@@ -1,0 +1,54 @@
+﻿@model Business.Essentials.Model.Customer
+
+@{
+    ViewBag.Title = Business.Essentials.Resources.Delete;
+}
+
+<h2>@Business.Essentials.Resources.Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>@Business.Essentials.Resources.Title_Customer</legend>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Name)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Name)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Zone)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Zone)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.CreditLimit)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CreditLimit)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.CreditDays)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CreditDays)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Comment)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Comment)
+    </div>
+
+</fieldset>
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" value= @Business.Essentials.Resources.Delete /> |
+        @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
+    </p>
+}

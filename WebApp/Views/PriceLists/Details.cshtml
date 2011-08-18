@@ -1,0 +1,37 @@
+﻿@model Business.Essentials.Model.PriceList
+
+@{
+    ViewBag.Title = Business.Essentials.Resources.Details;
+}
+
+<h2>@Business.Essentials.Resources.Details</h2>
+
+<fieldset>
+    <legend>@Business.Essentials.Resources.Title_PriceList</legend>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Name)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Name)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.HighProfitMargin)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.HighProfitMargin)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.LowProfitMargin)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.LowProfitMargin)
+    </div>
+
+</fieldset>
+<p>
+    @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id=Model.Id }) |
+    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
+</p>

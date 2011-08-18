@@ -1,0 +1,53 @@
+﻿@using Business.Essentials.Model
+@model IEnumerable<Business.Essentials.Model.PriceList>
+
+@{
+    ViewBag.Title = Business.Essentials.Resources.Title_PriceList;
+}
+
+<h2>@Business.Essentials.Resources.Title_PriceList</h2>
+
+<p>
+    @Html.ActionLink(Business.Essentials.Resources.CreateNew, "Create")
+</p>
+<table>
+    <tr>
+        <th>
+            @Html.LabelFor(x => new PriceList().Name)
+        </th>
+
+        <th>
+            @Html.LabelFor(x => new PriceList().HighProfitMargin)
+        </th>
+
+        <th>
+            @Html.LabelFor(x => new PriceList().LowProfitMargin)
+        </th>
+        
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+       
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+       
+        <td>
+            @Html.DisplayFor(modelItem => item.HighProfitMargin)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.LowProfitMargin)
+        </td>
+
+        <td>
+            @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id=item.Id }) |
+            @Html.ActionLink(Business.Essentials.Resources.Details, "Details", new { id=item.Id }) |
+            @Html.ActionLink(Business.Essentials.Resources.Delete, "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>

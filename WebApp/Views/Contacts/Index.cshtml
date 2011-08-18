@@ -1,0 +1,85 @@
+﻿@using Business.Essentials.Model
+@model IEnumerable<Business.Essentials.Model.Contact>
+
+@{
+    ViewBag.Title = Business.Essentials.Resources.Title_Contact;
+}
+
+<h2>@Business.Essentials.Resources.DisplayName_Contacts</h2>
+
+<p>
+    @Html.ActionLink(Business.Essentials.Resources.CreateNew, "Create")
+</p>
+<table>
+    <tr>
+        <th>
+            @Html.LabelFor(x => new Contact().Name)
+        </th>
+
+        <th>
+            @Html.LabelFor(x => new Contact().JobTitle)
+        </th>
+        <th>
+            @Html.LabelFor(x => new Contact().Phone)
+        </th>
+        <th>
+            @Html.LabelFor(x => new Contact().PhoneExt)
+        </th>
+        <th>
+            @Html.LabelFor(x => new Contact().Mobile)
+        </th>
+        <th>
+            @Html.LabelFor(x => new Contact().Fax)
+        </th>
+        <th>
+            @Html.LabelFor(x => new Contact().Website)
+        </th>
+        <th>
+            @Html.LabelFor(x => new Contact().Email)
+        </th>
+        <th>
+            @Html.LabelFor(x => new Contact().Comment)
+        </th>
+
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.JobTitle)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Phone)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PhoneExt)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Mobile)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Fax)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Website)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Comment)
+        </td>
+
+        <td>
+            @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id=item.Id }) |
+            @Html.ActionLink(Business.Essentials.Resources.Details, "Details", new { id=item.Id }) |
+            @Html.ActionLink(Business.Essentials.Resources.Delete, "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>

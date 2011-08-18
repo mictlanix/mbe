@@ -1,0 +1,40 @@
+﻿@model Business.Essentials.Model.CashRegister
+
+@{
+    ViewBag.Title = Business.Essentials.Resources.Delete;
+}
+
+<h2>@Business.Essentials.Resources.Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>@Business.Essentials.Resources.Title_CashRegister</legend>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Code)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Code)
+    </div>
+    
+    <div class="display-label">
+        @Html.LabelFor(model => model.Name)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Name)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Comment)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Comment)
+    </div>
+
+</fieldset>
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" value= @Business.Essentials.Resources.Delete /> |
+        @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
+    </p>
+}
