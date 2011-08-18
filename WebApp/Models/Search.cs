@@ -7,13 +7,19 @@ using System.Web.Security;
 
 namespace Business.Essentials.WebApp.Models
 {
-    public class Search
+    public class Search<T>
     {
+        public Search()
+        {
+            Results = new List<T>();
+        }
+
         [Required]
         [Display(Name = "Pattern", ResourceType = typeof(Resources))]
         [StringLength(42, MinimumLength = 2, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string Pattern { get; set; }
         public int Offset { get; set; }
         public int Limit { get; set; }
+        public IList<T> Results { get; set; }
     }
 }

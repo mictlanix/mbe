@@ -13,32 +13,46 @@ namespace Business.Essentials.WebApp.Controllers
     public class ProductsController : Controller
     {
         //
-        // GET: /Product/
+        // GET: /Products/
 
-        public ActionResult Index()
+        public ActionResult Index(string Pattern, int? Offset, int? Limit)
         {
-            return View(new List<Product>());
+            if (Pattern == null)
+            {
+                return View(new Search<Product> { Limit = 25 });
+            }
+
+            return View(GetProducts(new Search<Product> { Pattern = Pattern, Offset = Offset.Value, Limit = Limit.Value }));
         }
 
         //
-        // POST: /Products/Index
+        // POST: /Products/
 
         [HttpPost]
-        public ActionResult Index(Search search)
+        public ActionResult Index(Search<Product> search)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var qry = from x in Product.Queryable
-                          where x.Name.Contains(search.Pattern) ||
-                                x.Code.Contains(search.Pattern) ||
-                                x.SKU.Contains(search.Pattern) ||
-                                x.Brand.Contains(search.Pattern)
-                          select x;
-
-                return View(qry.Take(250).ToList());
+                return View(search);
             }
 
-            return View(new List<Product>());
+            search.Offset = 0;
+            return View(GetProducts(search));
+        }
+
+        Search<Product> GetProducts(Search<Product> search)
+        {
+            var qry = from x in Product.Queryable
+                      where x.Name.Contains(search.Pattern) ||
+                            x.Code.Contains(search.Pattern) ||
+                            x.SKU.Contains(search.Pattern) ||
+                            x.Brand.Contains(search.Pattern)
+                      orderby x.Name
+                      select x;
+
+            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+
+            return search;
         }
 
         //
