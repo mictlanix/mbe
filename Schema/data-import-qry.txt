@@ -1,0 +1,20 @@
+PARA COPIAR UNA BD A OTRA BD CON MYSQLWORKBENCH
+
+DELETE FROM `be_framos`.`product`;
+INSERT INTO `be_framos`.`product`
+(`code`, `sku`,`name`,`brand`,`model`,`location`,`cost`,`unit_of_measurement`,`perishable`,
+`seriable`,`invoiceable`,`comment`,`price1`,`price2`,`price3`,`price4`,`old_id`)
+SELECT IFNULL(`cod_bar`, CONCAT('N/D [', p.id, ']')), `clave`,`desc1`, `marca`,
+  `modelo`,`ubicacion`,
+  CAST(IFNULL(costo_uni, 0) AS DECIMAL(18, 4)),
+  u.nombre unidad,0,0,0,
+  LEFT(extras, 500),
+  CAST(IF(precio1 like '%.%.%', 0, l.precio1) AS DECIMAL(18, 4)),
+  CAST(IF(precio2 like '%.%.%', 0, l.precio2) AS DECIMAL(18, 4)),
+  CAST(IF(precio3 like '%.%.%', 0, l.precio3) AS DECIMAL(18, 4)),
+  CAST(IF(precio4 like '%.%.%', 0, l.precio4) AS DECIMAL(18, 4)),
+  p.id
+FROM ramos.productos1 p
+INNER JOIN ramos.unidades u ON p.unidad = u.id
+INNER JOIN ramos.precios l ON p.lista_precio = l.id
+

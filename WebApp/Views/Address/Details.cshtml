@@ -1,0 +1,93 @@
+﻿@model Business.Essentials.Model.Address
+
+@{
+    ViewBag.Title = Business.Essentials.Resources.Details;
+}
+
+<h2>@Business.Essentials.Resources.Details</h2>
+
+<fieldset>
+    <legend>@Business.Essentials.Resources.Title_Address</legend>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.TaxpayerId)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.TaxpayerId)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.TaxpayerName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.TaxpayerName)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Street)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Street)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.ExteriorNumber)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ExteriorNumber)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.InteriorNumber)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.InteriorNumber)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Neighborhood)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Neighborhood)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Borough)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Borough)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.State)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.State)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Country)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Country)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.ZipCode)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ZipCode)
+    </div>
+
+   <div class="display-label">
+        @Html.LabelFor(model => model.Comment)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Comment)
+    </div>
+
+</fieldset>
+<p>
+    @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id=Model.Id }) |
+    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
+</p>
