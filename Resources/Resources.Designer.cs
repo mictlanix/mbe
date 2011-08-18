@@ -169,7 +169,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Crear.
+        ///   Looks up a localized string similar to Nuevo.
         /// </summary>
         public static string Create {
             get {
