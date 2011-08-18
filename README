@@ -1,0 +1,10 @@
+Dependencies
+
+ 1. Install NuGet Command Line
+    Download it from http://nuget.codeplex.com/releases
+ 2. Make a Packages directory
+    $ mkdir Packages
+ 3. Download libraries using nuget
+    $ nuget install Model/packages.config -o Packages
+    $ nuget install WebApp/packages.config -o Packages
+
