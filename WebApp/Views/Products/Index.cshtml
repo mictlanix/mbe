@@ -1,6 +1,6 @@
 ﻿@using Business.Essentials.Model
 @using Business.Essentials.WebApp.Models
-@model IEnumerable<Business.Essentials.Model.Product>
+@model Search<Product>
 
 @{
     ViewBag.Title = Business.Essentials.Resources.Title_Product;
@@ -16,14 +16,26 @@
     @Html.ValidationSummary(true)
     <fieldset>
      	<div class="editor-label">
-            @Html.LabelFor(model => new Search().Pattern)
+            @Html.LabelFor(x => x.Pattern)
         </div>
         <div class="editor-field">
-            @Html.EditorFor(model => new Search().Pattern)
+            @Html.EditorFor(x => x.Pattern)
+            @Html.HiddenFor(x => x.Offset)
+            @Html.HiddenFor(x => x.Limit)
             <input type="submit" value= "@Business.Essentials.Resources.Search" />
         </div>
         <p>
-            @Html.ValidationMessageFor(model => new Search().Pattern)
+            @if (Model.Offset >= Model.Limit)
+            {
+                @Html.ActionLink("<", "Index", new { Pattern = Model.Pattern, Limit = Model.Limit, Offset = Model.Offset - Model.Limit })
+            }
+            @if (Model.Results.Count >= Model.Limit)
+            {
+                @Html.ActionLink(">", "Index", new { Pattern = Model.Pattern, Limit = Model.Limit, Offset = Model.Offset + Model.Limit })
+            }
+            
+            @Html.Encode(string.Format("{0} elementos listados.", Model.Results.Count))
+            @Html.ValidationMessageFor(x => x.Pattern)
         </p>
     </fieldset>
 }
@@ -64,7 +76,7 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model)
+@foreach (var item in Model.Results)
 {
     <tr>
         <td>
