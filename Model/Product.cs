@@ -53,6 +53,7 @@ namespace Business.Essentials.Model
         [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
         public decimal Cost { get; set; }
 
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [Property("unit_of_measurement")]
         [Display(Name = "UnitOfMeasurement", ResourceType = typeof(Resources))]
         public string UnitOfMeasurement { get; set; }
@@ -100,5 +101,13 @@ namespace Business.Essentials.Model
 
         [UIHint("Image")]
         public string Photo { get { return string.Format("{0}.png", Code.Trim()); } }
+
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+        [Display(Name = "Category", ResourceType = typeof(Resources))]
+        public int CategoryId { get; set; }
+
+        [BelongsTo("category")]
+        [Display(Name = "Category", ResourceType = typeof(Resources))]
+        public virtual Category Category { get; set; }
     }
 }

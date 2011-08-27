@@ -70,6 +70,10 @@
         <th>
             @Html.LabelFor(x => new Product().Price4)
         </th>
+        <th>
+            @Html.LabelFor(x => new Product().Category)
+        </th>
+
         
 
 
@@ -109,6 +113,9 @@
         </td>
          <td>
             @Html.DisplayFor(modelItem => item.Price4)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Category.Name)
         </td>
   
         <td>

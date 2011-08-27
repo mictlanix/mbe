@@ -12,17 +12,34 @@ namespace Business.Essentials.WebApp.Controllers
 {
     public class ProductsController : Controller
     {
+
+        //
+        public JsonResult GetSuggestions(string pattern)
+        {
+            JsonResult result = new JsonResult();
+            var qry = from x in Product.Queryable
+                      where x.Name.Contains(pattern) ||
+                            x.Code.Contains(pattern) ||
+                            x.SKU.Contains(pattern)
+                      select new { id = x.Id, name = x.Name, code = x.Code, sku = x.SKU, url = string.Format("/Photos/{0}.png", x.Code.Trim()) };
+
+            result = Json(qry.Take(15).ToList());
+            result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+
+            return result;  
+        }
+
         //
         // GET: /Products/
 
-        public ActionResult Index(string Pattern, int? Offset, int? Limit)
+        public ActionResult Index(string pattern, int? offset, int? limit)
         {
-            if (Pattern == null)
+            if (pattern == null)
             {
                 return View(new Search<Product> { Limit = 25 });
             }
 
-            return View(GetProducts(new Search<Product> { Pattern = Pattern, Offset = Offset.Value, Limit = Limit.Value }));
+            return View(GetProducts(new Search<Product> { Pattern = pattern, Offset = offset.Value, Limit = limit.Value }));
         }
 
         //
@@ -80,6 +97,8 @@ namespace Business.Essentials.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                Category category = Category.Find(product.CategoryId);
+                product.Category = category;
                 product.Save();
                 return RedirectToAction("Index");
             }
