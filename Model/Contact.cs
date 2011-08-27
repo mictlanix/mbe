@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
+using WebActivator;
+using DataAnnotationsExtensions;
 
 namespace Business.Essentials.Model
 {
@@ -44,14 +46,14 @@ namespace Business.Essentials.Model
         public string Fax { get; set; }
 
         [Property]
+        [Url(ErrorMessageResourceName = "Validation_Url", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "Website", ResourceType = typeof(Resources))]
-        [DataType(DataType.Url, ErrorMessageResourceType = typeof(Resources))]
         [StringLength(80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string Website { get; set; }
 
         [Property]
+        [Email(ErrorMessageResourceName = "Validation_Email", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "Email", ResourceType = typeof(Resources))]
-        [DataType(DataType.EmailAddress)]
         [StringLength(80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string Email { get; set; }
 

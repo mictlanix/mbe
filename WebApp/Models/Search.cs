@@ -7,6 +7,7 @@ using System.Web.Security;
 
 namespace Business.Essentials.WebApp.Models
 {
+
     public class Search<T>
     {
         public Search()
@@ -22,4 +23,5 @@ namespace Business.Essentials.WebApp.Models
         public int Limit { get; set; }
         public IList<T> Results { get; set; }
     }
+    
 }

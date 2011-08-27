@@ -154,7 +154,7 @@
     <value>País</value>
   </data>
   <data name="Create" xml:space="preserve">
-    <value>Nuevo</value>
+    <value>Crear</value>
   </data>
   <data name="CreateNew" xml:space="preserve">
     <value>Crear Nuevo</value>
@@ -404,5 +404,14 @@
   </data>
   <data name="Validation_Date" xml:space="preserve">
     <value>Fecha invalida</value>
+  </data>
+  <data name="Validation_Email" xml:space="preserve">
+    <value>Lo introducido no corresponde a un {0}.</value>
+  </data>
+  <data name="Validation_Url" xml:space="preserve">
+    <value>Lo introducido no corresponde a un {0}.</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>Nuevo</value>
   </data>
 </root>

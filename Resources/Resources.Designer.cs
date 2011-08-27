@@ -169,7 +169,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Nuevo.
+        ///   Looks up a localized string similar to Crear.
         /// </summary>
         public static string Create {
             get {
@@ -462,6 +462,15 @@ namespace Business.Essentials {
         public static string Neighborhood {
             get {
                 return ResourceManager.GetString("Neighborhood", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nuevo.
+        /// </summary>
+        public static string New {
+            get {
+                return ResourceManager.GetString("New", resourceCulture);
             }
         }
         
@@ -835,6 +844,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lo introducido no corresponde a un {0}..
+        /// </summary>
+        public static string Validation_Email {
+            get {
+                return ResourceManager.GetString("Validation_Email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to El usuario y/o contraseña son invalidos..
         /// </summary>
         public static string Validation_InvalidLogOn {
@@ -885,6 +903,15 @@ namespace Business.Essentials {
         public static string Validation_StringLength {
             get {
                 return ResourceManager.GetString("Validation_StringLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lo introducido no corresponde a un {0}..
+        /// </summary>
+        public static string Validation_Url {
+            get {
+                return ResourceManager.GetString("Validation_Url", resourceCulture);
             }
         }
         
