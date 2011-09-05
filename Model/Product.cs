@@ -109,5 +109,13 @@ namespace Business.Essentials.Model
         [BelongsTo("category")]
         [Display(Name = "Category", ResourceType = typeof(Resources))]
         public virtual Category Category { get; set; }
+
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+        [Display(Name = "Supplier", ResourceType = typeof(Resources))]
+        public int SupplierId { get; set; }
+
+        [BelongsTo("supplier")]
+        [Display(Name = "Supplier", ResourceType = typeof(Resources))]
+        public virtual Supplier Supplier { get; set; }
     }
 }

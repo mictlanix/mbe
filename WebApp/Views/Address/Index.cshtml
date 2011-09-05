@@ -1,14 +1,8 @@
 ﻿@using Business.Essentials.Model
 @model IEnumerable<Business.Essentials.Model.Address>
 
-@{
-    ViewBag.Title = Business.Essentials.Resources.Title_Address;
-}
-
-<h2>@Business.Essentials.Resources.DisplayName_Address</h2>
-
 <p>
-    @Html.ActionLink(Business.Essentials.Resources.CreateNew, "Create")
+    @Html.ActionLink(Business.Essentials.Resources.CreateNew, "CreateForSupplier", "Address", new { id = ViewBag.OwnerId }, null)
 </p>
 <table>
     <tr>

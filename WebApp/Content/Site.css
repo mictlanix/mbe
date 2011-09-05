@@ -322,3 +322,10 @@ div#title {
 .tri-state {
     width: 6em;
 }
+
+/* Styles for custom helpers
+----------------------------------------------------------*/
+img.small {
+    max-width:80px;
+    max-height:80px;
+}

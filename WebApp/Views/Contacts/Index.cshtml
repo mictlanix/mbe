@@ -1,12 +1,6 @@
 ﻿@using Business.Essentials.Model
 @model IEnumerable<Business.Essentials.Model.Contact>
 
-@{
-    ViewBag.Title = Business.Essentials.Resources.Title_Contact;
-}
-
-<h2>@Business.Essentials.Resources.DisplayName_Contacts</h2>
-
 <p>
     @Html.ActionLink(Business.Essentials.Resources.CreateNew, "Create")
 </p>

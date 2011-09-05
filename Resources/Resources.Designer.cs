@@ -106,7 +106,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cuidad.
+        ///   Looks up a localized string similar to Delegación o Municipio.
         /// </summary>
         public static string Borough {
             get {
@@ -376,6 +376,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Introduzca lo que desea buscar..
+        /// </summary>
+        public static string HIntText {
+            get {
+                return ResourceManager.GetString("HIntText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mensajero.
         /// </summary>
         public static string Im {
@@ -480,6 +489,15 @@ namespace Business.Essentials {
         public static string No {
             get {
                 return ResourceManager.GetString("No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No existe coincidencia..
+        /// </summary>
+        public static string NoResultsText {
+            get {
+                return ResourceManager.GetString("NoResultsText", resourceCulture);
             }
         }
         
@@ -601,6 +619,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Buscando....
+        /// </summary>
+        public static string SearchingText {
+            get {
+                return ResourceManager.GetString("SearchingText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Seriable.
         /// </summary>
         public static string Seriable {
@@ -651,6 +678,24 @@ namespace Business.Essentials {
         public static string Street {
             get {
                 return ResourceManager.GetString("Street", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Proveedor.
+        /// </summary>
+        public static string Supplier {
+            get {
+                return ResourceManager.GetString("Supplier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Acuerdo con Proveedor.
+        /// </summary>
+        public static string SupplierAgreement {
+            get {
+                return ResourceManager.GetString("SupplierAgreement", resourceCulture);
             }
         }
         

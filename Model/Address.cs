@@ -9,6 +9,8 @@ namespace Business.Essentials.Model
     [ActiveRecord("address")]
     public class Address : ActiveRecordLinqBase<Address>
     {
+        IList<Supplier> suppliers = new List<Supplier>();
+
         [PrimaryKey(PrimaryKeyType.Identity, "address_id")]
         public int Id { get; set; }
 
@@ -70,5 +72,11 @@ namespace Business.Essentials.Model
         [StringLength(500, MinimumLength = 0)]
         public string Comment { get; set; }
 
+        [HasAndBelongsToMany(typeof(Supplier), Table = "supplier_address", ColumnKey = "address", ColumnRef = "supplier")]
+        public IList<Supplier> Suppliers
+        {
+            get { return suppliers; }
+            set { suppliers = value; }
+        }
     }
 }

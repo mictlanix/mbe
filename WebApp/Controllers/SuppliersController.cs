@@ -11,6 +11,19 @@ namespace Business.Essentials.WebApp.Controllers
 {
     public class SuppliersController : Controller
     {
+        public JsonResult GetSuggestions(string pattern)
+        {
+            JsonResult result = new JsonResult();
+            var qry = from x in Supplier.Queryable
+                      where x.Name.Contains(pattern)
+                      select new { id = x.Id, name = x.Name };
+
+            result = Json(qry.Take(15).ToList());
+            result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+
+            return result;
+        }
+
         //
         // GET: /Suppliers/
 
@@ -28,6 +41,9 @@ namespace Business.Essentials.WebApp.Controllers
         public ViewResult Details(int id)
         {
             Supplier supplier = Supplier.Find(id);
+
+            ViewBag.OwnerId = supplier.Id;
+            
             return View(supplier);
         }
 

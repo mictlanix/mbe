@@ -1,4 +1,5 @@
-﻿@model Business.Essentials.Model.Supplier
+﻿@using Business.Essentials.WebApp.Helpers;
+@model Business.Essentials.Model.Supplier
 
 @{
     ViewBag.Title = Business.Essentials.Resources.Details;
@@ -49,3 +50,8 @@
     @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id=Model.Id }) |
     @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
 </p>
+
+<fieldset>
+    <legend>@Business.Essentials.Resources.DisplayName_Address</legend>
+    @Html.Partial("~/Views/Address/Index.cshtml", Model.Addresses)
+</fieldset>

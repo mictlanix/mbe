@@ -1,5 +1,7 @@
 ﻿@model Business.Essentials.Model.SupplierAgreement
 
+
+
 @{
     ViewBag.Title = Business.Essentials.Resources.Details;
 }
@@ -8,6 +10,13 @@
 
 <fieldset>
     <legend>@Business.Essentials.Resources.Title_SupplierAgreement</legend>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Supplier)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Supplier.Name)
+    </div>
 
     <div class="display-label">
         @Html.LabelFor(model => model.Start)
@@ -31,6 +40,7 @@
     </div>
 
 </fieldset>
+
 <p>
     @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id=Model.Id }) |
     @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")

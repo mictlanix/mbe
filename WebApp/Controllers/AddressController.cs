@@ -34,9 +34,11 @@ namespace Business.Essentials.WebApp.Controllers
         //
         // GET: /Address/Create
 
-        public ActionResult Create()
+        public ActionResult CreateForSupplier(int id)
         {
-            return View();
+            ViewBag.OwnerId = id;
+            ViewBag.OwnerType = "Suppliers";
+            return View("Create");
         }
 
         //
@@ -47,8 +49,18 @@ namespace Business.Essentials.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                address.Save();
-                return RedirectToAction("Index");
+                int owner = int.Parse(Request.Params["OwnerId"]);
+                string type = Request.Params["OwnerType"];
+
+                if (type == "Suppliers")
+                {
+                    var supplier = Supplier.Find(owner);
+                    address.Suppliers.Add(supplier);
+                }
+
+                address.Create();
+
+                return RedirectToAction("Details", type, new { id = owner });
             }
 
             return View(address);
