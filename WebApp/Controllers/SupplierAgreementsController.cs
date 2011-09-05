@@ -47,6 +47,9 @@ namespace Business.Essentials.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                Supplier supplier = Supplier.Find(supplierAgreement.SupplierId);
+                supplierAgreement.Supplier = supplier;
+
                 supplierAgreement.Save();
                 return RedirectToAction("Index");
             }
@@ -71,6 +74,8 @@ namespace Business.Essentials.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                Supplier supplier = Supplier.Find(supplierAgreement.SupplierId);
+                supplierAgreement.Supplier = supplier;
                 supplierAgreement.Save();
                 return RedirectToAction("Index");
             }

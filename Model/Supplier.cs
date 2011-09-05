@@ -9,6 +9,8 @@ namespace Business.Essentials.Model
     [ActiveRecord("supplier")]
     public class Supplier : ActiveRecordLinqBase<Supplier>
     {
+        IList<Address> addresses = new List<Address>();
+
         [PrimaryKey(PrimaryKeyType.Identity, "supplier_id")]
         public int Id { get; set; }
 
@@ -39,5 +41,11 @@ namespace Business.Essentials.Model
         [Display(Name = "CreditDays", ResourceType = typeof(Resources))]
         public int CreditDays { get; set; }
 
+        [HasAndBelongsToMany(typeof(Address), Table = "supplier_address", ColumnKey = "supplier", ColumnRef = "address", Inverse = true)]
+        public IList<Address> Addresses
+        {
+            get { return addresses; }
+            set { addresses = value; }
+        }
     }
 }

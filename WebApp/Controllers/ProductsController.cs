@@ -97,6 +97,9 @@ namespace Business.Essentials.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                Supplier supplier = Supplier.Find(product.SupplierId);
+                product.Supplier = supplier;
+                
                 Category category = Category.Find(product.CategoryId);
                 product.Category = category;
                 product.Save();
@@ -121,6 +124,11 @@ namespace Business.Essentials.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                Supplier supplier = Supplier.Find(product.SupplierId);
+                product.Supplier = supplier;
+
+                Category category = Category.Find(product.CategoryId);
+                product.Category = category;
                 product.Save();
                 return RedirectToAction("Index");
             }

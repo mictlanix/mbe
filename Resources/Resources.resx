@@ -133,7 +133,7 @@
     <value>Cumpleaños</value>
   </data>
   <data name="Borough" xml:space="preserve">
-    <value>Cuidad</value>
+    <value>Delegación o Municipio</value>
   </data>
   <data name="Brand" xml:space="preserve">
     <value>Marca</value>
@@ -413,5 +413,20 @@
   </data>
   <data name="New" xml:space="preserve">
     <value>Nuevo</value>
+  </data>
+  <data name="HIntText" xml:space="preserve">
+    <value>Introduzca lo que desea buscar.</value>
+  </data>
+  <data name="NoResultsText" xml:space="preserve">
+    <value>No existe coincidencia.</value>
+  </data>
+  <data name="SearchingText" xml:space="preserve">
+    <value>Buscando...</value>
+  </data>
+  <data name="Supplier" xml:space="preserve">
+    <value>Proveedor</value>
+  </data>
+  <data name="SupplierAgreement" xml:space="preserve">
+    <value>Acuerdo con Proveedor</value>
   </data>
 </root>

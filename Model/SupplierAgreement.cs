@@ -30,5 +30,13 @@ namespace Business.Essentials.Model
         [StringLength(500, MinimumLength = 0)]
         public string Comment { get; set; }
 
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+        [Display(Name = "Supplier", ResourceType = typeof(Resources))]
+        public int SupplierId { get; set; }
+
+        [BelongsTo("supplier")]
+        [Display(Name = "Supplier", ResourceType = typeof(Resources))]
+        public virtual Supplier Supplier { get; set; }
+
     }
 }

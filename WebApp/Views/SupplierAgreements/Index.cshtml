@@ -12,6 +12,10 @@
 <table>
     <tr>
         <th>
+            @Html.LabelFor(x => new SupplierAgreement().Supplier)
+        </th>
+
+        <th>
             @Html.LabelFor(x => new SupplierAgreement().Start)
         </th>
 
@@ -27,6 +31,9 @@
 
 @foreach (var item in Model) {
     <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Supplier.Name)
+        </td>
         <td>
             @Html.DisplayFor(modelItem => item.Start)
         </td>
