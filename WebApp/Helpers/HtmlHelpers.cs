@@ -12,43 +12,6 @@ namespace Business.Essentials.WebApp.Helpers
 {
     public static class HtmlHelpers
     {
-        public static IList<Contact> GetContacts(this HtmlHelper html)
-        {
-            List<Contact> items = new List<Contact>();
-
-            items.Add(new Contact
-            {
-                Id = 1,
-                Name = "Contact 01"
-            });
-
-            items.Add(new Contact
-            {
-                Id = 2,
-                Name = "Contact 02"
-            });
-
-            items.Add(new Contact
-            {
-                Id = 4,
-                Name = "Contact 03"
-            });
-
-            items.Add(new Contact
-            {
-                Id = 5,
-                Name = "Contact 04"
-            });
-
-            items.Add(new Contact
-            {
-                Id = 5,
-                Name = "Contact 05"
-            });
-
-            return items;
-        }
-
         public static MvcHtmlString ActionImage(this HtmlHelper html,
                                                 string action,
                                                 object routeValues,
@@ -87,6 +50,19 @@ namespace Business.Essentials.WebApp.Helpers
             string anchorHtml = anchorBuilder.ToString(TagRenderMode.Normal);
 
             return MvcHtmlString.Create(anchorHtml);
+        }
+
+        public static string GetMenuClass(this HtmlHelper html, string controller)
+        {
+            string ctl = html.ViewContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString();
+            return ctl == controller ? "gbz0l" : string.Empty;
+        }
+
+        public static string GetMenuClass(this HtmlHelper html, string controller, string action)
+        {
+            string ctl = html.ViewContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString();
+            string atn = html.ViewContext.Controller.ValueProvider.GetValue("action").RawValue.ToString();
+            return ctl == controller && atn == action ? "gbz0l" : string.Empty;
         }
     }
 }

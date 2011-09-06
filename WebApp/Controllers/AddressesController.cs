@@ -9,7 +9,7 @@ using Business.Essentials.Model;
 
 namespace Business.Essentials.WebApp.Controllers
 {
-    public class AddressController : Controller
+    public class AddressesController : Controller
     {
         //
         // GET: /Address/
@@ -28,6 +28,20 @@ namespace Business.Essentials.WebApp.Controllers
         public ViewResult Details(int id)
         {
             Address address = Address.Find(id);
+            var customer = address.Customers.FirstOrDefault();
+
+            if (customer == null)
+            {
+                var supplier = address.Suppliers.First();
+                ViewBag.OwnerId = supplier.Id;
+                ViewBag.OwnerType = "Suppliers";
+            }
+            else
+            {
+                ViewBag.OwnerId = customer.Id;
+                ViewBag.OwnerType = "Customers";
+            }
+
             return View(address);
         }
 
@@ -41,6 +55,12 @@ namespace Business.Essentials.WebApp.Controllers
             return View("Create");
         }
 
+        public ActionResult CreateForCustomer(int id)
+        {
+            ViewBag.OwnerId = id;
+            ViewBag.OwnerType = "Customers";
+            return View("Create");
+        }
         //
         // POST: /Address/Create
 
@@ -58,6 +78,12 @@ namespace Business.Essentials.WebApp.Controllers
                     address.Suppliers.Add(supplier);
                 }
 
+                if (type == "Customers")
+                {
+                    var customer = Customer.Find(owner);
+                    address.Customers.Add(customer);
+                }
+
                 address.Create();
 
                 return RedirectToAction("Details", type, new { id = owner });
@@ -72,6 +98,20 @@ namespace Business.Essentials.WebApp.Controllers
         public ActionResult Edit(int id)
         {
             Address address = Address.Find(id);
+            var customer = address.Customers.FirstOrDefault();
+
+            if (customer == null)
+            {
+                var supplier = address.Suppliers.First();
+                ViewBag.OwnerId = supplier.Id;
+                ViewBag.OwnerType = "Suppliers";
+            }
+            else
+            {
+                ViewBag.OwnerId = customer.Id;
+                ViewBag.OwnerType = "Customers";
+            }
+
             return View(address);
         }
 
@@ -83,8 +123,15 @@ namespace Business.Essentials.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                int owner = int.Parse(Request.Params["OwnerId"]);
+                string type = Request.Params["OwnerType"];
+                Address item = Address.Find(address.Id);
+
+                address.Suppliers = item.Suppliers;
+                address.Customers = item.Customers;
                 address.Save();
-                return RedirectToAction("Index");
+
+                return RedirectToAction("Details", type, new { id = owner });
             }
             return View(address);
         }
@@ -95,6 +142,20 @@ namespace Business.Essentials.WebApp.Controllers
         public ActionResult Delete(int id)
         {
             Address address = Address.Find(id);
+            var customer = address.Customers.FirstOrDefault();
+
+            if (customer == null)
+            {
+                var supplier = address.Suppliers.First();
+                ViewBag.OwnerId = supplier.Id;
+                ViewBag.OwnerType = "Suppliers";
+            }
+            else
+            {
+                ViewBag.OwnerId = customer.Id;
+                ViewBag.OwnerType = "Customers";
+            }
+
             return View(address);
         }
 
@@ -104,9 +165,12 @@ namespace Business.Essentials.WebApp.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            int owner = int.Parse(Request.Params["OwnerId"]);
+            string type = Request.Params["OwnerType"];
             Address address = Address.Find(id);
+
             address.Delete();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", type, new { id = owner });
         }
 
         protected override void Dispose(bool disposing)

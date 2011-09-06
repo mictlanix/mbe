@@ -49,3 +49,19 @@
     @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id=Model.Id }) |
     @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
 </p>
+
+<fieldset>
+    <legend>@Business.Essentials.Resources.DisplayName_Address</legend>
+    <p>
+        @Html.ActionLink(Business.Essentials.Resources.CreateNew, "CreateForCustomer", "Addresses", new { id = Model.Id }, null)
+    </p>
+    @Html.Partial("~/Views/Addresses/Index.cshtml", Model.Addresses)
+</fieldset>
+
+<fieldset>
+    <legend>@Business.Essentials.Resources.DisplayName_Contacts</legend>
+    <p>
+        @Html.ActionLink(Business.Essentials.Resources.CreateNew, "CreateForCustomer", "Contacts", new { id = Model.Id }, null)
+    </p>
+    @Html.Partial("~/Views/Contacts/Index.cshtml", Model.Contacts)
+</fieldset>

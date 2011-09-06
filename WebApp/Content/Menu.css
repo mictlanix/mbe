@@ -1,5 +1,4 @@
 ﻿body{color:#000;margin:3px 0}
-body{background:#fff}
 #gsr a:active,a.fl:active,.fl a:active,.gl a:active{color:#c11}
 #gb{font:13px/27px Arial,sans-serif;height:30px}
 #gbz,#gbg{position:absolute;white-space:nowrap;top:0;height:30px;z-index:1000}
@@ -12,6 +11,7 @@ body{background:#fff}
 .gbt{position:relative;display:-moz-inline-box;display:inline-block;line-height:27px;padding:0;vertical-align:top}
 .gbt{*display:inline}
 .gbzt,.gbgt{cursor:pointer;display:block;text-decoration:none !important}
+.gbzt:hover,.gbzt:focus,.gbgt:hover,.gbgt:focus{background-color:#4c4c4c;background-image:none;_background-image:none;background-position:0 -102px;background-repeat:repeat-x;outline:none;text-decoration:none !important}
 #gbz .gbzt,#gbz .gbgt,#gbg .gbgt{color:#ccc!important}
 .gbz0l .gbts{color:#fff;font-weight:bold}
 .gbz0l .gbtb2{border-top-color:#dd4b39!important}
@@ -40,3 +40,19 @@ body{background:#fff}
 .gbto .gbm{visibility:visible;top:29px!important}
 .gbto .gbts{background:#fff;border-color:#bebebe;color:#36c;padding-bottom:1px;padding-top:2px}
 .gbto .gbzt .gbtb2,.gbto .gbgt .gbtb2{border-top-width:0}
+
+/* mine */
+body{background: transparent url(images/body-bg.png);}
+#container{position: relative;background: transparent url(images/header-bg.png) repeat-x top left;}
+header, #header {
+    top:32px;
+    height: 160px;
+    position: relative;
+    margin: 0 auto;
+    width: 90%;
+    z-index: 10;
+}
+header h1, #header h1 {
+    margin-top: 45px;
+    color:#F50;
+}

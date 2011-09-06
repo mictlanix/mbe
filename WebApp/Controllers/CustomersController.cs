@@ -28,6 +28,7 @@ namespace Business.Essentials.WebApp.Controllers
         public ViewResult Details(int id)
         {
             Customer customer = Customer.Find(id);
+            ViewBag.OwnerId = customer.Id;
             return View(customer);
         }
 
@@ -93,8 +94,15 @@ namespace Business.Essentials.WebApp.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Customer customer = Customer.Find(id);
-            customer.Delete();
-            return RedirectToAction("Index");
+            try
+            {
+                customer.Delete();
+                return RedirectToAction("Index");
+            }
+            catch (Exception)
+            {
+                return View("DeleteUnsuccessful");
+            }
         }
 
         protected override void Dispose(bool disposing)

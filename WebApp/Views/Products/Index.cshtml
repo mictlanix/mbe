@@ -75,9 +75,6 @@
         <th>
             @Html.LabelFor(x => new Product().Category)
         </th>
-        <th>
-            @Html.LabelFor(x => new Product().Supplier)
-        </th>
         <th></th>
     </tr>
 
@@ -119,12 +116,9 @@
         <td>
             @Html.DisplayFor(modelItem => item.Category.Name)
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Supplier.Name)
-        </td>
   
         <td>
-            @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id = item.Id }) |
+            @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id = item.Id })
             @Html.ActionLink(Business.Essentials.Resources.Delete, "Delete", new { id = item.Id })
         </td>
     </tr>

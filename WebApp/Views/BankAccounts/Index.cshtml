@@ -1,14 +1,7 @@
 ﻿@using Business.Essentials.Model
 @model IEnumerable<Business.Essentials.Model.BankAccount>
 
-@{
-    ViewBag.Title = Business.Essentials.Resources.Title_BankAccount;
-}
-
-<h2>@Business.Essentials.Resources.DisplayName_BankAccount</h2>
-
 <p>
-    @Html.ActionLink(Business.Essentials.Resources.CreateNew, "Create")
 </p>
 <table>
     <tr>
@@ -50,9 +43,9 @@
         </td>
 
         <td>
-            @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id=item.Id }) |
-            @Html.ActionLink(Business.Essentials.Resources.Details, "Details", new { id=item.Id }) |
-            @Html.ActionLink(Business.Essentials.Resources.Delete, "Delete", new { id=item.Id })
+            @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", "BankAccounts", new { id=item.Id }, null) |
+            @Html.ActionLink(Business.Essentials.Resources.Details, "Details", "BankAccounts", new { id = item.Id }, null) |
+            @Html.ActionLink(Business.Essentials.Resources.Delete, "Delete", "BankAccounts", new { id = item.Id }, null)
         </td>
     </tr>
 }
