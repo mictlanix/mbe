@@ -41,6 +41,12 @@ namespace Business.Essentials.WebApp.Controllers
             return View("Create");
         }
 
+        public ActionResult CreateForCustomer(int id)
+        {
+            ViewBag.OwnerId = id;
+            ViewBag.OwnerType = "Customers";
+            return View("Create");
+        }
         //
         // POST: /Address/Create
 
@@ -56,6 +62,12 @@ namespace Business.Essentials.WebApp.Controllers
                 {
                     var supplier = Supplier.Find(owner);
                     address.Suppliers.Add(supplier);
+                }
+
+                if (type == "Customers")
+                {
+                    var customer = Customer.Find(owner);
+                    address.Customers.Add(customer);
                 }
 
                 address.Create();

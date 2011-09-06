@@ -175,16 +175,16 @@
     <value>Detalles</value>
   </data>
   <data name="DisplayName_Address" xml:space="preserve">
-    <value>Catálogo de Direcciones</value>
+    <value>Direcciones</value>
   </data>
   <data name="DisplayName_BankAccount" xml:space="preserve">
-    <value>Catálogo de Bancos</value>
+    <value>Bancos</value>
   </data>
   <data name="DisplayName_CashRegister" xml:space="preserve">
     <value>Catálogo de Cajas</value>
   </data>
   <data name="DisplayName_Contacts" xml:space="preserve">
-    <value>Catálogo de Contactos</value>
+    <value>Contactos</value>
   </data>
   <data name="DisplayName_Customers" xml:space="preserve">
     <value>Catálogo de Clientes</value>
@@ -376,7 +376,7 @@
     <value>Zona</value>
   </data>
   <data name="DisplayName_SupplierAgreement" xml:space="preserve">
-    <value>Catálogo de Acuerdos con Proveedores</value>
+    <value>Acuerdos con Proveedor</value>
   </data>
   <data name="End" xml:space="preserve">
     <value>Fecha de Fin</value>

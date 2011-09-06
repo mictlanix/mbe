@@ -10,6 +10,8 @@ namespace Business.Essentials.Model
     public class Supplier : ActiveRecordLinqBase<Supplier>
     {
         IList<Address> addresses = new List<Address>();
+        IList<Contact> contacts = new List<Contact>();
+        IList<BankAccount> banksAccounts = new List<BankAccount>();
 
         [PrimaryKey(PrimaryKeyType.Identity, "supplier_id")]
         public int Id { get; set; }
@@ -46,6 +48,20 @@ namespace Business.Essentials.Model
         {
             get { return addresses; }
             set { addresses = value; }
+        }
+
+        [HasAndBelongsToMany(typeof(Contact), Table = "supplier_contact", ColumnKey = "supplier", ColumnRef = "contact", Inverse = true)]
+        public IList<Contact> Contacts
+        {
+            get { return contacts; }
+            set { contacts = value; }
+        }
+
+        [HasAndBelongsToMany(typeof(BankAccount), Table = "supplier_bank_account", ColumnKey = "supplier", ColumnRef = "bank_account", Inverse = true)]
+        public IList<BankAccount> BanksAccounts
+        {
+            get { return banksAccounts; }
+            set { banksAccounts = value; }
         }
     }
 }
