@@ -40,6 +40,10 @@ namespace Business.Essentials.WebApp
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
 
+#if DEBUG
+            log4net.Config.XmlConfigurator.Configure();
+#endif
+
             IConfigurationSource source = ConfigurationManager.GetSection("activeRecord") as IConfigurationSource;
             ActiveRecordStarter.Initialize(typeof(Category).Assembly, source);
         }

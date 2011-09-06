@@ -1,3 +1,10 @@
 ﻿@model Boolean
 
-@Html.Encode(Model ? Business.Essentials.Resources.Yes : Business.Essentials.Resources.No)
+@if (Model)
+{
+    <img src="@Url.Content("~/Content/images/true.png")" alt="@Business.Essentials.Resources.Yes" title="@Business.Essentials.Resources.Yes"/>
+}
+else
+{
+    <img src="@Url.Content("~/Content/images/false.png")" alt="@Business.Essentials.Resources.No" title="@Business.Essentials.Resources.No"/>
+}

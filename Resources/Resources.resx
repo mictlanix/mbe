@@ -429,4 +429,10 @@
   <data name="SupplierAgreement" xml:space="preserve">
     <value>Acuerdo con Proveedor</value>
   </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>Bienvenido</value>
+  </data>
+  <data name="Prices" xml:space="preserve">
+    <value>Precios</value>
+  </data>
 </root>
