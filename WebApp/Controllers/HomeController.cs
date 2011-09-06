@@ -10,7 +10,7 @@ namespace Business.Essentials.WebApp.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Message = Resources.Title_Application;
+            ViewBag.Message = Resources.Welcome;
 
             return View();
         }

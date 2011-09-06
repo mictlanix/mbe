@@ -1,0 +1,63 @@
+﻿@using Business.Essentials.WebApp.Helpers;
+
+<div id="gb">
+    <div id="gbz">
+        <ol class="gbtc">
+            <li class="gbt">
+                <a class="gbzt @Html.GetMenuClass("Home", "Index")" href="@Url.Action("Index", "Home")">
+                    <span class="gbtb2"></span>
+                    <span class="gbts">@Business.Essentials.Resources.Title_Home</span>
+                </a>
+            </li>
+            <li class="gbt">
+                <a class="gbzt @Html.GetMenuClass("Products")" href="@Url.Action("Index", "Products")">
+                    <span class="gbtb2"></span>
+                    <span class="gbts">@Business.Essentials.Resources.Title_Product</span>
+                </a>
+            </li>
+            <li class="gbt">
+                <a class="gbzt @Html.GetMenuClass("Categories")" href="@Url.Action("Index", "Categories")">
+                    <span class="gbtb2"></span>
+                    <span class="gbts">@Business.Essentials.Resources.Title_Category</span>
+                </a>
+            </li>
+            <li class="gbt">
+                <a class="gbzt @Html.GetMenuClass("Customers")" href="@Url.Action("Index", "Customers")">
+                    <span class="gbtb2"></span>
+                    <span class="gbts">@Business.Essentials.Resources.Title_Customer</span>
+                </a>
+            </li>
+            <li class="gbt">
+                <a class="gbzt @Html.GetMenuClass("Suppliers")" href="@Url.Action("Index", "Suppliers")">
+                    <span class="gbtb2"></span>
+                    <span class="gbts">@Business.Essentials.Resources.Title_Supplier</span>
+                </a>
+            </li>
+            <li class="gbt">
+                <a class="gbzt @Html.GetMenuClass("Warehouses")" href="@Url.Action("Index", "Warehouses")">
+                    <span class="gbtb2"></span>
+                    <span class="gbts">@Business.Essentials.Resources.Title_Warehouse</span>
+                </a>
+            </li>
+            <li class="gbt">
+                <a class="gbzt @Html.GetMenuClass("PriceLists")" href="@Url.Action("Index", "PriceLists")">
+                    <span class="gbtb2"></span>
+                    <span class="gbts">@Business.Essentials.Resources.Title_PriceList</span>
+                </a>
+            </li>
+            <li class="gbt">
+                <a class="gbzt @Html.GetMenuClass("SupplierAgreements")" href="@Url.Action("Index", "SupplierAgreements")">
+                    <span class="gbtb2"></span>
+                    <span class="gbts">@Business.Essentials.Resources.Title_SupplierAgreement</span>
+                </a>
+            </li>
+            <li class="gbt">
+                <a class="gbzt @Html.GetMenuClass("Home", "About")" href="@Url.Action("About", "Home")">
+                    <span class="gbtb2"></span>
+                    <span class="gbts">@Business.Essentials.Resources.Title_About</span>
+                </a>
+            </li>
+        </ol>
+    </div>
+    <div id="gbx3"/>
+</div>
