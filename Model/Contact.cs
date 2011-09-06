@@ -11,6 +11,9 @@ namespace Business.Essentials.Model
     [ActiveRecord("contact")]
     public class Contact : ActiveRecordLinqBase<Contact>
     {
+        IList<Supplier> suppliers = new List<Supplier>();
+        IList<Customer> customers = new List<Customer>();
+
         [PrimaryKey(PrimaryKeyType.Identity, "contact_id")]
         public int Id { get; set; }
 
@@ -78,5 +81,18 @@ namespace Business.Essentials.Model
         [StringLength(500, MinimumLength = 0)]
         public string Comment { get; set; }
 
+        [HasAndBelongsToMany(typeof(Supplier), Table = "supplier_contact", ColumnKey = "contact", ColumnRef = "supplier")]
+        public IList<Supplier> Suppliers
+        {
+            get { return suppliers; }
+            set { suppliers = value; }
+        }
+
+        [HasAndBelongsToMany(typeof(Customer), Table = "customer_contact", ColumnKey = "contact", ColumnRef = "customer")]
+        public IList<Customer> Customers
+        {
+            get { return customers; }
+            set { customers = value; }
+        }
     }
 }

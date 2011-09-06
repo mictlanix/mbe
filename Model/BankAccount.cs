@@ -9,6 +9,8 @@ namespace Business.Essentials.Model
     [ActiveRecord("bank_account")]
     public class BankAccount : ActiveRecordLinqBase<BankAccount>
     {
+        IList<Supplier> suppliers = new List<Supplier>();
+
         [PrimaryKey(PrimaryKeyType.Identity, "bank_account_id")]
         public int Id { get; set; }
 
@@ -41,6 +43,13 @@ namespace Business.Essentials.Model
         [Display(Name = "Comment", ResourceType = typeof(Resources))]
         [StringLength(500, MinimumLength = 0)]
         public string Comment { get; set; }
+
+        [HasAndBelongsToMany(typeof(Supplier), Table = "supplier_bank_account", ColumnKey = "bank_account", ColumnRef = "supplier")]
+        public IList<Supplier> Suppliers
+        {
+            get { return suppliers; }
+            set { suppliers = value; }
+        }
 
     }
 }

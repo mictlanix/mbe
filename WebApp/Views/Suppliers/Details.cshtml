@@ -53,5 +53,24 @@
 
 <fieldset>
     <legend>@Business.Essentials.Resources.DisplayName_Address</legend>
-    @Html.Partial("~/Views/Address/Index.cshtml", Model.Addresses)
+    <p>
+        @Html.ActionLink(Business.Essentials.Resources.CreateNew, "CreateForSupplier", "Addresses", new { id = Model.Id }, null)
+    </p>
+    @Html.Partial("~/Views/Addresses/Index.cshtml", Model.Addresses)
+</fieldset>
+
+<fieldset>
+    <legend>@Business.Essentials.Resources.DisplayName_Contacts</legend>
+    <p>
+        @Html.ActionLink(Business.Essentials.Resources.CreateNew, "CreateForSupplier", "Contacts", new { id = Model.Id }, null)
+    </p>
+    @Html.Partial("~/Views/Contacts/Index.cshtml", Model.Contacts)
+</fieldset>
+
+<fieldset>
+    <legend>@Business.Essentials.Resources.DisplayName_BankAccount</legend>
+    <p>
+        @Html.ActionLink(Business.Essentials.Resources.CreateNew, "CreateForSupplier", "BankAccounts", new { id = Model.Id }, null)
+    </p>
+    @Html.Partial("~/Views/BankAccounts/Index.cshtml", Model.BanksAccounts)
 </fieldset>

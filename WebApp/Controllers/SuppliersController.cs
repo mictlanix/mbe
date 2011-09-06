@@ -109,8 +109,24 @@ namespace Business.Essentials.WebApp.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Supplier supplier = Supplier.Find(id);
-            supplier.Delete();
-            return RedirectToAction("Index");
+
+            try
+            {
+                supplier.Delete();
+                return RedirectToAction("Index");
+            }
+            catch (Exception)
+            {
+                return View("DeleteUnsuccessful");
+            }
+        }
+
+        //
+        // GET: /Supplier/Delete/5
+
+        public ActionResult DeleteUnsuccessful()
+        {
+            return View();
         }
 
         protected override void Dispose(bool disposing)
