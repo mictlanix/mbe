@@ -53,9 +53,9 @@
 <fieldset>
     <legend>@Business.Essentials.Resources.DisplayName_Address</legend>
     <p>
-        @Html.ActionLink(Business.Essentials.Resources.CreateNew, "CreateForCustomer", "Address", new { id = Model.Id }, null)
+        @Html.ActionLink(Business.Essentials.Resources.CreateNew, "CreateForCustomer", "Addresses", new { id = Model.Id }, null)
     </p>
-    @Html.Partial("~/Views/Address/Index.cshtml", Model.Addresses)
+    @Html.Partial("~/Views/Addresses/Index.cshtml", Model.Addresses)
 </fieldset>
 
 <fieldset>

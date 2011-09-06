@@ -9,7 +9,7 @@ using Business.Essentials.Model;
 
 namespace Business.Essentials.WebApp.Controllers
 {
-    public class PointSaleController : Controller
+    public class PointsOfSaleController : Controller
     {
         //
         // GET: /PointSale/

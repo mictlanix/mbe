@@ -205,7 +205,7 @@
     <value>Editar</value>
   </data>
   <data name="Email" xml:space="preserve">
-    <value>Correo Electrónico</value>
+    <value>Correo</value>
   </data>
   <data name="ExteriorNumber" xml:space="preserve">
     <value>Número Exterior</value>
@@ -307,37 +307,37 @@
     <value>Razón Social</value>
   </data>
   <data name="Title_Address" xml:space="preserve">
-    <value>Dirección</value>
+    <value>Direcciones</value>
   </data>
   <data name="Title_BankAccount" xml:space="preserve">
-    <value>Banco</value>
+    <value>Bancos</value>
   </data>
   <data name="Title_CashRegister" xml:space="preserve">
-    <value>Caja</value>
+    <value>Cajas</value>
   </data>
   <data name="Title_Category" xml:space="preserve">
-    <value>Línea de Producto</value>
+    <value>Líneas de Producto</value>
   </data>
   <data name="Title_Contact" xml:space="preserve">
-    <value>Contacto</value>
+    <value>Contactos</value>
   </data>
   <data name="Title_Customer" xml:space="preserve">
-    <value>Cliente</value>
+    <value>Clientes</value>
   </data>
   <data name="Title_PointSale" xml:space="preserve">
-    <value>Punto de Venta</value>
+    <value>Puntos de Venta</value>
   </data>
   <data name="Title_PriceList" xml:space="preserve">
-    <value>Lista de Precios</value>
+    <value>Listas de Precios</value>
   </data>
   <data name="Title_Product" xml:space="preserve">
-    <value>Producto</value>
+    <value>Productos</value>
   </data>
   <data name="Title_Supplier" xml:space="preserve">
-    <value>Proveedor</value>
+    <value>Proveedores</value>
   </data>
   <data name="Title_Warehouse" xml:space="preserve">
-    <value>Almacén</value>
+    <value>Almacenes</value>
   </data>
   <data name="UnitOfMeasurement" xml:space="preserve">
     <value>U. M.</value>
@@ -364,7 +364,7 @@
     <value>El campo {0} debe tener entre {2} y {1} caracteres de largo.</value>
   </data>
   <data name="Website" xml:space="preserve">
-    <value>Dirección Electrónica</value>
+    <value>Sitio Web</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Si</value>
@@ -385,7 +385,7 @@
     <value>Fecha de Inicio</value>
   </data>
   <data name="Title_SupplierAgreement" xml:space="preserve">
-    <value>Acuerdo con Proveedor</value>
+    <value>Contratos</value>
   </data>
   <data name="Validation_DateGreaterThan" xml:space="preserve">
     <value>{0} debe ser posterior a {1}.</value>

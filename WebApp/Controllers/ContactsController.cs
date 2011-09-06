@@ -28,6 +28,19 @@ namespace Business.Essentials.WebApp.Controllers
         public ViewResult Details(int id)
         {
             Contact contact = Contact.Find(id);
+            var customer = contact.Customers.FirstOrDefault();
+
+            if (customer == null)
+            {
+                var supplier = contact.Suppliers.First();
+                ViewBag.OwnerId = supplier.Id;
+                ViewBag.OwnerType = "Suppliers";
+            }
+            else
+            {
+                ViewBag.OwnerId = customer.Id;
+                ViewBag.OwnerType = "Customers";
+            }
             return View(contact);
         }
 
@@ -85,6 +98,20 @@ namespace Business.Essentials.WebApp.Controllers
         public ActionResult Edit(int id)
         {
             Contact contact = Contact.Find(id);
+            var customer = contact.Customers.FirstOrDefault();
+
+            if (customer == null)
+            {
+                var supplier = contact.Suppliers.First();
+                ViewBag.OwnerId = supplier.Id;
+                ViewBag.OwnerType = "Suppliers";
+            }
+            else
+            {
+                ViewBag.OwnerId = customer.Id;
+                ViewBag.OwnerType = "Customers";
+            }
+
             return View(contact);
         }
 
@@ -96,8 +123,15 @@ namespace Business.Essentials.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                int owner = int.Parse(Request.Params["OwnerId"]);
+                string type = Request.Params["OwnerType"];
+                Contact item = Contact.Find(contact.Id);
+
+                contact.Suppliers = item.Suppliers;
+                contact.Customers = item.Customers;
                 contact.Save();
-                return RedirectToAction("Index");
+
+                return RedirectToAction("Details", type, new { id = owner });
             }
             return View(contact);
         }
@@ -108,6 +142,20 @@ namespace Business.Essentials.WebApp.Controllers
         public ActionResult Delete(int id)
         {
             Contact contact = Contact.Find(id);
+            var customer = contact.Customers.FirstOrDefault();
+
+            if (customer == null)
+            {
+                var supplier = contact.Suppliers.First();
+                ViewBag.OwnerId = supplier.Id;
+                ViewBag.OwnerType = "Suppliers";
+            }
+            else
+            {
+                ViewBag.OwnerId = customer.Id;
+                ViewBag.OwnerType = "Customers";
+            }
+
             return View(contact);
         }
 
@@ -117,9 +165,12 @@ namespace Business.Essentials.WebApp.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            int owner = int.Parse(Request.Params["OwnerId"]);
+            string type = Request.Params["OwnerType"];
             Contact contact = Contact.Find(id);
+
             contact.Delete();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", type, new { id = owner });
         }
 
         protected override void Dispose(bool disposing)
