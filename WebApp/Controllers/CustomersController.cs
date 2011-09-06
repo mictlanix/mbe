@@ -28,6 +28,7 @@ namespace Business.Essentials.WebApp.Controllers
         public ViewResult Details(int id)
         {
             Customer customer = Customer.Find(id);
+            ViewBag.OwnerId = customer.Id;
             return View(customer);
         }
 

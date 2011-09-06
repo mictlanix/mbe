@@ -232,7 +232,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Catálogo de Direcciones.
+        ///   Looks up a localized string similar to Direcciones.
         /// </summary>
         public static string DisplayName_Address {
             get {
@@ -241,7 +241,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Catálogo de Bancos.
+        ///   Looks up a localized string similar to Bancos.
         /// </summary>
         public static string DisplayName_BankAccount {
             get {
@@ -259,7 +259,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Catálogo de Contactos.
+        ///   Looks up a localized string similar to Contactos.
         /// </summary>
         public static string DisplayName_Contacts {
             get {
@@ -295,7 +295,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Catálogo de Acuerdos con Proveedores.
+        ///   Looks up a localized string similar to Acuerdos con Proveedor.
         /// </summary>
         public static string DisplayName_SupplierAgreement {
             get {

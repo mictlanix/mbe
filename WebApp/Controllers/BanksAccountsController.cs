@@ -34,9 +34,11 @@ namespace Business.Essentials.WebApp.Controllers
         //
         // GET: /BanksAccounts/Create
 
-        public ActionResult Create()
+        public ActionResult CreateForSupplier(int id)
         {
-            return View();
+            ViewBag.OwnerId = id;
+            ViewBag.OwnerType = "Suppliers";
+            return View("Create");
         }
 
         //
@@ -47,8 +49,14 @@ namespace Business.Essentials.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                int owner = int.Parse(Request.Params["OwnerId"]);
+                string type = Request.Params["OwnerType"];
+
+                var supplier = Supplier.Find(owner);
+                bankAccount.Suppliers.Add(supplier);
+
                 bankAccount.Save();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", type, new { id = owner });
             }
 
             return View(bankAccount);
