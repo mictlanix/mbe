@@ -55,22 +55,10 @@
             @Html.LabelFor(x => new Product().Name)
         </th>
         <th>
-            @Html.LabelFor(x => new Product().Cost)
-        </th>
-        <th>
             @Html.LabelFor(x => new Product().UnitOfMeasurement)
         </th>
         <th>
-            @Html.LabelFor(x => new Product().Price1)
-        </th>
-        <th>
-            @Html.LabelFor(x => new Product().Price2)
-        </th>
-        <th>
-            @Html.LabelFor(x => new Product().Price3)
-        </th>
-        <th>
-            @Html.LabelFor(x => new Product().Price4)
+            @Business.Essentials.Resources.Prices
         </th>
         <th>
             @Html.LabelFor(x => new Product().Category)
@@ -95,22 +83,20 @@
          <td>
             @Html.DisplayFor(modelItem => item.Name)
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Cost)
-        </td>
          <td>
             @Html.DisplayFor(modelItem => item.UnitOfMeasurement)
         </td>
-        <td>
+        <td nowrap="nowrap">
+            @Html.LabelFor(x => item.Price1):
             @Html.DisplayFor(modelItem => item.Price1)
-        </td>
-         <td>
+            <br/>
+            @Html.LabelFor(x => item.Price2):
             @Html.DisplayFor(modelItem => item.Price2)
-        </td>
-        <td>
+            <br/>
+            @Html.LabelFor(x => item.Price3):
             @Html.DisplayFor(modelItem => item.Price3)
-        </td>
-         <td>
+            <br/>
+            @Html.LabelFor(x => item.Price4):
             @Html.DisplayFor(modelItem => item.Price4)
         </td>
         <td>
