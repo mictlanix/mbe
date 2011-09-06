@@ -583,6 +583,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Precios.
+        /// </summary>
+        public static string Prices {
+            get {
+                return ResourceManager.GetString("Prices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Referencia.
         /// </summary>
         public static string Reference {
