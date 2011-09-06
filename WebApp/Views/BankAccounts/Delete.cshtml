@@ -43,8 +43,10 @@
 
 </fieldset>
 @using (Html.BeginForm()) {
+    @Html.Hidden("OwnerId", (object)ViewBag.OwnerId)
+    @Html.Hidden("OwnerType", (object)ViewBag.OwnerType)
     <p>
-        <input type="submit" value= @Business.Essentials.Resources.Delete /> |
-        @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
+        <input type="submit" value= "@Business.Essentials.Resources.Delete" /> |
+        @Html.ActionLink(Business.Essentials.Resources.BackToList, "Details", (string)ViewBag.OwnerType, new { id = ViewBag.OwnerId }, null)
     </p>
 }

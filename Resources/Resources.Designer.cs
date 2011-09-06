@@ -331,7 +331,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Correo Electrónico.
+        ///   Looks up a localized string similar to Correo.
         /// </summary>
         public static string Email {
             get {
@@ -727,7 +727,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Dirección.
+        ///   Looks up a localized string similar to Direcciones.
         /// </summary>
         public static string Title_Address {
             get {
@@ -745,7 +745,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Banco.
+        ///   Looks up a localized string similar to Bancos.
         /// </summary>
         public static string Title_BankAccount {
             get {
@@ -754,7 +754,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Caja.
+        ///   Looks up a localized string similar to Cajas.
         /// </summary>
         public static string Title_CashRegister {
             get {
@@ -763,7 +763,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Línea de Producto.
+        ///   Looks up a localized string similar to Líneas de Producto.
         /// </summary>
         public static string Title_Category {
             get {
@@ -772,7 +772,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Contacto.
+        ///   Looks up a localized string similar to Contactos.
         /// </summary>
         public static string Title_Contact {
             get {
@@ -781,7 +781,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cliente.
+        ///   Looks up a localized string similar to Clientes.
         /// </summary>
         public static string Title_Customer {
             get {
@@ -799,7 +799,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Punto de Venta.
+        ///   Looks up a localized string similar to Puntos de Venta.
         /// </summary>
         public static string Title_PointSale {
             get {
@@ -808,7 +808,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Lista de Precios.
+        ///   Looks up a localized string similar to Listas de Precios.
         /// </summary>
         public static string Title_PriceList {
             get {
@@ -817,7 +817,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Producto.
+        ///   Looks up a localized string similar to Productos.
         /// </summary>
         public static string Title_Product {
             get {
@@ -826,7 +826,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Proveedor.
+        ///   Looks up a localized string similar to Proveedores.
         /// </summary>
         public static string Title_Supplier {
             get {
@@ -835,7 +835,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Acuerdo con Proveedor.
+        ///   Looks up a localized string similar to Contratos.
         /// </summary>
         public static string Title_SupplierAgreement {
             get {
@@ -844,7 +844,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Almacén.
+        ///   Looks up a localized string similar to Almacenes.
         /// </summary>
         public static string Title_Warehouse {
             get {
@@ -961,7 +961,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Dirección Electrónica.
+        ///   Looks up a localized string similar to Sitio Web.
         /// </summary>
         public static string Website {
             get {
