@@ -435,4 +435,16 @@
   <data name="Prices" xml:space="preserve">
     <value>Precios</value>
   </data>
+  <data name="Price5" xml:space="preserve">
+    <value>Precio x Kg</value>
+  </data>
+  <data name="Price6" xml:space="preserve">
+    <value>Precio x Mts</value>
+  </data>
+  <data name="Price7" xml:space="preserve">
+    <value>Precio x Pieza</value>
+  </data>
+  <data name="Message_DeleteConfirmation" xml:space="preserve">
+    <value>¿Está seguro de borrar esto?</value>
+  </data>
 </root>

@@ -9,6 +9,15 @@
 <fieldset>
     <legend>@Business.Essentials.Resources.Title_Product</legend>
 
+    <div style="float:right">
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Photo)
+        </div>
+        <div class="editor-input">
+            <img src="@Url.Content("~/Photos/" + Model.Photo)" alt="@Model" class="medium" />
+        </div>
+    </div>
+
     <div class="display-label">
         @Html.LabelFor(model => model.Code)
     </div>
@@ -119,6 +128,27 @@
     </div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Price4)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Price5)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Price5)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Price6)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Price6)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Price7)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Price7)
     </div>
 
     <div class="display-label">

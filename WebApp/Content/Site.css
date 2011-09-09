@@ -330,3 +330,9 @@ img.small {
     max-width:80px;
     max-height:80px;
 }
+
+img.medium
+{
+    max-width:200px;
+    max-height:200px;
+}

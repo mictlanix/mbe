@@ -1,6 +1,6 @@
-﻿@using Business.Essentials.Model
-@using Business.Essentials.WebApp.Helpers
-@using Business.Essentials.WebApp.Models
+﻿@using Business.Essentials.Model;
+@using Business.Essentials.WebApp.Helpers;
+@using Business.Essentials.WebApp.Models;
 @model Search<Product>
 
 @{
@@ -42,7 +42,7 @@
     </fieldset>
 }
 
-<table>
+<table style="width:100%">
     <tr>
         <th></th>
         <th>
@@ -86,18 +86,45 @@
          <td>
             @Html.DisplayFor(modelItem => item.UnitOfMeasurement)
         </td>
-        <td nowrap="nowrap">
-            @Html.LabelFor(x => item.Price1):
-            @Html.DisplayFor(modelItem => item.Price1)
-            <br/>
-            @Html.LabelFor(x => item.Price2):
-            @Html.DisplayFor(modelItem => item.Price2)
-            <br/>
-            @Html.LabelFor(x => item.Price3):
-            @Html.DisplayFor(modelItem => item.Price3)
-            <br/>
-            @Html.LabelFor(x => item.Price4):
-            @Html.DisplayFor(modelItem => item.Price4)
+        <td>
+            <table style="border:0;width:100%;text-align:right;">
+                <tr>
+                    <td title="@Business.Essentials.Resources.Price1" style="border:0;background:#F7F8E0 url('@Url.Content("~/Content/images/price1.png")') no-repeat left bottom;">
+                        @Html.DisplayFor(modelItem => item.Price1)
+                    </td>
+                    <td title="@Business.Essentials.Resources.Price2" style="border:0;background:#E6F8E0 url('@Url.Content("~/Content/images/price2.png")') no-repeat left bottom;">
+                        @Html.DisplayFor(modelItem => item.Price2)
+                    </td>
+                </tr>
+                <tr>
+                    <td title="@Business.Essentials.Resources.Price3" style="border:0;background:#E0F8F7 url('@Url.Content("~/Content/images/price3.png")') no-repeat left bottom;">
+                        @Html.DisplayFor(modelItem => item.Price3)
+                    </td>
+                    <td title="@Business.Essentials.Resources.Price4" style="border:0;background:#F8E0F7 url('@Url.Content("~/Content/images/price4.png")') no-repeat left bottom;">
+                        @Html.DisplayFor(modelItem => item.Price4)
+                    </td>
+                </tr>
+                <tr>
+                @if(item.Price5 > 0)
+                {
+                    <td title="@Business.Essentials.Resources.Price5" style="border:0;background:#F8E6E0 url('@Url.Content("~/Content/images/price5.png")') no-repeat left bottom;">
+                        @Html.DisplayFor(modelItem => item.Price5)
+                    </td>
+                }
+                else if (item.Price6 > 0)
+                {
+                    <td title="@Business.Essentials.Resources.Price6" style="border:0;background:#F8E6E0 url('@Url.Content("~/Content/images/price6.png")') no-repeat left bottom;">
+                        @Html.DisplayFor(modelItem => item.Price6)
+                    </td>
+                }
+                @if (item.Price7 > 0)
+                {
+                    <td title="@Business.Essentials.Resources.Price7" style="border:0;background:#F8E6E0 url('@Url.Content("~/Content/images/price7.png")') no-repeat left bottom;">
+                        @Html.DisplayFor(modelItem => item.Price7)
+                    </td>
+                }
+                </tr>
+            </table>
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Category.Name)
