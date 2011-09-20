@@ -8,30 +8,30 @@ using Business.Essentials.Model;
 
 namespace Business.Essentials.WebApp.Controllers
 {
-    public class PointsOfSaleController : Controller
+    public class CashDrawerController : Controller
     {
         //
-        // GET: /PointSale/
+        // GET: /cashDrawer/
 
         public ViewResult Index()
         {
-            var qry = from x in PointSale.Queryable
+            var qry = from x in CashDrawer.Queryable
                       select x;
 
             return View(qry.ToList());
         }
 
         //
-        // GET: /PointSale/Details/5
+        // GET: /cashDrawer/Details/5
 
         public ViewResult Details(int id)
         {
-            PointSale pointSale = PointSale.Find(id);
-            return View(pointSale);
+            CashDrawer cashDrawer = CashDrawer.Find(id);
+            return View(cashDrawer);
         }
 
         //
-        // GET: /PointSale/Create
+        // GET: /cashDrawer/Create
 
         public ActionResult Create()
         {
@@ -39,60 +39,60 @@ namespace Business.Essentials.WebApp.Controllers
         }
 
         //
-        // POST: /PointSale/Create
+        // POST: /cashDrawer/Create
 
         [HttpPost]
-        public ActionResult Create(PointSale pointSale)
+        public ActionResult Create(CashDrawer cashDrawer)
         {
             if (ModelState.IsValid)
             {
-                pointSale.Save();
+                cashDrawer.Save();
                 return RedirectToAction("Index");
             }
 
-            return View(pointSale);
+            return View(cashDrawer);
         }
 
         //
-        // GET: /Warehouses/Edit/5
+        // GET: /cashDrawer/Edit/5
 
         public ActionResult Edit(int id)
         {
-            PointSale pointSale = PointSale.Find(id);
-            return View(pointSale);
+            CashDrawer cashDrawer = CashDrawer.Find(id);
+            return View(cashDrawer);
         }
 
         //
-        // POST: /PointSale/Edit/5
+        // POST: /cashDrawer/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(PointSale pointSale)
+        public ActionResult Edit(CashDrawer cashDrawer)
         {
             if (ModelState.IsValid)
             {
-                pointSale.Save();
+                cashDrawer.Save();
                 return RedirectToAction("Index");
             }
-            return View(pointSale);
+            return View(cashDrawer);
         }
 
         //
-        // GET: /PointSale/Delete/5
+        // GET: /cashDrawer/Delete/5
 
         public ActionResult Delete(int id)
         {
-            PointSale pointSale = PointSale.Find(id);
-            return View(pointSale);
+            CashDrawer cashDrawer = CashDrawer.Find(id);
+            return View(cashDrawer);
         }
 
         //
-        // POST: /Warehouses/Delete/5
+        // POST: /cashDrawer/Delete/5
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            PointSale pointSale = PointSale.Find(id);
-            pointSale.Delete();
+            CashDrawer cashDrawer = CashDrawer.Find(id);
+            cashDrawer.Delete();
             return RedirectToAction("Index");
         }
 

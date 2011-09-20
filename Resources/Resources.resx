@@ -403,7 +403,7 @@
     <value>Acerca de</value>
   </data>
   <data name="Validation_Date" xml:space="preserve">
-    <value>Fecha invalida</value>
+    <value>Fecha Invalida</value>
   </data>
   <data name="Validation_Email" xml:space="preserve">
     <value>Lo introducido no corresponde a un {0}.</value>
@@ -446,5 +446,86 @@
   </data>
   <data name="Message_DeleteConfirmation" xml:space="preserve">
     <value>¿Está seguro de borrar esto?</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Activo</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Agregar</value>
+  </data>
+  <data name="Cancelled" xml:space="preserve">
+    <value>Cancelado</value>
+  </data>
+  <data name="Cashier" xml:space="preserve">
+    <value>Cajero</value>
+  </data>
+  <data name="Credit" xml:space="preserve">
+    <value>Crédito</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Fecha y Hora</value>
+  </data>
+  <data name="Discount" xml:space="preserve">
+    <value>Descuento</value>
+  </data>
+  <data name="DueDate" xml:space="preserve">
+    <value>Fecha de Vencimiento</value>
+  </data>
+  <data name="Employee" xml:space="preserve">
+    <value>Empleado</value>
+  </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="Gender" xml:space="preserve">
+    <value>Género</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Apellido</value>
+  </data>
+  <data name="PersonalId" xml:space="preserve">
+    <value>CURP</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Precio</value>
+  </data>
+  <data name="Product" xml:space="preserve">
+    <value>Producto</value>
+  </data>
+  <data name="ProductCode" xml:space="preserve">
+    <value>Código del Producto</value>
+  </data>
+  <data name="ProductName" xml:space="preserve">
+    <value>Nombre del Producto</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Cantidad</value>
+  </data>
+  <data name="SalesOrder" xml:space="preserve">
+    <value>Orden de Venta</value>
+  </data>
+  <data name="SalesPerson" xml:space="preserve">
+    <value>Vendedor</value>
+  </data>
+  <data name="StartJobDate" xml:space="preserve">
+    <value>Fecha de Entrada</value>
+  </data>
+  <data name="TaxRate" xml:space="preserve">
+    <value>Impuesto</value>
+  </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Importe</value>
+  </data>
+  <data name="CashDrawer" xml:space="preserve">
+    <value>Caja</value>
+  </data>
+  <data name="CashSession" xml:space="preserve">
+    <value>Sesión de Caja</value>
+  </data>
+  <data name="Denomination" xml:space="preserve">
+    <value>Denominación</value>
+  </data>
+  <data name="Method" xml:space="preserve">
+    <value>Método de Pago</value>
   </data>
 </root>

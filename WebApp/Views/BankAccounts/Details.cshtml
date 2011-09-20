@@ -41,11 +41,10 @@
         </div>
 
         @Html.Hidden("OwnerId", (object)ViewBag.OwnerId)
-        @Html.Hidden("OwnerType", (object)ViewBag.OwnerType)
 
 </fieldset>
 <p>
     @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id = Model.Id }) |
-    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Details", (string)ViewBag.OwnerType, new { id = ViewBag.OwnerId }, null)
+    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Details", "Suppliers", new { id = ViewBag.OwnerId }, null)
 
 </p>

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -31,7 +30,6 @@ namespace Business.Essentials.WebApp.Controllers
             var supplier = bankAccount.Suppliers.First();
 
             ViewBag.OwnerId = supplier.Id;
-            ViewBag.OwnerType = "Suppliers";
             return View(bankAccount);
         }
 
@@ -41,7 +39,6 @@ namespace Business.Essentials.WebApp.Controllers
         public ActionResult CreateForSupplier(int id)
         {
             ViewBag.OwnerId = id;
-            ViewBag.OwnerType = "Suppliers";
             return View("Create");
         }
 
@@ -54,13 +51,12 @@ namespace Business.Essentials.WebApp.Controllers
             if (ModelState.IsValid)
             {
                 int owner = int.Parse(Request.Params["OwnerId"]);
-                string type = Request.Params["OwnerType"];
 
                 var supplier = Supplier.Find(owner);
                 bankAccount.Suppliers.Add(supplier);
 
                 bankAccount.Save();
-                return RedirectToAction("Details", type, new { id = owner });
+                return RedirectToAction("Details", "Suppliers", new { id = owner });
             }
 
             return View(bankAccount);
@@ -75,7 +71,6 @@ namespace Business.Essentials.WebApp.Controllers
             var supplier = bankAccount.Suppliers.First();
 
             ViewBag.OwnerId = supplier.Id;
-            ViewBag.OwnerType = "Suppliers";
             return View(bankAccount);
         }
 
@@ -88,13 +83,12 @@ namespace Business.Essentials.WebApp.Controllers
             if (ModelState.IsValid)
             {
                 int owner = int.Parse(Request.Params["OwnerId"]);
-                string type = Request.Params["OwnerType"];
                 BankAccount item = BankAccount.Find(bankAccount.Id);
 
                 bankAccount.Suppliers = item.Suppliers;
                 bankAccount.Save();
 
-                return RedirectToAction("Details", type, new { id = owner });
+                return RedirectToAction("Details", "Suppliers", new { id = owner });
             }
             return View(bankAccount);
         }
@@ -108,7 +102,6 @@ namespace Business.Essentials.WebApp.Controllers
             var supplier = bankAccount.Suppliers.First();
 
             ViewBag.OwnerId = supplier.Id;
-            ViewBag.OwnerType = "Suppliers";
             return View(bankAccount);
         }
 
@@ -119,11 +112,10 @@ namespace Business.Essentials.WebApp.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             int owner = int.Parse(Request.Params["OwnerId"]);
-            string type = Request.Params["OwnerType"];
             BankAccount bankAccount = BankAccount.Find(id);
 
             bankAccount.Delete();
-            return RedirectToAction("Details", type, new { id = owner });
+            return RedirectToAction("Details", "Suppliers", new { id = owner });
         }
 
         protected override void Dispose(bool disposing)
