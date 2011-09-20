@@ -11,7 +11,9 @@ namespace Business.Essentials.Model
     {
         IList<Address> addresses = new List<Address>();
         IList<Contact> contacts = new List<Contact>();
-        IList<BankAccount> banksAccounts = new List<BankAccount>();
+        IList<BankAccount> accounts = new List<BankAccount>();
+        IList<SupplierAgreement> agrements = new List<SupplierAgreement>();
+
 
         [PrimaryKey(PrimaryKeyType.Identity, "supplier_id")]
         public int Id { get; set; }
@@ -60,8 +62,15 @@ namespace Business.Essentials.Model
         [HasAndBelongsToMany(typeof(BankAccount), Table = "supplier_bank_account", ColumnKey = "supplier", ColumnRef = "bank_account", Inverse = true)]
         public IList<BankAccount> BanksAccounts
         {
-            get { return banksAccounts; }
-            set { banksAccounts = value; }
+            get { return accounts; }
+            set { accounts = value; }
+        }
+
+        [HasMany( typeof(SupplierAgreement), Table = "supplier_agreement", ColumnKey = "supplier")]
+        public IList<SupplierAgreement> Agreements
+        {
+            get { return agrements; }
+            set { agrements = value; }
         }
     }
 }

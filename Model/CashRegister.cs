@@ -6,10 +6,10 @@ using Castle.ActiveRecord.Framework;
 
 namespace Business.Essentials.Model
 {
-    [ActiveRecord("cash_register")]
-    public class CashRegister : ActiveRecordLinqBase<CashRegister>
+    [ActiveRecord("cash_drawer")]
+    public class CashDrawer : ActiveRecordLinqBase<CashDrawer>
     {
-        [PrimaryKey(PrimaryKeyType.Identity, "cash_register_id")]
+        [PrimaryKey(PrimaryKeyType.Identity, "cash_drawer_id")]
         public int Id { get; set; }
 
         [Property]

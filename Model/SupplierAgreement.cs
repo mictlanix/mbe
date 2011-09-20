@@ -10,6 +10,7 @@ namespace Business.Essentials.Model
     [ActiveRecord("supplier_agreement")]
     public class SupplierAgreement : ActiveRecordLinqBase<SupplierAgreement>
     {
+
         [PrimaryKey(PrimaryKeyType.Identity, "supplier_agreement_id")]
         public int Id { get; set; }
 
@@ -34,9 +35,8 @@ namespace Business.Essentials.Model
         [Display(Name = "Supplier", ResourceType = typeof(Resources))]
         public int SupplierId { get; set; }
 
-        [BelongsTo("supplier")]
+        [BelongsTo("supplier", Lazy = FetchWhen.OnInvoke)]
         [Display(Name = "Supplier", ResourceType = typeof(Resources))]
         public virtual Supplier Supplier { get; set; }
-
     }
 }

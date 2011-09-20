@@ -52,7 +52,6 @@
         </div>
 
         @Html.Hidden("OwnerId", (object)ViewBag.OwnerId)
-        @Html.Hidden("OwnerType", (object)ViewBag.OwnerType)
 
         <p>
             <input type="submit" value= "@Business.Essentials.Resources.Save" />
@@ -61,5 +60,5 @@
 }
 
 <div>
-    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Details", (string)ViewBag.OwnerType, new { id = ViewBag.OwnerId }, null)
+    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Details", "Suppliers", new { id = ViewBag.OwnerId }, null)
 </div>

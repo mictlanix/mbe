@@ -114,6 +114,10 @@ namespace Business.Essentials.Model
         [DataType(DataType.Currency)]
         public decimal Price7 { get; set; }
 
+        [Property("tax_rate")]
+        [Display(Name = "TaxRate", ResourceType = typeof(Resources))]
+        public decimal TaxRate { get; set; }
+
         [UIHint("Image")]
         [Display(Name = "Photo", ResourceType = typeof(Resources))]
         public string Photo { get { return string.Format("{0}.png", Code.Trim()); } }
