@@ -7,4 +7,19 @@ Dependencies
  3. Download libraries using nuget
     $ nuget install Model/packages.config -o Packages
     $ nuget install WebApp/packages.config -o Packages
+ 4. Make a MVC 3 directory inside Packages
+    $ mkdir Packages/AspNetMVC.3.0.0.0
+ 5. Copy MVC 3 dll files
+    $ cp <asp.net mvc 3 path>/System.Web.Mvc.dll Packages/AspNetMVC.3.0.0.0/
+    $ cp <asp.net mvc 3 path>/System.Web.Helpers.dll Packages/AspNetMVC.3.0.0.0/
+    $ cp <asp.net mvc 3 path>/System.Web.Razor.dll Packages/AspNetMVC.3.0.0.0/
+    $ cp <asp.net mvc 3 path>/System.Web.WebPages.dll Packages/AspNetMVC.3.0.0.0/
+    $ cp <asp.net mvc 3 path>/System.Web.WebPages.Razor.dll Packages/AspNetMVC.3.0.0.0/
+    $ cp <asp.net mvc 3 path>/System.Web.WebPages.Deployment.dll Packages/AspNetMVC.3.0.0.0/
 
+Mono's StringLengthAttribute Fix
+
+ 1. Download the patched DataAnnotations assembly
+    Download it from http://mictlanix.org/files/DataAnnotations-Patched.zip
+ 2. Replace in GAC (.Net 4 Profile)
+    $ cp System.ComponentModel.DataAnnotations.dll <mono path>/lib/mono/gac/System.ComponentModel.DataAnnotations/4.0.0.0__31bf3856ad364e35/System.ComponentModel.DataAnnotations.dll
