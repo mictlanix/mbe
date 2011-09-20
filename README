@@ -22,4 +22,4 @@ Mono's StringLengthAttribute Fix
  1. Download the patched DataAnnotations assembly
     Download it from http://mictlanix.org/files/DataAnnotations-Patched.zip
  2. Replace in GAC (.Net 4 Profile)
-    $ cp System.ComponentModel.DataAnnotations.dll <mono path>/lib/mono/gac/System.ComponentModel.DataAnnotations/4.0.0.0__31bf3856ad364e35/System.ComponentModel.DataAnnotations.dll
+    $ cp System.ComponentModel.DataAnnotations.dll <mono path>/lib/mono/gac/System.ComponentModel.DataAnnotations/4.0.0.0__31bf3856ad364e35/
