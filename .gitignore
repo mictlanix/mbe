@@ -3,3 +3,7 @@ Photos
 */bin
 */obj
 *.suo
+*.userprefs
+*.pidb
+*.user
+*.resources
