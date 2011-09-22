@@ -9,8 +9,16 @@ namespace Business.Essentials.Model
     [ActiveRecord("sales_order")]
     public class SalesOrder : ActiveRecordLinqBase<SalesOrder>
     {
+        IList<SalesOrderDetail> details = new List<SalesOrderDetail>();
+
         [PrimaryKey(PrimaryKeyType.Identity, "sales_order_id")]
+        [Display(Name = "SalesOrderId", ResourceType = typeof(Resources))]
         public int Id { get; set; }
+
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+        [Display(Name = "Customer", ResourceType = typeof(Resources))]
+        [UIHint("CustomerSelector")]
+        public int CustomerId { get; set; }
 
         [BelongsTo("customer")]
         [Display(Name = "Customer", ResourceType = typeof(Resources))]
@@ -19,24 +27,24 @@ namespace Business.Essentials.Model
         [Property]
         [DataType(DataType.DateTime)]
         [Display(Name = "Date", ResourceType = typeof(Resources))]
-        public DateTime? Date { get; set; }
+        public DateTime Date { get; set; }
 
         [BelongsTo("salesperson")]
         [Display(Name = "SalesPerson", ResourceType = typeof(Resources))]
         public virtual Employee SalesPerson { get; set; }
 
         [BelongsTo("point_sale")]
-        [Display(Name = "Employee", ResourceType = typeof(Resources))]
-        public virtual Employee Employee { get; set; }
+        [Display(Name = "PointOfSale", ResourceType = typeof(Resources))]
+        public virtual PointSale PointOfSale { get; set; }
 
         [Property("credit")]
         [Display(Name = "Credit", ResourceType = typeof(Resources))]
         public bool IsCredit { get; set; }
 
         [Property("due_date")]
-        [DataType(DataType.DateTime)]
+        [DataType(DataType.Date)]
         [Display(Name = "DueDate", ResourceType = typeof(Resources))]
-        public DateTime? DueDate { get; set; }
+        public DateTime DueDate { get; set; }
 
         [Property("active")]
         [Display(Name = "Active", ResourceType = typeof(Resources))]
@@ -45,5 +53,12 @@ namespace Business.Essentials.Model
         [Property("cancelled")]
         [Display(Name = "Cancelled", ResourceType = typeof(Resources))]
         public bool IsCancelled { get; set; }
+
+        [HasMany(typeof(SalesOrderDetail), Table = "sales_order_detail", ColumnKey = "sales_order")]
+        public IList<SalesOrderDetail> Details
+        {
+            get { return details; }
+            set { details = value; }
+        }
     }
 }

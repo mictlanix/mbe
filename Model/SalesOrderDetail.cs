@@ -12,7 +12,7 @@ namespace Business.Essentials.Model
         [PrimaryKey(PrimaryKeyType.Identity, "sales_order_detail_id")]
         public int Id { get; set; }
 
-        [BelongsTo("sales_order")]
+        [BelongsTo("sales_order", Lazy = FetchWhen.OnInvoke)]
         [Display(Name = "SalesOrder", ResourceType = typeof(Resources))]
         public virtual SalesOrder SalesOrder { get; set; }
 
@@ -49,5 +49,16 @@ namespace Business.Essentials.Model
         [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string ProductName { get; set; }
 
+        [DataType(DataType.Currency)]
+        public decimal Taxes
+        {
+            get { return Quantity * Price / (1 + TaxRate); }
+        }
+
+        [DataType(DataType.Currency)]
+        public decimal Total
+        {
+            get { return Quantity * Price; }
+        }
     }
 }

@@ -196,6 +196,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cerrar.
+        /// </summary>
+        public static string Close {
+            get {
+                return ResourceManager.GetString("Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Código.
         /// </summary>
         public static string Code {
@@ -376,6 +385,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Catálogo de Empleados.
+        /// </summary>
+        public static string DisplayName_Employee {
+            get {
+                return ResourceManager.GetString("DisplayName_Employee", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Catálogo de Puntos de Venta.
         /// </summary>
         public static string DisplayName_PointSale {
@@ -390,6 +408,24 @@ namespace Business.Essentials {
         public static string DisplayName_Products {
             get {
                 return ResourceManager.GetString("DisplayName_Products", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ventas.
+        /// </summary>
+        public static string DisplayName_SalesOrder {
+            get {
+                return ResourceManager.GetString("DisplayName_SalesOrder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Detalles de la Venta.
+        /// </summary>
+        public static string DisplayName_SalesOrderDetails {
+            get {
+                return ResourceManager.GetString("DisplayName_SalesOrderDetails", resourceCulture);
             }
         }
         
@@ -480,6 +516,15 @@ namespace Business.Essentials {
         public static string Fax {
             get {
                 return ResourceManager.GetString("Fax", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Femenino.
+        /// </summary>
+        public static string Female {
+            get {
+                return ResourceManager.GetString("Female", resourceCulture);
             }
         }
         
@@ -579,6 +624,15 @@ namespace Business.Essentials {
         public static string LowProfitMargin {
             get {
                 return ResourceManager.GetString("LowProfitMargin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Masculino.
+        /// </summary>
+        public static string Male {
+            get {
+                return ResourceManager.GetString("Male", resourceCulture);
             }
         }
         
@@ -714,6 +768,15 @@ namespace Business.Essentials {
         public static string Photo {
             get {
                 return ResourceManager.GetString("Photo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Punto de Venta.
+        /// </summary>
+        public static string PointOfSale {
+            get {
+                return ResourceManager.GetString("PointOfSale", resourceCulture);
             }
         }
         
@@ -862,6 +925,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Folio.
+        /// </summary>
+        public static string SalesOrderId {
+            get {
+                return ResourceManager.GetString("SalesOrderId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Vendedor.
         /// </summary>
         public static string SalesPerson {
@@ -957,6 +1029,15 @@ namespace Business.Essentials {
         public static string Street {
             get {
                 return ResourceManager.GetString("Street", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Éxito.
+        /// </summary>
+        public static string Succes {
+            get {
+                return ResourceManager.GetString("Succes", resourceCulture);
             }
         }
         
@@ -1078,6 +1159,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Empleados.
+        /// </summary>
+        public static string Title_Employee {
+            get {
+                return ResourceManager.GetString("Title_Employee", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Inicio.
         /// </summary>
         public static string Title_Home {
@@ -1110,6 +1200,15 @@ namespace Business.Essentials {
         public static string Title_Product {
             get {
                 return ResourceManager.GetString("Title_Product", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Orden de Venta.
+        /// </summary>
+        public static string Title_SalesOrder {
+            get {
+                return ResourceManager.GetString("Title_SalesOrder", resourceCulture);
             }
         }
         

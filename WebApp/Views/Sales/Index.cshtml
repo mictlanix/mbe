@@ -1,76 +1,72 @@
-﻿
+﻿@using Business.Essentials.Model
+@model IEnumerable<Business.Essentials.Model.SalesOrder>
+
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = Business.Essentials.Resources.Title_SalesOrder;
 }
 
+<h2>@Business.Essentials.Resources.DisplayName_SalesOrder</h2>
 
-<script src="@Url.Content("~/Scripts/jquery.tokeninput.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/jquery.tokeninput.formatters.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/jquery.jeditable.mini.js")" type="text/javascript"></script>
-<link href="@Url.Content("~/Content/themes/base/token-input.css")" rel="stylesheet" type="text/css" />
+<table>
+    <tr>
+        <th>
+            @Html.LabelFor(x => new SalesOrder().Id)
+        </th>
 
-<h2>Simple Server-Backed Search</h2> 
-<div> 
-    <fieldset>
-    <legend>@Business.Essentials.Resources.Search</legend>
-        <input type="text" id="demo-input" name="blah" />
-        <script type="text/javascript">
-            $(function () {
-                $("#demo-input").tokenInput("@Url.Action("GetSuggestions", "Products")",
-                    {
-                        resultsFormatter: function(item){return ProductFormatter(item);},
-                        queryParam: "pattern",minChars: 3,tokenLimit: 1
-                    });
-            });
-        </script>
-        <input id="add" type="submit" value="@Business.Essentials.Resources.Add" />
-    </fieldset>
-    @*<div id="edit-in-place">
-        <h3>Quantity:</h3>
-        <div id="qty_id" class="edit" style="display:inline-block;min-width:60px;text-align:right;background:yellow;">1</div>
-    </div>*@
-    <div id="list-items">
-        <ul id="items">
-        </ul>
-    </div>
-    <div id="details-quantity">
-    </div>
-</div>
-@*<style type="text/css">
-	#items .ui-selecting { background: #FECA40; }
-	#items .ui-selected { background: #F39814; color: white; }
-	#items { list-style-type: none; margin: 0; padding: 0; width: 80%; }
-	#items li { margin: 3px; padding: 0.4em; }
-</style>*@
-<script type="text/javascript">
-    function editQuantity(id, value) {
-        var result = "Error";
+        <th>
+            @Html.LabelFor(x => new SalesOrder().Date)
+        </th>
 
-        $.ajaxSetup({ async: false });
-        $.post("/Sales/EditDetailQuantity", { "id": id, "quantity": value }, function (data) {
-            result = data.quantity;
-            $("#item" + id + " div.edit").css({ "background": "green" });
-        }, "json");
-        $.ajaxSetup({ async: true });
+        <th>
+            @Html.LabelFor(x => new SalesOrder().Customer)
+        </th>
 
-        return result;
-    }
+        <th>
+            @Html.LabelFor(x => new SalesOrder().DueDate)
+        </th>
 
-    $(function () {
-        $("#add").click(function () {
-            var item = $("#demo-input").tokenInput("get")[0];
+         <th>
+            @Html.LabelFor(x => new SalesOrder().SalesPerson)
+        </th>
 
-            $.post("/Sales/AddDetail", { "order": "0", "product": "" + item.id }, function (detail) {
-                $("#items").append(SalesOrderDetailFormatter(detail));
-                $("#item" + detail.id + " div.edit").editable(function (value, settings) {
-                    return editQuantity(detail.id, value);
-                }, { style: "inherit" });
-                $("#demo-input").tokenInput("clear");
-            }, "json");
-        });
+        <th>
+            @Html.LabelFor(x => new SalesOrder().PointOfSale)
+        </th>
+        
+        <th></th>
+    </tr>
 
-        $('.edit').editable(function (value, settings) {
-            return editQuantity(432, value);
-        }, { style: "inherit" });
-    });
-</script>
+@foreach (var item in Model) {
+    <tr>
+       
+        <td>
+            @Html.DisplayFor(modelItem => item.Id)
+        </td>
+       
+        <td>
+            @Html.DisplayFor(modelItem => item.Date)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.Customer.Name)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.DueDate)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.SalesPerson.FirstName)
+            @Html.DisplayFor(modelItem => item.SalesPerson.LastName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PointOfSale.Name)
+        </td>
+       
+        <td>
+            @Html.ActionLink(Business.Essentials.Resources.Details, "Details", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>

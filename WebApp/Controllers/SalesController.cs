@@ -14,34 +14,86 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ViewResult Index()
         {
+            var qry = from x in SalesOrder.Queryable
+                      select x;
+
+            return View(qry.ToList());
+        }
+
+        // GET: /Sales/Details/
+
+        public ViewResult Details(int id)
+        {
+            SalesOrder order = SalesOrder.Find(id);
+
+            return View(order);
+        }
+
+        //
+        // GET: /Sales/New
+
+        public ViewResult New()
+        {
             return View();
         }
 
-        public ActionResult Create()
+        [HttpPost]
+        public ActionResult New(SalesOrder item)
         {
-            return View("Create");
+            var customer = Customer.Find(item.CustomerId);
+            var salesperson = Employee.Find(1); //FIXME use user logged on
+            var point_sale = PointSale.Find(1); //FIXME use settings
+
+            item.Customer = customer;
+            item.SalesPerson = salesperson;
+            item.PointOfSale = point_sale;
+            item.Date = DateTime.Now;
+            item.DueDate = item.IsCredit ? item.Date.AddDays(customer.CreditDays) : item.Date;
+
+            item.Create();
+
+            if(Request.IsAjaxRequest())
+            {
+                return PartialView("_SalesInfo", item);
+            }
+
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
         public JsonResult AddDetail(int order, int product)
         {
-            JsonResult result = new JsonResult();
-            var item = Product.Find(product);
-            var detail = new
+            JsonResult result;
+            var p = Product.Find(product);
+
+            var detail = new SalesOrderDetail
             {
-                id = (int)DateTime.Now.Ticks,
-                product = item.Id,
-                name = item.Name,
-                code = item.Code,
-                sku = item.SKU,
-                url = string.Format("/Photos/{0}", item.Photo),
-                quantity = 1,
-                price = item.Price1,
-                discount = 0,
-                taxRate = item.TaxRate,
+                SalesOrder = SalesOrder.Find(order),
+                Product = p,
+                ProductCode = p.Code,
+                ProductName = p.Name,
+                Price = p.Price1,
+                Discount = 0,
+                TaxRate = p.TaxRate,
+                Quantity = 1,
             };
 
-            result = Json(detail);
+            detail.Create();
+
+            result = Json(new
+            {
+                id = detail.Id,
+                product = detail.Product.Id,
+                name = detail.Product.Name,
+                code = detail.Product.Code,
+                sku = detail.Product.SKU,
+                url = string.Format("/Photos/{0}", detail.Product.Photo),
+                quantity = detail.Quantity,
+                price = detail.Price,
+                discount = detail.Discount,
+                taxRate = detail.TaxRate
+            });
+
             result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
 
             return result;
@@ -50,17 +102,17 @@ namespace Business.Essentials.WebApp.Controllers
         [HttpPost]
         public JsonResult EditDetailQuantity(int id, decimal quantity)
         {
-            JsonResult result = new JsonResult();
-            var detail = new
+            SalesOrderDetail detail = SalesOrderDetail.Find(id);
+
+            if (!(quantity > 0))
             {
-                id = id,
-                quantity = quantity
-            };
+                return Json(new { id = id, quantity = detail.Quantity }, JsonRequestBehavior.AllowGet);
+            }
 
-            result = Json(detail);
-            result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            detail.Quantity = quantity;
+            detail.Save();
 
-            return result;
+            return Json(new { id = id, quantity = detail.Quantity }, JsonRequestBehavior.AllowGet);
         }
     }
 }

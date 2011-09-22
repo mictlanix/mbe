@@ -1,0 +1,91 @@
+﻿@using Business.Essentials.Model
+@model SalesOrder
+
+@{
+    ViewBag.Title = "New Sale";
+}
+
+<script src="@Url.Content("~/Scripts/jquery.tokeninput.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.tokeninput.formatters.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.jeditable.mini.js")" type="text/javascript"></script>
+<link href="@Url.Content("~/Content/themes/base/token-input.css")" rel="stylesheet" type="text/css" />
+
+<h2>New Sale</h2> 
+
+<div id="sales-order">
+    <fieldset>
+        <legend>Sales Information</legend>
+            @using (Ajax.BeginForm(new AjaxOptions { HttpMethod = "POST", Url = "/Sales/New", UpdateTargetId = "sales-order" }))
+            {
+                @Html.ValidationSummary(true)
+                
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.Customer)
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(model => model.CustomerId)
+                    @Html.ValidationMessageFor(model => model.CustomerId)
+                </div>
+                
+     	        <div class="editor-label">
+                    @Html.LabelFor(model => model.IsCredit)
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(model => model.IsCredit)
+                    @Html.ValidationMessageFor(model => model.IsCredit)
+                </div>
+
+                <p>
+                    <input type="submit" value="@Business.Essentials.Resources.Save" />
+                </p>
+            }
+    </fieldset>
+</div>
+    
+<fieldset>
+    <input type="text" id="product-search" name="product-search" />
+    <input id="add" type="submit" value="@Business.Essentials.Resources.Add" />
+    <div id="list-items">
+        <ul id="items">
+        </ul>
+    </div>
+</fieldset>
+
+<script type="text/javascript">
+    function editQuantity(id, value) {
+        var result = "Error";
+
+        $.ajaxSetup({ async: false });
+        $.post("/Sales/EditDetailQuantity", { "id": id, "quantity": value }, function (data) {
+            result = data.quantity;
+            $("#item" + id + " div.edit").css({ "background": "green" });
+        }, "json");
+        $.ajaxSetup({ async: true });
+
+        return result;
+    }
+
+    $(function () {
+        $("#product-search").tokenInput("@Url.Action("GetSuggestions", "Products")", {
+            resultsFormatter: function(item){return ProductFormatter(item);},
+            queryParam: "pattern",minChars: 3,tokenLimit: 1
+        });
+
+        $("#add").click(function () {
+            var item = $("#product-search").tokenInput("get")[0];
+
+            $.post("/Sales/AddDetail", { "order": $("#sales-order-id").html().trim(), "product": "" + item.id }, function (detail) {
+                $("#items").append(SalesOrderDetailFormatter(detail));
+                $("#item" + detail.id + " div.edit").editable(function (value, settings) {
+                    return editQuantity(detail.id, value);
+                }, { style: "inherit" });
+                $("#product-search").tokenInput("clear");
+            }, "json");
+        });
+    });
+</script>
+
+<div id="sales-totals">
+<h1>Hola</h1>
+<p>Ejemplo</p>
+</div>

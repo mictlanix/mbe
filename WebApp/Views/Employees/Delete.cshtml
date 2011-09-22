@@ -1,0 +1,64 @@
+﻿@using Business.Essentials.WebApp.Helpers;
+@model Business.Essentials.Model.Employee
+
+@{
+    ViewBag.Title = Business.Essentials.Resources.Delete;
+}
+
+<h2>@Business.Essentials.Resources.Delete</h2>
+
+<h3>@Business.Essentials.Resources.Message_DeleteConfirmation</h3>
+<fieldset>
+    <legend>@Business.Essentials.Resources.Title_Employee</legend>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.FirstName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FirstName)
+    </div>
+    <div class="display-label">
+        @Html.LabelFor(model => model.LastName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.LastName)
+    </div>
+    <div class="display-label">
+        @Html.LabelFor(model => model.Birthday)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Birthday)
+    </div>
+    <div class="display-label">
+        @Html.LabelFor(model => model.TaxpayerId)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.TaxpayerId)
+    </div>
+    <div class="display-label">
+        @Html.LabelFor(model => model.Gender)
+    </div>
+    <div class="display-field">
+        @Model.Gender.GetDisplayName()
+    </div>
+    <div class="display-label">
+        @Html.LabelFor(model => model.PersonalId)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PersonalId)
+    </div>
+    <div class="display-label">
+        @Html.LabelFor(model => model.StartJobDate)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.StartJobDate)
+    </div>
+    
+
+</fieldset>
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" value= "@Business.Essentials.Resources.Delete" /> |
+        @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
+    </p>
+}
