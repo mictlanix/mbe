@@ -51,6 +51,11 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ActionResult Create()
         {
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_Create");
+            }
+
             return View();
         }
 
@@ -59,14 +64,24 @@ namespace Business.Essentials.WebApp.Controllers
 
         [HttpPost]
         public ActionResult Create(Supplier supplier)
-        {   
-            if (ModelState.IsValid)
+        {
+            if (!ModelState.IsValid)
             {
-                supplier.Save();
-                return RedirectToAction("Index");
+                if (Request.IsAjaxRequest())
+                    return PartialView("_Create", supplier);
+
+                return View(supplier);
             }
 
-            return View(supplier);
+            supplier.Save();
+
+            if (Request.IsAjaxRequest())
+            {
+                //FIXME: localize string
+                return PartialView("_Success", "Operation successful!");
+            }
+
+            return RedirectToAction("Index");
         }
 
         //

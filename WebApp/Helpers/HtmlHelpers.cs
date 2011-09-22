@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using System.Data;
 using System.Web.Routing;
-using Business.Essentials.Model;
 
 namespace Business.Essentials.WebApp.Helpers
 {
@@ -62,6 +59,19 @@ namespace Business.Essentials.WebApp.Helpers
             string ctl = html.ViewContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString();
             string atn = html.ViewContext.Controller.ValueProvider.GetValue("action").RawValue.ToString();
             return ctl == controller && atn == action ? "gbz0l" : string.Empty;
+        }
+
+        public static string GetDisplayName(this Enum member)
+        {
+            string display_name = member.ToString();
+
+            var prop_info = member.GetType().GetField(display_name);
+            var attrs = prop_info.GetCustomAttributes(typeof(DisplayAttribute), false);
+
+            if (attrs.Count() != 0)
+                display_name = ((DisplayAttribute)attrs[0]).GetName();
+
+            return display_name;
         }
     }
 }

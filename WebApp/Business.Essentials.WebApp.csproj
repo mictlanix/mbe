@@ -116,6 +116,7 @@
     <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\ContactsController.cs" />
     <Compile Include="Controllers\CustomersController.cs" />
+    <Compile Include="Controllers\EmployeesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PointsOfSaleController.cs" />
     <Compile Include="Controllers\PriceListsController.cs" />
@@ -145,6 +146,7 @@
     <Content Include="Content\images\price6.png" />
     <Content Include="Content\images\price7.png" />
     <Content Include="Content\images\true.png" />
+    <Content Include="Content\main.css" />
     <Content Include="Content\Menu.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -308,7 +310,7 @@
     <Content Include="Views\Suppliers\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Suppliers\Create.cshtml" />
+    <Content Include="Views\Suppliers\_Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\PriceLists\Create.cshtml" />
@@ -440,10 +442,20 @@
     <Content Include="Views\Shared\_Menu.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Sales\Create.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="ClassDiagram1.cd" />
+    <Content Include="Views\Suppliers\Create.cshtml" />
+    <Content Include="Views\Suppliers\EditorTemplates\Supplier.cshtml" />
+    <Content Include="Views\Shared\_Success.cshtml" />
+    <Content Include="Views\Sales\New.cshtml" />
+    <Content Include="Views\Employees\Create.cshtml" />
+    <Content Include="Views\Employees\Delete.cshtml" />
+    <Content Include="Views\Employees\Details.cshtml" />
+    <Content Include="Views\Employees\Edit.cshtml" />
+    <Content Include="Views\Employees\Index.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CustomerSelector.cshtml" />
+    <Content Include="Views\Sales\_SalesInfo.cshtml" />
+    <Content Include="Views\Sales\Details.cshtml" />
+    <Content Include="Views\Sales\DetailsOrder.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

@@ -72,5 +72,7 @@ namespace Business.Essentials.Model
             get { return agrements; }
             set { agrements = value; }
         }
+
+        
     }
 }

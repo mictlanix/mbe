@@ -1,0 +1,17 @@
+﻿.number {
+  text-align:right
+}
+
+#sales-totals
+{
+  color: darkBlue;
+  background-color : white;
+  border-color: darkBlue;
+  border-width : 2px;
+  border-style : solid;
+  width: 400px;
+  z-index: 1;
+  position: fixed;
+  right: 80px;
+  top: 200px;
+}

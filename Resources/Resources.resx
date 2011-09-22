@@ -528,4 +528,37 @@
   <data name="Method" xml:space="preserve">
     <value>Método de Pago</value>
   </data>
+  <data name="Close" xml:space="preserve">
+    <value>Cerrar</value>
+  </data>
+  <data name="Succes" xml:space="preserve">
+    <value>Éxito</value>
+  </data>
+  <data name="DisplayName_Employee" xml:space="preserve">
+    <value>Catálogo de Empleados</value>
+  </data>
+  <data name="Title_Employee" xml:space="preserve">
+    <value>Empleados</value>
+  </data>
+  <data name="Female" xml:space="preserve">
+    <value>Femenino</value>
+  </data>
+  <data name="Male" xml:space="preserve">
+    <value>Masculino</value>
+  </data>
+  <data name="SalesOrderId" xml:space="preserve">
+    <value>Folio</value>
+  </data>
+  <data name="PointOfSale" xml:space="preserve">
+    <value>Punto de Venta</value>
+  </data>
+  <data name="DisplayName_SalesOrder" xml:space="preserve">
+    <value>Ventas</value>
+  </data>
+  <data name="DisplayName_SalesOrderDetails" xml:space="preserve">
+    <value>Detalles de la Venta</value>
+  </data>
+  <data name="Title_SalesOrder" xml:space="preserve">
+    <value>Orden de Venta</value>
+  </data>
 </root>

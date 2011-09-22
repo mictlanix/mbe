@@ -6,6 +6,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Business.Essentials.Model
 {
+    public enum GenderEnum : int
+    {
+        [Display(Name = "Male", ResourceType = typeof(Resources))]
+        Male,
+        [Display(Name = "Female", ResourceType = typeof(Resources))]
+        Female
+    }
+
     [ActiveRecord("employee")]
     public class Employee : ActiveRecordLinqBase<Employee>
     {
@@ -36,7 +44,7 @@ namespace Business.Essentials.Model
 
         [Property]
         [Display(Name = "Gender", ResourceType = typeof(Resources))]
-        public int Gender { get; set; }
+        public GenderEnum Gender { get; set; }
 
         [Property("personal_id")]
         [Display(Name = "PersonalId", ResourceType = typeof(Resources))]
