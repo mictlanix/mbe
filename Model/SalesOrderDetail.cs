@@ -52,7 +52,7 @@ namespace Business.Essentials.Model
         [DataType(DataType.Currency)]
         public decimal Taxes
         {
-            get { return Quantity * Price / (1 + TaxRate); }
+            get { return Total - (Quantity * Price / (1 + TaxRate)); }
         }
 
         [DataType(DataType.Currency)]
