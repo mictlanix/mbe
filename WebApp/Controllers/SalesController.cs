@@ -114,5 +114,21 @@ namespace Business.Essentials.WebApp.Controllers
 
             return Json(new { id = id, quantity = detail.Quantity }, JsonRequestBehavior.AllowGet);
         }
+
+        //GET/SalesTotals
+
+        public ActionResult GetSalesTotals(int id)
+        {
+            //var qry = from x in SalesOrder.Queryable
+            //          where id == x.Id;
+            //          select new { Total = x.Details.Sum(y => y.Quantity * y.Price), 
+            //                       Taxes = x.Details.Sum(y => y.Quantity * y.Price / (1 + y.TaxRate)) };
+            var order = SalesOrder.Find(id);
+            ViewBag.Total = order.Details.Sum(y => y.Quantity * y.Price);
+            ViewBag.Taxes = order.Details.Sum(y =>y.Total - (y.Quantity * y.Price / (1 + y.TaxRate)));
+
+            return PartialView("_SalesTotals");
+        }
+
     }
 }

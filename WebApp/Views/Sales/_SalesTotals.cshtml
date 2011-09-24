@@ -1,0 +1,26 @@
+﻿
+<fieldset>
+    <legend>Sales Totals</legend>
+
+    <div class="display-label">
+        Total
+    </div>
+    <div id="sales-order-id" class="display-field">
+        @ViewBag.Total
+    </div>
+
+    <div class="display-label">
+        Taxes
+    </div>
+    <div class="display-field">
+        @ViewBag.Taxes
+    </div>
+
+    <div class="display-label">
+        Subtotal
+    </div>
+    <div class="display-field">
+        @(ViewBag.Total - ViewBag.Taxes)
+    </div>
+
+</fieldset>

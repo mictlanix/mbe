@@ -12,7 +12,7 @@
 
 <h2>New Sale</h2> 
 
-<div id="sales-order">
+<div id="sales-order" style="margin:0 400px 0 0">
     <fieldset>
         <legend>Sales Information</legend>
             @using (Ajax.BeginForm(new AjaxOptions { HttpMethod = "POST", Url = "/Sales/New", UpdateTargetId = "sales-order" }))
@@ -41,17 +41,30 @@
             }
     </fieldset>
 </div>
-    
-<fieldset>
-    <input type="text" id="product-search" name="product-search" />
-    <input id="add" type="submit" value="@Business.Essentials.Resources.Add" />
-    <div id="list-items">
-        <ul id="items">
-        </ul>
-    </div>
-</fieldset>
+ 
+ <div style="margin:0 400px 0 0"> 
+    <fieldset>
+        <input type="text" id="product-search" name="product-search" />
+        <input id="add" type="submit" value="@Business.Essentials.Resources.Add" />
+        <div id="list-items">
+            <ul id="items">
+            </ul>
+        </div>
+    </fieldset>
+</div>  
+
+
+<div id="sales-totals">
+<h1>Hola</h1>
+<p>Ejemplo</p>
+</div>
 
 <script type="text/javascript">
+    function updateTotals(){
+        $.get("/Sales/GetSalesTotals/" + $("#sales-order-id").html().trim(), function (data) {
+            $("#sales-totals").html(data);
+        });
+    }
     function editQuantity(id, value) {
         var result = "Error";
 
@@ -59,6 +72,7 @@
         $.post("/Sales/EditDetailQuantity", { "id": id, "quantity": value }, function (data) {
             result = data.quantity;
             $("#item" + id + " div.edit").css({ "background": "green" });
+            updateTotals();
         }, "json");
         $.ajaxSetup({ async: true });
 
@@ -80,12 +94,8 @@
                     return editQuantity(detail.id, value);
                 }, { style: "inherit" });
                 $("#product-search").tokenInput("clear");
+                updateTotals();
             }, "json");
         });
     });
 </script>
-
-<div id="sales-totals">
-<h1>Hola</h1>
-<p>Ejemplo</p>
-</div>
