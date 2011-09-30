@@ -61,6 +61,9 @@ namespace Business.Essentials.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                PriceList priceList = PriceList.Find(customer.PriceListId);
+                customer.PriceList = priceList;
+
                 customer.Save();
                 return RedirectToAction("Index");
             }
@@ -85,6 +88,9 @@ namespace Business.Essentials.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                PriceList priceList = PriceList.Find(customer.PriceListId);
+                customer.PriceList = priceList;
+
                 customer.Save();
                 return RedirectToAction("Index");
             }

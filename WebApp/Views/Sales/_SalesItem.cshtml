@@ -1,0 +1,23 @@
+﻿@model Business.Essentials.Model.SalesOrderDetail
+<li id="item@(Model.Id)">
+    <img style="min-width:50px;max-width:50px;height:50px;vertical-align:top;" src="@Url.Content("~/Photos/" + Model.Product.Photo)" title="@Model.ProductName"/>
+    <div style="display:inline-block;height:60px;vertical-align:top;">
+        <b>@Model.ProductName</b><br/>
+        <b>Código:</b> @Model.ProductCode 
+        <b>SKU:</b> @Model.Product.SKU <br/>
+        <b>Precio:</b> @Html.DisplayFor(x => x.Price)
+        <b>Cantidad:</b>
+        <div class='edit quantity'>@Model.Quantity.ToString("0.####")</div>
+        <b>Descuento:</b>
+        <div class='edit discount'>@Model.Discount.ToString("p")</div>
+        <b>Importe:</b>
+        <span class='total'>@Model.Total</span>
+        <a class="remove" href="/Sales/RemoveDetail/@Model.Id">@Business.Essentials.Resources.Delete</a>
+        <script type="text/javascript">
+            $("#item@(Model.Id) a.remove").click(function(event){
+                event.preventDefault();
+                removeItem(@Model.Id);
+            });
+        </script>
+    </div>
+</li>

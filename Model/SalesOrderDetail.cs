@@ -21,6 +21,7 @@ namespace Business.Essentials.Model
         public virtual Product Product { get; set; }
 
         [Property]
+        [DisplayFormat(DataFormatString = "{0:0.####}")]
         [Display(Name = "Quantity", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
         public decimal Quantity { get; set; }
@@ -32,6 +33,7 @@ namespace Business.Essentials.Model
         public decimal Price { get; set; }
 
         [Property]
+        [DisplayFormat(DataFormatString = "{0:p}")]
         [Display(Name = "Discount", ResourceType = typeof(Resources))]
         public decimal Discount { get; set; }
 
@@ -50,15 +52,24 @@ namespace Business.Essentials.Model
         public string ProductName { get; set; }
 
         [DataType(DataType.Currency)]
-        public decimal Taxes
+        [Display(Name = "Subtotal", ResourceType = typeof(Resources))]
+        public decimal Subtotal
         {
-            get { return Total - (Quantity * Price / (1 + TaxRate)); }
+            get { return Math.Round(Total / (1 + TaxRate), 2, MidpointRounding.AwayFromZero); }
         }
 
         [DataType(DataType.Currency)]
+        [Display(Name = "Taxes", ResourceType = typeof(Resources))]
+        public decimal Taxes
+        {
+            get { return Total - Subtotal; }
+        }
+
+        [DataType(DataType.Currency)]
+        [Display(Name = "Total", ResourceType = typeof(Resources))]
         public decimal Total
         {
-            get { return Quantity * Price; }
+            get { return Math.Round(Quantity * Price * (1 - Discount), 2, MidpointRounding.AwayFromZero); }
         }
     }
 }

@@ -7,6 +7,9 @@
 
 <h2>@Business.Essentials.Resources.DisplayName_SalesOrder</h2>
 
+<p>
+    @Html.ActionLink(Business.Essentials.Resources.NewSale, "New")
+</p>
 <table>
     <tr>
         <th>
@@ -38,12 +41,11 @@
 
 @foreach (var item in Model) {
     <tr>
-       
-        <td>
+        <td class="number">
             @Html.DisplayFor(modelItem => item.Id)
         </td>
        
-        <td>
+        <td class="center">
             @Html.DisplayFor(modelItem => item.Date)
         </td>
 
@@ -51,7 +53,7 @@
             @Html.DisplayFor(modelItem => item.Customer.Name)
         </td>
 
-        <td>
+        <td class="center">
             @Html.DisplayFor(modelItem => item.DueDate)
         </td>
 
@@ -59,12 +61,15 @@
             @Html.DisplayFor(modelItem => item.SalesPerson.FirstName)
             @Html.DisplayFor(modelItem => item.SalesPerson.LastName)
         </td>
-        <td>
+        <td class="center">
             @Html.DisplayFor(modelItem => item.PointOfSale.Name)
         </td>
        
         <td>
             @Html.ActionLink(Business.Essentials.Resources.Details, "Details", new { id=item.Id })
+        </td>
+        <td>
+            @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id=item.Id })
         </td>
     </tr>
 }

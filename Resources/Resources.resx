@@ -561,4 +561,22 @@
   <data name="Title_SalesOrder" xml:space="preserve">
     <value>Orden de Venta</value>
   </data>
+  <data name="SalesTotals" xml:space="preserve">
+    <value>Totales</value>
+  </data>
+  <data name="Subtotal" xml:space="preserve">
+    <value>Subtotal</value>
+  </data>
+  <data name="Taxes" xml:space="preserve">
+    <value>I.V.A.</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="PriceList" xml:space="preserve">
+    <value>Lista de Precios</value>
+  </data>
+  <data name="NewSale" xml:space="preserve">
+    <value>Venta Nueva</value>
+  </data>
 </root>

@@ -1,17 +1,20 @@
-﻿.number {
-  text-align:right
+﻿#dialog-confirm{display:none}
+#sales-totals {
+  width:300px;
+  z-index:1;
+  position:fixed;
+  right:80px;
+  bottom:34px;
 }
-
-#sales-totals
-{
-  color: darkBlue;
-  background-color : white;
-  border-color: darkBlue;
-  border-width : 2px;
-  border-style : solid;
-  width: 400px;
-  z-index: 1;
-  position: fixed;
-  right: 80px;
-  top: 200px;
+.center {
+  text-align:center;
+}
+.number {
+  text-align:right;
+}
+.edit {
+    display:inline-block;
+    min-width:60px;
+    text-align:right;
+    background:yellow;
 }

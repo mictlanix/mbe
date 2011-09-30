@@ -195,7 +195,7 @@
                         hintText: "@Business.Essentials.Resources.HIntText",
                         noResultsText: "@Business.Essentials.Resources.NoResultsText",
                         searchingText: "@Business.Essentials.Resources.SearchingText",
-                        prePopulate: (typeof supplier === "undefined") ? null : category,
+                        prePopulate: (typeof category === "undefined") ? null : category,
                         queryParam: "pattern", minChars: 1, tokenLimit: 1
                     });
                 });
