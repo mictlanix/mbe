@@ -1,4 +1,5 @@
 ﻿@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Models
 @model SalesOrder
 
 @{
@@ -13,33 +14,7 @@
 <h2>New Sale</h2> 
 
 <div id="sales-order" style="margin:0 300px 0 0">
-    <fieldset>
-        <legend>Sales Information</legend>
-            @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "sales-order" }))
-            {
-                @Html.ValidationSummary(true)
-                
-                <div class="editor-label">
-                    @Html.LabelFor(model => model.Customer)
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.CustomerId)
-                    @Html.ValidationMessageFor(model => model.CustomerId)
-                </div>
-                
-     	        <div class="editor-label">
-                    @Html.LabelFor(model => model.IsCredit)
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.IsCredit)
-                    @Html.ValidationMessageFor(model => model.IsCredit)
-                </div>
-
-                <p>
-                    <input type="submit" value="@Business.Essentials.Resources.Save" />
-                </p>
-            }
-    </fieldset>
+@Html.Partial("_SalesInfo")
 </div>
  
  <div style="margin:0 300px 0 0"> 
@@ -48,12 +23,16 @@
         <input id="add" type="submit" value="@Business.Essentials.Resources.Add" />
         <div id="list-items">
             <ul id="items">
+            @foreach (var item in Model.Details)
+            {
+                @Html.Partial("_SalesItem", item) 
+            }
             </ul>
         </div>
     </fieldset>
 </div>  
 <div id="sales-totals">
-    @Html.Partial("_SalesTotals")
+    @Html.Partial("_SalesTotals", new SalesTotals { Total = Model.Total, Subtotal = Model.Subtotal })
 </div>
 <div id="dialog-confirm" title="@Business.Essentials.Resources.Delete">
 	<p>
@@ -122,9 +101,6 @@
 
     $(function () {
         $("#product-search").tokenInput("@Url.Action("GetSuggestions", "Products")", {
-            hintText: "@Business.Essentials.Resources.HIntText",
-            noResultsText: "@Business.Essentials.Resources.NoResultsText",
-            searchingText: "@Business.Essentials.Resources.SearchingText",
             resultsFormatter: function(item){return ProductFormatter(item);},
             queryParam: "pattern",minChars: 3,tokenLimit: 1
         });
@@ -137,10 +113,10 @@
                     $("#items").append(data);
                     $("#item" + detail.id + " div.quantity").editable(function (value, settings) {
                         return editQuantity(detail.id, value);
-                    }, { style: "inherit" });
+                    });
                     $("#item" + detail.id + " div.discount").editable(function (value, settings) {
                         return editDiscount(detail.id, value);
-                    }, { style: "inherit" });
+                    });
 
                     $("#product-search").tokenInput("clear");
                     updateTotals();
@@ -148,5 +124,11 @@
 
             }, "json");
         });
+        
+    @foreach (var item in Model.Details)
+    {
+        @:$("#item@(item.Id) div.quantity").editable(function(value,settings){return editQuantity(@item.Id, value);});
+        @:$("#item@(item.Id) div.discount").editable(function(value, settings){return editDiscount(@item.Id, value);});
+    }
     });
 </script>

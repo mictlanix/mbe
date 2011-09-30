@@ -1,26 +1,26 @@
-﻿
+﻿@model Business.Essentials.WebApp.Models.SalesTotals
 <fieldset>
-    <legend>Sales Totals</legend>
+    <legend>@Business.Essentials.Resources.SalesTotals</legend>
 
     <div class="display-label">
-        Total
+        @Html.LabelFor(x => x.Total)
     </div>
     <div id="sales-order-id" class="display-field">
-        @ViewBag.Total
+        @Html.DisplayFor(x => x.Total)
     </div>
 
     <div class="display-label">
-        Taxes
+        @Html.LabelFor(x => x.Taxes)
     </div>
     <div class="display-field">
-        @ViewBag.Taxes
+        @Html.DisplayFor(x => x.Taxes)
     </div>
 
     <div class="display-label">
-        Subtotal
+        @Html.LabelFor(x => x.Subtotal)
     </div>
     <div class="display-field">
-        @(ViewBag.Total - ViewBag.Taxes)
+        @Html.DisplayFor(x => x.Subtotal)
     </div>
 
 </fieldset>

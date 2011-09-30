@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
@@ -59,6 +60,27 @@ namespace Business.Essentials.Model
         {
             get { return details; }
             set { details = value; }
+        }
+
+        [DataType(DataType.Currency)]
+        [Display(Name = "Subtotal", ResourceType = typeof(Resources))]
+        public decimal Subtotal
+        {
+            get { return Details.Sum(x => x.Subtotal); }
+        }
+
+        [DataType(DataType.Currency)]
+        [Display(Name = "Taxes", ResourceType = typeof(Resources))]
+        public decimal Taxes
+        {
+            get { return Total - Subtotal; }
+        }
+
+        [DataType(DataType.Currency)]
+        [Display(Name = "Total", ResourceType = typeof(Resources))]
+        public decimal Total
+        {
+            get { return Details.Sum(x => x.Total); }
         }
     }
 }

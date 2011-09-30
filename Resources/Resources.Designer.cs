@@ -700,6 +700,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Venta Nueva.
+        /// </summary>
+        public static string NewSale {
+            get {
+                return ResourceManager.GetString("NewSale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No.
         /// </summary>
         public static string No {
@@ -853,6 +862,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lista de Precios.
+        /// </summary>
+        public static string PriceList {
+            get {
+                return ResourceManager.GetString("PriceList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Precios.
         /// </summary>
         public static string Prices {
@@ -939,6 +957,15 @@ namespace Business.Essentials {
         public static string SalesPerson {
             get {
                 return ResourceManager.GetString("SalesPerson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Totales.
+        /// </summary>
+        public static string SalesTotals {
+            get {
+                return ResourceManager.GetString("SalesTotals", resourceCulture);
             }
         }
         
@@ -1033,6 +1060,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Subtotal.
+        /// </summary>
+        public static string Subtotal {
+            get {
+                return ResourceManager.GetString("Subtotal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Éxito.
         /// </summary>
         public static string Succes {
@@ -1056,6 +1092,15 @@ namespace Business.Essentials {
         public static string SupplierAgreement {
             get {
                 return ResourceManager.GetString("SupplierAgreement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to I.V.A..
+        /// </summary>
+        public static string Taxes {
+            get {
+                return ResourceManager.GetString("Taxes", resourceCulture);
             }
         }
         
@@ -1236,6 +1281,15 @@ namespace Business.Essentials {
         public static string Title_Warehouse {
             get {
                 return ResourceManager.GetString("Title_Warehouse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total.
+        /// </summary>
+        public static string Total {
+            get {
+                return ResourceManager.GetString("Total", resourceCulture);
             }
         }
         

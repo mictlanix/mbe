@@ -1,0 +1,34 @@
+﻿@model Business.Essentials.Model.SalesOrder
+
+<fieldset>
+    <legend>Sales Information</legend>
+        @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "sales-order" }))
+        {
+            @Html.ValidationSummary(true)
+                
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Customer)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.CustomerId)
+                @Html.ValidationMessageFor(model => model.CustomerId)
+            </div>
+                
+     	    <div class="editor-label">
+                @Html.LabelFor(model => model.IsCredit)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.IsCredit)
+                @Html.ValidationMessageFor(model => model.IsCredit)
+            </div>
+
+            <p>
+                <input type="submit" value="@Business.Essentials.Resources.Save" />
+            </p>
+        }
+</fieldset>
+<script type="text/javascript">
+    $(function () {
+        $("#CustomerId").tokenInput("add", { id: "@Model.Customer.Id", name: "@Model.Customer.Name"});
+    });
+</script>
