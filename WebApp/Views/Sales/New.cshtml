@@ -1,4 +1,5 @@
 ﻿@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Models
 @model SalesOrder
 
 @{
@@ -53,7 +54,7 @@
     </fieldset>
 </div>  
 <div id="sales-totals">
-    @Html.Partial("_SalesTotals")
+    @Html.Partial("_SalesTotals", new SalesTotals { Total = Model.Total, Subtotal = Model.Subtotal })
 </div>
 <div id="dialog-confirm" title="@Business.Essentials.Resources.Delete">
 	<p>
