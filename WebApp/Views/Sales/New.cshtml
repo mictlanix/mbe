@@ -16,7 +16,7 @@
 <div id="sales-order" style="margin:0 300px 0 0">
     <fieldset>
         <legend>Sales Information</legend>
-            @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "sales-order" }))
+            @using (Html.BeginForm())
             {
                 @Html.ValidationSummary(true)
                 
@@ -43,111 +43,4 @@
     </fieldset>
 </div>
  
- <div style="margin:0 300px 0 0"> 
-    <fieldset>
-        <input type="text" id="product-search" name="product-search" />
-        <input id="add" type="submit" value="@Business.Essentials.Resources.Add" />
-        <div id="list-items">
-            <ul id="items">
-            </ul>
-        </div>
-    </fieldset>
-</div>  
-<div id="sales-totals">
-    @Html.Partial("_SalesTotals")
-</div>
-<div id="dialog-confirm" title="@Business.Essentials.Resources.Delete">
-	<p>
-        <span class="ui-icon ui-icon-circle-close" style="float:left; margin:3px 7px 20px 0;"></span>
-        @Business.Essentials.Resources.Message_DeleteConfirmation
-    </p>
-</div>
-<script type="text/javascript">
-    function updateTotals(){
-        $.get("/Sales/GetSalesTotals/" + $("#sales-order-id").html().trim(), function (data) {
-            $("#sales-totals").html(data);
-        });
-    }
-
-    function editQuantity(id, value) {
-        var result = "Error";
-
-        $.ajaxSetup({ async: false });
-        $.post("/Sales/EditDetailQuantity", { "id": id, "quantity": value }, function (data) {
-            result = data.quantity;
-            $("#item" + id + " div.quantity").css({ "background": "green" });
-            $("#item" + id + " span.total").html(data.total);
-            updateTotals();
-        }, "json");
-        $.ajaxSetup({ async: true });
-
-        return result;
-    }
-
-    function editDiscount(id, value) {
-        var result = "Error";
-
-        $.ajaxSetup({ async: false });
-        $.post("/Sales/EditDetailDiscount", { "id": id, "value": value }, function (data) {
-            result = data.discount;
-            $("#item" + id + " div.discount").css({ "background": "green" });
-            $("#item" + id + " span.total").html(data.total);
-            updateTotals();
-        }, "json");
-        $.ajaxSetup({ async: true });
-
-        return result;
-    }
-    
-    function removeItem(id) {
-        $("#dialog-confirm").dialog({
-            resizable: true,
-            height: 178,
-            modal: true,
-            buttons: {
-                @Business.Essentials.Resources.Delete: function () {
-                    $.post("/Sales/RemoveDetail", { "id": id }, function (data) {
-                        if(data.result) {
-                            $("#item" + id).remove();
-                            updateTotals();
-                        }
-                    }, "json");
-                    $(this).dialog("close");
-                },
-                @Business.Essentials.Resources.Close: function () {
-                    $(this).dialog("close");
-                }
-            }
-        });
-    }
-
-    $(function () {
-        $("#product-search").tokenInput("@Url.Action("GetSuggestions", "Products")", {
-            hintText: "@Business.Essentials.Resources.HIntText",
-            noResultsText: "@Business.Essentials.Resources.NoResultsText",
-            searchingText: "@Business.Essentials.Resources.SearchingText",
-            resultsFormatter: function(item){return ProductFormatter(item);},
-            queryParam: "pattern",minChars: 3,tokenLimit: 1
-        });
-
-        $("#add").click(function () {
-            var item = $("#product-search").tokenInput("get")[0];
-
-            $.post("/Sales/AddDetail", { "order": $("#sales-order-id").html().trim(), "product": "" + item.id }, function (detail) {
-                $.get("/Sales/GetSalesItem/" + detail.id, function (data) {
-                    $("#items").append(data);
-                    $("#item" + detail.id + " div.quantity").editable(function (value, settings) {
-                        return editQuantity(detail.id, value);
-                    }, { style: "inherit" });
-                    $("#item" + detail.id + " div.discount").editable(function (value, settings) {
-                        return editDiscount(detail.id, value);
-                    }, { style: "inherit" });
-
-                    $("#product-search").tokenInput("clear");
-                    updateTotals();
-                });
-
-            }, "json");
-        });
-    });
-</script>
+ 

@@ -447,7 +447,7 @@
   <data name="Message_DeleteConfirmation" xml:space="preserve">
     <value>¿Está seguro de borrar esto?</value>
   </data>
-  <data name="Active" xml:space="preserve">
+  <data name="Completed" xml:space="preserve">
     <value>Activo</value>
   </data>
   <data name="Add" xml:space="preserve">

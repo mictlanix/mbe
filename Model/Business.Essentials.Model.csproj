@@ -71,9 +71,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CashCount.cs" />
+    <Compile Include="CashDrawer.cs" />
     <Compile Include="CashSession.cs" />
     <Compile Include="Category.cs" />
-    <Compile Include="CashRegister.cs" />
     <Compile Include="BankAccount.cs" />
     <Compile Include="Address.cs" />
     <Compile Include="CustomerPayment.cs" />
