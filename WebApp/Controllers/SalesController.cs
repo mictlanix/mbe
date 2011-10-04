@@ -35,7 +35,7 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ViewResult New()
         {
-            return View();
+            return View(new SalesOrder());
         }
 
         [HttpPost]
