@@ -15,7 +15,7 @@ namespace Business.Essentials.WebApp.Models
             Results = new List<T>();
         }
 
-        [Required]
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "Pattern", ResourceType = typeof(Resources))]
         [StringLength(42, MinimumLength = 2, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string Pattern { get; set; }
