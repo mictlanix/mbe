@@ -186,13 +186,8 @@ namespace Business.Essentials.WebApp.Controllers
             //                       Taxes = x.Details.Sum(y => y.Quantity * y.Price / (1 + y.TaxRate)) };
 
             var order = SalesOrder.Find(id);
-            var totals = new SalesTotals
-            {
-                Total = order.Total,
-                Subtotal = order.Subtotal
-            };
 
-            return PartialView("_SalesTotals", totals);
+            return PartialView("_SalesTotals", order);
         }
 
         //GET/SalesTotals/{id}
