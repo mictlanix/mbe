@@ -64,5 +64,18 @@ namespace Business.Essentials.WebApp.Helpers
             string atn = html.ViewContext.Controller.ValueProvider.GetValue("action").RawValue.ToString();
             return ctl == controller && atn == action ? "gbz0l" : string.Empty;
         }
+
+        public static string GetDisplayName(this Enum member)
+        {
+            string display_name = Enum.GetName(member.GetType(), member);
+
+            var prop_info = member.GetType().GetField(display_name);
+            var attrs = prop_info.GetCustomAttributes(typeof(DisplayAttribute), false);
+
+            if (attrs.Count() != 0)
+                display_name = ((DisplayAttribute)attrs[0]).GetName();
+
+            return display_name;
+        }
     }
 }
