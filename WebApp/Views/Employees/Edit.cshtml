@@ -1,0 +1,90 @@
+﻿@using Business.Essentials.Model;
+@using Business.Essentials.WebApp.Helpers;
+@model Business.Essentials.Model.Employee
+
+@{
+    ViewBag.Title = Business.Essentials.Resources.Edit;
+}
+
+<h2>@Business.Essentials.Resources.Edit</h2>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>@Business.Essentials.Resources.Title_Employee</legend>
+
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.FirstName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.FirstName)
+            @Html.ValidationMessageFor(model => model.FirstName)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.LastName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.LastName)
+            @Html.ValidationMessageFor(model => model.LastName)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Birthday)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Birthday)
+            @Html.ValidationMessageFor(model => model.Birthday)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.TaxpayerId)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.TaxpayerId)
+            @Html.ValidationMessageFor(model => model.TaxpayerId)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Gender)
+        </div>
+        <div class="editor-field">
+            <select id="status-list" name="Gender">
+                @foreach (var item in Enum.GetValues(typeof(GenderEnum)))
+                {
+                    if ((GenderEnum)item == Model.Gender)
+                    {
+                        <option value="@((int)item)" selected="selected">@(((GenderEnum)item).GetDisplayName())</option>
+                    }
+                    else
+                    {
+                        <option value="@((int)item)">@(((GenderEnum)item).GetDisplayName())</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.PersonalId)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.PersonalId)
+            @Html.ValidationMessageFor(model => model.PersonalId)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.StartJobDate)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.StartJobDate)
+            @Html.ValidationMessageFor(model => model.StartJobDate)
+        </div>
+
+        <p>
+            <input type="submit" value= @Business.Essentials.Resources.Save />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
+</div>

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
-using WebActivator;
 using DataAnnotationsExtensions;
 
 namespace Business.Essentials.Model

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -9,30 +8,30 @@ using Business.Essentials.Model;
 
 namespace Business.Essentials.WebApp.Controllers
 {
-    public class CashRegisterController : Controller
+    public class EmployeesController : Controller
     {
         //
-        // GET: /CashRegister/
+        // GET: /Employee/
 
         public ViewResult Index()
         {
-            var qry = from x in CashRegister.Queryable
+            var qry = from x in Employee.Queryable
                       select x;
 
             return View(qry.ToList());
         }
 
         //
-        // GET: /CashRegister/Details/5
+        // GET: /Employee/Details/5
 
         public ViewResult Details(int id)
         {
-            CashRegister cashRegister = CashRegister.Find(id);
-            return View(cashRegister);
+            Employee employee = Employee.Find(id);
+            return View(employee);
         }
 
         //
-        // GET: /CashRegister/Create
+        // GET: /Employee/Create
 
         public ActionResult Create()
         {
@@ -40,60 +39,60 @@ namespace Business.Essentials.WebApp.Controllers
         }
 
         //
-        // POST: /CashRegister/Create
+        // POST: /Employee/Create
 
         [HttpPost]
-        public ActionResult Create(CashRegister cashRegister)
+        public ActionResult Create(Employee employee)
         {
             if (ModelState.IsValid)
             {
-                cashRegister.Save();
+                employee.Save();
                 return RedirectToAction("Index");
             }
 
-            return View(cashRegister);
+            return View(employee);
         }
 
         //
-        // GET: /CashRegister/Edit/5
+        // GET: /Warehouses/Edit/5
 
         public ActionResult Edit(int id)
         {
-            CashRegister cashRegister = CashRegister.Find(id);
-            return View(cashRegister);
+            Employee employee = Employee.Find(id);
+            return View(employee);
         }
 
         //
-        // POST: /CashRegister/Edit/5
+        // POST: /Employee/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(CashRegister cashRegister)
+        public ActionResult Edit(Employee employee)
         {
             if (ModelState.IsValid)
             {
-                cashRegister.Save();
+                employee.Save();
                 return RedirectToAction("Index");
             }
-            return View(cashRegister);
+            return View(employee);
         }
 
         //
-        // GET: /CashRegister/Delete/5
+        // GET: /Employee/Delete/5
 
         public ActionResult Delete(int id)
         {
-            CashRegister cashRegister = CashRegister.Find(id);
-            return View(cashRegister);
+            Employee employee = Employee.Find(id);
+            return View(employee);
         }
 
         //
-        // POST: /CashRegister/Delete/5
+        // POST: /Warehouses/Delete/5
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            CashRegister cashRegister = CashRegister.Find(id);
-            cashRegister.Delete();
+            Employee employee = Employee.Find(id);
+            employee.Delete();
             return RedirectToAction("Index");
         }
 
@@ -103,3 +102,4 @@ namespace Business.Essentials.WebApp.Controllers
         }
     }
 }
+

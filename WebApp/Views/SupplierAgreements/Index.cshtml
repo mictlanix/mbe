@@ -1,20 +1,10 @@
 ﻿@using Business.Essentials.Model
 @model IEnumerable<Business.Essentials.Model.SupplierAgreement>
 
-@{
-    ViewBag.Title = Business.Essentials.Resources.Title_SupplierAgreement;}
-
-<h2>@Business.Essentials.Resources.DisplayName_SupplierAgreement</h2>
-
 <p>
-    @Html.ActionLink(Business.Essentials.Resources.CreateNew, "Create")
 </p>
 <table>
     <tr>
-        <th>
-            @Html.LabelFor(x => new SupplierAgreement().Supplier)
-        </th>
-
         <th>
             @Html.LabelFor(x => new SupplierAgreement().Start)
         </th>
@@ -32,9 +22,6 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Supplier.Name)
-        </td>
-        <td>
             @Html.DisplayFor(modelItem => item.Start)
         </td>
         <td>
@@ -45,9 +32,9 @@
         </td>
 
         <td>
-            @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id=item.Id }) |
-            @Html.ActionLink(Business.Essentials.Resources.Details, "Details", new { id=item.Id }) |
-            @Html.ActionLink(Business.Essentials.Resources.Delete, "Delete", new { id=item.Id })
+            @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", "SupplierAgreements", new { id=item.Id }, null) |
+            @Html.ActionLink(Business.Essentials.Resources.Details, "Details", "SupplierAgreements", new { id = item.Id }, null) |
+            @Html.ActionLink(Business.Essentials.Resources.Delete, "Delete", "SupplierAgreements", new { id = item.Id }, null)
         </td>
     </tr>
 }

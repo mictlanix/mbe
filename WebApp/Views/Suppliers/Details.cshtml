@@ -74,3 +74,11 @@
     </p>
     @Html.Partial("~/Views/BankAccounts/Index.cshtml", Model.BanksAccounts)
 </fieldset>
+
+<fieldset>
+    <legend>@Business.Essentials.Resources.DisplayName_SupplierAgreement</legend>
+    <p>
+        @Html.ActionLink(Business.Essentials.Resources.CreateNew, "CreateForSupplier", "SupplierAgreements", new { id = Model.Id }, null)
+    </p>
+    @Html.Partial("~/Views/SupplierAgreements/Index.cshtml", Model.Agreements)
+</fieldset>

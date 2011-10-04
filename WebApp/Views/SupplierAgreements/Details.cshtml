@@ -39,9 +39,11 @@
         @Html.DisplayFor(model => model.Comment)
     </div>
 
-</fieldset>
+    @Html.Hidden("OwnerId", (object)ViewBag.OwnerId)
 
+</fieldset>
 <p>
-    @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id=Model.Id }) |
-    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
+    @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id = Model.Id }) |
+    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Details", "Suppliers", new { id = ViewBag.OwnerId }, null)
+
 </p>

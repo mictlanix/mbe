@@ -42,6 +42,14 @@ namespace Business.Essentials.Model
         [StringLength(500, MinimumLength = 0)]
         public string Comment { get; set; }
 
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+        [Display(Name = "PriceList", ResourceType = typeof(Resources))]
+        public int PriceListId { get; set; }
+
+        [BelongsTo("price_list")]
+        [Display(Name = "PriceList", ResourceType = typeof(Resources))]
+        public virtual PriceList PriceList { get; set; }
+
         [HasAndBelongsToMany(typeof(Address), Table = "customer_address", ColumnKey = "customer", ColumnRef = "address", Inverse = true)]
         public IList<Address> Addresses
         {

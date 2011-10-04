@@ -21,6 +21,10 @@
         </th>
 
         <th>
+            @Html.LabelFor(x => new Customer().PriceList)
+        </th>
+
+        <th>
             @Html.LabelFor(x => new Customer().CreditLimit)
         </th>
 
@@ -45,6 +49,10 @@
        
         <td>
             @Html.DisplayFor(modelItem => item.Zone)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.PriceList.Name)
         </td>
 
         <td>

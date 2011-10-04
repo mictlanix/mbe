@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using System.Data.Entity;
 using System.Data;
 using Business.Essentials.Model;
 using Business.Essentials.WebApp.Models;
+using System.IO;
 
 namespace Business.Essentials.WebApp.Controllers
 {
@@ -86,15 +86,16 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ActionResult Create()
         {
-            return View();
+            return View(new Product { IsInvoiceable = true });
         }
 
         //
         // POST: /Products/Create
 
         [HttpPost]
-        public ActionResult Create(Product product)
+        public ActionResult Create(Product product, HttpPostedFileBase file)
         {
+            
             if (ModelState.IsValid)
             {
                 Supplier supplier = Supplier.Find(product.SupplierId);
@@ -103,6 +104,8 @@ namespace Business.Essentials.WebApp.Controllers
                 Category category = Category.Find(product.CategoryId);
                 product.Category = category;
                 product.Save();
+                SavePhoto(product.Photo, file);
+
                 return RedirectToAction("Index");
             }
             return View(product);
@@ -120,7 +123,7 @@ namespace Business.Essentials.WebApp.Controllers
         // POST: /Products/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(Product product)
+        public ActionResult Edit(Product product, HttpPostedFileBase file)
         {
             if (ModelState.IsValid)
             {
@@ -130,6 +133,8 @@ namespace Business.Essentials.WebApp.Controllers
                 Category category = Category.Find(product.CategoryId);
                 product.Category = category;
                 product.Save();
+                SavePhoto(product.Photo, file);
+
                 return RedirectToAction("Index");
             }
             return View(product);
@@ -153,6 +158,17 @@ namespace Business.Essentials.WebApp.Controllers
             Product product = Product.Find(id);
             product.Delete();
             return RedirectToAction("Index");
+        }
+
+        void SavePhoto(string fileName, HttpPostedFileBase file)
+        {
+            if (file != null && file.ContentLength > 0)
+            {
+                var img = System.Drawing.Image.FromStream(file.InputStream);
+                var path = Path.Combine(Server.MapPath("~/Photos"), fileName);
+                img.Save(path, System.Drawing.Imaging.ImageFormat.Png);
+                img.Dispose();
+            }
         }
 
         protected override void Dispose(bool disposing)
