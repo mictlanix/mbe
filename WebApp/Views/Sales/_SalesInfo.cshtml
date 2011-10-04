@@ -41,5 +41,5 @@
         </div>
     }
 
-    @Ajax.ActionLink(Business.Essentials.Resources.Edit, "Edit", new AjaxOptions { UpdateTargetId = "sales-order" })
+    @Ajax.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "sales-order" })
 </fieldset>

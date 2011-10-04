@@ -51,14 +51,15 @@ namespace Business.Essentials.WebApp.Controllers
             item.Date = DateTime.Now;
             item.DueDate = item.IsCredit ? item.Date.AddDays(customer.CreditDays) : item.Date;
 
-            item.Create();
+            item.CreateAndFlush();
 
-            if(Request.IsAjaxRequest())
+            while (item.Id == 0)
             {
-                return PartialView("_SalesInfo", item);
+                System.Diagnostics.Debug.WriteLine("New Sales Id: {0}", item.Id);
+                System.Threading.Thread.Sleep(10);
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Edit", new { id = item.Id });
         }
 
         public ActionResult Edit(int id)
@@ -92,10 +93,9 @@ namespace Business.Essentials.WebApp.Controllers
         [HttpPost]
         public JsonResult AddDetail(int order, int product)
         {
-            JsonResult result;
             var p = Product.Find(product);
 
-            var detail = new SalesOrderDetail
+            var item = new SalesOrderDetail
             {
                 SalesOrder = SalesOrder.Find(order),
                 Product = p,
@@ -106,41 +106,31 @@ namespace Business.Essentials.WebApp.Controllers
                 Quantity = 1,
             };
 
-            switch (detail.SalesOrder.Customer.PriceList.Id)
+            switch (item.SalesOrder.Customer.PriceList.Id)
             {
                 case 1:
-                    detail.Price = p.Price1;
+                    item.Price = p.Price1;
                     break;
                 case 2:
-                    detail.Price = p.Price2;
+                    item.Price = p.Price2;
                     break;
                 case 3:
-                    detail.Price = p.Price3;
+                    item.Price = p.Price3;
                     break;
                 case 4:
-                    detail.Price = p.Price4;
+                    item.Price = p.Price4;
                     break;
             }
 
-            detail.Create();
+            item.CreateAndFlush();
 
-            result = Json(new
+            while (item.Id == 0)
             {
-                id = detail.Id,
-                //product = detail.Product.Id,
-                //name = detail.Product.Name,
-                //code = detail.Product.Code,
-                //sku = detail.Product.SKU,
-                //url = string.Format("/Photos/{0}", detail.Product.Photo),
-                //quantity = detail.Quantity,
-                //price = detail.Price,
-                //discount = detail.Discount,
-                //taxRate = detail.TaxRate
-            });
+                System.Diagnostics.Debug.WriteLine("New Detail Id: {0}", item.Id);
+                System.Threading.Thread.Sleep(10);
+            }
 
-            result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
-
-            return result;
+            return Json(new { id = item.Id });
         }
 
         [HttpPost]
@@ -204,6 +194,12 @@ namespace Business.Essentials.WebApp.Controllers
             item.Delete();
             return Json(new { id = id, result = true });
         }
+
+        //[HttpPost]
+        //public ActionResult CompleteSale(int id)
+        //{
+        //    return
+        //}
 
     }
 }

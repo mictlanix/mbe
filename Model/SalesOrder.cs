@@ -47,9 +47,9 @@ namespace Business.Essentials.Model
         [Display(Name = "DueDate", ResourceType = typeof(Resources))]
         public DateTime DueDate { get; set; }
 
-        [Property("active")]
-        [Display(Name = "Active", ResourceType = typeof(Resources))]
-        public bool IsActive { get; set; }
+        [Property("completed")]
+        [Display(Name = "Completed", ResourceType = typeof(Resources))]
+        public bool IsCompleted { get; set; }
 
         [Property("cancelled")]
         [Display(Name = "Cancelled", ResourceType = typeof(Resources))]
