@@ -6,9 +6,18 @@
 
 <h2>@Business.Essentials.Resources.Delete</h2>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>@Business.Essentials.Resources.Message_DeleteConfirmation</h3>
 <fieldset>
     <legend>@Business.Essentials.Resources.Title_Product</legend>
+
+        <div style="float:right">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Photo)
+            </div>
+            <div class="editor-input">
+                <img src="@Url.Content("~/Photos/" + Model.Photo)" alt="@Model" class="medium" />
+            </div>
+        </div>
 
         <div class="display-label">
             @Html.LabelFor(model => model.Code)
@@ -122,6 +131,34 @@
             @Html.DisplayFor(model => model.Price4)
         </div>
 
+        @if (Model.Price5 > 0)
+        {
+            <div class="display-label">
+                @Html.LabelFor(model => model.Price5)
+            </div>
+            <div class="display-field">
+                @Html.DisplayFor(model => model.Price5)
+            </div>
+        }   
+        @if (Model.Price6 > 0)
+        {
+            <div class="display-label">
+                @Html.LabelFor(model => model.Price6)
+            </div>
+            <div class="display-field">
+                @Html.DisplayFor(model => model.Price6)
+            </div>
+        }   
+        @if (Model.Price7 > 0)
+        {
+            <div class="display-label">
+                @Html.LabelFor(model => model.Price7)
+            </div>
+            <div class="display-field">
+                @Html.DisplayFor(model => model.Price7)
+            </div>
+        }
+
         <div class="display-label">
             @Html.LabelFor(model => model.Category)
         </div>
@@ -140,7 +177,7 @@
 @using (Html.BeginForm())
 {
     <p>
-        <input type="submit" value= @Business.Essentials.Resources.Delete /> |
+        <input type="submit" value= "@Business.Essentials.Resources.Delete" /> |
         @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
     </p>
 }

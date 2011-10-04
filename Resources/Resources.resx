@@ -403,7 +403,7 @@
     <value>Acerca de</value>
   </data>
   <data name="Validation_Date" xml:space="preserve">
-    <value>Fecha invalida</value>
+    <value>Fecha Invalida</value>
   </data>
   <data name="Validation_Email" xml:space="preserve">
     <value>Lo introducido no corresponde a un {0}.</value>
@@ -434,5 +434,149 @@
   </data>
   <data name="Prices" xml:space="preserve">
     <value>Precios</value>
+  </data>
+  <data name="Price5" xml:space="preserve">
+    <value>Precio x Kg</value>
+  </data>
+  <data name="Price6" xml:space="preserve">
+    <value>Precio x Mts</value>
+  </data>
+  <data name="Price7" xml:space="preserve">
+    <value>Precio x Pieza</value>
+  </data>
+  <data name="Message_DeleteConfirmation" xml:space="preserve">
+    <value>¿Está seguro de borrar esto?</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Activo</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Agregar</value>
+  </data>
+  <data name="Cancelled" xml:space="preserve">
+    <value>Cancelado</value>
+  </data>
+  <data name="Cashier" xml:space="preserve">
+    <value>Cajero</value>
+  </data>
+  <data name="Credit" xml:space="preserve">
+    <value>Crédito</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Fecha y Hora</value>
+  </data>
+  <data name="Discount" xml:space="preserve">
+    <value>Descuento</value>
+  </data>
+  <data name="DueDate" xml:space="preserve">
+    <value>Fecha de Vencimiento</value>
+  </data>
+  <data name="Employee" xml:space="preserve">
+    <value>Empleado</value>
+  </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="Gender" xml:space="preserve">
+    <value>Género</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Apellido</value>
+  </data>
+  <data name="PersonalId" xml:space="preserve">
+    <value>CURP</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Precio</value>
+  </data>
+  <data name="Product" xml:space="preserve">
+    <value>Producto</value>
+  </data>
+  <data name="ProductCode" xml:space="preserve">
+    <value>Código del Producto</value>
+  </data>
+  <data name="ProductName" xml:space="preserve">
+    <value>Nombre del Producto</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Cantidad</value>
+  </data>
+  <data name="SalesOrder" xml:space="preserve">
+    <value>Orden de Venta</value>
+  </data>
+  <data name="SalesPerson" xml:space="preserve">
+    <value>Vendedor</value>
+  </data>
+  <data name="StartJobDate" xml:space="preserve">
+    <value>Fecha de Entrada</value>
+  </data>
+  <data name="TaxRate" xml:space="preserve">
+    <value>Impuesto</value>
+  </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Importe</value>
+  </data>
+  <data name="CashDrawer" xml:space="preserve">
+    <value>Caja</value>
+  </data>
+  <data name="CashSession" xml:space="preserve">
+    <value>Sesión de Caja</value>
+  </data>
+  <data name="Denomination" xml:space="preserve">
+    <value>Denominación</value>
+  </data>
+  <data name="Method" xml:space="preserve">
+    <value>Método de Pago</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Cerrar</value>
+  </data>
+  <data name="Succes" xml:space="preserve">
+    <value>Éxito</value>
+  </data>
+  <data name="DisplayName_Employee" xml:space="preserve">
+    <value>Catálogo de Empleados</value>
+  </data>
+  <data name="Title_Employee" xml:space="preserve">
+    <value>Empleados</value>
+  </data>
+  <data name="Female" xml:space="preserve">
+    <value>Femenino</value>
+  </data>
+  <data name="Male" xml:space="preserve">
+    <value>Masculino</value>
+  </data>
+  <data name="SalesOrderId" xml:space="preserve">
+    <value>Folio</value>
+  </data>
+  <data name="PointOfSale" xml:space="preserve">
+    <value>Punto de Venta</value>
+  </data>
+  <data name="DisplayName_SalesOrder" xml:space="preserve">
+    <value>Ventas</value>
+  </data>
+  <data name="DisplayName_SalesOrderDetails" xml:space="preserve">
+    <value>Detalles de la Venta</value>
+  </data>
+  <data name="Title_SalesOrder" xml:space="preserve">
+    <value>Orden de Venta</value>
+  </data>
+  <data name="SalesTotals" xml:space="preserve">
+    <value>Totales</value>
+  </data>
+  <data name="Subtotal" xml:space="preserve">
+    <value>Subtotal</value>
+  </data>
+  <data name="Taxes" xml:space="preserve">
+    <value>I.V.A.</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="PriceList" xml:space="preserve">
+    <value>Lista de Precios</value>
+  </data>
+  <data name="NewSale" xml:space="preserve">
+    <value>Venta Nueva</value>
   </data>
 </root>

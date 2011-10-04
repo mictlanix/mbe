@@ -1,0 +1,45 @@
+﻿@model Business.Essentials.Model.SalesOrder
+
+<fieldset>
+    <legend>Sales Information</legend>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Id)
+    </div>
+    <div id="sales-order-id" class="display-field">
+        @Html.DisplayFor(model => model.Id)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Date)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Date)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Customer)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Customer.Name)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Customer.PriceList)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Customer.PriceList.Name)
+    </div>
+
+    @if (Model.IsCredit)
+    {
+        <div class="display-label">
+            @Html.LabelFor(model => model.DueDate)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.DueDate)
+        </div>
+    }
+
+    @Ajax.ActionLink(Business.Essentials.Resources.Edit, "Edit", new AjaxOptions { UpdateTargetId = "sales-order" })
+</fieldset>

@@ -1,0 +1,20 @@
+﻿#dialog-confirm{display:none}
+#sales-totals {
+  width:300px;
+  z-index:1;
+  position:fixed;
+  right:80px;
+  bottom:34px;
+}
+.center {
+  text-align:center;
+}
+.number {
+  text-align:right;
+}
+.edit {
+    display:inline-block;
+    min-width:60px;
+    text-align:right;
+    background:yellow;
+}

@@ -32,6 +32,33 @@
               @Html.ValidationMessageFor(model => model.Zone)
         </div>
 
+        <div class="editor-label">
+            @Html.LabelFor(model => model.PriceList)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.PriceListId)
+            @Html.ValidationMessageFor(model => model.PriceListId)
+            @if (Model.PriceList != null)
+            {
+                <script type="text/javascript">
+                    var priceList = [{ id: "@Model.PriceList.Id", name: "@Model.PriceList.Name"}];
+                </script>
+            }
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $("#PriceListId").tokenInput("@Url.Action("GetSuggestions", "PriceLists")",
+                    {
+                        hintText: "@Business.Essentials.Resources.HIntText",
+                        noResultsText: "@Business.Essentials.Resources.NoResultsText",
+                        searchingText: "@Business.Essentials.Resources.SearchingText",
+                        prePopulate: (typeof supplier === "undefined") ? null : category,
+                        queryParam: "pattern", minChars: 1, tokenLimit: 1
+                    });
+                });
+            </script>
+            
+        </div>
+
          <div class="editor-label">
             @Html.LabelFor(model => model.CreditLimit)
         </div>

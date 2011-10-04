@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -11,6 +10,20 @@ namespace Business.Essentials.WebApp.Controllers
 {
     public class PriceListsController : Controller
     {
+
+        public JsonResult GetSuggestions(string pattern)
+        {
+            JsonResult result = new JsonResult();
+            var qry = from x in PriceList.Queryable
+                      where x.Name.Contains(pattern)
+                      select new { id = x.Id, name = x.Name };
+
+            result = Json(qry.Take(15).ToList());
+            result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+
+            return result;
+        }
+
         //
         // GET: /PriceList/
 

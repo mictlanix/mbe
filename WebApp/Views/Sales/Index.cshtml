@@ -1,24 +1,77 @@
-﻿
+﻿@using Business.Essentials.Model
+@model IEnumerable<Business.Essentials.Model.SalesOrder>
+
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = Business.Essentials.Resources.Title_SalesOrder;
 }
 
+<h2>@Business.Essentials.Resources.DisplayName_SalesOrder</h2>
 
-<script src="@Url.Content("~/Scripts/jquery.tokeninput.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/jquery.tokeninput.formatters.js")" type="text/javascript"></script>
-<link href="@Url.Content("~/Content/themes/base/token-input.css")" rel="stylesheet" type="text/css" />
+<p>
+    @Html.ActionLink(Business.Essentials.Resources.NewSale, "New")
+</p>
+<table>
+    <tr>
+        <th>
+            @Html.LabelFor(x => new SalesOrder().Id)
+        </th>
 
-<h2>Simple Server-Backed Search</h2> 
-<div> 
-    
-    
-    <input type="text" id="demo-input" name="blah" />
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#demo-input").tokenInput("@Url.Action("GetSuggestions", "Products")",
-            {
-                resultsFormatter: function(item){return ProductFormatter(item);},
-                queryParam: "pattern",minChars: 3,tokenLimit: 1});
-        });
-    </script>
-</div> 
+        <th>
+            @Html.LabelFor(x => new SalesOrder().Date)
+        </th>
+
+        <th>
+            @Html.LabelFor(x => new SalesOrder().Customer)
+        </th>
+
+        <th>
+            @Html.LabelFor(x => new SalesOrder().DueDate)
+        </th>
+
+         <th>
+            @Html.LabelFor(x => new SalesOrder().SalesPerson)
+        </th>
+
+        <th>
+            @Html.LabelFor(x => new SalesOrder().PointOfSale)
+        </th>
+        
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td class="number">
+            @Html.DisplayFor(modelItem => item.Id)
+        </td>
+       
+        <td class="center">
+            @Html.DisplayFor(modelItem => item.Date)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.Customer.Name)
+        </td>
+
+        <td class="center">
+            @Html.DisplayFor(modelItem => item.DueDate)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.SalesPerson.FirstName)
+            @Html.DisplayFor(modelItem => item.SalesPerson.LastName)
+        </td>
+        <td class="center">
+            @Html.DisplayFor(modelItem => item.PointOfSale.Name)
+        </td>
+       
+        <td>
+            @Html.ActionLink(Business.Essentials.Resources.Details, "Details", new { id=item.Id })
+        </td>
+        <td>
+            @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>

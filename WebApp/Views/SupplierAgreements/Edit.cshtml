@@ -20,30 +20,12 @@
         <legend>@Business.Essentials.Resources.Title_SupplierAgreement</legend>
 
         @Html.HiddenFor(model => model.Id)
-
-        <div class="editor-label">
+        
+        <div class="display-label">
             @Html.LabelFor(model => model.Supplier)
         </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.SupplierId)
-            @Html.ValidationMessageFor(model => model.SupplierId)
-            @if (Model.Supplier != null)
-            {
-                <script type="text/javascript">
-                    var supplier = [{ id: "@Model.Supplier.Id", name: "@Model.Supplier.Name"}];
-                </script>
-            }
-            <script type="text/javascript">
-                $(document).ready(function () {
-                $("#SupplierId").tokenInput("@Url.Action("GetSuggestions", "Suppliers")",
-                {
-                    hintText: "@Business.Essentials.Resources.HIntText",
-                    noResultsText: "@Business.Essentials.Resources.NoResultsText",
-                    searchingText: "@Business.Essentials.Resources.SearchingText",
-                    prePopulate: (typeof supplier === "undefined") ? null : supplier,
-                    queryParam: "pattern",minChars: 1,tokenLimit: 1});
-                });
-            </script>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.Supplier.Name)
         </div>
 
         <div class="editor-label">
@@ -64,6 +46,7 @@
         <div class="editor-field">
             @Html.EditorFor(model => model.Comment)
         </div>
+
         <p>
             <input type="submit" value= "@Business.Essentials.Resources.Save" />
         </p>
@@ -71,5 +54,5 @@
 }
 
 <div>
-    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
+    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Details", "Suppliers", new { id = Model.Supplier.Id }, null)
 </div>

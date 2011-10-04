@@ -1,0 +1,7 @@
+﻿@model Business.Essentials.Model.Supplier
+
+@using (Ajax.BeginForm(new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "supplier_dlg" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.EditorForModel()
+}

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -28,33 +27,38 @@ namespace Business.Essentials.WebApp.Controllers
         public ViewResult Details(int id)
         {
             SupplierAgreement supplierAgreement = SupplierAgreement.Find(id);
+            var supplier = supplierAgreement.Supplier;
+
+            ViewBag.OwnerId = supplier.Id;
             return View(supplierAgreement);
         }
 
         //
         // GET: /SupplierAgreements/Create
 
-        public ActionResult Create()
+        public ActionResult CreateForSupplier(int id)
         {
-            return View();
+            Supplier supplier = Supplier.Find(id);
+            return View("Create", new SupplierAgreement { SupplierId = id, Supplier = supplier });
         }
 
         //
         // POST: /SupplierAgreements/Create
 
         [HttpPost]
-        public ActionResult Create(SupplierAgreement supplierAgreement)
+        public ActionResult Create(SupplierAgreement agreement)
         {
             if (ModelState.IsValid)
             {
-                Supplier supplier = Supplier.Find(supplierAgreement.SupplierId);
-                supplierAgreement.Supplier = supplier;
+                Supplier supplier = Supplier.Find(agreement.SupplierId);
 
-                supplierAgreement.Save();
-                return RedirectToAction("Index");
+                agreement.Supplier = supplier;
+                agreement.Save();
+
+                return RedirectToAction("Details", "Suppliers", new { id = agreement.Supplier.Id });
             }
 
-            return View(supplierAgreement);
+            return View(agreement);
         }
 
         //
@@ -62,24 +66,27 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ActionResult Edit(int id)
         {
-            SupplierAgreement supplierAgreement = SupplierAgreement.Find(id);
-            return View(supplierAgreement);
+            SupplierAgreement item = SupplierAgreement.Find(id);
+            return View(item);
         }
 
         //
         // POST: /SupplierAgreements/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(SupplierAgreement supplierAgreement)
+        public ActionResult Edit(SupplierAgreement agreement)
         {
             if (ModelState.IsValid)
             {
-                Supplier supplier = Supplier.Find(supplierAgreement.SupplierId);
-                supplierAgreement.Supplier = supplier;
-                supplierAgreement.Save();
-                return RedirectToAction("Index");
+                SupplierAgreement item = SupplierAgreement.Find(agreement.Id);
+
+                agreement.Supplier = item.Supplier;
+                agreement.Save();
+
+                return RedirectToAction("Details", "Suppliers", new { id = agreement.Supplier.Id });
             }
-            return View(supplierAgreement);
+
+            return View(agreement);
         }
 
         //
@@ -87,8 +94,8 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ActionResult Delete(int id)
         {
-            SupplierAgreement supplierAgreement = SupplierAgreement.Find(id);
-            return View(supplierAgreement);
+            SupplierAgreement item = SupplierAgreement.Find(id);
+            return View(item);
         }
 
         //
@@ -97,9 +104,11 @@ namespace Business.Essentials.WebApp.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            SupplierAgreement supplierAgreement = SupplierAgreement.Find(id);
-            supplierAgreement.Delete();
-            return RedirectToAction("Index");
+            SupplierAgreement item = SupplierAgreement.Find(id);
+
+            item.Delete();
+
+            return RedirectToAction("Details", "Suppliers", new { id = item.Supplier.Id });
         }
 
         protected override void Dispose(bool disposing)

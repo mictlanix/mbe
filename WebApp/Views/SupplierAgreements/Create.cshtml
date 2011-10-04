@@ -13,28 +13,18 @@
 <link href="@Url.Content("~/Content/themes/base/token-input.css")" rel="stylesheet" type="text/css" />
 
 
-@using (Html.BeginForm()) {
+@using (Html.BeginForm("Create", "SupplierAgreements")) {
     @Html.ValidationSummary(true)
     <fieldset>
         <legend>@Business.Essentials.Resources.Title_SupplierAgreement</legend>
+        
+        @Html.HiddenFor(model => model.SupplierId)
 
-        <div class="editor-label">
+        <div class="display-label">
             @Html.LabelFor(model => model.Supplier)
         </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.SupplierId)
-            @Html.ValidationMessageFor(model => model.SupplierId)
-            <script type="text/javascript">
-                $(document).ready(function () {
-                $("#SupplierId").tokenInput("@Url.Action("GetSuggestions", "Suppliers")",
-                {
-                    hintText: "@Business.Essentials.Resources.HIntText",
-                    noResultsText: "@Business.Essentials.Resources.NoResultsText",
-                    searchingText: "@Business.Essentials.Resources.SearchingText",
-                    queryParam: "pattern",minChars: 1,tokenLimit: 1});
-                });
-            </script>
-            
+        <div class="display-field">
+            @Html.DisplayFor(model => model.Supplier.Name)
         </div>
 
         <div class="editor-label">
@@ -57,13 +47,13 @@
         <div class="editor-field">
             @Html.EditorFor(model => model.Comment)
         </div>
-       
+
         <p>
-            <input type="submit" value= "@Business.Essentials.Resources.Create" />
+            <input type="submit" value="@Business.Essentials.Resources.Create" />
         </p>
     </fieldset>
 }
 
 <div>
-    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
+    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Details", "Suppliers", new { id = Model.Supplier.Id }, null)
 </div>

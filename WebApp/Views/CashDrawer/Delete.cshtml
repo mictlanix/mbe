@@ -1,11 +1,12 @@
-﻿@model Business.Essentials.Model.CashRegister
+﻿@model Business.Essentials.Model.CashDrawer
 
 @{
-    ViewBag.Title = Business.Essentials.Resources.Details;
+    ViewBag.Title = Business.Essentials.Resources.Delete;
 }
 
-<h2>@Business.Essentials.Resources.Details</h2>
+<h2>@Business.Essentials.Resources.Delete</h2>
 
+<h3>@Business.Essentials.Resources.Message_DeleteConfirmation</h3>
 <fieldset>
     <legend>@Business.Essentials.Resources.Title_CashRegister</legend>
 
@@ -15,7 +16,7 @@
     <div class="display-field">
         @Html.DisplayFor(model => model.Code)
     </div>
-
+    
     <div class="display-label">
         @Html.LabelFor(model => model.Name)
     </div>
@@ -31,7 +32,9 @@
     </div>
 
 </fieldset>
-<p>
-    @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id=Model.Id }) |
-    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
-</p>
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" value= @Business.Essentials.Resources.Delete /> |
+        @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
+    </p>
+}

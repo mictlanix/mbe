@@ -1,0 +1,20 @@
+﻿@using Business.Essentials.Model
+@model int
+
+@{
+    var field = ViewData.TemplateInfo.HtmlFieldPrefix;
+}
+
+@Html.TextBox("", Model)
+<script type="text/javascript">
+    $(function () {
+        $("#@field").tokenInput("@Url.Action("GetSuggestions", "Customers")", {
+            hintText: "@Business.Essentials.Resources.HIntText",
+            noResultsText: "@Business.Essentials.Resources.NoResultsText",
+            searchingText: "@Business.Essentials.Resources.SearchingText",
+            queryParam: "pattern",
+            minChars: 1,
+            tokenLimit: 1
+        });
+    });
+</script>

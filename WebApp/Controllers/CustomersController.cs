@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -11,6 +10,20 @@ namespace Business.Essentials.WebApp.Controllers
 {
     public class CustomersController : Controller
     {
+        public JsonResult GetSuggestions(string pattern)
+        {
+            JsonResult result = new JsonResult();
+            var qry = from x in Customer.Queryable
+                      where x.Name.Contains(pattern) ||
+                            x.Zone.Contains(pattern)
+                      select new { id = x.Id, name = x.Name, zone = x.Zone };
+
+            result = Json(qry.Take(15).ToList());
+            result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+
+            return result;
+        }
+
         //
         // GET: /Customer/
 
@@ -48,6 +61,9 @@ namespace Business.Essentials.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                PriceList priceList = PriceList.Find(customer.PriceListId);
+                customer.PriceList = priceList;
+
                 customer.Save();
                 return RedirectToAction("Index");
             }
@@ -72,6 +88,9 @@ namespace Business.Essentials.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                PriceList priceList = PriceList.Find(customer.PriceListId);
+                customer.PriceList = priceList;
+
                 customer.Save();
                 return RedirectToAction("Index");
             }

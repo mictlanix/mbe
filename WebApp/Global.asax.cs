@@ -47,5 +47,16 @@ namespace Business.Essentials.WebApp
             IConfigurationSource source = ConfigurationManager.GetSection("activeRecord") as IConfigurationSource;
             ActiveRecordStarter.Initialize(typeof(Category).Assembly, source);
         }
+
+        protected void Application_BeginRequest(object sender, EventArgs e)
+        {
+            HttpContext.Current.Response.Cache.SetExpires(DateTime.UtcNow.AddDays(-1));
+            HttpContext.Current.Response.Cache.SetMaxAge(TimeSpan.FromSeconds(0));
+            HttpContext.Current.Response.Cache.AppendCacheExtension("must-revalidate,proxy-revalidate");
+            HttpContext.Current.Response.Cache.SetValidUntilExpires(false);
+            HttpContext.Current.Response.Cache.SetRevalidation(HttpCacheRevalidation.AllCaches);
+            HttpContext.Current.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            HttpContext.Current.Response.Cache.SetNoStore();
+        }
     }
 }

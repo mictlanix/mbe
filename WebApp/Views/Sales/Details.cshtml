@@ -1,0 +1,68 @@
+﻿@using Business.Essentials.WebApp.Helpers;
+@using Business.Essentials.Model;
+@model Business.Essentials.Model.SalesOrder
+
+@{
+    ViewBag.Title = Business.Essentials.Resources.Details;
+}
+
+<h2>@Business.Essentials.Resources.Details</h2>
+
+<fieldset>
+    <legend>@Business.Essentials.Resources.Title_SalesOrder</legend>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Id)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Id)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Date)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Date)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Customer)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Customer.Name)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.DueDate)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.DueDate)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.SalesPerson)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.SalesPerson.FirstName)
+        @Html.DisplayFor(model => model.SalesPerson.LastName)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.PointOfSale)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PointOfSale.Name)
+    </div>
+
+</fieldset>
+
+<fieldset>
+    <legend>@Business.Essentials.Resources.DisplayName_SalesOrderDetails</legend>
+    <p></p>
+        @Html.Partial("DetailsOrder", Model.Details)
+
+</fieldset>
+
+<p>
+    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
+</p>

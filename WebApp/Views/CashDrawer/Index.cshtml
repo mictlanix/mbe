@@ -1,5 +1,5 @@
 ﻿@using Business.Essentials.Model
-@model IEnumerable<Business.Essentials.Model.CashRegister>
+@model IEnumerable<Business.Essentials.Model.CashDrawer>
 
 @{
     ViewBag.Title = Business.Essentials.Resources.Title_CashRegister;
@@ -13,14 +13,14 @@
 <table>
     <tr>
         <th>
-            @Html.LabelFor(x => new CashRegister().Code)
+            @Html.LabelFor(x => new CashDrawer().Code)
         </th>
 
         <th>
-            @Html.LabelFor(x => new CashRegister().Name)
+            @Html.LabelFor(x => new CashDrawer().Name)
         </th>
         <th>
-            @Html.LabelFor(x => new CashRegister().Comment)
+            @Html.LabelFor(x => new CashDrawer().Comment)
         </th>
         
         <th></th>
