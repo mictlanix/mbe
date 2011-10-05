@@ -11,6 +11,7 @@ namespace Business.Essentials.Model
     public class SalesOrder : ActiveRecordLinqBase<SalesOrder>
     {
         IList<SalesOrderDetail> details = new List<SalesOrderDetail>();
+        IList<CustomerPayment> payments = new List<CustomerPayment>();
 
         [PrimaryKey(PrimaryKeyType.Identity, "sales_order_id")]
         [Display(Name = "SalesOrderId", ResourceType = typeof(Resources))]
@@ -62,6 +63,13 @@ namespace Business.Essentials.Model
             set { details = value; }
         }
 
+        [HasMany(typeof(CustomerPayment), Table = "customer_payment", ColumnKey = "sales_order")]
+        public IList<CustomerPayment> Payments
+        {
+            get { return payments; }
+            set { payments = value; }
+        }
+        
         [DataType(DataType.Currency)]
         [Display(Name = "Subtotal", ResourceType = typeof(Resources))]
         public decimal Subtotal
@@ -81,6 +89,20 @@ namespace Business.Essentials.Model
         public decimal Total
         {
             get { return Details.Sum(x => x.Total); }
+        }
+
+        [DataType(DataType.Currency)]
+        [Display(Name = "Paid", ResourceType = typeof(Resources))]
+        public decimal Paid
+        {
+            get { return Payments.Sum(x => x.Amount); }
+        }
+
+        [DataType(DataType.Currency)]
+        [Display(Name = "Balance", ResourceType = typeof(Resources))]
+        public decimal Balance
+        {
+            get { return Paid - Total; }
         }
     }
 }

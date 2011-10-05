@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Castle.ActiveRecord;
 using Business.Essentials.Model;
 using Business.Essentials.WebApp.Models;
 
@@ -16,6 +17,7 @@ namespace Business.Essentials.WebApp.Controllers
         public ViewResult Index()
         {
             var qry = from x in SalesOrder.Queryable
+                      where !x.IsCancelled && !x.IsCompleted
                       select x;
 
             return View(qry.ToList());
@@ -51,7 +53,10 @@ namespace Business.Essentials.WebApp.Controllers
             item.Date = DateTime.Now;
             item.DueDate = item.IsCredit ? item.Date.AddDays(customer.CreditDays) : item.Date;
 
-            item.CreateAndFlush();
+            using (var session = new SessionScope())
+            {
+                item.CreateAndFlush();
+            }
 
             while (item.Id == 0)
             {
@@ -122,12 +127,16 @@ namespace Business.Essentials.WebApp.Controllers
                     break;
             }
 
-            item.CreateAndFlush();
+            using (var session = new SessionScope())
+            {
+                item.CreateAndFlush();
+            }
 
             while (item.Id == 0)
             {
                 System.Diagnostics.Debug.WriteLine("New Detail Id: {0}", item.Id);
                 System.Threading.Thread.Sleep(10);
+                item.Refresh();
             }
 
             return Json(new { id = item.Id });
@@ -195,11 +204,98 @@ namespace Business.Essentials.WebApp.Controllers
             return Json(new { id = id, result = true });
         }
 
-        //[HttpPost]
-        //public ActionResult CompleteSale(int id)
-        //{
-        //    return
-        //}
+        public ActionResult PayOrders()
+        {
+            var qry = from x in SalesOrder.Queryable
+                      where x.IsCompleted && !x.IsCancelled
+                      select x;
+
+            return View(qry.ToList());
+        }
+
+        [HttpPost]
+        public ActionResult ConfirmOrder(int id)
+        {
+            SalesOrder item = SalesOrder.Find(id);
+
+            item.IsCompleted = true;
+            item.Save();
+
+            return RedirectToAction("New");
+        }
+
+        public ActionResult PayOrder(int id)
+        {
+            SalesOrder order = SalesOrder.Find(id);
+
+            return View("PayOrder", order);
+        }
+
+        [HttpPost]
+        public ActionResult CancelOrder(int id)
+        {
+            SalesOrder item = SalesOrder.Find(id);
+
+            item.IsCancelled = true;
+            item.Save();
+
+            return RedirectToAction("New");
+        }
+
+        public ActionResult GetSalesOrderBalance(int id)
+        {
+            var order = SalesOrder.Find(id);
+
+            return PartialView("_SalesOrderBalance", order);
+        }
+
+        [HttpPost]
+        public JsonResult AddPayment(int order, int type, decimal amount, string reference)
+        {
+            var item = new CustomerPayment
+            {
+                SalesOrder = SalesOrder.Find(order),
+                Method = (PaymentMethod)type,
+                Amount = amount,
+                Date = DateTime.Now,
+                Reference = reference,
+            };
+
+            using (var session = new SessionScope())
+            {
+                item.CreateAndFlush();
+            }
+
+            while (item.Id == 0)
+            {
+                System.Diagnostics.Debug.WriteLine("New Detail Id: {0}", item.Id);
+                System.Threading.Thread.Sleep(10);
+                item.Refresh();
+            }
+
+            return Json(new { id = item.Id });
+        }
+
+        public ActionResult GetPayment(int id)
+        {
+            return PartialView("_Payment", CustomerPayment.Find(id));
+        }
+
+        [HttpPost]
+        public JsonResult RemovePayment(int id)
+        {
+            CustomerPayment item = CustomerPayment.Find(id);
+            item.Delete();
+            return Json(new { id = id, result = true });
+        }
+
+        public JsonResult GetBalance(int id)
+        {
+            SalesOrder order = SalesOrder.Find(id);
+
+            return Json(new { balance = order.Balance }, JsonRequestBehavior.AllowGet);
+        }
+        
 
     }
 }

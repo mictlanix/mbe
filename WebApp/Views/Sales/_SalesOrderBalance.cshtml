@@ -10,27 +10,28 @@
     </div>
 
     <div class="display-label">
-        @Html.LabelFor(x => x.Taxes)
+        @Html.LabelFor(x => x.Paid)
     </div>
     <div class="display-field">
-        @Html.DisplayFor(x => x.Taxes)
+        @Html.DisplayFor(x => x.Paid)
     </div>
 
     <div class="display-label">
-        @Html.LabelFor(x => x.Subtotal)
+        @Html.LabelFor(x => x.Balance)
     </div>
     <div class="display-field">
-        @Html.DisplayFor(x => x.Subtotal)
+        @Html.DisplayFor(x => x.Balance)
     </div>
-    @if (Model.Total > 0)
-    {
-        using (Html.BeginForm("ConfirmOrder", "Sales"))
-        {
-            @Html.Hidden("id", Model.Id)
-            <p>
-                <input type="submit" value="Complete Sale" />
-            </p>
-        }
-    }
 
 </fieldset>
+<script type="text/javascript">
+@if (Model.Balance >= 0)
+{
+    @:$("#form").hide("slow");
+}
+else
+{
+    @:$("#Amount").val("@((-Model.Balance).ToString("0.00"))");
+    @:$("#form").show("slow");
+}
+</script>
