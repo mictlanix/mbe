@@ -6,6 +6,22 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Business.Essentials.Model
 {
+    public enum PaymentMethod : int
+    {
+        [Display(Name = "Cash", ResourceType = typeof(Resources))]
+        Cash = 1,
+        [Display(Name = "CreditCard", ResourceType = typeof(Resources))]
+        CreditCard,
+        [Display(Name = "DebitCard", ResourceType = typeof(Resources))]
+        DebitCard,
+        [Display(Name = "Check", ResourceType = typeof(Resources))]
+        Check,
+        [Display(Name = "WireTransfer", ResourceType = typeof(Resources))]
+        WireTransfer,
+        [Display(Name = "GovernmentFunding", ResourceType = typeof(Resources))]
+        GovernmentFunding
+    }
+
     [ActiveRecord("customer_payment")]
     public class CustomerPayment : ActiveRecordLinqBase<CustomerPayment>
     {
@@ -23,13 +39,13 @@ namespace Business.Essentials.Model
 
         [Property]
         [Display(Name = "Method", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
-        public int Method { get; set; }
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+        public PaymentMethod Method { get; set; }
 
         [Property]
         [DataType(DataType.DateTime)]
         [Display(Name = "Date", ResourceType = typeof(Resources))]
-        public DateTime? Date { get; set; }
+        public DateTime Date { get; set; }
 
         [BelongsTo("cash_session")]
         [Display(Name = "CashSession", ResourceType = typeof(Resources))]

@@ -582,4 +582,31 @@
   <data name="HostAddress" xml:space="preserve">
     <value>Dirección IP</value>
   </data>
+  <data name="Cash" xml:space="preserve">
+    <value>Efectivo</value>
+  </data>
+  <data name="Check" xml:space="preserve">
+    <value>Cheque</value>
+  </data>
+  <data name="CreditCard" xml:space="preserve">
+    <value>Tarjeta de Crédito</value>
+  </data>
+  <data name="DebitCard" xml:space="preserve">
+    <value>Tarjeta de Débito</value>
+  </data>
+  <data name="GovernmentFunding" xml:space="preserve">
+    <value>Tajeta FONACOT</value>
+  </data>
+  <data name="Payment" xml:space="preserve">
+    <value>Pago</value>
+  </data>
+  <data name="WireTransfer" xml:space="preserve">
+    <value>Transnferencia Bancaria</value>
+  </data>
+  <data name="Balance" xml:space="preserve">
+    <value>Balance</value>
+  </data>
+  <data name="Paid" xml:space="preserve">
+    <value>Pagado</value>
+  </data>
 </root>

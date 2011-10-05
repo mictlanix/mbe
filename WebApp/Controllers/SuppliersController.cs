@@ -81,7 +81,7 @@ namespace Business.Essentials.WebApp.Controllers
                 return PartialView("_Success", "Operation successful!");
             }
 
-            return RedirectToAction("Index");
+            return View("Index");
         }
 
         //

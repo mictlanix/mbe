@@ -106,6 +106,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Balance.
+        /// </summary>
+        public static string Balance {
+            get {
+                return ResourceManager.GetString("Balance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nombre del Banco.
         /// </summary>
         public static string BankName {
@@ -151,6 +160,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Efectivo.
+        /// </summary>
+        public static string Cash {
+            get {
+                return ResourceManager.GetString("Cash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Caja.
         /// </summary>
         public static string CashDrawer {
@@ -183,6 +201,15 @@ namespace Business.Essentials {
         public static string Category {
             get {
                 return ResourceManager.GetString("Category", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cheque.
+        /// </summary>
+        public static string Check {
+            get {
+                return ResourceManager.GetString("Check", resourceCulture);
             }
         }
         
@@ -268,6 +295,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tarjeta de Crédito.
+        /// </summary>
+        public static string CreditCard {
+            get {
+                return ResourceManager.GetString("CreditCard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Días de Crédito.
         /// </summary>
         public static string CreditDays {
@@ -300,6 +336,15 @@ namespace Business.Essentials {
         public static string Date {
             get {
                 return ResourceManager.GetString("Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tarjeta de Débito.
+        /// </summary>
+        public static string DebitCard {
+            get {
+                return ResourceManager.GetString("DebitCard", resourceCulture);
             }
         }
         
@@ -547,6 +592,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tajeta FONACOT.
+        /// </summary>
+        public static string GovernmentFunding {
+            get {
+                return ResourceManager.GetString("GovernmentFunding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Margen de Ganancia Alto.
         /// </summary>
         public static string HighProfitMargin {
@@ -736,11 +790,29 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pagado.
+        /// </summary>
+        public static string Paid {
+            get {
+                return ResourceManager.GetString("Paid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Patrón de Búsqueda.
         /// </summary>
         public static string Pattern {
             get {
                 return ResourceManager.GetString("Pattern", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pago.
+        /// </summary>
+        public static string Payment {
+            get {
+                return ResourceManager.GetString("Payment", resourceCulture);
             }
         }
         
@@ -1425,6 +1497,15 @@ namespace Business.Essentials {
         public static string Welcome {
             get {
                 return ResourceManager.GetString("Welcome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transnferencia Bancaria.
+        /// </summary>
+        public static string WireTransfer {
+            get {
+                return ResourceManager.GetString("WireTransfer", resourceCulture);
             }
         }
         

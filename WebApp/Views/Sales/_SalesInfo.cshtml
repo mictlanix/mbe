@@ -6,7 +6,7 @@
     <div class="display-label">
         @Html.LabelFor(model => model.Id)
     </div>
-    <div id="sales-order-id" class="display-field">
+    <div class="display-field">
         @Html.DisplayFor(model => model.Id)
     </div>
 
@@ -40,6 +40,22 @@
             @Html.DisplayFor(model => model.DueDate)
         </div>
     }
-
-    @Ajax.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "sales-order" })
+    
+    <div style="float:right">
+        @using (Html.BeginForm("CancelOrder", "Sales"))
+            {
+                @Html.Hidden("id", Model.Id)
+                <p>
+                    <input type="submit" value="Cancel Order" />
+                </p>
+            }
+    </div>
+    
+    <div id="edit-sales-order" style="@(Model.Details.Count > 0 ? "display:none" : "")" >
+        @Ajax.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "sales-order" })
+    </div>
+    
 </fieldset>
+<script type="text/javascript">
+    var SalesOrder = { Id: @Model.Id };
+</script>

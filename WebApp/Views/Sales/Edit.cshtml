@@ -30,7 +30,7 @@
             </ul>
         </div>
     </fieldset>
-</div>  
+</div>
 <div id="sales-totals">
     @Html.Partial("_SalesTotals")
 </div>
@@ -42,8 +42,11 @@
 </div>
 <script type="text/javascript">
     function updateTotals(){
-        $.get("/Sales/GetSalesTotals/" + $("#sales-order-id").html().trim(), function (data) {
+        $.get("/Sales/GetSalesTotals/" + SalesOrder.Id, function (data) {
             $("#sales-totals").html(data);
+            if($("#items").children().length === 0){
+                $("#edit-sales-order").show();
+            }
         });
     }
 
@@ -108,7 +111,7 @@
         $("#add").click(function () {
             var item = $("#product-search").tokenInput("get")[0];
 
-            $.post("/Sales/AddDetail", { "order": $("#sales-order-id").html().trim(), "product": "" + item.id }, function (detail) {
+            $.post("/Sales/AddDetail", { "order": SalesOrder.Id, "product": "" + item.id }, function (detail) {
                 $.get("/Sales/GetSalesItem/" + detail.id, function (data) {
                     $("#items").append(data);
                     $("#item" + detail.id + " div.quantity").editable(function (value, settings) {
@@ -120,6 +123,8 @@
 
                     $("#product-search").tokenInput("clear");
                     updateTotals();
+
+                    $("#edit-sales-order").hide();
                 });
 
             }, "json");

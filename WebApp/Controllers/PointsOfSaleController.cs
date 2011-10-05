@@ -15,6 +15,7 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ViewResult Index()
         {
+            
             var qry = from x in PointSale.Queryable
                       select x;
 
