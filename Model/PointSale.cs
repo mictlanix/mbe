@@ -24,6 +24,12 @@ namespace Business.Essentials.Model
         [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string Name { get; set; }
 
+        [Property("host_address")]
+        [Display(Name = "HostAddress", ResourceType = typeof(Resources))]
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+        [StringLength(15, MinimumLength = 7, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+        public string HostAddress { get; set; }
+
         [Property]
         [DataType(DataType.MultilineText)]
         [Display(Name = "Comment", ResourceType = typeof(Resources))]

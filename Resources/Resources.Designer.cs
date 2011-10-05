@@ -565,6 +565,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dirección IP.
+        /// </summary>
+        public static string HostAddress {
+            get {
+                return ResourceManager.GetString("HostAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mensajero.
         /// </summary>
         public static string Im {

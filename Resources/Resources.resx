@@ -579,4 +579,7 @@
   <data name="NewSale" xml:space="preserve">
     <value>Venta Nueva</value>
   </data>
+  <data name="HostAddress" xml:space="preserve">
+    <value>Dirección IP</value>
+  </data>
 </root>
