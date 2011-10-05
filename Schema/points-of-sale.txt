@@ -1,0 +1,7 @@
+DELETE FROM `be_framos`.`price_list`;
+INSERT INTO `be_framos`.`price_list`
+(`price_list_id`,`name`, `high_profit_margin`, `low_profit_margin`)
+VALUES (1,'Supermostrador',0,0),
+(2,'Mostrador',0,0),
+(3,'Mayoreo',0,0),
+(4,'Especial',0,0);
