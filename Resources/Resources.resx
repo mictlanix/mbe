@@ -382,7 +382,7 @@
     <value>Fecha de Fin</value>
   </data>
   <data name="Start" xml:space="preserve">
-    <value>Fecha de Inicio</value>
+    <value> Inicio</value>
   </data>
   <data name="Title_SupplierAgreement" xml:space="preserve">
     <value>Contratos</value>
@@ -766,12 +766,36 @@
     <value>Punto de Venta Inválido</value>
   </data>
   <data name="Message_InvalidPointOfSale" xml:space="preserve">
-    <value>La maquina de la cuál se hizo la solicitud de venta no está registrada como un punto de venta válido.</value>
+    <value>La máquina de la cuál se hizo la solicitud de venta no está registrada como un punto de venta válido.</value>
   </data>
   <data name="Message_DeleteUnsuccessful" xml:space="preserve">
     <value>No se pudo borrar el elemento porque existen dependencias en el sistema hacia él.</value>
   </data>
   <data name="Error" xml:space="preserve">
     <value>Error</value>
+  </data>
+  <data name="InvalidCashDrawer" xml:space="preserve">
+    <value>Caja Inválido</value>
+  </data>
+  <data name="Message_InvalidCashDrawer" xml:space="preserve">
+    <value>La máquina de la cuál se hizo la solicitud de cobro no está registrada como una caja válida.</value>
+  </data>
+  <data name="CloseSession" xml:space="preserve">
+    <value>Cerrar Sesión</value>
+  </data>
+  <data name="DisplayName_CashSession" xml:space="preserve">
+    <value>Sesión de la Caja</value>
+  </data>
+  <data name="StartSession" xml:space="preserve">
+    <value>Iniciar Sesión</value>
+  </data>
+  <data name="DisplayName_CloseSession" xml:space="preserve">
+    <value>Cierre de Sesión</value>
+  </data>
+  <data name="Title_CloseSession" xml:space="preserve">
+    <value>Cierre de Sesión</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Tipo de Pago</value>
   </data>
 </root>

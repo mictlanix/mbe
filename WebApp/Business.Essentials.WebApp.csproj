@@ -136,6 +136,8 @@
     <Compile Include="Helpers\SecurityHelpers.cs" />
     <Compile Include="Helpers\HtmlHelpers.cs" />
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\MoneyCount.cs" />
+    <Compile Include="Models\MasterDetails.cs" />
     <Compile Include="Models\Search.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -363,21 +365,6 @@
     <Content Include="Views\Warehouses\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\CashDrawer\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\CashDrawer\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\CashDrawer\Details.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\CashDrawer\Delete.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\CashDrawer\Create.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Contacts\_Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -499,6 +486,22 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\UnknownError.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Payments\OpenSession.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CashDrawers\Create.cshtml" />
+    <Content Include="Views\CashDrawers\Delete.cshtml" />
+    <Content Include="Views\CashDrawers\Details.cshtml" />
+    <Content Include="Views\CashDrawers\Edit.cshtml" />
+    <Content Include="Views\CashDrawers\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Payments\_SessionInfo.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Payments\CloseSession.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

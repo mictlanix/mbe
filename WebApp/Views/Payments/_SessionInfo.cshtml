@@ -1,0 +1,27 @@
+﻿@model Business.Essentials.Model.CashSession
+
+<fieldset>
+    <legend>@Business.Essentials.Resources.DisplayName_CashSession</legend>
+
+    
+    <div class="display-label">
+        @Html.LabelFor(model => model.CashDrawer) :
+        @Html.DisplayFor(model => model.CashDrawer.Name)
+    </div>
+    
+    <div class="display-label">
+        @Html.LabelFor(model => model.Cashier) :
+        @Html.DisplayFor(model => model.Cashier.Name)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Start) :
+        @Html.DisplayFor(model => model.Start)
+    </div>
+    @if (ViewBag.ShowCloseSession)
+    {
+        <div class="right floating">
+            @Html.ActionLink(Business.Essentials.Resources.CloseSession, "CloseSession")
+        </div>
+    }
+</fieldset>
