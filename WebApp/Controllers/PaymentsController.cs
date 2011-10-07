@@ -13,11 +13,37 @@ namespace Business.Essentials.WebApp.Controllers
     {
         public ViewResult Index()
         {
-            var qry = from x in SalesOrder.Queryable
-                      where x.IsCompleted && !x.IsPaid && !x.IsCancelled
-                      select x;
+            if (GetDrawer() == null)
+            {
+                return View("InvalidCashDrawer");
+            }
+            else
+            {
+                var qry = from x in SalesOrder.Queryable
+                          where x.IsCompleted && !x.IsPaid && !x.IsCancelled
+                          select x;
 
-            return View(qry.ToList());
+                return View(qry.ToList());
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Index()
+        {
+            var session = new CashSession();
+            var payment = new CustomerPayment();
+
+            session.CashDrawer = GetDrawer();
+            if (GetDrawer() == null)
+            {
+                return View("InvalidCashDrawer");
+            }
+            session.Start = DateTime.Now;
+            session.Cashier = Employee.Find(1);
+            payment.Date = DateTime.Now;
+            payment.CashSession = session;
+            
+            return View("Index");
         }
 
         public ActionResult PayOrder(int id)
@@ -84,6 +110,12 @@ namespace Business.Essentials.WebApp.Controllers
 
             return RedirectToAction("Index");
         }
-        
+
+        CashDrawer GetDrawer()
+        {
+            var addr = Request.UserHostAddress;
+
+            return CashDrawer.Queryable.SingleOrDefault(x => x.HostAddress == addr);
+        }
     }
 }
