@@ -28,13 +28,6 @@ div#logo {
 #dialog-confirm {
   display:none
 }
-#sales-totals {
-  width:300px;
-  z-index:1;
-  position:fixed;
-  right:80px;
-  bottom:34px;
-}
 .page {
   width:96%;
   margin:10px auto;
@@ -42,17 +35,29 @@ div#logo {
 .date {
   white-space:nowrap;
 }
-.number,input.number  {
-  text-align:right;
-}
 .left {
   text-align:left;
 }
 .center {
   text-align:center;
 }
+.right,.number,input.number  {
+  text-align:right;
+}
+.left.floating {
+  float:left;
+  clear:left;
+}
+.right.floating {
+  float:right;
+  clear:right;
+}
+.display-field, .editor-field {
+  margin:1em 0 0 0;
+}
 .edit,.edit-ok {
   display:inline-block;
+  margin:2px 0;
   min-width:60px;
   text-align:right;
 }
@@ -61,6 +66,9 @@ div#logo {
 }
 .edit-ok {
   background:#00CD00;
+}
+fieldset {
+  padding: 0 1.4em 0 1.4em;
 }
 table {
   width:100%;
@@ -71,4 +79,52 @@ table th {
 table td.actions {
   white-space:nowrap;
   width:1px;
+}
+label {
+  font-weight:bold;
+}
+ul.token-input-list {
+  margin:2px 0;
+}
+ul.sales-items {
+    list-style-type:none;
+    padding-left: 0px;
+}
+ul.sales-items li:hover {
+  background:AliceBlue ;
+}
+ul.sales-items li:first-child {
+  border-top:1px solid gray;
+}
+ul.sales-items li {
+  border-bottom:1px solid gray;
+}
+ul.sales-items li div.photo {
+  float:left;
+}
+ul.sales-items li div.photo img {
+  display:block;
+  margin:8px 5px 0 5px;
+  max-width:50px;
+  max-height:50px;
+}
+ul.sales-items li div.info {
+  margin:0 0 0 60px;
+}
+ul.sales-items li div.action-link {
+  float:right;
+  margin:0 5px 0 0;
+}
+#sales-totals {
+  width:300px;
+  z-index:1;
+  position:fixed;
+  top:259px;
+  right:40px;
+}
+.search-box {
+  display:inline-block;
+}
+.search-box {
+  display:inline-block;
 }

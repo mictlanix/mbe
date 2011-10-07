@@ -44,6 +44,7 @@ namespace Business.Essentials.Model
 
         [PrimaryKey(PrimaryKeyType.Identity, "sales_order_id")]
         [Display(Name = "SalesOrderId", ResourceType = typeof(Resources))]
+        [DisplayFormat(DataFormatString="{0:000000}")]
         public int Id { get; set; }
 
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]

@@ -3,20 +3,33 @@
 <fieldset>
     <legend>@Business.Essentials.Resources.DisplayName_SalesInformation</legend>
 
-    <div class="display-label">
-        @Html.LabelFor(model => model.Id)
-    </div>
-    <div class="display-field">
+    <div class="display-label right floating">
+        @Html.LabelFor(model => model.Id):
         @Html.DisplayFor(model => model.Id)
     </div>
 
-    <div class="display-label">
-        @Html.LabelFor(model => model.Date)
-    </div>
-    <div class="display-field">
+    <div class="display-label right floating">
+        @Html.LabelFor(model => model.Date):
         @Html.DisplayFor(model => model.Date)
     </div>
 
+    @if (Model.IsCredit)
+    {
+        <div class="display-label right floating">
+            @Html.LabelFor(model => model.DueDate)
+            @Html.DisplayFor(model => model.DueDate)
+        </div>
+    }
+    
+    <div class="right floating">
+        <p>
+        @using (Html.BeginForm("CancelOrder", "Sales", new { id =  Model.Id }))
+        {
+            <input type="submit" value="@Business.Essentials.Resources.CancelOrder" />
+        }
+        </p>
+    </div>
+    
     <div class="display-label">
         @Html.LabelFor(model => model.Customer)
     </div>
@@ -31,29 +44,11 @@
         @Html.DisplayFor(model => model.Customer.PriceList.Name)
     </div>
 
-    @if (Model.IsCredit)
-    {
-        <div class="display-label">
-            @Html.LabelFor(model => model.DueDate)
-        </div>
-        <div class="display-field">
-            @Html.DisplayFor(model => model.DueDate)
-        </div>
-    }
-    
-    <div style="float:right">
-        @using (Html.BeginForm("CancelOrder", "Sales"))
-        {
-            @Html.Hidden("id", Model.Id)
-            <input type="submit" value="@Business.Essentials.Resources.CancelOrder" />
-
-        }
-    </div>
-    
     <div id="edit-sales-order" style="@(Model.Details.Count > 0 ? "display:none" : "")" >
+        <p>
         @Ajax.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "sales-order" })
+        </p>
     </div>
-    
 </fieldset>
 <script type="text/javascript">
     var SalesOrder = { Id: @Model.Id };

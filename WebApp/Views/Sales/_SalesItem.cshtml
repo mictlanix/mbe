@@ -1,7 +1,19 @@
 ﻿@model Business.Essentials.Model.SalesOrderDetail
+
 <li id="item@(Model.Id)">
-    <img style="min-width:50px;max-width:50px;height:50px;vertical-align:top;" src="@Url.Content("~/Photos/" + Model.Product.Photo)" title="@Model.ProductName"/>
-    <div style="display:inline-block;height:60px;vertical-align:top;">
+    <div class="photo">
+        <img src="@Url.Content("~/Photos/" + Model.Product.Photo)" title="@Model.ProductName"/>
+    </div>
+    <div class="action-link">
+        <a class="remove" href="/Sales/RemoveDetail/@Model.Id">@Business.Essentials.Resources.Delete</a>
+        <script type="text/javascript">
+            $("#item@(Model.Id) a.remove").click(function(event){
+                event.preventDefault();
+                removeItem(@Model.Id);
+            });
+        </script>
+    </div>
+    <div class="info">
         <b>@Model.ProductName</b><br/>
         <b>@Business.Essentials.Resources.Code:</b> @Model.ProductCode 
         <b>@Business.Essentials.Resources.SKU:</b> @Model.Product.SKU <br/>
@@ -12,12 +24,5 @@
         <div class='edit discount'>@Model.Discount.ToString("p")</div>
         <b>@Business.Essentials.Resources.Amount:</b>
         <strong class='total'>@Html.DisplayFor(x => x.Total)</strong>
-        <a class="remove" href="/Sales/RemoveDetail/@Model.Id">@Business.Essentials.Resources.Delete</a>
-        <script type="text/javascript">
-            $("#item@(Model.Id) a.remove").click(function(event){
-                event.preventDefault();
-                removeItem(@Model.Id);
-            });
-        </script>
     </div>
 </li>
