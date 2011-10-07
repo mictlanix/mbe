@@ -11,7 +11,7 @@
         <b>Descuento:</b>
         <div class='edit discount'>@Model.Discount.ToString("p")</div>
         <b>Importe:</b>
-        <span class='total'>@Model.Total</span>
+        <strong class='total'>@Html.DisplayFor(x => x.Total)</strong>
         <a class="remove" href="/Sales/RemoveDetail/@Model.Id">@Business.Essentials.Resources.Delete</a>
         <script type="text/javascript">
             $("#item@(Model.Id) a.remove").click(function(event){

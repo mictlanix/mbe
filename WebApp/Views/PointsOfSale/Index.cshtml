@@ -1,11 +1,11 @@
 ﻿@using Business.Essentials.Model
-@model IEnumerable<Business.Essentials.Model.PointSale>
+@model IEnumerable<Business.Essentials.Model.PointOfSale>
 
 @{
-    ViewBag.Title = Business.Essentials.Resources.Title_PointSale;
+    ViewBag.Title = Business.Essentials.Resources.Title_PointOfSale;
 }
 
-<h2>@Business.Essentials.Resources.DisplayName_PointSale</h2>
+<h2>@Business.Essentials.Resources.DisplayName_PointsOfSale</h2>
 
 <p>
     @Html.ActionLink(Business.Essentials.Resources.CreateNew, "Create")
@@ -13,14 +13,14 @@
 <table>
     <tr>
         <th>
-            @Html.LabelFor(x => new PointSale().Code)
+            @Html.LabelFor(x => new PointOfSale().Code)
         </th>
 
         <th>
-            @Html.LabelFor(x => new PointSale().Name)
+            @Html.LabelFor(x => new PointOfSale().Name)
         </th>
         <th>
-            @Html.LabelFor(x => new PointSale().Comment)
+            @Html.LabelFor(x => new PointOfSale().Comment)
         </th>
         
         <th></th>

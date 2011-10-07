@@ -10,6 +10,20 @@ namespace Business.Essentials.WebApp.Controllers
 {
     public class EmployeesController : Controller
     {
+
+        // AJAX
+        // GET: /Categories/GetSuggestions
+
+        public JsonResult GetSuggestions(string pattern)
+        {
+            var qry = from x in Employee.Queryable
+                      where x.FirstName.Contains(pattern) ||
+                            x.LastName.Contains(pattern)
+                      select new { id = x.Id, name = x.FirstName + " " + x.LastName };
+
+            return Json(qry.Take(15).ToList(), JsonRequestBehavior.AllowGet);
+        }
+
         //
         // GET: /Employee/
 
@@ -46,7 +60,7 @@ namespace Business.Essentials.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                employee.Save();
+                employee.Create();
                 return RedirectToAction("Index");
             }
 
@@ -70,7 +84,7 @@ namespace Business.Essentials.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                employee.Save();
+                employee.Update();
                 return RedirectToAction("Index");
             }
             return View(employee);

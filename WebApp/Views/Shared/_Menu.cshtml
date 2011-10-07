@@ -1,4 +1,9 @@
-﻿@using Business.Essentials.WebApp.Helpers;
+﻿@using Business.Essentials.Model;
+@using Business.Essentials.WebApp.Helpers;
+
+@{
+    ViewBag.User = Html.CurrentUser() ?? new User();
+}
 
 <div id="gb">
     <div id="gbz">
@@ -6,7 +11,7 @@
             <li class="gbt">
                 <a class="gbzt @Html.GetMenuClass("Home", "Index")" href="@Url.Action("Index", "Home")">
                     <span class="gbtb2"></span>
-                    <span class="gbts">@Business.Essentials.Resources.Title_Home</span>
+                    <span class="gbts">@Business.Essentials.Resources.Menu_Home</span>
                 </a>
             </li>
             <li class="gbt">
@@ -53,5 +58,7 @@
             </li>
         </ol>
     </div>
-    <div id="gbx3"/>
+    @Html.Partial("_LogOnPartial")
+    <div id="gbx3"></div>
+    <div id="gbx4"></div>
 </div>

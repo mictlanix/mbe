@@ -1,9 +1,8 @@
 ﻿// 
-// Warehouse.cs
+// AccessPrivilege.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
-//   Eduardo Nieto <enieto@mictlanix.org>
 // 
 // Copyright (C) 2011 Eddy Zavaleta, Mictlanix (http://www.mictlanix.org)
 // 
@@ -35,29 +34,48 @@ using Castle.ActiveRecord.Framework;
 
 namespace Business.Essentials.Model
 {
-    [ActiveRecord("warehouse")]
-    public class Warehouse : ActiveRecordLinqBase<Warehouse>
+    [ActiveRecord("access_privilege")]
+    public class AccessPrivilege : ActiveRecordLinqBase<AccessPrivilege>
     {
-        [PrimaryKey(PrimaryKeyType.Identity, "warehouse_id")]
+        [PrimaryKey(PrimaryKeyType.Identity, "access_privilege_id")]
         public int Id { get; set; }
 
-        [Property]
-        [Display(Name = "Code", ResourceType = typeof(Resources))]
+        [BelongsTo("user")]
+        [Display(Name = "User", ResourceType = typeof(Resources))]
+        public virtual User User { get; set; }
+
+        [Property()]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [StringLength(25, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Code { get; set; }
-        
-        [Property]
-        [Display(Name = "Name", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Name { get; set; }
+        [Display(Name = "SystemObject", ResourceType = typeof(Resources))]
+        public SystemObjects Object { get; set; }
 
         [Property]
-        [DataType(DataType.MultilineText)]
-        [Display(Name = "Comment", ResourceType = typeof(Resources))]
-        [StringLength(500, MinimumLength = 0)]
-        public string Comment { get; set; }
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+        [Display(Name = "Privileges", ResourceType = typeof(Resources))]
+        public AccessRight Privileges { get; set; }
 
+        public bool AllowCreate
+        {
+            get { return (Privileges & AccessRight.Create) == AccessRight.Create; }
+            set { Privileges = value ? Privileges | AccessRight.Create : Privileges & ~AccessRight.Create; }
+        }
+
+        public bool AllowRead
+        {
+            get { return (Privileges & AccessRight.Read) == AccessRight.Read; }
+            set { Privileges = value ? Privileges | AccessRight.Read : Privileges & ~AccessRight.Read; }
+        }
+
+        public bool AllowUpdate
+        {
+            get { return (Privileges & AccessRight.Update) == AccessRight.Update; }
+            set { Privileges = value ? Privileges | AccessRight.Update : Privileges & ~AccessRight.Update; }
+        }
+
+        public bool AllowDelete
+        {
+            get { return (Privileges & AccessRight.Delete) == AccessRight.Delete; }
+            set { Privileges = value ? Privileges | AccessRight.Delete : Privileges & ~AccessRight.Delete; }
+        }
     }
 }

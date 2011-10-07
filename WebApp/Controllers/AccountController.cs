@@ -1,16 +1,67 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
+using Business.Essentials.Model;
 using Business.Essentials.WebApp.Models;
 
 namespace Business.Essentials.WebApp.Controllers
 {
     public class AccountController : Controller
     {
+        bool ValidateUser(string username, string password)
+        {
+            User user = Model.User.Queryable.SingleOrDefault(x => x.UserName == username);
+            return user != null && user.Password == SHA1(password);
+        }
+
+        bool CreateUser(string username, string password, int employee, string email)
+        {
+            User user = new User
+            {
+                UserName = username,
+                Password = SHA1(password),
+                Employee = Employee.Find(employee),
+                Email = email
+            };
+
+            if (Model.User.Queryable.Count(x => x.UserName == username) > 0)
+            {
+                throw new Exception(Business.Essentials.Resources.Message_UserNameAlreadyExists);
+            }
+
+            user.Create();
+
+            return true;
+        }
+
+        bool ChangePassword(string username, string oldPassword, string newPassword)
+        {
+            User user = Model.User.Find(username);
+            string pwd = SHA1(oldPassword);
+
+            if (user == null || user.Password != pwd)
+                return false;
+
+            user.Password = SHA1(newPassword);
+            user.Save();
+            
+            return true;
+        }
+
+
+        protected string SHA1(string text)
+        {
+            byte[] bytes = Encoding.Default.GetBytes("" + text);
+            SHA1CryptoServiceProvider sha1 = new SHA1CryptoServiceProvider();
+
+            return BitConverter.ToString(sha1.ComputeHash(bytes)).Replace("-", "");
+        }
 
         //
         // GET: /Account/LogOn
@@ -28,7 +79,7 @@ namespace Business.Essentials.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (Membership.ValidateUser(model.UserName, model.Password))
+                if (ValidateUser(model.UserName, model.Password))
                 {
                     FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
                     if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
@@ -43,7 +94,7 @@ namespace Business.Essentials.WebApp.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "The user name or password provided is incorrect.");
+                    ModelState.AddModelError("", Business.Essentials.Resources.Message_InvalidUserPassword);
                 }
             }
 
@@ -66,7 +117,7 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ActionResult Register()
         {
-            return View();
+            return View(new RegisterModel());
         }
 
         //
@@ -78,17 +129,22 @@ namespace Business.Essentials.WebApp.Controllers
             if (ModelState.IsValid)
             {
                 // Attempt to register the user
-                MembershipCreateStatus createStatus;
-                Membership.CreateUser(model.UserName, model.Password, model.Email, null, null, true, null, out createStatus);
 
-                if (createStatus == MembershipCreateStatus.Success)
+                try
                 {
-                    FormsAuthentication.SetAuthCookie(model.UserName, false /* createPersistentCookie */);
-                    return RedirectToAction("Index", "Home");
+                    if (CreateUser(model.UserName, model.Password, model.EmployeeId, model.Email))
+                    {
+                        FormsAuthentication.SetAuthCookie(model.UserName, false);
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", Business.Essentials.Resources.Message_UnknownError);
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    ModelState.AddModelError("", ErrorCodeToString(createStatus));
+                    ModelState.AddModelError("", ex.Message);                    
                 }
             }
 
@@ -114,14 +170,13 @@ namespace Business.Essentials.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-
                 // ChangePassword will throw an exception rather
                 // than return false in certain failure scenarios.
                 bool changePasswordSucceeded;
+
                 try
                 {
-                    MembershipUser currentUser = Membership.GetUser(User.Identity.Name, true /* userIsOnline */);
-                    changePasswordSucceeded = currentUser.ChangePassword(model.OldPassword, model.NewPassword);
+                    changePasswordSucceeded = ChangePassword(User.Identity.Name, model.OldPassword, model.NewPassword);
                 }
                 catch (Exception)
                 {
@@ -134,7 +189,7 @@ namespace Business.Essentials.WebApp.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
+                    ModelState.AddModelError("", Business.Essentials.Resources.Message_ChangePasswordWrong);
                 }
             }
 
@@ -149,45 +204,5 @@ namespace Business.Essentials.WebApp.Controllers
         {
             return View();
         }
-
-        #region Status Codes
-        private static string ErrorCodeToString(MembershipCreateStatus createStatus)
-        {
-            // See http://go.microsoft.com/fwlink/?LinkID=177550 for
-            // a full list of status codes.
-            switch (createStatus)
-            {
-                case MembershipCreateStatus.DuplicateUserName:
-                    return "User name already exists. Please enter a different user name.";
-
-                case MembershipCreateStatus.DuplicateEmail:
-                    return "A user name for that e-mail address already exists. Please enter a different e-mail address.";
-
-                case MembershipCreateStatus.InvalidPassword:
-                    return "The password provided is invalid. Please enter a valid password value.";
-
-                case MembershipCreateStatus.InvalidEmail:
-                    return "The e-mail address provided is invalid. Please check the value and try again.";
-
-                case MembershipCreateStatus.InvalidAnswer:
-                    return "The password retrieval answer provided is invalid. Please check the value and try again.";
-
-                case MembershipCreateStatus.InvalidQuestion:
-                    return "The password retrieval question provided is invalid. Please check the value and try again.";
-
-                case MembershipCreateStatus.InvalidUserName:
-                    return "The user name provided is invalid. Please check the value and try again.";
-
-                case MembershipCreateStatus.ProviderError:
-                    return "The authentication provider returned an error. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
-
-                case MembershipCreateStatus.UserRejected:
-                    return "The user creation request has been canceled. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
-
-                default:
-                    return "An unknown error occurred. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
-            }
-        }
-        #endregion
     }
 }

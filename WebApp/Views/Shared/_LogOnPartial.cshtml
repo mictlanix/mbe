@@ -1,7 +1,63 @@
-﻿@if(Request.IsAuthenticated) {
-    <text>Welcome <strong>@User.Identity.Name</strong>!
-    [ @Html.ActionLink("Log Off", "LogOff", "Account") ]</text>
-}
-else {
-    @:[ @Html.ActionLink("Log On", "LogOn", "Account") ]
+﻿
+<div id="gbw">
+    <div id="gbg">
+        <h2 class="gbxx">Account Options</h2>
+        <span class="gbtcb"></span>
+        <ol class="gbtc">
+            <li class="gbt">
+                <a id="gbg4" class="gbgt" href="@(Request.IsAuthenticated ? "javascript:void(0)" : @Url.Action("LogOn", "Account"))">
+                    <span class="gbtb2"></span>
+                    <span id="gbgs4" class="gbts gbtsa">
+                        <span id="gbi4">
+                            <span id="gbi4m1">@(Request.IsAuthenticated ? User.Identity.Name : Business.Essentials.Resources.SignIn)</span>
+                            <span class="gbma"></span>
+                        </span>
+                    </span>
+                </a>
+                @if (Request.IsAuthenticated)
+                {
+                <div id="gbd4" class="gbm" style="top:32px;right:-6px;left:auto;visibility:hidden;">
+                    <div class="gbmc">
+                        <div id="gbmpdv" style="width:240px;">
+                            <div class="gbpc">
+                                <span id="gbmpn" class="gbps">@ViewBag.User.Employee</span>
+                                <span class="gbps2">@ViewBag.User.Email</span>
+                                <ol class="gbmcc">
+                                    <li class="gbmtc"></li>
+                                    <li class="gbmtc">
+                                        <a class="gbml1" href="@Url.Action("ChangePassword", "Account")">Cambiar Contraseña</a>
+                                    </li>
+                                </ol>
+                            </div>
+                            <div class="gbmh"></div>
+                            <div class="gbmpal">
+                                <a class="gbml1" href="@Url.Action("LogOff", "Account")">
+                                    <span class="gbmpala">Salir</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                }
+            </li>
+            <li class="gbt gbtb">
+                <span class="gbts"></span>
+            </li>
+        </ol>
+    </div>
+</div>
+
+@if(Request.IsAuthenticated)
+{
+    <script type="text/javascript">
+        $(function () {
+            $('#gbg4').toggle(function () {
+                $('#gbg4').parent().addClass('gbto');
+                $('#gbd4').css({ "visibility": "visible" });
+            }, function () {
+                $('#gbg4').parent().removeClass('gbto');
+                $('#gbd4').css({ "visibility": "hidden" });
+            });
+        });
+    </script>
 }

@@ -1,9 +1,8 @@
 ﻿// 
-// Category.cs
+// SystemObjects.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
-//   Eduardo Nieto <enieto@mictlanix.org>
 // 
 // Copyright (C) 2011 Eddy Zavaleta, Mictlanix (http://www.mictlanix.org)
 // 
@@ -35,23 +34,25 @@ using Castle.ActiveRecord.Framework;
 
 namespace Business.Essentials.Model
 {
-    [ActiveRecord("category")]
-    public class Category : ActiveRecordLinqBase<Category>
+    public enum SystemObjects : int
     {
-        [PrimaryKey(PrimaryKeyType.Identity, "category_id")]
-        public int Id { get; set; }
-
-        [Property]
-        [Display(Name = "Name", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Name { get; set; }
-
-        [Property]
-        [DataType(DataType.MultilineText)]
-        [Display(Name = "Comment", ResourceType = typeof(Resources))]
-        [StringLength(500, MinimumLength = 0)]
-        public string Comment { get; set; }
-
+        [Display(Name = "DisplayName_Products", ResourceType = typeof(Resources))]
+        Products,
+        [Display(Name = "DisplayName_Categories", ResourceType = typeof(Resources))]
+        Categories,
+        [Display(Name = "DisplayName_Customers", ResourceType = typeof(Resources))]
+        Customers,
+        [Display(Name = "DisplayName_Suppliers", ResourceType = typeof(Resources))]
+        Suppliers,
+        [Display(Name = "DisplayName_Warehouses", ResourceType = typeof(Resources))]
+        Warehouses,
+        [Display(Name = "DisplayName_PriceLists", ResourceType = typeof(Resources))]
+        PriceLists,
+        [Display(Name = "DisplayName_Employees", ResourceType = typeof(Resources))]
+        Employees,
+        [Display(Name = "DisplayName_SalesOrders", ResourceType = typeof(Resources))]
+        SalesOrders,
+        [Display(Name = "DisplayName_CustomerPayments", ResourceType = typeof(Resources))]
+        CustomerPayments,
     }
 }

@@ -1,0 +1,50 @@
+﻿@using Business.Essentials.Model;
+@using Business.Essentials.WebApp.Helpers;
+@model IEnumerable<User>
+
+@{
+    ViewBag.Title = Business.Essentials.Resources.Title_Users;
+}
+
+<h2>@Business.Essentials.Resources.DisplayName_Users</h2>
+
+<table>
+    <tr>
+        <th>
+            @Html.LabelFor(x => new User().UserName)
+        </th>
+        <th>
+            @Html.LabelFor(x => new User().Employee.Name)
+        </th>
+        <th>
+            @Html.LabelFor(x => new User().Email)
+        </th>
+        <th>
+            @Html.LabelFor(x => new User().IsAdministrator)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.UserName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Employee.Name)
+        </td>
+        <td class="center">
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td class="center">
+            @Html.DisplayFor(modelItem => item.IsAdministrator)
+        </td>
+        <td class="actions">
+            @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id = item.UserName }) |
+            @Html.ActionLink(Business.Essentials.Resources.Details, "Details", new { id = item.UserName }) |
+            @Html.ActionLink(Business.Essentials.Resources.Delete, "Delete", new { id = item.UserName })
+        </td>
+    </tr>
+}
+
+</table>

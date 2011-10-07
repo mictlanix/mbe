@@ -1,4 +1,18 @@
-﻿#dialog-confirm{display:none}
+﻿body{background: transparent url(images/body-bg.png);}
+#container{position: relative;background: transparent url(images/header-bg.png) repeat-x top left;}
+header, #header {
+    top:32px;
+    height: 160px;
+    position: relative;
+    margin: 0 auto;
+    width: 90%;
+    z-index: 10;
+}
+header h1, #header h1 {
+    margin-top: 45px;
+    color:#F50;
+}
+#dialog-confirm{display:none}
 #sales-totals {
   width:300px;
   z-index:1;
@@ -6,15 +20,23 @@
   right:80px;
   bottom:34px;
 }
+.left {
+  text-align:left;
+}
 .center {
   text-align:center;
 }
-.number {
+.number,input.number  {
   text-align:right;
 }
-.edit {
+.edit,.edit-ok {
     display:inline-block;
     min-width:60px;
     text-align:right;
-    background:yellow;
+}
+.edit:hover {
+  background:#fffcc3;
+}
+.edit-ok {
+  background:#00CD00;
 }

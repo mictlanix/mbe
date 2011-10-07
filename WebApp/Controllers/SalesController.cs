@@ -45,7 +45,9 @@ namespace Business.Essentials.WebApp.Controllers
         {
             var customer = Customer.Find(item.CustomerId);
             var salesperson = Employee.Find(1); //FIXME use user logged on
-            var point_sale = PointSale.Find(1); //FIXME use settings
+            var point_sale = PointOfSale.Find(1); //FIXME use settings
+
+            var addr = Request.UserHostAddress;
 
             item.Customer = customer;
             item.SalesPerson = salesperson;

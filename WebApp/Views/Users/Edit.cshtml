@@ -1,0 +1,110 @@
+﻿@using Business.Essentials.Model;
+@using Business.Essentials.WebApp.Helpers;
+@model Business.Essentials.Model.User
+
+@{
+    ViewBag.Title = Business.Essentials.Resources.Edit;
+}
+
+<h2>@Business.Essentials.Resources.Edit</h2>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>@Business.Essentials.Resources.User</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.UserName)
+        </div>
+        <div class="editor-field">
+            @Html.HiddenFor(model => model.UserName)
+            @Html.DisplayFor(model => model.UserName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Employee.Name)
+        </div>
+        <div class="editor-field">
+            @Html.DisplayFor(model => model.Employee.Name)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Email)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Email)
+            @Html.ValidationMessageFor(model => model.Email)
+        </div>
+
+        <div class="editor-label">
+            @Html.EditorFor(model => model.IsAdministrator)
+            @Html.LabelFor(model => model.IsAdministrator)
+        </div>
+
+        <table>
+            <tr>
+                <th>@Business.Essentials.Resources.Module</th>
+                <th>
+                    @Html.CheckBox("Create")
+                    @Business.Essentials.Resources.Create
+                </th>
+                <th>
+                    @Html.CheckBox("Read")
+                    @Business.Essentials.Resources.Read
+                </th>
+                <th>
+                    @Html.CheckBox("Update")
+                    @Business.Essentials.Resources.Update
+                </th>
+                <th>
+                    @Html.CheckBox("Delete")
+                    @Business.Essentials.Resources.Delete
+                </th>
+            </tr>
+            @foreach(var item in Enum.GetValues(typeof(SystemObjects)))
+            {
+            <tr class="center">
+                <td class="left">
+                    @(((SystemObjects)item).GetDisplayName())
+                </td>
+                <td>
+                    @Html.CheckBox(Enum.GetName(typeof(SystemObjects), item) + "Create",
+                                   Model.Privileges.Count(x => x.Object == (SystemObjects)item && (x.Privileges & AccessRight.Create) != 0) > 0)
+                </td>
+                <td>
+                    @Html.CheckBox(Enum.GetName(typeof(SystemObjects), item) + "Read",
+                                    Model.Privileges.Count(x => x.Object == (SystemObjects)item && (x.Privileges & AccessRight.Read) != 0) > 0)
+                </td>
+                <td>
+                    @Html.CheckBox(Enum.GetName(typeof(SystemObjects), item) + "Update",
+                                    Model.Privileges.Count(x => x.Object == (SystemObjects)item && (x.Privileges & AccessRight.Update) != 0) > 0)
+                </td>
+                <td>
+                    @Html.CheckBox(Enum.GetName(typeof(SystemObjects), item) + "Delete",
+                                    Model.Privileges.Count(x => x.Object == (SystemObjects)item && (x.Privileges & AccessRight.Delete) != 0) > 0)
+                </td>
+            </tr>
+            }
+        </table>
+        <p>
+            <input type="submit" value="@Business.Essentials.Resources.Save" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("table tr:first th input:checkbox").click(function () {
+            var checkedStatus = this.checked;
+            $("table tr td input:checkbox[name$='" + this.name + "']").each(function () {
+                this.checked = checkedStatus;
+            });
+        });
+    });
+</script> 

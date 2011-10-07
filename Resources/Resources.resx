@@ -174,13 +174,13 @@
   <data name="Details" xml:space="preserve">
     <value>Detalles</value>
   </data>
-  <data name="DisplayName_Address" xml:space="preserve">
+  <data name="DisplayName_Addresses" xml:space="preserve">
     <value>Direcciones</value>
   </data>
-  <data name="DisplayName_BankAccount" xml:space="preserve">
+  <data name="DisplayName_BankAccounts" xml:space="preserve">
     <value>Bancos</value>
   </data>
-  <data name="DisplayName_CashRegister" xml:space="preserve">
+  <data name="DisplayName_CashDrawers" xml:space="preserve">
     <value>Catálogo de Cajas</value>
   </data>
   <data name="DisplayName_Contacts" xml:space="preserve">
@@ -189,7 +189,7 @@
   <data name="DisplayName_Customers" xml:space="preserve">
     <value>Catálogo de Clientes</value>
   </data>
-  <data name="DisplayName_PointSale" xml:space="preserve">
+  <data name="DisplayName_PointsOfSale" xml:space="preserve">
     <value>Catálogo de Puntos de Venta</value>
   </data>
   <data name="DisplayName_Products" xml:space="preserve">
@@ -198,7 +198,7 @@
   <data name="DisplayName_Suppliers" xml:space="preserve">
     <value>Catálogo de Proveedores</value>
   </data>
-  <data name="DisplayName_Warehouse" xml:space="preserve">
+  <data name="DisplayName_Warehouses" xml:space="preserve">
     <value>Catálogo de Almacenes</value>
   </data>
   <data name="Edit" xml:space="preserve">
@@ -312,7 +312,7 @@
   <data name="Title_BankAccount" xml:space="preserve">
     <value>Bancos</value>
   </data>
-  <data name="Title_CashRegister" xml:space="preserve">
+  <data name="Title_CashDrawer" xml:space="preserve">
     <value>Cajas</value>
   </data>
   <data name="Title_Category" xml:space="preserve">
@@ -324,7 +324,7 @@
   <data name="Title_Customer" xml:space="preserve">
     <value>Clientes</value>
   </data>
-  <data name="Title_PointSale" xml:space="preserve">
+  <data name="Title_PointOfSale" xml:space="preserve">
     <value>Puntos de Venta</value>
   </data>
   <data name="Title_PriceList" xml:space="preserve">
@@ -375,7 +375,7 @@
   <data name="Zone" xml:space="preserve">
     <value>Zona</value>
   </data>
-  <data name="DisplayName_SupplierAgreement" xml:space="preserve">
+  <data name="DisplayName_SupplierAgreements" xml:space="preserve">
     <value>Acuerdos con Proveedor</value>
   </data>
   <data name="End" xml:space="preserve">
@@ -397,7 +397,7 @@
     <value>Ramos Hermanos</value>
   </data>
   <data name="Title_Home" xml:space="preserve">
-    <value>Inicio</value>
+    <value>Mictlanix BE</value>
   </data>
   <data name="Title_About" xml:space="preserve">
     <value>Acerca de</value>
@@ -534,7 +534,7 @@
   <data name="Succes" xml:space="preserve">
     <value>Éxito</value>
   </data>
-  <data name="DisplayName_Employee" xml:space="preserve">
+  <data name="DisplayName_Employees" xml:space="preserve">
     <value>Catálogo de Empleados</value>
   </data>
   <data name="Title_Employee" xml:space="preserve">
@@ -552,8 +552,8 @@
   <data name="PointOfSale" xml:space="preserve">
     <value>Punto de Venta</value>
   </data>
-  <data name="DisplayName_SalesOrder" xml:space="preserve">
-    <value>Ventas</value>
+  <data name="DisplayName_SalesOrders" xml:space="preserve">
+    <value>Punto de Venta</value>
   </data>
   <data name="DisplayName_SalesOrderDetails" xml:space="preserve">
     <value>Detalles de la Venta</value>
@@ -608,5 +608,119 @@
   </data>
   <data name="Paid" xml:space="preserve">
     <value>Pagado</value>
+  </data>
+  <data name="DisplayName_Users" xml:space="preserve">
+    <value>Catálogo de Usuarios</value>
+  </data>
+  <data name="Menu_Home" xml:space="preserve">
+    <value>Inicio</value>
+  </data>
+  <data name="Title_Users" xml:space="preserve">
+    <value>Usuarios</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Usuario</value>
+  </data>
+  <data name="Administrator" xml:space="preserve">
+    <value>Administrador</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Contraseña</value>
+  </data>
+  <data name="Read" xml:space="preserve">
+    <value>Consultar</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Editar</value>
+  </data>
+  <data name="UserName" xml:space="preserve">
+    <value>Usuario</value>
+  </data>
+  <data name="DisplayName_Categories" xml:space="preserve">
+    <value>Líneas de Producto</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>Nínguno</value>
+  </data>
+  <data name="DisplayName_CustomerPayments" xml:space="preserve">
+    <value>Caja de Cobro</value>
+  </data>
+  <data name="DisplayName_PriceLists" xml:space="preserve">
+    <value>Listas de Precios</value>
+  </data>
+  <data name="Module" xml:space="preserve">
+    <value>Módulo</value>
+  </data>
+  <data name="AccountInformation" xml:space="preserve">
+    <value>Información del Usuario</value>
+  </data>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>Cambiar Contraseña</value>
+  </data>
+  <data name="DisplayName_ChangePassword" xml:space="preserve">
+    <value>Cambio de Contraseña</value>
+  </data>
+  <data name="DisplayName_LogOn" xml:space="preserve">
+    <value>Inicio de Sesión</value>
+  </data>
+  <data name="DisplayName_Register" xml:space="preserve">
+    <value>Registro de Usuario</value>
+  </data>
+  <data name="LogOn" xml:space="preserve">
+    <value>Iniciar Sesión</value>
+  </data>
+  <data name="Message_ChangePasswordFail" xml:space="preserve">
+    <value>El cambio de contraseña no fue exitoso. Por favor, corrija los errores y vuelva a intentarlo.</value>
+  </data>
+  <data name="Message_ChangePasswordSuccess" xml:space="preserve">
+    <value>Su contraseña se ha cambiado exitosamente.</value>
+  </data>
+  <data name="Message_LoginRegister" xml:space="preserve">
+    <value>Por favor ingrese su usuario y contraseña. O si usted no tiene un usuario, favor de</value>
+  </data>
+  <data name="Message_LoginUnsuccessful" xml:space="preserve">
+    <value>El inicio de sesión no fue exitoso. Por favor, corrija los errores y vuelva a intentarlo.</value>
+  </data>
+  <data name="Message_RegisterUnsuccessful" xml:space="preserve">
+    <value>El registro no fue exitoso. Por favor, corrija los errores y vuelva a intentarlo.</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Registrarse</value>
+  </data>
+  <data name="Title_ChangePassword" xml:space="preserve">
+    <value>Contraseña</value>
+  </data>
+  <data name="Title_LogOn" xml:space="preserve">
+    <value>Inicio de Sesión</value>
+  </data>
+  <data name="Title_Register" xml:space="preserve">
+    <value>Registro</value>
+  </data>
+  <data name="Message_ChangePasswordWrong" xml:space="preserve">
+    <value>La contraseña actual es incorrecta o la contraseña nueva es inválida.</value>
+  </data>
+  <data name="Message_InvalidUserPassword" xml:space="preserve">
+    <value>El usuario o contraseña es  incorrecto.</value>
+  </data>
+  <data name="Message_UnknownError" xml:space="preserve">
+    <value>Error desconocido. Por favor, verifica tus datos y vuelve a intentarlo. Si el problema persiste contacte a su administrador de sistema.</value>
+  </data>
+  <data name="Message_UserNameAlreadyExists" xml:space="preserve">
+    <value>El nombre de usuario ya existe.</value>
+  </data>
+  <data name="SignIn" xml:space="preserve">
+    <value>Acceder</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Confirmar Contraseña</value>
+  </data>
+  <data name="CurrentPassword" xml:space="preserve">
+    <value>Contraseña Actual</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>Contraseña Nueva</value>
+  </data>
+  <data name="RememberMe" xml:space="preserve">
+    <value>¿Recordarme?</value>
   </data>
 </root>

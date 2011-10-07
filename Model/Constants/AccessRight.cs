@@ -1,9 +1,8 @@
 ﻿// 
-// Category.cs
+// AccessRight.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
-//   Eduardo Nieto <enieto@mictlanix.org>
 // 
 // Copyright (C) 2011 Eddy Zavaleta, Mictlanix (http://www.mictlanix.org)
 // 
@@ -35,23 +34,18 @@ using Castle.ActiveRecord.Framework;
 
 namespace Business.Essentials.Model
 {
-    [ActiveRecord("category")]
-    public class Category : ActiveRecordLinqBase<Category>
+    [Flags]
+    public enum AccessRight : int
     {
-        [PrimaryKey(PrimaryKeyType.Identity, "category_id")]
-        public int Id { get; set; }
-
-        [Property]
-        [Display(Name = "Name", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Name { get; set; }
-
-        [Property]
-        [DataType(DataType.MultilineText)]
-        [Display(Name = "Comment", ResourceType = typeof(Resources))]
-        [StringLength(500, MinimumLength = 0)]
-        public string Comment { get; set; }
-
+        [Display(Name = "None", ResourceType = typeof(Resources))]
+        None = 0,
+        [Display(Name = "Create", ResourceType = typeof(Resources))]
+        Create = 1,
+        [Display(Name = "Read", ResourceType = typeof(Resources))]
+        Read = 2,
+        [Display(Name = "Update", ResourceType = typeof(Resources))]
+        Update = 4,
+        [Display(Name = "Delete", ResourceType = typeof(Resources))]
+        Delete = 8
     }
 }

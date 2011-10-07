@@ -1,4 +1,4 @@
-﻿@model Business.Essentials.Model.PointSale
+﻿@model Business.Essentials.Model.PointOfSale
 
 @{
     ViewBag.Title = Business.Essentials.Resources.CreateNew;
@@ -12,7 +12,7 @@
 @using (Html.BeginForm()) {
     @Html.ValidationSummary(true)
     <fieldset>
-        <legend>@Business.Essentials.Resources.Title_PointSale</legend>
+        <legend>@Business.Essentials.Resources.Title_PointOfSale</legend>
 
          <div class="editor-label">
             @Html.LabelFor(model => model.Code)
