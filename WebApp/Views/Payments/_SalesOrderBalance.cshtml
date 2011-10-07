@@ -25,11 +25,11 @@
 
     @if(Model.Balance >= 0)
     {
-        using (Html.BeginForm("ConfirmPayment", "Sales"))
+        using (Html.BeginForm("ConfirmPayment", "Payments"))
         {
             @Html.Hidden("id", Model.Id)
             <p>
-                <input type="submit" value="Complete Payment" />
+                <input type="submit" value="@Business.Essentials.Resources.CompletePayment" />
             </p>
         }
     }

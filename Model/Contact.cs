@@ -58,6 +58,7 @@ namespace Business.Essentials.Model
 
         [Property]
         [Display(Name = "Phone", ResourceType = typeof(Resources))]
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(25, MinimumLength = 8, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string Phone { get; set; }
        
@@ -85,6 +86,7 @@ namespace Business.Essentials.Model
         [Property]
         [Email(ErrorMessageResourceName = "Validation_Email", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "Email", ResourceType = typeof(Resources))]
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string Email { get; set; }
 

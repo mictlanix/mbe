@@ -206,15 +206,6 @@ namespace Business.Essentials.WebApp.Controllers
             return Json(new { id = id, result = true });
         }
 
-        public ActionResult PayOrders()
-        {
-            var qry = from x in SalesOrder.Queryable
-                      where x.IsCompleted && !x.IsPaid && !x.IsCancelled
-                      select x;
-
-            return View(qry.ToList());
-        }
-
         [HttpPost]
         public ActionResult ConfirmOrder(int id)
         {
@@ -224,13 +215,6 @@ namespace Business.Essentials.WebApp.Controllers
             item.Save();
 
             return RedirectToAction("New");
-        }
-
-        public ActionResult PayOrder(int id)
-        {
-            SalesOrder order = SalesOrder.Find(id);
-
-            return View("PayOrder", order);
         }
 
         [HttpPost]
@@ -243,71 +227,5 @@ namespace Business.Essentials.WebApp.Controllers
 
             return RedirectToAction("New");
         }
-
-        public ActionResult GetSalesOrderBalance(int id)
-        {
-            var order = SalesOrder.Find(id);
-
-            return PartialView("_SalesOrderBalance", order);
-        }
-
-        [HttpPost]
-        public JsonResult AddPayment(int order, int type, decimal amount, string reference)
-        {
-            var item = new CustomerPayment
-            {
-                SalesOrder = SalesOrder.Find(order),
-                Method = (PaymentMethod)type,
-                Amount = amount,
-                Date = DateTime.Now,
-                Reference = reference,
-            };
-
-            using (var session = new SessionScope())
-            {
-                item.CreateAndFlush();
-            }
-
-            while (item.Id == 0)
-            {
-                System.Diagnostics.Debug.WriteLine("New Detail Id: {0}", item.Id);
-                System.Threading.Thread.Sleep(10);
-                item.Refresh();
-            }
-
-            return Json(new { id = item.Id });
-        }
-
-        public ActionResult GetPayment(int id)
-        {
-            return PartialView("_Payment", CustomerPayment.Find(id));
-        }
-
-        [HttpPost]
-        public JsonResult RemovePayment(int id)
-        {
-            CustomerPayment item = CustomerPayment.Find(id);
-            item.Delete();
-            return Json(new { id = id, result = true });
-        }
-
-        public JsonResult GetBalance(int id)
-        {
-            SalesOrder order = SalesOrder.Find(id);
-
-            return Json(new { balance = order.Balance }, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpPost]
-        public ActionResult ConfirmPayment(int id)
-        {
-            SalesOrder item = SalesOrder.Find(id);
-
-            item.IsPaid = true;
-            item.Save();
-
-            return RedirectToAction("PayOrders");
-        }
-        
     }
 }

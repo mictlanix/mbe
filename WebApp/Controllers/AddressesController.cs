@@ -11,17 +11,6 @@ namespace Business.Essentials.WebApp.Controllers
     public class AddressesController : Controller
     {
         //
-        // GET: /Address/
-
-        public ViewResult Index()
-        {
-            var qry = from x in Address.Queryable
-                      select x;
-
-            return View(qry.ToList());
-        }
-
-        //
         // GET: /Address/Details/5
 
         public ViewResult Details(int id)

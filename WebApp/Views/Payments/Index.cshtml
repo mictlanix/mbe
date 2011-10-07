@@ -2,10 +2,10 @@
 @model IEnumerable<Business.Essentials.Model.SalesOrder>
 
 @{
-    ViewBag.Title = Business.Essentials.Resources.Title_SalesOrder;
+    ViewBag.Title = Business.Essentials.Resources.Title_PaySalesOrders;
 }
 
-<h2>@Business.Essentials.Resources.DisplayName_SalesOrders</h2>
+<h2>@Business.Essentials.Resources.DisplayName_PaySalesOrders</h2>
 
 <table>
     <tr>
@@ -63,7 +63,7 @@
         </td>
        
         <td>
-            @Html.ActionLink("Pay", "PayOrder", new { id = item.Id })
+            @Html.ActionLink(Business.Essentials.Resources.Pay, "PayOrder", new { id = item.Id })
         </td>
     </tr>
 }

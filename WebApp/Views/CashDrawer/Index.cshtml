@@ -19,6 +19,11 @@
         <th>
             @Html.LabelFor(x => new CashDrawer().Name)
         </th>
+
+        <th>
+            @Html.LabelFor(x => new CashDrawer().HostAddress)
+        </th>
+
         <th>
             @Html.LabelFor(x => new CashDrawer().Comment)
         </th>
@@ -31,9 +36,15 @@
         <td>
             @Html.DisplayFor(modelItem => item.Code)
         </td>
+
         <td>
             @Html.DisplayFor(modelItem => item.Name)
         </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.HostAddress)
+        </td>
+
         <td>
             @Html.DisplayFor(modelItem => item.Comment)
         </td>

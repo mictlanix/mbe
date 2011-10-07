@@ -1,7 +1,7 @@
 ﻿@model Business.Essentials.Model.SalesOrder
 
 <fieldset>
-    <legend>Sales Information</legend>
+    <legend>@Business.Essentials.Resources.DisplayName_SalesInformation</legend>
         @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "sales-order" }))
         {
             @Html.ValidationSummary(true)
