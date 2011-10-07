@@ -583,15 +583,6 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Caja.
-        /// </summary>
-        public static string DisplayName_PaySalesOrders {
-            get {
-                return ResourceManager.GetString("DisplayName_PaySalesOrders", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Catálogo de Puntos de Venta.
         /// </summary>
         public static string DisplayName_PointsOfSale {
@@ -1708,6 +1699,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Caja.
+        /// </summary>
+        public static string Title_CustomerPayment {
+            get {
+                return ResourceManager.GetString("Title_CustomerPayment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Empleados.
         /// </summary>
         public static string Title_Employee {
@@ -1753,15 +1753,6 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Caja.
-        /// </summary>
-        public static string Title_PaySalesOrders {
-            get {
-                return ResourceManager.GetString("Title_PaySalesOrders", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Puntos de Venta.
         /// </summary>
         public static string Title_PointOfSale {
@@ -1798,7 +1789,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Orden de Venta.
+        ///   Looks up a localized string similar to Ventas.
         /// </summary>
         public static string Title_SalesOrder {
             get {

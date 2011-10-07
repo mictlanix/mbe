@@ -559,7 +559,7 @@
     <value>Detalles de la Venta</value>
   </data>
   <data name="Title_SalesOrder" xml:space="preserve">
-    <value>Orden de Venta</value>
+    <value>Ventas</value>
   </data>
   <data name="SalesTotals" xml:space="preserve">
     <value>Totales</value>
@@ -738,16 +738,13 @@
   <data name="DisplayName_NewSale" xml:space="preserve">
     <value>Venta Nueva</value>
   </data>
-  <data name="DisplayName_PaySalesOrders" xml:space="preserve">
-    <value>Caja</value>
-  </data>
   <data name="DisplayName_SalesInformation" xml:space="preserve">
     <value>Información de la Venta</value>
   </data>
   <data name="Title_NewSale" xml:space="preserve">
     <value>Venta Nueva</value>
   </data>
-  <data name="Title_PaySalesOrders" xml:space="preserve">
+  <data name="Title_CustomerPayment" xml:space="preserve">
     <value>Caja</value>
   </data>
   <data name="Pay" xml:space="preserve">
