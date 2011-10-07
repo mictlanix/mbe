@@ -253,66 +253,6 @@ namespace Business.Essentials.WebApp.Controllers
             return RedirectToAction("New");
         }
 
-        public ActionResult GetSalesOrderBalance(int id)
-        {
-            var order = SalesOrder.Find(id);
-
-            return PartialView("_SalesOrderBalance", order);
-        }
-
-        [HttpPost]
-        public JsonResult AddPayment(int order, int type, decimal amount, string reference)
-        {
-            var item = new CustomerPayment
-            {
-                SalesOrder = SalesOrder.Find(order),
-                Method = (PaymentMethod)type,
-                Amount = amount,
-                Date = DateTime.Now,
-                Reference = reference,
-            };
-
-            using (var session = new SessionScope())
-            {
-                item.CreateAndFlush();
-            }
-
-            System.Diagnostics.Debug.WriteLine("New CustomerPayment [Id = {0}]", item.Id);
-
-            return Json(new { id = item.Id });
-        }
-
-        public ActionResult GetPayment(int id)
-        {
-            return PartialView("_Payment", CustomerPayment.Find(id));
-        }
-
-        [HttpPost]
-        public JsonResult RemovePayment(int id)
-        {
-            CustomerPayment item = CustomerPayment.Find(id);
-            item.Delete();
-            return Json(new { id = id, result = true });
-        }
-
-        public JsonResult GetBalance(int id)
-        {
-            SalesOrder order = SalesOrder.Find(id);
-
-            return Json(new { balance = order.Balance }, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpPost]
-        public ActionResult ConfirmPayment(int id)
-        {
-            SalesOrder item = SalesOrder.Find(id);
-
-            item.IsPaid = true;
-            item.Save();
-
-            return RedirectToAction("PayOrders");
-        }
-
         PointOfSale GetPoS()
         {
             var addr = Request.UserHostAddress;

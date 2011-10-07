@@ -1,46 +1,42 @@
 ﻿@using Business.Essentials.Model
-@using Business.Essentials.WebApp.Models
-@model MasterDetails<CashSession, SalesOrder>
+@model IEnumerable<SalesOrder>
 
 @{
     ViewBag.Title = Business.Essentials.Resources.Title_CustomerPayment;
-    ViewBag.ShowCloseSession = true;
 }
 
 <h2>@Business.Essentials.Resources.DisplayName_CustomerPayments</h2>
 
-@Html.Partial("_SessionInfo", Model.Master)
-
+<div>
+    @using (Html.BeginForm("OpenSession", "Payments"))
+    {
+        <p>
+            <input type="submit" value="@Business.Essentials.Resources.StartSession" />
+        </p>
+    }
+</div>
 <table>
     <tr>
         <th>
             @Html.LabelFor(x => new SalesOrder().Id)
         </th>
-
         <th>
             @Html.LabelFor(x => new SalesOrder().Date)
         </th>
-
         <th>
             @Html.LabelFor(x => new SalesOrder().Customer)
         </th>
-
         <th>
             @Html.LabelFor(x => new SalesOrder().DueDate)
         </th>
-
          <th>
             @Html.LabelFor(x => new SalesOrder().SalesPerson)
         </th>
-
         <th>
             @Html.LabelFor(x => new SalesOrder().PointOfSale)
         </th>
-        
-        <th></th>
     </tr>
-
-@foreach (var item in Model.Details) {
+@foreach (var item in Model) {
     <tr>
         <td class="number">
             @Html.DisplayFor(modelItem => item.Id)
@@ -65,11 +61,6 @@
         <td class="center">
             @Html.DisplayFor(modelItem => item.PointOfSale.Name)
         </td>
-       
-        <td>
-            @Html.ActionLink(Business.Essentials.Resources.Pay, "PayOrder", new { id = item.Id })
-        </td>
     </tr>
 }
-
 </table>

@@ -1,0 +1,57 @@
+﻿@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@using Business.Essentials.WebApp.Models
+@model MasterDetails<CashSession, MoneyCount>
+
+@{
+    ViewBag.Title = Business.Essentials.Resources.Title_CloseSession;
+    ViewBag.ShowCloseSession = false;
+}
+
+<h2>@Business.Essentials.Resources.DisplayName_CloseSession</h2>
+
+@Html.Partial("_SessionInfo", Model.Master)
+
+<table>
+    <tr>
+        <th>
+            @Html.LabelFor(x => new CustomerPayment().Method)
+        </th>
+
+        <th>
+            @Html.LabelFor(x => new CustomerPayment().Amount)
+        </th>
+    </tr>
+
+@foreach (var item in Model.Details) {
+    <tr>
+        <td class="number">
+            @item.Type.GetDisplayName()
+        </td>
+       
+        <td class="number">
+            @Html.DisplayFor(modelItem => item.Amount)
+        </td>
+    </tr>
+}
+    <tr>
+        <td class="number">
+            @Business.Essentials.Resources.Total
+        </td>
+
+        <td class="number">
+            @Model.Details.Sum(x => x.Amount).ToString("c")
+        </td>
+    </tr>
+</table>
+
+<div style="float:right">
+@using (Html.BeginForm("CloseSession", "Payments"))
+{
+    <input type="submit" value="@Business.Essentials.Resources.CloseSession" />
+}
+</div>
+
+<p>
+    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
+</p>

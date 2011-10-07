@@ -277,6 +277,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cerrar Sesión.
+        /// </summary>
+        public static string CloseSession {
+            get {
+                return ResourceManager.GetString("CloseSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Código.
         /// </summary>
         public static string Code {
@@ -502,6 +511,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sesión de la Caja.
+        /// </summary>
+        public static string DisplayName_CashSession {
+            get {
+                return ResourceManager.GetString("DisplayName_CashSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Líneas de Producto.
         /// </summary>
         public static string DisplayName_Categories {
@@ -516,6 +534,15 @@ namespace Business.Essentials {
         public static string DisplayName_ChangePassword {
             get {
                 return ResourceManager.GetString("DisplayName_ChangePassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cierre de Sesión.
+        /// </summary>
+        public static string DisplayName_CloseSession {
+            get {
+                return ResourceManager.GetString("DisplayName_CloseSession", resourceCulture);
             }
         }
         
@@ -835,6 +862,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Caja Inválido.
+        /// </summary>
+        public static string InvalidCashDrawer {
+            get {
+                return ResourceManager.GetString("InvalidCashDrawer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Punto de Venta Inválido.
         /// </summary>
         public static string InvalidPointOfSale {
@@ -970,7 +1006,16 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to La maquina de la cuál se hizo la solicitud de venta no está registrada como un punto de venta válido..
+        ///   Looks up a localized string similar to La máquina de la cuál se hizo la solicitud de cobro no está registrada como una caja válida..
+        /// </summary>
+        public static string Message_InvalidCashDrawer {
+            get {
+                return ResourceManager.GetString("Message_InvalidCashDrawer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to La máquina de la cuál se hizo la solicitud de venta no está registrada como un punto de venta válido..
         /// </summary>
         public static string Message_InvalidPointOfSale {
             get {
@@ -1510,7 +1555,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Fecha de Inicio.
+        ///   Looks up a localized string similar to  Inicio.
         /// </summary>
         public static string Start {
             get {
@@ -1524,6 +1569,15 @@ namespace Business.Essentials {
         public static string StartJobDate {
             get {
                 return ResourceManager.GetString("StartJobDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Iniciar Sesión.
+        /// </summary>
+        public static string StartSession {
+            get {
+                return ResourceManager.GetString("StartSession", resourceCulture);
             }
         }
         
@@ -1677,6 +1731,15 @@ namespace Business.Essentials {
         public static string Title_ChangePassword {
             get {
                 return ResourceManager.GetString("Title_ChangePassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cierre de Sesión.
+        /// </summary>
+        public static string Title_CloseSession {
+            get {
+                return ResourceManager.GetString("Title_CloseSession", resourceCulture);
             }
         }
         
@@ -1839,6 +1902,15 @@ namespace Business.Essentials {
         public static string Total {
             get {
                 return ResourceManager.GetString("Total", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tipo de Pago.
+        /// </summary>
+        public static string Type {
+            get {
+                return ResourceManager.GetString("Type", resourceCulture);
             }
         }
         
