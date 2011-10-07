@@ -56,7 +56,7 @@
     <p>
         @Html.ActionLink(Business.Essentials.Resources.CreateNew, "CreateForSupplier", "Addresses", new { id = Model.Id }, null)
     </p>
-    @Html.Partial("~/Views/Addresses/Index.cshtml", Model.Addresses)
+    @Html.Partial("../Addresses/_Index", Model.Addresses)
 </fieldset>
 
 <fieldset>
@@ -64,7 +64,7 @@
     <p>
         @Html.ActionLink(Business.Essentials.Resources.CreateNew, "CreateForSupplier", "Contacts", new { id = Model.Id }, null)
     </p>
-    @Html.Partial("~/Views/Contacts/Index.cshtml", Model.Contacts)
+    @Html.Partial("../Contacts/_Index", Model.Contacts)
 </fieldset>
 
 <fieldset>
@@ -72,7 +72,7 @@
     <p>
         @Html.ActionLink(Business.Essentials.Resources.CreateNew, "CreateForSupplier", "BankAccounts", new { id = Model.Id }, null)
     </p>
-    @Html.Partial("~/Views/BankAccounts/Index.cshtml", Model.BanksAccounts)
+    @Html.Partial("../BankAccounts/_Index", Model.BanksAccounts)
 </fieldset>
 
 <fieldset>
@@ -80,5 +80,5 @@
     <p>
         @Html.ActionLink(Business.Essentials.Resources.CreateNew, "CreateForSupplier", "SupplierAgreements", new { id = Model.Id }, null)
     </p>
-    @Html.Partial("~/Views/SupplierAgreements/Index.cshtml", Model.Agreements)
+    @Html.Partial("../SupplierAgreements/_Index", Model.Agreements)
 </fieldset>

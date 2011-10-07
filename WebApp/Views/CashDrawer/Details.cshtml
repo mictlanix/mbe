@@ -7,7 +7,7 @@
 <h2>@Business.Essentials.Resources.Details</h2>
 
 <fieldset>
-    <legend>@Business.Essentials.Resources.Title_CashRegister</legend>
+    <legend>@Business.Essentials.Resources.Title_CashDrawer</legend>
 
     <div class="display-label">
         @Html.LabelFor(model => model.Code)
@@ -21,6 +21,13 @@
     </div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Name)
+    </div>
+    
+    <div class="display-label">
+        @Html.LabelFor(model => model.HostAddress)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.HostAddress)
     </div>
 
     <div class="display-label">

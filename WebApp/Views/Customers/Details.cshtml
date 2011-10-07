@@ -62,7 +62,7 @@
     <p>
         @Html.ActionLink(Business.Essentials.Resources.CreateNew, "CreateForCustomer", "Addresses", new { id = Model.Id }, null)
     </p>
-    @Html.Partial("~/Views/Addresses/Index.cshtml", Model.Addresses)
+    @Html.Partial("../Addresses/_Index", Model.Addresses)
 </fieldset>
 
 <fieldset>
@@ -70,5 +70,5 @@
     <p>
         @Html.ActionLink(Business.Essentials.Resources.CreateNew, "CreateForCustomer", "Contacts", new { id = Model.Id }, null)
     </p>
-    @Html.Partial("~/Views/Contacts/Index.cshtml", Model.Contacts)
+    @Html.Partial("../Contacts/_Index", Model.Contacts)
 </fieldset>

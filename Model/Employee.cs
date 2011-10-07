@@ -85,6 +85,7 @@ namespace Business.Essentials.Model
 
         [Property]
         [Display(Name = "Gender", ResourceType = typeof(Resources))]
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         public GenderEnum Gender { get; set; }
 
         [Property("personal_id")]
@@ -95,6 +96,7 @@ namespace Business.Essentials.Model
         [Property("start_job_date")]
         [DataType(DataType.Date)]
         [Display(Name = "StartJobDate", ResourceType = typeof(Resources))]
-        public DateTime? StartJobDate { get; set; }
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+        public DateTime StartJobDate { get; set; }
     }
 }

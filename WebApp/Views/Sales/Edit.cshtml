@@ -3,7 +3,7 @@
 @model SalesOrder
 
 @{
-    ViewBag.Title = "New Sale";
+    ViewBag.Title = Business.Essentials.Resources.Edit;
 }
 
 <script src="@Url.Content("~/Scripts/jquery.tokeninput.js")" type="text/javascript"></script>
@@ -11,7 +11,7 @@
 <script src="@Url.Content("~/Scripts/jquery.jeditable.mini.js")" type="text/javascript"></script>
 <link href="@Url.Content("~/Content/themes/base/token-input.css")" rel="stylesheet" type="text/css" />
 
-<h2>New Sale</h2> 
+<h2>@Business.Essentials.Resources.DisplayName_EditSale</h2> 
 
 <div id="sales-order" style="margin:0 300px 0 0">
 @Html.Partial("_SalesInfo")
@@ -116,6 +116,9 @@
 
     $(function () {
         $("#product-search").tokenInput("@Url.Action("GetSuggestions", "Products")", {
+            hintText: "@Business.Essentials.Resources.HIntText",
+            noResultsText: "@Business.Essentials.Resources.NoResultsText",
+            searchingText: "@Business.Essentials.Resources.SearchingText",          
             resultsFormatter: function(item){return ProductFormatter(item);},
             queryParam: "pattern",minChars: 3,tokenLimit: 1
         });

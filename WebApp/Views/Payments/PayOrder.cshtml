@@ -4,7 +4,7 @@
 @model SalesOrder
 
 @{
-    ViewBag.Title = "Payment";
+    ViewBag.Title = Business.Essentials.Resources.Payment;
 }
 
 <script src="@Url.Content("~/Scripts/jquery.tokeninput.js")" type="text/javascript"></script>
@@ -12,7 +12,7 @@
 <script src="@Url.Content("~/Scripts/jquery.jeditable.mini.js")" type="text/javascript"></script>
 <link href="@Url.Content("~/Content/themes/base/token-input.css")" rel="stylesheet" type="text/css" />
 
-<h2>Payment</h2> 
+<h2>@Business.Essentials.Resources.Payment</h2> 
 
 <div id="pay-order">
 @Html.Partial("_PaymentInfo")
@@ -75,7 +75,7 @@
 
 <script type="text/javascript">
     function updateTotals() {
-        $.get("/Sales/GetSalesOrderBalance/" + SalesOrder.Id, function (data) {
+        $.get("/Payments/GetSalesOrderBalance/" + SalesOrder.Id, function (data) {
             $("#sales-order-balance").html(data);
         });
     }
@@ -87,7 +87,7 @@
             modal: true,
             buttons: {
                 @Business.Essentials.Resources.Delete: function () {
-                    $.post("/Sales/RemovePayment", { "id": id }, function (data) {
+                    $.post("/Payments/RemovePayment", { "id": id }, function (data) {
                         if(data.result) {
                             $("#payment" + id).remove();
                             updateTotals();
@@ -108,8 +108,8 @@
             var amount = $("#Amount").val();
             var reference = $("#Reference").val();
 
-            $.post("/Sales/AddPayment", { "order": SalesOrder.Id, "type": type, "amount": amount, "reference": reference }, function (detail) {
-                $.get("/Sales/GetPayment/" + detail.id, function (data) {
+            $.post("/Payments/AddPayment", { "order": SalesOrder.Id, "type": type, "amount": amount, "reference": reference }, function (detail) {
+                $.get("/Payments/GetPayment/" + detail.id, function (data) {
                     $("#items").append(data);
                     $(":input").not(":submit, :button").val("").removeAttr("selected");
                     $("#reference").hide("slow");
