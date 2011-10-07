@@ -115,6 +115,7 @@
     <Compile Include="Controllers\CashDrawerController.cs" />
     <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\ContactsController.cs" />
+    <Compile Include="Controllers\PaymentsController.cs" />
     <Compile Include="Controllers\CustomersController.cs" />
     <Compile Include="Controllers\EmployeesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -374,7 +375,7 @@
     <Content Include="Views\CashDrawer\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Contacts\Index.cshtml" />
+    <Content Include="Views\Contacts\_Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Contacts\Edit.cshtml" />
@@ -395,7 +396,7 @@
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\SupplierAgreements\Index.cshtml" />
+    <Content Include="Views\SupplierAgreements\_Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\SupplierAgreements\Edit.cshtml" />
@@ -430,12 +431,12 @@
     <Content Include="Views\Addresses\Delete.cshtml" />
     <Content Include="Views\Addresses\Details.cshtml" />
     <Content Include="Views\Addresses\Edit.cshtml" />
-    <Content Include="Views\Addresses\Index.cshtml" />
+    <Content Include="Views\Addresses\_Index.cshtml" />
     <Content Include="Views\BankAccounts\Create.cshtml" />
     <Content Include="Views\BankAccounts\Delete.cshtml" />
     <Content Include="Views\BankAccounts\Details.cshtml" />
     <Content Include="Views\BankAccounts\Edit.cshtml" />
-    <Content Include="Views\BankAccounts\Index.cshtml" />
+    <Content Include="Views\BankAccounts\_Index.cshtml" />
     <Content Include="Views\PointsOfSale\Create.cshtml" />
     <Content Include="Views\PointsOfSale\Delete.cshtml" />
     <Content Include="Views\PointsOfSale\Details.cshtml" />
@@ -458,7 +459,7 @@
     <Content Include="Views\Shared\EditorTemplates\CustomerSelector.cshtml" />
     <Content Include="Views\Sales\_SalesInfo.cshtml" />
     <Content Include="Views\Sales\Details.cshtml" />
-    <Content Include="Views\Sales\DetailsOrder.cshtml" />
+    <Content Include="Views\Sales\_SalesOrderDetails.cshtml" />
     <Content Include="Views\Sales\_SalesTotals.cshtml" />
     <Content Include="Views\Sales\_SalesItem.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
@@ -473,17 +474,22 @@
     <Content Include="Views\Shared\EditorTemplates\EmployeeSelector.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Sales\_Payment.cshtml" />
+    <Content Include="Views\Payments\_Payment.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Sales\PayOrder.cshtml">
-      <SubType>Code</SubType>
-    </Content>
-    <Content Include="Views\Sales\PayOrders.cshtml">
-      <SubType>Code</SubType>
-    </Content>
-    <Content Include="Views\Sales\_PaymentInfo.cshtml" />
-    <Content Include="Views\Sales\_SalesOrderBalance.cshtml" />
+    <Content Include="Views\Payments\_PaymentInfo.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Payments\_SalesOrderBalance.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Payments\PayOrder.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Payments\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Payments\InvalidCashDrawer.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

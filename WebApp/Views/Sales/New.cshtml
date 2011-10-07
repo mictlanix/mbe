@@ -3,7 +3,7 @@
 @model SalesOrder
 
 @{
-    ViewBag.Title = "New Sale";
+    ViewBag.Title = Business.Essentials.Resources.Title_NewSale;
 }
 
 <script src="@Url.Content("~/Scripts/jquery.tokeninput.js")" type="text/javascript"></script>
@@ -11,7 +11,7 @@
 <script src="@Url.Content("~/Scripts/jquery.jeditable.mini.js")" type="text/javascript"></script>
 <link href="@Url.Content("~/Content/themes/base/token-input.css")" rel="stylesheet" type="text/css" />
 
-<h2>New Sale</h2> 
+<h2>@Business.Essentials.Resources.DisplayName_NewSale</h2> 
 
 <div id="sales-order" style="margin:0 300px 0 0">
     <fieldset>

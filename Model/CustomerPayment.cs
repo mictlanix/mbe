@@ -74,6 +74,7 @@ namespace Business.Essentials.Model
         [Property]
         [DataType(DataType.DateTime)]
         [Display(Name = "Date", ResourceType = typeof(Resources))]
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         public DateTime Date { get; set; }
 
         [BelongsTo("cash_session")]

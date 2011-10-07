@@ -178,6 +178,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancelar Orden.
+        /// </summary>
+        public static string CancelOrder {
+            get {
+                return ResourceManager.GetString("CancelOrder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Efectivo.
         /// </summary>
         public static string Cash {
@@ -273,6 +282,24 @@ namespace Business.Essentials {
         public static string Completed {
             get {
                 return ResourceManager.GetString("Completed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pagado.
+        /// </summary>
+        public static string CompletePayment {
+            get {
+                return ResourceManager.GetString("CompletePayment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finalizar Venta.
+        /// </summary>
+        public static string CompleteSale {
+            get {
+                return ResourceManager.GetString("CompleteSale", resourceCulture);
             }
         }
         
@@ -502,6 +529,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Editar Venta.
+        /// </summary>
+        public static string DisplayName_EditSale {
+            get {
+                return ResourceManager.GetString("DisplayName_EditSale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Catálogo de Empleados.
         /// </summary>
         public static string DisplayName_Employees {
@@ -516,6 +552,24 @@ namespace Business.Essentials {
         public static string DisplayName_LogOn {
             get {
                 return ResourceManager.GetString("DisplayName_LogOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Venta Nueva.
+        /// </summary>
+        public static string DisplayName_NewSale {
+            get {
+                return ResourceManager.GetString("DisplayName_NewSale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Caja.
+        /// </summary>
+        public static string DisplayName_PaySalesOrders {
+            get {
+                return ResourceManager.GetString("DisplayName_PaySalesOrders", resourceCulture);
             }
         }
         
@@ -552,6 +606,15 @@ namespace Business.Essentials {
         public static string DisplayName_Register {
             get {
                 return ResourceManager.GetString("DisplayName_Register", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Información de la Venta.
+        /// </summary>
+        public static string DisplayName_SalesInformation {
+            get {
+                return ResourceManager.GetString("DisplayName_SalesInformation", resourceCulture);
             }
         }
         
@@ -1051,6 +1114,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pagar.
+        /// </summary>
+        public static string Pay {
+            get {
+                return ResourceManager.GetString("Pay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pago.
         /// </summary>
         public static string Payment {
@@ -1213,7 +1285,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Código del Producto.
+        ///   Looks up a localized string similar to Código.
         /// </summary>
         public static string ProductCode {
             get {
@@ -1222,7 +1294,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Nombre del Producto.
+        ///   Looks up a localized string similar to  Producto.
         /// </summary>
         public static string ProductName {
             get {
@@ -1596,6 +1668,24 @@ namespace Business.Essentials {
         public static string Title_LogOn {
             get {
                 return ResourceManager.GetString("Title_LogOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Venta Nueva.
+        /// </summary>
+        public static string Title_NewSale {
+            get {
+                return ResourceManager.GetString("Title_NewSale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Caja.
+        /// </summary>
+        public static string Title_PaySalesOrders {
+            get {
+                return ResourceManager.GetString("Title_PaySalesOrders", resourceCulture);
             }
         }
         

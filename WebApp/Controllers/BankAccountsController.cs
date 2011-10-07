@@ -11,17 +11,6 @@ namespace Business.Essentials.WebApp.Controllers
     public class BankAccountsController : Controller
     {
         //
-        // GET: /BanksAccounts/
-
-        public ViewResult Index()
-        {
-            var qry = from x in BankAccount.Queryable
-                      select x;
-
-            return View(qry.ToList());
-        }
-
-        //
         // GET: /BanksAccounts/Details/5
 
         public ViewResult Details(int id)

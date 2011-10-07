@@ -69,7 +69,7 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ActionResult Create()
         {
-            return View(new Product { IsInvoiceable = true });
+            return View(new Product { IsInvoiceable = true, TaxRate = 0.16m });
         }
 
         //

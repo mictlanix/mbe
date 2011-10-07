@@ -1,7 +1,7 @@
 ﻿@model Business.Essentials.Model.SalesOrder
 
 <fieldset>
-    <legend>Sales Information</legend>
+    <legend>@Business.Essentials.Resources.DisplayName_SalesInformation</legend>
 
     <div class="display-label">
         @Html.LabelFor(model => model.Id)
@@ -46,7 +46,7 @@
             {
                 @Html.Hidden("id", Model.Id)
                 <p>
-                    <input type="submit" value="Cancel Order" />
+                    <input type="submit" value="@Business.Essentials.Resources.CancelOrder" />
                 </p>
             }
     </div>

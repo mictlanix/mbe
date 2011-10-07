@@ -11,17 +11,6 @@ namespace Business.Essentials.WebApp.Controllers
     public class ContactsController : Controller
     {
         //
-        // GET: /Contact/
-
-        public ViewResult Index()
-        {
-            var qry = from x in Contact.Queryable
-                      select x;
-
-            return View(qry.ToList());
-        }
-
-        //
         // GET: /Contacts/Details/5
 
         public ViewResult Details(int id)

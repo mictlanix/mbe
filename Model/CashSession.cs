@@ -44,6 +44,7 @@ namespace Business.Essentials.Model
         [Property]
         [DataType(DataType.DateTime)]
         [Display(Name = "Start", ResourceType = typeof(Resources))]
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         public DateTime? Start { get; set; }
 
         [Property]
@@ -58,5 +59,6 @@ namespace Business.Essentials.Model
         [BelongsTo("cash_drawer")]
         [Display(Name = "CashDrawer", ResourceType = typeof(Resources))]
         public virtual CashDrawer CashDrawer { get; set; }
+
     }
 }

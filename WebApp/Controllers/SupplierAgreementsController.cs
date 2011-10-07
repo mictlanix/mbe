@@ -11,17 +11,6 @@ namespace Business.Essentials.WebApp.Controllers
     public class SupplierAgreementsController : Controller
     {
         //
-        // GET: /SupplierAgreements/
-
-        public ViewResult Index()
-        {
-            var qry = from x in SupplierAgreement.Queryable
-                      select x;
-
-            return View(qry.ToList());
-        }
-
-        //
         // GET: /SupplierAgreements/Details/5
 
         public ViewResult Details(int id)
