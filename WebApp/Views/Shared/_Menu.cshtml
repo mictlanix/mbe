@@ -69,6 +69,42 @@
                 </a>
             </li>
             }
+            @if (Html.GetPrivilege(CurrentUser, SystemObjects.PointsOfSale).AllowRead)
+            {
+            <li class="gbt">
+                <a class="gbzt @Html.GetMenuClass("PointsOfSale")" href="@Url.Action("Index", "PointsOfSale")">
+                    <span class="gbtb2"></span>
+                    <span class="gbts">@Business.Essentials.Resources.Title_PointOfSale</span>
+                </a>
+            </li>
+            }
+            @if (Html.GetPrivilege(CurrentUser, SystemObjects.CashDrawers).AllowRead)
+            {
+            <li class="gbt">
+                <a class="gbzt @Html.GetMenuClass("CashDrawers")" href="@Url.Action("Index", "CashDrawers")">
+                    <span class="gbtb2"></span>
+                    <span class="gbts">@Business.Essentials.Resources.Title_CashDrawer</span>
+                </a>
+            </li>
+            }
+            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders).AllowRead)
+            {
+            <li class="gbt">
+                <a class="gbzt @Html.GetMenuClass("Sales")" href="@Url.Action("Index", "Sales")">
+                    <span class="gbtb2"></span>
+                    <span class="gbts">@Business.Essentials.Resources.Title_SalesOrder</span>
+                </a>
+            </li>
+            }
+            @if (Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments).AllowRead)
+            {
+            <li class="gbt">
+                <a class="gbzt @Html.GetMenuClass("Payments")" href="@Url.Action("Index", "Payments")">
+                    <span class="gbtb2"></span>
+                    <span class="gbts">@Business.Essentials.Resources.Title_CustomerPayment</span>
+                </a>
+            </li>
+            }
             <li class="gbt">
                 <a class="gbzt @Html.GetMenuClass("Home", "About")" href="@Url.Action("About", "Home")">
                     <span class="gbtb2"></span>

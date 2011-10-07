@@ -37,10 +37,10 @@ using Business.Essentials.Model;
 
 namespace Business.Essentials.WebApp.Controllers
 {
-    public class CashDrawerController : Controller
+    public class CashDrawersController : Controller
     {
         //
-        // GET: /cashDrawer/
+        // GET: /CashDrawers/
 
         public ViewResult Index()
         {
@@ -51,16 +51,16 @@ namespace Business.Essentials.WebApp.Controllers
         }
 
         //
-        // GET: /cashDrawer/Details/5
+        // GET: /CashDrawers/Details/5
 
         public ViewResult Details(int id)
         {
-            CashDrawer cashDrawer = CashDrawer.Find(id);
-            return View(cashDrawer);
+            CashDrawer CashDrawers = CashDrawer.Find(id);
+            return View(CashDrawers);
         }
 
         //
-        // GET: /cashDrawer/Create
+        // GET: /CashDrawers/Create
 
         public ActionResult Create()
         {
@@ -68,60 +68,60 @@ namespace Business.Essentials.WebApp.Controllers
         }
 
         //
-        // POST: /cashDrawer/Create
+        // POST: /CashDrawers/Create
 
         [HttpPost]
-        public ActionResult Create(CashDrawer cashDrawer)
+        public ActionResult Create(CashDrawer CashDrawers)
         {
             if (ModelState.IsValid)
             {
-                cashDrawer.Save();
+                CashDrawers.Save();
                 return RedirectToAction("Index");
             }
 
-            return View(cashDrawer);
+            return View(CashDrawers);
         }
 
         //
-        // GET: /cashDrawer/Edit/5
+        // GET: /CashDrawers/Edit/5
 
         public ActionResult Edit(int id)
         {
-            CashDrawer cashDrawer = CashDrawer.Find(id);
-            return View(cashDrawer);
+            CashDrawer CashDrawers = CashDrawer.Find(id);
+            return View(CashDrawers);
         }
 
         //
-        // POST: /cashDrawer/Edit/5
+        // POST: /CashDrawers/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(CashDrawer cashDrawer)
+        public ActionResult Edit(CashDrawer CashDrawers)
         {
             if (ModelState.IsValid)
             {
-                cashDrawer.Save();
+                CashDrawers.Save();
                 return RedirectToAction("Index");
             }
-            return View(cashDrawer);
+            return View(CashDrawers);
         }
 
         //
-        // GET: /cashDrawer/Delete/5
+        // GET: /CashDrawers/Delete/5
 
         public ActionResult Delete(int id)
         {
-            CashDrawer cashDrawer = CashDrawer.Find(id);
-            return View(cashDrawer);
+            CashDrawer CashDrawers = CashDrawer.Find(id);
+            return View(CashDrawers);
         }
 
         //
-        // POST: /cashDrawer/Delete/5
+        // POST: /CashDrawers/Delete/5
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            CashDrawer cashDrawer = CashDrawer.Find(id);
-            cashDrawer.Delete();
+            CashDrawer CashDrawers = CashDrawer.Find(id);
+            CashDrawers.Delete();
             return RedirectToAction("Index");
         }
 

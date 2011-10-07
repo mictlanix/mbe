@@ -115,7 +115,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AddressesController.cs" />
     <Compile Include="Controllers\BankAccountsController.cs" />
-    <Compile Include="Controllers\CashDrawerController.cs" />
+    <Compile Include="Controllers\CashDrawersController.cs" />
     <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\ContactsController.cs" />
     <Compile Include="Controllers\PaymentsController.cs" />

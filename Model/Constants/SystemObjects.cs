@@ -54,5 +54,9 @@ namespace Business.Essentials.Model
         SalesOrders,
         [Display(Name = "DisplayName_CustomerPayments", ResourceType = typeof(Resources))]
         CustomerPayments,
+        [Display(Name = "DisplayName_PointsOfSale", ResourceType = typeof(Resources))]
+        PointsOfSale,
+        [Display(Name = "DisplayName_CashDrawers", ResourceType = typeof(Resources))]
+        CashDrawers,
     }
 }

@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Castle.ActiveRecord;
 using Business.Essentials.Model;
 using Business.Essentials.WebApp.Models;
+using Business.Essentials.WebApp.Helpers;
 
 namespace Business.Essentials.WebApp.Controllers
 {
@@ -32,23 +33,27 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ViewResult OpenSession()
         {
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult OpenSession()
-        {
-            var session = new CashSession();
-
-            session.CashDrawer = GetDrawer();
-
-            if (session.CashDrawer == null)
+            if (GetDrawer() == null)
             {
                 return View("InvalidCashDrawer");
             }
 
-            session.Start = DateTime.Now;
-            session.Cashier = Employee.Find(1);
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult OpenSession(CashSession item)
+        {
+            item = new CashSession();
+            item.CashDrawer = GetDrawer();
+
+            if (item.CashDrawer == null)
+            {
+                return View("InvalidCashDrawer");
+            }
+
+            item.Start = DateTime.Now;
+            item.Cashier = SecurityHelpers.GetUser(User.Identity.Name).Employee;
             
             return RedirectToAction("Index");
         }
