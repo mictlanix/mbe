@@ -1,15 +1,22 @@
-﻿@{
+﻿@using Business.Essentials
+@{
     ViewBag.Title = Business.Essentials.Resources.Title_About;
 }
 
 <h2>@Business.Essentials.Resources.Title_About</h2>
-<leyend>Autores:</leyend>
+<div style="float:right;">
+    <a href="http://www.mictlanix.org">
+        <img src="@Url.Content("~/Content/images/mtx-logo-small.png")" alt="Mictlanix"/>
+    </a>
+</div>
+<leyend>@Resources.Authors:</leyend>
 <ul>
     <li>Eddy Zavaleta &lt;eddy@mictlanix.org&gt;</li>
     <li>Eduardo Nieto &lt;enieto@mictlanix.org&gt;</li>
 </ul>
 <p>
-    Copyright &copy; 2011 Eddy Zavaleta, Mictlanix (<a href="http://www.mictlanix.org">www.mictlanix.org</a>)
+    Copyright &copy; 2011 Eddy Zavaleta, <a href="http://www.mictlanix.org">Mictlanix</a>
+    and contributors.
 </p>
 <p>
     Permission is hereby granted, free of charge, to any person obtaining

@@ -41,8 +41,7 @@
         <td>
             @Html.DisplayFor(modelItem => item.Comment)
         </td>
-
-        <td>
+        <td class="actions">
             @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", "BankAccounts", new { id=item.Id }, null) |
             @Html.ActionLink(Business.Essentials.Resources.Details, "Details", "BankAccounts", new { id = item.Id }, null) |
             @Html.ActionLink(Business.Essentials.Resources.Delete, "Delete", "BankAccounts", new { id = item.Id }, null)

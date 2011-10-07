@@ -1,16 +1,9 @@
-﻿@model Business.Essentials.Model.Supplier
+﻿@using Business.Essentials
 
 @{
-    ViewBag.Title = Business.Essentials.Resources.Delete;
+    ViewBag.Title = Resources.Delete;
 }
 
-<h2>@Business.Essentials.Resources.Delete</h2>
-
-<p>
-    [AGREGAR A RESOURCES Message_DeleteUnsuccessful]
-    No se pudo borrar el elemento porque existen dependencias en el sistema hacia él.
-</p>
-
-<p>
-    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
-</p>
+<h2>@Resources.Delete</h2>
+<p>@Resources.Message_DeleteUnsuccessful</p>
+<p>@Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")</p>

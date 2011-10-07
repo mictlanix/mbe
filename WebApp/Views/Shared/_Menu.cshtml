@@ -1,8 +1,9 @@
-﻿@using Business.Essentials.Model;
-@using Business.Essentials.WebApp.Helpers;
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
 
 @{
-    ViewBag.User = Html.CurrentUser() ?? new User();
+    var CurrentUser = Html.CurrentUser() ?? new User();
 }
 
 <div id="gb">
@@ -14,42 +15,60 @@
                     <span class="gbts">@Business.Essentials.Resources.Menu_Home</span>
                 </a>
             </li>
+            @if (Html.GetPrivilege(CurrentUser, SystemObjects.Products).AllowRead)
+            {
             <li class="gbt">
                 <a class="gbzt @Html.GetMenuClass("Products")" href="@Url.Action("Index", "Products")">
                     <span class="gbtb2"></span>
                     <span class="gbts">@Business.Essentials.Resources.Title_Product</span>
                 </a>
             </li>
+            }
+            @if (Html.GetPrivilege(CurrentUser, SystemObjects.Categories).AllowRead)
+            {
             <li class="gbt">
                 <a class="gbzt @Html.GetMenuClass("Categories")" href="@Url.Action("Index", "Categories")">
                     <span class="gbtb2"></span>
                     <span class="gbts">@Business.Essentials.Resources.Title_Category</span>
                 </a>
             </li>
+            }
+            @if (Html.GetPrivilege(CurrentUser, SystemObjects.Customers).AllowRead)
+            {
             <li class="gbt">
                 <a class="gbzt @Html.GetMenuClass("Customers")" href="@Url.Action("Index", "Customers")">
                     <span class="gbtb2"></span>
                     <span class="gbts">@Business.Essentials.Resources.Title_Customer</span>
                 </a>
             </li>
+            }
+            @if (Html.GetPrivilege(CurrentUser, SystemObjects.Suppliers).AllowRead)
+            {
             <li class="gbt">
                 <a class="gbzt @Html.GetMenuClass("Suppliers")" href="@Url.Action("Index", "Suppliers")">
                     <span class="gbtb2"></span>
                     <span class="gbts">@Business.Essentials.Resources.Title_Supplier</span>
                 </a>
             </li>
+            }
+            @if (Html.GetPrivilege(CurrentUser, SystemObjects.Warehouses).AllowRead)
+            {
             <li class="gbt">
                 <a class="gbzt @Html.GetMenuClass("Warehouses")" href="@Url.Action("Index", "Warehouses")">
                     <span class="gbtb2"></span>
                     <span class="gbts">@Business.Essentials.Resources.Title_Warehouse</span>
                 </a>
             </li>
+            }
+            @if (Html.GetPrivilege(CurrentUser, SystemObjects.PriceLists).AllowRead)
+            {
             <li class="gbt">
                 <a class="gbzt @Html.GetMenuClass("PriceLists")" href="@Url.Action("Index", "PriceLists")">
                     <span class="gbtb2"></span>
                     <span class="gbts">@Business.Essentials.Resources.Title_PriceList</span>
                 </a>
             </li>
+            }
             <li class="gbt">
                 <a class="gbzt @Html.GetMenuClass("Home", "About")" href="@Url.Action("About", "Home")">
                     <span class="gbtb2"></span>
@@ -58,7 +77,7 @@
             </li>
         </ol>
     </div>
-    @Html.Partial("_LogOnPartial")
+    @Html.Partial("_LogOnPartial", CurrentUser)
     <div id="gbx3"></div>
     <div id="gbx4"></div>
 </div>

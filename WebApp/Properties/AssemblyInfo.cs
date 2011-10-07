@@ -5,13 +5,13 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Business.Essentials.WebApp")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Mictlanix Business Essentials")]
+[assembly: AssemblyDescription("Core Business System")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Business.Essentials.WebApp")]
-[assembly: AssemblyCopyright("Copyright ©  2011")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCompany("Mictlanix")]
+[assembly: AssemblyProduct("Business Essentials")]
+[assembly: AssemblyCopyright("Copyright ©  2011 Eddy Zavaleta, Mictlanix, and contributors.")]
+[assembly: AssemblyTrademark("Mictlanix BE")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 

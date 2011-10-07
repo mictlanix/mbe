@@ -394,7 +394,7 @@
     <value>Patrón de Búsqueda</value>
   </data>
   <data name="Title_Application" xml:space="preserve">
-    <value>Ramos Hermanos</value>
+    <value>Mictlanix BE - Ramos Hermanos</value>
   </data>
   <data name="Title_Home" xml:space="preserve">
     <value>Mictlanix BE</value>
@@ -752,5 +752,29 @@
   </data>
   <data name="Pay" xml:space="preserve">
     <value>Pagar</value>
+  </data>
+  <data name="Alt_Logo" xml:space="preserve">
+    <value>Ramos Ferretería</value>
+  </data>
+  <data name="Authors" xml:space="preserve">
+    <value>Autores</value>
+  </data>
+  <data name="Title_Logo" xml:space="preserve">
+    <value>Ramos Hermanos</value>
+  </data>
+  <data name="LogOff" xml:space="preserve">
+    <value>Salir</value>
+  </data>
+  <data name="InvalidPointOfSale" xml:space="preserve">
+    <value>Punto de Venta Inválido</value>
+  </data>
+  <data name="Message_InvalidPointOfSale" xml:space="preserve">
+    <value>La maquina de la cuál se hizo la solicitud de venta no está registrada como un punto de venta válido.</value>
+  </data>
+  <data name="Message_DeleteUnsuccessful" xml:space="preserve">
+    <value>No se pudo borrar el elemento porque existen dependencias en el sistema hacia él.</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
   </data>
 </root>

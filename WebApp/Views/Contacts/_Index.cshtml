@@ -66,8 +66,7 @@
         <td>
             @Html.DisplayFor(modelItem => item.Comment)
         </td>
-
-        <td>
+        <td class="actions">
             @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", "Contacts", new { id = item.Id }, null) |
             @Html.ActionLink(Business.Essentials.Resources.Details, "Details", "Contacts", new { id = item.Id }, null) |
             @Html.ActionLink(Business.Essentials.Resources.Delete, "Delete", "Contacts", new { id = item.Id }, null)

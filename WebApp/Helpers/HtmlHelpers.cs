@@ -1,4 +1,32 @@
-﻿using System;
+﻿// 
+// HtmlHelpers.cs
+// 
+// Author:
+//   Eddy Zavaleta <eddy@mictlanix.org>
+// 
+// Copyright (C) 2011 Eddy Zavaleta, Mictlanix, and contributors.
+// 
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
@@ -10,19 +38,27 @@ namespace Business.Essentials.WebApp.Helpers
     public static class HtmlHelpers
     {
         public static MvcHtmlString ActionImage(this HtmlHelper html,
-                                                string action,
-                                                object routeValues,
                                                 string imagePath,
-                                                string alt)
+                                                string action,
+                                                object routeValues)
         {
-            return ActionImage(html, action, routeValues, imagePath, alt, null);
+            return ActionImage(html, imagePath, action, null, routeValues, null);
         }
 
         public static MvcHtmlString ActionImage(this HtmlHelper html,
+                                                string imagePath,
                                                 string action,
                                                 object routeValues,
+                                                object htmlAttributes)
+        {
+            return ActionImage(html, imagePath, action, null, routeValues, htmlAttributes);
+        }
+
+        public static MvcHtmlString ActionImage(this HtmlHelper html,
                                                 string imagePath,
-                                                string alt,
+                                                string action,
+                                                string controller,
+                                                object routeValues,
                                                 object htmlAttributes)
         {
             var url = new UrlHelper(html.ViewContext.RequestContext);
@@ -31,7 +67,6 @@ namespace Business.Essentials.WebApp.Helpers
             var imgBuilder = new TagBuilder("img");
 
             imgBuilder.MergeAttribute("src", url.Content(imagePath));
-            imgBuilder.MergeAttribute("alt", alt);
 
             if (htmlAttributes != null)
             {
@@ -42,7 +77,7 @@ namespace Business.Essentials.WebApp.Helpers
 
             // build the <a> tag
             var anchorBuilder = new TagBuilder("a");
-            anchorBuilder.MergeAttribute("href", url.Action(action, routeValues));
+            anchorBuilder.MergeAttribute("href", url.Action(action, controller, routeValues));
             anchorBuilder.InnerHtml = imgHtml; // include the <img> tag inside
             string anchorHtml = anchorBuilder.ToString(TagRenderMode.Normal);
 
@@ -73,16 +108,6 @@ namespace Business.Essentials.WebApp.Helpers
                 display_name = ((DisplayAttribute)attrs[0]).GetName();
 
             return display_name;
-        }
-
-        public static User CurrentUser(this HtmlHelper helper)
-        {
-            return GetUser(helper, helper.ViewContext.HttpContext.User.Identity.Name);
-        }
-
-        public static User GetUser(this HtmlHelper helper, string username)
-        {
-            return User.Queryable.SingleOrDefault(x => x.UserName == username);
         }
     }
 }

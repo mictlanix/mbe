@@ -4,7 +4,7 @@
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
 // 
-// Copyright (C) 2011 Eddy Zavaleta, Mictlanix (http://www.mictlanix.org)
+// Copyright (C) 2011 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the

@@ -11,39 +11,46 @@ namespace Business.Essentials.WebApp.Controllers
 {
     public class PaymentsController : Controller
     {
-        public ViewResult Index()
+        public ActionResult Index()
         {
             if (GetDrawer() == null)
             {
                 return View("InvalidCashDrawer");
             }
-            else
-            {
-                var qry = from x in SalesOrder.Queryable
-                          where x.IsCompleted && !x.IsPaid && !x.IsCancelled
-                          select x;
 
-                return View(qry.ToList());
+            if (GetSession() == null)
+            {
+                return RedirectToAction("OpenSession");
             }
+
+            var qry = from x in SalesOrder.Queryable
+                      where x.IsCompleted && !x.IsPaid && !x.IsCancelled
+                      select x;
+
+            return View(qry.ToList());
+        }
+
+        public ViewResult OpenSession()
+        {
+            return View();
         }
 
         [HttpPost]
-        public ActionResult Index()
+        public ActionResult OpenSession()
         {
             var session = new CashSession();
-            var payment = new CustomerPayment();
 
             session.CashDrawer = GetDrawer();
-            if (GetDrawer() == null)
+
+            if (session.CashDrawer == null)
             {
                 return View("InvalidCashDrawer");
             }
+
             session.Start = DateTime.Now;
             session.Cashier = Employee.Find(1);
-            payment.Date = DateTime.Now;
-            payment.CashSession = session;
             
-            return View("Index");
+            return RedirectToAction("Index");
         }
 
         public ActionResult PayOrder(int id)
@@ -65,11 +72,12 @@ namespace Business.Essentials.WebApp.Controllers
         {
             var item = new CustomerPayment
             {
+                CashSession = GetSession(),
                 SalesOrder = SalesOrder.Find(order),
                 Method = (PaymentMethod)type,
                 Amount = amount,
                 Date = DateTime.Now,
-                Reference = reference,
+                Reference = reference
             };
 
             using (var session = new SessionScope())
@@ -116,6 +124,14 @@ namespace Business.Essentials.WebApp.Controllers
             var addr = Request.UserHostAddress;
 
             return CashDrawer.Queryable.SingleOrDefault(x => x.HostAddress == addr);
+        }
+
+        CashSession GetSession()
+        {
+            var addr = Request.UserHostAddress;
+            return CashSession.Queryable
+                              .Where(x => x.End == null)
+                              .SingleOrDefault(x => x.CashDrawer.HostAddress == addr);
         }
     }
 }

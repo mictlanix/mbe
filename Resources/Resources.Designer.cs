@@ -106,11 +106,29 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ramos Ferretería.
+        /// </summary>
+        public static string Alt_Logo {
+            get {
+                return ResourceManager.GetString("Alt_Logo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Importe.
         /// </summary>
         public static string Amount {
             get {
                 return ResourceManager.GetString("Amount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Autores.
+        /// </summary>
+        public static string Authors {
+            get {
+                return ResourceManager.GetString("Authors", resourceCulture);
             }
         }
         
@@ -718,6 +736,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        public static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Número Exterior.
         /// </summary>
         public static string ExteriorNumber {
@@ -817,6 +844,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Punto de Venta Inválido.
+        /// </summary>
+        public static string InvalidPointOfSale {
+            get {
+                return ResourceManager.GetString("InvalidPointOfSale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Facturable.
         /// </summary>
         public static string Invoiceable {
@@ -849,6 +885,15 @@ namespace Business.Essentials {
         public static string Location {
             get {
                 return ResourceManager.GetString("Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Salir.
+        /// </summary>
+        public static string LogOff {
+            get {
+                return ResourceManager.GetString("LogOff", resourceCulture);
             }
         }
         
@@ -921,6 +966,24 @@ namespace Business.Essentials {
         public static string Message_DeleteConfirmation {
             get {
                 return ResourceManager.GetString("Message_DeleteConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No se pudo borrar el elemento porque existen dependencias en el sistema hacia él..
+        /// </summary>
+        public static string Message_DeleteUnsuccessful {
+            get {
+                return ResourceManager.GetString("Message_DeleteUnsuccessful", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to La maquina de la cuál se hizo la solicitud de venta no está registrada como un punto de venta válido..
+        /// </summary>
+        public static string Message_InvalidPointOfSale {
+            get {
+                return ResourceManager.GetString("Message_InvalidPointOfSale", resourceCulture);
             }
         }
         
@@ -1582,7 +1645,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ramos Hermanos.
+        ///   Looks up a localized string similar to Mictlanix BE - Ramos Hermanos.
         /// </summary>
         public static string Title_Application {
             get {
@@ -1659,6 +1722,15 @@ namespace Business.Essentials {
         public static string Title_Home {
             get {
                 return ResourceManager.GetString("Title_Home", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ramos Hermanos.
+        /// </summary>
+        public static string Title_Logo {
+            get {
+                return ResourceManager.GetString("Title_Logo", resourceCulture);
             }
         }
         

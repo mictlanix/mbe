@@ -1,5 +1,11 @@
-﻿@{
-    ViewBag.Title = Business.Essentials.Resources.Title_Home;
+﻿@using Business.Essentials
+
+@{
+    ViewBag.Title = Resources.Title_Home;
 }
 
-<h2>@ViewBag.Message</h2>
+<p class="center">
+    <img src="@Url.Content("~/Content/images/welcome.png")"
+         alt="@Resources.Welcome"
+         style="margin:100px 0;"/>
+</p>
