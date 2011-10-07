@@ -72,7 +72,7 @@ namespace Business.Essentials.WebApp.Controllers
                 return View("InvalidPointOfSale");
             }
 
-            return View(new SalesOrder());
+            return View(new SalesOrder { CustomerId = 1, Customer = Customer.Find(1) });
         }
 
         [HttpPost]

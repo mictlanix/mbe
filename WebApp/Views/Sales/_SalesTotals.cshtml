@@ -2,35 +2,35 @@
 <fieldset>
     <legend>@Business.Essentials.Resources.SalesTotals</legend>
 
-    <div class="display-label">
+    <div class="display-label left floating">
         @Html.LabelFor(x => x.Total)
     </div>
-    <div class="display-field">
+    <div class="display-field number">
         @Html.DisplayFor(x => x.Total)
     </div>
 
-    <div class="display-label">
+    <div class="display-label left floating">
         @Html.LabelFor(x => x.Taxes)
     </div>
-    <div class="display-field">
+    <div class="display-field number">
         @Html.DisplayFor(x => x.Taxes)
     </div>
 
-    <div class="display-label">
+    <div class="display-label left floating">
         @Html.LabelFor(x => x.Subtotal)
     </div>
-    <div class="display-field">
+    <div class="display-field number">
         @Html.DisplayFor(x => x.Subtotal)
     </div>
+    <div class="right floating">
     @if (Model.Total > 0)
     {
-        using (Html.BeginForm("ConfirmOrder", "Sales"))
+        <p>
+        @using (Html.BeginForm("ConfirmOrder", "Sales", new { id = Model.Id }))
         {
-            @Html.Hidden("id", Model.Id)
-            <p>
-                <input type="submit" value="@Business.Essentials.Resources.CompleteSale" />
-            </p>
+            <input type="submit" value="@Business.Essentials.Resources.CompleteSale" />
         }
+        </p>
     }
-
+    </div>
 </fieldset>
