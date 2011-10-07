@@ -85,6 +85,10 @@ namespace Business.Essentials.Model
         [Display(Name = "Cancelled", ResourceType = typeof(Resources))]
         public bool IsCancelled { get; set; }
 
+        [Property("paid")]
+        [Display(Name = "Paid", ResourceType = typeof(Resources))]
+        public bool IsPaid { get; set; }
+
         [HasMany(typeof(SalesOrderDetail), Table = "sales_order_detail", ColumnKey = "sales_order")]
         public IList<SalesOrderDetail> Details
         {
