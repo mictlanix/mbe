@@ -13,20 +13,18 @@ namespace Business.Essentials.WebApp.Controllers
     public class ProductsController : Controller
     {
 
-        //
+        // AJAX
+        // GET: /Products/GetSuggestions
+
         public JsonResult GetSuggestions(string pattern)
         {
-            JsonResult result = new JsonResult();
             var qry = from x in Product.Queryable
                       where x.Name.Contains(pattern) ||
                             x.Code.Contains(pattern) ||
                             x.SKU.Contains(pattern)
                       select new { id = x.Id, name = x.Name, code = x.Code, sku = x.SKU, url = string.Format("/Photos/{0}.png", x.Code.Trim()) };
 
-            result = Json(qry.Take(15).ToList());
-            result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
-
-            return result;  
+            return Json(qry.Take(15).ToList(), JsonRequestBehavior.AllowGet);
         }
 
         //
@@ -55,21 +53,6 @@ namespace Business.Essentials.WebApp.Controllers
 
             search.Offset = 0;
             return View(GetProducts(search));
-        }
-
-        Search<Product> GetProducts(Search<Product> search)
-        {
-            var qry = from x in Product.Queryable
-                      where x.Name.Contains(search.Pattern) ||
-                            x.Code.Contains(search.Pattern) ||
-                            x.SKU.Contains(search.Pattern) ||
-                            x.Brand.Contains(search.Pattern)
-                      orderby x.Name
-                      select x;
-
-            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-
-            return search;
         }
 
         //
@@ -110,6 +93,7 @@ namespace Business.Essentials.WebApp.Controllers
             }
             return View(product);
         }
+
         //
         // GET: /Products/Edit/5
 
@@ -158,6 +142,21 @@ namespace Business.Essentials.WebApp.Controllers
             Product product = Product.Find(id);
             product.Delete();
             return RedirectToAction("Index");
+        }
+
+        Search<Product> GetProducts(Search<Product> search)
+        {
+            var qry = from x in Product.Queryable
+                      where x.Name.Contains(search.Pattern) ||
+                            x.Code.Contains(search.Pattern) ||
+                            x.SKU.Contains(search.Pattern) ||
+                            x.Brand.Contains(search.Pattern)
+                      orderby x.Name
+                      select x;
+
+            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+
+            return search;
         }
 
         void SavePhoto(string fileName, HttpPostedFileBase file)

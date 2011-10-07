@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Business.Essentials.Model;
 
 namespace Business.Essentials.WebApp.Helpers
 {
@@ -72,6 +73,16 @@ namespace Business.Essentials.WebApp.Helpers
                 display_name = ((DisplayAttribute)attrs[0]).GetName();
 
             return display_name;
+        }
+
+        public static User CurrentUser(this HtmlHelper helper)
+        {
+            return GetUser(helper, helper.ViewContext.HttpContext.User.Identity.Name);
+        }
+
+        public static User GetUser(this HtmlHelper helper, string username)
+        {
+            return User.Queryable.SingleOrDefault(x => x.UserName == username);
         }
     }
 }

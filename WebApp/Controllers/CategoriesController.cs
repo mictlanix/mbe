@@ -11,17 +11,16 @@ namespace Business.Essentials.WebApp.Controllers
     public class CategoriesController : Controller
     {
 
+        // AJAX
+        // GET: /Categories/GetSuggestions
+
         public JsonResult GetSuggestions(string pattern)
         {
-            JsonResult result = new JsonResult();
             var qry = from x in Category.Queryable
                       where x.Name.Contains(pattern) 
                       select new { id = x.Id, name = x.Name};
 
-            result = Json(qry.Take(15).ToList());
-            result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
-
-            return result;
+            return Json(qry.Take(15).ToList(), JsonRequestBehavior.AllowGet);
         }
 
         //

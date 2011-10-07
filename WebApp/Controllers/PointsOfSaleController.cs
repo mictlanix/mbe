@@ -15,8 +15,7 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ViewResult Index()
         {
-            
-            var qry = from x in PointSale.Queryable
+            var qry = from x in PointOfSale.Queryable
                       select x;
 
             return View(qry.ToList());
@@ -27,7 +26,7 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ViewResult Details(int id)
         {
-            PointSale pointSale = PointSale.Find(id);
+            PointOfSale pointSale = PointOfSale.Find(id);
             return View(pointSale);
         }
 
@@ -43,7 +42,7 @@ namespace Business.Essentials.WebApp.Controllers
         // POST: /PointSale/Create
 
         [HttpPost]
-        public ActionResult Create(PointSale pointSale)
+        public ActionResult Create(PointOfSale pointSale)
         {
             if (ModelState.IsValid)
             {
@@ -59,7 +58,7 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ActionResult Edit(int id)
         {
-            PointSale pointSale = PointSale.Find(id);
+            PointOfSale pointSale = PointOfSale.Find(id);
             return View(pointSale);
         }
 
@@ -67,7 +66,7 @@ namespace Business.Essentials.WebApp.Controllers
         // POST: /PointSale/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(PointSale pointSale)
+        public ActionResult Edit(PointOfSale pointSale)
         {
             if (ModelState.IsValid)
             {
@@ -82,7 +81,7 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ActionResult Delete(int id)
         {
-            PointSale pointSale = PointSale.Find(id);
+            PointOfSale pointSale = PointOfSale.Find(id);
             return View(pointSale);
         }
 
@@ -92,7 +91,7 @@ namespace Business.Essentials.WebApp.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            PointSale pointSale = PointSale.Find(id);
+            PointOfSale pointSale = PointOfSale.Find(id);
             pointSale.Delete();
             return RedirectToAction("Index");
         }
