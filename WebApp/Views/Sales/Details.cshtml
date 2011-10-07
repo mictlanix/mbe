@@ -58,9 +58,7 @@
 
 <fieldset>
     <legend>@Business.Essentials.Resources.DisplayName_SalesOrderDetails</legend>
-    <p></p>
-        @Html.Partial("DetailsOrder", Model.Details)
-
+    @Html.Partial("_SalesOrderDetails", Model.Details)
 </fieldset>
 
 <p>

@@ -3,14 +3,14 @@
     <img style="min-width:50px;max-width:50px;height:50px;vertical-align:top;" src="@Url.Content("~/Photos/" + Model.Product.Photo)" title="@Model.ProductName"/>
     <div style="display:inline-block;height:60px;vertical-align:top;">
         <b>@Model.ProductName</b><br/>
-        <b>Código:</b> @Model.ProductCode 
-        <b>SKU:</b> @Model.Product.SKU <br/>
-        <b>Precio:</b> @Html.DisplayFor(x => x.Price)
-        <b>Cantidad:</b>
+        <b>@Business.Essentials.Resources.Code:</b> @Model.ProductCode 
+        <b>@Business.Essentials.Resources.SKU:</b> @Model.Product.SKU <br/>
+        <b>@Business.Essentials.Resources.Price:</b> @Html.DisplayFor(x => x.Price)
+        <b>@Business.Essentials.Resources.Quantity:</b>
         <div class='edit quantity'>@Model.Quantity.ToString("0.####")</div>
-        <b>Descuento:</b>
+        <b>@Business.Essentials.Resources.Discount:</b>
         <div class='edit discount'>@Model.Discount.ToString("p")</div>
-        <b>Importe:</b>
+        <b>@Business.Essentials.Resources.Amount:</b>
         <strong class='total'>@Html.DisplayFor(x => x.Total)</strong>
         <a class="remove" href="/Sales/RemoveDetail/@Model.Id">@Business.Essentials.Resources.Delete</a>
         <script type="text/javascript">

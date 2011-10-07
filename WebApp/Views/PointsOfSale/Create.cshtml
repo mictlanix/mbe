@@ -21,6 +21,7 @@
             @Html.EditorFor(model => model.Code)
             @Html.ValidationMessageFor(model => model.Code)
         </div>
+
         <div class="editor-label">
             @Html.LabelFor(model => model.Name)
         </div>
@@ -28,6 +29,15 @@
             @Html.EditorFor(model => model.Name)
             @Html.ValidationMessageFor(model => model.Name)
         </div>
+        
+        <div class="editor-label">
+            @Html.LabelFor(model => model.HostAddress)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.HostAddress)
+            @Html.ValidationMessageFor(model => model.HostAddress)
+        </div>
+
         <div class="editor-label">
             @Html.LabelFor(model => model.Comment)
         </div>

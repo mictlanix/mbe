@@ -101,11 +101,15 @@
             @Html.LabelFor(model => model.IsInvoiceable)
             @Html.CheckBoxFor(model => model.IsInvoiceable)
         </div>
+
         <div class="editor-label">
-            @Html.LabelFor(model => model.Comment)
+            @Html.LabelFor(model => model.TaxRate)
         </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Comment)
+        <div>
+            <select id="TaxRate" name="TaxRate">
+                <option value="0" @(Model.TaxRate == 0 ? "selected='selected'" : "")>0%</option>
+                <option value="0.16" @(Model.TaxRate != 0 ? "selected='selected'" : "")>16%</option>
+            </select>
         </div>
 
         <div class="editor-label">
@@ -198,7 +202,13 @@
                     queryParam: "pattern",minChars: 1,tokenLimit: 1});
                 });
             </script>
-            
+        </div>
+    
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Comment)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Comment)
         </div>
 
         <p>

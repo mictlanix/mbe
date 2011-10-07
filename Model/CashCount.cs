@@ -43,6 +43,7 @@ namespace Business.Essentials.Model
 
         [BelongsTo("session")]
         [Display(Name = "CashSession", ResourceType = typeof(Resources))]
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         public virtual CashSession CashSession { get; set; }
 
         [Property]

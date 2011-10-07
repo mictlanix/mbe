@@ -59,10 +59,12 @@ namespace Business.Essentials.Model
         [Property("credit_limit")]
         [DataType(DataType.Currency)]
         [Display(Name = "CreditLimit", ResourceType = typeof(Resources))]
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         public decimal CreditLimit { get; set; }
 
         [Property("credit_days")]
         [Display(Name = "CreditDays", ResourceType = typeof(Resources))]
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         public int CreditDays { get; set; }
 
         [Property]
@@ -71,8 +73,8 @@ namespace Business.Essentials.Model
         [StringLength(500, MinimumLength = 0)]
         public string Comment { get; set; }
 
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "PriceList", ResourceType = typeof(Resources))]
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         public int PriceListId { get; set; }
 
         [BelongsTo("price_list")]
