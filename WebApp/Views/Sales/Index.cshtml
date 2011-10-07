@@ -64,11 +64,8 @@
         <td class="center">
             @Html.DisplayFor(modelItem => item.PointOfSale.Name)
         </td>
-       
-        <td>
+        <td class="actions">
             @Html.ActionLink(Business.Essentials.Resources.Details, "Details", new { id=item.Id })
-        </td>
-        <td>
             @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id=item.Id })
         </td>
     </tr>

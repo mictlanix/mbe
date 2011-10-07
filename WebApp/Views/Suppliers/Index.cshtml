@@ -57,8 +57,7 @@
         <td>
             @Html.DisplayFor(modelItem => item.CreditDays)
         </td>
-       
-        <td>
+        <td class="actions">
             @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id=item.Id }) |
             @Html.ActionLink(Business.Essentials.Resources.Details, "Details", new { id=item.Id }) |
             @Html.ActionLink(Business.Essentials.Resources.Delete, "Delete", new { id=item.Id })

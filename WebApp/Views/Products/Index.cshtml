@@ -70,9 +70,8 @@
 {
     <tr>
         <td>
-            @Html.ActionImage("Details", new { id = item.Id }, Url.Content("~/Photos/" + item.Photo),
-                              Business.Essentials.Resources.Details,
-                              new { title = Business.Essentials.Resources.Details,  @class = "small" })
+            @Html.ActionImage(Url.Content("~/Photos/" + item.Photo), "Details", new { id = item.Id },
+                              new { alt = Business.Essentials.Resources.Details, title = Business.Essentials.Resources.Details,  @class = "small" })
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Code)
@@ -129,8 +128,7 @@
         <td>
             @Html.DisplayFor(modelItem => item.Category.Name)
         </td>
-  
-        <td>
+        <td class="actions">
             @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id = item.Id })
             @Html.ActionLink(Business.Essentials.Resources.Delete, "Delete", new { id = item.Id })
         </td>

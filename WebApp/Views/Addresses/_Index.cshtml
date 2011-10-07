@@ -56,8 +56,7 @@
         <td>
             @Html.DisplayFor(modelItem => item.ZipCode)
         </td>
-
-        <td>
+        <td class="actions">
             @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", "Addresses", new { id=item.Id }, null) |
             @Html.ActionLink(Business.Essentials.Resources.Details, "Details", "Addresses", new { id = item.Id }, null) |
             @Html.ActionLink(Business.Essentials.Resources.Delete, "Delete", "Addresses", new { id = item.Id }, null)

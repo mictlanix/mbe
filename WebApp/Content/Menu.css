@@ -1,6 +1,4 @@
-﻿body{color:#000;margin:3px 0}
-body{background:#fff}
-#gsr a:active,a.fl:active,.fl a:active,.gl a:active{color:#c11}
+﻿#gsr a:active,a.fl:active,.fl a:active,.gl a:active{color:#c11}
 #gb{font:13px/27px Arial,sans-serif;height:30px}
 #gbz{position:absolute;white-space:nowrap;top:0;height:30px;z-index:1000}
 #gbz{left:0;padding-left:4px}

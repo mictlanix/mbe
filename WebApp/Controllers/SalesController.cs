@@ -1,4 +1,33 @@
-﻿using System;
+﻿// 
+// SalesController.cs
+// 
+// Author:
+//   Eddy Zavaleta <eddy@mictlanix.org>
+//   Eduardo Nieto <enieto@mictlanix.org>
+// 
+// Copyright (C) 2011 Eddy Zavaleta, Mictlanix, and contributors.
+// 
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -6,6 +35,7 @@ using System.Web.Mvc;
 using Castle.ActiveRecord;
 using Business.Essentials.Model;
 using Business.Essentials.WebApp.Models;
+using Business.Essentials.WebApp.Helpers;
 
 namespace Business.Essentials.WebApp.Controllers
 {
@@ -37,33 +67,39 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ViewResult New()
         {
+            if (GetPoS() == null)
+            {
+                return View("InvalidPointOfSale");
+            }
+
             return View(new SalesOrder());
         }
 
         [HttpPost]
         public ActionResult New(SalesOrder item)
         {
-            var customer = Customer.Find(item.CustomerId);
-            var salesperson = Employee.Find(1); //FIXME use user logged on
-            var point_sale = PointOfSale.Find(1); //FIXME use settings
+            item.PointOfSale = GetPoS();
 
-            var addr = Request.UserHostAddress;
+            if (item.PointOfSale == null)
+            {
+                return View("InvalidPointOfSale");
+            }
 
-            item.Customer = customer;
-            item.SalesPerson = salesperson;
-            item.PointOfSale = point_sale;
+            item.Customer = Customer.Find(item.CustomerId);
+            item.SalesPerson = SecurityHelpers.GetUser(User.Identity.Name).Employee;
             item.Date = DateTime.Now;
-            item.DueDate = item.IsCredit ? item.Date.AddDays(customer.CreditDays) : item.Date;
+            item.DueDate = item.IsCredit ? item.Date.AddDays(item.Customer.CreditDays) : item.Date;
 
             using (var session = new SessionScope())
             {
                 item.CreateAndFlush();
             }
 
-            while (item.Id == 0)
+            System.Diagnostics.Debug.WriteLine("New SalesOrder [Id = {0}]", item.Id);
+
+            if (item.Id == 0)
             {
-                System.Diagnostics.Debug.WriteLine("New Sales Id: {0}", item.Id);
-                System.Threading.Thread.Sleep(10);
+                return View("UnknownError");
             }
 
             return RedirectToAction("Edit", new { id = item.Id });
@@ -134,12 +170,7 @@ namespace Business.Essentials.WebApp.Controllers
                 item.CreateAndFlush();
             }
 
-            while (item.Id == 0)
-            {
-                System.Diagnostics.Debug.WriteLine("New Detail Id: {0}", item.Id);
-                System.Threading.Thread.Sleep(10);
-                item.Refresh();
-            }
+            System.Diagnostics.Debug.WriteLine("New SalesOrderDetail [Id = {0}]", item.Id);
 
             return Json(new { id = item.Id });
         }
@@ -181,13 +212,7 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ActionResult GetSalesTotals(int id)
         {
-            //var qry = from x in SalesOrder.Queryable
-            //          where id == x.Id;
-            //          select new { Total = x.Details.Sum(y => y.Quantity * y.Price), 
-            //                       Taxes = x.Details.Sum(y => y.Quantity * y.Price / (1 + y.TaxRate)) };
-
             var order = SalesOrder.Find(id);
-
             return PartialView("_SalesTotals", order);
         }
 
@@ -226,6 +251,72 @@ namespace Business.Essentials.WebApp.Controllers
             item.Save();
 
             return RedirectToAction("New");
+        }
+
+        public ActionResult GetSalesOrderBalance(int id)
+        {
+            var order = SalesOrder.Find(id);
+
+            return PartialView("_SalesOrderBalance", order);
+        }
+
+        [HttpPost]
+        public JsonResult AddPayment(int order, int type, decimal amount, string reference)
+        {
+            var item = new CustomerPayment
+            {
+                SalesOrder = SalesOrder.Find(order),
+                Method = (PaymentMethod)type,
+                Amount = amount,
+                Date = DateTime.Now,
+                Reference = reference,
+            };
+
+            using (var session = new SessionScope())
+            {
+                item.CreateAndFlush();
+            }
+
+            System.Diagnostics.Debug.WriteLine("New CustomerPayment [Id = {0}]", item.Id);
+
+            return Json(new { id = item.Id });
+        }
+
+        public ActionResult GetPayment(int id)
+        {
+            return PartialView("_Payment", CustomerPayment.Find(id));
+        }
+
+        [HttpPost]
+        public JsonResult RemovePayment(int id)
+        {
+            CustomerPayment item = CustomerPayment.Find(id);
+            item.Delete();
+            return Json(new { id = id, result = true });
+        }
+
+        public JsonResult GetBalance(int id)
+        {
+            SalesOrder order = SalesOrder.Find(id);
+
+            return Json(new { balance = order.Balance }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult ConfirmPayment(int id)
+        {
+            SalesOrder item = SalesOrder.Find(id);
+
+            item.IsPaid = true;
+            item.Save();
+
+            return RedirectToAction("PayOrders");
+        }
+
+        PointOfSale GetPoS()
+        {
+            var addr = Request.UserHostAddress;
+            return PointOfSale.Queryable.SingleOrDefault(x => x.HostAddress == addr);
         }
     }
 }

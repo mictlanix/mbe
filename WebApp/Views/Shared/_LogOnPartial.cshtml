@@ -1,4 +1,5 @@
-﻿
+﻿@using Business.Essentials
+@model Business.Essentials.Model.User
 <div id="gbw">
     <div id="gbg">
         <h2 class="gbxx">Account Options</h2>
@@ -9,7 +10,7 @@
                     <span class="gbtb2"></span>
                     <span id="gbgs4" class="gbts gbtsa">
                         <span id="gbi4">
-                            <span id="gbi4m1">@(Request.IsAuthenticated ? User.Identity.Name : Business.Essentials.Resources.SignIn)</span>
+                            <span id="gbi4m1">@(Request.IsAuthenticated ? User.Identity.Name : Resources.SignIn)</span>
                             <span class="gbma"></span>
                         </span>
                     </span>
@@ -20,19 +21,19 @@
                     <div class="gbmc">
                         <div id="gbmpdv" style="width:240px;">
                             <div class="gbpc">
-                                <span id="gbmpn" class="gbps">@ViewBag.User.Employee</span>
-                                <span class="gbps2">@ViewBag.User.Email</span>
+                                <span id="gbmpn" class="gbps">@Model.Employee</span>
+                                <span class="gbps2">@Model.Email</span>
                                 <ol class="gbmcc">
                                     <li class="gbmtc"></li>
                                     <li class="gbmtc">
-                                        <a class="gbml1" href="@Url.Action("ChangePassword", "Account")">Cambiar Contraseña</a>
+                                        <a class="gbml1" href="@Url.Action("ChangePassword", "Account")">@Resources.ChangePassword</a>
                                     </li>
                                 </ol>
                             </div>
                             <div class="gbmh"></div>
                             <div class="gbmpal">
                                 <a class="gbml1" href="@Url.Action("LogOff", "Account")">
-                                    <span class="gbmpala">Salir</span>
+                                    <span class="gbmpala">@Resources.LogOff</span>
                                 </a>
                             </div>
                         </div>
@@ -46,7 +47,6 @@
         </ol>
     </div>
 </div>
-
 @if(Request.IsAuthenticated)
 {
     <script type="text/javascript">

@@ -1,9 +1,8 @@
 ﻿// 
-// CashSession.cs
+// HtmlHelpers.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
-//   Eduardo Nieto <enieto@mictlanix.org>
 // 
 // Copyright (C) 2011 Eddy Zavaleta, Mictlanix, and contributors.
 // 
@@ -28,37 +27,34 @@
 //
 
 using System;
-using System.Collections.Generic;
-using Castle.ActiveRecord;
-using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web.Mvc;
+using System.Web.Routing;
+using Business.Essentials.Model;
 
-namespace Business.Essentials.Model
+namespace Business.Essentials.WebApp.Helpers
 {
-    [ActiveRecord("cash_session")]
-    public class CashSession : ActiveRecordLinqBase<CashSession>
+    public static class SecurityHelpers
     {
-        [PrimaryKey(PrimaryKeyType.Identity, "cash_session_id")]
-        public int Id { get; set; }
+        public static User CurrentUser(this HtmlHelper helper)
+        {
+            return GetUser(helper, helper.ViewContext.HttpContext.User.Identity.Name);
+        }
 
-        [Property]
-        [DataType(DataType.DateTime)]
-        [Display(Name = "Start", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        public DateTime? Start { get; set; }
+        public static User GetUser(this HtmlHelper helper, string username)
+        {
+            return GetUser(username);
+        }
 
-        [Property]
-        [DataType(DataType.DateTime)]
-        [Display(Name = "End", ResourceType = typeof(Resources))]
-        public DateTime? End { get; set; }
+        public static User GetUser(string username)
+        {
+            return User.Queryable.SingleOrDefault(x => x.UserName == username);
+        }
 
-        [BelongsTo("cashier")]
-        [Display(Name = "Cashier", ResourceType = typeof(Resources))]
-        public virtual Employee Cashier { get; set; }
-
-        [BelongsTo("cash_drawer")]
-        [Display(Name = "CashDrawer", ResourceType = typeof(Resources))]
-        public virtual CashDrawer CashDrawer { get; set; }
-
+        public static AccessPrivilege GetPrivilege(this HtmlHelper helper, User user, SystemObjects obj)
+        {
+            return user.Privileges.SingleOrDefault(x => x.Object == obj) ?? new AccessPrivilege();
+        }
     }
 }
