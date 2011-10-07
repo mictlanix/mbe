@@ -31,6 +31,9 @@
         </div>
     </fieldset>
 </div>
+<div id="backTo" style="display:none">
+    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
+</div>
 <div id="sales-totals">
     @Html.Partial("_SalesTotals")
 </div>
@@ -45,7 +48,10 @@
         $.get("/Sales/GetSalesTotals/" + SalesOrder.Id, function (data) {
             $("#sales-totals").html(data);
             if($("#items").children().length === 0){
-                $("#edit-sales-order").show();
+                $("#edit-sales-order").show("slow");
+                $("#backTo").hide("slow");                
+            }else{
+                $("#backTo").show("slow");
             }
         });
     }
@@ -130,7 +136,7 @@
                     $("#product-search").tokenInput("clear");
                     updateTotals();
 
-                    $("#edit-sales-order").hide();
+                    $("#edit-sales-order").hide("slow");
                 });
 
             }, "json");

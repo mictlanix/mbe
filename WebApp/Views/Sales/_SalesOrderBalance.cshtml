@@ -23,7 +23,18 @@
         @Html.DisplayFor(x => x.Balance)
     </div>
 
+    @if(Model.Balance >= 0)
+    {
+        using (Html.BeginForm("ConfirmPayment", "Sales"))
+        {
+            @Html.Hidden("id", Model.Id)
+            <p>
+                <input type="submit" value="Complete Payment" />
+            </p>
+        }
+    }
 </fieldset>
+
 <script type="text/javascript">
 @if (Model.Balance >= 0)
 {

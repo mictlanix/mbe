@@ -83,6 +83,5 @@ namespace Business.Essentials.Model
         [Property]
         [Display(Name = "Reference", ResourceType = typeof(Resources))]
         public string Reference { get; set; }
-
     }
 }

@@ -209,7 +209,7 @@ namespace Business.Essentials.WebApp.Controllers
         public ActionResult PayOrders()
         {
             var qry = from x in SalesOrder.Queryable
-                      where x.IsCompleted && !x.IsCancelled
+                      where x.IsCompleted && !x.IsPaid && !x.IsCancelled
                       select x;
 
             return View(qry.ToList());
@@ -297,7 +297,17 @@ namespace Business.Essentials.WebApp.Controllers
 
             return Json(new { balance = order.Balance }, JsonRequestBehavior.AllowGet);
         }
-        
 
+        [HttpPost]
+        public ActionResult ConfirmPayment(int id)
+        {
+            SalesOrder item = SalesOrder.Find(id);
+
+            item.IsPaid = true;
+            item.Save();
+
+            return RedirectToAction("PayOrders");
+        }
+        
     }
 }
