@@ -907,6 +907,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cargando....
+        /// </summary>
+        public static string Loading {
+            get {
+                return ResourceManager.GetString("Loading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ubicación.
         /// </summary>
         public static string Location {

@@ -62,15 +62,17 @@ namespace Business.Essentials.WebApp.Helpers
                                                 object htmlAttributes)
         {
             var url = new UrlHelper(html.ViewContext.RequestContext);
+            var attrs = new RouteValueDictionary(htmlAttributes);
 
             // build the <img> tag
             var imgBuilder = new TagBuilder("img");
 
             imgBuilder.MergeAttribute("src", url.Content(imagePath));
 
-            if (htmlAttributes != null)
+            if (attrs.ContainsKey("alt"))
             {
-                imgBuilder.MergeAttributes(new RouteValueDictionary(htmlAttributes));
+                imgBuilder.MergeAttribute("alt", attrs["alt"].ToString());
+                attrs.Remove("alt");
             }
 
             string imgHtml = imgBuilder.ToString(TagRenderMode.SelfClosing);
@@ -79,6 +81,12 @@ namespace Business.Essentials.WebApp.Helpers
             var anchorBuilder = new TagBuilder("a");
             anchorBuilder.MergeAttribute("href", url.Action(action, controller, routeValues));
             anchorBuilder.InnerHtml = imgHtml; // include the <img> tag inside
+
+            if (attrs.Count > 0)
+            {
+                anchorBuilder.MergeAttributes(attrs);
+            }
+
             string anchorHtml = anchorBuilder.ToString(TagRenderMode.Normal);
 
             return MvcHtmlString.Create(anchorHtml);

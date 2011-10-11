@@ -1,4 +1,5 @@
-﻿@model Business.Essentials.Model.Product
+﻿@using Business.Essentials;
+@model Business.Essentials.Model.Product
 
 @{
     ViewBag.Title = Business.Essentials.Resources.Delete;
@@ -177,7 +178,7 @@
 @using (Html.BeginForm())
 {
     <p>
-        <input type="submit" value= "@Business.Essentials.Resources.Delete" /> |
-        @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
+        <button type="submit" class="icon delete">@Resources.Delete</button>
+        @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index", new { }, new { @class = "button" })
     </p>
 }

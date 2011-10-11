@@ -19,10 +19,10 @@
         <b>@Business.Essentials.Resources.SKU:</b> @Model.Product.SKU <br/>
         <b>@Business.Essentials.Resources.Price:</b> @Html.DisplayFor(x => x.Price)
         <b>@Business.Essentials.Resources.Quantity:</b>
-        <div class='edit quantity'>@Model.Quantity.ToString("0.####")</div>
+        <div class="editable quantity">@Model.Quantity.ToString("0.####")</div>
         <b>@Business.Essentials.Resources.Discount:</b>
-        <div class='edit discount'>@Model.Discount.ToString("p")</div>
+        <div class="editable discount">@Model.Discount.ToString("p")</div>
         <b>@Business.Essentials.Resources.Amount:</b>
-        <strong class='total'>@Html.DisplayFor(x => x.Total)</strong>
+        <strong class="total">@Html.DisplayFor(x => x.Total)</strong>
     </div>
 </li>

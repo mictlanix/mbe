@@ -63,7 +63,7 @@ namespace Business.Essentials.WebApp.Controllers
         {
             if (pattern == null)
             {
-                return View(new Search<Product> { Limit = 25 });
+                return View(new Search<Product> { Limit = 100 });
             }
 
             return View(GetProducts(new Search<Product> { Pattern = pattern, Offset = offset.Value, Limit = limit.Value }));
@@ -75,22 +75,37 @@ namespace Business.Essentials.WebApp.Controllers
         [HttpPost]
         public ActionResult Index(Search<Product> search)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
+            {
+                search.Offset = 0;
+                search = GetProducts(search);
+            }
+
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_Index", search);
+            }
+            else
             {
                 return View(search);
             }
-
-            search.Offset = 0;
-            return View(GetProducts(search));
         }
 
         //
         // GET: /Products/Details/5
 
-        public ViewResult Details(int id)
+        public ActionResult Details(int id)
         {
             Product product = Product.Find(id);
-            return View(product);
+
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_Details", product);
+            }
+            else
+            {
+                return View(product);
+            }
         }
 
         //

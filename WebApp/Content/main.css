@@ -1,8 +1,26 @@
 ﻿body {
-  background:transparent url(images/body-bg.png);
+    background:transparent url(images/body-bg.png);
+    color:#333;
+    font:normal 13px arial,sans-serif;
+    margin:0;
+    padding:0;
+}
+h2 
+{
+    font:normal 20px Arial,sans-serif;
+    line-height:30px;
+    color:#DD4B39;
+    padding: 0 0 10px 0;
 }
 img {
   border:none;
+}
+a:link,a:visited,a:active {
+    color:#36C;
+    text-decoration:none;
+}
+a:hover {
+    text-decoration:underline;
 }
 #container {
   background:transparent url(images/header-bg.png) repeat-x left -30px;
@@ -29,8 +47,8 @@ div#logo {
   display:none
 }
 .page {
-  width:96%;
-  margin:10px auto;
+  min-width:800px;
+  margin:10px 20px;
 }
 .date {
   white-space:nowrap;
@@ -55,36 +73,65 @@ div#logo {
 .display-field, .editor-field {
   margin:1em 0 0 0;
 }
-.edit,.edit-ok {
+.editable,.editable-ok {
   display:inline-block;
   margin:2px 0;
   min-width:60px;
   text-align:right;
 }
-.edit:hover {
+.editable:hover {
   background:#fffcc3;
 }
-.edit-ok {
+.editable-ok {
   background:#00CD00;
+}
+a.small img,img.small {
+    max-width:80px;
+    max-height:80px;
+}
+a.medium img,img.medium {
+    max-width:200px;
+    max-height:200px;
 }
 fieldset {
   padding: 0 1.4em 0 1.4em;
 }
+label {
+  color:#888;
+  font-size:15px;
+  font-weight:normal;
+  line-height:1.2em;
+  text-align:right;
+}
+input[type="text"], 
+input[type="password"] {
+  border:1px solid #ccc;
+  padding:5px 8px;
+  font-size:1.2em;
+  color:#444;
+  width:382px;
+}
 table {
-  width:100%;
+    width:100%;
+    border:1px solid #DEDEDE;
+    border-collapse:collapse;
+}
+table td {
+    padding:5px;
+    border:solid 1px #e8eef4;
 }
 table th {
-  text-align:center;
+    padding: 6px 5px;
+    font-weight:normal;
+    text-align:center;
+    color:#DD4B39;
+}
+table th label {
+    color:#DD4B39;
 }
 table td.actions {
   white-space:nowrap;
   width:1px;
-}
-label {
-  font-weight:bold;
-}
-ul.token-input-list {
-  margin:2px 0;
 }
 ul.sales-items {
     list-style-type:none;
@@ -122,9 +169,32 @@ ul.sales-items li div.action-link {
   top:259px;
   right:40px;
 }
-.search-box {
-  display:inline-block;
+#activity-indicator {
+  display:none;
+  padding:10px;
+  text-align:center;
 }
 .search-box {
-  display:inline-block;
+  display:block;
+  white-space:nowrap;
+  padding:1px;
+}
+.search-field {
+  display:block;
+  margin-right:110px;
+}
+.search-field input[type="text"] {
+  padding:6px 2px;
+  width:100%;
+}
+.search-box button {
+  display:block;
+  float:right;
+  clear:none;
+}
+
+ul.token-input-list {
+    margin:2px 0;
+    font:inherit;
+    border:1px solid #ccc;
 }

@@ -58,7 +58,7 @@
             var element = $("#item" + id + " div.quantity");
             element.html(data.quantity);
             element.siblings(".total").html(data.total);
-            element.switchClass("edit", "edit-ok").switchClass("edit-ok", "edit", 3000);
+            element.switchClass("editable", "editable-ok").switchClass("editable-ok", "editable", 3000);
             result = data.quantity;
         }, "json");
         $.ajaxSetup({ async: true });
@@ -76,7 +76,7 @@
             var element = $("#item" + id + " div.discount");
             element.html(data.discount);
             element.siblings(".total").html(data.total);
-            element.switchClass("edit", "edit-ok").switchClass("edit-ok", "edit", 3000);
+            element.switchClass("editable", "editable-ok").switchClass("editable-ok", "editable", 3000);
             result = data.discount;
         }, "json");
         $.ajaxSetup({ async: true });
@@ -153,3 +153,11 @@
     }
     });
 </script>
+<style type="text/css">
+ul.token-input-list {
+  width:500px;
+}
+div.token-input-dropdown {
+  width:500px;
+}
+</style>
