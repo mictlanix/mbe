@@ -1,4 +1,5 @@
-﻿@model Business.Essentials.Model.Product
+﻿@using Business.Essentials;
+@model Business.Essentials.Model.Product
 
 @{
     ViewBag.Title = Business.Essentials.Resources.CreateNew;
@@ -82,17 +83,17 @@
             @Html.EditorFor(model => model.UnitOfMeasurement)
         </div>
 
-        <div class="editor-label-checkbox">
-            @Html.LabelFor(model => model.IsPerishable)
+        <div class="editor-label">
             @Html.CheckBoxFor(model => model.IsPerishable)
+            @Html.LabelFor(model => model.IsPerishable)
         </div>
-        <div class="editor-label-checkbox">
-            @Html.LabelFor(model => model.IsSeriable)
+        <div class="editor-label">
             @Html.CheckBoxFor(model => model.IsSeriable)
+            @Html.LabelFor(model => model.IsSeriable)
         </div>
-         <div class="editor-label-checkbox">
-            @Html.LabelFor(model => model.IsInvoiceable)
+         <div class="editor-label">
             @Html.CheckBoxFor(model => model.IsInvoiceable)
+            @Html.LabelFor(model => model.IsInvoiceable)
         </div>
 
         <div class="editor-label">
@@ -204,12 +205,10 @@
             @Html.EditorFor(model => model.Comment)
         </div>
 
-        <p>
-            <input type="submit" value= @Business.Essentials.Resources.Create />
-        </p>
+        <p><button type="submit" class="icon save">@Resources.Create</button></p>
     </fieldset>
 }
 
 <div>
-    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
+    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index", new { }, new { @class = "button" })
 </div>

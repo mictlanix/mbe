@@ -1,4 +1,5 @@
-﻿@using Business.Essentials.Model;
+﻿@using Business.Essentials;
+@using Business.Essentials.Model;
 @using Business.Essentials.WebApp.Helpers;
 @using Business.Essentials.WebApp.Models;
 @model Search<Product>
@@ -7,133 +8,48 @@
     ViewBag.Title = Business.Essentials.Resources.Title_Product;
 }
 
+
+<script src="@Url.Content("~/Scripts/jquery.cluetip.min.js")" type="text/javascript"></script>
+<link href="@Url.Content("~/Content/jquery.cluetip.css")" rel="stylesheet" type="text/css" />
+
 <h2>@Business.Essentials.Resources.DisplayName_Products</h2>
 
 <p>
-    @Html.ActionLink(Business.Essentials.Resources.CreateNew, "Create")
+    @Html.ActionLink(Business.Essentials.Resources.CreateNew, "Create", new { }, new { @class = "button icon add" })
 </p>
 
-@using (Html.BeginForm())
+@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))
 {
-    @Html.ValidationSummary(true)
-    <fieldset>
-     	<div class="editor-label">
-            @Html.LabelFor(x => x.Pattern)
+    @Html.HiddenFor(x => x.Offset)
+    @Html.HiddenFor(x => x.Limit)
+    <div class="editor-label">
+        @Html.LabelFor(x => x.Pattern)
+    </div>
+    <div class="search-box">
+        <button type="submit" class="icon search">@Resources.Search</button>
+        <div class="search-field">
+            <input type="text" id="Pattern" name="Pattern" />
         </div>
-        <div class="editor-field">
-            @Html.EditorFor(x => x.Pattern)
-            @Html.HiddenFor(x => x.Offset)
-            @Html.HiddenFor(x => x.Limit)
-            <input type="submit" value= "@Business.Essentials.Resources.Search" />
-        </div>
-        <p>
-            @if (Model.Offset >= Model.Limit)
-            {
-                @Html.ActionLink("<", "Index", new { Pattern = Model.Pattern, Limit = Model.Limit, Offset = Model.Offset - Model.Limit })
-            }
-            @if (Model.Results.Count >= Model.Limit)
-            {
-                @Html.ActionLink(">", "Index", new { Pattern = Model.Pattern, Limit = Model.Limit, Offset = Model.Offset + Model.Limit })
-            }
-            
-            @Html.Encode(string.Format("{0} elementos listados.", Model.Results.Count))
-            @Html.ValidationMessageFor(x => x.Pattern)
-        </p>
-    </fieldset>
+    </div>
+    <p>
+        @if (Model.Offset >= Model.Limit)
+        {
+            @Html.ActionLink("<", "Index", new { Pattern = Model.Pattern, Limit = Model.Limit, Offset = Model.Offset - Model.Limit })
+        }
+        @if (Model.Results.Count >= Model.Limit)
+        {
+            @Html.ActionLink(">", "Index", new { Pattern = Model.Pattern, Limit = Model.Limit, Offset = Model.Offset + Model.Limit })
+        }
+    </p>
 }
-
-<table style="width:100%">
-    <tr>
-        <th></th>
-        <th>
-            @Html.LabelFor(x => new Product().Code)
-        </th>
-        <th>
-            @Html.LabelFor(x => new Product().SKU)
-        </th>
-        <th>
-            @Html.LabelFor(x => new Product().Name)
-        </th>
-        <th>
-            @Html.LabelFor(x => new Product().UnitOfMeasurement)
-        </th>
-        <th>
-            @Business.Essentials.Resources.Prices
-        </th>
-        <th>
-            @Html.LabelFor(x => new Product().Category)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model.Results)
-{
-    <tr>
-        <td>
-            @Html.ActionImage(Url.Content("~/Photos/" + item.Photo), "Details", new { id = item.Id },
-                              new { alt = Business.Essentials.Resources.Details, title = Business.Essentials.Resources.Details,  @class = "small" })
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Code)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.SKU)
-        </td>
-         <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-         <td>
-            @Html.DisplayFor(modelItem => item.UnitOfMeasurement)
-        </td>
-        <td>
-            <table style="border:0;width:100%;text-align:right;">
-                <tr>
-                    <td title="@Business.Essentials.Resources.Price1" style="border:0;background:#F7F8E0 url('@Url.Content("~/Content/images/price1.png")') no-repeat left bottom;">
-                        @Html.DisplayFor(modelItem => item.Price1)
-                    </td>
-                    <td title="@Business.Essentials.Resources.Price2" style="border:0;background:#E6F8E0 url('@Url.Content("~/Content/images/price2.png")') no-repeat left bottom;">
-                        @Html.DisplayFor(modelItem => item.Price2)
-                    </td>
-                </tr>
-                <tr>
-                    <td title="@Business.Essentials.Resources.Price3" style="border:0;background:#E0F8F7 url('@Url.Content("~/Content/images/price3.png")') no-repeat left bottom;">
-                        @Html.DisplayFor(modelItem => item.Price3)
-                    </td>
-                    <td title="@Business.Essentials.Resources.Price4" style="border:0;background:#F8E0F7 url('@Url.Content("~/Content/images/price4.png")') no-repeat left bottom;">
-                        @Html.DisplayFor(modelItem => item.Price4)
-                    </td>
-                </tr>
-                <tr>
-                @if(item.Price5 > 0)
-                {
-                    <td title="@Business.Essentials.Resources.Price5" style="border:0;background:#F8E6E0 url('@Url.Content("~/Content/images/price5.png")') no-repeat left bottom;">
-                        @Html.DisplayFor(modelItem => item.Price5)
-                    </td>
-                }
-                else if (item.Price6 > 0)
-                {
-                    <td title="@Business.Essentials.Resources.Price6" style="border:0;background:#F8E6E0 url('@Url.Content("~/Content/images/price6.png")') no-repeat left bottom;">
-                        @Html.DisplayFor(modelItem => item.Price6)
-                    </td>
-                }
-                @if (item.Price7 > 0)
-                {
-                    <td title="@Business.Essentials.Resources.Price7" style="border:0;background:#F8E6E0 url('@Url.Content("~/Content/images/price7.png")') no-repeat left bottom;">
-                        @Html.DisplayFor(modelItem => item.Price7)
-                    </td>
-                }
-                </tr>
-            </table>
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Category.Name)
-        </td>
-        <td class="actions">
-            @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id = item.Id })
-            @Html.ActionLink(Business.Essentials.Resources.Delete, "Delete", new { id = item.Id })
-        </td>
-    </tr>
-}
-
-
-</table>
+<div id="activity-indicator">
+    <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
+</div>
+<div id="search-results">
+    @Html.Partial("_Index")
+</div>
+<script type="text/javascript">
+    function onSearchBegin() {
+        $("#search-results").html(null);
+    }
+</script>

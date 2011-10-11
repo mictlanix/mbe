@@ -1,0 +1,115 @@
+﻿@using Business.Essentials;
+@using Business.Essentials.Model;
+@using Business.Essentials.WebApp.Helpers;
+@using Business.Essentials.WebApp.Models;
+@model Search<Product>
+
+<p>@Html.ValidationMessageFor(x => x.Pattern)</p>
+
+<table>
+    <tr>
+        <th></th>
+        <th>
+            @Html.LabelFor(x => new Product().Code)
+        </th>
+        <th>
+            @Html.LabelFor(x => new Product().SKU)
+        </th>
+        <th>
+            @Html.LabelFor(x => new Product().Name)
+        </th>
+        <th>
+            @Html.LabelFor(x => new Product().UnitOfMeasurement)
+        </th>
+        <th>
+            @Business.Essentials.Resources.Prices
+        </th>
+        <th>
+            @Html.LabelFor(x => new Product().Category)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model.Results)
+{
+    <tr>
+        <td>
+            @Html.ActionImage(Url.Content("~/Photos/" + item.Photo), "Details", new { id = item.Id },
+                              new { alt = Business.Essentials.Resources.Details,
+                                    title = Business.Essentials.Resources.Details,
+                                    rel = Url.Action("Details", new { id = item.Id }),
+                                    @class = "small tips"
+                              })
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Code)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SKU)
+        </td>
+         <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+         <td>
+            @Html.DisplayFor(modelItem => item.UnitOfMeasurement)
+        </td>
+        <td>
+            <table style="border:0;width:100%;text-align:right;">
+                <tr>
+                    <td title="@Business.Essentials.Resources.Price1" style="border:0;background:#F7F8E0 url('@Url.Content("~/Content/images/price1.png")') no-repeat left bottom;">
+                        @Html.DisplayFor(modelItem => item.Price1)
+                    </td>
+                    <td title="@Business.Essentials.Resources.Price2" style="border:0;background:#E6F8E0 url('@Url.Content("~/Content/images/price2.png")') no-repeat left bottom;">
+                        @Html.DisplayFor(modelItem => item.Price2)
+                    </td>
+                </tr>
+                <tr>
+                    <td title="@Business.Essentials.Resources.Price3" style="border:0;background:#E0F8F7 url('@Url.Content("~/Content/images/price3.png")') no-repeat left bottom;">
+                        @Html.DisplayFor(modelItem => item.Price3)
+                    </td>
+                    <td title="@Business.Essentials.Resources.Price4" style="border:0;background:#F8E0F7 url('@Url.Content("~/Content/images/price4.png")') no-repeat left bottom;">
+                        @Html.DisplayFor(modelItem => item.Price4)
+                    </td>
+                </tr>
+                <tr>
+                @if (item.Price5 > 0)
+                {
+                    <td title="@Business.Essentials.Resources.Price5" style="border:0;background:#F8E6E0 url('@Url.Content("~/Content/images/price5.png")') no-repeat left bottom;">
+                        @Html.DisplayFor(modelItem => item.Price5)
+                    </td>
+                }
+                else if (item.Price6 > 0)
+                {
+                    <td title="@Business.Essentials.Resources.Price6" style="border:0;background:#F8E6E0 url('@Url.Content("~/Content/images/price6.png")') no-repeat left bottom;">
+                        @Html.DisplayFor(modelItem => item.Price6)
+                    </td>
+                }
+                @if (item.Price7 > 0)
+                {
+                    <td title="@Business.Essentials.Resources.Price7" style="border:0;background:#F8E6E0 url('@Url.Content("~/Content/images/price7.png")') no-repeat left bottom;">
+                        @Html.DisplayFor(modelItem => item.Price7)
+                    </td>
+                }
+                </tr>
+            </table>
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Category.Name)
+        </td>
+        <td class="actions">
+            @Html.ActionImage(Url.Content("~/Content/icons/edit.png"), "Edit", new { id = item.Id },
+                              new { alt = Resources.Edit, title = Resources.Edit })
+            @Html.ActionImage(Url.Content("~/Content/icons/delete-item.png"), "Delete", new { id = item.Id },
+                              new { alt = Resources.Delete, title = Resources.Delete })
+        </td>
+    </tr>
+}
+</table>
+<script type="text/javascript">
+    $(function () {
+        $('a.tips').cluetip({
+            showTitle: false,
+            width:600
+        });
+    });
+</script>
