@@ -58,18 +58,26 @@
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </p>
 
-<fieldset>
-    <legend>@Resources.DisplayName_Addresses</legend>
-    <p>
-        @Html.ActionLink(Resources.CreateNew, "CreateForCustomer", "Addresses", new { id = Model.Id }, new { @class = "button icon add" })
-    </p>
-    @Html.Partial("../Addresses/_Index", Model.Addresses)
-</fieldset>
+<div id="tabs">
+    <ul>
+        <li><a href="#tabs-1">@Resources.DisplayName_Addresses</a></li>
+        <li><a href="#tabs-2">@Resources.DisplayName_Contacts</a></li>
+    </ul>
+    <div id="tabs-1">
+            <p>
+                @Html.ActionLink(Resources.CreateNew, "CreateForCustomer", "Addresses", new { id = Model.Id }, new { @class = "button icon add" })
+            </p>
+            @Html.Partial("../Addresses/_Index", Model.Addresses)
+    </div>
+    <div id="tabs-2">
+            <p>
+                @Html.ActionLink(Resources.CreateNew, "CreateForCustomer", "Contacts", new { id = Model.Id }, new { @class = "button icon add" })
+            </p>
+            @Html.Partial("../Contacts/_Index", Model.Contacts)
+    </div>
+</div>
 
-<fieldset>
-    <legend>@Resources.DisplayName_Contacts</legend>
-    <p>
-        @Html.ActionLink(Resources.CreateNew, "CreateForCustomer", "Contacts", new { id = Model.Id }, new { @class = "button icon add" })
-    </p>
-    @Html.Partial("../Contacts/_Index", Model.Contacts)
-</fieldset>
+
+
+
+

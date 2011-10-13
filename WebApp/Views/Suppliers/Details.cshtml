@@ -52,34 +52,38 @@
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </p>
 
-<fieldset>
-    <legend>@Resources.DisplayName_Addresses</legend>
-    <p>
-        @Html.ActionLink(Resources.CreateNew, "CreateForSupplier", "Addresses", new { id = Model.Id }, new { @class = "button icon add" })
-    </p>
-    @Html.Partial("../Addresses/_Index", Model.Addresses)
-</fieldset>
+<div id="tabs">
+    <ul>
+        <li><a href="#tabs-1">@Resources.DisplayName_Addresses</a></li>
+        <li><a href="#tabs-2">@Resources.DisplayName_Contacts</a></li>
+        <li><a href="#tabs-3">@Resources.DisplayName_BankAccounts</a></li>
+        <li><a href="#tabs-4">@Resources.DisplayName_SupplierAgreements</a></li>
+    </ul>
+    <div id="tabs-1">
+        <p>
+            @Html.ActionLink(Resources.CreateNew, "CreateForSupplier", "Addresses", new { id = Model.Id }, new { @class = "button icon add" })
+        </p>
+        @Html.Partial("../Addresses/_Index", Model.Addresses)
+    </div>
 
-<fieldset>
-    <legend>@Resources.DisplayName_Contacts</legend>
-    <p>
-        @Html.ActionLink(Resources.CreateNew, "CreateForSupplier", "Contacts", new { id = Model.Id }, new { @class = "button icon add" })
-    </p>
-    @Html.Partial("../Contacts/_Index", Model.Contacts)
-</fieldset>
+    <div id="tabs-2">
+        <p>
+            @Html.ActionLink(Resources.CreateNew, "CreateForSupplier", "Contacts", new { id = Model.Id }, new { @class = "button icon add" })
+        </p>
+        @Html.Partial("../Contacts/_Index", Model.Contacts)
+    </div>
 
-<fieldset>
-    <legend>@Resources.DisplayName_BankAccounts</legend>
-    <p>
-        @Html.ActionLink(Resources.CreateNew, "CreateForSupplier", "BankAccounts", new { id = Model.Id }, new { @class = "button icon add" })
-    </p>
-    @Html.Partial("../BankAccounts/_Index", Model.BanksAccounts)
-</fieldset>
+    <div id="tabs-3">
+        <p>
+            @Html.ActionLink(Resources.CreateNew, "CreateForSupplier", "BankAccounts", new { id = Model.Id }, new { @class = "button icon add" })
+        </p>
+        @Html.Partial("../BankAccounts/_Index", Model.BanksAccounts)
+    </div>
 
-<fieldset>
-    <legend>@Resources.DisplayName_SupplierAgreements</legend>
-    <p>
-        @Html.ActionLink(Resources.CreateNew, "CreateForSupplier", "SupplierAgreements", new { id = Model.Id }, new { @class = "button icon add" })
-    </p>
-    @Html.Partial("../SupplierAgreements/_Index", Model.Agreements)
-</fieldset>
+    <div id="tabs-4">
+        <p>
+            @Html.ActionLink(Resources.CreateNew, "CreateForSupplier", "SupplierAgreements", new { id = Model.Id }, new { @class = "button icon add" })
+        </p>
+        @Html.Partial("../SupplierAgreements/_Index", Model.Agreements)
+    </div>
+</div>
