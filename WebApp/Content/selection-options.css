@@ -102,10 +102,11 @@
 }
 .selection-options .option-desc .icon
 {
+    background:url(icons/dollar.png) no-repeat;
     margin:0 auto;
     display:block;
     width:75px;
-    padding:6px 0;
+    padding:6px 0 6px 16px;
     border:2px solid #545454;
     border-radius:6px;
     font-size:20px;

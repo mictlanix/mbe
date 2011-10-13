@@ -100,3 +100,6 @@ button.icon.register,a.button.icon.register {
 button.icon.logOn,a.button.icon.logOn {
     background:url(icons/ID.png) no-repeat;
 }
+button.icon.pay,a.button.icon.pay {
+    background:url(icons/dollar.png) no-repeat;
+}

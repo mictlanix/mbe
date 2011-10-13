@@ -32,7 +32,7 @@
 	                <label>
 	                    @Html.RadioButtonFor(model => new CustomerPayment().Method, (int)item)
 	                    <span class="option-desc">
-		                    <span class="icon">@Enum.GetName(typeof(PaymentMethod), item)</span>
+		                    <span class="icon">@Resources.Pay</span>
 		                    <span class="text">@(((PaymentMethod)item).GetDisplayName())</span>
 	                    </span>
 	                </label>
@@ -54,7 +54,7 @@
                 @Html.EditorFor(model => new CustomerPayment().Reference)
             </div>
         </div>
-        <p><button type="submit">@Resources.Pay</button></p>
+        <p><button id="pay" type="submit" class="icon pay">@Resources.Pay</button></p>
 
     </div>
     <div id="list-items">
