@@ -801,4 +801,25 @@
   <data name="Loading" xml:space="preserve">
     <value>Cargando...</value>
   </data>
+  <data name="Company" xml:space="preserve">
+    <value>Ferretería Ramos</value>
+  </data>
+  <data name="CompanyAddress" xml:space="preserve">
+    <value>Av. 16 de Septiembre No. 78,Barrio San Miguel, C. P. 55620, San Juan Zitlaltepec, Zumpango, Estado de México, México</value>
+  </data>
+  <data name="CompanyTaxpayer" xml:space="preserve">
+    <value>R.F.C. RAGM600610LJ2</value>
+  </data>
+  <data name="CompanyTaxpayerName" xml:space="preserve">
+    <value>Margarito Eliseo Ramos Godinez</value>
+  </data>
+  <data name="Title_SalesTicket" xml:space="preserve">
+    <value>Ticket de Venta</value>
+  </data>
+  <data name="Print" xml:space="preserve">
+    <value>Imprimir</value>
+  </data>
+  <data name="Title_SalesNote" xml:space="preserve">
+    <value>Ticket Para Pago</value>
+  </data>
 </root>
