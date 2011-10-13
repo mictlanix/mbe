@@ -1,14 +1,15 @@
-﻿@using Business.Essentials.Model
+﻿@using Business.Essentials
+@using Business.Essentials.Model
 @model IEnumerable<Business.Essentials.Model.CashDrawer>
 
 @{
-    ViewBag.Title = Business.Essentials.Resources.Title_CashDrawer;
+    ViewBag.Title = Resources.Title_CashDrawer;
 }
 
-<h2>@Business.Essentials.Resources.DisplayName_CashDrawers</h2>
+<h2>@Resources.DisplayName_CashDrawers</h2>
 
 <p>
-    @Html.ActionLink(Business.Essentials.Resources.CreateNew, "Create")
+    @Html.ActionLink(Resources.CreateNew, "Create", new { }, new { @class = "button icon add" })
 </p>
 <table>
     <tr>
@@ -22,10 +23,6 @@
 
         <th>
             @Html.LabelFor(x => new CashDrawer().HostAddress)
-        </th>
-
-        <th>
-            @Html.LabelFor(x => new CashDrawer().Comment)
         </th>
         
         <th></th>
@@ -45,13 +42,10 @@
             @Html.DisplayFor(modelItem => item.HostAddress)
         </td>
 
-        <td>
-            @Html.DisplayFor(modelItem => item.Comment)
-        </td>
         <td class="actions">
-            @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id=item.Id }) |
-            @Html.ActionLink(Business.Essentials.Resources.Details, "Details", new { id=item.Id }) |
-            @Html.ActionLink(Business.Essentials.Resources.Delete, "Delete", new { id=item.Id })
+            @Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
+            @Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+            @Html.ActionLink(" ", "Delete", new { id = item.Id }, new { @class = "button icon delete icon-only", @title = Resources.Delete })
         </td>
     </tr>
 }

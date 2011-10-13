@@ -1,12 +1,13 @@
-﻿@using Business.Essentials.Model;
+﻿@using Business.Essentials
+@using Business.Essentials.Model;
 @using Business.Essentials.WebApp.Helpers;
 @model IEnumerable<User>
 
 @{
-    ViewBag.Title = Business.Essentials.Resources.Title_Users;
+    ViewBag.Title = Resources.Title_Users;
 }
 
-<h2>@Business.Essentials.Resources.DisplayName_Users</h2>
+<h2>@Resources.DisplayName_Users</h2>
 
 <table>
     <tr>
@@ -40,9 +41,9 @@
             @Html.DisplayFor(modelItem => item.IsAdministrator)
         </td>
         <td class="actions">
-            @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id = item.UserName }) |
-            @Html.ActionLink(Business.Essentials.Resources.Details, "Details", new { id = item.UserName }) |
-            @Html.ActionLink(Business.Essentials.Resources.Delete, "Delete", new { id = item.UserName })
+            @Html.ActionLink(" ", "Edit", new { id = item.UserName }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
+            @Html.ActionLink(" ", "Details", new { id = item.UserName }, new { @class = "button icon view icon-only", @title = Resources.Details })
+            @Html.ActionLink(" ", "Delete", new { id = item.UserName }, new { @class = "button icon delete icon-only", @title = Resources.Delete })
         </td>
     </tr>
 }

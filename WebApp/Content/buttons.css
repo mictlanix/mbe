@@ -67,8 +67,8 @@ button.right,a.right {
 button.icon,a.button.icon {
     padding:9px 12px 7px 32px;
 }
-button.only-icon,a.button.only-icon {
-    padding:8px 17px;
+button.icon-only,a.button.icon-only {
+    padding:16px 16px;
 }
 button.icon.add,a.button.icon.add {
     background:url(icons/add-item.png) no-repeat;
@@ -80,8 +80,23 @@ button.icon.save,a.button.icon.save {
     background:url(icons/save.png) no-repeat;
 }
 button.icon.delete,a.button.icon.delete {
-    background:url(icons/delete-item.png) no-repeat;
+    background:url(icons/recycle-full.png) no-repeat;
 }
 button.icon.search,a.button.icon.search {
     background:url(icons/search.png) no-repeat;
+}
+button.icon.cancel,a.button.icon.cancel {
+    background:url(icons/delete-item.png) no-repeat;
+}
+button.icon.view,a.button.icon.view {
+    background:url(icons/view-item.png) no-repeat;
+}
+button.icon.back,a.button.icon.back {
+    background:url(icons/home.png) no-repeat;
+}
+button.icon.register,a.button.icon.register {
+    background:url(icons/agent.png) no-repeat;
+}
+button.icon.logOn,a.button.icon.logOn {
+    background:url(icons/ID.png) no-repeat;
 }

@@ -1,4 +1,5 @@
-﻿@using Business.Essentials.Model
+﻿@using Business.Essentials
+@using Business.Essentials.Model
 @model IEnumerable<Business.Essentials.Model.Contact>
 
 <p>
@@ -30,9 +31,6 @@
         <th>
             @Html.LabelFor(x => new Contact().Email)
         </th>
-        <th>
-            @Html.LabelFor(x => new Contact().Comment)
-        </th>
 
         <th></th>
     </tr>
@@ -63,13 +61,11 @@
         <td>
             @Html.DisplayFor(modelItem => item.Email)
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Comment)
-        </td>
+
         <td class="actions">
-            @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", "Contacts", new { id = item.Id }, null) |
-            @Html.ActionLink(Business.Essentials.Resources.Details, "Details", "Contacts", new { id = item.Id }, null) |
-            @Html.ActionLink(Business.Essentials.Resources.Delete, "Delete", "Contacts", new { id = item.Id }, null)
+            @Html.ActionLink(" ", "Edit", "Contacts", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
+            @Html.ActionLink(" ", "Details", "Contacts", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+            @Html.ActionLink(" ", "Delete", "Contacts", new { id = item.Id }, new { @class = "button icon delete icon-only", @title = Resources.Delete })
         </td>
     </tr>
 }

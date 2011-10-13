@@ -1,18 +1,17 @@
-﻿@using Business.Essentials.Model
+﻿@using Business.Essentials
+@using Business.Essentials.Model
 @model IEnumerable<SalesOrder>
 
 @{
-    ViewBag.Title = Business.Essentials.Resources.Title_CustomerPayment;
+    ViewBag.Title = Resources.Title_CustomerPayment;
 }
 
-<h2>@Business.Essentials.Resources.DisplayName_CustomerPayments</h2>
+<h2>@Resources.DisplayName_CustomerPayments</h2>
 
 <div>
     @using (Html.BeginForm("OpenSession", "Payments"))
     {
-        <p>
-            <input type="submit" value="@Business.Essentials.Resources.StartSession" />
-        </p>
+        <p><button type="submit">@Resources.StartSession</button></p>
     }
 </div>
 <table>

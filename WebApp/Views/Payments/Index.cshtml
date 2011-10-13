@@ -1,13 +1,14 @@
-﻿@using Business.Essentials.Model
+﻿@using Business.Essentials
+@using Business.Essentials.Model
 @using Business.Essentials.WebApp.Models
 @model MasterDetails<CashSession, SalesOrder>
 
 @{
-    ViewBag.Title = Business.Essentials.Resources.Title_CustomerPayment;
+    ViewBag.Title = Resources.Title_CustomerPayment;
     ViewBag.ShowCloseSession = true;
 }
 
-<h2>@Business.Essentials.Resources.DisplayName_CustomerPayments</h2>
+<h2>@Resources.DisplayName_CustomerPayments</h2>
 
 @Html.Partial("_SessionInfo", Model.Master)
 
@@ -66,8 +67,8 @@
             @Html.DisplayFor(modelItem => item.PointOfSale.Name)
         </td>
        
-        <td>
-            @Html.ActionLink(Business.Essentials.Resources.Pay, "PayOrder", new { id = item.Id })
+        <td style="text-align:center">
+            @Html.ActionLink(Resources.Pay, "PayOrder", new { id = item.Id }, new { @class = "button" })
         </td>
     </tr>
 }

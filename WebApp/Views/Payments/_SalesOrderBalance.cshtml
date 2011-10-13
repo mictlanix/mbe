@@ -1,6 +1,7 @@
-﻿@model Business.Essentials.Model.SalesOrder
+﻿@using Business.Essentials
+@model Business.Essentials.Model.SalesOrder
 <fieldset>
-    <legend>@Business.Essentials.Resources.SalesTotals</legend>
+    <legend>@Resources.SalesTotals</legend>
 
     <div class="display-label">
         @Html.LabelFor(x => x.Total)
@@ -28,9 +29,8 @@
         using (Html.BeginForm("ConfirmPayment", "Payments"))
         {
             @Html.Hidden("id", Model.Id)
-            <p>
-                <input type="submit" value="@Business.Essentials.Resources.CompletePayment" />
-            </p>
+            
+            <p><button type="submit">@Resources.CompletePayment</button></p>
         }
     }
 </fieldset>

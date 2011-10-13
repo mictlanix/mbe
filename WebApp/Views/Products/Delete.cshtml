@@ -2,14 +2,14 @@
 @model Business.Essentials.Model.Product
 
 @{
-    ViewBag.Title = Business.Essentials.Resources.Delete;
+    ViewBag.Title = Resources.Delete;
 }
 
-<h2>@Business.Essentials.Resources.Delete</h2>
+<h2>@Resources.Delete</h2>
 
-<h3>@Business.Essentials.Resources.Message_DeleteConfirmation</h3>
+<h3>@Resources.Message_DeleteConfirmation</h3>
 <fieldset>
-    <legend>@Business.Essentials.Resources.Title_Product</legend>
+    <legend>@Resources.Title_Product</legend>
 
         <div style="float:right">
             <div class="editor-label">
@@ -179,6 +179,6 @@
 {
     <p>
         <button type="submit" class="icon delete">@Resources.Delete</button>
-        @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index", new { }, new { @class = "button" })
+        @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button" })
     </p>
 }

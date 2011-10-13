@@ -1,15 +1,16 @@
-﻿@using Business.Essentials.WebApp.Helpers;
+﻿@using Business.Essentials
+@using Business.Essentials.WebApp.Helpers;
 @using Business.Essentials.Model;
 @model Business.Essentials.Model.SalesOrder
 
 @{
-    ViewBag.Title = Business.Essentials.Resources.Details;
+    ViewBag.Title = Resources.Details;
 }
 
-<h2>@Business.Essentials.Resources.Details</h2>
+<h2>@Resources.Details</h2>
 
 <fieldset>
-    <legend>@Business.Essentials.Resources.Title_SalesOrder</legend>
+    <legend>@Resources.Title_SalesOrder</legend>
 
     <div class="display-label">
         @Html.LabelFor(model => model.Id)
@@ -62,5 +63,5 @@
 </fieldset>
 
 <p>
-    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
+    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </p>

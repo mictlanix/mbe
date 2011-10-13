@@ -1,16 +1,17 @@
-﻿@model Business.Essentials.WebApp.Models.RegisterModel
+﻿@using Business.Essentials
+@model Business.Essentials.WebApp.Models.RegisterModel
 
 @{
-    ViewBag.Title = @Business.Essentials.Resources.Title_Register;
+    ViewBag.Title = Resources.Title_Register;
 }
 
-<h2>@Business.Essentials.Resources.DisplayName_Register</h2>
+<h2>@Resources.DisplayName_Register</h2>
 
 @using (Html.BeginForm()) {
-    @Html.ValidationSummary(true, @Business.Essentials.Resources.Message_RegisterUnsuccessful)
+    @Html.ValidationSummary(true, @Resources.Message_RegisterUnsuccessful)
     <div>
         <fieldset>
-            <legend>@Business.Essentials.Resources.AccountInformation</legend>
+            <legend>@Resources.AccountInformation</legend>
 
             <div class="editor-label">
                 @Html.LabelFor(m => m.UserName)
@@ -52,9 +53,8 @@
                 @Html.ValidationMessageFor(m => m.ConfirmPassword)
             </div>
 
-            <p>
-                <input type="submit" value="@Business.Essentials.Resources.Register" />
-            </p>
+            <p><button type="submit">@Resources.Register</button></p>
+
         </fieldset>
     </div>
 }

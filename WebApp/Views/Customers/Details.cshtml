@@ -1,13 +1,14 @@
-﻿@model Business.Essentials.Model.Customer
+﻿@using Business.Essentials
+@model Business.Essentials.Model.Customer
 
 @{
-    ViewBag.Title = Business.Essentials.Resources.Details;
+    ViewBag.Title = Resources.Details;
 }
 
-<h2>@Business.Essentials.Resources.Details</h2>
+<h2>@Resources.Details</h2>
 
 <fieldset>
-    <legend>@Business.Essentials.Resources.Title_Customer</legend>
+    <legend>@Resources.Title_Customer</legend>
 
     <div class="display-label">
         @Html.LabelFor(model => model.Name)
@@ -53,22 +54,22 @@
 
 </fieldset>
 <p>
-    @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id=Model.Id }) |
-    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
+    @Html.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new { @class = "button icon edit" })
+    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </p>
 
 <fieldset>
-    <legend>@Business.Essentials.Resources.DisplayName_Addresses</legend>
+    <legend>@Resources.DisplayName_Addresses</legend>
     <p>
-        @Html.ActionLink(Business.Essentials.Resources.CreateNew, "CreateForCustomer", "Addresses", new { id = Model.Id }, null)
+        @Html.ActionLink(Resources.CreateNew, "CreateForCustomer", "Addresses", new { id = Model.Id }, new { @class = "button icon add" })
     </p>
     @Html.Partial("../Addresses/_Index", Model.Addresses)
 </fieldset>
 
 <fieldset>
-    <legend>@Business.Essentials.Resources.DisplayName_Contacts</legend>
+    <legend>@Resources.DisplayName_Contacts</legend>
     <p>
-        @Html.ActionLink(Business.Essentials.Resources.CreateNew, "CreateForCustomer", "Contacts", new { id = Model.Id }, null)
+        @Html.ActionLink(Resources.CreateNew, "CreateForCustomer", "Contacts", new { id = Model.Id }, new { @class = "button icon add" })
     </p>
     @Html.Partial("../Contacts/_Index", Model.Contacts)
 </fieldset>

@@ -1,15 +1,16 @@
-﻿@model Business.Essentials.Model.BankAccount
+﻿@using Business.Essentials
+@model Business.Essentials.Model.BankAccount
 
 @{
-    ViewBag.Title = Business.Essentials.Resources.Edit;
+    ViewBag.Title = Resources.Edit;
 }
 
-<h2>@Business.Essentials.Resources.Edit</h2>
+<h2>@Resources.Edit</h2>
 
 @using (Html.BeginForm()) {
     @Html.ValidationSummary(true)
     <fieldset>
-        <legend>@Business.Essentials.Resources.Title_BankAccount</legend>
+        <legend>@Resources.Title_BankAccount</legend>
 
         @Html.HiddenFor(model => model.Id)
 
@@ -50,12 +51,11 @@
 
         @Html.Hidden("OwnerId", (object)ViewBag.OwnerId)
 
-        <p>
-            <input type="submit" value= "@Business.Essentials.Resources.Save" />
-        </p>
+        <p><button type="submit" class="icon save">@Resources.Save</button></p>
+
     </fieldset>
 }
 
 <div>
-    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Details", "Suppliers", new { id = ViewBag.OwnerId }, null)
+    @Html.ActionLink(Resources.BackToList, "Details", "Suppliers", new { id = ViewBag.OwnerId }, new { @class = "button icon back" })
 </div>

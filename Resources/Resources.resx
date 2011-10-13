@@ -595,13 +595,13 @@
     <value>Tarjeta de Débito</value>
   </data>
   <data name="GovernmentFunding" xml:space="preserve">
-    <value>Tajeta FONACOT</value>
+    <value> FONACOT</value>
   </data>
   <data name="Payment" xml:space="preserve">
     <value>Pago</value>
   </data>
   <data name="WireTransfer" xml:space="preserve">
-    <value>Transnferencia Bancaria</value>
+    <value>Transferencia</value>
   </data>
   <data name="Balance" xml:space="preserve">
     <value>Balance</value>

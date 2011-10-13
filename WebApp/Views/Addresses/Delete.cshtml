@@ -1,14 +1,15 @@
-﻿@model Business.Essentials.Model.Address
+﻿@using Business.Essentials
+@model Business.Essentials.Model.Address
 
 @{
-    ViewBag.Title = Business.Essentials.Resources.Delete;
+    ViewBag.Title = Resources.Delete;
 }
 
-<h2>@Business.Essentials.Resources.Delete</h2>
+<h2>@Resources.Delete</h2>
 
-<h3>@Business.Essentials.Resources.Message_DeleteConfirmation</h3>
+<h3>@Resources.Message_DeleteConfirmation</h3>
 <fieldset>
-    <legend>@Business.Essentials.Resources.Title_Address</legend>
+    <legend>@Resources.Title_Address</legend>
 
     <div class="display-label">
         @Html.LabelFor(model => model.TaxpayerId)
@@ -93,7 +94,7 @@
     @Html.Hidden("OwnerId", (object)ViewBag.OwnerId)
     @Html.Hidden("OwnerType", (object)ViewBag.OwnerType)
     <p>
-        <input type="submit" value= "@Business.Essentials.Resources.Delete" /> |
-        @Html.ActionLink(Business.Essentials.Resources.BackToList, "Details", (string)ViewBag.OwnerType, new { id = ViewBag.OwnerId }, null)
+        <button type="submit" class="icon delete">@Resources.Delete</button>
+        @Html.ActionLink(Resources.BackToList, "Details", (string)ViewBag.OwnerType, new { id = ViewBag.OwnerId }, new { @class = "button icon back" })
     </p>
 }

@@ -1,15 +1,16 @@
-﻿@model Business.Essentials.Model.PointOfSale
+﻿@using Business.Essentials
+@model Business.Essentials.Model.PointOfSale
 
 @{
-    ViewBag.Title = Business.Essentials.Resources.CreateNew;
+    ViewBag.Title = Resources.CreateNew;
 }
 
-<h2>@Business.Essentials.Resources.Create</h2>
+<h2>@Resources.Create</h2>
 
 @using (Html.BeginForm()) {
     @Html.ValidationSummary(true)
     <fieldset>
-        <legend>@Business.Essentials.Resources.Title_PointOfSale</legend>
+        <legend>@Resources.Title_PointOfSale</legend>
 
          <div class="editor-label">
             @Html.LabelFor(model => model.Code)
@@ -42,12 +43,11 @@
             @Html.EditorFor(model => model.Comment)
         </div>
        
-        <p>
-            <input type="submit" value= @Business.Essentials.Resources.Create />
-        </p>
+        <p><button type="submit" class="icon save">@Resources.Create</button></p>
+
     </fieldset>
 }
 
 <div>
-    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
+    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>

@@ -1,4 +1,5 @@
-﻿@using Business.Essentials.WebApp.Helpers;
+﻿@using Business.Essentials
+@using Business.Essentials.WebApp.Helpers
 @using Business.Essentials.Model
 @model Business.Essentials.Model.CustomerPayment
 <li id="payment@(Model.Id)">
@@ -6,12 +7,12 @@
         <b>@Model.Method.GetDisplayName()</b><br/>
         @if (!string.IsNullOrEmpty(Model.Reference))
         {
-            <b>@Business.Essentials.Resources.Reference:</b> @Model.Reference
+            <b>@Resources.Reference:</b> @Model.Reference
         }
-        <b>@Business.Essentials.Resources.Amount:</b> @Html.DisplayFor(x => x.Amount)
-        <a class="remove" href="/Sales/RemovePayment/@Model.Id">@Business.Essentials.Resources.Delete</a>
+        <b>@Resources.Amount:</b> @Html.DisplayFor(x => x.Amount)
+        <a class="button icon-only icon delete" href="/Sales/RemovePayment/@Model.Id"></a>
         <script type="text/javascript">
-            $("#payment@(Model.Id) a.remove").click(function(event){
+            $("#payment@(Model.Id) a.delete").click(function(event){
                 event.preventDefault();
                 removeItem(@Model.Id);
             });
