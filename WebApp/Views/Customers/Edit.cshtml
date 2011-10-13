@@ -1,15 +1,16 @@
-﻿@model Business.Essentials.Model.Customer
+﻿@using Business.Essentials
+@model Business.Essentials.Model.Customer
 
 @{
-    ViewBag.Title = Business.Essentials.Resources.Edit;
+    ViewBag.Title = Resources.Edit;
 }
 
-<h2>@Business.Essentials.Resources.Edit</h2>
+<h2>@Resources.Edit</h2>
 
 @using (Html.BeginForm()) {
     @Html.ValidationSummary(true)
     <fieldset>
-        <legend>@Business.Essentials.Resources.Customer</legend>
+        <legend>@Resources.Customer</legend>
 
         @Html.HiddenFor(model => model.Id)
 
@@ -45,9 +46,9 @@
                 $(document).ready(function () {
                     $("#PriceListId").tokenInput("@Url.Action("GetSuggestions", "PriceLists")",
                     {
-                        hintText: "@Business.Essentials.Resources.HIntText",
-                        noResultsText: "@Business.Essentials.Resources.NoResultsText",
-                        searchingText: "@Business.Essentials.Resources.SearchingText",
+                        hintText: "@Resources.HIntText",
+                        noResultsText: "@Resources.NoResultsText",
+                        searchingText: "@Resources.SearchingText",
                         prePopulate: (typeof supplier === "undefined") ? null : category,
                         queryParam: "pattern", minChars: 1, tokenLimit: 1
                     });
@@ -77,12 +78,10 @@
             @Html.EditorFor(model => model.Comment)
         </div>
 
-        <p>
-            <input type="submit" value= @Business.Essentials.Resources.Save />
-        </p>
+       <p><button type="submit" class="icon save">@Resources.Save</button></p>
     </fieldset>
 }
 
 <div>
-    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
+    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>

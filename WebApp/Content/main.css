@@ -94,7 +94,7 @@ a.medium img,img.medium {
     max-height:200px;
 }
 fieldset {
-  padding: 0 1.4em 0 1.4em;
+  padding: 0 1.4em 1em 1.4em;
 }
 label {
   color:#888;

@@ -1,17 +1,18 @@
-﻿@using Business.Essentials.Model;
+﻿@using Business.Essentials
+@using Business.Essentials.Model;
 @using Business.Essentials.WebApp.Helpers;
 @model Business.Essentials.Model.User
 
 @{
-    ViewBag.Title = Business.Essentials.Resources.Edit;
+    ViewBag.Title = Resources.Edit;
 }
 
-<h2>@Business.Essentials.Resources.Edit</h2>
+<h2>@Resources.Edit</h2>
 
 @using (Html.BeginForm()) {
     @Html.ValidationSummary(true)
     <fieldset>
-        <legend>@Business.Essentials.Resources.User</legend>
+        <legend>@Resources.User</legend>
 
         <div class="editor-label">
             @Html.LabelFor(model => model.UserName)
@@ -43,22 +44,22 @@
 
         <table>
             <tr>
-                <th>@Business.Essentials.Resources.Module</th>
+                <th>@Resources.Module</th>
                 <th>
                     @Html.CheckBox("Create")
-                    @Business.Essentials.Resources.Create
+                    @Resources.Create
                 </th>
                 <th>
                     @Html.CheckBox("Read")
-                    @Business.Essentials.Resources.Read
+                    @Resources.Read
                 </th>
                 <th>
                     @Html.CheckBox("Update")
-                    @Business.Essentials.Resources.Update
+                    @Resources.Update
                 </th>
                 <th>
                     @Html.CheckBox("Delete")
-                    @Business.Essentials.Resources.Delete
+                    @Resources.Delete
                 </th>
             </tr>
             @foreach(var item in Enum.GetValues(typeof(SystemObjects)))
@@ -86,14 +87,12 @@
             </tr>
             }
         </table>
-        <p>
-            <input type="submit" value="@Business.Essentials.Resources.Save" />
-        </p>
+        <p><button type="submit" class="icon save">@Resources.Save</button></p>
     </fieldset>
 }
 
 <div>
-    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
+        @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
 <script type="text/javascript">
     $(function () {

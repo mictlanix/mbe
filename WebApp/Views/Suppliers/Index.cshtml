@@ -1,15 +1,16 @@
-﻿@using Business.Essentials.Model
+﻿@using Business.Essentials
+@using Business.Essentials.Model
 @model IEnumerable<Business.Essentials.Model.Supplier>
 
 @{
-    ViewBag.Title = Business.Essentials.Resources.Title_Supplier;
+    ViewBag.Title = Resources.Title_Supplier;
 }
 
-<h2>@Business.Essentials.Resources.DisplayName_Suppliers</h2>
+<h2>@Resources.DisplayName_Suppliers</h2>
 
 <p>
-    @Html.ActionLink(Business.Essentials.Resources.CreateNew, "Create")
-    @*@Html.ActionLink(Business.Essentials.Resources.CreateNew, "Create", "Suppliers", null, new { @class = "openDialog", data_dialog_id = "supplier_dlg", data_dialog_title = "New Supplier" })*@
+    @Html.ActionLink(Resources.CreateNew, "Create", new { }, new { @class = "button icon add" })
+    @*@Html.ActionLink(Resources.CreateNew, "Create", "Suppliers", null, new { @class = "openDialog button icon add", data_dialog_id = "supplier_dlg", data_dialog_title = "New Supplier" })*@
 </p>
 <table>
     <tr>
@@ -58,9 +59,9 @@
             @Html.DisplayFor(modelItem => item.CreditDays)
         </td>
         <td class="actions">
-            @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id=item.Id }) |
-            @Html.ActionLink(Business.Essentials.Resources.Details, "Details", new { id=item.Id }) |
-            @Html.ActionLink(Business.Essentials.Resources.Delete, "Delete", new { id=item.Id })
+            @Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
+            @Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+            @Html.ActionLink(" ", "Delete", new { id = item.Id }, new { @class = "button icon delete icon-only", @title = Resources.Delete })
         </td>
     </tr>
 }

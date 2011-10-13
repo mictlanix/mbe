@@ -1,7 +1,8 @@
-﻿@model Business.Essentials.Model.SalesOrder
+﻿@using Business.Essentials
+@model Business.Essentials.Model.SalesOrder
 
 <fieldset>
-    <legend>@Business.Essentials.Resources.DisplayName_SalesInformation</legend>
+    <legend>@Resources.DisplayName_SalesInformation</legend>
 
     <div class="display-label">
         @Html.LabelFor(model => model.Id)

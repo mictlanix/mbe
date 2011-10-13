@@ -1,14 +1,15 @@
-﻿@using Business.Essentials.Model
+﻿@using Business.Essentials
+@using Business.Essentials.Model
 @using Business.Essentials.WebApp.Helpers
 @using Business.Essentials.WebApp.Models
 @model MasterDetails<CashSession, MoneyCount>
 
 @{
-    ViewBag.Title = Business.Essentials.Resources.Title_CloseSession;
+    ViewBag.Title = Resources.Title_CloseSession;
     ViewBag.ShowCloseSession = false;
 }
 
-<h2>@Business.Essentials.Resources.DisplayName_CloseSession</h2>
+<h2>@Resources.DisplayName_CloseSession</h2>
 
 @Html.Partial("_SessionInfo", Model.Master)
 
@@ -48,10 +49,10 @@
 <div style="float:right">
 @using (Html.BeginForm("CloseSession", "Payments"))
 {
-    <input type="submit" value="@Business.Essentials.Resources.CloseSession" />
+    <p><button type="submit">@Resources.CloseSession</button></p>
 }
 </div>
 
 <p>
-    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
+    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </p>

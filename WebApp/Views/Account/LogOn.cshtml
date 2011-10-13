@@ -1,21 +1,22 @@
-﻿@model Business.Essentials.WebApp.Models.LogOnModel
+﻿@using Business.Essentials
+@model Business.Essentials.WebApp.Models.LogOnModel
 
 @{
-    ViewBag.Title = Business.Essentials.Resources.Title_LogOn;
+    ViewBag.Title = Resources.Title_LogOn;
 }
 
-<h2>@Business.Essentials.Resources.DisplayName_LogOn</h2>
+<h2>@Resources.DisplayName_LogOn</h2>
 <p>
-    @Business.Essentials.Resources.Message_LoginRegister
-    @Html.ActionLink(Business.Essentials.Resources.Register, "Register").
+    @Resources.Message_LoginRegister
+    @Html.ActionLink(Resources.Register, "Register").
 </p>
 
-@Html.ValidationSummary(true, Business.Essentials.Resources.Message_LoginUnsuccessful)
+@Html.ValidationSummary(true, Resources.Message_LoginUnsuccessful)
 
 @using (Html.BeginForm()) {
     <div>
         <fieldset>
-            <legend>@Business.Essentials.Resources.AccountInformation</legend>
+            <legend>@Resources.AccountInformation</legend>
 
             <div class="editor-label">
                 @Html.LabelFor(m => m.UserName)
@@ -38,9 +39,8 @@
                 @Html.LabelFor(m => m.RememberMe)
             </div>
 
-            <p>
-                <input type="submit" value="@Business.Essentials.Resources.LogOn" />
-            </p>
+            <p><button type="submit">@Resources.LogOn</button></p>
+
         </fieldset>
     </div>
 }

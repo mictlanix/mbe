@@ -1,15 +1,16 @@
-﻿@model Business.Essentials.Model.Customer
+﻿@using Business.Essentials
+@model Business.Essentials.Model.Customer
 
 @{
-    ViewBag.Title = Business.Essentials.Resources.CreateNew;
+    ViewBag.Title = Resources.CreateNew;
 }
 
-<h2>@Business.Essentials.Resources.Create</h2>
+<h2>@Resources.Create</h2>
 
 @using (Html.BeginForm()) {
     @Html.ValidationSummary(true)
     <fieldset>
-        <legend>@Business.Essentials.Resources.Title_Customer</legend>
+        <legend>@Resources.Title_Customer</legend>
 
         <div class="editor-label">
             @Html.LabelFor(model => model.Name)
@@ -36,9 +37,9 @@
                 $(document).ready(function () {
                 $("#PriceListId").tokenInput("@Url.Action("GetSuggestions", "PriceLists")",
                 {
-                    hintText: "@Business.Essentials.Resources.HIntText",
-                    noResultsText: "@Business.Essentials.Resources.NoResultsText",
-                    searchingText: "@Business.Essentials.Resources.SearchingText",
+                    hintText: "@Resources.HIntText",
+                    noResultsText: "@Resources.NoResultsText",
+                    searchingText: "@Resources.SearchingText",
                     queryParam: "pattern",minChars: 1,tokenLimit: 1});
                 });
             </script>
@@ -64,12 +65,11 @@
             @Html.EditorFor(model => model.Comment)
         </div>
        
-        <p>
-            <input type="submit" value= @Business.Essentials.Resources.Create />
-        </p>
+        <p><button type="submit" class="icon save">@Resources.Create</button></p>
+
     </fieldset>
 }
 
 <div>
-    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
+    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>

@@ -1,7 +1,8 @@
-﻿@model Business.Essentials.Model.Supplier
+﻿@using Business.Essentials
+@model Business.Essentials.Model.Supplier
 
 <fieldset>
-    <legend>@Business.Essentials.Resources.Title_Supplier</legend>
+    <legend>@Resources.Title_Supplier</legend>
 
     <div class="editor-label">
         @Html.LabelFor(model => model.Code)
@@ -37,7 +38,6 @@
         @Html.EditorFor(model => model.CreditDays)          
     </div>
        
-    <p>
-        <input type="submit" value = "@Business.Essentials.Resources.Create" />
-    </p>
+    <p><button type="submit" class="icon save">@Resources.Create</button></p>
+
 </fieldset>

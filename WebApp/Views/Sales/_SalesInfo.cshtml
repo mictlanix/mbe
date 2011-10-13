@@ -1,7 +1,8 @@
-﻿@model Business.Essentials.Model.SalesOrder
+﻿@using Business.Essentials
+@model Business.Essentials.Model.SalesOrder
 
 <fieldset>
-    <legend>@Business.Essentials.Resources.DisplayName_SalesInformation</legend>
+    <legend>@Resources.DisplayName_SalesInformation</legend>
 
     <div class="display-label right floating">
         @Html.LabelFor(model => model.Id):
@@ -25,7 +26,7 @@
         <p>
         @using (Html.BeginForm("CancelOrder", "Sales", new { id =  Model.Id }))
         {
-            <input type="submit" value="@Business.Essentials.Resources.CancelOrder" />
+            <button type="submit" class="icon cancel">@Resources.CancelOrder</button>
         }
         </p>
     </div>
@@ -46,7 +47,7 @@
 
     <div id="edit-sales-order" style="@(Model.Details.Count > 0 ? "display:none" : "")" >
         <p>
-        @Ajax.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "sales-order" })
+        @Ajax.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "sales-order" }, new { @class = "button icon edit" })
         </p>
     </div>
 </fieldset>

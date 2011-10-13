@@ -1,16 +1,17 @@
-﻿@using Business.Essentials.Model
+﻿@using Business.Essentials
+@using Business.Essentials.Model
 @using Business.Essentials.WebApp.Models
 @model SalesOrder
 
 @{
-    ViewBag.Title = Business.Essentials.Resources.Title_NewSale;
+    ViewBag.Title = Resources.Title_NewSale;
 }
 
-<h2>@Business.Essentials.Resources.DisplayName_NewSale</h2> 
+<h2>@Resources.DisplayName_NewSale</h2> 
 
 <div id="sales-order">
     <fieldset>
-        <legend>@Business.Essentials.Resources.DisplayName_SalesInformation</legend>
+        <legend>@Resources.DisplayName_SalesInformation</legend>
             @using (Html.BeginForm())
             {
                 @Html.ValidationSummary(true)
@@ -28,14 +29,14 @@
                 </div>
 
                 <p class="right">
-                    <input type="submit" value="@Business.Essentials.Resources.Save" />
+                    <button type="submit" class="icon save">@Resources.Save</button>
                 </p>
             }
     </fieldset>
 </div>
 
 <div id="back">
-    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
+    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
 <style type="text/css">
 ul.token-input-list {

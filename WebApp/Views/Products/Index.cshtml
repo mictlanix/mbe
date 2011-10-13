@@ -5,17 +5,17 @@
 @model Search<Product>
 
 @{
-    ViewBag.Title = Business.Essentials.Resources.Title_Product;
+    ViewBag.Title = Resources.Title_Product;
 }
 
 
 <script src="@Url.Content("~/Scripts/jquery.cluetip.min.js")" type="text/javascript"></script>
 <link href="@Url.Content("~/Content/jquery.cluetip.css")" rel="stylesheet" type="text/css" />
 
-<h2>@Business.Essentials.Resources.DisplayName_Products</h2>
+<h2>@Resources.DisplayName_Products</h2>
 
 <p>
-    @Html.ActionLink(Business.Essentials.Resources.CreateNew, "Create", new { }, new { @class = "button icon add" })
+    @Html.ActionLink(Resources.CreateNew, "Create", new { }, new { @class = "button icon add" })
 </p>
 
 @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))

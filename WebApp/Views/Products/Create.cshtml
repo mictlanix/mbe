@@ -2,16 +2,16 @@
 @model Business.Essentials.Model.Product
 
 @{
-    ViewBag.Title = Business.Essentials.Resources.CreateNew;
+    ViewBag.Title = Resources.CreateNew;
 }
 
-<h2>@Business.Essentials.Resources.New</h2>
+<h2>@Resources.New</h2>
 
 @using (Html.BeginForm("Create", "Products", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.ValidationSummary(true)
     <fieldset>
-        <legend>@Business.Essentials.Resources.Title_Product</legend>
+        <legend>@Resources.Title_Product</legend>
 
         <div style="float:right">
             <div class="editor-label">
@@ -172,9 +172,9 @@
                 $(document).ready(function () {
                 $("#CategoryId").tokenInput("@Url.Action("GetSuggestions", "Categories")",
                 {
-                    hintText: "@Business.Essentials.Resources.HIntText",
-                    noResultsText: "@Business.Essentials.Resources.NoResultsText",
-                    searchingText: "@Business.Essentials.Resources.SearchingText",
+                    hintText: "@Resources.HIntText",
+                    noResultsText: "@Resources.NoResultsText",
+                    searchingText: "@Resources.SearchingText",
                     queryParam: "pattern",minChars: 1,tokenLimit: 1});
                 });
             </script>
@@ -190,9 +190,9 @@
                 $(document).ready(function () {
                 $("#SupplierId").tokenInput("@Url.Action("GetSuggestions", "Suppliers")",
                 {
-                    hintText: "@Business.Essentials.Resources.HIntText",
-                    noResultsText: "@Business.Essentials.Resources.NoResultsText",
-                    searchingText: "@Business.Essentials.Resources.SearchingText",
+                    hintText: "@Resources.HIntText",
+                    noResultsText: "@Resources.NoResultsText",
+                    searchingText: "@Resources.SearchingText",
                     queryParam: "pattern",minChars: 1,tokenLimit: 1});
                 });
             </script>
@@ -210,5 +210,5 @@
 }
 
 <div>
-    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index", new { }, new { @class = "button" })
+    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button" })
 </div>

@@ -244,12 +244,11 @@
     <Content Include="Content\icons\view-item.png" />
     <Content Include="Content\icons\wifi.png" />
     <Content Include="Content\icons\world.png" />
+    <Content Include="Content\jquery.cluetip.css" />
+    <Content Include="Content\selection-options.css" />
     <Content Include="Content\images\body-bg.png" />
     <Content Include="Content\images\false.png" />
     <Content Include="Content\images\header-bg.png" />
-    <Content Include="Content\images\loading-bar.gif" />
-    <Content Include="Content\images\loading-circle.gif" />
-    <Content Include="Content\images\logo.png" />
     <Content Include="Content\images\mtx-logo-small.png" />
     <Content Include="Content\images\price1.png" />
     <Content Include="Content\images\price2.png" />
@@ -259,8 +258,6 @@
     <Content Include="Content\images\price6.png" />
     <Content Include="Content\images\price7.png" />
     <Content Include="Content\images\true.png" />
-    <Content Include="Content\images\welcome.png" />
-    <Content Include="Content\jquery.cluetip.css" />
     <Content Include="Content\main.css" />
     <Content Include="Content\menu.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -613,10 +610,9 @@
     <Content Include="Views\Payments\CloseSession.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Products\_Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="Content\icons\Thumbs.db" />
     <Content Include="Views\Products\_Details.cshtml" />
+    <Content Include="Views\Products\_Index.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

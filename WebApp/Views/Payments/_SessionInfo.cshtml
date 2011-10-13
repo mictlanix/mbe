@@ -1,7 +1,8 @@
-﻿@model Business.Essentials.Model.CashSession
+﻿@using Business.Essentials
+@model Business.Essentials.Model.CashSession
 
 <fieldset>
-    <legend>@Business.Essentials.Resources.DisplayName_CashSession</legend>
+    <legend>@Resources.DisplayName_CashSession</legend>
 
     
     <div class="display-label">
@@ -21,7 +22,7 @@
     @if (ViewBag.ShowCloseSession)
     {
         <div class="right floating">
-            @Html.ActionLink(Business.Essentials.Resources.CloseSession, "CloseSession")
+            @Html.ActionLink(Resources.CloseSession, "CloseSession", new { }, new { @class = "button" })
         </div>
     }
 </fieldset>

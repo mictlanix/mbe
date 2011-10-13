@@ -1,13 +1,14 @@
-﻿@model Business.Essentials.Model.Contact
+﻿@using Business.Essentials
+@model Business.Essentials.Model.Contact
 
 @{
-    ViewBag.Title = Business.Essentials.Resources.Details;
+    ViewBag.Title = Resources.Details;
 }
 
-<h2>@Business.Essentials.Resources.Details</h2>
+<h2>@Resources.Details</h2>
 
 <fieldset>
-    <legend>@Business.Essentials.Resources.Title_Contact</legend>
+    <legend>@Resources.Title_Contact</legend>
 
     <div class="display-label">
         @Html.LabelFor(model => model.Name)
@@ -98,7 +99,7 @@
 
 </fieldset>
 <p>
-    @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id = Model.Id }) |
-    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Details", (string)ViewBag.OwnerType, new { id = ViewBag.OwnerId }, null)
+    @Html.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new { @class = "button icon edit" })
+    @Html.ActionLink(Resources.BackToList, "Details", (string)ViewBag.OwnerType, new { id = ViewBag.OwnerId }, new { @class = "button icon back" })
 
 </p>

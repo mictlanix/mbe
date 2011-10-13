@@ -1,15 +1,17 @@
-﻿@using Business.Essentials.WebApp.Helpers;
+﻿@using Business.Essentials
+@using Business.Essentials.WebApp.Helpers
 @using Business.Essentials.Model
 @using Business.Essentials.WebApp.Models
 @model SalesOrder
 
 @{
-    ViewBag.Title = Business.Essentials.Resources.Payment;
+    ViewBag.Title = Resources.Payment;
 }
 
-<script src="@Url.Content("~/Scripts/jquery.jeditable.mini.js")" type="text/javascript"></script>
+<link href="@Url.Content("~/Content/selection-options.css")" rel="stylesheet" type="text/css" />
 
-<h2>@Business.Essentials.Resources.Payment</h2> 
+
+<h2>@Resources.Payment</h2> 
 
 <div id="pay-order">
 @Html.Partial("_PaymentInfo")
@@ -23,12 +25,20 @@
             @Html.LabelFor(model => new CustomerPayment().Method)
         </div>
         <div class="editor-field">
-            <select id="Method" name="Method">
-                @foreach (var item in Enum.GetValues(typeof(PaymentMethod)))
-                {
-                    <option value="@((int)item)">@(((PaymentMethod)item).GetDisplayName())</option>
-                }
-            </select>
+            <ul class="selection-options">
+            @foreach (var item in Enum.GetValues(typeof(PaymentMethod)))
+            {
+                <li>
+	                <label>
+	                    @Html.RadioButtonFor(model => new CustomerPayment().Method, (int)item)
+	                    <span class="option-desc">
+		                    <span class="icon">@Enum.GetName(typeof(PaymentMethod), item)</span>
+		                    <span class="text">@(((PaymentMethod)item).GetDisplayName())</span>
+	                    </span>
+	                </label>
+	            </li>
+            }
+            </ul>
         </div>
         <div class="display-label">
             @Html.LabelFor(model => new CustomerPayment().Amount)
@@ -44,10 +54,8 @@
                 @Html.EditorFor(model => new CustomerPayment().Reference)
             </div>
         </div>
+        <p><button type="submit">@Resources.Pay</button></p>
 
-        <p>
-            <input id="pay" type="submit" value="@Business.Essentials.Resources.Pay" />
-        </p>
     </div>
     <div id="list-items">
         <ul id="items">
@@ -63,10 +71,10 @@
     @Html.Partial("_SalesOrderBalance")
 </div>
 
-<div id="dialog-confirm" title="@Business.Essentials.Resources.Delete">
+<div id="dialog-confirm" title="@Resources.Delete">
 	<p>
         <span class="ui-icon ui-icon-circle-close" style="float:left; margin:3px 7px 20px 0;"></span>
-        @Business.Essentials.Resources.Message_DeleteConfirmation
+        @Resources.Message_DeleteConfirmation
     </p>
 </div>
 
@@ -83,7 +91,7 @@
             height: 178,
             modal: true,
             buttons: {
-                @Business.Essentials.Resources.Delete: function () {
+                @Resources.Delete: function () {
                     $.post("/Payments/RemovePayment", { "id": id }, function (data) {
                         if(data.result) {
                             $("#payment" + id).remove();
@@ -92,7 +100,7 @@
                     }, "json");
                     $(this).dialog("close");
                 },
-                @Business.Essentials.Resources.Close: function () {
+                @Resources.Close: function () {
                     $(this).dialog("close");
                 }
             }
@@ -101,14 +109,15 @@
 
     $(function () {
         $("#pay").click(function () {
-            var type = $("#Method").val();
+            var type = $("#Method:checked").val();
             var amount = $("#Amount").val();
             var reference = $("#Reference").val();
 
             $.post("/Payments/AddPayment", { "order": SalesOrder.Id, "type": type, "amount": amount, "reference": reference }, function (detail) {
                 $.get("/Payments/GetPayment/" + detail.id, function (data) {
                     $("#items").append(data);
-                    $(":input").not(":submit, :button").val("").removeAttr("selected");
+                    $(":input").not(":submit, :button, :radio").val("").removeAttr("selected");
+                    $("#Method").attr("checked", true);
                     $("#reference").hide("slow");
                     updateTotals();
                 });
@@ -116,8 +125,9 @@
             }, "json");
         });
 
-        $("#Method").change(function () {
-            var status = $("#Method option:selected").val();
+        $(":radio").change(function() {
+            var status = $("#Method:checked").val();
+            
             if (status === "4" || status === "5") {
                 $("#reference").show("slow");
             } else {
@@ -127,3 +137,11 @@
     });
 </script>
 
+<script>
+    $(function () {
+        $(".selection-options>li").click(function () {
+            $(".selection-options>li").removeClass("selected");
+            $(this).addClass("selected");
+        });
+    });
+</script>

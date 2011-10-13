@@ -1,14 +1,15 @@
-﻿@using Business.Essentials.WebApp.Helpers;
+﻿@using Business.Essentials
+@using Business.Essentials.WebApp.Helpers;
 @model Business.Essentials.Model.Employee
 
 @{
-    ViewBag.Title = Business.Essentials.Resources.Details;
+    ViewBag.Title = Resources.Details;
 }
 
-<h2>@Business.Essentials.Resources.Details</h2>
+<h2>@Resources.Details</h2>
 
 <fieldset>
-    <legend>@Business.Essentials.Resources.Title_Employee</legend>
+    <legend>@Resources.Title_Employee</legend>
 
     <div class="display-label">
         @Html.LabelFor(model => model.FirstName)
@@ -54,7 +55,8 @@
     </div>
 
 </fieldset>
+
 <p>
-    @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", new { id=Model.Id }) |
-    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Index")
+    @Html.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new { @class = "button icon edit" })
+    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </p>

@@ -1,4 +1,5 @@
-﻿@using Business.Essentials.Model
+﻿@using Business.Essentials
+@using Business.Essentials.Model
 @model IEnumerable<Business.Essentials.Model.SupplierAgreement>
 
 <p>
@@ -31,9 +32,9 @@
             @Html.DisplayFor(modelItem => item.Comment)
         </td>
         <td class="actions">
-            @Html.ActionLink(Business.Essentials.Resources.Edit, "Edit", "SupplierAgreements", new { id=item.Id }, null) |
-            @Html.ActionLink(Business.Essentials.Resources.Details, "Details", "SupplierAgreements", new { id = item.Id }, null) |
-            @Html.ActionLink(Business.Essentials.Resources.Delete, "Delete", "SupplierAgreements", new { id = item.Id }, null)
+            @Html.ActionLink(" ", "Edit", "SupplierAgreements", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
+            @Html.ActionLink(" ", "Details", "SupplierAgreements", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+            @Html.ActionLink(" ", "Delete", "SupplierAgreements", new { id = item.Id }, new { @class = "button icon delete icon-only", @title = Resources.Delete })
         </td>
     </tr>
 }

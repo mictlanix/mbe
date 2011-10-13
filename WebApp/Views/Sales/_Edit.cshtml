@@ -1,7 +1,8 @@
-﻿@model Business.Essentials.Model.SalesOrder
+﻿@using Business.Essentials
+@model Business.Essentials.Model.SalesOrder
 
 <fieldset>
-    <legend>@Business.Essentials.Resources.DisplayName_SalesInformation</legend>
+    <legend>@Resources.DisplayName_SalesInformation</legend>
         @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "sales-order" }))
         {
             @Html.ValidationSummary(true)
@@ -22,9 +23,8 @@
                 @Html.ValidationMessageFor(model => model.IsCredit)
             </div>
 
-            <p>
-                <input type="submit" value="@Business.Essentials.Resources.Save" />
-            </p>
+            <p><button type="submit" class="icon save">@Resources.Save</button></p>
+
         }
 </fieldset>
 <script type="text/javascript">
