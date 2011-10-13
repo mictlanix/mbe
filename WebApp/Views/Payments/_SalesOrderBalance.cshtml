@@ -26,11 +26,12 @@
 
     @if(Model.Balance >= 0)
     {
-        using (Html.BeginForm("ConfirmPayment", "Payments"))
+        using (Html.BeginForm("ConfirmPayment", "Payments", new { id = Model.Id }))
         {
-            @Html.Hidden("id", Model.Id)
-            
-            <p><button type="submit">@Resources.CompletePayment</button></p>
+            <p>
+                <button type="button" class="icon print">@Resources.Print</button>
+                <button type="submit">@Resources.CompletePayment</button>
+            </p>
         }
     }
 </fieldset>
@@ -45,4 +46,9 @@ else
     @:$("#Amount").val("@((-Model.Balance).ToString("0.00"))");
     @:$("#form").show("slow");
 }
+    $(function() {
+        $(".print").printPage({
+          url: "@Url.Action("PrintOrder", "Sales", new { id = Model.Id })"
+        });
+    });
 </script>

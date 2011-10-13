@@ -1,0 +1,45 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@model SalesOrder
+
+@{
+    Layout = "~/Views/Shared/_TicketLayout.cshtml";
+    ViewBag.Title = Resources.Title_SalesNote;
+    ViewBag.SkipAddress = true;
+}
+
+<div class="display-label right">
+    @Html.LabelFor(model => model.Date)
+</div>
+<div class="display-field date right">
+    @Html.DisplayFor(model => model.Date)
+</div>
+
+<fieldset>
+    <div class="display-label left floating">
+        @Html.LabelFor(x => x.Total)
+    </div>
+    <div class="display-field number">
+        @Html.DisplayFor(x => x.Total)
+    </div>
+
+    <div class="display-label left floating">
+        @Html.LabelFor(x => x.Taxes)
+    </div>
+    <div class="display-field number">
+        @Html.DisplayFor(x => x.Taxes)
+    </div>
+
+    <div class="display-label left floating">
+        @Html.LabelFor(x => x.Subtotal)
+    </div>
+    <div class="display-field number">
+        @Html.DisplayFor(x => x.Subtotal)
+    </div>
+</fieldset>
+
+<div class="display-label display-field center">
+    <img src="@Url.Action("Code128", "Barcodes", new { id = Html.DisplayFor(x => x.Id).ToString() })" alt="@Html.DisplayFor(x => x.Id)" title="@Html.DisplayFor(x => x.Id)" />
+    <br />
+    @Html.DisplayFor(model => model.Id)
+</div>

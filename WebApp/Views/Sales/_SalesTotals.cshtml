@@ -29,9 +29,17 @@
         <p>
         @using (Html.BeginForm("ConfirmOrder", "Sales", new { id = Model.Id }))
         {
+            <button type="button" class="icon print">@Resources.Print</button>
             <button type="submit">@Resources.CompleteSale</button>            
         }
         </p>
     }
     </div>
 </fieldset>
+<script type="text/javascript">
+    $(function() {
+        $(".print").printPage({
+          url: "@Url.Action("PrintOrder", "Sales", new { id = Model.Id })"
+        });
+    });
+</script>

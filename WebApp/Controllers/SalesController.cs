@@ -53,6 +53,18 @@ namespace Business.Essentials.WebApp.Controllers
             return View(qry.ToList());
         }
 
+        // GET: /Sales/PrintOrder/
+
+        public ViewResult PrintOrder(int id)
+        {
+            SalesOrder item = SalesOrder.Find(id);
+
+            if(item.IsCompleted)
+                return View("_SalesTicket", item);
+            else
+                return View("_SalesNote", item);
+        }
+
         // GET: /Sales/Details/
 
         public ViewResult Details(int id)

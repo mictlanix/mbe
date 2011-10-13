@@ -103,3 +103,6 @@ button.icon.logOn,a.button.icon.logOn {
 button.icon.pay,a.button.icon.pay {
     background:url(icons/dollar.png) no-repeat;
 }
+button.icon.print,a.button.icon.print {
+    background:url(icons/print.png) no-repeat;
+}
