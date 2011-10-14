@@ -1,8 +1,14 @@
 ﻿@using Business.Essentials
-@model Business.Essentials.Model.Customer
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@model Customer
 
 @{
     ViewBag.Title = Resources.Details;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Customers);
+    var AllowCreateAddresses = Html.GetPrivilege(CurrentUser, SystemObjects.Addresses).AllowCreate;
+    var AllowCreateContacts = Html.GetPrivilege(CurrentUser, SystemObjects.Contacts).AllowCreate;
 }
 
 <h2>@Resources.Details</h2>
@@ -54,7 +60,10 @@
 
 </fieldset>
 <p>
+@if(Privilege.AllowUpdate)
+{
     @Html.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new { @class = "button icon edit" })
+}
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </p>
 
@@ -64,16 +73,22 @@
         <li><a href="#tabs-2">@Resources.DisplayName_Contacts</a></li>
     </ul>
     <div id="tabs-1">
-            <p>
-                @Html.ActionLink(Resources.CreateNew, "CreateForCustomer", "Addresses", new { id = Model.Id }, new { @class = "button icon add" })
-            </p>
-            @Html.Partial("../Addresses/_Index", Model.Addresses)
+    @if(AllowCreateAddresses)
+    {
+        <p>
+            @Html.ActionLink(Resources.CreateNew, "CreateForCustomer", "Addresses", new { id = Model.Id }, new { @class = "button icon add" })
+        </p>
+    }
+        @Html.Partial("../Addresses/_Index", Model.Addresses)
     </div>
     <div id="tabs-2">
-            <p>
-                @Html.ActionLink(Resources.CreateNew, "CreateForCustomer", "Contacts", new { id = Model.Id }, new { @class = "button icon add" })
-            </p>
-            @Html.Partial("../Contacts/_Index", Model.Contacts)
+    @if(AllowCreateContacts)
+    {
+        <p>
+            @Html.ActionLink(Resources.CreateNew, "CreateForCustomer", "Contacts", new { id = Model.Id }, new { @class = "button icon add" })
+        </p>
+    }
+        @Html.Partial("../Contacts/_Index", Model.Contacts)
     </div>
 </div>
 

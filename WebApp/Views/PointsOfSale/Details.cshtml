@@ -1,8 +1,12 @@
 ﻿@using Business.Essentials
-@model Business.Essentials.Model.PointOfSale
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@model PointOfSale
 
 @{
     ViewBag.Title = Resources.Details;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.PointsOfSale);
 }
 
 <h2>@Resources.Details</h2>
@@ -40,6 +44,9 @@
 
 </fieldset>
 <p>
+@if(Privilege.AllowUpdate)
+{
     @Html.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new { @class = "button icon edit" })
+}
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </p>

@@ -1,9 +1,11 @@
 ﻿@using Business.Essentials
+@using Business.Essentials.Model
 @using Business.Essentials.WebApp.Helpers
-@model Business.Essentials.Model.User
+@model User
 
 @{
     ViewBag.Title = Resources.Details;
+    var CurrentUser = Html.CurrentUser() ?? new User();
 }
 
 <h2>@Resources.Details</h2>
@@ -11,27 +13,30 @@
 <fieldset>
     <legend>@Resources.User</legend>
 
-    <div class="display-label">@Html.LabelFor(model => model.UserName)</div>
+    <div class="display-label">@Html.LabelFor(x => x.UserName)</div>
     <div class="display-field">
-        @Html.DisplayFor(model => model.UserName)
+        @Html.DisplayFor(x => x.UserName)
     </div>
 
-    <div class="display-label">@Html.LabelFor(model => model.Employee.Name)</div>
+    <div class="display-label">@Html.LabelFor(x => x.Employee.Name)</div>
     <div class="display-field">
-        @Html.DisplayFor(model => model.Employee.Name)
+        @Html.DisplayFor(x => x.Employee.Name)
     </div>
 
-    <div class="display-label">@Html.LabelFor(model => model.Email)</div>
+    <div class="display-label">@Html.LabelFor(x => x.Email)</div>
     <div class="display-field">
-        @Html.DisplayFor(model => model.Email)
+        @Html.DisplayFor(x => x.Email)
     </div>
 
     <div class="display-label">
-        @Html.DisplayFor(model => model.IsAdministrator)
-        @Html.LabelFor(model => model.IsAdministrator)
+        @Html.DisplayFor(x => x.IsAdministrator)
+        @Html.LabelFor(x => x.IsAdministrator)
     </div>
 </fieldset>
 <p>
-    @Html.ActionLink(Resources.Edit, "Edit", new { id = Model.UserName }, new { @class = "button icon edit" })
+@if(CurrentUser.IsAdministrator)
+{
+	@Html.ActionLink(Resources.Edit, "Edit", new { id = Model.UserName }, new { @class = "button icon edit" })
+}
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </p>

@@ -1,8 +1,12 @@
 ﻿@using Business.Essentials
-@model Business.Essentials.Model.BankAccount
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@model BankAccount
 
 @{
     ViewBag.Title = Resources.Details;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.BankAccounts);
 }
 
 <h2>@Resources.Details</h2>
@@ -45,7 +49,9 @@
 
 </fieldset>
 <p>
-    @Html.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new { @class = "button icon edit" })
+@if(Privilege.AllowUpdate)
+{
+    @Html.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new { @class = "button icon edit" })    
+}
     @Html.ActionLink(Resources.BackToList, "Details", "Suppliers", new { id = ViewBag.OwnerId }, new { @class = "button icon back" })
-
 </p>

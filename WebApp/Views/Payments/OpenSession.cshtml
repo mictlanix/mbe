@@ -1,19 +1,24 @@
 ﻿@using Business.Essentials
 @using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
 @model IEnumerable<SalesOrder>
 
 @{
     ViewBag.Title = Resources.Title_CustomerPayment;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments);
 }
 
 <h2>@Resources.DisplayName_CustomerPayments</h2>
 
-<div>
+@if(Privilege.AllowCreate)
+{
     @using (Html.BeginForm("OpenSession", "Payments"))
     {
         <p><button type="submit">@Resources.StartSession</button></p>
     }
-</div>
+}
+
 <table>
     <tr>
         <th>

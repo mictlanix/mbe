@@ -1,5 +1,12 @@
 ﻿@using Business.Essentials
-@model Business.Essentials.Model.CashSession
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@model CashSession
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments);
+}
 
 <fieldset>
     <legend>@Resources.DisplayName_CashSession</legend>
@@ -19,10 +26,13 @@
         @Html.LabelFor(model => model.Start) :
         @Html.DisplayFor(model => model.Start)
     </div>
-    @if (ViewBag.ShowCloseSession)
+    @if(Privilege.AllowDelete)
     {
-        <div class="right floating">
-            @Html.ActionLink(Resources.CloseSession, "CloseSession", new { }, new { @class = "button" })
-        </div>
+	    @if (ViewBag.ShowCloseSession)
+	    {
+	        <div class="right floating">
+	            @Html.ActionLink(Resources.CloseSession, "CloseSession", new { }, new { @class = "button" })
+	        </div>
+	    }
     }
 </fieldset>

@@ -161,21 +161,6 @@ namespace Business.Essentials.WebApp.Controllers
             return RedirectToAction("Index");
         }
 
-        CashDrawer GetDrawer()
-        {
-            var addr = Request.UserHostAddress;
-
-            return CashDrawer.Queryable.SingleOrDefault(x => x.HostAddress == addr);
-        }
-
-        CashSession GetSession()
-        {
-            var addr = Request.UserHostAddress;
-            return CashSession.Queryable
-                              .Where(x => x.End == null)
-                              .SingleOrDefault(x => x.CashDrawer.HostAddress == addr);
-        }
-
         public ActionResult CloseSession()
         {
             var session = GetSession();
@@ -204,5 +189,19 @@ namespace Business.Essentials.WebApp.Controllers
             return RedirectToAction("Index");
         }
         
+        CashDrawer GetDrawer()
+        {
+            var addr = Request.UserHostAddress;
+
+            return CashDrawer.Queryable.SingleOrDefault(x => x.HostAddress == addr);
+        }
+
+        CashSession GetSession()
+        {
+            var addr = Request.UserHostAddress;
+            return CashSession.Queryable
+                              .Where(x => x.End == null)
+                              .SingleOrDefault(x => x.CashDrawer.HostAddress == addr);
+        }
     }
 }

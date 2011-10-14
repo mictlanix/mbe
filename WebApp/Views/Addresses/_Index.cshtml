@@ -1,9 +1,13 @@
 ﻿@using Business.Essentials
 @using Business.Essentials.Model
-@model IEnumerable<Business.Essentials.Model.Address>
+@using Business.Essentials.WebApp.Helpers
+@model IEnumerable<Address>
 
-<p>
-</p>
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Addresses);
+}
+
 <table>
     <tr>
         <th>
@@ -35,32 +39,41 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.TaxpayerId)
+            @Html.DisplayFor(x => item.TaxpayerId)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.TaxpayerName)
+            @Html.DisplayFor(x => item.TaxpayerName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Street)
-            @Html.DisplayFor(modelItem => item.ExteriorNumber)
-            @Html.DisplayFor(modelItem => item.InteriorNumber)
+            @Html.DisplayFor(x => item.Street)
+            @Html.DisplayFor(x => item.ExteriorNumber)
+            @Html.DisplayFor(x => item.InteriorNumber)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Neighborhood)
+            @Html.DisplayFor(x => item.Neighborhood)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Borough)
+            @Html.DisplayFor(x => item.Borough)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.State)
+            @Html.DisplayFor(x => item.State)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.ZipCode)
+            @Html.DisplayFor(x => item.ZipCode)
         </td>
         <td class="actions">
-            @Html.ActionLink(" ", "Edit", "Addresses", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
-            @Html.ActionLink(" ", "Details", "Addresses", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
-            @Html.ActionLink(" ", "Delete", "Addresses", new { id = item.Id }, new { @class = "button icon delete icon-only", @title = Resources.Delete })
+        	@if(Privilege.AllowUpdate)
+        	{
+            	@Html.ActionLink(" ", "Edit", "Addresses", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
+            }
+        	@if(Privilege.AllowRead)
+        	{
+            	@Html.ActionLink(" ", "Details", "Addresses", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+            }
+        	@if(Privilege.AllowDelete)
+        	{
+            	@Html.ActionLink(" ", "Delete", "Addresses", new { id = item.Id }, new { @class = "button icon delete icon-only", @title = Resources.Delete })
+            }
         </td>
     </tr>
 }

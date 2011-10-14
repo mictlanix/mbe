@@ -1,9 +1,13 @@
 ﻿@using Business.Essentials
 @using Business.Essentials.Model
-@model IEnumerable<Business.Essentials.Model.SupplierAgreement>
+@using Business.Essentials.WebApp.Helpers
+@model IEnumerable<SupplierAgreement>
 
-<p>
-</p>
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SupplierAgreements);
+}
+
 <table>
     <tr>
         <th>
@@ -32,11 +36,19 @@
             @Html.DisplayFor(modelItem => item.Comment)
         </td>
         <td class="actions">
-            @Html.ActionLink(" ", "Edit", "SupplierAgreements", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
-            @Html.ActionLink(" ", "Details", "SupplierAgreements", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
-            @Html.ActionLink(" ", "Delete", "SupplierAgreements", new { id = item.Id }, new { @class = "button icon delete icon-only", @title = Resources.Delete })
+        	@if(Privilege.AllowUpdate)
+        	{
+            	@Html.ActionLink(" ", "Edit", "SupplierAgreements", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
+            }
+        	@if(Privilege.AllowRead)
+        	{
+            	@Html.ActionLink(" ", "Details", "SupplierAgreements", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+            }
+        	@if(Privilege.AllowDelete)
+        	{
+            	@Html.ActionLink(" ", "Delete", "SupplierAgreements", new { id = item.Id }, new { @class = "button icon delete icon-only", @title = Resources.Delete })
+            }
         </td>
     </tr>
 }
-
 </table>

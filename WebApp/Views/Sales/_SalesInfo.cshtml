@@ -1,5 +1,12 @@
 ﻿@using Business.Essentials
-@model Business.Essentials.Model.SalesOrder
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@model SalesOrder
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders);
+}
 
 <fieldset>
     <legend>@Resources.DisplayName_SalesInformation</legend>
@@ -14,14 +21,16 @@
         @Html.DisplayFor(model => model.Date)
     </div>
 
-    @if (Model.IsCredit)
-    {
-        <div class="display-label right floating">
-            @Html.LabelFor(model => model.DueDate)
-            @Html.DisplayFor(model => model.DueDate)
-        </div>
-    }
+@if (Model.IsCredit)
+{
+    <div class="display-label right floating">
+        @Html.LabelFor(model => model.DueDate)
+        @Html.DisplayFor(model => model.DueDate)
+    </div>
+}
     
+@if(Privilege.AllowDelete)
+{
     <div class="right floating">
         <p>
         @using (Html.BeginForm("CancelOrder", "Sales", new { id =  Model.Id }))
@@ -30,6 +39,7 @@
         }
         </p>
     </div>
+}
     
     <div class="display-label">
         @Html.LabelFor(model => model.Customer)

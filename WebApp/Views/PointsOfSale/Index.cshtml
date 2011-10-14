@@ -1,15 +1,21 @@
 ﻿@using Business.Essentials
 @using Business.Essentials.Model
-@model IEnumerable<Business.Essentials.Model.PointOfSale>
+@using Business.Essentials.WebApp.Helpers
+@model IEnumerable<PointOfSale>
 
 @{
     ViewBag.Title = Resources.Title_PointOfSale;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.PointsOfSale);
 }
 
 <h2>@Resources.DisplayName_PointsOfSale</h2>
 
 <p>
+@if(Privilege.AllowCreate)
+{
     @Html.ActionLink(Resources.CreateNew, "Create", new { }, new { @class = "button icon add" })
+}
 </p>
 <table>
     <tr>
@@ -35,26 +41,34 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Code)
+            @Html.DisplayFor(x => item.Code)
         </td>
 
         <td>
-            @Html.DisplayFor(modelItem => item.Name)
+            @Html.DisplayFor(x => item.Name)
         </td>
         
         <td>
-            @Html.DisplayFor(modelItem => item.HostAddress)
+            @Html.DisplayFor(x => item.HostAddress)
         </td>
 
         <td>
-            @Html.DisplayFor(modelItem => item.Comment)
+            @Html.DisplayFor(x => item.Comment)
         </td>
         <td class="actions">
-            @Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
-            @Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
-            @Html.ActionLink(" ", "Delete", new { id = item.Id }, new { @class = "button icon delete icon-only", @title = Resources.Delete })
+        	@if(Privilege.AllowUpdate)
+        	{
+            	@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
+            }
+        	@if(Privilege.AllowRead)
+        	{
+            	@Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+            }
+        	@if(Privilege.AllowDelete)
+        	{
+            	@Html.ActionLink(" ", "Delete", new { id = item.Id }, new { @class = "button icon delete icon-only", @title = Resources.Delete })
+            }
         </td>
     </tr>
 }
-
 </table>

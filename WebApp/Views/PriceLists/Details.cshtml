@@ -1,8 +1,12 @@
 ﻿@using Business.Essentials
-@model Business.Essentials.Model.PriceList
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@model PriceList
 
 @{
     ViewBag.Title = Resources.Details;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.PriceLists);
 }
 
 <h2>@Resources.Details</h2>
@@ -11,28 +15,31 @@
     <legend>@Resources.Title_PriceList</legend>
 
     <div class="display-label">
-        @Html.LabelFor(model => model.Name)
+        @Html.LabelFor(x => x.Name)
     </div>
     <div class="display-field">
-        @Html.DisplayFor(model => model.Name)
+        @Html.DisplayFor(x => x.Name)
     </div>
 
     <div class="display-label">
-        @Html.LabelFor(model => model.HighProfitMargin)
+        @Html.LabelFor(x => x.HighProfitMargin)
     </div>
     <div class="display-field">
-        @Html.DisplayFor(model => model.HighProfitMargin)
+        @Html.DisplayFor(x => x.HighProfitMargin)
     </div>
 
     <div class="display-label">
-        @Html.LabelFor(model => model.LowProfitMargin)
+        @Html.LabelFor(x => x.LowProfitMargin)
     </div>
     <div class="display-field">
-        @Html.DisplayFor(model => model.LowProfitMargin)
+        @Html.DisplayFor(x => x.LowProfitMargin)
     </div>
 
 </fieldset>
 <p>
+@if(Privilege.AllowUpdate)
+{
     @Html.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new { @class = "button icon edit" })
+}
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </p>
