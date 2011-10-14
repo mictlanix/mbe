@@ -6,6 +6,8 @@
 
 @{
     ViewBag.Title = Resources.Title_Product;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Products);
 }
 
 
@@ -15,7 +17,10 @@
 <h2>@Resources.DisplayName_Products</h2>
 
 <p>
+@if(Privilege.AllowCreate)
+{
     @Html.ActionLink(Resources.CreateNew, "Create", new { }, new { @class = "button icon add" })
+}
 </p>
 
 @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))

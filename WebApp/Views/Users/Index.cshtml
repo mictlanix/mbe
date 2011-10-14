@@ -1,10 +1,11 @@
 ﻿@using Business.Essentials
-@using Business.Essentials.Model;
-@using Business.Essentials.WebApp.Helpers;
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
 @model IEnumerable<User>
 
 @{
     ViewBag.Title = Resources.Title_Users;
+    var CurrentUser = Html.CurrentUser() ?? new User();
 }
 
 <h2>@Resources.DisplayName_Users</h2>
@@ -29,21 +30,24 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.UserName)
+            @Html.DisplayFor(x => item.UserName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Employee.Name)
+            @Html.DisplayFor(x => item.Employee.Name)
         </td>
         <td class="center">
-            @Html.DisplayFor(modelItem => item.Email)
+            @Html.DisplayFor(x => item.Email)
         </td>
         <td class="center">
-            @Html.DisplayFor(modelItem => item.IsAdministrator)
+            @Html.DisplayFor(x => item.IsAdministrator)
         </td>
         <td class="actions">
-            @Html.ActionLink(" ", "Edit", new { id = item.UserName }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
-            @Html.ActionLink(" ", "Details", new { id = item.UserName }, new { @class = "button icon view icon-only", @title = Resources.Details })
-            @Html.ActionLink(" ", "Delete", new { id = item.UserName }, new { @class = "button icon delete icon-only", @title = Resources.Delete })
+        	@if(CurrentUser.IsAdministrator)
+        	{
+	            @Html.ActionLink(" ", "Edit", new { id = item.UserName }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
+	            @Html.ActionLink(" ", "Details", new { id = item.UserName }, new { @class = "button icon view icon-only", @title = Resources.Details })
+	            @Html.ActionLink(" ", "Delete", new { id = item.UserName }, new { @class = "button icon delete icon-only", @title = Resources.Delete })
+            }
         </td>
     </tr>
 }

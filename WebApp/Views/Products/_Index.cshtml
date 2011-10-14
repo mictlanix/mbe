@@ -1,8 +1,13 @@
-﻿@using Business.Essentials;
-@using Business.Essentials.Model;
-@using Business.Essentials.WebApp.Helpers;
-@using Business.Essentials.WebApp.Models;
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@using Business.Essentials.WebApp.Models
 @model Search<Product>
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Products);
+}
 
 <p>@Html.ValidationMessageFor(x => x.Pattern)</p>
 
@@ -97,8 +102,14 @@
             @Html.DisplayFor(modelItem => item.Category.Name)
         </td>
         <td class="actions">
-            @Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
-            @Html.ActionLink(" ", "Delete", new { id = item.Id }, new { @class = "button icon delete icon-only", @title = Resources.Delete })
+        	@if(Privilege.AllowUpdate)
+        	{
+            	@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
+            }
+        	@if(Privilege.AllowDelete)
+        	{
+            	@Html.ActionLink(" ", "Delete", new { id = item.Id }, new { @class = "button icon delete icon-only", @title = Resources.Delete })
+            }
         </td>
     </tr>
 }

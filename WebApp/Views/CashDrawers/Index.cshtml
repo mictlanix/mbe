@@ -1,15 +1,21 @@
 ﻿@using Business.Essentials
 @using Business.Essentials.Model
-@model IEnumerable<Business.Essentials.Model.CashDrawer>
+@using Business.Essentials.WebApp.Helpers
+@model IEnumerable<CashDrawer>
 
 @{
     ViewBag.Title = Resources.Title_CashDrawer;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CashDrawers);
 }
 
 <h2>@Resources.DisplayName_CashDrawers</h2>
 
 <p>
+@if(Privilege.AllowCreate)
+{
     @Html.ActionLink(Resources.CreateNew, "Create", new { }, new { @class = "button icon add" })
+}
 </p>
 <table>
     <tr>
@@ -33,19 +39,25 @@
         <td>
             @Html.DisplayFor(modelItem => item.Code)
         </td>
-
         <td>
             @Html.DisplayFor(modelItem => item.Name)
         </td>
-
         <td>
             @Html.DisplayFor(modelItem => item.HostAddress)
         </td>
-
         <td class="actions">
-            @Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
-            @Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
-            @Html.ActionLink(" ", "Delete", new { id = item.Id }, new { @class = "button icon delete icon-only", @title = Resources.Delete })
+        	@if(Privilege.AllowUpdate)
+        	{
+            	@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
+            }
+        	@if(Privilege.AllowRead)
+        	{
+            	@Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+            }
+        	@if(Privilege.AllowDelete)
+        	{
+            	@Html.ActionLink(" ", "Delete", new { id = item.Id }, new { @class = "button icon delete icon-only", @title = Resources.Delete })
+            }
         </td>
     </tr>
 }

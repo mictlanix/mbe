@@ -1,9 +1,16 @@
 ﻿@using Business.Essentials
+@using Business.Essentials.Model
 @using Business.Essentials.WebApp.Helpers
-@model Business.Essentials.Model.Supplier
+@model Supplier
 
 @{
     ViewBag.Title = Resources.Details;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Suppliers);
+    var AllowCreateAddresses = Html.GetPrivilege(CurrentUser, SystemObjects.Addresses).AllowCreate;
+    var AllowCreateContacts = Html.GetPrivilege(CurrentUser, SystemObjects.Contacts).AllowCreate;
+    var AllowCreateBankAccounts = Html.GetPrivilege(CurrentUser, SystemObjects.BankAccounts).AllowCreate;
+    var AllowCreateAgreements = Html.GetPrivilege(CurrentUser, SystemObjects.SupplierAgreements).AllowCreate;
 }
 
 <h2>@Resources.Details</h2>
@@ -48,7 +55,10 @@
 
 </fieldset>
 <p>
+@if(Privilege.AllowUpdate)
+{
     @Html.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new { @class = "button icon edit" })
+}
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </p>
 
@@ -60,30 +70,40 @@
         <li><a href="#tabs-4">@Resources.DisplayName_SupplierAgreements</a></li>
     </ul>
     <div id="tabs-1">
+    @if(AllowCreateAddresses)
+    {
         <p>
             @Html.ActionLink(Resources.CreateNew, "CreateForSupplier", "Addresses", new { id = Model.Id }, new { @class = "button icon add" })
         </p>
+    }
         @Html.Partial("../Addresses/_Index", Model.Addresses)
     </div>
 
     <div id="tabs-2">
+    @if(AllowCreateContacts)
+    {
         <p>
             @Html.ActionLink(Resources.CreateNew, "CreateForSupplier", "Contacts", new { id = Model.Id }, new { @class = "button icon add" })
         </p>
+    }
         @Html.Partial("../Contacts/_Index", Model.Contacts)
     </div>
-
     <div id="tabs-3">
+    @if(AllowCreateBankAccounts)
+    {
         <p>
             @Html.ActionLink(Resources.CreateNew, "CreateForSupplier", "BankAccounts", new { id = Model.Id }, new { @class = "button icon add" })
         </p>
+    }
         @Html.Partial("../BankAccounts/_Index", Model.BanksAccounts)
     </div>
-
     <div id="tabs-4">
+    @if(AllowCreateAgreements)
+    {
         <p>
             @Html.ActionLink(Resources.CreateNew, "CreateForSupplier", "SupplierAgreements", new { id = Model.Id }, new { @class = "button icon add" })
         </p>
+    }
         @Html.Partial("../SupplierAgreements/_Index", Model.Agreements)
     </div>
 </div>

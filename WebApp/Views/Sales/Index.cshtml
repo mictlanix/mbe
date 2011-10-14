@@ -1,15 +1,21 @@
 ﻿@using Business.Essentials
 @using Business.Essentials.Model
-@model IEnumerable<Business.Essentials.Model.SalesOrder>
+@using Business.Essentials.WebApp.Helpers
+@model IEnumerable<SalesOrder>
 
 @{
     ViewBag.Title = Resources.Title_SalesOrder;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders);
 }
 
 <h2>@Business.Essentials.Resources.DisplayName_SalesOrders</h2>
 
 <p>
+@if(Privilege.AllowCreate)
+{
     @Html.ActionLink(Resources.NewSale, "New", new { }, new { @class = "button icon add" })
+}
 </p>
 <table>
     <tr>
@@ -66,8 +72,14 @@
             @Html.DisplayFor(modelItem => item.PointOfSale.Name)
         </td>
         <td class="actions">
-            @Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
-            @Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+        	@if(Privilege.AllowUpdate)
+        	{
+            	@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
+            }
+        	@if(Privilege.AllowRead)
+        	{
+            	@Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+            }
         </td>
     </tr>
 }

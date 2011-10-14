@@ -58,5 +58,13 @@ namespace Business.Essentials.Model
         PointsOfSale,
         [Display(Name = "DisplayName_CashDrawers", ResourceType = typeof(Resources))]
         CashDrawers,
+        [Display(Name = "DisplayName_Addresses", ResourceType = typeof(Resources))]
+        Addresses,
+        [Display(Name = "DisplayName_Contacts", ResourceType = typeof(Resources))]
+        Contacts,
+        [Display(Name = "DisplayName_BankAccounts", ResourceType = typeof(Resources))]
+		BankAccounts,
+        [Display(Name = "DisplayName_SupplierAgreements", ResourceType = typeof(Resources))]
+		SupplierAgreements
     }
 }
