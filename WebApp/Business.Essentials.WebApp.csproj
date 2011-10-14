@@ -134,6 +134,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\CustomerHelpers.cs" />
     <Compile Include="Helpers\SecurityHelpers.cs" />
     <Compile Include="Helpers\HtmlHelpers.cs" />
     <Compile Include="Models\AccountModels.cs" />
@@ -320,7 +321,6 @@
     <Content Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
-    <Content Include="Content\themes\base\token-input.css" />
     <Content Include="Content\themes\flick\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\flick\images\ui-bg_flat_0_eeeeee_40x100.png" />
     <Content Include="Content\themes\flick\images\ui-bg_flat_55_ffffff_40x100.png" />

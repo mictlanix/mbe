@@ -116,7 +116,7 @@
                 $.get("/Payments/GetPayment/" + detail.id, function (data) {
                     $("#items").append(data);
                     $(":input").not(":submit, :button, :radio").val("").removeAttr("selected");
-                    $("#Method").attr("checked", true);
+                    $("#Method").attr("checked", false);
                     $("#reference").hide("slow");
                     updateTotals();
                 });
