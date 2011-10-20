@@ -28,7 +28,7 @@
     </div>
     @if(Privilege.AllowDelete)
     {
-	    @if (ViewBag.ShowCloseSession)
+	    if (ViewBag.ShowCloseSession)
 	    {
 	        <div class="right floating">
 	            @Html.ActionLink(Resources.CloseSession, "CloseSession", new { }, new { @class = "button" })
