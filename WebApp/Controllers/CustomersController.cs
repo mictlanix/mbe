@@ -45,7 +45,7 @@ namespace Business.Essentials.WebApp.Controllers
             var qry = from x in Customer.Queryable
                       where x.Name.Contains(pattern) ||
                             x.Zone.Contains(pattern)
-                      select new { id = x.Id, name = x.Name, zone = x.Zone };
+                      select new { id = x.Id, name = x.Name, hasCredit = (x.CreditDays > 0 && x.CreditLimit > 0) };
 
             result = Json(qry.Take(15).ToList());
             result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;

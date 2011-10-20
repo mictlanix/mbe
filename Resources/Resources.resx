@@ -822,4 +822,7 @@
   <data name="Title_SalesNote" xml:space="preserve">
     <value>Ticket Para Pago</value>
   </data>
+  <data name="CreditLimitExceeded" xml:space="preserve">
+    <value>Límite de Crédito Excedido Por:</value>
+  </data>
 </root>
