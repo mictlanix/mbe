@@ -1,5 +1,5 @@
 ﻿// 
-// CashDrawerController.cs
+// CashDrawersController.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>

@@ -1,6 +1,13 @@
-﻿@model Business.Essentials.Model.Supplier
+﻿@using Business.Essentials
+@model Business.Essentials.Model.Supplier
 
-@using (Ajax.BeginForm(new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "supplier_dlg" }))
+@*@using (Ajax.BeginForm( new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "supplier_dlg" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.EditorForModel()
+}*@
+
+@using (Html.BeginForm())
 {
     @Html.ValidationSummary(true)
     @Html.EditorForModel()
