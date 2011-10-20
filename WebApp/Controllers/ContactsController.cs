@@ -33,6 +33,7 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Castle.ActiveRecord;
 using Business.Essentials.Model;
 
 namespace Business.Essentials.WebApp.Controllers
@@ -88,20 +89,27 @@ namespace Business.Essentials.WebApp.Controllers
             {
                 int owner = int.Parse(Request.Params["OwnerId"]);
                 string type = Request.Params["OwnerType"];
+				
+	            using (var session = new SessionScope())
+	            {
+	                contact.CreateAndFlush();
+	            }
 
+	            System.Diagnostics.Debug.WriteLine("New Contact [Id = {0}]", contact.Id);
+				
                 if (type == "Suppliers")
                 {
                     var supplier = Supplier.Find(owner);
-                    contact.Suppliers.Add(supplier);
+					supplier.Contacts.Add(contact);
+                	supplier.Save();
                 }
 
                 if (type == "Customers")
                 {
                     var customer = Customer.Find(owner);
-                    contact.Customers.Add(customer);
+					customer.Contacts.Add(contact);
+                	customer.Save();
                 }
-
-                contact.Create();
 
                 return RedirectToAction("Details", type, new { id = owner });
             }
@@ -142,10 +150,7 @@ namespace Business.Essentials.WebApp.Controllers
             {
                 int owner = int.Parse(Request.Params["OwnerId"]);
                 string type = Request.Params["OwnerType"];
-                Contact item = Contact.Find(contact.Id);
-
-                contact.Suppliers = item.Suppliers;
-                contact.Customers = item.Customers;
+				
                 contact.Save();
 
                 return RedirectToAction("Details", type, new { id = owner });

@@ -33,6 +33,7 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Castle.ActiveRecord;
 using Business.Essentials.Model;
 
 namespace Business.Essentials.WebApp.Controllers
@@ -64,20 +65,27 @@ namespace Business.Essentials.WebApp.Controllers
         // POST: /BanksAccounts/Create
 
         [HttpPost]
-        public ActionResult Create(BankAccount bankAccount)
+        public ActionResult Create(BankAccount item)
         {
             if (ModelState.IsValid)
             {
                 int owner = int.Parse(Request.Params["OwnerId"]);
 
-                var supplier = Supplier.Find(owner);
-                bankAccount.Suppliers.Add(supplier);
+	            using (var session = new SessionScope())
+	            {
+	                item.CreateAndFlush();
+	            }
 
-                bankAccount.Save();
+	            System.Diagnostics.Debug.WriteLine("New BankAccount [Id = {0}]", item.Id);
+				
+                var supplier = Supplier.Find(owner);
+                supplier.BanksAccounts.Add(item);
+                supplier.Save();
+				
                 return RedirectToAction("Details", "Suppliers", new { id = owner });
             }
 
-            return View(bankAccount);
+            return View(item);
         }
 
         //
@@ -101,9 +109,7 @@ namespace Business.Essentials.WebApp.Controllers
             if (ModelState.IsValid)
             {
                 int owner = int.Parse(Request.Params["OwnerId"]);
-                BankAccount item = BankAccount.Find(bankAccount.Id);
-
-                bankAccount.Suppliers = item.Suppliers;
+				
                 bankAccount.Save();
 
                 return RedirectToAction("Details", "Suppliers", new { id = owner });
