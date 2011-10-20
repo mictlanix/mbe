@@ -13,7 +13,7 @@
 
 @if(Privilege.AllowCreate)
 {
-    @using (Html.BeginForm("OpenSession", "Payments"))
+    using (Html.BeginForm("OpenSession", "Payments"))
     {
         <p><button type="submit">@Resources.StartSession</button></p>
     }

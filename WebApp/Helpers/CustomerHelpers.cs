@@ -49,7 +49,7 @@ namespace Business.Essentials.WebApp.Helpers
 
             qry = from x in SalesOrder.Queryable
                   from y in x.Details
-                  where x.Customer.Id == id
+                  where x.Customer.Id == id && (!x.IsCancelled)
                   select y.Quantity * y.Price * (1 - y.Discount);
             var bought = qry.Count() > 0 ? qry.ToList().Sum() : 0;
 
