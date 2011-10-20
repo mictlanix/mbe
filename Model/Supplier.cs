@@ -74,21 +74,21 @@ namespace Business.Essentials.Model
         [Display(Name = "CreditDays", ResourceType = typeof(Resources))]
         public int CreditDays { get; set; }
 
-        [HasAndBelongsToMany(typeof(Address), Table = "supplier_address", ColumnKey = "supplier", ColumnRef = "address", Inverse = true)]
+        [HasAndBelongsToMany(typeof(Address), Table = "supplier_address", ColumnKey = "supplier", ColumnRef = "address")]
         public IList<Address> Addresses
         {
             get { return addresses; }
             set { addresses = value; }
         }
 
-        [HasAndBelongsToMany(typeof(Contact), Table = "supplier_contact", ColumnKey = "supplier", ColumnRef = "contact", Inverse = true)]
+        [HasAndBelongsToMany(typeof(Contact), Table = "supplier_contact", ColumnKey = "supplier", ColumnRef = "contact")]
         public IList<Contact> Contacts
         {
             get { return contacts; }
             set { contacts = value; }
         }
 
-        [HasAndBelongsToMany(typeof(BankAccount), Table = "supplier_bank_account", ColumnKey = "supplier", ColumnRef = "bank_account", Inverse = true)]
+        [HasAndBelongsToMany(typeof(BankAccount), Table = "supplier_bank_account", ColumnKey = "supplier", ColumnRef = "bank_account")]
         public IList<BankAccount> BanksAccounts
         {
             get { return accounts; }

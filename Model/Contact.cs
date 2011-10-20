@@ -111,14 +111,14 @@ namespace Business.Essentials.Model
         [StringLength(500, MinimumLength = 0)]
         public string Comment { get; set; }
 
-        [HasAndBelongsToMany(typeof(Supplier), Table = "supplier_contact", ColumnKey = "contact", ColumnRef = "supplier")]
+        [HasAndBelongsToMany(typeof(Supplier), Table = "supplier_contact", ColumnKey = "contact", ColumnRef = "supplier", Inverse = true)]
         public IList<Supplier> Suppliers
         {
             get { return suppliers; }
             set { suppliers = value; }
         }
 
-        [HasAndBelongsToMany(typeof(Customer), Table = "customer_contact", ColumnKey = "contact", ColumnRef = "customer")]
+        [HasAndBelongsToMany(typeof(Customer), Table = "customer_contact", ColumnKey = "contact", ColumnRef = "customer", Inverse = true)]
         public IList<Customer> Customers
         {
             get { return customers; }

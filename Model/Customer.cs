@@ -81,14 +81,14 @@ namespace Business.Essentials.Model
         [Display(Name = "PriceList", ResourceType = typeof(Resources))]
         public virtual PriceList PriceList { get; set; }
 
-        [HasAndBelongsToMany(typeof(Address), Table = "customer_address", ColumnKey = "customer", ColumnRef = "address", Inverse = true)]
+        [HasAndBelongsToMany(typeof(Address), Table = "customer_address", ColumnKey = "customer", ColumnRef = "address")]
         public IList<Address> Addresses
         {
             get { return addresses; }
             set { addresses = value; }
         }
 
-        [HasAndBelongsToMany(typeof(Contact), Table = "customer_contact", ColumnKey = "customer", ColumnRef = "contact", Inverse = true)]
+        [HasAndBelongsToMany(typeof(Contact), Table = "customer_contact", ColumnKey = "customer", ColumnRef = "contact")]
         public IList<Contact> Contacts
         {
             get { return contacts; }

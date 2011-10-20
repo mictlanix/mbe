@@ -71,7 +71,7 @@ namespace Business.Essentials.Model
         [StringLength(500, MinimumLength = 0)]
         public string Comment { get; set; }
 
-        [HasAndBelongsToMany(typeof(Supplier), Table = "supplier_bank_account", ColumnKey = "bank_account", ColumnRef = "supplier")]
+        [HasAndBelongsToMany(typeof(Supplier), Table = "supplier_bank_account", ColumnKey = "bank_account", ColumnRef = "supplier", Inverse = true)]
         public IList<Supplier> Suppliers
         {
             get { return suppliers; }
