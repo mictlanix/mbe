@@ -400,6 +400,8 @@
     <Content Include="Views\Shared\_LogOnPartial.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
+    <Content Include="Views\Shared\InvalidPointOfSale.cshtml" />
+    <Content Include="Views\Shared\InvalidCashDrawer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />
@@ -617,12 +619,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Payments\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Payments\InvalidCashDrawer.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Sales\InvalidPointOfSale.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\UnknownError.cshtml" />
