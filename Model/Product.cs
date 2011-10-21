@@ -131,16 +131,19 @@ namespace Business.Essentials.Model
         [Property("price5")]
         [Display(Name = "Price5", ResourceType = typeof(Resources))]
         [DataType(DataType.Currency)]
+        [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
         public decimal Price5 { get; set; }
 
         [Property("price6")]
         [Display(Name = "Price6", ResourceType = typeof(Resources))]
         [DataType(DataType.Currency)]
+        [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
         public decimal Price6 { get; set; }
 
         [Property("price7")]
         [Display(Name = "Price7", ResourceType = typeof(Resources))]
         [DataType(DataType.Currency)]
+        [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
         public decimal Price7 { get; set; }
 
         [Property("tax_rate")]
@@ -166,5 +169,35 @@ namespace Business.Essentials.Model
         [BelongsTo("supplier")]
         [Display(Name = "Supplier", ResourceType = typeof(Resources))]
         public virtual Supplier Supplier { get; set; }
+
+        #region Override Base Methods
+
+        public override string ToString()
+        {
+            return string.Format("{0} [{1}, {2}, {3}]", Code, Name, Brand, Model);
+        }
+
+        public override bool Equals(object obj)
+        {
+            Product other = obj as Product;
+
+            if (other == null)
+                return false;
+
+            if (Id == 0 && other.Id == 0)
+                return (object)this == other;
+            else
+                return Id == other.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            if (Id == 0)
+                return base.GetHashCode();
+
+            return string.Format("{0}#{1}", GetType().FullName, Id).GetHashCode();
+        }
+
+        #endregion
     }
 }

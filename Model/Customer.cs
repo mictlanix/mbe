@@ -52,7 +52,6 @@ namespace Business.Essentials.Model
 
         [Property]
         [Display(Name = "Zone", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(250, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string Zone { get; set; }
 
@@ -94,5 +93,35 @@ namespace Business.Essentials.Model
             get { return contacts; }
             set { contacts = value; }
         }
+
+        #region Override Base Methods
+
+        public override string ToString()
+        {
+            return string.Format("{0} [{1}, {2}, {3}]", Name, CreditLimit, CreditDays, PriceList);
+        }
+
+        public override bool Equals(object obj)
+        {
+            Customer other = obj as Customer;
+
+            if (other == null)
+                return false;
+
+            if (Id == 0 && other.Id == 0)
+                return (object)this == other;
+            else
+                return Id == other.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            if (Id == 0)
+                return base.GetHashCode();
+
+            return string.Format("{0}#{1}", GetType().FullName, Id).GetHashCode();
+        }
+
+        #endregion
     }
 }

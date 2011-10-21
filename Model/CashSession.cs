@@ -54,11 +54,42 @@ namespace Business.Essentials.Model
 
         [BelongsTo("cashier")]
         [Display(Name = "Cashier", ResourceType = typeof(Resources))]
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         public virtual Employee Cashier { get; set; }
 
         [BelongsTo("cash_drawer")]
         [Display(Name = "CashDrawer", ResourceType = typeof(Resources))]
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         public virtual CashDrawer CashDrawer { get; set; }
 
+        #region Override Base Methods
+
+        public override string ToString()
+        {
+            return string.Format("{0} [{1}, {2}]", Start, End, CashDrawer);
+        }
+
+        public override bool Equals(object obj)
+        {
+            CashSession other = obj as CashSession;
+
+            if (other == null)
+                return false;
+
+            if (Id == 0 && other.Id == 0)
+                return (object)this == other;
+            else
+                return Id == other.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            if (Id == 0)
+                return base.GetHashCode();
+
+            return string.Format("{0}#{1}", GetType().FullName, Id).GetHashCode();
+        }
+
+        #endregion
     }
 }

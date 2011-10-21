@@ -138,5 +138,35 @@ namespace Business.Essentials.Model
         {
             get { return Paid - Total; }
         }
+
+        #region Override Base Methods
+
+        public override string ToString()
+        {
+            return string.Format("{0:000000} [{1}, {2}, {3}]", Id, Customer, Date, SalesPerson);
+        }
+
+        public override bool Equals(object obj)
+        {
+            SalesOrder other = obj as SalesOrder;
+
+            if (other == null)
+                return false;
+
+            if (Id == 0 && other.Id == 0)
+                return (object)this == other;
+            else
+                return Id == other.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            if (Id == 0)
+                return base.GetHashCode();
+
+            return string.Format("{0}#{1}", GetType().FullName, Id).GetHashCode();
+        }
+
+        #endregion
     }
 }

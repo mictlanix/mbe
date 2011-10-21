@@ -916,7 +916,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Caja Inválido.
+        ///   Looks up a localized string similar to Caja Inválida.
         /// </summary>
         public static string InvalidCashDrawer {
             get {

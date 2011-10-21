@@ -187,11 +187,26 @@ namespace Business.Essentials.WebApp.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            var contact = Contact.Find(id);
+            var customer = contact.Customers.FirstOrDefault();
+            var supplier = contact.Suppliers.FirstOrDefault();
             int owner = int.Parse(Request.Params["OwnerId"]);
             string type = Request.Params["OwnerType"];
-            Contact contact = Contact.Find(id);
+
+            if (customer != null)
+            {
+                customer.Contacts.Remove(contact);
+                customer.Save();
+            }
+
+            if (supplier != null)
+            {
+                supplier.Contacts.Remove(contact);
+                supplier.Save();
+            }
 
             contact.Delete();
+
             return RedirectToAction("Details", type, new { id = owner });
         }
 

@@ -79,10 +79,41 @@ namespace Business.Essentials.Model
 
         [BelongsTo("cash_session")]
         [Display(Name = "CashSession", ResourceType = typeof(Resources))]
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         public virtual CashSession CashSession { get; set; }
 
         [Property]
         [Display(Name = "Reference", ResourceType = typeof(Resources))]
         public string Reference { get; set; }
+
+        #region Override Base Methods
+
+        public override string ToString()
+        {
+            return string.Format("{0} [{1}, {2}, {3}]", SalesOrder, Amount, Method, Date);
+        }
+
+        public override bool Equals(object obj)
+        {
+            CustomerPayment other = obj as CustomerPayment;
+
+            if (other == null)
+                return false;
+
+            if (Id == 0 && other.Id == 0)
+                return (object)this == other;
+            else
+                return Id == other.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            if (Id == 0)
+                return base.GetHashCode();
+
+            return string.Format("{0}#{1}", GetType().FullName, Id).GetHashCode();
+        }
+
+        #endregion
     }
 }
