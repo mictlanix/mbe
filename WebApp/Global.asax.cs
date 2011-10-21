@@ -47,7 +47,8 @@ namespace Business.Essentials.WebApp
             IConfigurationSource source = ConfigurationManager.GetSection("activeRecord") as IConfigurationSource;
             ActiveRecordStarter.Initialize(typeof(Category).Assembly, source);
         }
-
+		
+		/*
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
             HttpContext.Current.Response.Cache.SetExpires(DateTime.UtcNow.AddDays(-1));
@@ -58,5 +59,6 @@ namespace Business.Essentials.WebApp
             HttpContext.Current.Response.Cache.SetCacheability(HttpCacheability.NoCache);
             HttpContext.Current.Response.Cache.SetNoStore();
         }
+        */
     }
 }
