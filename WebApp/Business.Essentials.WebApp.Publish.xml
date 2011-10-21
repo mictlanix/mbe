@@ -6,19 +6,19 @@
     <file relUrl="Content/icons/mobile.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="bin/pl/Castle.Components.Validator.resources.dll" publishTime="10/06/2011 23:41:38" />
     <file relUrl="Views/Categories/Edit.cshtml" publishTime="10/12/2011 21:20:18" />
-    <file relUrl="bin/NHibernate.xml" publishTime="10/06/2011 23:41:42" />
     <file relUrl="Content/themes/flick/jquery.ui.button.css" publishTime="10/13/2011 13:23:08" />
     <file relUrl="Content/themes/flick/jquery.ui.dialog.css" publishTime="10/13/2011 13:23:08" />
     <file relUrl="Views/Shared/DeleteUnsuccessful.cshtml" publishTime="10/13/2011 03:29:14" />
     <file relUrl="Content/icons/fancy-globe.png" publishTime="10/11/2011 20:35:30" />
+    <file relUrl="Content/icons/flower.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Views/Shared/_LogOnPartial.cshtml" publishTime="10/07/2011 10:28:56" />
     <file relUrl="Content/themes/flick/jquery.ui.base.css" publishTime="10/13/2011 13:23:08" />
     <file relUrl="Content/icons/wifi.png" publishTime="10/11/2011 20:35:31" />
-    <file relUrl="Views/Warehouses/Delete.cshtml" publishTime="10/13/2011 04:20:11" />
     <file relUrl="Content/icons/scale.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/icons/network.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/icons/satellite.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Scripts/EditorHookup.js" publishTime="09/14/2011 05:32:53" />
+    <file relUrl="Content/icons/fan.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="bin/es/Castle.Components.Validator.resources.dll" publishTime="10/06/2011 23:41:37" />
     <file relUrl="Content/themes/base/jquery.ui.tabs.css" publishTime="10/07/2011 10:28:56" />
     <file relUrl="Content/themes/flick/images/ui-icons_454545_256x240.png" publishTime="10/13/2011 13:23:10" />
@@ -26,19 +26,23 @@
     <file relUrl="Views/Addresses/Create.cshtml" publishTime="10/14/2011 07:44:08" />
     <file relUrl="Content/icons/male-user.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Views/SupplierAgreements/Create.cshtml" publishTime="10/13/2011 03:33:40" />
-    <file relUrl="bin/Business.Essentials.Resources.pdb" publishTime="10/19/2011 12:26:23" />
+    <file relUrl="bin/Business.Essentials.Resources.pdb" publishTime="10/20/2011 04:16:23" />
     <file relUrl="Views/Shared/DisplayTemplates/Boolean.cshtml" publishTime="09/06/2011 09:54:01" />
     <file relUrl="Views/Sales/_SalesTicket.cshtml" publishTime="10/13/2011 17:28:21" />
+    <file relUrl="Views/Shared/InvalidCashDrawer.cshtml" publishTime="10/20/2011 03:22:39" />
     <file relUrl="Views/Addresses/_Index.cshtml" publishTime="10/14/2011 07:44:08" />
     <file relUrl="Content/icons/calculator.png" publishTime="10/11/2011 20:35:30" />
+    <file relUrl="Content/icons/screen.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/themes/flick/jquery-ui-1.8.16.custom.css" publishTime="10/13/2011 13:23:08" />
+    <file relUrl="bin/log4net.dll" publishTime="10/06/2011 23:41:40" />
     <file relUrl="Views/Shared/_Menu.cshtml" publishTime="10/13/2011 03:27:28" />
     <file relUrl="Content/themes/base/minified/images/ui-icons_cd0a0a_256x240.png" publishTime="08/18/2011 11:40:08" />
-    <file relUrl="Content/icons/fire.png" publishTime="10/11/2011 20:35:30" />
-    <file relUrl="Content/icons/pin.png" publishTime="10/11/2011 20:35:30" />
+    <file relUrl="Content/icons/pie-chart.png" publishTime="10/11/2011 20:35:30" />
+    <file relUrl="bin/log4net.xml" publishTime="10/06/2011 23:41:40" />
     <file relUrl="Scripts/jquery.form.js" publishTime="09/15/2011 17:51:04" />
     <file relUrl="Content/icons/tree.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/icons/briefcase.png" publishTime="10/11/2011 20:35:30" />
+    <file relUrl="Content/icons/recycle-empty.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Views/Customers/Create.cshtml" publishTime="10/12/2011 21:20:18" />
     <file relUrl="Views/Employees/Details.cshtml" publishTime="10/14/2011 07:44:08" />
     <file relUrl="Views/SupplierAgreements/_Index.cshtml" publishTime="10/14/2011 07:44:08" />
@@ -46,19 +50,18 @@
     <file relUrl="Content/icons/copy-item.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Views/Products/_Details.cshtml" publishTime="10/14/2011 07:44:08" />
     <file relUrl="Content/themes/base/minified/images/ui-bg_flat_0_aaaaaa_40x100.png" publishTime="08/18/2011 11:40:08" />
-    <file relUrl="Views/Sales/InvalidPointOfSale.cshtml" publishTime="10/13/2011 03:05:20" />
     <file relUrl="bin/nl/Castle.Components.Validator.resources.dll" publishTime="10/06/2011 23:41:38" />
     <file relUrl="Scripts/MicrosoftAjax.debug.js" publishTime="08/18/2011 11:40:08" />
     <file relUrl="Content/icons/view-item.png" publishTime="10/11/2011 20:35:31" />
     <file relUrl="Content/themes/base/minified/jquery.ui.progressbar.min.css" publishTime="10/07/2011 10:28:56" />
     <file relUrl="Content/themes/base/minified/jquery.ui.accordion.min.css" publishTime="10/07/2011 10:28:56" />
+    <file relUrl="Content/themes/base/minified/images/ui-icons_2e83ff_256x240.png" publishTime="08/18/2011 11:40:08" />
     <file relUrl="Content/icons/recycle-full.png" publishTime="10/11/2011 20:35:30" />
-    <file relUrl="bin/Castle.ActiveRecord.Web.dll" publishTime="10/06/2011 23:41:37" />
-    <file relUrl="Content/icons/fan.png" publishTime="10/11/2011 20:35:30" />
+    <file relUrl="Content/icons/container.png" publishTime="10/11/2011 20:35:30" />
+    <file relUrl="Content/icons/bar-chart.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/icons/flag.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/icons/heart.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/themes/base/minified/images/ui-bg_glass_95_fef1ec_1x400.png" publishTime="08/18/2011 11:40:08" />
-    <file relUrl="Views/Customers/Index.cshtml" publishTime="10/14/2011 07:44:08" />
     <file relUrl="Content/icons/line-globe.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="bin/fr/Castle.Components.Validator.resources.dll" publishTime="10/06/2011 23:41:37" />
     <file relUrl="Scripts/MicrosoftMvcAjax.js" publishTime="08/18/2011 11:40:08" />
@@ -68,12 +71,10 @@
     <file relUrl="Content/themes/base/images/ui-bg_flat_75_ffffff_40x100.png" publishTime="08/18/2011 11:40:08" />
     <file relUrl="Content/jquery.cluetip.css" publishTime="10/11/2011 20:35:31" />
     <file relUrl="Views/Payments/CloseSession.cshtml" publishTime="10/13/2011 15:31:34" />
-    <file relUrl="Views/Suppliers/EditorTemplates/Supplier.cshtml" publishTime="10/13/2011 03:46:29" />
+    <file relUrl="Views/Suppliers/EditorTemplates/Supplier.cshtml" publishTime="10/20/2011 03:22:39" />
     <file relUrl="Views/Products/Index.cshtml" publishTime="10/14/2011 07:44:08" />
-    <file relUrl="Content/icons/light.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/themes/base/minified/images/ui-icons_888888_256x240.png" publishTime="08/18/2011 11:40:08" />
     <file relUrl="Views/PriceLists/Create.cshtml" publishTime="10/13/2011 01:58:58" />
-    <file relUrl="bin/Castle.ActiveRecord.dll" publishTime="10/06/2011 23:41:37" />
     <file relUrl="Content/icons/full-screen.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Views/Products/Edit.cshtml" publishTime="10/12/2011 04:21:13" />
     <file relUrl="Content/icons/lock.png" publishTime="10/11/2011 20:35:30" />
@@ -83,11 +84,10 @@
     <file relUrl="Content/themes/base/jquery.ui.dialog.css" publishTime="10/07/2011 10:28:56" />
     <file relUrl="Content/themes/flick/images/ui-icons_ffffff_256x240.png" publishTime="10/13/2011 13:23:10" />
     <file relUrl="bin/Lucene.Net.xml" publishTime="10/06/2011 23:41:41" />
-    <file relUrl="Views/Shared/_Success.cshtml" publishTime="10/13/2011 03:28:34" />
     <file relUrl="Scripts/jquery.validate-vsdoc.js" publishTime="10/07/2011 10:28:56" />
     <file relUrl="Views/Warehouses/Index.cshtml" publishTime="10/14/2011 07:44:08" />
     <file relUrl="Views/Customers/Details.cshtml" publishTime="10/14/2011 07:44:08" />
-    <file relUrl="Content/icons/connections.png" publishTime="10/11/2011 20:35:30" />
+    <file relUrl="Content/images/false.png" publishTime="09/06/2011 09:54:01" />
     <file relUrl="Views/Account/ChangePassword.cshtml" publishTime="10/12/2011 23:40:03" />
     <file relUrl="bin/Castle.Core.dll" publishTime="10/06/2011 23:41:38" />
     <file relUrl="Views/BankAccounts/Delete.cshtml" publishTime="10/12/2011 21:20:18" />
@@ -102,23 +102,22 @@
     <file relUrl="Scripts/jquery.unobtrusive-ajax.js" publishTime="08/18/2011 11:40:08" />
     <file relUrl="Content/themes/flick/jquery.ui.core.css" publishTime="10/13/2011 13:23:08" />
     <file relUrl="Scripts/jquery.validate.unobtrusive.min.js" publishTime="08/18/2011 11:40:08" />
+    <file relUrl="Views/BankAccounts/Details.cshtml" publishTime="10/14/2011 07:44:08" />
     <file relUrl="Views/Contacts/Delete.cshtml" publishTime="10/12/2011 21:20:18" />
     <file relUrl="Views/Sales/_SalesOrderDetails.cshtml" publishTime="10/13/2011 17:28:21" />
+    <file relUrl="Content/themes/base/minified/images/ui-bg_glass_55_fbf9ee_1x400.png" publishTime="08/18/2011 11:40:08" />
     <file relUrl="Views/Payments/_Payment.cshtml" publishTime="10/13/2011 00:55:55" />
     <file relUrl="Content/icons/bird.png" publishTime="10/11/2011 20:35:30" />
-    <file relUrl="Content/icons/glasses.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Scripts/jquery-ui-1.8.16.min.js" publishTime="10/07/2011 10:28:56" />
-    <file relUrl="bin/Business.Essentials.Model.dll" publishTime="10/19/2011 12:26:24" />
+    <file relUrl="bin/Business.Essentials.Model.dll" publishTime="10/20/2011 04:16:25" />
     <file relUrl="Content/images/price3.png" publishTime="09/08/2011 16:33:10" />
     <file relUrl="Views/Shared/DisplayTemplates/Date.cshtml" publishTime="08/18/2011 11:40:08" />
-    <file relUrl="Views/Payments/InvalidCashDrawer.cshtml" publishTime="10/14/2011 07:44:08" />
     <file relUrl="bin/Castle.ActiveRecord.Web.xml" publishTime="10/06/2011 23:41:37" />
     <file relUrl="Views/SupplierAgreements/Edit.cshtml" publishTime="10/13/2011 03:38:03" />
     <file relUrl="Content/icons/badge.png" publishTime="10/11/2011 20:35:30" />
-    <file relUrl="Content/icons/server.png" publishTime="10/11/2011 20:35:30" />
-    <file relUrl="Content/icons/chain.png" publishTime="10/11/2011 20:35:30" />
+    <file relUrl="bin/it/Castle.Components.Validator.resources.dll" publishTime="10/06/2011 23:41:37" />
     <file relUrl="Content/themes/base/minified/jquery.ui.tabs.min.css" publishTime="10/07/2011 10:28:56" />
-    <file relUrl="bin/log4net.xml" publishTime="10/06/2011 23:41:40" />
+    <file relUrl="Content/themes/base/images/ui-icons_cd0a0a_256x240.png" publishTime="08/18/2011 11:40:08" />
     <file relUrl="Content/icons/push-pin.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/themes/base/images/ui-bg_highlight-soft_75_cccccc_1x100.png" publishTime="08/18/2011 11:40:08" />
     <file relUrl="Views/Shared/EditorTemplates/EmployeeSelector.cshtml" publishTime="10/13/2011 03:23:04" />
@@ -126,7 +125,7 @@
     <file relUrl="Views/Suppliers/Create.cshtml" publishTime="10/13/2011 03:47:46" />
     <file relUrl="Content/themes/base/minified/images/ui-bg_highlight-soft_75_cccccc_1x100.png" publishTime="08/18/2011 11:40:08" />
     <file relUrl="bin/Lucene.Net.pdb" publishTime="10/06/2011 23:41:41" />
-    <file relUrl="Content/themes/base/minified/jquery-ui.min.css" publishTime="10/07/2011 10:28:56" />
+    <file relUrl="Content/icons/server.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/icons/tap.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Views/Account/ChangePasswordSuccess.cshtml" publishTime="10/12/2011 23:38:03" />
     <file relUrl="Content/icons/phone.png" publishTime="10/11/2011 20:35:30" />
@@ -142,9 +141,7 @@
     <file relUrl="Content/icons/boat.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/themes/base/images/ui-icons_454545_256x240.png" publishTime="08/18/2011 11:40:08" />
     <file relUrl="Views/Sales/Details.cshtml" publishTime="10/13/2011 02:49:17" />
-    <file relUrl="Views/Payments/OpenSession.cshtml" publishTime="10/17/2011 23:32:30" />
-    <file relUrl="Content/icons/cloud-filled.png" publishTime="10/11/2011 20:35:30" />
-    <file relUrl="Content/images/false.png" publishTime="09/06/2011 09:54:01" />
+    <file relUrl="Views/Payments/OpenSession.cshtml" publishTime="10/20/2011 03:22:39" />
     <file relUrl="Views/BankAccounts/Create.cshtml" publishTime="10/12/2011 21:20:18" />
     <file relUrl="Content/themes/base/images/ui-bg_flat_0_aaaaaa_40x100.png" publishTime="08/18/2011 11:40:08" />
     <file relUrl="Content/themes/base/minified/images/ui-bg_glass_65_ffffff_1x400.png" publishTime="08/18/2011 11:40:08" />
@@ -156,11 +153,12 @@
     <file relUrl="Global.asax" publishTime="08/18/2011 11:40:08" />
     <file relUrl="Content/themes/base/jquery.ui.all.css" publishTime="10/07/2011 10:28:56" />
     <file relUrl="bin/Castle.ActiveRecord.xml" publishTime="10/06/2011 23:41:37" />
-    <file relUrl="bin/Business.Essentials.Resources.dll" publishTime="10/19/2011 12:26:23" />
+    <file relUrl="Views/Shared/_TicketLayout.cshtml" publishTime="10/13/2011 17:28:21" />
+    <file relUrl="bin/Business.Essentials.Resources.dll" publishTime="10/20/2011 04:16:24" />
     <file relUrl="Content/themes/flick/images/ui-bg_flat_75_ffffff_40x100.png" publishTime="10/13/2011 13:23:09" />
     <file relUrl="Content/icons/home.png" publishTime="10/11/2011 20:35:30" />
+    <file relUrl="Content/icons/computer.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Views/Web.config" publishTime="08/18/2011 11:40:09" />
-    <file relUrl="bin/Castle.Components.Validator.dll" publishTime="10/06/2011 23:41:37" />
     <file relUrl="Views/PriceLists/Delete.cshtml" publishTime="10/13/2011 02:05:05" />
     <file relUrl="Content/themes/flick/jquery.ui.all.css" publishTime="10/13/2011 13:23:08" />
     <file relUrl="Content/icons/delete-item.png" publishTime="10/11/2011 20:35:30" />
@@ -170,7 +168,8 @@
     <file relUrl="bin/sv/Castle.Components.Validator.resources.dll" publishTime="10/06/2011 23:41:38" />
     <file relUrl="Content/icons/apple.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Views/Users/Index.cshtml" publishTime="10/14/2011 07:44:08" />
-    <file relUrl="bin/Business.Essentials.WebApp.dll" publishTime="10/19/2011 12:26:26" />
+    <file relUrl="bin/Business.Essentials.WebApp.dll" publishTime="10/20/2011 04:16:26" />
+    <file relUrl="Views/Home/About.cshtml" publishTime="10/13/2011 00:49:36" />
     <file relUrl="Content/icons/ipod.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="bin/mk/Castle.Components.Validator.resources.dll" publishTime="10/06/2011 23:41:38" />
     <file relUrl="Views/Shared/UnknownError.cshtml" publishTime="10/07/2011 10:28:56" />
@@ -178,67 +177,66 @@
     <file relUrl="Views/Payments/PayOrder.cshtml" publishTime="10/14/2011 14:14:01" />
     <file relUrl="Views/Sales/_SalesNote.cshtml" publishTime="10/13/2011 17:28:21" />
     <file relUrl="Content/icons/world.png" publishTime="10/11/2011 20:35:31" />
-    <file relUrl="Content/themes/base/minified/images/ui-icons_2e83ff_256x240.png" publishTime="08/18/2011 11:40:08" />
-    <file relUrl="Content/icons/chat-02.png" publishTime="10/11/2011 20:35:30" />
+    <file relUrl="bin/Lucene.Net.dll" publishTime="10/06/2011 23:41:40" />
+    <file relUrl="Views/Payments/_SalesOrderBalance.cshtml" publishTime="10/14/2011 14:14:01" />
+    <file relUrl="Views/Shared/DisplayTemplates/Image.cshtml" publishTime="08/29/2011 16:26:03" />
     <file relUrl="Content/icons/next-item.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Views/Account/LogOn.cshtml" publishTime="10/12/2011 23:28:16" />
     <file relUrl="Content/themes/flick/jquery.ui.progressbar.css" publishTime="10/13/2011 13:23:09" />
     <file relUrl="Content/icons/email.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Views/Sales/New.cshtml" publishTime="10/14/2011 14:14:01" />
+    <file relUrl="Content/icons/globe.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Views/Contacts/Details.cshtml" publishTime="10/14/2011 07:44:08" />
     <file relUrl="Content/themes/base/minified/images/ui-icons_222222_256x240.png" publishTime="08/18/2011 11:40:08" />
+    <file relUrl="Content/themes/flick/jquery.ui.datepicker.css" publishTime="10/13/2011 13:23:09" />
     <file relUrl="bin/Castle.Components.Validator.pdb" publishTime="10/06/2011 23:41:37" />
     <file relUrl="Content/images/price1.png" publishTime="09/08/2011 16:31:23" />
     <file relUrl="Views/Warehouses/Edit.cshtml" publishTime="10/13/2011 04:36:06" />
-    <file relUrl="bin/Business.Essentials.Model.pdb" publishTime="10/19/2011 12:26:24" />
     <file relUrl="Views/PriceLists/Edit.cshtml" publishTime="10/13/2011 02:21:32" />
     <file relUrl="bin/ru/Castle.Components.Validator.resources.dll" publishTime="10/06/2011 23:41:38" />
     <file relUrl="Views/Employees/Create.cshtml" publishTime="10/12/2011 21:10:39" />
     <file relUrl="Content/images/price7.png" publishTime="09/08/2011 16:35:29" />
-    <file relUrl="Content/icons/container.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/themes/base/jquery.ui.selectable.css" publishTime="10/07/2011 10:28:56" />
     <file relUrl="Views/Employees/Index.cshtml" publishTime="10/14/2011 07:44:08" />
     <file relUrl="Scripts/jquery.unobtrusive-ajax.min.js" publishTime="08/18/2011 11:40:08" />
     <file relUrl="Content/images/price6.png" publishTime="09/08/2011 16:35:03" />
     <file relUrl="Content/icons/headphone.png" publishTime="10/11/2011 20:35:30" />
-    <file relUrl="Views/Sales/_SalesTotals.cshtml" publishTime="10/17/2011 02:29:46" />
     <file relUrl="Content/icons/disc.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/themes/base/minified/jquery.ui.selectable.min.css" publishTime="10/07/2011 10:28:56" />
+    <file relUrl="Content/themes/flick/images/ui-bg_flat_0_aaaaaa_40x100.png" publishTime="10/13/2011 13:23:10" />
+    <file relUrl="Content/icons/unlock.png" publishTime="10/11/2011 20:35:31" />
     <file relUrl="Views/Suppliers/Index.cshtml" publishTime="10/14/2011 07:44:08" />
-    <file relUrl="bin/Business.Essentials.WebApp.pdb" publishTime="10/19/2011 12:26:26" />
-    <file relUrl="Views/CashDrawers/Create.cshtml" publishTime="10/12/2011 21:20:18" />
+    <file relUrl="Views/Products/Delete.cshtml" publishTime="10/12/2011 04:43:27" />
+    <file relUrl="bin/Business.Essentials.WebApp.pdb" publishTime="10/20/2011 04:16:26" />
+    <file relUrl="Content/themes/flick/images/ui-icons_ff0084_256x240.png" publishTime="10/13/2011 13:23:09" />
+    <file relUrl="Content/images/header-bg.png" publishTime="09/06/2011 09:54:01" />
     <file relUrl="Content/icons/arrow-round.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Views/Shared/_Layout.cshtml" publishTime="10/13/2011 17:28:21" />
     <file relUrl="Scripts/jquery-ui-i18n.min.js" publishTime="09/14/2011 05:38:21" />
     <file relUrl="Views/BankAccounts/Edit.cshtml" publishTime="10/12/2011 21:20:18" />
     <file relUrl="Views/Suppliers/Details.cshtml" publishTime="10/14/2011 07:44:08" />
-    <file relUrl="Views/CashDrawers/Details.cshtml" publishTime="10/14/2011 07:44:08" />
+    <file relUrl="Views/Sales/_Edit.cshtml" publishTime="10/13/2011 02:30:10" />
     <file relUrl="Content/themes/base/minified/jquery.ui.resizable.min.css" publishTime="10/07/2011 10:28:56" />
     <file relUrl="Views/Sales/_SalesItem.cshtml" publishTime="10/13/2011 02:43:47" />
     <file relUrl="Content/themes/flick/jquery-ui.css" publishTime="10/13/2011 13:19:59" />
     <file relUrl="Content/themes/base/minified/jquery.ui.dialog.min.css" publishTime="10/07/2011 10:28:56" />
-    <file relUrl="Scripts/MicrosoftMvcValidation.debug.js" publishTime="08/18/2011 11:40:08" />
+    <file relUrl="Views/Contacts/Edit.cshtml" publishTime="10/12/2011 21:20:18" />
     <file relUrl="Scripts/jquery-1.6.4.js" publishTime="10/07/2011 10:28:56" />
     <file relUrl="Content/themes/flick/images/ui-icons_0073ea_256x240.png" publishTime="10/13/2011 13:23:09" />
-    <file relUrl="Views/Suppliers/_Create.cshtml" publishTime="09/22/2011 00:56:05" />
+    <file relUrl="Views/Suppliers/_Create.cshtml" publishTime="10/20/2011 03:22:39" />
     <file relUrl="Content/icons/download.png" publishTime="10/11/2011 20:35:30" />
-    <file relUrl="Views/Home/About.cshtml" publishTime="10/13/2011 00:49:36" />
+    <file relUrl="bin/Antlr3.Runtime.dll" publishTime="10/06/2011 23:41:37" />
     <file relUrl="Views/Categories/Delete.cshtml" publishTime="10/12/2011 21:20:18" />
     <file relUrl="Content/Menu.css" publishTime="10/07/2011 10:28:56" />
     <file relUrl="Views/Employees/Delete.cshtml" publishTime="10/12/2011 21:07:27" />
     <file relUrl="Content/themes/base/minified/images/ui-icons_454545_256x240.png" publishTime="08/18/2011 11:40:08" />
-    <file relUrl="Views/Payments/_PaymentInfo.cshtml" publishTime="10/13/2011 00:57:06" />
     <file relUrl="Content/icons/lab.png" publishTime="10/11/2011 20:35:30" />
-    <file relUrl="Views/PointsOfSale/Details.cshtml" publishTime="10/14/2011 07:44:08" />
-    <file relUrl="bin/Lucene.Net.dll" publishTime="10/06/2011 23:41:40" />
-    <file relUrl="Views/Shared/DisplayTemplates/Image.cshtml" publishTime="08/29/2011 16:26:03" />
-    <file relUrl="Content/buttons.css" publishTime="10/13/2011 17:28:20" />
-    <file relUrl="Views/Categories/Details.cshtml" publishTime="10/14/2011 07:44:08" />
+    <file relUrl="Views/CashDrawers/Details.cshtml" publishTime="10/14/2011 07:44:08" />
+    <file relUrl="Content/icons/chat-02.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/icons/female-user.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/icons/ID.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/token-input.css" publishTime="10/07/2011 16:07:41" />
     <file relUrl="Views/SupplierAgreements/Delete.cshtml" publishTime="10/13/2011 03:36:01" />
-    <file relUrl="bin/lt/Castle.Components.Validator.resources.dll" publishTime="10/06/2011 23:41:37" />
     <file relUrl="Scripts/jquery.cluetip.min.js" publishTime="10/11/2011 20:35:31" />
     <file relUrl="Scripts/jquery.validate.js" publishTime="10/07/2011 10:28:56" />
     <file relUrl="bin/WebActivator.dll" publishTime="10/06/2011 23:41:42" />
@@ -249,19 +247,18 @@
     <file relUrl="Views/Sales/_SalesInfo.cshtml" publishTime="10/14/2011 07:44:08" />
     <file relUrl="Scripts/jquery.print-page.js" publishTime="10/13/2011 17:28:21" />
     <file relUrl="Views/CashDrawers/Edit.cshtml" publishTime="10/12/2011 21:20:18" />
-    <file relUrl="Content/images/body-bg.png" publishTime="09/06/2011 09:54:01" />
-    <file relUrl="bin/Antlr3.Runtime.dll" publishTime="10/06/2011 23:41:37" />
+    <file relUrl="Content/themes/base/minified/jquery.ui.slider.min.css" publishTime="10/07/2011 10:28:56" />
     <file relUrl="Content/themes/base/jquery-ui.css" publishTime="10/07/2011 10:28:56" />
     <file relUrl="bin/NHibernate.ByteCode.Castle.dll" publishTime="10/06/2011 23:41:42" />
     <file relUrl="Content/icons/network-pc.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/icons/database.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/icons/configuration.png" publishTime="10/11/2011 20:35:30" />
+    <file relUrl="Content/selection-options.css" publishTime="10/13/2011 16:32:43" />
     <file relUrl="Views/CashDrawers/Delete.cshtml" publishTime="10/12/2011 21:20:18" />
     <file relUrl="Views/Suppliers/Delete.cshtml" publishTime="10/13/2011 03:48:37" />
-    <file relUrl="Views/Products/Delete.cshtml" publishTime="10/12/2011 04:43:27" />
+    <file relUrl="Content/icons/pin.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/themes/base/jquery.ui.autocomplete.css" publishTime="10/07/2011 10:28:56" />
     <file relUrl="Views/Home/Index.cshtml" publishTime="10/07/2011 10:28:56" />
-    <file relUrl="Content/themes/flick/jquery.ui.resizable.css" publishTime="10/13/2011 13:23:08" />
     <file relUrl="Views/CashDrawers/Index.cshtml" publishTime="10/14/2011 07:44:08" />
     <file relUrl="packages.config" publishTime="10/07/2011 10:28:56" />
     <file relUrl="Content/themes/base/images/ui-bg_glass_95_fef1ec_1x400.png" publishTime="08/18/2011 11:40:08" />
@@ -270,13 +267,13 @@
     <file relUrl="Content/icons/Scissors.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/icons/lamp.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Scripts/jquery-ui-1.8.16.js" publishTime="10/07/2011 10:28:56" />
+    <file relUrl="Scripts/MicrosoftMvcValidation.js" publishTime="08/18/2011 11:40:08" />
     <file relUrl="Scripts/jquery-1.6.4.min.js" publishTime="10/07/2011 10:28:56" />
-    <file relUrl="Scripts/MicrosoftAjax.js" publishTime="08/18/2011 11:40:08" />
+    <file relUrl="Views/Shared/InvalidPointOfSale.cshtml" publishTime="10/20/2011 03:22:39" />
     <file relUrl="Content/Site.css" publishTime="10/11/2011 20:35:30" />
-    <file relUrl="Content/themes/base/images/ui-icons_cd0a0a_256x240.png" publishTime="08/18/2011 11:40:08" />
     <file relUrl="Content/images/true.png" publishTime="09/06/2011 09:54:01" />
-    <file relUrl="Views/Sales/Edit.cshtml" publishTime="10/13/2011 03:20:51" />
     <file relUrl="Content/themes/base/minified/jquery.ui.base.min.css" publishTime="10/07/2011 10:28:56" />
+    <file relUrl="Content/icons/search.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Scripts/jquery-ui-i18n.js" publishTime="09/14/2011 05:38:23" />
     <file relUrl="bin/Castle.Components.Validator.xml" publishTime="10/06/2011 23:41:37" />
     <file relUrl="Content/images/price5.png" publishTime="09/08/2011 16:34:07" />
@@ -284,56 +281,58 @@
     <file relUrl="Content/themes/base/jquery.ui.progressbar.css" publishTime="10/07/2011 10:28:56" />
     <file relUrl="Content/images/price4.png" publishTime="09/08/2011 16:33:39" />
     <file relUrl="Content/icons/happy-face.png" publishTime="10/11/2011 20:35:30" />
+    <file relUrl="Content/themes/flick/jquery.ui.theme.css" publishTime="10/13/2011 13:23:08" />
+    <file relUrl="Views/Contacts/Create.cshtml" publishTime="10/12/2011 21:20:18" />
     <file relUrl="Content/themes/flick/images/ui-bg_highlight-soft_100_f6f6f6_1x100.png" publishTime="10/13/2011 13:23:09" />
     <file relUrl="Content/icons/bookmark.png" publishTime="10/11/2011 20:35:30" />
-    <file relUrl="Content/icons/lady.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Scripts/jquery.validate.unobtrusive.js" publishTime="08/18/2011 11:40:08" />
-    <file relUrl="Content/images/header-bg.png" publishTime="09/06/2011 09:54:01" />
+    <file relUrl="Content/icons/connections.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/icons/agent.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/icons/chat-.png" publishTime="10/11/2011 20:35:30" />
-    <file relUrl="Content/icons/computer.png" publishTime="10/11/2011 20:35:30" />
+    <file relUrl="Content/themes/base/images/ui-icons_888888_256x240.png" publishTime="08/18/2011 11:40:08" />
+    <file relUrl="Content/buttons.css" publishTime="10/13/2011 17:28:20" />
     <file relUrl="Views/Suppliers/Edit.cshtml" publishTime="10/13/2011 03:53:16" />
     <file relUrl="Views/SupplierAgreements/Details.cshtml" publishTime="10/14/2011 07:44:08" />
     <file relUrl="Content/themes/base/minified/jquery.ui.core.min.css" publishTime="10/07/2011 10:28:56" />
     <file relUrl="Content/themes/base/jquery.ui.accordion.css" publishTime="10/07/2011 10:28:56" />
     <file relUrl="Content/icons/usb.png" publishTime="10/11/2011 20:35:31" />
-    <file relUrl="Views/Addresses/Delete.cshtml" publishTime="10/12/2011 21:20:18" />
-    <file relUrl="Views/PointsOfSale/Edit.cshtml" publishTime="10/13/2011 01:38:13" />
+    <file relUrl="Views/Payments/_PaymentInfo.cshtml" publishTime="10/13/2011 00:57:06" />
     <file relUrl="Views/Users/Delete.cshtml" publishTime="10/13/2011 03:59:14" />
-    <file relUrl="Content/icons/screen.png" publishTime="10/11/2011 20:35:30" />
-    <file relUrl="bin/it/Castle.Components.Validator.resources.dll" publishTime="10/06/2011 23:41:37" />
+    <file relUrl="Content/icons/glasses.png" publishTime="10/11/2011 20:35:30" />
+    <file relUrl="bin/Castle.Components.Validator.dll" publishTime="10/06/2011 23:41:37" />
     <file relUrl="Content/icons/print.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/icons/shield.png" publishTime="10/11/2011 20:35:30" />
-    <file relUrl="Views/Sales/_Edit.cshtml" publishTime="10/13/2011 02:30:10" />
-    <file relUrl="Content/themes/base/images/ui-icons_888888_256x240.png" publishTime="08/18/2011 11:40:08" />
+    <file relUrl="Views/Sales/Edit.cshtml" publishTime="10/13/2011 03:20:51" />
     <file relUrl="Views/Categories/Index.cshtml" publishTime="10/14/2011 07:44:08" />
     <file relUrl="Content/themes/base/minified/jquery.ui.all.min.css" publishTime="10/07/2011 10:28:56" />
     <file relUrl="Content/themes/base/minified/images/ui-bg_glass_75_e6e6e6_1x400.png" publishTime="08/18/2011 11:40:08" />
     <file relUrl="Content/themes/flick/jquery.ui.tabs.css" publishTime="10/13/2011 13:23:09" />
     <file relUrl="Views/PriceLists/Index.cshtml" publishTime="10/14/2011 07:44:08" />
+    <file relUrl="Content/icons/edit.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="bin/NHibernate.ByteCode.Castle.xml" publishTime="10/06/2011 23:41:42" />
-    <file relUrl="Content/icons/bar-chart.png" publishTime="10/11/2011 20:35:30" />
-    <file relUrl="Content/icons/recycle-empty.png" publishTime="10/11/2011 20:35:30" />
+    <file relUrl="bin/lt/Castle.Components.Validator.resources.dll" publishTime="10/06/2011 23:41:37" />
+    <file relUrl="Views/PointsOfSale/Edit.cshtml" publishTime="10/13/2011 01:38:13" />
     <file relUrl="Views/Payments/Index.cshtml" publishTime="10/14/2011 07:44:08" />
     <file relUrl="Views/Warehouses/Details.cshtml" publishTime="10/14/2011 07:44:08" />
     <file relUrl="Content/themes/base/jquery.ui.button.css" publishTime="10/07/2011 10:28:56" />
-    <file relUrl="Views/Contacts/Edit.cshtml" publishTime="10/12/2011 21:20:18" />
-    <file relUrl="Content/icons/search.png" publishTime="10/11/2011 20:35:30" />
+    <file relUrl="Content/icons/chain.png" publishTime="10/11/2011 20:35:30" />
+    <file relUrl="bin/Business.Essentials.Model.pdb" publishTime="10/20/2011 04:16:24" />
     <file relUrl="Content/themes/flick/jquery.ui.slider.css" publishTime="10/13/2011 13:23:09" />
     <file relUrl="Content/themes/base/images/ui-bg_glass_75_e6e6e6_1x400.png" publishTime="08/18/2011 11:40:08" />
     <file relUrl="Views/Employees/Edit.cshtml" publishTime="10/13/2011 00:41:26" />
-    <file relUrl="Views/Shared/_TicketLayout.cshtml" publishTime="10/13/2011 17:28:21" />
-    <file relUrl="Content/selection-options.css" publishTime="10/13/2011 16:32:43" />
+    <file relUrl="Views/Sales/_SalesTotals.cshtml" publishTime="10/20/2011 03:22:39" />
+    <file relUrl="Content/icons/light.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Views/Payments/_SessionInfo.cshtml" publishTime="10/14/2011 07:53:22" />
     <file relUrl="Content/icons/processing.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/icons/music-node.png" publishTime="10/11/2011 20:35:30" />
-    <file relUrl="bin/log4net.dll" publishTime="10/06/2011 23:41:40" />
-    <file relUrl="Content/themes/flick/jquery.ui.datepicker.css" publishTime="10/13/2011 13:23:09" />
+    <file relUrl="Views/Customers/Index.cshtml" publishTime="10/14/2011 07:44:08" />
+    <file relUrl="Views/CashDrawers/Create.cshtml" publishTime="10/12/2011 21:20:18" />
     <file relUrl="Content/themes/base/jquery.ui.theme.css" publishTime="10/07/2011 10:28:56" />
     <file relUrl="Content/icons/mouse.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/icons/star.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/themes/flick/images/ui-bg_flat_0_eeeeee_40x100.png" publishTime="10/13/2011 13:23:10" />
-    <file relUrl="Scripts/MicrosoftMvcValidation.js" publishTime="08/18/2011 11:40:08" />
+    <file relUrl="bin/Castle.ActiveRecord.dll" publishTime="10/06/2011 23:41:37" />
+    <file relUrl="Views/Addresses/Delete.cshtml" publishTime="10/12/2011 21:20:18" />
     <file relUrl="Content/icons/add-item.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Views/Users/Edit.cshtml" publishTime="10/13/2011 04:12:29" />
     <file relUrl="Content/themes/base/images/ui-bg_glass_75_dadada_1x400.png" publishTime="08/18/2011 11:40:08" />
@@ -344,23 +343,23 @@
     <file relUrl="Views/Shared/DisplayTemplates/DateTime.cshtml" publishTime="09/30/2011 04:56:11" />
     <file relUrl="Content/icons/bar-chart-02.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Views/Sales/Index.cshtml" publishTime="10/14/2011 07:44:08" />
-    <file relUrl="Content/icons/edit.png" publishTime="10/11/2011 20:35:30" />
+    <file relUrl="bin/Castle.ActiveRecord.Web.dll" publishTime="10/06/2011 23:41:37" />
     <file relUrl="Content/ticket.css" publishTime="10/13/2011 17:28:21" />
     <file relUrl="Content/themes/flick/images/ui-bg_glass_65_ffffff_1x400.png" publishTime="10/13/2011 13:23:09" />
-    <file relUrl="Content/icons/globe.png" publishTime="10/11/2011 20:35:30" />
+    <file relUrl="Content/images/body-bg.png" publishTime="09/06/2011 09:54:01" />
     <file relUrl="Views/_ViewStart.cshtml" publishTime="08/18/2011 11:40:09" />
-    <file relUrl="Views/Payments/_SalesOrderBalance.cshtml" publishTime="10/14/2011 14:14:01" />
+    <file relUrl="bin/NHibernate.xml" publishTime="10/06/2011 23:41:42" />
     <file relUrl="Content/icons/first-aid.png" publishTime="10/11/2011 20:35:30" />
-    <file relUrl="Content/icons/unlock.png" publishTime="10/11/2011 20:35:31" />
+    <file relUrl="Content/icons/lady.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/themes/base/minified/images/ui-bg_flat_75_ffffff_40x100.png" publishTime="08/18/2011 11:40:08" />
     <file relUrl="Content/icons/cassette.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/icons/configuration02.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Views/PriceLists/Details.cshtml" publishTime="10/14/2011 07:44:08" />
     <file relUrl="Content/themes/base/minified/jquery.ui.autocomplete.min.css" publishTime="10/07/2011 10:28:56" />
     <file relUrl="Content/icons/shut-down.png" publishTime="10/11/2011 20:35:30" />
-    <file relUrl="Content/themes/flick/images/ui-bg_flat_0_aaaaaa_40x100.png" publishTime="10/13/2011 13:23:10" />
+    <file relUrl="Content/themes/base/minified/jquery-ui.min.css" publishTime="10/07/2011 10:28:56" />
     <file relUrl="Scripts/jquery.validate.min.js" publishTime="10/07/2011 10:28:56" />
-    <file relUrl="Content/icons/pie-chart.png" publishTime="10/11/2011 20:35:30" />
+    <file relUrl="Scripts/MicrosoftAjax.js" publishTime="08/18/2011 11:40:08" />
     <file relUrl="Content/themes/base/minified/jquery.ui.theme.min.css" publishTime="10/07/2011 10:28:56" />
     <file relUrl="Content/main.css" publishTime="10/11/2011 21:40:47" />
     <file relUrl="Content/themes/base/jquery.ui.resizable.css" publishTime="10/07/2011 10:28:56" />
@@ -371,28 +370,29 @@
     <file relUrl="Content/icons/connected.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="bin/DataAnnotationsExtensions.dll" publishTime="10/06/2011 23:41:38" />
     <file relUrl="Views/Categories/Create.cshtml" publishTime="10/12/2011 21:20:18" />
-    <file relUrl="Web.config" publishTime="10/19/2011 12:26:28" />
+    <file relUrl="Web.config" publishTime="10/20/2011 03:36:15" />
     <file relUrl="Content/themes/flick/jquery.ui.autocomplete.css" publishTime="10/13/2011 13:23:08" />
-    <file relUrl="Views/Contacts/Create.cshtml" publishTime="10/12/2011 21:20:18" />
+    <file relUrl="Scripts/MicrosoftMvcValidation.debug.js" publishTime="08/18/2011 11:40:08" />
     <file relUrl="Views/BankAccounts/_Index.cshtml" publishTime="10/14/2011 07:44:08" />
-    <file relUrl="Content/themes/base/minified/jquery.ui.slider.min.css" publishTime="10/07/2011 10:28:56" />
-    <file relUrl="Content/themes/base/minified/images/ui-bg_glass_55_fbf9ee_1x400.png" publishTime="08/18/2011 11:40:08" />
-    <file relUrl="Content/themes/flick/jquery.ui.theme.css" publishTime="10/13/2011 13:23:08" />
+    <file relUrl="Views/Shared/_Success.cshtml" publishTime="10/13/2011 03:28:34" />
+    <file relUrl="Content/icons/cloud-filled.png" publishTime="10/11/2011 20:35:30" />
+    <file relUrl="Content/icons/fire.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/icons/microphone.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Content/themes/base/images/ui-bg_glass_65_ffffff_1x400.png" publishTime="08/18/2011 11:40:08" />
-    <file relUrl="Content/themes/flick/images/ui-icons_ff0084_256x240.png" publishTime="10/13/2011 13:23:09" />
+    <file relUrl="Content/themes/flick/jquery.ui.resizable.css" publishTime="10/13/2011 13:23:08" />
     <file relUrl="Content/icons/multi-agents.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="bin/pt/Castle.Components.Validator.resources.dll" publishTime="10/06/2011 23:41:38" />
     <file relUrl="Content/icons/leaves.png" publishTime="10/11/2011 20:35:30" />
-    <file relUrl="Views/BankAccounts/Details.cshtml" publishTime="10/14/2011 07:44:08" />
+    <file relUrl="Views/Categories/Details.cshtml" publishTime="10/14/2011 07:44:08" />
     <file relUrl="Content/icons/umbrella.png" publishTime="10/11/2011 20:35:30" />
     <file relUrl="Views/PointsOfSale/Create.cshtml" publishTime="10/13/2011 01:31:26" />
     <file relUrl="Views/Products/Create.cshtml" publishTime="10/12/2011 04:17:37" />
-    <file relUrl="Content/icons/flower.png" publishTime="10/11/2011 20:35:30" />
+    <file relUrl="Views/PointsOfSale/Details.cshtml" publishTime="10/14/2011 07:44:08" />
     <file relUrl="Scripts/jquery-1.6.4-vsdoc.js" publishTime="10/07/2011 10:28:56" />
+    <file relUrl="Views/Customers/Delete.cshtml" publishTime="10/12/2011 21:11:55" />
     <file relUrl="Views/Products/_Index.cshtml" publishTime="10/14/2011 07:44:08" />
     <file relUrl="Content/themes/base/jquery.ui.core.css" publishTime="10/07/2011 10:28:56" />
-    <file relUrl="Views/Customers/Delete.cshtml" publishTime="10/12/2011 21:11:55" />
+    <file relUrl="Views/Warehouses/Delete.cshtml" publishTime="10/13/2011 04:20:11" />
     <file relUrl="Content/themes/base/images/ui-icons_2e83ff_256x240.png" publishTime="08/18/2011 11:40:08" />
     <file relUrl="Content/themes/flick/jquery.ui.selectable.css" publishTime="10/13/2011 13:23:08" />
     <file relUrl="Content/themes/base/jquery.ui.datepicker.css" publishTime="10/07/2011 10:28:56" />

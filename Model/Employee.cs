@@ -98,5 +98,6 @@ namespace Business.Essentials.Model
         [Display(Name = "StartJobDate", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         public DateTime StartJobDate { get; set; }
+
     }
 }

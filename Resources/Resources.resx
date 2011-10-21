@@ -775,7 +775,7 @@
     <value>Error</value>
   </data>
   <data name="InvalidCashDrawer" xml:space="preserve">
-    <value>Caja Inválido</value>
+    <value>Caja Inválida</value>
   </data>
   <data name="Message_InvalidCashDrawer" xml:space="preserve">
     <value>La máquina de la cuál se hizo la solicitud de cobro no está registrada como una caja válida.</value>

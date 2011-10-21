@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -147,6 +147,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
+    <Content Include="Content\images\loading-bar.gif" />
+    <Content Include="Content\images\loading-circle.gif" />
+    <Content Include="Content\images\logo.png" />
+    <Content Include="Content\images\print_icon.gif" />
+    <Content Include="Content\images\wait.gif" />
+    <Content Include="Content\images\welcome.png" />
     <Content Include="Content\ticket.css" />
     <Content Include="Content\icons\add-item.png" />
     <Content Include="Content\icons\addressbook.png" />
@@ -660,7 +666,7 @@
   </Target>
   <ProjectExtensions>
     <VisualStudio>
-      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+      <FlavorProperties GUID="{349C5851-65DF-11DA-9384-00065B846F21}">
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>

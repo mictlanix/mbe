@@ -135,8 +135,15 @@ namespace Business.Essentials.WebApp.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            var bankAccount = BankAccount.Find(id);
+            var supplier = bankAccount.Suppliers.FirstOrDefault();
             int owner = int.Parse(Request.Params["OwnerId"]);
-            BankAccount bankAccount = BankAccount.Find(id);
+
+            if (supplier != null)
+            {
+                supplier.BanksAccounts.Remove(bankAccount);
+                supplier.Save();
+            }
 
             bankAccount.Delete();
             return RedirectToAction("Details", "Suppliers", new { id = owner });

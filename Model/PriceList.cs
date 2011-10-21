@@ -48,14 +48,46 @@ namespace Business.Essentials.Model
         public string Name { get; set; }
 
         [Property("high_profit_margin")]
-        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:p}")]
         [Display(Name = "HighProfitMargin", ResourceType = typeof(Resources))]
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         public decimal HighProfitMargin { get; set; }
 
         [Property("low_profit_margin")]
-        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:p}")]
         [Display(Name = "LowProfitMargin", ResourceType = typeof(Resources))]
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         public decimal LowProfitMargin { get; set; }
+
+        #region Override Base Methods
+
+        public override string ToString()
+        {
+            return string.Format("{0} [{1:p}, {2:p}]", Name, HighProfitMargin, LowProfitMargin);
+        }
+
+        public override bool Equals(object obj)
+        {
+            PriceList other = obj as PriceList;
+
+            if (other == null)
+                return false;
+
+            if (Id == 0 && other.Id == 0)
+                return (object)this == other;
+            else
+                return Id == other.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            if (Id == 0)
+                return base.GetHashCode();
+
+            return string.Format("{0}#{1}", GetType().FullName, Id).GetHashCode();
+        }
+
+        #endregion
 
     }
 }
