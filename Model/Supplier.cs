@@ -43,7 +43,6 @@ namespace Business.Essentials.Model
         IList<BankAccount> accounts = new List<BankAccount>();
         IList<SupplierAgreement> agrements = new List<SupplierAgreement>();
 
-
         [PrimaryKey(PrimaryKeyType.Identity, "supplier_id")]
         public int Id { get; set; }
 
@@ -106,7 +105,7 @@ namespace Business.Essentials.Model
 
         public override string ToString()
         {
-            return string.Format("{0} [{1}, {2}, {3}]", Code, Name, CreditLimit, CreditDays);
+            return string.Format("{0} [{1}, {2}, {3}]", Name, Code, CreditLimit, CreditDays);
         }
 
         public override bool Equals(object obj)

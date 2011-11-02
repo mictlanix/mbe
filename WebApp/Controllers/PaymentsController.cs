@@ -65,7 +65,20 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ActionResult OpenSession()
         {
-            if (GetDrawer() == null)
+            var model = new MasterDetails<CashSession, SalesOrder>();
+            var qry = from x in SalesOrder.Queryable
+                      where x.IsCompleted && !x.IsPaid && !x.IsCancelled
+                      select x;
+
+            model.Master = new CashSession
+            {
+                Start = DateTime.Now,
+                CashCounts = CashHelpers.ListDenominations(),
+                CashDrawer = GetDrawer(),
+                Cashier = SecurityHelpers.GetUser(User.Identity.Name).Employee
+            };
+
+            if (model.Master.CashDrawer == null)
             {
                 return View("InvalidCashDrawer");
             }
@@ -75,17 +88,16 @@ namespace Business.Essentials.WebApp.Controllers
                 return RedirectToAction("Index");
             }
 
-            var qry = from x in SalesOrder.Queryable
-                      where x.IsCompleted && !x.IsPaid && !x.IsCancelled
-                      select x;
+            model.Details = qry.ToList();
 
-            return View(qry.ToList());
+            return View(model);
         }
 
         [HttpPost]
         public ActionResult OpenSession(CashSession item)
         {
-            item = new CashSession();
+            List<CashCount> cash_counts;
+            
             item.CashDrawer = GetDrawer();
 
             if (item.CashDrawer == null)
@@ -93,9 +105,28 @@ namespace Business.Essentials.WebApp.Controllers
                 return View("InvalidCashDrawer");
             }
 
+            cash_counts = new List<CashCount>(item.CashCounts.Where(x => x.Quantity > 0));
+
             item.Start = DateTime.Now;
-            item.Cashier = SecurityHelpers.GetUser(User.Identity.Name).Employee;
-            item.CreateAndFlush();
+            item.Cashier = Model.User.TryFind(User.Identity.Name).Employee;
+            item.CashCounts.Clear();
+
+            using (var session = new SessionScope())
+            {
+                item.CreateAndFlush();
+            }
+
+            System.Diagnostics.Debug.WriteLine("New CashSession [Id = {0}]", item.Id);
+            
+            using (var session = new SessionScope())
+            {
+                foreach (var x in cash_counts)
+                {
+                    x.Session = item;
+                    x.Type = CashCountType.StartingCash;
+                    x.Create();
+                }
+            }
 
             return RedirectToAction("Index");
         }
@@ -180,9 +211,10 @@ namespace Business.Essentials.WebApp.Controllers
 
 
         [HttpPost]
-        public ActionResult CloseSession(CashSession item)
+        public ActionResult CloseSession(int id)
         {
-            item = GetSession();
+            var item = CashSession.Find(id);
+            
             item.End = DateTime.Now;
             item.Update();
 

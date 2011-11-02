@@ -1,8 +1,9 @@
 ﻿// 
-// HtmlHelpers.cs
+// CashHelpers.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
+//   Eduardo Nieto <enieto@mictlanix.org>
 // 
 // Copyright (C) 2011 Eddy Zavaleta, Mictlanix, and contributors.
 // 
@@ -27,6 +28,7 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
@@ -35,26 +37,22 @@ using Business.Essentials.Model;
 
 namespace Business.Essentials.WebApp.Helpers
 {
-    public static class SecurityHelpers
+    public static class CashHelpers
     {
-        public static User CurrentUser(this HtmlHelper helper)
+        public static IList<CashCount> ListDenominations()
         {
-            return GetUser(helper, helper.ViewContext.HttpContext.User.Identity.Name);
-        }
+            string[] denominations = Resources.Denominations.Split(',');
+            IList<CashCount> items = new List<CashCount>(denominations.Length);
 
-        public static User GetUser(this HtmlHelper helper, string username)
-        {
-            return GetUser(username);
-        }
+            foreach (var item in denominations)
+            {
+                items.Add(new CashCount
+                {
+                    Denomination = decimal.Parse(item)
+                });
+            }
 
-        public static User GetUser(string username)
-        {
-            return User.TryFind(username);
-        }
-
-        public static AccessPrivilege GetPrivilege(this HtmlHelper helper, User user, SystemObjects obj)
-        {
-            return user.Privileges.SingleOrDefault(x => x.Object == obj) ?? new AccessPrivilege();
+            return items;
         }
     }
 }

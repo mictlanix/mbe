@@ -1,7 +1,8 @@
 ﻿@using Business.Essentials
 @using Business.Essentials.Model
 @using Business.Essentials.WebApp.Helpers
-@model IEnumerable<SalesOrder>
+@using Business.Essentials.WebApp.Models
+@model MasterDetails<CashSession,SalesOrder>
 
 @{
     ViewBag.Title = Resources.Title_CustomerPayment;
@@ -11,12 +12,9 @@
 
 <h2>@Resources.DisplayName_CustomerPayments</h2>
 
-@if(Privilege.AllowCreate)
+@if (Privilege.AllowCreate)
 {
-    using (Html.BeginForm("OpenSession", "Payments"))
-    {
-        <p><button type="submit">@Resources.StartSession</button></p>
-    }
+    @Html.Partial("_OpenSession", Model.Master)
 }
 
 <table>
@@ -40,7 +38,8 @@
             @Html.LabelFor(x => new SalesOrder().PointOfSale)
         </th>
     </tr>
-@foreach (var item in Model) {
+@foreach (var item in Model.Details)
+{
     <tr>
         <td class="number">
             @Html.DisplayFor(modelItem => item.Id)

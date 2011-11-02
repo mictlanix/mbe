@@ -1,5 +1,5 @@
 ﻿// 
-// CashSession.cs
+// InventoryReceipt.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
@@ -29,58 +29,76 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 
 namespace Business.Essentials.Model
 {
-    [ActiveRecord("cash_session")]
-    public class CashSession : ActiveRecordLinqBase<CashSession>
+    [ActiveRecord("inventory_receipt")]
+    public class InventoryReceipt : ActiveRecordLinqBase<InventoryReceipt>
     {
-        IList<CashCount> cash_counts = new List<CashCount>();
+        IList<ReceiptDetail> details = new List<ReceiptDetail>();
 
-        [PrimaryKey(PrimaryKeyType.Identity, "cash_session_id")]
+        [PrimaryKey(PrimaryKeyType.Identity, "inventory_receipt_id")]
+        [Display(Name = "InventoryReceiptId", ResourceType = typeof(Resources))]
         public int Id { get; set; }
 
-        [BelongsTo("cashier")]
-        [Display(Name = "Cashier", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        public virtual Employee Cashier { get; set; }
+        [Property("creation_time")]
+        [DataType(DataType.DateTime)]
+        [Display(Name = "CreationTime", ResourceType = typeof(Resources))]
+        public DateTime CreationTime { get; set; }
 
-        [BelongsTo("cash_drawer")]
-        [Display(Name = "CashDrawer", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        public virtual CashDrawer CashDrawer { get; set; }
+        [Property("modification_time")]
+        [DataType(DataType.DateTime)]
+        [Display(Name = "ModificationTime", ResourceType = typeof(Resources))]
+        public DateTime ModificationTime { get; set; }
+
+        [BelongsTo("creator")]
+        [Display(Name = "Creator", ResourceType = typeof(Resources))]
+        public virtual Employee Creator { get; set; }
+
+        [BelongsTo("updater")]
+        [Display(Name = "Updater", ResourceType = typeof(Resources))]
+        public virtual Employee Updater { get; set; }
+
+        [BelongsTo("warehouse")]
+        [Display(Name = "Warehouse", ResourceType = typeof(Resources))]
+        public virtual Warehouse Warehouse { get; set; }
+
+        [Property("completed")]
+        [Display(Name = "Completed", ResourceType = typeof(Resources))]
+        public bool IsCompleted { get; set; }
+
+        [Property("cancelled")]
+        [Display(Name = "Cancelled", ResourceType = typeof(Resources))]
+        public bool IsCancelled { get; set; }
 
         [Property]
-        [DataType(DataType.DateTime)]
-        [Display(Name = "Start", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        public DateTime Start { get; set; }
+        [DataType(DataType.MultilineText)]
+        [Display(Name = "Comment", ResourceType = typeof(Resources))]
+        [StringLength(500, MinimumLength = 0)]
+        public string Comment { get; set; }
 
-        [Property]
-        [DataType(DataType.DateTime)]
-        [Display(Name = "End", ResourceType = typeof(Resources))]
-        public DateTime? End { get; set; }
 
-        [HasMany(typeof(CashCount), Table = "cash_count", ColumnKey = "session")]
-        public IList<CashCount> CashCounts
+        [HasMany(typeof(ReceiptDetail), Table = "receipt_detail", ColumnKey = "inventory_receipt")]
+        public IList<ReceiptDetail> Details
         {
-            get { return cash_counts; }
-            set { cash_counts = value; }
+            get { return details; }
+            set { details = value; }
         }
 
         #region Override Base Methods
 
         public override string ToString()
         {
-            return string.Format("{0} [{1} - {2}]", CashDrawer, Start, End);
+            return string.Format("{0} [{1}, {2}, {3}]", Id, CreationTime, Creator, Warehouse);
         }
 
         public override bool Equals(object obj)
         {
-            CashSession other = obj as CashSession;
+            InventoryReceipt other = obj as InventoryReceipt;
 
             if (other == null)
                 return false;

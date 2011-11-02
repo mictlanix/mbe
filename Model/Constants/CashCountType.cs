@@ -1,5 +1,5 @@
 ﻿// 
-// HtmlHelpers.cs
+// CashCountType.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
@@ -27,34 +27,18 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web.Mvc;
-using System.Web.Routing;
-using Business.Essentials.Model;
+using Castle.ActiveRecord;
+using Castle.ActiveRecord.Framework;
 
-namespace Business.Essentials.WebApp.Helpers
+namespace Business.Essentials.Model
 {
-    public static class SecurityHelpers
+    public enum CashCountType : int
     {
-        public static User CurrentUser(this HtmlHelper helper)
-        {
-            return GetUser(helper, helper.ViewContext.HttpContext.User.Identity.Name);
-        }
-
-        public static User GetUser(this HtmlHelper helper, string username)
-        {
-            return GetUser(username);
-        }
-
-        public static User GetUser(string username)
-        {
-            return User.TryFind(username);
-        }
-
-        public static AccessPrivilege GetPrivilege(this HtmlHelper helper, User user, SystemObjects obj)
-        {
-            return user.Privileges.SingleOrDefault(x => x.Object == obj) ?? new AccessPrivilege();
-        }
+        [Display(Name = "StartingCash", ResourceType = typeof(Resources))]
+        StartingCash = 0,
+        [Display(Name = "CountedCash", ResourceType = typeof(Resources))]
+        CountedCash = 1
     }
 }

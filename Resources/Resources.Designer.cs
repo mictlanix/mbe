@@ -385,6 +385,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Efectivo Contado.
+        /// </summary>
+        public static string CountedCash {
+            get {
+                return ResourceManager.GetString("CountedCash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to País.
         /// </summary>
         public static string Country {
@@ -408,6 +417,24 @@ namespace Business.Essentials {
         public static string CreateNew {
             get {
                 return ResourceManager.GetString("CreateNew", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fecha de Creación.
+        /// </summary>
+        public static string CreationTime {
+            get {
+                return ResourceManager.GetString("CreationTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Realizó.
+        /// </summary>
+        public static string Creator {
+            get {
+                return ResourceManager.GetString("Creator", resourceCulture);
             }
         }
         
@@ -934,6 +961,60 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Salida del Inventario.
+        /// </summary>
+        public static string InventoryIssue {
+            get {
+                return ResourceManager.GetString("InventoryIssue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Salida del Inventario.
+        /// </summary>
+        public static string InventoryIssueId {
+            get {
+                return ResourceManager.GetString("InventoryIssueId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entrada del Inventario.
+        /// </summary>
+        public static string InventoryReceipt {
+            get {
+                return ResourceManager.GetString("InventoryReceipt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entrada en el Inventario.
+        /// </summary>
+        public static string InventoryReceiptId {
+            get {
+                return ResourceManager.GetString("InventoryReceiptId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trasnferencia de Inventario.
+        /// </summary>
+        public static string InventoryTransfer {
+            get {
+                return ResourceManager.GetString("InventoryTransfer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transferencia de Inventario.
+        /// </summary>
+        public static string InventoryTransferId {
+            get {
+                return ResourceManager.GetString("InventoryTransferId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Facturable.
         /// </summary>
         public static string Invoiceable {
@@ -948,6 +1029,15 @@ namespace Business.Essentials {
         public static string JobTitle {
             get {
                 return ResourceManager.GetString("JobTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kardex.
+        /// </summary>
+        public static string KardexId {
+            get {
+                return ResourceManager.GetString("KardexId", resourceCulture);
             }
         }
         
@@ -1164,6 +1254,15 @@ namespace Business.Essentials {
         public static string Model {
             get {
                 return ResourceManager.GetString("Model", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fecha de Modificación.
+        /// </summary>
+        public static string ModificationTime {
+            get {
+                return ResourceManager.GetString("ModificationTime", resourceCulture);
             }
         }
         
@@ -1636,6 +1735,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Efectivo Inicial.
+        /// </summary>
+        public static string StartingCash {
+            get {
+                return ResourceManager.GetString("StartingCash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fecha de Entrada.
         /// </summary>
         public static string StartJobDate {
@@ -2023,6 +2131,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Actualizó.
+        /// </summary>
+        public static string Updater {
+            get {
+                return ResourceManager.GetString("Updater", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Usuario.
         /// </summary>
         public static string User {
@@ -2136,6 +2253,24 @@ namespace Business.Essentials {
         public static string Validation_Url {
             get {
                 return ResourceManager.GetString("Validation_Url", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Almacén Destino.
+        /// </summary>
+        public static string WarehouseDestiny {
+            get {
+                return ResourceManager.GetString("WarehouseDestiny", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Almacén Origen.
+        /// </summary>
+        public static string WarehouseOrigin {
+            get {
+                return ResourceManager.GetString("WarehouseOrigin", resourceCulture);
             }
         }
         
