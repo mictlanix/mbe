@@ -1,5 +1,5 @@
 ﻿// 
-// CashCount.cs
+// Kardex.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
@@ -29,48 +29,51 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 
-
 namespace Business.Essentials.Model
 {
-    [ActiveRecord("cash_count")]
-    public class CashCount : ActiveRecordLinqBase<CashCount>
+    [ActiveRecord("kardex")]
+    public class Kardex : ActiveRecordLinqBase<Kardex>
     {
-        [PrimaryKey(PrimaryKeyType.Identity, "cash_count_id")]
+        IList<ReceiptDetail> details = new List<ReceiptDetail>();
+
+        [PrimaryKey(PrimaryKeyType.Identity, "kardex_id")]
+        [Display(Name = "KardexId", ResourceType = typeof(Resources))]
         public int Id { get; set; }
 
-        [BelongsTo("session")]
-        [Display(Name = "CashSession", ResourceType = typeof(Resources))]
-        //[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        public virtual CashSession Session { get; set; }
+        [BelongsTo("product")]
+        [Display(Name = "Product", ResourceType = typeof(Resources))]
+        public virtual Product Product { get; set; }
+
+        [BelongsTo("warehouse")]
+        [Display(Name = "Warehouse", ResourceType = typeof(Resources))]
+        public virtual Warehouse Warehouse { get; set; }
 
         [Property]
-        [Display(Name = "Denomination", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
-        public decimal Denomination { get; set; }
-
-        [Property]
+        [DisplayFormat(DataFormatString = "{0:0.####}")]
         [Display(Name = "Quantity", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
-        public int Quantity { get; set; }
+        public decimal Quantity { get; set; }
 
         [Property]
-        [Display(Name = "Type", ResourceType = typeof(Resources))]
-        public CashCountType Type { get; set; }
+        [DataType(DataType.DateTime)]
+        [Display(Name = "Date", ResourceType = typeof(Resources))]
+        public DateTime Date { get; set; }
 
         #region Override Base Methods
 
         public override string ToString()
         {
-            return string.Format("{0:c} × {1} = {2:c}", Denomination, Quantity, Denomination * Quantity);
+            return string.Format("{0} [{1}, {2}, {3}]", Id, Warehouse, Product, Quantity);
         }
 
         public override bool Equals(object obj)
         {
-            CashCount other = obj as CashCount;
+            Kardex other = obj as Kardex;
 
             if (other == null)
                 return false;

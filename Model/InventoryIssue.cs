@@ -1,5 +1,5 @@
 ﻿// 
-// CashCount.cs
+// InventoryIssue.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
@@ -29,48 +29,76 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 
-
 namespace Business.Essentials.Model
 {
-    [ActiveRecord("cash_count")]
-    public class CashCount : ActiveRecordLinqBase<CashCount>
+    [ActiveRecord("inventory_issue")]
+    public class InventoryIssue : ActiveRecordLinqBase<InventoryIssue>
     {
-        [PrimaryKey(PrimaryKeyType.Identity, "cash_count_id")]
+        IList<IssueDetail> details = new List<IssueDetail>();
+
+        [PrimaryKey(PrimaryKeyType.Identity, "inventory_issue_id")]
+        [Display(Name = "InventoryIssueId", ResourceType = typeof(Resources))]
         public int Id { get; set; }
 
-        [BelongsTo("session")]
-        [Display(Name = "CashSession", ResourceType = typeof(Resources))]
-        //[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        public virtual CashSession Session { get; set; }
+        [Property("creation_time")]
+        [DataType(DataType.DateTime)]
+        [Display(Name = "CreationTime", ResourceType = typeof(Resources))]
+        public DateTime CreationTime { get; set; }
+
+        [Property("modification_time")]
+        [DataType(DataType.DateTime)]
+        [Display(Name = "ModificationTime", ResourceType = typeof(Resources))]
+        public DateTime ModificationTime { get; set; }
+
+        [BelongsTo("creator")]
+        [Display(Name = "Creator", ResourceType = typeof(Resources))]
+        public virtual Employee Creator { get; set; }
+
+        [BelongsTo("updater")]
+        [Display(Name = "Updater", ResourceType = typeof(Resources))]
+        public virtual Employee Updater { get; set; }
+
+        [BelongsTo("warehouse")]
+        [Display(Name = "Warehouse", ResourceType = typeof(Resources))]
+        public virtual Warehouse Warehouse { get; set; }
+
+        [Property("completed")]
+        [Display(Name = "Completed", ResourceType = typeof(Resources))]
+        public bool IsCompleted { get; set; }
+
+        [Property("cancelled")]
+        [Display(Name = "Cancelled", ResourceType = typeof(Resources))]
+        public bool IsCancelled { get; set; }
 
         [Property]
-        [Display(Name = "Denomination", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
-        public decimal Denomination { get; set; }
+        [DataType(DataType.MultilineText)]
+        [Display(Name = "Comment", ResourceType = typeof(Resources))]
+        [StringLength(500, MinimumLength = 0)]
+        public string Comment { get; set; }
 
-        [Property]
-        [Display(Name = "Quantity", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
-        public int Quantity { get; set; }
 
-        [Property]
-        [Display(Name = "Type", ResourceType = typeof(Resources))]
-        public CashCountType Type { get; set; }
+        [HasMany(typeof(IssueDetail), Table = "issue_detail", ColumnKey = "inventory_issue")]
+        public IList<IssueDetail> Details
+        {
+            get { return details; }
+            set { details = value; }
+        }
 
         #region Override Base Methods
 
         public override string ToString()
         {
-            return string.Format("{0:c} × {1} = {2:c}", Denomination, Quantity, Denomination * Quantity);
+            return string.Format("{0} [{1}, {2}, {3}]", Id, CreationTime, Creator, Warehouse);
         }
 
         public override bool Equals(object obj)
         {
-            CashCount other = obj as CashCount;
+            InventoryIssue other = obj as InventoryIssue;
 
             if (other == null)
                 return false;

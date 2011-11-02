@@ -134,6 +134,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\CashHelpers.cs" />
     <Compile Include="Helpers\CustomerHelpers.cs" />
     <Compile Include="Helpers\SecurityHelpers.cs" />
     <Compile Include="Helpers\HtmlHelpers.cs" />
@@ -652,6 +653,7 @@
     <Content Include="Views\Sales\_SalesTicket.cshtml" />
     <Content Include="Views\Shared\_TicketLayout.cshtml" />
     <Content Include="Views\Sales\_SalesNote.cshtml" />
+    <Content Include="Views\Payments\_OpenSession.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

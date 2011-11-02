@@ -1,0 +1,44 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@model CashSession
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments);
+}
+
+@using (Html.BeginForm("OpenSession", "Payments"))
+{
+<fieldset>
+    <legend>@Resources.DisplayName_CashSession</legend>
+
+    <div class="display-label">
+        @Html.LabelFor(x => x.CashDrawer) :
+        @Html.DisplayFor(x => x.CashDrawer.Name)
+    </div>
+    
+    <div class="display-label">
+        @Html.LabelFor(x => x.Cashier) :
+        @Html.DisplayFor(x => x.Cashier.Name)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(x => x.Start) :
+        @Html.DisplayFor(x => x.Start)
+    </div>
+
+    @for (int i = 0; i < Model.CashCounts.Count; i++)
+    {
+    <div class="display-label">
+        @Html.HiddenFor(x => Model.CashCounts[i].Denomination)
+        @Html.DisplayFor(x => Model.CashCounts[i].Denomination)
+        <span>&times;</span>
+        @Html.EditorFor(x => Model.CashCounts[i].Quantity)
+    </div>
+    }
+    
+    <p><button type="submit">@Resources.StartSession</button></p>
+
+</fieldset>
+}

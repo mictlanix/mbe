@@ -828,4 +828,49 @@
   <data name="Denominations" xml:space="preserve">
     <value>0.5,1,2,5,10,20,50,100,200,500,1000</value>
   </data>
+  <data name="CountedCash" xml:space="preserve">
+    <value>Efectivo Contado</value>
+  </data>
+  <data name="StartingCash" xml:space="preserve">
+    <value>Efectivo Inicial</value>
+  </data>
+  <data name="CreationTime" xml:space="preserve">
+    <value>Fecha de Creación</value>
+  </data>
+  <data name="Creator" xml:space="preserve">
+    <value>Realizó</value>
+  </data>
+  <data name="InventoryIssue" xml:space="preserve">
+    <value>Salida del Inventario</value>
+  </data>
+  <data name="InventoryIssueId" xml:space="preserve">
+    <value>Salida del Inventario</value>
+  </data>
+  <data name="InventoryReceipt" xml:space="preserve">
+    <value>Entrada del Inventario</value>
+  </data>
+  <data name="InventoryReceiptId" xml:space="preserve">
+    <value>Entrada en el Inventario</value>
+  </data>
+  <data name="InventoryTransfer" xml:space="preserve">
+    <value>Trasnferencia de Inventario</value>
+  </data>
+  <data name="InventoryTransferId" xml:space="preserve">
+    <value>Transferencia de Inventario</value>
+  </data>
+  <data name="KardexId" xml:space="preserve">
+    <value>Kardex</value>
+  </data>
+  <data name="ModificationTime" xml:space="preserve">
+    <value>Fecha de Modificación</value>
+  </data>
+  <data name="Updater" xml:space="preserve">
+    <value>Actualizó</value>
+  </data>
+  <data name="WarehouseDestiny" xml:space="preserve">
+    <value>Almacén Destino</value>
+  </data>
+  <data name="WarehouseOrigin" xml:space="preserve">
+    <value>Almacén Origen</value>
+  </data>
 </root>

@@ -1,5 +1,5 @@
 ﻿// 
-// CashCount.cs
+// IssueDetail.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
@@ -33,44 +33,48 @@ using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 
-
 namespace Business.Essentials.Model
 {
-    [ActiveRecord("cash_count")]
-    public class CashCount : ActiveRecordLinqBase<CashCount>
+    [ActiveRecord("issue_detail")]
+    public class IssueDetail : ActiveRecordLinqBase<IssueDetail>
     {
-        [PrimaryKey(PrimaryKeyType.Identity, "cash_count_id")]
+        [PrimaryKey(PrimaryKeyType.Identity, "issue_detail_id")]
         public int Id { get; set; }
 
-        [BelongsTo("session")]
-        [Display(Name = "CashSession", ResourceType = typeof(Resources))]
-        //[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        public virtual CashSession Session { get; set; }
+        [BelongsTo("inventory_issue", Lazy = FetchWhen.OnInvoke)]
+        [Display(Name = "InventoryIssue", ResourceType = typeof(Resources))]
+        public virtual InventoryIssue InventoryIssue { get; set; }
+
+        [BelongsTo("product")]
+        [Display(Name = "Product", ResourceType = typeof(Resources))]
+        public virtual Product Product { get; set; }
 
         [Property]
-        [Display(Name = "Denomination", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
-        public decimal Denomination { get; set; }
-
-        [Property]
+        [DisplayFormat(DataFormatString = "{0:0.####}")]
         [Display(Name = "Quantity", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
-        public int Quantity { get; set; }
+        public decimal Quantity { get; set; }
 
-        [Property]
-        [Display(Name = "Type", ResourceType = typeof(Resources))]
-        public CashCountType Type { get; set; }
+        [Property("product_code")]
+        [Display(Name = "ProductCode", ResourceType = typeof(Resources))]
+        [StringLength(25, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+        public string ProductCode { get; set; }
+
+        [Property("product_name")]
+        [Display(Name = "ProductName", ResourceType = typeof(Resources))]
+        [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+        public string ProductName { get; set; }
 
         #region Override Base Methods
 
         public override string ToString()
         {
-            return string.Format("{0:c} × {1} = {2:c}", Denomination, Quantity, Denomination * Quantity);
+            return string.Format("{0} [{1}, {2}, {3}]", Id, InventoryIssue, Product, Quantity);
         }
 
         public override bool Equals(object obj)
         {
-            CashCount other = obj as CashCount;
+            IssueDetail other = obj as IssueDetail;
 
             if (other == null)
                 return false;

@@ -77,8 +77,16 @@
     <Compile Include="BankAccount.cs" />
     <Compile Include="Address.cs" />
     <Compile Include="AccessPrivilege.cs" />
+    <Compile Include="Constants\CashCountType.cs" />
     <Compile Include="Constants\SystemObjects.cs" />
     <Compile Include="Constants\AccessRight.cs" />
+    <Compile Include="Kardex.cs" />
+    <Compile Include="TransferDetail.cs" />
+    <Compile Include="InventoryTransfer.cs" />
+    <Compile Include="InventoryIssue.cs" />
+    <Compile Include="IssueDetail.cs" />
+    <Compile Include="ReceiptDetail.cs" />
+    <Compile Include="InventoryReceipt.cs" />
     <Compile Include="CustomerPayment.cs" />
     <Compile Include="Employee.cs" />
     <Compile Include="PointOfSale.cs" />

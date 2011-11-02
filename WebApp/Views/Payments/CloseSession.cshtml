@@ -47,7 +47,7 @@
 </table>
 
 <div style="float:right">
-@using (Html.BeginForm("CloseSession", "Payments"))
+@using (Html.BeginForm("CloseSession", "Payments", new { id = Model.Master.Id }))
 {
     <p><button type="submit">@Resources.CloseSession</button></p>
 }
