@@ -180,6 +180,21 @@ namespace Business.Essentials.WebApp.Controllers
                 Reference = reference
             };
 
+            if (item.Method == PaymentMethod.Cash)
+            {
+                if (item.Amount > -item.SalesOrder.Balance)
+                {
+                    item.Change = item.Amount + item.SalesOrder.Balance;
+                    item.Amount = -item.SalesOrder.Balance;
+                }
+            }
+            else {
+                if (item.Amount > -item.SalesOrder.Balance)
+                {
+                    item.Amount = -item.SalesOrder.Balance;
+                }
+            }
+
             using (var session = new SessionScope())
             {
                 item.CreateAndFlush();
