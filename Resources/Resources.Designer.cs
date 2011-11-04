@@ -673,6 +673,33 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Salidas.
+        /// </summary>
+        public static string DisplayName_InventoryIssues {
+            get {
+                return ResourceManager.GetString("DisplayName_InventoryIssues", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entradas.
+        /// </summary>
+        public static string DisplayName_InventoryReceipts {
+            get {
+                return ResourceManager.GetString("DisplayName_InventoryReceipts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Traspasos.
+        /// </summary>
+        public static string DisplayName_InventoryTransfers {
+            get {
+                return ResourceManager.GetString("DisplayName_InventoryTransfers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Inicio de Sesión.
         /// </summary>
         public static string DisplayName_LogOn {
@@ -961,6 +988,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Almacén.
+        /// </summary>
+        public static string Inventory {
+            get {
+                return ResourceManager.GetString("Inventory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Salida del Inventario.
         /// </summary>
         public static string InventoryIssue {
@@ -1105,11 +1141,29 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Catálogos.
+        /// </summary>
+        public static string MasterData {
+            get {
+                return ResourceManager.GetString("MasterData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Inicio.
         /// </summary>
         public static string Menu_Home {
             get {
                 return ResourceManager.GetString("Menu_Home", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Punto de Venta.
+        /// </summary>
+        public static string Menu_SalesOrders {
+            get {
+                return ResourceManager.GetString("Menu_SalesOrders", resourceCulture);
             }
         }
         
@@ -1627,6 +1681,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ventas.
+        /// </summary>
+        public static string Sales {
+            get {
+                return ResourceManager.GetString("Sales", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Orden de Venta.
         /// </summary>
         public static string SalesOrder {
@@ -1942,7 +2005,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Caja.
+        ///   Looks up a localized string similar to Caja de Cobro.
         /// </summary>
         public static string Title_CustomerPayment {
             get {
@@ -1965,6 +2028,33 @@ namespace Business.Essentials {
         public static string Title_Home {
             get {
                 return ResourceManager.GetString("Title_Home", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Salidas.
+        /// </summary>
+        public static string Title_InventoryIssue {
+            get {
+                return ResourceManager.GetString("Title_InventoryIssue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entradas.
+        /// </summary>
+        public static string Title_InventoryReceipt {
+            get {
+                return ResourceManager.GetString("Title_InventoryReceipt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Traspasos.
+        /// </summary>
+        public static string Title_InventoryTransfer {
+            get {
+                return ResourceManager.GetString("Title_InventoryTransfer", resourceCulture);
             }
         }
         

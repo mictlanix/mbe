@@ -1,5 +1,5 @@
 ﻿// 
-// Kardex.cs
+// InventoryReceiptDetail.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
@@ -29,28 +29,21 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 
 namespace Business.Essentials.Model
 {
-    [ActiveRecord("kardex")]
-    public class Kardex : ActiveRecordLinqBase<Kardex>
+    [ActiveRecord("inventory_receipt_detail")]
+    public class InventoryReceiptDetail : ActiveRecordLinqBase<InventoryReceiptDetail>
     {
-        [PrimaryKey(PrimaryKeyType.Identity, "kardex_id")]
-        [Display(Name = "KardexId", ResourceType = typeof(Resources))]
+        [PrimaryKey(PrimaryKeyType.Identity, "receipt_detail_id")]
         public int Id { get; set; }
 
-        [Property]
-        [DataType(DataType.DateTime)]
-        [Display(Name = "Date", ResourceType = typeof(Resources))]
-        public DateTime Date { get; set; }
-
-        [BelongsTo("warehouse")]
-        [Display(Name = "Warehouse", ResourceType = typeof(Resources))]
-        public virtual Warehouse Warehouse { get; set; }
+        [BelongsTo("receipt", Lazy = FetchWhen.OnInvoke)]
+        [Display(Name = "InventoryReceipt", ResourceType = typeof(Resources))]
+        public virtual InventoryReceipt Receipt { get; set; }
 
         [BelongsTo("product")]
         [Display(Name = "Product", ResourceType = typeof(Resources))]
@@ -62,16 +55,26 @@ namespace Business.Essentials.Model
         [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
         public decimal Quantity { get; set; }
 
+        [Property("product_code")]
+        [Display(Name = "ProductCode", ResourceType = typeof(Resources))]
+        [StringLength(25, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+        public string ProductCode { get; set; }
+
+        [Property("product_name")]
+        [Display(Name = "ProductName", ResourceType = typeof(Resources))]
+        [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+        public string ProductName { get; set; }
+
         #region Override Base Methods
 
         public override string ToString()
         {
-            return string.Format("{0} [{1}, {2}, {3}]", Id, Warehouse, Product, Quantity);
+            return string.Format("{0} [{1}, {2}, {3}]", Id, Receipt, Product, Quantity);
         }
 
         public override bool Equals(object obj)
         {
-            Kardex other = obj as Kardex;
+            InventoryReceiptDetail other = obj as InventoryReceiptDetail;
 
             if (other == null)
                 return false;
