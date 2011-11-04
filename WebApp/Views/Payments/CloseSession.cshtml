@@ -1,58 +1,45 @@
 ﻿@using Business.Essentials
 @using Business.Essentials.Model
 @using Business.Essentials.WebApp.Helpers
-@using Business.Essentials.WebApp.Models
-@model MasterDetails<CashSession, MoneyCount>
+@model CashSession
 
 @{
-    ViewBag.Title = Resources.Title_CloseSession;
-    ViewBag.ShowCloseSession = false;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments);
 }
 
-<h2>@Resources.DisplayName_CloseSession</h2>
-
-@Html.Partial("_SessionInfo", Model.Master)
-
-<table>
-    <tr>
-        <th>
-            @Html.LabelFor(x => new CustomerPayment().Method)
-        </th>
-
-        <th>
-            @Html.LabelFor(x => new CustomerPayment().Amount)
-        </th>
-    </tr>
-
-@foreach (var item in Model.Details) {
-    <tr>
-        <td class="number">
-            @item.Type.GetDisplayName()
-        </td>
-       
-        <td class="number">
-            @Html.DisplayFor(modelItem => item.Amount)
-        </td>
-    </tr>
-}
-    <tr>
-        <td class="number">
-            @Resources.Total
-        </td>
-
-        <td class="number">
-            @Model.Details.Sum(x => x.Amount).ToString("c")
-        </td>
-    </tr>
-</table>
-
-<div style="float:right">
-@using (Html.BeginForm("CloseSession", "Payments", new { id = Model.Master.Id }))
+@using (Html.BeginForm("CloseSession", "Payments"))
 {
-    <p><button type="submit">@Resources.CloseSession</button></p>
-}
-</div>
+<fieldset>
+    <legend>@Resources.DisplayName_CashSession</legend>
 
-<p>
-    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
-</p>
+    @Html.HiddenFor(x => x.Id)
+
+    <div class="display-label">
+        @Html.LabelFor(x => x.CashDrawer) :
+        @Html.DisplayFor(x => x.CashDrawer.Name)
+    </div>
+    
+    <div class="display-label">
+        @Html.LabelFor(x => x.Cashier) :
+        @Html.DisplayFor(x => x.Cashier.Name)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(x => x.Start) :
+        @Html.DisplayFor(x => x.Start)
+    </div>
+
+    @for (int i = 0; i < Model.CashCounts.Count; i++)
+    {
+    <div class="display-label">
+        @Html.HiddenFor(x => Model.CashCounts[i].Denomination)
+        @Html.DisplayFor(x => Model.CashCounts[i].Denomination)
+        <span>&times;</span>
+        @Html.EditorFor(x => Model.CashCounts[i].Quantity)
+    </div>
+    }
+    
+    <p><button type="submit">@Resources.CloseSession</button></p>
+</fieldset>
+}
