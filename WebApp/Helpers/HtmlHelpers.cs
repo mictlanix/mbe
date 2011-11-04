@@ -92,17 +92,11 @@ namespace Business.Essentials.WebApp.Helpers
             return MvcHtmlString.Create(anchorHtml);
         }
 
-        public static string GetMenuClass(this HtmlHelper html, string controller)
-        {
-            string ctl = html.ViewContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString();
-            return ctl == controller ? "gbz0l" : string.Empty;
-        }
-
-        public static string GetMenuClass(this HtmlHelper html, string controller, string action)
+        public static bool IsMenuSelected(this HtmlHelper html, string action, string controller)
         {
             string ctl = html.ViewContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString();
             string atn = html.ViewContext.Controller.ValueProvider.GetValue("action").RawValue.ToString();
-            return ctl == controller && atn == action ? "gbz0l" : string.Empty;
+            return ctl == controller && atn == action;
         }
 
         public static string GetDisplayName(this Enum member)

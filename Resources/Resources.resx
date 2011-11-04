@@ -745,7 +745,7 @@
     <value>Venta Nueva</value>
   </data>
   <data name="Title_CustomerPayment" xml:space="preserve">
-    <value>Caja</value>
+    <value>Caja de Cobro</value>
   </data>
   <data name="Pay" xml:space="preserve">
     <value>Pagar</value>
@@ -872,5 +872,35 @@
   </data>
   <data name="WarehouseOrigin" xml:space="preserve">
     <value>Almacén Origen</value>
+  </data>
+  <data name="MasterData" xml:space="preserve">
+    <value>Catálogos</value>
+  </data>
+  <data name="Sales" xml:space="preserve">
+    <value>Ventas</value>
+  </data>
+  <data name="DisplayName_InventoryIssues" xml:space="preserve">
+    <value>Salidas</value>
+  </data>
+  <data name="DisplayName_InventoryReceipts" xml:space="preserve">
+    <value>Entradas</value>
+  </data>
+  <data name="DisplayName_InventoryTransfers" xml:space="preserve">
+    <value>Traspasos</value>
+  </data>
+  <data name="Title_InventoryIssue" xml:space="preserve">
+    <value>Salidas</value>
+  </data>
+  <data name="Title_InventoryReceipt" xml:space="preserve">
+    <value>Entradas</value>
+  </data>
+  <data name="Title_InventoryTransfer" xml:space="preserve">
+    <value>Traspasos</value>
+  </data>
+  <data name="Inventory" xml:space="preserve">
+    <value>Almacén</value>
+  </data>
+  <data name="Menu_SalesOrders" xml:space="preserve">
+    <value>Punto de Venta</value>
   </data>
 </root>

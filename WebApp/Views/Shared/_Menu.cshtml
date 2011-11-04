@@ -10,112 +10,158 @@
     <div id="gbz">
         <ol class="gbtc">
             <li class="gbt">
-                <a class="gbzt @Html.GetMenuClass("Home", "Index")" href="@Url.Action("Index", "Home")">
+                <a class="gbzt @(Html.IsMenuSelected("Index", "Home") ? "gbz0l" : "")"
+                   href="@Url.Action("Index", "Home")">
                     <span class="gbtb2"></span>
                     <span class="gbts">@Resources.Menu_Home</span>
                 </a>
             </li>
-            @if (Html.GetPrivilege(CurrentUser, SystemObjects.Products).AllowRead)
-            {
             <li class="gbt">
-                <a class="gbzt @Html.GetMenuClass("Products")" href="@Url.Action("Index", "Products")">
+                <a id="master-data-menu" class="gbgt" href="javascript:void(0)">
                     <span class="gbtb2"></span>
-                    <span class="gbts">@Resources.Title_Product</span>
+                    <span class="gbts gbtsa">
+                        <span>@Resources.MasterData</span>
+                        <span class="gbma"></span>
+                    </span>
                 </a>
+                <div id="master-data-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
+                    <div class="gbmc">
+                        <ol class="gbmcc">
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.Products).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "Products") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "Products")">@Resources.Title_Product</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.Categories).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "Categories") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "Categories")">@Resources.Title_Category</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.Customers).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "Customers") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "Customers")">@Resources.Title_Customer</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.Suppliers).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "Suppliers") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "Suppliers")">@Resources.Title_Supplier</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.Employees).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "Employees") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "Employees")">@Resources.Title_Employee</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.Warehouses).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "Warehouses") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "Warehouses")">@Resources.Title_Warehouse</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.PriceLists).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "PriceLists") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "PriceLists")">@Resources.Title_PriceList</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.PointsOfSale).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "PointsOfSale") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "PointsOfSale")">@Resources.Title_PointOfSale</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.CashDrawers).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "CashDrawers") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "CashDrawers")">@Resources.Title_CashDrawer</a>
+                            </li>
+                            }
+                        </ol>
+                    </div>
+                </div>
             </li>
-            }
-            @if (Html.GetPrivilege(CurrentUser, SystemObjects.Categories).AllowRead)
-            {
             <li class="gbt">
-                <a class="gbzt @Html.GetMenuClass("Categories")" href="@Url.Action("Index", "Categories")">
+                <a id="sales-menu" class="gbgt" href="javascript:void(0)">
                     <span class="gbtb2"></span>
-                    <span class="gbts">@Resources.Title_Category</span>
+                    <span class="gbts gbtsa">
+                        <span>@Resources.Sales</span>
+                        <span class="gbma"></span>
+                    </span>
                 </a>
+                <div id="sales-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
+                    <div class="gbmc">
+                        <ol class="gbmcc">
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "Sales") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "Sales")">@Resources.Menu_SalesOrders</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "Payments") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "Payments")">@Resources.Title_CustomerPayment</a>
+                            </li>
+                            }
+                        </ol>
+                    </div>
+                </div>
             </li>
-            }
-            @if (Html.GetPrivilege(CurrentUser, SystemObjects.Customers).AllowRead)
-            {
             <li class="gbt">
-                <a class="gbzt @Html.GetMenuClass("Customers")" href="@Url.Action("Index", "Customers")">
+                <a id="inventory-menu" class="gbgt" href="javascript:void(0)">
                     <span class="gbtb2"></span>
-                    <span class="gbts">@Resources.Title_Customer</span>
+                    <span class="gbts gbtsa">
+                        <span>@Resources.Inventory</span>
+                        <span class="gbma"></span>
+                    </span>
                 </a>
+                <div id="inventory-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
+                    <div class="gbmc">
+                        <ol class="gbmcc">
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.InventoryReceipts).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Receipts", "Inventory") ? "gbm0l" : "")"
+                                   href="@Url.Action("Receipts", "Inventory")">@Resources.Title_InventoryReceipt</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.InventoryIssues).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Issues", "Inventory") ? "gbm0l" : "")"
+                                   href="@Url.Action("Issues", "Inventory")">@Resources.Title_InventoryIssue</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.InventoryTransfers).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Transfers", "Inventory") ? "gbm0l" : "")"
+                                   href="@Url.Action("Transfers", "Inventory")">@Resources.Title_InventoryTransfer</a>
+                            </li>
+                            }
+                        </ol>
+                    </div>
+                </div>
             </li>
-            }
-            @if (Html.GetPrivilege(CurrentUser, SystemObjects.Suppliers).AllowRead)
-            {
             <li class="gbt">
-                <a class="gbzt @Html.GetMenuClass("Suppliers")" href="@Url.Action("Index", "Suppliers")">
-                    <span class="gbtb2"></span>
-                    <span class="gbts">@Resources.Title_Supplier</span>
-                </a>
-            </li>
-            }
-            @if (Html.GetPrivilege(CurrentUser, SystemObjects.Employees).AllowRead)
-            {
-            <li class="gbt">
-                <a class="gbzt @Html.GetMenuClass("Employees")" href="@Url.Action("Index", "Employees")">
-                    <span class="gbtb2"></span>
-                    <span class="gbts">@Resources.Title_Employee</span>
-                </a>
-            </li>
-            }
-            @if (Html.GetPrivilege(CurrentUser, SystemObjects.Warehouses).AllowRead)
-            {
-            <li class="gbt">
-                <a class="gbzt @Html.GetMenuClass("Warehouses")" href="@Url.Action("Index", "Warehouses")">
-                    <span class="gbtb2"></span>
-                    <span class="gbts">@Resources.Title_Warehouse</span>
-                </a>
-            </li>
-            }
-            @if (Html.GetPrivilege(CurrentUser, SystemObjects.PriceLists).AllowRead)
-            {
-            <li class="gbt">
-                <a class="gbzt @Html.GetMenuClass("PriceLists")" href="@Url.Action("Index", "PriceLists")">
-                    <span class="gbtb2"></span>
-                    <span class="gbts">@Resources.Title_PriceList</span>
-                </a>
-            </li>
-            }
-            @if (Html.GetPrivilege(CurrentUser, SystemObjects.PointsOfSale).AllowRead)
-            {
-            <li class="gbt">
-                <a class="gbzt @Html.GetMenuClass("PointsOfSale")" href="@Url.Action("Index", "PointsOfSale")">
-                    <span class="gbtb2"></span>
-                    <span class="gbts">@Resources.Title_PointOfSale</span>
-                </a>
-            </li>
-            }
-            @if (Html.GetPrivilege(CurrentUser, SystemObjects.CashDrawers).AllowRead)
-            {
-            <li class="gbt">
-                <a class="gbzt @Html.GetMenuClass("CashDrawers")" href="@Url.Action("Index", "CashDrawers")">
-                    <span class="gbtb2"></span>
-                    <span class="gbts">@Resources.Title_CashDrawer</span>
-                </a>
-            </li>
-            }
-            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders).AllowRead)
-            {
-            <li class="gbt">
-                <a class="gbzt @Html.GetMenuClass("Sales")" href="@Url.Action("Index", "Sales")">
-                    <span class="gbtb2"></span>
-                    <span class="gbts">@Resources.Title_SalesOrder</span>
-                </a>
-            </li>
-            }
-            @if (Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments).AllowRead)
-            {
-            <li class="gbt">
-                <a class="gbzt @Html.GetMenuClass("Payments")" href="@Url.Action("Index", "Payments")">
-                    <span class="gbtb2"></span>
-                    <span class="gbts">@Resources.Title_CustomerPayment</span>
-                </a>
-            </li>
-            }
-            <li class="gbt">
-                <a class="gbzt @Html.GetMenuClass("Home", "About")" href="@Url.Action("About", "Home")">
+                <a class="gbzt @(Html.IsMenuSelected("About", "Home") ? "gbz0l" : "")"
+                   href="@Url.Action("About", "Home")">
                     <span class="gbtb2"></span>
                     <span class="gbts">@Resources.Title_About</span>
                 </a>
@@ -126,3 +172,46 @@
     <div id="gbx3"></div>
     <div id="gbx4"></div>
 </div>
+@if (Request.IsAuthenticated)
+{
+<script type="text/javascript">
+    $(function () {
+        $('#master-data-menu').toggle(function () {
+            if ($('#sales-menu').parent().hasClass('gbto'))
+                $('#sales-menu').trigger("click");
+            if ($('#inventory-menu').parent().hasClass('gbto'))
+                $('#inventory-menu').trigger("click");
+
+            $('#master-data-menu').parent().addClass('gbto');
+            $('#master-data-menu-items').css({ "visibility": "visible" });
+        }, function () {
+            $('#master-data-menu').parent().removeClass('gbto');
+            $('#master-data-menu-items').css({ "visibility": "hidden" });
+        });
+        $('#sales-menu').toggle(function () {
+            if ($('#master-data-menu').parent().hasClass('gbto'))
+                $('#master-data-menu').trigger("click");
+            if ($('#inventory-menu').parent().hasClass('gbto'))
+                $('#inventory-menu').trigger("click");
+
+            $('#sales-menu').parent().addClass('gbto');
+            $('#sales-menu-items').css({ "visibility": "visible" });
+        }, function () {
+            $('#sales-menu').parent().removeClass('gbto');
+            $('#sales-menu-items').css({ "visibility": "hidden" });
+        });
+        $('#inventory-menu').toggle(function () {
+            if ($('#master-data-menu').parent().hasClass('gbto'))
+                $('#master-data-menu').trigger("click");
+            if ($('#sales-menu').parent().hasClass('gbto'))
+                $('#sales-menu').trigger("click");
+
+            $('#inventory-menu').parent().addClass('gbto');
+            $('#inventory-menu-items').css({ "visibility": "visible" });
+        }, function () {
+            $('#inventory-menu').parent().removeClass('gbto');
+            $('#inventory-menu-items').css({ "visibility": "hidden" });
+        });
+    });
+</script>
+}
