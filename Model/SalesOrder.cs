@@ -129,7 +129,7 @@ namespace Business.Essentials.Model
         [Display(Name = "Paid", ResourceType = typeof(Resources))]
         public decimal Paid
         {
-            get { return Payments.Sum(x => x.Amount); }
+            get { return Payments.Sum(x => x.Amount + x.Change.GetValueOrDefault()); }
         }
 
         [DataType(DataType.Currency)]

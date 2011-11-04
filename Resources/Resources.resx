@@ -829,7 +829,7 @@
     <value>0.5,1,2,5,10,20,50,100,200,500,1000</value>
   </data>
   <data name="CountedCash" xml:space="preserve">
-    <value>Efectivo Contado</value>
+    <value>Efectivo Final</value>
   </data>
   <data name="StartingCash" xml:space="preserve">
     <value>Efectivo Inicial</value>
@@ -902,5 +902,11 @@
   </data>
   <data name="Menu_SalesOrders" xml:space="preserve">
     <value>Punto de Venta</value>
+  </data>
+  <data name="Title_SessionInfo" xml:space="preserve">
+    <value>Información de la Sesión</value>
+  </data>
+  <data name="Change" xml:space="preserve">
+    <value>Cambio</value>
   </data>
 </root>

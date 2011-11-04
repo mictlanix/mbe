@@ -1,0 +1,101 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@using Business.Essentials.WebApp.Models
+@model MasterDetails<CashSession, MoneyCount>
+
+@{
+    ViewBag.Title = Resources.Title_CloseSession;
+    ViewBag.ShowCloseSession = false;
+}
+
+<h2>@Resources.DisplayName_CloseSession</h2>
+
+<fieldset>
+    <legend>@Resources.DisplayName_CashSession</legend>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Master.CashDrawer) :
+        @Html.DisplayFor(model => model.Master.CashDrawer.Name)
+    </div>
+    
+    <div class="display-label">
+        @Html.LabelFor(model => model.Master.Cashier) :
+        @Html.DisplayFor(model => model.Master.Cashier.Name)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Master.Start) :
+        @Html.DisplayFor(model => model.Master.Start)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Master.End) :
+        @Html.DisplayFor(model => model.Master.End)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Master.StartingCash) :
+        @Html.DisplayFor(model => model.Master.StartingCash)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Master.CountedCash) :
+        @Html.DisplayFor(model => model.Master.CountedCash)
+    </div>
+    
+</fieldset>
+
+<table>
+    <tr>
+        <th>
+            @Html.LabelFor(x => new CustomerPayment().Method)
+        </th>
+
+        <th>
+            @Html.LabelFor(x => new CustomerPayment().Amount)
+        </th>
+    </tr>
+
+@foreach (var item in Model.Details) {
+    <tr>
+        <td class="number">
+            @item.Type.GetDisplayName()
+        </td>
+       
+        <td class="number">
+            @Html.DisplayFor(modelItem => item.Amount)
+        </td>
+    </tr>
+}
+    <tr>
+        <td class="number">
+            @Resources.Total
+        </td>
+
+        <td class="number">
+            @Model.Details.Sum(x => x.Amount).ToString("c")
+        </td>
+    </tr>
+</table>
+
+<div style="float:right">
+@using (Html.BeginForm("CloseSession", "Payments", new { id = Model.Master.Id }))
+{
+    <button type="button" class="icon print">@Resources.Print</button>
+
+}
+</div>
+
+<p>
+    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+</p>
+
+<script type="text/javascript">
+    $(function() {
+        $(".print").printPage({
+            url: "@Url.Action("PrintSession", "Payments", new { id = Model.Master.Id })"
+        });
+    });
+
+</script>

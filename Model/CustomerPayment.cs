@@ -66,6 +66,10 @@ namespace Business.Essentials.Model
         [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
         public decimal Amount { get; set; }
 
+        [Property("cash_change")]
+        [Display(Name = "Change", ResourceType = typeof(Resources))]
+        public decimal? Change { get; set; }
+
         [Property]
         [Display(Name = "Method", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
