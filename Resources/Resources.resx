@@ -829,7 +829,7 @@
     <value>0.5,1,2,5,10,20,50,100,200,500,1000</value>
   </data>
   <data name="CountedCash" xml:space="preserve">
-    <value>Efectivo Contado</value>
+    <value>Efectivo Final</value>
   </data>
   <data name="StartingCash" xml:space="preserve">
     <value>Efectivo Inicial</value>
@@ -872,5 +872,8 @@
   </data>
   <data name="WarehouseOrigin" xml:space="preserve">
     <value>Almacén Origen</value>
+  </data>
+  <data name="Title_SessionInfo" xml:space="preserve">
+    <value>Información de la Sesión</value>
   </data>
 </root>

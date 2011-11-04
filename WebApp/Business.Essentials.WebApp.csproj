@@ -644,7 +644,7 @@
     <Content Include="Views\Payments\_SessionInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Payments\CloseSession.cshtml" />
+    <Content Include="Views\Payments\CloseSessionConfirmed.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\icons\Thumbs.db" />
@@ -654,6 +654,8 @@
     <Content Include="Views\Shared\_TicketLayout.cshtml" />
     <Content Include="Views\Sales\_SalesNote.cshtml" />
     <Content Include="Views\Payments\_OpenSession.cshtml" />
+    <Content Include="Views\Payments\CloseSession.cshtml" />
+    <Content Include="Views\Payments\_SessionInfoPrinter.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

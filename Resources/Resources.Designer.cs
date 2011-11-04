@@ -385,7 +385,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Efectivo Contado.
+        ///   Looks up a localized string similar to Efectivo Final.
         /// </summary>
         public static string CountedCash {
             get {
@@ -2055,6 +2055,15 @@ namespace Business.Essentials {
         public static string Title_SalesTicket {
             get {
                 return ResourceManager.GetString("Title_SalesTicket", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Información de la Sesión.
+        /// </summary>
+        public static string Title_SessionInfo {
+            get {
+                return ResourceManager.GetString("Title_SessionInfo", resourceCulture);
             }
         }
         

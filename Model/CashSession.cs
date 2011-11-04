@@ -29,6 +29,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
@@ -69,6 +70,20 @@ namespace Business.Essentials.Model
         {
             get { return cash_counts; }
             set { cash_counts = value; }
+        }
+
+        [DataType(DataType.Currency)]
+        [Display(Name = "StartingCash", ResourceType = typeof(Resources))]
+        public decimal StartingCash
+        {
+            get { return CashCounts.Where(x => x.Type == CashCountType.StartingCash).Sum(x => x.Total); }
+        }
+
+        [DataType(DataType.Currency)]
+        [Display(Name = "CountedCash", ResourceType = typeof(Resources))]
+        public decimal CountedCash
+        {
+            get { return CashCounts.Where(x => x.Type == CashCountType.CountedCash).Sum(x => x.Total); }
         }
 
         #region Override Base Methods
