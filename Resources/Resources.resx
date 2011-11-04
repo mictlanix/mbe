@@ -876,4 +876,7 @@
   <data name="Title_SessionInfo" xml:space="preserve">
     <value>Información de la Sesión</value>
   </data>
+  <data name="Change" xml:space="preserve">
+    <value>Cambio</value>
+  </data>
 </root>
