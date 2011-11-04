@@ -63,6 +63,28 @@ namespace Business.Essentials.WebApp.Controllers
             return View(new MasterDetails<CashSession, SalesOrder> { Master = session, Details = qry.ToList() });
         }
 
+        // GET: /CloseSession/PrintSession/
+
+        public ViewResult PrintSession(int id)
+        {
+            var session = CashSession.Find(id);
+            var qry = from x in CustomerPayment.Queryable
+                      where x.CashSession.Id == session.Id
+                      select new { Type = x.Method, Amount = x.Amount };
+            var list = from x in qry.ToList()
+                       group x by x.Type into g
+                       select new MoneyCount { Type = g.Key, Amount = g.Sum(y => y.Amount) };
+
+            return View("_SessionInfoPrinter", 
+                        new MasterDetails<CashSession, MoneyCount> 
+                        { Master = session, Details = list.ToList() });
+            //return View(new MasterDetails<CashSession, MoneyCount>
+            //{
+            //    Master = session,
+            //    Details = list.ToList()
+            //});
+        }
+
         public ActionResult OpenSession()
         {
             var model = new MasterDetails<CashSession, SalesOrder>();
@@ -195,6 +217,37 @@ namespace Business.Essentials.WebApp.Controllers
         public ActionResult CloseSession()
         {
             var session = GetSession();
+            session.CashCounts = CashHelpers.ListDenominations();
+            return View(session);
+        }
+
+        [HttpPost]
+        public ActionResult CloseSession(CashSession item)
+        {
+            List<CashCount> cash_counts;
+
+            cash_counts = new List<CashCount>(item.CashCounts.Where(x => x.Quantity > 0));
+            item = CashSession.Find(item.Id);
+
+            using (var session = new SessionScope())
+            {
+                foreach (var x in cash_counts)
+                {
+                    x.Session = item;
+                    x.Type = CashCountType.CountedCash;
+                    x.Create();
+                }
+            }
+
+            item.End = DateTime.Now;
+            item.Update();
+
+            return RedirectToAction("CloseSessionConfirmed", new { id = item.Id });
+        }
+
+        public ActionResult CloseSessionConfirmed(int id)
+        {
+            var session = CashSession.Find(id);
             var qry = from x in CustomerPayment.Queryable
                       where x.CashSession.Id == session.Id
                       select new { Type = x.Method, Amount = x.Amount };
@@ -207,18 +260,6 @@ namespace Business.Essentials.WebApp.Controllers
                 Master = session,
                 Details = list.ToList()
             });
-        }
-
-
-        [HttpPost]
-        public ActionResult CloseSession(int id)
-        {
-            var item = CashSession.Find(id);
-            
-            item.End = DateTime.Now;
-            item.Update();
-
-            return RedirectToAction("Index");
         }
         
         CashDrawer GetDrawer()

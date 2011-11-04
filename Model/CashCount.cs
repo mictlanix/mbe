@@ -61,11 +61,18 @@ namespace Business.Essentials.Model
         [Display(Name = "Type", ResourceType = typeof(Resources))]
         public CashCountType Type { get; set; }
 
+        [DataType(DataType.Currency)]
+        [Display(Name = "Total", ResourceType = typeof(Resources))]
+        public decimal Total
+        {
+            get { return Denomination * Quantity; }
+        }
+
         #region Override Base Methods
 
         public override string ToString()
         {
-            return string.Format("{0:c} × {1} = {2:c}", Denomination, Quantity, Denomination * Quantity);
+            return string.Format("{0:c} × {1} = {2:c}", Denomination, Quantity, Total);
         }
 
         public override bool Equals(object obj)
