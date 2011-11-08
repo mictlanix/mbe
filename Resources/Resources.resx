@@ -909,4 +909,10 @@
   <data name="Change" xml:space="preserve">
     <value>Cambio</value>
   </data>
+  <data name="NextPage" xml:space="preserve">
+    <value>Siguiente</value>
+  </data>
+  <data name="PrevPage" xml:space="preserve">
+    <value>Atrás</value>
+  </data>
 </root>

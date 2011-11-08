@@ -36,16 +36,6 @@
             <input type="text" id="Pattern" name="Pattern" />
         </div>
     </div>
-    <p>
-        @if (Model.Offset >= Model.Limit)
-        {
-            @Html.ActionLink("<", "Index", new { Pattern = Model.Pattern, Limit = Model.Limit, Offset = Model.Offset - Model.Limit })
-        }
-        @if (Model.Results.Count >= Model.Limit)
-        {
-            @Html.ActionLink(">", "Index", new { Pattern = Model.Pattern, Limit = Model.Limit, Offset = Model.Offset + Model.Limit })
-        }
-    </p>
 }
 <div id="activity-indicator">
     <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
