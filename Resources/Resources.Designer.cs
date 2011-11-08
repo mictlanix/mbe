@@ -2435,5 +2435,23 @@ namespace Business.Essentials {
                 return ResourceManager.GetString("Zone", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Siguiente.
+        /// </summary>
+        public static string NextPage {
+            get {
+                return ResourceManager.GetString("NextPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Atrás.
+        /// </summary>
+        public static string PrevPage {
+            get {
+                return ResourceManager.GetString("PrevPage", resourceCulture);
+            }
+        }
     }
 }
