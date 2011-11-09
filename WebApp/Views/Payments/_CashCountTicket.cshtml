@@ -1,0 +1,177 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@using Business.Essentials.WebApp.Models
+@model CashCountReport
+
+@{
+    Layout = "~/Views/Shared/_TicketLayout.cshtml";
+    ViewBag.SkipAddress = true;
+}
+<table>
+    <tr>
+        <th colspan="2" class="line center">
+            @Resources.Title_CloseSession
+        </th>
+    </tr>
+    <tr>
+        <td colspan="2" class="line title center">
+            @Resources.Title_SessionInfo
+        </td>
+    </tr>
+    <tr>
+        <td class="right">
+            @Html.LabelFor(model => model.CashDrawer) :            
+        </td>
+        <td class="left">
+            @Html.DisplayFor(model => model.CashDrawer.Name)
+        </td>
+    </tr>
+    <tr>
+        <td class="right">
+            @Html.LabelFor(model => model.Start) :            
+        </td>
+        <td class="left">
+            @Html.DisplayFor(model => model.Start)
+        </td>
+    </tr>
+    <tr>
+        <td class="right">
+            @Html.LabelFor(model => model.End) :            
+        </td>
+        <td class="left">
+            @Html.DisplayFor(model => model.End)
+        </td>
+    </tr>
+    <tr>
+        <td class="line right">
+            @Html.LabelFor(model => model.Cashier) :            
+        </td>
+        <td class="line left">
+            @Html.DisplayFor(model => model.Cashier.Name)
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="line title center">
+            @Resources.Title_Entry
+        </td>
+    </tr>
+    @foreach (var item in Model.MoneyCounts) 
+    {
+        <tr>
+            <td class="right">
+                @item.Type.GetDisplayName() :
+            </td>
+       
+            <td class="number">
+                @Html.DisplayFor(modelItem => item.Amount)
+            </td>
+        </tr>
+    }
+    <tr>
+        <td class="line right">
+            @Resources.Total :
+        </td>
+        <td class="line number">
+            @Model.MoneyCounts.Sum(x => x.Amount).ToString("c")
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="line title center">
+            @Resources.Title_CashMovements
+        </td>
+    </tr>
+    <tr>
+        <td class="right">
+            @Html.LabelFor(model => model.StartingCash) :            
+        </td>
+        <td class="number">
+            @Html.DisplayFor(model => model.StartingCash)
+        </td>
+    </tr>
+    <tr>
+        <td class="right">
+            @Html.LabelFor(model => model.CashSales) :            
+        </td>
+        <td class="number">
+            @Html.DisplayFor(model => model.CashSales)
+        </td>
+    </tr>
+    <tr>
+        <td class="line right">
+            @Html.LabelFor(model => model.CashInDrawer) :            
+        </td>
+        <td class="line number">
+            @Html.DisplayFor(model => model.CashInDrawer)
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="line title center">
+            @Resources.Title_CashCounted
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <table>
+            @foreach (var item in Model.CashCounts.OrderBy(x => x.Denomination)) 
+            {
+                <tr>
+                    <td class="right" style="width:50%">
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td class="center">×</td>
+                    <td class="right">
+                        @Html.DisplayFor(modelItem => item.Denomination)
+                    </td>
+                    <td class="center">=</td>
+                    <td class="number">
+                        @Html.DisplayFor(modelItem => item.Total)
+                    </td>
+                </tr>
+            }
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td class="line right">
+            @Html.LabelFor(model => model.CountedCash) :            
+        </td>
+        <td class="line number">
+            @Html.DisplayFor(model => model.CountedCash)
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="line title center">
+            @Resources.Title_CashBalance
+        </td>
+    </tr>
+    <tr>
+        <td class="right">
+            @Html.LabelFor(model => model.CashInDrawer) :            
+        </td>
+        <td class="number">
+            @Html.DisplayFor(model => model.CashInDrawer)
+        </td>
+    </tr>
+    <tr>
+        <td class="right">
+            @Html.LabelFor(model => model.CountedCash) :            
+        </td>
+        <td class="number">
+            @Html.DisplayFor(model => model.CountedCash)
+        </td>
+    </tr>         
+    <tr>
+        <td class="line right">
+            @(Model.CashInDrawer > Model.CountedCash ? Resources.Shortage : Resources.Overage) :
+        </td>
+        <td class="line number">
+            @Html.DisplayFor(model => model.Balance)
+        </td>
+    </tr>
+</table>
+<div class="display-label display-field center">
+    <img src="@Url.Action("Code128", "Barcodes", new { id = Html.DisplayFor(x => x.SessionId).ToString() })" alt="@Html.DisplayFor(x => x.SessionId)" title="@Html.DisplayFor(x => x.SessionId)">
+    <br />
+    @Html.DisplayFor(model => model.SessionId)
+</div>

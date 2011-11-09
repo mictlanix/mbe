@@ -232,6 +232,33 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Efectivo en caja.
+        /// </summary>
+        public static string CashInDrawer {
+            get {
+                return ResourceManager.GetString("CashInDrawer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Efectivo Recibido.
+        /// </summary>
+        public static string CashReceived {
+            get {
+                return ResourceManager.GetString("CashReceived", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ventas en Efectivo.
+        /// </summary>
+        public static string CashSales {
+            get {
+                return ResourceManager.GetString("CashSales", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sesión de Caja.
         /// </summary>
         public static string CashSession {
@@ -1357,6 +1384,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sobrante.
+        /// </summary>
+        public static string Overage {
+            get {
+                return ResourceManager.GetString("Overage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pagado.
         /// </summary>
         public static string Paid {
@@ -1708,6 +1744,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Faltante.
+        /// </summary>
+        public static string Shortage {
+            get {
+                return ResourceManager.GetString("Shortage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Acceder.
         /// </summary>
         public static string SignIn {
@@ -1897,11 +1942,38 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Balance de Caja.
+        /// </summary>
+        public static string Title_CashBalance {
+            get {
+                return ResourceManager.GetString("Title_CashBalance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Efectivo Contado.
+        /// </summary>
+        public static string Title_CashCounted {
+            get {
+                return ResourceManager.GetString("Title_CashCounted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cajas.
         /// </summary>
         public static string Title_CashDrawer {
             get {
                 return ResourceManager.GetString("Title_CashDrawer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Movimientos en Caja.
+        /// </summary>
+        public static string Title_CashMovements {
+            get {
+                return ResourceManager.GetString("Title_CashMovements", resourceCulture);
             }
         }
         
@@ -1924,7 +1996,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cierre de Sesión.
+        ///   Looks up a localized string similar to Corte de Caja.
         /// </summary>
         public static string Title_CloseSession {
             get {
@@ -1969,6 +2041,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ingresos.
+        /// </summary>
+        public static string Title_Entry {
+            get {
+                return ResourceManager.GetString("Title_Entry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mictlanix BE.
         /// </summary>
         public static string Title_Home {
@@ -1992,6 +2073,15 @@ namespace Business.Essentials {
         public static string Title_LogOn {
             get {
                 return ResourceManager.GetString("Title_LogOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ventas Netas.
+        /// </summary>
+        public static string Title_NetSales {
+            get {
+                return ResourceManager.GetString("Title_NetSales", resourceCulture);
             }
         }
         
@@ -2064,6 +2154,15 @@ namespace Business.Essentials {
         public static string Title_SalesTicket {
             get {
                 return ResourceManager.GetString("Title_SalesTicket", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sesión.
+        /// </summary>
+        public static string Title_Session {
+            get {
+                return ResourceManager.GetString("Title_Session", resourceCulture);
             }
         }
         

@@ -27,6 +27,9 @@ h3 {
 .left {
   text-align:left;
 }
+.right {
+  text-align:right;
+}
 .center {
   text-align:center;
 }
@@ -52,6 +55,17 @@ table {
 }
 td.line {
     border-bottom:1px solid black;
+}
+td.title {
+    font-size:13px;
+    font-weight:bold;
+}
+th {
+    font-size:18px;
+    font-weight:bold;
+}
+th.line {
+    border-bottom:2px solid black;
 }
 .display-label {
     margin-top:5px;

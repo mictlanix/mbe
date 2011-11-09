@@ -94,7 +94,7 @@
 <script type="text/javascript">
     $(function() {
         $(".print").printPage({
-            url: "@Url.Action("PrintSession", "Payments", new { id = Model.Master.Id })"
+            url: "@Url.Action("PrintCashCount", "Payments", new { id = Model.Master.Id })"
         });
     });
 
