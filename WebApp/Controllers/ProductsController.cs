@@ -59,14 +59,9 @@ namespace Business.Essentials.WebApp.Controllers
         //
         // GET: /Products/
 
-        public ActionResult Index(string pattern, int? offset, int? limit)
+        public ActionResult Index()
         {
-            if (pattern == null)
-            {
-                return View(new Search<Product> { Limit = 100 });
-            }
-
-            return View(GetProducts(new Search<Product> { Pattern = pattern, Offset = offset.Value, Limit = limit.Value }));
+            return View(new Search<Product> { Limit = 100 });
         }
 
         //
@@ -77,7 +72,6 @@ namespace Business.Essentials.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                search.Offset = 0;
                 search = GetProducts(search);
             }
 
@@ -197,7 +191,8 @@ namespace Business.Essentials.WebApp.Controllers
                             x.Brand.Contains(search.Pattern)
                       orderby x.Name
                       select x;
-
+			
+			search.Total = qry.Count();
             search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
 
             return search;

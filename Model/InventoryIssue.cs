@@ -39,7 +39,7 @@ namespace Business.Essentials.Model
     [ActiveRecord("inventory_issue")]
     public class InventoryIssue : ActiveRecordLinqBase<InventoryIssue>
     {
-        IList<IssueDetail> details = new List<IssueDetail>();
+        IList<InventoryIssueDetail> details = new List<InventoryIssueDetail>();
 
         [PrimaryKey(PrimaryKeyType.Identity, "inventory_issue_id")]
         [Display(Name = "InventoryIssueId", ResourceType = typeof(Resources))]
@@ -81,9 +81,8 @@ namespace Business.Essentials.Model
         [StringLength(500, MinimumLength = 0)]
         public string Comment { get; set; }
 
-
-        [HasMany(typeof(IssueDetail), Table = "issue_detail", ColumnKey = "inventory_issue")]
-        public IList<IssueDetail> Details
+        [HasMany(typeof(InventoryIssueDetail), Table = "inventory_issue_detail", ColumnKey = "issue")]
+        public IList<InventoryIssueDetail> Details
         {
             get { return details; }
             set { details = value; }

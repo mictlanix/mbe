@@ -1,5 +1,5 @@
 ﻿// 
-// ReceiptDetail.cs
+// InventoryReceiptDetail.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
@@ -35,15 +35,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Business.Essentials.Model
 {
-    [ActiveRecord("receipt_detail")]
-    public class ReceiptDetail : ActiveRecordLinqBase<ReceiptDetail>
+    [ActiveRecord("inventory_receipt_detail")]
+    public class InventoryReceiptDetail : ActiveRecordLinqBase<InventoryReceiptDetail>
     {
         [PrimaryKey(PrimaryKeyType.Identity, "receipt_detail_id")]
         public int Id { get; set; }
 
-        [BelongsTo("inventory_receipt", Lazy = FetchWhen.OnInvoke)]
+        [BelongsTo("receipt", Lazy = FetchWhen.OnInvoke)]
         [Display(Name = "InventoryReceipt", ResourceType = typeof(Resources))]
-        public virtual InventoryReceipt InventoryReceipt { get; set; }
+        public virtual InventoryReceipt Receipt { get; set; }
 
         [BelongsTo("product")]
         [Display(Name = "Product", ResourceType = typeof(Resources))]
@@ -69,12 +69,12 @@ namespace Business.Essentials.Model
 
         public override string ToString()
         {
-            return string.Format("{0} [{1}, {2}, {3}]", Id, InventoryReceipt, Product, Quantity);
+            return string.Format("{0} [{1}, {2}, {3}]", Id, Receipt, Product, Quantity);
         }
 
         public override bool Equals(object obj)
         {
-            ReceiptDetail other = obj as ReceiptDetail;
+            InventoryReceiptDetail other = obj as InventoryReceiptDetail;
 
             if (other == null)
                 return false;

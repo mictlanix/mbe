@@ -50,6 +50,17 @@ namespace Business.Essentials.WebApp.Models
         public int Offset { get; set; }
         public int Limit { get; set; }
         public IList<T> Results { get; set; }
+        public int Total { get; set; }
+        public int Start { get { return Total == 0 ? 0 : Offset + 1; } }
+        public int End { get { return Total == 0 ? 0 : Offset + Results.Count; } }
+		
+		public bool HasPrev { get { return Offset > 0; } }
+		public bool HasNext { get { return Total > End; } }
+		
+		public override string ToString ()
+		{
+			return string.Format ("{0}-{1} / {2}", Start, End, Total);
+		}
     }
     
 }
