@@ -39,30 +39,28 @@ namespace Business.Essentials.Model
     [ActiveRecord("kardex")]
     public class Kardex : ActiveRecordLinqBase<Kardex>
     {
-        IList<ReceiptDetail> details = new List<ReceiptDetail>();
-
         [PrimaryKey(PrimaryKeyType.Identity, "kardex_id")]
         [Display(Name = "KardexId", ResourceType = typeof(Resources))]
         public int Id { get; set; }
 
-        [BelongsTo("product")]
-        [Display(Name = "Product", ResourceType = typeof(Resources))]
-        public virtual Product Product { get; set; }
+        [Property]
+        [DataType(DataType.DateTime)]
+        [Display(Name = "Date", ResourceType = typeof(Resources))]
+        public DateTime Date { get; set; }
 
         [BelongsTo("warehouse")]
         [Display(Name = "Warehouse", ResourceType = typeof(Resources))]
         public virtual Warehouse Warehouse { get; set; }
+
+        [BelongsTo("product")]
+        [Display(Name = "Product", ResourceType = typeof(Resources))]
+        public virtual Product Product { get; set; }
 
         [Property]
         [DisplayFormat(DataFormatString = "{0:0.####}")]
         [Display(Name = "Quantity", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
         public decimal Quantity { get; set; }
-
-        [Property]
-        [DataType(DataType.DateTime)]
-        [Display(Name = "Date", ResourceType = typeof(Resources))]
-        public DateTime Date { get; set; }
 
         #region Override Base Methods
 

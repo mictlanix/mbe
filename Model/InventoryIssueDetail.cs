@@ -1,5 +1,5 @@
 ﻿// 
-// IssueDetail.cs
+// InventoryIssueDetail.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
@@ -35,15 +35,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Business.Essentials.Model
 {
-    [ActiveRecord("issue_detail")]
-    public class IssueDetail : ActiveRecordLinqBase<IssueDetail>
+    [ActiveRecord("inventory_issue_detail")]
+    public class InventoryIssueDetail : ActiveRecordLinqBase<InventoryIssueDetail>
     {
         [PrimaryKey(PrimaryKeyType.Identity, "issue_detail_id")]
         public int Id { get; set; }
 
-        [BelongsTo("inventory_issue", Lazy = FetchWhen.OnInvoke)]
+        [BelongsTo("issue", Lazy = FetchWhen.OnInvoke)]
         [Display(Name = "InventoryIssue", ResourceType = typeof(Resources))]
-        public virtual InventoryIssue InventoryIssue { get; set; }
+        public virtual InventoryIssue Issue { get; set; }
 
         [BelongsTo("product")]
         [Display(Name = "Product", ResourceType = typeof(Resources))]
@@ -69,12 +69,12 @@ namespace Business.Essentials.Model
 
         public override string ToString()
         {
-            return string.Format("{0} [{1}, {2}, {3}]", Id, InventoryIssue, Product, Quantity);
+            return string.Format("{0} [{1}, {2}, {3}]", Id, Issue, Product, Quantity);
         }
 
         public override bool Equals(object obj)
         {
-            IssueDetail other = obj as IssueDetail;
+            InventoryIssueDetail other = obj as InventoryIssueDetail;
 
             if (other == null)
                 return false;

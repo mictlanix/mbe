@@ -11,6 +11,10 @@
 
 <p>@Html.ValidationMessageFor(x => x.Pattern)</p>
 
+<div class="buttons right">
+	<label class="button left">@Model.ToString()</label>@if (Model.HasPrev) {<a class="button middle icon prev icon-only" title="@Resources.PrevPage" href="javascript:void(0)"></a>}@if (Model.HasNext) {<a class="button right icon next icon-only" title="@Resources.NextPage" href="javascript:void(0)"></a>}
+</div>
+
 <table>
     <tr>
         <th></th>
@@ -114,8 +118,17 @@
     </tr>
 }
 </table>
+<div class="buttons right">
+	<label class="button left">@Model.ToString()</label><a class="button middle icon prev icon-only" title="@Resources.NextPage" href="javascript:void(0)"></a><a class="button right icon next icon-only" title="@Resources.PrevPage" href="javascript:void(0)"></a>
+</div>
 <script type="text/javascript">
     $(function () {
+    	$('a.prev').click(function (e) {
+    		e.preventDefault();
+    	});
+    	$('a.next').click(function (e) {
+    		e.preventDefault();
+    	});
         $('a.tips').cluetip({
             showTitle: false,
             width:600

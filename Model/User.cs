@@ -48,7 +48,6 @@ namespace Business.Essentials.Model
         [Property()]
         [DataType(DataType.Password)]
         [Display(Name = "Password", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(40, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string Password { get; set; }
 

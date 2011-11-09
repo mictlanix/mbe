@@ -1,5 +1,5 @@
 ﻿// 
-// TransferDetail.cs
+// InventoryTransferDetail.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
@@ -35,15 +35,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Business.Essentials.Model
 {
-    [ActiveRecord("transfer_detail")]
-    public class TransferDetail : ActiveRecordLinqBase<TransferDetail>
+    [ActiveRecord("inventory_transfer_detail")]
+    public class InventoryTransferDetail : ActiveRecordLinqBase<InventoryTransferDetail>
     {
         [PrimaryKey(PrimaryKeyType.Identity, "transfer_detail_id")]
         public int Id { get; set; }
 
-        [BelongsTo("inventory_transfer", Lazy = FetchWhen.OnInvoke)]
+        [BelongsTo("transfer", Lazy = FetchWhen.OnInvoke)]
         [Display(Name = "InventoryTransfer", ResourceType = typeof(Resources))]
-        public virtual InventoryTransfer InventoryTransfer { get; set; }
+        public virtual InventoryTransfer Transfer { get; set; }
 
         [BelongsTo("product")]
         [Display(Name = "Product", ResourceType = typeof(Resources))]
@@ -69,12 +69,12 @@ namespace Business.Essentials.Model
 
         public override string ToString()
         {
-            return string.Format("{0} [{1}, {2}, {3}]", Id, InventoryTransfer, Product, Quantity);
+            return string.Format("{0} [{1}, {2}, {3}]", Id, Transfer, Product, Quantity);
         }
 
         public override bool Equals(object obj)
         {
-            TransferDetail other = obj as TransferDetail;
+            InventoryTransferDetail other = obj as InventoryTransferDetail;
 
             if (other == null)
                 return false;
