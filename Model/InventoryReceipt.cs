@@ -43,6 +43,7 @@ namespace Business.Essentials.Model
 
         [PrimaryKey(PrimaryKeyType.Identity, "inventory_receipt_id")]
         [Display(Name = "InventoryReceiptId", ResourceType = typeof(Resources))]
+        [DisplayFormat(DataFormatString = "{0:000000}")]
         public int Id { get; set; }
 
         [Property("creation_time")]
@@ -62,6 +63,11 @@ namespace Business.Essentials.Model
         [BelongsTo("updater")]
         [Display(Name = "Updater", ResourceType = typeof(Resources))]
         public virtual Employee Updater { get; set; }
+
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+        [Display(Name = "Warehouse", ResourceType = typeof(Resources))]
+        [UIHint("WarehouseSelector")]
+        public int WarehouseId { get; set; }
 
         [BelongsTo("warehouse")]
         [Display(Name = "Warehouse", ResourceType = typeof(Resources))]

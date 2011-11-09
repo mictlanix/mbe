@@ -1,0 +1,45 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@model IEnumerable<InventoryIssue>
+
+@{
+    ViewBag.Title = Resources.Title_InventoryIssue;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.InventoryIssues);
+}
+
+<h2>@Resources.DisplayName_InventoryIssues</h2>
+
+<p>
+@if(Privilege.AllowCreate)
+{
+    @Html.ActionLink(Resources.CreateNew, "NewIssue", new { }, new { @class = "button icon add" })
+}
+</p>
+<table>
+    <tr>
+        <th>@Html.LabelFor(x => new InventoryIssue().Id)</th>
+        <th>@Html.LabelFor(x => new InventoryIssue().CreationTime)</th>
+        <th>@Html.LabelFor(x => new InventoryIssue().Warehouse)</th>
+        <th>@Html.LabelFor(x => new InventoryIssue().IsCompleted)</th>
+        <th>@Html.LabelFor(x => new InventoryIssue().IsCancelled)</th>
+        <th></th>
+    </tr>
+@foreach (var item in Model) {
+    <tr>
+        <td class="number">@Html.DisplayFor(x => item.Id)</td>
+        <td class="date">@Html.DisplayFor(x => item.CreationTime)</td>
+        <td>@Html.DisplayFor(x => item.Warehouse.Name)</td>
+        <td class="bool">@Html.DisplayFor(x => item.IsCompleted)</td>
+        <td class="bool">@Html.DisplayFor(x => item.IsCancelled)</td>
+        <td class="actions">
+            @Html.ActionLink(" ", "Issue", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+        	@if(Privilege.AllowUpdate && !item.IsCompleted && !item.IsCancelled)
+        	{
+            	@Html.ActionLink(" ", "EditIssue", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
+            }
+        </td>
+    </tr>
+}
+</table>

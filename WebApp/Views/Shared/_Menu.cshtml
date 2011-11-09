@@ -4,6 +4,20 @@
 
 @{
     var CurrentUser = Html.CurrentUser() ?? new User();
+    var ShowMasterDataMenu = Html.GetPrivilege(CurrentUser, SystemObjects.Products).AllowRead ||
+                             Html.GetPrivilege(CurrentUser, SystemObjects.Categories).AllowRead ||
+                             Html.GetPrivilege(CurrentUser, SystemObjects.Customers).AllowRead ||
+                             Html.GetPrivilege(CurrentUser, SystemObjects.Suppliers).AllowRead ||
+                             Html.GetPrivilege(CurrentUser, SystemObjects.Employees).AllowRead ||
+                             Html.GetPrivilege(CurrentUser, SystemObjects.Warehouses).AllowRead ||
+                             Html.GetPrivilege(CurrentUser, SystemObjects.PriceLists).AllowRead ||
+                             Html.GetPrivilege(CurrentUser, SystemObjects.PointsOfSale).AllowRead ||
+                             Html.GetPrivilege(CurrentUser, SystemObjects.CashDrawers).AllowRead;
+    var ShowSalesMenu = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders).AllowRead ||
+                        Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments).AllowRead;
+    var ShowInventoryMenu = Html.GetPrivilege(CurrentUser, SystemObjects.InventoryReceipts).AllowRead ||
+                            Html.GetPrivilege(CurrentUser, SystemObjects.InventoryIssues).AllowRead ||
+                            Html.GetPrivilege(CurrentUser, SystemObjects.InventoryTransfers).AllowRead;
 }
 
 <div id="gb">
@@ -16,6 +30,8 @@
                     <span class="gbts">@Resources.Menu_Home</span>
                 </a>
             </li>
+            @if (ShowMasterDataMenu)
+            {
             <li class="gbt">
                 <a id="master-data-menu" class="gbgt" href="javascript:void(0)">
                     <span class="gbtb2"></span>
@@ -94,6 +110,9 @@
                     </div>
                 </div>
             </li>
+            }
+            @if (ShowSalesMenu)
+            {
             <li class="gbt">
                 <a id="sales-menu" class="gbgt" href="javascript:void(0)">
                     <span class="gbtb2"></span>
@@ -123,6 +142,9 @@
                     </div>
                 </div>
             </li>
+            }
+            @if (ShowInventoryMenu)
+            {
             <li class="gbt">
                 <a id="inventory-menu" class="gbgt" href="javascript:void(0)">
                     <span class="gbtb2"></span>
@@ -159,6 +181,7 @@
                     </div>
                 </div>
             </li>
+            }
             <li class="gbt">
                 <a class="gbzt @(Html.IsMenuSelected("About", "Home") ? "gbz0l" : "")"
                    href="@Url.Action("About", "Home")">

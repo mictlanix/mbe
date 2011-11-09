@@ -125,9 +125,16 @@ namespace Business.Essentials.WebApp.Controllers
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
+
+
+        public JsonResult GetSuggestions(string pattern)
         {
-            base.Dispose(disposing);
+            var qry = from x in Warehouse.Queryable
+                      where x.Code.Contains(pattern) ||
+                            x.Name.Contains(pattern)
+                      select new { id = x.Id, name = x.Name};
+
+            return Json(qry.Take(15).ToList(), JsonRequestBehavior.AllowGet);
         }
     }
 }

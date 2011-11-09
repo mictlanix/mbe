@@ -33,6 +33,7 @@ using System.Linq;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
+using Business.Essentials.Model.Validation;
 
 namespace Business.Essentials.Model
 {
@@ -43,6 +44,7 @@ namespace Business.Essentials.Model
 
         [PrimaryKey(PrimaryKeyType.Identity, "inventory_transfer_id")]
         [Display(Name = "InventoryTransferId", ResourceType = typeof(Resources))]
+        [DisplayFormat(DataFormatString = "{0:000000}")]
         public int Id { get; set; }
 
         [Property("creation_time")]
@@ -63,13 +65,24 @@ namespace Business.Essentials.Model
         [Display(Name = "Updater", ResourceType = typeof(Resources))]
         public virtual Employee Updater { get; set; }
 
-        [BelongsTo("warehouse")]
-        [Display(Name = "WarehouseOrigin", ResourceType = typeof(Resources))]
-        public virtual Warehouse WarehouseOrigin { get; set; }
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+        [Display(Name = "WarehouseFrom", ResourceType = typeof(Resources))]
+        [UIHint("WarehouseSelector")]
+        public int FromId { get; set; }
 
-        [BelongsTo("warehouse_destiny")]
-        [Display(Name = "WarehouseDestiny", ResourceType = typeof(Resources))]
-        public virtual Warehouse WarehouseDestiny { get; set; }
+        [BelongsTo("warehouse")]
+        [Display(Name = "WarehouseFrom", ResourceType = typeof(Resources))]
+        public virtual Warehouse From { get; set; }
+
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+        [Distinct("FromId", ErrorMessageResourceName = "Validation_ShouldNotBeEquals", ErrorMessageResourceType = typeof(Resources))]
+        [Display(Name = "WarehouseTo", ResourceType = typeof(Resources))]
+        [UIHint("WarehouseSelector")]
+        public int ToId { get; set; }
+
+        [BelongsTo("warehouse_to")]
+        [Display(Name = "WarehouseTo", ResourceType = typeof(Resources))]
+        public virtual Warehouse To { get; set; }
 
         [Property("completed")]
         [Display(Name = "Completed", ResourceType = typeof(Resources))]
@@ -96,7 +109,7 @@ namespace Business.Essentials.Model
 
         public override string ToString()
         {
-            return string.Format("{0} [{1}, {2}, {3}]", Id, WarehouseOrigin, WarehouseDestiny, Creator);
+            return string.Format("{0} [{1}, {2}, {3}]", Id, From, To, Creator);
         }
 
         public override bool Equals(object obj)

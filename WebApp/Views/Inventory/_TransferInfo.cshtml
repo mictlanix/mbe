@@ -1,0 +1,50 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@model InventoryTransfer
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.InventoryTransfers);
+}
+
+<fieldset>
+    <legend>@Resources.DisplayName_InventoryInformation</legend>
+    <div class="display-label right floating">
+        @Html.LabelFor(model => model.Id):
+        @Html.DisplayFor(model => model.Id)
+    </div>
+    <div class="display-label right floating">
+        @Html.LabelFor(model => model.CreationTime):
+        @Html.DisplayFor(model => model.CreationTime)
+    </div>
+    <div class="display-label">
+        @Html.LabelFor(model => model.From)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.From.Name)
+    </div>
+    <div class="display-label">
+        @Html.LabelFor(model => model.To)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.To.Name)
+    </div>
+    <div class="display-label">
+        @Html.LabelFor(model => model.Comment)
+        @Html.DisplayFor(model => model.Comment)
+    </div>
+    <div class="right">
+        @Ajax.ActionLink(Resources.Edit, "EditTransfer", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "master-container" }, new { @class = "button icon edit" })
+        @if (Privilege.AllowDelete)
+        {
+            using (Html.BeginForm("CancelTransfer", "Inventory", new { id = Model.Id }, FormMethod.Post, new { style = "display:inline" }))
+            {
+                <button type="submit" class="icon cancel">@Resources.Cancel</button>
+            }
+        }
+    </div>
+</fieldset>
+<script type="text/javascript">
+    var InventoryMovement = { Id: @Model.Id };
+</script>

@@ -844,19 +844,19 @@
     <value>Salida del Inventario</value>
   </data>
   <data name="InventoryIssueId" xml:space="preserve">
-    <value>Salida del Inventario</value>
+    <value>Folio de Salida</value>
   </data>
   <data name="InventoryReceipt" xml:space="preserve">
     <value>Entrada del Inventario</value>
   </data>
   <data name="InventoryReceiptId" xml:space="preserve">
-    <value>Entrada en el Inventario</value>
+    <value>Folio de Entrada</value>
   </data>
   <data name="InventoryTransfer" xml:space="preserve">
-    <value>Trasnferencia de Inventario</value>
+    <value>Traspaso de Inventario</value>
   </data>
   <data name="InventoryTransferId" xml:space="preserve">
-    <value>Transferencia de Inventario</value>
+    <value>Folio de Traspaso</value>
   </data>
   <data name="KardexId" xml:space="preserve">
     <value>Kardex</value>
@@ -867,11 +867,11 @@
   <data name="Updater" xml:space="preserve">
     <value>Actualizó</value>
   </data>
-  <data name="WarehouseDestiny" xml:space="preserve">
-    <value>Almacén Destino</value>
-  </data>
-  <data name="WarehouseOrigin" xml:space="preserve">
+  <data name="WarehouseFrom" xml:space="preserve">
     <value>Almacén Origen</value>
+  </data>
+  <data name="WarehouseTo" xml:space="preserve">
+    <value>Almacén Destino</value>
   </data>
   <data name="MasterData" xml:space="preserve">
     <value>Catálogos</value>
@@ -880,13 +880,13 @@
     <value>Ventas</value>
   </data>
   <data name="DisplayName_InventoryIssues" xml:space="preserve">
-    <value>Salidas</value>
+    <value>Salidas de Almacén</value>
   </data>
   <data name="DisplayName_InventoryReceipts" xml:space="preserve">
-    <value>Entradas</value>
+    <value>Entradas de Almacén</value>
   </data>
   <data name="DisplayName_InventoryTransfers" xml:space="preserve">
-    <value>Traspasos</value>
+    <value>Traspasos entre  Almacenes</value>
   </data>
   <data name="Title_InventoryIssue" xml:space="preserve">
     <value>Salidas</value>
@@ -950,5 +950,47 @@
   </data>
   <data name="StartDate" xml:space="preserve">
     <value>Fecha de Inicio</value>
+  </data>
+  <data name="Warehouse" xml:space="preserve">
+    <value>Almacén</value>
+  </data>
+  <data name="DisplayName_EditInventoryReceipt" xml:space="preserve">
+    <value>Editar Entrada</value>
+  </data>
+  <data name="DisplayName_NewInventoryReceipt" xml:space="preserve">
+    <value>Nueva Entrada al Almacén</value>
+  </data>
+  <data name="Title_NewInventoryReceipt" xml:space="preserve">
+    <value>Nueva Entrada</value>
+  </data>
+  <data name="DisplayName_InventoryInformation" xml:space="preserve">
+    <value>Información del Movimiento</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Complete" xml:space="preserve">
+    <value>Finalizar</value>
+  </data>
+  <data name="DisplayName_EditInventoryIssue" xml:space="preserve">
+    <value>Editar Salida</value>
+  </data>
+  <data name="DisplayName_NewInventoryIssue" xml:space="preserve">
+    <value>Nueva Salida del Almacén</value>
+  </data>
+  <data name="Title_NewInventoryIssue" xml:space="preserve">
+    <value>Nueva Salida</value>
+  </data>
+  <data name="Title_NewInventoryTransfer" xml:space="preserve">
+    <value>Nuevo Traspaso</value>
+  </data>
+  <data name="DisplayName_EditInventoryTransfer" xml:space="preserve">
+    <value>Editar Traspaso</value>
+  </data>
+  <data name="DisplayName_NewInventoryTransfer" xml:space="preserve">
+    <value>Nuevo Traspaso Entre Almacenes</value>
+  </data>
+  <data name="Validation_ShouldNotBeEquals" xml:space="preserve">
+    <value>Los campos {0} y {1} no deben ser iguales.</value>
   </data>
 </root>

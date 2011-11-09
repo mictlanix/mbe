@@ -1,0 +1,32 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@model InventoryIssue
+
+<fieldset>
+    <legend>@Resources.DisplayName_InventoryInformation</legend>
+@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "master-container" }))
+{
+    @Html.ValidationSummary(true)
+                
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Warehouse)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.WarehouseId)
+        @Html.ValidationMessageFor(model => model.WarehouseId)
+    </div>
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Comment)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.Comment)
+    </div>
+    <p><button type="submit" class="icon save">@Resources.Save</button></p>
+}
+</fieldset>
+<script type="text/javascript">
+    $(function () {
+        $("#WarehouseId").tokenInput("add", { id: "@Model.Warehouse.Id", name: "@Model.Warehouse.Name" });
+    });
+</script>

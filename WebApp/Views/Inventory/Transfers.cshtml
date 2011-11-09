@@ -1,0 +1,47 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@model IEnumerable<InventoryTransfer>
+
+@{
+    ViewBag.Title = Resources.Title_InventoryTransfer;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.InventoryTransfers);
+}
+
+<h2>@Resources.DisplayName_InventoryTransfers</h2>
+
+<p>
+@if(Privilege.AllowCreate)
+{
+    @Html.ActionLink(Resources.CreateNew, "NewTransfer", new { }, new { @class = "button icon add" })
+}
+</p>
+<table>
+    <tr>
+        <th>@Html.LabelFor(x => new InventoryTransfer().Id)</th>
+        <th>@Html.LabelFor(x => new InventoryTransfer().CreationTime)</th>
+        <th>@Html.LabelFor(x => new InventoryTransfer().From)</th>
+        <th>@Html.LabelFor(x => new InventoryTransfer().To)</th>
+        <th>@Html.LabelFor(x => new InventoryTransfer().IsCompleted)</th>
+        <th>@Html.LabelFor(x => new InventoryTransfer().IsCancelled)</th>
+        <th></th>
+    </tr>
+@foreach (var item in Model) {
+    <tr>
+        <td class="number">@Html.DisplayFor(x => item.Id)</td>
+        <td class="date">@Html.DisplayFor(x => item.CreationTime)</td>
+        <td>@Html.DisplayFor(x => item.From.Name)</td>
+        <td>@Html.DisplayFor(x => item.To.Name)</td>
+        <td class="bool">@Html.DisplayFor(x => item.IsCompleted)</td>
+        <td class="bool">@Html.DisplayFor(x => item.IsCancelled)</td>
+        <td class="actions">
+            @Html.ActionLink(" ", "Transfer", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+        	@if(Privilege.AllowUpdate && !item.IsCompleted && !item.IsCancelled)
+        	{
+            	@Html.ActionLink(" ", "EditTransfer", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
+            }
+        </td>
+    </tr>
+}
+</table>
