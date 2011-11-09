@@ -41,6 +41,7 @@ namespace Business.Essentials.WebApp.Models
 
     public class CashCountReport
     {
+        [DisplayFormat(DataFormatString = "{0:000000}")]
         public int SessionId { get; set; }
 
         [Display(Name = "Cashier", ResourceType = typeof(Resources))]
