@@ -948,4 +948,7 @@
   <data name="PrevPage" xml:space="preserve">
     <value>Atrás</value>
   </data>
+  <data name="StartDate" xml:space="preserve">
+    <value>Fecha de Inicio</value>
+  </data>
 </root>

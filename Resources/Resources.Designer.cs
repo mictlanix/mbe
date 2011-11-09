@@ -1870,6 +1870,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fecha de Inicio.
+        /// </summary>
+        public static string StartDate {
+            get {
+                return ResourceManager.GetString("StartDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Efectivo Inicial.
         /// </summary>
         public static string StartingCash {
