@@ -63,10 +63,11 @@ namespace Business.Essentials.WebApp.Controllers
             return View(new MasterDetails<CashSession, SalesOrder> { Master = session, Details = qry.ToList() });
         }
 
-        // GET: /CloseSession/PrintSession/
+        // GET: /Payments/PrintCashCount/
 
-        public ViewResult PrintSession(int id)
+        public ViewResult PrintCashCount(int id)
         {
+            var info = new CashCountReport();
             var session = CashSession.Find(id);
             var qry = from x in CustomerPayment.Queryable
                       where x.CashSession.Id == session.Id
@@ -75,14 +76,16 @@ namespace Business.Essentials.WebApp.Controllers
                        group x by x.Type into g
                        select new MoneyCount { Type = g.Key, Amount = g.Sum(y => y.Amount) };
 
-            return View("_SessionInfoPrinter", 
-                        new MasterDetails<CashSession, MoneyCount> 
-                        { Master = session, Details = list.ToList() });
-            //return View(new MasterDetails<CashSession, MoneyCount>
-            //{
-            //    Master = session,
-            //    Details = list.ToList()
-            //});
+            info.Cashier = session.Cashier;
+            info.CashDrawer = session.CashDrawer;
+            info.Start = session.Start;
+            info.End = session.End;
+            info.MoneyCounts = list.ToList();
+            info.CashCounts = session.CashCounts.Where(x => x.Type == CashCountType.CountedCash).ToList();
+            info.StartingCash = session.StartingCash;
+            info.SessionId = session.Id;
+
+            return View("_CashCountTicket", info);
         }
 
         public ActionResult OpenSession()

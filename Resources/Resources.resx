@@ -793,7 +793,7 @@
     <value>Cierre de Sesión</value>
   </data>
   <data name="Title_CloseSession" xml:space="preserve">
-    <value>Cierre de Sesión</value>
+    <value>Corte de Caja</value>
   </data>
   <data name="Type" xml:space="preserve">
     <value>Tipo de Pago</value>
@@ -878,5 +878,38 @@
   </data>
   <data name="Change" xml:space="preserve">
     <value>Cambio</value>
+  </data>
+  <data name="CashReceived" xml:space="preserve">
+    <value>Efectivo Recibido</value>
+  </data>
+  <data name="Title_CashBalance" xml:space="preserve">
+    <value>Balance de Caja</value>
+  </data>
+  <data name="Title_CashCounted" xml:space="preserve">
+    <value>Efectivo Contado</value>
+  </data>
+  <data name="Title_CashMovements" xml:space="preserve">
+    <value>Movimientos en Caja</value>
+  </data>
+  <data name="Title_Entry" xml:space="preserve">
+    <value>Ingresos</value>
+  </data>
+  <data name="Title_NetSales" xml:space="preserve">
+    <value>Ventas Netas</value>
+  </data>
+  <data name="Title_Session" xml:space="preserve">
+    <value>Sesión</value>
+  </data>
+  <data name="CashInDrawer" xml:space="preserve">
+    <value>Efectivo en caja</value>
+  </data>
+  <data name="CashSales" xml:space="preserve">
+    <value>Ventas en Efectivo</value>
+  </data>
+  <data name="Overage" xml:space="preserve">
+    <value>Sobrante</value>
+  </data>
+  <data name="Shortage" xml:space="preserve">
+    <value>Faltante</value>
   </data>
 </root>

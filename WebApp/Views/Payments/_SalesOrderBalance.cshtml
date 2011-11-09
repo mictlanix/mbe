@@ -48,7 +48,7 @@ else
 }
     $(function() {
         $(".print").printPage({
-          url: "@Url.Action("PrintOrder", "Sales", new { id = Model.Id })"
+          url: "@Url.Action("PrintCashCount", "Sales", new { id = Model.Id })"
         });
     });
 </script>

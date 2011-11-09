@@ -139,6 +139,7 @@
     <Compile Include="Helpers\SecurityHelpers.cs" />
     <Compile Include="Helpers\HtmlHelpers.cs" />
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\CashCountReport.cs" />
     <Compile Include="Models\MoneyCount.cs" />
     <Compile Include="Models\MasterDetails.cs" />
     <Compile Include="Models\Search.cs" />
@@ -655,7 +656,7 @@
     <Content Include="Views\Sales\_SalesNote.cshtml" />
     <Content Include="Views\Payments\_OpenSession.cshtml" />
     <Content Include="Views\Payments\CloseSession.cshtml" />
-    <Content Include="Views\Payments\_SessionInfoPrinter.cshtml" />
+    <Content Include="Views\Payments\_CashCountTicket.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
