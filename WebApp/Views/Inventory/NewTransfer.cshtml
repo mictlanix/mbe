@@ -1,0 +1,67 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Models
+@model InventoryTransfer
+
+@{
+    ViewBag.Title = Resources.Title_NewInventoryTransfer;
+}
+
+<h2>@Resources.DisplayName_NewInventoryTransfer</h2> 
+
+<div id="master-container">
+    <fieldset>
+        <legend>@Resources.DisplayName_InventoryInformation</legend>
+            @using (Html.BeginForm())
+            {
+                @Html.ValidationSummary(true)
+                
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.From)
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(model => model.FromId)
+                    @Html.ValidationMessageFor(model => model.FromId)
+                </div>
+                
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.To)
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(model => model.ToId)
+                    @Html.ValidationMessageFor(model => model.ToId)
+                </div>
+                
+     	        <div class="editor-label">
+                    @Html.LabelFor(model => model.Comment)
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(model => model.Comment)
+                </div>
+                
+                <p class="right">
+                    <button type="submit" class="icon save">@Resources.Save</button>
+                </p>
+            }
+    </fieldset>
+</div>
+<div id="back">
+    @Html.ActionLink(Resources.BackToList, "Transfers", new { }, new { @class = "button icon back" })
+</div>
+<style type="text/css">
+ul.token-input-list {
+  width:100%;
+}
+</style>
+<script type="text/javascript">
+    $(function () {
+        @if(Model.From != null)
+        {
+            @:$("#FromId").tokenInput("add", { id: "@Model.From.Id", name: "@Model.From.Name" });
+        }
+        @if(Model.To != null)
+        {
+            @:$("#ToId").tokenInput("add", { id: "@Model.To.Id", name: "@Model.To.Name" });
+        }
+    });
+</script>

@@ -1,0 +1,10 @@
+﻿@model string
+@{
+    var lines = string.Format("{0}", Model).Replace("\r\n", "\n").Replace('\r', '\n').Split('\n');
+}
+<p>
+@foreach (var line in lines)
+{
+    @line<br/>
+}
+</p>

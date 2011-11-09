@@ -22,6 +22,9 @@ a:link,a:visited,a:active {
 a:hover {
     text-decoration:underline;
 }
+textarea.text-box {
+  width:100%;
+}
 #container {
   background:transparent url(images/header-bg.png) repeat-x left -30px;
 }
@@ -50,8 +53,10 @@ div#logo {
   min-width:800px;
   margin:10px 20px;
 }
-.date {
+.date,.bool,.number {
   white-space:nowrap;
+  width:1px;
+  text-align:center;
 }
 .left {
   text-align:left;
@@ -133,34 +138,33 @@ table td.actions {
   white-space:nowrap;
   width:1px;
 }
-ul.sales-items {
+ul.list-items {
     list-style-type:none;
     padding-left: 0px;
 }
-ul.sales-items li:hover {
+ul.list-items li:hover {
   background:AliceBlue ;
 }
-ul.sales-items li:first-child {
+ul.list-items li:first-child {
   border-top:1px solid gray;
 }
-ul.sales-items li {
+ul.list-items li {
   border-bottom:1px solid gray;
 }
-ul.sales-items li div.photo {
+ul.list-items li div.photo {
   float:left;
 }
-ul.sales-items li div.photo img {
+ul.list-items li div.photo img {
   display:block;
   margin:8px 5px 0 5px;
   max-width:50px;
   max-height:50px;
 }
-ul.sales-items li div.info {
+ul.list-items li div.info {
   margin:0 0 0 60px;
 }
-ul.sales-items li div.action-link {
+ul.list-items li div.action-link {
   float:right;
-  margin:0 5px 0 0;
 }
 #sales-totals {
   width:300px;
@@ -183,9 +187,12 @@ ul.sales-items li div.action-link {
   display:block;
   margin-right:110px;
 }
-.search-field input[type="text"] {
+.search-field > input[type="text"] {
   padding:6px 2px;
   width:100%;
+}
+.search-field .token-input-list input[type="text"] {
+  padding:4px 2px;
 }
 .search-box button {
   display:block;

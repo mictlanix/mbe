@@ -187,6 +187,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancelar.
+        /// </summary>
+        public static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancelado.
         /// </summary>
         public static string Cancelled {
@@ -372,6 +381,15 @@ namespace Business.Essentials {
         public static string CompanyTaxpayerName {
             get {
                 return ResourceManager.GetString("CompanyTaxpayerName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finalizar.
+        /// </summary>
+        public static string Complete {
+            get {
+                return ResourceManager.GetString("Complete", resourceCulture);
             }
         }
         
@@ -691,6 +709,33 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Editar Salida.
+        /// </summary>
+        public static string DisplayName_EditInventoryIssue {
+            get {
+                return ResourceManager.GetString("DisplayName_EditInventoryIssue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Editar Entrada.
+        /// </summary>
+        public static string DisplayName_EditInventoryReceipt {
+            get {
+                return ResourceManager.GetString("DisplayName_EditInventoryReceipt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Editar Traspaso.
+        /// </summary>
+        public static string DisplayName_EditInventoryTransfer {
+            get {
+                return ResourceManager.GetString("DisplayName_EditInventoryTransfer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Editar Venta.
         /// </summary>
         public static string DisplayName_EditSale {
@@ -709,7 +754,16 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Salidas.
+        ///   Looks up a localized string similar to Información del Movimiento.
+        /// </summary>
+        public static string DisplayName_InventoryInformation {
+            get {
+                return ResourceManager.GetString("DisplayName_InventoryInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Salidas de Almacén.
         /// </summary>
         public static string DisplayName_InventoryIssues {
             get {
@@ -718,7 +772,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Entradas.
+        ///   Looks up a localized string similar to Entradas de Almacén.
         /// </summary>
         public static string DisplayName_InventoryReceipts {
             get {
@@ -727,7 +781,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Traspasos.
+        ///   Looks up a localized string similar to Traspasos entre  Almacenes.
         /// </summary>
         public static string DisplayName_InventoryTransfers {
             get {
@@ -741,6 +795,33 @@ namespace Business.Essentials {
         public static string DisplayName_LogOn {
             get {
                 return ResourceManager.GetString("DisplayName_LogOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nueva Salida del Almacén.
+        /// </summary>
+        public static string DisplayName_NewInventoryIssue {
+            get {
+                return ResourceManager.GetString("DisplayName_NewInventoryIssue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nueva Entrada al Almacén.
+        /// </summary>
+        public static string DisplayName_NewInventoryReceipt {
+            get {
+                return ResourceManager.GetString("DisplayName_NewInventoryReceipt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nuevo Traspaso Entre Almacenes.
+        /// </summary>
+        public static string DisplayName_NewInventoryTransfer {
+            get {
+                return ResourceManager.GetString("DisplayName_NewInventoryTransfer", resourceCulture);
             }
         }
         
@@ -1042,7 +1123,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Salida del Inventario.
+        ///   Looks up a localized string similar to Folio de Salida.
         /// </summary>
         public static string InventoryIssueId {
             get {
@@ -1060,7 +1141,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Entrada en el Inventario.
+        ///   Looks up a localized string similar to Folio de Entrada.
         /// </summary>
         public static string InventoryReceiptId {
             get {
@@ -1069,7 +1150,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Trasnferencia de Inventario.
+        ///   Looks up a localized string similar to Traspaso de Inventario.
         /// </summary>
         public static string InventoryTransfer {
             get {
@@ -1078,7 +1159,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Transferencia de Inventario.
+        ///   Looks up a localized string similar to Folio de Traspaso.
         /// </summary>
         public static string InventoryTransferId {
             get {
@@ -2203,6 +2284,33 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nueva Salida.
+        /// </summary>
+        public static string Title_NewInventoryIssue {
+            get {
+                return ResourceManager.GetString("Title_NewInventoryIssue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nueva Entrada.
+        /// </summary>
+        public static string Title_NewInventoryReceipt {
+            get {
+                return ResourceManager.GetString("Title_NewInventoryReceipt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nuevo Traspaso.
+        /// </summary>
+        public static string Title_NewInventoryTransfer {
+            get {
+                return ResourceManager.GetString("Title_NewInventoryTransfer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Venta Nueva.
         /// </summary>
         public static string Title_NewSale {
@@ -2473,6 +2581,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Los campos {0} y {1} no deben ser iguales..
+        /// </summary>
+        public static string Validation_ShouldNotBeEquals {
+            get {
+                return ResourceManager.GetString("Validation_ShouldNotBeEquals", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to El campo {0} debe tener entre {2} y {1} caracteres de largo..
         /// </summary>
         public static string Validation_StringLength {
@@ -2491,20 +2608,29 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Almacén Destino.
+        ///   Looks up a localized string similar to Almacén.
         /// </summary>
-        public static string WarehouseDestiny {
+        public static string Warehouse {
             get {
-                return ResourceManager.GetString("WarehouseDestiny", resourceCulture);
+                return ResourceManager.GetString("Warehouse", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Almacén Origen.
         /// </summary>
-        public static string WarehouseOrigin {
+        public static string WarehouseFrom {
             get {
-                return ResourceManager.GetString("WarehouseOrigin", resourceCulture);
+                return ResourceManager.GetString("WarehouseFrom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Almacén Destino.
+        /// </summary>
+        public static string WarehouseTo {
+            get {
+                return ResourceManager.GetString("WarehouseTo", resourceCulture);
             }
         }
         

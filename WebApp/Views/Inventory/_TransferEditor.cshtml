@@ -1,0 +1,46 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@model InventoryTransfer
+
+<fieldset>
+    <legend>@Resources.DisplayName_InventoryInformation</legend>
+@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "master-container" }))
+{
+    @Html.ValidationSummary(true)
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.From)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.FromId)
+        @Html.ValidationMessageFor(model => model.FromId)
+    </div>
+    <div class="editor-label">
+        @Html.LabelFor(model => model.To)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.ToId)
+        @Html.ValidationMessageFor(model => model.ToId)
+    </div>
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Comment)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.Comment)
+    </div>
+    <p><button type="submit" class="icon save">@Resources.Save</button></p>
+}
+</fieldset>
+<script type="text/javascript">
+    $(function () {
+        @if(Model.From != null)
+        {
+            @:$("#FromId").tokenInput("add", { id: "@Model.From.Id", name: "@Model.From.Name" });
+        }
+        @if(Model.To != null)
+        {
+            @:$("#ToId").tokenInput("add", { id: "@Model.To.Id", name: "@Model.To.Name" });
+        }
+    });
+</script>
