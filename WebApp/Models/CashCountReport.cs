@@ -50,7 +50,7 @@ namespace Business.Essentials.WebApp.Models
         public CashDrawer CashDrawer { get; set; }
 
         [DataType(DataType.DateTime)]
-        [Display(Name = "Start", ResourceType = typeof(Resources))]
+        [Display(Name = "StartDate", ResourceType = typeof(Resources))]
         public DateTime Start { get; set; }
 
         [DataType(DataType.DateTime)]
