@@ -9,6 +9,11 @@
 </head>
 <body>
     <header>
+        <div id="logo">
+            <img src="@Url.Content("~/Content/images/logo.png")"
+                 alt="@Resources.Alt_Logo"
+                 title="@Resources.Title_Logo"/>
+        </div>
         <h1>@Resources.Company</h1>
         @if (ViewBag.SkipAddress == null || !ViewBag.SkipAddress)
         {

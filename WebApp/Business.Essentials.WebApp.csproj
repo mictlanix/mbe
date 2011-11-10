@@ -156,6 +156,7 @@
     <Content Include="Content\images\print_icon.gif" />
     <Content Include="Content\images\wait.gif" />
     <Content Include="Content\images\welcome.png" />
+    <Content Include="Content\menu.css" />
     <Content Include="Content\ticket.css" />
     <Content Include="Content\icons\add-item.png" />
     <Content Include="Content\icons\addressbook.png" />
@@ -273,7 +274,6 @@
     <Content Include="Content\images\price7.png" />
     <Content Include="Content\images\true.png" />
     <Content Include="Content\main.css" />
-    <Content Include="Content\menu.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
