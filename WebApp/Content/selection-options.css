@@ -1,3 +1,7 @@
+.page {
+  min-width:800px;
+  margin:10px 20px;
+}
 .selection-options
 {
     padding:0;
@@ -102,15 +106,20 @@
 }
 .selection-options .option-desc .icon
 {
-    background:url(icons/dollar.png) no-repeat;
     margin:0 auto;
     display:block;
-    width:75px;
+    width:100px;
     padding:6px 0 6px 16px;
     border:2px solid #545454;
     border-radius:6px;
     font-size:20px;
     color:#333;
+    padding:6px 2px;
+}
+.selection-options .option-desc .icon.dollar
+{
+    background:url(icons/dollar.png) no-repeat;
+    padding:6px 0 6px 16px;
     *padding:5px 0 12px;
 }
 .selection-options .option-desc .text
@@ -121,3 +130,4 @@
     font-weight:lighter;
     margin:18px 0 0;
 }
+

@@ -682,6 +682,9 @@
     <Content Include="Views\Inventory\EditTransfer.cshtml" />
     <Content Include="Views\Inventory\Transfer.cshtml" />
     <Content Include="Views\Inventory\NewTransfer.cshtml" />
+    <Content Include="Views\Payments\CreditPayment.cshtml" />
+    <Content Include="Views\Payments\_Index.cshtml" />
+    <Content Include="Views\Payments\CashPayment.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

@@ -7,9 +7,8 @@
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments);
 }
+<link href="@Url.Content("~/Content/selection-options.css")" rel="stylesheet" type="text/css" />
 
-@using (Html.BeginForm("OpenSession", "Payments"))
-{
 <fieldset>
     <legend>@Resources.DisplayName_CashSession</legend>
 
@@ -27,18 +26,27 @@
         @Html.LabelFor(x => x.Start) :
         @Html.DisplayFor(x => x.Start)
     </div>
-
-    @for (int i = 0; i < Model.CashCounts.Count; i++)
-    {
-    <div class="display-label">
-        @Html.HiddenFor(x => Model.CashCounts[i].Denomination)
-        @Html.DisplayFor(x => Model.CashCounts[i].Denomination)
-        <span>&times;</span>
-        @Html.EditorFor(x => Model.CashCounts[i].Quantity)
-    </div>
-    }
-    
-    <p><button type="submit">@Resources.StartSession</button></p>
-
 </fieldset>
+<div>
+@if (Privilege.AllowCreate)
+{
+    using (Html.BeginForm("OpenSession", "Payments"))
+    {
+    <ul class="selection-options">
+        @for (int i = 0; i < Model.CashCounts.Count; i++)
+        {
+            <li>
+                <label>
+                    <span class="option-desc">
+                        <span class="icon">@Html.DisplayFor(x => Model.CashCounts[i].Denomination)</span>
+                        <span class="text">@Html.EditorFor(x => Model.CashCounts[i].Quantity)</span>
+                    </span>
+                </label>
+                @Html.HiddenFor(x => Model.CashCounts[i].Denomination)
+            </li>
+        }
+    </ul>
+    <p><button type="submit">@Resources.StartSession</button></p>
+    }
 }
+</div>

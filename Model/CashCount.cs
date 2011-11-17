@@ -48,6 +48,7 @@ namespace Business.Essentials.Model
         public virtual CashSession Session { get; set; }
 
         [Property]
+        [DataType(DataType.Currency)]
         [Display(Name = "Denomination", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
         public decimal Denomination { get; set; }

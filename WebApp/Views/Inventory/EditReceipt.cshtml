@@ -14,7 +14,6 @@
 <div id="master-container">
 @Html.Partial("_ReceiptInfo")
 </div>
-
 <div id="details-container">
     <div class="search-box">
         <button id="add" type="submit" class="icon add">@Resources.Add</button>
@@ -22,7 +21,6 @@
             <input type="text" id="product-search" name="product-search" />
         </div>
     </div>
-
     <div id="items-container">
         <ul id="items" class="list-items">
         @foreach (var item in Model.Details)
