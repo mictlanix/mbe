@@ -57,10 +57,49 @@ namespace Business.Essentials.WebApp.Controllers
             }
 
             var qry = from x in SalesOrder.Queryable
-                      where x.IsCompleted && !x.IsPaid && !x.IsCancelled
+                      where x.IsCompleted && !x.IsPaid && !x.IsCancelled && !x.IsCredit
                       select x;
 
             return View(new MasterDetails<CashSession, SalesOrder> { Master = session, Details = qry.ToList() });
+        }
+
+        [HttpPost]
+        public ActionResult Index(int? id)
+        {
+            var drawer = GetDrawer();
+            var session = GetSession();
+
+            if (drawer == null)
+            {
+                return View("InvalidCashDrawer");
+            }
+
+            if (session == null)
+            {
+                return RedirectToAction("OpenSession");
+            }
+
+            var qry = from x in SalesOrder.Queryable
+                      where x.IsCompleted && !x.IsPaid && 
+                            !x.IsCancelled && !x.IsCredit
+                      select x;
+
+            if (id != null && id > 0)
+            {
+                qry = from x in qry
+                      where x.Id == id
+                      select x;
+            }
+
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_Index", qry.ToList());
+            }
+            else
+            {
+                return View(new MasterDetails<CashSession, SalesOrder> { Master = session, Details = qry.ToList() }); 
+
+            }
         }
 
         // GET: /Payments/PrintCashCount/
@@ -92,7 +131,7 @@ namespace Business.Essentials.WebApp.Controllers
         {
             var model = new MasterDetails<CashSession, SalesOrder>();
             var qry = from x in SalesOrder.Queryable
-                      where x.IsCompleted && !x.IsPaid && !x.IsCancelled
+                      where x.IsCompleted && !x.IsPaid && !x.IsCancelled && !x.IsCredit
                       select x;
 
             model.Master = new CashSession
@@ -162,6 +201,10 @@ namespace Business.Essentials.WebApp.Controllers
 
             return View("PayOrder", order);
         }
+        public ViewResult PayCredit()
+        {
+            return View("NewPay");
+        }
 
         public ActionResult GetSalesOrderBalance(int id)
         {
@@ -173,10 +216,13 @@ namespace Business.Essentials.WebApp.Controllers
         [HttpPost]
         public JsonResult AddPayment(int order, int type, decimal amount, string reference)
         {
+            var sales_order = SalesOrder.Find(order);
+
             var item = new CustomerPayment
             {
                 CashSession = GetSession(),
-                SalesOrder = SalesOrder.Find(order),
+                SalesOrder = sales_order,
+                Customer = sales_order.Customer,
                 Method = (PaymentMethod)type,
                 Amount = amount,
                 Date = DateTime.Now,

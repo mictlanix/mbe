@@ -15,63 +15,18 @@
 
 @Html.Partial("_SessionInfo", Model.Master)
 
-<table>
-    <tr>
-        <th>
-            @Html.LabelFor(x => new SalesOrder().Id)
-        </th>
-
-        <th>
-            @Html.LabelFor(x => new SalesOrder().Date)
-        </th>
-
-        <th>
-            @Html.LabelFor(x => new SalesOrder().Customer)
-        </th>
-
-        <th>
-            @Html.LabelFor(x => new SalesOrder().DueDate)
-        </th>
-
-         <th>
-            @Html.LabelFor(x => new SalesOrder().SalesPerson)
-        </th>
-
-        <th>
-            @Html.LabelFor(x => new SalesOrder().PointOfSale)
-        </th>
-        
-        <th></th>
-    </tr>
-
-@foreach (var item in Model.Details) {
-    <tr>
-        <td class="number">
-            @Html.DisplayFor(x => item.Id)
-        </td>
-        <td class="center">
-            @Html.DisplayFor(x => item.Date)
-        </td>
-        <td>
-            @Html.DisplayFor(x => item.Customer.Name)
-        </td>
-        <td class="center">
-            @Html.DisplayFor(x => item.DueDate)
-        </td>
-        <td>
-            @Html.DisplayFor(x => item.SalesPerson.FirstName)
-            @Html.DisplayFor(x => item.SalesPerson.LastName)
-        </td>
-        <td class="center">
-            @Html.DisplayFor(x => item.PointOfSale.Name)
-        </td>
-        <td class="actions">
-        	@if(Privilege.AllowUpdate)
-        	{
-            	@Html.ActionLink(Resources.Pay, "PayOrder", new { id = item.Id }, new { @class = "button icon pay" })
-            }
-        </td>
-    </tr>
+@if (Privilege.AllowUpdate)
+{
+    <div id="tabs">
+        <ul>
+            <li><a href="#tabs-1">@Resources.DisplayName_CashPayment</a></li>
+            <li><a href="#tabs-2">@Resources.DisplayName_CreditPayment</a></li>
+        </ul>
+        <div id="tabs-1">
+            @Html.Partial("CashPayment", Model.Details)
+        </div>
+        <div id="tabs-2">
+            @Html.Partial("CreditPayment", new CustomerPayment())
+        </div>
+    </div>
 }
-
-</table>

@@ -61,6 +61,15 @@ namespace Business.Essentials.Model
         [Display(Name = "SalesOrder", ResourceType = typeof(Resources))]
         public virtual SalesOrder SalesOrder { get; set; }
 
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+        [Display(Name = "Customer", ResourceType = typeof(Resources))]
+        [UIHint("CustomerSelector")]
+        public int CustomerId { get; set; }
+
+        [BelongsTo("customer")]
+        [Display(Name = "Customer", ResourceType = typeof(Resources))]
+        public virtual Customer Customer { get; set; }
+
         [Property]
         [Display(Name = "Amount", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]

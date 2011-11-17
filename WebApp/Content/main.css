@@ -199,9 +199,16 @@ ul.list-items li div.action-link {
   float:right;
   clear:none;
 }
-
 ul.token-input-list {
     margin:2px 0;
     font:inherit;
     border:1px solid #ccc;
+}
+.selection-options input[type="text"] {
+    width:90px;
+    font-size:13px;
+    text-align:right;
+}
+#details-container {
+    margin:1.5em 0;
 }

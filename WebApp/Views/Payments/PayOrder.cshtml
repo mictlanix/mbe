@@ -22,6 +22,12 @@
 
     <div id="form">
         <div class="display-label">
+            @Html.LabelFor(model => new CustomerPayment().Amount)
+        </div>
+        <div class="display-field">
+            @Html.EditorFor(model => new CustomerPayment().Amount)
+        </div>
+        <div class="display-label">
             @Html.LabelFor(model => new CustomerPayment().Method)
         </div>
         <div class="editor-field">
@@ -32,19 +38,13 @@
 	                <label>
 	                    @Html.RadioButtonFor(model => new CustomerPayment().Method, (int)item)
 	                    <span class="option-desc">
-		                    <span class="icon">@Resources.Pay</span>
+		                    <span class="icon dollar">@Resources.Pay</span>
 		                    <span class="text">@(((PaymentMethod)item).GetDisplayName())</span>
 	                    </span>
 	                </label>
 	            </li>
             }
             </ul>
-        </div>
-        <div class="display-label">
-            @Html.LabelFor(model => new CustomerPayment().Amount)
-        </div>
-        <div class="display-field">
-            @Html.EditorFor(model => new CustomerPayment().Amount)
         </div>
         <div id="reference" style="display:none">
             <div class="display-label">
@@ -107,6 +107,9 @@
     }
 
     $(function () {
+        $("#Method").attr("checked", true);
+        $(".selection-options>li:first-child").addClass("selected");
+
         $("#pay").click(function () {
             var type = $("#Method:checked").val();
             var amount = $("#Amount").val();
@@ -116,8 +119,9 @@
                 $.get("/Payments/GetPayment/" + detail.id, function (data) {
                     $("#items").append(data);
                     $(":input").not(":submit, :button, :radio").val("").removeAttr("selected");
-                    $("#Method").attr("checked", false);
                     $("#reference").hide("slow");
+                    $("#Method").attr("checked", true);
+                    $(".selection-options>li:first-child").addClass("selected");                    
                     updateTotals();
                 });
 
@@ -133,11 +137,7 @@
                 $("#reference").hide("slow");
             }
         });
-    });
-</script>
-
-<script>
-    $(function () {
+    
         $(".selection-options>li").click(function () {
             $(".selection-options>li").removeClass("selected");
             $(this).addClass("selected");

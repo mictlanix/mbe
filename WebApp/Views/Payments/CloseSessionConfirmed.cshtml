@@ -46,6 +46,7 @@
     
 </fieldset>
 
+<div id="details-container">
 <table>
     <tr>
         <th>
@@ -78,7 +79,7 @@
         </td>
     </tr>
 </table>
-
+</div>
 <div style="float:right">
 @using (Html.BeginForm("CloseSession", "Payments", new { id = Model.Master.Id }))
 {
@@ -86,11 +87,9 @@
 
 }
 </div>
-
-<p>
+<div id="backTo">
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
-</p>
-
+</div>
 <script type="text/javascript">
     $(function() {
         $(".print").printPage({

@@ -592,7 +592,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 0.5,1,2,5,10,20,50,100,200,500,1000.
+        ///   Looks up a localized string similar to 0.2,0.5,1,2,5,10,20,50,100,200,500,1000.
         /// </summary>
         public static string Denominations {
             get {
@@ -646,6 +646,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Contado.
+        /// </summary>
+        public static string DisplayName_CashPayment {
+            get {
+                return ResourceManager.GetString("DisplayName_CashPayment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sesión de la Caja.
         /// </summary>
         public static string DisplayName_CashSession {
@@ -687,6 +696,15 @@ namespace Business.Essentials {
         public static string DisplayName_Contacts {
             get {
                 return ResourceManager.GetString("DisplayName_Contacts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crédito.
+        /// </summary>
+        public static string DisplayName_CreditPayment {
+            get {
+                return ResourceManager.GetString("DisplayName_CreditPayment", resourceCulture);
             }
         }
         
@@ -831,6 +849,15 @@ namespace Business.Essentials {
         public static string DisplayName_NewSale {
             get {
                 return ResourceManager.GetString("DisplayName_NewSale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selección de Cliente.
+        /// </summary>
+        public static string DisplayName_PayCredit {
+            get {
+                return ResourceManager.GetString("DisplayName_PayCredit", resourceCulture);
             }
         }
         
@@ -1569,6 +1596,15 @@ namespace Business.Essentials {
         public static string Pay {
             get {
                 return ResourceManager.GetString("Pay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Abono de Crédito.
+        /// </summary>
+        public static string PayCredit {
+            get {
+                return ResourceManager.GetString("PayCredit", resourceCulture);
             }
         }
         
@@ -2316,6 +2352,15 @@ namespace Business.Essentials {
         public static string Title_NewSale {
             get {
                 return ResourceManager.GetString("Title_NewSale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Abono de Crédito.
+        /// </summary>
+        public static string Title_PayCredit {
+            get {
+                return ResourceManager.GetString("Title_PayCredit", resourceCulture);
             }
         }
         
