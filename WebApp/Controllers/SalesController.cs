@@ -268,7 +268,7 @@ namespace Business.Essentials.WebApp.Controllers
         PointOfSale GetPoS()
         {
             var addr = Request.UserHostAddress;
-            return PointOfSale.Queryable.FirstOrDefault();//.SingleOrDefault(x => x.HostAddress == addr);
+            return PointOfSale.Queryable.SingleOrDefault(x => x.HostAddress == addr);
         }
     }
 }
