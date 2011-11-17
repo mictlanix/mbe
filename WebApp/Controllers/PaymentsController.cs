@@ -284,7 +284,7 @@ namespace Business.Essentials.WebApp.Controllers
         {
             var addr = Request.UserHostAddress;
 
-            return CashDrawer.Queryable.FirstOrDefault();//SingleOrDefault(x => x.HostAddress == addr);
+            return CashDrawer.Queryable.SingleOrDefault(x => x.HostAddress == addr);
         }
 
         CashSession GetSession()
@@ -292,8 +292,7 @@ namespace Business.Essentials.WebApp.Controllers
             var addr = Request.UserHostAddress;
             return CashSession.Queryable
                               .Where(x => x.End == null)
-                              .FirstOrDefault();
-                              //.SingleOrDefault(x => x.CashDrawer.HostAddress == addr);
+                              .SingleOrDefault(x => x.CashDrawer.HostAddress == addr);
         }
     }
 }
