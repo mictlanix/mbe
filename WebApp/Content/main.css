@@ -146,10 +146,10 @@ ul.list-items li:hover {
   background:AliceBlue ;
 }
 ul.list-items li:first-child {
-  border-top:1px solid gray;
+  border-top:1px solid #ddd;
 }
 ul.list-items li {
-  border-bottom:1px solid gray;
+  border-bottom:1px solid #ddd;
 }
 ul.list-items li div.photo {
   float:left;
@@ -160,8 +160,19 @@ ul.list-items li div.photo img {
   max-width:50px;
   max-height:50px;
 }
-ul.list-items li div.info {
+ul.list-items li div.info 
+{
   margin:0 0 0 60px;
+}
+ul.list-items li div.info span.text
+{
+    font-size:18px;
+    font-weight:lighter;
+}
+ul.list-items li div.info label
+{
+    font-size:18px;
+    font-weight:lighter;
 }
 ul.list-items li div.action-link {
   float:right;

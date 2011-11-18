@@ -54,10 +54,12 @@
                 @Html.EditorFor(model => new CustomerPayment().Reference)
             </div>
         </div>
-        <p><button id="pay" type="submit" class="icon pay">@Resources.Pay</button></p>
+        <div class="right">
+            <p><button id="pay" type="submit" class="icon pay">@Resources.Pay</button></p>
+        </div>
     </div>
-    <div id="list-items">
-        <ul id="items">
+    <div id="items-container">
+        <ul id="items" class="list-items">
         @foreach (var item in Model.Payments)
         {
             @Html.Partial("_Payment", item) 
@@ -118,10 +120,11 @@
             $.post("/Payments/AddPayment", { "order": SalesOrder.Id, "type": type, "amount": amount, "reference": reference }, function (detail) {
                 $.get("/Payments/GetPayment/" + detail.id, function (data) {
                     $("#items").append(data);
+                    $(".selection-options>li").removeClass("selected");
                     $(":input").not(":submit, :button, :radio").val("").removeAttr("selected");
                     $("#reference").hide("slow");
                     $("#Method").attr("checked", true);
-                    $(".selection-options>li:first-child").addClass("selected");                    
+                    $(".selection-options>li:first-child").addClass("selected");
                     updateTotals();
                 });
 

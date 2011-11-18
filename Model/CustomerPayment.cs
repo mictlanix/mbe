@@ -71,6 +71,7 @@ namespace Business.Essentials.Model
         public virtual Customer Customer { get; set; }
 
         [Property]
+        [DataType(DataType.Currency)]
         [Display(Name = "Amount", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
         public decimal Amount { get; set; }

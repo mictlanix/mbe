@@ -50,6 +50,13 @@ namespace Business.Essentials.WebApp.Controllers
 
         bool CreateUser(string username, string password, int employee, string email)
         {
+            username = username.ToLower();
+
+            if (Model.User.Queryable.Count(x => x.UserName == username) > 0)
+            {
+                throw new Exception(Business.Essentials.Resources.Message_UserNameAlreadyExists);
+            }
+
             User user = new User
             {
                 UserName = username,
@@ -57,11 +64,6 @@ namespace Business.Essentials.WebApp.Controllers
                 Employee = Employee.Find(employee),
                 Email = email
             };
-
-            if (Model.User.Queryable.Count(x => x.UserName == username) > 0)
-            {
-                throw new Exception(Business.Essentials.Resources.Message_UserNameAlreadyExists);
-            }
 
             user.Create();
 
@@ -107,6 +109,8 @@ namespace Business.Essentials.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                model.UserName = model.UserName.ToLower();
+
                 if (ValidateUser(model.UserName, model.Password))
                 {
                     FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
@@ -157,6 +161,7 @@ namespace Business.Essentials.WebApp.Controllers
             if (ModelState.IsValid)
             {
                 // Attempt to register the user
+                model.UserName = model.UserName.ToLower();
 
                 try
                 {
