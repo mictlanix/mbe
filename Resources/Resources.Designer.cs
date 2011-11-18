@@ -2732,5 +2732,14 @@ namespace Business.Essentials {
                 return ResourceManager.GetString("Zone", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registro del Pago Exitoso.
+        /// </summary>
+        public static string DisplayName_PaymentSuccesful {
+            get {
+                return ResourceManager.GetString("DisplayName_PaymentSuccesful", resourceCulture);
+            }
+        }
     }
 }

@@ -18,3 +18,8 @@ FROM ramos.productos1 p
 INNER JOIN ramos.unidades u ON p.unidad = u.id
 INNER JOIN ramos.precios l ON p.lista_precio = l.id
 
+
+update customer_payment
+set customer = (select customer from sales_order o where o.sales_order_id = sales_order)
+
+

@@ -35,22 +35,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Business.Essentials.Model
 {
-    public enum PaymentMethod : int
-    {
-        [Display(Name = "Cash", ResourceType = typeof(Resources))]
-        Cash = 1,
-        [Display(Name = "CreditCard", ResourceType = typeof(Resources))]
-        CreditCard,
-        [Display(Name = "DebitCard", ResourceType = typeof(Resources))]
-        DebitCard,
-        [Display(Name = "Check", ResourceType = typeof(Resources))]
-        Check,
-        [Display(Name = "WireTransfer", ResourceType = typeof(Resources))]
-        WireTransfer,
-        [Display(Name = "GovernmentFunding", ResourceType = typeof(Resources))]
-        GovernmentFunding
-    }
-
     [ActiveRecord("customer_payment")]
     public class CustomerPayment : ActiveRecordLinqBase<CustomerPayment>
     {
@@ -88,12 +72,10 @@ namespace Business.Essentials.Model
         [Property]
         [DataType(DataType.DateTime)]
         [Display(Name = "Date", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         public DateTime Date { get; set; }
 
         [BelongsTo("cash_session")]
         [Display(Name = "CashSession", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         public virtual CashSession CashSession { get; set; }
 
         [Property]
@@ -104,7 +86,7 @@ namespace Business.Essentials.Model
 
         public override string ToString()
         {
-            return string.Format("{0} [{1}, {2}, {3}]", SalesOrder, Amount, Method, Date);
+            return string.Format("{0} : {1:c} [{2:u}]", Method, Amount, Date);
         }
 
         public override bool Equals(object obj)
