@@ -1008,4 +1008,7 @@
   <data name="DisplayName_CreditPayment" xml:space="preserve">
     <value>Crédito</value>
   </data>
+  <data name="DisplayName_PaymentSuccesful" xml:space="preserve">
+    <value>Registro del Pago Exitoso</value>
+  </data>
 </root>

@@ -129,12 +129,12 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ActionResult OpenSession()
         {
-            var model = new MasterDetails<CashSession, SalesOrder>();
-            var qry = from x in SalesOrder.Queryable
-                      where x.IsCompleted && !x.IsPaid && !x.IsCancelled && !x.IsCredit
-                      select x;
-
-            model.Master = new CashSession
+            if (GetSession() != null)
+            {
+                return RedirectToAction("Index");
+            }
+			
+            var model = new CashSession
             {
                 Start = DateTime.Now,
                 CashCounts = CashHelpers.ListDenominations(),
@@ -142,17 +142,10 @@ namespace Business.Essentials.WebApp.Controllers
                 Cashier = SecurityHelpers.GetUser(User.Identity.Name).Employee
             };
 
-            if (model.Master.CashDrawer == null)
+            if (model.CashDrawer == null)
             {
                 return View("InvalidCashDrawer");
             }
-
-            if (GetSession() != null)
-            {
-                return RedirectToAction("Index");
-            }
-
-            model.Details = qry.ToList();
 
             return View(model);
         }
@@ -201,11 +194,7 @@ namespace Business.Essentials.WebApp.Controllers
 
             return View("PayOrder", order);
         }
-        public ViewResult PayCredit()
-        {
-            return View("NewPay");
-        }
-
+		
         public ActionResult GetSalesOrderBalance(int id)
         {
             var order = SalesOrder.Find(id);
@@ -249,9 +238,42 @@ namespace Business.Essentials.WebApp.Controllers
                 item.CreateAndFlush();
             }
 
-            System.Diagnostics.Debug.WriteLine("New Detail [Id = {0}]", item.Id);
+            System.Diagnostics.Debug.WriteLine("New Payment [Id = {0}]", item.Id);
 
             return Json(new { id = item.Id });
+        }
+		
+        public ActionResult CreditPayment()
+        {
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_CreditPayment", new CustomerPayment());
+            }
+			
+            return View("_CreditPayment", new CustomerPayment());
+        }
+		
+        [HttpPost]
+        public ActionResult CreditPayment(CustomerPayment item)
+        {
+            item.CashSession = GetSession();
+            item.Customer = Customer.Find(item.CustomerId);
+            item.Date = DateTime.Now;
+            item.Change = 0m;
+
+            using (var session = new SessionScope())
+            {
+                item.CreateAndFlush();
+            }
+
+            System.Diagnostics.Debug.WriteLine("New Payment [Id = {0}]", item.Id);
+			
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_CreditPaymentSuccesful", item);
+            }
+			
+            return View("_CreditPaymentSuccesful", item);
         }
 
         public ActionResult GetPayment(int id)

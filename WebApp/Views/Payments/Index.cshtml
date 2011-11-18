@@ -19,14 +19,14 @@
 {
     <div id="tabs">
         <ul>
-            <li><a href="#tabs-1">@Resources.DisplayName_CashPayment</a></li>
-            <li><a href="#tabs-2">@Resources.DisplayName_CreditPayment</a></li>
+            <li><a href="#cash-payment">@Resources.DisplayName_CashPayment</a></li>
+            <li><a href="#credit-payment">@Resources.DisplayName_CreditPayment</a></li>
         </ul>
-        <div id="tabs-1">
-            @Html.Partial("CashPayment", Model.Details)
+        <div id="cash-payment">
+            @Html.Partial("_CashPayment", Model.Details)
         </div>
-        <div id="tabs-2">
-            @Html.Partial("CreditPayment", new CustomerPayment())
+        <div id="credit-payment">
+            @Html.Partial("_CreditPayment", new CustomerPayment())
         </div>
     </div>
 }

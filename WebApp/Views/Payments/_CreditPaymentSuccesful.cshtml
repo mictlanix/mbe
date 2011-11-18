@@ -1,0 +1,40 @@
+﻿@using Business.Essentials
+@using Business.Essentials.WebApp.Helpers
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Models
+@model CustomerPayment
+
+<h2>@Resources.DisplayName_PaymentSuccesful</h2>
+
+<div id="details-container">
+	<div class="editor-label">
+	    @Html.LabelFor(x => x.Customer)
+	</div>
+	<div class="display-field">
+	    @Html.DisplayFor(x => x.Customer.Name)
+	</div>
+	<div class="display-label">
+	    @Html.LabelFor(x => x.Amount)
+	</div>
+	<div class="display-field">
+	    @Html.DisplayFor(x => x.Amount)
+	</div>
+	<div class="display-label">
+	    @Html.LabelFor(x => x.Method)
+	</div>
+	<div class="editor-field">
+		@Model.Method.GetDisplayName()
+	</div>
+	@if (!string.IsNullOrEmpty(Model.Reference))
+	{
+	<div class="display-label">
+	    @Html.LabelFor(x => x.Reference)
+	</div>
+	<div class="display-field">
+	    @Html.DisplayFor(x => x.Reference)
+	</div>
+	}
+</div>
+<div id="back-to-list">
+    @Ajax.ActionLink(Resources.BackToList, "CreditPayment", "Payments", new { }, new AjaxOptions { UpdateTargetId = "credit-payment" }, new { @class = "button icon back" })
+</div>
