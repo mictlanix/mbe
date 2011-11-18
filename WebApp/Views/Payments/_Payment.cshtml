@@ -3,7 +3,31 @@
 @using Business.Essentials.Model
 @model Business.Essentials.Model.CustomerPayment
 <li id="payment@(Model.Id)">
-    <div style="display:inline-block;height:60px;vertical-align:top;">
+    <div class="photo">
+        <img src="@Url.Content("~/Content/icons/dollar.png")" title="@Resources.Pay"/>
+    </div>
+    <div class="action-link">
+        <a class="button icon-only icon delete" title="@Resources.Delete" href="/Payments/RemovePayment/@Model.Id"></a>
+        <script type="text/javascript">
+            $("#payment@(Model.Id) a.delete").click(function(event){
+                event.preventDefault();
+                removeItem(@Model.Id);
+            });
+        </script>
+    </div>
+    <div class="info">
+        <label>@Resources.Amount:</label>
+        <span class="text">@Html.DisplayFor(x => x.Amount)</span>
+        <br/>
+        <label>@Resources.Type:</label>
+        <span class="text">@Model.Method.GetDisplayName()</span>
+        @if (!string.IsNullOrEmpty(Model.Reference))
+        {
+            <label>@Resources.Reference:</label>
+            <span class="text">@Model.Reference</span>
+        }
+    </div>
+    @*<div style="display:inline-block;height:60px;vertical-align:top;">
         <b>@Model.Method.GetDisplayName()</b><br/>
         @if (!string.IsNullOrEmpty(Model.Reference))
         {
@@ -17,5 +41,6 @@
                 removeItem(@Model.Id);
             });
         </script>
-    </div>
+    </div>*@
+
 </li>
