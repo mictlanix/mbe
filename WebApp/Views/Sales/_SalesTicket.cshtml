@@ -1,5 +1,7 @@
 ﻿@using Business.Essentials
 @using Business.Essentials.Model
+@using Business.Essentials.WebApp.Models
+@using Business.Essentials.WebApp.Helpers
 @model SalesOrder
 
 @{
@@ -69,9 +71,27 @@
     <tr>
         <td></td>
         <td></td>
-        <td class="total right">Total</td>
+        <td class="total right">@Resources.Total</td>
         <td class="total number">@Html.DisplayFor(x => x.Total)</td>
     </tr>
+    @foreach (var item in Model.Payments)
+    {
+        <tr>
+            <td></td>
+            <td></td>
+            <td class="right">@item.Method.GetDisplayName()</td>
+            <td class="number">@Html.DisplayFor(modelItem => item.Cash)</td>
+        </tr>
+    }
+    @if (Model.Payments.Sum(x => x.Change.GetValueOrDefault()) > 0)
+    {
+        <tr>
+            <td></td>
+            <td></td>
+            <td class="right">@Resources.Change</td>
+            <td class="number">@Html.DisplayFor(x => Model.Balance)</td>
+        </tr>
+    }
 </table>
 
 <div class="display-label display-field">

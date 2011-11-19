@@ -110,7 +110,7 @@
     }
 
     $(function () {
-        $("#product-search").tokenInput("@Url.Action("GetSuggestions", "Products")", {
+        $("#product-search").tokenInput("@Url.Action("GetSuggestions", "Sales", new { order = Model.Id })", {
             hintText: "@Resources.HIntText",
             noResultsText: "@Resources.NoResultsText",
             searchingText: "@Resources.SearchingText",          
