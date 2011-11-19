@@ -78,7 +78,7 @@ namespace Business.Essentials.Model
 
         [Property]
         [Display(Name = "Cost", ResourceType = typeof(Resources))]
-        [DisplayFormat(DataFormatString = "{0:c}")]
+        [DataType(DataType.Currency)]
         [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
         public decimal Cost { get; set; }
 
