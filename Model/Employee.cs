@@ -35,24 +35,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Business.Essentials.Model
 {
-    public enum GenderEnum : int
-    {
-        [Display(Name = "Male", ResourceType = typeof(Resources))]
-        Male,
-        [Display(Name = "Female", ResourceType = typeof(Resources))]
-        Female
-    }
-
     [ActiveRecord("employee")]
     public class Employee : ActiveRecordLinqBase<Employee>
     {
         public Employee()
         {
-        }
-
-        public override string ToString()
-        {
-            return string.Format("{0} {1}", FirstName, LastName).Trim();
         }
 
         [PrimaryKey(PrimaryKeyType.Identity, "employee_id")]
@@ -98,6 +85,35 @@ namespace Business.Essentials.Model
         [Display(Name = "StartJobDate", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         public DateTime StartJobDate { get; set; }
+		
+        #region Override Base Methods
 
+        public override string ToString()
+        {
+            return string.Format("{0}", Name);
+        }
+
+        public override bool Equals(object obj)
+        {
+            Employee other = obj as Employee;
+
+            if (other == null)
+                return false;
+
+            if (Id == 0 && other.Id == 0)
+                return (object)this == other;
+            else
+                return Id == other.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            if (Id == 0)
+                return base.GetHashCode();
+
+            return string.Format("{0}#{1}", GetType().FullName, Id).GetHashCode();
+        }
+
+        #endregion
     }
 }

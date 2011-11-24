@@ -1,5 +1,5 @@
-﻿// 
-// HtmlHelpers.cs
+// 
+// GenderEnum.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
@@ -28,41 +28,14 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web.Mvc;
-using System.Web.Routing;
-using Business.Essentials.Model;
 
-namespace Business.Essentials.WebApp.Helpers
+namespace Business.Essentials.Model
 {
-    public static class SecurityHelpers
+    public enum GenderEnum : int
     {
-        public static User CurrentUser(this HtmlHelper helper)
-        {
-			User user = helper.ViewContext.HttpContext.Items["CurrentUser"] as User;
-			
-			if (user == null)
-			{
-				user = GetUser(helper, helper.ViewContext.HttpContext.User.Identity.Name);
-				helper.ViewContext.HttpContext.Items.Add("CurrentUser", user);
-			}
-			
-            return user;
-        }
-
-        public static User GetUser(this HtmlHelper helper, string username)
-        {
-            return GetUser(username);
-        }
-
-        public static User GetUser(string username)
-        {
-            return User.TryFind(username);
-        }
-
-        public static AccessPrivilege GetPrivilege(this HtmlHelper helper, User user, SystemObjects obj)
-        {
-            return user.Privileges.SingleOrDefault(x => x.Object == obj) ?? new AccessPrivilege();
-        }
+        [Display(Name = "Male", ResourceType = typeof(Resources))]
+        Male,
+        [Display(Name = "Female", ResourceType = typeof(Resources))]
+        Female
     }
 }

@@ -36,33 +36,26 @@
 
 @foreach (var item in Model) {
     <tr>
-       
+        <td class="number">
+            @Html.DisplayFor(x => item.ProductCode)
+        </td>
         <td>
-            @Html.DisplayFor(modelItem => item.ProductCode)
+            @Html.DisplayFor(x => item.ProductName)
         </td>
-       
-        <td>
-            @Html.DisplayFor(modelItem => item.ProductName)
-        </td>
-
         <td class="number">
-            @Html.DisplayFor(modelItem => item.Quantity)
+            @Html.DisplayFor(x => item.Quantity)
         </td>
-
         <td class="number">
-            @Html.DisplayFor(modelItem => item.Price)
+            @Html.DisplayFor(x => item.Price)
         </td>
-
         <td class="number">
-            @Html.DisplayFor(modelItem => item.Discount)
+            @Html.DisplayFor(x => item.Discount)
         </td>
-
         <td class="number">
-            @Html.DisplayFor(modelItem => item.Taxes)
+            @Html.DisplayFor(x => item.Taxes)
         </td>
-        
         <td class="number">
-            @Html.DisplayFor(modelItem => item.Total)
+            @Html.DisplayFor(x => item.Total)
         </td>
     </tr>
 }
@@ -83,5 +76,4 @@
         @Model.Sum(x => x.Total).ToString("c")
     </td>
 </tr>
-
 </table>

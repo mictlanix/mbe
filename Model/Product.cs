@@ -43,10 +43,10 @@ namespace Business.Essentials.Model
         public int Id { get; set; }
 
         [Property]
+        [ValidateIsUnique]
         [Display(Name = "Code", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [UniqueProductCode(ErrorMessageResourceName = "Validation_Duplicate", ErrorMessageResourceType = typeof(Resources))]
-        [ValidateIsUnique]
         [StringLength(25, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string Code { get; set; }
 
@@ -78,7 +78,7 @@ namespace Business.Essentials.Model
 
         [Property]
         [Display(Name = "Cost", ResourceType = typeof(Resources))]
-        [DisplayFormat(DataFormatString = "{0:c}")]
+        [DataType(DataType.Currency)]
         [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
         public decimal Cost { get; set; }
 
@@ -160,11 +160,13 @@ namespace Business.Essentials.Model
 
         [BelongsTo("category")]
         [Display(Name = "Category", ResourceType = typeof(Resources))]
+		[UIHint("CategorySelector")]
         public virtual Category Category { get; set; }
 
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "Supplier", ResourceType = typeof(Resources))]
-        public int SupplierId { get; set; }
+        [UIHint("SupplierSelector")]
+		public int SupplierId { get; set; }
 
         [BelongsTo("supplier")]
         [Display(Name = "Supplier", ResourceType = typeof(Resources))]

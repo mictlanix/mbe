@@ -414,6 +414,7 @@
     <Content Include="Views\Payments\_CreditPaymentSuccesful.cshtml" />
     <Content Include="Views\Payments\_CreditPayment.cshtml" />
     <Content Include="Views\Payments\_CashPayment.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\PriceListSelector.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />

@@ -33,6 +33,7 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Castle.ActiveRecord;
 using Business.Essentials.Model;
 
 namespace Business.Essentials.WebApp.Controllers
@@ -70,9 +71,18 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ViewResult Details(int id)
         {
-            Customer customer = Customer.Find(id);
-            ViewBag.OwnerId = customer.Id;
-            return View(customer);
+			Customer item;
+			
+			using(new SessionScope())
+			{
+	            item = Customer.Find(id);
+				item.Addresses.ToList();
+				item.Contacts.ToList();
+			}
+			
+			ViewBag.OwnerId = item.Id;
+			
+            return View(item);
         }
 
         //
@@ -114,17 +124,25 @@ namespace Business.Essentials.WebApp.Controllers
         // POST: /Customer/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(Customer customer)
+        public ActionResult Edit(Customer item)
         {
-            if (ModelState.IsValid)
-            {
-                PriceList priceList = PriceList.Find(customer.PriceListId);
-                customer.PriceList = priceList;
-
-                customer.Save();
-                return RedirectToAction("Index");
-            }
-            return View(customer);
+            item.PriceList = PriceList.TryFind(item.PriceListId);
+			
+            if (!ModelState.IsValid)
+            	return View(item);
+			
+			var customer = Customer.Find(item.Id);
+			
+			customer.Name = item.Name;
+			customer.Zone = item.Zone;
+			customer.PriceList = item.PriceList;
+			customer.CreditDays = item.CreditDays;
+			customer.CreditLimit = item.CreditLimit;
+			customer.Comment = item.Comment;
+			
+            customer.Save();
+			
+            return RedirectToAction("Index");
         }
 
         //

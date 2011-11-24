@@ -8,6 +8,7 @@ using System.Web.Routing;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using Business.Essentials.Model;
+using Business.Essentials.WebApp.Helpers;
 
 namespace Business.Essentials.WebApp
 {
@@ -51,14 +52,16 @@ namespace Business.Essentials.WebApp
 		/*
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
-            HttpContext.Current.Response.Cache.SetExpires(DateTime.UtcNow.AddDays(-1));
-            HttpContext.Current.Response.Cache.SetMaxAge(TimeSpan.FromSeconds(0));
-            HttpContext.Current.Response.Cache.AppendCacheExtension("must-revalidate,proxy-revalidate");
-            HttpContext.Current.Response.Cache.SetValidUntilExpires(false);
-            HttpContext.Current.Response.Cache.SetRevalidation(HttpCacheRevalidation.AllCaches);
-            HttpContext.Current.Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            HttpContext.Current.Response.Cache.SetNoStore();
+			if(HttpContext.Current.User != null)
+			{
+				HttpContext.Current.Items.Add("CurrentUser", SecurityHelpers.GetUser(HttpContext.Current.User.Identity.Name));
+			}
         }
-        */
+		*/
+		
+		protected void Application_EndRequest(Object sender, EventArgs e)
+		{
+			HttpContext.Current.Items.Remove("CurrentUser");
+		}
     }
 }

@@ -45,11 +45,15 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ViewResult Details(int id)
         {
-            BankAccount bankAccount = BankAccount.Find(id);
-            var supplier = bankAccount.Suppliers.First();
-
-            ViewBag.OwnerId = supplier.Id;
-            return View(bankAccount);
+            using (new SessionScope())
+            {
+	            var item = BankAccount.Find(id);
+	            var supplier = item.Suppliers.First();
+	
+	            ViewBag.OwnerId = supplier.Id;
+			
+            	return View(item);
+			}
         }
 
         //
@@ -71,16 +75,19 @@ namespace Business.Essentials.WebApp.Controllers
             {
                 int owner = int.Parse(Request.Params["OwnerId"]);
 
-	            using (var session = new SessionScope())
+	            using (new SessionScope())
 	            {
 	                item.CreateAndFlush();
 	            }
 
 	            System.Diagnostics.Debug.WriteLine("New BankAccount [Id = {0}]", item.Id);
 				
-                var supplier = Supplier.Find(owner);
-                supplier.BanksAccounts.Add(item);
-                supplier.Save();
+	            using (new SessionScope())
+	            {
+	                var supplier = Supplier.Find(owner);
+	                supplier.BanksAccounts.Add(item);
+	                supplier.Save();
+	            }
 				
                 return RedirectToAction("Details", "Suppliers", new { id = owner });
             }
@@ -93,28 +100,32 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ActionResult Edit(int id)
         {
-            BankAccount bankAccount = BankAccount.Find(id);
-            var supplier = bankAccount.Suppliers.First();
-
-            ViewBag.OwnerId = supplier.Id;
-            return View(bankAccount);
+            using (new SessionScope())
+            {
+	            var item = BankAccount.Find(id);
+	            var supplier = item.Suppliers.First();
+	
+	            ViewBag.OwnerId = supplier.Id;
+			
+            	return View(item);
+			}
         }
 
         //
         // POST: /BanksAccounts/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(BankAccount bankAccount)
+        public ActionResult Edit(BankAccount item)
         {
             if (ModelState.IsValid)
             {
                 int owner = int.Parse(Request.Params["OwnerId"]);
 				
-                bankAccount.Save();
+                item.Save();
 
                 return RedirectToAction("Details", "Suppliers", new { id = owner });
             }
-            return View(bankAccount);
+            return View(item);
         }
 
         //
@@ -122,11 +133,15 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ActionResult Delete(int id)
         {
-            BankAccount bankAccount = BankAccount.Find(id);
-            var supplier = bankAccount.Suppliers.First();
-
-            ViewBag.OwnerId = supplier.Id;
-            return View(bankAccount);
+            using (new SessionScope())
+            {
+	            var item = BankAccount.Find(id);
+	            var supplier = item.Suppliers.First();
+	
+	            ViewBag.OwnerId = supplier.Id;
+				
+	            return View(item);
+			}
         }
 
         //
@@ -135,17 +150,22 @@ namespace Business.Essentials.WebApp.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            var bankAccount = BankAccount.Find(id);
-            var supplier = bankAccount.Suppliers.FirstOrDefault();
             int owner = int.Parse(Request.Params["OwnerId"]);
-
-            if (supplier != null)
+			
+            using (new SessionScope())
             {
-                supplier.BanksAccounts.Remove(bankAccount);
-                supplier.Save();
-            }
-
-            bankAccount.Delete();
+	            var item = BankAccount.Find(id);
+	            var supplier = item.Suppliers.FirstOrDefault();
+	
+	            if (supplier != null)
+	            {
+	                supplier.BanksAccounts.Remove(item);
+	                supplier.Save();
+	            }
+				
+	            item.Delete();
+			}
+			
             return RedirectToAction("Details", "Suppliers", new { id = owner });
         }
 

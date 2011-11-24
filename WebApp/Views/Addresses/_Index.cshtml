@@ -38,7 +38,7 @@
 
 @foreach (var item in Model) {
     <tr>
-        <td>
+        <td class="nowrap">
             @Html.DisplayFor(x => item.TaxpayerId)
         </td>
         <td>
@@ -58,7 +58,7 @@
         <td>
             @Html.DisplayFor(x => item.State)
         </td>
-        <td>
+        <td class="number">
             @Html.DisplayFor(x => item.ZipCode)
         </td>
         <td class="actions">

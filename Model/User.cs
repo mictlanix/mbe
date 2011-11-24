@@ -72,6 +72,5 @@ namespace Business.Essentials.Model
             get { return privileges; }
             set { privileges = value; }
         }
-
     }
 }
