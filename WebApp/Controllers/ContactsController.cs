@@ -45,21 +45,25 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ViewResult Details(int id)
         {
-            Contact contact = Contact.Find(id);
-            var customer = contact.Customers.FirstOrDefault();
-
-            if (customer == null)
+            using (new SessionScope())
             {
-                var supplier = contact.Suppliers.First();
-                ViewBag.OwnerId = supplier.Id;
-                ViewBag.OwnerType = "Suppliers";
-            }
-            else
-            {
-                ViewBag.OwnerId = customer.Id;
-                ViewBag.OwnerType = "Customers";
-            }
-            return View(contact);
+	            Contact item = Contact.Find(id);
+	            var customer = item.Customers.FirstOrDefault();
+	
+	            if (customer == null)
+	            {
+	                var supplier = item.Suppliers.First();
+	                ViewBag.OwnerId = supplier.Id;
+	                ViewBag.OwnerType = "Suppliers";
+	            }
+	            else
+	            {
+	                ViewBag.OwnerId = customer.Id;
+	                ViewBag.OwnerType = "Customers";
+	            }
+				
+	            return View(item);
+			}
         }
 
         //
@@ -83,38 +87,44 @@ namespace Business.Essentials.WebApp.Controllers
         // POST: /Contacts/Create
 
         [HttpPost]
-        public ActionResult Create(Contact contact)
+        public ActionResult Create(Contact item)
         {
             if (ModelState.IsValid)
             {
                 int owner = int.Parse(Request.Params["OwnerId"]);
                 string type = Request.Params["OwnerType"];
 				
-	            using (var session = new SessionScope())
+	            using (new SessionScope())
 	            {
-	                contact.CreateAndFlush();
+	                item.CreateAndFlush();
 	            }
 
-	            System.Diagnostics.Debug.WriteLine("New Contact [Id = {0}]", contact.Id);
+	            System.Diagnostics.Debug.WriteLine("New Contact [Id = {0}]", item.Id);
 				
                 if (type == "Suppliers")
                 {
-                    var supplier = Supplier.Find(owner);
-					supplier.Contacts.Add(contact);
-                	supplier.Save();
+		            using (new SessionScope())
+		            {
+	                    var supplier = Supplier.Find(owner);
+						supplier.Contacts.Add(item);
+	                	supplier.Save();
+		            }
                 }
 
                 if (type == "Customers")
                 {
-                    var customer = Customer.Find(owner);
-					customer.Contacts.Add(contact);
-                	customer.Save();
+		            using (new SessionScope())
+		            {
+	                    var customer = Customer.Find(owner);
+						customer.Contacts.Add(item);
+	                	customer.Save();
+		            }
                 }
 
                 return RedirectToAction("Details", type, new { id = owner });
             }
 
-            return View(contact);
+            return View(item);
         }
 
         //
@@ -122,22 +132,25 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ActionResult Edit(int id)
         {
-            Contact contact = Contact.Find(id);
-            var customer = contact.Customers.FirstOrDefault();
-
-            if (customer == null)
+            using (new SessionScope())
             {
-                var supplier = contact.Suppliers.First();
-                ViewBag.OwnerId = supplier.Id;
-                ViewBag.OwnerType = "Suppliers";
-            }
-            else
-            {
-                ViewBag.OwnerId = customer.Id;
-                ViewBag.OwnerType = "Customers";
-            }
-
-            return View(contact);
+            	var item = Contact.Find(id);
+	            var customer = item.Customers.FirstOrDefault();
+	
+	            if (customer == null)
+	            {
+	                var supplier = item.Suppliers.First();
+	                ViewBag.OwnerId = supplier.Id;
+	                ViewBag.OwnerType = "Suppliers";
+	            }
+	            else
+	            {
+	                ViewBag.OwnerId = customer.Id;
+	                ViewBag.OwnerType = "Customers";
+	            }
+				
+            	return View(item);
+			}
         }
 
         //
@@ -163,22 +176,25 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ActionResult Delete(int id)
         {
-            Contact contact = Contact.Find(id);
-            var customer = contact.Customers.FirstOrDefault();
-
-            if (customer == null)
+            using (new SessionScope())
             {
-                var supplier = contact.Suppliers.First();
-                ViewBag.OwnerId = supplier.Id;
-                ViewBag.OwnerType = "Suppliers";
-            }
-            else
-            {
-                ViewBag.OwnerId = customer.Id;
-                ViewBag.OwnerType = "Customers";
-            }
-
-            return View(contact);
+	            var item = Contact.Find(id);
+	            var customer = item.Customers.FirstOrDefault();
+	
+	            if (customer == null)
+	            {
+	                var supplier = item.Suppliers.First();
+	                ViewBag.OwnerId = supplier.Id;
+	                ViewBag.OwnerType = "Suppliers";
+	            }
+	            else
+	            {
+	                ViewBag.OwnerId = customer.Id;
+	                ViewBag.OwnerType = "Customers";
+	            }
+	
+	            return View(item);
+			}
         }
 
         //
@@ -187,26 +203,30 @@ namespace Business.Essentials.WebApp.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            var contact = Contact.Find(id);
-            var customer = contact.Customers.FirstOrDefault();
-            var supplier = contact.Suppliers.FirstOrDefault();
             int owner = int.Parse(Request.Params["OwnerId"]);
             string type = Request.Params["OwnerType"];
-
-            if (customer != null)
+			
+            using (new SessionScope())
             {
-                customer.Contacts.Remove(contact);
-                customer.Save();
-            }
-
-            if (supplier != null)
-            {
-                supplier.Contacts.Remove(contact);
-                supplier.Save();
-            }
-
-            contact.Delete();
-
+	            var item = Contact.Find(id);
+	            var customer = item.Customers.FirstOrDefault();
+	            var supplier = item.Suppliers.FirstOrDefault();
+	
+	            if (customer != null)
+	            {
+	                customer.Contacts.Remove(item);
+	                customer.Save();
+	            }
+	
+	            if (supplier != null)
+	            {
+	                supplier.Contacts.Remove(item);
+	                supplier.Save();
+	            }
+	
+	            item.Delete();
+			}
+			
             return RedirectToAction("Details", type, new { id = owner });
         }
 

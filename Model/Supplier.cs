@@ -47,6 +47,7 @@ namespace Business.Essentials.Model
         public int Id { get; set; }
 
         [Property]
+		[ValidateIsUnique]
         [Display(Name = "Code", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(25, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
@@ -73,28 +74,28 @@ namespace Business.Essentials.Model
         [Display(Name = "CreditDays", ResourceType = typeof(Resources))]
         public int CreditDays { get; set; }
 
-        [HasAndBelongsToMany(typeof(Address), Table = "supplier_address", ColumnKey = "supplier", ColumnRef = "address")]
+        [HasAndBelongsToMany(typeof(Address), Table = "supplier_address", ColumnKey = "supplier", ColumnRef = "address", Lazy = true)]
         public IList<Address> Addresses
         {
             get { return addresses; }
             set { addresses = value; }
         }
 
-        [HasAndBelongsToMany(typeof(Contact), Table = "supplier_contact", ColumnKey = "supplier", ColumnRef = "contact")]
+        [HasAndBelongsToMany(typeof(Contact), Table = "supplier_contact", ColumnKey = "supplier", ColumnRef = "contact", Lazy = true)]
         public IList<Contact> Contacts
         {
             get { return contacts; }
             set { contacts = value; }
         }
 
-        [HasAndBelongsToMany(typeof(BankAccount), Table = "supplier_bank_account", ColumnKey = "supplier", ColumnRef = "bank_account")]
+        [HasAndBelongsToMany(typeof(BankAccount), Table = "supplier_bank_account", ColumnKey = "supplier", ColumnRef = "bank_account", Lazy = true)]
         public IList<BankAccount> BanksAccounts
         {
             get { return accounts; }
             set { accounts = value; }
         }
 
-        [HasMany( typeof(SupplierAgreement), Table = "supplier_agreement", ColumnKey = "supplier")]
+        [HasMany( typeof(SupplierAgreement), Table = "supplier_agreement", ColumnKey = "supplier", Lazy = true)]
         public IList<SupplierAgreement> Agreements
         {
             get { return agrements; }
@@ -105,7 +106,7 @@ namespace Business.Essentials.Model
 
         public override string ToString()
         {
-            return string.Format("{0} [{1}, {2}, {3}]", Name, Code, CreditLimit, CreditDays);
+            return string.Format("{0}", Name);
         }
 
         public override bool Equals(object obj)

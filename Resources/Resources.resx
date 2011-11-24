@@ -370,7 +370,7 @@
     <value>Si</value>
   </data>
   <data name="ZipCode" xml:space="preserve">
-    <value>Código Postal</value>
+    <value>C.P.</value>
   </data>
   <data name="Zone" xml:space="preserve">
     <value>Zona</value>

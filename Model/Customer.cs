@@ -74,20 +74,21 @@ namespace Business.Essentials.Model
 
         [Display(Name = "PriceList", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        public int PriceListId { get; set; }
+		[UIHint("PriceListSelector")]
+		public int PriceListId { get; set; }
 
         [BelongsTo("price_list")]
         [Display(Name = "PriceList", ResourceType = typeof(Resources))]
         public virtual PriceList PriceList { get; set; }
 
-        [HasAndBelongsToMany(typeof(Address), Table = "customer_address", ColumnKey = "customer", ColumnRef = "address")]
+        [HasAndBelongsToMany(typeof(Address), Table = "customer_address", ColumnKey = "customer", ColumnRef = "address", Lazy = true)]
         public IList<Address> Addresses
         {
             get { return addresses; }
             set { addresses = value; }
         }
 
-        [HasAndBelongsToMany(typeof(Contact), Table = "customer_contact", ColumnKey = "customer", ColumnRef = "contact")]
+        [HasAndBelongsToMany(typeof(Contact), Table = "customer_contact", ColumnKey = "customer", ColumnRef = "contact", Lazy = true)]
         public IList<Contact> Contacts
         {
             get { return contacts; }

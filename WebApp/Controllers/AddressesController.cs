@@ -45,22 +45,25 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ViewResult Details(int id)
         {
-            Address address = Address.Find(id);
-            var customer = address.Customers.FirstOrDefault();
-
-            if (customer == null)
+            using (new SessionScope())
             {
-                var supplier = address.Suppliers.First();
-                ViewBag.OwnerId = supplier.Id;
-                ViewBag.OwnerType = "Suppliers";
-            }
-            else
-            {
-                ViewBag.OwnerId = customer.Id;
-                ViewBag.OwnerType = "Customers";
-            }
+	            var item = Address.Find(id);
+	            var customer = item.Customers.FirstOrDefault();
 
-            return View(address);
+	            if (customer == null)
+	            {
+	                var supplier = item.Suppliers.First();
+	                ViewBag.OwnerId = supplier.Id;
+	                ViewBag.OwnerType = "Suppliers";
+	            }
+	            else
+	            {
+	                ViewBag.OwnerId = customer.Id;
+	                ViewBag.OwnerType = "Customers";
+	            }
+	
+	            return View(item);
+			}
         }
 
         //
@@ -83,40 +86,44 @@ namespace Business.Essentials.WebApp.Controllers
         // POST: /Address/Create
 
         [HttpPost]
-        public ActionResult Create(Address address)
+        public ActionResult Create(Address item)
         {
             if (ModelState.IsValid)
             {
                 int owner = int.Parse(Request.Params["OwnerId"]);
                 string type = Request.Params["OwnerType"];
 				
-	            using (var session = new SessionScope())
+	            using (new SessionScope())
 	            {
-	                address.CreateAndFlush();
+	                item.CreateAndFlush();
 	            }
 	
-	            System.Diagnostics.Debug.WriteLine("New Address [Id = {0}]", address.Id);
+	            System.Diagnostics.Debug.WriteLine("New Address [Id = {0}]", item.Id);
 				
                 if (type == "Suppliers")
                 {
-                    var supplier = Supplier.Find(owner);
-					supplier.Addresses.Add(address);
-					supplier.Save();
+		            using (new SessionScope())
+		            {
+	                    var supplier = Supplier.Find(owner);
+						supplier.Addresses.Add(item);
+						supplier.Save();
+		            }
                 }
 
                 if (type == "Customers")
                 {
-                    var customer = Customer.Find(owner);
-					customer.Addresses.Add(address);
-					customer.Save();
+		            using (new SessionScope())
+		            {
+	                    var customer = Customer.Find(owner);
+						customer.Addresses.Add(item);
+						customer.Save();
+		            }
                 }
-				
-				address.Save();
 				
                 return RedirectToAction("Details", type, new { id = owner });
             }
 
-            return View(address);
+            return View(item);
         }
 
         //
@@ -124,22 +131,25 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ActionResult Edit(int id)
         {
-            Address address = Address.Find(id);
-            var customer = address.Customers.FirstOrDefault();
-
-            if (customer == null)
+            using (new SessionScope())
             {
-                var supplier = address.Suppliers.First();
-                ViewBag.OwnerId = supplier.Id;
-                ViewBag.OwnerType = "Suppliers";
-            }
-            else
-            {
-                ViewBag.OwnerId = customer.Id;
-                ViewBag.OwnerType = "Customers";
-            }
-
-            return View(address);
+            	var item = Address.Find(id);
+	            var customer = item.Customers.FirstOrDefault();
+	
+	            if (customer == null)
+	            {
+	                var supplier = item.Suppliers.First();
+	                ViewBag.OwnerId = supplier.Id;
+	                ViewBag.OwnerType = "Suppliers";
+	            }
+	            else
+	            {
+	                ViewBag.OwnerId = customer.Id;
+	                ViewBag.OwnerType = "Customers";
+	            }
+				
+            	return View(item);
+			}
         }
 
         //
@@ -165,22 +175,25 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ActionResult Delete(int id)
         {
-            Address address = Address.Find(id);
-            var customer = address.Customers.FirstOrDefault();
-
-            if (customer == null)
+            using (new SessionScope())
             {
-                var supplier = address.Suppliers.First();
-                ViewBag.OwnerId = supplier.Id;
-                ViewBag.OwnerType = "Suppliers";
-            }
-            else
-            {
-                ViewBag.OwnerId = customer.Id;
-                ViewBag.OwnerType = "Customers";
-            }
-
-            return View(address);
+	            var item = Address.Find(id);
+	            var customer = item.Customers.FirstOrDefault();
+	
+	            if (customer == null)
+	            {
+	                var supplier = item.Suppliers.First();
+	                ViewBag.OwnerId = supplier.Id;
+	                ViewBag.OwnerType = "Suppliers";
+	            }
+	            else
+	            {
+	                ViewBag.OwnerId = customer.Id;
+	                ViewBag.OwnerType = "Customers";
+	            }
+	
+	            return View(item);
+			}
         }
 
         //
@@ -189,25 +202,29 @@ namespace Business.Essentials.WebApp.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            var address = Address.Find(id);
-			var customer = address.Customers.FirstOrDefault();
-            var supplier = address.Suppliers.FirstOrDefault();
             string type = Request.Params["OwnerType"];
             int owner = int.Parse(Request.Params["OwnerId"]);
-
-            if (customer != null)
-            {
-				customer.Addresses.Remove(address);
-				customer.Save();
-            }
 			
-            if (supplier != null)
+            using (new SessionScope())
             {
-				supplier.Addresses.Remove(address);
-				supplier.Save();
-            }
-			
-            address.Delete();
+	            var item = Address.Find(id);
+				var customer = item.Customers.FirstOrDefault();
+	            var supplier = item.Suppliers.FirstOrDefault();
+	
+	            if (customer != null)
+	            {
+					customer.Addresses.Remove(item);
+					customer.Save();
+	            }
+				
+	            if (supplier != null)
+	            {
+					supplier.Addresses.Remove(item);
+					supplier.Save();
+	            }
+				
+	            item.Delete();
+			}
 			
             return RedirectToAction("Details", type, new { id = owner });
         }

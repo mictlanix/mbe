@@ -19,7 +19,6 @@
     -moz-border-radius:8px;
     *display:block;
     *float:left;
-    margin-right:10px;
     letter-spacing:0;
 }
 .selection-options li.focused,

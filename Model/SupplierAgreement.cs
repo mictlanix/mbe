@@ -39,7 +39,6 @@ namespace Business.Essentials.Model
     [ActiveRecord("supplier_agreement")]
     public class SupplierAgreement : ActiveRecordLinqBase<SupplierAgreement>
     {
-
         [PrimaryKey(PrimaryKeyType.Identity, "supplier_agreement_id")]
         public int Id { get; set; }
 

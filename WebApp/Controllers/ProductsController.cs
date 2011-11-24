@@ -114,22 +114,18 @@ namespace Business.Essentials.WebApp.Controllers
         // POST: /Products/Create
 
         [HttpPost]
-        public ActionResult Create(Product product, HttpPostedFileBase file)
+        public ActionResult Create(Product item, HttpPostedFileBase file)
         {
+            if (!ModelState.IsValid)
+            	return View(item);
             
-            if (ModelState.IsValid)
-            {
-                Supplier supplier = Supplier.Find(product.SupplierId);
-                product.Supplier = supplier;
-                
-                Category category = Category.Find(product.CategoryId);
-                product.Category = category;
-                product.Save();
-                SavePhoto(product.Photo, file);
+            item.Supplier = Supplier.Find(item.SupplierId);
+            item.Category = Category.Find(item.CategoryId);
+			
+            item.Save();
+            SavePhoto(item.Photo, file);
 
-                return RedirectToAction("Index");
-            }
-            return View(product);
+            return RedirectToAction("Index");
         }
 
         //
@@ -145,21 +141,18 @@ namespace Business.Essentials.WebApp.Controllers
         // POST: /Products/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(Product product, HttpPostedFileBase file)
+        public ActionResult Edit(Product item, HttpPostedFileBase file)
         {
-            if (ModelState.IsValid)
-            {
-                Supplier supplier = Supplier.Find(product.SupplierId);
-                product.Supplier = supplier;
+            if (!ModelState.IsValid)
+            	return View(item);
+            
+            item.Supplier = Supplier.Find(item.SupplierId);
+            item.Category = Category.Find(item.CategoryId);
+			
+            item.Save();
+            SavePhoto(item.Photo, file);
 
-                Category category = Category.Find(product.CategoryId);
-                product.Category = category;
-                product.Save();
-                SavePhoto(product.Photo, file);
-
-                return RedirectToAction("Index");
-            }
-            return View(product);
+            return RedirectToAction("Index");
         }
 
         //

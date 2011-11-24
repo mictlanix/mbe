@@ -64,6 +64,9 @@ div#logo {
 .center {
   text-align:center;
 }
+.nowrap {
+  white-space:nowrap;
+}
 .right,.number,input.number  {
   text-align:right;
 }

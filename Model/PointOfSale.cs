@@ -42,6 +42,7 @@ namespace Business.Essentials.Model
         public int Id { get; set; }
 
         [Property]
+		[ValidateIsUnique]
         [Display(Name = "Code", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(25, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
@@ -54,6 +55,7 @@ namespace Business.Essentials.Model
         public string Name { get; set; }
 
         [Property("host_address")]
+		[ValidateIsUnique]
         [Display(Name = "HostAddress", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(15, MinimumLength = 7, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]

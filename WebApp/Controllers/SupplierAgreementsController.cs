@@ -44,11 +44,12 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ViewResult Details(int id)
         {
-            SupplierAgreement supplierAgreement = SupplierAgreement.Find(id);
-            var supplier = supplierAgreement.Supplier;
+            var agreement = SupplierAgreement.Find(id);
+            var supplier = agreement.Supplier;
 
             ViewBag.OwnerId = supplier.Id;
-            return View(supplierAgreement);
+			
+            return View(agreement);
         }
 
         //
@@ -64,19 +65,17 @@ namespace Business.Essentials.WebApp.Controllers
         // POST: /SupplierAgreements/Create
 
         [HttpPost]
-        public ActionResult Create(SupplierAgreement agreement)
+        public ActionResult Create(SupplierAgreement item)
         {
             if (ModelState.IsValid)
             {
-                Supplier supplier = Supplier.Find(agreement.SupplierId);
+                item.Supplier = Supplier.Find(item.SupplierId);
+                item.Save();
 
-                agreement.Supplier = supplier;
-                agreement.Save();
-
-                return RedirectToAction("Details", "Suppliers", new { id = agreement.Supplier.Id });
+                return RedirectToAction("Details", "Suppliers", new { id = item.Supplier.Id });
             }
 
-            return View(agreement);
+            return View(item);
         }
 
         //
@@ -85,6 +84,7 @@ namespace Business.Essentials.WebApp.Controllers
         public ActionResult Edit(int id)
         {
             SupplierAgreement item = SupplierAgreement.Find(id);
+			
             return View(item);
         }
 
@@ -92,19 +92,17 @@ namespace Business.Essentials.WebApp.Controllers
         // POST: /SupplierAgreements/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(SupplierAgreement agreement)
+        public ActionResult Edit(SupplierAgreement item)
         {
             if (ModelState.IsValid)
             {
-                SupplierAgreement item = SupplierAgreement.Find(agreement.Id);
+                item.Supplier = SupplierAgreement.Find(item.Id).Supplier;
+                item.Save();
 
-                agreement.Supplier = item.Supplier;
-                agreement.Save();
-
-                return RedirectToAction("Details", "Suppliers", new { id = agreement.Supplier.Id });
+                return RedirectToAction("Details", "Suppliers", new { id = item.Supplier.Id });
             }
 
-            return View(agreement);
+            return View(item);
         }
 
         //

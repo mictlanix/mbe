@@ -58,7 +58,7 @@ namespace Business.Essentials.Model
         [Property]
         [Display(Name = "Street", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [StringLength(45, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+        [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string Street { get; set; }
 
         [Property("exterior_number")]
@@ -108,19 +108,23 @@ namespace Business.Essentials.Model
         [StringLength(500, MinimumLength = 0)]
         public string Comment { get; set; }
 
-        [HasAndBelongsToMany(typeof(Supplier), Table = "supplier_address", ColumnKey = "address", ColumnRef = "supplier", Inverse = true)]
+        [HasAndBelongsToMany(typeof(Supplier), Table = "supplier_address", ColumnKey = "address", ColumnRef = "supplier", Inverse = true, Lazy = true)]
         public IList<Supplier> Suppliers
         {
             get { return suppliers; }
             set { suppliers = value; }
         }
 
-        [HasAndBelongsToMany(typeof(Customer), Table = "customer_address", ColumnKey = "address", ColumnRef = "customer", Inverse = true)]
+        [HasAndBelongsToMany(typeof(Customer), Table = "customer_address", ColumnKey = "address", ColumnRef = "customer", Inverse = true, Lazy = true)]
         public IList<Customer> Customers
         {
             get { return customers; }
             set { customers = value; }
         }
+		
+        public string StreetAndNumer {
+			get { return string.Format("{0} {1} {2}", Street, ExteriorNumber, InteriorNumber).Trim(); }
+		}
 		
 		#region Override Base Methods
 
