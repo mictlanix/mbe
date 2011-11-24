@@ -26,7 +26,7 @@
     </div>
     <div class="right floating">
     <p>
-        @if (!Model.IsCredit || CustomerHelpers.CalcDebt(Model.Customer.Id) <= Model.Customer.CreditLimit)
+        @if (!Model.IsCredit || (CustomerHelpers.CalcDebt(Model.Customer.Id) + Model.Total) <= Model.Customer.CreditLimit)
         {
             if (Model.Total > 0)
             {
@@ -39,7 +39,7 @@
         }
         else
         {
-            var difference = CustomerHelpers.CalcDebt(Model.Customer.Id) - Model.Customer.CreditLimit;
+            var difference = CustomerHelpers.CalcDebt(Model.Customer.Id) + Model.Total - Model.Customer.CreditLimit;
 
             @Resources.CreditLimitExceeded
             <br />

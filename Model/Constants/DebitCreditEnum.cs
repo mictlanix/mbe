@@ -1,8 +1,7 @@
 ﻿// 
-// HtmlHelpers.cs
+// DebitCreditEnum.cs
 // 
 // Author:
-//   Eddy Zavaleta <eddy@mictlanix.org>
 //   Eduardo Nieto <enieto@mictlanix.org>
 // 
 // Copyright (C) 2011 Eddy Zavaleta, Mictlanix, and contributors.
@@ -28,33 +27,18 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web.Mvc;
-using System.Web.Routing;
-using Business.Essentials.Model;
+using Castle.ActiveRecord;
+using Castle.ActiveRecord.Framework;
 
-namespace Business.Essentials.WebApp.Helpers
+namespace Business.Essentials.Model
 {
-    public static class CustomerHelpers
+    public enum DebitCreditEnum : int
     {
-        public static decimal CalcDebt(int id)
-        {
-            IQueryable<decimal> qry;
-
-            qry = from x in CustomerPayment.Queryable
-                  where x.SalesOrder == null && x.Customer.Id == id
-                  select x.Amount;
-            var paid = qry.Count() > 0 ? qry.ToList().Sum() : 0;
-
-            qry = from x in SalesOrder.Queryable
-                  from y in x.Details
-                  where x.IsCredit && x.IsCompleted &&
-                        x.Customer.Id == id 
-                  select y.Quantity * y.Price * (1 - y.Discount);
-            var bought = qry.Count() > 0 ? qry.ToList().Sum() : 0;
-
-            return bought - paid;
-        }
+        [Display(Name = "Enum_Debit", ResourceType = typeof(Resources))]
+        Debit = 0,
+        [Display(Name = "Enum_Credit", ResourceType = typeof(Resources))]
+        Credit = 1
     }
 }

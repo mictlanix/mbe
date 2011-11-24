@@ -1,0 +1,55 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Models
+@using Business.Essentials.WebApp.Helpers;
+@model IEnumerable<AccountsReceivableSummary>
+
+@{
+    ViewBag.Title = Resources.Title_AccountsReceivable;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.AccountsReceivable);
+}
+
+<h2>@Resources.DisplayName_AccountsReceivable</h2>
+
+<table>
+    <tr>
+        <th>
+            @Html.LabelFor(x => new Customer().Name)            
+        </th>
+        <th class="nowrap">
+            @Html.LabelFor(x => new AccountsReceivableSummary().TotalSales)
+        </th>
+        <th class="nowrap">
+            @Html.LabelFor(x => new AccountsReceivableSummary().TotalPayments)
+        </th>
+        <th>
+            @Html.LabelFor(x => new AccountsReceivableSummary().Balance)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(x => item.Customer.Name)
+        </td>
+        <td class="number">
+            @Html.DisplayFor(x => item.TotalSales)
+        </td>
+        <td class="number">
+            @Html.DisplayFor(x => item.TotalPayments)
+        </td>
+        <td class="number">
+            @Html.DisplayFor(x => item.Balance)
+        </td>
+        <td class="actions">
+        @if (Privilege.AllowRead)
+        {
+            	@Html.ActionLink(" ", "AccountStatement", new { id = item.Customer.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+        }
+        </td>
+    </tr>
+}
+</table>

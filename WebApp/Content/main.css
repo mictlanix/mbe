@@ -101,6 +101,9 @@ a.medium img,img.medium {
     max-width:200px;
     max-height:200px;
 }
+p.multiline {
+    margin: 0;
+}
 fieldset {
   padding: 0 1.4em 1em 1.4em;
 }
