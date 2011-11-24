@@ -60,8 +60,8 @@ namespace Business.Essentials.WebApp.Controllers
         public ViewResult Index()
         {
             var qry = from x in Customer.Queryable
-                      orderby x.Name
-                      select x;
+                        orderby x.Name
+                        select x;
 
             return View(qry.ToList());
         }

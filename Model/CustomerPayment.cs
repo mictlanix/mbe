@@ -61,6 +61,7 @@ namespace Business.Essentials.Model
         public decimal Amount { get; set; }
 
         [Property("cash_change")]
+        [DataType(DataType.Currency)]
         [Display(Name = "Change", ResourceType = typeof(Resources))]
         public decimal? Change { get; set; }
 
@@ -108,6 +109,13 @@ namespace Business.Essentials.Model
                 return base.GetHashCode();
 
             return string.Format("{0}#{1}", GetType().FullName, Id).GetHashCode();
+        }
+
+        [DataType(DataType.Currency)]
+        [Display(Name = "Cash", ResourceType = typeof(Resources))]
+        public decimal Cash
+        {
+            get { return Amount + Change.GetValueOrDefault(); }
         }
 
         #endregion

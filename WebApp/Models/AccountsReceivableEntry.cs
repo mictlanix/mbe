@@ -1,5 +1,5 @@
 ﻿// 
-// HtmlHelpers.cs
+// AccountsReceivableEntry.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
@@ -28,33 +28,38 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
+using System.Globalization;
 using System.Web.Mvc;
-using System.Web.Routing;
+using System.Linq;
+using System.Web.Security;
 using Business.Essentials.Model;
 
-namespace Business.Essentials.WebApp.Helpers
+namespace Business.Essentials.WebApp.Models
 {
-    public static class CustomerHelpers
+    public class AccountsReceivableEntry
     {
-        public static decimal CalcDebt(int id)
-        {
-            IQueryable<decimal> qry;
+        [DisplayFormat(DataFormatString = "{0:000000}")]
+        [Display(Name = "Movement", ResourceType = typeof(Resources))]
+        public int Number { get; set; }
 
-            qry = from x in CustomerPayment.Queryable
-                  where x.SalesOrder == null && x.Customer.Id == id
-                  select x.Amount;
-            var paid = qry.Count() > 0 ? qry.ToList().Sum() : 0;
+        [DataType(DataType.DateTime)]
+        [Display(Name = "Date", ResourceType = typeof(Resources))]
+        public DateTime Date { get; set; }
 
-            qry = from x in SalesOrder.Queryable
-                  from y in x.Details
-                  where x.IsCredit && x.IsCompleted &&
-                        x.Customer.Id == id 
-                  select y.Quantity * y.Price * (1 - y.Discount);
-            var bought = qry.Count() > 0 ? qry.ToList().Sum() : 0;
+        public DebitCreditEnum Type { get; set; }
 
-            return bought - paid;
-        }
+        [DataType(DataType.Currency)]
+        [Display(Name = "Amount", ResourceType = typeof(Resources))]
+        public decimal Amount { get; set; }
+
+        [DataType(DataType.Currency)]
+        [Display(Name = "Balance", ResourceType = typeof(Resources))]
+        public decimal Balance { get; set; }
+
+        [DataType(DataType.MultilineText)]
+        [Display(Name = "Description", ResourceType = typeof(Resources))]
+        public String Description { get; set; }
     }
 }
