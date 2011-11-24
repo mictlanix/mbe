@@ -1,0 +1,65 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@using Business.Essentials.WebApp.Models
+@model MasterDetails<AccountsReceivableSummary, AccountsReceivableEntry>
+
+@{
+    ViewBag.Title = Resources.Statements;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Categories);
+}
+
+<h2>@Resources.DisplayName_AccountsReceivable</h2>
+
+<fieldset>
+    <legend>@Resources.DisplayName_DataCustomer</legend>
+        <div class="display-label">
+            @Html.LabelFor(x => x.Master.Customer) :
+            @Html.DisplayFor(x => x.Master.Customer.Name)
+        </div>
+        <div class="display-label">
+            @Html.LabelFor(x => x.Master.Customer.CreditLimit) :
+            @Html.DisplayFor(x => Model.Master.Customer.CreditLimit)
+        </div>
+        <div class="display-label">
+            @Html.LabelFor(x => x.Master.AvailableCredit) :
+            @Html.DisplayFor(x => x.Master.AvailableCredit)
+        </div>
+        <div class="display-label">
+            @Html.LabelFor(x => x.Master.Customer.CreditDays) :
+            @Html.DisplayFor(x => x.Master.Customer.CreditDays)
+        </div>
+
+</fieldset>
+<table>
+    <tr>
+        <th>@Resources.Date</th>
+        <th>@Resources.Movement</th>
+        <th>@Resources.Description</th>
+        <th>@Resources.Enum_Debit</th>
+        <th>@Resources.Enum_Credit</th>
+        <th>@Resources.Balance</th>
+    </tr>
+    @foreach(var item in Model.Details)
+    {
+    <tr>
+        <td class="date">@Html.DisplayFor(x => item.Date)</td>
+        <td class="number">@Html.DisplayFor(x => item.Number)</td>
+        <td>@Html.DisplayFor(x => item.Description)</td>
+        <td class="number">
+            @if (item.Type == DebitCreditEnum.Debit)
+            {
+                @Html.DisplayFor(x => item.Amount)
+            }
+        </td>
+        <td class="number">
+            @if (item.Type == DebitCreditEnum.Credit)
+            {
+                @Html.DisplayFor(x => item.Amount)
+            }
+        </td>
+        <td class="number">@Html.DisplayFor(x => item.Balance)</td>
+    </tr>
+    }
+</table>

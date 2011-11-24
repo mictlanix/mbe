@@ -2,7 +2,7 @@
 @{
     var lines = string.Format("{0}", Model).Replace("\r\n", "\n").Replace('\r', '\n').Split('\n');
 }
-<p>
+<p class="multiline">
 @foreach (var line in lines)
 {
     @line<br/>
