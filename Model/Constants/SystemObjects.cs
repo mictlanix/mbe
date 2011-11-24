@@ -71,6 +71,10 @@ namespace Business.Essentials.Model
         [Display(Name = "DisplayName_InventoryIssues", ResourceType = typeof(Resources))]
         InventoryIssues,
         [Display(Name = "DisplayName_InventoryTransfers", ResourceType = typeof(Resources))]
-        InventoryTransfers
+        InventoryTransfers,
+        [Display(Name = "DisplayName_AccountsReceivable", ResourceType = typeof(Resources))]
+        AccountsReceivable,
+        [Display(Name = "DisplayName_AccountsPayable", ResourceType = typeof(Resources))]
+        AccountsPayable
     }
 }

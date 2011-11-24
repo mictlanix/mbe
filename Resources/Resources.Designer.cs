@@ -97,6 +97,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Administración.
+        /// </summary>
+        public static string Administration {
+            get {
+                return ResourceManager.GetString("Administration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Administrador.
         /// </summary>
         public static string Administrator {
@@ -129,6 +138,15 @@ namespace Business.Essentials {
         public static string Authors {
             get {
                 return ResourceManager.GetString("Authors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crédito Disponible.
+        /// </summary>
+        public static string AvailableCredit {
+            get {
+                return ResourceManager.GetString("AvailableCredit", resourceCulture);
             }
         }
         
@@ -601,6 +619,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Descripción.
+        /// </summary>
+        public static string Description {
+            get {
+                return ResourceManager.GetString("Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Detalles.
         /// </summary>
         public static string Details {
@@ -619,11 +646,38 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cuentas por Pagar.
+        /// </summary>
+        public static string DisplayName_AccountsPayable {
+            get {
+                return ResourceManager.GetString("DisplayName_AccountsPayable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cuentas por Cobrar.
+        /// </summary>
+        public static string DisplayName_AccountsReceivable {
+            get {
+                return ResourceManager.GetString("DisplayName_AccountsReceivable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Direcciones.
         /// </summary>
         public static string DisplayName_Addresses {
             get {
                 return ResourceManager.GetString("DisplayName_Addresses", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Administración.
+        /// </summary>
+        public static string DisplayName_Administration {
+            get {
+                return ResourceManager.GetString("DisplayName_Administration", resourceCulture);
             }
         }
         
@@ -723,6 +777,15 @@ namespace Business.Essentials {
         public static string DisplayName_Customers {
             get {
                 return ResourceManager.GetString("DisplayName_Customers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Datos del Cliente.
+        /// </summary>
+        public static string DisplayName_DataCustomer {
+            get {
+                return ResourceManager.GetString("DisplayName_DataCustomer", resourceCulture);
             }
         }
         
@@ -858,6 +921,15 @@ namespace Business.Essentials {
         public static string DisplayName_PayCredit {
             get {
                 return ResourceManager.GetString("DisplayName_PayCredit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registro del Pago Exitoso.
+        /// </summary>
+        public static string DisplayName_PaymentSuccesful {
+            get {
+                return ResourceManager.GetString("DisplayName_PaymentSuccesful", resourceCulture);
             }
         }
         
@@ -1006,6 +1078,24 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Abono.
+        /// </summary>
+        public static string Enum_Credit {
+            get {
+                return ResourceManager.GetString("Enum_Credit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cargo.
+        /// </summary>
+        public static string Enum_Debit {
+            get {
+                return ResourceManager.GetString("Enum_Debit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error.
         /// </summary>
         public static string Error {
@@ -1047,6 +1137,35 @@ namespace Business.Essentials {
         public static string FirstName {
             get {
                 return ResourceManager.GetString("FirstName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pago con {0}.
+        /// </summary>
+        public static string Format_PaymentDescription {
+            get {
+                return ResourceManager.GetString("Format_PaymentDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pago con {0} 
+        ///Refencia: {1}.
+        /// </summary>
+        public static string Format_PaymentWithRefDescription {
+            get {
+                return ResourceManager.GetString("Format_PaymentWithRefDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Venta a Crédito
+        ///Vencimiento: {0:d}.
+        /// </summary>
+        public static string Format_SaleDescription {
+            get {
+                return ResourceManager.GetString("Format_SaleDescription", resourceCulture);
             }
         }
         
@@ -1470,6 +1589,15 @@ namespace Business.Essentials {
         public static string Module {
             get {
                 return ResourceManager.GetString("Module", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Movimiento.
+        /// </summary>
+        public static string Movement {
+            get {
+                return ResourceManager.GetString("Movement", resourceCulture);
             }
         }
         
@@ -2032,6 +2160,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Estado de Cuenta.
+        /// </summary>
+        public static string Statements {
+            get {
+                return ResourceManager.GetString("Statements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Calle.
         /// </summary>
         public static string Street {
@@ -2118,6 +2255,24 @@ namespace Business.Essentials {
         public static string Title_About {
             get {
                 return ResourceManager.GetString("Title_About", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cuentas por Pagar.
+        /// </summary>
+        public static string Title_AccountsPayable {
+            get {
+                return ResourceManager.GetString("Title_AccountsPayable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cuentas por Cobrar.
+        /// </summary>
+        public static string Title_AccountsReceivable {
+            get {
+                return ResourceManager.GetString("Title_AccountsReceivable", resourceCulture);
             }
         }
         
@@ -2491,6 +2646,24 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Total de Pagos.
+        /// </summary>
+        public static string TotalPayments {
+            get {
+                return ResourceManager.GetString("TotalPayments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total de Compras.
+        /// </summary>
+        public static string TotalSales {
+            get {
+                return ResourceManager.GetString("TotalSales", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tipo de Pago.
         /// </summary>
         public static string Type {
@@ -2730,15 +2903,6 @@ namespace Business.Essentials {
         public static string Zone {
             get {
                 return ResourceManager.GetString("Zone", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Registro del Pago Exitoso.
-        /// </summary>
-        public static string DisplayName_PaymentSuccesful {
-            get {
-                return ResourceManager.GetString("DisplayName_PaymentSuccesful", resourceCulture);
             }
         }
     }

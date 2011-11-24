@@ -1011,4 +1011,60 @@
   <data name="DisplayName_PaymentSuccesful" xml:space="preserve">
     <value>Registro del Pago Exitoso</value>
   </data>
+  <data name="Administration" xml:space="preserve">
+    <value>Administración</value>
+  </data>
+  <data name="DisplayName_AccountsPayable" xml:space="preserve">
+    <value>Cuentas por Pagar</value>
+  </data>
+  <data name="DisplayName_AccountsReceivable" xml:space="preserve">
+    <value>Cuentas por Cobrar</value>
+  </data>
+  <data name="DisplayName_Administration" xml:space="preserve">
+    <value>Administración</value>
+  </data>
+  <data name="Enum_Credit" xml:space="preserve">
+    <value>Abono</value>
+  </data>
+  <data name="Enum_Debit" xml:space="preserve">
+    <value>Cargo</value>
+  </data>
+  <data name="Statements" xml:space="preserve">
+    <value>Estado de Cuenta</value>
+  </data>
+  <data name="Title_AccountsPayable" xml:space="preserve">
+    <value>Cuentas por Pagar</value>
+  </data>
+  <data name="Title_AccountsReceivable" xml:space="preserve">
+    <value>Cuentas por Cobrar</value>
+  </data>
+  <data name="TotalPayments" xml:space="preserve">
+    <value>Total de Pagos</value>
+  </data>
+  <data name="TotalSales" xml:space="preserve">
+    <value>Total de Compras</value>
+  </data>
+  <data name="DisplayName_DataCustomer" xml:space="preserve">
+    <value>Datos del Cliente</value>
+  </data>
+  <data name="Movement" xml:space="preserve">
+    <value>Movimiento</value>
+  </data>
+  <data name="AvailableCredit" xml:space="preserve">
+    <value>Crédito Disponible</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Descripción</value>
+  </data>
+  <data name="Format_PaymentDescription" xml:space="preserve">
+    <value>Pago con {0}</value>
+  </data>
+  <data name="Format_PaymentWithRefDescription" xml:space="preserve">
+    <value>Pago con {0} 
+Refencia: {1}</value>
+  </data>
+  <data name="Format_SaleDescription" xml:space="preserve">
+    <value>Venta a Crédito
+Vencimiento: {0:d}</value>
+  </data>
 </root>

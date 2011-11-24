@@ -33,6 +33,7 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Castle.ActiveRecord;
 using Business.Essentials.Model;
 
 namespace Business.Essentials.WebApp.Controllers
@@ -59,8 +60,8 @@ namespace Business.Essentials.WebApp.Controllers
         public ViewResult Index()
         {
             var qry = from x in Customer.Queryable
-                      orderby x.Name
-                      select x;
+                        orderby x.Name
+                        select x;
 
             return View(qry.ToList());
         }
