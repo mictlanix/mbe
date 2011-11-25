@@ -140,7 +140,7 @@ namespace Business.Essentials.WebApp.Controllers
 			customer.CreditLimit = item.CreditLimit;
 			customer.Comment = item.Comment;
 			
-            customer.Save();
+            customer.Update();
 			
             return RedirectToAction("Index");
         }

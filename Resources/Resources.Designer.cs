@@ -1611,6 +1611,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nombre y Firma.
+        /// </summary>
+        public static string NameAndSignature {
+            get {
+                return ResourceManager.GetString("NameAndSignature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Colonia.
         /// </summary>
         public static string Neighborhood {
@@ -1760,6 +1769,26 @@ namespace Business.Essentials {
         public static string PersonalId {
             get {
                 return ResourceManager.GetString("PersonalId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Persona que Entrega
+        ///.
+        /// </summary>
+        public static string PersonDelivery {
+            get {
+                return ResourceManager.GetString("PersonDelivery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Persona que Recibe
+        ///.
+        /// </summary>
+        public static string PersonReceipt {
+            get {
+                return ResourceManager.GetString("PersonReceipt", resourceCulture);
             }
         }
         
@@ -2889,7 +2918,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Código Postal.
+        ///   Looks up a localized string similar to C.P..
         /// </summary>
         public static string ZipCode {
             get {

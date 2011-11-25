@@ -31,33 +31,47 @@
     </div>
 </fieldset>
 
-<table>
-    <tr>
-        <th>
-            @Html.LabelFor(x => new InventoryIssueDetail().Quantity)
-        </th>
-        <th>
-            @Html.LabelFor(x => new InventoryIssueDetail().ProductCode)
-        </th>
-        <th>
-            @Html.LabelFor(x => new InventoryIssueDetail().ProductName)
-        </th>
-    </tr>
-@foreach (var item in Model.Details) {
-    <tr>
-        <td class="number">
-            @Html.DisplayFor(modelItem => item.Quantity)
-        </td>
-        <td class="center">
-            @Html.DisplayFor(modelItem => item.ProductCode)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ProductName)
-        </td>
-    </tr>
-}
-</table>
-
-<p>
+<div>
+    <table>
+        <tr>
+            <th>
+                @Html.LabelFor(x => new InventoryIssueDetail().Quantity)
+            </th>
+            <th>
+                @Html.LabelFor(x => new InventoryIssueDetail().ProductCode)
+            </th>
+            <th>
+                @Html.LabelFor(x => new InventoryIssueDetail().ProductName)
+            </th>
+        </tr>
+    @foreach (var item in Model.Details) {
+        <tr>
+            <td class="number">
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td class="center">
+                @Html.DisplayFor(modelItem => item.ProductCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+        </tr>
+    }
+    </table>
+    <p></p>
+</div>
+<div class="right floating">
+    <button type="button" class="icon print">@Resources.Print</button>     
+</div>
+<div id="backTo">
     @Html.ActionLink(Resources.BackToList, "Issues", new { }, new { @class = "button icon back" })
-</p>
+</div>
+
+<script type="text/javascript">
+    $(function() {
+        $(".print").printPage({
+            url: "@Url.Action("PrintIssue", "Inventory", new { id = Model.Id })"
+        });
+    });
+
+</script>

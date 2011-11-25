@@ -1,0 +1,106 @@
+﻿@page  
+{
+    size: US-Letter;
+    margin: 10mm;
+}
+* {
+    font-family:"Lucida Grande", Verdana, sans-serif;
+}
+body {
+    background:white;
+    color:black;
+    font:normal 10pt "Lucida Grande", Verdana, sans-serif;
+    margin:0 0 0 0;
+    padding:0;
+    width:auto;
+}
+section {
+    margin:1.6em 0;
+}
+img {
+    border:none;
+}
+#logo {
+    text-align:right;
+}
+h1,h2,h3 
+{
+    float:inherit;
+  text-align:center;
+}
+h3 {
+  font-weight:normal;
+  margin:0;
+}
+.date {
+  white-space:nowrap;
+}
+.left {
+  text-align:left;
+}
+.right {
+  text-align:right;
+}
+.center {
+  text-align:center;
+}
+.right,.number,input.number  {
+  text-align:right;
+  padding-right:5px;
+}
+.left.floating {
+  float:left;
+  clear:left;
+}
+.right.floating {
+  float:right;
+  clear:right;
+}
+.total {
+  font-weight:bold;
+}
+table {
+    margin:10px 0;
+    width:100%;
+    border-collapse:collapse;
+}
+table.height {
+    height:50px;
+}
+td.line {
+    border-bottom:1px solid black;
+}
+td.line-top {
+    border-top:1px solid gray;
+}
+td.border{
+    border-right: 1px solid gray;
+}
+td.title {
+    font-size:13px;
+    font-weight:bold;
+}
+th {
+    font-size:18px;
+    font-weight:bold;
+}
+th.line {
+    border-bottom:1px solid gray; 
+}
+th.border{
+    border-right: 1px solid gray;
+}
+.display-label {
+    margin-top:5px;
+}
+.display-field {
+    margin-bottom:5px;
+}
+.signatures {
+    margin:5em 0;
+}
+p.multiline {
+    margin: 0;
+    width:182mm;
+    word-wrap:break-word;
+}

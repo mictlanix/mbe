@@ -1067,4 +1067,15 @@ Refencia: {1}</value>
     <value>Venta a Crédito
 Vencimiento: {0:d}</value>
   </data>
+  <data name="NameAndSignature" xml:space="preserve">
+    <value>Nombre y Firma</value>
+  </data>
+  <data name="PersonDelivery" xml:space="preserve">
+    <value>Persona que Entrega
+</value>
+  </data>
+  <data name="PersonReceipt" xml:space="preserve">
+    <value>Persona que Recibe
+</value>
+  </data>
 </root>
