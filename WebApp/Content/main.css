@@ -103,6 +103,8 @@ a.medium img,img.medium {
 }
 p.multiline {
     margin: 0;
+    width:700px;
+    word-wrap:break-word;
 }
 fieldset {
   padding: 0 1.4em 1em 1.4em;

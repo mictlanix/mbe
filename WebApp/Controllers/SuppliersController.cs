@@ -159,8 +159,8 @@ namespace Business.Essentials.WebApp.Controllers
 			supplier.CreditLimit = item.CreditLimit;
 			//TODO: Add Comment Property
 			//supplier.Comment = item.Comment;
-			
-			item.Update();
+
+            supplier.Update();
             
 			return RedirectToAction("Index");
         }

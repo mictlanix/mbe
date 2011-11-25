@@ -149,6 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
+    <Content Include="Content\letter.css" />
     <Content Include="Content\images\loading-bar.gif" />
     <Content Include="Content\images\loading-circle.gif" />
     <Content Include="Content\images\logo.png" />
@@ -690,6 +691,10 @@
     <Content Include="Views\Payments\_Index.cshtml" />
     <Content Include="Views\AccountsReceivables\AccountStatement.cshtml" />
     <Content Include="Views\AccountsReceivables\Index.cshtml" />
+    <Content Include="Views\Inventory\_PrintReceipt.cshtml" />
+    <Content Include="Views\Shared\_LetterLayout.cshtml" />
+    <Content Include="Views\Inventory\_PrintIssue.cshtml" />
+    <Content Include="Views\Inventory\_PrintTransfer.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

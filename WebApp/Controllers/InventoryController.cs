@@ -54,6 +54,14 @@ namespace Business.Essentials.WebApp.Controllers
             return View(qry.ToList());
         }
 
+        // GET: /Inventory/PrintReceipt/
+
+        public ViewResult PrintReceipt(int id)
+        {
+            InventoryReceipt item = InventoryReceipt.Find(id);
+
+            return View("_PrintReceipt",item);
+        }
         //
         // GET: /Inventory/Receipt/{id}
 
@@ -241,6 +249,15 @@ namespace Business.Essentials.WebApp.Controllers
                       select x;
 
             return View(qry.ToList());
+        }
+
+        // GET: /Inventory/PrintIssue/
+
+        public ViewResult PrintIssue(int id)
+        {
+            InventoryIssue item = InventoryIssue.Find(id);
+
+            return View("_PrintIssue", item);
         }
 
         //
@@ -440,6 +457,15 @@ namespace Business.Essentials.WebApp.Controllers
             InventoryTransfer item = InventoryTransfer.Find(id);
 
             return View(item);
+        }
+
+        // GET: /Inventory/PrintTransfer/
+
+        public ViewResult PrintTransfer(int id)
+        {
+            InventoryTransfer item = InventoryTransfer.Find(id);
+
+            return View("_PrintTransfer", item);
         }
 
         //
