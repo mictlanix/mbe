@@ -44,7 +44,7 @@ namespace Business.Essentials.WebApp.Helpers
 			if (user == null)
 			{
 				user = GetUser(helper, helper.ViewContext.HttpContext.User.Identity.Name);
-				helper.ViewContext.HttpContext.Items.Add("CurrentUser", user);
+				helper.ViewContext.HttpContext.Items["CurrentUser"] = user;
 			}
 			
             return user;
