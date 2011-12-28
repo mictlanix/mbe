@@ -22,6 +22,7 @@
         <th>@Html.LabelFor(x => new InventoryReceipt().Id)</th>
         <th>@Html.LabelFor(x => new InventoryReceipt().CreationTime)</th>
         <th>@Html.LabelFor(x => new InventoryReceipt().Warehouse)</th>
+        <th>@Html.LabelFor(x => new InventoryReceipt().Order)</th>
         <th>@Html.LabelFor(x => new InventoryReceipt().IsCompleted)</th>
         <th>@Html.LabelFor(x => new InventoryReceipt().IsCancelled)</th>
         <th></th>
@@ -31,6 +32,7 @@
         <td class="number">@Html.DisplayFor(x => item.Id)</td>
         <td class="date">@Html.DisplayFor(x => item.CreationTime)</td>
         <td>@Html.DisplayFor(x => item.Warehouse.Name)</td>
+        <td class="number">@Html.DisplayFor(x => item.Order.Id)</td>
         <td class="bool">@Html.DisplayFor(x => item.IsCompleted)</td>
         <td class="bool">@Html.DisplayFor(x => item.IsCancelled)</td>
         <td class="actions">

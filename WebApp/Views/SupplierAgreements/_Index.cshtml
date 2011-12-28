@@ -17,9 +17,6 @@
         <th>
             @Html.LabelFor(x => new SupplierAgreement().End)
         </th>
-        <th>
-            @Html.LabelFor(x => new SupplierAgreement().Comment)
-        </th>
         
         <th></th>
     </tr>
@@ -31,9 +28,6 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.End)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Comment)
         </td>
         <td class="actions">
         	@if(Privilege.AllowUpdate)

@@ -186,16 +186,6 @@
         <div class="editor-field">
             @Html.EditorFor(model => model.SupplierId)
             @Html.ValidationMessageFor(model => model.SupplierId)
-            <script type="text/javascript">
-                $(document).ready(function () {
-                $("#SupplierId").tokenInput("@Url.Action("GetSuggestions", "Suppliers")",
-                {
-                    hintText: "@Resources.HIntText",
-                    noResultsText: "@Resources.NoResultsText",
-                    searchingText: "@Resources.SearchingText",
-                    queryParam: "pattern",minChars: 1,tokenLimit: 1});
-                });
-            </script>
         </div>
     
         <div class="editor-label">

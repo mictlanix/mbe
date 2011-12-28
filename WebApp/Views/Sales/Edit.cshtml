@@ -17,9 +17,9 @@
  
  <div style="margin-right:300px"> 
     <div class="search-box">
+        <label>@Resources.Product</label>
         <input type="text" id="product-search" name="product-search" />
     </div>
-    <button id="add" type="submit">@Resources.Add</button>
     <div id="items-container">
         <ul id="items" class="list-items">
         @foreach (var item in Model.Details)
@@ -115,29 +115,26 @@
             noResultsText: "@Resources.NoResultsText",
             searchingText: "@Resources.SearchingText",          
             resultsFormatter: function(item){return ProductFormatter(item);},
-            queryParam: "pattern",minChars: 3,tokenLimit: 1
-        });
+            queryParam: "pattern",minChars: 3,tokenLimit: 1,
+            onAdd: function (item) {
+                $.post("/Sales/AddDetail", { "order": SalesOrder.Id, "product": "" + item.id }, function (detail) {
+                    $.get("/Sales/GetSalesItem/" + detail.id, function (data) {
+                        $("#items").append(data);
+                        $("#item" + detail.id + " div.quantity").editable(function (value, settings) {
+                            return editQuantity(detail.id, value);
+                        }, { cssclass : "number" });
+                        $("#item" + detail.id + " div.discount").editable(function (value, settings) {
+                            return editDiscount(detail.id, value);
+                        }, { cssclass : "number" });
 
-        $("#add").click(function () {
-            var item = $("#product-search").tokenInput("get")[0];
+                        $("#product-search").tokenInput("clear");
+                        updateTotals();
 
-            $.post("/Sales/AddDetail", { "order": SalesOrder.Id, "product": "" + item.id }, function (detail) {
-                $.get("/Sales/GetSalesItem/" + detail.id, function (data) {
-                    $("#items").append(data);
-                    $("#item" + detail.id + " div.quantity").editable(function (value, settings) {
-                        return editQuantity(detail.id, value);
-                    }, { cssclass : "number" });
-                    $("#item" + detail.id + " div.discount").editable(function (value, settings) {
-                        return editDiscount(detail.id, value);
-                    }, { cssclass : "number" });
+                        $("#edit-sales-order").hide("slow");
+                    });
 
-                    $("#product-search").tokenInput("clear");
-                    updateTotals();
-
-                    $("#edit-sales-order").hide("slow");
-                });
-
-            }, "json");
+                }, "json");
+            }
         });
 
         $(window).scroll(function() {

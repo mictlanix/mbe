@@ -20,6 +20,8 @@
                             Html.GetPrivilege(CurrentUser, SystemObjects.InventoryTransfers).AllowRead;
     var ShowAdministrationMenu = Html.GetPrivilege(CurrentUser, SystemObjects.AccountsReceivable).AllowRead ||
                             Html.GetPrivilege(CurrentUser, SystemObjects.AccountsPayable).AllowRead;
+    var ShowPurchasesMenu = Html.GetPrivilege(CurrentUser, SystemObjects.PurchasesOrders).AllowRead ||
+                            Html.GetPrivilege(CurrentUser, SystemObjects.SupplierPayment).AllowRead;
 }
 
 <div id="gb">
@@ -184,6 +186,38 @@
                 </div>
             </li>
             }
+            @if (ShowPurchasesMenu)
+            {
+            <li class="gbt">
+                <a id="purchases-menu" class="gbgt" href="javascript:void(0)">
+                    <span class="gbtb2"></span>
+                    <span class="gbts gbtsa">
+                        <span>@Resources.Purchases</span>
+                        <span class="gbma"></span>
+                    </span>
+                </a>
+                <div id="purchases-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
+                    <div class="gbmc">
+                        <ol class="gbmcc">
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.PurchasesOrders).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "Purchases") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "Purchases")">@Resources.Title_PurchaseOrder</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SupplierPayment).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "SupplierPayments") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "SupplierPayments")">@Resources.Title_SuppliersPayments</a>
+                            </li>
+                            }
+                        </ol>
+                    </div>
+                </div>
+            </li>
+            }
             @if (ShowAdministrationMenu)
             {
             <li class="gbt">
@@ -204,13 +238,13 @@
                                    href="@Url.Action("Index", "AccountsReceivables")">@Resources.Title_AccountsReceivable</a>
                             </li>
                             }
-                            @*@if (Html.GetPrivilege(CurrentUser, SystemObjects.AccountsPayable).AllowRead)
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.AccountsPayable).AllowRead)
                             {
                             <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "Payments") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "Payments")">@Resources.Title_AccountsPayable</a>
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "AccountsPayables") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "AccountsPayables")">@Resources.Title_AccountsPayable</a>
                             </li>
-                            }*@
+                            }
                         </ol>
                     </div>
                 </div>
@@ -240,6 +274,8 @@
                 $('#inventory-menu').trigger("click");
             if ($('#statements-menu').parent().hasClass('gbto'))
                 $('#statements-menu').trigger("click");
+            if ($('#purchases-menu').parent().hasClass('gbto'))
+                $('#purchases-menu').trigger("click");
 
             $('#master-data-menu').parent().addClass('gbto');
             $('#master-data-menu-items').css({ "visibility": "visible" });
@@ -254,6 +290,8 @@
                 $('#inventory-menu').trigger("click");
             if ($('#statements-menu').parent().hasClass('gbto'))
                 $('#statements-menu').trigger("click");
+            if ($('#purchases-menu').parent().hasClass('gbto'))
+                $('#purchases-menu').trigger("click");
 
             $('#sales-menu').parent().addClass('gbto');
             $('#sales-menu-items').css({ "visibility": "visible" });
@@ -268,12 +306,30 @@
                 $('#sales-menu').trigger("click");
             if ($('#statements-menu').parent().hasClass('gbto'))
                 $('#statements-menu').trigger("click");
+            if ($('#purchases-menu').parent().hasClass('gbto'))
+                $('#purchases-menu').trigger("click");
 
             $('#inventory-menu').parent().addClass('gbto');
             $('#inventory-menu-items').css({ "visibility": "visible" });
         }, function () {
             $('#inventory-menu').parent().removeClass('gbto');
             $('#inventory-menu-items').css({ "visibility": "hidden" });
+        });
+        $('#purchases-menu').toggle(function () {
+            if ($('#master-data-menu').parent().hasClass('gbto'))
+                $('#master-data-menu').trigger("click");
+            if ($('#sales-menu').parent().hasClass('gbto'))
+                $('#sales-menu').trigger("click");
+            if ($('#inventory-menu').parent().hasClass('gbto'))
+                $('#inventory-menu').trigger("click");
+            if ($('#statements-menu').parent().hasClass('gbto'))
+                $('#statements-menu').trigger("click");
+
+            $('#purchases-menu').parent().addClass('gbto');
+            $('#purchases-menu-items').css({ "visibility": "visible" });
+        }, function () {
+            $('#purchases-menu').parent().removeClass('gbto');
+            $('#purchases-menu-items').css({ "visibility": "hidden" });
         });
         $('#statements-menu').toggle(function () {
             if ($('#master-data-menu').parent().hasClass('gbto'))
@@ -282,6 +338,8 @@
                 $('#sales-menu').trigger("click");
             if ($('#inventory-menu').parent().hasClass('gbto'))
                 $('#inventory-menu').trigger("click");
+            if ($('#purchases-menu').parent().hasClass('gbto'))
+                $('#purchases-menu').trigger("click");
 
             $('#statements-menu').parent().addClass('gbto');
             $('#statements-menu-items').css({ "visibility": "visible" });

@@ -3,6 +3,7 @@
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
+//   Eduardo Nieto <enieto@mictlanix.org>
 // 
 // Copyright (C) 2011 Eddy Zavaleta, Mictlanix, and contributors.
 // 
@@ -159,6 +160,7 @@ namespace Business.Essentials.WebApp.Controllers
                 ProductCode = p.Code,
                 ProductName = p.Name,
                 Quantity = 1,
+                QuantityOrdered = 0
             };
 
             using (var session = new SessionScope())

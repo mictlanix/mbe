@@ -3,6 +3,7 @@
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
+//   Eduardo Nieto <enieto@mictlanix.org>
 // 
 // Copyright (C) 2011 Eddy Zavaleta, Mictlanix, and contributors.
 // 
@@ -27,6 +28,7 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
@@ -111,5 +113,16 @@ namespace Business.Essentials.WebApp.Helpers
 
             return display_name;
         }
+
+        public static IList<Warehouse> GetWarehouse(this HtmlHelper helper)
+        {
+            var qry = from x in Warehouse.Queryable
+                      orderby x.Name
+                      select x;
+
+            return qry.ToList();
+
+        }
+
     }
 }

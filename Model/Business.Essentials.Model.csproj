@@ -79,9 +79,15 @@
     <Compile Include="Address.cs" />
     <Compile Include="AccessPrivilege.cs" />
     <Compile Include="Constants\CashCountType.cs" />
+    <Compile Include="Constants\SupplierPaymentMethod.cs" />
     <Compile Include="Constants\DebitCreditEnum.cs" />
     <Compile Include="Constants\SystemObjects.cs" />
     <Compile Include="Constants\AccessRight.cs" />
+    <Compile Include="ReturnOrderDetail.cs" />
+    <Compile Include="ReturnOrder.cs" />
+    <Compile Include="SupplierPayment.cs" />
+    <Compile Include="PurchaseOrderDetail.cs" />
+    <Compile Include="PurchaseOrder.cs" />
     <Compile Include="Kardex.cs" />
     <Compile Include="InventoryTransferDetail.cs" />
     <Compile Include="InventoryTransfer.cs" />

@@ -1,0 +1,24 @@
+﻿@using Business.Essentials
+@using Business.Essentials.WebApp.Helpers
+@model Business.Essentials.Model.PurchaseOrder
+
+<div class="right">
+@*<fieldset>
+    <legend>@Resources.PurchasesTotals</legend>
+*@
+    <div class="display-label" style="display:inline" >
+        <b>@Html.LabelFor(x => x.Subtotal):</b>
+        @Html.DisplayFor(x => x.Subtotal)
+    </div>
+    <div class="display-label" style="display:inline-block" >
+        <b>@Html.LabelFor(x => x.Taxes):</b>
+        @Html.DisplayFor(x => x.Taxes)
+    </div>
+    <div class="display-label" style="display:inline-block" >
+        <b>@Html.LabelFor(x => x.Total):</b>
+        @Html.DisplayFor(x => x.Total)
+    </div>
+    <p></p>
+@*
+</fieldset>*@
+</div>

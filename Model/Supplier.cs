@@ -74,6 +74,12 @@ namespace Business.Essentials.Model
         [Display(Name = "CreditDays", ResourceType = typeof(Resources))]
         public int CreditDays { get; set; }
 
+        [Property]
+        [DataType(DataType.MultilineText)]
+        [Display(Name = "Comment", ResourceType = typeof(Resources))]
+        [StringLength(500, MinimumLength = 0)]
+        public string Comment { get; set; }
+
         [HasAndBelongsToMany(typeof(Address), Table = "supplier_address", ColumnKey = "supplier", ColumnRef = "address", Lazy = true)]
         public IList<Address> Addresses
         {

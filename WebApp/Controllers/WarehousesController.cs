@@ -136,5 +136,17 @@ namespace Business.Essentials.WebApp.Controllers
 
             return Json(qry.Take(15).ToList(), JsonRequestBehavior.AllowGet);
         }
+
+        public JsonResult List()
+        {
+            var qry = from x in Warehouse.Queryable
+                      select new { id = x.Id, name = x.Name };
+
+            var dict = qry.ToDictionary(x => x.id.ToString(), x => x.name);
+
+            //dict.Add("selected", id.ToString());
+
+            return Json(dict, JsonRequestBehavior.AllowGet);
+        }
     }
 }

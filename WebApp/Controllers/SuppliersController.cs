@@ -158,7 +158,7 @@ namespace Business.Essentials.WebApp.Controllers
 			supplier.CreditDays = item.CreditDays;
 			supplier.CreditLimit = item.CreditLimit;
 			//TODO: Add Comment Property
-			//supplier.Comment = item.Comment;
+			supplier.Comment = item.Comment;
 
             supplier.Update();
             

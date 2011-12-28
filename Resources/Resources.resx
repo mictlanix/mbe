@@ -1078,4 +1078,83 @@ Vencimiento: {0:d}</value>
     <value>Persona que Recibe
 </value>
   </data>
+  <data name="InvoiceNumber" xml:space="preserve">
+    <value>Número de Factura</value>
+  </data>
+  <data name="PurchaseOrder" xml:space="preserve">
+    <value>Orden de Compra</value>
+  </data>
+  <data name="PurchaseOrderId" xml:space="preserve">
+    <value>Folio de Compra</value>
+  </data>
+  <data name="DisplayName_PurchasesOrders" xml:space="preserve">
+    <value>Compras</value>
+  </data>
+  <data name="Title_PurchaseOrder" xml:space="preserve">
+    <value>Compras</value>
+  </data>
+  <data name="DisplayName_NewPurchase" xml:space="preserve">
+    <value>Nueva Compra a Proveedor</value>
+  </data>
+  <data name="DisplayName_PurchaseInformation" xml:space="preserve">
+    <value>Información de la Compra</value>
+  </data>
+  <data name="Title_NewPurchase" xml:space="preserve">
+    <value>Nueva Compra</value>
+  </data>
+  <data name="DisplayName_EditPurchase" xml:space="preserve">
+    <value>Editar Compra</value>
+  </data>
+  <data name="PurchasesTotals" xml:space="preserve">
+    <value>Totales</value>
+  </data>
+  <data name="QuantityDelivered" xml:space="preserve">
+    <value>Cantidad Recibida</value>
+  </data>
+  <data name="QuantityOrdered" xml:space="preserve">
+    <value>Cantidad Ordenada</value>
+  </data>
+  <data name="SupplierPaymentId" xml:space="preserve">
+    <value>Folio de Pago</value>
+  </data>
+  <data name="DisplayName_SupplierPayment" xml:space="preserve">
+    <value>Pago a Proveedor</value>
+  </data>
+  <data name="Purchases" xml:space="preserve">
+    <value>Compras</value>
+  </data>
+  <data name="Title_SuppliersPayments" xml:space="preserve">
+    <value>Pagos a Proveedores</value>
+  </data>
+  <data name="SupplierPayment" xml:space="preserve">
+    <value>Pago a Proveedor</value>
+  </data>
+  <data name="SuppliersPayments" xml:space="preserve">
+    <value>Pagos a Proveedores</value>
+  </data>
+  <data name="NewPay" xml:space="preserve">
+    <value>Nuevo Pago</value>
+  </data>
+  <data name="DisplayName_DataSupplier" xml:space="preserve">
+    <value>Datos del Proveedor</value>
+  </data>
+  <data name="Format_PurchaseDescription" xml:space="preserve">
+    <value>Compra a Crédito
+Realizada el: {0:d}</value>
+  </data>
+  <data name="TotalPurchases" xml:space="preserve">
+    <value>Total de Compras</value>
+  </data>
+  <data name="DisplayName_PaymentInformation" xml:space="preserve">
+    <value>Información del Pago</value>
+  </data>
+  <data name="ReturnOrder" xml:space="preserve">
+    <value>Devolución</value>
+  </data>
+  <data name="ReturnOrderId" xml:space="preserve">
+    <value>Folio de la Devolución</value>
+  </data>
+  <data name="SalesOrderDetail" xml:space="preserve">
+    <value>Orden de Venta</value>
+  </data>
 </root>

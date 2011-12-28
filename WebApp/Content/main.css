@@ -81,16 +81,21 @@ div#logo {
 .display-field, .editor-field {
   margin:1em 0 0 0;
 }
+.editable-warehouse, .editable-warehouse-ok{
+  display:inline-block;
+  margin:2px 0;
+  text-align:left;
+}
 .editable,.editable-ok {
   display:inline-block;
   margin:2px 0;
   min-width:60px;
   text-align:right;
 }
-.editable:hover {
+.editable:hover,.editable-warehouse:hover {
   background:#fffcc3;
 }
-.editable-ok {
+.editable-ok,.editable-warehouse-ok {
   background:#00CD00;
 }
 a.small img,img.small {

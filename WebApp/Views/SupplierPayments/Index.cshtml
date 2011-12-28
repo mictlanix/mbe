@@ -1,0 +1,41 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@model IEnumerable<SupplierPayment>
+
+@{
+    ViewBag.Title = Resources.Title_SuppliersPayments;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SupplierPayment);
+}
+
+<h2>@Resources.DisplayName_SupplierPayment</h2>
+
+<p>
+@if(Privilege.AllowCreate)
+{
+    @Html.ActionLink(Resources.NewPay, "NewPay", new { }, new { @class = "button icon add" })
+}
+</p>
+<table>
+    <tr>
+        <th>@Html.LabelFor(x => new SupplierPayment().Id)</th>
+        <th>@Html.LabelFor(x => new SupplierPayment().Date)</th>
+        <th>@Html.LabelFor(x => new SupplierPayment().Supplier)</th>
+        <th>@Html.LabelFor(x => new SupplierPayment().Amount)</th>
+        <th>@Html.LabelFor(x => new SupplierPayment().Method)</th>
+        <th></th>
+    </tr>
+@foreach (var item in Model) {
+    <tr>
+        <td class="number">@Html.DisplayFor(x => item.Id)</td>
+        <td class="date">@Html.DisplayFor(x => item.Date)</td>
+        <td>@Html.DisplayFor(x => item.Supplier.Name)</td>
+        <td class="number">@Html.DisplayFor(x => item.Amount)</td>
+        <td class="date">@item.Method.GetDisplayName()</td>
+        <td class="actions">
+            @Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+        </td>
+    </tr>
+}
+</table>
