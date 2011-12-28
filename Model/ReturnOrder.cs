@@ -1,5 +1,5 @@
 ﻿// 
-// InventoryReceipt.cs
+// ReturnOrder.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
@@ -36,15 +36,23 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Business.Essentials.Model
 {
-    [ActiveRecord("inventory_receipt")]
-    public class InventoryReceipt : ActiveRecordLinqBase<InventoryReceipt>
+    [ActiveRecord("return_oder")]
+    public class ReturnOrder : ActiveRecordLinqBase<ReturnOrder>
     {
-        IList<InventoryReceiptDetail> details = new List<InventoryReceiptDetail>();
+        IList<ReturnOrderDetail> details = new List<ReturnOrderDetail>();
 
-        [PrimaryKey(PrimaryKeyType.Identity, "inventory_receipt_id")]
-        [Display(Name = "InventoryReceiptId", ResourceType = typeof(Resources))]
+        [PrimaryKey(PrimaryKeyType.Identity, "return_order_id")]
+        [Display(Name = "ReturnOrderId", ResourceType = typeof(Resources))]
         [DisplayFormat(DataFormatString = "{0:000000}")]
         public int Id { get; set; }
+
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+        [Display(Name = "SalesOrder", ResourceType = typeof(Resources))]
+        public int SalesOrderId { get; set; }
+
+        [BelongsTo("sales_order")]
+        [Display(Name = "SalesOrder", ResourceType = typeof(Resources))]
+        public virtual SalesOrder SalesOrder { get; set; }
 
         [Property("creation_time")]
         [DataType(DataType.DateTime)]
@@ -64,18 +72,9 @@ namespace Business.Essentials.Model
         [Display(Name = "Updater", ResourceType = typeof(Resources))]
         public virtual Employee Updater { get; set; }
 
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [Display(Name = "Warehouse", ResourceType = typeof(Resources))]
-        [UIHint("WarehouseSelector")]
-        public int WarehouseId { get; set; }
-
-        [BelongsTo("warehouse")]
-        [Display(Name = "Warehouse", ResourceType = typeof(Resources))]
-        public virtual Warehouse Warehouse { get; set; }
-
-        [BelongsTo("purchase_order")]
-        [Display(Name = "PurchaseOrder", ResourceType = typeof(Resources))]
-        public virtual PurchaseOrder Order { get; set; }
+        [BelongsTo("sales_person")]
+        [Display(Name = "SalesPerson", ResourceType = typeof(Resources))]
+        public virtual Employee SalesPerson { get; set; }
 
         [Property("completed")]
         [Display(Name = "Completed", ResourceType = typeof(Resources))]
@@ -91,23 +90,44 @@ namespace Business.Essentials.Model
         [StringLength(500, MinimumLength = 0)]
         public string Comment { get; set; }
 
-        [HasMany(typeof(InventoryReceiptDetail), Table = "inventory_receipt_detail", ColumnKey = "receipt")]
-        public IList<InventoryReceiptDetail> Details
+        [HasMany(typeof(ReturnOrderDetail), Table = "return_order_detail", ColumnKey = "return_order")]
+        public IList<ReturnOrderDetail> Details
         {
             get { return details; }
             set { details = value; }
+        }
+
+        [DataType(DataType.Currency)]
+        [Display(Name = "Subtotal", ResourceType = typeof(Resources))]
+        public decimal Subtotal
+        {
+            get { return Details.Sum(x => x.Subtotal); }
+        }
+
+        [DataType(DataType.Currency)]
+        [Display(Name = "Taxes", ResourceType = typeof(Resources))]
+        public decimal Taxes
+        {
+            get { return Total - Subtotal; }
+        }
+
+        [DataType(DataType.Currency)]
+        [Display(Name = "Total", ResourceType = typeof(Resources))]
+        public decimal Total
+        {
+            get { return Details.Sum(x => x.Total); }
         }
 
         #region Override Base Methods
 
         public override string ToString()
         {
-            return string.Format("{0} [{1}, {2}, {3}]", Id, CreationTime, Creator, Warehouse);
+            return string.Format("{0} [{1}, {2}, {3}]", Id, CreationTime, Creator, SalesOrder);
         }
 
         public override bool Equals(object obj)
         {
-            InventoryReceipt other = obj as InventoryReceipt;
+            PurchaseOrder other = obj as PurchaseOrder;
 
             if (other == null)
                 return false;

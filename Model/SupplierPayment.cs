@@ -1,5 +1,5 @@
 ﻿// 
-// InventoryReceipt.cs
+// SupplierPayment.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
@@ -29,85 +29,65 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 
 namespace Business.Essentials.Model
 {
-    [ActiveRecord("inventory_receipt")]
-    public class InventoryReceipt : ActiveRecordLinqBase<InventoryReceipt>
+    [ActiveRecord("supplier_payment")]
+    public class SupplierPayment : ActiveRecordLinqBase<SupplierPayment>
     {
-        IList<InventoryReceiptDetail> details = new List<InventoryReceiptDetail>();
-
-        [PrimaryKey(PrimaryKeyType.Identity, "inventory_receipt_id")]
-        [Display(Name = "InventoryReceiptId", ResourceType = typeof(Resources))]
+        [PrimaryKey(PrimaryKeyType.Identity, "supplier_payment_id")]
+        [Display(Name = "SupplierPaymentId", ResourceType = typeof(Resources))]
         [DisplayFormat(DataFormatString = "{0:000000}")]
         public int Id { get; set; }
 
-        [Property("creation_time")]
-        [DataType(DataType.DateTime)]
-        [Display(Name = "CreationTime", ResourceType = typeof(Resources))]
-        public DateTime CreationTime { get; set; }
-
-        [Property("modification_time")]
-        [DataType(DataType.DateTime)]
-        [Display(Name = "ModificationTime", ResourceType = typeof(Resources))]
-        public DateTime ModificationTime { get; set; }
-
-        [BelongsTo("creator")]
-        [Display(Name = "Creator", ResourceType = typeof(Resources))]
-        public virtual Employee Creator { get; set; }
-
-        [BelongsTo("updater")]
-        [Display(Name = "Updater", ResourceType = typeof(Resources))]
-        public virtual Employee Updater { get; set; }
-
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [Display(Name = "Warehouse", ResourceType = typeof(Resources))]
-        [UIHint("WarehouseSelector")]
-        public int WarehouseId { get; set; }
+        [Display(Name = "Supplier", ResourceType = typeof(Resources))]
+        [UIHint("SupplierSelector")]
+        public int SupplierId { get; set; }
 
-        [BelongsTo("warehouse")]
-        [Display(Name = "Warehouse", ResourceType = typeof(Resources))]
-        public virtual Warehouse Warehouse { get; set; }
-
-        [BelongsTo("purchase_order")]
-        [Display(Name = "PurchaseOrder", ResourceType = typeof(Resources))]
-        public virtual PurchaseOrder Order { get; set; }
-
-        [Property("completed")]
-        [Display(Name = "Completed", ResourceType = typeof(Resources))]
-        public bool IsCompleted { get; set; }
-
-        [Property("cancelled")]
-        [Display(Name = "Cancelled", ResourceType = typeof(Resources))]
-        public bool IsCancelled { get; set; }
+        [BelongsTo("supplier")]
+        [Display(Name = "Supplier", ResourceType = typeof(Resources))]
+        public virtual Supplier Supplier { get; set; }
 
         [Property]
-        [DataType(DataType.MultilineText)]
+        [DataType(DataType.Currency)]
+        [Display(Name = "Amount", ResourceType = typeof(Resources))]
+        [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
+        public decimal Amount { get; set; }
+
+        [Property]
+        [Display(Name = "Method", ResourceType = typeof(Resources))]
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+        public PaymentMethod Method { get; set; }
+
+        [Property]
+        [DataType(DataType.DateTime)]
+        [Display(Name = "Date", ResourceType = typeof(Resources))]
+        public DateTime Date { get; set; }
+
+        [Property]
+        [Display(Name = "Reference", ResourceType = typeof(Resources))]
+        public string Reference { get; set; }
+
+        [Property]
         [Display(Name = "Comment", ResourceType = typeof(Resources))]
+        [DataType(DataType.MultilineText)]
         [StringLength(500, MinimumLength = 0)]
         public string Comment { get; set; }
-
-        [HasMany(typeof(InventoryReceiptDetail), Table = "inventory_receipt_detail", ColumnKey = "receipt")]
-        public IList<InventoryReceiptDetail> Details
-        {
-            get { return details; }
-            set { details = value; }
-        }
 
         #region Override Base Methods
 
         public override string ToString()
         {
-            return string.Format("{0} [{1}, {2}, {3}]", Id, CreationTime, Creator, Warehouse);
+            return string.Format("{0} : {1:c} [{2:u}]", Method, Amount, Date);
         }
 
         public override bool Equals(object obj)
         {
-            InventoryReceipt other = obj as InventoryReceipt;
+            SupplierPayment other = obj as SupplierPayment;
 
             if (other == null)
                 return false;

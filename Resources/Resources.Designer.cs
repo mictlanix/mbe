@@ -790,6 +790,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Datos del Proveedor.
+        /// </summary>
+        public static string DisplayName_DataSupplier {
+            get {
+                return ResourceManager.GetString("DisplayName_DataSupplier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Editar Salida.
         /// </summary>
         public static string DisplayName_EditInventoryIssue {
@@ -813,6 +822,15 @@ namespace Business.Essentials {
         public static string DisplayName_EditInventoryTransfer {
             get {
                 return ResourceManager.GetString("DisplayName_EditInventoryTransfer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Editar Compra.
+        /// </summary>
+        public static string DisplayName_EditPurchase {
+            get {
+                return ResourceManager.GetString("DisplayName_EditPurchase", resourceCulture);
             }
         }
         
@@ -907,6 +925,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nueva Compra a Proveedor.
+        /// </summary>
+        public static string DisplayName_NewPurchase {
+            get {
+                return ResourceManager.GetString("DisplayName_NewPurchase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Venta Nueva.
         /// </summary>
         public static string DisplayName_NewSale {
@@ -921,6 +948,15 @@ namespace Business.Essentials {
         public static string DisplayName_PayCredit {
             get {
                 return ResourceManager.GetString("DisplayName_PayCredit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Información del Pago.
+        /// </summary>
+        public static string DisplayName_PaymentInformation {
+            get {
+                return ResourceManager.GetString("DisplayName_PaymentInformation", resourceCulture);
             }
         }
         
@@ -957,6 +993,24 @@ namespace Business.Essentials {
         public static string DisplayName_Products {
             get {
                 return ResourceManager.GetString("DisplayName_Products", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Información de la Compra.
+        /// </summary>
+        public static string DisplayName_PurchaseInformation {
+            get {
+                return ResourceManager.GetString("DisplayName_PurchaseInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Compras.
+        /// </summary>
+        public static string DisplayName_PurchasesOrders {
+            get {
+                return ResourceManager.GetString("DisplayName_PurchasesOrders", resourceCulture);
             }
         }
         
@@ -1002,6 +1056,15 @@ namespace Business.Essentials {
         public static string DisplayName_SupplierAgreements {
             get {
                 return ResourceManager.GetString("DisplayName_SupplierAgreements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pago a Proveedor.
+        /// </summary>
+        public static string DisplayName_SupplierPayment {
+            get {
+                return ResourceManager.GetString("DisplayName_SupplierPayment", resourceCulture);
             }
         }
         
@@ -1156,6 +1219,16 @@ namespace Business.Essentials {
         public static string Format_PaymentWithRefDescription {
             get {
                 return ResourceManager.GetString("Format_PaymentWithRefDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Compra a Crédito
+        ///Realizada el: {0:d}.
+        /// </summary>
+        public static string Format_PurchaseDescription {
+            get {
+                return ResourceManager.GetString("Format_PurchaseDescription", resourceCulture);
             }
         }
         
@@ -1319,6 +1392,15 @@ namespace Business.Essentials {
         public static string Invoiceable {
             get {
                 return ResourceManager.GetString("Invoiceable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Número de Factura.
+        /// </summary>
+        public static string InvoiceNumber {
+            get {
+                return ResourceManager.GetString("InvoiceNumber", resourceCulture);
             }
         }
         
@@ -1647,6 +1729,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nuevo Pago.
+        /// </summary>
+        public static string NewPay {
+            get {
+                return ResourceManager.GetString("NewPay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Venta Nueva.
         /// </summary>
         public static string NewSale {
@@ -1964,11 +2055,65 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Orden de Compra.
+        /// </summary>
+        public static string PurchaseOrder {
+            get {
+                return ResourceManager.GetString("PurchaseOrder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Folio de Compra.
+        /// </summary>
+        public static string PurchaseOrderId {
+            get {
+                return ResourceManager.GetString("PurchaseOrderId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Compras.
+        /// </summary>
+        public static string Purchases {
+            get {
+                return ResourceManager.GetString("Purchases", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Totales.
+        /// </summary>
+        public static string PurchasesTotals {
+            get {
+                return ResourceManager.GetString("PurchasesTotals", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cantidad.
         /// </summary>
         public static string Quantity {
             get {
                 return ResourceManager.GetString("Quantity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cantidad Recibida.
+        /// </summary>
+        public static string QuantityDelivered {
+            get {
+                return ResourceManager.GetString("QuantityDelivered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cantidad Ordenada.
+        /// </summary>
+        public static string QuantityOrdered {
+            get {
+                return ResourceManager.GetString("QuantityOrdered", resourceCulture);
             }
         }
         
@@ -2009,6 +2154,24 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Devolución.
+        /// </summary>
+        public static string ReturnOrder {
+            get {
+                return ResourceManager.GetString("ReturnOrder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Folio de la Devolución.
+        /// </summary>
+        public static string ReturnOrderId {
+            get {
+                return ResourceManager.GetString("ReturnOrderId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clabe Interbancaria.
         /// </summary>
         public static string RoutingNumber {
@@ -2032,6 +2195,15 @@ namespace Business.Essentials {
         public static string SalesOrder {
             get {
                 return ResourceManager.GetString("SalesOrder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Orden de Venta.
+        /// </summary>
+        public static string SalesOrderDetail {
+            get {
+                return ResourceManager.GetString("SalesOrderDetail", resourceCulture);
             }
         }
         
@@ -2239,6 +2411,33 @@ namespace Business.Essentials {
         public static string SupplierAgreement {
             get {
                 return ResourceManager.GetString("SupplierAgreement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pago a Proveedor.
+        /// </summary>
+        public static string SupplierPayment {
+            get {
+                return ResourceManager.GetString("SupplierPayment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Folio de Pago.
+        /// </summary>
+        public static string SupplierPaymentId {
+            get {
+                return ResourceManager.GetString("SupplierPaymentId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pagos a Proveedores.
+        /// </summary>
+        public static string SuppliersPayments {
+            get {
+                return ResourceManager.GetString("SuppliersPayments", resourceCulture);
             }
         }
         
@@ -2531,6 +2730,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nueva Compra.
+        /// </summary>
+        public static string Title_NewPurchase {
+            get {
+                return ResourceManager.GetString("Title_NewPurchase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Venta Nueva.
         /// </summary>
         public static string Title_NewSale {
@@ -2572,6 +2780,15 @@ namespace Business.Essentials {
         public static string Title_Product {
             get {
                 return ResourceManager.GetString("Title_Product", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Compras.
+        /// </summary>
+        public static string Title_PurchaseOrder {
+            get {
+                return ResourceManager.GetString("Title_PurchaseOrder", resourceCulture);
             }
         }
         
@@ -2648,6 +2865,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pagos a Proveedores.
+        /// </summary>
+        public static string Title_SuppliersPayments {
+            get {
+                return ResourceManager.GetString("Title_SuppliersPayments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Usuarios.
         /// </summary>
         public static string Title_Users {
@@ -2680,6 +2906,15 @@ namespace Business.Essentials {
         public static string TotalPayments {
             get {
                 return ResourceManager.GetString("TotalPayments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total de Compras.
+        /// </summary>
+        public static string TotalPurchases {
+            get {
+                return ResourceManager.GetString("TotalPurchases", resourceCulture);
             }
         }
         

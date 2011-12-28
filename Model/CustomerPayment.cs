@@ -83,6 +83,13 @@ namespace Business.Essentials.Model
         [Display(Name = "Reference", ResourceType = typeof(Resources))]
         public string Reference { get; set; }
 
+        [DataType(DataType.Currency)]
+        [Display(Name = "Cash", ResourceType = typeof(Resources))]
+        public decimal Cash
+        {
+            get { return Amount + Change.GetValueOrDefault(); }
+        }
+
         #region Override Base Methods
 
         public override string ToString()
@@ -109,13 +116,6 @@ namespace Business.Essentials.Model
                 return base.GetHashCode();
 
             return string.Format("{0}#{1}", GetType().FullName, Id).GetHashCode();
-        }
-
-        [DataType(DataType.Currency)]
-        [Display(Name = "Cash", ResourceType = typeof(Resources))]
-        public decimal Cash
-        {
-            get { return Amount + Change.GetValueOrDefault(); }
         }
 
         #endregion

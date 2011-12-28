@@ -3,6 +3,7 @@
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
+//   Eduardo Nieto <enieto@mictlanix.org>
 // 
 // Copyright (C) 2011 Eddy Zavaleta, Mictlanix, and contributors.
 // 
@@ -75,6 +76,10 @@ namespace Business.Essentials.Model
         [Display(Name = "DisplayName_AccountsReceivable", ResourceType = typeof(Resources))]
         AccountsReceivable,
         [Display(Name = "DisplayName_AccountsPayable", ResourceType = typeof(Resources))]
-        AccountsPayable
+        AccountsPayable,
+        [Display(Name = "DisplayName_PurchasesOrders", ResourceType = typeof(Resources))]
+        PurchasesOrders,
+        [Display(Name = "DisplayName_SupplierPayment", ResourceType = typeof(Resources))]
+        SupplierPayment
     }
 }

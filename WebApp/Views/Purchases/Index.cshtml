@@ -1,0 +1,45 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@model IEnumerable<PurchaseOrder>
+
+@{
+    ViewBag.Title = Resources.Title_PurchaseOrder;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.PurchasesOrders);
+}
+
+<h2>@Resources.DisplayName_PurchasesOrders</h2>
+
+<p>
+@if(Privilege.AllowCreate)
+{
+    @Html.ActionLink(Resources.CreateNew, "NewPurchase", new { }, new { @class = "button icon add" })
+}
+</p>
+<table>
+    <tr>
+        <th>@Html.LabelFor(x => new PurchaseOrder().Id)</th>
+        <th>@Html.LabelFor(x => new PurchaseOrder().CreationTime)</th>
+        <th>@Html.LabelFor(x => new PurchaseOrder().Supplier)</th>
+        <th>@Html.LabelFor(x => new PurchaseOrder().IsCompleted)</th>
+        <th>@Html.LabelFor(x => new PurchaseOrder().IsCancelled)</th>
+        <th></th>
+    </tr>
+@foreach (var item in Model) {
+    <tr>
+        <td class="number">@Html.DisplayFor(x => item.Id)</td>
+        <td class="date">@Html.DisplayFor(x => item.CreationTime)</td>
+        <td>@Html.DisplayFor(x => item.Supplier.Name)</td>
+        <td class="bool">@Html.DisplayFor(x => item.IsCompleted)</td>
+        <td class="bool">@Html.DisplayFor(x => item.IsCancelled)</td>
+        <td class="actions">
+            @Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+        	@if(Privilege.AllowUpdate && !item.IsCompleted && !item.IsCancelled)
+        	{
+            	@Html.ActionLink(" ", "EditPurchase", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
+            }
+        </td>
+    </tr>
+}
+</table>

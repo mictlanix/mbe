@@ -1,5 +1,5 @@
 // 
-// PaymentMethod.cs
+// SupplierPaymentMethod.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
@@ -32,7 +32,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Business.Essentials.Model
 {
-    public enum PaymentMethod : int
+    public enum SupplierPaymentMethod : int
     {
         [Display(Name = "Cash", ResourceType = typeof(Resources))]
         Cash = 1,
@@ -43,8 +43,6 @@ namespace Business.Essentials.Model
         [Display(Name = "Check", ResourceType = typeof(Resources))]
         Check,
         [Display(Name = "WireTransfer", ResourceType = typeof(Resources))]
-        WireTransfer,
-        [Display(Name = "GovernmentFunding", ResourceType = typeof(Resources))]
-        GovernmentFunding
+        WireTransfer
     }
 }

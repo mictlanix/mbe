@@ -1,5 +1,5 @@
 ﻿// 
-// InventoryReceiptDetail.cs
+// PurchaseOrderDetail.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
@@ -35,31 +35,50 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Business.Essentials.Model
 {
-    [ActiveRecord("inventory_receipt_detail")]
-    public class InventoryReceiptDetail : ActiveRecordLinqBase<InventoryReceiptDetail>
+    [ActiveRecord("purchase_order_detail")]
+    public class PurchaseOrderDetail : ActiveRecordLinqBase<PurchaseOrderDetail>
     {
-        [PrimaryKey(PrimaryKeyType.Identity, "receipt_detail_id")]
+        [PrimaryKey(PrimaryKeyType.Identity, "purchase_order_detail_id")]
         public int Id { get; set; }
 
-        [BelongsTo("receipt", Lazy = FetchWhen.OnInvoke)]
-        [Display(Name = "InventoryReceipt", ResourceType = typeof(Resources))]
-        public virtual InventoryReceipt Receipt { get; set; }
+        [BelongsTo("purchase_order", Lazy = FetchWhen.OnInvoke)]
+        [Display(Name = "PurchaseOrder", ResourceType = typeof(Resources))]
+        public virtual PurchaseOrder Order { get; set; }
 
         [BelongsTo("product")]
         [Display(Name = "Product", ResourceType = typeof(Resources))]
         public virtual Product Product { get; set; }
 
-        [Property("quantity_ordered")]
-        [DisplayFormat(DataFormatString = "{0:0.####}")]
-        [Display(Name = "QuantityOrdered", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
-        public decimal QuantityOrdered { get; set; }
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+        [Display(Name = "Warehouse", ResourceType = typeof(Resources))]
+        [UIHint("WarehouseSelector")]
+        public int WarehouseId { get; set; }
+
+        [BelongsTo("warehouse")]
+        [Display(Name = "Warehouse", ResourceType = typeof(Resources))]
+        public virtual Warehouse Warehouse { get; set; }
 
         [Property]
         [DisplayFormat(DataFormatString = "{0:0.####}")]
         [Display(Name = "Quantity", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
         public decimal Quantity { get; set; }
+
+        [Property]
+        [DisplayFormat(DataFormatString = "{0:c}")]
+        [Display(Name = "Price", ResourceType = typeof(Resources))]
+        [DataType(DataType.Currency)]
+        [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
+        public decimal Price { get; set; }
+
+        [Property]
+        [DisplayFormat(DataFormatString = "{0:p}")]
+        [Display(Name = "Discount", ResourceType = typeof(Resources))]
+        public decimal Discount { get; set; }
+
+        [Property("tax_rate")]
+        [Display(Name = "TaxRate", ResourceType = typeof(Resources))]
+        public decimal TaxRate { get; set; }
 
         [Property("product_code")]
         [Display(Name = "ProductCode", ResourceType = typeof(Resources))]
@@ -71,16 +90,38 @@ namespace Business.Essentials.Model
         [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string ProductName { get; set; }
 
+        [DataType(DataType.Currency)]
+        [Display(Name = "Subtotal", ResourceType = typeof(Resources))]
+        public decimal Subtotal
+        {
+            get { return Math.Round(Total / (1 + TaxRate), 2, MidpointRounding.AwayFromZero); }
+        }
+
+        [DataType(DataType.Currency)]
+        [Display(Name = "Taxes", ResourceType = typeof(Resources))]
+        public decimal Taxes
+        {
+            get { return Total - Subtotal; }
+        }
+
+        [DataType(DataType.Currency)]
+        [Display(Name = "Total", ResourceType = typeof(Resources))]
+        public decimal Total
+        {
+            get { return Math.Round(Quantity * Price * (1 - Discount), 2, MidpointRounding.AwayFromZero); }
+        }
+
+
         #region Override Base Methods
 
         public override string ToString()
         {
-            return string.Format("{0} [{1}, {2}, {3}]", Id, Receipt, Product, Quantity);
+            return string.Format("{0} [{1}, {2}, {3}]", Id, Order, Product, Quantity);
         }
 
         public override bool Equals(object obj)
         {
-            InventoryReceiptDetail other = obj as InventoryReceiptDetail;
+            PurchaseOrderDetail other = obj as PurchaseOrderDetail;
 
             if (other == null)
                 return false;

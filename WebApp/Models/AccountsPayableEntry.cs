@@ -1,5 +1,5 @@
-// 
-// PaymentMethod.cs
+﻿// 
+// AccountsPayableEntry.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
@@ -28,23 +28,38 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using System.Web.Mvc;
+using System.Linq;
+using System.Web.Security;
+using Business.Essentials.Model;
 
-namespace Business.Essentials.Model
+namespace Business.Essentials.WebApp.Models
 {
-    public enum PaymentMethod : int
+    public class AccountsPayableEntry
     {
-        [Display(Name = "Cash", ResourceType = typeof(Resources))]
-        Cash = 1,
-        [Display(Name = "CreditCard", ResourceType = typeof(Resources))]
-        CreditCard,
-        [Display(Name = "DebitCard", ResourceType = typeof(Resources))]
-        DebitCard,
-        [Display(Name = "Check", ResourceType = typeof(Resources))]
-        Check,
-        [Display(Name = "WireTransfer", ResourceType = typeof(Resources))]
-        WireTransfer,
-        [Display(Name = "GovernmentFunding", ResourceType = typeof(Resources))]
-        GovernmentFunding
+        [DisplayFormat(DataFormatString = "{0:000000}")]
+        [Display(Name = "Movement", ResourceType = typeof(Resources))]
+        public int Number { get; set; }
+
+        [DataType(DataType.DateTime)]
+        [Display(Name = "Date", ResourceType = typeof(Resources))]
+        public DateTime Date { get; set; }
+
+        public DebitCreditEnum Type { get; set; }
+
+        [DataType(DataType.Currency)]
+        [Display(Name = "Amount", ResourceType = typeof(Resources))]
+        public decimal Amount { get; set; }
+
+        [DataType(DataType.Currency)]
+        [Display(Name = "Balance", ResourceType = typeof(Resources))]
+        public decimal Balance { get; set; }
+
+        [DataType(DataType.MultilineText)]
+        [Display(Name = "Description", ResourceType = typeof(Resources))]
+        public String Description { get; set; }
     }
 }

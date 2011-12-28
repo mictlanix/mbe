@@ -2,33 +2,33 @@
 @using Business.Essentials.Model
 @using Business.Essentials.WebApp.Helpers
 @using Business.Essentials.WebApp.Models
-@model MasterDetails<AccountsReceivableSummary, AccountsReceivableEntry>
+@model MasterDetails<AccountsPayableSummary, AccountsPayableEntry>
 
 @{
     ViewBag.Title = Resources.Statements;
     var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.AccountsReceivable);
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.AccountsPayable);
 }
 
-<h2>@Resources.DisplayName_AccountsReceivable</h2>
+<h2>@Resources.DisplayName_AccountsPayable</h2>
 
 <fieldset>
-    <legend>@Resources.DisplayName_DataCustomer</legend>
+    <legend>@Resources.DisplayName_DataSupplier</legend>
         <div class="display-label">
-            @Html.LabelFor(x => x.Master.Customer) :
-            @Html.DisplayFor(x => x.Master.Customer.Name)
+            @Html.LabelFor(x => x.Master.Supplier) :
+            @Html.DisplayFor(x => x.Master.Supplier.Name)
         </div>
         <div class="display-label">
-            @Html.LabelFor(x => x.Master.Customer.CreditLimit) :
-            @Html.DisplayFor(x => Model.Master.Customer.CreditLimit)
+            @Html.LabelFor(x => x.Master.Supplier.CreditLimit) :
+            @Html.DisplayFor(x => Model.Master.Supplier.CreditLimit)
         </div>
         <div class="display-label">
             @Html.LabelFor(x => x.Master.AvailableCredit) :
             @Html.DisplayFor(x => x.Master.AvailableCredit)
         </div>
         <div class="display-label">
-            @Html.LabelFor(x => x.Master.Customer.CreditDays) :
-            @Html.DisplayFor(x => x.Master.Customer.CreditDays)
+            @Html.LabelFor(x => x.Master.Supplier.CreditDays) :
+            @Html.DisplayFor(x => x.Master.Supplier.CreditDays)
         </div>
 
 </fieldset>

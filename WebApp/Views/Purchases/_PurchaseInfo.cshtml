@@ -1,0 +1,44 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@model PurchaseOrder
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.PurchasesOrders);
+}
+
+<fieldset>
+    <legend>@Resources.DisplayName_PurchaseInformation</legend>
+    <div class="display-label right floating">
+        @Html.LabelFor(model => model.Id):
+        @Html.DisplayFor(model => model.Id)
+    </div>
+    <div class="display-label right floating">
+        @Html.LabelFor(model => model.CreationTime):
+        @Html.DisplayFor(model => model.CreationTime)
+    </div>
+    <div class="display-label">
+        @Html.LabelFor(model => model.Supplier)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Supplier.Name)
+    </div>
+    <div class="display-label">
+        @Html.LabelFor(model => model.Comment)
+        @Html.DisplayFor(model => model.Comment)
+    </div>
+    <div class="right">
+        @Ajax.ActionLink(Resources.Edit, "EditPurchase", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "master-container" }, new { @class = "button icon edit" })
+        @if(Privilege.AllowDelete)
+        {
+            using (Html.BeginForm("CancelPurchase", "Purchases", new { id = Model.Id }, FormMethod.Post, new { style = "display:inline" }))
+            {
+                <button type="submit" class="icon cancel">@Resources.Cancel</button>
+            }
+        }
+    </div>
+</fieldset>
+<script type="text/javascript">
+    var PurchaseMovement = { Id: @Model.Id };
+</script>
