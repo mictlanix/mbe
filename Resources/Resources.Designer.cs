@@ -3205,5 +3205,176 @@ namespace Business.Essentials {
                 return ResourceManager.GetString("Zone", resourceCulture);
             }
         }
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Facturación.
+        /// </summary>
+        public static string DisplayName_SalesInvoices {
+            get {
+                return ResourceManager.GetString("DisplayName_SalesInvoices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Facturación.
+        /// </summary>
+        public static string Title_SalesInvoice {
+            get {
+                return ResourceManager.GetString("Title_SalesInvoice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Folio.
+        /// </summary>
+        public static string SalesInvoiceId {
+            get {
+                return ResourceManager.GetString("SalesInvoiceId", resourceCulture);
+            }
+        }
+		
+		/// <summary>
+        ///   Looks up a localized string similar to Factura Nueva.
+        /// </summary>
+        public static string NewInvoice {
+            get {
+                return ResourceManager.GetString("NewInvoice", resourceCulture);
+            }
+        }
+		
+		/// <summary>
+        ///   Looks up a localized string similar to Factura Nueva.
+        /// </summary>
+        public static string DisplayName_NewInvoice {
+            get {
+                return ResourceManager.GetString("DisplayName_NewInvoice", resourceCulture);
+            }
+        }
+		
+		/// <summary>
+        ///   Looks up a localized string similar to Factura Nueva.
+        /// </summary>
+        public static string Title_NewInvoice {
+            get {
+                return ResourceManager.GetString("Title_NewInvoice", resourceCulture);
+            }
+        }
+		
+		/// <summary>
+        ///   Looks up a localized string similar to Datos de Facturación.
+        /// </summary>
+        public static string BillTo {
+            get {
+                return ResourceManager.GetString("BillTo", resourceCulture);
+            }
+        }
+		
+		/// <summary>
+        ///   Looks up a localized string similar to Emisor.
+        /// </summary>
+        public static string Issuer {
+            get {
+                return ResourceManager.GetString("Issuer", resourceCulture);
+            }
+        }
+		
+		/// <summary>
+        ///   Looks up a localized string similar to Fecha de Emisión.
+        /// </summary>
+        public static string IssueDate {
+            get {
+                return ResourceManager.GetString("IssueDate", resourceCulture);
+            }
+        }
+		
+		/// <summary>
+        ///   Looks up a localized string similar to Fecha de Cancelación.
+        /// </summary>
+        public static string CancellationDate {
+            get {
+                return ResourceManager.GetString("CancellationDate", resourceCulture);
+            }
+        }
+		
+		/// <summary>
+        ///   Looks up a localized string similar to Serie.
+        /// </summary>
+        public static string Batch {
+            get {
+                return ResourceManager.GetString("Batch", resourceCulture);
+            }
+        }
+		
+		/// <summary>
+        ///   Looks up a localized string similar to Folio.
+        /// </summary>
+        public static string Serial {
+            get {
+                return ResourceManager.GetString("Serial", resourceCulture);
+            }
+        }
+		
+		/// <summary>
+        ///   Looks up a localized string similar to Número de Aprobación.
+        /// </summary>
+        public static string ApprovalNumber {
+            get {
+                return ResourceManager.GetString("ApprovalNumber", resourceCulture);
+            }
+        }
+		
+		/// <summary>
+        ///   Looks up a localized string similar to Año de Aprobación.
+        /// </summary>
+        public static string ApprovalYear {
+            get {
+                return ResourceManager.GetString("ApprovalYear", resourceCulture);
+            }
+        }
+		
+		/// <summary>
+        ///   Looks up a localized string similar to Número de Certificado.
+        /// </summary>
+        public static string CertificateNumber {
+            get {
+                return ResourceManager.GetString("CertificateNumber", resourceCulture);
+            }
+        }
+		
+		/// <summary>
+        ///   Looks up a localized string similar to Cadena Original.
+        /// </summary>
+        public static string OriginalString {
+            get {
+                return ResourceManager.GetString("OriginalString", resourceCulture);
+            }
+        }
+		
+		/// <summary>
+        ///   Looks up a localized string similar to Sello Digital.
+        /// </summary>
+        public static string DigitalSeal {
+            get {
+                return ResourceManager.GetString("DigitalSeal", resourceCulture);
+            }
+        }
+		
+		/// <summary>
+        ///   Looks up a localized string similar to Razones Sociales.
+        /// </summary>
+        public static string Title_Taxpayer {
+            get {
+                return ResourceManager.GetString("Title_Taxpayer", resourceCulture);
+            }
+        }
+		
+		/// <summary>
+        ///   Looks up a localized string similar to Razones Sociales (Emisores de Facturas).
+        /// </summary>
+        public static string DisplayName_Taxpayers {
+            get {
+                return ResourceManager.GetString("DisplayName_Taxpayers", resourceCulture);
+            }
+        }
     }
 }

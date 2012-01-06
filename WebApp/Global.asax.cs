@@ -25,7 +25,13 @@ namespace Business.Essentials.WebApp
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-
+			
+            routes.MapRoute(
+                "Barcodes", // Route name
+                "Barcodes/{action}/{id}.jpg", // URL with parameters
+                new {  controller = "Barcodes", action = "Index", id = UrlParameter.Optional } // Parameter defaults
+            );
+			
             routes.MapRoute(
                 "Default", // Route name
                 "{controller}/{action}/{id}", // URL with parameters

@@ -88,11 +88,11 @@ namespace Business.Essentials.WebApp.Controllers
         [HttpPost]
         public ActionResult NewReceipt(InventoryReceipt item)
         {
-            item.Warehouse = Warehouse.Find(item.WarehouseId);
-            item.Creator = SecurityHelpers.GetUser(User.Identity.Name).Employee;
-            item.Updater = item.Creator;
             item.CreationTime = DateTime.Now;
             item.ModificationTime = item.CreationTime;
+            item.Creator = SecurityHelpers.GetUser(User.Identity.Name).Employee;
+            item.Updater = item.Creator;
+            item.Warehouse = Warehouse.Find(item.WarehouseId);
 
             using (var session = new SessionScope())
             {
@@ -287,11 +287,11 @@ namespace Business.Essentials.WebApp.Controllers
         [HttpPost]
         public ActionResult NewIssue(InventoryIssue item)
         {
-            item.Warehouse = Warehouse.Find(item.WarehouseId);
-            item.Creator = SecurityHelpers.GetUser(User.Identity.Name).Employee;
-            item.Updater = item.Creator;
             item.CreationTime = DateTime.Now;
             item.ModificationTime = item.CreationTime;
+            item.Creator = SecurityHelpers.GetUser(User.Identity.Name).Employee;
+            item.Updater = item.Creator;
+            item.Warehouse = Warehouse.Find(item.WarehouseId);
 
             using (var session = new SessionScope())
             {
@@ -492,11 +492,11 @@ namespace Business.Essentials.WebApp.Controllers
             {
                 return View(item);
             }
-
-            item.Creator = SecurityHelpers.GetUser(User.Identity.Name).Employee;
-            item.Updater = item.Creator;
+			
             item.CreationTime = DateTime.Now;
             item.ModificationTime = item.CreationTime;
+            item.Creator = SecurityHelpers.GetUser(User.Identity.Name).Employee;
+            item.Updater = item.Creator;
 
             using (var session = new SessionScope())
             {

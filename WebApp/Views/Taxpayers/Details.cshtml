@@ -1,0 +1,100 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@model Taxpayer
+
+@{
+    ViewBag.Title = Resources.Details;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Taxpayers);
+}
+
+<h2>@Resources.Details</h2>
+
+<fieldset>
+    <legend>@Resources.Title_Taxpayer</legend>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Id)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Id)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Name)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Name)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Street)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Street)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.ExteriorNumber)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ExteriorNumber)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.InteriorNumber)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.InteriorNumber)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Neighborhood)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Neighborhood)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Borough)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Borough)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.State)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.State)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Country)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Country)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.ZipCode)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ZipCode)
+    </div>
+
+   <div class="display-label">
+        @Html.LabelFor(model => model.Comment)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Comment)
+    </div>
+</fieldset>
+<p>
+@if(Privilege.AllowUpdate)
+{
+    @Html.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new { @class = "button icon edit" })
+}
+	@Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+</p>

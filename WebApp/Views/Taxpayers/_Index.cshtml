@@ -1,0 +1,80 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@model IEnumerable<Taxpayer>
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Taxpayers);
+}
+
+<table>
+    <tr>
+        <th>
+            @Html.LabelFor(x => new Taxpayer().Id)
+        </th>
+
+        <th>
+            @Html.LabelFor(x => new Taxpayer().Name)
+        </th>
+        <th>
+            @Html.LabelFor(x => new Taxpayer().Street)
+        </th>
+        <th>
+            @Html.LabelFor(x => new Taxpayer().Neighborhood)
+        </th>
+        <th>
+            @Html.LabelFor(x => new Taxpayer().Borough)
+        </th>
+        <th>
+            @Html.LabelFor(x => new Taxpayer().State)
+        </th>
+         <th>
+            @Html.LabelFor(x => new Taxpayer().ZipCode)
+        </th>
+
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td class="nowrap">
+            @Html.DisplayFor(x => item.Id)
+        </td>
+        <td>
+            @Html.DisplayFor(x => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(x => item.Street)
+            @Html.DisplayFor(x => item.ExteriorNumber)
+            @Html.DisplayFor(x => item.InteriorNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(x => item.Neighborhood)
+        </td>
+        <td>
+            @Html.DisplayFor(x => item.Borough)
+        </td>
+        <td>
+            @Html.DisplayFor(x => item.State)
+        </td>
+        <td class="number">
+            @Html.DisplayFor(x => item.ZipCode)
+        </td>
+        <td class="actions">
+        	@if(Privilege.AllowUpdate)
+        	{
+            	@Html.ActionLink(" ", "Edit", "Taxpayers", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
+            }
+        	@if(Privilege.AllowRead)
+        	{
+            	@Html.ActionLink(" ", "Details", "Taxpayers", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+            }
+        	@if(Privilege.AllowDelete)
+        	{
+            	@Html.ActionLink(" ", "Delete", "Taxpayers", new { id = item.Id }, new { @class = "button icon delete icon-only", @title = Resources.Delete })
+            }
+        </td>
+    </tr>
+}
+</table>

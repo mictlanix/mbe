@@ -1071,12 +1071,67 @@ Vencimiento: {0:d}</value>
     <value>Nombre y Firma</value>
   </data>
   <data name="PersonDelivery" xml:space="preserve">
-    <value>Persona que Entrega
-</value>
+    <value>Persona que Entrega</value>
   </data>
   <data name="PersonReceipt" xml:space="preserve">
-    <value>Persona que Recibe
-</value>
+    <value>Persona que Recibe</value>
+  </data>
+  <data name="DisplayName_SalesInvoices" xml:space="preserve">
+    <value>Facturación</value>
+  </data>
+  <data name="Title_SalesInvoice" xml:space="preserve">
+    <value>Facturación</value>
+  </data>
+  <data name="SalesInvoiceId" xml:space="preserve">
+    <value>Folio</value>
+  </data>
+  <data name="NewInvoice" xml:space="preserve">
+    <value>Factura Nueva</value>
+  </data>
+  <data name="DisplayName_NewInvoice" xml:space="preserve">
+    <value>Factura Nueva</value>
+  </data>
+  <data name="Title_NewInvoice" xml:space="preserve">
+    <value>Factura Nueva</value>
+  </data>
+  <data name="BillTo" xml:space="preserve">
+    <value>Datos de Facturación</value>
+  </data>
+  <data name="Issuer" xml:space="preserve">
+    <value>Emisor</value>
+  </data>
+  <data name="IssueDate" xml:space="preserve">
+    <value>Fecha de Emisión</value>
+  </data>
+  <data name="CancellationDate" xml:space="preserve">
+    <value>Fecha de Cancelación</value>
+  </data>
+  <data name="Batch" xml:space="preserve">
+    <value>Serie</value>
+  </data>
+  <data name="Serial" xml:space="preserve">
+    <value>Folio</value>
+  </data>
+  <data name="ApprovalNumber" xml:space="preserve">
+    <value>Número de Aprobación</value>
+  </data>
+  <data name="ApprovalYear" xml:space="preserve">
+    <value>Año de Aprobación</value>
+  </data>
+  <data name="CertificateNumber" xml:space="preserve">
+    <value>Número de Certificado</value>
+  </data>
+  <data name="OriginalString" xml:space="preserve">
+    <value>Cadena Original</value>
+  </data>
+  <data name="DigitalSeal" xml:space="preserve">
+    <value>Sello Digital</value>
+  </data>
+  <data name="Title_Taxpayer" xml:space="preserve">
+    <value>Razones Sociales</value>
+  </data>
+  <data name="DisplayName_Taxpayers" xml:space="preserve">
+    <value>Razones Sociales (Emisores de Facturas)</value>
   </data>
   <data name="InvoiceNumber" xml:space="preserve">
     <value>Número de Factura</value>

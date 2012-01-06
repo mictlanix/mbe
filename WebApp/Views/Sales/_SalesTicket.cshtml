@@ -107,5 +107,5 @@
 </div>
 
 <div class="display-label display-field center">
-    <img src="@Url.Action("Code128", "Barcodes", new { id = Html.DisplayFor(x => x.Id).ToString() })" alt="@Html.DisplayFor(x => x.Id)" title="@Html.DisplayFor(x => x.Id)">
+    <img src="@Url.Action("Code128", "Barcodes", new { id = string.Format("{0}", Html.DisplayFor(x => x.Id)) })" alt="@Html.DisplayFor(x => x.Id)" title="@Html.DisplayFor(x => x.Id)">
 </div>

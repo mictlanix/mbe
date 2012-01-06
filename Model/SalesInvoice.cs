@@ -53,18 +53,23 @@ namespace Business.Essentials.Model
         [BelongsTo("customer")]
         [Display(Name = "Customer", ResourceType = typeof(Resources))]
         public virtual Customer Customer { get; set; }
-
-        [BelongsTo("taxpayer")]
+		
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+        [Display(Name = "Issuer", ResourceType = typeof(Resources))]
+        [UIHint("TaxpayerSelector")]
+        public int IssuerId { get; set; }
+		
+        [BelongsTo("issuer")]
         [Display(Name = "Issuer", ResourceType = typeof(Resources))]
         public Taxpayer Issuer { get; set; }
 		
-        [Property("purchase_order")]
-        [Display(Name = "PurchaseOrder", ResourceType = typeof(Resources))]
+        [Property()]
+        [Display(Name = "Reference", ResourceType = typeof(Resources))]
         [StringLength(25, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string PurchaseOrder { get; set; }
+        public string Reference { get; set; }
         
 		[Property]
-        [Display(Name = "Issued", ResourceType = typeof(Resources))]
+        [Display(Name = "IssueDate", ResourceType = typeof(Resources))]
         public DateTime? Issued { get; set; }
         
 		[Property]
@@ -77,15 +82,15 @@ namespace Business.Essentials.Model
 		
 		[Property("approval_number")]
         [Display(Name = "ApprovalNumber", ResourceType = typeof(Resources))]
-        public int ApprovalNumber { get; set; }
+        public int? ApprovalNumber { get; set; }
 		
 		[Property("approval_year")]
         [Display(Name = "ApprovalYear", ResourceType = typeof(Resources))]
-        public int ApprovalYear { get; set; }
+        public int? ApprovalYear { get; set; }
 		
 		[Property("certificate_number")]
         [Display(Name = "CertificateNumber", ResourceType = typeof(Resources))]
-        public decimal CertificateNumber { get; set; }
+        public decimal? CertificateNumber { get; set; }
 		
 		[Property("original_string")]
         [Display(Name = "OriginalString", ResourceType = typeof(Resources))]
@@ -95,26 +100,32 @@ namespace Business.Essentials.Model
         [Display(Name = "DigitalSeal", ResourceType = typeof(Resources))]
         public string DigitalSeal { get; set; }
 		
-		[Property("customer_tax_id")]
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+        [Display(Name = "BillTo", ResourceType = typeof(Resources))]
+        [UIHint("AddressSelector")]
+        public int BillToId { get; set; }
+
+        [BelongsTo("bill_to")]
+        [Display(Name = "BillTo", ResourceType = typeof(Resources))]
+        public virtual Address BillTo { get; set; }
+		
+		[Property("bill_to_taxid")]
         [Display(Name = "TaxpayerId", ResourceType = typeof(Resources))]
         [StringLength(13, MinimumLength = 12, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string CustomerTaxId { get; set; }
+        public string BillToTaxId { get; set; }
 
-        [Property("customer_tax_name")]
+        [Property("bill_to_name")]
         [Display(Name = "TaxpayerName", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(250, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string CustomerTaxName { get; set; }
+        public string BillToName { get; set; }
 		
 		[Property]
         [Display(Name = "Street", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string Street { get; set; }
 
         [Property("exterior_number")]
         [Display(Name = "ExteriorNumber", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(15, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string ExteriorNumber { get; set; }
 
@@ -125,31 +136,26 @@ namespace Business.Essentials.Model
 
         [Property]
         [Display(Name = "Neighborhood", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(150, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string Neighborhood { get; set; }
 
         [Property]
         [Display(Name = "Borough", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(150, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string Borough { get; set; }
 
         [Property]
         [Display(Name = "State", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string State { get; set; }
 
         [Property]
         [Display(Name = "Country", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string Country { get; set; }
 
         [Property("zip_code")]
         [Display(Name = "ZipCode", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(5, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string ZipCode { get; set; }
 		

@@ -82,6 +82,10 @@ namespace Business.Essentials.Model
         [Display(Name = "DisplayName_SupplierPayment", ResourceType = typeof(Resources))]
         SupplierPayment,
         [Display(Name = "DisplayName_ReturnCustomer", ResourceType = typeof(Resources))]
-        ReturnCustomer
+        ReturnCustomer,
+        [Display(Name = "DisplayName_SalesInvoices", ResourceType = typeof(Resources))]
+        SalesInvoices,
+        [Display(Name = "DisplayName_Taxpayers", ResourceType = typeof(Resources))]
+        Taxpayers
     }
 }

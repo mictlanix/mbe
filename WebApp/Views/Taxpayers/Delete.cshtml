@@ -1,0 +1,98 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@model Taxpayer
+
+@{
+    ViewBag.Title = Resources.Delete;
+}
+
+<h2>@Resources.Delete</h2>
+
+<h3>@Resources.Message_DeleteConfirmation</h3>
+<fieldset>
+    <legend>@Resources.Title_Taxpayer</legend>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Id)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Id)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Name)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Name)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Street)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Street)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.ExteriorNumber)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ExteriorNumber)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.InteriorNumber)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.InteriorNumber)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Neighborhood)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Neighborhood)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Borough)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Borough)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.State)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.State)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Country)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Country)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.ZipCode)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ZipCode)
+    </div>
+
+   <div class="display-label">
+        @Html.LabelFor(model => model.Comment)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Comment)
+    </div>
+</fieldset>
+@using (Html.BeginForm()) {
+    <p>
+        <button type="submit" class="icon delete">@Resources.Delete</button>
+        @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+    </p>
+}
