@@ -83,8 +83,8 @@
     <Compile Include="Constants\DebitCreditEnum.cs" />
     <Compile Include="Constants\SystemObjects.cs" />
     <Compile Include="Constants\AccessRight.cs" />
-    <Compile Include="ReturnOrderDetail.cs" />
-    <Compile Include="ReturnOrder.cs" />
+    <Compile Include="ReturnCustomerDetail.cs" />
+    <Compile Include="ReturnCustomer.cs" />
     <Compile Include="SupplierPayment.cs" />
     <Compile Include="PurchaseOrderDetail.cs" />
     <Compile Include="PurchaseOrder.cs" />

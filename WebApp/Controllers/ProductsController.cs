@@ -36,6 +36,9 @@ using System.Data;
 using Business.Essentials.Model;
 using Business.Essentials.WebApp.Models;
 using System.IO;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Security.Cryptography;
 
 namespace Business.Essentials.WebApp.Controllers
 {
@@ -200,6 +203,26 @@ namespace Business.Essentials.WebApp.Controllers
                 img.Save(path, System.Drawing.Imaging.ImageFormat.Png);
                 img.Dispose();
             }
+        }
+
+        string HashFromImage(Image img)
+        {
+            string hash;
+            byte[] bytes = null;
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                img.Save(ms, img.RawFormat);
+                bytes = ms.ToArray();
+            }
+
+            using (SHA1CryptoServiceProvider sha1 = new SHA1CryptoServiceProvider())
+            {
+                bytes = sha1.ComputeHash(bytes);
+                hash = BitConverter.ToString(bytes).Replace("-", "").ToLower();
+            }
+
+            return hash;
         }
 
         protected override void Dispose(bool disposing)

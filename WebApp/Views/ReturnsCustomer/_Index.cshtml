@@ -1,0 +1,70 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@using Business.Essentials.WebApp.Models
+@model IEnumerable<SalesOrder>
+
+@*@{
+    ViewBag.Title = Resources.Title_CustomerPayment;
+    ViewBag.ShowCloseSession = true;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments);
+}*@
+
+<table>
+    <tr>
+        <th>
+            @Html.LabelFor(x => new SalesOrder().Id)
+        </th>
+
+        <th>
+            @Html.LabelFor(x => new SalesOrder().Date)
+        </th>
+
+        <th>
+            @Html.LabelFor(x => new SalesOrder().Customer)
+        </th>
+
+        <th>
+            @Html.LabelFor(x => new SalesOrder().DueDate)
+        </th>
+
+            <th>
+            @Html.LabelFor(x => new SalesOrder().SalesPerson)
+        </th>
+
+        <th>
+            @Html.LabelFor(x => new SalesOrder().PointOfSale)
+        </th>
+        
+        <th></th>
+    </tr>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td class="number">
+            @Html.DisplayFor(x => item.Id)
+        </td>
+        <td class="date">
+            @Html.DisplayFor(x => item.Date)
+        </td>
+        <td>
+            @Html.DisplayFor(x => item.Customer.Name)
+        </td>
+        <td class="date">
+            @Html.DisplayFor(x => item.DueDate)
+        </td>
+        <td>
+            @Html.DisplayFor(x => item.SalesPerson.FirstName)
+            @Html.DisplayFor(x => item.SalesPerson.LastName)
+        </td>
+        <td class="center">
+            @Html.DisplayFor(x => item.PointOfSale.Name)
+        </td>
+        <td class="actions">
+        	@Html.ActionLink(Resources.Return, "Return", new { id = item.Id }, new { @class = "button" })
+        </td>
+    </tr>
+}
+</table>

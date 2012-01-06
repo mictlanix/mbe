@@ -1,0 +1,68 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@using Business.Essentials.WebApp.Models
+@model IEnumerable<ReturnCustomer>
+
+
+@{
+    ViewBag.Title = Resources.Title_ReturnCustomer;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.ReturnCustomer);
+}
+
+<h2>@Resources.DisplayName_ReturnCustomer</h2>
+
+@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))
+{
+    <div class="search-box">
+        <label>@Resources.FolioSalesOrder</label>
+        <button type="submit" class="icon search">@Resources.Search</button>
+        <div class="search-field">
+            <input type="text" id="id" name="id" />
+        </div>
+    </div>
+}
+<div id="details-container">
+    <div id="activity-indicator">
+        <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
+    </div>
+    <div id="search-results">
+    </div>
+</div>
+
+<div id="returns-container">
+    <table>
+        <tr>
+            <th>@Html.LabelFor(x => new ReturnCustomer().Id)</th>
+            <th>@Html.LabelFor(x => new ReturnCustomer().CreationTime )</th>
+            <th>@Html.LabelFor(x => new ReturnCustomer().SalesOrder.Customer)</th>
+            <th>@Html.LabelFor(x => new ReturnCustomer().SalesPerson)</th>
+            <th>@Html.LabelFor(x => new ReturnCustomer().Creator)</th>
+            <th>@Html.LabelFor(x => new ReturnCustomer().IsCompleted)</th>
+            <th>@Html.LabelFor(x => new ReturnCustomer().IsCancelled)</th>
+        </tr>
+    @foreach (var item in Model) {
+        <tr>
+            <td class="number">@Html.DisplayFor(x => item.Id)</td>
+            <td class="date">@Html.DisplayFor(x => item.CreationTime)</td>
+            <td>@Html.DisplayFor(x => item.SalesOrder.Customer.Name)</td>
+            <td>@Html.DisplayFor(x => item.SalesPerson.Name)</td>
+            <td>@Html.DisplayFor(x => item.Creator.Name)</td>
+            <td class="bool">@Html.DisplayFor(x => item.IsCompleted)</td>
+            <td class="bool">@Html.DisplayFor(x => item.IsCancelled)</td>
+            <td class="actions">
+        	    @if(Privilege.AllowUpdate && !item.IsCompleted && !item.IsCancelled)
+        	    {
+            	    @Html.ActionLink(" ", "EditReturn", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
+                }
+            </td>
+        </tr>
+    }
+    </table>
+</div>
+<script type="text/javascript">
+    function onSearchBegin() {
+        $("#search-results").html(null);
+    }
+</script>

@@ -1024,6 +1024,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Devolución a Clientes.
+        /// </summary>
+        public static string DisplayName_ReturnCustomer {
+            get {
+                return ResourceManager.GetString("DisplayName_ReturnCustomer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Información de la Venta.
         /// </summary>
         public static string DisplayName_SalesInformation {
@@ -1200,6 +1209,15 @@ namespace Business.Essentials {
         public static string FirstName {
             get {
                 return ResourceManager.GetString("FirstName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Folio de Venta.
+        /// </summary>
+        public static string FolioSalesOrder {
+            get {
+                return ResourceManager.GetString("FolioSalesOrder", resourceCulture);
             }
         }
         
@@ -2156,9 +2174,18 @@ namespace Business.Essentials {
         /// <summary>
         ///   Looks up a localized string similar to Devolución.
         /// </summary>
-        public static string ReturnOrder {
+        public static string Return {
             get {
-                return ResourceManager.GetString("ReturnOrder", resourceCulture);
+                return ResourceManager.GetString("Return", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Devolución.
+        /// </summary>
+        public static string ReturnCustomer {
+            get {
+                return ResourceManager.GetString("ReturnCustomer", resourceCulture);
             }
         }
         
@@ -2798,6 +2825,15 @@ namespace Business.Essentials {
         public static string Title_Register {
             get {
                 return ResourceManager.GetString("Title_Register", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Devolución a Cliente.
+        /// </summary>
+        public static string Title_ReturnCustomer {
+            get {
+                return ResourceManager.GetString("Title_ReturnCustomer", resourceCulture);
             }
         }
         

@@ -1,0 +1,67 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@model SalesOrder
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders);
+}
+
+<fieldset>
+    <legend>@Resources.DisplayName_SalesInformation</legend>
+
+    <div class="display-label right floating">
+        @Html.LabelFor(model => model.Id) @Html.Label(":")
+        @Html.DisplayFor(model => model.Id)
+    </div>
+
+    <div class="display-label right floating">
+        @Html.LabelFor(model => model.Date) @Html.Label(":")
+        @Html.DisplayFor(model => model.Date)
+    </div>
+@*
+@if (Model.IsCredit)
+{
+    <div class="display-label right floating">
+        @Html.LabelFor(model => model.DueDate)
+        @Html.DisplayFor(model => model.DueDate)
+    </div>
+}
+    *@
+@*@if(Privilege.AllowDelete)
+{
+    <div class="right floating">
+        <p>
+        @using (Html.BeginForm("CancelOrder", "Sales", new { id =  Model.Id }))
+        {
+            <button type="submit" class="icon cancel">@Resources.CancelOrder</button>
+        }
+        </p>
+    </div>
+}*@
+    
+    <div class="display-label">
+        @Html.LabelFor(model => model.Customer) @Html.Label(":")
+        @Html.DisplayFor(model => model.Customer.Name)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Customer.PriceList) @Html.Label(":")
+        @Html.DisplayFor(model => model.Customer.PriceList.Name)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.SalesPerson) @Html.Label(":")
+        @Html.DisplayFor(model => model.SalesPerson.Name)
+    </div>
+
+    @*<div id="edit-sales-order" style="@(Model.Details.Count > 0 ? "display:none" : "")" >
+        <p>
+        @Ajax.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "sales-order" }, new { @class = "button icon edit" })
+        </p>
+    </div>*@
+</fieldset>
+@*<script type="text/javascript">
+    var SalesOrder = { Id: @Model.Id };
+</script>*@
