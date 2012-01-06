@@ -150,6 +150,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\Code128Content.cs" />
     <Compile Include="Utils\Code128Rendering.cs" />
+    <Compile Include="Controllers\InvoicesController.cs" />
+    <Compile Include="Controllers\TaxpayersController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
@@ -419,6 +421,15 @@
     <Content Include="Views\Payments\_CreditPayment.cshtml" />
     <Content Include="Views\Payments\_CashPayment.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\PriceListSelector.cshtml" />
+    <Content Include="Views\Invoices\Index.cshtml" />
+    <Content Include="Views\Invoices\Edit.cshtml" />
+    <Content Include="Views\Invoices\New.cshtml" />
+    <Content Include="Views\Taxpayers\Create.cshtml" />
+    <Content Include="Views\Taxpayers\Delete.cshtml" />
+    <Content Include="Views\Taxpayers\Details.cshtml" />
+    <Content Include="Views\Taxpayers\Edit.cshtml" />
+    <Content Include="Views\Taxpayers\_Index.cshtml" />
+    <Content Include="Views\Taxpayers\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />
@@ -757,4 +768,7 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
+  <ItemGroup>
+    <Folder Include="Views\Invoices\" />
+  </ItemGroup>
 </Project>

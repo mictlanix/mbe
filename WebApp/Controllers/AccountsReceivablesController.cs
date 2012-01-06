@@ -46,7 +46,7 @@ namespace Business.Essentials.WebApp.Controllers
         //
         // GET: /Statements/
 
-        // TODO: Obtimise DB qry al memory
+        // TODO: Obtimise DB qry and memory
         public ActionResult Index()
         {
             var results = new List<AccountsReceivableSummary>();

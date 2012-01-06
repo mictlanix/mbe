@@ -229,9 +229,16 @@ namespace Business.Essentials.WebApp.Controllers
             return RedirectToAction("Details", type, new { id = owner });
         }
 
-        protected override void Dispose(bool disposing)
+        public JsonResult GetSuggestions(int customer, string pattern)
         {
-            base.Dispose(disposing);
+            var qry = from x in Address.Queryable
+					  from y in x.Customers
+                      where y.Id == customer && (
+							x.TaxpayerId.Contains(pattern) ||
+							x.TaxpayerName.Contains(pattern))
+                      select new { id = x.Id, name = string.Format("{1} ({0})", x.TaxpayerId, x.TaxpayerName) };
+
+            return Json(qry.ToList(), JsonRequestBehavior.AllowGet);
         }
     }
 }

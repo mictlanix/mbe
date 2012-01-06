@@ -45,35 +45,6 @@ namespace Business.Essentials.WebApp.Controllers
         //
         // GET: /Sales/
 
-        public JsonResult GetSuggestions(int order, string pattern)
-        {
-            SalesOrder sales_order = SalesOrder.Find(order);
-            int pl = sales_order.Customer.PriceList.Id;
-            ArrayList items = new ArrayList(15);
-
-            var qry = from x in Product.Queryable
-                      where x.Name.Contains(pattern) ||
-                            x.Code.Contains(pattern) ||
-                            x.SKU.Contains(pattern)
-                      select x;
-
-            foreach(var x in qry.Take(15))
-            {
-                var item =new { 
-                    id = x.Id,
-                    name = x.Name, 
-                    code = x.Code, 
-                    sku = x.SKU, 
-                    url = string.Format("/Photos/{0}", x.Photo),
-                    price = (pl == 1 ? x.Price1 : (pl == 2 ? x.Price2 : (pl == 3 ? x.Price3 : x.Price4))).ToString("c")
-                };
-                
-                items.Add(item);
-            }
-
-            return Json(items, JsonRequestBehavior.AllowGet);
-        }
-
         public ViewResult Index()
         {
             var qry = from x in SalesOrder.Queryable
@@ -303,7 +274,36 @@ namespace Business.Essentials.WebApp.Controllers
 
             return RedirectToAction("New");
         }
+		
+        public JsonResult GetSuggestions(int order, string pattern)
+        {
+            SalesOrder sales_order = SalesOrder.Find(order);
+            int pl = sales_order.Customer.PriceList.Id;
+            ArrayList items = new ArrayList(15);
 
+            var qry = from x in Product.Queryable
+                      where x.Name.Contains(pattern) ||
+                            x.Code.Contains(pattern) ||
+                            x.SKU.Contains(pattern)
+                      select x;
+
+            foreach(var x in qry.Take(15))
+            {
+                var item =new { 
+                    id = x.Id,
+                    name = x.Name, 
+                    code = x.Code, 
+                    sku = x.SKU, 
+                    url = string.Format("/Photos/{0}", x.Photo),
+                    price = (pl == 1 ? x.Price1 : (pl == 2 ? x.Price2 : (pl == 3 ? x.Price3 : x.Price4))).ToString("c")
+                };
+                
+                items.Add(item);
+            }
+
+            return Json(items, JsonRequestBehavior.AllowGet);
+        }
+		
         PointOfSale GetPoS()
         {
             var addr = Request.UserHostAddress;

@@ -12,14 +12,16 @@
                              Html.GetPrivilege(CurrentUser, SystemObjects.Warehouses).AllowRead ||
                              Html.GetPrivilege(CurrentUser, SystemObjects.PriceLists).AllowRead ||
                              Html.GetPrivilege(CurrentUser, SystemObjects.PointsOfSale).AllowRead ||
-                             Html.GetPrivilege(CurrentUser, SystemObjects.CashDrawers).AllowRead;
+                             Html.GetPrivilege(CurrentUser, SystemObjects.CashDrawers).AllowRead ||
+                             Html.GetPrivilege(CurrentUser, SystemObjects.Taxpayers).AllowRead;
     var ShowSalesMenu = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders).AllowRead ||
                         Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments).AllowRead;
     var ShowInventoryMenu = Html.GetPrivilege(CurrentUser, SystemObjects.InventoryReceipts).AllowRead ||
                             Html.GetPrivilege(CurrentUser, SystemObjects.InventoryIssues).AllowRead ||
                             Html.GetPrivilege(CurrentUser, SystemObjects.InventoryTransfers).AllowRead;
     var ShowAdministrationMenu = Html.GetPrivilege(CurrentUser, SystemObjects.AccountsReceivable).AllowRead ||
-                            Html.GetPrivilege(CurrentUser, SystemObjects.AccountsPayable).AllowRead;
+                            	 Html.GetPrivilege(CurrentUser, SystemObjects.AccountsPayable).AllowRead ||
+                            	 Html.GetPrivilege(CurrentUser, SystemObjects.SalesInvoices).AllowRead;
     var ShowPurchasesMenu = Html.GetPrivilege(CurrentUser, SystemObjects.PurchasesOrders).AllowRead ||
                             Html.GetPrivilege(CurrentUser, SystemObjects.SupplierPayment).AllowRead;
 }
@@ -108,6 +110,13 @@
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("Index", "CashDrawers") ? "gbm0l" : "")"
                                    href="@Url.Action("Index", "CashDrawers")">@Resources.Title_CashDrawer</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.Taxpayers).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "Taxpayers") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "Taxpayers")">@Resources.Title_Taxpayer</a>
                             </li>
                             }
                         </ol>
@@ -221,14 +230,14 @@
             @if (ShowAdministrationMenu)
             {
             <li class="gbt">
-                <a id="statements-menu" class="gbgt" href="javascript:void(0)">
+                <a id="mgmt-menu" class="gbgt" href="javascript:void(0)">
                     <span class="gbtb2"></span>
                     <span class="gbts gbtsa">
                         <span>@Resources.Administration</span>
                         <span class="gbma"></span>
                     </span>
                 </a>
-                <div id="statements-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
+                <div id="mgmt-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
                     <div class="gbmc">
                         <ol class="gbmcc">
                             @if (Html.GetPrivilege(CurrentUser, SystemObjects.AccountsReceivable).AllowRead)
@@ -245,6 +254,13 @@
                                    href="@Url.Action("Index", "AccountsPayables")">@Resources.Title_AccountsPayable</a>
                             </li>
                             }
+                            @*if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesInvoices).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "Invoices") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "Invoices")">@Resources.Title_SalesInvoice</a>
+                            </li>
+                            }*@
                         </ol>
                     </div>
                 </div>
@@ -272,10 +288,10 @@
                 $('#sales-menu').trigger("click");
             if ($('#inventory-menu').parent().hasClass('gbto'))
                 $('#inventory-menu').trigger("click");
-            if ($('#statements-menu').parent().hasClass('gbto'))
-                $('#statements-menu').trigger("click");
             if ($('#purchases-menu').parent().hasClass('gbto'))
                 $('#purchases-menu').trigger("click");
+            if ($('#mgmt-menu').parent().hasClass('gbto'))
+                $('#mgmt-menu').trigger("click");
 
             $('#master-data-menu').parent().addClass('gbto');
             $('#master-data-menu-items').css({ "visibility": "visible" });
@@ -288,10 +304,10 @@
                 $('#master-data-menu').trigger("click");
             if ($('#inventory-menu').parent().hasClass('gbto'))
                 $('#inventory-menu').trigger("click");
-            if ($('#statements-menu').parent().hasClass('gbto'))
-                $('#statements-menu').trigger("click");
             if ($('#purchases-menu').parent().hasClass('gbto'))
                 $('#purchases-menu').trigger("click");
+            if ($('#mgmt-menu').parent().hasClass('gbto'))
+                $('#mgmt-menu').trigger("click");
 
             $('#sales-menu').parent().addClass('gbto');
             $('#sales-menu-items').css({ "visibility": "visible" });
@@ -304,10 +320,10 @@
                 $('#master-data-menu').trigger("click");
             if ($('#sales-menu').parent().hasClass('gbto'))
                 $('#sales-menu').trigger("click");
-            if ($('#statements-menu').parent().hasClass('gbto'))
-                $('#statements-menu').trigger("click");
             if ($('#purchases-menu').parent().hasClass('gbto'))
                 $('#purchases-menu').trigger("click");
+            if ($('#mgmt-menu').parent().hasClass('gbto'))
+                $('#mgmt-menu').trigger("click");
 
             $('#inventory-menu').parent().addClass('gbto');
             $('#inventory-menu-items').css({ "visibility": "visible" });
@@ -322,8 +338,8 @@
                 $('#sales-menu').trigger("click");
             if ($('#inventory-menu').parent().hasClass('gbto'))
                 $('#inventory-menu').trigger("click");
-            if ($('#statements-menu').parent().hasClass('gbto'))
-                $('#statements-menu').trigger("click");
+            if ($('#mgmt-menu').parent().hasClass('gbto'))
+                $('#mgmt-menu').trigger("click");
 
             $('#purchases-menu').parent().addClass('gbto');
             $('#purchases-menu-items').css({ "visibility": "visible" });
@@ -331,7 +347,7 @@
             $('#purchases-menu').parent().removeClass('gbto');
             $('#purchases-menu-items').css({ "visibility": "hidden" });
         });
-        $('#statements-menu').toggle(function () {
+        $('#mgmt-menu').toggle(function () {
             if ($('#master-data-menu').parent().hasClass('gbto'))
                 $('#master-data-menu').trigger("click");
             if ($('#sales-menu').parent().hasClass('gbto'))
@@ -341,11 +357,11 @@
             if ($('#purchases-menu').parent().hasClass('gbto'))
                 $('#purchases-menu').trigger("click");
 
-            $('#statements-menu').parent().addClass('gbto');
-            $('#statements-menu-items').css({ "visibility": "visible" });
+            $('#mgmt-menu').parent().addClass('gbto');
+            $('#mgmt-menu-items').css({ "visibility": "visible" });
         }, function () {
-            $('#statements-menu').parent().removeClass('gbto');
-            $('#statements-menu-items').css({ "visibility": "hidden" });
+            $('#mgmt-menu').parent().removeClass('gbto');
+            $('#mgmt-menu-items').css({ "visibility": "hidden" });
         });
     });
 </script>

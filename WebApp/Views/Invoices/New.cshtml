@@ -1,0 +1,67 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Models
+@model SalesInvoice
+
+@{
+    ViewBag.Title = Resources.Title_NewInvoice;
+}
+
+<h2>@Resources.DisplayName_NewInvoice</h2> 
+
+<div id="sales-invoice">
+    <fieldset>
+        <legend>@Resources.DisplayName_SalesInformation</legend>
+            @using (Html.BeginForm())
+            {
+                @Html.ValidationSummary(true)
+
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.Is)
+                    @Html.EditorFor(model => model.CustomerId)
+                    @Html.ValidationMessageFor(model => model.CustomerId)
+                </div>
+                
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.Customer)
+                    @Html.EditorFor(model => model.CustomerId)
+                    @Html.ValidationMessageFor(model => model.CustomerId)
+                </div>
+
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.BillTo)
+                    @Html.EditorFor(model => model.BillToId)
+                    @Html.ValidationMessageFor(model => model.BillToId)
+                </div>
+                
+                <p class="right">
+                    <button type="submit" class="icon save">@Resources.Save</button>
+                </p>
+            }
+    </fieldset>
+</div>
+<div id="back-to-list">
+    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+</div>
+<style type="text/css">
+ul.token-input-list {
+  width:100%;
+}
+</style>
+<script type="text/javascript">
+    $(function () {
+        $("#BillToId").tokenInput(function() {
+			var customer = $("#CustomerId").tokenInput("get")[0];
+			
+			if(typeof(customer) === "undefined") {
+				customer = {id : 0};
+			}
+			
+			return "@Url.Action("GetSuggestions", "Addresses", new { customer = 0 })" + customer.id; }, {
+            hintText: "@Resources.HIntText",
+            noResultsText: "@Resources.NoResultsText",
+            searchingText: "@Resources.SearchingText",          
+            queryParam: "pattern",minChars: 3,tokenLimit: 1
+        });
+    });
+</script>

@@ -15,23 +15,29 @@ namespace Business.Essentials.Model
 		}
 
 		[PrimaryKey("taxpayer_id")]
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+        [StringLength(13, MinimumLength = 12, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+        [Display(Name = "TaxpayerId", ResourceType = typeof(Resources))]
         public string Id { get; set; }
 		
         [Property]
-        [Display(Name = "Name", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(250, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+        [Display(Name = "TaxpayerName", ResourceType = typeof(Resources))]
         public string Name { get; set; }
 		
 		[Property("approval_number")]
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "ApprovalNumber", ResourceType = typeof(Resources))]
         public int ApprovalNumber { get; set; }
 		
 		[Property("approval_year")]
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "ApprovalYear", ResourceType = typeof(Resources))]
         public int ApprovalYear { get; set; }
 		
 		[Property("certificate_number")]
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "CertificateNumber", ResourceType = typeof(Resources))]
         public decimal CertificateNumber { get; set; }
 
