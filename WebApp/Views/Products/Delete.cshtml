@@ -16,7 +16,7 @@
                 @Html.LabelFor(model => model.Photo)
             </div>
             <div class="editor-input">
-                <img src="@Url.Content("~/Photos/" + Model.Photo)" alt="@Model" class="medium" />
+                <img src="@Url.Content(Model.Photo)" alt="@Model" class="medium" />
             </div>
         </div>
 

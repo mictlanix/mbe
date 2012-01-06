@@ -3376,5 +3376,14 @@ namespace Business.Essentials {
                 return ResourceManager.GetString("DisplayName_Taxpayers", resourceCulture);
             }
         }
+		
+		/// <summary>
+        ///   Looks up a localized string similar to ~/Photos/.
+        /// </summary>
+        public static string Default_PhotosPath {
+            get {
+                return ResourceManager.GetString("Default_PhotosPath", resourceCulture);
+            }
+        }
     }
 }

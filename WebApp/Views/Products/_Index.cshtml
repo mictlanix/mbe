@@ -39,7 +39,7 @@
 {
     <tr>
         <td>
-            @Html.ActionImage(Url.Content("~/Photos/" + item.Photo), "Details", new { id = item.Id },
+            @Html.ActionImage(Url.Content(item.Photo), "Details", new { id = item.Id },
                               new { alt = Resources.Details,
                                     title = Resources.Details,
                                     rel = Url.Action("Details", new { id = item.Id }),

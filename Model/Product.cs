@@ -149,10 +149,11 @@ namespace Business.Essentials.Model
         [Property("tax_rate")]
         [Display(Name = "TaxRate", ResourceType = typeof(Resources))]
         public decimal TaxRate { get; set; }
-
+		
+		[Property]
         [UIHint("Image")]
         [Display(Name = "Photo", ResourceType = typeof(Resources))]
-        public string Photo { get { return string.Format("{0}.png", Code.Trim()); } }
+        public string Photo { get; set; }
 
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "Category", ResourceType = typeof(Resources))]

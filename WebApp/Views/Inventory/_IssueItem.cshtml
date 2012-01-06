@@ -5,7 +5,7 @@
 
 <li id="item@(Model.Id)">
     <div class="photo">
-        <img src="@Url.Content("~/Photos/" + Model.Product.Photo)" title="@Model.ProductName"/>
+        <img src="@Url.Content(Model.Product.Photo)" title="@Model.ProductName"/>
     </div>
     <div class="action-link">
         <a class="button icon-only icon delete" title="@Resources.Delete" href="/Inventory/RemoveIssueDetail/@Model.Id"></a>

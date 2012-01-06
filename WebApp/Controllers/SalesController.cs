@@ -294,7 +294,7 @@ namespace Business.Essentials.WebApp.Controllers
                     name = x.Name, 
                     code = x.Code, 
                     sku = x.SKU, 
-                    url = string.Format("/Photos/{0}", x.Photo),
+                    url = x.Photo,
                     price = (pl == 1 ? x.Price1 : (pl == 2 ? x.Price2 : (pl == 3 ? x.Price3 : x.Price4))).ToString("c")
                 };
                 
