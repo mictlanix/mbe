@@ -1224,4 +1224,7 @@ Realizada el: {0:d}</value>
   <data name="Return" xml:space="preserve">
     <value>Devolución</value>
   </data>
+  <data name="Default_PhotosPath" xml:space="preserve">
+    <value>~/Photos/</value>
+  </data>
 </root>

@@ -54,7 +54,7 @@ namespace Business.Essentials.WebApp.Controllers
                       where x.Name.Contains(pattern) ||
                             x.Code.Contains(pattern) ||
                             x.SKU.Contains(pattern)
-                      select new { id = x.Id, name = x.Name, code = x.Code, sku = x.SKU, url = string.Format("/Photos/{0}.png", x.Code.Trim()) };
+                      select new { id = x.Id, name = x.Name, code = x.Code, sku = x.SKU, url = x.Photo };
 
             return Json(qry.Take(15).ToList(), JsonRequestBehavior.AllowGet);
         }
@@ -117,19 +117,19 @@ namespace Business.Essentials.WebApp.Controllers
         // POST: /Products/Create
 
         [HttpPost]
-        public ActionResult Create(Product item, HttpPostedFileBase file)
-        {
-            if (!ModelState.IsValid)
-            	return View(item);
+        public ActionResult Create (Product item, HttpPostedFileBase file)
+		{
+			if (!ModelState.IsValid)
+				return View (item);
             
-            item.Supplier = Supplier.Find(item.SupplierId);
-            item.Category = Category.Find(item.CategoryId);
+			item.Supplier = Supplier.Find (item.SupplierId);
+			item.Category = Category.Find (item.CategoryId);
+			item.Photo = SavePhoto (file) ?? item.Photo;
 			
-            item.Save();
-            SavePhoto(item.Photo, file);
+			item.Save ();
 
-            return RedirectToAction("Index");
-        }
+			return RedirectToAction ("Index");
+		}
 
         //
         // GET: /Products/Edit/5
@@ -144,19 +144,19 @@ namespace Business.Essentials.WebApp.Controllers
         // POST: /Products/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(Product item, HttpPostedFileBase file)
-        {
-            if (!ModelState.IsValid)
-            	return View(item);
+        public ActionResult Edit (Product item, HttpPostedFileBase file)
+		{
+			if (!ModelState.IsValid)
+				return View (item);
             
-            item.Supplier = Supplier.Find(item.SupplierId);
-            item.Category = Category.Find(item.CategoryId);
+			item.Supplier = Supplier.Find (item.SupplierId);
+			item.Category = Category.Find (item.CategoryId);
+			item.Photo = SavePhoto (file) ?? item.Photo;
 			
-            item.Save();
-            SavePhoto(item.Photo, file);
+			item.Save ();
 
-            return RedirectToAction("Index");
-        }
+			return RedirectToAction ("Index");
+		}
 
         //
         // GET: /Products/Delete/5
@@ -194,17 +194,36 @@ namespace Business.Essentials.WebApp.Controllers
             return search;
         }
 
-        void SavePhoto(string fileName, HttpPostedFileBase file)
-        {
-            if (file != null && file.ContentLength > 0)
-            {
-                var img = System.Drawing.Image.FromStream(file.InputStream);
-                var path = Path.Combine(Server.MapPath("~/Photos"), fileName);
-                img.Save(path, System.Drawing.Imaging.ImageFormat.Png);
-                img.Dispose();
-            }
-        }
+        string SavePhoto (HttpPostedFileBase file)
+		{
+			if (file == null || file.ContentLength == 0)
+				return null;
+			
+			using (var stream = file.InputStream) {
+				using (var img = Image.FromStream (stream)) {
+					var hash = string.Format ("{0}.png", HashFromStream (stream));
+					var path = Path.Combine (Server.MapPath (Resources.Default_PhotosPath), hash);
+					
+					img.Save (path, ImageFormat.Png);
+					
+					return Path.Combine (Resources.Default_PhotosPath, hash);
+				}
+			}
+		}
+		
+		string HashFromStream (Stream stream)
+		{
+			string hash;
+			byte[] bytes = null;
 
+			using (SHA1CryptoServiceProvider sha1 = new SHA1CryptoServiceProvider()) {
+				bytes = sha1.ComputeHash (stream);
+				hash = BitConverter.ToString (bytes).Replace ("-", "").ToLower ();
+			}
+
+			return hash;
+		}
+		
         string HashFromImage(Image img)
         {
             string hash;
