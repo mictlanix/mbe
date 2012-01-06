@@ -1,5 +1,5 @@
 ﻿// 
-// SupplierPaymentsController.cs
+// ReturnsCustomerController.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
@@ -39,62 +39,105 @@ using Business.Essentials.WebApp.Helpers;
 
 namespace Business.Essentials.WebApp.Controllers
 {
-    public class SupplierPaymentsController : Controller
+    public class ReturnsCustomerController : Controller
     {
         //
-        // GET: /SupplierPayment/
+        // GET: /Returns/
 
         public ActionResult Index()
         {
-            var qry = from x in SupplierPayment.Queryable
+            var qry = from x in ReturnCustomer.Queryable
                       orderby x.Id descending
                       select x;
 
             return View(qry.ToList());
         }
 
+        [HttpPost]
+        public ActionResult Index(int id)
+        {
+            var qry = from x in SalesOrder.Queryable
+                      where x.IsCompleted && x.IsPaid &&
+                            x.Id == id
+                      select x;
+
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_Index", qry.ToList());
+            }
+            else
+            {
+                return View(new SalesOrder());
+
+            }
+        }
+
+
         //
-        // GET: /SupplierPayment/Details/5
+        // GET: /Returns/Details/5
 
         public ActionResult Details(int id)
         {
-            SupplierPayment item = SupplierPayment.Find(id);
-
-            return View(item);
+            return View();
         }
 
         //
-        // GET: /SupplierPayment/Create
+        // GET: /Returns/Create
 
-        public ActionResult NewPay()
+        public ActionResult Return(int id)
         {
-            return View(new SupplierPayment());
+            SalesOrder sales = SalesOrder.Find(id);
+
+            ReturnCustomer item = new ReturnCustomer();
+            item.CreationTime = DateTime.Now;
+            item.Creator = SecurityHelpers.GetUser(User.Identity.Name).Employee;
+            item.SalesOrder = sales;
+            item.SalesPerson = sales.SalesPerson;
+            item.Updater = SecurityHelpers.GetUser(User.Identity.Name).Employee;
+            item.ModificationTime = DateTime.Now;
+
+            item.Create();
+
+            return View(item);
         } 
 
         //
-        // POST: /SupplierPayment/Create
+        // POST: /Returns/Create
 
         [HttpPost]
-        public ActionResult NewPay(SupplierPayment item)
+        public ActionResult Return(FormCollection collection)
         {
-            if (!ModelState.IsValid)
-                return View(item);
-
-            item.Supplier = Supplier.Find(item.SupplierId);
-            item.Date = DateTime.Now;
-            item.Creator = SecurityHelpers.GetUser(User.Identity.Name).Employee;
-
-            using (var session = new SessionScope())
-            {
-                item.CreateAndFlush();
-            }
-
-            return RedirectToAction("Index");
-
+            return PartialView();
         }
         
         //
-        // GET: /SupplierPayment/Delete/5
+        // GET: /Returns/Edit/5
+ 
+        public ActionResult Edit(int id)
+        {
+            return View();
+        }
+
+        //
+        // POST: /Returns/Edit/5
+
+        [HttpPost]
+        public ActionResult Edit(int id, FormCollection collection)
+        {
+            try
+            {
+                // TODO: Add update logic here
+ 
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        //
+        // GET: /Returns/Delete/5
  
         public ActionResult Delete(int id)
         {
@@ -102,7 +145,7 @@ namespace Business.Essentials.WebApp.Controllers
         }
 
         //
-        // POST: /SupplierPayment/Delete/5
+        // POST: /Returns/Delete/5
 
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection)

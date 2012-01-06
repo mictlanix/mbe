@@ -156,11 +156,11 @@ namespace Business.Essentials.Model
 
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "Category", ResourceType = typeof(Resources))]
+        [UIHint("CategorySelector")]
         public int CategoryId { get; set; }
 
         [BelongsTo("category")]
         [Display(Name = "Category", ResourceType = typeof(Resources))]
-		[UIHint("CategorySelector")]
         public virtual Category Category { get; set; }
 
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]

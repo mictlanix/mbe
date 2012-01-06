@@ -89,10 +89,14 @@ namespace Business.Essentials.WebApp.Controllers
         {
             SalesOrder item = SalesOrder.Find(id);
 
-            if(item.IsCompleted)
+            if (item.IsCompleted)
+            {
                 return View("_SalesTicket", item);
+            }
             else
+            {
                 return View("_SalesNote", item);
+            }
         }
 
         // GET: /Sales/Details/
@@ -277,6 +281,11 @@ namespace Business.Essentials.WebApp.Controllers
         public ActionResult ConfirmOrder(int id)
         {
             SalesOrder item = SalesOrder.Find(id);
+
+            if (item.IsCredit)
+            {
+                item.IsPaid = true;
+            }
 
             item.IsCompleted = true;
             item.Save();

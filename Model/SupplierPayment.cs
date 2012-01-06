@@ -52,6 +52,10 @@ namespace Business.Essentials.Model
         [Display(Name = "Supplier", ResourceType = typeof(Resources))]
         public virtual Supplier Supplier { get; set; }
 
+        [BelongsTo("creator")]
+        [Display(Name = "Creator", ResourceType = typeof(Resources))]
+        public virtual Employee Creator { get; set; }
+
         [Property]
         [DataType(DataType.Currency)]
         [Display(Name = "Amount", ResourceType = typeof(Resources))]

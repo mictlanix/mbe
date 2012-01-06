@@ -123,6 +123,7 @@
     <Compile Include="Controllers\PriceListsController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\PurchasesController.cs" />
+    <Compile Include="Controllers\ReturnsCustomerController.cs" />
     <Compile Include="Controllers\SalesController.cs" />
     <Compile Include="Controllers\AccountsReceivablesController.cs" />
     <Compile Include="Controllers\SupplierAgreementsController.cs" />
@@ -713,6 +714,13 @@
     <Content Include="Views\AccountsPayables\AccountStatement.cshtml" />
     <Content Include="Views\AccountsPayables\Index.cshtml" />
     <Content Include="Views\SupplierPayments\Details.cshtml" />
+    <Content Include="Views\ReturnsCustomer\Index.cshtml" />
+    <Content Include="Views\ReturnsCustomer\_Index.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CategorySelector.cshtml" />
+    <Content Include="Views\ReturnsCustomer\Return.cshtml" />
+    <Content Include="Views\ReturnsCustomer\_SalesItemReturn.cshtml" />
+    <Content Include="Views\ReturnsCustomer\_SalesInfoReturn.cshtml" />
+    <Content Include="Views\ReturnsCustomer\_ReturnTotals.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
