@@ -29,16 +29,17 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Data;
-using Business.Essentials.Model;
-using Business.Essentials.WebApp.Models;
-using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Linq;
+using System.IO;
 using System.Security.Cryptography;
+using System.Web;
+using System.Web.Mvc;
+using Castle.ActiveRecord;
+using NHibernate.Exceptions;
+using Business.Essentials.Model;
+using Business.Essentials.WebApp.Models;
 
 namespace Business.Essentials.WebApp.Controllers
 {
@@ -124,7 +125,7 @@ namespace Business.Essentials.WebApp.Controllers
             
 			item.Supplier = Supplier.Find (item.SupplierId);
 			item.Category = Category.Find (item.CategoryId);
-			item.Photo = SavePhoto (file) ?? item.Photo;
+			item.Photo = SavePhoto (file) ?? Resources.Default_PhotoFile;
 			
 			item.Save ();
 
@@ -171,11 +172,18 @@ namespace Business.Essentials.WebApp.Controllers
         // POST: /Products/Delete/5
 
         [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed (int id)
         {
-            Product product = Product.Find(id);
-            product.Delete();
-            return RedirectToAction("Index");
+			try {
+				using (new SessionScope()) {
+					var item = Product.Find (id);
+					item.Delete ();
+				}
+
+				return RedirectToAction ("Index");
+			} catch (GenericADOException) {
+				return View ("DeleteUnsuccessful");
+			}
         }
 
         Search<Product> GetProducts(Search<Product> search)

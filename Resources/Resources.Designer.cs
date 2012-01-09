@@ -3385,5 +3385,14 @@ namespace Business.Essentials {
                 return ResourceManager.GetString("Default_PhotosPath", resourceCulture);
             }
         }
+		
+		/// <summary>
+        ///   Looks up a localized string similar to ~/Content/images/na.png.
+        /// </summary>
+        public static string Default_PhotoFile {
+            get {
+                return ResourceManager.GetString("Default_PhotoFile", resourceCulture);
+            }
+        }
     }
 }

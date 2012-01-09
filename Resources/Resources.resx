@@ -1227,4 +1227,7 @@ Realizada el: {0:d}</value>
   <data name="Default_PhotosPath" xml:space="preserve">
     <value>~/Photos/</value>
   </data>
+  <data name="Default_PhotoFile" xml:space="preserve">
+    <value>~/Content/images/na.png</value>
+  </data>
 </root>
