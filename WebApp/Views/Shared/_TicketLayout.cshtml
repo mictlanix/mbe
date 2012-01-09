@@ -10,9 +10,7 @@
 <body>
     <header>
         <div id="logo">
-            <img src="@Url.Content("~/Content/images/logo.png")"
-                 alt="@Resources.Alt_Logo"
-                 title="@Resources.Title_Logo"/>
+            ·<img src="@Url.Content("~/Content/images/logo-ticket.png")" alt="@Resources.Alt_Logo" title="@Resources.Title_Logo"/>·
         </div>
         <h1>@Resources.Company</h1>
         @if (ViewBag.SkipAddress == null || !ViewBag.SkipAddress)
@@ -26,6 +24,8 @@
     <section id="main">
         @RenderBody()
     </section>
-    <footer></footer>
+    <footer>
+    	@RenderSection("Footer", required: false)
+	</footer>
 </body>
 </html>

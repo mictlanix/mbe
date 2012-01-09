@@ -170,8 +170,9 @@
         </td>
     </tr>
 </table>
-<div class="display-label display-field center">
-    <img src="@Url.Action("Code128", "Barcodes", new { id = string.Format("{0}", Html.DisplayFor(x => x.SessionId)) })" alt="@Html.DisplayFor(x => x.SessionId)" title="@Html.DisplayFor(x => x.SessionId)">
-    <br />
-    @Html.DisplayFor(model => model.SessionId)
-</div>
+
+@section Footer {
+	<img src="@Url.Action("Code128", "Barcodes", new { id = string.Format("{0}", Html.DisplayFor(x => x.SessionId)) })" alt="@Html.DisplayFor(x => x.SessionId)" title="@Html.DisplayFor(x => x.SessionId)">
+	<br />
+    @Html.DisplayFor(x => x.SessionId)
+}

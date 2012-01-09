@@ -29,11 +29,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
+using NHibernate.Exceptions;
 using Business.Essentials.Model;
 
 namespace Business.Essentials.WebApp.Controllers
@@ -158,19 +158,19 @@ namespace Business.Essentials.WebApp.Controllers
         // POST: /Customer/Delete/5
 
         [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Customer customer = Customer.Find(id);
-            try
-            {
-                customer.Delete();
-                return RedirectToAction("Index");
-            }
-            catch (Exception)
-            {
-                return View("DeleteUnsuccessful");
-            }
-        }
+        public ActionResult DeleteConfirmed (int id)
+		{
+			try {
+				using (new SessionScope()) {
+					var item = Customer.Find (id);
+					item.Delete ();
+				}
+
+				return RedirectToAction ("Index");
+			} catch (GenericADOException) {
+				return View ("DeleteUnsuccessful");
+			}
+		}
 
         protected override void Dispose(bool disposing)
         {

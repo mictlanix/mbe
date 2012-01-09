@@ -1,6 +1,6 @@
 ﻿@page  
 {
-    size:portrait;
+    size:72mm 297mm;
     margin:0 0;
 }
 * {
@@ -9,10 +9,14 @@
 body {
     background:white;
     color:black;
-    font:normal 10pt "Lucida Grande", Verdana, sans-serif;
+    direction:ltr;
+    font-size:12px;
+    font-weight:bold;
     margin:0;
     padding:0;
-    width:92mm;
+}
+footer {
+    text-align:center;
 }
 img {
     border:none;
