@@ -63,7 +63,10 @@
             @Html.DisplayFor(x => item.PointOfSale.Name)
         </td>
         <td class="actions">
-        	@Html.ActionLink(Resources.Return, "Return", new { id = item.Id }, new { @class = "button" })
+        @using (Html.BeginForm("CreateFromSalesOrder", "ReturnsCustomer", new { id = item.Id }))
+        {
+            <button type="submit" class="icon save">@Resources.Return</button>
+        }
         </td>
     </tr>
 }
