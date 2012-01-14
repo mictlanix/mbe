@@ -78,13 +78,15 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ActionResult Details(int id)
         {
-            return View();
+            ReturnCustomer item = ReturnCustomer.Find(id);
+
+            return View(item);
         }
 
         //
         // GET: /Returns/Create
-
-        public ActionResult Return(int id)
+        [HttpPost]
+        public ActionResult CreateFromSalesOrder(int id)
         {
             SalesOrder sales = SalesOrder.Find(id);
 
@@ -98,18 +100,9 @@ namespace Business.Essentials.WebApp.Controllers
 
             item.Create();
 
-            return View(item);
+            return RedirectToAction("Details", new { id = item.Id });
         } 
 
-        //
-        // POST: /Returns/Create
-
-        [HttpPost]
-        public ActionResult Return(FormCollection collection)
-        {
-            return PartialView();
-        }
-        
         //
         // GET: /Returns/Edit/5
  
