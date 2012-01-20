@@ -209,7 +209,7 @@ namespace Business.Essentials.WebApp.Controllers
 			
 			using (var stream = file.InputStream) {
 				using (var img = Image.FromStream (stream)) {
-					var hash = string.Format ("{0}.png", HashFromStream (stream));
+					var hash = string.Format ("{0}.png", HashFromImage (img));
 					var path = Path.Combine (Server.MapPath (Resources.Default_PhotosPath), hash);
 					
 					img.Save (path, ImageFormat.Png);
