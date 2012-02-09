@@ -12,28 +12,36 @@
 <h2>@Resources.DisplayName_ReturnCustomer</h2> 
 
 <div id="sales-order" style="margin-right:300px">
-@Html.Partial("_SalesInfoReturn", Model.SalesOrder)
+@Html.Partial("_SalesInfoReturn")
 </div>
  
  <div style="margin-right:300px"> 
-    @*<div class="search-box">
-        <label>@Resources.Product</label>
-        <input type="text" id="product-search" name="product-search" />
-    </div>*@
     <div id="items-container">
         <ul id="items" class="list-items">
-        @foreach (var item in Model.SalesOrder.Details)
+        @foreach (var item in Model.Details)
         {
-            @Html.Partial("_SalesItemReturn", item) 
+            @Html.Partial("_ReturnItem", item) 
         }
         </ul>
     </div>
+    @if (Model.Total == 0)
+    {
+        <div id="items-null">
+            @Html.Partial("_DeleteReturn")
+        </div>
+    }
+</div>
+<div class="right floating">
+    @using (Html.BeginForm("CancelReturn", "ReturnsCustomer", new { id = Model.Id }))
+    {
+        <button type="submit" class="icon lock">@Resources.Cancel</button>
+    }
 </div>
 <div id="backTo">
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
-<div id="sales-totals">
-    @Html.Partial("_ReturnTotals", Model.SalesOrder)
+<div id="return-totals">
+    @Html.Partial("_ReturnTotals")
 </div>
 <div id="dialog-confirm" title="@Resources.Delete">
 	<p>
@@ -41,7 +49,73 @@
         @Resources.Message_DeleteConfirmation
     </p>
 </div>
+
 <script type="text/javascript">
+    function updateTotals(){
+        $.get("/ReturnsCustomer/GetReturnTotals/" + ReturnCustomer.Id, function (data) {
+            $("#return-totals").html(data);
+        });
+    }
+
+    function editQuantity(id, value) {
+        var result = "Error";
+
+        $.ajaxSetup({ async: false });
+        $.post("/ReturnsCustomer/EditDetailQuantity", { "id": id, "quantity": value }, function (data) {
+            var element = $("#item" + id + " div.quantity");
+            element.html(data.quantity);
+            element.siblings(".total").html(data.total);
+            element.switchClass("editable", "editable-ok").switchClass("editable-ok", "editable", 3000);
+            result = data.quantity;
+        }, "json");
+        $.ajaxSetup({ async: true });
+
+        updateTotals();
+
+        return result;
+    }
+
+    function removeItem(id) {
+        $("#dialog-confirm").dialog({
+            resizable: true,
+            height: 178,
+            modal: true,
+            buttons: {
+                @Resources.Delete: function () {
+                    $.post("/ReturnsCustomer/RemoveDetail", { "id": id }, function (data) {
+                        if(data.result) {
+                            $("#item" + id).remove();
+                            updateTotals();
+                        }
+                    }, "json");
+                    $(this).dialog("close");
+                },
+                @Resources.Close: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+    }
+
+    $(function () {
+        $(window).scroll(function() {
+            var y = 98 + $("div.page").offset().top - $(this).scrollTop();
+            $('#return-totals').animate({ top: (y > 0 ? y : 10) + "px" }, 
+                { queue: false, duration: 500, easing: 'easeInOutSine' });
+        });
+
+        $(window).scroll();
+
+    @foreach (var item in Model.Details)
+    {
+        @:$("#item@(item.Id) div.quantity").editable(function(value,settings){return editQuantity(@item.Id, value);});
+    }
+    });    
+               
+    
+</script>
+
+@*<script type="text/javascript">
     function updateTotals(){
         $.get("/Sales/GetSalesTotals/" + SalesOrder.Id, function (data) {
             $("#sales-totals").html(data);
@@ -151,11 +225,4 @@
     }
     });
 </script>
-<style type="text/css">
-ul.token-input-list {
-  width:500px;
-}
-div.token-input-dropdown {
-  width:500px;
-}
-</style>
+*@

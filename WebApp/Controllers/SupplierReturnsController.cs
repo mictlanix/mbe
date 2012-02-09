@@ -1,5 +1,5 @@
 ﻿// 
-// ReturnsCustomerController.cs
+// SupplierReturnsController.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
@@ -38,18 +38,17 @@ using NHibernate;
 using Business.Essentials.Model;
 using Business.Essentials.WebApp.Models;
 using Business.Essentials.WebApp.Helpers;
-
 namespace Business.Essentials.WebApp.Controllers
 {
-    public class ReturnsCustomerController : Controller
+    public class SupplierReturnsController : Controller
     {
         //
-        // GET: /Returns/
+        // GET: /SupplierReturns/
 
         public ActionResult Index()
         {
-            var qry = from x in ReturnCustomer.Queryable
-                      where !x.IsCancelled && !x.IsCompleted 
+            var qry = from x in SupplierReturn.Queryable
+                      where !x.IsCancelled && !x.IsCompleted
                       orderby x.Id descending
                       select x;
 
@@ -59,9 +58,8 @@ namespace Business.Essentials.WebApp.Controllers
         [HttpPost]
         public ActionResult Index(int id)
         {
-            var qry = from x in SalesOrder.Queryable
-                      where x.IsCompleted && x.IsPaid &&
-                            x.Id == id
+            var qry = from x in PurchaseOrder.Queryable
+                      where x.IsCompleted && x.Id == id
                       select x;
 
             if (Request.IsAjaxRequest())
@@ -70,21 +68,22 @@ namespace Business.Essentials.WebApp.Controllers
             }
             else
             {
-                return View(new SalesOrder());
+                return View(new PurchaseOrder());
 
             }
         }
 
-        public ViewResult PrintCustomerReturn(int id)
+        public ViewResult PrintSupplierReturn(int id)
         {
-            ReturnCustomer item = ReturnCustomer.Find(id);
+            SupplierReturn item = SupplierReturn.Find(id);
 
-                return View("_CustomerReturnTicket", item);
+            return View("_PrintSupplierReturn", item);
         }
+
 
         public ViewResult Historic()
         {
-            var qry = from x in ReturnCustomer.Queryable
+            var qry = from x in SupplierReturn.Queryable
                       where x.IsCompleted || x.IsCancelled
                       orderby x.Id descending
                       select x;
@@ -92,14 +91,21 @@ namespace Business.Essentials.WebApp.Controllers
             return View(qry.ToList());
         }
 
+        public ViewResult HistoricDetails(int id)
+        {
+            SupplierReturn order = SupplierReturn.Find(id);
+
+            return View(order);
+        }
+
 
         //
         // GET: /Returns/Details/5
 
-        public ActionResult Details(int id)
+        public ActionResult EditSupplierReturn(int id)
         {
-            ReturnCustomer item = ReturnCustomer.Find(id);
-
+            SupplierReturn item = SupplierReturn.Find(id);
+            
             item.ModificationTime = DateTime.Now;
             item.Updater = SecurityHelpers.GetUser(User.Identity.Name).Employee;
 
@@ -108,48 +114,42 @@ namespace Business.Essentials.WebApp.Controllers
             return View(item);
         }
 
-
-        public ViewResult HistoricDetails(int id)
-        {
-            ReturnCustomer order = ReturnCustomer.Find(id);
-
-            return View(order);
-        }
-
         //
         // GET: /Returns/Create
         [HttpPost]
-        public ActionResult CreateFromSalesOrder(int id)
+        public ActionResult CreateFromPurchaseOrder(int id)
         {
-            SalesOrder sales = SalesOrder.Find(id);
-
-            ReturnCustomer item = new ReturnCustomer();
+            PurchaseOrder purchase = PurchaseOrder.Find(id);
+            
+            SupplierReturn item = new SupplierReturn();
             item.CreationTime = DateTime.Now;
             item.Creator = SecurityHelpers.GetUser(User.Identity.Name).Employee;
-            item.SalesOrder = sales;
-            item.SalesPerson = sales.SalesPerson;
+            item.PurchaseOrder = purchase;
+            item.Supplier = purchase.Supplier;
             item.Updater = SecurityHelpers.GetUser(User.Identity.Name).Employee;
             item.ModificationTime = DateTime.Now;
 
             item.Create();
 
-            foreach (var x in sales.Details)
+            
+            foreach (var x in purchase.Details)
             {
                 var sum = GetReturnableQuantity(x.Id);
 
                 if (sum > 0)
                 {
-                    var detail = new ReturnCustomerDetail
+                    var detail = new SupplierReturnDetail
                     {
                         Order = item,
-                        SalesOrderDetail = x,
+                        PurchaseOrderDetail = x,
                         Product = x.Product,
                         ProductCode = x.ProductCode,
                         ProductName = x.ProductName,
                         Discount = x.Discount,
                         TaxRate = x.TaxRate,
                         Price = x.Price,
-                        Quantity = sum
+                        Quantity = sum,
+                        Warehouse = x.Warehouse
                     };
 
                     using (var session = new SessionScope())
@@ -158,16 +158,15 @@ namespace Business.Essentials.WebApp.Controllers
                     }
                 }
             }
-
-                return RedirectToAction("Details", new { id = item.Id });
-        } 
+                return RedirectToAction("EditSupplierReturn", new { id = item.Id });
+        }
 
         [HttpPost]
         public JsonResult EditDetailQuantity(int id, decimal quantity)
         {
-            ReturnCustomerDetail detail = ReturnCustomerDetail.Find(id);
+            SupplierReturnDetail detail = SupplierReturnDetail.Find(id);
 
-            decimal sum = GetReturnableQuantity(detail.SalesOrderDetail.Id);
+            var sum = GetReturnableQuantity(detail.PurchaseOrderDetail.Id);
 
             if (quantity > 0 && quantity <= sum)
             {
@@ -181,19 +180,18 @@ namespace Business.Essentials.WebApp.Controllers
                 detail.Save();
                 return Json(new { id = id, quantity = sum, total = detail.Total.ToString("c") });
             }
-
         }
 
         public ActionResult GetReturnTotals(int id)
         {
-            var order = ReturnCustomer.Find(id);
+            var order = SupplierReturn.Find(id);
             return PartialView("_ReturnTotals", order);
         }
 
         [HttpPost]
         public JsonResult RemoveDetail(int id)
         {
-            ReturnCustomerDetail item = ReturnCustomerDetail.Find(id);
+            SupplierReturnDetail item = SupplierReturnDetail.Find(id);
             item.Delete();
             return Json(new { id = id, result = true });
         }
@@ -201,18 +199,59 @@ namespace Business.Essentials.WebApp.Controllers
         [HttpPost]
         public ActionResult ConfirmReturn(int id)
         {
-            ReturnCustomer item = ReturnCustomer.Find(id);
+            SupplierReturn item = SupplierReturn.Find(id);
+
+            var qry = from x in SupplierReturnDetail.Queryable
+                      where x.Order.Id == id
+                      group x by x.Warehouse into g
+                      select new { Warehouse = g.Key, Details = g.ToList() };
+
+            foreach (var x in qry)
+            {
+                var master = new InventoryIssue
+                {
+                    Return = item,
+                    Warehouse = x.Warehouse,
+                    CreationTime = DateTime.Now,
+                    Creator = SecurityHelpers.GetUser(User.Identity.Name).Employee,
+                    ModificationTime = DateTime.Now,
+                    Updater = SecurityHelpers.GetUser(User.Identity.Name).Employee,
+                    Comment = string.Format(Resources.Message_SupplierReturn, item.Supplier.Name, item.PurchaseOrder.Id, item.Id)
+                };
+
+                using (var session = new SessionScope())
+                {
+                    master.CreateAndFlush();
+                }
+
+                foreach (var y in x.Details)
+                {
+                    var detail = new InventoryIssueDetail
+                    {
+                        Issue = master,
+                        Product = y.Product,
+                        Quantity = y.Quantity,
+                        ProductCode = y.ProductCode,
+                        ProductName = y.ProductName
+                    };
+
+                    using (var session = new SessionScope())
+                    {
+                        detail.CreateAndFlush();
+                    }
+                }
+            }
 
             item.IsCompleted = true;
             item.Save();
-            //TODO/ Falta realizar la salida del almacén 
+
             return RedirectToAction("Index");
         }
 
         [HttpPost]
         public ActionResult CancelReturn(int id)
         {
-            ReturnCustomer item = ReturnCustomer.Find(id);
+            SupplierReturn item = SupplierReturn.Find(id);
 
             foreach (var x in item.Details)
             {
@@ -225,14 +264,15 @@ namespace Business.Essentials.WebApp.Controllers
             return RedirectToAction("Index");
         }
 
+
         decimal GetReturnableQuantity(int id)
         {
-            var item = SalesOrderDetail.Find(id);
+            var item = PurchaseOrderDetail.Find(id);
             string sql = @"SELECT SUM(d.quantity) quantity
-                           FROM return_customer_detail d INNER JOIN return_customer m ON d.return_customer = m.return_customer_id
-                           WHERE m.completed <> 0 AND d.sales_order_detail = :detail ";
+                           FROM supplier_return_detail d INNER JOIN supplier_return m ON d.supplier_return = m.supplier_return_id
+                           WHERE m.completed <> 0 AND d.purchase_order_detail = :detail ";
 
-            IList<decimal> quantities = (IList<decimal>)ActiveRecordMediator<ReturnCustomerDetail>.Execute(
+            IList<decimal> quantities = (IList<decimal>)ActiveRecordMediator<SupplierReturnDetail>.Execute(
                 delegate(ISession session, object instance)
                 {
                     try
@@ -247,6 +287,7 @@ namespace Business.Essentials.WebApp.Controllers
                         return null;
                     }
                 }, null);
+                
 
             if (quantities != null && quantities.Count > 0)
             {

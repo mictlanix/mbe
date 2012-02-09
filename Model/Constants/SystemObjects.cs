@@ -86,6 +86,14 @@ namespace Business.Essentials.Model
         [Display(Name = "DisplayName_SalesInvoices", ResourceType = typeof(Resources))]
         SalesInvoices,
         [Display(Name = "DisplayName_Taxpayers", ResourceType = typeof(Resources))]
-        Taxpayers
+        Taxpayers,
+        [Display(Name = "DisplayName_SupplierReturns", ResourceType = typeof(Resources))]
+        SupplierReturns,
+        [Display(Name = "DisplayName_SalesOrdersHistoric", ResourceType = typeof(Resources))]
+        SalesOrdersHistoric,
+        [Display(Name = "DisplayName_CustomerReturnHistoric", ResourceType = typeof(Resources))]
+        ReturnCustomerHistoric,
+        [Display(Name = "DisplayName_SupplierReturnHistoric", ResourceType = typeof(Resources))]
+        SupplierReturnHistoric
     }
 }

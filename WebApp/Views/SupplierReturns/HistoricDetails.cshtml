@@ -1,0 +1,58 @@
+﻿@using Business.Essentials
+@using Business.Essentials.WebApp.Helpers;
+@using Business.Essentials.Model;
+@model Business.Essentials.Model.SupplierReturn
+
+ @{
+    ViewBag.Title = Resources.Details;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SupplierReturnHistoric);    
+}
+
+<h2>@Resources.Details</h2>
+
+<fieldset>
+    <legend>@Resources.Title_SupplierReturn</legend>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Id) @Html.Label(":")
+        @Html.DisplayFor(model => model.Id)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.CreationTime) @Html.Label(":")
+        @Html.DisplayFor(model => model.CreationTime)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Creator) @Html.Label(":")
+        @Html.DisplayFor(model => model.Creator.Name)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.PurchaseOrder) @Html.Label(":")
+        @Html.DisplayFor(model => model.PurchaseOrder.Id)
+    </div>
+
+</fieldset>
+
+<fieldset>
+    <legend>@Business.Essentials.Resources.DisplayName_SupplierReturnDetails</legend>
+    @Html.Partial("_SupplierReturnDetails", Model.Details)
+</fieldset>
+<div class="right floating">
+    <button type="button" class="icon print">@Resources.Print</button>     
+</div>
+<p>
+    @Html.ActionLink(Resources.BackToList, "Historic", new { }, new { @class = "button icon back" })
+</p>
+
+<script type="text/javascript">
+    $(function() {
+        $(".print").printPage({
+            url: "@Url.Action("PrintSupplierReturn", "SupplierReturns", new { id = Model.Id })"
+        });
+    });
+
+</script>
+

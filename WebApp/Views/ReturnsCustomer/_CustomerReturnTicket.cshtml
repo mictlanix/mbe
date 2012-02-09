@@ -1,0 +1,89 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Models
+@using Business.Essentials.WebApp.Helpers
+@model ReturnCustomer
+
+@{
+    Layout = "~/Views/Shared/_TicketLayout.cshtml";
+    ViewBag.Title = Resources.Title_CustomerReturnNote;
+} 
+
+<div class="display-label right">
+    @Html.LabelFor(model => model.Id)
+</div>
+<div class="display-field right">
+    @Html.DisplayFor(model => model.Id)
+</div>
+
+<div class="display-label right">
+    @Html.LabelFor(model => model.ModificationTime)
+</div>
+<div class="display-field date right">
+    @Html.DisplayFor(model => model.ModificationTime)
+</div>
+
+<div class="display-label">
+    @Html.LabelFor(model => model.SalesOrder)
+</div>
+<div class="display-field">
+    @Html.DisplayFor(model => model.SalesOrder.Id)
+</div>
+
+<div class="display-label">
+    @Html.LabelFor(model => model.SalesOrder.Customer)
+</div>
+<div class="display-field">
+    @Html.DisplayFor(model => model.SalesOrder.Customer.Name)
+</div>
+<table>
+@foreach (var item in Model.Details)
+{
+    <tr>
+        <td class="line number" rowspan="2">
+            @Html.DisplayFor(modelItem => item.Quantity)
+        </td>
+        <td colspan="2">
+            @Html.DisplayFor(modelItem => item.ProductName)
+        </td>
+        <td class="line number" rowspan="2">
+            @Html.DisplayFor(modelItem => item.Total)
+        </td>
+    </tr>
+    <tr>
+        <td class="line">
+            ✕
+            @Html.DisplayFor(modelItem => item.Price)
+            @if (item.Discount > 0)
+            {
+                @:- @Html.DisplayFor(modelItem => item.Discount)
+            }
+        </td>
+        <td class="line center">
+            @Html.DisplayFor(modelItem => item.ProductCode)
+        </td>
+    </tr>
+}
+    <tr>
+        <td></td>
+        <td></td>
+        <td class="total right">@Resources.Total</td>
+        <td class="total number">@Html.DisplayFor(x => x.Total)</td>
+    </tr>
+</table>
+
+<div class="display-label display-field">
+    @Html.LabelFor(model => model.Taxes)
+    @Html.DisplayFor(model => model.Taxes)
+</div>
+
+<div class="display-label right">
+    @Html.LabelFor(model => model.Creator)
+</div>
+<div class="display-field right">
+    @Html.DisplayFor(model => model.Creator.Name)
+</div>
+
+@section Footer {
+	<img src="@Url.Action("Code128", "Barcodes", new { id = string.Format("{0}", Html.DisplayFor(x => x.Id)) })" alt="@Html.DisplayFor(x => x.Id)" title="@Html.DisplayFor(x => x.Id)">
+}

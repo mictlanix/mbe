@@ -1,5 +1,5 @@
 ﻿// 
-// ReturnCustomer.cs
+// SupplierReturn.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
@@ -36,23 +36,19 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Business.Essentials.Model
 {
-    [ActiveRecord("return_customer")]
-    public class ReturnCustomer : ActiveRecordLinqBase<ReturnCustomer>
+    [ActiveRecord("supplier_return")]
+    public class SupplierReturn : ActiveRecordLinqBase<SupplierReturn>
     {
-        IList<ReturnCustomerDetail> details = new List<ReturnCustomerDetail>();
+        IList<SupplierReturnDetail> details = new List<SupplierReturnDetail>();
 
-        [PrimaryKey(PrimaryKeyType.Identity, "return_customer_id")]
+        [PrimaryKey(PrimaryKeyType.Identity, "supplier_return_id")]
         [Display(Name = "ReturnOrderId", ResourceType = typeof(Resources))]
         [DisplayFormat(DataFormatString = "{0:000000}")]
         public int Id { get; set; }
 
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [Display(Name = "SalesOrder", ResourceType = typeof(Resources))]
-        public int SalesOrderId { get; set; }
-
-        [BelongsTo("sales_order")]
-        [Display(Name = "SalesOrder", ResourceType = typeof(Resources))]
-        public virtual SalesOrder SalesOrder { get; set; }
+        [BelongsTo("purchase_order")]
+        [Display(Name = "PurchaseOrder", ResourceType = typeof(Resources))]
+        public virtual PurchaseOrder PurchaseOrder { get; set; }
 
         [Property("creation_time")]
         [DataType(DataType.DateTime)]
@@ -72,9 +68,9 @@ namespace Business.Essentials.Model
         [Display(Name = "Updater", ResourceType = typeof(Resources))]
         public virtual Employee Updater { get; set; }
 
-        [BelongsTo("sales_person")]
-        [Display(Name = "SalesPerson", ResourceType = typeof(Resources))]
-        public virtual Employee SalesPerson { get; set; }
+        [BelongsTo("supplier")]
+        [Display(Name = "Supplier", ResourceType = typeof(Resources))]
+        public virtual Supplier Supplier { get; set; }
 
         [Property("completed")]
         [Display(Name = "Completed", ResourceType = typeof(Resources))]
@@ -90,8 +86,8 @@ namespace Business.Essentials.Model
         [StringLength(500, MinimumLength = 0)]
         public string Comment { get; set; }
 
-        [HasMany(typeof(ReturnCustomerDetail), Table = "return_customer_detail", ColumnKey = "return_customer")]
-        public IList<ReturnCustomerDetail> Details
+        [HasMany(typeof(SupplierReturnDetail), Table = "supplier_return_detail", ColumnKey = "supplier_return")]
+        public IList<SupplierReturnDetail> Details
         {
             get { return details; }
             set { details = value; }
@@ -122,12 +118,12 @@ namespace Business.Essentials.Model
 
         public override string ToString()
         {
-            return string.Format("{0} [{1}, {2}, {3}]", Id, CreationTime, Creator, SalesOrder);
+            return string.Format("{0} [{1}, {2}, {3}]", Id, CreationTime, Creator, PurchaseOrder);
         }
 
         public override bool Equals(object obj)
         {
-            ReturnCustomer other = obj as ReturnCustomer;
+            SupplierReturn other = obj as SupplierReturn;
 
             if (other == null)
                 return false;

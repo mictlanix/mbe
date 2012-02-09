@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -128,6 +128,7 @@
     <Compile Include="Controllers\AccountsReceivablesController.cs" />
     <Compile Include="Controllers\SupplierAgreementsController.cs" />
     <Compile Include="Controllers\SupplierPaymentsController.cs" />
+    <Compile Include="Controllers\SupplierReturnsController.cs" />
     <Compile Include="Controllers\SuppliersController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\WarehousesController.cs" />
@@ -620,7 +621,7 @@
     <Content Include="Views\Employees\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\CustomerSelector.cshtml" />
     <Content Include="Views\Sales\_SalesInfo.cshtml" />
-    <Content Include="Views\Sales\Details.cshtml" />
+    <Content Include="Views\Sales\_Details.cshtml" />
     <Content Include="Views\Sales\_SalesOrderDetails.cshtml" />
     <Content Include="Views\Sales\_SalesTotals.cshtml" />
     <Content Include="Views\Sales\_SalesItem.cshtml" />
@@ -729,9 +730,29 @@
     <Content Include="Views\ReturnsCustomer\_Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\CategorySelector.cshtml" />
     <Content Include="Views\ReturnsCustomer\Details.cshtml" />
-    <Content Include="Views\ReturnsCustomer\_SalesItemReturn.cshtml" />
+    <Content Include="Views\ReturnsCustomer\_ReturnItem.cshtml" />
     <Content Include="Views\ReturnsCustomer\_SalesInfoReturn.cshtml" />
     <Content Include="Views\ReturnsCustomer\_ReturnTotals.cshtml" />
+    <Content Include="Views\SupplierReturns\Index.cshtml" />
+    <Content Include="Views\SupplierReturns\_Index.cshtml" />
+    <Content Include="Views\SupplierReturns\EditSupplierReturn.cshtml" />
+    <Content Include="Views\SupplierReturns\_PurchaseInfoReturn.cshtml" />
+    <Content Include="Views\SupplierReturns\_ReturnItem.cshtml" />
+    <Content Include="Views\SupplierReturns\_ReturnTotals.cshtml" />
+    <Content Include="Views\Sales\Historic.cshtml" />
+    <Content Include="Views\Sales\Details.cshtml" />
+    <Content Include="Views\Sales\HistoricDetails.cshtml" />
+    <Content Include="Views\ReturnsCustomer\_DeleteReturn.cshtml" />
+    <Content Include="Views\ReturnsCustomer\Historic.cshtml" />
+    <Content Include="Views\ReturnsCustomer\HistoricDetails.cshtml" />
+    <Content Include="Views\ReturnsCustomer\_ReturnCustomerDetails.cshtml" />
+    <Content Include="Views\SupplierReturns\_DeleteReturn.cshtml" />
+    <Content Include="Views\SupplierReturns\Historic.cshtml" />
+    <Content Include="Views\SupplierReturns\HistoricDetails.cshtml" />
+    <Content Include="Views\SupplierReturns\_SupplierReturnDetails.cshtml" />
+    <Content Include="Views\AccountsPayables\Dates.cshtml" />
+    <Content Include="Views\SupplierReturns\_PrintSupplierReturn.cshtml" />
+    <Content Include="Views\ReturnsCustomer\_CustomerReturnTicket.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -768,7 +789,5 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
-  <ItemGroup>
-    <Folder Include="Views\Invoices\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

@@ -1,0 +1,79 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@model IEnumerable<Business.Essentials.Model.SupplierReturnDetail>
+
+
+<table>
+    <tr>
+        <th>
+            @Html.LabelFor(x => new SupplierReturnDetail().ProductCode)
+        </th>
+
+        <th>
+            @Html.LabelFor(x => new SupplierReturnDetail().ProductName)
+        </th>
+
+        <th>
+            @Html.LabelFor(x => new SupplierReturnDetail().Quantity)
+        </th>
+
+        <th>
+            @Html.LabelFor(x => new SupplierReturnDetail().Price)
+        </th>
+        
+        <th>
+            @Html.LabelFor(x => new SupplierReturnDetail().Discount)
+        </th>
+
+        <th>
+            @Html.LabelFor(x => new SupplierReturnDetail().TaxRate)
+        </th>
+        
+        <th>
+            @Html.LabelFor(x => new SupplierReturnDetail().Total)
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td class="number">
+            @Html.DisplayFor(x => item.ProductCode)
+        </td>
+        <td>
+            @Html.DisplayFor(x => item.ProductName)
+        </td>
+        <td class="number">
+            @Html.DisplayFor(x => item.Quantity)
+        </td>
+        <td class="number">
+            @Html.DisplayFor(x => item.Price)
+        </td>
+        <td class="number">
+            @Html.DisplayFor(x => item.Discount)
+        </td>
+        <td class="number">
+            @Html.DisplayFor(x => item.Taxes)
+        </td>
+        <td class="number">
+            @Html.DisplayFor(x => item.Total)
+        </td>
+    </tr>
+}
+<tr>
+    <td></td>
+    <td class="number">
+        @Resources.Total
+    </td>
+    <td class="number">
+        @Model.Sum(x => x.Quantity).ToString("0.####")
+    </td>
+    <td></td>
+    <td></td>
+    <td class="number">
+        @Model.Sum(x => x.Taxes)
+    </td>
+    <td class="number">
+        @Model.Sum(x => x.Total).ToString("c")
+    </td>
+</tr>
+</table>

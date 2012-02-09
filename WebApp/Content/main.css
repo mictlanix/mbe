@@ -197,6 +197,13 @@ ul.list-items li div.action-link {
   top:259px;
   right:40px;
 }
+#return-totals {
+  width:300px;
+  z-index:1;
+  position:fixed;
+  top:259px;
+  right:40px;
+}
 #activity-indicator {
   display:none;
   padding:10px;

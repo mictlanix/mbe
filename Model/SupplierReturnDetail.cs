@@ -1,5 +1,5 @@
 ﻿// 
-// ReturnCustomerDetail.cs
+// SupplierReturnDetail.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
@@ -35,27 +35,27 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Business.Essentials.Model
 {
-    [ActiveRecord("return_customer_detail")]
-    public class ReturnCustomerDetail : ActiveRecordLinqBase<ReturnCustomerDetail>
+    [ActiveRecord("supplier_return_detail")]
+    public class SupplierReturnDetail : ActiveRecordLinqBase<SupplierReturnDetail>
     {
-        [PrimaryKey(PrimaryKeyType.Identity, "return_customer_detail_id")]
+        [PrimaryKey(PrimaryKeyType.Identity, "supplier_return_detail_id")]
         public int Id { get; set; }
 
-        [BelongsTo("return_customer", Lazy = FetchWhen.OnInvoke)]
-        [Display(Name = "ReturnCustomer", ResourceType = typeof(Resources))]
-        public virtual ReturnCustomer Order { get; set; }
+        [BelongsTo("supplier_return", Lazy = FetchWhen.OnInvoke)]
+        [Display(Name = "SupplierReturn", ResourceType = typeof(Resources))]
+        public virtual SupplierReturn Order { get; set; }
 
         [BelongsTo("product")]
         [Display(Name = "Product", ResourceType = typeof(Resources))]
         public virtual Product Product { get; set; }
 
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [Display(Name = "SalesOrderDetail", ResourceType = typeof(Resources))]
-        public int SalesOrderDetailId { get; set; }
+        [BelongsTo("purchase_order_detail")]
+        [Display(Name = "PurchaseOrderDetail", ResourceType = typeof(Resources))]
+        public virtual PurchaseOrderDetail PurchaseOrderDetail { get; set; }
 
-        [BelongsTo("sales_order_detail")]
-        [Display(Name = "SalesOrderDetail", ResourceType = typeof(Resources))]
-        public virtual SalesOrderDetail SalesOrderDetail { get; set; }
+        [BelongsTo("warehouse")]
+        [Display(Name = "Warehouse", ResourceType = typeof(Resources))]
+        public virtual Warehouse Warehouse { get; set; }
 
         [Property]
         [DisplayFormat(DataFormatString = "{0:0.####}")]
@@ -120,7 +120,7 @@ namespace Business.Essentials.Model
 
         public override bool Equals(object obj)
         {
-            ReturnCustomerDetail other = obj as ReturnCustomerDetail;
+            SupplierReturnDetail other = obj as SupplierReturnDetail;
 
             if (other == null)
                 return false;

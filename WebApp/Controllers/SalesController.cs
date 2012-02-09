@@ -54,13 +54,23 @@ namespace Business.Essentials.WebApp.Controllers
             return View(qry.ToList());
         }
 
+        public ViewResult Historic()
+        {
+            var qry = from x in SalesOrder.Queryable
+                      where x.IsCompleted || x.IsCancelled
+                      orderby x.Id descending
+                      select x;
+
+            return View(qry.ToList());
+        }
+
         // GET: /Sales/PrintOrder/
 
         public ViewResult PrintOrder(int id)
         {
             SalesOrder item = SalesOrder.Find(id);
 
-            if (item.IsCompleted)
+            if (item.IsCompleted || item.IsCredit)
             {
                 return View("_SalesTicket", item);
             }
@@ -79,6 +89,12 @@ namespace Business.Essentials.WebApp.Controllers
             return View(order);
         }
 
+        public ViewResult HistoricDetails(int id)
+        {
+            SalesOrder order = SalesOrder.Find(id);
+
+            return View(order);
+        }
         //
         // GET: /Sales/New
 

@@ -1230,4 +1230,79 @@ Realizada el: {0:d}</value>
   <data name="Default_PhotoFile" xml:space="preserve">
     <value>~/Content/images/na.png</value>
   </data>
+  <data name="DisplayName_SupplierReturns" xml:space="preserve">
+    <value>Devolución a Proveedores</value>
+  </data>
+  <data name="FolioPurchaseOrder" xml:space="preserve">
+    <value>Folio de Compra</value>
+  </data>
+  <data name="PurchaseOrderDetail" xml:space="preserve">
+    <value>Orden de Compra</value>
+  </data>
+  <data name="SupplierReturn" xml:space="preserve">
+    <value>Devolución a Proveedor</value>
+  </data>
+  <data name="Title_SupplierReturn" xml:space="preserve">
+    <value>Devolución a Proveedor</value>
+  </data>
+  <data name="Message_SupplierReturn" xml:space="preserve">
+    <value>Devolución al proveedor {0} con folio de compra {1} y folio de devolución {2}.</value>
+  </data>
+  <data name="DisplayName_SalesOrdersHistoric" xml:space="preserve">
+    <value>Histórico de Ventas</value>
+  </data>
+  <data name="Title_Sale" xml:space="preserve">
+    <value>Venta</value>
+  </data>
+  <data name="Title_SalesOrdersHistoric" xml:space="preserve">
+    <value>Histórico de Ventas</value>
+  </data>
+  <data name="DisplayName_CustomerReturnHistoric" xml:space="preserve">
+    <value>Histórico Devoluciones a Clientes</value>
+  </data>
+  <data name="DisplayName_ReturnCustomerDetails" xml:space="preserve">
+    <value>Detalles de la Devolución a Cliente</value>
+  </data>
+  <data name="DisplayName_SupplierReturnHistoric" xml:space="preserve">
+    <value>Histórico Devoluciones a Proveedores</value>
+  </data>
+  <data name="Message_DeleteReturn" xml:space="preserve">
+    <value>Todos los productos de esta venta ya se han devuelto.
+Por favor cancele la devolución.</value>
+  </data>
+  <data name="Title_CustomerReturnHistoric" xml:space="preserve">
+    <value>Histórico Devolución a Cliente</value>
+  </data>
+  <data name="Title_SupplierReturnHistoric" xml:space="preserve">
+    <value>Histórico Devolución a Proveedor</value>
+  </data>
+  <data name="DisplayName_SupplierReturnDetails" xml:space="preserve">
+    <value>Detalles de la Devolución a Proveedor</value>
+  </data>
+  <data name="DisplayName_PurchaseSearch" xml:space="preserve">
+    <value>Búsqueda de Compras</value>
+  </data>
+  <data name="DisplayName_ReturnIncomplete" xml:space="preserve">
+    <value>Devoluciones Pendientes</value>
+  </data>
+  <data name="DisplayName_SalesSearch" xml:space="preserve">
+    <value>Búsqueda de Ventas</value>
+  </data>
+  <data name="Format_ReturnPurchaseDescription" xml:space="preserve">
+    <value>Devolución a Proveedor
+Realizada el: {0:d}</value>
+  </data>
+  <data name="Format_ReturnSaleDescription" xml:space="preserve">
+    <value>Devolución de Cliente
+Realizada el: {0:d}</value>
+  </data>
+  <data name="TotalReturns" xml:space="preserve">
+    <value>Total de Devoluciones</value>
+  </data>
+  <data name="DisplayName_ReturnInformation" xml:space="preserve">
+    <value>Información de la Devolución</value>
+  </data>
+  <data name="Title_CustomerReturnNote" xml:space="preserve">
+    <value>Ticket de Devolución</value>
+  </data>
 </root>

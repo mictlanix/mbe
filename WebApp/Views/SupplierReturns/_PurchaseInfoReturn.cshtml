@@ -1,0 +1,37 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@model SupplierReturn
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SupplierReturns);
+}
+
+<fieldset>
+    <legend>@Resources.DisplayName_PurchaseInformation</legend>
+    <div class="display-label">
+        @Html.LabelFor(model => model.PurchaseOrder.Id) @Html.Label(":")
+        @Html.DisplayFor(model => model.PurchaseOrder.Id)
+    </div>
+    <div class="display-label">
+        @Html.LabelFor(model => model.PurchaseOrder.CreationTime) @Html.Label(":")
+        @Html.DisplayFor(model => model.PurchaseOrder.CreationTime)
+    </div>
+    <div class="display-label">
+        @Html.LabelFor(model => model.PurchaseOrder.Supplier) @Html.Label(":")
+        @Html.DisplayFor(model => model.PurchaseOrder.Supplier.Name)
+    </div>
+   <div class="right">
+        @if(Privilege.AllowDelete)
+        {
+            using (Html.BeginForm("CancelReturn", "SupplierReturns", new { id = Model.Id }, FormMethod.Post, new { style = "display:inline" }))
+            {
+                <button type="submit" class="icon cancel">@Resources.Cancel</button>
+            }
+        }
+    </div>
+</fieldset>
+<script type="text/javascript">
+    var SupplierReturn = { Id: @Model.Id };
+</script>

@@ -1,6 +1,6 @@
 ﻿@using Business.Essentials
 @using Business.Essentials.WebApp.Helpers
-@model Business.Essentials.Model.SalesOrder
+@model Business.Essentials.Model.ReturnCustomer
 <fieldset>
     <legend>@Resources.SalesTotals</legend>
 
@@ -26,33 +26,21 @@
     </div>
     <div class="right floating">
     <p>
-        @if (!Model.IsCredit || (CustomerHelpers.CalcDebt(Model.Customer.Id) + Model.Total) <= Model.Customer.CreditLimit)
+        @if (Model.Total > 0)
         {
-            if (Model.Total > 0)
+            using (Html.BeginForm("ConfirmReturn", "ReturnsCustomer", new { id = Model.Id }))
             {
-                using (Html.BeginForm("ConfirmOrder", "Sales", new { id = Model.Id }))
-                {
-                <button type="button" class="icon print">@Resources.Print</button>
-                <button id="complete" type="submit">@Resources.CompleteSale</button>            
-                }
+            <button type="button" class="icon print">@Resources.Print</button>
+            <button id="complete" type="submit">@Resources.Complete</button>            
             }
         }
-        else
-        {
-            var difference = CustomerHelpers.CalcDebt(Model.Customer.Id) + Model.Total - Model.Customer.CreditLimit;
-
-            @Resources.CreditLimitExceeded
-            <br />
-            @difference.ToString("c")
-        }
-        
     </p>
     </div>
 </fieldset>
 <script type="text/javascript">
     $(function() {
         $(".print").printPage({
-            url: "@Url.Action("PrintOrder", "Sales", new { id = Model.Id })"
+            url: "@Url.Action("PrintCustomerReturn", "ReturnsCustomer", new { id = Model.Id })"
         });
     });
 

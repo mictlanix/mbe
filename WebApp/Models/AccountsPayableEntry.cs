@@ -61,5 +61,14 @@ namespace Business.Essentials.WebApp.Models
         [DataType(DataType.MultilineText)]
         [Display(Name = "Description", ResourceType = typeof(Resources))]
         public String Description { get; set; }
+
+        [DataType(DataType.Date)]
+        [Display(Name = "StartDate", ResourceType = typeof(Resources))]
+        public DateTime StartDate { get; set; }
+
+        [DataType(DataType.Date)]
+        [Display(Name = "End", ResourceType = typeof(Resources))]
+        public DateTime EndDate { get; set; }
+		
     }
 }

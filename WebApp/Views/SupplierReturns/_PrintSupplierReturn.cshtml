@@ -1,0 +1,84 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model;
+@using Business.Essentials.WebApp.Helpers;
+@model SupplierReturn
+
+@{
+    Layout = "~/Views/Shared/_LetterLayout.cshtml";
+    ViewBag.Title = Resources.Title_SupplierReturn;
+    //ViewBag.SkipAddress = true;
+}
+<h2>@Resources.DisplayName_ReturnInformation</h2>
+<p></p>
+    <div class="display-label">
+        <b>@Html.LabelFor(model => model.Supplier):</b>
+        @Html.DisplayFor(model => model.Supplier.Name)
+    </div>
+    <div class="display-label">
+        <b>@Html.LabelFor(model => model.Id):</b>
+        @Html.DisplayFor(model => model.Id)
+    </div>
+    <div class="display-label">
+        <b>@Html.LabelFor(model => model.CreationTime):</b>
+        @Html.DisplayFor(model => model.CreationTime)
+    </div>
+    <div class="display-label">
+        <b>@Html.LabelFor(model => model.PurchaseOrder):</b>
+        @Html.DisplayFor(model => model.PurchaseOrder.Id)
+    </div>
+
+
+<table>
+    <tr>
+        <th class="line border">
+            @Html.LabelFor(x => new SupplierReturnDetail().Quantity)
+        </th>
+        <th class="line border">
+            @Html.LabelFor(x => new SupplierReturnDetail().ProductCode)
+        </th>
+        <th class="line">
+            @Html.LabelFor(x => new SupplierReturnDetail().ProductName)
+        </th>
+    </tr>
+@foreach (var item in Model.Details) {
+    <tr>
+        <td class="line-top border center">
+            @Html.DisplayFor(modelItem => item.Quantity)
+        </td>
+        <td class="line-top border center">
+            @Html.DisplayFor(modelItem => item.ProductCode)
+        </td>
+        <td class="line-top">
+            @Html.DisplayFor(modelItem => item.ProductName)
+        </td>
+    </tr>
+}
+    <tr>
+        <td class="line-top border center">
+            @Model.Details.Sum(x => x.Quantity)
+        </td>
+        <td class="line-top border center">
+            @Resources.Total
+        </td>
+        <td class="line-top">
+        </td>
+    </tr>
+</table>
+
+<section class="signatures">
+    <table>
+        <tr>
+            <td></td>
+            <td class="line-top center nowrap" style="width:250px">
+                @Resources.PersonDelivery<br/>
+                @Resources.NameAndSignature
+            </td>
+            <td></td>
+            <td class="line-top center nowrap" style="width:250px">
+                @Resources.PersonReceipt<br/>
+                @Resources.NameAndSignature
+            </td>
+            <td></td>
+        </tr>
+    </table>
+</section>

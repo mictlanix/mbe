@@ -1,0 +1,46 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@model IEnumerable<ReturnCustomer>
+
+@{
+    ViewBag.Title = Resources.Title_CustomerReturnHistoric;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.ReturnCustomerHistoric);
+}
+
+<h2>@Business.Essentials.Resources.DisplayName_CustomerReturnHistoric</h2>
+
+<table>
+        <tr>
+            <th>@Html.LabelFor(x => new ReturnCustomer().Id)</th>
+            <th>@Html.LabelFor(x => new ReturnCustomer().CreationTime)</th>
+            <th>@Html.LabelFor(x => new ReturnCustomer().SalesOrder.Customer)</th>
+            <th>@Html.LabelFor(x => new ReturnCustomer().SalesPerson)</th>
+            <th>@Html.LabelFor(x => new ReturnCustomer().Creator)</th>
+            <th>@Html.LabelFor(x => new ReturnCustomer().SalesOrder)</th>
+            <th>@Html.LabelFor(x => new ReturnCustomer().IsCompleted)</th>
+            <th>@Html.LabelFor(x => new ReturnCustomer().IsCancelled)</th>
+            <th></th>
+        </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td class="number">@Html.DisplayFor(x => item.Id)</td>
+            <td class="date">@Html.DisplayFor(x => item.CreationTime)</td>
+            <td>@Html.DisplayFor(x => item.SalesOrder.Customer.Name)</td>
+            <td>@Html.DisplayFor(x => item.SalesPerson.Name)</td>
+            <td>@Html.DisplayFor(x => item.Creator.Name)</td>
+            <td class="number">@Html.DisplayFor(x => item.SalesOrder.Id)</td>
+            <td class="bool">@Html.DisplayFor(x => item.IsCompleted)</td>
+            <td class="bool">@Html.DisplayFor(x => item.IsCancelled)</td>
+            <td class="actions">
+        	    @if(Privilege.AllowRead)
+        	    {
+            	    @Html.ActionLink(" ", "HistoricDetails", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+                }
+            </td>
+    </tr>
+}
+
+</table>

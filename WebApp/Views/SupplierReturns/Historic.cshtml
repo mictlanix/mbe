@@ -1,0 +1,44 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@model IEnumerable<SupplierReturn>
+
+@{
+    ViewBag.Title = Resources.Title_SupplierReturnHistoric;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SupplierReturnHistoric);
+}
+
+<h2>@Business.Essentials.Resources.DisplayName_SupplierReturnHistoric</h2>
+
+<table>
+        <tr>
+            <th>@Html.LabelFor(x => new SupplierReturn().Id)</th>
+            <th>@Html.LabelFor(x => new SupplierReturn().CreationTime)</th>
+            <th>@Html.LabelFor(x => new SupplierReturn().Supplier.Name)</th>
+            <th>@Html.LabelFor(x => new SupplierReturn().Creator)</th>
+            <th>@Html.LabelFor(x => new SupplierReturn().PurchaseOrder)</th>
+            <th>@Html.LabelFor(x => new SupplierReturn().IsCompleted)</th>
+            <th>@Html.LabelFor(x => new ReturnCustomer().IsCancelled)</th>
+            <th></th>
+        </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td class="number">@Html.DisplayFor(x => item.Id)</td>
+            <td class="date">@Html.DisplayFor(x => item.CreationTime)</td>
+            <td>@Html.DisplayFor(x => item.PurchaseOrder.Supplier.Name)</td>
+            <td>@Html.DisplayFor(x => item.Creator.Name)</td>
+            <td class="number">@Html.DisplayFor(x => item.PurchaseOrder.Id)</td>
+            <td class="bool">@Html.DisplayFor(x => item.IsCompleted)</td>
+            <td class="bool">@Html.DisplayFor(x => item.IsCancelled)</td>
+            <td class="actions">
+        	    @if(Privilege.AllowRead)
+        	    {
+            	    @Html.ActionLink(" ", "HistoricDetails", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+                }
+            </td>
+    </tr>
+}
+
+</table>
