@@ -4,12 +4,11 @@
 @using Business.Essentials.WebApp.Models
 @model IEnumerable<SalesOrder>
 
-@*@{
-    ViewBag.Title = Resources.Title_CustomerPayment;
-    ViewBag.ShowCloseSession = true;
+@{
+    ViewBag.Title = Resources.Title_ReturnCustomer;
     var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments);
-}*@
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.ReturnCustomer);
+}
 
 <table>
     <tr>
@@ -63,9 +62,12 @@
             @Html.DisplayFor(x => item.PointOfSale.Name)
         </td>
         <td class="actions">
-        @using (Html.BeginForm("CreateFromSalesOrder", "ReturnsCustomer", new { id = item.Id }))
+        @if (Privilege.AllowCreate)
         {
-            <button type="submit" class="icon save">@Resources.Return</button>
+            using (Html.BeginForm("CreateFromSalesOrder", "ReturnsCustomer", new { id = item.Id }))
+            {
+                <button type="submit" class="icon save">@Resources.Return</button>
+            }
         }
         </td>
     </tr>

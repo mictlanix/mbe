@@ -67,6 +67,24 @@ namespace Business.Essentials.WebApp.Controllers
 
             qry_payments = null;
 
+            var qry_returns = (from x in SupplierReturn.Queryable
+                               where x.IsCompleted
+                               group x by x.Supplier into c
+                               select new
+                               {
+                                   Supplier = c.Key,
+                                   Returns = c.ToList()
+                               }).ToList();
+
+            var returns = (from x in qry_returns
+                           select new AccountsPayableSummary
+                           {
+                               Supplier = x.Supplier,
+                               TotalReturns = x.Returns.Sum(y => y.Total)
+                           }).ToList();
+
+            qry_returns = null;
+
             var qry_purchases = (from x in PurchaseOrder.Queryable
                       where x.IsCompleted
                       group x by x.Supplier into c
@@ -88,7 +106,15 @@ namespace Business.Essentials.WebApp.Controllers
             foreach (var item in purchases)
             {
                 var temp = payments.SingleOrDefault(x => x.Supplier.Id == item.Supplier.Id);
-                
+
+                var temp2 = returns.SingleOrDefault(x => x.Supplier.Id == item.Supplier.Id);
+
+                if (temp2 != null)
+                {
+                    item.TotalReturns = temp2.TotalReturns;
+                    returns.Remove(temp2);
+                }
+
                 if (temp != null)
                 {
                     item.TotalPayments = temp.TotalPayments;
@@ -98,6 +124,7 @@ namespace Business.Essentials.WebApp.Controllers
                 results.Add(item);
             }
 
+            results.AddRange(returns);
             results.AddRange(payments);
             results = results.OrderBy(x => x.Supplier.Name).ToList();
 
@@ -106,10 +133,13 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ViewResult AccountStatement(int id)
         {
+            var date = new AccountsPayableEntry();
             Supplier item = Supplier.Find(id);
             var results = new List<AccountsPayableEntry>();
             var qry_purchases = (from x in PurchaseOrder.Queryable
-                             where x.IsCompleted && x.Supplier.Id == item.Id
+                                 where x.IsCompleted && x.Supplier.Id == item.Id 
+                                 //&& x.ModificationTime > date.StartDate && 
+                                 //x.ModificationTime < date.EndDate 
                              select x).ToList();
             var purchases = (from x in qry_purchases
                         select new AccountsPayableEntry
@@ -124,8 +154,29 @@ namespace Business.Essentials.WebApp.Controllers
             qry_purchases.Clear();
             qry_purchases = null;
 
+            var qry_returns = (from x in SupplierReturn.Queryable
+                               where x.IsCompleted && x.Supplier.Id == item.Id 
+                               //&& x.ModificationTime > date.StartDate && 
+                               //x.ModificationTime < date.EndDate
+                               select x).ToList();
+
+            var returns = (from x in qry_returns
+                           select new AccountsPayableEntry
+                           {
+                               Number = x.Id,
+                               Date = x.ModificationTime,
+                               Amount = x.Total,
+                               Type = DebitCreditEnum.Debit,
+                               Description = string.Format(Resources.Format_ReturnPurchaseDescription, x.ModificationTime)
+                           }).ToList();
+
+            qry_returns.Clear();
+            qry_returns = null;
+
             var qry_payments = (from x in SupplierPayment.Queryable
-                                where x.Supplier.Id == item.Id
+                                where x.Supplier.Id == item.Id 
+                                //&& x.Date > date.StartDate && 
+                                //x.Date < date.EndDate
                                 select x).ToList();
 
             var payments = (from x in qry_payments
@@ -143,6 +194,7 @@ namespace Business.Essentials.WebApp.Controllers
 
             results.AddRange(payments);
             results.AddRange(purchases);
+            results.AddRange(returns);
             results = results.OrderBy(x => x.Date).ToList();
 
             var sum = 0m;
@@ -157,7 +209,8 @@ namespace Business.Essentials.WebApp.Controllers
                 Master = new AccountsPayableSummary {
                     Supplier = item,
                     TotalPurchases = purchases.Sum(x => x.Amount),
-                    TotalPayments = payments.Sum(x => x.Amount)
+                    TotalPayments = payments.Sum(x => x.Amount),
+                    TotalReturns = returns.Sum(x => x.Amount)
                 },
                 Details = results
             });

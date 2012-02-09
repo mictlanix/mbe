@@ -1,12 +1,16 @@
 ﻿@using Business.Essentials
-@model Business.Essentials.Model.ReturnCustomerDetail
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Models
+@using Business.Essentials.WebApp.Helpers
+@model SupplierReturnDetail
+           
 
 <li id="item@(Model.Id)">
     <div class="photo">
         <img src="@Url.Content(Model.Product.Photo)" title="@Model.ProductName"/>
     </div>
     <div class="action-link">
-        <a class="button icon-only icon delete" title="@Resources.Delete" href="/Sales/RemoveDetail/@Model.Id"></a>
+        <a class="button icon-only icon delete" title="@Resources.Delete" href="/SupplierReturns/RemoveDetail/@Model.Id"></a>
         <script type="text/javascript">
             $("#item@(Model.Id) a.delete").click(function(event){
                 event.preventDefault();
@@ -17,13 +21,17 @@
     <div class="info">
         <b>@Model.ProductName</b><br/>
         <b>@Resources.Code:</b> @Model.ProductCode 
-        <b>@Resources.SKU:</b> @Model.Product.SKU <br/>
-        <b>@Resources.Price:</b> @Html.DisplayFor(x => x.Price)
+        <b>@Resources.SKU:</b> @Model.Product.SKU<br/>
         <b>@Resources.Quantity:</b>
         <div class="editable quantity">@Model.Quantity.ToString("0.####")</div>
+        <b>@Resources.Price:</b>
+        <div class="editable price">@Model.Price.ToString("c")</div> 
         <b>@Resources.Discount:</b>
         <div class="editable discount">@Model.Discount.ToString("p")</div>
         <b>@Resources.Amount:</b>
-        <strong class="total">@Html.DisplayFor(x => x.Total)</strong>
+        <strong class="total">@Html.DisplayFor(x => x.Total)</strong><br />
+        <b>@Resources.Warehouse:</b>
+        <div class="editable-warehouse warehouse">@(Model.Warehouse == null ? Resources.Warehouse : Model.Warehouse.Name)</div>
+        &nbsp;
     </div>
 </li>

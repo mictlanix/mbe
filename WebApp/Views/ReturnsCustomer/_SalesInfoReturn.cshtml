@@ -1,67 +1,42 @@
 ﻿@using Business.Essentials
 @using Business.Essentials.Model
 @using Business.Essentials.WebApp.Helpers
-@model SalesOrder
+@model ReturnCustomer
 
 @{
     var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders);
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.ReturnCustomer);
 }
 
 <fieldset>
     <legend>@Resources.DisplayName_SalesInformation</legend>
 
     <div class="display-label right floating">
-        @Html.LabelFor(model => model.Id) @Html.Label(":")
-        @Html.DisplayFor(model => model.Id)
+        @Html.LabelFor(model => model.SalesOrder.Id) @Html.Label(":")
+        @Html.DisplayFor(model => model.SalesOrder.Id)
     </div>
 
     <div class="display-label right floating">
-        @Html.LabelFor(model => model.Date) @Html.Label(":")
-        @Html.DisplayFor(model => model.Date)
-    </div>
-@*
-@if (Model.IsCredit)
-{
-    <div class="display-label right floating">
-        @Html.LabelFor(model => model.DueDate)
-        @Html.DisplayFor(model => model.DueDate)
-    </div>
-}
-    *@
-@*@if(Privilege.AllowDelete)
-{
-    <div class="right floating">
-        <p>
-        @using (Html.BeginForm("CancelOrder", "Sales", new { id =  Model.Id }))
-        {
-            <button type="submit" class="icon cancel">@Resources.CancelOrder</button>
-        }
-        </p>
-    </div>
-}*@
-    
-    <div class="display-label">
-        @Html.LabelFor(model => model.Customer) @Html.Label(":")
-        @Html.DisplayFor(model => model.Customer.Name)
+        @Html.LabelFor(model => model.SalesOrder.Date) @Html.Label(":")
+        @Html.DisplayFor(model => model.SalesOrder.Date)
     </div>
 
     <div class="display-label">
-        @Html.LabelFor(model => model.Customer.PriceList) @Html.Label(":")
-        @Html.DisplayFor(model => model.Customer.PriceList.Name)
+        @Html.LabelFor(model => model.SalesOrder.Customer) @Html.Label(":")
+        @Html.DisplayFor(model => model.SalesOrder.Customer.Name)
     </div>
 
     <div class="display-label">
-        @Html.LabelFor(model => model.SalesPerson) @Html.Label(":")
-        @Html.DisplayFor(model => model.SalesPerson.Name)
+        @Html.LabelFor(model => model.SalesOrder.Customer.PriceList) @Html.Label(":")
+        @Html.DisplayFor(model => model.SalesOrder.Customer.PriceList.Name)
     </div>
 
-    @*<div id="edit-sales-order" style="@(Model.Details.Count > 0 ? "display:none" : "")" >
-        <p>
-        @Ajax.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "sales-order" }, new { @class = "button icon edit" })
-        </p>
-    </div>*@
+    <div class="display-label">
+        @Html.LabelFor(model => model.SalesOrder.SalesPerson) @Html.Label(":")
+        @Html.DisplayFor(model => model.SalesOrder.SalesPerson.Name)
+    </div>
+
 </fieldset>
-@*<script type="text/javascript">
-    var SalesOrder = { Id: @Model.Id };
-</script>*@
+<script type="text/javascript">
+    var ReturnCustomer = { Id: @Model.Id };
+</script>

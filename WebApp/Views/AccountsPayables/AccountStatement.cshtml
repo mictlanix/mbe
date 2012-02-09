@@ -32,6 +32,11 @@
         </div>
 
 </fieldset>
+
+@*<div>
+    @Html.Partial("Dates", new AccountsPayableEntry { StartDate = DateTime.Now.AddDays(-30), EndDate = DateTime.Now })
+</div>*@
+
 <table>
     <tr>
         <th>@Resources.Date</th>
@@ -63,3 +68,7 @@
     </tr>
     }
 </table>
+<p></p>
+<div id="backTo">
+    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+</div>

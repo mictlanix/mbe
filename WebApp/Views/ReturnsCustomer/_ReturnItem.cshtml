@@ -6,7 +6,7 @@
         <img src="@Url.Content(Model.Product.Photo)" title="@Model.ProductName"/>
     </div>
     <div class="action-link">
-        <a class="button icon-only icon delete" title="@Resources.Delete" href="/Sales/RemoveDetail/@Model.Id"></a>
+        <a class="button icon-only icon delete" title="@Resources.Delete" href="/ReturnsCustomer/RemoveDetail/@Model.Id"></a>
         <script type="text/javascript">
             $("#item@(Model.Id) a.delete").click(function(event){
                 event.preventDefault();
@@ -21,8 +21,7 @@
         <b>@Resources.Price:</b> @Html.DisplayFor(x => x.Price)
         <b>@Resources.Quantity:</b>
         <div class="editable quantity">@Model.Quantity.ToString("0.####")</div>
-        <b>@Resources.Discount:</b>
-        <div class="editable discount">@Model.Discount.ToString("p")</div>
+        <b>@Resources.Discount:</b>@Model.Discount.ToString("c")
         <b>@Resources.Amount:</b>
         <strong class="total">@Html.DisplayFor(x => x.Total)</strong>
     </div>

@@ -15,15 +15,21 @@
                              Html.GetPrivilege(CurrentUser, SystemObjects.CashDrawers).AllowRead ||
                              Html.GetPrivilege(CurrentUser, SystemObjects.Taxpayers).AllowRead;
     var ShowSalesMenu = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders).AllowRead ||
-                        Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments).AllowRead;
+                        Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments).AllowRead ||
+                        Html.GetPrivilege(CurrentUser, SystemObjects.ReturnCustomer).AllowRead ||
+                        Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrdersHistoric).AllowRead ||
+                        Html.GetPrivilege(CurrentUser, SystemObjects.ReturnCustomerHistoric).AllowRead;
     var ShowInventoryMenu = Html.GetPrivilege(CurrentUser, SystemObjects.InventoryReceipts).AllowRead ||
                             Html.GetPrivilege(CurrentUser, SystemObjects.InventoryIssues).AllowRead ||
                             Html.GetPrivilege(CurrentUser, SystemObjects.InventoryTransfers).AllowRead;
+    var ShowPurchasesMenu = Html.GetPrivilege(CurrentUser, SystemObjects.PurchasesOrders).AllowRead ||
+                            Html.GetPrivilege(CurrentUser, SystemObjects.SupplierPayment).AllowRead ||
+                            Html.GetPrivilege(CurrentUser, SystemObjects.SupplierReturns).AllowRead ||
+                            Html.GetPrivilege(CurrentUser, SystemObjects.SupplierReturnHistoric).AllowRead;
     var ShowAdministrationMenu = Html.GetPrivilege(CurrentUser, SystemObjects.AccountsReceivable).AllowRead ||
                             	 Html.GetPrivilege(CurrentUser, SystemObjects.AccountsPayable).AllowRead ||
                             	 Html.GetPrivilege(CurrentUser, SystemObjects.SalesInvoices).AllowRead;
-    var ShowPurchasesMenu = Html.GetPrivilege(CurrentUser, SystemObjects.PurchasesOrders).AllowRead ||
-                            Html.GetPrivilege(CurrentUser, SystemObjects.SupplierPayment).AllowRead;
+    
 }
 
 <div id="gb">
@@ -151,6 +157,27 @@
                                    href="@Url.Action("Index", "Payments")">@Resources.Title_CustomerPayment</a>
                             </li>
                             }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.ReturnCustomer).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "ReturnsCustomer") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "ReturnsCustomer")">@Resources.Title_ReturnCustomer</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrdersHistoric).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Historic", "Sales") ? "gbm0l" : "")"
+                                   href="@Url.Action("Historic", "Sales")">@Resources.Title_SalesOrdersHistoric</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.ReturnCustomerHistoric).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Historic", "ReturnsCustomer") ? "gbm0l" : "")"
+                                   href="@Url.Action("Historic", "ReturnsCustomer")">@Resources.Title_CustomerReturnHistoric</a>
+                            </li>
+                            }
                         </ol>
                     </div>
                 </div>
@@ -220,6 +247,20 @@
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("Index", "SupplierPayments") ? "gbm0l" : "")"
                                    href="@Url.Action("Index", "SupplierPayments")">@Resources.Title_SuppliersPayments</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SupplierReturns).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "SupplierReturns") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "SupplierReturns")">@Resources.Title_SupplierReturn</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SupplierReturnHistoric).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Historic", "SupplierReturns") ? "gbm0l" : "")"
+                                   href="@Url.Action("Historic", "SupplierReturns")">@Resources.Title_SupplierReturnHistoric</a>
                             </li>
                             }
                         </ol>

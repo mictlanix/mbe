@@ -23,6 +23,9 @@
         <th class="nowrap">
             @Html.LabelFor(x => new AccountsPayableSummary().TotalPayments)
         </th>
+        <th class="nowrap">
+            @Html.LabelFor(x => new AccountsPayableSummary().TotalReturns)
+        </th>
         <th>
             @Html.LabelFor(x => new AccountsPayableSummary().Balance)
         </th>
@@ -40,6 +43,9 @@
         </td>
         <td class="number">
             @Html.DisplayFor(x => item.TotalPayments)
+        </td>
+        <td class="number">
+            @Html.DisplayFor(x => item.TotalReturns)
         </td>
         <td class="number">
             @Html.DisplayFor(x => item.Balance)

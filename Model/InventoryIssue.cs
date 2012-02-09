@@ -73,6 +73,10 @@ namespace Business.Essentials.Model
         [Display(Name = "Warehouse", ResourceType = typeof(Resources))]
         public virtual Warehouse Warehouse { get; set; }
 
+        [BelongsTo("supplier_return")]
+        [Display(Name = "SupplierReturn", ResourceType = typeof(Resources))]
+        public virtual SupplierReturn Return { get; set; }
+
         [Property("completed")]
         [Display(Name = "Completed", ResourceType = typeof(Resources))]
         public bool IsCompleted { get; set; }

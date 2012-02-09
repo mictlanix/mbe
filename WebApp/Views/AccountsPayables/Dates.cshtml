@@ -1,0 +1,21 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@using Business.Essentials.WebApp.Models
+@model AccountsPayableEntry
+           
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+    <p></p>
+        <div class="right floating">
+            @Html.LabelFor(model => model.EndDate)
+            @Html.EditorFor(model => model.EndDate)
+        </div>
+        <div class="left floating">
+            @Html.LabelFor(model => model.StartDate)
+            @Html.EditorFor(model => model.StartDate)
+        </div>
+    </fieldset>
+}
