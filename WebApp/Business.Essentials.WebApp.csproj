@@ -753,6 +753,7 @@
     <Content Include="Views\AccountsPayables\Dates.cshtml" />
     <Content Include="Views\SupplierReturns\_PrintSupplierReturn.cshtml" />
     <Content Include="Views\ReturnsCustomer\_CustomerReturnTicket.cshtml" />
+    <Content Include="Views\Sales\_PromissoryNoteTicket.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -80,12 +80,6 @@ namespace Business.Essentials.Model
         [Display(Name = "Cancelled", ResourceType = typeof(Resources))]
         public bool IsCancelled { get; set; }
 
-        [Property]
-        [DataType(DataType.MultilineText)]
-        [Display(Name = "Comment", ResourceType = typeof(Resources))]
-        [StringLength(500, MinimumLength = 0)]
-        public string Comment { get; set; }
-
         [HasMany(typeof(SupplierReturnDetail), Table = "supplier_return_detail", ColumnKey = "supplier_return")]
         public IList<SupplierReturnDetail> Details
         {

@@ -54,6 +54,10 @@ namespace Business.Essentials.WebApp.Models
         public decimal TotalSales { get; set; }
 
         [DataType(DataType.Currency)]
+        [Display(Name = "TotalReturns", ResourceType = typeof(Resources))]
+        public decimal TotalReturns { get; set; }
+
+        [DataType(DataType.Currency)]
         [Display(Name = "AvailableCredit", ResourceType = typeof(Resources))]
         public decimal AvailableCredit
         { get 
@@ -68,7 +72,7 @@ namespace Business.Essentials.WebApp.Models
         { 
             get 
             {
-                return TotalSales - TotalPayments;
+                return TotalSales - TotalPayments - TotalReturns;
             } 
         }
     }

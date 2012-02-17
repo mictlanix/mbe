@@ -1305,4 +1305,26 @@ Realizada el: {0:d}</value>
   <data name="Title_CustomerReturnNote" xml:space="preserve">
     <value>Ticket de Devolución</value>
   </data>
+  <data name="PromissoryNote" xml:space="preserve">
+    <value>Pagaré</value>
+  </data>
+  <data name="PromissoryNoteContent" xml:space="preserve">
+    <value>Por este PAGARÉ, 
+yo {0} prometo incondicionalmente 
+pagar a la orden de el Sr. Margarito Eliseo Ramos Godinez,
+ la cantidad de {1} el día {2}
+Obligándome a pagar para el caso de mora un interés equivalente al ____ mensual durante todo el tiempo que permanezca insoluto.</value>
+  </data>
+  <data name="Accept" xml:space="preserve">
+    <value>Acepto</value>
+  </data>
+  <data name="Line" xml:space="preserve">
+    <value>__________________</value>
+  </data>
+  <data name="Person" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="ReleaseOrder" xml:space="preserve">
+    <value>Orden de Despacho</value>
+  </data>
 </root>

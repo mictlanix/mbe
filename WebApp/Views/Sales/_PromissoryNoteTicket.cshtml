@@ -1,0 +1,61 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Models
+@using Business.Essentials.WebApp.Helpers
+@model SalesOrder
+
+@{
+    Layout = "~/Views/Shared/_TicketLayout.cshtml";
+    ViewBag.Title = Resources.PromissoryNote;
+}
+
+<div class="display-label">
+    @Html.LabelFor(model => model.Id) @Html.Label(":")
+    @Html.DisplayFor(model => model.Id)
+</div>
+
+<div class="display-label">
+    @Html.LabelFor(model => model.Date) @Html.Label(":")
+    @Html.DisplayFor(model => model.Date)
+</div>
+
+<div class="display-label">
+    @Html.LabelFor(model => model.Customer) @Html.Label(":")
+    @Html.DisplayFor(model => model.Customer.Name)
+</div>
+
+<div class="display-label">
+    @Html.LabelFor(model => model.DueDate)
+</div>
+<div class="display-field date">
+    @Html.DisplayFor(model => model.DueDate)
+</div>
+
+<div>
+    @string.Format(Resources.PromissoryNoteContent, Model.Customer.Name, Model.Total.ToString("c"), Model.DueDate) 
+</div>
+<br />
+<br />
+<br />
+<table>
+    <tr>
+        <td></td>
+        <td class="line-top center nowrap">
+            @Resources.Line <br/>
+            @string.Format(Resources.Person, Model.Customer.Name)<br/>
+            @Resources.Accept
+        </td>
+        <td></td>
+    </tr>
+</table>
+
+<div class="display-label right">
+    @Html.LabelFor(model => model.SalesPerson)
+</div>
+<div class="display-field right">
+    @Html.DisplayFor(model => model.SalesPerson.Name)
+</div>
+
+@section Footer {
+	<img src="@Url.Action("Code128", "Barcodes", new { id = string.Format("{0}", Html.DisplayFor(x => x.Id)) })" alt="@Html.DisplayFor(x => x.Id)" title="@Html.DisplayFor(x => x.Id)">
+}

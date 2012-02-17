@@ -68,6 +68,24 @@ namespace Business.Essentials.WebApp.Controllers
 
             qry_payments = null;
 
+            var qry_returns = (from x in ReturnCustomer.Queryable
+                               where x.IsCompleted && x.SalesOrder.IsCredit
+                               group x by x.Customer into c
+                               select new
+                               {
+                                   Customer = c.Key,
+                                   Returns = c.ToList()
+                               }).ToList();
+
+            var returns = (from x in qry_returns
+                           select new AccountsReceivableSummary
+                           {
+                               Customer = x.Customer,
+                               TotalReturns = x.Returns.Sum(y => y.Total)
+                           }).ToList();
+
+            qry_returns = null;
+
             var qry_sales = (from x in SalesOrder.Queryable
                       where x.IsCredit && x.IsCompleted
                       group x by x.Customer into c
@@ -89,7 +107,14 @@ namespace Business.Essentials.WebApp.Controllers
             foreach (var item in sales)
             {
                 var temp = payments.SingleOrDefault(x => x.Customer.Id == item.Customer.Id);
-                
+
+                var temp2 = returns.SingleOrDefault(x => x.Customer.Id == item.Customer.Id);
+
+                if (temp2 != null)
+                {
+                    item.TotalReturns = temp2.TotalReturns;
+                    returns.Remove(temp2);
+                }
                 if (temp != null)
                 {
                     item.TotalPayments = temp.TotalPayments;
@@ -99,6 +124,7 @@ namespace Business.Essentials.WebApp.Controllers
                 results.Add(item);
             }
 
+            results.AddRange(returns);
             results.AddRange(payments);
             results = results.OrderBy(x => x.Customer.Name).ToList();
 
@@ -126,6 +152,23 @@ namespace Business.Essentials.WebApp.Controllers
             qry_sales.Clear();
             qry_sales = null;
 
+            var qry_returns = (from x in ReturnCustomer.Queryable
+                               where x.IsCompleted && x.Customer.Id == item.Id && x.SalesOrder.IsCredit
+                               select x).ToList();
+
+            var returns = (from x in qry_returns
+                           select new AccountsReceivableEntry
+                           {
+                               Number = x.Id,
+                               Date = x.ModificationTime,
+                               Amount = x.Total,
+                               Type = DebitCreditEnum.Credit,
+                               Description = string.Format(Resources.Format_ReturnSaleDescription, x.ModificationTime)
+                           }).ToList();
+
+            qry_returns.Clear();
+            qry_returns = null;
+
             var qry_payments = (from x in CustomerPayment.Queryable
                                 where x.SalesOrder == null && x.Customer.Id == item.Id
                                 select x).ToList();
@@ -145,6 +188,7 @@ namespace Business.Essentials.WebApp.Controllers
 
             results.AddRange(payments);
             results.AddRange(sales);
+            results.AddRange(returns);
             results = results.OrderBy(x => x.Date).ToList();
 
             var sum = 0m;
@@ -159,7 +203,8 @@ namespace Business.Essentials.WebApp.Controllers
                 Master = new AccountsReceivableSummary {
                     Customer = item,
                     TotalSales = sales.Sum(x => x.Amount),
-                    TotalPayments = payments.Sum(x => x.Amount)
+                    TotalPayments = payments.Sum(x => x.Amount),
+                    TotalReturns = returns.Sum(x => x.Amount)
                 },
                 Details = results
             });

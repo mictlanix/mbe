@@ -80,6 +80,10 @@ namespace Business.Essentials.Model
         [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string ProductName { get; set; }
 
+        [Property("release_order")]
+        [Display(Name = "ReleaseOrder", ResourceType = typeof(Resources))]
+        public bool IsReleaseOrder { get; set; }
+
         [DataType(DataType.Currency)]
         [Display(Name = "Subtotal", ResourceType = typeof(Resources))]
         public decimal Subtotal
