@@ -76,6 +76,10 @@ namespace Business.Essentials.Model
         [Display(Name = "SalesPerson", ResourceType = typeof(Resources))]
         public virtual Employee SalesPerson { get; set; }
 
+        [BelongsTo("customer")]
+        [Display(Name = "Customer", ResourceType = typeof(Resources))]
+        public virtual Customer Customer { get; set; }
+
         [Property("completed")]
         [Display(Name = "Completed", ResourceType = typeof(Resources))]
         public bool IsCompleted { get; set; }
@@ -83,12 +87,6 @@ namespace Business.Essentials.Model
         [Property("cancelled")]
         [Display(Name = "Cancelled", ResourceType = typeof(Resources))]
         public bool IsCancelled { get; set; }
-
-        [Property]
-        [DataType(DataType.MultilineText)]
-        [Display(Name = "Comment", ResourceType = typeof(Resources))]
-        [StringLength(500, MinimumLength = 0)]
-        public string Comment { get; set; }
 
         [HasMany(typeof(ReturnCustomerDetail), Table = "return_customer_detail", ColumnKey = "return_customer")]
         public IList<ReturnCustomerDetail> Details

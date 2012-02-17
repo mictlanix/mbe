@@ -61,6 +61,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Acepto.
+        /// </summary>
+        public static string Accept {
+            get {
+                return ResourceManager.GetString("Accept", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Información del Usuario.
         /// </summary>
         public static string AccountInformation {
@@ -1695,6 +1704,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to __________________.
+        /// </summary>
+        public static string Line {
+            get {
+                return ResourceManager.GetString("Line", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cargando....
         /// </summary>
         public static string Loading {
@@ -2155,6 +2173,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0}.
+        /// </summary>
+        public static string Person {
+            get {
+                return ResourceManager.GetString("Person", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CURP.
         /// </summary>
         public static string PersonalId {
@@ -2353,6 +2380,28 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pagaré.
+        /// </summary>
+        public static string PromissoryNote {
+            get {
+                return ResourceManager.GetString("PromissoryNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Por este PAGARÉ, 
+        ///yo {0} prometo incondicionalmente 
+        ///pagar a la orden de el Sr. Margarito Eliseo Ramos Godinez,
+        /// la cantidad de {1} el día {2}
+        ///Obligándome a pagar para el caso de mora un interés equivalente al ____ mensual durante todo el tiempo que permanezca insoluto..
+        /// </summary>
+        public static string PromissoryNoteContent {
+            get {
+                return ResourceManager.GetString("PromissoryNoteContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Orden de Compra.
         /// </summary>
         public static string PurchaseOrder {
@@ -2448,6 +2497,15 @@ namespace Business.Essentials {
         public static string Register {
             get {
                 return ResourceManager.GetString("Register", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Orden de Despacho.
+        /// </summary>
+        public static string ReleaseOrder {
+            get {
+                return ResourceManager.GetString("ReleaseOrder", resourceCulture);
             }
         }
         

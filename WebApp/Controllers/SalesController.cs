@@ -64,6 +64,13 @@ namespace Business.Essentials.WebApp.Controllers
             return View(qry.ToList());
         }
 
+        public ViewResult PrintPromissoryNote(int id)
+        {
+            SalesOrder item = SalesOrder.Find(id);
+
+            return View("_PromissoryNoteTicket", item);
+        }
+
         // GET: /Sales/PrintOrder/
 
         public ViewResult PrintOrder(int id)

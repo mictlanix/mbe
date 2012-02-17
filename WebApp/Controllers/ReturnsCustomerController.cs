@@ -128,6 +128,7 @@ namespace Business.Essentials.WebApp.Controllers
             item.Creator = SecurityHelpers.GetUser(User.Identity.Name).Employee;
             item.SalesOrder = sales;
             item.SalesPerson = sales.SalesPerson;
+            item.Customer = sales.Customer;
             item.Updater = SecurityHelpers.GetUser(User.Identity.Name).Employee;
             item.ModificationTime = DateTime.Now;
 

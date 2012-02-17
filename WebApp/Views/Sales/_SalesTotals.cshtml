@@ -32,8 +32,12 @@
             {
                 using (Html.BeginForm("ConfirmOrder", "Sales", new { id = Model.Id }))
                 {
-                <button type="button" class="icon print">@Resources.Print</button>
-                <button id="complete" type="submit">@Resources.CompleteSale</button>            
+                <button type="button" class="icon print note">@Resources.Print</button>
+                <button id="complete" type="submit">@Resources.CompleteSale</button><br />
+                    if (Model.IsCredit)
+                    {
+                        <button type="button" class="icon print promissory left">@Resources.PromissoryNote</button>
+                    }
                 }
             }
         }
@@ -51,8 +55,12 @@
 </fieldset>
 <script type="text/javascript">
     $(function() {
-        $(".print").printPage({
+        $(".note").printPage({
             url: "@Url.Action("PrintOrder", "Sales", new { id = Model.Id })"
+        });
+
+        $(".promissory").printPage({
+            url: "@Url.Action("PrintPromissoryNote", "Sales", new { id = Model.Id })"
         });
     });
 
