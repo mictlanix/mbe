@@ -248,6 +248,24 @@ namespace Business.Essentials.WebApp.Controllers
             return Json(new { id = id, discount = detail.Discount.ToString("p"), total = detail.Total.ToString("c") });
         }
 
+        [HttpPost]
+        public JsonResult EditDeliveryOrder(int id, int value)
+        {
+            SalesOrderDetail detail = SalesOrderDetail.Find(id);
+
+            if (value != 0)
+            {
+                detail.IsDeliveryOrder = true;
+                detail.Save();
+            }
+            else
+            {
+                detail.IsDeliveryOrder = false;
+                detail.Save();
+            }
+
+            return Json(new { id = id, value = detail.IsDeliveryOrder });
+        }
         //GET/SalesTotals
 
         public ActionResult GetSalesTotals(int id)

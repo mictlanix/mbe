@@ -1327,4 +1327,7 @@ Obligándome a pagar para el caso de mora un interés equivalente al ____ mensua
   <data name="ReleaseOrder" xml:space="preserve">
     <value>Orden de Despacho</value>
   </data>
+  <data name="DeliveryOrder" xml:space="preserve">
+    <value>Orden de Despacho</value>
+  </data>
 </root>
