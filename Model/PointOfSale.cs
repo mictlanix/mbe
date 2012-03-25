@@ -63,13 +63,6 @@ namespace Business.Essentials.Model
         [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string Name { get; set; }
 
-        [Property("host_address")]
-		[ValidateIsUnique]
-        [Display(Name = "HostAddress", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [StringLength(15, MinimumLength = 7, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string HostAddress { get; set; }
-
         [Property]
         [DataType(DataType.MultilineText)]
         [Display(Name = "Comment", ResourceType = typeof(Resources))]
@@ -80,7 +73,7 @@ namespace Business.Essentials.Model
 
         public override string ToString()
         {
-            return string.Format("{0} [{1}, {2}]", Code, Name, HostAddress);
+            return string.Format("{1} [{0}, {2}]", Code, Name, Store);
         }
 
         public override bool Equals(object obj)

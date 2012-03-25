@@ -576,9 +576,6 @@
   <data name="NewSale" xml:space="preserve">
     <value>Venta Nueva</value>
   </data>
-  <data name="HostAddress" xml:space="preserve">
-    <value>Dirección IP</value>
-  </data>
   <data name="Cash" xml:space="preserve">
     <value>Efectivo</value>
   </data>
@@ -1203,12 +1200,6 @@ Realizada el: {0:d}</value>
   <data name="Return" xml:space="preserve">
     <value>Devolución</value>
   </data>
-  <data name="Default_PhotosPath" xml:space="preserve">
-    <value>~/Photos/</value>
-  </data>
-  <data name="Default_PhotoFile" xml:space="preserve">
-    <value>~/Content/images/na.png</value>
-  </data>
   <data name="DisplayName_SupplierReturns" xml:space="preserve">
     <value>Devolución a Proveedores</value>
   </data>
@@ -1289,9 +1280,6 @@ Realizada el: {0:d}</value>
   </data>
   <data name="Accept" xml:space="preserve">
     <value>Acepto</value>
-  </data>
-  <data name="Line" xml:space="preserve">
-    <value>__________________</value>
   </data>
   <data name="Person" xml:space="preserve">
     <value>{0}</value>

@@ -1,0 +1,53 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@model SalesInvoice
+
+<fieldset>
+    <legend>@Resources.DisplayName_InvoiceInformation</legend>
+        @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "master-section" }))
+        {
+            @Html.ValidationSummary(true)
+                
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Issuer)
+                @Html.EditorFor(model => model.IssuerId)
+                @Html.ValidationMessageFor(model => model.IssuerId)
+            </div>
+            
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Customer)
+                @Html.EditorFor(model => model.CustomerId)
+                @Html.ValidationMessageFor(model => model.CustomerId)
+            </div>
+
+            <div class="editor-label">
+                @Html.LabelFor(model => model.BillTo)
+                @Html.EditorFor(model => model.BillToId)
+                @Html.ValidationMessageFor(model => model.BillToId)
+            </div>
+
+            <p><button type="submit" class="icon save">@Resources.Save</button></p>
+        }
+</fieldset>
+<script type="text/javascript">
+    $(function () {
+        $("#IssuerId").tokenInput("add", { id: "@Model.Issuer.Id", name: "@Model.Issuer.Name"});
+        $("#CustomerId").tokenInput("add", { id: "@Model.Customer.Id", name: "@Model.Customer.Name"});
+        
+        $("#BillToId").tokenInput(function() {
+			var customer = $("#CustomerId").tokenInput("get")[0];
+			
+			if(typeof(customer) === "undefined") {
+				customer = {id : 0};
+			}
+			
+			return "@Url.Action("GetSuggestions", "Addresses", new { customer = 0 })" + customer.id; }, {
+            hintText: "@Resources.HIntText",
+            noResultsText: "@Resources.NoResultsText",
+            searchingText: "@Resources.SearchingText",          
+            queryParam: "pattern",minChars: 3,tokenLimit: 1
+        });
+        
+        $("#BillToId").tokenInput("add", { id: "@Model.BillTo.Id", name: "@string.Format("{1} ({0})", Model.BillTo.TaxpayerId, Model.BillTo.TaxpayerName)"});
+    });
+</script>

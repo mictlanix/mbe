@@ -54,7 +54,7 @@
         <p>
 		@if(Privilege.AllowDelete)
 		{
-		    using (Html.BeginForm("CancelOrder", "Invoices", new { id =  Model.Id }))
+		    using (Html.BeginForm("Cancel", "Invoices", new { id =  Model.Id }))
 		    {
 		    	@Ajax.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "master-section" }, new { @class = "button icon edit " + (Model.Details.Count > 0 ? "hidden" : "")})
 		        <button type="submit" class="icon cancel">@Resources.Cancel</button>
