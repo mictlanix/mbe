@@ -66,6 +66,9 @@ table {
 td.line {
     border-bottom:1px solid black;
 }
+td.line-top {
+    border-top:1px solid black;
+}
 td.title {
     font-size:13px;
     font-weight:bold;
@@ -82,4 +85,13 @@ th.line {
 }
 .display-field {
     margin-bottom:5px;
+}
+.signature {
+	margin:50px 20px;
+    border-top:1px solid black;
+    text-align:center;
+}
+legend,.legend {
+	margin:20px 10px;
+	text-align:justify;
 }

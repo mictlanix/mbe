@@ -7,10 +7,10 @@
     <legend>@Resources.SalesTotals</legend>
 
     <div class="display-label left floating">
-        @Html.LabelFor(x => x.Total)
+        @Html.LabelFor(x => x.Subtotal)
     </div>
     <div class="display-field right floating">
-        @Html.DisplayFor(x => x.Total)
+        @Html.DisplayFor(x => x.Subtotal)
     </div>
 
     <div class="display-label left floating">
@@ -19,32 +19,21 @@
     <div class="display-field right floating">
         @Html.DisplayFor(x => x.Taxes)
     </div>
-
+    
     <div class="display-label left floating">
-        @Html.LabelFor(x => x.Subtotal)
+        @Html.LabelFor(x => x.Total)
     </div>
     <div class="display-field right floating">
-        @Html.DisplayFor(x => x.Subtotal)
-    </div>
-    
-    <div class="right floating">
-    <p>
-        if (Model.Total > 0)
-        {
-            using (Html.BeginForm("Confirm", "Invoice", new { id = Model.Id }))
-            {
-            <button type="button" class="icon print">@Resources.Print</button>
-            <button id="complete" type="submit">@Resources.CompleteInvoice</button><br />
-            }
-        }
-    </p>
+        @Html.DisplayFor(x => x.Total)
     </div>
 </fieldset>
-<script type="text/javascript">
-    $(function() {
-        $(".print").printPage({
-            url: "@Url.Action("Print", "Invoices", new { id = Model.Id })"
-        });
-    });
 
-</script>
+<div class="right floating">
+    @if (Model.Total > 0)
+    {
+        using (Html.BeginForm("Confirm", "Invoice", new { id = Model.Id }))
+        {
+        <button id="complete" type="submit">@Resources.CompleteInvoice</button><br />
+        }
+    }
+</div>

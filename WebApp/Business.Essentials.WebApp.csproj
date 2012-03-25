@@ -439,6 +439,7 @@
     </Content>
     <Content Include="Views\Invoices\_MasterInfo.cshtml" />
     <Content Include="Views\Invoices\_Totals.cshtml" />
+    <Content Include="Views\Invoices\_Detail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />
