@@ -53,6 +53,9 @@ div#logo {
   min-width:800px;
   margin:10px 20px;
 }
+.hidden {
+  display:none;
+}
 .date,.bool,.number {
   white-space:nowrap;
   width:1px;
