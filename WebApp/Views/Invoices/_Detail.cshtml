@@ -1,0 +1,35 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@model SalesInvoiceDetail
+
+<li id="item@(Model.Id)">
+    <div class="photo">
+        <img src="@Url.Content(Model.Product.Photo)" title="@Model.ProductName"/>
+    </div>
+    <div class="action-link">
+        <a class="button icon-only icon delete" title="@Resources.Delete" href="/Invoices/RemoveDetail/@Model.Id"></a>
+        <script type="text/javascript">
+            $("#item@(Model.Id) a.delete").click(function(event){
+                event.preventDefault();
+                removeItem(@Model.Id);
+            });
+        </script>
+    </div>
+    <div class="info">
+        <div class="editable name">@Model.ProductName</div><br/>
+        <b>@Resources.Code:</b>
+        <div class="editable code">@Model.ProductCode</div>
+        <b>@Resources.Price:</b>
+        <div class="editable price">@Html.DisplayFor(x => x.Price)</div>
+        <b>@Resources.TaxRate:</b>
+        <div class="editable tax">@Html.DisplayFor(x => x.TaxRate)</div><br />
+        <b>@Resources.UnitOfMeasurement:</b>
+        <div class="editable um">@Model.UnitOfMeasurement</div>
+        <b>@Resources.Quantity:</b>
+        <div class="editable quantity">@Html.DisplayFor(x => x.Quantity)</div>
+        <b>@Resources.Discount:</b>
+        <div class="editable discount">@Html.DisplayFor(x => x.Discount)</div>
+        <b>@Resources.Amount:</b>
+        <strong class="total">@Html.DisplayFor(x => x.Total)</strong>
+    </div>
+</li>
