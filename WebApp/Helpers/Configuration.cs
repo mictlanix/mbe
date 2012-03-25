@@ -63,5 +63,37 @@ namespace Business.Essentials.WebApp.Helpers
 		public static string PromissoryNoteContent {
 			get { return ConfigurationManager.AppSettings ["PromissoryNoteContent"]; }
 		}
+		
+		public static string PhotosPath {
+			get { return ConfigurationManager.AppSettings ["PhotosPath"]; }
+		}
+		
+		public static string DefaultPhotoFile {
+			get { return ConfigurationManager.AppSettings ["DefaultPhotoFile"]; }
+		}
+		
+		public static decimal VAT {
+			get { return decimal.Parse (ConfigurationManager.AppSettings ["VAT"]); }
+		}
+		
+		public static string CFDsPath {
+			get { return ConfigurationManager.AppSettings ["CFDsPath"]; }
+		}
+		
+		public static string InvoicesBatch {
+			get { return ConfigurationManager.AppSettings ["InvoiceBatch"]; }
+		}
+
+		public static string Certificate {
+			get { return ConfigurationManager.AppSettings ["Certificate"]; }
+		}
+
+		public static string PrivateKey {
+			get { return ConfigurationManager.AppSettings ["PrivateKey"]; }
+		}
+
+		public static string PrivateKeyPassword {
+			get { return ConfigurationManager.AppSettings ["PrivateKeyPassword"]; }
+		}
 	}
 }
