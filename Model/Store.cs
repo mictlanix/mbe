@@ -1,5 +1,5 @@
 ﻿// 
-// CashDrawer.cs
+// PointOfSale.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
@@ -35,20 +35,11 @@ using Castle.ActiveRecord.Framework;
 
 namespace Business.Essentials.Model
 {
-    [ActiveRecord("cash_drawer")]
-    public class CashDrawer : ActiveRecordLinqBase<CashDrawer>
+    [ActiveRecord("store")]
+    public class Store : ActiveRecordLinqBase<Store>
     {
-        [PrimaryKey(PrimaryKeyType.Identity, "cash_drawer_id")]
+        [PrimaryKey(PrimaryKeyType.Identity, "store_id")]
         public int Id { get; set; }
-
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [Display(Name = "Store", ResourceType = typeof(Resources))]
-        [UIHint("StoreSelector")]
-        public int StoreId { get; set; }
-
-        [BelongsTo("store")]
-        [Display(Name = "Store", ResourceType = typeof(Resources))]
-        public virtual Store Store { get; set; }
 
         [Property]
 		[ValidateIsUnique]
@@ -63,13 +54,6 @@ namespace Business.Essentials.Model
         [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string Name { get; set; }
 
-        [Property("host_address")]
-		[ValidateIsUnique]
-        [Display(Name = "HostAddress", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [StringLength(15, MinimumLength = 7, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string HostAddress { get; set; }
-
         [Property]
         [DataType(DataType.MultilineText)]
         [Display(Name = "Comment", ResourceType = typeof(Resources))]
@@ -80,12 +64,12 @@ namespace Business.Essentials.Model
 
         public override string ToString()
         {
-            return string.Format("{0} [{1}, {2}]", Code, Name, HostAddress);
+            return string.Format("{0} [{1}, {2}]", Id, Code, Name);
         }
 
         public override bool Equals(object obj)
         {
-            CashDrawer other = obj as CashDrawer;
+            Store other = obj as Store;
 
             if (other == null)
                 return false;
@@ -105,6 +89,5 @@ namespace Business.Essentials.Model
         }
 
         #endregion
-
     }
 }

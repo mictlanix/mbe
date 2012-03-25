@@ -41,6 +41,15 @@ namespace Business.Essentials.Model
         [PrimaryKey(PrimaryKeyType.Identity, "point_sale_id")]
         public int Id { get; set; }
 
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+        [Display(Name = "Store", ResourceType = typeof(Resources))]
+        [UIHint("StoreSelector")]
+        public int StoreId { get; set; }
+		
+        [BelongsTo("store")]
+        [Display(Name = "Store", ResourceType = typeof(Resources))]
+        public virtual Store Store { get; set; }
+
         [Property]
 		[ValidateIsUnique]
         [Display(Name = "Code", ResourceType = typeof(Resources))]

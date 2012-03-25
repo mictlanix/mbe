@@ -13,7 +13,8 @@
                              Html.GetPrivilege(CurrentUser, SystemObjects.PriceLists).AllowRead ||
                              Html.GetPrivilege(CurrentUser, SystemObjects.PointsOfSale).AllowRead ||
                              Html.GetPrivilege(CurrentUser, SystemObjects.CashDrawers).AllowRead ||
-                             Html.GetPrivilege(CurrentUser, SystemObjects.Taxpayers).AllowRead;
+                             Html.GetPrivilege(CurrentUser, SystemObjects.Taxpayers).AllowRead ||
+                             Html.GetPrivilege(CurrentUser, SystemObjects.Stores).AllowRead;
     var ShowSalesMenu = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders).AllowRead ||
                         Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments).AllowRead ||
                         Html.GetPrivilege(CurrentUser, SystemObjects.ReturnCustomer).AllowRead ||
@@ -123,6 +124,13 @@
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("Index", "Taxpayers") ? "gbm0l" : "")"
                                    href="@Url.Action("Index", "Taxpayers")">@Resources.Title_Taxpayer</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.Stores).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "Stores") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "Stores")">@Resources.Title_Store</a>
                             </li>
                             }
                         </ol>
