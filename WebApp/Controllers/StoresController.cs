@@ -133,7 +133,8 @@ namespace Business.Essentials.WebApp.Controllers
         public JsonResult GetSuggestions(string pattern)
         {
             var qry = from x in Store.Queryable
-                      where x.Name.Contains(pattern)
+                      where x.Name.Contains(pattern) ||
+                      x.Code.Contains(pattern)
                       select new { id = x.Id, name = x.Name };
 
             return Json(qry.Take(15).ToList(), JsonRequestBehavior.AllowGet);
