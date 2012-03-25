@@ -1,5 +1,5 @@
 ﻿@using Business.Essentials
-@model Business.Essentials.Model.PointOfSale
+@model Business.Essentials.Model.Store
 
 @{
     ViewBag.Title = Resources.Edit;
@@ -10,7 +10,7 @@
 @using (Html.BeginForm()) {
     @Html.ValidationSummary(true)
     <fieldset>
-        <legend>@Resources.Title_PointOfSale</legend>
+        <legend>@Resources.Title_Store</legend>
 
         @Html.HiddenFor(model => model.Id)
 
@@ -29,22 +29,7 @@
             @Html.EditorFor(model => model.Name)
             @Html.ValidationMessageFor(model => model.Name)
         </div>
-        
-        <div class="display-label">
-            @Html.LabelFor(model => model.Store)
-        </div>
-        <div class="display-field">
-            @Html.DisplayFor(model => model.Store.Name)
-        </div>
-@*
-        <div class="editor-label">
-            @Html.LabelFor(model => model.HostAddress)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.HostAddress)
-            @Html.ValidationMessageFor(model => model.HostAddress)
-        </div>
-*@
+       
         <div class="editor-label">
             @Html.LabelFor(model => model.Comment)
         </div>

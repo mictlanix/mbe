@@ -28,9 +28,13 @@
         </th>
         
         <th>
+            @Html.LabelFor(x => new PointOfSale().Store)
+        </th>
+        @*
+        <th>
             @Html.LabelFor(x => new PointOfSale().HostAddress)
         </th>
-
+*@
         <th></th>
     </tr>
 
@@ -43,11 +47,16 @@
         <td>
             @Html.DisplayFor(x => item.Name)
         </td>
-        
+
+        <td>
+            @Html.DisplayFor(x => item.Store.Name)
+        </td>
+
+        @*
         <td>
             @Html.DisplayFor(x => item.HostAddress)
         </td>
-        
+        *@
         <td class="actions">
         	@if(Privilege.AllowUpdate)
         	{
