@@ -55,7 +55,7 @@ namespace Business.Essentials.WebApp.Controllers
         //
         // GET: /Taxpayer/Details/5
 
-        public ViewResult Details(int id)
+        public ViewResult Details(string id)
         {
 			Taxpayer item = Taxpayer.Find(id);
 			
@@ -92,7 +92,7 @@ namespace Business.Essentials.WebApp.Controllers
         //
         // GET: /Taxpayer/Edit/5
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             Taxpayer item = Taxpayer.Find(id);
             return View(item);
@@ -115,7 +115,7 @@ namespace Business.Essentials.WebApp.Controllers
         //
         // GET: /Taxpayer/Delete/5
 
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             Taxpayer item = Taxpayer.Find(id);
             return View(item);
@@ -125,7 +125,7 @@ namespace Business.Essentials.WebApp.Controllers
         // POST: /Taxpayer/Delete/5
 
         [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(string id)
         {
 			try {
 				using (new SessionScope()) {
@@ -144,7 +144,7 @@ namespace Business.Essentials.WebApp.Controllers
             var qry = from x in Taxpayer.Queryable
                       where x.Id.Contains(pattern) ||
 							x.Name.Contains(pattern)
-                      select new { id = x.Id, name = x.Name };
+                      select new { id = x.Id, name = string.Format ("{1} ({0})", x.Id, x.Name) };
 
             return Json(qry.Take(15).ToList(), JsonRequestBehavior.AllowGet);
         }

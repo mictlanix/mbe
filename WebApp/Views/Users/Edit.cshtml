@@ -13,20 +13,22 @@
     @Html.ValidationSummary(true)
     <fieldset>
         <legend>@Resources.User</legend>
+        
+        @Html.HiddenFor(model => model.UserName)
 
         <div class="editor-label">
             @Html.LabelFor(model => model.UserName)
         </div>
         <div class="editor-field">
-            @Html.HiddenFor(model => model.UserName)
             @Html.DisplayFor(model => model.UserName)
         </div>
 
         <div class="editor-label">
-            @Html.LabelFor(model => model.Employee.Name)
+            @Html.LabelFor(model => model.Employee)
         </div>
         <div class="editor-field">
-            @Html.DisplayFor(model => model.Employee.Name)
+            @Html.EditorFor(model => model.EmployeeId)
+            @Html.ValidationMessageFor(model => model.EmployeeId)
         </div>
 
         <div class="editor-label">
@@ -96,6 +98,7 @@
 </div>
 <script type="text/javascript">
     $(function () {
+        $("#EmployeeId").tokenInput("add", { id: "@Model.Employee.Id", name: "@Model.Employee.Name"});
         $("table tr:first th input:checkbox").click(function () {
             var checkedStatus = this.checked;
             $("table tr td input:checkbox[name$='" + this.name + "']").each(function () {
@@ -103,4 +106,4 @@
             });
         });
     });
-</script> 
+</script>

@@ -57,7 +57,12 @@ namespace Business.Essentials.Model
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(250, MinimumLength = 6, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string Email { get; set; }
-
+		
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[Display(Name = "Employee", ResourceType = typeof(Resources))]
+		[UIHint("EmployeeSelector")]
+		public int EmployeeId { get; set; }
+		
         [BelongsTo("employee")]
         [Display(Name = "Employee", ResourceType = typeof(Resources))]
         public virtual Employee Employee { get; set; }
