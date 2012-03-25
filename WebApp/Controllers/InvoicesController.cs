@@ -73,7 +73,6 @@ namespace Business.Essentials.WebApp.Controllers
 			item.Creator = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 			item.Updater = item.Creator;
 			
-			
 			// Bill to info
 			item.BillToTaxId = item.BillTo.TaxpayerId;
 			item.BillToName = item.BillTo.TaxpayerName;
@@ -117,17 +116,33 @@ namespace Business.Essentials.WebApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(SalesInvoice item)
-        {
-            var order = SalesInvoice.Find(item.Id);
-            var customer = Customer.Find(item.CustomerId);
-
-            order.Customer = customer;
+        public ActionResult Edit (SalesInvoice item)
+		{
+			var invoice = SalesInvoice.Find (item.Id);
 			
-            order.Save();
+			invoice.Customer = Customer.TryFind (item.CustomerId);
+			invoice.BillTo = Address.TryFind (item.BillToId);
+			invoice.Issuer = Taxpayer.TryFind (item.IssuerId);
+			
+			item.ModificationTime = DateTime.Now;
+			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			
+			// Bill to info
+			invoice.BillToTaxId = invoice.BillTo.TaxpayerId;
+			invoice.BillToName = invoice.BillTo.TaxpayerName;
+			invoice.Street = invoice.BillTo.Street;
+			invoice.ExteriorNumber = invoice.BillTo.ExteriorNumber;
+			invoice.InteriorNumber = invoice.BillTo.InteriorNumber;
+			invoice.Neighborhood = invoice.BillTo.Neighborhood;
+			invoice.Borough = invoice.BillTo.Borough;
+			invoice.State = invoice.BillTo.State;
+			invoice.Country = invoice.BillTo.Country;
+			invoice.ZipCode = invoice.BillTo.ZipCode;
+			
+			invoice.Save ();
 
-            return PartialView("_SalesInfo", order);
-        }
+			return PartialView ("_MasterInfo", invoice);
+		}
 
         [HttpPost]
         public ActionResult Confirm(int id)
@@ -137,7 +152,7 @@ namespace Business.Essentials.WebApp.Controllers
             item.IsCompleted = true;
             item.Save();
 
-            return RedirectToAction("New");
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
@@ -148,7 +163,7 @@ namespace Business.Essentials.WebApp.Controllers
             item.IsCancelled = true;
             item.Save();
 
-            return RedirectToAction("New");
+            return RedirectToAction("Index");
         }
 		
         public ViewResult Print(int id)

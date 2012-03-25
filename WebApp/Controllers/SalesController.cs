@@ -345,10 +345,10 @@ namespace Business.Essentials.WebApp.Controllers
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}
 		
-        PointOfSale GetPoS()
-        {
-            var addr = Request.UserHostAddress;
-            return PointOfSale.Queryable.SingleOrDefault(x => x.HostAddress == addr);
+		// FIXME: cookie
+        PointOfSale GetPoS ()
+		{
+			return PointOfSale.Queryable.FirstOrDefault ();
         }
     }
 }

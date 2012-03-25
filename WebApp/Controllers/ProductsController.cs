@@ -40,6 +40,7 @@ using Castle.ActiveRecord;
 using NHibernate.Exceptions;
 using Business.Essentials.Model;
 using Business.Essentials.WebApp.Models;
+using Business.Essentials.WebApp.Helpers;
 
 namespace Business.Essentials.WebApp.Controllers
 {
@@ -125,7 +126,7 @@ namespace Business.Essentials.WebApp.Controllers
             
 			item.Supplier = Supplier.Find (item.SupplierId);
 			item.Category = Category.Find (item.CategoryId);
-			item.Photo = SavePhoto (file) ?? Resources.Default_PhotoFile;
+			item.Photo = SavePhoto (file) ?? Configuration.DefaultPhotoFile;
 			
 			item.Save ();
 
@@ -210,11 +211,11 @@ namespace Business.Essentials.WebApp.Controllers
 			using (var stream = file.InputStream) {
 				using (var img = Image.FromStream (stream)) {
 					var hash = string.Format ("{0}.png", HashFromImage (img));
-					var path = Path.Combine (Server.MapPath (Resources.Default_PhotosPath), hash);
+					var path = Path.Combine (Server.MapPath (Configuration.PhotosPath), hash);
 					
 					img.Save (path, ImageFormat.Png);
 					
-					return Path.Combine (Resources.Default_PhotosPath, hash);
+					return Path.Combine (Configuration.PhotosPath, hash);
 				}
 			}
 		}

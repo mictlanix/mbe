@@ -30,11 +30,7 @@
         <th>
             @Html.LabelFor(x => new CashDrawer().Store)
         </th>
-        @*
-        <th>
-            @Html.LabelFor(x => new CashDrawer().HostAddress)
-        </th>
-        *@
+        
         <th></th>
     </tr>
 
@@ -49,9 +45,6 @@
         <td>
             @Html.DisplayFor(modelItem => item.Store.Name)
         </td>
-       @* <td>
-            @Html.DisplayFor(modelItem => item.HostAddress)
-        </td>*@
         <td class="actions">
         	@if(Privilege.AllowUpdate)
         	{
