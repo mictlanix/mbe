@@ -75,6 +75,7 @@ namespace Business.Essentials.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                pointSale.Store = Store.Find(pointSale.StoreId);
                 pointSale.Save();
                 return RedirectToAction("Index");
             }
@@ -99,6 +100,7 @@ namespace Business.Essentials.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                pointSale.Store = PointOfSale.Find(pointSale.Id).Store;
                 pointSale.Save();
                 return RedirectToAction("Index");
             }
