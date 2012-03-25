@@ -75,6 +75,7 @@ namespace Business.Essentials.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                CashDrawers.Store = Store.Find(CashDrawers.StoreId);
                 CashDrawers.Save();
                 return RedirectToAction("Index");
             }
@@ -99,6 +100,7 @@ namespace Business.Essentials.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                CashDrawers.Store = CashDrawer.Find(CashDrawers.Id).Store;
                 CashDrawers.Save();
                 return RedirectToAction("Index");
             }
