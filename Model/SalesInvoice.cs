@@ -57,7 +57,7 @@ namespace Business.Essentials.Model
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "Issuer", ResourceType = typeof(Resources))]
         [UIHint("TaxpayerSelector")]
-        public int IssuerId { get; set; }
+        public string IssuerId { get; set; }
 		
         [BelongsTo("issuer")]
         [Display(Name = "Issuer", ResourceType = typeof(Resources))]
@@ -172,10 +172,27 @@ namespace Business.Essentials.Model
         public DateTime? CancellationDate { get; set; }
 
         [HasMany(typeof(SalesInvoiceDetail), Table = "sales_invoice_detail", ColumnKey = "invoice")]
-        public IList<SalesInvoiceDetail> Details
-        {
-            get { return details; }
-            set { details = value; }
-        }
-    }
+        public IList<SalesInvoiceDetail> Details {
+			get { return details; }
+			set { details = value; }
+		}
+		
+		[DataType(DataType.Currency)]
+		[Display(Name = "Subtotal", ResourceType = typeof(Resources))]
+		public decimal Subtotal {
+			get { return Details.Sum (x => x.Subtotal); }
+		}
+
+		[DataType(DataType.Currency)]
+		[Display(Name = "Taxes", ResourceType = typeof(Resources))]
+		public decimal Taxes {
+			get { return Total - Subtotal; }
+		}
+
+		[DataType(DataType.Currency)]
+		[Display(Name = "Total", ResourceType = typeof(Resources))]
+		public decimal Total {
+			get { return Details.Sum (x => x.Total); }
+		}
+	}
 }

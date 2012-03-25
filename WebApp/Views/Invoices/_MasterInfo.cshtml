@@ -1,0 +1,51 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@model SalesInvoice
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesInvoices);
+}
+
+<fieldset>
+    <legend>@Resources.DisplayName_SalesInformation</legend>
+
+    <div class="display-label right floating">
+        @Html.LabelFor(model => model.Id):
+        @Html.DisplayFor(model => model.Id)
+    </div>
+
+    <div class="display-label right floating">
+        @Html.LabelFor(model => model.Issued):
+        @Html.DisplayFor(model => model.Issued)
+    </div>
+    
+@if(Privilege.AllowDelete)
+{
+    <div class="right floating">
+        <p>
+        @using (Html.BeginForm("CancelOrder", "Invoices", new { id =  Model.Id }))
+        {
+            <button type="submit" class="icon cancel">@Resources.CancelOrder</button>
+        }
+        </p>
+    </div>
+}
+    
+    <div class="display-label">
+        @Html.LabelFor(model => model.Customer)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Customer.Name)
+    </div>
+
+    <div id="edit-panel" style="@(Model.Details.Count > 0 ? "display:none" : "")" >
+        <p>
+        @Ajax.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "master-section" }, new { @class = "button icon edit" })
+        </p>
+    </div>
+</fieldset>
+<script type="text/javascript">
+    var SalesOrder = { Id: @Model.Id };
+</script>

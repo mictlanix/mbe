@@ -67,14 +67,23 @@ namespace Business.Essentials.Model
         [Display(Name = "TaxRate", ResourceType = typeof(Resources))]
         public decimal TaxRate { get; set; }
 
+        [DataType(DataType.Currency)]
+        [Display(Name = "Subtotal", ResourceType = typeof(Resources))]
+        public decimal Subtotal
+        {
+            get { return Math.Round(Total / (1 + TaxRate), 2, MidpointRounding.AwayFromZero); }
+        }
+
+		[DataType(DataType.Currency)]
+		[Display(Name = "Taxes", ResourceType = typeof(Resources))]
+		public decimal Taxes {
+			get { return Total - Subtotal; }
+		}
+
+        [DataType(DataType.Currency)]
 		[Display(Name = "Total", ResourceType = typeof(Resources))]
         public decimal Total {
 			get { return Math.Round(Quantity * Price * (1m - Discount), 2, MidpointRounding.AwayFromZero); }
-		}
-        
-		[Display(Name = "Taxes", ResourceType = typeof(Resources))]
-		public decimal Taxes {
-			get { return Math.Round(Total * TaxRate, 2, MidpointRounding.AwayFromZero); } 
 		}
     }
 }

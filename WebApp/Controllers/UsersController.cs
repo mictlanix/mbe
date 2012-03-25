@@ -72,52 +72,49 @@ namespace Business.Essentials.WebApp.Controllers
         // POST: /Users/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(User item)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(item);
-            }
+        public ActionResult Edit (User item)
+		{
+			if (!ModelState.IsValid) {
+				return View (item);
+			}
 
-            User user = Model.User.Find(item.UserName);
+			User user = Model.User.Find (item.UserName);
+			
+			user.Employee = Employee.Find (item.EmployeeId);
+			user.Email = item.Email;
+			user.IsAdministrator = item.IsAdministrator;
 
-            user.Email = item.Email;
-            user.IsAdministrator = item.IsAdministrator;
+			foreach (var i in Enum.GetValues(typeof(SystemObjects))) {
+				SystemObjects obj = (SystemObjects)i;
+				string prefix = Enum.GetName (typeof(SystemObjects), i);
+				AccessPrivilege privilege = user.Privileges.SingleOrDefault (x => x.Object == obj);
 
-            foreach(var i in Enum.GetValues(typeof(SystemObjects)))
-            {
-                SystemObjects obj = (SystemObjects)i;
-                string prefix = Enum.GetName(typeof(SystemObjects), i);
-                AccessPrivilege privilege = user.Privileges.SingleOrDefault(x => x.Object == obj);
+				if (privilege == null) {
+					privilege = new AccessPrivilege { User = user, Object = obj };
+				}
 
-                if (privilege == null)
-                {
-                    privilege = new AccessPrivilege { User = user, Object = obj };
-                }
+				foreach (var j in Enum.GetValues(typeof(AccessRight))) {
+					AccessRight right = (AccessRight)j;
+					string name = prefix + Enum.GetName (typeof(AccessRight), j);
+					string value = Request.Params [name];
 
-                foreach (var j in Enum.GetValues(typeof(AccessRight)))
-                {
-                    AccessRight right = (AccessRight)j;
-                    string name = prefix + Enum.GetName(typeof(AccessRight), j);
-                    string value = Request.Params[name];
+					if (value == null)
+						continue;
 
-                    if (value == null)
-                        continue;
+					if (value.Contains ("true"))
+						privilege.Privileges |= right;
+					else
+						privilege.Privileges &= ~right;
+				}
 
-                    if(value.Contains("true"))
-                        privilege.Privileges |= right;
-                    else
-                        privilege.Privileges &= ~right;
-                }
+				privilege.Save ();
+			}
 
-                privilege.Save();
-            }
+			user.Update ();
 
-            user.Update();
+			return RedirectToAction ("Index");
 
-            return RedirectToAction("Index");
-
-        }
+		}
 
         //
         // GET: /Users/Delete/5
@@ -132,13 +129,17 @@ namespace Business.Essentials.WebApp.Controllers
         // POST: /Users/Delete/5
 
         [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(string id)
-        {
-            User item = Model.User.Find(id);
-
-            item.Delete();
+        public ActionResult DeleteConfirmed (string id)
+		{
+			User item = Model.User.Find (id);
+			
+			foreach (var x in item.Privileges.ToList ()) {
+				x.Delete ();
+			}
+			
+			item.DeleteAndFlush ();
             
-            return RedirectToAction("Index");
-        }
+			return RedirectToAction ("Index");
+		}
     }
 }

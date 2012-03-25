@@ -307,6 +307,16 @@
                 </div>
             </li>
             }
+            @if (CurrentUser.IsAdministrator)
+            {
+            <li class="gbt">
+                <a class="gbzt @(Html.IsMenuSelected("Index", "Users") ? "gbz0l" : "")"
+                   href="@Url.Action("Index", "Users")">
+                    <span class="gbtb2"></span>
+                    <span class="gbts">@Resources.Title_Users</span>
+                </a>
+            </li>
+            }
             <li class="gbt">
                 <a class="gbzt @(Html.IsMenuSelected("About", "Home") ? "gbz0l" : "")"
                    href="@Url.Action("About", "Home")">
