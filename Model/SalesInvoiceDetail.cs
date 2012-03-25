@@ -64,6 +64,7 @@ namespace Business.Essentials.Model
         public decimal Discount { get; set; }
 
         [Property("tax_rate")]
+		[DisplayFormat(DataFormatString = "{0:p}")]
         [Display(Name = "TaxRate", ResourceType = typeof(Resources))]
         public decimal TaxRate { get; set; }
 
