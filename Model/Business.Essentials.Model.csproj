@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -67,6 +67,7 @@
     <Reference Include="NHibernate.Search, Version=0.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc">
       <HintPath>..\packages\Castle.Activerecord.3.0.0.1\lib\Net40\NHibernate.Search.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CashCount.cs" />
@@ -118,6 +119,8 @@
     <Compile Include="SalesInvoice.cs" />
     <Compile Include="SalesInvoiceDetail.cs" />
     <Compile Include="Taxpayer.cs" />
+    <Compile Include="CFDv2\SatCfdv2.cs" />
+    <Compile Include="CFDv2\SatCfdv2Ex.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Resources\Business.Essentials.Resources.csproj">
@@ -133,4 +136,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Folder Include="CFDv2\" />
+  </ItemGroup>
 </Project>

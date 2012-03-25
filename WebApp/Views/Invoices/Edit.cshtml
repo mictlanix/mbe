@@ -53,9 +53,6 @@
     function updateTotals(){
         $.get("/Invoices/GetTotals/" + @Model.Id, function (data) {
             $("#totals-section").html(data);
-            if($("#items").children().length === 0){
-                $("a.edit").show("slow");            
-            }
         });
     }
 
@@ -246,9 +243,7 @@
                             return editDiscount(detail.id, value);
                         }, { cssclass : "number" });
 
-
                         $("#product-search").tokenInput("clear");
-                        $("a.edit").hide("slow");
                         updateTotals();
                     });
 

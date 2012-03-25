@@ -619,24 +619,6 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ~/Content/images/na.png.
-        /// </summary>
-        public static string Default_PhotoFile {
-            get {
-                return ResourceManager.GetString("Default_PhotoFile", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to ~/Photos/.
-        /// </summary>
-        public static string Default_PhotosPath {
-            get {
-                return ResourceManager.GetString("Default_PhotosPath", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Borrar.
         /// </summary>
         public static string Delete {
@@ -1529,15 +1511,6 @@ namespace Business.Essentials {
         public static string HIntText {
             get {
                 return ResourceManager.GetString("HIntText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Dirección IP.
-        /// </summary>
-        public static string HostAddress {
-            get {
-                return ResourceManager.GetString("HostAddress", resourceCulture);
             }
         }
         

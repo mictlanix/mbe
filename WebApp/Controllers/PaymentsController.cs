@@ -348,19 +348,17 @@ namespace Business.Essentials.WebApp.Controllers
             });
         }
         
-        CashDrawer GetDrawer()
-        {
-            var addr = Request.UserHostAddress;
-
-            return CashDrawer.Queryable.SingleOrDefault(x => x.HostAddress == addr);
+		// FIXME: cookie
+        CashDrawer GetDrawer ()
+		{
+			return CashDrawer.Queryable.FirstOrDefault ();
         }
 
-        CashSession GetSession()
-        {
-            var addr = Request.UserHostAddress;
-            return CashSession.Queryable
-                              .Where(x => x.End == null)
-                              .SingleOrDefault(x => x.CashDrawer.HostAddress == addr);
+        CashSession GetSession ()
+		{
+			return CashSession.Queryable
+                              .Where (x => x.End == null)
+                              .FirstOrDefault ();
         }
     }
 }
