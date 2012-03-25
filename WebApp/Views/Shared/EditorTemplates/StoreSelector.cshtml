@@ -9,7 +9,7 @@
 @Html.TextBox("", Model)
 <script type="text/javascript">
     $(function () {
-        $("#@field").tokenInput("@Url.Action("GetSuggestions", "Store")", {
+        $("#@field").tokenInput("@Url.Action("GetSuggestions", "Stores")", {
             hintText: "@Resources.HIntText",
             noResultsText: "@Resources.NoResultsText",
             searchingText: "@Resources.SearchingText",
