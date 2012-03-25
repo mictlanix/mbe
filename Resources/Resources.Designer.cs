@@ -122,16 +122,7 @@ namespace Business.Essentials {
                 return ResourceManager.GetString("Administrator", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Ramos Ferretería.
-        /// </summary>
-        public static string Alt_Logo {
-            get {
-                return ResourceManager.GetString("Alt_Logo", resourceCulture);
-            }
-        }
-        
+                
         /// <summary>
         ///   Looks up a localized string similar to Importe.
         /// </summary>
@@ -426,42 +417,6 @@ namespace Business.Essentials {
         public static string Comment {
             get {
                 return ResourceManager.GetString("Comment", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Ferretería Ramos.
-        /// </summary>
-        public static string Company {
-            get {
-                return ResourceManager.GetString("Company", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Av. 16 de Septiembre No. 78,Barrio San Miguel, C. P. 55620, San Juan Zitlaltepec, Zumpango, Estado de México, México.
-        /// </summary>
-        public static string CompanyAddress {
-            get {
-                return ResourceManager.GetString("CompanyAddress", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to R.F.C. RAGM600610LJ2.
-        /// </summary>
-        public static string CompanyTaxpayer {
-            get {
-                return ResourceManager.GetString("CompanyTaxpayer", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Margarito Eliseo Ramos Godinez.
-        /// </summary>
-        public static string CompanyTaxpayerName {
-            get {
-                return ResourceManager.GetString("CompanyTaxpayerName", resourceCulture);
             }
         }
         
@@ -2398,19 +2353,6 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Por este PAGARÉ, 
-        ///yo {0} prometo incondicionalmente 
-        ///pagar a la orden de el Sr. Margarito Eliseo Ramos Godinez,
-        /// la cantidad de {1} el día {2}
-        ///Obligándome a pagar para el caso de mora un interés equivalente al ____ mensual durante todo el tiempo que permanezca insoluto..
-        /// </summary>
-        public static string PromissoryNoteContent {
-            get {
-                return ResourceManager.GetString("PromissoryNoteContent", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Orden de Compra.
         /// </summary>
         public static string PurchaseOrder {
@@ -2924,15 +2866,6 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mictlanix BE - Ramos Hermanos.
-        /// </summary>
-        public static string Title_Application {
-            get {
-                return ResourceManager.GetString("Title_Application", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Bancos.
         /// </summary>
         public static string Title_BankAccount {
@@ -3100,15 +3033,6 @@ namespace Business.Essentials {
         public static string Title_InventoryTransfer {
             get {
                 return ResourceManager.GetString("Title_InventoryTransfer", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Ramos Hermanos.
-        /// </summary>
-        public static string Title_Logo {
-            get {
-                return ResourceManager.GetString("Title_Logo", resourceCulture);
             }
         }
         
@@ -3678,5 +3602,32 @@ namespace Business.Essentials {
                 return ResourceManager.GetString("Zone", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Editar Factura.
+        /// </summary>
+        public static string DisplayName_EditInvoice {
+			get {
+				return ResourceManager.GetString ("DisplayName_EditInvoice", resourceCulture);
+			}
+		}
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Información de la Factura.
+        /// </summary>
+        public static string DisplayName_InvoiceInformation {
+			get {
+				return ResourceManager.GetString ("DisplayName_InvoiceInformation", resourceCulture);
+			}
+		}
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Emitir Factura.
+        /// </summary>
+        public static string CompleteInvoice {
+			get {
+				return ResourceManager.GetString ("CompleteInvoice", resourceCulture);
+			}
+		}
     }
 }

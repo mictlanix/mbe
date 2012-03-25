@@ -53,25 +53,26 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ViewResult New()
         {
-            return View(new SalesInvoice { CustomerId = 1, Customer = Customer.Find(1) });
+            return View();
         }
 
         [HttpPost]
-        public ActionResult New(SalesInvoice item)
-        {
-            item.Customer = Customer.TryFind(item.CustomerId);
-            item.BillTo = Address.TryFind(item.BillToId);
+        public ActionResult New (SalesInvoice item)
+		{
+			item.Customer = Customer.TryFind (item.CustomerId);
+			item.BillTo = Address.TryFind (item.BillToId);
+			item.Issuer = Taxpayer.TryFind (item.IssuerId);
 			
-			if (!ModelState.IsValid)
-			{
-				return View(item);
+			if (!ModelState.IsValid) {
+				return View (item);
 			}
 			
 			// Invoice creation info
-            item.CreationTime = DateTime.Now;
-            item.ModificationTime = item.CreationTime;
-            item.Creator = SecurityHelpers.GetUser(User.Identity.Name).Employee;
-            item.Updater = item.Creator;
+			item.CreationTime = DateTime.Now;
+			item.ModificationTime = item.CreationTime;
+			item.Creator = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			item.Updater = item.Creator;
+			
 			
 			// Bill to info
 			item.BillToTaxId = item.BillTo.TaxpayerId;
@@ -85,20 +86,18 @@ namespace Business.Essentials.WebApp.Controllers
 			item.Country = item.BillTo.Country;
 			item.ZipCode = item.BillTo.ZipCode;
 			
-            using (var session = new SessionScope())
-            {
-                item.CreateAndFlush();
-            }
+			using (var session = new SessionScope()) {
+				item.CreateAndFlush ();
+			}
 
-            System.Diagnostics.Debug.WriteLine("New SalesInvoice [Id = {0}]", item.Id);
+			System.Diagnostics.Debug.WriteLine ("New SalesInvoice [Id = {0}]", item.Id);
 
-            if (item.Id == 0)
-            {
-                return View("UnknownError");
-            }
+			if (item.Id == 0) {
+				return View ("UnknownError");
+			}
 
-            return RedirectToAction("Edit", new { id = item.Id });
-        }
+			return RedirectToAction ("Edit", new { id = item.Id });
+		}
 
         public ViewResult Details(int id)
         {

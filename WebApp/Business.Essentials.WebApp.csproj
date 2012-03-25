@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -153,6 +153,7 @@
     <Compile Include="Utils\Code128Rendering.cs" />
     <Compile Include="Controllers\InvoicesController.cs" />
     <Compile Include="Controllers\TaxpayersController.cs" />
+    <Compile Include="Helpers\Configuration.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
@@ -431,6 +432,12 @@
     <Content Include="Views\Taxpayers\Edit.cshtml" />
     <Content Include="Views\Taxpayers\_Index.cshtml" />
     <Content Include="Views\Taxpayers\Index.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\TaxpayerSelector.cshtml" />
+    <Content Include="MictlanixBE.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\Invoices\_MasterInfo.cshtml" />
+    <Content Include="Views\Invoices\_Totals.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />
@@ -758,6 +765,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

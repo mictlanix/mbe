@@ -393,9 +393,6 @@
   <data name="Pattern" xml:space="preserve">
     <value>Patrón de Búsqueda</value>
   </data>
-  <data name="Title_Application" xml:space="preserve">
-    <value>Mictlanix BE - Ramos Hermanos</value>
-  </data>
   <data name="Title_Home" xml:space="preserve">
     <value>Mictlanix BE</value>
   </data>
@@ -750,14 +747,8 @@
   <data name="Pay" xml:space="preserve">
     <value>Pagar</value>
   </data>
-  <data name="Alt_Logo" xml:space="preserve">
-    <value>Ramos Ferretería</value>
-  </data>
   <data name="Authors" xml:space="preserve">
     <value>Autores</value>
-  </data>
-  <data name="Title_Logo" xml:space="preserve">
-    <value>Ramos Hermanos</value>
   </data>
   <data name="LogOff" xml:space="preserve">
     <value>Salir</value>
@@ -800,18 +791,6 @@
   </data>
   <data name="Loading" xml:space="preserve">
     <value>Cargando...</value>
-  </data>
-  <data name="Company" xml:space="preserve">
-    <value>Ferretería Ramos</value>
-  </data>
-  <data name="CompanyAddress" xml:space="preserve">
-    <value>Av. 16 de Septiembre No. 78,Barrio San Miguel, C. P. 55620, San Juan Zitlaltepec, Zumpango, Estado de México, México</value>
-  </data>
-  <data name="CompanyTaxpayer" xml:space="preserve">
-    <value>R.F.C. RAGM600610LJ2</value>
-  </data>
-  <data name="CompanyTaxpayerName" xml:space="preserve">
-    <value>Margarito Eliseo Ramos Godinez</value>
   </data>
   <data name="Title_SalesTicket" xml:space="preserve">
     <value>Ticket de Venta</value>
@@ -1083,7 +1062,7 @@ Vencimiento: {0:d}</value>
     <value>Facturación</value>
   </data>
   <data name="SalesInvoiceId" xml:space="preserve">
-    <value>Folio</value>
+    <value>Folio de Sistema</value>
   </data>
   <data name="NewInvoice" xml:space="preserve">
     <value>Factura Nueva</value>
@@ -1308,13 +1287,6 @@ Realizada el: {0:d}</value>
   <data name="PromissoryNote" xml:space="preserve">
     <value>Pagaré</value>
   </data>
-  <data name="PromissoryNoteContent" xml:space="preserve">
-    <value>Por este PAGARÉ, 
-yo {0} prometo incondicionalmente 
-pagar a la orden de el Sr. Margarito Eliseo Ramos Godinez,
- la cantidad de {1} el día {2}
-Obligándome a pagar para el caso de mora un interés equivalente al ____ mensual durante todo el tiempo que permanezca insoluto.</value>
-  </data>
   <data name="Accept" xml:space="preserve">
     <value>Acepto</value>
   </data>
@@ -1329,5 +1301,14 @@ Obligándome a pagar para el caso de mora un interés equivalente al ____ mensua
   </data>
   <data name="DeliveryOrder" xml:space="preserve">
     <value>Orden de Despacho</value>
+  </data>
+  <data name="DisplayName_EditInvoice" xml:space="preserve">
+    <value>Editar Factura</value>
+  </data>
+  <data name="DisplayName_InvoiceInformation" xml:space="preserve">
+    <value>Información de la Factura</value>
+  </data>
+  <data name="CompleteInvoice" xml:space="preserve">
+    <value>Emitir Factura</value>
   </data>
 </root>

@@ -1,7 +1,7 @@
 ﻿@using Business.Essentials
 @using Business.Essentials.Model
 @using Business.Essentials.WebApp.Models
-@model SalesOrder
+@model SalesInvoice
 
 @{
     ViewBag.Title = Resources.Edit;
@@ -9,10 +9,10 @@
 
 <script src="@Url.Content("~/Scripts/jquery.jeditable.mini.js")" type="text/javascript"></script>
 
-<h2>@Resources.DisplayName_EditSale</h2> 
+<h2>@Resources.DisplayName_EditInvoice</h2> 
 
-<div id="sales-order" style="margin-right:300px">
-@Html.Partial("_SalesInfo")
+<div id="master-section" style="margin-right:300px">
+@Html.Partial("_MasterInfo")
 </div>
  
 <div style="margin-right:300px"> 
@@ -32,8 +32,8 @@
 <div id="back-to-list">
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
-<div id="sales-totals">
-    @Html.Partial("_SalesTotals")
+<div id="totals-section">
+    @Html.Partial("_Totals")
 </div>
 <div id="dialog-confirm" title="@Resources.Delete">
 	<p>
