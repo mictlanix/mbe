@@ -122,7 +122,7 @@ namespace Business.Essentials {
                 return ResourceManager.GetString("Administrator", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Importe.
         /// </summary>
@@ -435,6 +435,15 @@ namespace Business.Essentials {
         public static string Completed {
             get {
                 return ResourceManager.GetString("Completed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Emitir Factura.
+        /// </summary>
+        public static string CompleteInvoice {
+            get {
+                return ResourceManager.GetString("CompleteInvoice", resourceCulture);
             }
         }
         
@@ -889,6 +898,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Editar Factura.
+        /// </summary>
+        public static string DisplayName_EditInvoice {
+            get {
+                return ResourceManager.GetString("DisplayName_EditInvoice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Editar Compra.
         /// </summary>
         public static string DisplayName_EditPurchase {
@@ -948,6 +966,15 @@ namespace Business.Essentials {
         public static string DisplayName_InventoryTransfers {
             get {
                 return ResourceManager.GetString("DisplayName_InventoryTransfers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Información de la Factura.
+        /// </summary>
+        public static string DisplayName_InvoiceInformation {
+            get {
+                return ResourceManager.GetString("DisplayName_InvoiceInformation", resourceCulture);
             }
         }
         
@@ -1191,6 +1218,15 @@ namespace Business.Essentials {
         public static string DisplayName_SalesSearch {
             get {
                 return ResourceManager.GetString("DisplayName_SalesSearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tiendas.
+        /// </summary>
+        public static string DisplayName_Stores {
+            get {
+                return ResourceManager.GetString("DisplayName_Stores", resourceCulture);
             }
         }
         
@@ -2515,7 +2551,7 @@ namespace Business.Essentials {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Folio.
+        ///   Looks up a localized string similar to Folio de Sistema.
         /// </summary>
         public static string SalesInvoiceId {
             get {
@@ -2709,6 +2745,15 @@ namespace Business.Essentials {
         public static string Statements {
             get {
                 return ResourceManager.GetString("Statements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tienda.
+        /// </summary>
+        public static string Store {
+            get {
+                return ResourceManager.GetString("Store", resourceCulture);
             }
         }
         
@@ -3244,6 +3289,15 @@ namespace Business.Essentials {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tienda.
+        /// </summary>
+        public static string Title_Store {
+            get {
+                return ResourceManager.GetString("Title_Store", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Proveedores.
         /// </summary>
         public static string Title_Supplier {
@@ -3602,32 +3656,5 @@ namespace Business.Essentials {
                 return ResourceManager.GetString("Zone", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Editar Factura.
-        /// </summary>
-        public static string DisplayName_EditInvoice {
-			get {
-				return ResourceManager.GetString ("DisplayName_EditInvoice", resourceCulture);
-			}
-		}
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Información de la Factura.
-        /// </summary>
-        public static string DisplayName_InvoiceInformation {
-			get {
-				return ResourceManager.GetString ("DisplayName_InvoiceInformation", resourceCulture);
-			}
-		}
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Emitir Factura.
-        /// </summary>
-        public static string CompleteInvoice {
-			get {
-				return ResourceManager.GetString ("CompleteInvoice", resourceCulture);
-			}
-		}
     }
 }

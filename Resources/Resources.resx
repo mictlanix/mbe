@@ -1311,4 +1311,13 @@ Realizada el: {0:d}</value>
   <data name="CompleteInvoice" xml:space="preserve">
     <value>Emitir Factura</value>
   </data>
+  <data name="DisplayName_Stores" xml:space="preserve">
+    <value>Tiendas</value>
+  </data>
+  <data name="Store" xml:space="preserve">
+    <value>Tienda</value>
+  </data>
+  <data name="Title_Store" xml:space="preserve">
+    <value>Tienda</value>
+  </data>
 </root>
