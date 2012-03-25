@@ -33,25 +33,35 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Business.Essentials.Model;
+using System.Configuration;
 
 namespace Business.Essentials.WebApp.Helpers
 {
-	public static class CashHelpers
+	public static class Configuration
 	{
-		public static IList<CashCount> ListDenominations ()
-		{
-			string[] denominations = Resources.Denominations.Split (',');
-			IList<CashCount> items = new List<CashCount> (denominations.Length);
-
-			foreach (var item in denominations) {
-				items.Add (new CashCount
-                {
-                    Denomination = decimal.Parse (item)
-                });
-			}
-
-			return items;
+		public static string ApplicationTitle {
+			get { return ConfigurationManager.AppSettings ["ApplicationTitle"]; }
+		}
+		public static string LogoTitle {
+			get { return ConfigurationManager.AppSettings ["LogoTitle"]; }
+		}
+		public static string LogoAlt {
+			get { return ConfigurationManager.AppSettings ["LogoAlt"]; }
+		}
+		public static string Company {
+			get { return ConfigurationManager.AppSettings ["Company"]; }
+		}
+		public static string CompanyAddress {
+			get { return ConfigurationManager.AppSettings ["CompanyAddress"]; }
+		}
+		public static string CompanyTaxpayer {
+			get { return ConfigurationManager.AppSettings ["CompanyTaxpayer"]; }
+		}
+		public static string CompanyTaxpayerName {
+			get { return ConfigurationManager.AppSettings ["CompanyTaxpayerName"]; }
+		}
+		public static string PromissoryNoteContent {
+			get { return ConfigurationManager.AppSettings ["PromissoryNoteContent"]; }
 		}
 	}
 }

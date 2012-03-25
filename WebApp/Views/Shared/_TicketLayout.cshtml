@@ -1,4 +1,5 @@
 ﻿@using Business.Essentials
+@using Business.Essentials.WebApp.Helpers
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,14 +11,14 @@
 <body>
     <header>
         <div id="logo">
-            <img src="@Url.Content("~/Content/images/logo-ticket.png")" alt="@Resources.Alt_Logo" title="@Resources.Title_Logo"/>
+            <img src="@Url.Content("~/Content/images/logo-ticket.png")" alt="@Configuration.LogoAlt" title="@Configuration.LogoTitle"/>
         </div>
-        <h1>@Resources.Company</h1>
+        <h1>@Configuration.Company</h1>
         @if (ViewBag.SkipAddress == null || !ViewBag.SkipAddress)
         {
-        <h3>@Resources.CompanyTaxpayer</h3>
-        <h3>@Resources.CompanyTaxpayerName</h3>
-        <h3>@Resources.CompanyAddress</h3>
+        <h3>@Configuration.CompanyTaxpayer</h3>
+        <h3>@Configuration.CompanyTaxpayerName</h3>
+        <h3>@Configuration.CompanyAddress</h3>
         }
         <h2>@ViewBag.Title</h2>
     </header>

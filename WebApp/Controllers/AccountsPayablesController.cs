@@ -133,7 +133,7 @@ namespace Business.Essentials.WebApp.Controllers
 
         public ViewResult AccountStatement(int id)
         {
-            var date = new AccountsPayableEntry();
+            //var date = new AccountsPayableEntry();
             Supplier item = Supplier.Find(id);
             var results = new List<AccountsPayableEntry>();
             var qry_purchases = (from x in PurchaseOrder.Queryable
