@@ -1,18 +1,18 @@
 ﻿@using Business.Essentials
 @using Business.Essentials.Model
 @using Business.Essentials.WebApp.Helpers
-@model CashDrawer
+@model Store
 
 @{
     ViewBag.Title = Resources.Details;
     var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CashDrawers);
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Stores);
 }
 
 <h2>@Resources.Details</h2>
 
 <fieldset>
-    <legend>@Resources.Title_CashDrawer</legend>
+    <legend>@Resources.Title_Store</legend>
 
     <div class="display-label">
         @Html.LabelFor(model => model.Code)
@@ -27,21 +27,7 @@
     <div class="display-field">
         @Html.DisplayFor(model => model.Name)
     </div>
-      
-    <div class="display-label">
-        @Html.LabelFor(model => model.Store)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Store.Name)
-    </div>
-@*
-    <div class="display-label">
-        @Html.LabelFor(model => model.HostAddress)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.HostAddress)
-    </div>
-*@
+    
     <div class="display-label">
         @Html.LabelFor(model => model.Comment)
     </div>

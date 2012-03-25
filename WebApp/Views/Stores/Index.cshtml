@@ -1,15 +1,15 @@
 ﻿@using Business.Essentials
 @using Business.Essentials.Model
 @using Business.Essentials.WebApp.Helpers
-@model IEnumerable<CashDrawer>
+@model IEnumerable<Store>
 
 @{
-    ViewBag.Title = Resources.Title_CashDrawer;
+    ViewBag.Title = Resources.Title_Store;
     var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CashDrawers);
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Stores);
 }
 
-<h2>@Resources.DisplayName_CashDrawers</h2>
+<h2>@Resources.DisplayName_Stores</h2>
 
 <p>
 @if(Privilege.AllowCreate)
@@ -20,38 +20,26 @@
 <table>
     <tr>
         <th>
-            @Html.LabelFor(x => new CashDrawer().Code)
+            @Html.LabelFor(x => new Store().Code)
         </th>
 
         <th>
-            @Html.LabelFor(x => new CashDrawer().Name)
+            @Html.LabelFor(x => new Store().Name)
         </th>
         
-        <th>
-            @Html.LabelFor(x => new CashDrawer().Store)
-        </th>
-        @*
-        <th>
-            @Html.LabelFor(x => new CashDrawer().HostAddress)
-        </th>
-        *@
         <th></th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Code)
+            @Html.DisplayFor(x => item.Code)
         </td>
+
         <td>
-            @Html.DisplayFor(modelItem => item.Name)
+            @Html.DisplayFor(x => item.Name)
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Store.Name)
-        </td>
-       @* <td>
-            @Html.DisplayFor(modelItem => item.HostAddress)
-        </td>*@
+       
         <td class="actions">
         	@if(Privilege.AllowUpdate)
         	{
@@ -68,5 +56,4 @@
         </td>
     </tr>
 }
-
 </table>

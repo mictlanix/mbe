@@ -29,7 +29,14 @@
             @Html.EditorFor(model => model.Name)
             @Html.ValidationMessageFor(model => model.Name)
         </div>
-        
+          
+        <div class="display-label">
+            @Html.LabelFor(model => model.Store)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.Store.Name)
+        </div>
+@*
         <div class="editor-label">
             @Html.LabelFor(model => model.HostAddress)
         </div>
@@ -37,7 +44,7 @@
             @Html.EditorFor(model => model.HostAddress)
             @Html.ValidationMessageFor(model => model.HostAddress)
         </div>
-
+*@
         <div class="editor-label">
             @Html.LabelFor(model => model.Comment)
         </div>

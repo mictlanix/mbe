@@ -94,6 +94,8 @@ namespace Business.Essentials.Model
         [Display(Name = "DisplayName_CustomerReturnHistoric", ResourceType = typeof(Resources))]
         ReturnCustomerHistoric,
         [Display(Name = "DisplayName_SupplierReturnHistoric", ResourceType = typeof(Resources))]
-        SupplierReturnHistoric
+        SupplierReturnHistoric,
+        [Display(Name = "DisplayName_Stores", ResourceType = typeof(Resources))]
+        Stores
     }
 }
