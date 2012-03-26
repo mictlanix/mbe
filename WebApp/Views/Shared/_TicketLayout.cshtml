@@ -11,9 +11,9 @@
 <body>
     <header>
         <div id="logo">
-            <img src="@Url.Content("~/Content/images/logo-ticket.png")" alt="@Configuration.LogoAlt" title="@Configuration.LogoTitle"/>
+            <img src="@Url.Content(ViewBag.StoreLogo)" alt="@Configuration.LogoAlt" title="@Configuration.LogoTitle"/>
         </div>
-        <h1>@Configuration.Company</h1>
+        <h1>@ViewBag.Store</h1>
         @if (ViewBag.SkipAddress == null || !ViewBag.SkipAddress)
         {
         <h3>@Configuration.CompanyTaxpayer</h3>
@@ -26,7 +26,7 @@
         @RenderBody()
     </section>
     <footer>
-    	-@RenderSection("Footer", required: false)-
+    	@RenderSection("Footer", required: false)
 	</footer>
 </body>
 </html>

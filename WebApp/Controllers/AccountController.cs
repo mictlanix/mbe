@@ -29,14 +29,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
 using Business.Essentials.Model;
 using Business.Essentials.WebApp.Models;
+using Business.Essentials.WebApp.Helpers;
 
 namespace Business.Essentials.WebApp.Controllers
 {
@@ -45,7 +44,7 @@ namespace Business.Essentials.WebApp.Controllers
         bool ValidateUser(string username, string password)
         {
             User user = Model.User.Queryable.SingleOrDefault(x => x.UserName == username);
-            return user != null && user.Password == SHA1(password);
+            return user != null && user.Password ==  SecurityHelpers.SHA1(password);
         }
 
         bool CreateUser(string username, string password, int employee, string email)
@@ -60,7 +59,7 @@ namespace Business.Essentials.WebApp.Controllers
             User user = new User
             {
                 UserName = username,
-                Password = SHA1(password),
+                Password = SecurityHelpers.SHA1(password),
                 Employee = Employee.Find(employee),
                 Email = email
             };
@@ -73,24 +72,15 @@ namespace Business.Essentials.WebApp.Controllers
         bool ChangePassword(string username, string oldPassword, string newPassword)
         {
             User user = Model.User.Find(username);
-            string pwd = SHA1(oldPassword);
+            string pwd = SecurityHelpers.SHA1(oldPassword);
 
             if (user == null || user.Password != pwd)
                 return false;
 
-            user.Password = SHA1(newPassword);
+            user.Password = SecurityHelpers.SHA1(newPassword);
             user.Save();
             
             return true;
-        }
-
-
-        protected string SHA1(string text)
-        {
-            byte[] bytes = Encoding.Default.GetBytes("" + text);
-            SHA1CryptoServiceProvider sha1 = new SHA1CryptoServiceProvider();
-
-            return BitConverter.ToString(sha1.ComputeHash(bytes)).Replace("-", "");
         }
 
         //
@@ -233,9 +223,65 @@ namespace Business.Essentials.WebApp.Controllers
         //
         // GET: /Account/ChangePasswordSuccess
 
-        public ActionResult ChangePasswordSuccess()
-        {
-            return View();
-        }
+        public ActionResult ChangePasswordSuccess ()
+		{
+			return View ();
+		}
+		
+		public ActionResult LocalSettings ()
+		{
+			LocalSettings item = new LocalSettings ();
+			
+			if (Request.Cookies ["Store"] != null) {
+				item.Store = Store.TryFind (int.Parse (Request.Cookies ["Store"].Value));
+			}
+			
+			if (Request.Cookies ["PointOfSale"] != null) {
+				item.PointOfSale = PointOfSale.TryFind (int.Parse (Request.Cookies ["PointOfSale"].Value));
+			}
+			
+			if (Request.Cookies ["CashDrawer"] != null) {
+				item.CashDrawer = CashDrawer.TryFind (int.Parse (Request.Cookies ["CashDrawer"].Value));
+			}
+			
+			return View (item);
+		}
+		
+		[HttpPost]
+		public ActionResult LocalSettings (LocalSettings item)
+		{
+			item.Store = Store.TryFind (item.StoreId);
+			item.PointOfSale = PointOfSale.TryFind (item.PointOfSaleId);
+			item.CashDrawer = CashDrawer.TryFind (item.CashDrawerId.GetValueOrDefault ());
+			
+			if (!ModelState.IsValid) {
+				return View (item);
+			}
+			
+			Response.Cookies ["Store"].Value = item.Store.Id.ToString ();
+			Response.Cookies ["Store"].Expires = DateTime.Now.AddYears (100);
+			
+			if (item.PointOfSale != null) {
+				Response.Cookies ["PointOfSale"].Value = item.PointOfSale.Id.ToString ();
+				Response.Cookies ["PointOfSale"].Expires = DateTime.Now.AddYears (100);
+			} else {
+				if (Request.Cookies ["PointOfSale"] != null) {
+					Response.Cookies ["PointOfSale"].Value = string.Empty;
+					Response.Cookies ["PointOfSale"].Expires = DateTime.Now.AddDays (-1d);
+				}
+			}
+			
+			if (item.CashDrawer != null) {
+				Response.Cookies ["CashDrawer"].Value = item.CashDrawer.Id.ToString ();
+				Response.Cookies ["CashDrawer"].Expires = DateTime.Now.AddYears (100);
+			} else {
+				if (Request.Cookies ["CashDrawer"] != null) {
+					Response.Cookies ["CashDrawer"].Value = string.Empty;
+					Response.Cookies ["CashDrawer"].Expires = DateTime.Now.AddDays (-1d);
+				}
+			}
+			
+			return RedirectToAction ("Index", "Home");
+		}
     }
 }

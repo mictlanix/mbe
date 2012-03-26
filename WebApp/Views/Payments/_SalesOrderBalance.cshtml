@@ -37,16 +37,17 @@
 </fieldset>
 
 <script type="text/javascript">
-@if (Model.Balance >= 0)
-{
-    @:$("#form").hide("slow");
-}
-else
-{
-    @:$("#Amount").val("@((-Model.Balance).ToString("0.00"))");
-    @:$("#form").show("slow");
-}
     $(function() {
+		@if (Model.Balance >= 0) {
+		    <text>$("#form").hide("slow");</text>
+		} else {
+		    <text>
+		    	$("#Amount").val("@((-Model.Balance).ToString("0.00"))");
+		    	$("#form").show("slow");
+		    </text>
+		}
+		
+		$(".print").die();
         $(".print").printPage({
           url: "@Url.Action("PrintOrder", "Sales", new { id = Model.Id })"
         });

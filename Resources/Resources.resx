@@ -544,7 +544,7 @@
     <value>Masculino</value>
   </data>
   <data name="SalesOrderId" xml:space="preserve">
-    <value>Folio</value>
+    <value>ID</value>
   </data>
   <data name="PointOfSale" xml:space="preserve">
     <value>Punto de Venta</value>
@@ -1059,7 +1059,7 @@ Vencimiento: {0:d}</value>
     <value>Facturación</value>
   </data>
   <data name="SalesInvoiceId" xml:space="preserve">
-    <value>Folio de Sistema</value>
+    <value>ID</value>
   </data>
   <data name="NewInvoice" xml:space="preserve">
     <value>Factura Nueva</value>
@@ -1307,5 +1307,26 @@ Realizada el: {0:d}</value>
   </data>
   <data name="Title_Store" xml:space="preserve">
     <value>Tienda</value>
+  </data>
+  <data name="Title_LocalSettings" xml:space="preserve">
+    <value>Configuración Local</value>
+  </data>
+  <data name="DisplayName_LocalSettings" xml:space="preserve">
+    <value>Configuración Local</value>
+  </data>
+  <data name="DisplayName_Settings" xml:space="preserve">
+    <value>Opciones</value>
+  </data>
+  <data name="LocalSettings" xml:space="preserve">
+    <value>Configuración</value>
+  </data>
+  <data name="InvalidStore" xml:space="preserve">
+    <value>Tienda Inválida</value>
+  </data>
+  <data name="Message_InvalidStore" xml:space="preserve">
+    <value>La máquina desde la cuál está tratando de hacer esta operación no tiene configurada una tienda válida.</value>
+  </data>
+  <data name="Logo" xml:space="preserve">
+    <value>Logo</value>
   </data>
 </root>

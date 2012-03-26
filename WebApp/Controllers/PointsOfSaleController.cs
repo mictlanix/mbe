@@ -120,16 +120,22 @@ namespace Business.Essentials.WebApp.Controllers
         // POST: /Warehouses/Delete/5
 
         [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            PointOfSale pointSale = PointOfSale.Find(id);
-            pointSale.Delete();
-            return RedirectToAction("Index");
-        }
+        public ActionResult DeleteConfirmed (int id)
+		{
+			PointOfSale pointSale = PointOfSale.Find (id);
+			pointSale.Delete ();
+			return RedirectToAction ("Index");
+		}
+		
+		public JsonResult GetSuggestions (int store, string pattern)
+		{
+			var qry = from x in PointOfSale.Queryable
+                      where x.Store.Id == store &&
+							(x.Code.Contains (pattern) ||
+					 		 x.Name.Contains (pattern))
+                      select new { id = x.Id, name = x.Name };
 
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-        }
+			return Json (qry.Take (15).ToList (), JsonRequestBehavior.AllowGet);
+		}
     }
 }

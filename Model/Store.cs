@@ -53,7 +53,12 @@ namespace Business.Essentials.Model
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string Name { get; set; }
-
+		
+		[Property]
+		[UIHint("Image")]
+		[Display(Name = "Logo", ResourceType = typeof(Resources))]
+		public string Logo { get; set; }
+		
         [Property]
         [DataType(DataType.MultilineText)]
         [Display(Name = "Comment", ResourceType = typeof(Resources))]

@@ -46,21 +46,6 @@ namespace Business.Essentials.WebApp.Controllers
 {
     public class ProductsController : Controller
     {
-
-        // AJAX
-        // GET: /Products/GetSuggestions
-
-        public JsonResult GetSuggestions(string pattern)
-        {
-            var qry = from x in Product.Queryable
-                      where x.Name.Contains(pattern) ||
-                            x.Code.Contains(pattern) ||
-                            x.SKU.Contains(pattern)
-                      select new { id = x.Id, name = x.Name, code = x.Code, sku = x.SKU, url = x.Photo };
-
-            return Json(qry.Take(15).ToList(), JsonRequestBehavior.AllowGet);
-        }
-
         //
         // GET: /Products/
 
@@ -253,9 +238,19 @@ namespace Business.Essentials.WebApp.Controllers
             return hash;
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-        }
+		// AJAX
+		// GET: /Products/GetSuggestions
+
+		public JsonResult GetSuggestions (string pattern)
+		{
+			var qry = from x in Product.Queryable
+                      where x.Name.Contains (pattern) ||
+                            x.Code.Contains (pattern) ||
+                            x.SKU.Contains (pattern)
+					  orderby x.Name
+                      select new { id = x.Id, name = x.Name, code = x.Code, sku = x.SKU, url = x.Photo };
+
+			return Json (qry.Take (15).ToList (), JsonRequestBehavior.AllowGet);
+		}
     }
 }

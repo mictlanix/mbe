@@ -76,26 +76,6 @@
                         @Html.DisplayFor(modelItem => item.Price4)
                     </td>
                 </tr>
-                <tr>
-                @if (item.Price5 > 0)
-                {
-                    <td title="@Resources.Price5" style="border:0;background:#F8E6E0 url('@Url.Content("~/Content/images/price5.png")') no-repeat left bottom;">
-                        @Html.DisplayFor(modelItem => item.Price5)
-                    </td>
-                }
-                else if (item.Price6 > 0)
-                {
-                    <td title="@Resources.Price6" style="border:0;background:#F8E6E0 url('@Url.Content("~/Content/images/price6.png")') no-repeat left bottom;">
-                        @Html.DisplayFor(modelItem => item.Price6)
-                    </td>
-                }
-                @if (item.Price7 > 0)
-                {
-                    <td title="@Resources.Price7" style="border:0;background:#F8E6E0 url('@Url.Content("~/Content/images/price7.png")') no-repeat left bottom;">
-                        @Html.DisplayFor(modelItem => item.Price7)
-                    </td>
-                }
-                </tr>
             </table>
         </td>
         <td>

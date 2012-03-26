@@ -3629,5 +3629,68 @@ namespace Business.Essentials {
                 return ResourceManager.GetString("Zone", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuración Local.
+        /// </summary>
+        public static string Title_LocalSettings {
+            get {
+                return ResourceManager.GetString("Title_LocalSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuración Local.
+        /// </summary>
+        public static string DisplayName_LocalSettings {
+            get {
+                return ResourceManager.GetString("DisplayName_LocalSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opciones.
+        /// </summary>
+        public static string DisplayName_Settings {
+            get {
+                return ResourceManager.GetString("DisplayName_Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuración.
+        /// </summary>
+        public static string LocalSettings {
+            get {
+                return ResourceManager.GetString("LocalSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tienda Inválida.
+        /// </summary>
+        public static string InvalidStore {
+            get {
+                return ResourceManager.GetString("InvalidStore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to La máquina desde la cuál está tratando de hacer esta operación no tiene configurada una tienda válida.
+        /// </summary>
+        public static string Message_InvalidStore {
+			get {
+				return ResourceManager.GetString ("Message_InvalidStore", resourceCulture);
+			}
+		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Logo.
+        /// </summary>
+        public static string Logo {
+            get {
+                return ResourceManager.GetString("Logo", resourceCulture);
+            }
+        }
     }
 }
