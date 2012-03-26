@@ -45,7 +45,16 @@ namespace Business.Essentials.Model
         [Display(Name = "ReturnOrderId", ResourceType = typeof(Resources))]
         [DisplayFormat(DataFormatString = "{0:000000}")]
         public int Id { get; set; }
-
+		
+		[BelongsTo("store")]
+		[Display(Name = "Store", ResourceType = typeof(Resources))]
+		public virtual Store Store { get; set; }
+		
+		[Property("serial")]
+		[Display(Name = "Serial", ResourceType = typeof(Resources))]
+		[DisplayFormat(DataFormatString="{0:000000}")]
+		public int Serial { get; set; }
+		
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "SalesOrder", ResourceType = typeof(Resources))]
         public int SalesOrderId { get; set; }

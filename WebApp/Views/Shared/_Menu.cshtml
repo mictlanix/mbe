@@ -105,20 +105,6 @@
                                    href="@Url.Action("Index", "PriceLists")">@Resources.Title_PriceList</a>
                             </li>
                             }
-                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.PointsOfSale).AllowRead)
-                            {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "PointsOfSale") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "PointsOfSale")">@Resources.Title_PointOfSale</a>
-                            </li>
-                            }
-                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.CashDrawers).AllowRead)
-                            {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "CashDrawers") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "CashDrawers")">@Resources.Title_CashDrawer</a>
-                            </li>
-                            }
                             @if (Html.GetPrivilege(CurrentUser, SystemObjects.Taxpayers).AllowRead)
                             {
                             <li class="gbmtc">
@@ -131,6 +117,20 @@
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("Index", "Stores") ? "gbm0l" : "")"
                                    href="@Url.Action("Index", "Stores")">@Resources.DisplayName_Stores</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.PointsOfSale).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "PointsOfSale") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "PointsOfSale")">@Resources.Title_PointOfSale</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.CashDrawers).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "CashDrawers") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "CashDrawers")">@Resources.Title_CashDrawer</a>
                             </li>
                             }
                         </ol>

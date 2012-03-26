@@ -95,3 +95,7 @@ legend,.legend {
 	margin:20px 10px;
 	text-align:justify;
 }
+fieldset {
+	margin:10px 0;
+	clear:both;
+}

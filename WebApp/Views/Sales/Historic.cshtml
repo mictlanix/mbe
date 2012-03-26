@@ -79,9 +79,15 @@
         	@if(Privilege.AllowRead)
         	{
             	@Html.ActionLink(" ", "HistoricDetails", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+            	@Html.ActionLink(" ", item.IsCredit ? "PrintPromissoryNote" : "PrintOrder", new { id = item.Id }, new { @class = "button icon print icon-only", @title = Resources.Print })
             }
         </td>
     </tr>
 }
 
 </table>
+<script type="text/javascript">
+	$(function() {
+        $(".print").printPage();
+	});
+</script>

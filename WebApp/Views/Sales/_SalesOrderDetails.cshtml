@@ -1,6 +1,6 @@
 ﻿@using Business.Essentials
 @using Business.Essentials.Model
-@model IEnumerable<Business.Essentials.Model.SalesOrderDetail>
+@model IEnumerable<SalesOrderDetail>
 
 
 <table>
@@ -70,7 +70,7 @@
     <td></td>
     <td></td>
     <td class="number">
-        @Model.Sum(x => x.Taxes)
+        @Model.Sum(x => x.Taxes).ToString("c")
     </td>
     <td class="number">
         @Model.Sum(x => x.Total).ToString("c")

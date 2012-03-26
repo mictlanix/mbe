@@ -46,41 +46,45 @@ namespace Business.Essentials.WebApp.Controllers
         //
         // GET: /Returns/
 
-        public ActionResult Index()
-        {
-            var qry = from x in ReturnCustomer.Queryable
-                      where !x.IsCancelled && !x.IsCompleted 
+        public ActionResult Index ()
+		{
+			var item = GetStore ();
+			
+			if (item == null) {
+				return View ("InvalidStore");
+			}
+			
+			var qry = from x in ReturnCustomer.Queryable
+                      where x.Store.Id == item.Id &&
+							!x.IsCancelled &&
+							!x.IsCompleted
                       orderby x.Id descending
                       select x;
 
-            return View(qry.ToList());
-        }
+			return View (qry.ToList ());
+		}
 
         [HttpPost]
-        public ActionResult Index(int id)
-        {
-            var qry = from x in SalesOrder.Queryable
+        public ActionResult Index (int id)
+		{
+			var qry = from x in SalesOrder.Queryable
                       where x.IsCompleted && x.IsPaid &&
                             x.Id == id
                       select x;
 
-            if (Request.IsAjaxRequest())
-            {
-                return PartialView("_Index", qry.ToList());
-            }
-            else
-            {
-                return View(new SalesOrder());
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_Index", qry.ToList ());
+			} else {
+				return View (new SalesOrder ());
+			}
+		}
 
-            }
-        }
+        public ViewResult PrintCustomerReturn (int id)
+		{
+			ReturnCustomer item = ReturnCustomer.Find (id);
 
-        public ViewResult PrintCustomerReturn(int id)
-        {
-            ReturnCustomer item = ReturnCustomer.Find(id);
-
-                return View("_CustomerReturnTicket", item);
-        }
+			return View ("_CustomerReturnTicket", item);
+		}
 
         public ViewResult Historic()
         {
@@ -108,7 +112,6 @@ namespace Business.Essentials.WebApp.Controllers
             return View(item);
         }
 
-
         public ViewResult HistoricDetails(int id)
         {
             ReturnCustomer order = ReturnCustomer.Find(id);
@@ -119,28 +122,37 @@ namespace Business.Essentials.WebApp.Controllers
         //
         // GET: /Returns/Create
         [HttpPost]
-        public ActionResult CreateFromSalesOrder(int id)
-        {
-            SalesOrder sales = SalesOrder.Find(id);
+        public ActionResult CreateFromSalesOrder (int id)
+		{
+			SalesOrder sales = SalesOrder.Find (id);
 
-            ReturnCustomer item = new ReturnCustomer();
-            item.CreationTime = DateTime.Now;
-            item.Creator = SecurityHelpers.GetUser(User.Identity.Name).Employee;
-            item.SalesOrder = sales;
-            item.SalesPerson = sales.SalesPerson;
-            item.Customer = sales.Customer;
-            item.Updater = SecurityHelpers.GetUser(User.Identity.Name).Employee;
-            item.ModificationTime = DateTime.Now;
+			var item = new ReturnCustomer ();
+			
+			// Store and Serial
+			item.Store = sales.Store;
+			try {
+				item.Serial = (from x in ReturnCustomer.Queryable
+	            			   where x.Store.Id == item.Store.Id
+	                      	   select x.Serial).Max () + 1;
+			} catch {
+				item.Serial = 1;
+			}
+			
+			item.CreationTime = DateTime.Now;
+			item.Creator = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			item.SalesOrder = sales;
+			item.SalesPerson = sales.SalesPerson;
+			item.Customer = sales.Customer;
+			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			item.ModificationTime = DateTime.Now;
 
-            item.Create();
+			item.Create ();
 
-            foreach (var x in sales.Details)
-            {
-                var sum = GetReturnableQuantity(x.Id);
+			foreach (var x in sales.Details) {
+				var sum = GetReturnableQuantity (x.Id);
 
-                if (sum > 0)
-                {
-                    var detail = new ReturnCustomerDetail
+				if (sum > 0) {
+					var detail = new ReturnCustomerDetail
                     {
                         Order = item,
                         SalesOrderDetail = x,
@@ -153,15 +165,14 @@ namespace Business.Essentials.WebApp.Controllers
                         Quantity = sum
                     };
 
-                    using (var session = new SessionScope())
-                    {
-                        detail.CreateAndFlush();
-                    }
-                }
-            }
+					using (var session = new SessionScope()) {
+						detail.CreateAndFlush ();
+					}
+				}
+			}
 
-                return RedirectToAction("Details", new { id = item.Id });
-        } 
+			return RedirectToAction ("Details", new { id = item.Id });
+		} 
 
         [HttpPost]
         public JsonResult EditDetailQuantity(int id, decimal quantity)
@@ -234,17 +245,13 @@ namespace Business.Essentials.WebApp.Controllers
                            WHERE m.completed <> 0 AND d.sales_order_detail = :detail ";
 
             IList<decimal> quantities = (IList<decimal>)ActiveRecordMediator<ReturnCustomerDetail>.Execute(
-                delegate(ISession session, object instance)
-                {
-                    try
-                    {
+                delegate(ISession session, object instance) {
+                    try {
                         return session.CreateSQLQuery(sql)
-                            .SetParameter("detail", id)
-                            .SetMaxResults(1)
-                            .List<decimal>();
-                    }
-                    catch (ArgumentNullException)
-                    {
+                        			  .SetParameter("detail", id)
+                            		  .SetMaxResults(1)
+                            		  .List<decimal>();
+                    } catch (ArgumentNullException) {
                         return null;
                     }
                 }, null);
@@ -256,5 +263,14 @@ namespace Business.Essentials.WebApp.Controllers
 
             return item.Quantity;
         }
+		
+		Store GetStore ()
+		{
+			if (Request.Cookies ["Store"] != null) {
+				return Store.TryFind (int.Parse (Request.Cookies ["Store"].Value));
+			}
+			
+			return null;
+		}
     }
 }

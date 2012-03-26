@@ -40,6 +40,19 @@ namespace Business.Essentials.Model
     {
         [PrimaryKey(PrimaryKeyType.Identity, "customer_payment_id")]
         public int Id { get; set; }
+		
+		[BelongsTo("store")]
+		[Display(Name = "Store", ResourceType = typeof(Resources))]
+		public virtual Store Store { get; set; }
+		
+		[Property("serial")]
+		[Display(Name = "Serial", ResourceType = typeof(Resources))]
+		[DisplayFormat(DataFormatString="{0:000000}")]
+		public int Serial { get; set; }
+		
+		[BelongsTo("cash_session")]
+		[Display(Name = "CashSession", ResourceType = typeof(Resources))]
+		public virtual CashSession CashSession { get; set; }
 
         [BelongsTo("sales_order")]
         [Display(Name = "SalesOrder", ResourceType = typeof(Resources))]
@@ -74,10 +87,6 @@ namespace Business.Essentials.Model
         [DataType(DataType.DateTime)]
         [Display(Name = "Date", ResourceType = typeof(Resources))]
         public DateTime Date { get; set; }
-
-        [BelongsTo("cash_session")]
-        [Display(Name = "CashSession", ResourceType = typeof(Resources))]
-        public virtual CashSession CashSession { get; set; }
 
         [Property]
         [Display(Name = "Reference", ResourceType = typeof(Resources))]

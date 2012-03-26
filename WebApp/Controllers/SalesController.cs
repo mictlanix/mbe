@@ -45,14 +45,22 @@ namespace Business.Essentials.WebApp.Controllers
         //
         // GET: /Sales/
 
-        public ViewResult Index()
-        {
-            var qry = from x in SalesOrder.Queryable
-                      where !x.IsCancelled && !x.IsCompleted
+        public ViewResult Index ()
+		{
+			var item = GetPoS ();
+			
+			if (item == null) {
+				return View ("InvalidPointOfSale");
+			}
+			
+			var qry = from x in SalesOrder.Queryable
+                      where x.Store.Id == item.Store.Id &&
+							!x.IsCancelled &&
+							!x.IsCompleted
                       select x;
 
-            return View(qry.ToList());
-        }
+			return View (qry.ToList ());
+		}
 
         public ViewResult Historic()
         {
@@ -116,34 +124,41 @@ namespace Business.Essentials.WebApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult New(SalesOrder item)
-        {
-            item.PointOfSale = GetPoS();
+        public ActionResult New (SalesOrder item)
+		{
+			item.PointOfSale = GetPoS ();
 
-            if (item.PointOfSale == null)
-            {
-                return View("InvalidPointOfSale");
-            }
+			if (item.PointOfSale == null) {
+				return View ("InvalidPointOfSale");
+			}
+			
+			// Store and Serial
+			item.Store = item.PointOfSale.Store;
+			try {
+				item.Serial = (from x in SalesOrder.Queryable
+	            			   where x.Store.Id == item.Store.Id
+	                      	   select x.Serial).Max () + 1;
+			} catch {
+				item.Serial = 1;
+			}
+			
+			item.Customer = Customer.Find (item.CustomerId);
+			item.SalesPerson = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			item.Date = DateTime.Now;
+			item.DueDate = item.IsCredit ? item.Date.AddDays (item.Customer.CreditDays) : item.Date;
 
-            item.Customer = Customer.Find(item.CustomerId);
-            item.SalesPerson = SecurityHelpers.GetUser(User.Identity.Name).Employee;
-            item.Date = DateTime.Now;
-            item.DueDate = item.IsCredit ? item.Date.AddDays(item.Customer.CreditDays) : item.Date;
+			using (var session = new SessionScope()) {
+				item.CreateAndFlush ();
+			}
 
-            using (var session = new SessionScope())
-            {
-                item.CreateAndFlush();
-            }
+			System.Diagnostics.Debug.WriteLine ("New SalesOrder [Id = {0}]", item.Id);
 
-            System.Diagnostics.Debug.WriteLine("New SalesOrder [Id = {0}]", item.Id);
+			if (item.Id == 0) {
+				return View ("UnknownError");
+			}
 
-            if (item.Id == 0)
-            {
-                return View("UnknownError");
-            }
-
-            return RedirectToAction("Edit", new { id = item.Id });
-        }
+			return RedirectToAction ("Edit", new { id = item.Id });
+		}
 
         public ActionResult Edit(int id)
         {
@@ -335,7 +350,7 @@ namespace Business.Essentials.WebApp.Controllers
                     name = x.Name, 
                     code = x.Code, 
                     sku = x.SKU, 
-                    url = x.Photo,
+                    url = Url.Content(x.Photo),
                     price = (pl == 1 ? x.Price1 : (pl == 2 ? x.Price2 : (pl == 3 ? x.Price3 : x.Price4))).ToString ("c")
                 };
                 
@@ -345,10 +360,13 @@ namespace Business.Essentials.WebApp.Controllers
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}
 		
-		// FIXME: cookie
         PointOfSale GetPoS ()
 		{
-			return PointOfSale.Queryable.FirstOrDefault ();
-        }
+			if (Request.Cookies ["PointOfSale"] != null) {
+				return PointOfSale.TryFind (int.Parse (Request.Cookies ["PointOfSale"].Value));
+			}
+			
+			return null;
+		}
     }
 }

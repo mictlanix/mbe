@@ -5,16 +5,19 @@
 @{
     Layout = "~/Views/Shared/_TicketLayout.cshtml";
     ViewBag.Title = Resources.Title_SalesNote;
+    ViewBag.Store = Model.Store.Name;
+    ViewBag.StoreLogo = Model.Store.Logo;
     ViewBag.SkipAddress = true;
 }
 
-<div class="display-label right">
-    @Html.LabelFor(model => model.Date)
+<div class="display-label right floating">
+    @Html.LabelFor(x => x.Date)<br/>
+    @Html.DisplayFor(x => x.Date)
 </div>
-<div class="display-field date right">
-    @Html.DisplayFor(model => model.Date)
+<div class="display-label">
+    @Html.LabelFor(x => x.Serial)<br/>
+    @Html.DisplayFor(x => x.Serial)
 </div>
-
 <fieldset>
     <div class="display-label left floating">
         @Html.LabelFor(x => x.Total)
@@ -40,6 +43,5 @@
 
 @section Footer {
 	<img src="@Url.Action("Code128", "Barcodes", new { id = string.Format("{0}", Html.DisplayFor(x => x.Id)) })" alt="@Html.DisplayFor(x => x.Id)" title="@Html.DisplayFor(x => x.Id)">
-	<br />
-    @Html.DisplayFor(x => x.Id)
+	<p>@Html.LabelFor(x => x.Id): @Html.DisplayFor(x => x.Id)</p>
 }
