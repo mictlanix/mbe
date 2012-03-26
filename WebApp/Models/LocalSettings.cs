@@ -1,8 +1,9 @@
 ﻿// 
-// HtmlHelpers.cs
+// AccountsReceivableEntry.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
+//   Eduardo Nieto <enieto@mictlanix.org>
 // 
 // Copyright (C) 2011 Eddy Zavaleta, Mictlanix, and contributors.
 // 
@@ -27,52 +28,39 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
+using System.Globalization;
 using System.Web.Mvc;
-using System.Web.Routing;
-using System.Security.Cryptography;
-using System.Text;
+using System.Linq;
+using System.Web.Security;
 using Business.Essentials.Model;
 
-namespace Business.Essentials.WebApp.Helpers
+namespace Business.Essentials.WebApp.Models
 {
-    public static class SecurityHelpers
+    public class LocalSettings
     {
-        public static User CurrentUser(this HtmlHelper helper)
-        {
-			User user = helper.ViewContext.HttpContext.Items["CurrentUser"] as User;
-			
-			if (user == null)
-			{
-				user = GetUser(helper, helper.ViewContext.HttpContext.User.Identity.Name);
-				helper.ViewContext.HttpContext.Items["CurrentUser"] = user;
-			}
-			
-            return user;
-        }
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[Display(Name = "Store", ResourceType = typeof(Resources))]
+		[UIHint("StoreSelector")]
+		public int StoreId { get; set; }
 
-        internal static User GetUser(this HtmlHelper helper, string username)
-        {
-            return GetUser(username);
-        }
+		[Display(Name = "Store", ResourceType = typeof(Resources))]
+		public virtual Store Store { get; set; }
+		
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[Display(Name = "PointOfSale", ResourceType = typeof(Resources))]
+		[UIHint("PointOfSaleSelector")]
+		public int PointOfSaleId { get; set; }
 
-        internal static User GetUser(string username)
-        {
-            return User.TryFind(username);
-        }
+		[Display(Name = "PointOfSale", ResourceType = typeof(Resources))]
+		public virtual PointOfSale PointOfSale { get; set; }
+		
+		[Display(Name = "CashDrawer", ResourceType = typeof(Resources))]
+		[UIHint("CashDrawerSelector")]
+		public int? CashDrawerId { get; set; }
 
-        public static AccessPrivilege GetPrivilege (this HtmlHelper helper, User user, SystemObjects obj)
-		{
-			return user.Privileges.SingleOrDefault (x => x.Object == obj) ?? new AccessPrivilege ();
-		}
-
-		internal static string SHA1 (string text)
-		{
-			byte[] bytes = Encoding.Default.GetBytes ("" + text);
-			SHA1CryptoServiceProvider sha1 = new SHA1CryptoServiceProvider ();
-
-			return BitConverter.ToString (sha1.ComputeHash (bytes)).Replace ("-", "");
-		}
+		[Display(Name = "CashDrawer", ResourceType = typeof(Resources))]
+		public virtual CashDrawer CashDrawer { get; set; }
     }
 }
