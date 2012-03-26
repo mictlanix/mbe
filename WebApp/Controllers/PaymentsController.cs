@@ -151,7 +151,7 @@ namespace Business.Essentials.WebApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult OpenSession(CashSession item)
+        public ActionResult OpenSession (CashSession item)
         {
             List<CashCount> cash_counts;
             
@@ -161,7 +161,7 @@ namespace Business.Essentials.WebApp.Controllers
             {
                 return View("InvalidCashDrawer");
             }
-
+			
             cash_counts = new List<CashCount>(item.CashCounts.Where(x => x.Quantity > 0));
 
             item.Start = DateTime.Now;
@@ -203,13 +203,13 @@ namespace Business.Essentials.WebApp.Controllers
         }
 
         [HttpPost]
-        public JsonResult AddPayment(int order, int type, decimal amount, string reference)
-        {
-            var sales_order = SalesOrder.Find(order);
+        public JsonResult AddPayment (int order, int type, decimal amount, string reference)
+		{
+			var sales_order = SalesOrder.Find (order);
 
-            var item = new CustomerPayment
+			var item = new CustomerPayment
             {
-                CashSession = GetSession(),
+                CashSession = GetSession (),
                 SalesOrder = sales_order,
                 Customer = sales_order.Customer,
                 Method = (PaymentMethod)type,
@@ -217,31 +217,36 @@ namespace Business.Essentials.WebApp.Controllers
                 Date = DateTime.Now,
                 Reference = reference
             };
+			
+			// Store and Serial
+			item.Store = item.CashSession.CashDrawer.Store;
+			try {
+				item.Serial = (from x in CustomerPayment.Queryable
+	            			   where x.Store.Id == item.Store.Id
+	                      	   select x.Serial).Max () + 1;
+			} catch {
+				item.Serial = 1;
+			}
 
-            if (item.Method == PaymentMethod.Cash)
-            {
-                if (item.Amount > -item.SalesOrder.Balance)
-                {
-                    item.Change = item.Amount + item.SalesOrder.Balance;
-                    item.Amount = -item.SalesOrder.Balance;
-                }
-            }
-            else {
-                if (item.Amount > -item.SalesOrder.Balance)
-                {
-                    item.Amount = -item.SalesOrder.Balance;
-                }
-            }
+			if (item.Method == PaymentMethod.Cash) {
+				if (item.Amount > -item.SalesOrder.Balance) {
+					item.Change = item.Amount + item.SalesOrder.Balance;
+					item.Amount = -item.SalesOrder.Balance;
+				}
+			} else {
+				if (item.Amount > -item.SalesOrder.Balance) {
+					item.Amount = -item.SalesOrder.Balance;
+				}
+			}
 
-            using (var session = new SessionScope())
-            {
-                item.CreateAndFlush();
-            }
+			using (var session = new SessionScope()) {
+				item.CreateAndFlush ();
+			}
 
-            System.Diagnostics.Debug.WriteLine("New Payment [Id = {0}]", item.Id);
+			System.Diagnostics.Debug.WriteLine ("New Payment [Id = {0}]", item.Id);
 
-            return Json(new { id = item.Id });
-        }
+			return Json (new { id = item.Id });
+		}
 		
         public ActionResult CreditPayment()
         {
@@ -351,14 +356,23 @@ namespace Business.Essentials.WebApp.Controllers
 		// FIXME: cookie
         CashDrawer GetDrawer ()
 		{
-			return CashDrawer.Queryable.FirstOrDefault ();
-        }
+			if (Request.Cookies ["CashDrawer"] != null) {
+				return CashDrawer.TryFind (int.Parse (Request.Cookies ["CashDrawer"].Value));
+			}
+			
+			return null;
+		}
 
         CashSession GetSession ()
 		{
+			var item = GetDrawer ();
+			
+			if (item == null)
+				return null;
+			
 			return CashSession.Queryable
                               .Where (x => x.End == null)
-                              .FirstOrDefault ();
-        }
+                              .SingleOrDefault (x => x.CashDrawer.Id == item.Id);
+		}
     }
 }

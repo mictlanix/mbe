@@ -6,7 +6,6 @@
 @{
     ViewBag.Title = Resources.Details;
     var CurrentUser = Html.CurrentUser() ?? new User();
-    
 }
 
 <h2>@Resources.Details</h2>
@@ -17,6 +16,11 @@
     <div class="display-label">
         @Html.LabelFor(model => model.Id) @Html.Label(":")
         @Html.DisplayFor(model => model.Id)
+    </div>
+    
+    <div class="display-label">
+        @Html.LabelFor(model => model.Serial) @Html.Label(":")
+        @Html.DisplayFor(model => model.Serial)
     </div>
 
     <div class="display-label">

@@ -1,0 +1,96 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Models
+@model LocalSettings
+
+@{
+    ViewBag.Title = Resources.Title_LocalSettings;
+}
+
+<h2>@Resources.DisplayName_LocalSettings</h2> 
+
+<fieldset>
+    <legend>@Resources.DisplayName_Settings</legend>
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary(true)
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Store)
+            @Html.TextBoxFor(model => model.StoreId)
+            @Html.ValidationMessageFor(model => model.StoreId)
+        </div>
+        
+        <div class="editor-label">
+            @Html.LabelFor(model => model.PointOfSale)
+            @Html.EditorFor(model => model.PointOfSaleId)
+            @Html.ValidationMessageFor(model => model.PointOfSaleId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.CashDrawer)
+            @Html.EditorFor(model => model.CashDrawerId)
+            @Html.ValidationMessageFor(model => model.CashDrawerId)
+        </div>
+        
+        <p class="right">
+            <button type="submit" class="icon save">@Resources.Save</button>
+        </p>
+    }
+</fieldset>
+<style type="text/css">
+ul.token-input-list {
+  width:100%;
+}
+</style>
+<script type="text/javascript">
+    $(function () {
+        $("#StoreId").tokenInput("@Url.Action("GetSuggestions", "Stores")", {
+            hintText: "@Resources.HIntText",
+            noResultsText: "@Resources.NoResultsText",
+            searchingText: "@Resources.SearchingText",
+            queryParam: "pattern", minChars: 1, tokenLimit: 1,
+		    @if (Model.Store != null) {
+		    	<text>prePopulate: [{ id: "@Model.Store.Id", name: "@Model.Store.Name"}],</text>
+			}
+            onDelete: function (item){
+                $("#PointOfSaleId").tokenInput("clear");
+                $("#CashDrawerId").tokenInput("clear");
+            }
+        });
+        
+        $("#PointOfSaleId").tokenInput(function() {
+			var item = $("#StoreId").tokenInput("get")[0];
+			
+			if(typeof(item) === "undefined") {
+				item = {id : 0};
+			}
+			
+			return "@Url.Action("GetSuggestions", "PointsOfSale", new { store = 0 })" + item.id; }, {
+            hintText: "@Resources.HIntText",
+            noResultsText: "@Resources.NoResultsText",
+            searchingText: "@Resources.SearchingText",
+            queryParam: "pattern",minChars: 3,tokenLimit: 1
+		    @if (Model.PointOfSale != null) {
+		    	<text>,prePopulate: [{ id: "@Model.PointOfSale.Id", name: "@Model.PointOfSale.Name"}]</text>
+			}
+        });
+        
+        $("#CashDrawerId").tokenInput(function() {
+			var item = $("#StoreId").tokenInput("get")[0];
+			
+			if(typeof(item) === "undefined") {
+				item = {id : 0};
+			}
+			
+			return "@Url.Action("GetSuggestions", "CashDrawers", new { store = 0 })" + item.id; }, {
+            hintText: "@Resources.HIntText",
+            noResultsText: "@Resources.NoResultsText",
+            searchingText: "@Resources.SearchingText",
+            queryParam: "pattern",minChars: 3,tokenLimit: 1
+		    @if (Model.CashDrawer != null) {
+		    	<text>,prePopulate: [{ id: "@Model.CashDrawer.Id", name: "@Model.CashDrawer.Name"}]</text>
+			}
+        });
+    });
+</script>

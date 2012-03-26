@@ -128,24 +128,6 @@ namespace Business.Essentials.Model
         [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
         public decimal Price4 { get; set; }
 
-        [Property("price5")]
-        [Display(Name = "Price5", ResourceType = typeof(Resources))]
-        [DataType(DataType.Currency)]
-        [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
-        public decimal Price5 { get; set; }
-
-        [Property("price6")]
-        [Display(Name = "Price6", ResourceType = typeof(Resources))]
-        [DataType(DataType.Currency)]
-        [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
-        public decimal Price6 { get; set; }
-
-        [Property("price7")]
-        [Display(Name = "Price7", ResourceType = typeof(Resources))]
-        [DataType(DataType.Currency)]
-        [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
-        public decimal Price7 { get; set; }
-
         [Property("tax_rate")]
         [Display(Name = "TaxRate", ResourceType = typeof(Resources))]
         public decimal TaxRate { get; set; }
