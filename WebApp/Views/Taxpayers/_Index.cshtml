@@ -13,24 +13,20 @@
         <th>
             @Html.LabelFor(x => new Taxpayer().Id)
         </th>
-
         <th>
             @Html.LabelFor(x => new Taxpayer().Name)
         </th>
         <th>
-            @Html.LabelFor(x => new Taxpayer().Street)
+            @Html.LabelFor(x => new Address ().Street)
         </th>
         <th>
-            @Html.LabelFor(x => new Taxpayer().Neighborhood)
+            @Html.LabelFor(x => new Address ().Neighborhood)
         </th>
         <th>
-            @Html.LabelFor(x => new Taxpayer().Borough)
-        </th>
-        <th>
-            @Html.LabelFor(x => new Taxpayer().State)
+            @Html.LabelFor(x => new Address ().State)
         </th>
          <th>
-            @Html.LabelFor(x => new Taxpayer().ZipCode)
+            @Html.LabelFor(x => new Address ().ZipCode)
         </th>
 
         <th></th>
@@ -38,37 +34,24 @@
 
 @foreach (var item in Model) {
     <tr>
-        <td class="nowrap">
-            @Html.DisplayFor(x => item.Id)
-        </td>
+        <td class="number">@Html.DisplayFor(x => item.Id)</td>
+        <td>@Html.DisplayFor(x => item.Name)</td>
         <td>
-            @Html.DisplayFor(x => item.Name)
+            @Html.DisplayFor(x => item.Address.Street)
+            @Html.DisplayFor(x => item.Address.ExteriorNumber)
+            @Html.DisplayFor(x => item.Address.InteriorNumber)
         </td>
-        <td>
-            @Html.DisplayFor(x => item.Street)
-            @Html.DisplayFor(x => item.ExteriorNumber)
-            @Html.DisplayFor(x => item.InteriorNumber)
-        </td>
-        <td>
-            @Html.DisplayFor(x => item.Neighborhood)
-        </td>
-        <td>
-            @Html.DisplayFor(x => item.Borough)
-        </td>
-        <td>
-            @Html.DisplayFor(x => item.State)
-        </td>
-        <td class="number">
-            @Html.DisplayFor(x => item.ZipCode)
-        </td>
+        <td>@Html.DisplayFor(x => item.Address.Neighborhood)</td>
+        <td>@Html.DisplayFor(x => item.Address.State)</td>
+        <td class="number">@Html.DisplayFor(x => item.Address.ZipCode)</td>
         <td class="actions">
-        	@if(Privilege.AllowUpdate)
-        	{
-            	@Html.ActionLink(" ", "Edit", "Taxpayers", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
-            }
         	@if(Privilege.AllowRead)
         	{
             	@Html.ActionLink(" ", "Details", "Taxpayers", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+            }
+        	@if(Privilege.AllowUpdate)
+        	{
+            	@Html.ActionLink(" ", "Edit", "Taxpayers", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
             }
         	@if(Privilege.AllowDelete)
         	{

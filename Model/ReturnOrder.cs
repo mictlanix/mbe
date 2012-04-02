@@ -127,7 +127,7 @@ namespace Business.Essentials.Model
 
         public override bool Equals(object obj)
         {
-            PurchaseOrder other = obj as PurchaseOrder;
+            ReturnOrder other = obj as ReturnOrder;
 
             if (other == null)
                 return false;

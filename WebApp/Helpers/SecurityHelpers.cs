@@ -1,5 +1,5 @@
 ﻿// 
-// HtmlHelpers.cs
+// SecurityHelpers.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
@@ -73,6 +73,21 @@ namespace Business.Essentials.WebApp.Helpers
 			SHA1CryptoServiceProvider sha1 = new SHA1CryptoServiceProvider ();
 
 			return BitConverter.ToString (sha1.ComputeHash (bytes)).Replace ("-", "");
+		}
+		
+		internal static byte[] DecodeBase64 (string data)
+		{
+			return System.Convert.FromBase64String (data);
+		}
+
+		internal static string EncodeBase64 (byte[] data)
+		{
+			return System.Convert.ToBase64String (data, Base64FormattingOptions.None);
+		}
+
+		internal static string EncodeBase64 (string data)
+		{
+			return EncodeBase64 (Encoding.UTF8.GetBytes (data));
 		}
     }
 }

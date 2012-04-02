@@ -15,25 +15,20 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\</OutputPath>
+    <OutputPath>bin</OutputPath>
+    <WarningLevel>4</WarningLevel>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ExcludeGeneratedDebugSymbol>true</ExcludeGeneratedDebugSymbol>
-    <ExcludeApp_Data>true</ExcludeApp_Data>
-    <PublishDatabases>false</PublishDatabases>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Antlr3.Runtime">
@@ -103,9 +98,6 @@
     <Reference Include="Lucene.Net">
       <HintPath>..\Packages\Lucene.2.9.2.2\lib\Lucene.Net.dll</HintPath>
     </Reference>
-    <Reference Include="BouncyCastle.Crypto">
-      <HintPath>lib\BouncyCastle.Crypto.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RegisterClientValidationExtensions.cs" />
@@ -160,6 +152,7 @@
     <Compile Include="Helpers\Configuration.cs" />
     <Compile Include="Helpers\CFDv2Helpers.cs" />
     <Compile Include="Models\LocalSettings.cs" />
+    <Compile Include="Utils\CurrencyConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
@@ -439,12 +432,20 @@
     <Content Include="MictlanixBE.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Views\Invoices\_MasterInfo.cshtml" />
     <Content Include="Views\Invoices\_Totals.cshtml" />
-    <Content Include="Views\Invoices\_Detail.cshtml" />
-    <Content Include="Views\Invoices\_Edit.cshtml" />
     <Content Include="Views\Account\LocalSettings.cshtml" />
     <Content Include="Views\Shared\InvalidStore.cshtml" />
+    <Content Include="Views\Invoices\_MasterView.cshtml" />
+    <Content Include="Views\Invoices\_MasterEditView.cshtml" />
+    <Content Include="Views\Invoices\_DetailEditView.cshtml" />
+    <Content Include="Views\Invoices\_DetailView.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Address.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Address.cshtml" />
+    <Content Include="Views\TaxpayerDocuments\_Index.cshtml" />
+    <Content Include="Views\Invoices\_BatchSelector.cshtml" />
+    <Content Include="Views\Invoices\Details.cshtml" />
+    <Content Include="Views\Invoices\Print.cshtml" />
+    <Content Include="Views\Shared\_FiscalLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />
@@ -812,4 +813,7 @@
     </MonoDevelop>
   </ProjectExtensions>
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Views\TaxpayerDocuments\" />
+  </ItemGroup>
 </Project>

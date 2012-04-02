@@ -88,7 +88,7 @@ namespace Business.Essentials.Model
         [Display(Name = "Subtotal", ResourceType = typeof(Resources))]
         public decimal Subtotal
         {
-            get { return Math.Round(Total / (1 + TaxRate), 2, MidpointRounding.AwayFromZero); }
+            get { return Math.Round(Quantity * Price * (1 - Discount) / (1 + TaxRate), 2, MidpointRounding.AwayFromZero); }
         }
 
         [DataType(DataType.Currency)]

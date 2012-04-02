@@ -15,18 +15,18 @@ namespace Business.Essentials.WebApp.Controllers
         //
         // GET: /Barcodes/Code128/abc123
 
-        public ActionResult Code128(string id)
-        {
-            var ms = new MemoryStream(4 * 1024);
-            var barcode = Code128Rendering.MakeBarcodeImage(id, 2, false);
+        public ActionResult Code128 (string id)
+		{
+			var ms = new MemoryStream (4 * 1024);
+			var barcode = Code128Rendering.MakeBarcodeImage (id, 2, false);
+			
+			barcode.Save (ms, ImageFormat.Png);
+			ms.Seek (0, SeekOrigin.Begin);
+			var result = new FileStreamResult (ms, "image/png");
+			result.FileDownloadName = string.Format ("{0}.png", id);
 
-            barcode.Save(ms, ImageFormat.Jpeg);
-            ms.Seek(0, SeekOrigin.Begin);
-            var result = new FileStreamResult(ms, "image/jpeg");
-            result.FileDownloadName = string.Format("{0}.jpg", id);
-
-            return result;
-        }
+			return result;
+		}
 
     }
 }

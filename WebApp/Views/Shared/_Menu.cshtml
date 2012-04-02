@@ -165,6 +165,13 @@
                                    href="@Url.Action("Index", "Payments")">@Resources.Title_CustomerPayment</a>
                             </li>
                             }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesInvoices).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "Invoices") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "Invoices")">@Resources.Title_SalesInvoice</a>
+                            </li>
+                            }
                             @if (Html.GetPrivilege(CurrentUser, SystemObjects.ReturnCustomer).AllowRead)
                             {
                             <li class="gbmtc">
@@ -303,13 +310,6 @@
                                    href="@Url.Action("Index", "AccountsPayables")">@Resources.Title_AccountsPayable</a>
                             </li>
                             }
-                            @*if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesInvoices).AllowRead)
-                            {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "Invoices") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "Invoices")">@Resources.Title_SalesInvoice</a>
-                            </li>
-                            }*@
                         </ol>
                     </div>
                 </div>
