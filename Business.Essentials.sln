@@ -7,12 +7,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Business.Essentials.Model",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Business.Essentials.Resources", "Resources\Business.Essentials.Resources.csproj", "{CBB1BA70-351E-4009-86FB-484810DC6364}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mictlanix.CFDv2", "CFDv2\Mictlanix.CFDv2.csproj", "{63EBACD8-7BB0-480F-81BF-5E0690B27112}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Release|Any CPU = Release|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{63EBACD8-7BB0-480F-81BF-5E0690B27112}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63EBACD8-7BB0-480F-81BF-5E0690B27112}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63EBACD8-7BB0-480F-81BF-5E0690B27112}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63EBACD8-7BB0-480F-81BF-5E0690B27112}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CBB1BA70-351E-4009-86FB-484810DC6364}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CBB1BA70-351E-4009-86FB-484810DC6364}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBB1BA70-351E-4009-86FB-484810DC6364}.Release|Any CPU.ActiveCfg = Release|Any CPU

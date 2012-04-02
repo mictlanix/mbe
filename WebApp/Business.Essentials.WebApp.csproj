@@ -464,6 +464,10 @@
       <Project>{CBB1BA70-351E-4009-86FB-484810DC6364}</Project>
       <Name>Business.Essentials.Resources</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CFDv2\Mictlanix.CFDv2.csproj">
+      <Project>{63EBACD8-7BB0-480F-81BF-5E0690B27112}</Project>
+      <Name>Mictlanix.CFDv2</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Categories\Index.cshtml" />
