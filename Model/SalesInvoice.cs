@@ -18,8 +18,12 @@ namespace Business.Essentials.Model
 
         [PrimaryKey(PrimaryKeyType.Identity, "sales_invoice_id")]
         [Display(Name = "SalesInvoiceId", ResourceType = typeof(Resources))]
-        [DisplayFormat(DataFormatString="{0:000000}")]
+        [DisplayFormat(DataFormatString="{0:D6}")]
         public int Id { get; set; }
+		
+		[BelongsTo("store")]
+		[Display(Name = "Store", ResourceType = typeof(Resources))]
+		public virtual Store Store { get; set; }
 		
         [Property("creation_time")]
         [DataType(DataType.DateTime)]
@@ -63,10 +67,9 @@ namespace Business.Essentials.Model
         [Display(Name = "Issuer", ResourceType = typeof(Resources))]
         public Taxpayer Issuer { get; set; }
 		
-        [Property()]
-        [Display(Name = "Reference", ResourceType = typeof(Resources))]
-        [StringLength(25, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Reference { get; set; }
+		[BelongsTo("issued_from")]
+		[Display(Name = "Issuer", ResourceType = typeof(Resources))]
+		public virtual Address IssuedFrom { get; set; }
         
 		[Property]
         [Display(Name = "IssueDate", ResourceType = typeof(Resources))]
@@ -78,6 +81,7 @@ namespace Business.Essentials.Model
 		
 		[Property]
         [Display(Name = "Serial", ResourceType = typeof(Resources))]
+        [DisplayFormat(DataFormatString="{0:D6}")]
         public int? Serial { get; set; }
 		
 		[Property("approval_number")]
@@ -90,6 +94,7 @@ namespace Business.Essentials.Model
 		
 		[Property("certificate_number")]
         [Display(Name = "CertificateNumber", ResourceType = typeof(Resources))]
+		[DisplayFormat(DataFormatString="{0:00000000000000000000}")]
         public decimal? CertificateNumber { get; set; }
 		
 		[Property("original_string")]
@@ -104,60 +109,15 @@ namespace Business.Essentials.Model
         [Display(Name = "BillTo", ResourceType = typeof(Resources))]
         [UIHint("AddressSelector")]
         public int BillToId { get; set; }
-
+		
         [BelongsTo("bill_to")]
         [Display(Name = "BillTo", ResourceType = typeof(Resources))]
         public virtual Address BillTo { get; set; }
 		
-		[Property("bill_to_taxid")]
-        [Display(Name = "TaxpayerId", ResourceType = typeof(Resources))]
-        [StringLength(13, MinimumLength = 12, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string BillToTaxId { get; set; }
-
-        [Property("bill_to_name")]
-        [Display(Name = "TaxpayerName", ResourceType = typeof(Resources))]
-        [StringLength(250, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string BillToName { get; set; }
-		
-		[Property]
-        [Display(Name = "Street", ResourceType = typeof(Resources))]
-        [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Street { get; set; }
-
-        [Property("exterior_number")]
-        [Display(Name = "ExteriorNumber", ResourceType = typeof(Resources))]
-        [StringLength(15, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string ExteriorNumber { get; set; }
-
-        [Property("interior_number")]
-        [Display(Name = "InteriorNumber", ResourceType = typeof(Resources))]
-        [StringLength(15, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string InteriorNumber { get; set; }
-
-        [Property]
-        [Display(Name = "Neighborhood", ResourceType = typeof(Resources))]
-        [StringLength(150, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Neighborhood { get; set; }
-
-        [Property]
-        [Display(Name = "Borough", ResourceType = typeof(Resources))]
-        [StringLength(150, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Borough { get; set; }
-
-        [Property]
-        [Display(Name = "State", ResourceType = typeof(Resources))]
-        [StringLength(80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string State { get; set; }
-
-        [Property]
-        [Display(Name = "Country", ResourceType = typeof(Resources))]
-        [StringLength(80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Country { get; set; }
-
-        [Property("zip_code")]
-        [Display(Name = "ZipCode", ResourceType = typeof(Resources))]
-        [StringLength(5, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string ZipCode { get; set; }
+		[Property()]
+		[Display(Name = "Reference", ResourceType = typeof(Resources))]
+		[StringLength(25, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public string Reference { get; set; }
 		
         [Property("completed")]
         [Display(Name = "Completed", ResourceType = typeof(Resources))]

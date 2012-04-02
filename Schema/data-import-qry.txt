@@ -51,3 +51,5 @@ UPDATE sales_order 		SET serial = sales_order_id;
 UPDATE customer_payment SET serial = customer_payment_id;
 UPDATE return_customer 	SET serial = return_customer_id;
 
+UPDATE product			SET tax_included = 1;
+UPDATE product 			SET name = replace(name, 'Ã“', 'Ó');

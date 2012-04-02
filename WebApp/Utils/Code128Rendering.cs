@@ -154,7 +154,7 @@ namespace Business.Essentials.WebApp.Utils
          }
 
          // get surface to draw on
-         Image myimg = new System.Drawing.Bitmap(width, height);
+         Image myimg = new System.Drawing.Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
          using (Graphics gr = Graphics.FromImage(myimg))
          {
 

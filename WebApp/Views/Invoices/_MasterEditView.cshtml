@@ -7,12 +7,14 @@
         @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "master-section" }))
         {
             @Html.ValidationSummary(true)
-                
+            
             <div class="editor-label">
-                @Html.LabelFor(model => model.Issuer)
-                @Html.EditorFor(model => model.IssuerId)
-                @Html.ValidationMessageFor(model => model.IssuerId)
+                @Html.LabelFor(x => x.Issuer)
+                @Html.TextBoxFor(x => x.IssuerId)
+                @Html.ValidationMessageFor(x => x.IssuerId)
             </div>
+            
+            <div id="div-batch" class="editor-label"></div>
             
             <div class="editor-label">
                 @Html.LabelFor(model => model.Customer)
@@ -26,12 +28,36 @@
                 @Html.ValidationMessageFor(model => model.BillToId)
             </div>
 
-            <p><button type="submit" class="icon save">@Resources.Save</button></p>
+            <p>
+            	<button type="submit" class="icon save">@Resources.Save</button>
+        		@Ajax.ActionLink(Resources.Discard, "GetMaster", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "master-section" }, new { @class = "button icon cancel" })
+        	</p>
         }
 </fieldset>
 <script type="text/javascript">
     $(function () {
-        $("#IssuerId").tokenInput("add", { id: "@Model.Issuer.Id", name: "@Model.Issuer.Name"});
+        $("#IssuerId").tokenInput("@Url.Action("GetSuggestions", "Taxpayers")", {
+            hintText: "@Resources.HIntText",
+            noResultsText: "@Resources.NoResultsText",
+            searchingText: "@Resources.SearchingText",
+            queryParam: "pattern",
+            minChars: 1,
+            tokenLimit: 1,
+            prePopulate: [{ id: "@Model.Issuer.Id", name: "@Model.Issuer.Name"}],
+            onAdd: function (item) {
+                $.get("/Invoices/GetBatchSelector/" + item.id, function (data) {
+		            $("#div-batch").html(data);
+		        });
+            },
+            onDelete: function (item){
+                $("#div-batch").html(null);
+            }
+        });
+        
+        $.get("/Invoices/GetBatchSelector/@Model.Issuer.Id", function (data) {
+            $("#div-batch").html(data);
+        });
+
         $("#CustomerId").tokenInput("add", { id: "@Model.Customer.Id", name: "@Model.Customer.Name"});
         
         $("#BillToId").tokenInput(function() {

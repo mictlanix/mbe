@@ -19,68 +19,35 @@
     <div class="display-field">
         @Html.DisplayFor(model => model.Id)
     </div>
-
+    
     <div class="display-label">
-        @Html.LabelFor(model => model.Name)
+        @Html.LabelFor(x => x.Name)
     </div>
     <div class="display-field">
-        @Html.DisplayFor(model => model.Name)
+        @Html.DisplayFor(x => x.Name)
     </div>
 
-    <div class="display-label">
-        @Html.LabelFor(model => model.Street)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Street)
-    </div>
+	@Html.DisplayFor(x => x.Address)
 
     <div class="display-label">
-        @Html.LabelFor(model => model.ExteriorNumber)
+        @Html.LabelFor(x => x.ApprovalNumber)
     </div>
     <div class="display-field">
-        @Html.DisplayFor(model => model.ExteriorNumber)
+        @Html.DisplayFor(x => x.ApprovalNumber)
     </div>
 
     <div class="display-label">
-        @Html.LabelFor(model => model.InteriorNumber)
+        @Html.LabelFor(x => x.ApprovalYear)
     </div>
     <div class="display-field">
-        @Html.DisplayFor(model => model.InteriorNumber)
+        @Html.DisplayFor(x => x.ApprovalYear)
     </div>
 
     <div class="display-label">
-        @Html.LabelFor(model => model.Neighborhood)
+        @Html.LabelFor(x => x.CertificateNumber)
     </div>
     <div class="display-field">
-        @Html.DisplayFor(model => model.Neighborhood)
-    </div>
-
-    <div class="display-label">
-        @Html.LabelFor(model => model.Borough)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Borough)
-    </div>
-
-    <div class="display-label">
-        @Html.LabelFor(model => model.State)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.State)
-    </div>
-
-    <div class="display-label">
-        @Html.LabelFor(model => model.Country)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Country)
-    </div>
-
-    <div class="display-label">
-        @Html.LabelFor(model => model.ZipCode)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.ZipCode)
+        @Html.DisplayFor(x => x.CertificateNumber)
     </div>
 
 </fieldset>

@@ -1,5 +1,5 @@
 ﻿// 
-// CashHelpers.cs
+// Configuration.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
@@ -76,24 +76,12 @@ namespace Business.Essentials.WebApp.Helpers
 			get { return decimal.Parse (ConfigurationManager.AppSettings ["VAT"]); }
 		}
 		
-		public static string CFDsPath {
-			get { return ConfigurationManager.AppSettings ["CFDsPath"]; }
+		public static bool IsTaxIncluded {
+			get { return Convert.ToBoolean (ConfigurationManager.AppSettings ["IsTaxIncluded"]); }
 		}
 		
-		public static string InvoicesBatch {
-			get { return ConfigurationManager.AppSettings ["InvoiceBatch"]; }
-		}
-
-		public static string Certificate {
-			get { return ConfigurationManager.AppSettings ["Certificate"]; }
-		}
-
-		public static string PrivateKey {
-			get { return ConfigurationManager.AppSettings ["PrivateKey"]; }
-		}
-
-		public static string PrivateKeyPassword {
-			get { return ConfigurationManager.AppSettings ["PrivateKeyPassword"]; }
+		public static string FiscalFilesPath {
+			get { return ConfigurationManager.AppSettings ["FiscalFilesPath"]; }
 		}
 	}
 }

@@ -12,22 +12,19 @@
     <AssemblyName>Business.Essentials.Model</AssemblyName>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
+    <OutputPath>bin\Release</OutputPath>
     <WarningLevel>4</WarningLevel>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DataAnnotationsExtensions">
@@ -119,8 +116,8 @@
     <Compile Include="SalesInvoice.cs" />
     <Compile Include="SalesInvoiceDetail.cs" />
     <Compile Include="Taxpayer.cs" />
-    <Compile Include="CFDv2\SatCfdv2.cs" />
-    <Compile Include="CFDv2\SatCfdv2Ex.cs" />
+    <Compile Include="TaxpayerDocument.cs" />
+    <Compile Include="Constants\FiscalDocumentType.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Resources\Business.Essentials.Resources.csproj">
@@ -136,7 +133,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <Folder Include="CFDv2\" />
-  </ItemGroup>
 </Project>

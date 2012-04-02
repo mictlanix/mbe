@@ -180,16 +180,6 @@ ul.list-items li div.info
 {
   margin:0 0 0 60px;
 }
-ul.list-items li div.info span.text
-{
-    font-size:18px;
-    font-weight:lighter;
-}
-ul.list-items li div.info label
-{
-    font-size:18px;
-    font-weight:lighter;
-}
 ul.list-items li div.action-link {
   float:right;
 }
@@ -245,4 +235,21 @@ ul.token-input-list {
 }
 #details-container {
     margin:1.5em 0;
+}
+li label {
+  display:inline-block;
+  margin:2px 0;
+  min-width:75px;
+  text-align:right;
+}
+li div.value {
+  display:inline-block;
+  margin:2px 0;
+  min-width:60px;
+  text-align:right;
+}
+li div.value.name {
+  padding-left:5px;
+  font-size:larger;
+  font-weight:bold;
 }

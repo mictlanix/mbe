@@ -3,7 +3,7 @@
 @using Business.Essentials.Model;
 @model Business.Essentials.Model.SalesOrder
 
-    @Html.Partial("_Details", Model)
+@Html.Partial("_Details", Model)
 
 <p>
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
