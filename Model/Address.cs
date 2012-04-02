@@ -40,7 +40,16 @@ namespace Business.Essentials.Model
     {
         IList<Supplier> suppliers = new List<Supplier>();
         IList<Customer> customers = new List<Customer>();
-
+		
+		public Address ()
+		{
+		}
+		
+		public Address (Address item)
+		{
+			Copy (item);
+		}
+		
         [PrimaryKey(PrimaryKeyType.Identity, "address_id")]
         public int Id { get; set; }
 
@@ -79,6 +88,11 @@ namespace Business.Essentials.Model
         public string Neighborhood { get; set; }
 
         [Property]
+        [Display(Name = "Locality", ResourceType = typeof(Resources))]
+        [StringLength(150, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+        public string Locality { get; set; }
+
+        [Property]
         [Display(Name = "Borough", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(150, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
@@ -107,7 +121,7 @@ namespace Business.Essentials.Model
         [Display(Name = "Comment", ResourceType = typeof(Resources))]
         [StringLength(500, MinimumLength = 0)]
         public string Comment { get; set; }
-
+		
         [HasAndBelongsToMany(typeof(Supplier), Table = "supplier_address", ColumnKey = "address", ColumnRef = "supplier", Inverse = true, Lazy = true)]
         public IList<Supplier> Suppliers
         {
@@ -122,8 +136,23 @@ namespace Business.Essentials.Model
             set { customers = value; }
         }
 		
-        public string StreetAndNumer {
-			get { return string.Format("{0} {1} {2}", Street, ExteriorNumber, InteriorNumber).Trim(); }
+        public string StreetAndNumber {
+			get { return string.Format ("{0} {1} {2}", Street, ExteriorNumber, InteriorNumber).Trim (); }
+		}
+		
+		public void Copy (Address item)
+		{
+			TaxpayerId = item.TaxpayerId;
+			TaxpayerName = item.TaxpayerName;
+			Street = item.Street;
+			ExteriorNumber = item.ExteriorNumber;
+			InteriorNumber = item.InteriorNumber;
+			Neighborhood = item.Neighborhood;
+			Locality = item.Locality;
+			Borough = item.Borough;
+			State = item.State;
+			Country = item.Country;
+			ZipCode = item.ZipCode;
 		}
 		
 		#region Override Base Methods

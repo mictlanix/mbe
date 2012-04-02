@@ -32,9 +32,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Text;
 using Castle.ActiveRecord;
 using NHibernate.Exceptions;
 using Business.Essentials.Model;
+using Business.Essentials.WebApp.Helpers;
 
 namespace Business.Essentials.WebApp.Controllers
 {
@@ -55,62 +57,131 @@ namespace Business.Essentials.WebApp.Controllers
         //
         // GET: /Taxpayer/Details/5
 
-        public ViewResult Details(string id)
-        {
-			Taxpayer item = Taxpayer.Find(id);
-			
-            return View(item);
-        }
+        public ViewResult Details (string id)
+		{
+			using (var session = new SessionScope()) {
+				var item = Taxpayer.Find (id);
+				item.Documents.ToList ();
+				
+				return View (item);
+			}
+		}
 
         //
         // GET: /Taxpayer/Create
 
-        public ActionResult Create()
-        {
-            if (Request.IsAjaxRequest())
-            {
-                return PartialView("_Create");
-            }
+        public ActionResult Create ()
+		{
+			var item = new Taxpayer { 
+				Address = new Address {
+					TaxpayerId = "XXXXXXXXXXXX",
+					TaxpayerName = "XXX"
+				},
+				CertificateNumber = 0
+			};
+			
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_Create", item);
+			}
 
-            return View();
-        }
+			return View (item);
+		}
 
         //
         // POST: /Taxpayer/Create
 
         [HttpPost]
-        public ActionResult Create(Taxpayer item)
-        {
-            if (!ModelState.IsValid)
-            	return View(item);
+        public ActionResult Create (Taxpayer item, IEnumerable<HttpPostedFileBase> files)
+		{
+			if (!ModelState.IsValid)
+				return View (item);
 			
-            item.Save();
+			item.Address.TaxpayerId = item.Id;
+			item.Address.TaxpayerName = item.Name;
 			
-            return RedirectToAction("Index");
-        }
-
+			foreach (var file in files) {
+				if (file != null && file.ContentLength > 0) {
+					var name = file.FileName.ToLower ();
+					
+					if (name.EndsWith (".cer")) {
+						item.CertificateData = FileToBytes (file);
+					} else if (name.EndsWith (".key")) {
+						item.KeyData = FileToBytes (file);
+						item.KeyPassword = Encoding.UTF8.GetBytes (item.KeyPassword2);
+					}
+				}
+			}
+			
+			// FIXME: use transaction
+			using (var session = new SessionScope()) {
+				item.Address.CreateAndFlush ();
+				item.CreateAndFlush ();
+			}
+			
+			return RedirectToAction ("Index");
+		}
+		
+		byte[] FileToBytes (HttpPostedFileBase file)
+		{
+			using (var stream = file.InputStream) {
+				var data = new byte[file.ContentLength];
+				stream.Read (data, 0, file.ContentLength);
+				return data;
+			}
+		}
+		
         //
         // GET: /Taxpayer/Edit/5
 
-        public ActionResult Edit(string id)
-        {
-            Taxpayer item = Taxpayer.Find(id);
-            return View(item);
-        }
+        public ActionResult Edit (string id)
+		{
+			var item = Taxpayer.Find (id);
+			
+			item.KeyPassword = null;
+			
+			return View (item);
+		}
 
         //
         // POST: /Taxpayer/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(Taxpayer item)
-        {
-            if (!ModelState.IsValid)
-            	return View(item);
-
-            item.Update();
+        public ActionResult Edit (Taxpayer item, IEnumerable<HttpPostedFileBase> files)
+		{
+			if (!ModelState.IsValid)
+				return View (item);
+			
+			item.Address.TaxpayerId = item.Id;
+			item.Address.TaxpayerName = item.Name;
+			
+			var taxpayer = Taxpayer.Find (item.Id);
+			
+			// update info
+			taxpayer.Name = item.Name;
+			taxpayer.ApprovalNumber = item.ApprovalNumber;
+			taxpayer.ApprovalYear = item.ApprovalYear;
+			taxpayer.CertificateNumber = item.CertificateNumber;
+			taxpayer.Address.Copy (item.Address);
+			
+			foreach (var file in files) {
+				if (file != null && file.ContentLength > 0) {
+					var name = file.FileName.ToLower ();
+					
+					if (name.EndsWith (".cer")) {
+						taxpayer.CertificateData = FileToBytes (file);
+					} else if (name.EndsWith (".key")) {
+						taxpayer.KeyData = FileToBytes (file);
+						taxpayer.KeyPassword = Encoding.UTF8.GetBytes (item.KeyPassword2);
+					}
+				}
+			}
+			
+			// FIXME: use transaction
+			taxpayer.Address.Update ();
+			taxpayer.Update ();
             
-			return RedirectToAction("Index");
-        }
+			return RedirectToAction ("Index");
+		}
 
         //
         // GET: /Taxpayer/Delete/5

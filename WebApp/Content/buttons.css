@@ -122,3 +122,6 @@ button.icon.prev,a.button.icon.prev {
 button.icon.lock,a.button.icon.lock {
     background:url(icons/lock.png) no-repeat;
 }
+button.icon.download,a.button.icon.download {
+    background:url(icons/download.png) no-repeat;
+}

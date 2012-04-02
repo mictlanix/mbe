@@ -3,7 +3,6 @@
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
-//   Eduardo Nieto <enieto@mictlanix.org>
 // 
 // Copyright (C) 2011 Eddy Zavaleta, Mictlanix, and contributors.
 // 
@@ -34,6 +33,7 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Business.Essentials.Model;
+using Business.Essentials.WebApp.Utils;
 
 namespace Business.Essentials.WebApp.Helpers
 {
@@ -121,8 +121,11 @@ namespace Business.Essentials.WebApp.Helpers
                       select x;
 
             return qry.ToList();
-
         }
-
+		
+		public static string ToMXN (this HtmlHelper helper, decimal val)
+		{
+			return CurrencyConverter.ToMXN (val).ToUpper ();
+		}
     }
 }

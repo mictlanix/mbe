@@ -21,19 +21,31 @@ img {
     border:none;
 }
 #logo {
-    text-align:right;
+	position:absolute;
+    right:20px;
+    top:20px;
 }
-h1,h2,h3 
+h1,h2,h4
 {
-    float:inherit;
+  float:inherit;
   text-align:center;
 }
 h3 {
-  font-weight:normal;
-  margin:0;
+  margin:4px 0;
+  font-weight:bold;
 }
-.date {
+h4 {
+  font-weight:normal;
+  margin:1px 0;
+  font-size:smaller;
+}
+h4.black {
+  font-weight:bold;
+}
+.date,.bool,.number,.nowrap {
   white-space:nowrap;
+  width:1px;
+  text-align:center;
 }
 .left {
   text-align:left;
@@ -60,6 +72,7 @@ h3 {
   font-weight:bold;
 }
 table {
+	clear:both;
     margin:10px 0;
     width:100%;
     border-collapse:collapse;
@@ -103,4 +116,12 @@ p.multiline {
     margin: 0;
     width:182mm;
     word-wrap:break-word;
+}
+#digital-signature {
+  margin-top:20px;
+  padding:2px;
+  font-size:8px;
+  background:silver;
+  word-wrap:break-word;
+  border:dashed 1px #3c3c3c;
 }

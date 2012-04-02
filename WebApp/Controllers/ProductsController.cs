@@ -109,6 +109,7 @@ namespace Business.Essentials.WebApp.Controllers
 			if (!ModelState.IsValid)
 				return View (item);
             
+			item.IsTaxIncluded = Configuration.IsTaxIncluded;
 			item.Supplier = Supplier.Find (item.SupplierId);
 			item.Category = Category.Find (item.CategoryId);
 			item.Photo = SavePhoto (file) ?? Configuration.DefaultPhotoFile;
@@ -136,6 +137,7 @@ namespace Business.Essentials.WebApp.Controllers
 			if (!ModelState.IsValid)
 				return View (item);
             
+			item.IsTaxIncluded = Configuration.IsTaxIncluded;
 			item.Supplier = Supplier.Find (item.SupplierId);
 			item.Category = Category.Find (item.CategoryId);
 			item.Photo = SavePhoto (file) ?? item.Photo;

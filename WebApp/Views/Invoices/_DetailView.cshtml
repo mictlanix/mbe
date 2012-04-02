@@ -1,0 +1,26 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@model SalesInvoiceDetail
+
+<li id="item@(Model.Id)">
+    <div class="photo">
+        <img src="@Url.Content(Model.Product.Photo)" title="@Model.ProductName"/>
+    </div>
+    <div class="info">
+        <div class="value name">@Model.ProductName</div><br/>
+        <label>@Resources.Code:</label>
+        <div class="value code">@Model.ProductCode</div>
+        <label>@Resources.Price:</label>
+        <div class="value price">@Html.DisplayFor(x => x.Price)</div>
+        <label>@Resources.TaxRate:</label>
+        <div class="value tax">@Html.DisplayFor(x => x.TaxRate)</div><br />
+        <label>@Resources.UnitOfMeasurement:</label>
+        <div class="value um">@Model.UnitOfMeasurement</div>
+        <label>@Resources.Quantity:</label>
+        <div class="value quantity">@Html.DisplayFor(x => x.Quantity)</div>
+        <label>@Resources.Discount:</label>
+        <div class="value discount">@Html.DisplayFor(x => x.Discount)</div>
+        <label>@Resources.Amount:</label>
+        <div class="value total">@Html.DisplayFor(x => x.Total)</div>
+    </div>
+</li>

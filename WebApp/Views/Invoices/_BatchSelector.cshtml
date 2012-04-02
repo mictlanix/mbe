@@ -1,0 +1,11 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@model SalesInvoice
+
+@{
+	IEnumerable<SelectListItem> items = ViewBag.Items;
+}
+
+@Html.LabelFor(x => x.Batch)<br />
+@Html.DropDownListFor(x => x.Batch, items)

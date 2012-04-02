@@ -59,6 +59,10 @@ namespace Business.Essentials.Model
 		[Display(Name = "Logo", ResourceType = typeof(Resources))]
 		public string Logo { get; set; }
 		
+		[Property]
+		[Display(Name = "Location", ResourceType = typeof(Resources))]
+		public string Location { get; set; }
+		
         [Property]
         [DataType(DataType.MultilineText)]
         [Display(Name = "Comment", ResourceType = typeof(Resources))]

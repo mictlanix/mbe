@@ -12,29 +12,31 @@
 <h2>@Resources.DisplayName_EditInvoice</h2> 
 
 <div id="master-section">
-@Html.Partial("_MasterInfo")
+@Html.Partial("_MasterView")
 </div>
 
 <div id="details-section">
-	<div id="tabs">
-	    <ul>
-	        <li><a href="#tabs-1">@Resources.Product</a></li>
-	        <li><a href="#tabs-2">@Resources.SalesOrder</a></li>
-	    </ul>
-	    <div id="tabs-1">
-	        <input type="text" id="product-search" name="product-search" />
-	    </div>
-	    <div id="tabs-2">
-	        <input type="text" id="sales-order-search" name="sales-order-search" />
-	    </div>
-    </div>
     <div id="items-container">
         <ul id="items" class="list-items">
         @foreach (var item in Model.Details)
         {
-            @Html.Partial("_Detail", item) 
+            @Html.Partial("_DetailEditView", item) 
         }
         </ul>
+    </div>
+	<div id="tabs">
+	    <ul>
+	        <li><a href="#tabs-1">@Resources.Product</a></li>
+	        <!--<li><a href="#tabs-2">@Resources.SalesOrder</a></li>-->
+	    </ul>
+	    <div id="tabs-1">
+	        <input type="text" id="product-search" name="product-search" />
+	    </div>
+	    <!--
+	    <div id="tabs-2">
+	        <input type="text" id="sales-order-search" name="sales-order-search" />
+	    </div>
+	    -->
     </div>
 </div>
 <div id="totals-section" class="right floating" style="width:300px">
@@ -281,7 +283,6 @@
 		        $("#item@(item.Id) div.discount").editable(function(value,settings){
 		        	return editDiscount(@item.Id, value);
 		    	}, { cssclass : "number" });
-	    	
 	        </text>
 	    }
     });

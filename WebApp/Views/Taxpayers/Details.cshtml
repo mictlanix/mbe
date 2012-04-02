@@ -15,73 +15,40 @@
     <legend>@Resources.Title_Taxpayer</legend>
 
     <div class="display-label">
-        @Html.LabelFor(model => model.Id)
+        @Html.LabelFor(x => x.Id)
     </div>
     <div class="display-field">
-        @Html.DisplayFor(model => model.Id)
+        @Html.DisplayFor(x => x.Id)
     </div>
 
     <div class="display-label">
-        @Html.LabelFor(model => model.Name)
+        @Html.LabelFor(x => x.Name)
     </div>
     <div class="display-field">
-        @Html.DisplayFor(model => model.Name)
+        @Html.DisplayFor(x => x.Name)
+    </div>
+
+	@Html.DisplayFor(x => x.Address)
+
+    <div class="display-label">
+        @Html.LabelFor(x => x.ApprovalNumber)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(x => x.ApprovalNumber)
     </div>
 
     <div class="display-label">
-        @Html.LabelFor(model => model.Street)
+        @Html.LabelFor(x => x.ApprovalYear)
     </div>
     <div class="display-field">
-        @Html.DisplayFor(model => model.Street)
+        @Html.DisplayFor(x => x.ApprovalYear)
     </div>
 
     <div class="display-label">
-        @Html.LabelFor(model => model.ExteriorNumber)
+        @Html.LabelFor(x => x.CertificateNumber)
     </div>
     <div class="display-field">
-        @Html.DisplayFor(model => model.ExteriorNumber)
-    </div>
-
-    <div class="display-label">
-        @Html.LabelFor(model => model.InteriorNumber)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.InteriorNumber)
-    </div>
-
-    <div class="display-label">
-        @Html.LabelFor(model => model.Neighborhood)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Neighborhood)
-    </div>
-
-    <div class="display-label">
-        @Html.LabelFor(model => model.Borough)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Borough)
-    </div>
-
-    <div class="display-label">
-        @Html.LabelFor(model => model.State)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.State)
-    </div>
-
-    <div class="display-label">
-        @Html.LabelFor(model => model.Country)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Country)
-    </div>
-
-    <div class="display-label">
-        @Html.LabelFor(model => model.ZipCode)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.ZipCode)
+        @Html.DisplayFor(x => x.CertificateNumber)
     </div>
 
 </fieldset>
@@ -92,3 +59,17 @@
 }
 	@Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </p>
+
+<div id="tabs">
+    <ul>
+        <li><a href="#tabs-1">@Resources.DisplayName_TaxpayerDocuments</a></li>
+    </ul>
+    <div id="tabs-1">
+        @Html.Partial("../TaxpayerDocuments/_Index", Model.Documents)
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#tabs").tabs();
+    });
+</script>

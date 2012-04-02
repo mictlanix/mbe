@@ -1,0 +1,29 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@using Business.Essentials.WebApp.Helpers
+@model IEnumerable<TaxpayerDocument>
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+}
+
+<table>
+    <tr>
+        <th>@Html.LabelFor(x => new TaxpayerDocument().Batch)</th>
+        <th>@Html.LabelFor(x => new TaxpayerDocument().SerialStart)</th>
+        <th>@Html.LabelFor(x => new TaxpayerDocument().SerialEnd)</th>
+        <th>@Html.LabelFor(x => new TaxpayerDocument().Type)</th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td class="center">@Html.DisplayFor(x => item.Batch)</td>
+        <td class="right">@Html.DisplayFor(x => item.SerialStart)</td>
+        <td class="right">@Html.DisplayFor(x => item.SerialEnd)</td>
+        <td class="center">@item.Type.GetDisplayName()</td>
+        <td class="actions"></td>
+    </tr>
+}
+
+</table>

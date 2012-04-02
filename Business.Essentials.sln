@@ -9,44 +9,25 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Business.Essentials.Resourc
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Debug|Mixed Platforms = Debug|Mixed Platforms
-		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
-		Release|Mixed Platforms = Release|Mixed Platforms
-		Release|x86 = Release|x86
+		Debug|Any CPU = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CBB1BA70-351E-4009-86FB-484810DC6364}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBB1BA70-351E-4009-86FB-484810DC6364}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBB1BA70-351E-4009-86FB-484810DC6364}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBB1BA70-351E-4009-86FB-484810DC6364}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D13A33DE-A12D-420E-ABB2-76A7C0F2E2E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D13A33DE-A12D-420E-ABB2-76A7C0F2E2E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D13A33DE-A12D-420E-ABB2-76A7C0F2E2E5}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{D13A33DE-A12D-420E-ABB2-76A7C0F2E2E5}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{D13A33DE-A12D-420E-ABB2-76A7C0F2E2E5}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{D13A33DE-A12D-420E-ABB2-76A7C0F2E2E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D13A33DE-A12D-420E-ABB2-76A7C0F2E2E5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D13A33DE-A12D-420E-ABB2-76A7C0F2E2E5}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{D13A33DE-A12D-420E-ABB2-76A7C0F2E2E5}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{D13A33DE-A12D-420E-ABB2-76A7C0F2E2E5}.Release|x86.ActiveCfg = Release|Any CPU
 		{F9363BAC-A7BB-4A77-81E0-892C8CCCD297}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F9363BAC-A7BB-4A77-81E0-892C8CCCD297}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F9363BAC-A7BB-4A77-81E0-892C8CCCD297}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{F9363BAC-A7BB-4A77-81E0-892C8CCCD297}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{F9363BAC-A7BB-4A77-81E0-892C8CCCD297}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{F9363BAC-A7BB-4A77-81E0-892C8CCCD297}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9363BAC-A7BB-4A77-81E0-892C8CCCD297}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F9363BAC-A7BB-4A77-81E0-892C8CCCD297}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{F9363BAC-A7BB-4A77-81E0-892C8CCCD297}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{F9363BAC-A7BB-4A77-81E0-892C8CCCD297}.Release|x86.ActiveCfg = Release|Any CPU
-		{CBB1BA70-351E-4009-86FB-484810DC6364}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{CBB1BA70-351E-4009-86FB-484810DC6364}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{CBB1BA70-351E-4009-86FB-484810DC6364}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{CBB1BA70-351E-4009-86FB-484810DC6364}.Debug|x86.ActiveCfg = Debug|x86
-		{CBB1BA70-351E-4009-86FB-484810DC6364}.Debug|x86.Build.0 = Debug|x86
-		{CBB1BA70-351E-4009-86FB-484810DC6364}.Release|Any CPU.ActiveCfg = Release|x86
-		{CBB1BA70-351E-4009-86FB-484810DC6364}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{CBB1BA70-351E-4009-86FB-484810DC6364}.Release|Mixed Platforms.Build.0 = Release|x86
-		{CBB1BA70-351E-4009-86FB-484810DC6364}.Release|x86.ActiveCfg = Release|x86
-		{CBB1BA70-351E-4009-86FB-484810DC6364}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = WebApp\Business.Essentials.WebApp.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
