@@ -7,94 +7,79 @@
     ViewBag.Title = Resources.CreateNew;
 }
 
-<h2>@Business.Essentials.Resources.Create</h2>
+<h2>@Resources.Create</h2>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Create", "Taxpayers", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.ValidationSummary(true)
     <fieldset>
         <legend>@Resources.Title_Taxpayer</legend>
 
         <div class="editor-label">
-            @Html.LabelFor(model => model.Id)
+            @Html.LabelFor(x => x.Id)
         </div>
         <div class="editor-field">
-            @Html.EditorFor(model => model.Id)
-            @Html.ValidationMessageFor(model => model.Id)
+            @Html.EditorFor(x => x.Id)
+            @Html.ValidationMessageFor(x => x.Id)
         </div>
 
-         <div class="editor-label">
-            @Html.LabelFor(model => model.Name)
+		<div class="editor-label">
+            @Html.LabelFor(x => x.Name)
         </div>
         <div class="editor-field">
-            @Html.EditorFor(model => model.Name)
-            @Html.ValidationMessageFor(model => model.Name)
+            @Html.EditorFor(x => x.Name)
+            @Html.ValidationMessageFor(x => x.Name)
         </div>
 
+		@Html.EditorFor(x => x.Address)
+		@Html.HiddenFor(x => x.Address.TaxpayerId)
+		@Html.HiddenFor(x => x.Address.TaxpayerName)
+
+		<div class="editor-label">
+            @Html.LabelFor(x => x.ApprovalNumber)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(x => x.ApprovalNumber)
+            @Html.ValidationMessageFor(x => x.ApprovalNumber)
+        </div>
+
+		<div class="editor-label">
+            @Html.LabelFor(x => x.ApprovalYear)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(x => x.ApprovalYear)
+            @Html.ValidationMessageFor(x => x.ApprovalYear)
+        </div>
+
+		<div class="editor-label">
+            @Html.LabelFor(x => x.CertificateNumber)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(x => x.CertificateNumber)
+            @Html.ValidationMessageFor(x => x.CertificateNumber)
+        </div>
+        
         <div class="editor-label">
-            @Html.LabelFor(model => model.Street)
+            @Html.LabelFor(x => x.CertificateData)
         </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Street)
-            @Html.ValidationMessageFor(model => model.Street)
+        <div class="editor-input">
+            <input type="file" name="files" id="cerFile" />
         </div>
-
+        
         <div class="editor-label">
-            @Html.LabelFor(model => model.ExteriorNumber)
+            @Html.LabelFor(x => x.KeyData)
         </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.ExteriorNumber)
-            @Html.ValidationMessageFor(model => model.ExteriorNumber)
+        <div class="editor-input">
+            <input type="file" name="files" id="keyFile" />
         </div>
-
+        
         <div class="editor-label">
-            @Html.LabelFor(model => model.InteriorNumber)
+            @Html.LabelFor(m => m.KeyPassword)
         </div>
         <div class="editor-field">
-            @Html.EditorFor(model => model.InteriorNumber)
-            @Html.ValidationMessageFor(model => model.InteriorNumber)
+            @Html.EditorFor(m => m.KeyPassword2)
         </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Neighborhood)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Neighborhood)
-            @Html.ValidationMessageFor(model => model.Neighborhood)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Borough)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Borough)
-            @Html.ValidationMessageFor(model => model.Borough)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.State)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.State)
-            @Html.ValidationMessageFor(model => model.State)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Country)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Country)
-            @Html.ValidationMessageFor(model => model.Country)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.ZipCode)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.ZipCode)
-            @Html.ValidationMessageFor(model => model.ZipCode)
-        </div>
-
+            
         <p><button type="submit" class="icon save">@Resources.Create</button></p>
     </fieldset>
 }

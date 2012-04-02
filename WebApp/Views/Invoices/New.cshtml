@@ -11,27 +11,29 @@
 
 <div id="sales-invoice">
     <fieldset>
-        <legend>@Resources.DisplayName_SalesInformation</legend>
+        <legend>@Resources.DisplayName_InvoiceInformation</legend>
             @using (Html.BeginForm())
             {
                 @Html.ValidationSummary(true)
 
                 <div class="editor-label">
-                    @Html.LabelFor(model => model.Issuer)
-                    @Html.EditorFor(model => model.IssuerId)
-                    @Html.ValidationMessageFor(model => model.IssuerId)
+                    @Html.LabelFor(x => x.Issuer)
+                    @Html.TextBoxFor(x => x.IssuerId)
+                    @Html.ValidationMessageFor(x => x.IssuerId)
                 </div>
                 
+                <div id="div-batch" class="editor-label"></div>
+
                 <div class="editor-label">
-                    @Html.LabelFor(model => model.Customer)
-                    @Html.EditorFor(model => model.CustomerId)
-                    @Html.ValidationMessageFor(model => model.CustomerId)
+                    @Html.LabelFor(x => x.Customer)
+                    @Html.EditorFor(x => x.CustomerId)
+                    @Html.ValidationMessageFor(x => x.CustomerId)
                 </div>
 
                 <div class="editor-label">
-                    @Html.LabelFor(model => model.BillTo)
-                    @Html.EditorFor(model => model.BillToId)
-                    @Html.ValidationMessageFor(model => model.BillToId)
+                    @Html.LabelFor(x => x.BillTo)
+                    @Html.EditorFor(x => x.BillToId)
+                    @Html.ValidationMessageFor(x => x.BillToId)
                 </div>
                 
                 <p class="right">
@@ -50,6 +52,24 @@ ul.token-input-list {
 </style>
 <script type="text/javascript">
     $(function () {
+    
+        $("#IssuerId").tokenInput("@Url.Action("GetSuggestions", "Taxpayers")", {
+            hintText: "@Resources.HIntText",
+            noResultsText: "@Resources.NoResultsText",
+            searchingText: "@Resources.SearchingText",
+            queryParam: "pattern",
+            minChars: 1,
+            tokenLimit: 1,
+            onAdd: function (item) {
+                $.get("/Invoices/GetBatchSelector/" + item.id, function (data) {
+		            $("#div-batch").html(data);
+		        });
+            },
+            onDelete: function (item){
+                $("#div-batch").html(null);
+            }
+        });
+        
         $("#BillToId").tokenInput(function() {
 			var customer = $("#CustomerId").tokenInput("get")[0];
 			

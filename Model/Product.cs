@@ -132,6 +132,10 @@ namespace Business.Essentials.Model
         [Display(Name = "TaxRate", ResourceType = typeof(Resources))]
         public decimal TaxRate { get; set; }
 		
+        [Property("tax_included")]
+        [Display(Name = "TaxIncluded", ResourceType = typeof(Resources))]
+        public bool IsTaxIncluded { get; set; }
+		
 		[Property]
         [UIHint("Image")]
         [Display(Name = "Photo", ResourceType = typeof(Resources))]

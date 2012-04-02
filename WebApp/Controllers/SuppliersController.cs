@@ -157,7 +157,6 @@ namespace Business.Essentials.WebApp.Controllers
 			supplier.Zone = item.Zone;
 			supplier.CreditDays = item.CreditDays;
 			supplier.CreditLimit = item.CreditLimit;
-			//TODO: Add Comment Property
 			supplier.Comment = item.Comment;
 
             supplier.Update();

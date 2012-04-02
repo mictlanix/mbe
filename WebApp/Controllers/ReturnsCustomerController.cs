@@ -130,6 +130,7 @@ namespace Business.Essentials.WebApp.Controllers
 			
 			// Store and Serial
 			item.Store = sales.Store;
+			
 			try {
 				item.Serial = (from x in ReturnCustomer.Queryable
 	            			   where x.Store.Id == item.Store.Id

@@ -2,6 +2,8 @@
 using System.Configuration;
 using System.Collections.Generic;
 using System.Linq;
+using System.Globalization;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -28,7 +30,7 @@ namespace Business.Essentials.WebApp
 			
             routes.MapRoute(
                 "Barcodes", // Route name
-                "Barcodes/{action}/{id}.jpg", // URL with parameters
+                "Barcodes/{action}/{id}.png", // URL with parameters
                 new {  controller = "Barcodes", action = "Index", id = UrlParameter.Optional } // Parameter defaults
             );
 			
@@ -40,29 +42,33 @@ namespace Business.Essentials.WebApp
 
         }
 
-        protected void Application_Start()
-        {
-            AreaRegistration.RegisterAllAreas();
+        protected void Application_Start ()
+		{
+			AreaRegistration.RegisterAllAreas ();
 
-            RegisterGlobalFilters(GlobalFilters.Filters);
-            RegisterRoutes(RouteTable.Routes);
+			RegisterGlobalFilters (GlobalFilters.Filters);
+			RegisterRoutes (RouteTable.Routes);
 
 #if DEBUG
             log4net.Config.XmlConfigurator.Configure();
 #endif
 
-            IConfigurationSource source = ConfigurationManager.GetSection("activeRecord") as IConfigurationSource;
-            ActiveRecordStarter.Initialize(typeof(Category).Assembly, source);
-        }
+			IConfigurationSource source = ConfigurationManager.GetSection ("activeRecord") as IConfigurationSource;
+			ActiveRecordStarter.Initialize (typeof(Category).Assembly, source);
+		}
 		
 		/*
-        protected void Application_BeginRequest(object sender, EventArgs e)
-        {
+        protected void Application_BeginRequest (object sender, EventArgs e)
+		{
+			var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone ();
+			culture.NumberFormat.CurrencyDecimalDigits = 4;
+			Thread.CurrentThread.CurrentCulture = culture;
+			
 			if(HttpContext.Current.User != null)
 			{
 				HttpContext.Current.Items.Add("CurrentUser", SecurityHelpers.GetUser(HttpContext.Current.User.Identity.Name));
 			}
-        }
+		}
 		*/
 		
 		protected void Application_EndRequest(Object sender, EventArgs e)

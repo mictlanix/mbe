@@ -784,7 +784,7 @@
     <value>Corte de Caja</value>
   </data>
   <data name="Type" xml:space="preserve">
-    <value>Tipo de Pago</value>
+    <value>Tipo</value>
   </data>
   <data name="Loading" xml:space="preserve">
     <value>Cargando...</value>
@@ -1328,5 +1328,65 @@ Realizada el: {0:d}</value>
   </data>
   <data name="Logo" xml:space="preserve">
     <value>Logo</value>
+  </data>
+  <data name="SinglePayment" xml:space="preserve">
+    <value>Pago en una sola exhibición</value>
+  </data>
+  <data name="PrivateKey" xml:space="preserve">
+    <value>FIEL</value>
+  </data>
+  <data name="PrivateKeyPassword" xml:space="preserve">
+    <value>Contraseña de la FIEL</value>
+  </data>
+  <data name="FiscalDocumentType_Income" xml:space="preserve">
+    <value>Ingreso</value>
+  </data>
+  <data name="FiscalDocumentType_Outcome" xml:space="preserve">
+    <value>Egreso</value>
+  </data>
+  <data name="FiscalDocumentType_Transfer" xml:space="preserve">
+    <value>Traslado</value>
+  </data>
+  <data name="Certificate" xml:space="preserve">
+    <value>Certificado</value>
+  </data>
+  <data name="DisplayName_TaxpayerDocuments" xml:space="preserve">
+    <value>Series y Folios</value>
+  </data>
+  <data name="DisplayName_TaxpayerDocuments" xml:space="preserve">
+    <value>Series y Folios</value>
+  </data>
+  <data name="SerialStart" xml:space="preserve">
+    <value>Folio Inicial</value>
+  </data>
+  <data name="SerialEnd" xml:space="preserve">
+    <value>Folio Final</value>
+  </data>
+  <data name="Discard" xml:space="preserve">
+    <value>Descartar</value>
+  </data>
+  <data name="Format_FiscalDocumentPath" xml:space="preserve">
+    <value>{0}/{1}-CFD-{2}{3:D5}.xml</value>
+  </data>
+  <data name="Format_FiscalDocumentName" xml:space="preserve">
+    <value>{0}-CFD-{1}{2:D5}.xml</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Descargar</value>
+  </data>
+  <data name="FiscalDocument" xml:space="preserve">
+    <value>Comprobante Fiscal</value>
+  </data>
+  <data name="TaxIncluded" xml:space="preserve">
+    <value>Incluye Impuestos</value>
+  </data>
+  <data name="VAT" xml:space="preserve">
+    <value>IVA</value>
+  </data>
+  <data name="Locality" xml:space="preserve">
+    <value>Localidad</value>
+  </data>
+  <data name="FiscalDocumentLegend" xml:space="preserve">
+    <value>Este documento es una representación impresa de un CFD.</value>
   </data>
 </root>

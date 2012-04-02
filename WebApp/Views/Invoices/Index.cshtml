@@ -24,8 +24,7 @@
         <th>@Html.LabelFor(x => new SalesInvoice().Batch)</th>
         <th>@Html.LabelFor(x => new SalesInvoice().Serial)</th>
         <th class="date">@Html.LabelFor(x => new SalesInvoice().Issued)</th>
-        <th>@Html.LabelFor(x => new SalesInvoice().BillToTaxId)</th>
-        <th>@Html.LabelFor(x => new SalesInvoice().BillToName)</th>
+        <th>@Html.LabelFor(x => new SalesInvoice().BillTo)</th>
         <th>@Html.LabelFor(x => new SalesOrder().IsCompleted)</th>
         <th>@Html.LabelFor(x => new SalesOrder().IsCancelled)</th>
         <th></th>
@@ -38,23 +37,26 @@
         <td class="number center">@Html.DisplayFor(x => item.Batch)</td>
         <td class="number">@Html.DisplayFor(x => item.Serial)</td>
         <td class="date">@Html.DisplayFor(x => item.Issued)</td>
-        <td class="number center">@Html.DisplayFor(x => item.BillToTaxId)</td>
-        <td>@Html.DisplayFor(x => item.BillToName)</td>
+        <td>
+        	@Html.DisplayFor(x => item.BillTo.TaxpayerId)
+        	@Html.DisplayFor(x => item.BillTo.TaxpayerName)
+        </td>
         <td class="bool">@Html.DisplayFor(x => item.IsCompleted)</td>
         <td class="bool">@Html.DisplayFor(x => item.IsCancelled)</td>
 
         <td class="actions">
-        	@if(Privilege.AllowUpdate)
-        	{
-            	@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
-            }
         	@if(Privilege.AllowRead)
         	{
             	@Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+            	@Html.ActionLink(" ", "Print", new { id = item.Id }, new { @class = "button icon print icon-only", title = Resources.Print, target = "_blank" })
             }
-        	@if(Privilege.AllowRead)
+        	@if(Privilege.AllowUpdate && !item.IsCompleted && !item.IsCancelled)
         	{
-            	@Html.ActionLink(" ", "Print", new { id = item.Id }, new { @class = "button icon print icon-only", @title = Resources.Print })
+            	@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
+            }
+        	@if(Privilege.AllowRead && item.IsCompleted)
+        	{
+            	@Html.ActionLink(" ", "Download", new { id = item.Id }, new { @class = "button icon download icon-only", @title = Resources.Download })
             }
         </td>
     </tr>

@@ -1,0 +1,75 @@
+﻿@using Business.Essentials
+@using Business.Essentials.Model
+@model Address
+
+<div class="editor-label">
+    @Html.LabelFor(x => x.Street)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(x => x.Street)
+    @Html.ValidationMessageFor(x => x.Street)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(x => x.ExteriorNumber)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(x => x.ExteriorNumber)
+    @Html.ValidationMessageFor(x => x.ExteriorNumber)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(x => x.InteriorNumber)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(x => x.InteriorNumber)
+    @Html.ValidationMessageFor(x => x.InteriorNumber)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(x => x.Neighborhood)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(x => x.Neighborhood)
+    @Html.ValidationMessageFor(x => x.Neighborhood)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(x => x.Locality)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(x => x.Locality)
+    @Html.ValidationMessageFor(x => x.Locality)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(x => x.Borough)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(x => x.Borough)
+    @Html.ValidationMessageFor(x => x.Borough)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(x => x.State)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(x => x.State)
+    @Html.ValidationMessageFor(x => x.State)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(x => x.Country)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(x => x.Country)
+    @Html.ValidationMessageFor(x => x.Country)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(x => x.ZipCode)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(x => x.ZipCode)
+    @Html.ValidationMessageFor(x => x.ZipCode)
+</div>

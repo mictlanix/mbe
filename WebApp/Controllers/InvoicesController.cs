@@ -31,6 +31,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
@@ -42,14 +43,20 @@ namespace Business.Essentials.WebApp.Controllers
 {
     public class InvoicesController : Controller
     {
-        public ViewResult Index()
-        {
-            var qry = from x in SalesInvoice.Queryable
+        public ViewResult Index ()
+		{
+			var item = GetStore ();
+			
+			if (item == null) {
+				return View ("InvalidStore");
+			}
+			
+			var qry = from x in SalesInvoice.Queryable
 					  orderby x.Id descending
                       select x;
 
-            return View(qry.ToList());
-        }
+			return View (qry.ToList ());
+		}
 
         public ViewResult New()
         {
@@ -59,9 +66,9 @@ namespace Business.Essentials.WebApp.Controllers
         [HttpPost]
         public ActionResult New (SalesInvoice item)
 		{
+			item.Issuer = Taxpayer.TryFind (item.IssuerId);
 			item.Customer = Customer.TryFind (item.CustomerId);
 			item.BillTo = Address.TryFind (item.BillToId);
-			item.Issuer = Taxpayer.TryFind (item.IssuerId);
 			
 			if (!ModelState.IsValid) {
 				return View (item);
@@ -72,20 +79,16 @@ namespace Business.Essentials.WebApp.Controllers
 			item.ModificationTime = item.CreationTime;
 			item.Creator = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 			item.Updater = item.Creator;
+			item.Store = GetStore ();
 			
-			// Bill to info
-			item.BillToTaxId = item.BillTo.TaxpayerId;
-			item.BillToName = item.BillTo.TaxpayerName;
-			item.Street = item.BillTo.Street;
-			item.ExteriorNumber = item.BillTo.ExteriorNumber;
-			item.InteriorNumber = item.BillTo.InteriorNumber;
-			item.Neighborhood = item.BillTo.Neighborhood;
-			item.Borough = item.BillTo.Borough;
-			item.State = item.BillTo.State;
-			item.Country = item.BillTo.Country;
-			item.ZipCode = item.BillTo.ZipCode;
+			// Address info
+			item.BillTo = new Address (item.BillTo);
+			item.IssuedFrom = new Address (item.Issuer.Address);
 			
+			// FIXME: use transaction
 			using (var session = new SessionScope()) {
+				item.BillTo.CreateAndFlush ();
+				item.IssuedFrom.CreateAndFlush ();
 				item.CreateAndFlush ();
 			}
 
@@ -98,19 +101,32 @@ namespace Business.Essentials.WebApp.Controllers
 			return RedirectToAction ("Edit", new { id = item.Id });
 		}
 
-        public ViewResult Details(int id)
-        {
-            SalesInvoice order = SalesInvoice.Find(id);
+        public ViewResult Details (int id)
+		{
+			SalesInvoice item = SalesInvoice.Find (id);
 
-            return View(order);
-        }
-
+			return View (item);
+		}
+		
+		public ViewResult Print (int id)
+		{
+			if (Request.Cookies ["Store"] != null) {
+				ViewBag.Store = Store.TryFind (int.Parse (Request.Cookies ["Store"].Value));
+			}
+			return View (SalesInvoice.Find (id));
+		}
+		
+		public ActionResult GetMaster (int id)
+		{
+			return PartialView ("_MasterView", SalesInvoice.TryFind (id));
+		}
+		
         public ActionResult Edit(int id)
         {
             SalesInvoice item = SalesInvoice.Find(id);
-
+			
             if (Request.IsAjaxRequest())
-                return PartialView("_Edit", item);
+                return PartialView("_MasterEditView", item);
             else
                 return View(item);
         }
@@ -118,43 +134,85 @@ namespace Business.Essentials.WebApp.Controllers
         [HttpPost]
         public ActionResult Edit (SalesInvoice item)
 		{
+			item.Issuer = Taxpayer.TryFind (item.IssuerId);
+			item.Customer = Customer.TryFind (item.CustomerId);
+			item.BillTo = Address.TryFind (item.BillToId);
+			
+			if (!ModelState.IsValid) {
+				return View (item);
+			}
+			
 			var invoice = SalesInvoice.Find (item.Id);
 			
-			invoice.Customer = Customer.TryFind (item.CustomerId);
-			invoice.BillTo = Address.TryFind (item.BillToId);
-			invoice.Issuer = Taxpayer.TryFind (item.IssuerId);
+			invoice.Issuer = item.Issuer;
+			invoice.Customer = item.Customer;
+			invoice.Batch = item.Batch;
+			invoice.ModificationTime = DateTime.Now;
+			invoice.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 			
-			item.ModificationTime = DateTime.Now;
-			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			// Address info
+			invoice.BillTo.Copy (item.BillTo);
+			invoice.IssuedFrom.Copy (invoice.Issuer.Address);
 			
-			// Bill to info
-			invoice.BillToTaxId = invoice.BillTo.TaxpayerId;
-			invoice.BillToName = invoice.BillTo.TaxpayerName;
-			invoice.Street = invoice.BillTo.Street;
-			invoice.ExteriorNumber = invoice.BillTo.ExteriorNumber;
-			invoice.InteriorNumber = invoice.BillTo.InteriorNumber;
-			invoice.Neighborhood = invoice.BillTo.Neighborhood;
-			invoice.Borough = invoice.BillTo.Borough;
-			invoice.State = invoice.BillTo.State;
-			invoice.Country = invoice.BillTo.Country;
-			invoice.ZipCode = invoice.BillTo.ZipCode;
-			
-			invoice.Save ();
+			// FIXME: use transaction
+			using (var session = new SessionScope()) {
+				invoice.BillTo.Save ();
+				invoice.IssuedFrom.Save ();
+				invoice.Save ();
+			}
 
-			return PartialView ("_MasterInfo", invoice);
+			return PartialView ("_MasterView", invoice);
 		}
 
         [HttpPost]
-        public ActionResult Confirm(int id)
-        {
-            SalesInvoice item = SalesInvoice.Find(id);
+        public ActionResult Confirm (int id)
+		{
+			int serial;
+			SalesInvoice item = SalesInvoice.Find (id);
+			
+			serial = (from x in SalesInvoice.Queryable
+                      where x.Batch == item.Batch
+                      select x.Serial).Max ().GetValueOrDefault ();
+			serial += 1;
+			
+			item.Serial = serial;
+			item.ApprovalNumber = item.Issuer.ApprovalNumber;
+			item.ApprovalYear = item.Issuer.ApprovalYear;
+			item.CertificateNumber = item.Issuer.CertificateNumber;
+			item.IsCompleted = true;
+			
+			var doc = CFDv2Helpers.IssueCFD (item);
+			
+			item.Issued = doc.fecha;
+			item.OriginalString = CFDv2Helpers.OriginalString (doc);
+			item.DigitalSeal = doc.sello;
+			
+			// save to database
+			item.Save ();
+			
+			// save to filesystem
+			var filename = string.Format (Resources.Format_FiscalDocumentPath,
+	                                      Server.MapPath (Configuration.FiscalFilesPath),
+                                          item.Issuer.Id, item.Batch, item.Serial);
+			var xml_content = CFDv2Helpers.SerializeToXmlString (doc);
+			System.IO.File.WriteAllText (filename, xml_content);
 
-            item.IsCompleted = true;
-            item.Save();
-
-            return RedirectToAction("Index");
-        }
-
+			return RedirectToAction ("Index");
+		}
+		
+		public ActionResult Download (int id)
+		{
+			var item = SalesInvoice.Find (id);
+			var doc = CFDv2Helpers.InvoiceToCFD (item);
+			var stream = CFDv2Helpers.SerializeToXmlStream (doc);
+			var result = new FileStreamResult (stream, "text/xml");
+			
+			result.FileDownloadName = string.Format (Resources.Format_FiscalDocumentName,
+			                                         item.Issuer.Id, item.Batch, item.Serial);
+			
+			return result;
+		}
+		
         [HttpPost]
         public ActionResult Cancel(int id)
         {
@@ -166,19 +224,9 @@ namespace Business.Essentials.WebApp.Controllers
             return RedirectToAction("Index");
         }
 		
-        public ViewResult Print(int id)
-        {
-            SalesInvoice item = SalesInvoice.Find(id);
-
-            if(item.IsCompleted)
-                return View("_SalesTicket", item);
-            else
-                return View("_SalesNote", item);
-        }
-		
 		public ActionResult GetDetail (int id)
 		{
-			return PartialView ("_Detail", SalesInvoiceDetail.Find (id));
+			return PartialView ("_DetailEditView", SalesInvoiceDetail.Find (id));
 		}
 		
         [HttpPost]
@@ -211,6 +259,10 @@ namespace Business.Essentials.WebApp.Controllers
 			case 4:
 				item.Price = p.Price4;
 				break;
+			}
+			
+			if (p.IsTaxIncluded) {
+				item.Price = item.Price / (1m + item.TaxRate);
 			}
 			
 			using (var session = new SessionScope()) {
@@ -272,7 +324,7 @@ namespace Business.Essentials.WebApp.Controllers
 			decimal val;
 
 			success = decimal.TryParse (value.Trim (),
-			                            System.Globalization.NumberStyles.AllowCurrencySymbol,
+			                            System.Globalization.NumberStyles.Currency,
 			                            null, out val);
 
 			if (success && val >= 0) {
@@ -333,7 +385,23 @@ namespace Business.Essentials.WebApp.Controllers
 
 			return Json (new { id = id, value = detail.Discount.ToString ("p"), total = detail.Total.ToString ("c") });
 		}
+		
+		public ActionResult GetBatchSelector (string id)
+		{
+			var qry = from x in TaxpayerDocument.Queryable
+					  where x.Taxpayer.Id == id
+					  select new { x.Batch, x.Type };
+			var list = from x in qry.ToList ()
+					   select new SelectListItem {
+							Value = x.Batch,
+							Text = string.Format ("{0} - {1}", x.Batch, x.Type.GetDisplayName ())
+					   };
 
+			ViewBag.Items = list.ToList ();
+			
+			return PartialView ("_BatchSelector");
+		}
+		
         public ActionResult GetTotals(int id)
         {
             var order = SalesInvoice.Find(id);
@@ -375,6 +443,15 @@ namespace Business.Essentials.WebApp.Controllers
 			}
 
 			return Json (items, JsonRequestBehavior.AllowGet);
+		}
+		
+		Store GetStore ()
+		{
+			if (Request.Cookies ["Store"] != null) {
+				return Store.TryFind (int.Parse (Request.Cookies ["Store"].Value));
+			}
+			
+			return null;
 		}
     }
 }

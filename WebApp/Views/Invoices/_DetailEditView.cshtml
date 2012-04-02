@@ -17,19 +17,19 @@
     </div>
     <div class="info">
         <div class="editable name">@Model.ProductName</div><br/>
-        <b>@Resources.Code:</b>
+        <label>@Resources.Code:</label>
         <div class="editable code">@Model.ProductCode</div>
-        <b>@Resources.Price:</b>
+        <label>@Resources.Price:</label>
         <div class="editable price">@Html.DisplayFor(x => x.Price)</div>
-        <b>@Resources.TaxRate:</b>
+        <label>@Resources.TaxRate:</label>
         <div class="editable tax">@Html.DisplayFor(x => x.TaxRate)</div><br />
-        <b>@Resources.UnitOfMeasurement:</b>
+        <label>@Resources.UnitOfMeasurement:</label>
         <div class="editable um">@Model.UnitOfMeasurement</div>
-        <b>@Resources.Quantity:</b>
+        <label>@Resources.Quantity:</label>
         <div class="editable quantity">@Html.DisplayFor(x => x.Quantity)</div>
-        <b>@Resources.Discount:</b>
+        <label>@Resources.Discount:</label>
         <div class="editable discount">@Html.DisplayFor(x => x.Discount)</div>
-        <b>@Resources.Amount:</b>
+        <label>@Resources.Amount:</label>
         <strong class="total">@Html.DisplayFor(x => x.Total)</strong>
     </div>
 </li>

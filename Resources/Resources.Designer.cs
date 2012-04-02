@@ -3692,5 +3692,176 @@ namespace Business.Essentials {
                 return ResourceManager.GetString("Logo", resourceCulture);
             }
         }
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Pago en una sola exhibición.
+        /// </summary>
+        public static string SinglePayment {
+            get {
+                return ResourceManager.GetString("SinglePayment", resourceCulture);
+            }
+        }
+		
+        /// <summary>
+        ///   Looks up a localized string similar to FIEL.
+        /// </summary>
+        public static string PrivateKey {
+            get {
+                return ResourceManager.GetString("PrivateKey", resourceCulture);
+            }
+        }
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Contraseña de la FIEL.
+        /// </summary>
+        public static string PrivateKeyPassword {
+            get {
+                return ResourceManager.GetString("PrivateKeyPassword", resourceCulture);
+            }
+        }
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Ingreso.
+        /// </summary>
+        public static string FiscalDocumentType_Income {
+            get {
+                return ResourceManager.GetString("FiscalDocumentType_Income", resourceCulture);
+            }
+        }
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Egreso.
+        /// </summary>
+        public static string FiscalDocumentType_Outcome {
+            get {
+                return ResourceManager.GetString("FiscalDocumentType_Outcome", resourceCulture);
+            }
+        }
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Traslado.
+        /// </summary>
+        public static string FiscalDocumentType_Transfer {
+            get {
+                return ResourceManager.GetString("FiscalDocumentType_Transfer", resourceCulture);
+            }
+        }
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Certificado.
+        /// </summary>
+        public static string Certificate {
+			get {
+				return ResourceManager.GetString ("Certificate", resourceCulture);
+			}
+		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Series y Folios.
+        /// </summary>
+        public static string DisplayName_TaxpayerDocuments {
+			get {
+				return ResourceManager.GetString ("DisplayName_TaxpayerDocuments", resourceCulture);
+			}
+		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Folio Inicial.
+        /// </summary>
+        public static string SerialStart {
+			get {
+				return ResourceManager.GetString ("SerialStart", resourceCulture);
+			}
+		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Folio Final.
+        /// </summary>
+        public static string SerialEnd {
+			get {
+				return ResourceManager.GetString ("SerialEnd", resourceCulture);
+			}
+		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Descartar.
+        /// </summary>
+        public static string Discard {
+			get {
+				return ResourceManager.GetString ("Discard", resourceCulture);
+			}
+		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to {0}\{1}-CFD-{2}{3:D5}.xml.
+        /// </summary>
+        public static string Format_FiscalDocumentPath {
+			get {
+				return ResourceManager.GetString ("Format_FiscalDocumentPath", resourceCulture);
+			}
+		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to {0}-CFD-{1}{2:D5}.xml.
+        /// </summary>
+        public static string Format_FiscalDocumentName {
+			get {
+				return ResourceManager.GetString ("Format_FiscalDocumentName", resourceCulture);
+			}
+		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Descargar.
+        /// </summary>
+        public static string Download {
+			get {
+				return ResourceManager.GetString ("Download", resourceCulture);
+			}
+		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Comprobante Fiscal.
+        /// </summary>
+        public static string FiscalDocument {
+			get {
+				return ResourceManager.GetString ("FiscalDocument", resourceCulture);
+			}
+		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Incluye Impuestos.
+        /// </summary>
+        public static string TaxIncluded {
+			get {
+				return ResourceManager.GetString ("TaxIncluded", resourceCulture);
+			}
+		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to IVA.
+        /// </summary>
+        public static string VAT {
+			get {
+				return ResourceManager.GetString ("VAT", resourceCulture);
+			}
+		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Localidad.
+        /// </summary>
+        public static string Locality {
+			get {
+				return ResourceManager.GetString ("Locality", resourceCulture);
+			}
+		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Localidad.
+        /// </summary>
+        public static string FiscalDocumentLegend {
+			get {
+				return ResourceManager.GetString ("FiscalDocumentLegend", resourceCulture);
+			}
+		}
     }
 }
