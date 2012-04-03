@@ -252,7 +252,7 @@ namespace Business.Essentials.WebApp.Controllers
                         			  .SetParameter("detail", id)
                             		  .SetMaxResults(1)
                             		  .List<decimal>();
-                    } catch (ArgumentNullException) {
+                    } catch (Exception) {
                         return null;
                     }
                 }, null);

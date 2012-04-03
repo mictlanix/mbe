@@ -8,10 +8,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Business.Essentials.Model")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Business.Essentials.Model")]
-[assembly: AssemblyCopyright("Copyright ©  2011")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCompany("Mictlanix")]
+[assembly: AssemblyProduct("Business Essentials")]
+[assembly: AssemblyCopyright("Copyright © 2012 Eddy Zavaleta, Mictlanix and contributors.")]
+[assembly: AssemblyTrademark("Mictlanix BE")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
