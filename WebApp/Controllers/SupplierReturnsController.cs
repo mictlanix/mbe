@@ -282,7 +282,7 @@ namespace Business.Essentials.WebApp.Controllers
                             .SetMaxResults(1)
                             .List<decimal>();
                     }
-                    catch (ArgumentNullException)
+                    catch (Exception)
                     {
                         return null;
                     }
