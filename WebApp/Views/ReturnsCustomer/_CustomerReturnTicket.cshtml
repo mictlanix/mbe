@@ -52,15 +52,14 @@
     </tr>
     <tr>
         <td class="line">
-            ✕
-            @Html.DisplayFor(modelItem => item.Price)
+        	@Html.Encode("✕") @Html.DisplayFor(x => item.Price)
             @if (item.Discount > 0)
             {
-                @:- @Html.DisplayFor(modelItem => item.Discount)
+                @:- @Html.DisplayFor(x => item.Discount)
             }
         </td>
         <td class="line center">
-            @Html.DisplayFor(modelItem => item.ProductCode)
+            @Html.DisplayFor(x => item.ProductCode)
         </td>
     </tr>
 }
