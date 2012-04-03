@@ -259,27 +259,35 @@ namespace Business.Essentials.WebApp.Controllers
         }
 		
         [HttpPost]
-        public ActionResult CreditPayment(CustomerPayment item)
-        {
-            item.CashSession = GetSession();
-            item.Customer = Customer.Find(item.CustomerId);
-            item.Date = DateTime.Now;
-            item.Change = 0m;
-
-            using (var session = new SessionScope())
-            {
-                item.CreateAndFlush();
-            }
-
-            System.Diagnostics.Debug.WriteLine("New Payment [Id = {0}]", item.Id);
+        public ActionResult CreditPayment (CustomerPayment item)
+		{
+			item.CashSession = GetSession ();
+			item.Customer = Customer.Find (item.CustomerId);
+			item.Date = DateTime.Now;
+			item.Change = 0m;
 			
-            if (Request.IsAjaxRequest())
-            {
-                return PartialView("_CreditPaymentSuccesful", item);
-            }
+			// Store and Serial
+			item.Store = item.CashSession.CashDrawer.Store;
+			try {
+				item.Serial = (from x in CustomerPayment.Queryable
+	            			   where x.Store.Id == item.Store.Id
+	                      	   select x.Serial).Max () + 1;
+			} catch {
+				item.Serial = 1;
+			}
+
+			using (var session = new SessionScope()) {
+				item.CreateAndFlush ();
+			}
+
+			System.Diagnostics.Debug.WriteLine ("New Payment [Id = {0}]", item.Id);
 			
-            return View("_CreditPaymentSuccesful", item);
-        }
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_CreditPaymentSuccesful", item);
+			}
+			
+			return View ("_CreditPaymentSuccesful", item);
+		}
 
         public ActionResult GetPayment(int id)
         {
