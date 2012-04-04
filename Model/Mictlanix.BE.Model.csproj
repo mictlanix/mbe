@@ -120,9 +120,9 @@
     <Compile Include="Constants\FiscalDocumentType.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Resources\Business.Essentials.Resources.csproj">
+    <ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">
       <Project>{CBB1BA70-351E-4009-86FB-484810DC6364}</Project>
-      <Name>Business.Essentials.Resources</Name>
+      <Name>Mictlanix.BE.Resources</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
