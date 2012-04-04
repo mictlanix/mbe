@@ -456,17 +456,17 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Model\Business.Essentials.Model.csproj">
-      <Project>{F9363BAC-A7BB-4A77-81E0-892C8CCCD297}</Project>
-      <Name>Business.Essentials.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Resources\Business.Essentials.Resources.csproj">
-      <Project>{CBB1BA70-351E-4009-86FB-484810DC6364}</Project>
-      <Name>Business.Essentials.Resources</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CFDv2\Mictlanix.CFDv2.csproj">
       <Project>{63EBACD8-7BB0-480F-81BF-5E0690B27112}</Project>
       <Name>Mictlanix.CFDv2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Model\Mictlanix.BE.Model.csproj">
+      <Project>{F9363BAC-A7BB-4A77-81E0-892C8CCCD297}</Project>
+      <Name>Mictlanix.BE.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">
+      <Project>{CBB1BA70-351E-4009-86FB-484810DC6364}</Project>
+      <Name>Mictlanix.BE.Resources</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -783,7 +783,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
