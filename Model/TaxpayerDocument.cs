@@ -5,7 +5,7 @@ using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 
-namespace Business.Essentials.Model
+namespace Mictlanix.BE.Model
 {   
     [ActiveRecord("taxpayer_document")]
     public class TaxpayerDocument : ActiveRecordLinqBase<TaxpayerDocument>

@@ -32,7 +32,7 @@ using System.ComponentModel.DataAnnotations;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 
-namespace Business.Essentials.Model
+namespace Mictlanix.BE.Model
 {
     public enum DebitCreditEnum : int
     {

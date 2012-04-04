@@ -34,9 +34,9 @@ using System.Web;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
 using NHibernate.Exceptions;
-using Business.Essentials.Model;
+using Mictlanix.BE.Model;
 
-namespace Business.Essentials.WebApp.Controllers
+namespace Mictlanix.BE.Web.Controllers
 {
     public class SuppliersController : Controller
     {

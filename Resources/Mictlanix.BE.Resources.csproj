@@ -31,6 +31,7 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LogicalName>Mictlanix.BE.Resources.resources</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

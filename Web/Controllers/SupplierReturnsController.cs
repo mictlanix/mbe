@@ -35,10 +35,10 @@ using System.Web.Mvc;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Queries;
 using NHibernate;
-using Business.Essentials.Model;
-using Business.Essentials.WebApp.Models;
-using Business.Essentials.WebApp.Helpers;
-namespace Business.Essentials.WebApp.Controllers
+using Mictlanix.BE.Model;
+using Mictlanix.BE.Web.Models;
+using Mictlanix.BE.Web.Helpers;
+namespace Mictlanix.BE.Web.Controllers
 {
     public class SupplierReturnsController : Controller
     {

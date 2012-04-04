@@ -34,7 +34,7 @@ using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using DataAnnotationsExtensions;
 
-namespace Business.Essentials.Model
+namespace Mictlanix.BE.Model
 {
     [ActiveRecord("contact")]
     public class Contact : ActiveRecordLinqBase<Contact>

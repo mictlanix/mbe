@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace Business.Essentials.Model.Validation
+namespace Mictlanix.BE.Model.Validation
 {
     class UniqueProductCodeAttribute : ValidationAttribute
     {

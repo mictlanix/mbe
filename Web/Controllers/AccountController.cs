@@ -33,11 +33,11 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
-using Business.Essentials.Model;
-using Business.Essentials.WebApp.Models;
-using Business.Essentials.WebApp.Helpers;
+using Mictlanix.BE.Model;
+using Mictlanix.BE.Web.Models;
+using Mictlanix.BE.Web.Helpers;
 
-namespace Business.Essentials.WebApp.Controllers
+namespace Mictlanix.BE.Web.Controllers
 {
     public class AccountController : Controller
     {
@@ -53,7 +53,7 @@ namespace Business.Essentials.WebApp.Controllers
 
             if (Model.User.Queryable.Count(x => x.UserName == username) > 0)
             {
-                throw new Exception(Business.Essentials.Resources.Message_UserNameAlreadyExists);
+                throw new Exception(Mictlanix.BE.Resources.Message_UserNameAlreadyExists);
             }
 
             User user = new User
@@ -116,7 +116,7 @@ namespace Business.Essentials.WebApp.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", Business.Essentials.Resources.Message_InvalidUserPassword);
+                    ModelState.AddModelError("", Mictlanix.BE.Resources.Message_InvalidUserPassword);
                 }
             }
 
@@ -162,7 +162,7 @@ namespace Business.Essentials.WebApp.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError("", Business.Essentials.Resources.Message_UnknownError);
+                        ModelState.AddModelError("", Mictlanix.BE.Resources.Message_UnknownError);
                     }
                 }
                 catch (Exception ex)
@@ -212,7 +212,7 @@ namespace Business.Essentials.WebApp.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", Business.Essentials.Resources.Message_ChangePasswordWrong);
+                    ModelState.AddModelError("", Mictlanix.BE.Resources.Message_ChangePasswordWrong);
                 }
             }
 

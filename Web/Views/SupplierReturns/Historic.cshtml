@@ -1,6 +1,6 @@
-﻿@using Business.Essentials
-@using Business.Essentials.Model
-@using Business.Essentials.WebApp.Helpers
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
 @model IEnumerable<SupplierReturn>
 
 @{
@@ -9,7 +9,7 @@
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SupplierReturnHistoric);
 }
 
-<h2>@Business.Essentials.Resources.DisplayName_SupplierReturnHistoric</h2>
+<h2>@Mictlanix.BE.Resources.DisplayName_SupplierReturnHistoric</h2>
 
 <table>
         <tr>

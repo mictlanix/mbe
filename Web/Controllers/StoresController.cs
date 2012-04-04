@@ -33,9 +33,9 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Business.Essentials.Model;
+using Mictlanix.BE.Model;
 
-namespace Business.Essentials.WebApp.Controllers
+namespace Mictlanix.BE.Web.Controllers
 {
     public class StoresController : Controller
     {
