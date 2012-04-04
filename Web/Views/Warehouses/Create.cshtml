@@ -1,11 +1,11 @@
-﻿@using Business.Essentials
-@model Business.Essentials.Model.Warehouse
+﻿@using Mictlanix.BE
+@model Mictlanix.BE.Model.Warehouse
 
 @{
     ViewBag.Title = Resources.CreateNew;
 }
 
-<h2>@Business.Essentials.Resources.Create</h2>
+<h2>@Mictlanix.BE.Resources.Create</h2>
 
 @using (Html.BeginForm()) {
     @Html.ValidationSummary(true)

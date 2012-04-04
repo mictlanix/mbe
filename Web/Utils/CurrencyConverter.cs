@@ -1,6 +1,6 @@
 using System;
 
-namespace Business.Essentials.WebApp.Utils
+namespace Mictlanix.BE.Web.Utils
 {
 	public class CurrencyConverter
 	{

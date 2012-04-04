@@ -35,7 +35,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using System.Configuration;
 
-namespace Business.Essentials.WebApp.Helpers
+namespace Mictlanix.BE.Web.Helpers
 {
 	public static class Configuration
 	{

@@ -32,11 +32,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Web.Mvc;
 using System.Web.Security;
-using Business.Essentials.Model;
+using Mictlanix.BE.Model;
 
-namespace Business.Essentials.WebApp.Models
+namespace Mictlanix.BE.Web.Models
 {
-
     public class MoneyCount
     {
         public PaymentMethod Type { get; set; }

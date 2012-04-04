@@ -1,6 +1,6 @@
-﻿@using Business.Essentials
-@using Business.Essentials.Model
-@using Business.Essentials.WebApp.Helpers
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
 @model IEnumerable<SalesOrder>
 
 @{
@@ -9,7 +9,7 @@
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrdersHistoric);
 }
 
-<h2>@Business.Essentials.Resources.DisplayName_SalesOrdersHistoric</h2>
+<h2>@Mictlanix.BE.Resources.DisplayName_SalesOrdersHistoric</h2>
 
 <table>
     <tr>

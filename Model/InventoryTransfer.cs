@@ -33,9 +33,9 @@ using System.Linq;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
-using Business.Essentials.Model.Validation;
+using Mictlanix.BE.Model.Validation;
 
-namespace Business.Essentials.Model
+namespace Mictlanix.BE.Model
 {
     [ActiveRecord("inventory_transfer")]
     public class InventoryTransfer : ActiveRecordLinqBase<InventoryTransfer>

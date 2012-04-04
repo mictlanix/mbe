@@ -1,6 +1,6 @@
-﻿@using Business.Essentials
-@using Business.Essentials.Model
-@using Business.Essentials.WebApp.Helpers
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
 @model IEnumerable<SalesInvoice>
 
 @{
@@ -9,7 +9,7 @@
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesInvoices);
 }
 
-<h2>@Business.Essentials.Resources.DisplayName_SalesInvoices</h2>
+<h2>@Mictlanix.BE.Resources.DisplayName_SalesInvoices</h2>
 
 <p>
 @if(Privilege.AllowCreate)

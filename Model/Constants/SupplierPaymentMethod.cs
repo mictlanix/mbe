@@ -30,7 +30,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Business.Essentials.Model
+namespace Mictlanix.BE.Model
 {
     public enum SupplierPaymentMethod : int
     {

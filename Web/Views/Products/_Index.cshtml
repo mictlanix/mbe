@@ -1,7 +1,7 @@
-﻿@using Business.Essentials
-@using Business.Essentials.Model
-@using Business.Essentials.WebApp.Helpers
-@using Business.Essentials.WebApp.Models
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
 @model Search<Product>
 
 @{
@@ -27,7 +27,7 @@
             @Html.LabelFor(x => new Product().UnitOfMeasurement)
         </th>
         <th>
-            @Business.Essentials.Resources.Prices
+            @Mictlanix.BE.Resources.Prices
         </th>
         <th>
             @Html.LabelFor(x => new Product().Category)
