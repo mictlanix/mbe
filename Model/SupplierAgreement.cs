@@ -32,9 +32,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
-using Business.Essentials.Model.Validation;
+using Mictlanix.BE.Model.Validation;
 
-namespace Business.Essentials.Model
+namespace Mictlanix.BE.Model
 {
     [ActiveRecord("supplier_agreement")]
     public class SupplierAgreement : ActiveRecordLinqBase<SupplierAgreement>

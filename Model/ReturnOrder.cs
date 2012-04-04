@@ -34,7 +34,7 @@ using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 
-namespace Business.Essentials.Model
+namespace Mictlanix.BE.Model
 {
     [ActiveRecord("return_oder")]
     public class ReturnOrder : ActiveRecordLinqBase<ReturnOrder>

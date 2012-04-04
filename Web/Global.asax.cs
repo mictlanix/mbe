@@ -9,10 +9,10 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
-using Business.Essentials.Model;
-using Business.Essentials.WebApp.Helpers;
+using Mictlanix.BE.Model;
+using Mictlanix.BE.Web.Helpers;
 
-namespace Business.Essentials.WebApp
+namespace Mictlanix.BE.Web
 {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801

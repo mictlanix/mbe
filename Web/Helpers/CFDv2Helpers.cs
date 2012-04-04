@@ -34,9 +34,9 @@ using System.IO;
 using System.Text;
 using Mictlanix.CFDv2;
 using Mictlanix.CFDv2.Resources;
-using Business.Essentials.Model;
+using Mictlanix.BE.Model;
 
-namespace Business.Essentials.WebApp.Helpers
+namespace Mictlanix.BE.Web.Helpers
 {
 	public static class CFDv2Helpers
 	{

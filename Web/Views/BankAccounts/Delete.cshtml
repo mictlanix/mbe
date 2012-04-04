@@ -1,5 +1,5 @@
-﻿@using Business.Essentials
-@model Business.Essentials.Model.BankAccount
+﻿@using Mictlanix.BE
+@model Mictlanix.BE.Model.BankAccount
 
 @{
     ViewBag.Title = Resources.Delete;
@@ -47,6 +47,6 @@
     @Html.Hidden("OwnerId", (object)ViewBag.OwnerId)
     <p>
         <button type="submit" class="icon delete">@Resources.Delete</button>
-        @Html.ActionLink(Business.Essentials.Resources.BackToList, "Details", "Suppliers", new { id = ViewBag.OwnerId }, new { @class = "button icon back" })
+        @Html.ActionLink(Mictlanix.BE.Resources.BackToList, "Details", "Suppliers", new { id = ViewBag.OwnerId }, new { @class = "button icon back" })
     </p>
 }

@@ -1,7 +1,7 @@
-﻿@using Business.Essentials
-@using Business.Essentials.WebApp.Helpers;
-@using Business.Essentials.Model;
-@model Business.Essentials.Model.ReturnCustomer
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Web.Helpers;
+@using Mictlanix.BE.Model;
+@model Mictlanix.BE.Model.ReturnCustomer
 
  @{
     ViewBag.Title = Resources.Details;
@@ -42,7 +42,7 @@
 </fieldset>
 
 <fieldset>
-    <legend>@Business.Essentials.Resources.DisplayName_ReturnCustomerDetails</legend>
+    <legend>@Mictlanix.BE.Resources.DisplayName_ReturnCustomerDetails</legend>
     @Html.Partial("_ReturnCustomerDetails", Model.Details)
 </fieldset>
 <p>

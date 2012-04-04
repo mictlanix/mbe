@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Diagnostics;
 
-namespace Business.Essentials.WebApp.Utils
+namespace Mictlanix.BE.Web.Utils
 {
 	/// <summary>
 	/// Summary description for Code128Rendering.

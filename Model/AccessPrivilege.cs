@@ -32,7 +32,7 @@ using System.ComponentModel.DataAnnotations;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 
-namespace Business.Essentials.Model
+namespace Mictlanix.BE.Model
 {
     [ActiveRecord("access_privilege")]
     public class AccessPrivilege : ActiveRecordLinqBase<AccessPrivilege>

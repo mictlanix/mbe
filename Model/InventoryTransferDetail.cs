@@ -33,7 +33,7 @@ using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 
-namespace Business.Essentials.Model
+namespace Mictlanix.BE.Model
 {
     [ActiveRecord("inventory_transfer_detail")]
     public class InventoryTransferDetail : ActiveRecordLinqBase<InventoryTransferDetail>

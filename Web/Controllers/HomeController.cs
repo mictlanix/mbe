@@ -32,7 +32,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace Business.Essentials.WebApp.Controllers
+namespace Mictlanix.BE.Web.Controllers
 {
     public class HomeController : Controller
     {

@@ -8,8 +8,8 @@
     <ProjectGuid>{F9363BAC-A7BB-4A77-81E0-892C8CCCD297}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Business.Essentials.Model</RootNamespace>
-    <AssemblyName>Business.Essentials.Model</AssemblyName>
+    <RootNamespace>Mictlanix.BE.Model</RootNamespace>
+    <AssemblyName>Mictlanix.BE.Model</AssemblyName>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">

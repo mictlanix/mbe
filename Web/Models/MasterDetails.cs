@@ -33,7 +33,7 @@ using System.Globalization;
 using System.Web.Mvc;
 using System.Web.Security;
 
-namespace Business.Essentials.WebApp.Models
+namespace Mictlanix.BE.Web.Models
 {
     public class MasterDetails<TMaster, TDetail>
     {
