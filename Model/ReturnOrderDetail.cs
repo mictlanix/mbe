@@ -33,7 +33,7 @@ using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 
-namespace Business.Essentials.Model
+namespace Mictlanix.BE.Model
 {
     [ActiveRecord("return_order_detail")]
     public class ReturnOrderDetail : ActiveRecordLinqBase<ReturnOrderDetail>

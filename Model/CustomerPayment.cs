@@ -33,7 +33,7 @@ using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 
-namespace Business.Essentials.Model
+namespace Mictlanix.BE.Model
 {
     [ActiveRecord("customer_payment")]
     public class CustomerPayment : ActiveRecordLinqBase<CustomerPayment>

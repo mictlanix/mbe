@@ -33,9 +33,9 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using System.Security.Cryptography;
 using System.Text;
-using Business.Essentials.Model;
+using Mictlanix.BE.Model;
 
-namespace Business.Essentials.WebApp.Helpers
+namespace Mictlanix.BE.Web.Helpers
 {
     public static class SecurityHelpers
     {

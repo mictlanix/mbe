@@ -34,7 +34,7 @@ using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 
 
-namespace Business.Essentials.Model
+namespace Mictlanix.BE.Model
 {
     [ActiveRecord("cash_count")]
     public class CashCount : ActiveRecordLinqBase<CashCount>

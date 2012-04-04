@@ -32,10 +32,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Business.Essentials.Model;
-using Business.Essentials.WebApp.Utils;
+using Mictlanix.BE.Model;
+using Mictlanix.BE.Web.Utils;
 
-namespace Business.Essentials.WebApp.Helpers
+namespace Mictlanix.BE.Web.Helpers
 {
     public static class HtmlHelpers
     {

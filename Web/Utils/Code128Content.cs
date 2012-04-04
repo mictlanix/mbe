@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace Business.Essentials.WebApp.Utils
+namespace Mictlanix.BE.Web.Utils
 {
    public enum CodeSet
    {

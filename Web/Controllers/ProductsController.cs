@@ -38,11 +38,11 @@ using System.Web;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
 using NHibernate.Exceptions;
-using Business.Essentials.Model;
-using Business.Essentials.WebApp.Models;
-using Business.Essentials.WebApp.Helpers;
+using Mictlanix.BE.Model;
+using Mictlanix.BE.Web.Models;
+using Mictlanix.BE.Web.Helpers;
 
-namespace Business.Essentials.WebApp.Controllers
+namespace Mictlanix.BE.Web.Controllers
 {
     public class ProductsController : Controller
     {

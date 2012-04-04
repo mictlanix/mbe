@@ -1,5 +1,5 @@
-﻿@using Business.Essentials
-@model Business.Essentials.Model.Contact
+﻿@using Mictlanix.BE
+@model Mictlanix.BE.Model.Contact
 
 @{
     ViewBag.Title = Resources.CreateNew;
@@ -111,6 +111,6 @@
 }
 
 <div>
-    @Html.ActionLink(Business.Essentials.Resources.BackToList, "Details", (string)ViewBag.OwnerType, new { id = ViewBag.OwnerId }, new { @class = "button icon back" })
+    @Html.ActionLink(Mictlanix.BE.Resources.BackToList, "Details", (string)ViewBag.OwnerType, new { id = ViewBag.OwnerId }, new { @class = "button icon back" })
 </div>
 

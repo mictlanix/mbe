@@ -35,10 +35,10 @@ using System.Web.Mvc;
 using System.Text;
 using Castle.ActiveRecord;
 using NHibernate.Exceptions;
-using Business.Essentials.Model;
-using Business.Essentials.WebApp.Helpers;
+using Mictlanix.BE.Model;
+using Mictlanix.BE.Web.Helpers;
 
-namespace Business.Essentials.WebApp.Controllers
+namespace Mictlanix.BE.Web.Controllers
 {
     public class TaxpayersController : Controller
     {
