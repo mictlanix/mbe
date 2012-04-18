@@ -15,13 +15,6 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin</OutputPath>
-    <WarningLevel>4</WarningLevel>
-    <DefineConstants>TRACE</DefineConstants>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -29,6 +22,14 @@
     <WarningLevel>4</WarningLevel>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>TRACE</DefineConstants>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Antlr3.Runtime">
@@ -153,6 +154,7 @@
     <Compile Include="Helpers\CFDv2Helpers.cs" />
     <Compile Include="Models\LocalSettings.cs" />
     <Compile Include="Utils\CurrencyConverter.cs" />
+    <Compile Include="Controllers\QuotationsController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
@@ -446,6 +448,19 @@
     <Content Include="Views\Invoices\Details.cshtml" />
     <Content Include="Views\Invoices\Print.cshtml" />
     <Content Include="Views\Shared\_FiscalLayout.cshtml" />
+    <Content Include="Views\Quotations\Index.cshtml" />
+    <Content Include="Views\Quotations\New.cshtml" />
+    <Content Include="Views\Quotations\Edit.cshtml" />
+    <Content Include="Views\Quotations\_Totals.cshtml" />
+    <Content Include="Views\Quotations\Details.cshtml" />
+    <Content Include="Views\Quotations\_MasterEditView.cshtml" />
+    <Content Include="Views\Quotations\_MasterView.cshtml" />
+    <Content Include="Views\Quotations\_DetailEditView.cshtml" />
+    <Content Include="Views\Quotations\_DetailView.cshtml" />
+    <Content Include="Views\Sales\_Totals.cshtml" />
+    <Content Include="Views\ReturnsCustomer\_Totals.cshtml" />
+    <Content Include="Views\Purchases\_Totals.cshtml" />
+    <Content Include="Views\SupplierReturns\_Totals.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />
@@ -642,7 +657,6 @@
     <Content Include="Views\Sales\_SalesInfo.cshtml" />
     <Content Include="Views\Sales\_Details.cshtml" />
     <Content Include="Views\Sales\_SalesOrderDetails.cshtml" />
-    <Content Include="Views\Sales\_SalesTotals.cshtml" />
     <Content Include="Views\Sales\_SalesItem.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
   </ItemGroup>
@@ -739,7 +753,6 @@
     <Content Include="Views\Purchases\Details.cshtml" />
     <Content Include="Views\Purchases\_PurchaseEditor.cshtml" />
     <Content Include="Views\Purchases\_PrintPurchase.cshtml" />
-    <Content Include="Views\Purchases\_PurchasesTotals.cshtml" />
     <Content Include="Views\SupplierPayments\Index.cshtml" />
     <Content Include="Views\SupplierPayments\NewPay.cshtml" />
     <Content Include="Views\AccountsPayables\AccountStatement.cshtml" />
@@ -751,13 +764,11 @@
     <Content Include="Views\ReturnsCustomer\Details.cshtml" />
     <Content Include="Views\ReturnsCustomer\_ReturnItem.cshtml" />
     <Content Include="Views\ReturnsCustomer\_SalesInfoReturn.cshtml" />
-    <Content Include="Views\ReturnsCustomer\_ReturnTotals.cshtml" />
     <Content Include="Views\SupplierReturns\Index.cshtml" />
     <Content Include="Views\SupplierReturns\_Index.cshtml" />
     <Content Include="Views\SupplierReturns\EditSupplierReturn.cshtml" />
     <Content Include="Views\SupplierReturns\_PurchaseInfoReturn.cshtml" />
     <Content Include="Views\SupplierReturns\_ReturnItem.cshtml" />
-    <Content Include="Views\SupplierReturns\_ReturnTotals.cshtml" />
     <Content Include="Views\Sales\Historic.cshtml" />
     <Content Include="Views\Sales\Details.cshtml" />
     <Content Include="Views\Sales\HistoricDetails.cshtml" />
@@ -779,6 +790,8 @@
     <Content Include="Views\Stores\Details.cshtml" />
     <Content Include="Views\Stores\Edit.cshtml" />
     <Content Include="Views\Stores\Index.cshtml" />
+    <None Include="Views\ReturnsCustomer\Return.cshtml" />
+    <None Include="Views\ReturnsCustomer\_SalesItemReturn.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

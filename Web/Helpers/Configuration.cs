@@ -34,11 +34,18 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Configuration;
+using Mictlanix.BE.Model;
 
 namespace Mictlanix.BE.Web.Helpers
 {
 	public static class Configuration
 	{
+		public const string StoreCookieKey = "Store";
+		public const string PointOfSaleCookieKey = "PointOfSale";
+		public const string CashDrawerCookieKey = "CashDrawer";
+
+		#region Application Global Settings
+		
 		public static string ApplicationTitle {
 			get { return ConfigurationManager.AppSettings ["ApplicationTitle"]; }
 		}
@@ -83,5 +90,47 @@ namespace Mictlanix.BE.Web.Helpers
 		public static string FiscalFilesPath {
 			get { return ConfigurationManager.AppSettings ["FiscalFilesPath"]; }
 		}
+		
+		#endregion
+		
+		#region Request's (Local) Settings
+		
+		public static Store Store {
+			get {
+				var cookie = System.Web.HttpContext.Current.Request.Cookies [StoreCookieKey];
+				
+				if (cookie != null) {
+					return Store.TryFind (int.Parse (cookie.Value));
+				}
+				
+				return null;
+			}
+		}
+		
+		public static PointOfSale PointOfSale {
+			get {
+				var cookie = System.Web.HttpContext.Current.Request.Cookies [PointOfSaleCookieKey];
+				
+				if (cookie != null) {
+					return PointOfSale.TryFind (int.Parse (cookie.Value));
+				}
+				
+				return null;
+			}
+		}
+		
+		public static CashDrawer CashDrawer {
+			get {
+				var cookie = System.Web.HttpContext.Current.Request.Cookies [CashDrawerCookieKey];
+				
+				if (cookie != null) {
+					return CashDrawer.TryFind (int.Parse (cookie.Value));
+				}
+				
+				return null;
+			}
+		}
+		
+		#endregion
 	}
 }

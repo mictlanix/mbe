@@ -38,7 +38,7 @@
     }
 </div>
 <div id="returns-totals">
-    @Html.Partial("_ReturnTotals")
+    @Html.Partial("_Totals")
 </div>
 <div id="backTo" class="floating">
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
@@ -51,7 +51,7 @@
 </div>
 <script type="text/javascript">
     function updateTotals(){
-        $.get("/SupplierReturns/GetReturnTotals/" + SupplierReturn.Id, function (data) {
+        $.get("/SupplierReturns/GetTotals/" + SupplierReturn.Id, function (data) {
             $("#returns-totals").html(data);
         });
     }

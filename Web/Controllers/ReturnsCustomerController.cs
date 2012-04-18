@@ -48,7 +48,7 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Index ()
 		{
-			var item = GetStore ();
+			var item = Configuration.Store;
 			
 			if (item == null) {
 				return View ("InvalidStore");
@@ -197,10 +197,10 @@ namespace Mictlanix.BE.Web.Controllers
 
         }
 
-        public ActionResult GetReturnTotals(int id)
+        public ActionResult GetTotals(int id)
         {
             var order = ReturnCustomer.Find(id);
-            return PartialView("_ReturnTotals", order);
+            return PartialView("_Totals", order);
         }
 
         [HttpPost]
@@ -264,14 +264,5 @@ namespace Mictlanix.BE.Web.Controllers
 
             return item.Quantity;
         }
-		
-		Store GetStore ()
-		{
-			if (Request.Cookies ["Store"] != null) {
-				return Store.TryFind (int.Parse (Request.Cookies ["Store"].Value));
-			}
-			
-			return null;
-		}
     }
 }

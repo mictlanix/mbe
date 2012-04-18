@@ -62,7 +62,7 @@ namespace Mictlanix.BE.Web.Controllers
                             select new AccountsPayableSummary
                             {
                                 Supplier = x.Supplier,
-                                TotalPayments = x.Payments.Sum(y => y.Amount)
+                                PaymentsSummary = x.Payments.Sum(y => y.Amount)
                             }).ToList();
 
             qry_payments = null;
@@ -80,7 +80,7 @@ namespace Mictlanix.BE.Web.Controllers
                            select new AccountsPayableSummary
                            {
                                Supplier = x.Supplier,
-                               TotalReturns = x.Returns.Sum(y => y.Total)
+                               ReturnsSummary = x.Returns.Sum(y => y.Total)
                            }).ToList();
 
             qry_returns = null;
@@ -98,7 +98,7 @@ namespace Mictlanix.BE.Web.Controllers
                         select new AccountsPayableSummary
                         {
                             Supplier = x.Supplier,
-                            TotalPurchases = x.Purchases.Sum(y => y.Total)
+                            PurchasesSummary = x.Purchases.Sum(y => y.Total)
                         };
 
             qry_purchases = null;
@@ -111,13 +111,13 @@ namespace Mictlanix.BE.Web.Controllers
 
                 if (temp2 != null)
                 {
-                    item.TotalReturns = temp2.TotalReturns;
+                    item.ReturnsSummary = temp2.ReturnsSummary;
                     returns.Remove(temp2);
                 }
 
                 if (temp != null)
                 {
-                    item.TotalPayments = temp.TotalPayments;
+                    item.PaymentsSummary = temp.PaymentsSummary;
                     payments.Remove(temp);
                 }
 
@@ -208,9 +208,9 @@ namespace Mictlanix.BE.Web.Controllers
             {
                 Master = new AccountsPayableSummary {
                     Supplier = item,
-                    TotalPurchases = purchases.Sum(x => x.Amount),
-                    TotalPayments = payments.Sum(x => x.Amount),
-                    TotalReturns = returns.Sum(x => x.Amount)
+                    PurchasesSummary = purchases.Sum(x => x.Amount),
+                    PaymentsSummary = payments.Sum(x => x.Amount),
+                    ReturnsSummary = returns.Sum(x => x.Amount)
                 },
                 Details = results
             });

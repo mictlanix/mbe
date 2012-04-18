@@ -46,16 +46,16 @@ namespace Mictlanix.BE.Web.Models
         public Customer Customer { get; set; }
 
         [DataType(DataType.Currency)]
-        [Display(Name = "TotalPayments", ResourceType = typeof(Resources))]
-        public decimal TotalPayments { get; set; }
+		[Display(Name = "PaymentsSummary", ResourceType = typeof(Resources))]
+        public decimal PaymentsSummary { get; set; }
 
         [DataType(DataType.Currency)]
-        [Display(Name = "TotalSales", ResourceType = typeof(Resources))]
-        public decimal TotalSales { get; set; }
+		[Display(Name = "SalesSummary", ResourceType = typeof(Resources))]
+        public decimal SalesSummary { get; set; }
 
         [DataType(DataType.Currency)]
-        [Display(Name = "TotalReturns", ResourceType = typeof(Resources))]
-        public decimal TotalReturns { get; set; }
+		[Display(Name = "ReturnsSummary", ResourceType = typeof(Resources))]
+        public decimal ReturnsSummary { get; set; }
 
         [DataType(DataType.Currency)]
         [Display(Name = "AvailableCredit", ResourceType = typeof(Resources))]
@@ -72,7 +72,7 @@ namespace Mictlanix.BE.Web.Models
         { 
             get 
             {
-                return TotalSales - TotalPayments - TotalReturns;
+                return SalesSummary - PaymentsSummary - ReturnsSummary;
             } 
         }
     }

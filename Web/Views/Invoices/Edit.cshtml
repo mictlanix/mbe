@@ -24,19 +24,17 @@
         }
         </ul>
     </div>
-	<div id="tabs">
+	<div id="tabs" class="tabs-bottom">
 	    <ul>
 	        <li><a href="#tabs-1">@Resources.Product</a></li>
-	        <!--<li><a href="#tabs-2">@Resources.SalesOrder</a></li>-->
+	        <li><a href="#tabs-2">@Resources.SalesOrder</a></li>
 	    </ul>
 	    <div id="tabs-1">
 	        <input type="text" id="product-search" name="product-search" />
 	    </div>
-	    <!--
 	    <div id="tabs-2">
 	        <input type="text" id="sales-order-search" name="sales-order-search" />
 	    </div>
-	    -->
     </div>
 </div>
 <div id="totals-section" class="right floating" style="width:300px">
@@ -198,7 +196,10 @@
 
     $(function () {
     	$("#tabs").tabs();
-
+		$(".tabs-bottom .ui-tabs-nav, .tabs-bottom .ui-tabs-nav > *")
+			.removeClass( "ui-corner-all ui-corner-top" )
+			.addClass( "ui-corner-bottom" );
+			
         $("#product-search").tokenInput("@Url.Action("GetSuggestions", "Invoices", new { id = Model.Id })", {
             hintText: "@Resources.HIntText",
             noResultsText: "@Resources.NoResultsText",
@@ -294,4 +295,10 @@ ul.token-input-list {
 div.token-input-dropdown {
   width:650px;
 }
+.ui-widget-content { border:0; }
+.tabs-bottom { position: relative; } 
+.tabs-bottom .ui-tabs-panel { padding: 0 2px 0 0; height: 72px; overflow: auto; } 
+.tabs-bottom .ui-tabs-nav { position: absolute !important; left: 0; bottom: 0; right:0; padding: 0 0.2em 0.2em 0; } 
+.tabs-bottom .ui-tabs-nav li { float:right; margin-top: -2px !important; margin-bottom: 1px !important; border-top: none; border-bottom-width: 1px; }
+.ui-tabs-selected { margin-top: -3px !important; }
 </style>

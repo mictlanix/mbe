@@ -1,17 +1,17 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Models
-@model SalesOrder
+@model SalesQuote
 
 @{
-    ViewBag.Title = Resources.Title_NewSale;
+    ViewBag.Title = Resources.NewQuote;
 }
 
-<h2>@Resources.DisplayName_NewSale</h2> 
+<h2>@Resources.NewQuote</h2> 
 
-<div id="master-section">
+<div id="sales-order">
     <fieldset>
-        <legend>@Resources.DisplayName_SalesInformation</legend>
+        <legend>@Resources.MasterInformation</legend>
         @using (Html.BeginForm())
         {
             @Html.ValidationSummary(true)
@@ -20,10 +20,6 @@
                 @Html.LabelFor(model => model.Customer)
                 @Html.TextBoxFor(model => model.CustomerId)
                 @Html.ValidationMessageFor(model => model.CustomerId)
-            </div>
-            <div id="hasCredit" class="editor-label" style="display:none">
-                @Html.EditorFor(model => model.IsCredit)
-                @Html.LabelFor(model => model.IsCredit)
             </div>
            
             <p class="right">
@@ -49,16 +45,7 @@ ul.token-input-list {
             queryParam: "pattern",
             minChars: 1,
             tokenLimit: 1,
-            prePopulate: [{ id: "@Model.Customer.Id", name: "@Model.Customer.Name"}],
-            onAdd: function (item) {
-                if (item.hasCredit) {
-                    $("#hasCredit").show("slow");
-                }
-            },
-            onDelete: function (item){
-                $("#IsCredit").attr("checked", false);                
-                $("#hasCredit").hide("slow");
-            }
+            prePopulate: [{ id: "@Model.Customer.Id", name: "@Model.Customer.Name"}]
         });
     });
 </script>

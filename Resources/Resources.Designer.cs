@@ -2398,15 +2398,6 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Totales.
-        /// </summary>
-        public static string PurchasesTotals {
-            get {
-                return ResourceManager.GetString("PurchasesTotals", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Cantidad.
         /// </summary>
         public static string Quantity {
@@ -2571,9 +2562,9 @@ namespace Mictlanix.BE {
         /// <summary>
         ///   Looks up a localized string similar to Totales.
         /// </summary>
-        public static string SalesTotals {
+        public static string Totals {
             get {
-                return ResourceManager.GetString("SalesTotals", resourceCulture);
+                return ResourceManager.GetString("Totals", resourceCulture);
             }
         }
         
@@ -3354,36 +3345,36 @@ namespace Mictlanix.BE {
         /// <summary>
         ///   Looks up a localized string similar to Total de Pagos.
         /// </summary>
-        public static string TotalPayments {
-            get {
-                return ResourceManager.GetString("TotalPayments", resourceCulture);
+        public static string PaymentsSummary {
+			get {
+				return ResourceManager.GetString ("PaymentsSummary", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Total de Compras.
         /// </summary>
-        public static string TotalPurchases {
-            get {
-                return ResourceManager.GetString("TotalPurchases", resourceCulture);
+        public static string PurchasesSummary {
+			get {
+				return ResourceManager.GetString ("PurchasesSummary", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Total de Devoluciones.
         /// </summary>
-        public static string TotalReturns {
-            get {
-                return ResourceManager.GetString("TotalReturns", resourceCulture);
+        public static string ReturnsSummary {
+			get {
+				return ResourceManager.GetString ("ReturnsSummary", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Total de Compras.
         /// </summary>
-        public static string TotalSales {
-            get {
-                return ResourceManager.GetString("TotalSales", resourceCulture);
+        public static string SalesSummary {
+			get {
+				return ResourceManager.GetString ("SalesSummary", resourceCulture);
             }
         }
         
@@ -3861,6 +3852,87 @@ namespace Mictlanix.BE {
         public static string FiscalDocumentLegend {
 			get {
 				return ResourceManager.GetString ("FiscalDocumentLegend", resourceCulture);
+			}
+		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Cotización.
+        /// </summary>
+        public static string SalesQuote {
+			get {
+				return ResourceManager.GetString ("SalesQuote", resourceCulture);
+			}
+		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to ID.
+        /// </summary>
+        public static string SalesQuoteId {
+			get {
+				return ResourceManager.GetString ("SalesQuoteId", resourceCulture);
+			}
+		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Detalles de la Cotización.
+        /// </summary>
+        public static string DisplayName_SalesQuoteDetails {
+			get {
+				return ResourceManager.GetString ("DisplayName_SalesQuoteDetails", resourceCulture);
+			}
+		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Cotizaciones.
+        /// </summary>
+        public static string DisplayName_SalesQuotes {
+			get {
+				return ResourceManager.GetString ("DisplayName_SalesQuotes", resourceCulture);
+			}
+		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Cotizaciones.
+        /// </summary>
+        public static string Title_SalesQuotes {
+			get {
+				return ResourceManager.GetString ("Title_SalesQuotes", resourceCulture);
+			}
+		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Cotización Nueva.
+        /// </summary>
+        public static string NewQuote {
+			get {
+				return ResourceManager.GetString ("NewQuote", resourceCulture);
+			}
+		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Información General.
+        /// </summary>
+        public static string MasterInformation {
+			get {
+				return ResourceManager.GetString ("MasterInformation", resourceCulture);
+			}
+		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Detalles.
+        /// </summary>
+        public static string DetailInformation {
+			get {
+				return ResourceManager.GetString ("DetailInformation", resourceCulture);
+			}
+		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Cotizaciones.
+        /// </summary>
+        public static string SalesQuotes {
+			get {
+				return ResourceManager.GetString ("SalesQuotes", resourceCulture);
 			}
 		}
     }

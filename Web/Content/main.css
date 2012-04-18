@@ -156,7 +156,8 @@ table td.actions {
 }
 ul.list-items {
     list-style-type:none;
-    padding-left: 0px;
+    padding-left:0px;
+    margin-bottom:0px;
 }
 ul.list-items li:hover {
   background:AliceBlue ;
@@ -252,4 +253,7 @@ li div.value.name {
   padding-left:5px;
   font-size:larger;
   font-weight:bold;
+}
+#master-section,#details-section {
+  margin:10px 0;
 }

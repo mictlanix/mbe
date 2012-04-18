@@ -1,11 +1,10 @@
 ﻿// 
-// SalesController.cs
+// QuotationsController.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
-//   Eduardo Nieto <enieto@mictlanix.org>
 // 
-// Copyright (C) 2011 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2012 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -40,21 +39,21 @@ using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers
 {
-    public class SalesController : Controller
+    public class QuotationsController : Controller
     {
         //
-        // GET: /Sales/
+        // GET: /Quotations/
 
         public ViewResult Index ()
 		{
-			var item = Configuration.PointOfSale;
+			var item = Configuration.Store;
 			
 			if (item == null) {
-				return View ("InvalidPointOfSale");
+				return View ("InvalidStore");
 			}
 			
-			var qry = from x in SalesOrder.Queryable
-                      where x.Store.Id == item.Store.Id &&
+			var qry = from x in SalesQuote.Queryable
+                      where x.Store.Id == item.Id &&
 							!x.IsCancelled &&
 							!x.IsCompleted
                       select x;
@@ -62,80 +61,47 @@ namespace Mictlanix.BE.Web.Controllers
 			return View (qry.ToList ());
 		}
 
-        public ViewResult Historic()
-        {
-            var qry = from x in SalesOrder.Queryable
-                      where x.IsCompleted || x.IsCancelled
-                      orderby x.Id descending
-                      select x;
+        // GET: /Quotations/Print/
 
-            return View(qry.ToList());
+        public ViewResult Print (int id)
+		{
+			return View ("_SalesTicket", SalesQuote.TryFind (id));
         }
 
-        public ViewResult PrintPromissoryNote(int id)
-        {
-            SalesOrder item = SalesOrder.Find(id);
-
-            return View("_PromissoryNoteTicket", item);
-        }
-
-        // GET: /Sales/PrintOrder/
-
-        public ViewResult PrintOrder(int id)
-        {
-            SalesOrder item = SalesOrder.Find(id);
-
-            if (item.IsCompleted || item.IsCredit)
-            {
-                return View("_SalesTicket", item);
-            }
-            else
-            {
-                return View("_SalesNote", item);
-            }
-        }
-
-        // GET: /Sales/Details/
+        // GET: /Quotations/Details/
 
         public ViewResult Details(int id)
         {
-            SalesOrder order = SalesOrder.Find(id);
-
-            return View(order);
+            return View(SalesQuote.Find(id));
         }
 
-        public ViewResult HistoricDetails(int id)
-        {
-            SalesOrder order = SalesOrder.Find(id);
-
-            return View(order);
-        }
         //
-        // GET: /Sales/New
+        // GET: /Quotations/New
 
         public ViewResult New ()
 		{
-			if (Configuration.PointOfSale == null)
-            {
-                return View("InvalidPointOfSale");
-            }
+			var item = Configuration.Store;
+			
+			if (item == null) {
+				return View ("InvalidStore");
+			}
 
-            return View(new SalesOrder { CustomerId = 1, Customer = Customer.Find(1) });
+            return View(new SalesQuote { CustomerId = 1, Customer = Customer.Find(1) });
         }
 
         [HttpPost]
-		public ActionResult New (SalesOrder item)
+		public ActionResult New (SalesQuote item)
 		{
-			item.PointOfSale = Configuration.PointOfSale;
-
-			if (item.PointOfSale == null) {
-				return View ("InvalidPointOfSale");
+			item.Store = Configuration.Store;
+			
+			if (item.Store == null) {
+				return View ("InvalidStore");
 			}
 			
 			// Store and Serial
-			item.Store = item.PointOfSale.Store;
+			item.Store = item.Store;
 			try {
-				item.Serial = (from x in SalesOrder.Queryable
+				item.Serial = (from x in SalesQuote.Queryable
 	            			   where x.Store.Id == item.Store.Id
 	                      	   select x.Serial).Max () + 1;
 			} catch {
@@ -145,13 +111,14 @@ namespace Mictlanix.BE.Web.Controllers
 			item.Customer = Customer.Find (item.CustomerId);
 			item.SalesPerson = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 			item.Date = DateTime.Now;
-			item.DueDate = item.IsCredit ? item.Date.AddDays (item.Customer.CreditDays) : item.Date;
+			//FIXME: choose date from UI
+			item.DueDate = item.Date.AddDays (30);
 
 			using (var session = new SessionScope()) {
 				item.CreateAndFlush ();
 			}
 
-			System.Diagnostics.Debug.WriteLine ("New SalesOrder [Id = {0}]", item.Id);
+			System.Diagnostics.Debug.WriteLine ("New SalesQuote [Id = {0}]", item.Id);
 
 			if (item.Id == 0) {
 				return View ("UnknownError");
@@ -160,9 +127,9 @@ namespace Mictlanix.BE.Web.Controllers
 			return RedirectToAction ("Edit", new { id = item.Id });
 		}
 
-        public ActionResult Edit(int id)
-        {
-            SalesOrder item = SalesOrder.Find(id);
+        public ActionResult Edit (int id)
+		{
+			SalesQuote item = SalesQuote.Find (id);
 
             if (Request.IsAjaxRequest())
                 return PartialView("_Edit", item);
@@ -171,21 +138,20 @@ namespace Mictlanix.BE.Web.Controllers
         }
 
         //
-        // POST: /Customer/Edit/5
+        // POST: /Quotations/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(SalesOrder item)
+        public ActionResult Edit(SalesQuote item)
         {
-            var order = SalesOrder.Find(item.Id);
+            var quote = SalesQuote.Find(item.Id);
             var customer = Customer.Find(item.CustomerId);
 
-            order.Customer = customer;
-            order.IsCredit = item.IsCredit;
-            order.DueDate = item.IsCredit ? order.Date.AddDays(customer.CreditDays) : order.Date;
+            quote.Customer = customer;
+            quote.DueDate = quote.DueDate;
 
-            order.Save();
+            quote.Save();
 
-            return PartialView("_SalesInfo", order);
+            return PartialView("_SalesInfo", quote);
         }
 
         [HttpPost]
@@ -193,9 +159,9 @@ namespace Mictlanix.BE.Web.Controllers
         {
             var p = Product.Find(product);
 
-            var item = new SalesOrderDetail
+            var item = new SalesQuoteDetail
             {
-                SalesOrder = SalesOrder.Find(order),
+                SalesQuote = SalesQuote.Find(order),
                 Product = p,
                 ProductCode = p.Code,
                 ProductName = p.Name,
@@ -204,7 +170,7 @@ namespace Mictlanix.BE.Web.Controllers
                 Quantity = 1,
             };
 
-            switch (item.SalesOrder.Customer.PriceList.Id)
+            switch (item.SalesQuote.Customer.PriceList.Id)
             {
                 case 1:
                     item.Price = p.Price1;
@@ -225,7 +191,7 @@ namespace Mictlanix.BE.Web.Controllers
                 item.CreateAndFlush();
             }
 
-            System.Diagnostics.Debug.WriteLine("New SalesOrderDetail [Id = {0}]", item.Id);
+            System.Diagnostics.Debug.WriteLine("New SalesQuoteDetail [Id = {0}]", item.Id);
 
             return Json(new { id = item.Id });
         }
@@ -233,7 +199,7 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public JsonResult EditDetailQuantity(int id, decimal quantity)
         {
-            SalesOrderDetail detail = SalesOrderDetail.Find(id);
+            SalesQuoteDetail detail = SalesQuoteDetail.Find(id);
 
             if (quantity > 0)
             {
@@ -247,7 +213,7 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public JsonResult EditDetailDiscount(int id, string value)
         {
-            SalesOrderDetail detail = SalesOrderDetail.Find(id);
+            SalesQuoteDetail detail = SalesQuoteDetail.Find(id);
             bool success;
             decimal discount;
 
@@ -263,74 +229,50 @@ namespace Mictlanix.BE.Web.Controllers
             return Json(new { id = id, discount = detail.Discount.ToString("p"), total = detail.Total.ToString("c") });
         }
 
-        [HttpPost]
-        public JsonResult EditDeliveryOrder(int id, int value)
+        public ActionResult GetTotals(int id)
         {
-            SalesOrderDetail detail = SalesOrderDetail.Find(id);
-
-            if (value != 0)
-            {
-                detail.IsDeliveryOrder = true;
-                detail.Save();
-            }
-            else
-            {
-                detail.IsDeliveryOrder = false;
-                detail.Save();
-            }
-
-            return Json(new { id = id, value = detail.IsDeliveryOrder });
+            var order = SalesQuote.Find(id);
+            return PartialView("_Totals", order);
         }
 
-        public ActionResult GetTotals (int id)
+        public ActionResult GetDetail (int id)
 		{
-			var order = SalesOrder.Find (id);
-			return PartialView ("_Totals", order);
-        }
-
-        public ActionResult GetSalesItem (int id)
-		{
-			return PartialView ("_SalesItem", SalesOrderDetail.Find (id));
+			return PartialView ("_DetailEditView", SalesQuoteDetail.Find(id));
         }
 
         [HttpPost]
         public JsonResult RemoveDetail(int id)
         {
-            SalesOrderDetail item = SalesOrderDetail.Find(id);
+            SalesQuoteDetail item = SalesQuoteDetail.Find(id);
             item.Delete();
             return Json(new { id = id, result = true });
         }
 
         [HttpPost]
-        public ActionResult ConfirmOrder(int id)
-        {
-            SalesOrder item = SalesOrder.Find(id);
+		public ActionResult ConfirmOrder (int id)
+		{
+			SalesQuote item = SalesQuote.Find (id);
 
-            if (item.IsCredit)
-            {
-                item.IsPaid = true;
-            }
+			item.IsCompleted = true;
+			item.Save ();
 
-            item.IsCompleted = true;
-            item.Save();
-
-            return RedirectToAction("New");
+			return RedirectToAction ("New");
         }
 
         [HttpPost]
-        public ActionResult CancelOrder(int id)
-        {
-            SalesOrder item = SalesOrder.Find(id);
+		public ActionResult CancelOrder (int id)
+		{
+			SalesQuote item = SalesQuote.Find (id);
 
-            item.IsCancelled = true;
-            item.Save();
+			item.IsCancelled = true;
+			item.Save ();
 
-            return RedirectToAction("New");
+			return RedirectToAction ("New");
         }
 		
         public JsonResult GetSuggestions (int order, string pattern)
 		{
-			SalesOrder sales_order = SalesOrder.Find (order);
+			SalesQuote sales_order = SalesQuote.Find (order);
 			int pl = sales_order.Customer.PriceList.Id;
 			ArrayList items = new ArrayList (15);
 
