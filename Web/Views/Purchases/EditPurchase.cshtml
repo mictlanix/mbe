@@ -34,7 +34,7 @@
     </div>
 </div>
 <div id="purchases-totals">
-    @Html.Partial("_PurchasesTotals")
+    @Html.Partial("_Totals")
 </div>
 <div class="right floating">
     @using (Html.BeginForm("ConfirmPurchase", "Purchases", new { id = Model.Id }))
@@ -53,7 +53,7 @@
 </div>
 <script type="text/javascript">
     function updateTotals(){
-        $.get("/Purchases/GetPurchasesTotals/" + PurchaseMovement.Id, function (data) {
+        $.get("/Purchases/GetTotals/" + PurchaseMovement.Id, function (data) {
             $("#purchases-totals").html(data);
         });
     }

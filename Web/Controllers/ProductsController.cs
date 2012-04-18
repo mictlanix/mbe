@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ProductsController.cs
 // 
 // Author:
@@ -28,6 +28,7 @@
 //
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -245,14 +246,27 @@ namespace Mictlanix.BE.Web.Controllers
 
 		public JsonResult GetSuggestions (string pattern)
 		{
+			ArrayList items = new ArrayList (15);
 			var qry = from x in Product.Queryable
                       where x.Name.Contains (pattern) ||
-                            x.Code.Contains (pattern) ||
-                            x.SKU.Contains (pattern)
+							x.Code.Contains (pattern) ||
+							x.SKU.Contains (pattern)
 					  orderby x.Name
-                      select new { id = x.Id, name = x.Name, code = x.Code, sku = x.SKU, url = x.Photo };
-
-			return Json (qry.Take (15).ToList (), JsonRequestBehavior.AllowGet);
+                      select x;
+			
+			foreach (var x in qry.Take(15)) {
+				var item = new { 
+                    id = x.Id,
+                    name = x.Name, 
+                    code = x.Code, 
+                    sku = x.SKU, 
+                    url = Url.Content (x.Photo)
+				};
+                
+				items.Add (item);
+			}
+			
+			return Json (items, JsonRequestBehavior.AllowGet);
 		}
     }
 }

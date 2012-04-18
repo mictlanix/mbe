@@ -96,6 +96,8 @@ namespace Mictlanix.BE.Model
         [Display(Name = "DisplayName_SupplierReturnHistoric", ResourceType = typeof(Resources))]
         SupplierReturnHistoric,
         [Display(Name = "DisplayName_Stores", ResourceType = typeof(Resources))]
-        Stores
+        Stores,
+		[Display(Name = "SalesQuotes", ResourceType = typeof(Resources))]
+		SalesQuotes
     }
 }

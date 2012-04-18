@@ -19,7 +19,9 @@
                         Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments).AllowRead ||
                         Html.GetPrivilege(CurrentUser, SystemObjects.ReturnCustomer).AllowRead ||
                         Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrdersHistoric).AllowRead ||
-                        Html.GetPrivilege(CurrentUser, SystemObjects.ReturnCustomerHistoric).AllowRead;
+                        Html.GetPrivilege(CurrentUser, SystemObjects.ReturnCustomerHistoric).AllowRead ||
+                        Html.GetPrivilege(CurrentUser, SystemObjects.SalesQuotes).AllowRead ||
+                        Html.GetPrivilege(CurrentUser, SystemObjects.SalesInvoices).AllowRead;
     var ShowInventoryMenu = Html.GetPrivilege(CurrentUser, SystemObjects.InventoryReceipts).AllowRead ||
                             Html.GetPrivilege(CurrentUser, SystemObjects.InventoryIssues).AllowRead ||
                             Html.GetPrivilege(CurrentUser, SystemObjects.InventoryTransfers).AllowRead;
@@ -28,8 +30,7 @@
                             Html.GetPrivilege(CurrentUser, SystemObjects.SupplierReturns).AllowRead ||
                             Html.GetPrivilege(CurrentUser, SystemObjects.SupplierReturnHistoric).AllowRead;
     var ShowAdministrationMenu = Html.GetPrivilege(CurrentUser, SystemObjects.AccountsReceivable).AllowRead ||
-                            	 Html.GetPrivilege(CurrentUser, SystemObjects.AccountsPayable).AllowRead ||
-                            	 Html.GetPrivilege(CurrentUser, SystemObjects.SalesInvoices).AllowRead;
+                            	 Html.GetPrivilege(CurrentUser, SystemObjects.AccountsPayable).AllowRead;
     
 }
 
@@ -165,6 +166,14 @@
                                    href="@Url.Action("Index", "Payments")">@Resources.Title_CustomerPayment</a>
                             </li>
                             }
+                            @*
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesQuotes).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "Quotations") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "Quotations")">@Resources.SalesQuotes</a>
+                            </li>
+                            }*@
                             @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesInvoices).AllowRead)
                             {
                             <li class="gbmtc">
@@ -342,85 +351,21 @@
 {
 <script type="text/javascript">
     $(function () {
-        $('#master-data-menu').toggle(function () {
-            if ($('#sales-menu').parent().hasClass('gbto'))
-                $('#sales-menu').trigger("click");
-            if ($('#inventory-menu').parent().hasClass('gbto'))
-                $('#inventory-menu').trigger("click");
-            if ($('#purchases-menu').parent().hasClass('gbto'))
-                $('#purchases-menu').trigger("click");
-            if ($('#mgmt-menu').parent().hasClass('gbto'))
-                $('#mgmt-menu').trigger("click");
+    	$(document).click(function(e){
+	    	$('.gbgt').each(function () {
+	            $(this).parent().removeClass('gbto');
+	            $(this).next().css({ "visibility": "hidden" });
+	      	});
+		});
 
-            $('#master-data-menu').parent().addClass('gbto');
-            $('#master-data-menu-items').css({ "visibility": "visible" });
-        }, function () {
-            $('#master-data-menu').parent().removeClass('gbto');
-            $('#master-data-menu-items').css({ "visibility": "hidden" });
-        });
-        $('#sales-menu').toggle(function () {
-            if ($('#master-data-menu').parent().hasClass('gbto'))
-                $('#master-data-menu').trigger("click");
-            if ($('#inventory-menu').parent().hasClass('gbto'))
-                $('#inventory-menu').trigger("click");
-            if ($('#purchases-menu').parent().hasClass('gbto'))
-                $('#purchases-menu').trigger("click");
-            if ($('#mgmt-menu').parent().hasClass('gbto'))
-                $('#mgmt-menu').trigger("click");
-
-            $('#sales-menu').parent().addClass('gbto');
-            $('#sales-menu-items').css({ "visibility": "visible" });
-        }, function () {
-            $('#sales-menu').parent().removeClass('gbto');
-            $('#sales-menu-items').css({ "visibility": "hidden" });
-        });
-        $('#inventory-menu').toggle(function () {
-            if ($('#master-data-menu').parent().hasClass('gbto'))
-                $('#master-data-menu').trigger("click");
-            if ($('#sales-menu').parent().hasClass('gbto'))
-                $('#sales-menu').trigger("click");
-            if ($('#purchases-menu').parent().hasClass('gbto'))
-                $('#purchases-menu').trigger("click");
-            if ($('#mgmt-menu').parent().hasClass('gbto'))
-                $('#mgmt-menu').trigger("click");
-
-            $('#inventory-menu').parent().addClass('gbto');
-            $('#inventory-menu-items').css({ "visibility": "visible" });
-        }, function () {
-            $('#inventory-menu').parent().removeClass('gbto');
-            $('#inventory-menu-items').css({ "visibility": "hidden" });
-        });
-        $('#purchases-menu').toggle(function () {
-            if ($('#master-data-menu').parent().hasClass('gbto'))
-                $('#master-data-menu').trigger("click");
-            if ($('#sales-menu').parent().hasClass('gbto'))
-                $('#sales-menu').trigger("click");
-            if ($('#inventory-menu').parent().hasClass('gbto'))
-                $('#inventory-menu').trigger("click");
-            if ($('#mgmt-menu').parent().hasClass('gbto'))
-                $('#mgmt-menu').trigger("click");
-
-            $('#purchases-menu').parent().addClass('gbto');
-            $('#purchases-menu-items').css({ "visibility": "visible" });
-        }, function () {
-            $('#purchases-menu').parent().removeClass('gbto');
-            $('#purchases-menu-items').css({ "visibility": "hidden" });
-        });
-        $('#mgmt-menu').toggle(function () {
-            if ($('#master-data-menu').parent().hasClass('gbto'))
-                $('#master-data-menu').trigger("click");
-            if ($('#sales-menu').parent().hasClass('gbto'))
-                $('#sales-menu').trigger("click");
-            if ($('#inventory-menu').parent().hasClass('gbto'))
-                $('#inventory-menu').trigger("click");
-            if ($('#purchases-menu').parent().hasClass('gbto'))
-                $('#purchases-menu').trigger("click");
-
-            $('#mgmt-menu').parent().addClass('gbto');
-            $('#mgmt-menu-items').css({ "visibility": "visible" });
-        }, function () {
-            $('#mgmt-menu').parent().removeClass('gbto');
-            $('#mgmt-menu-items').css({ "visibility": "hidden" });
+		$('.gbgt').click(function () {
+			event.stopPropagation();
+			$('.gbgt').each(function () {
+	            $(this).parent().removeClass('gbto');
+	            $(this).next().css({ "visibility": "hidden" });
+	      	});
+            $(this).parent().addClass('gbto');
+            $(this).next().css({ "visibility": "visible" });
         });
     });
 </script>

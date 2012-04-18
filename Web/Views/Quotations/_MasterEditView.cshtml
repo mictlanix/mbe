@@ -1,0 +1,35 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model SalesQuote
+
+<fieldset>
+    <legend>@Resources.DisplayName_SalesInformation</legend>
+        @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "master-section" }))
+        {
+            @Html.ValidationSummary(true)
+                
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Customer)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.CustomerId)
+                @Html.ValidationMessageFor(model => model.CustomerId)
+            </div>
+                
+     	    <div class="editor-label">
+                @Html.LabelFor(model => model.IsCredit)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.IsCredit)
+                @Html.ValidationMessageFor(model => model.IsCredit)
+            </div>
+
+            <p><button type="submit" class="icon save">@Resources.Save</button></p>
+        }
+</fieldset>
+<script type="text/javascript">
+    $(function () {
+        $("#CustomerId").tokenInput("add", { id: "@Model.Customer.Id", name: "@Model.Customer.Name"});
+    });
+</script>

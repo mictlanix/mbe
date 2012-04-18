@@ -50,17 +50,3 @@
         </ol>
     </div>
 </div>
-@if(Request.IsAuthenticated)
-{
-    <script type="text/javascript">
-        $(function () {
-            $('#gbg4').toggle(function () {
-                $('#gbg4').parent().addClass('gbto');
-                $('#gbd4').css({ "visibility": "visible" });
-            }, function () {
-                $('#gbg4').parent().removeClass('gbto');
-                $('#gbd4').css({ "visibility": "hidden" });
-            });
-        });
-    </script>
-}

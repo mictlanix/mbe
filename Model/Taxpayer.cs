@@ -32,16 +32,6 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "Address", ResourceType = typeof(Resources))]
 		public virtual Address Address { get; set; }
 		
-		[Property("approval_number")]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [Display(Name = "ApprovalNumber", ResourceType = typeof(Resources))]
-        public int ApprovalNumber { get; set; }
-		
-		[Property("approval_year")]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [Display(Name = "ApprovalYear", ResourceType = typeof(Resources))]
-        public int ApprovalYear { get; set; }
-		
 		[Property("certificate_number")]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "CertificateNumber", ResourceType = typeof(Resources))]

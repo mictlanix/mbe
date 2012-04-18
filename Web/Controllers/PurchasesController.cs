@@ -258,12 +258,10 @@ namespace Mictlanix.BE.Web.Controllers
             return PartialView("_PurchaseItem", PurchaseOrderDetail.Find(id));
         }
 
-        //GET/PurchasesTotals
-
-        public ActionResult GetPurchasesTotals(int id)
+        public ActionResult GetTotals(int id)
         {
             var order = PurchaseOrder.Find(id);
-            return PartialView("_PurchasesTotals", order);
+            return PartialView("_Totals", order);
         }
 
         //

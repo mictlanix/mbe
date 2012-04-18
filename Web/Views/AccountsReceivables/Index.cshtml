@@ -18,13 +18,13 @@
             @Html.LabelFor(x => new Customer().Name)            
         </th>
         <th class="nowrap">
-            @Html.LabelFor(x => new AccountsReceivableSummary().TotalSales)
+            @Html.LabelFor(x => new AccountsReceivableSummary().SalesSummary)
         </th>
         <th class="nowrap">
-            @Html.LabelFor(x => new AccountsReceivableSummary().TotalPayments)
+            @Html.LabelFor(x => new AccountsReceivableSummary().PaymentsSummary)
         </th>
         <th class="nowrap">
-            @Html.LabelFor(x => new AccountsPayableSummary().TotalReturns)
+            @Html.LabelFor(x => new AccountsPayableSummary().ReturnsSummary)
         </th>
         <th>
             @Html.LabelFor(x => new AccountsReceivableSummary().Balance)
@@ -39,13 +39,13 @@
             @Html.DisplayFor(x => item.Customer.Name)
         </td>
         <td class="number">
-            @Html.DisplayFor(x => item.TotalSales)
+            @Html.DisplayFor(x => item.SalesSummary)
         </td>
         <td class="number">
-            @Html.DisplayFor(x => item.TotalPayments)
+            @Html.DisplayFor(x => item.PaymentsSummary)
         </td>
         <td class="number">
-            @Html.DisplayFor(x => item.TotalReturns)
+            @Html.DisplayFor(x => item.ReturnsSummary)
         </td>
         <td class="number">
             @Html.DisplayFor(x => item.Balance)
