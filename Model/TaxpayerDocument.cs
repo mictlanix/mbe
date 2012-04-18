@@ -34,6 +34,16 @@ namespace Mictlanix.BE.Model
         [Display(Name = "SerialEnd", ResourceType = typeof(Resources))]
         public int SerialEnd { get; set; }
 		
+		[Property("approval_number")]
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+        [Display(Name = "ApprovalNumber", ResourceType = typeof(Resources))]
+        public int ApprovalNumber { get; set; }
+		
+		[Property("approval_year")]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[Display(Name = "ApprovalYear", ResourceType = typeof(Resources))]
+		public int ApprovalYear { get; set; }
+		
 		[Property]
         [Display(Name = "Type", ResourceType = typeof(Resources))]
         public FiscalDocumentType Type { get; set; }

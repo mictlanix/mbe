@@ -3,31 +3,44 @@
 
 <fieldset>
     <legend>@Resources.DisplayName_SalesInformation</legend>
-        @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "sales-order" }))
-        {
-            @Html.ValidationSummary(true)
-                
-            <div class="editor-label">
-                @Html.LabelFor(model => model.Customer)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.CustomerId)
-                @Html.ValidationMessageFor(model => model.CustomerId)
-            </div>
-                
-     	    <div class="editor-label">
-                @Html.LabelFor(model => model.IsCredit)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.IsCredit)
-                @Html.ValidationMessageFor(model => model.IsCredit)
-            </div>
-
-            <p><button type="submit" class="icon save">@Resources.Save</button></p>
-        }
+    @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "master-section" }))
+    {
+        @Html.ValidationSummary(true)
+        
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Customer)
+            @Html.TextBoxFor(model => model.CustomerId)
+            @Html.ValidationMessageFor(model => model.CustomerId)
+        </div>
+        <div id="hasCredit" class="editor-label" style="display:none">
+            @Html.EditorFor(model => model.IsCredit)
+            @Html.LabelFor(model => model.IsCredit)
+        </div>
+       
+        <p class="right">
+            <button type="submit" class="icon save">@Resources.Save</button>
+        </p>
+    }
 </fieldset>
 <script type="text/javascript">
     $(function () {
-        $("#CustomerId").tokenInput("add", { id: "@Model.Customer.Id", name: "@Model.Customer.Name"});
+        $("#CustomerId").tokenInput("@Url.Action("GetSuggestions", "Customers")", {
+            hintText: "@Resources.HIntText",
+            noResultsText: "@Resources.NoResultsText",
+            searchingText: "@Resources.SearchingText",
+            queryParam: "pattern",
+            minChars: 1,
+            tokenLimit: 1,
+            prePopulate: [{ id: "@Model.Customer.Id", name: "@Model.Customer.Name"}],
+            onAdd: function (item) {
+                if (item.hasCredit) {
+                    $("#hasCredit").show("slow");
+                }
+            },
+            onDelete: function (item){
+                $("#IsCredit").attr("checked", false);                
+                $("#hasCredit").hide("slow");
+            }
+        });
     });
 </script>

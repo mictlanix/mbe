@@ -11,15 +11,11 @@
 
 <h2>@Resources.DisplayName_EditSale</h2> 
 
-<div id="sales-order" style="margin-right:300px">
+<div id="master-section" style="margin-right:300px">
 @Html.Partial("_SalesInfo")
 </div>
  
- <div style="margin-right:300px"> 
-    <div class="search-box">
-        <label>@Resources.Product</label>
-        <input type="text" id="product-search" name="product-search" />
-    </div>
+<div id="details-section" style="margin-right:300px">
     <div id="items-container">
         <ul id="items" class="list-items">
         @foreach (var item in Model.Details)
@@ -28,12 +24,15 @@
         }
         </ul>
     </div>
+    <div class="search-box">
+        <input type="text" id="product-search" name="product-search" />
+    </div>
 </div>
 <div id="back-to-list">
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
 <div id="sales-totals">
-    @Html.Partial("_SalesTotals")
+    @Html.Partial("_Totals")
 </div>
 <div id="dialog-confirm" title="@Resources.Delete">
 	<p>
@@ -43,7 +42,7 @@
 </div>
 <script type="text/javascript">
     function updateTotals(){
-        $.get("/Sales/GetSalesTotals/" + SalesOrder.Id, function (data) {
+        $.get("/Sales/GetTotals/" + @Model.Id, function (data) {
             $("#sales-totals").html(data);
             if($("#items").children().length === 0){
                 $("#edit-sales-order").show("slow");            
@@ -131,7 +130,7 @@
             resultsFormatter: function(item){return ProductFormatter(item);},
             queryParam: "pattern",minChars: 3,tokenLimit: 1,
             onAdd: function (item) {
-                $.post("/Sales/AddDetail", { "order": SalesOrder.Id, "product": "" + item.id }, function (detail) {
+                $.post("/Sales/AddDetail", { "order": @Model.Id, "product": "" + item.id }, function (detail) {
                     $.get("/Sales/GetSalesItem/" + detail.id, function (data) {
                         $("#items").append(data);
                         $("#item" + detail.id + " div.quantity").editable(function (value, settings) {

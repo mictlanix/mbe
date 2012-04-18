@@ -3,9 +3,8 @@
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
-//   Eduardo Nieto <enieto@mictlanix.org>
 // 
-// Copyright (C) 2011 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2012 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -45,7 +44,7 @@ namespace Mictlanix.BE.Web.Controllers
     {
         public ViewResult Index ()
 		{
-			var item = GetStore ();
+			var item = Configuration.Store;
 			
 			if (item == null) {
 				return View ("InvalidStore");
@@ -64,7 +63,7 @@ namespace Mictlanix.BE.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult New (SalesInvoice item)
+		public ActionResult New (SalesInvoice item)
 		{
 			item.Issuer = Taxpayer.TryFind (item.IssuerId);
 			item.Customer = Customer.TryFind (item.CustomerId);
@@ -79,7 +78,7 @@ namespace Mictlanix.BE.Web.Controllers
 			item.ModificationTime = item.CreationTime;
 			item.Creator = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 			item.Updater = item.Creator;
-			item.Store = GetStore ();
+			item.Store = Configuration.Store;
 			
 			// Address info
 			item.BillTo = new Address (item.BillTo);
@@ -110,9 +109,6 @@ namespace Mictlanix.BE.Web.Controllers
 		
 		public ViewResult Print (int id)
 		{
-			if (Request.Cookies ["Store"] != null) {
-				ViewBag.Store = Store.TryFind (int.Parse (Request.Cookies ["Store"].Value));
-			}
 			return View (SalesInvoice.Find (id));
 		}
 		
@@ -165,25 +161,55 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 
         [HttpPost]
-        public ActionResult Confirm (int id)
+		public ActionResult Confirm (int id)
 		{
-			int serial;
-			SalesInvoice item = SalesInvoice.Find (id);
+			SalesInvoice item;
+			TaxpayerDocument batch;
 			
-			serial = (from x in SalesInvoice.Queryable
-                      where x.Batch == item.Batch
-                      select x.Serial).Max ().GetValueOrDefault ();
-			serial += 1;
+			using (var session = new SessionScope()) {
+				item = SalesInvoice.Find (id);
+				batch = item.Issuer.Documents.Single (x => x.Batch == item.Batch);
+			}
+			
+			int serial = (from x in SalesInvoice.Queryable
+                          where x.Batch == item.Batch
+                          select x.Serial).Max ().GetValueOrDefault () + 1;
 			
 			item.Serial = serial;
-			item.ApprovalNumber = item.Issuer.ApprovalNumber;
-			item.ApprovalYear = item.Issuer.ApprovalYear;
+			item.ApprovalNumber = batch.ApprovalNumber;
+			item.ApprovalYear = batch.ApprovalYear;
 			item.CertificateNumber = item.Issuer.CertificateNumber;
 			item.IsCompleted = true;
 			
 			var doc = CFDv2Helpers.IssueCFD (item);
 			
 			item.Issued = doc.fecha;
+			item.OriginalString = CFDv2Helpers.OriginalString (doc);
+			item.DigitalSeal = doc.sello;
+			
+			// save to database
+			item.Save ();
+			
+			// save to filesystem
+			var filename = string.Format (Resources.Format_FiscalDocumentPath,
+	                                      Server.MapPath (Configuration.FiscalFilesPath),
+                                          item.Issuer.Id, item.Batch, item.Serial);
+			var xml_content = CFDv2Helpers.SerializeToXmlString (doc);
+			System.IO.File.WriteAllText (filename, xml_content);
+
+			return RedirectToAction ("Index");
+		}
+
+        [HttpPost]
+		public ActionResult Sign (int id)
+		{
+			SalesInvoice item = SalesInvoice.Find (id);
+			
+			if (!item.IsCompleted)
+				return RedirectToAction ("Index");
+
+			var doc = CFDv2Helpers.SignCFD (item);
+			
 			item.OriginalString = CFDv2Helpers.OriginalString (doc);
 			item.DigitalSeal = doc.sello;
 			
@@ -443,15 +469,6 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 
 			return Json (items, JsonRequestBehavior.AllowGet);
-		}
-		
-		Store GetStore ()
-		{
-			if (Request.Cookies ["Store"] != null) {
-				return Store.TryFind (int.Parse (Request.Cookies ["Store"].Value));
-			}
-			
-			return null;
 		}
     }
 }

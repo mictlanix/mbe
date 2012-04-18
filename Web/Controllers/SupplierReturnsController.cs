@@ -182,10 +182,10 @@ namespace Mictlanix.BE.Web.Controllers
             }
         }
 
-        public ActionResult GetReturnTotals(int id)
+        public ActionResult GetTotals(int id)
         {
             var order = SupplierReturn.Find(id);
-            return PartialView("_ReturnTotals", order);
+            return PartialView("_Totals", order);
         }
 
         [HttpPost]

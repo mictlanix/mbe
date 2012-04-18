@@ -54,6 +54,14 @@ namespace Mictlanix.BE.Web.Helpers
 			return cfd;
 		}
 
+		internal static Comprobante SignCFD (SalesInvoice item)
+		{
+			var cfd = InvoiceToCFD (item);
+			cfd.sello = CFDv2Utils.DigitalSignature (cfd, item.Issuer.KeyData,
+                                     				 item.Issuer.KeyPassword);
+			return cfd;
+		}
+		
 		internal static Comprobante InvoiceToCFD (SalesInvoice item)
 		{
 			var cfd = new Comprobante

@@ -230,19 +230,11 @@ namespace Mictlanix.BE.Web.Controllers
 		
 		public ActionResult LocalSettings ()
 		{
-			LocalSettings item = new LocalSettings ();
-			
-			if (Request.Cookies ["Store"] != null) {
-				item.Store = Store.TryFind (int.Parse (Request.Cookies ["Store"].Value));
-			}
-			
-			if (Request.Cookies ["PointOfSale"] != null) {
-				item.PointOfSale = PointOfSale.TryFind (int.Parse (Request.Cookies ["PointOfSale"].Value));
-			}
-			
-			if (Request.Cookies ["CashDrawer"] != null) {
-				item.CashDrawer = CashDrawer.TryFind (int.Parse (Request.Cookies ["CashDrawer"].Value));
-			}
+			LocalSettings item = new LocalSettings {
+				Store = Configuration.Store,
+				PointOfSale = Configuration.PointOfSale,
+				CashDrawer = Configuration.CashDrawer
+			};
 			
 			return View (item);
 		}
@@ -258,26 +250,36 @@ namespace Mictlanix.BE.Web.Controllers
 				return View (item);
 			}
 			
-			Response.Cookies ["Store"].Value = item.Store.Id.ToString ();
-			Response.Cookies ["Store"].Expires = DateTime.Now.AddYears (100);
+			Response.Cookies.Add (new HttpCookie (Configuration.StoreCookieKey) {
+				Value = item.Store.Id.ToString (),
+				Expires = DateTime.Now.AddYears (100)
+			});
 			
 			if (item.PointOfSale != null) {
-				Response.Cookies ["PointOfSale"].Value = item.PointOfSale.Id.ToString ();
-				Response.Cookies ["PointOfSale"].Expires = DateTime.Now.AddYears (100);
+				Response.Cookies.Add(new HttpCookie(Configuration.PointOfSaleCookieKey) {
+					Value = item.PointOfSale.Id.ToString (),
+					Expires = DateTime.Now.AddYears (100)
+				});
 			} else {
-				if (Request.Cookies ["PointOfSale"] != null) {
-					Response.Cookies ["PointOfSale"].Value = string.Empty;
-					Response.Cookies ["PointOfSale"].Expires = DateTime.Now.AddDays (-1d);
+				if (Request.Cookies [Configuration.PointOfSaleCookieKey] != null) {
+					Response.Cookies.Add(new HttpCookie(Configuration.PointOfSaleCookieKey) {
+						Value = string.Empty,
+						Expires = DateTime.Now.AddDays (-1d)
+					});
 				}
 			}
 			
 			if (item.CashDrawer != null) {
-				Response.Cookies ["CashDrawer"].Value = item.CashDrawer.Id.ToString ();
-				Response.Cookies ["CashDrawer"].Expires = DateTime.Now.AddYears (100);
+				Response.Cookies.Add(new HttpCookie(Configuration.CashDrawerCookieKey) {
+					Value = item.CashDrawer.Id.ToString (),
+					Expires = DateTime.Now.AddYears (100)
+				});
 			} else {
-				if (Request.Cookies ["CashDrawer"] != null) {
-					Response.Cookies ["CashDrawer"].Value = string.Empty;
-					Response.Cookies ["CashDrawer"].Expires = DateTime.Now.AddDays (-1d);
+				if (Request.Cookies [Configuration.CashDrawerCookieKey] != null) {
+					Response.Cookies.Add(new HttpCookie(Configuration.CashDrawerCookieKey) {
+						Value = string.Empty,
+						Expires = DateTime.Now.AddDays (-1d)
+					});
 				}
 			}
 			
