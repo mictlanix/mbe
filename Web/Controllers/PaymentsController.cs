@@ -41,9 +41,9 @@ namespace Mictlanix.BE.Web.Controllers
 {
     public class PaymentsController : Controller
     {
-        public ActionResult Index()
-        {
-            var drawer = GetDrawer();
+        public ActionResult Index ()
+		{
+			var drawer = Configuration.CashDrawer;
             var session = GetSession();
 
             if (drawer == null)
@@ -64,9 +64,9 @@ namespace Mictlanix.BE.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(int? id)
-        {
-            var drawer = GetDrawer();
+		public ActionResult Index (int? id)
+		{
+			var drawer = Configuration.CashDrawer;
             var session = GetSession();
 
             if (drawer == null)
@@ -138,7 +138,7 @@ namespace Mictlanix.BE.Web.Controllers
             {
                 Start = DateTime.Now,
                 CashCounts = CashHelpers.ListDenominations(),
-                CashDrawer = GetDrawer(),
+                CashDrawer = Configuration.CashDrawer,
                 Cashier = SecurityHelpers.GetUser(User.Identity.Name).Employee
             };
 
@@ -151,11 +151,11 @@ namespace Mictlanix.BE.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult OpenSession (CashSession item)
-        {
-            List<CashCount> cash_counts;
+		public ActionResult OpenSession (CashSession item)
+		{
+			List<CashCount> cash_counts;
             
-            item.CashDrawer = GetDrawer();
+			item.CashDrawer = Configuration.CashDrawer;
 
             if (item.CashDrawer == null)
             {
@@ -361,19 +361,9 @@ namespace Mictlanix.BE.Web.Controllers
             });
         }
         
-		// FIXME: cookie
-        CashDrawer GetDrawer ()
-		{
-			if (Request.Cookies ["CashDrawer"] != null) {
-				return CashDrawer.TryFind (int.Parse (Request.Cookies ["CashDrawer"].Value));
-			}
-			
-			return null;
-		}
-
         CashSession GetSession ()
 		{
-			var item = GetDrawer ();
+			var item = Configuration.CashDrawer;
 			
 			if (item == null)
 				return null;

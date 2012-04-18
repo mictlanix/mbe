@@ -158,8 +158,6 @@ namespace Mictlanix.BE.Web.Controllers
 			
 			// update info
 			taxpayer.Name = item.Name;
-			taxpayer.ApprovalNumber = item.ApprovalNumber;
-			taxpayer.ApprovalYear = item.ApprovalYear;
 			taxpayer.CertificateNumber = item.CertificateNumber;
 			taxpayer.Address.Copy (item.Address);
 			

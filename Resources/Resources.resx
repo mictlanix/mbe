@@ -558,7 +558,7 @@
   <data name="Title_SalesOrder" xml:space="preserve">
     <value>Ventas</value>
   </data>
-  <data name="SalesTotals" xml:space="preserve">
+  <data name="Totals" xml:space="preserve">
     <value>Totales</value>
   </data>
   <data name="Subtotal" xml:space="preserve">
@@ -1014,12 +1014,6 @@
   <data name="Title_AccountsReceivable" xml:space="preserve">
     <value>Cuentas por Cobrar</value>
   </data>
-  <data name="TotalPayments" xml:space="preserve">
-    <value>Total de Pagos</value>
-  </data>
-  <data name="TotalSales" xml:space="preserve">
-    <value>Total de Compras</value>
-  </data>
   <data name="DisplayName_DataCustomer" xml:space="preserve">
     <value>Datos del Cliente</value>
   </data>
@@ -1136,9 +1130,6 @@ Vencimiento: {0:d}</value>
   <data name="DisplayName_EditPurchase" xml:space="preserve">
     <value>Editar Compra</value>
   </data>
-  <data name="PurchasesTotals" xml:space="preserve">
-    <value>Totales</value>
-  </data>
   <data name="QuantityDelivered" xml:space="preserve">
     <value>Cantidad Recibida</value>
   </data>
@@ -1173,8 +1164,17 @@ Vencimiento: {0:d}</value>
     <value>Compra a Crédito
 Realizada el: {0:d}</value>
   </data>
-  <data name="TotalPurchases" xml:space="preserve">
+  <data name="SalesSummary" xml:space="preserve">
+    <value>Total de Ventas</value>
+  </data>
+  <data name="PaymentsSummary" xml:space="preserve">
+    <value>Total de Pagos</value>
+  </data>
+  <data name="PurchasesSummary" xml:space="preserve">
     <value>Total de Compras</value>
+  </data>
+  <data name="ReturnsSummary" xml:space="preserve">
+    <value>Total de Devoluciones</value>
   </data>
   <data name="DisplayName_PaymentInformation" xml:space="preserve">
     <value>Información del Pago</value>
@@ -1265,9 +1265,6 @@ Realizada el: {0:d}</value>
   <data name="Format_ReturnSaleDescription" xml:space="preserve">
     <value>Devolución de Cliente
 Realizada el: {0:d}</value>
-  </data>
-  <data name="TotalReturns" xml:space="preserve">
-    <value>Total de Devoluciones</value>
   </data>
   <data name="DisplayName_ReturnInformation" xml:space="preserve">
     <value>Información de la Devolución</value>
@@ -1388,5 +1385,32 @@ Realizada el: {0:d}</value>
   </data>
   <data name="FiscalDocumentLegend" xml:space="preserve">
     <value>Este documento es una representación impresa de un CFD.</value>
+  </data>
+  <data name="SalesQuote" xml:space="preserve">
+    <value>Cotización</value>
+  </data>
+  <data name="SalesQuotes" xml:space="preserve">
+    <value>Cotizaciones</value>
+  </data>
+  <data name="Title_SalesQuotes" xml:space="preserve">
+    <value>Cotizaciones</value>
+  </data>
+  <data name="SalesQuoteId" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="DisplayName_SalesQuoteDetails" xml:space="preserve">
+    <value>Detalles de la Cotización</value>
+  </data>
+  <data name="DisplayName_SalesQuotes" xml:space="preserve">
+    <value>Cotizaciones</value>
+  </data>
+  <data name="NewQuote" xml:space="preserve">
+    <value>Cotización Nueva</value>
+  </data>
+  <data name="MasterInformation" xml:space="preserve">
+    <value>Información General</value>
+  </data>
+  <data name="DetailInformation" xml:space="preserve">
+    <value>Detalles</value>
   </data>
 </root>

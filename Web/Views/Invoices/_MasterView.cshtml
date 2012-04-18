@@ -9,7 +9,7 @@
 }
 
 <fieldset>
-    <legend>@Resources.DisplayName_InvoiceInformation</legend>
+    <legend>@Resources.MasterInformation</legend>
 
     <div class="display-label right floating">
         @Html.LabelFor(x => x.Id):
@@ -58,14 +58,13 @@
         @Html.DisplayFor(x => x.BillTo.ZipCode)
     </div>
 
-
     <div class="right">
         <p>
 		@if(Privilege.AllowDelete)
 		{
 		    using (Html.BeginForm("Cancel", "Invoices", new { id =  Model.Id }))
 		    {
-				if(!(Model.IsCompleted || Model.IsCancelled))
+				if(!Model.IsCompleted && !Model.IsCancelled)
 				{
 		    		@Ajax.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "master-section" }, new { @class = "button icon edit " + (Model.Details.Count > 0 ? "hidden" : "")})
 				}
@@ -77,5 +76,4 @@
 		}
         </p>
     </div>
-
 </fieldset>
