@@ -53,9 +53,7 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 			
 			var qry = from x in SalesQuote.Queryable
-                      where x.Store.Id == item.Id &&
-							!x.IsCancelled &&
-							!x.IsCompleted
+                      where x.Store.Id == item.Id
                       select x;
 
 			return View (qry.ToList ());
@@ -131,27 +129,31 @@ namespace Mictlanix.BE.Web.Controllers
 		{
 			SalesQuote item = SalesQuote.Find (id);
 
-            if (Request.IsAjaxRequest())
-                return PartialView("_Edit", item);
+			if (Request.IsAjaxRequest ())
+				return PartialView ("_MasterEditView", item);
             else
                 return View(item);
         }
 
-        //
-        // POST: /Quotations/Edit/5
-
+		public ActionResult DiscardChanges (int id)
+		{
+			return PartialView ("_MasterView", SalesQuote.TryFind (id));
+		}
+		
         [HttpPost]
-        public ActionResult Edit(SalesQuote item)
-        {
-            var quote = SalesQuote.Find(item.Id);
-            var customer = Customer.Find(item.CustomerId);
+		public ActionResult Edit (SalesQuote item)
+		{
+			item.Customer = Customer.TryFind (item.CustomerId);
 
-            quote.Customer = customer;
-            quote.DueDate = quote.DueDate;
+			if (!ModelState.IsValid) {
+				return PartialView ("_MasterEditView", item);
+			}
+			
+			var quote = SalesQuote.Find (item.Id);
+			quote.DueDate = item.DueDate;
+			quote.Save ();
 
-            quote.Save();
-
-            return PartialView("_SalesInfo", quote);
+			return PartialView ("_MasterView", quote);
         }
 
         [HttpPost]
@@ -249,18 +251,18 @@ namespace Mictlanix.BE.Web.Controllers
         }
 
         [HttpPost]
-		public ActionResult ConfirmOrder (int id)
+		public ActionResult Confirm (int id)
 		{
 			SalesQuote item = SalesQuote.Find (id);
 
 			item.IsCompleted = true;
 			item.Save ();
 
-			return RedirectToAction ("New");
+			return RedirectToAction ("Index");
         }
 
         [HttpPost]
-		public ActionResult CancelOrder (int id)
+		public ActionResult Cancel (int id)
 		{
 			SalesQuote item = SalesQuote.Find (id);
 

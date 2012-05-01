@@ -452,7 +452,6 @@
     <Content Include="Views\Quotations\New.cshtml" />
     <Content Include="Views\Quotations\Edit.cshtml" />
     <Content Include="Views\Quotations\_Totals.cshtml" />
-    <Content Include="Views\Quotations\Details.cshtml" />
     <Content Include="Views\Quotations\_MasterEditView.cshtml" />
     <Content Include="Views\Quotations\_MasterView.cshtml" />
     <Content Include="Views\Quotations\_DetailEditView.cshtml" />
@@ -461,6 +460,7 @@
     <Content Include="Views\ReturnsCustomer\_Totals.cshtml" />
     <Content Include="Views\Purchases\_Totals.cshtml" />
     <Content Include="Views\SupplierReturns\_Totals.cshtml" />
+    <Content Include="Views\Quotations\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />
