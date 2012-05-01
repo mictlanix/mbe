@@ -25,6 +25,8 @@
         <th>@Html.LabelFor(x => new SalesQuote().Customer)</th>
         <th>@Html.LabelFor(x => new SalesQuote().DueDate)</th>
         <th>@Html.LabelFor(x => new SalesQuote().SalesPerson)</th>
+        <th>@Html.LabelFor(x => new SalesOrder().IsCompleted)</th>
+        <th>@Html.LabelFor(x => new SalesOrder().IsCancelled)</th>
         <th></th>
     </tr>
 
@@ -39,8 +41,10 @@
             @Html.DisplayFor(modelItem => item.SalesPerson.FirstName)
             @Html.DisplayFor(modelItem => item.SalesPerson.LastName)
         </td>
+        <td class="bool">@Html.DisplayFor(x => item.IsCompleted)</td>
+        <td class="bool">@Html.DisplayFor(x => item.IsCancelled)</td>
         <td class="actions">
-        	@if(Privilege.AllowUpdate)
+        	@if(Privilege.AllowUpdate && !item.IsCompleted && !item.IsCancelled)
         	{
             	@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
             }
