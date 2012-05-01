@@ -33,6 +33,7 @@ using System.Linq;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
+using Mictlanix.BE.Model.Validation;
 
 namespace Mictlanix.BE.Model
 {
@@ -74,8 +75,9 @@ namespace Mictlanix.BE.Model
         public virtual Customer Customer { get; set; }
 		
         [Property("due_date")]
-        [DataType(DataType.Date)]
-        [Display(Name = "DueDate", ResourceType = typeof(Resources))]
+		[DataType(DataType.Date)]
+		[Display(Name = "DueDate", ResourceType = typeof(Resources))]
+		[DateGreaterThan("Date", ErrorMessageResourceName = "Validation_DateGreaterThan", ErrorMessageResourceType = typeof(Resources))]
         public DateTime DueDate { get; set; }
 
         [Property("completed")]

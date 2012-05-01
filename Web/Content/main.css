@@ -132,6 +132,9 @@ input[type="password"] {
   color:#444;
   width:382px;
 }
+input[type="text"].date {
+  width:120px;
+}
 table {
     width:100%;
     border:1px solid #DEDEDE;
