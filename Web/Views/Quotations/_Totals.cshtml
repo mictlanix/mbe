@@ -25,9 +25,9 @@
 <div class="right floating">
     @if (Model.Total > 0)
     {
-        using (Html.BeginForm("Confirm", "Invoices", new { id = Model.Id }))
+        using (Html.BeginForm("Confirm", "Quotations", new { id = Model.Id }))
         {
-        	<button id="complete" type="submit">@Resources.CompleteInvoice</button><br />
+        	<button id="complete" type="submit">@Resources.Complete</button><br />
         }
     }
 </div>

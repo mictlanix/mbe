@@ -112,11 +112,6 @@ namespace Mictlanix.BE.Web.Controllers
 			return View (SalesInvoice.Find (id));
 		}
 		
-		public ActionResult GetMaster (int id)
-		{
-			return PartialView ("_MasterView", SalesInvoice.TryFind (id));
-		}
-		
         public ActionResult Edit(int id)
         {
             SalesInvoice item = SalesInvoice.Find(id);
@@ -126,6 +121,11 @@ namespace Mictlanix.BE.Web.Controllers
             else
                 return View(item);
         }
+		
+		public ActionResult DiscardChanges (int id)
+		{
+			return PartialView ("_MasterView", SalesInvoice.TryFind (id));
+		}
 
         [HttpPost]
         public ActionResult Edit (SalesInvoice item)

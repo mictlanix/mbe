@@ -166,14 +166,13 @@
                                    href="@Url.Action("Index", "Payments")">@Resources.Title_CustomerPayment</a>
                             </li>
                             }
-                            @*
                             @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesQuotes).AllowRead)
                             {
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("Index", "Quotations") ? "gbm0l" : "")"
                                    href="@Url.Action("Index", "Quotations")">@Resources.SalesQuotes</a>
                             </li>
-                            }*@
+                            }
                             @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesInvoices).AllowRead)
                             {
                             <li class="gbmtc">
@@ -350,20 +349,19 @@
 @if (Request.IsAuthenticated)
 {
 <script type="text/javascript">
+	function hidePopups() {
+    	$('.gbgt').each(function () {
+            $(this).parent().removeClass('gbto');
+            $(this).next().css({ "visibility": "hidden" });
+      	});
+	}
+	
     $(function () {
-    	$(document).click(function(e){
-	    	$('.gbgt').each(function () {
-	            $(this).parent().removeClass('gbto');
-	            $(this).next().css({ "visibility": "hidden" });
-	      	});
-		});
-
+    	$(document).click(hidePopups);
+    	
 		$('.gbgt').click(function () {
 			event.stopPropagation();
-			$('.gbgt').each(function () {
-	            $(this).parent().removeClass('gbto');
-	            $(this).next().css({ "visibility": "hidden" });
-	      	});
+			hidePopups();
             $(this).parent().addClass('gbto');
             $(this).next().css({ "visibility": "visible" });
         });
