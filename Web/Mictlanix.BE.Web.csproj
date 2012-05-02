@@ -461,6 +461,8 @@
     <Content Include="Views\Purchases\_Totals.cshtml" />
     <Content Include="Views\SupplierReturns\_Totals.cshtml" />
     <Content Include="Views\Quotations\Details.cshtml" />
+    <Content Include="Views\Quotations\Print.cshtml" />
+    <Content Include="Views\Shared\_PrintLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />
