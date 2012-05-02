@@ -59,20 +59,6 @@ namespace Mictlanix.BE.Web.Controllers
 			return View (qry.ToList ());
 		}
 
-        // GET: /Quotations/Print/
-
-        public ViewResult Print (int id)
-		{
-			return View ("_SalesTicket", SalesQuote.TryFind (id));
-        }
-
-        // GET: /Quotations/Details/
-
-        public ViewResult Details(int id)
-        {
-            return View(SalesQuote.Find(id));
-        }
-
         //
         // GET: /Quotations/New
 
@@ -124,6 +110,20 @@ namespace Mictlanix.BE.Web.Controllers
 
 			return RedirectToAction ("Edit", new { id = item.Id });
 		}
+
+        // GET: /Quotations/Details/
+
+        public ViewResult Details(int id)
+        {
+            return View(SalesQuote.Find(id));
+        }
+
+        // GET: /Quotations/Print/
+
+        public ViewResult Print (int id)
+		{
+			return View (SalesQuote.TryFind (id));
+        }
 
         public ActionResult Edit (int id)
 		{
