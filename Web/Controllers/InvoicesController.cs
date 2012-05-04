@@ -31,6 +31,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
@@ -239,11 +240,37 @@ namespace Mictlanix.BE.Web.Controllers
 			return result;
 		}
 		
-        [HttpPost]
-        public ActionResult Cancel(int id)
-        {
-            SalesInvoice item = SalesInvoice.Find(id);
+		public ActionResult Report (string taxpayer, int year, int month)
+		{
+			var ms = new MemoryStream ();
+			var result = new FileStreamResult (ms, "text/plain");
+			StreamWriter sw = new StreamWriter (ms, Encoding.UTF8);
+			var start = new DateTime (year, month, 1, 0, 0, 0, DateTimeKind.Unspecified);
+			var end = start.AddMonths (1);
+			var qry = from x in SalesInvoice.Queryable
+					  where x.IsCompleted && ((x.Issued >= start && x.Issued < end) ||
+				(x.IsCancelled && x.CancellationDate >= start && x.CancellationDate < end))
+					  select x;
+			
+			foreach (var row in CFDv2Helpers.MonthlyReport(qry.ToList())) {
+				sw.WriteLine (row);
+			}
+			
+			sw.Flush ();
+			ms.Seek (0, SeekOrigin.Begin);
 
+			result.FileDownloadName = string.Format (Resources.Format_FiscalReportName,
+			                                         taxpayer, year, month);
+			
+			return result;
+		}
+		
+        [HttpPost]
+		public ActionResult Cancel (int id)
+		{
+			SalesInvoice item = SalesInvoice.Find (id);
+
+			item.CancellationDate = DateTime.Now;
             item.IsCancelled = true;
             item.Save();
 

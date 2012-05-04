@@ -24,15 +24,21 @@ namespace Mictlanix.BE.Web
             filters.Add(new HandleErrorAttribute());
         }
 
-        public static void RegisterRoutes(RouteCollection routes)
-        {
-            routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+        public static void RegisterRoutes (RouteCollection routes)
+		{
+			routes.IgnoreRoute ("{resource}.axd/{*pathInfo}");
 			
-            routes.MapRoute(
+			routes.MapRoute (
                 "Barcodes", // Route name
                 "Barcodes/{action}/{id}.png", // URL with parameters
-                new {  controller = "Barcodes", action = "Index", id = UrlParameter.Optional } // Parameter defaults
-            );
+                new {controller = "Barcodes", action = "Index", id = UrlParameter.Optional } // Parameter defaults
+			);
+			
+			routes.MapRoute (
+                "FiscalReport", // Route name
+                "Invoices/Report/{taxpayer}/{year}/{month}", // URL with parameters
+                new {controller = "Invoices", action = "Report", year = @"\d{4}", month = @"\d{2}" } // Parameter defaults
+			);
 			
             routes.MapRoute(
                 "Default", // Route name

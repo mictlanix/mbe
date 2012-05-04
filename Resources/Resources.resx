@@ -1413,4 +1413,13 @@ Realizada el: {0:d}</value>
   <data name="DetailInformation" xml:space="preserve">
     <value>Detalles</value>
   </data>
+  <data name="FiscalDocuments" xml:space="preserve">
+    <value>Facturas</value>
+  </data>
+  <data name="FiscalReports" xml:space="preserve">
+    <value>Reportes</value>
+  </data>
+  <data name="Format_FiscalReportName" xml:space="preserve">
+    <value>1{0}{2:00}{1:0000}.txt</value>
+  </data>
 </root>
