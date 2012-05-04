@@ -38,7 +38,6 @@ using Mictlanix.BE.Model;
 
 namespace Mictlanix.BE.Web.Models
 {
-
     public class CashCountReport
     {
         [DisplayFormat(DataFormatString = "{0:000000}")]
