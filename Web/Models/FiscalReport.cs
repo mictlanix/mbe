@@ -1,8 +1,9 @@
 ﻿// 
-// Search.cs
+// CashCut.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
+//   Eduardo Nieto <enieto@mictlanix.org>
 // 
 // Copyright (C) 2011 Eddy Zavaleta, Mictlanix, and contributors.
 // 
@@ -31,17 +32,26 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Web.Mvc;
+using System.Linq;
 using System.Web.Security;
 using Mictlanix.BE.Model;
 
 namespace Mictlanix.BE.Web.Models
 {
-    public class MoneyCount
+    public class FiscalReport
     {
-        public PaymentMethod Type { get; set; }
-        
-		[DataType(DataType.Currency)]
-        public decimal Amount { get; set; }
+        [Display(Name = "Year", ResourceType = typeof(Resources))]
+        public int Year { get; set; }
+
+        [Display(Name = "Month", ResourceType = typeof(Resources))]
+        [DisplayFormat(DataFormatString = "{0:00}")]
+        public int Month { get; set; }
+
+        [Display(Name = "TaxpayerId", ResourceType = typeof(Resources))]
+        public string TaxpayerId { get; set; }
+		
+        [Display(Name = "TaxpayerName", ResourceType = typeof(Resources))]
+		public string TaxpayerName { get; set; }
     }
     
 }

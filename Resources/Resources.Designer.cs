@@ -3935,5 +3935,32 @@ namespace Mictlanix.BE {
 				return ResourceManager.GetString ("SalesQuotes", resourceCulture);
 			}
 		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Facturas.
+        /// </summary>
+        public static string FiscalDocuments {
+			get {
+				return ResourceManager.GetString ("FiscalDocuments", resourceCulture);
+			}
+		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Reportes.
+        /// </summary>
+        public static string FiscalReports {
+			get {
+				return ResourceManager.GetString ("FiscalReports", resourceCulture);
+			}
+		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to {0}.txt.
+        /// </summary>
+        public static string Format_FiscalReportName {
+			get {
+				return ResourceManager.GetString ("Format_FiscalReportName", resourceCulture);
+			}
+		}
     }
 }

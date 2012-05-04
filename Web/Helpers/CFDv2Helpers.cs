@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CFDv2Helpers.cs
 // 
 // Author:
@@ -145,6 +145,61 @@ namespace Mictlanix.BE.Web.Helpers
 			return cfd;
 		}
 		
+		internal static CFDv2Report MonthlyReport (string taxpayer, int year, int month)
+		{
+			var item = new CFDv2Report ();
+			
+			item.Taxpayer = taxpayer;
+			item.Date = new DateTime (year, month, 1, 0, 0, 0, DateTimeKind.Unspecified);
+			
+			return item;
+		}
+		
+		internal static IEnumerable<CFDv2ReportItem> MonthlyReport (IEnumerable<SalesInvoice> items)
+		{
+			var list = new List<CFDv2ReportItem> (items.Count ());
+			
+			foreach (var item in items) {
+				var state = true;
+				var dup = false;
+				
+				if (item.IsCancelled) {
+					var dt1 = item.Issued.Value;
+					var dt2 = item.CancellationDate.Value;
+										
+					if (dt1.Year == dt2.Year && dt1.Month == dt2.Month) {
+						dup = true;
+					} else {
+						state = false;
+					}
+				}
+				
+				var row = new CFDv2ReportItem {
+					Taxpayer = item.BillTo.TaxpayerId,
+					Batch = item.Batch,
+					Serial = item.Serial.Value,
+					ApprovalNumber = item.ApprovalNumber.Value,
+					Date = item.Issued.Value,
+					Amount = item.Total,
+					Taxes = item.Taxes,
+					IsActive = state,
+					Type = ComprobanteTipoDeComprobante.ingreso
+				};
+				
+				list.Add (row);
+				
+				if (dup) {
+					row = (CFDv2ReportItem)row.Clone ();
+					row.IsActive = false;
+					list.Add (row);
+				}
+			}
+			
+			return list;
+		}
+		
+		#region CFDv2 Wrappers
+		
 		public static string OriginalString (Comprobante cfd)
 		{
 			return CFDv2Utils.OriginalString (cfd);
@@ -161,5 +216,7 @@ namespace Mictlanix.BE.Web.Helpers
 				return Encoding.UTF8.GetString (ms.ToArray ());
 			}
 		}
+		
+		#endregion
 	}
 }
