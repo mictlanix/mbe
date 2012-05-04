@@ -155,6 +155,7 @@
     <Compile Include="Models\LocalSettings.cs" />
     <Compile Include="Utils\CurrencyConverter.cs" />
     <Compile Include="Controllers\QuotationsController.cs" />
+    <Compile Include="Models\FiscalReport.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
@@ -463,6 +464,8 @@
     <Content Include="Views\Quotations\Details.cshtml" />
     <Content Include="Views\Quotations\Print.cshtml" />
     <Content Include="Views\Shared\_PrintLayout.cshtml" />
+    <Content Include="Views\Invoices\_Reports.cshtml" />
+    <Content Include="Views\Invoices\_Invoices.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />

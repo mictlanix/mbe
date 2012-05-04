@@ -64,14 +64,14 @@ div#logo {
 .left {
   text-align:left;
 }
+.right,.number,input.number  {
+  text-align:right;
+}
 .center {
   text-align:center;
 }
 .nowrap {
   white-space:nowrap;
-}
-.right,.number,input.number  {
-  text-align:right;
 }
 .left.floating {
   float:left;
