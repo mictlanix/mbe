@@ -3955,11 +3955,38 @@ namespace Mictlanix.BE {
 		}
 		
         /// <summary>
-        ///   Looks up a localized string similar to {0}.txt.
+        ///   Looks up a localized string similar to 1{0}{2:00}{1:0000}.txt.
         /// </summary>
         public static string Format_FiscalReportName {
 			get {
 				return ResourceManager.GetString ("Format_FiscalReportName", resourceCulture);
+			}
+		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Año.
+        /// </summary>
+        public static string Year {
+			get {
+				return ResourceManager.GetString ("Year", resourceCulture);
+			}
+		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Mes.
+        /// </summary>
+        public static string Month {
+			get {
+				return ResourceManager.GetString ("Month", resourceCulture);
+			}
+		}
+		
+        /// <summary>
+        ///   Looks up a localized string similar to Elaborada Por.
+        /// </summary>
+        public static string CreatedBy {
+			get {
+				return ResourceManager.GetString ("CreatedBy", resourceCulture);
 			}
 		}
     }
