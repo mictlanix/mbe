@@ -1,9 +1,8 @@
-﻿// 
-// CashCut.cs
+// 
+// FiscalReport.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
-//   Eduardo Nieto <enieto@mictlanix.org>
 // 
 // Copyright (C) 2011 Eddy Zavaleta, Mictlanix, and contributors.
 // 
@@ -52,6 +51,40 @@ namespace Mictlanix.BE.Web.Models
 		
         [Display(Name = "TaxpayerName", ResourceType = typeof(Resources))]
 		public string TaxpayerName { get; set; }
+		
+        #region Override Base Methods
+
+        public override string ToString ()
+		{
+			return string.Format (Resources.Format_FiscalReportName, TaxpayerId, Year, Month);
+        }
+
+        public override bool Equals (object obj)
+		{
+			FiscalReport other = obj as FiscalReport;
+
+			if (other == null)
+				return false;
+
+			if (TaxpayerId == string.Empty && other.TaxpayerId == string.Empty &&
+				Year == 0 && other.Year == 0 && Month == 0 && other.Month == 0) {
+				return (object)this == other;
+			}
+			
+			return Year == other.Year &&
+				   Month == other.Month &&
+				   TaxpayerId == other.TaxpayerId;
+        }
+
+        public override int GetHashCode ()
+		{
+			if (TaxpayerId == string.Empty && Year == 0 && Month == 0)
+				return base.GetHashCode ();
+
+			return string.Format ("{0}#{1}{2}{3}", GetType ().FullName, TaxpayerId, Year, Month).GetHashCode();
+        }
+
+        #endregion
     }
     
 }

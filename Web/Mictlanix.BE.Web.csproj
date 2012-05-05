@@ -156,6 +156,7 @@
     <Compile Include="Utils\CurrencyConverter.cs" />
     <Compile Include="Controllers\QuotationsController.cs" />
     <Compile Include="Models\FiscalReport.cs" />
+    <Compile Include="Models\Pair.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />

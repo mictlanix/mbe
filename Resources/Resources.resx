@@ -1422,4 +1422,13 @@ Realizada el: {0:d}</value>
   <data name="Format_FiscalReportName" xml:space="preserve">
     <value>1{0}{2:00}{1:0000}.txt</value>
   </data>
+  <data name="Year" xml:space="preserve">
+    <value>Año</value>
+  </data>
+  <data name="Month" xml:space="preserve">
+    <value>Mes</value>
+  </data>
+  <data name="CreatedBy" xml:space="preserve">
+    <value>Elaborada Por</value>
+  </data>
 </root>
