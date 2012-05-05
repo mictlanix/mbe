@@ -18,6 +18,10 @@
         @Html.DisplayFor(model => model.Id)
     </div>
     <div class="display-label">
+        <b>@Resources.CreatedBy:</b>
+        @Html.DisplayFor(model => model.Creator.Name)
+    </div>
+    <div class="display-label">
         <b>@Html.LabelFor(model => model.CreationTime):</b>
         @Html.DisplayFor(model => model.CreationTime)
     </div>

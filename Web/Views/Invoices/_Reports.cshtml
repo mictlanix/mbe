@@ -1,25 +1,25 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
 @using Mictlanix.BE.Web.Helpers
-@model IEnumerable<SalesInvoice>
+@model IEnumerable<FiscalReport>
 
 <table>
     <tr>
-        <th class="date">Año</th>
-        <th class="date">Mes</th>
-        <th>RFC</th>
-        <th>Nombre</th>
+        <th class="center">@Html.LabelFor(x => new FiscalReport().Year)</th>
+        <th class="center">@Html.LabelFor(x => new FiscalReport().Month)</th>
+        <th class="center">@Html.LabelFor(x => new FiscalReport().TaxpayerId)</th>
+        <th class="center">@Html.LabelFor(x => new FiscalReport().TaxpayerName)</th>
         <th></th>
     </tr>
-
 @foreach (var item in Model) {
     <tr>
-        <td class="date">@Html.DisplayFor(x => item.Id)</td>
-        <td class="date">@Html.DisplayFor(x => item.Batch)</td>
-        <td class="date">@Html.DisplayFor(x => item.BillTo.TaxpayerId)</td>
-        <td>@Html.DisplayFor(x => item.BillTo.TaxpayerName)</td>
+        <td class="number center">@Html.DisplayFor(x => item.Year)</td>
+        <td class="number center">@Html.DisplayFor(x => item.Month)</td>
+        <td class="center">@Html.DisplayFor(x => item.TaxpayerId)</td>
+        <td>@Html.DisplayFor(x => item.TaxpayerName)</td>
         <td class="actions">
-        	@Html.ActionLink(" ", "Download", new { id = item.Id }, new { @class = "button icon download icon-only", @title = Resources.Download })
+        	@Html.ActionLink(" ", "Report", new { taxpayer = item.TaxpayerId, year = item.Year, month = item.Month }, new { @class = "button icon download icon-only", @title = Resources.Download })
         </td>
     </tr>
 }
