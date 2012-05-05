@@ -1,7 +1,8 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
 @using Mictlanix.BE.Web.Helpers
-@model IEnumerable<SalesInvoice>
+@model Pair<IEnumerable<SalesInvoice>, IEnumerable<FiscalReport>>
 
 @{
     ViewBag.Title = Resources.Title_SalesInvoice;
@@ -15,10 +16,10 @@
         <li><a href="#tabs-2">@Resources.FiscalReports</a></li>
     </ul>
     <div id="tabs-1">
-		@Html.Partial("_Invoices")
+		@Html.Partial("_Invoices", Model.First)
     </div>
     <div id="tabs-2">
-		@Html.Partial("_Reports")
+		@Html.Partial("_Reports", Model.Second)
     </div>
 </div>
 <script type="text/javascript">

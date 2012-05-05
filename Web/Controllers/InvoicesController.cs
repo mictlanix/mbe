@@ -1,4 +1,4 @@
-﻿// 
+// 
 // InvoicesController.cs
 // 
 // Author:
@@ -54,8 +54,17 @@ namespace Mictlanix.BE.Web.Controllers
 			var qry = from x in SalesInvoice.Queryable
 					  orderby x.Id descending
                       select x;
-
-			return View (qry.ToList ());
+			var invoices = qry.ToList ();
+			var reports = (from x in invoices
+			               where x.IsCompleted
+						   select new FiscalReport {
+							  TaxpayerId = x.Issuer.Id,
+							  TaxpayerName = x.Issuer.Name,
+							  Month = x.Issued.Value.Month,
+							  Year = x.Issued.Value.Year
+						  }).Distinct ().OrderByDescending (x => x.Year).OrderByDescending (x => x.Month);
+			
+			return View (new Pair<IEnumerable<SalesInvoice>, IEnumerable<FiscalReport>> (invoices, reports));
 		}
 
         public ViewResult New()
@@ -385,7 +394,7 @@ namespace Mictlanix.BE.Web.Controllers
 				detail.Save ();
 			}
 
-			return Json (new { id = id, value = detail.Price.ToString ("c"), total = detail.Total.ToString ("c") });
+			return Json (new {id = id, value = detail.Price.ToString ("C4"), total = detail.Total.ToString ("c") });
 		}
 		
 		[HttpPost]
