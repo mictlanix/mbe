@@ -178,6 +178,7 @@ namespace Mictlanix.BE.Web.Helpers
 					Taxpayer = item.BillTo.TaxpayerId,
 					Batch = item.Batch,
 					Serial = item.Serial.Value,
+					ApprovalYear = item.ApprovalYear.Value,
 					ApprovalNumber = item.ApprovalNumber.Value,
 					Date = item.Issued.Value,
 					Amount = item.Total,
