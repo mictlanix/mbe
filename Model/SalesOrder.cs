@@ -99,14 +99,14 @@ namespace Mictlanix.BE.Model
         [Display(Name = "Paid", ResourceType = typeof(Resources))]
         public bool IsPaid { get; set; }
 
-        [HasMany(typeof(SalesOrderDetail), Table = "sales_order_detail", ColumnKey = "sales_order")]
+        [HasMany(typeof(SalesOrderDetail), Table = "sales_order_detail", ColumnKey = "sales_order", Lazy = true)]
         public IList<SalesOrderDetail> Details
         {
             get { return details; }
             set { details = value; }
         }
 
-        [HasMany(typeof(CustomerPayment), Table = "customer_payment", ColumnKey = "sales_order")]
+        [HasMany(typeof(CustomerPayment), Table = "customer_payment", ColumnKey = "sales_order", Lazy = true)]
         public IList<CustomerPayment> Payments
         {
             get { return payments; }
