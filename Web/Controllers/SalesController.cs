@@ -72,19 +72,30 @@ namespace Mictlanix.BE.Web.Controllers
             return View(qry.ToList());
         }
 
-        public ViewResult PrintPromissoryNote(int id)
-        {
-            SalesOrder item = SalesOrder.Find(id);
+        public ViewResult PrintPromissoryNote (int id)
+		{
+			SalesOrder item;
 
+			using (new SessionScope()) {
+				item = SalesOrder.Find (id);
+				item.Details.ToList ();
+			}
+			
             return View("_PromissoryNoteTicket", item);
         }
 
         // GET: /Sales/PrintOrder/
 
-        public ViewResult PrintOrder(int id)
-        {
-            SalesOrder item = SalesOrder.Find(id);
+        public ViewResult PrintOrder (int id)
+		{
+			SalesOrder item;
 
+			using (new SessionScope()) {
+				item = SalesOrder.Find (id);
+				item.Details.ToList ();
+				item.Payments.ToList ();
+			}
+			
             if (item.IsCompleted || item.IsCredit)
             {
                 return View("_SalesTicket", item);
@@ -97,18 +108,28 @@ namespace Mictlanix.BE.Web.Controllers
 
         // GET: /Sales/Details/
 
-        public ViewResult Details(int id)
-        {
-            SalesOrder order = SalesOrder.Find(id);
-
-            return View(order);
+        public ViewResult Details (int id)
+		{
+			SalesOrder item;
+			
+			using (new SessionScope()) {
+				item = SalesOrder.Find (id);
+				item.Details.ToList ();
+			}
+			
+			return View (item);
         }
 
-        public ViewResult HistoricDetails(int id)
-        {
-            SalesOrder order = SalesOrder.Find(id);
-
-            return View(order);
+        public ViewResult HistoricDetails (int id)
+		{
+			SalesOrder item;
+			
+			using (new SessionScope()) {
+				item = SalesOrder.Find (id);
+				item.Details.ToList ();
+			}
+			
+			return View (item);
         }
         //
         // GET: /Sales/New
@@ -160,32 +181,42 @@ namespace Mictlanix.BE.Web.Controllers
 			return RedirectToAction ("Edit", new { id = item.Id });
 		}
 
-        public ActionResult Edit(int id)
-        {
-            SalesOrder item = SalesOrder.Find(id);
+        public ActionResult Edit (int id)
+		{
+			SalesOrder item;
 
-            if (Request.IsAjaxRequest())
-                return PartialView("_Edit", item);
-            else
-                return View(item);
+			using (new SessionScope()) {
+				item = SalesOrder.Find (id);
+				item.Details.ToList ();
+			}
+			
+			if (Request.IsAjaxRequest ())
+				return PartialView ("_Edit", item);
+			else
+				return View (item);
         }
 
         //
         // POST: /Customer/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(SalesOrder item)
-        {
-            var order = SalesOrder.Find(item.Id);
-            var customer = Customer.Find(item.CustomerId);
+		public ActionResult Edit (SalesOrder item)
+		{
+			SalesOrder order;
+			var customer = Customer.Find (item.CustomerId);
 
-            order.Customer = customer;
-            order.IsCredit = item.IsCredit;
-            order.DueDate = item.IsCredit ? order.Date.AddDays(customer.CreditDays) : order.Date;
+			using (new SessionScope()) {
+				order = SalesOrder.Find (item.Id);
+				order.Details.ToList ();
+			}
+			
+			order.Customer = customer;
+			order.IsCredit = item.IsCredit;
+			order.DueDate = item.IsCredit ? order.Date.AddDays (customer.CreditDays) : order.Date;
 
-            order.Save();
+			order.Save ();
 
-            return PartialView("_SalesInfo", order);
+			return PartialView ("_SalesInfo", order);
         }
 
         [HttpPost]
@@ -284,8 +315,14 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult GetTotals (int id)
 		{
-			var order = SalesOrder.Find (id);
-			return PartialView ("_Totals", order);
+			SalesOrder item;
+
+			using (new SessionScope()) {
+				item = SalesOrder.Find (id);
+				item.Details.ToList ();
+			}
+			
+			return PartialView ("_Totals", item);
         }
 
         public ActionResult GetSalesItem (int id)
