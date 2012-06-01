@@ -188,25 +188,43 @@ namespace Mictlanix.BE.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult PayOrder(int id)
-        {
-            SalesOrder order = SalesOrder.Find(id);
+        public ActionResult PayOrder (int id)
+		{
+			SalesOrder item;
+			
+			using (new SessionScope()) {
+				item = SalesOrder.Find (id);
+				item.Details.ToList ();
+				item.Payments.ToList ();
+			}
 
-            return View("PayOrder", order);
+			return View (item);
         }
 		
-        public ActionResult GetSalesOrderBalance(int id)
-        {
-            var order = SalesOrder.Find(id);
+        public ActionResult GetSalesOrderBalance (int id)
+		{
+			SalesOrder item;
+			
+			using (new SessionScope()) {
+				item = SalesOrder.Find (id);
+				item.Details.ToList ();
+				item.Payments.ToList ();
+			}
 
-            return PartialView("_SalesOrderBalance", order);
+			return PartialView ("_SalesOrderBalance", item);
         }
 
         [HttpPost]
-        public JsonResult AddPayment (int order, int type, decimal amount, string reference)
+		public JsonResult AddPayment (int order, int type, decimal amount, string reference)
 		{
-			var sales_order = SalesOrder.Find (order);
+			SalesOrder sales_order;
 
+			using (new SessionScope()) {
+				sales_order = SalesOrder.Find (order);
+				sales_order.Details.ToList ();
+				sales_order.Payments.ToList ();
+			}
+			
 			var item = new CustomerPayment
             {
                 CashSession = GetSession (),
