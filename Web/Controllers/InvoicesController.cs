@@ -52,7 +52,8 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 			
 			var qry = from x in SalesInvoice.Queryable
-					  orderby x.Id descending
+					  where !(!x.IsCompleted && x.IsCancelled)
+					  orderby x.IsCompleted, x.Issued descending
                       select x;
 			var invoices = qry.ToList ();
 			var reports = (from x in invoices
@@ -179,6 +180,10 @@ namespace Mictlanix.BE.Web.Controllers
 			using (var session = new SessionScope()) {
 				item = SalesInvoice.Find (id);
 				batch = item.Issuer.Documents.Single (x => x.Batch == item.Batch);
+			}
+			
+			if (item.IsCompleted || item.IsCancelled) {
+				return RedirectToAction ("Index");
 			}
 			
 			int serial = (from x in SalesInvoice.Queryable
