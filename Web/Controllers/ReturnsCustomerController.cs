@@ -122,10 +122,15 @@ namespace Mictlanix.BE.Web.Controllers
         //
         // GET: /Returns/Create
         [HttpPost]
-        public ActionResult CreateFromSalesOrder (int id)
+		public ActionResult CreateFromSalesOrder (int id)
 		{
-			SalesOrder sales = SalesOrder.Find (id);
+			SalesOrder sales;
 
+			using (new SessionScope()) {
+				sales = SalesOrder.Find (id);
+				sales.Details.ToList ();
+			}
+			
 			var item = new ReturnCustomer ();
 			
 			// Store and Serial
@@ -144,31 +149,32 @@ namespace Mictlanix.BE.Web.Controllers
 			item.SalesOrder = sales;
 			item.SalesPerson = sales.SalesPerson;
 			item.Customer = sales.Customer;
-			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
-			item.ModificationTime = DateTime.Now;
+			item.Updater = item.Creator;
+			item.ModificationTime = item.CreationTime;
 
 			item.Create ();
 
 			foreach (var x in sales.Details) {
 				var sum = GetReturnableQuantity (x.Id);
 
-				if (sum > 0) {
-					var detail = new ReturnCustomerDetail
-                    {
-                        Order = item,
-                        SalesOrderDetail = x,
-                        Product = x.Product,
-                        ProductCode = x.ProductCode,
-                        ProductName = x.ProductName,
-                        Discount = x.Discount,
-                        TaxRate = x.TaxRate,
-                        Price = x.Price,
-                        Quantity = sum
-                    };
+				if (sum <= 0)
+					continue;
+				
+				var detail = new ReturnCustomerDetail
+                {
+                    Order = item,
+                    SalesOrderDetail = x,
+                    Product = x.Product,
+                    ProductCode = x.ProductCode,
+                    ProductName = x.ProductName,
+                    Discount = x.Discount,
+                    TaxRate = x.TaxRate,
+                    Price = x.Price,
+                    Quantity = sum
+                };
 
-					using (var session = new SessionScope()) {
-						detail.CreateAndFlush ();
-					}
+				using (var session = new SessionScope()) {
+					detail.CreateAndFlush ();
 				}
 			}
 

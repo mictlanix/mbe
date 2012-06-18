@@ -3989,5 +3989,14 @@ namespace Mictlanix.BE {
 				return ResourceManager.GetString ("CreatedBy", resourceCulture);
 			}
 		}
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Folio de Sistema.
+        /// </summary>
+        public static string FiscalDocumentId {
+			get {
+				return ResourceManager.GetString ("FiscalDocumentId", resourceCulture);
+            }
+        }
     }
 }

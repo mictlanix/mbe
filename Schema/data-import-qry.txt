@@ -53,3 +53,13 @@ UPDATE return_customer 	SET serial = return_customer_id;
 
 UPDATE product			SET tax_included = 1;
 UPDATE product 			SET name = replace(name, 'Ã“', 'Ó');
+
+INSERT INTO fiscal_document 
+SELECT sales_invoice_id, creation_time, modification_time, creator, updater, store, customer, issuer, issued, issued_from, bill_to, batch, serial, approval_number, approval_year, certificate_number, original_string, digital_seal, completed, cancelled, cancellation_date, reference, comment
+FROM sales_invoice;
+
+INSERT INTO fiscal_document_detail
+SELECT sales_invoice_detail_id, invoice, product, order_detail, product_code, product_name, unit_of_measurement, quantity, price, discount, tax_rate
+FROM sales_invoice_detail;
+
+

@@ -15,7 +15,6 @@
         <th>@Html.LabelFor(x => new TaxpayerDocument().Type)</th>
         <th>@Html.LabelFor(x => new TaxpayerDocument().ApprovalNumber)</th>
         <th>@Html.LabelFor(x => new TaxpayerDocument().ApprovalYear)</th>
-        <th></th>
     </tr>
 
 @foreach (var item in Model) {
@@ -26,7 +25,6 @@
         <td class="center">@item.Type.GetDisplayName()</td>
         <td class="right">@Html.DisplayFor(x => item.ApprovalNumber)</td>
         <td class="right">@Html.DisplayFor(x => item.ApprovalYear)</td>
-        <td class="actions"></td>
     </tr>
 }
 

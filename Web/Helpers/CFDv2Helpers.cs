@@ -40,6 +40,156 @@ namespace Mictlanix.BE.Web.Helpers
 {
 	public static class CFDv2Helpers
 	{
+		internal static Comprobante IssueCFD (FiscalDocument item)
+		{
+			var dt = DateTime.Now;
+			var cfd = InvoiceToCFD (item);
+
+			cfd.fecha = new DateTime (dt.Year, dt.Month, dt.Day,
+					                  dt.Hour, dt.Minute, dt.Second,
+					                  DateTimeKind.Unspecified);
+			cfd.sello = CFDv2Utils.DigitalSignature (cfd, item.Issuer.KeyData,
+                                     				 item.Issuer.KeyPassword);
+
+			return cfd;
+		}
+
+		internal static Comprobante SignCFD (FiscalDocument item)
+		{
+			var cfd = InvoiceToCFD (item);
+			cfd.sello = CFDv2Utils.DigitalSignature (cfd, item.Issuer.KeyData,
+                                     				 item.Issuer.KeyPassword);
+			return cfd;
+		}
+		
+		internal static Comprobante InvoiceToCFD (FiscalDocument item)
+		{
+			var cfd = new Comprobante
+            {
+                tipoDeComprobante = (ComprobanteTipoDeComprobante)item.Type,
+                noAprobacion = item.ApprovalNumber.ToString (),
+                anoAprobacion = item.ApprovalYear.ToString (),
+                noCertificado = item.CertificateNumber.ToString ().PadLeft (20, '0'),
+                serie = item.Batch,
+                folio = item.Serial.ToString (),
+                fecha = item.Issued.GetValueOrDefault (),
+                formaDePago = Resources.SinglePayment,
+                certificado = SecurityHelpers.EncodeBase64 (item.Issuer.CertificateData),
+                Emisor = new ComprobanteEmisor
+                {
+                    nombre = item.IssuedFrom.TaxpayerName,
+                    rfc = item.IssuedFrom.TaxpayerId,
+                    DomicilioFiscal = new t_UbicacionFiscal
+                    {
+                        calle = item.IssuedFrom.Street,
+                        noExterior = item.IssuedFrom.ExteriorNumber,
+                        noInterior = item.IssuedFrom.InteriorNumber,
+                        colonia = item.IssuedFrom.Neighborhood,
+                        codigoPostal = item.IssuedFrom.ZipCode,
+						localidad = item.IssuedFrom.Locality,
+                        municipio = item.IssuedFrom.Borough,
+                        estado = item.IssuedFrom.State,
+                        pais = item.IssuedFrom.Country
+                    }
+                },
+                Receptor = new ComprobanteReceptor
+                {
+                    nombre = item.BillTo.TaxpayerName,
+                    rfc = item.BillTo.TaxpayerId,
+                    Domicilio = new t_Ubicacion
+                    {
+                        calle = item.BillTo.Street,
+                        noExterior = item.BillTo.ExteriorNumber,
+                        noInterior = item.BillTo.InteriorNumber,
+                        colonia = item.BillTo.Neighborhood,
+                        codigoPostal = item.BillTo.ZipCode,
+						localidad = item.IssuedFrom.Locality,
+                        municipio = item.BillTo.Borough,
+                        estado = item.BillTo.State,
+                        pais = item.BillTo.Country
+                    }
+                },
+                Conceptos = new ComprobanteConcepto[item.Details.Count],
+                Impuestos = new ComprobanteImpuestos
+                {
+                    Traslados = new ComprobanteImpuestosTraslado[1]
+                },
+				subTotal = item.Subtotal,
+				total = item.Total,
+				sello = item.DigitalSeal
+            };
+            
+			int i = 0;
+			foreach (var detail in item.Details) {
+				cfd.Conceptos [i++] = new ComprobanteConcepto
+                {
+                    cantidad = detail.Quantity,
+                    unidad = detail.UnitOfMeasurement,
+                    noIdentificacion = detail.ProductCode,
+                    descripcion = detail.ProductName,
+                    valorUnitario = detail.Price,
+                    importe = detail.Total
+                };
+			}
+
+			cfd.Impuestos.Traslados [0] = new ComprobanteImpuestosTraslado
+            {
+                impuesto = ComprobanteImpuestosTrasladoImpuesto.IVA,
+                importe = item.Taxes,
+                tasa = Configuration.VAT * 100m
+            };
+			
+			//cfd.descuentoSpecified = true;
+			// cfd.descuento = 
+
+			return cfd;
+		}
+		
+		internal static IEnumerable<CFDv2ReportItem> MonthlyReport (IEnumerable<FiscalDocument> items)
+		{
+			var list = new List<CFDv2ReportItem> (items.Count ());
+			
+			foreach (var item in items) {
+				var state = true;
+				var dup = false;
+				
+				if (item.IsCancelled) {
+					var dt1 = item.Issued.Value;
+					var dt2 = item.CancellationDate.Value;
+										
+					if (dt1.Year == dt2.Year && dt1.Month == dt2.Month) {
+						dup = true;
+					} else {
+						state = false;
+					}
+				}
+				
+				var row = new CFDv2ReportItem {
+					Taxpayer = item.BillTo.TaxpayerId,
+					Batch = item.Batch,
+					Serial = item.Serial.Value,
+					ApprovalYear = item.ApprovalYear.Value,
+					ApprovalNumber = item.ApprovalNumber.Value,
+					Date = item.Issued.Value,
+					Amount = item.Total,
+					Taxes = item.Taxes,
+					IsActive = state,
+					Type = (ComprobanteTipoDeComprobante)item.Type
+				};
+				
+				list.Add (row);
+				
+				if (dup) {
+					row = (CFDv2ReportItem)row.Clone ();
+					row.IsActive = false;
+					list.Add (row);
+				}
+			}
+			
+			return list;
+		}
+
+		/*
 		internal static Comprobante IssueCFD (SalesInvoice item)
 		{
 			var dt = DateTime.Now;
@@ -198,7 +348,9 @@ namespace Mictlanix.BE.Web.Helpers
 			
 			return list;
 		}
-		
+
+		*/
+
 		#region CFDv2 Wrappers
 		
 		public static string OriginalString (Comprobante cfd)
