@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 
@@ -13,15 +13,13 @@
                              Html.GetPrivilege(CurrentUser, SystemObjects.PriceLists).AllowRead ||
                              Html.GetPrivilege(CurrentUser, SystemObjects.PointsOfSale).AllowRead ||
                              Html.GetPrivilege(CurrentUser, SystemObjects.CashDrawers).AllowRead ||
-                             Html.GetPrivilege(CurrentUser, SystemObjects.Taxpayers).AllowRead ||
                              Html.GetPrivilege(CurrentUser, SystemObjects.Stores).AllowRead;
     var ShowSalesMenu = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders).AllowRead ||
                         Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments).AllowRead ||
                         Html.GetPrivilege(CurrentUser, SystemObjects.ReturnCustomer).AllowRead ||
                         Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrdersHistoric).AllowRead ||
                         Html.GetPrivilege(CurrentUser, SystemObjects.ReturnCustomerHistoric).AllowRead ||
-                        Html.GetPrivilege(CurrentUser, SystemObjects.SalesQuotes).AllowRead ||
-                        Html.GetPrivilege(CurrentUser, SystemObjects.SalesInvoices).AllowRead;
+                        Html.GetPrivilege(CurrentUser, SystemObjects.SalesQuotes).AllowRead;
     var ShowInventoryMenu = Html.GetPrivilege(CurrentUser, SystemObjects.InventoryReceipts).AllowRead ||
                             Html.GetPrivilege(CurrentUser, SystemObjects.InventoryIssues).AllowRead ||
                             Html.GetPrivilege(CurrentUser, SystemObjects.InventoryTransfers).AllowRead;
@@ -31,6 +29,9 @@
                             Html.GetPrivilege(CurrentUser, SystemObjects.SupplierReturnHistoric).AllowRead;
     var ShowAdministrationMenu = Html.GetPrivilege(CurrentUser, SystemObjects.AccountsReceivable).AllowRead ||
                             	 Html.GetPrivilege(CurrentUser, SystemObjects.AccountsPayable).AllowRead;
+    var ShowFiscalDocumentsMenu = Html.GetPrivilege(CurrentUser, SystemObjects.FiscalDocuments).AllowRead ||
+                            	  Html.GetPrivilege(CurrentUser, SystemObjects.FiscalReports).AllowRead ||
+                            	  Html.GetPrivilege(CurrentUser, SystemObjects.Taxpayers).AllowRead;
     
 }
 
@@ -106,13 +107,6 @@
                                    href="@Url.Action("Index", "PriceLists")">@Resources.Title_PriceList</a>
                             </li>
                             }
-                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.Taxpayers).AllowRead)
-                            {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "Taxpayers") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "Taxpayers")">@Resources.Title_Taxpayer</a>
-                            </li>
-                            }
                             @if (Html.GetPrivilege(CurrentUser, SystemObjects.Stores).AllowRead)
                             {
                             <li class="gbmtc">
@@ -171,13 +165,6 @@
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("Index", "Quotations") ? "gbm0l" : "")"
                                    href="@Url.Action("Index", "Quotations")">@Resources.SalesQuotes</a>
-                            </li>
-                            }
-                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesInvoices).AllowRead)
-                            {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "Invoices") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "Invoices")">@Resources.Title_SalesInvoice</a>
                             </li>
                             }
                             @if (Html.GetPrivilege(CurrentUser, SystemObjects.ReturnCustomer).AllowRead)
@@ -316,6 +303,45 @@
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("Index", "AccountsPayables") ? "gbm0l" : "")"
                                    href="@Url.Action("Index", "AccountsPayables")">@Resources.Title_AccountsPayable</a>
+                            </li>
+                            }
+                        </ol>
+                    </div>
+                </div>
+            </li>
+            }
+            @if (ShowFiscalDocumentsMenu)
+            {
+            <li class="gbt">
+                <a id="cfd-menu" class="gbgt" href="javascript:void(0)">
+                    <span class="gbtb2"></span>
+                    <span class="gbts gbtsa">
+                        <span>@Resources.FiscalDocuments</span>
+                        <span class="gbma"></span>
+                    </span>
+                </a>
+                <div id="cfd-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
+                    <div class="gbmc">
+                        <ol class="gbmcc">
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.Taxpayers).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "Taxpayers") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "Taxpayers")">@Resources.Title_Taxpayer</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.FiscalDocuments).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "FiscalDocuments") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "FiscalDocuments")">@Resources.FiscalDocuments</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.FiscalReports).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Reports", "FiscalDocuments") ? "gbm0l" : "")"
+                                   href="@Url.Action("Reports", "FiscalDocuments")">@Resources.FiscalReports</a>
                             </li>
                             }
                         </ol>

@@ -1,0 +1,79 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model FiscalDocument
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.FiscalDocuments);
+}
+
+<fieldset>
+    <legend>@Resources.MasterInformation</legend>
+
+    <div class="display-label right floating">
+        @Html.LabelFor(x => x.Id):
+        @Html.DisplayFor(x => x.Id)
+    </div>
+    <div class="display-label right floating">
+        @Html.LabelFor(x => x.Batch):
+        @Html.DisplayFor(x => x.Batch)
+    </div>
+
+@if(Model.IsCompleted)
+{
+    <div class="display-label right floating">
+        @Html.LabelFor(x => x.Serial):
+        @Html.DisplayFor(x => x.Serial)
+    </div>
+    <div class="display-label right floating">
+        @Html.LabelFor(x => x.Issued)<br/>
+        @Html.DisplayFor(x => x.Issued)
+    </div>
+}
+
+    <div class="display-label">
+        @Html.LabelFor(x => x.IssuedFrom)<br/>
+        @Html.DisplayFor(x => x.IssuedFrom.TaxpayerId)<br/>
+        @Html.DisplayFor(x => x.IssuedFrom.TaxpayerName)
+    </div>
+    
+    
+    <div class="display-label">
+        @Html.LabelFor(x => x.Customer)<br/>
+        @Html.DisplayFor(x => x.Customer.Name)
+    </div>
+    
+    <div class="display-label">
+        @Html.LabelFor(x => x.BillTo)<br/>
+        @Html.DisplayFor(x => x.BillTo.TaxpayerId)<br/>
+        @Html.DisplayFor(x => x.BillTo.TaxpayerName)<br/>
+        @Html.DisplayFor(x => x.BillTo.Street)
+        @Html.DisplayFor(x => x.BillTo.ExteriorNumber)
+        @Html.DisplayFor(x => x.BillTo.InteriorNumber)<br/>
+        @Html.DisplayFor(x => x.BillTo.Neighborhood),
+        @Html.DisplayFor(x => x.BillTo.Borough)<br/>
+        @Html.DisplayFor(x => x.BillTo.State),
+        @Html.DisplayFor(x => x.BillTo.Country),
+        @Html.DisplayFor(x => x.BillTo.ZipCode)
+    </div>
+
+    <div class="right">
+        <p>
+		@if(Privilege.AllowDelete)
+		{
+		    using (Html.BeginForm("Cancel", "FiscalDocuments", new { id =  Model.Id }))
+		    {
+				if(!Model.IsCompleted && !Model.IsCancelled)
+				{
+		    		@Ajax.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "master-section" }, new { @class = "button icon edit " + (Model.Details.Count > 0 ? "hidden" : "")})
+				}
+				if(!Model.IsCancelled)
+				{
+					<button type="submit" class="icon cancel">@Resources.Cancel</button>
+				}
+		    }
+		}
+        </p>
+    </div>
+</fieldset>
