@@ -40,17 +40,17 @@ namespace Mictlanix.BE.Web.Models
     public class FiscalReport
     {
         [Display(Name = "Year", ResourceType = typeof(Resources))]
-        public int Year { get; set; }
+        public virtual int Year { get; set; }
 
         [Display(Name = "Month", ResourceType = typeof(Resources))]
         [DisplayFormat(DataFormatString = "{0:00}")]
-        public int Month { get; set; }
+        public virtual int Month { get; set; }
 
         [Display(Name = "TaxpayerId", ResourceType = typeof(Resources))]
-        public string TaxpayerId { get; set; }
+        public virtual string TaxpayerId { get; set; }
 		
         [Display(Name = "TaxpayerName", ResourceType = typeof(Resources))]
-		public string TaxpayerName { get; set; }
+		public virtual string TaxpayerName { get; set; }
 		
         #region Override Base Methods
 

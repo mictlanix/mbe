@@ -63,9 +63,9 @@ namespace Mictlanix.BE.Web
 			ActiveRecordStarter.Initialize (typeof(Category).Assembly, source);
 		}
 		
-		/*
         protected void Application_BeginRequest (object sender, EventArgs e)
 		{
+			/*
 			var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone ();
 			culture.NumberFormat.CurrencyDecimalDigits = 4;
 			Thread.CurrentThread.CurrentCulture = culture;
@@ -73,13 +73,23 @@ namespace Mictlanix.BE.Web
 			if(HttpContext.Current.User != null)
 			{
 				HttpContext.Current.Items.Add("CurrentUser", SecurityHelpers.GetUser(HttpContext.Current.User.Identity.Name));
-			}
+			}*/
+			HttpContext.Current.Items.Add ("ar.sessionscope", new SessionScope ());
 		}
-		*/
 		
-		protected void Application_EndRequest(Object sender, EventArgs e)
+		protected void Application_EndRequest (Object sender, EventArgs e)
 		{
-			HttpContext.Current.Items.Remove("CurrentUser");
+			try {
+				SessionScope scope = HttpContext.Current.Items ["ar.sessionscope"] as SessionScope;
+                 
+				if (scope != null) {
+					scope.Dispose ();
+				}
+			} catch (Exception ex) {
+				HttpContext.Current.Trace.Warn ("Error", "EndRequest: " + ex.Message, ex);
+			}
+			
+			HttpContext.Current.Items.Remove ("CurrentUser");
 		}
     }
 }

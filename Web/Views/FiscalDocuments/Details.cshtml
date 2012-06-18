@@ -1,0 +1,31 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
+@model FiscalDocument
+
+@{
+    ViewBag.Title = Resources.Details;
+}
+
+<h2>@Resources.Details</h2>
+
+<div id="master-section">
+	@Html.Partial("_MasterView")
+</div>
+
+<div id="details-section">
+    <div id="items-container">
+        <ul id="items" class="list-items">
+        @foreach (var item in Model.Details)
+        {
+            @Html.Partial("_DetailView", item) 
+        }
+        </ul>
+    </div>
+</div>
+<div id="totals-section" class="right floating" style="width:300px">
+    @Html.Partial("_Totals")
+</div>
+<div id="back-to-list" style="clear:both">
+    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+</div>
