@@ -1,0 +1,35 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@model FiscalDocumentDetail
+
+<li id="item@(Model.Id)">
+    <div class="photo">
+        <img src="@Url.Content(Model.Product.Photo)" title="@Model.ProductName"/>
+    </div>
+    <div class="action-link">
+        <a class="button icon-only icon delete" title="@Resources.Delete" href="/FiscalDocuments/RemoveDetail/@Model.Id"></a>
+        <script type="text/javascript">
+            $("#item@(Model.Id) a.delete").click(function(event){
+                event.preventDefault();
+                removeItem(@Model.Id);
+            });
+        </script>
+    </div>
+    <div class="info">
+        <div class="editable name">@Model.ProductName</div><br/>
+        <label>@Resources.Code:</label>
+        <div class="editable code">@Model.ProductCode</div>
+        <label>@Resources.Price:</label>
+        <div class="editable price">@Html.DisplayFor(x => x.Price)</div>
+        <label>@Resources.TaxRate:</label>
+        <div class="editable tax">@Html.DisplayFor(x => x.TaxRate)</div><br />
+        <label>@Resources.UnitOfMeasurement:</label>
+        <div class="editable um">@Model.UnitOfMeasurement</div>
+        <label>@Resources.Quantity:</label>
+        <div class="editable quantity">@Html.DisplayFor(x => x.Quantity)</div>
+        <label>@Resources.Discount:</label>
+        <div class="editable discount">@Html.DisplayFor(x => x.Discount)</div>
+        <label>@Resources.Amount:</label>
+        <strong class="total">@Html.DisplayFor(x => x.Total)</strong>
+    </div>
+</li>

@@ -35,7 +35,7 @@ using Castle.ActiveRecord.Framework;
 
 namespace Mictlanix.BE.Model
 {
-    [ActiveRecord("address")]
+    [ActiveRecord("address", Lazy = true)]
     public class Address : ActiveRecordLinqBase<Address>
     {
         IList<Supplier> suppliers = new List<Supplier>();
@@ -51,96 +51,96 @@ namespace Mictlanix.BE.Model
 		}
 		
         [PrimaryKey(PrimaryKeyType.Identity, "address_id")]
-        public int Id { get; set; }
+		public virtual int Id { get; set; }
 
         [Property("taxpayer_id")]
-        [Display(Name = "TaxpayerId", ResourceType = typeof(Resources))]
-        [StringLength(13, MinimumLength = 12, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string TaxpayerId { get; set; }
+		[Display(Name = "TaxpayerId", ResourceType = typeof(Resources))]
+		[StringLength(13, MinimumLength = 12, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public virtual string TaxpayerId { get; set; }
 
         [Property("taxpayer_name")]
-        [Display(Name = "TaxpayerName", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [StringLength(250, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string TaxpayerName { get; set; }
+		[Display(Name = "TaxpayerName", ResourceType = typeof(Resources))]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[StringLength(250, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public virtual string TaxpayerName { get; set; }
 
         [Property]
-        [Display(Name = "Street", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Street { get; set; }
+		[Display(Name = "Street", ResourceType = typeof(Resources))]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public virtual string Street { get; set; }
 
         [Property("exterior_number")]
-        [Display(Name = "ExteriorNumber", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [StringLength(15, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string ExteriorNumber { get; set; }
+		[Display(Name = "ExteriorNumber", ResourceType = typeof(Resources))]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[StringLength(15, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public virtual string ExteriorNumber { get; set; }
 
         [Property("interior_number")]
-        [Display(Name = "InteriorNumber", ResourceType = typeof(Resources))]
-        [StringLength(15, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string InteriorNumber { get; set; }
+		[Display(Name = "InteriorNumber", ResourceType = typeof(Resources))]
+		[StringLength(15, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public virtual string InteriorNumber { get; set; }
 
         [Property]
-        [Display(Name = "Neighborhood", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [StringLength(150, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Neighborhood { get; set; }
+		[Display(Name = "Neighborhood", ResourceType = typeof(Resources))]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[StringLength(150, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public virtual string Neighborhood { get; set; }
 
         [Property]
-        [Display(Name = "Locality", ResourceType = typeof(Resources))]
-        [StringLength(150, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Locality { get; set; }
+		[Display(Name = "Locality", ResourceType = typeof(Resources))]
+		[StringLength(150, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public virtual string Locality { get; set; }
 
         [Property]
-        [Display(Name = "Borough", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [StringLength(150, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Borough { get; set; }
+		[Display(Name = "Borough", ResourceType = typeof(Resources))]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[StringLength(150, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public virtual string Borough { get; set; }
 
         [Property]
-        [Display(Name = "State", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [StringLength(80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string State { get; set; }
+		[Display(Name = "State", ResourceType = typeof(Resources))]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[StringLength(80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public virtual string State { get; set; }
 
         [Property]
-        [Display(Name = "Country", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [StringLength(80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Country { get; set; }
+		[Display(Name = "Country", ResourceType = typeof(Resources))]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[StringLength(80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public virtual string Country { get; set; }
 
         [Property("zip_code")]
-        [Display(Name = "ZipCode", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [StringLength(5, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string ZipCode { get; set; }
+		[Display(Name = "ZipCode", ResourceType = typeof(Resources))]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[StringLength(5, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public virtual string ZipCode { get; set; }
 
         [Property]
-        [DataType(DataType.MultilineText)]
-        [Display(Name = "Comment", ResourceType = typeof(Resources))]
-        [StringLength(500, MinimumLength = 0)]
-        public string Comment { get; set; }
+		[DataType(DataType.MultilineText)]
+		[Display(Name = "Comment", ResourceType = typeof(Resources))]
+		[StringLength(500, MinimumLength = 0)]
+		public virtual string Comment { get; set; }
 		
         [HasAndBelongsToMany(typeof(Supplier), Table = "supplier_address", ColumnKey = "address", ColumnRef = "supplier", Inverse = true, Lazy = true)]
-        public IList<Supplier> Suppliers
+		public virtual IList<Supplier> Suppliers
         {
             get { return suppliers; }
             set { suppliers = value; }
         }
 
         [HasAndBelongsToMany(typeof(Customer), Table = "customer_address", ColumnKey = "address", ColumnRef = "customer", Inverse = true, Lazy = true)]
-        public IList<Customer> Customers
+		public virtual IList<Customer> Customers
         {
             get { return customers; }
             set { customers = value; }
         }
 		
-        public string StreetAndNumber {
+        public virtual string StreetAndNumber {
 			get { return string.Format ("{0} {1} {2}", Street, ExteriorNumber, InteriorNumber).Trim (); }
 		}
 		
-		public void Copy (Address item)
+		public virtual void Copy (Address item)
 		{
 			TaxpayerId = item.TaxpayerId;
 			TaxpayerName = item.TaxpayerName;

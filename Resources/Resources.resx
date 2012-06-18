@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1414,10 +1414,10 @@ Realizada el: {0:d}</value>
     <value>Detalles</value>
   </data>
   <data name="FiscalDocuments" xml:space="preserve">
-    <value>Facturas</value>
+    <value>Comprobantes Fiscales</value>
   </data>
   <data name="FiscalReports" xml:space="preserve">
-    <value>Reportes</value>
+    <value>Reportes Fiscales</value>
   </data>
   <data name="Format_FiscalReportName" xml:space="preserve">
     <value>1{0}{2:00}{1:0000}.txt</value>
@@ -1430,5 +1430,8 @@ Realizada el: {0:d}</value>
   </data>
   <data name="CreatedBy" xml:space="preserve">
     <value>Elaborada Por</value>
+  </data>
+  <data name="FiscalDocumentId" xml:space="preserve">
+    <value>ID</value>
   </data>
 </root>

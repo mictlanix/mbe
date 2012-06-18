@@ -59,12 +59,10 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ViewResult Details (string id)
 		{
-			using (var session = new SessionScope()) {
-				var item = Taxpayer.Find (id);
-				item.Documents.ToList ();
-				
-				return View (item);
-			}
+			var item = Taxpayer.Find (id);
+			item.Documents.ToList ();
+			
+			return View (item);
 		}
 
         //

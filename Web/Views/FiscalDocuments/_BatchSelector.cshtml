@@ -1,0 +1,11 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model FiscalDocument
+
+@{
+	IEnumerable<SelectListItem> items = ViewBag.Items;
+}
+
+@Html.LabelFor(x => x.Batch)<br />
+@Html.DropDownListFor(x => x.Batch, items)

@@ -28,7 +28,7 @@ namespace Mictlanix.BE.Model
         [Display(Name = "TaxpayerName", ResourceType = typeof(Resources))]
         public string Name { get; set; }
 		
-		[BelongsTo("address")]
+		[BelongsTo("address", Lazy = FetchWhen.OnInvoke)]
 		[Display(Name = "Address", ResourceType = typeof(Resources))]
 		public virtual Address Address { get; set; }
 		

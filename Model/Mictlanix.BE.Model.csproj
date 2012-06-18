@@ -121,6 +121,8 @@
     <Compile Include="Constants\FiscalDocumentType.cs" />
     <Compile Include="SalesQuote.cs" />
     <Compile Include="SalesQuoteDetail.cs" />
+    <Compile Include="FiscalDocument.cs" />
+    <Compile Include="FiscalDocumentDetail.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">

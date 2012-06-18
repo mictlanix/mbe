@@ -1,0 +1,32 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
+@using Mictlanix.BE.Web.Helpers
+@model IEnumerable<FiscalReport>
+
+@{
+    ViewBag.Title = Resources.FiscalReports;
+}
+
+<h2>@Resources.FiscalReports</h2>
+
+<table>
+    <tr>
+        <th class="center">@Html.LabelFor(x => new FiscalReport().Year)</th>
+        <th class="center">@Html.LabelFor(x => new FiscalReport().Month)</th>
+        <th class="center">@Html.LabelFor(x => new FiscalReport().TaxpayerId)</th>
+        <th class="center">@Html.LabelFor(x => new FiscalReport().TaxpayerName)</th>
+        <th></th>
+    </tr>
+@foreach (var item in Model) {
+    <tr>
+        <td class="number center">@Html.DisplayFor(x => item.Year)</td>
+        <td class="number center">@Html.DisplayFor(x => item.Month)</td>
+        <td class="center">@Html.DisplayFor(x => item.TaxpayerId)</td>
+        <td>@Html.DisplayFor(x => item.TaxpayerName)</td>
+        <td class="actions">
+        	@Html.ActionLink(" ", "Report", new { taxpayer = item.TaxpayerId, year = item.Year, month = item.Month }, new { @class = "button icon download icon-only", @title = Resources.Download })
+        </td>
+    </tr>
+}
+</table>
