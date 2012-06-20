@@ -80,17 +80,15 @@ namespace Mictlanix.BE.Web.Controllers
             if (!ModelState.IsValid)
                 return View(item);
 
-            item.Supplier = Supplier.Find(item.SupplierId);
+            item.Supplier = Supplier.Find (item.SupplierId);
             item.Date = DateTime.Now;
             item.Creator = SecurityHelpers.GetUser(User.Identity.Name).Employee;
 
-            using (var session = new SessionScope())
-            {
+            using (var scope = new TransactionScope()) {
                 item.CreateAndFlush();
             }
 
             return RedirectToAction("Index");
-
         }
         
         //

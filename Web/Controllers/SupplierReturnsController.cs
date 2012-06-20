@@ -119,27 +119,26 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult CreateFromPurchaseOrder(int id)
         {
-            PurchaseOrder purchase = PurchaseOrder.Find(id);
-            
-            SupplierReturn item = new SupplierReturn();
+            var purchase = PurchaseOrder.Find (id);
+            var item = new SupplierReturn();
+
             item.CreationTime = DateTime.Now;
+            item.ModificationTime = item.CreationTime;
             item.Creator = SecurityHelpers.GetUser(User.Identity.Name).Employee;
+            item.Updater = item.Creator;
             item.PurchaseOrder = purchase;
             item.Supplier = purchase.Supplier;
-            item.Updater = SecurityHelpers.GetUser(User.Identity.Name).Employee;
-            item.ModificationTime = DateTime.Now;
 
-            item.Create();
+            using (var scope = new TransactionScope()) {
+            	item.Create();
 
-            
-            foreach (var x in purchase.Details)
-            {
-                var sum = GetReturnableQuantity(x.Id);
+	            foreach (var x in purchase.Details) {
+	                var qty = GetReturnableQuantity(x.Id);
 
-                if (sum > 0)
-                {
-                    var detail = new SupplierReturnDetail
-                    {
+	                if (qty <= 0)
+						continue;
+
+					var detail = new SupplierReturnDetail {
                         Order = item,
                         PurchaseOrderDetail = x,
                         Product = x.Product,
@@ -148,17 +147,15 @@ namespace Mictlanix.BE.Web.Controllers
                         Discount = x.Discount,
                         TaxRate = x.TaxRate,
                         Price = x.Price,
-                        Quantity = sum,
+                        Quantity = qty,
                         Warehouse = x.Warehouse
                     };
 
-                    using (var session = new SessionScope())
-                    {
-                        detail.CreateAndFlush();
-                    }
+					detail.Create ();
                 }
             }
-                return RedirectToAction("EditSupplierReturn", new { id = item.Id });
+
+			return RedirectToAction("EditSupplierReturn", new { id = item.Id });
         }
 
         [HttpPost]
@@ -199,78 +196,69 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult ConfirmReturn(int id)
         {
-            SupplierReturn item = SupplierReturn.Find(id);
+            var item = SupplierReturn.Find (id);
 
-            var qry = from x in SupplierReturnDetail.Queryable
+            var qry = from x in item.Details
                       where x.Order.Id == id
                       group x by x.Warehouse into g
                       select new { Warehouse = g.Key, Details = g.ToList() };
 
-            foreach (var x in qry)
-            {
-                var master = new InventoryIssue
-                {
-                    Return = item,
-                    Warehouse = x.Warehouse,
-                    CreationTime = DateTime.Now,
-                    Creator = SecurityHelpers.GetUser(User.Identity.Name).Employee,
-                    ModificationTime = DateTime.Now,
-                    Updater = SecurityHelpers.GetUser(User.Identity.Name).Employee,
-                    Comment = string.Format(Resources.Message_SupplierReturn, item.Supplier.Name, item.PurchaseOrder.Id, item.Id)
-                };
+			var dt = DateTime.Now;
+			var employee = SecurityHelpers.GetUser(User.Identity.Name).Employee;
+			
+            using (var scope = new TransactionScope()) {
+	            foreach (var x in qry) {
+	                var master = new InventoryIssue {
+	                    Return = item,
+	                    Warehouse = x.Warehouse,
+	                    CreationTime = dt,
+	                    ModificationTime = dt,
+	                    Creator = employee,
+	                    Updater = employee,
+	                    Comment = string.Format(Resources.Message_SupplierReturn, item.Supplier.Name, item.PurchaseOrder.Id, item.Id)
+	                };
 
-                using (var session = new SessionScope())
-                {
-                    master.CreateAndFlush();
-                }
+	               	master.Create ();
 
-                foreach (var y in x.Details)
-                {
-                    var detail = new InventoryIssueDetail
-                    {
-                        Issue = master,
-                        Product = y.Product,
-                        Quantity = y.Quantity,
-                        ProductCode = y.ProductCode,
-                        ProductName = y.ProductName
-                    };
+	                foreach (var y in x.Details) {
+	                    var detail = new InventoryIssueDetail {
+	                        Issue = master,
+	                        Product = y.Product,
+	                        Quantity = y.Quantity,
+	                        ProductCode = y.ProductCode,
+	                        ProductName = y.ProductName
+	                    };
 
-                    using (var session = new SessionScope())
-                    {
-                        detail.CreateAndFlush();
-                    }
-                }
+						detail.Create ();
+	                }
+	            }
+
+	            item.IsCompleted = true;
+	            item.Save();
             }
-
-            item.IsCompleted = true;
-            item.Save();
 
             return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public ActionResult CancelReturn(int id)
-        {
-            SupplierReturn item = SupplierReturn.Find(id);
+		public ActionResult CancelReturn (int id)
+		{
+			var item = SupplierReturn.Find (id);
 
-            foreach (var x in item.Details)
-            {
-                x.Delete();
-            }
-
-            item.IsCancelled = true;
-            item.Save();
+			using (var scope = new TransactionScope()) {
+				item.IsCancelled = true;
+				item.Save ();
+			}
 
             return RedirectToAction("Index");
         }
-
 
         decimal GetReturnableQuantity(int id)
         {
             var item = PurchaseOrderDetail.Find(id);
             string sql = @"SELECT SUM(d.quantity) quantity
                            FROM supplier_return_detail d INNER JOIN supplier_return m ON d.supplier_return = m.supplier_return_id
-                           WHERE m.completed <> 0 AND d.purchase_order_detail = :detail ";
+                           WHERE m.completed <> 0 AND m.cancelled = 0 AND d.purchase_order_detail = :detail ";
 
             IList<decimal> quantities = (IList<decimal>)ActiveRecordMediator<SupplierReturnDetail>.Execute(
                 delegate(ISession session, object instance)

@@ -86,25 +86,19 @@ namespace Mictlanix.BE.Web.Controllers
         // POST: /Inventory/NewReceipt
 
         [HttpPost]
-        public ActionResult NewReceipt(InventoryReceipt item)
-        {
-            item.CreationTime = DateTime.Now;
-            item.ModificationTime = item.CreationTime;
-            item.Creator = SecurityHelpers.GetUser(User.Identity.Name).Employee;
-            item.Updater = item.Creator;
-            item.Warehouse = Warehouse.Find(item.WarehouseId);
+		public ActionResult NewReceipt (InventoryReceipt item)
+		{
+			item.CreationTime = DateTime.Now;
+			item.ModificationTime = item.CreationTime;
+			item.Creator = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			item.Updater = item.Creator;
+			item.Warehouse = Warehouse.Find (item.WarehouseId);
 
-            using (var session = new SessionScope())
-            {
-                item.CreateAndFlush();
-            }
+			using (var scope = new TransactionScope()) {
+				item.CreateAndFlush ();
+			}
 
-            System.Diagnostics.Debug.WriteLine("New InventoryReceipt [Id = {0}]", item.Id);
-
-            if (item.Id == 0)
-            {
-                return View("UnknownError");
-            }
+			System.Diagnostics.Debug.WriteLine ("New InventoryReceipt [Id = {0}]", item.Id);
 
             return RedirectToAction("EditReceipt", new { id = item.Id });
         }
@@ -163,8 +157,7 @@ namespace Mictlanix.BE.Web.Controllers
                 QuantityOrdered = 0
             };
 
-            using (var session = new SessionScope())
-            {
+            using (var scope = new TransactionScope()) {
                 item.CreateAndFlush();
             }
 
@@ -293,17 +286,11 @@ namespace Mictlanix.BE.Web.Controllers
             item.Updater = item.Creator;
             item.Warehouse = Warehouse.Find(item.WarehouseId);
 
-            using (var session = new SessionScope())
-            {
+            using (var scope = new TransactionScope()) {
                 item.CreateAndFlush();
             }
 
             System.Diagnostics.Debug.WriteLine("New InventoryIssue [Id = {0}]", item.Id);
-
-            if (item.Id == 0)
-            {
-                return View("UnknownError");
-            }
 
             return RedirectToAction("EditIssue", new { id = item.Id });
         }
@@ -362,8 +349,7 @@ namespace Mictlanix.BE.Web.Controllers
                 Quantity = 1,
             };
 
-            using (var session = new SessionScope())
-            {
+            using (var scope = new TransactionScope()) {
                 item.CreateAndFlush();
             }
 
@@ -498,17 +484,11 @@ namespace Mictlanix.BE.Web.Controllers
             item.Creator = SecurityHelpers.GetUser(User.Identity.Name).Employee;
             item.Updater = item.Creator;
 
-            using (var session = new SessionScope())
-            {
+            using (var scope = new TransactionScope()) {
                 item.CreateAndFlush();
             }
 
             System.Diagnostics.Debug.WriteLine("New InventoryTransfer [Id = {0}]", item.Id);
-
-            if (item.Id == 0)
-            {
-                return View("UnknownError");
-            }
 
             return RedirectToAction("EditTransfer", new { id = item.Id });
         }
@@ -578,9 +558,8 @@ namespace Mictlanix.BE.Web.Controllers
                 Quantity = 1,
             };
 
-            using (var session = new SessionScope())
-            {
-                item.CreateAndFlush();
+            using (var scope = new TransactionScope()) {
+                item.CreateAndFlush ();
             }
 
             System.Diagnostics.Debug.WriteLine("New InventoryTransferDetail [Id = {0}]", item.Id);

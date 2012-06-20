@@ -14,9 +14,6 @@ using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web
 {
-    // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
-    // visit http://go.microsoft.com/?LinkId=9394801
-
     public class MvcApplication : System.Web.HttpApplication
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
@@ -31,13 +28,13 @@ namespace Mictlanix.BE.Web
 			routes.MapRoute (
                 "Barcodes", // Route name
                 "Barcodes/{action}/{id}.png", // URL with parameters
-                new {controller = "Barcodes", action = "Index", id = UrlParameter.Optional } // Parameter defaults
+                new {controller = "Barcodes", action = "Code128" } // Parameter defaults
 			);
 			
 			routes.MapRoute (
                 "FiscalReport", // Route name
-                "Invoices/Report/{taxpayer}/{year}/{month}", // URL with parameters
-                new {controller = "Invoices", action = "Report", year = @"\d{4}", month = @"\d{2}" } // Parameter defaults
+                "FiscalDocuments/Report/{taxpayer}/{year}/{month}", // URL with parameters
+                new {controller = "FiscalDocuments", action = "Report", year = @"\d{4}", month = @"\d{2}" } // Parameter defaults
 			);
 			
             routes.MapRoute(
@@ -45,7 +42,6 @@ namespace Mictlanix.BE.Web
                 "{controller}/{action}/{id}", // URL with parameters
                 new {  controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameter defaults
             );
-
         }
 
         protected void Application_Start ()
@@ -65,15 +61,6 @@ namespace Mictlanix.BE.Web
 		
         protected void Application_BeginRequest (object sender, EventArgs e)
 		{
-			/*
-			var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone ();
-			culture.NumberFormat.CurrencyDecimalDigits = 4;
-			Thread.CurrentThread.CurrentCulture = culture;
-			
-			if(HttpContext.Current.User != null)
-			{
-				HttpContext.Current.Items.Add("CurrentUser", SecurityHelpers.GetUser(HttpContext.Current.User.Identity.Name));
-			}*/
 			HttpContext.Current.Items.Add ("ar.sessionscope", new SessionScope ());
 		}
 		

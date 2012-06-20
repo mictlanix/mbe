@@ -98,15 +98,11 @@ namespace Mictlanix.BE.Web.Controllers
 			//FIXME: choose date from UI
 			item.DueDate = item.Date.AddDays (30);
 
-			using (var session = new SessionScope()) {
+			using (var scope = new TransactionScope()) {
 				item.CreateAndFlush ();
 			}
 
 			System.Diagnostics.Debug.WriteLine ("New SalesQuote [Id = {0}]", item.Id);
-
-			if (item.Id == 0) {
-				return View ("UnknownError");
-			}
 
 			return RedirectToAction ("Edit", new { id = item.Id });
 		}
@@ -161,8 +157,7 @@ namespace Mictlanix.BE.Web.Controllers
         {
             var p = Product.Find(product);
 
-            var item = new SalesQuoteDetail
-            {
+            var item = new SalesQuoteDetail {
                 SalesQuote = SalesQuote.Find(order),
                 Product = p,
                 ProductCode = p.Code,
@@ -172,8 +167,7 @@ namespace Mictlanix.BE.Web.Controllers
                 Quantity = 1,
             };
 
-            switch (item.SalesQuote.Customer.PriceList.Id)
-            {
+            switch (item.SalesQuote.Customer.PriceList.Id) {
                 case 1:
                     item.Price = p.Price1;
                     break;
@@ -188,9 +182,8 @@ namespace Mictlanix.BE.Web.Controllers
                     break;
             }
 
-            using (var session = new SessionScope())
-            {
-                item.CreateAndFlush();
+            using (var scope = new TransactionScope()) {
+                item.CreateAndFlush ();
             }
 
             System.Diagnostics.Debug.WriteLine("New SalesQuoteDetail [Id = {0}]", item.Id);

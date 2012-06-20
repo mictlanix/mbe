@@ -77,7 +77,7 @@ namespace Mictlanix.BE.Model
 		
 		[Property]
         [Display(Name = "Type", ResourceType = typeof(Resources))]
-        public FiscalDocumentType Type { get; set; }
+        public virtual FiscalDocumentType Type { get; set; }
         
 		[Property]
 		[Display(Name = "Batch", ResourceType = typeof(Resources))]
