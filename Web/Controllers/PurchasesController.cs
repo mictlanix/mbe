@@ -92,17 +92,11 @@ namespace Mictlanix.BE.Web.Controllers
             item.CreationTime = DateTime.Now;
             item.ModificationTime = item.CreationTime;
 
-            using (var session = new SessionScope())
-            {
+            using (var scope = new TransactionScope()) {
                 item.CreateAndFlush();
             }
 
             System.Diagnostics.Debug.WriteLine("New Purchase [Id = {0}]", item.Id);
-
-            if (item.Id == 0)
-            {
-                return View("UnknownError");
-            }
 
             return RedirectToAction("EditPurchase", new { id = item.Id });
         }
@@ -166,8 +160,7 @@ namespace Mictlanix.BE.Web.Controllers
                 Discount = 0
             };
 
-            using (var session = new SessionScope())
-            {
+            using (var scope = new TransactionScope()) {
                 item.CreateAndFlush();
             }
 
@@ -283,55 +276,48 @@ namespace Mictlanix.BE.Web.Controllers
         {
             PurchaseOrder item = PurchaseOrder.Find(id);
 
-            var qry = from x in PurchaseOrderDetail.Queryable
-                      where x.Order.Id == id
+            var qry = from x in item.Details
                       group x by x.Warehouse into g
                       select new { Warehouse = g.Key, Details = g.ToList() };
 
-            foreach (var x in qry)
-            {
-                var master = new InventoryReceipt
-                {
-                    Order = item,
-                    Warehouse = x.Warehouse,
-                    CreationTime = DateTime.Now,
-                    Creator = SecurityHelpers.GetUser(User.Identity.Name).Employee,
-                    ModificationTime = DateTime.Now,
-                    Updater = SecurityHelpers.GetUser(User.Identity.Name).Employee    
-                };
+			var dt = DateTime.Now;
+			var employee = SecurityHelpers.GetUser(User.Identity.Name).Employee;
 
-                using (var session = new SessionScope())
-                {
-                    master.CreateAndFlush();
-                }
+			using (var scope = new TransactionScope()) {
+	            foreach (var x in qry) {
+	                var master = new InventoryReceipt {
+	                    Order = item,
+	                    Warehouse = x.Warehouse,
+	                    CreationTime = dt,
+	                    ModificationTime = dt,
+	                    Creator = employee,
+	                    Updater = employee    
+	                };
 
-                foreach (var y in x.Details)
-                {
-                    var detail = new InventoryReceiptDetail 
-                    {
-                        Receipt = master,
-                        Product = y.Product,
-                        QuantityOrdered = y.Quantity,
-                        Quantity = y.Quantity,
-                        ProductCode = y.ProductCode,
-                        ProductName = y.ProductName
-                    };
+                    master.Create ();
 
-                    using (var session = new SessionScope())
-                    {
-                        detail.CreateAndFlush();
+	                foreach (var y in x.Details) {
+	                    var detail = new InventoryReceiptDetail {
+	                        Receipt = master,
+	                        Product = y.Product,
+	                        QuantityOrdered = y.Quantity,
+	                        Quantity = y.Quantity,
+	                        ProductCode = y.ProductCode,
+	                        ProductName = y.ProductName
+						};
+
+						detail.Create ();
                     }
                 }
-            }
 
-            foreach (var z in item.Details)
-            {
-                z.Product.Cost = z.Price;
-                z.Product.Update();
-            }
+	            foreach (var x in item.Details) {
+	                x.Product.Cost = x.Price;
+					x.Product.Update ();
+	            }
 
-            item.IsCompleted = true;
-            item.Save();
+	            item.IsCompleted = true;
+	            item.Save ();
+            }
 
             return RedirectToAction("Index");
         }

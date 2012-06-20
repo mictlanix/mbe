@@ -124,13 +124,7 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
 		public ActionResult CreateFromSalesOrder (int id)
 		{
-			SalesOrder sales;
-
-			using (new SessionScope()) {
-				sales = SalesOrder.Find (id);
-				sales.Details.ToList ();
-			}
-			
+			var sales = SalesOrder.Find (id);
 			var item = new ReturnCustomer ();
 			
 			// Store and Serial
@@ -152,29 +146,28 @@ namespace Mictlanix.BE.Web.Controllers
 			item.Updater = item.Creator;
 			item.ModificationTime = item.CreationTime;
 
-			item.Create ();
+			using (var scope = new TransactionScope()) {
+				item.Create ();
 
-			foreach (var x in sales.Details) {
-				var sum = GetReturnableQuantity (x.Id);
+				foreach (var x in sales.Details) {
+					var sum = GetReturnableQuantity (x.Id);
 
-				if (sum <= 0)
-					continue;
-				
-				var detail = new ReturnCustomerDetail
-                {
-                    Order = item,
-                    SalesOrderDetail = x,
-                    Product = x.Product,
-                    ProductCode = x.ProductCode,
-                    ProductName = x.ProductName,
-                    Discount = x.Discount,
-                    TaxRate = x.TaxRate,
-                    Price = x.Price,
-                    Quantity = sum
-                };
+					if (sum <= 0)
+						continue;
+					
+					var detail = new ReturnCustomerDetail {
+	                    Order = item,
+	                    SalesOrderDetail = x,
+	                    Product = x.Product,
+	                    ProductCode = x.ProductCode,
+	                    ProductName = x.ProductName,
+	                    Discount = x.Discount,
+	                    TaxRate = x.TaxRate,
+	                    Price = x.Price,
+	                    Quantity = sum
+	                };
 
-				using (var session = new SessionScope()) {
-					detail.CreateAndFlush ();
+					detail.Create ();
 				}
 			}
 
@@ -231,15 +224,12 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult CancelReturn(int id)
         {
-            ReturnCustomer item = ReturnCustomer.Find(id);
+            var item = ReturnCustomer.Find(id);
 
-            foreach (var x in item.Details)
-            {
-                x.Delete();
-            }
-
-            item.IsCancelled = true;
-            item.Save();
+			using (var scope = new TransactionScope()) {
+				item.IsCancelled = true;
+				item.Save ();
+			}
 
             return RedirectToAction("Index");
         }
@@ -249,7 +239,7 @@ namespace Mictlanix.BE.Web.Controllers
             var item = SalesOrderDetail.Find(id);
             string sql = @"SELECT SUM(d.quantity) quantity
                            FROM return_customer_detail d INNER JOIN return_customer m ON d.return_customer = m.return_customer_id
-                           WHERE m.completed <> 0 AND d.sales_order_detail = :detail ";
+                           WHERE m.completed <> 0 AND m.cancelled = 0 AND d.sales_order_detail = :detail ";
 
             IList<decimal> quantities = (IList<decimal>)ActiveRecordMediator<ReturnCustomerDetail>.Execute(
                 delegate(ISession session, object instance) {

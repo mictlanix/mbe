@@ -94,9 +94,8 @@ namespace Mictlanix.BE.Web.Controllers
 			// Address info
 			item.BillTo = new Address (item.BillTo);
 			item.IssuedFrom = new Address (item.Issuer.Address);
-			
-			// FIXME: use transaction
-			using (var session = new SessionScope()) {
+
+			using (var scope = new TransactionScope()) {
 				item.BillTo.CreateAndFlush ();
 				item.IssuedFrom.CreateAndFlush ();
 				item.CreateAndFlush ();
@@ -160,9 +159,8 @@ namespace Mictlanix.BE.Web.Controllers
 			// Address info
 			invoice.BillTo.Copy (item.BillTo);
 			invoice.IssuedFrom.Copy (invoice.Issuer.Address);
-			
-			// FIXME: use transaction
-			using (var session = new SessionScope()) {
+
+			using (var scope = new TransactionScope()) {
 				invoice.BillTo.Save ();
 				invoice.IssuedFrom.Save ();
 				invoice.Save ();
@@ -176,12 +174,10 @@ namespace Mictlanix.BE.Web.Controllers
 		{
 			SalesInvoice item;
 			TaxpayerDocument batch;
-			
-			using (var session = new SessionScope()) {
-				item = SalesInvoice.Find (id);
-				batch = item.Issuer.Documents.Single (x => x.Batch == item.Batch);
-			}
-			
+
+			item = SalesInvoice.Find (id);
+			batch = item.Issuer.Documents.Single (x => x.Batch == item.Batch);
+
 			if (item.IsCompleted || item.IsCancelled) {
 				return RedirectToAction ("Index");
 			}
@@ -202,9 +198,10 @@ namespace Mictlanix.BE.Web.Controllers
 			item.OriginalString = CFDv2Helpers.OriginalString (doc);
 			item.DigitalSeal = doc.sello;
 			
-			// save to database
-			item.Save ();
-			
+			using (var scope = new TransactionScope()) {
+				item.SaveAndFlush ();
+			}
+
 			// save to filesystem
 			var filename = string.Format (Resources.Format_FiscalDocumentPath,
 	                                      Server.MapPath (Configuration.FiscalFilesPath),
@@ -332,7 +329,7 @@ namespace Mictlanix.BE.Web.Controllers
 				item.Price = item.Price / (1m + item.TaxRate);
 			}
 			
-			using (var session = new SessionScope()) {
+			using (var scope = new TransactionScope()) {
 				item.CreateAndFlush ();
 			}
 

@@ -164,9 +164,9 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult DeleteConfirmed (int id)
         {
 			try {
-				using (new SessionScope()) {
+				using (var scope = new TransactionScope()) {
 					var item = Product.Find (id);
-					item.Delete ();
+					item.DeleteAndFlush ();
 				}
 
 				return RedirectToAction ("Index");

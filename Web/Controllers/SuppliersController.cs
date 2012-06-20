@@ -70,16 +70,12 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ViewResult Details(int id)
         {
-			Supplier item;
-			
-			using(new SessionScope())
-			{
-	            item = Supplier.Find(id);
-				item.Addresses.ToList();
-				item.Agreements.ToList();
-				item.BanksAccounts.ToList();
-				item.Contacts.ToList();
-			}
+			var item = Supplier.Find(id);
+
+			item.Addresses.ToList();
+			item.Agreements.ToList();
+			item.BanksAccounts.ToList();
+			item.Contacts.ToList();
 
             ViewBag.OwnerId = item.Id;
             
@@ -180,9 +176,9 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
 			try {
-				using (new SessionScope()) {
+				using (var scope = new TransactionScope()) {
 					var item = Supplier.Find (id);
-					item.Delete ();
+					item.DeleteAndFlush ();
 				}
 
 				return RedirectToAction ("Index");
