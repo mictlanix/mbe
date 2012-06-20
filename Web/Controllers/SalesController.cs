@@ -74,13 +74,10 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ViewResult PrintPromissoryNote (int id)
 		{
-			SalesOrder item;
+			var item = SalesOrder.Find (id);
 
-			using (new SessionScope()) {
-				item = SalesOrder.Find (id);
-				item.Details.ToList ();
-			}
-			
+			item.Details.ToList ();
+
             return View("_PromissoryNoteTicket", item);
         }
 
@@ -88,47 +85,31 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ViewResult PrintOrder (int id)
 		{
-			SalesOrder item;
+			var item = SalesOrder.Find (id);
 
-			using (new SessionScope()) {
-				item = SalesOrder.Find (id);
-				item.Details.ToList ();
-				item.Payments.ToList ();
-			}
+			item.Details.ToList ();
+			item.Payments.ToList ();
 			
-            if (item.IsCompleted || item.IsCredit)
-            {
-                return View("_SalesTicket", item);
-            }
-            else
-            {
-                return View("_SalesNote", item);
-            }
+            return View(item.IsCompleted || item.IsCredit ? "_SalesTicket" : "_SalesNote", item);
         }
 
         // GET: /Sales/Details/
 
         public ViewResult Details (int id)
 		{
-			SalesOrder item;
-			
-			using (new SessionScope()) {
-				item = SalesOrder.Find (id);
-				item.Details.ToList ();
-			}
-			
+			var item = SalesOrder.Find (id);
+
+			item.Details.ToList ();
+
 			return View (item);
         }
 
         public ViewResult HistoricDetails (int id)
 		{
-			SalesOrder item;
-			
-			using (new SessionScope()) {
-				item = SalesOrder.Find (id);
-				item.Details.ToList ();
-			}
-			
+			var item = SalesOrder.Find (id);
+
+			item.Details.ToList ();
+
 			return View (item);
         }
         //
@@ -168,32 +149,25 @@ namespace Mictlanix.BE.Web.Controllers
 			item.Date = DateTime.Now;
 			item.DueDate = item.IsCredit ? item.Date.AddDays (item.Customer.CreditDays) : item.Date;
 
-			using (var session = new SessionScope()) {
+			using (var scope = new TransactionScope()) {
 				item.CreateAndFlush ();
 			}
 
 			System.Diagnostics.Debug.WriteLine ("New SalesOrder [Id = {0}]", item.Id);
-
-			if (item.Id == 0) {
-				return View ("UnknownError");
-			}
 
 			return RedirectToAction ("Edit", new { id = item.Id });
 		}
 
         public ActionResult Edit (int id)
 		{
-			SalesOrder item;
-
-			using (new SessionScope()) {
-				item = SalesOrder.Find (id);
-				item.Details.ToList ();
-			}
-			
+			var item = SalesOrder.Find (id);
+				
 			if (Request.IsAjaxRequest ())
 				return PartialView ("_Edit", item);
-			else
+			else {
+				item.Details.ToList ();
 				return View (item);
+			}
         }
 
         //
@@ -202,19 +176,17 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
 		public ActionResult Edit (SalesOrder item)
 		{
-			SalesOrder order;
+			var order = SalesOrder.Find (item.Id);
 			var customer = Customer.Find (item.CustomerId);
-
-			using (new SessionScope()) {
-				order = SalesOrder.Find (item.Id);
-				order.Details.ToList ();
-			}
-			
+				
+			order.Details.ToList ();
 			order.Customer = customer;
 			order.IsCredit = item.IsCredit;
 			order.DueDate = item.IsCredit ? order.Date.AddDays (customer.CreditDays) : order.Date;
 
-			order.Save ();
+			using (var scope = new TransactionScope()) {
+				order.UpdateAndFlush ();
+			}
 
 			return PartialView ("_SalesInfo", order);
         }
@@ -251,9 +223,8 @@ namespace Mictlanix.BE.Web.Controllers
                     break;
             }
 
-            using (var session = new SessionScope())
-            {
-                item.CreateAndFlush();
+            using (var scope = new TransactionScope()) {
+                item.CreateAndFlush ();
             }
 
             System.Diagnostics.Debug.WriteLine("New SalesOrderDetail [Id = {0}]", item.Id);
@@ -315,13 +286,10 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult GetTotals (int id)
 		{
-			SalesOrder item;
+			var item = SalesOrder.Find (id);
+				
+			item.Details.ToList ();
 
-			using (new SessionScope()) {
-				item = SalesOrder.Find (id);
-				item.Details.ToList ();
-			}
-			
 			return PartialView ("_Totals", item);
         }
 

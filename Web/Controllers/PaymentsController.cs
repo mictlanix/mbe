@@ -152,64 +152,49 @@ namespace Mictlanix.BE.Web.Controllers
 
         [HttpPost]
 		public ActionResult OpenSession (CashSession item)
-		{
-			List<CashCount> cash_counts;
-            
+		{            
 			item.CashDrawer = Configuration.CashDrawer;
 
             if (item.CashDrawer == null)
-            {
                 return View("InvalidCashDrawer");
-            }
-			
-            cash_counts = new List<CashCount>(item.CashCounts.Where(x => x.Quantity > 0));
+
+			var cash_counts = item.CashCounts.Where(x => x.Quantity > 0).ToList();
 
             item.Start = DateTime.Now;
-            item.Cashier = Model.User.TryFind(User.Identity.Name).Employee;
+            item.Cashier = Model.User.Find(User.Identity.Name).Employee;
             item.CashCounts.Clear();
 
-            using (var session = new SessionScope())
-            {
-                item.CreateAndFlush();
+            using (var scope = new TransactionScope()) {
+                item.Create ();
+
+	            foreach (var x in cash_counts) {
+	                x.Session = item;
+	                x.Type = CashCountType.StartingCash;
+	                x.Create ();
+	            }
             }
 
-            System.Diagnostics.Debug.WriteLine("New CashSession [Id = {0}]", item.Id);
-            
-            using (var session = new SessionScope())
-            {
-                foreach (var x in cash_counts)
-                {
-                    x.Session = item;
-                    x.Type = CashCountType.StartingCash;
-                    x.Create();
-                }
-            }
+			System.Diagnostics.Debug.WriteLine("New CashSession [Id = {0}]", item.Id);
 
             return RedirectToAction("Index");
         }
 
         public ActionResult PayOrder (int id)
 		{
-			SalesOrder item;
-			
-			using (new SessionScope()) {
-				item = SalesOrder.Find (id);
-				item.Details.ToList ();
-				item.Payments.ToList ();
-			}
+			var item = SalesOrder.Find (id);
+
+			item.Details.ToList ();
+			item.Payments.ToList ();
 
 			return View (item);
         }
 		
         public ActionResult GetSalesOrderBalance (int id)
 		{
-			SalesOrder item;
-			
-			using (new SessionScope()) {
-				item = SalesOrder.Find (id);
-				item.Details.ToList ();
-				item.Payments.ToList ();
-			}
+			var item = SalesOrder.Find (id);
+
+			item.Details.ToList ();
+			item.Payments.ToList ();
 
 			return PartialView ("_SalesOrderBalance", item);
         }
@@ -217,16 +202,12 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
 		public JsonResult AddPayment (int order, int type, decimal amount, string reference)
 		{
-			SalesOrder sales_order;
+			var sales_order = SalesOrder.Find (order);
 
-			using (new SessionScope()) {
-				sales_order = SalesOrder.Find (order);
-				sales_order.Details.ToList ();
-				sales_order.Payments.ToList ();
-			}
-			
-			var item = new CustomerPayment
-            {
+			sales_order.Details.ToList ();
+			sales_order.Payments.ToList ();
+
+			var item = new CustomerPayment {
                 CashSession = GetSession (),
                 SalesOrder = sales_order,
                 Customer = sales_order.Customer,
@@ -257,7 +238,7 @@ namespace Mictlanix.BE.Web.Controllers
 				}
 			}
 
-			using (var session = new SessionScope()) {
+			using (var scope = new TransactionScope()) {
 				item.CreateAndFlush ();
 			}
 
@@ -294,7 +275,7 @@ namespace Mictlanix.BE.Web.Controllers
 				item.Serial = 1;
 			}
 
-			using (var session = new SessionScope()) {
+			using (var scope = new TransactionScope()) {
 				item.CreateAndFlush ();
 			}
 
@@ -341,23 +322,20 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult CloseSession(CashSession item)
         {
-            List<CashCount> cash_counts;
+        	var cash_counts = item.CashCounts.Where (x => x.Quantity > 0).ToList ();
+			
+            item = CashSession.Find (item.Id);
+            item.End = DateTime.Now;
 
-            cash_counts = new List<CashCount>(item.CashCounts.Where(x => x.Quantity > 0));
-            item = CashSession.Find(item.Id);
-
-            using (var session = new SessionScope())
-            {
-                foreach (var x in cash_counts)
-                {
+            using (var scope = new TransactionScope()) {
+				foreach (var x in cash_counts) {
                     x.Session = item;
                     x.Type = CashCountType.CountedCash;
-                    x.Create();
+                    x.Create ();
                 }
-            }
 
-            item.End = DateTime.Now;
-            item.Update();
+	            item.Update ();
+            }
 
             return RedirectToAction("CloseSessionConfirmed", new { id = item.Id });
         }
@@ -386,8 +364,7 @@ namespace Mictlanix.BE.Web.Controllers
 			if (item == null)
 				return null;
 			
-			return CashSession.Queryable
-                              .Where (x => x.End == null)
+			return CashSession.Queryable.Where (x => x.End == null)
                               .SingleOrDefault (x => x.CashDrawer.Id == item.Id);
 		}
     }
