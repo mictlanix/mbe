@@ -110,8 +110,7 @@ namespace Mictlanix.BE.Web.Controllers
 				}
 			}
 			
-			// FIXME: use transaction
-			using (var session = new SessionScope()) {
+			using (var scope = new TransactionScope()) {
 				item.Address.CreateAndFlush ();
 				item.CreateAndFlush ();
 			}
@@ -144,7 +143,7 @@ namespace Mictlanix.BE.Web.Controllers
         // POST: /Taxpayer/Edit/5
 
         [HttpPost]
-        public ActionResult Edit (Taxpayer item, IEnumerable<HttpPostedFileBase> files)
+		public ActionResult Edit (Taxpayer item, IEnumerable<HttpPostedFileBase> files)
 		{
 			if (!ModelState.IsValid)
 				return View (item);
@@ -172,10 +171,11 @@ namespace Mictlanix.BE.Web.Controllers
 				}
 			}
 			
-			// FIXME: use transaction
-			taxpayer.Address.Update ();
-			taxpayer.Update ();
-            
+			using (var scope = new TransactionScope()) {
+				taxpayer.Address.Update ();
+				taxpayer.Update ();
+			}
+
 			return RedirectToAction ("Index");
 		}
 
@@ -184,7 +184,7 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Delete(string id)
         {
-            Taxpayer item = Taxpayer.Find(id);
+			Taxpayer item = Taxpayer.Find(id);
             return View(item);
         }
 
@@ -195,10 +195,8 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult DeleteConfirmed(string id)
         {
 			try {
-				using (new SessionScope()) {
-					var item = Taxpayer.Find (id);
-					item.Delete ();
-				}
+				var item = Taxpayer.Find (id);
+				item.Delete ();
 
 				return RedirectToAction ("Index");
 			} catch (GenericADOException) {

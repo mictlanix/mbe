@@ -45,15 +45,12 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ViewResult Details(int id)
         {
-            using (new SessionScope())
-            {
-	            var item = BankAccount.Find(id);
-	            var supplier = item.Suppliers.First();
-	
-	            ViewBag.OwnerId = supplier.Id;
-			
-            	return View(item);
-			}
+            var item = BankAccount.Find(id);
+            var supplier = item.Suppliers.First();
+
+            ViewBag.OwnerId = supplier.Id;
+		
+        	return View(item);
         }
 
         //
@@ -71,28 +68,22 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult Create(BankAccount item)
         {
-            if (ModelState.IsValid)
-            {
-                int owner = int.Parse(Request.Params["OwnerId"]);
+            if (!ModelState.IsValid)
+				return View(item);
 
-	            using (new SessionScope())
-	            {
-	                item.CreateAndFlush();
-	            }
+            int owner = int.Parse(Request.Params["OwnerId"]);
 
-	            System.Diagnostics.Debug.WriteLine("New BankAccount [Id = {0}]", item.Id);
-				
-	            using (new SessionScope())
-	            {
-	                var supplier = Supplier.Find(owner);
-	                supplier.BanksAccounts.Add(item);
-	                supplier.Save();
-	            }
-				
-                return RedirectToAction("Details", "Suppliers", new { id = owner });
+            using (var scope = new TransactionScope()) {
+                item.CreateAndFlush();
+
+            	System.Diagnostics.Debug.WriteLine("New BankAccount [Id = {0}]", item.Id);
+			
+                var supplier = Supplier.Find(owner);
+                supplier.BanksAccounts.Add(item);
+                supplier.Save();
             }
-
-            return View(item);
+			
+            return RedirectToAction("Details", "Suppliers", new { id = owner });
         }
 
         //
@@ -100,15 +91,12 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Edit(int id)
         {
-            using (new SessionScope())
-            {
-	            var item = BankAccount.Find(id);
-	            var supplier = item.Suppliers.First();
-	
-	            ViewBag.OwnerId = supplier.Id;
-			
-            	return View(item);
-			}
+            var item = BankAccount.Find(id);
+            var supplier = item.Suppliers.First();
+
+            ViewBag.OwnerId = supplier.Id;
+		
+        	return View(item);
         }
 
         //
@@ -133,15 +121,12 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Delete(int id)
         {
-            using (new SessionScope())
-            {
-	            var item = BankAccount.Find(id);
-	            var supplier = item.Suppliers.First();
-	
-	            ViewBag.OwnerId = supplier.Id;
-				
-	            return View(item);
-			}
+            var item = BankAccount.Find(id);
+            var supplier = item.Suppliers.First();
+
+            ViewBag.OwnerId = supplier.Id;
+			
+            return View(item);
         }
 
         //
@@ -151,19 +136,17 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             int owner = int.Parse(Request.Params["OwnerId"]);
-			
-            using (new SessionScope())
-            {
+            
+            using (var scope = new TransactionScope()) {
 	            var item = BankAccount.Find(id);
 	            var supplier = item.Suppliers.FirstOrDefault();
 	
-	            if (supplier != null)
-	            {
+	            if (supplier != null) {
 	                supplier.BanksAccounts.Remove(item);
-	                supplier.Save();
+					supplier.Save();
 	            }
-				
-	            item.Delete();
+
+				item.DeleteAndFlush ();
 			}
 			
             return RedirectToAction("Details", "Suppliers", new { id = owner });

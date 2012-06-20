@@ -45,25 +45,22 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ViewResult Details(int id)
         {
-            using (new SessionScope())
+            Contact item = Contact.Find(id);
+            var customer = item.Customers.FirstOrDefault();
+
+            if (customer == null)
             {
-	            Contact item = Contact.Find(id);
-	            var customer = item.Customers.FirstOrDefault();
-	
-	            if (customer == null)
-	            {
-	                var supplier = item.Suppliers.First();
-	                ViewBag.OwnerId = supplier.Id;
-	                ViewBag.OwnerType = "Suppliers";
-	            }
-	            else
-	            {
-	                ViewBag.OwnerId = customer.Id;
-	                ViewBag.OwnerType = "Customers";
-	            }
-				
-	            return View(item);
-			}
+                var supplier = item.Suppliers.First();
+                ViewBag.OwnerId = supplier.Id;
+                ViewBag.OwnerType = "Suppliers";
+            }
+            else
+            {
+                ViewBag.OwnerId = customer.Id;
+                ViewBag.OwnerType = "Customers";
+            }
+			
+            return View(item);
         }
 
         //
@@ -89,42 +86,31 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult Create(Contact item)
         {
-            if (ModelState.IsValid)
-            {
-                int owner = int.Parse(Request.Params["OwnerId"]);
-                string type = Request.Params["OwnerType"];
-				
-	            using (new SessionScope())
-	            {
-	                item.CreateAndFlush();
-	            }
+            if (!ModelState.IsValid)
+            	return View(item);
+            
+            int owner = int.Parse(Request.Params["OwnerId"]);
+            string type = Request.Params["OwnerType"];
+
+			using (var scope = new TransactionScope()) {
+                item.CreateAndFlush();
 
 	            System.Diagnostics.Debug.WriteLine("New Contact [Id = {0}]", item.Id);
 				
-                if (type == "Suppliers")
-                {
-		            using (new SessionScope())
-		            {
-	                    var supplier = Supplier.Find(owner);
-						supplier.Contacts.Add(item);
-	                	supplier.Save();
-		            }
+                if (type == "Suppliers") {
+                    var supplier = Supplier.Find(owner);
+					supplier.Contacts.Add(item);
+                	supplier.Save();
                 }
 
-                if (type == "Customers")
-                {
-		            using (new SessionScope())
-		            {
-	                    var customer = Customer.Find(owner);
-						customer.Contacts.Add(item);
-	                	customer.Save();
-		            }
+                if (type == "Customers") {
+                    var customer = Customer.Find(owner);
+					customer.Contacts.Add(item);
+                	customer.Save();
                 }
+			}
 
-                return RedirectToAction("Details", type, new { id = owner });
-            }
-
-            return View(item);
+            return RedirectToAction("Details", type, new { id = owner });
         }
 
         //
@@ -132,25 +118,22 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Edit(int id)
         {
-            using (new SessionScope())
+        	var item = Contact.Find(id);
+            var customer = item.Customers.FirstOrDefault();
+
+            if (customer == null)
             {
-            	var item = Contact.Find(id);
-	            var customer = item.Customers.FirstOrDefault();
-	
-	            if (customer == null)
-	            {
-	                var supplier = item.Suppliers.First();
-	                ViewBag.OwnerId = supplier.Id;
-	                ViewBag.OwnerType = "Suppliers";
-	            }
-	            else
-	            {
-	                ViewBag.OwnerId = customer.Id;
-	                ViewBag.OwnerType = "Customers";
-	            }
-				
-            	return View(item);
-			}
+                var supplier = item.Suppliers.First();
+                ViewBag.OwnerId = supplier.Id;
+                ViewBag.OwnerType = "Suppliers";
+            }
+            else
+            {
+                ViewBag.OwnerId = customer.Id;
+                ViewBag.OwnerType = "Customers";
+            }
+			
+        	return View(item);
         }
 
         //
@@ -176,25 +159,22 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Delete(int id)
         {
-            using (new SessionScope())
+            var item = Contact.Find(id);
+            var customer = item.Customers.FirstOrDefault();
+
+            if (customer == null)
             {
-	            var item = Contact.Find(id);
-	            var customer = item.Customers.FirstOrDefault();
-	
-	            if (customer == null)
-	            {
-	                var supplier = item.Suppliers.First();
-	                ViewBag.OwnerId = supplier.Id;
-	                ViewBag.OwnerType = "Suppliers";
-	            }
-	            else
-	            {
-	                ViewBag.OwnerId = customer.Id;
-	                ViewBag.OwnerType = "Customers";
-	            }
-	
-	            return View(item);
-			}
+                var supplier = item.Suppliers.First();
+                ViewBag.OwnerId = supplier.Id;
+                ViewBag.OwnerType = "Suppliers";
+            }
+            else
+            {
+                ViewBag.OwnerId = customer.Id;
+                ViewBag.OwnerType = "Customers";
+            }
+
+            return View(item);
         }
 
         //
@@ -206,33 +186,25 @@ namespace Mictlanix.BE.Web.Controllers
             int owner = int.Parse(Request.Params["OwnerId"]);
             string type = Request.Params["OwnerType"];
 			
-            using (new SessionScope())
-            {
+            using (var scope = new TransactionScope()) {
 	            var item = Contact.Find(id);
 	            var customer = item.Customers.FirstOrDefault();
 	            var supplier = item.Suppliers.FirstOrDefault();
 	
-	            if (customer != null)
-	            {
+	            if (customer != null) {
 	                customer.Contacts.Remove(item);
 	                customer.Save();
 	            }
 	
-	            if (supplier != null)
-	            {
+	            if (supplier != null) {
 	                supplier.Contacts.Remove(item);
 	                supplier.Save();
 	            }
 	
-	            item.Delete();
+				item.DeleteAndFlush ();
 			}
 			
             return RedirectToAction("Details", type, new { id = owner });
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-        }
+		}
     }
 }

@@ -38,15 +38,14 @@ using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Helpers;
 
-
 namespace Mictlanix.BE.Web.Controllers
 {
     public class AccountsPayablesController : Controller
     {
         //
         // GET: /Statements/
-
         // TODO: Obtimise DB qry al memory
+
         public ActionResult Index()
         {
             var results = new List<AccountsPayableSummary>();
@@ -106,7 +105,6 @@ namespace Mictlanix.BE.Web.Controllers
             foreach (var item in purchases)
             {
                 var temp = payments.SingleOrDefault(x => x.Supplier.Id == item.Supplier.Id);
-
                 var temp2 = returns.SingleOrDefault(x => x.Supplier.Id == item.Supplier.Id);
 
                 if (temp2 != null)

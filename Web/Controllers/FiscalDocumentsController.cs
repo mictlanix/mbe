@@ -106,9 +106,8 @@ namespace Mictlanix.BE.Web.Controllers
 			// Address info
 			item.BillTo = new Address (item.BillTo);
 			item.IssuedFrom = new Address (item.Issuer.Address);
-			
-			// FIXME: use transaction
-			using (var session = new SessionScope()) {
+
+			using (var scope = new TransactionScope()) {
 				item.BillTo.CreateAndFlush ();
 				item.IssuedFrom.CreateAndFlush ();
 				item.CreateAndFlush ();
@@ -174,11 +173,12 @@ namespace Mictlanix.BE.Web.Controllers
 			// Address info
 			document.BillTo.Copy (item.BillTo);
 			document.IssuedFrom.Copy (document.Issuer.Address);
-			
-			// FIXME: use transaction
-			document.BillTo.Save ();
-			document.IssuedFrom.Save ();
-			document.SaveAndFlush ();
+
+			using (var scope = new TransactionScope()) {
+				document.BillTo.Save ();
+				document.IssuedFrom.Save ();
+				document.SaveAndFlush ();
+			}
 
 			return PartialView ("_MasterView", document);
 		}
@@ -343,7 +343,7 @@ namespace Mictlanix.BE.Web.Controllers
 				item.Price = item.Price / (1m + item.TaxRate);
 			}
 			
-			using (var session = new SessionScope()) {
+			using (var scope = new TransactionScope()) {
 				item.CreateAndFlush ();
 			}
 
