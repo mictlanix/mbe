@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mictlanix.BE.Model", "Model
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mictlanix.BE.Resources", "Resources\Mictlanix.BE.Resources.csproj", "{CBB1BA70-351E-4009-86FB-484810DC6364}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mictlanix.CFDLib", "CFDv2\Mictlanix.CFDLib.csproj", "{63EBACD8-7BB0-480F-81BF-5E0690B27112}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mictlanix.CFDLib", "CFDLib\Mictlanix.CFDLib.csproj", "{63EBACD8-7BB0-480F-81BF-5E0690B27112}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
