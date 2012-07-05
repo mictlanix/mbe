@@ -18,10 +18,15 @@
 	    <div style="margin:10px 250px 10px 10px">
 	        <h1>@ViewBag.StoreName</h1>
 	        <h4 class="black">
-	        	@ViewBag.TaxpayerName<br/>
+	        	@if (!string.IsNullOrEmpty (ViewBag.TaxpayerName)) {
+	        		@ViewBag.TaxpayerName<br/>
+	        	}
 	        	@ViewBag.Taxpayer
 	        </h4>
 	        <h4>
+	        	@if (string.IsNullOrEmpty (ViewBag.TaxpayerName)) {
+	        		<br/><b>@Resources.IssuedAt</b><br/>
+	        	}
 	        	@ViewBag.Address.StreetAndNumber<br/>
 	        	@ViewBag.Address.Neighborhood,
 	        	@ViewBag.Address.Locality,

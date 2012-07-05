@@ -36,7 +36,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Mictlanix.BE.Model
 {
-    [ActiveRecord("sales_order")]
+    [ActiveRecord("sales_order", Lazy = true)]
     public class SalesOrder : ActiveRecordLinqBase<SalesOrder>
     {
         IList<SalesOrderDetail> details = new List<SalesOrderDetail>();
@@ -45,8 +45,26 @@ namespace Mictlanix.BE.Model
         [PrimaryKey(PrimaryKeyType.Identity, "sales_order_id")]
         [Display(Name = "SalesOrderId", ResourceType = typeof(Resources))]
         [DisplayFormat(DataFormatString="{0:000000}")]
-        public int Id { get; set; }
+        public virtual int Id { get; set; }
 		
+        [Property("creation_time")]
+		[DataType(DataType.DateTime)]
+		[Display(Name = "CreationTime", ResourceType = typeof(Resources))]
+		public virtual DateTime CreationTime { get; set; }
+
+        [Property("modification_time")]
+		[DataType(DataType.DateTime)]
+		[Display(Name = "ModificationTime", ResourceType = typeof(Resources))]
+		public virtual DateTime ModificationTime { get; set; }
+
+        [BelongsTo("creator", Lazy = FetchWhen.OnInvoke)]
+        [Display(Name = "Creator", ResourceType = typeof(Resources))]
+        public virtual Employee Creator { get; set; }
+
+        [BelongsTo("updater", Lazy = FetchWhen.OnInvoke)]
+        [Display(Name = "Updater", ResourceType = typeof(Resources))]
+        public virtual Employee Updater { get; set; }
+
 		[BelongsTo("store")]
 		[Display(Name = "Store", ResourceType = typeof(Resources))]
 		public virtual Store Store { get; set; }
@@ -54,21 +72,21 @@ namespace Mictlanix.BE.Model
 		[Property("serial")]
 		[Display(Name = "Serial", ResourceType = typeof(Resources))]
 		[DisplayFormat(DataFormatString="{0:000000}")]
-		public int Serial { get; set; }
+		public virtual int Serial { get; set; }
 
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "Customer", ResourceType = typeof(Resources))]
         [UIHint("CustomerSelector")]
-        public int CustomerId { get; set; }
+        public virtual int CustomerId { get; set; }
 
-        [BelongsTo("customer")]
+        [BelongsTo("customer", NotNull = true, Fetch = FetchEnum.Join)]
         [Display(Name = "Customer", ResourceType = typeof(Resources))]
         public virtual Customer Customer { get; set; }
 
         [Property]
         [DataType(DataType.DateTime)]
         [Display(Name = "Date", ResourceType = typeof(Resources))]
-        public DateTime Date { get; set; }
+        public virtual DateTime Date { get; set; }
 
         [BelongsTo("salesperson")]
         [Display(Name = "SalesPerson", ResourceType = typeof(Resources))]
@@ -80,34 +98,34 @@ namespace Mictlanix.BE.Model
 
         [Property("credit")]
         [Display(Name = "Credit", ResourceType = typeof(Resources))]
-        public bool IsCredit { get; set; }
+        public virtual bool IsCredit { get; set; }
 
         [Property("due_date")]
         [DataType(DataType.Date)]
         [Display(Name = "DueDate", ResourceType = typeof(Resources))]
-        public DateTime DueDate { get; set; }
+        public virtual DateTime DueDate { get; set; }
 
         [Property("completed")]
         [Display(Name = "Completed", ResourceType = typeof(Resources))]
-        public bool IsCompleted { get; set; }
+        public virtual bool IsCompleted { get; set; }
 
         [Property("cancelled")]
         [Display(Name = "Cancelled", ResourceType = typeof(Resources))]
-        public bool IsCancelled { get; set; }
+        public virtual bool IsCancelled { get; set; }
 
         [Property("paid")]
         [Display(Name = "Paid", ResourceType = typeof(Resources))]
-        public bool IsPaid { get; set; }
+        public virtual bool IsPaid { get; set; }
 
         [HasMany(typeof(SalesOrderDetail), Table = "sales_order_detail", ColumnKey = "sales_order", Lazy = true)]
-        public IList<SalesOrderDetail> Details
+        public virtual IList<SalesOrderDetail> Details
         {
             get { return details; }
             set { details = value; }
         }
 
         [HasMany(typeof(CustomerPayment), Table = "customer_payment", ColumnKey = "sales_order", Lazy = true)]
-        public IList<CustomerPayment> Payments
+        public virtual IList<CustomerPayment> Payments
         {
             get { return payments; }
             set { payments = value; }
@@ -115,35 +133,35 @@ namespace Mictlanix.BE.Model
         
         [DataType(DataType.Currency)]
         [Display(Name = "Subtotal", ResourceType = typeof(Resources))]
-        public decimal Subtotal
+        public virtual decimal Subtotal
         {
             get { return Details.Sum(x => x.Subtotal); }
         }
 
         [DataType(DataType.Currency)]
         [Display(Name = "Taxes", ResourceType = typeof(Resources))]
-        public decimal Taxes
+        public virtual decimal Taxes
         {
             get { return Total - Subtotal; }
         }
 
         [DataType(DataType.Currency)]
         [Display(Name = "Total", ResourceType = typeof(Resources))]
-        public decimal Total
+        public virtual decimal Total
         {
             get { return Details.Sum(x => x.Total); }
         }
 
         [DataType(DataType.Currency)]
         [Display(Name = "Paid", ResourceType = typeof(Resources))]
-        public decimal Paid
+        public virtual decimal Paid
         {
             get { return Payments.Sum(x => x.Amount + x.Change.GetValueOrDefault()); }
         }
 
         [DataType(DataType.Currency)]
         [Display(Name = "Balance", ResourceType = typeof(Resources))]
-        public decimal Balance
+        public virtual decimal Balance
         {
             get { return Paid - Total; }
         }

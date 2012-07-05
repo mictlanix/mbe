@@ -41,23 +41,10 @@ namespace Mictlanix.BE.Web.Controllers
     public class EmployeesController : Controller
     {
 
-        // AJAX
-        // GET: /Categories/GetSuggestions
-
-        public JsonResult GetSuggestions(string pattern)
-        {
-            var qry = from x in Employee.Queryable
-                      where x.FirstName.Contains(pattern) ||
-                            x.LastName.Contains(pattern)
-                      select new { id = x.Id, name = x.FirstName + " " + x.LastName };
-
-            return Json(qry.Take(15).ToList(), JsonRequestBehavior.AllowGet);
-        }
-
         //
         // GET: /Employee/
 
-        public ViewResult Index()
+        public ViewResult Index ()
         {
             var qry = from x in Employee.Queryable
                       select x;
@@ -68,10 +55,10 @@ namespace Mictlanix.BE.Web.Controllers
         //
         // GET: /Employee/Details/5
 
-        public ViewResult Details(int id)
+        public ViewResult Details (int id)
         {
-            Employee employee = Employee.Find(id);
-            return View(employee);
+            var item = Employee.Find(id);
+            return View (item);
         }
 
         //
@@ -86,47 +73,50 @@ namespace Mictlanix.BE.Web.Controllers
         // POST: /Employee/Create
 
         [HttpPost]
-        public ActionResult Create(Employee employee)
+        public ActionResult Create (Employee item)
         {
-            if (ModelState.IsValid)
-            {
-                employee.Create();
-                return RedirectToAction("Index");
-            }
+            if (!ModelState.IsValid)
+            	return View (item);
 
-            return View(employee);
+			using (var scope = new TransactionScope ()) {
+            	item.CreateAndFlush ();
+			}
+
+			return RedirectToAction ("Index");
         }
 
         //
         // GET: /Warehouses/Edit/5
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit (int id)
         {
-            Employee employee = Employee.Find(id);
-            return View(employee);
+            var item = Employee.Find (id);
+            return View (item);
         }
 
         //
         // POST: /Employee/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(Employee employee)
+        public ActionResult Edit(Employee item)
         {
-            if (ModelState.IsValid)
-            {
-                employee.Update();
-                return RedirectToAction("Index");
-            }
-            return View(employee);
+            if (!ModelState.IsValid)
+            	return View (item);
+            
+			using (var scope = new TransactionScope ()) {
+            	item.UpdateAndFlush ();
+			}
+
+            return RedirectToAction ("Index");
         }
 
         //
         // GET: /Employee/Delete/5
 
-        public ActionResult Delete(int id)
+        public ActionResult Delete (int id)
         {
-            Employee employee = Employee.Find(id);
-            return View(employee);
+            var item = Employee.Find (id);
+            return View (item);
         }
 
         //
@@ -147,9 +137,17 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 		}
 
-        protected override void Dispose(bool disposing)
+        // AJAX
+        // GET: /Employees/GetSuggestions
+
+        public JsonResult GetSuggestions (string pattern)
         {
-            base.Dispose(disposing);
+            var qry = from x in Employee.Queryable
+                      where x.FirstName.Contains(pattern) ||
+                            x.LastName.Contains(pattern)
+                      select new { id = x.Id, name = x.FirstName + " " + x.LastName };
+
+            return Json(qry.Take(15).ToList(), JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -120,6 +120,7 @@ p.multiline {
 #digital-signature {
   margin-top:20px;
   padding:2px;
+  font-family:"Lucida Console", Monaco, monospace;
   font-size:8px;
   background:silver;
   word-wrap:break-word;

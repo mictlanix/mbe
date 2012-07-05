@@ -66,10 +66,18 @@ namespace Mictlanix.BE.Model
         [BelongsTo("issuer")]
 		[Display(Name = "Issuer", ResourceType = typeof(Resources))]
 		public virtual Taxpayer Issuer { get; set; }
-		
+
+		[Property("issued_location")]
+		[Display(Name = "IssuedLocation", ResourceType = typeof(Resources))]
+		public virtual string IssuedLocation { get; set; }
+
 		[BelongsTo("issued_from", Lazy = FetchWhen.OnInvoke)]
-		[Display(Name = "Issuer", ResourceType = typeof(Resources))]
+		[Display(Name = "IssuedFrom", ResourceType = typeof(Resources))]
 		public virtual Address IssuedFrom { get; set; }
+		
+		[BelongsTo("issued_at", Lazy = FetchWhen.OnInvoke)]
+		[Display(Name = "IssuedAt", ResourceType = typeof(Resources))]
+		public virtual Address IssuedAt { get; set; }
         
 		[Property]
 		[Display(Name = "IssueDate", ResourceType = typeof(Resources))]
@@ -117,7 +125,17 @@ namespace Mictlanix.BE.Model
         [BelongsTo("bill_to", Lazy = FetchWhen.OnInvoke)]
         [Display(Name = "BillTo", ResourceType = typeof(Resources))]
         public virtual Address BillTo { get; set; }
+
+        [Property("payment_method")]
+        [Display(Name = "PaymentMethod", ResourceType = typeof(Resources))]
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+        public virtual PaymentMethod PaymentMethod { get; set; }
 		
+        [Property("payment_reference")]
+		[Display(Name = "PaymentReference", ResourceType = typeof(Resources))]
+		[StringLength(25, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public virtual string PaymentReference { get; set; }
+
 		[Property()]
 		[Display(Name = "Reference", ResourceType = typeof(Resources))]
 		[StringLength(25, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
@@ -134,6 +152,9 @@ namespace Mictlanix.BE.Model
         [Property("cancellation_date")]
 		[Display(Name = "CancellationDate", ResourceType = typeof(Resources))]		
 		public virtual DateTime? CancellationDate { get; set; }
+		
+		[Property()]
+		public virtual decimal Version { get; set; }
 
         [HasMany(typeof(FiscalDocumentDetail), Table = "fiscal_document_detail", ColumnKey = "document", Lazy = true)]
 		public virtual IList<FiscalDocumentDetail> Details {

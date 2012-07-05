@@ -1,6 +1,6 @@
 ﻿@using Mictlanix.BE
-@using Mictlanix.BE.Model
-@using Mictlanix.BE.Web.Models
+@using Mictlanix.BE.Model;
+@using Mictlanix.BE.Web.Helpers;
 @model FiscalDocument
 
 @{
@@ -20,7 +20,7 @@
         <ul id="items" class="list-items">
         @foreach (var item in Model.Details)
         {
-            @Html.Partial("_DetailEditView", item) 
+            @Html.Partial("_DetailEditView", item)
         }
         </ul>
     </div>
@@ -51,7 +51,7 @@
 </div>
 <script type="text/javascript">
     function updateTotals(){
-        $.get("/FiscalDocuments/GetTotals/" + @Model.Id, function (data) {
+    	$.get("/FiscalDocuments/GetTotals", { "id": @Model.Id }, function (data) {
             $("#totals-section").html(data);
         });
     }

@@ -93,18 +93,21 @@ namespace Mictlanix.BE.Web.Controllers
         // POST: /Customer/Create
 
         [HttpPost]
-        public ActionResult Create(Customer customer)
+        public ActionResult Create(Customer item)
         {
-            if (ModelState.IsValid)
-            {
-                PriceList priceList = PriceList.Find(customer.PriceListId);
-                customer.PriceList = priceList;
+            if (!ModelState.IsValid)
+            	return View (item);
+            
+            PriceList priceList = PriceList.Find(item.PriceListId);
+            item.PriceList = priceList;
 
-                customer.Save();
-                return RedirectToAction("Index");
-            }
+			using (var scope = new TransactionScope()) {
+            	item.CreateAndFlush ();
+			}
+            
+            return RedirectToAction("Index");
 
-            return View(customer);
+
         }
 
         //

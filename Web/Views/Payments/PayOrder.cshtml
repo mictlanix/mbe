@@ -32,14 +32,19 @@
         </div>
         <div class="editor-field">
             <ul class="selection-options">
-            @foreach (var item in Enum.GetValues(typeof(PaymentMethod)))
-            {
+            @foreach (var item in new []{ PaymentMethod.Cash,
+            							  PaymentMethod.DebitCard,
+            							  PaymentMethod.CreditCard,
+            							  PaymentMethod.Check,
+            							  PaymentMethod.BankDeposit,
+            							  PaymentMethod.WireTransfer,
+            							  PaymentMethod.GovernmentFunding }) {
                 <li>
 	                <label>
 	                    @Html.RadioButtonFor(model => new CustomerPayment().Method, (int)item)
 	                    <span class="option-desc">
 		                    <span class="icon dollar">@Resources.Pay</span>
-		                    <span class="text">@(((PaymentMethod)item).GetDisplayName())</span>
+		                    <span class="text">@item.GetDisplayName()</span>
 	                    </span>
 	                </label>
 	            </li>

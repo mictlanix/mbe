@@ -80,7 +80,7 @@ namespace Mictlanix.BE.Web.Controllers
 			
                 var supplier = Supplier.Find(owner);
                 supplier.BanksAccounts.Add(item);
-                supplier.Save();
+                supplier.Update ();
             }
 			
             return RedirectToAction("Details", "Suppliers", new { id = owner });
@@ -108,8 +108,10 @@ namespace Mictlanix.BE.Web.Controllers
             if (ModelState.IsValid)
             {
                 int owner = int.Parse(Request.Params["OwnerId"]);
-				
-                item.Save();
+
+				using (var scope = new TransactionScope()) {
+					item.Update ();
+				}
 
                 return RedirectToAction("Details", "Suppliers", new { id = owner });
             }
@@ -143,7 +145,7 @@ namespace Mictlanix.BE.Web.Controllers
 	
 	            if (supplier != null) {
 	                supplier.BanksAccounts.Remove(item);
-					supplier.Save();
+					supplier.Update ();
 	            }
 
 				item.DeleteAndFlush ();

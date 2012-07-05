@@ -34,7 +34,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Text;
 using Castle.ActiveRecord;
-using NHibernate.Exceptions;
+using NHibernate;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Helpers;
 
@@ -96,6 +96,7 @@ namespace Mictlanix.BE.Web.Controllers
 			
 			item.Address.TaxpayerId = item.Id;
 			item.Address.TaxpayerName = item.Name;
+			item.Address.TaxpayerRegime = item.Regime;
 			
 			foreach (var file in files) {
 				if (file != null && file.ContentLength > 0) {
@@ -111,7 +112,7 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 			
 			using (var scope = new TransactionScope()) {
-				item.Address.CreateAndFlush ();
+				item.Address.Create ();
 				item.CreateAndFlush ();
 			}
 			
@@ -150,11 +151,13 @@ namespace Mictlanix.BE.Web.Controllers
 			
 			item.Address.TaxpayerId = item.Id;
 			item.Address.TaxpayerName = item.Name;
+			item.Address.TaxpayerRegime = item.Regime;
 			
 			var taxpayer = Taxpayer.Find (item.Id);
 			
 			// update info
 			taxpayer.Name = item.Name;
+			taxpayer.Regime = item.Regime;
 			taxpayer.CertificateNumber = item.CertificateNumber;
 			taxpayer.Address.Copy (item.Address);
 			
@@ -173,7 +176,7 @@ namespace Mictlanix.BE.Web.Controllers
 			
 			using (var scope = new TransactionScope()) {
 				taxpayer.Address.Update ();
-				taxpayer.Update ();
+				taxpayer.UpdateAndFlush ();
 			}
 
 			return RedirectToAction ("Index");
@@ -184,8 +187,7 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Delete(string id)
         {
-			Taxpayer item = Taxpayer.Find(id);
-            return View(item);
+            return View (Taxpayer.Find (id));
         }
 
         //
@@ -195,11 +197,13 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult DeleteConfirmed(string id)
         {
 			try {
-				var item = Taxpayer.Find (id);
-				item.Delete ();
+				using (var scope = new TransactionScope()) {
+					var item = Taxpayer.Find (id);
+					item.DeleteAndFlush ();
+				}
 
 				return RedirectToAction ("Index");
-			} catch (GenericADOException) {
+			} catch (TransactionException) {
 				return View ("DeleteUnsuccessful");
 			}
         }

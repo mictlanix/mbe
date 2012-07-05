@@ -99,13 +99,13 @@ namespace Mictlanix.BE.Web.Controllers
                 if (type == "Suppliers") {
 					var supplier = Supplier.Find(owner);
 					supplier.Addresses.Add(item);
-					supplier.Save();
+					supplier.Update ();
                 }
 
                 if (type == "Customers") {
                     var customer = Customer.Find(owner);
 					customer.Addresses.Add(item);
-					customer.Save();
+					customer.Update ();
                 }
             }
 
@@ -146,7 +146,9 @@ namespace Mictlanix.BE.Web.Controllers
                 int owner = int.Parse(Request.Params["OwnerId"]);
                 string type = Request.Params["OwnerType"];
 
-                address.Save();
+				using (var scope = new TransactionScope()) {
+					address.Update ();
+				}
 
                 return RedirectToAction("Details", type, new { id = owner });
             }
@@ -193,16 +195,16 @@ namespace Mictlanix.BE.Web.Controllers
 	            if (customer != null)
 	            {
 					customer.Addresses.Remove(item);
-					customer.Save();
+					customer.Update ();
 	            }
 				
 	            if (supplier != null)
 	            {
 					supplier.Addresses.Remove(item);
-					supplier.Save();
+					supplier.Update ();
 	            }
 				
-				item.DeleteAndFlush();
+				item.DeleteAndFlush ();
 			}
 			
             return RedirectToAction("Details", type, new { id = owner });

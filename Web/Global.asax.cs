@@ -61,14 +61,14 @@ namespace Mictlanix.BE.Web
 		
         protected void Application_BeginRequest (object sender, EventArgs e)
 		{
-			HttpContext.Current.Items.Add ("ar.sessionscope", new SessionScope ());
+			HttpContext.Current.Items.Add ("ar.sessionscope", new SessionScope (FlushAction.Never));
 		}
 		
 		protected void Application_EndRequest (Object sender, EventArgs e)
 		{
 			try {
 				SessionScope scope = HttpContext.Current.Items ["ar.sessionscope"] as SessionScope;
-                 
+
 				if (scope != null) {
 					scope.Dispose ();
 				}
