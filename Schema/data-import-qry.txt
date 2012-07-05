@@ -82,6 +82,20 @@ VALUES ('XXXXXXXXXXXX','XXX', 'Carretera Acueducto', '', '', 'Zumpango', 'Méxic
 
 UPDATE store SET address = LAST_INSERT_ID() WHERE store_id = 4;
 
+UPDATE sales_order
+SET creator = salesperson,
+    updater = salesperson,
+    creation_time = date,
+    modification_time = date;
 
+UPDATE customer_payment
+SET creator = (SELECT cashier FROM cash_session WHERE cash_session_id = cash_session),
+    updater = (SELECT cashier FROM cash_session WHERE cash_session_id = cash_session),
+    creation_time = date,
+    modification_time = date;
+
+UPDATE taxpayer
+SET regime = 'Régimen de las Personas Físicas con Actividades Empresariales y Profesionales'
+WHERE taxpayer_id = 'RAGM600610LJ2';
 
 

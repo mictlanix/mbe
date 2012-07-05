@@ -238,7 +238,7 @@ namespace Mictlanix.BE.Web.Helpers
                     unidad = detail.UnitOfMeasurement,
                     noIdentificacion = detail.ProductCode,
                     descripcion = detail.ProductName,
-                    valorUnitario = detail.Price,
+                    valorUnitario = Math.Round (detail.Price, 6, MidpointRounding.AwayFromZero),
                     importe = detail.Total
                 };
 			}

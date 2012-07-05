@@ -19,9 +19,8 @@
         @Html.LabelFor(x => x.Batch):
         @Html.DisplayFor(x => x.Batch)
     </div>
-
-@if(Model.IsCompleted)
-{
+	
+@if(Model.IsCompleted) {
     <div class="display-label right floating">
         @Html.LabelFor(x => x.Serial):
         @Html.DisplayFor(x => x.Serial)
@@ -32,6 +31,19 @@
     </div>
 }
 
+    <div class="display-label right floating">
+        @Html.LabelFor(x => x.PaymentMethod):
+        @Model.PaymentMethod.GetDisplayName()
+    </div>
+    
+@if (Model.PaymentMethod != PaymentMethod.Unidentified &&
+ 	 Model.PaymentMethod != PaymentMethod.Cash) {
+    <div class="display-label right floating">
+        @Html.LabelFor(x => x.PaymentReference):
+        @Html.DisplayFor(x => x.PaymentReference)
+    </div>
+}
+	
     <div class="display-label">
         @Html.LabelFor(x => x.IssuedFrom)<br/>
         @Html.DisplayFor(x => x.IssuedFrom.TaxpayerId)<br/>
