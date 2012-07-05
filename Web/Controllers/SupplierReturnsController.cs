@@ -102,16 +102,18 @@ namespace Mictlanix.BE.Web.Controllers
         //
         // GET: /Returns/Details/5
 
-        public ActionResult EditSupplierReturn(int id)
+        public ActionResult EditSupplierReturn (int id)
         {
-            SupplierReturn item = SupplierReturn.Find(id);
+            var item = SupplierReturn.Find(id);
             
             item.ModificationTime = DateTime.Now;
-            item.Updater = SecurityHelpers.GetUser(User.Identity.Name).Employee;
+            item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			
+			using (var scope = new TransactionScope ()) {
+				item.UpdateAndFlush ();
+			}
 
-            item.Save();
-
-            return View(item);
+            return View (item);
         }
 
         //
@@ -159,30 +161,24 @@ namespace Mictlanix.BE.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult EditDetailQuantity(int id, decimal quantity)
+        public JsonResult EditDetailQuantity (int id, decimal quantity)
         {
-            SupplierReturnDetail detail = SupplierReturnDetail.Find(id);
+            SupplierReturnDetail detail = SupplierReturnDetail.Find (id);
+            var sum = GetReturnableQuantity (detail.PurchaseOrderDetail.Id);
 
-            var sum = GetReturnableQuantity(detail.PurchaseOrderDetail.Id);
+			detail.Quantity = (quantity > 0 && quantity <= sum) ? quantity : sum;
 
-            if (quantity > 0 && quantity <= sum)
-            {
-                detail.Quantity = quantity;
-                detail.Save();
-                return Json(new { id = id, quantity = detail.Quantity, total = detail.Total.ToString("c") });
-            }
-            else
-            {
-                detail.Quantity = sum;
-                detail.Save();
-                return Json(new { id = id, quantity = sum, total = detail.Total.ToString("c") });
-            }
+			using (var scope = new TransactionScope ()) {
+				detail.UpdateAndFlush ();
+			}
+
+            return Json (new { id = id, quantity = detail.Quantity, total = detail.Total.ToString ("c") });
         }
 
-        public ActionResult GetTotals(int id)
+        public ActionResult GetTotals (int id)
         {
-            var order = SupplierReturn.Find(id);
-            return PartialView("_Totals", order);
+            var item = SupplierReturn.Find (id);
+            return PartialView ("_Totals", item);
         }
 
         [HttpPost]
@@ -234,7 +230,7 @@ namespace Mictlanix.BE.Web.Controllers
 	            }
 
 	            item.IsCompleted = true;
-	            item.Save();
+	            item.UpdateAndFlush ();
             }
 
             return RedirectToAction("Index");
@@ -245,12 +241,13 @@ namespace Mictlanix.BE.Web.Controllers
 		{
 			var item = SupplierReturn.Find (id);
 
+			item.IsCancelled = true;
+
 			using (var scope = new TransactionScope()) {
-				item.IsCancelled = true;
-				item.Save ();
+				item.UpdateAndFlush ();
 			}
 
-            return RedirectToAction("Index");
+            return RedirectToAction ("Index");
         }
 
         decimal GetReturnableQuantity(int id)

@@ -31,6 +31,14 @@
             @Html.ValidationMessageFor(x => x.Name)
         </div>
 
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Regime)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Regime)
+            @Html.ValidationMessageFor(model => model.Regime)
+        </div>
+        
 		@Html.EditorFor(x => x.Address)
 		@Html.HiddenFor(x => x.Address.TaxpayerId)
 		@Html.HiddenFor(x => x.Address.TaxpayerName)

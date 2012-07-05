@@ -63,6 +63,11 @@ namespace Mictlanix.BE.Model
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
 		[StringLength(250, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
 		public virtual string TaxpayerName { get; set; }
+		
+        [Property("taxpayer_regime")]
+		[Display(Name = "TaxRegime", ResourceType = typeof(Resources))]
+		[StringLength(250, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public virtual string TaxpayerRegime { get; set; }
 
         [Property]
 		[Display(Name = "Street", ResourceType = typeof(Resources))]

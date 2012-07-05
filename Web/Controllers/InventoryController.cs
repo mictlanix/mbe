@@ -127,14 +127,16 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult EditReceipt(InventoryReceipt item)
         {
-            var movement = InventoryReceipt.Find(item.Id);
+            var movement = InventoryReceipt.Find (item.Id);
 
             movement.Warehouse = Warehouse.Find(item.WarehouseId);
             movement.Updater = SecurityHelpers.GetUser(User.Identity.Name).Employee;
             movement.ModificationTime = DateTime.Now;
             movement.Comment = item.Comment;
 
-            movement.Save();
+			using (var scope = new TransactionScope()) {
+            	movement.UpdateAndFlush ();
+			}
 
             return PartialView("_ReceiptInfo", movement);
         }
@@ -174,10 +176,12 @@ namespace Mictlanix.BE.Web.Controllers
         {
             InventoryReceiptDetail detail = InventoryReceiptDetail.Find(id);
 
-            if (quantity > 0)
-            {
+            if (quantity > 0) {
                 detail.Quantity = quantity;
-                detail.Save();
+
+				using (var scope = new TransactionScope()) {
+	            	detail.UpdateAndFlush ();
+				}
             }
 
             return Json(new { id = id, quantity = detail.Quantity });
@@ -206,12 +210,15 @@ namespace Mictlanix.BE.Web.Controllers
         // POST: /Inventory/ConfirmReceipt/{id}
 
         [HttpPost]
-        public ActionResult ConfirmReceipt(int id)
+        public ActionResult ConfirmReceipt (int id)
         {
-            InventoryReceipt item = InventoryReceipt.Find(id);
+            InventoryReceipt item = InventoryReceipt.Find (id);
 
             item.IsCompleted = true;
-            item.Save();
+
+			using (var scope = new TransactionScope()) {
+            	item.UpdateAndFlush ();
+			}
 
             return RedirectToAction("Receipts");
         }
@@ -220,12 +227,15 @@ namespace Mictlanix.BE.Web.Controllers
         // POST: /Inventory/CancelReceipt/{id}
 
         [HttpPost]
-        public ActionResult CancelReceipt(int id)
+        public ActionResult CancelReceipt (int id)
         {
             InventoryReceipt item = InventoryReceipt.Find(id);
 
             item.IsCancelled = true;
-            item.Save();
+
+			using (var scope = new TransactionScope()) {
+            	item.UpdateAndFlush ();
+			}
 
             return RedirectToAction("Receipts");
         }
@@ -327,7 +337,9 @@ namespace Mictlanix.BE.Web.Controllers
             movement.ModificationTime = DateTime.Now;
             movement.Comment = item.Comment;
 
-            movement.Save();
+			using (var scope = new TransactionScope()) {
+            	movement.UpdateAndFlush ();
+			}
 
             return PartialView("_IssueInfo", movement);
         }
@@ -340,8 +352,7 @@ namespace Mictlanix.BE.Web.Controllers
         {
             var p = Product.Find(product);
 
-            var item = new InventoryIssueDetail
-            {
+            var item = new InventoryIssueDetail {
                 Issue = InventoryIssue.Find(movement),
                 Product = p,
                 ProductCode = p.Code,
@@ -366,10 +377,12 @@ namespace Mictlanix.BE.Web.Controllers
         {
             InventoryIssueDetail detail = InventoryIssueDetail.Find(id);
 
-            if (quantity > 0)
-            {
+            if (quantity > 0) {
                 detail.Quantity = quantity;
-                detail.Save();
+
+				using (var scope = new TransactionScope()) {
+	            	detail.UpdateAndFlush ();
+				}
             }
 
             return Json(new { id = id, quantity = detail.Quantity });
@@ -390,7 +403,11 @@ namespace Mictlanix.BE.Web.Controllers
         public JsonResult RemoveIssueDetail(int id)
         {
             InventoryIssueDetail item = InventoryIssueDetail.Find(id);
-            item.Delete();
+
+			using (var scope = new TransactionScope()) {
+            	item.DeleteAndFlush ();
+			}
+
             return Json(new { id = id, result = true });
         }
 
@@ -403,7 +420,10 @@ namespace Mictlanix.BE.Web.Controllers
             InventoryIssue item = InventoryIssue.Find(id);
 
             item.IsCompleted = true;
-            item.Save();
+
+			using (var scope = new TransactionScope()) {
+            	item.UpdateAndFlush ();
+			}
 
             return RedirectToAction("Issues");
         }
@@ -412,12 +432,15 @@ namespace Mictlanix.BE.Web.Controllers
         // POST: /Inventory/CancelIssue/{id}
 
         [HttpPost]
-        public ActionResult CancelIssue(int id)
+        public ActionResult CancelIssue (int id)
         {
             InventoryIssue item = InventoryIssue.Find(id);
 
             item.IsCancelled = true;
-            item.Save();
+
+			using (var scope = new TransactionScope()) {
+            	item.UpdateAndFlush ();
+			}
 
             return RedirectToAction("Issues");
         }
@@ -536,7 +559,9 @@ namespace Mictlanix.BE.Web.Controllers
             movement.ModificationTime = DateTime.Now;
             movement.Comment = item.Comment;
 
-            movement.Save();
+			using (var scope = new TransactionScope()) {
+            	movement.UpdateAndFlush ();
+			}
 
             return PartialView("_TransferInfo", movement);
         }
@@ -578,7 +603,10 @@ namespace Mictlanix.BE.Web.Controllers
             if (quantity > 0)
             {
                 detail.Quantity = quantity;
-                detail.Save();
+
+				using (var scope = new TransactionScope()) {
+	            	detail.UpdateAndFlush ();
+				}
             }
 
             return Json(new { id = id, quantity = detail.Quantity });
@@ -599,7 +627,11 @@ namespace Mictlanix.BE.Web.Controllers
         public JsonResult RemoveTransferDetail(int id)
         {
             InventoryTransferDetail item = InventoryTransferDetail.Find(id);
-            item.Delete();
+
+			using (var scope = new TransactionScope()) {
+            	item.DeleteAndFlush ();
+			}
+
             return Json(new { id = id, result = true });
         }
 
@@ -612,7 +644,10 @@ namespace Mictlanix.BE.Web.Controllers
             InventoryTransfer item = InventoryTransfer.Find(id);
 
             item.IsCompleted = true;
-            item.Save();
+
+			using (var scope = new TransactionScope()) {
+            	item.UpdateAndFlush ();
+			}
 
             return RedirectToAction("Transfers");
         }
@@ -621,12 +656,15 @@ namespace Mictlanix.BE.Web.Controllers
         // POST: /Inventory/CancelTransfer/{id}
 
         [HttpPost]
-        public ActionResult CancelTransfer(int id)
+        public ActionResult CancelTransfer (int id)
         {
             InventoryTransfer item = InventoryTransfer.Find(id);
 
             item.IsCancelled = true;
-            item.Save();
+
+			using (var scope = new TransactionScope()) {
+            	item.UpdateAndFlush ();
+			}
 
             return RedirectToAction("Transfers");
         }

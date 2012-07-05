@@ -33,6 +33,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
+using Castle.ActiveRecord;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Helpers;
@@ -78,8 +79,11 @@ namespace Mictlanix.BE.Web.Controllers
                 return false;
 
             user.Password = SecurityHelpers.SHA1(newPassword);
-            user.Save();
-            
+			
+			using (var scope = new TransactionScope()) {
+				user.Update ();
+			}
+        
             return true;
         }
 

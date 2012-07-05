@@ -33,6 +33,7 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Castle.ActiveRecord;
 using Mictlanix.BE.Model;
 
 namespace Mictlanix.BE.Web.Controllers
@@ -71,40 +72,45 @@ namespace Mictlanix.BE.Web.Controllers
         // POST: /PointSale/Create
 
         [HttpPost]
-        public ActionResult Create(PointOfSale pointSale)
+        public ActionResult Create(PointOfSale item)
         {
-            if (ModelState.IsValid)
-            {
-                pointSale.Store = Store.Find(pointSale.StoreId);
-                pointSale.Save();
-                return RedirectToAction("Index");
-            }
-
-            return View(pointSale);
+            if (!ModelState.IsValid)
+            	return View(item);
+            
+            item.Store = Store.Find(item.StoreId);
+            
+			using (var scope = new TransactionScope ()) {
+            	item.CreateAndFlush ();
+			}
+			
+            return RedirectToAction ("Index");
         }
 
         //
         // GET: /Warehouses/Edit/5
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit (int id)
         {
-            PointOfSale pointSale = PointOfSale.Find(id);
-            return View(pointSale);
+            PointOfSale item = PointOfSale.Find (id);
+            return View (item);
         }
 
         //
         // POST: /PointSale/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(PointOfSale pointSale)
+        public ActionResult Edit (PointOfSale item)
         {
-            if (ModelState.IsValid)
-            {
-                pointSale.Store = PointOfSale.Find(pointSale.Id).Store;
-                pointSale.Save();
-                return RedirectToAction("Index");
-            }
-            return View(pointSale);
+            if (!ModelState.IsValid)
+            	return View (item);
+            
+            item.Store = PointOfSale.Find (item.Id).Store;
+            
+			using (var scope = new TransactionScope ()) {
+            	item.UpdateAndFlush ();
+			}
+
+            return RedirectToAction ("Index");
         }
 
         //
@@ -112,8 +118,8 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Delete(int id)
         {
-            PointOfSale pointSale = PointOfSale.Find(id);
-            return View(pointSale);
+            PointOfSale item = PointOfSale.Find (id);
+            return View (item);
         }
 
         //
@@ -122,8 +128,12 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed (int id)
 		{
-			PointOfSale pointSale = PointOfSale.Find (id);
-			pointSale.Delete ();
+			PointOfSale item = PointOfSale.Find (id);
+
+			using (var scope = new TransactionScope ()) {
+            	item.DeleteAndFlush ();
+			}
+
 			return RedirectToAction ("Index");
 		}
 		

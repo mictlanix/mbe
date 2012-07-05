@@ -41,6 +41,24 @@ namespace Mictlanix.BE.Model
         [PrimaryKey(PrimaryKeyType.Identity, "customer_payment_id")]
         public int Id { get; set; }
 		
+        [Property("creation_time")]
+		[DataType(DataType.DateTime)]
+		[Display(Name = "CreationTime", ResourceType = typeof(Resources))]
+		public virtual DateTime CreationTime { get; set; }
+
+        [Property("modification_time")]
+		[DataType(DataType.DateTime)]
+		[Display(Name = "ModificationTime", ResourceType = typeof(Resources))]
+		public virtual DateTime ModificationTime { get; set; }
+
+        [BelongsTo("creator", Lazy = FetchWhen.OnInvoke)]
+        [Display(Name = "Creator", ResourceType = typeof(Resources))]
+        public virtual Employee Creator { get; set; }
+
+        [BelongsTo("updater", Lazy = FetchWhen.OnInvoke)]
+        [Display(Name = "Updater", ResourceType = typeof(Resources))]
+        public virtual Employee Updater { get; set; }
+
 		[BelongsTo("store")]
 		[Display(Name = "Store", ResourceType = typeof(Resources))]
 		public virtual Store Store { get; set; }
@@ -79,7 +97,7 @@ namespace Mictlanix.BE.Model
         public decimal? Change { get; set; }
 
         [Property]
-        [Display(Name = "Method", ResourceType = typeof(Resources))]
+        [Display(Name = "PaymentMethod", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         public PaymentMethod Method { get; set; }
 
@@ -89,7 +107,7 @@ namespace Mictlanix.BE.Model
         public DateTime Date { get; set; }
 
         [Property]
-        [Display(Name = "Reference", ResourceType = typeof(Resources))]
+        [Display(Name = "PaymentReference", ResourceType = typeof(Resources))]
         public string Reference { get; set; }
 
         [DataType(DataType.Currency)]

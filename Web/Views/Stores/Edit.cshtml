@@ -45,7 +45,12 @@
             @Html.EditorFor(model => model.Logo)
             @Html.ValidationMessageFor(model => model.Logo)
         </div>
-       
+       	
+		@Html.HiddenFor(x => x.Address.Id)
+       	@Html.HiddenFor(x => x.Address.TaxpayerId)
+		@Html.HiddenFor(x => x.Address.TaxpayerName)
+        @Html.EditorFor(x => x.Address)
+        
         <div class="editor-label">
             @Html.LabelFor(model => model.Comment)
         </div>

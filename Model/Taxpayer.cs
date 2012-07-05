@@ -27,7 +27,13 @@ namespace Mictlanix.BE.Model
         [StringLength(250, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "TaxpayerName", ResourceType = typeof(Resources))]
         public string Name { get; set; }
-		
+
+		[Property]
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+        [StringLength(250, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+        [Display(Name = "TaxRegime", ResourceType = typeof(Resources))]
+        public string Regime { get; set; }
+
 		[BelongsTo("address", Lazy = FetchWhen.OnInvoke)]
 		[Display(Name = "Address", ResourceType = typeof(Resources))]
 		public virtual Address Address { get; set; }

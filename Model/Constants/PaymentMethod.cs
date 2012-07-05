@@ -34,8 +34,10 @@ namespace Mictlanix.BE.Model
 {
     public enum PaymentMethod : int
     {
+        [Display(Name = "Unidentified", ResourceType = typeof(Resources))]
+        Unidentified,
         [Display(Name = "Cash", ResourceType = typeof(Resources))]
-        Cash = 1,
+        Cash,
         [Display(Name = "CreditCard", ResourceType = typeof(Resources))]
         CreditCard,
         [Display(Name = "DebitCard", ResourceType = typeof(Resources))]
@@ -45,6 +47,8 @@ namespace Mictlanix.BE.Model
         [Display(Name = "WireTransfer", ResourceType = typeof(Resources))]
         WireTransfer,
         [Display(Name = "GovernmentFunding", ResourceType = typeof(Resources))]
-        GovernmentFunding
+        GovernmentFunding,
+        [Display(Name = "BankDeposit", ResourceType = typeof(Resources))]
+		BankDeposit
     }
 }

@@ -35,39 +35,43 @@ using Castle.ActiveRecord.Framework;
 
 namespace Mictlanix.BE.Model
 {
-    [ActiveRecord("store")]
+    [ActiveRecord("store", Lazy = true)]
     public class Store : ActiveRecordLinqBase<Store>
     {
         [PrimaryKey(PrimaryKeyType.Identity, "store_id")]
-        public int Id { get; set; }
+        public virtual int Id { get; set; }
 
         [Property]
 		[ValidateIsUnique]
         [Display(Name = "Code", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(25, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Code { get; set; }
+        public virtual string Code { get; set; }
 
         [Property]
         [Display(Name = "Name", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 		
 		[Property]
 		[UIHint("Image")]
 		[Display(Name = "Logo", ResourceType = typeof(Resources))]
-		public string Logo { get; set; }
+		public virtual string Logo { get; set; }
 		
 		[Property]
 		[Display(Name = "Location", ResourceType = typeof(Resources))]
-		public string Location { get; set; }
-		
+		public virtual string Location { get; set; }
+
         [Property]
         [DataType(DataType.MultilineText)]
         [Display(Name = "Comment", ResourceType = typeof(Resources))]
         [StringLength(500, MinimumLength = 0)]
-        public string Comment { get; set; }
+        public virtual string Comment { get; set; }
+		
+		[BelongsTo("address", Lazy = FetchWhen.OnInvoke)]
+		[Display(Name = "Address", ResourceType = typeof(Resources))]
+		public virtual Address Address { get; set; }
 
         #region Override Base Methods
 

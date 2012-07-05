@@ -41,12 +41,12 @@ namespace Mictlanix.BE.Model
     {
         [PrimaryKey(PrimaryKeyType.Identity, "kardex_id")]
         [Display(Name = "KardexId", ResourceType = typeof(Resources))]
-        public int Id { get; set; }
+        public virtual int Id { get; set; }
 
         [Property]
         [DataType(DataType.DateTime)]
         [Display(Name = "Date", ResourceType = typeof(Resources))]
-        public DateTime Date { get; set; }
+        public virtual DateTime Date { get; set; }
 
         [BelongsTo("warehouse")]
         [Display(Name = "Warehouse", ResourceType = typeof(Resources))]
@@ -60,7 +60,7 @@ namespace Mictlanix.BE.Model
         [DisplayFormat(DataFormatString = "{0:0.####}")]
         [Display(Name = "Quantity", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
-        public decimal Quantity { get; set; }
+        public virtual decimal Quantity { get; set; }
 
         #region Override Base Methods
 
