@@ -485,7 +485,7 @@
       <Project>{CBB1BA70-351E-4009-86FB-484810DC6364}</Project>
       <Name>Mictlanix.BE.Resources</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CFDv2\Mictlanix.CFDLib.csproj">
+    <ProjectReference Include="..\CFDLib\Mictlanix.CFDLib.csproj">
       <Project>{63EBACD8-7BB0-480F-81BF-5E0690B27112}</Project>
       <Name>Mictlanix.CFDLib</Name>
     </ProjectReference>

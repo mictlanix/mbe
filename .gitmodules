@@ -1,3 +1,3 @@
-[submodule "CFDv2"]
-	path = CFDv2
-	url = git@github.com:mictlanix/cfdv2.git
+[submodule "CFDLib"]
+	path = CFDLib
+	url = git@github.com:mictlanix/cfdlib.git
