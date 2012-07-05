@@ -56,6 +56,7 @@ namespace Mictlanix.BE.Web.Controllers
 
             var qry = from x in SalesOrder.Queryable
                       where x.IsCompleted && !x.IsPaid && !x.IsCancelled && !x.IsCredit
+					  orderby x.Id descending
                       select x;
 
             return View (new MasterDetails<CashSession, SalesOrder> { Master = session, Details = qry.ToList() });
@@ -64,33 +65,42 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
 		public ActionResult Index (int? id)
 		{
+			IList<SalesOrder> items;
 			var drawer = Configuration.CashDrawer;
-            var session = GetSession ();
+			var session = GetSession ();
 
-            if (drawer == null) {
-                return View("InvalidCashDrawer");
-            }
+			if (drawer == null) {
+				return View ("InvalidCashDrawer");
+			}
 
-            if (session == null) {
-                return RedirectToAction("OpenSession");
-            }
+			if (session == null) {
+				return RedirectToAction ("OpenSession");
+			}
 
-            var qry = from x in SalesOrder.Queryable
-                      where x.IsCompleted && !x.IsPaid && 
-                            !x.IsCancelled && !x.IsCredit
-                      select x;
+			if (id != null && id > 0) {
+				var qry = from x in SalesOrder.Queryable
+	                      where x.IsCompleted && !x.IsPaid && 
+								!x.IsCancelled && !x.IsCredit &&
+								x.Id == id
+						  orderby x.Id descending
+	                      select x;
 
-            if (id != null && id > 0) {
-                qry = from x in qry
-                      where x.Id == id
-                      select x;
+				items = qry.ToList ();
+			} else {
+				var qry = from x in SalesOrder.Queryable
+	                      where x.IsCompleted && !x.IsPaid && 
+								!x.IsCancelled && !x.IsCredit
+						  orderby x.Id descending
+	                      select x;
+
+				items = qry.ToList ();
             }
 
             if (Request.IsAjaxRequest()) {
-                return PartialView ("_Index", qry.ToList());
+                return PartialView ("_Index", items);
             }
             else {
-                return View (new MasterDetails<CashSession, SalesOrder> { Master = session, Details = qry.ToList() }); 
+                return View (new MasterDetails<CashSession, SalesOrder> { Master = session, Details = items }); 
             }
         }
 

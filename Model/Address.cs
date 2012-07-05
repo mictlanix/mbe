@@ -149,6 +149,7 @@ namespace Mictlanix.BE.Model
 		{
 			TaxpayerId = item.TaxpayerId;
 			TaxpayerName = item.TaxpayerName;
+			TaxpayerRegime = item.TaxpayerRegime;
 			Street = item.Street;
 			ExteriorNumber = item.ExteriorNumber;
 			InteriorNumber = item.InteriorNumber;

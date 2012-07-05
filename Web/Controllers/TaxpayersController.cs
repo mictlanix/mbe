@@ -134,9 +134,7 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult Edit (string id)
 		{
 			var item = Taxpayer.Find (id);
-			
-			item.KeyPassword = null;
-			
+
 			return View (item);
 		}
 
