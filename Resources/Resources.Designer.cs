@@ -1903,15 +1903,6 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Método de Pago.
-        /// </summary>
-        public static string Method {
-            get {
-                return ResourceManager.GetString("Method", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Celular.
         /// </summary>
         public static string Mobile {
@@ -3996,6 +3987,78 @@ namespace Mictlanix.BE {
         public static string FiscalDocumentId {
 			get {
 				return ResourceManager.GetString ("FiscalDocumentId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Régimen Fiscal.
+        /// </summary>
+        public static string TaxRegime {
+			get {
+				return ResourceManager.GetString ("TaxRegime", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No Identificado.
+        /// </summary>
+        public static string Unidentified {
+			get {
+				return ResourceManager.GetString ("Unidentified", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Depósito Bancario.
+        /// </summary>
+        public static string BankDeposit {
+			get {
+				return ResourceManager.GetString ("BankDeposit", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Lugar de Expedición.
+        /// </summary>
+        public static string IssuedLocation {
+			get {
+				return ResourceManager.GetString ("IssuedLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Domicilio Fiscal.
+        /// </summary>
+        public static string IssuedFrom {
+			get {
+				return ResourceManager.GetString ("IssuedFrom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Domicilio de Expedición.
+        /// </summary>
+        public static string IssuedAt {
+			get {
+				return ResourceManager.GetString ("IssuedAt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Método de Pago.
+        /// </summary>
+        public static string PaymentMethod {
+            get {
+                return ResourceManager.GetString("PaymentMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Referencia de Pago.
+        /// </summary>
+        public static string PaymentReference {
+			get {
+				return ResourceManager.GetString ("PaymentReference", resourceCulture);
             }
         }
     }

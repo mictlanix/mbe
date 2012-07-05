@@ -54,12 +54,34 @@ UPDATE return_customer 	SET serial = return_customer_id;
 UPDATE product			SET tax_included = 1;
 UPDATE product 			SET name = replace(name, 'Ã“', 'Ó');
 
-INSERT INTO fiscal_document 
-SELECT sales_invoice_id, creation_time, modification_time, creator, updater, store, customer, issuer, issued, issued_from, bill_to, batch, serial, approval_number, approval_year, certificate_number, original_string, digital_seal, completed, cancelled, cancellation_date, reference, comment
+INSERT INTO fiscal_document (fiscal_document_id, creation_time, modification_time, creator, updater, store, customer, issuer, issued, issued_from, bill_to, type, batch, serial, approval_number, approval_year, certificate_number, original_string, digital_seal, completed, cancelled, cancellation_date, reference, comment, version, payment_method)
+SELECT sales_invoice_id, creation_time, modification_time, creator, updater, store, customer, issuer, issued, issued_from, bill_to, 0, batch, serial, approval_number, approval_year, certificate_number, original_string, digital_seal, completed, cancelled, cancellation_date, reference, comment, 2.0, 0
 FROM sales_invoice;
 
-INSERT INTO fiscal_document_detail
+INSERT INTO fiscal_document_detail (fiscal_document_detail_id, document, product, order_detail, product_code, product_name, unit_of_measurement, quantity, price, discount, tax_rate)
 SELECT sales_invoice_detail_id, invoice, product, order_detail, product_code, product_name, unit_of_measurement, quantity, price, discount, tax_rate
 FROM sales_invoice_detail;
+
+INSERT INTO address (taxpayer_id, taxpayer_name, street, exterior_number, neighborhood, locality, borough, state, country, zip_code)
+VALUES ('XXXXXXXXXXXX','XXX', 'Av. 16 de Septiembre', '78', 'Barrio San Miguel', 'San Juan Zitlaltepec', 'Zumpango', 'México', 'México', '55620');
+
+UPDATE store SET address = LAST_INSERT_ID() WHERE store_id = 1;
+
+INSERT INTO address (taxpayer_id, taxpayer_name, street, exterior_number, neighborhood, borough, state, country, zip_code)
+VALUES ('XXXXXXXXXXXX','XXX', 'Camino Viejo De Terraceria', 'S/N', '1ra Sección Barrio Santiago', 'Zumpango', 'México', 'México', '55600');
+
+UPDATE store SET address = LAST_INSERT_ID() WHERE store_id = 2;
+
+INSERT INTO address (taxpayer_id, taxpayer_name, street, exterior_number, neighborhood, locality, borough, state, country, zip_code)
+VALUES ('XXXXXXXXXXXX','XXX', 'Carretera Zumpango-Huehuetoca', 'S/N', 'San Pedro', 'San Juan Zitlaltepec', 'Zumpango', 'México', 'México', '55620');
+
+UPDATE store SET address = LAST_INSERT_ID() WHERE store_id = 3;
+
+INSERT INTO address (taxpayer_id, taxpayer_name, street, exterior_number, neighborhood, borough, state, country, zip_code)
+VALUES ('XXXXXXXXXXXX','XXX', 'Carretera Acueducto', '', '', 'Zumpango', 'México', 'México', '55620');
+
+UPDATE store SET address = LAST_INSERT_ID() WHERE store_id = 4;
+
+
 
 

@@ -92,6 +92,13 @@ namespace Mictlanix.BE.Web.Controllers
 			if (!ModelState.IsValid) {
 				return View (item);
 			}
+			
+			if (item.PaymentMethod == PaymentMethod.Unidentified ||
+				item.PaymentMethod == PaymentMethod.Cash) {
+				item.PaymentReference = null;
+			} else if (string.IsNullOrEmpty(item.PaymentReference)) {
+				item.PaymentReference = Resources.Unidentified;
+			}
 
 			var batch = item.Issuer.Documents.Single (x => x.Batch == item.Batch);
 
@@ -102,14 +109,19 @@ namespace Mictlanix.BE.Web.Controllers
 			item.Creator = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 			item.Updater = item.Creator;
 			item.Store = Configuration.Store;
-			
+			item.IssuedLocation = item.Store.Location;
+
 			// Address info
 			item.BillTo = new Address (item.BillTo);
 			item.IssuedFrom = new Address (item.Issuer.Address);
+			item.IssuedAt = new Address (item.Store.Address);
+
+			item.IssuedFrom.TaxpayerRegime = item.Issuer.Regime;
 
 			using (var scope = new TransactionScope()) {
-				item.BillTo.CreateAndFlush ();
-				item.IssuedFrom.CreateAndFlush ();
+				item.BillTo.Create ();
+				item.IssuedFrom.Create ();
+				item.IssuedAt.Create ();
 				item.CreateAndFlush ();
 			}
 
@@ -121,18 +133,6 @@ namespace Mictlanix.BE.Web.Controllers
 
 			return RedirectToAction ("Edit", new { id = item.Id });
 		}
-
-        public ViewResult Details (int id)
-		{
-			FiscalDocument item = FiscalDocument.Find (id);
-
-			return View (item);
-		}
-		
-		public ViewResult Print (int id)
-		{
-			return View (FiscalDocument.Find (id));
-		}
 		
         public ActionResult Edit(int id)
         {
@@ -143,11 +143,6 @@ namespace Mictlanix.BE.Web.Controllers
             else
                 return View(item);
         }
-		
-		public ActionResult DiscardChanges (int id)
-		{
-			return PartialView ("_MasterView", FiscalDocument.TryFind (id));
-		}
 
         [HttpPost]
 		public ActionResult Edit (FiscalDocument item)
@@ -155,32 +150,88 @@ namespace Mictlanix.BE.Web.Controllers
 			item.Issuer = Taxpayer.TryFind (item.IssuerId);
 			item.Customer = Customer.TryFind (item.CustomerId);
 			item.BillTo = Address.TryFind (item.BillToId);
-			
+
 			if (!ModelState.IsValid) {
 				return View (item);
 			}
 			
+			if (item.PaymentMethod == PaymentMethod.Unidentified ||
+			    item.PaymentMethod == PaymentMethod.Cash) {
+				item.PaymentReference = null;
+			} else if (string.IsNullOrEmpty(item.PaymentReference)) {
+				item.PaymentReference = Resources.Unidentified;
+			}
+			
 			var document = FiscalDocument.Find (item.Id);
 			var batch = item.Issuer.Documents.Single (x => x.Batch == item.Batch);
-			
+
+			// updated info
 			document.Type = batch.Type;
 			document.Batch = item.Batch;
 			document.Issuer = item.Issuer;
 			document.Customer = item.Customer;
 			document.ModificationTime = DateTime.Now;
 			document.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
-			
+			document.PaymentMethod = item.PaymentMethod;
+			document.PaymentReference = item.PaymentReference;
+
 			// Address info
 			document.BillTo.Copy (item.BillTo);
 			document.IssuedFrom.Copy (document.Issuer.Address);
+			document.IssuedFrom.TaxpayerRegime = document.Issuer.Regime;
 
 			using (var scope = new TransactionScope()) {
-				document.BillTo.Save ();
-				document.IssuedFrom.Save ();
-				document.SaveAndFlush ();
+				document.BillTo.Update ();
+				document.IssuedFrom.Update ();
+				document.UpdateAndFlush ();
 			}
 
 			return PartialView ("_MasterView", document);
+		}
+		
+		public ActionResult DiscardChanges (int id)
+		{
+			return PartialView ("_MasterView", FiscalDocument.TryFind (id));
+		}
+
+        public ViewResult Details (int id)
+		{
+			FiscalDocument item = FiscalDocument.Find (id);
+
+			return View (item);
+		}
+		
+		public ViewResult Print (int id)
+		{
+			var item = FiscalDocument.Find (id);
+			return View (string.Format("Printv{0:0}", item.Version * 10), item);
+		}
+
+        [HttpPost]
+		public ActionResult Sign (int id)
+		{
+			FiscalDocument item = FiscalDocument.Find (id);
+			
+			if (!item.IsCompleted)
+				return RedirectToAction ("Index");
+
+			var doc = CFDv2Helpers.SignCFD (item);
+			
+			item.OriginalString = doc.ToString ();
+			item.DigitalSeal = doc.sello;
+			
+			// save to database
+			using (var scope = new TransactionScope()) {
+            	item.UpdateAndFlush ();
+			}
+
+			// save to filesystem
+			var filename = string.Format (Resources.Format_FiscalDocumentPath,
+	                                      Server.MapPath (Configuration.FiscalFilesPath),
+                                          item.Issuer.Id, item.Batch, item.Serial);
+			System.IO.File.WriteAllText (filename, doc.ToXmlString ());
+
+			return RedirectToAction ("Index");
 		}
 
         [HttpPost]
@@ -205,59 +256,53 @@ namespace Mictlanix.BE.Web.Controllers
 			item.ApprovalNumber = batch.ApprovalNumber;
 			item.ApprovalYear = batch.ApprovalYear;
 			item.CertificateNumber = item.Issuer.CertificateNumber;
-			item.IsCompleted = true;
 
-			var doc = CFDv2Helpers.IssueCFD (item);
-			
+			dynamic doc = CFDv2Helpers.IssueCFD (item);
+
 			item.Issued = doc.fecha;
-			item.OriginalString = CFDv2Helpers.OriginalString (doc);
+			item.OriginalString = doc.ToString ();
 			item.DigitalSeal = doc.sello;
+			item.Version = decimal.Parse (doc.version);
 			
-			// save to database
-			item.Save ();
+			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			item.ModificationTime = DateTime.Now;
+			item.IsCompleted = true;
+			
+			using (var scope = new TransactionScope()) {
+				item.UpdateAndFlush ();
+			}
 			
 			// save to filesystem
 			var filename = string.Format (Resources.Format_FiscalDocumentPath,
 	                                      Server.MapPath (Configuration.FiscalFilesPath),
                                           item.Issuer.Id, item.Batch, item.Serial);
-			var xml_content = CFDv2Helpers.SerializeToXmlString (doc);
-			System.IO.File.WriteAllText (filename, xml_content);
-
-			return RedirectToAction ("Index");
-		}
-
-        [HttpPost]
-		public ActionResult Sign (int id)
-		{
-			FiscalDocument item = FiscalDocument.Find (id);
-			
-			if (!item.IsCompleted)
-				return RedirectToAction ("Index");
-
-			var doc = CFDv2Helpers.SignCFD (item);
-			
-			item.OriginalString = CFDv2Helpers.OriginalString (doc);
-			item.DigitalSeal = doc.sello;
-			
-			// save to database
-			item.Save ();
-			
-			// save to filesystem
-			var filename = string.Format (Resources.Format_FiscalDocumentPath,
-	                                      Server.MapPath (Configuration.FiscalFilesPath),
-                                          item.Issuer.Id, item.Batch, item.Serial);
-			var xml_content = CFDv2Helpers.SerializeToXmlString (doc);
-			System.IO.File.WriteAllText (filename, xml_content);
+			System.IO.File.WriteAllText (filename, doc.ToXmlString ());
 
 			return RedirectToAction ("Index");
 		}
 		
+        [HttpPost]
+		public ActionResult Cancel (int id)
+		{
+			var item = FiscalDocument.Find (id);
+
+			item.CancellationDate = DateTime.Now;
+			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			item.ModificationTime = DateTime.Now;
+            item.IsCancelled = true;
+
+			using (var scope = new TransactionScope()) {
+            	item.UpdateAndFlush ();
+			}
+
+            return RedirectToAction("Index");
+        }
+
 		public ActionResult Download (int id)
 		{
 			var item = FiscalDocument.Find (id);
 			var doc = CFDv2Helpers.InvoiceToCFD (item);
-			var stream = CFDv2Helpers.SerializeToXmlStream (doc);
-			var result = new FileStreamResult (stream, "text/xml");
+			var result = new FileStreamResult (doc.ToXmlStream (), "text/xml");
 			
 			result.FileDownloadName = string.Format (Resources.Format_FiscalDocumentName,
 			                                         item.Issuer.Id, item.Batch, item.Serial);
@@ -289,18 +334,6 @@ namespace Mictlanix.BE.Web.Controllers
 			
 			return result;
 		}
-		
-        [HttpPost]
-		public ActionResult Cancel (int id)
-		{
-			FiscalDocument item = FiscalDocument.Find (id);
-
-			item.CancellationDate = DateTime.Now;
-            item.IsCancelled = true;
-            item.Save();
-
-            return RedirectToAction("Index");
-        }
 		
 		public ActionResult GetDetail (int id)
 		{
@@ -360,7 +393,10 @@ namespace Mictlanix.BE.Web.Controllers
 			
 			if (val.Length > 0) {
 				detail.ProductName = val;
-				detail.Save ();
+
+				using (var scope = new TransactionScope()) {
+					detail.Update ();
+				}
 			}
 
 			return Json (new { id = id, value = detail.ProductName });
@@ -374,7 +410,10 @@ namespace Mictlanix.BE.Web.Controllers
 			
 			if (val.Length > 0) {
 				detail.ProductCode = val;
-				detail.Save ();
+
+				using (var scope = new TransactionScope()) {
+					detail.Update ();
+				}
 			}
 
 			return Json (new { id = id, value = detail.ProductCode });
@@ -388,7 +427,10 @@ namespace Mictlanix.BE.Web.Controllers
 			
 			if (val.Length > 0) {
 				detail.UnitOfMeasurement = val;
-				detail.Save ();
+
+				using (var scope = new TransactionScope()) {
+					detail.Update ();
+				}
 			}
 
 			return Json (new { id = id, value = detail.UnitOfMeasurement });
@@ -407,7 +449,10 @@ namespace Mictlanix.BE.Web.Controllers
 
 			if (success && val >= 0) {
 				detail.Price = val;
-				detail.Save ();
+
+				using (var scope = new TransactionScope()) {
+					detail.Update ();
+				}
 			}
 
 			return Json (new {id = id, value = detail.Price.ToString ("C4"), total = detail.Total.ToString ("c") });
@@ -426,7 +471,10 @@ namespace Mictlanix.BE.Web.Controllers
 			// FIXME: Allow to configure tax rates
 			if (success && (val == 0m || val == 0.16m)) {
 				detail.TaxRate = val;
-				detail.Save ();
+
+				using (var scope = new TransactionScope()) {
+					detail.Update ();
+				}
 			}
 
 			return Json (new { id = id, value = detail.TaxRate.ToString ("p") });
@@ -440,7 +488,10 @@ namespace Mictlanix.BE.Web.Controllers
             if (value > 0)
             {
                 detail.Quantity = value;
-                detail.Save();
+
+				using (var scope = new TransactionScope()) {
+					detail.Update ();
+				}
             }
 
             return Json(new { id = id, value = detail.Quantity, total = detail.Total.ToString("c") });
@@ -458,7 +509,10 @@ namespace Mictlanix.BE.Web.Controllers
 
 			if (success && val >= 0 && val <= 1) {
 				detail.Discount = val;
-				detail.Save ();
+
+				using (var scope = new TransactionScope()) {
+					detail.Update ();
+				}
 			}
 
 			return Json (new { id = id, value = detail.Discount.ToString ("p"), total = detail.Total.ToString ("c") });
@@ -480,10 +534,10 @@ namespace Mictlanix.BE.Web.Controllers
 			return PartialView ("_BatchSelector");
 		}
 		
-        public ActionResult GetTotals(int id)
+        public ActionResult GetTotals (int id)
         {
             var order = FiscalDocument.Find(id);
-            return PartialView("_Totals", order);
+            return PartialView ("_Totals", order);
         }
 
         [HttpPost]

@@ -33,26 +33,13 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Castle.ActiveRecord;
 using Mictlanix.BE.Model;
 
 namespace Mictlanix.BE.Web.Controllers
 {
     public class PriceListsController : Controller
     {
-
-        public JsonResult GetSuggestions(string pattern)
-        {
-            JsonResult result = new JsonResult();
-            var qry = from x in PriceList.Queryable
-                      where x.Name.Contains(pattern)
-                      select new { id = x.Id, name = x.Name };
-
-            result = Json(qry.Take(15).ToList());
-            result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
-
-            return result;
-        }
-
         //
         // GET: /PriceList/
 
@@ -85,38 +72,41 @@ namespace Mictlanix.BE.Web.Controllers
         // POST: /PriceList/Create
 
         [HttpPost]
-        public ActionResult Create(PriceList priceList)
+        public ActionResult Create(PriceList item)
         {
-            if (ModelState.IsValid)
-            {
-                priceList.Save();
-                return RedirectToAction("Index");
-            }
+            if (!ModelState.IsValid)
+            	return View(item);
+            
+			using (var scope = new TransactionScope ()) {
+            	item.CreateAndFlush ();
+			}
 
-            return View(priceList);
+			return RedirectToAction("Index");
         }
 
         //
         // GET: /PriceList/Edit/5
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit (int id)
         {
-            PriceList priceList = PriceList.Find(id);
-            return View(priceList);
+            PriceList item = PriceList.Find (id);
+            return View (item);
         }
 
         //
         // POST: /PriceList/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(PriceList priceList)
+        public ActionResult Edit (PriceList item)
         {
-            if (ModelState.IsValid)
-            {
-                priceList.Save();
-                return RedirectToAction("Index");
-            }
-            return View(priceList);
+            if (!ModelState.IsValid)
+            	return View (item);
+            
+			using (var scope = new TransactionScope ()) {
+            	item.UpdateAndFlush ();
+			}
+
+			return RedirectToAction("Index");
         }
 
         //
@@ -124,8 +114,8 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Delete(int id)
         {
-            PriceList priceList = PriceList.Find(id);
-            return View(priceList);
+            PriceList item = PriceList.Find(id);
+            return View(item);
         }
 
         //
@@ -134,14 +124,26 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            PriceList priceList = PriceList.Find(id);
-            priceList.Delete();
+            PriceList item = PriceList.Find (id);
+            
+			using (var scope = new TransactionScope ()) {
+            	item.DeleteAndFlush ();
+			}
+
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
+        public JsonResult GetSuggestions (string pattern)
         {
-            base.Dispose(disposing);
+            JsonResult result = new JsonResult();
+            var qry = from x in PriceList.Queryable
+                      where x.Name.Contains(pattern)
+                      select new { id = x.Id, name = x.Name };
+
+            result = Json(qry.Take(15).ToList());
+            result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+
+            return result;
         }
     }
 }

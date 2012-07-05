@@ -44,38 +44,34 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult Index ()
 		{
 			var drawer = Configuration.CashDrawer;
-            var session = GetSession();
+            var session = GetSession ();
 
-            if (drawer == null)
-            {
-                return View("InvalidCashDrawer");
+            if (drawer == null) {
+                return View ("InvalidCashDrawer");
             }
 
-            if (session == null)
-            {
-                return RedirectToAction("OpenSession");
+            if (session == null) {
+                return RedirectToAction ("OpenSession");
             }
 
             var qry = from x in SalesOrder.Queryable
                       where x.IsCompleted && !x.IsPaid && !x.IsCancelled && !x.IsCredit
                       select x;
 
-            return View(new MasterDetails<CashSession, SalesOrder> { Master = session, Details = qry.ToList() });
+            return View (new MasterDetails<CashSession, SalesOrder> { Master = session, Details = qry.ToList() });
         }
 
         [HttpPost]
 		public ActionResult Index (int? id)
 		{
 			var drawer = Configuration.CashDrawer;
-            var session = GetSession();
+            var session = GetSession ();
 
-            if (drawer == null)
-            {
+            if (drawer == null) {
                 return View("InvalidCashDrawer");
             }
 
-            if (session == null)
-            {
+            if (session == null) {
                 return RedirectToAction("OpenSession");
             }
 
@@ -84,27 +80,23 @@ namespace Mictlanix.BE.Web.Controllers
                             !x.IsCancelled && !x.IsCredit
                       select x;
 
-            if (id != null && id > 0)
-            {
+            if (id != null && id > 0) {
                 qry = from x in qry
                       where x.Id == id
                       select x;
             }
 
-            if (Request.IsAjaxRequest())
-            {
-                return PartialView("_Index", qry.ToList());
+            if (Request.IsAjaxRequest()) {
+                return PartialView ("_Index", qry.ToList());
             }
-            else
-            {
-                return View(new MasterDetails<CashSession, SalesOrder> { Master = session, Details = qry.ToList() }); 
-
+            else {
+                return View (new MasterDetails<CashSession, SalesOrder> { Master = session, Details = qry.ToList() }); 
             }
         }
 
         // GET: /Payments/PrintCashCount/
 
-        public ViewResult PrintCashCount(int id)
+        public ViewResult PrintCashCount (int id)
         {
             var info = new CashCountReport();
             var session = CashSession.Find(id);
@@ -129,25 +121,22 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult OpenSession()
         {
-            if (GetSession() != null)
-            {
-                return RedirectToAction("Index");
+            if (GetSession() != null) {
+                return RedirectToAction ("Index");
             }
 			
-            var model = new CashSession
-            {
+            var model = new CashSession {
                 Start = DateTime.Now,
-                CashCounts = CashHelpers.ListDenominations(),
+                CashCounts = CashHelpers.ListDenominations (),
                 CashDrawer = Configuration.CashDrawer,
                 Cashier = SecurityHelpers.GetUser(User.Identity.Name).Employee
             };
 
-            if (model.CashDrawer == null)
-            {
-                return View("InvalidCashDrawer");
+            if (model.CashDrawer == null) {
+                return View ("InvalidCashDrawer");
             }
 
-            return View(model);
+            return View (model);
         }
 
         [HttpPost]
@@ -176,7 +165,7 @@ namespace Mictlanix.BE.Web.Controllers
 
 			System.Diagnostics.Debug.WriteLine("New CashSession [Id = {0}]", item.Id);
 
-            return RedirectToAction("Index");
+            return RedirectToAction ("Index");
         }
 
         public ActionResult PayOrder (int id)
@@ -207,7 +196,14 @@ namespace Mictlanix.BE.Web.Controllers
 			sales_order.Details.ToList ();
 			sales_order.Payments.ToList ();
 
+			var dt = DateTime.Now;
+			var employee = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+
 			var item = new CustomerPayment {
+				Creator = employee,
+				CreationTime = dt,
+				Updater = employee,
+				ModificationTime = dt,
                 CashSession = GetSession (),
                 SalesOrder = sales_order,
                 Customer = sales_order.Customer,
@@ -247,19 +243,23 @@ namespace Mictlanix.BE.Web.Controllers
 			return Json (new { id = item.Id });
 		}
 		
-        public ActionResult CreditPayment()
+        public ActionResult CreditPayment ()
         {
-            if (Request.IsAjaxRequest())
+            if (Request.IsAjaxRequest ())
             {
                 return PartialView("_CreditPayment", new CustomerPayment());
             }
 			
-            return View("_CreditPayment", new CustomerPayment());
+            return View ("_CreditPayment", new CustomerPayment());
         }
 		
         [HttpPost]
         public ActionResult CreditPayment (CustomerPayment item)
 		{
+			item.Creator = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			item.CreationTime = DateTime.Now;
+			item.Updater = item.Creator;
+			item.ModificationTime = item.CreationTime;
 			item.CashSession = GetSession ();
 			item.Customer = Customer.Find (item.CustomerId);
 			item.Date = DateTime.Now;
@@ -275,7 +275,7 @@ namespace Mictlanix.BE.Web.Controllers
 				item.Serial = 1;
 			}
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
 			}
 
@@ -288,39 +288,48 @@ namespace Mictlanix.BE.Web.Controllers
 			return View ("_CreditPaymentSuccesful", item);
 		}
 
-        public ActionResult GetPayment(int id)
+        public ActionResult GetPayment (int id)
         {
-            return PartialView("_Payment", CustomerPayment.Find(id));
+            return PartialView ("_Payment", CustomerPayment.Find (id));
         }
 
         [HttpPost]
-        public JsonResult RemovePayment(int id)
+        public JsonResult RemovePayment (int id)
         {
-            CustomerPayment item = CustomerPayment.Find(id);
-            item.Delete();
-            return Json(new { id = id, result = true });
+            CustomerPayment item = CustomerPayment.Find (id);
+            
+			using (var scope = new TransactionScope ()) {
+            	item.DeleteAndFlush ();
+			}
+
+            return Json (new { id = id, result = true });
         }
 
         [HttpPost]
-        public ActionResult ConfirmPayment(int id)
+        public ActionResult ConfirmPayment (int id)
         {
-            SalesOrder item = SalesOrder.Find(id);
+            var item = SalesOrder.Find (id);
 
             item.IsPaid = true;
-            item.Save();
+			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			item.ModificationTime = DateTime.Now;
 
-            return RedirectToAction("Index");
+			using (var scope = new TransactionScope ()) {
+            	item.UpdateAndFlush ();
+			}
+
+            return RedirectToAction ("Index");
         }
 
-        public ActionResult CloseSession()
+        public ActionResult CloseSession ()
         {
-            var session = GetSession();
-            session.CashCounts = CashHelpers.ListDenominations();
-            return View(session);
+            var session = GetSession ();
+            session.CashCounts = CashHelpers.ListDenominations ();
+            return View (session);
         }
 
         [HttpPost]
-        public ActionResult CloseSession(CashSession item)
+        public ActionResult CloseSession (CashSession item)
         {
         	var cash_counts = item.CashCounts.Where (x => x.Quantity > 0).ToList ();
 			
@@ -334,13 +343,13 @@ namespace Mictlanix.BE.Web.Controllers
                     x.Create ();
                 }
 
-	            item.Update ();
+	            item.UpdateAndFlush ();
             }
 
             return RedirectToAction("CloseSessionConfirmed", new { id = item.Id });
         }
 
-        public ActionResult CloseSessionConfirmed(int id)
+        public ActionResult CloseSessionConfirmed (int id)
         {
             var session = CashSession.Find(id);
             var qry = from x in CustomerPayment.Queryable

@@ -1,11 +1,13 @@
 ﻿@using Mictlanix.BE
-@using Mictlanix.BE.Model
-@using Mictlanix.BE.Web.Models
+@using Mictlanix.BE.Model;
+@using Mictlanix.BE.Web.Helpers;
 @model FiscalDocument
 
 @{
     ViewBag.Title = Resources.Title_NewInvoice;
 }
+
+<link href="@Url.Content("~/Content/selection-options.css")" rel="stylesheet" type="text/css" />
 
 <h2>@Resources.DisplayName_NewInvoice</h2> 
 
@@ -36,6 +38,37 @@
                     @Html.ValidationMessageFor(x => x.BillToId)
                 </div>
                 
+		        <div class="editor-field">
+		            <ul class="selection-options">
+		            @foreach (var item in new []{ PaymentMethod.Unidentified,
+		            							  PaymentMethod.Cash,
+		            							  PaymentMethod.DebitCard,
+		            							  PaymentMethod.CreditCard,
+		            							  PaymentMethod.Check,
+		            							  PaymentMethod.BankDeposit,
+		            							  PaymentMethod.WireTransfer }) {
+		                <li>
+			                <label>
+			                    @Html.RadioButtonFor(x => x.PaymentMethod, (int)item)
+			                    <span class="option-desc">
+				                    <span class="icon dollar">@Resources.Payment</span>
+				                    <span class="text">@item.GetDisplayName()</span>
+			                    </span>
+			                </label>
+			            </li>
+		            }
+		            </ul>
+		        </div>
+
+		        <div id="reference" style="display:none">
+		            <div class="display-label">
+		                @Html.LabelFor(x => x.PaymentReference)
+		            </div>
+		            <div class="display-field">
+		                @Html.EditorFor(x => x.PaymentReference)
+		            </div>
+		        </div>
+
                 <p class="right">
                     <button type="submit" class="icon save">@Resources.Save</button>
                 </p>
@@ -52,7 +85,6 @@ ul.token-input-list {
 </style>
 <script type="text/javascript">
     $(function () {
-    
         $("#IssuerId").tokenInput("@Url.Action("GetSuggestions", "Taxpayers")", {
             hintText: "@Resources.HIntText",
             noResultsText: "@Resources.NoResultsText",
@@ -82,6 +114,24 @@ ul.token-input-list {
             noResultsText: "@Resources.NoResultsText",
             searchingText: "@Resources.SearchingText",          
             queryParam: "pattern",minChars: 3,tokenLimit: 1
+        });
+        
+    	$("#PaymentMethod").attr("checked", true);
+        $(".selection-options>li:first-child").addClass("selected");
+        
+        $(".selection-options>li").click(function () {
+            $(".selection-options>li").removeClass("selected");
+            $(this).addClass("selected");
+        });
+        
+        $(":radio").change(function() {
+            var status = $("#PaymentMethod:checked").val();
+            
+            if (status === "0" || status === "1") {
+                $("#reference").hide("slow");
+            } else {
+                $("#reference").show("slow");
+            }
         });
     });
 </script>

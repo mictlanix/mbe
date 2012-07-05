@@ -33,6 +33,7 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Castle.ActiveRecord;
 using Mictlanix.BE.Model;
 
 namespace Mictlanix.BE.Web.Controllers
@@ -71,16 +72,18 @@ namespace Mictlanix.BE.Web.Controllers
         // POST: /CashDrawers/Create
 
         [HttpPost]
-        public ActionResult Create(CashDrawer CashDrawers)
+        public ActionResult Create(CashDrawer item)
         {
-            if (ModelState.IsValid)
-            {
-                CashDrawers.Store = Store.Find(CashDrawers.StoreId);
-                CashDrawers.Save();
-                return RedirectToAction("Index");
-            }
+            if (!ModelState.IsValid)
+            	return View (item);
+        
+            item.Store = Store.Find (item.StoreId);
+			
+			using (var scope = new TransactionScope()) {
+            	item.CreateAndFlush ();
+			}
 
-            return View(CashDrawers);
+            return RedirectToAction ("Index");
         }
 
         //
@@ -88,23 +91,26 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Edit(int id)
         {
-            CashDrawer CashDrawers = CashDrawer.Find(id);
-            return View(CashDrawers);
+            CashDrawer item = CashDrawer.Find(id);
+            return View (item);
         }
 
         //
         // POST: /CashDrawers/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(CashDrawer CashDrawers)
+        public ActionResult Edit(CashDrawer item)
         {
-            if (ModelState.IsValid)
-            {
-                CashDrawers.Store = CashDrawer.Find(CashDrawers.Id).Store;
-                CashDrawers.Save();
-                return RedirectToAction("Index");
-            }
-            return View(CashDrawers);
+            if (!ModelState.IsValid)
+				return View(item);
+            
+            item.Store = CashDrawer.Find (item.Id).Store;
+            
+			using (var scope = new TransactionScope()) {
+            	item.UpdateAndFlush ();
+			}
+
+            return RedirectToAction("Index");
         }
 
         //
