@@ -464,8 +464,9 @@
     <Content Include="Views\FiscalDocuments\_DetailView.cshtml" />
     <Content Include="Views\FiscalDocuments\_BatchSelector.cshtml" />
     <Content Include="Views\FiscalDocuments\Details.cshtml" />
-    <Content Include="Views\FiscalDocuments\Print.cshtml" />
     <Content Include="Views\FiscalDocuments\Reports.cshtml" />
+    <Content Include="Views\FiscalDocuments\Printv22.cshtml" />
+    <Content Include="Views\FiscalDocuments\Printv20.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />
@@ -476,10 +477,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CFDv2\Mictlanix.CFDv2.csproj">
-      <Project>{63EBACD8-7BB0-480F-81BF-5E0690B27112}</Project>
-      <Name>Mictlanix.CFDv2</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Model\Mictlanix.BE.Model.csproj">
       <Project>{F9363BAC-A7BB-4A77-81E0-892C8CCCD297}</Project>
       <Name>Mictlanix.BE.Model</Name>
@@ -487,6 +484,10 @@
     <ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">
       <Project>{CBB1BA70-351E-4009-86FB-484810DC6364}</Project>
       <Name>Mictlanix.BE.Resources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CFDv2\Mictlanix.CFDLib.csproj">
+      <Project>{63EBACD8-7BB0-480F-81BF-5E0690B27112}</Project>
+      <Name>Mictlanix.CFDLib</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

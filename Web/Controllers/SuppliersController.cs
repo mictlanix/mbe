@@ -99,16 +99,17 @@ namespace Mictlanix.BE.Web.Controllers
         // POST: /Supplier/Create
 
         [HttpPost]
-        public ActionResult Create(Supplier supplier)
-        {
-            if (ModelState.IsValid)
-            {
-                supplier.Save();
-                return RedirectToAction("Index");
-            }
+		public ActionResult Create (Supplier item)
+		{
+			if (!ModelState.IsValid)
+				return View (item);
 
-            return View(supplier);
+			using (var scope = new TransactionScope ()) {
+				item.CreateAndFlush ();
+			}
 
+            return RedirectToAction("Index");
+            
             //if (!ModelState.IsValid)
             //{
             //    if (Request.IsAjaxRequest())
@@ -117,7 +118,7 @@ namespace Mictlanix.BE.Web.Controllers
             //    return View(supplier);
             //}
 
-            //supplier.Save();
+            //supplier.Create ();
 
             //if (Request.IsAjaxRequest())
             //{

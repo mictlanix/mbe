@@ -93,20 +93,20 @@ namespace Mictlanix.BE.Web.Controllers
             string type = Request.Params["OwnerType"];
 
 			using (var scope = new TransactionScope()) {
-                item.CreateAndFlush();
+                item.CreateAndFlush ();
 
 	            System.Diagnostics.Debug.WriteLine("New Contact [Id = {0}]", item.Id);
 				
                 if (type == "Suppliers") {
                     var supplier = Supplier.Find(owner);
 					supplier.Contacts.Add(item);
-                	supplier.Save();
+                	supplier.Update ();
                 }
 
                 if (type == "Customers") {
                     var customer = Customer.Find(owner);
 					customer.Contacts.Add(item);
-                	customer.Save();
+                	customer.Update ();
                 }
 			}
 
@@ -140,18 +140,19 @@ namespace Mictlanix.BE.Web.Controllers
         // POST: /Contacts/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(Contact contact)
+        public ActionResult Edit(Contact item)
         {
-            if (ModelState.IsValid)
-            {
-                int owner = int.Parse(Request.Params["OwnerId"]);
-                string type = Request.Params["OwnerType"];
-				
-                contact.Save();
+            if (!ModelState.IsValid)
+            	return View (item);
+            
+            int owner = int.Parse(Request.Params["OwnerId"]);
+            string type = Request.Params["OwnerType"];
 
-                return RedirectToAction("Details", type, new { id = owner });
-            }
-            return View(contact);
+			using (var scope = new TransactionScope()) {
+            	item.UpdateAndFlush ();
+			}
+            
+			return RedirectToAction("Details", type, new { id = owner });
         }
 
         //
@@ -187,18 +188,18 @@ namespace Mictlanix.BE.Web.Controllers
             string type = Request.Params["OwnerType"];
 			
             using (var scope = new TransactionScope()) {
-	            var item = Contact.Find(id);
-	            var customer = item.Customers.FirstOrDefault();
-	            var supplier = item.Suppliers.FirstOrDefault();
+	            var item = Contact.Find (id);
+	            var customer = item.Customers.FirstOrDefault ();
+	            var supplier = item.Suppliers.FirstOrDefault ();
 	
 	            if (customer != null) {
-	                customer.Contacts.Remove(item);
-	                customer.Save();
+	                customer.Contacts.Remove (item);
+	                customer.Update ();
 	            }
 	
 	            if (supplier != null) {
-	                supplier.Contacts.Remove(item);
-	                supplier.Save();
+	                supplier.Contacts.Remove (item);
+	                supplier.Update ();
 	            }
 	
 				item.DeleteAndFlush ();

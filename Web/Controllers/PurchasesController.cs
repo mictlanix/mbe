@@ -133,7 +133,9 @@ namespace Mictlanix.BE.Web.Controllers
             order.ModificationTime = DateTime.Now;
             order.Comment = item.Comment;
 
-            order.Save();
+			using (var scope = new TransactionScope ()) {
+            	order.UpdateAndFlush ();
+			}
 
             return PartialView("_PurchaseInfo", order);
 
@@ -180,7 +182,10 @@ namespace Mictlanix.BE.Web.Controllers
             if (quantity > 0)
             {
                 detail.Quantity = quantity;
-                detail.Save();
+
+				using (var scope = new TransactionScope ()) {
+	            	detail.UpdateAndFlush ();
+				}
             }
 
             return Json(new { id = id, quantity = detail.Quantity, total = detail.Total.ToString("c") });
@@ -201,7 +206,10 @@ namespace Mictlanix.BE.Web.Controllers
             if (success && price >= 0)
             {
                 detail.Price = price;
-                detail.Save();
+
+				using (var scope = new TransactionScope ()) {
+	            	detail.UpdateAndFlush ();
+				}
             }
 
             return Json(new { id = id, price = detail.Price.ToString("c"), total = detail.Total.ToString("c") });
@@ -223,7 +231,10 @@ namespace Mictlanix.BE.Web.Controllers
             if (success && discount >= 0 && discount <= 1)
             {
                 detail.Discount = discount;
-                detail.Save();
+
+				using (var scope = new TransactionScope ()) {
+	            	detail.UpdateAndFlush ();
+				}
             }
 
             return Json(new { id = id, discount = detail.Discount.ToString("p"), total = detail.Total.ToString("c") });
@@ -236,9 +247,13 @@ namespace Mictlanix.BE.Web.Controllers
         public JsonResult EditDetailWarehouse(int id, int warehouse)
         {
             PurchaseOrderDetail detail = PurchaseOrderDetail.Find(id);
+
             detail.WarehouseId = warehouse;
             detail.Warehouse = Warehouse.Find(detail.WarehouseId);
-            detail.Save();
+
+			using (var scope = new TransactionScope ()) {
+            	detail.UpdateAndFlush ();
+			}
 
             return Json(new { id = id, warehouse = detail.Warehouse.Name });
         }
@@ -274,7 +289,7 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult ConfirmPurchase(int id)
         {
-            PurchaseOrder item = PurchaseOrder.Find(id);
+            PurchaseOrder item = PurchaseOrder.Find (id);
 
             var qry = from x in item.Details
                       group x by x.Warehouse into g
@@ -316,7 +331,7 @@ namespace Mictlanix.BE.Web.Controllers
 	            }
 
 	            item.IsCompleted = true;
-	            item.Save ();
+	            item.UpdateAndFlush ();
             }
 
             return RedirectToAction("Index");
@@ -328,12 +343,15 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult CancelPurchase(int id)
         {
-            PurchaseOrder item = PurchaseOrder.Find(id);
+            var item = PurchaseOrder.Find (id);
             
             item.IsCancelled = true;
-            item.Save();
 
-            return RedirectToAction("Index");
+			using (var scope = new TransactionScope ()) {
+            	item.UpdateAndFlush ();
+			}
+
+            return RedirectToAction ("Index");
         }
         
     }

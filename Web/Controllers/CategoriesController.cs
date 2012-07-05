@@ -33,6 +33,7 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Castle.ActiveRecord;
 using Mictlanix.BE.Model;
 
 namespace Mictlanix.BE.Web.Controllers
@@ -84,15 +85,16 @@ namespace Mictlanix.BE.Web.Controllers
         // POST: /Categories/Create
 
         [HttpPost]
-        public ActionResult Create(Category category)
+        public ActionResult Create(Category item)
         {
-            if (ModelState.IsValid)
-            {
-                category.Save();
-                return RedirectToAction("Index");  
-            }
+            if (!ModelState.IsValid)
+            	return View(item);
 
-            return View(category);
+			using (var scope = new TransactionScope()) {
+            	item.CreateAndFlush ();
+			}
+
+            return RedirectToAction("Index");
         }
         
         //
@@ -108,14 +110,16 @@ namespace Mictlanix.BE.Web.Controllers
         // POST: /Categories/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(Category category)
+        public ActionResult Edit (Category item)
         {
-            if (ModelState.IsValid)
-            {
-                category.Save();
-                return RedirectToAction("Index");
-            }
-            return View(category);
+            if (!ModelState.IsValid)
+            	return View(item);
+            
+			using (var scope = new TransactionScope()) {
+            	item.UpdateAndFlush ();
+			}
+			
+            return RedirectToAction("Index");
         }
 
         //

@@ -44,51 +44,50 @@ namespace Mictlanix.BE.Web.Controllers
         //
         // GET: /SupplierPayment/
 
-        public ActionResult Index()
+        public ActionResult Index ()
         {
             var qry = from x in SupplierPayment.Queryable
                       orderby x.Id descending
                       select x;
 
-            return View(qry.ToList());
+            return View (qry.ToList());
         }
 
         //
         // GET: /SupplierPayment/Details/5
 
-        public ActionResult Details(int id)
+        public ActionResult Details (int id)
         {
-            SupplierPayment item = SupplierPayment.Find(id);
-
+            var item = SupplierPayment.Find(id);
             return View(item);
         }
 
         //
         // GET: /SupplierPayment/Create
 
-        public ActionResult NewPay()
+        public ActionResult NewPay ()
         {
-            return View(new SupplierPayment());
+            return View (new SupplierPayment ());
         } 
 
         //
         // POST: /SupplierPayment/Create
 
         [HttpPost]
-        public ActionResult NewPay(SupplierPayment item)
+        public ActionResult NewPay (SupplierPayment item)
         {
             if (!ModelState.IsValid)
-                return View(item);
+                return View (item);
 
             item.Supplier = Supplier.Find (item.SupplierId);
             item.Date = DateTime.Now;
-            item.Creator = SecurityHelpers.GetUser(User.Identity.Name).Employee;
+            item.Creator = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 
-            using (var scope = new TransactionScope()) {
+            using (var scope = new TransactionScope ()) {
                 item.CreateAndFlush();
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction ("Index");
         }
         
         //
@@ -96,19 +95,18 @@ namespace Mictlanix.BE.Web.Controllers
  
         public ActionResult Delete(int id)
         {
-            return View();
+            return View ();
         }
 
         //
         // POST: /SupplierPayment/Delete/5
 
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult Delete (int id, FormCollection collection)
         {
             try
             {
                 // TODO: Add delete logic here
- 
                 return RedirectToAction("Index");
             }
             catch

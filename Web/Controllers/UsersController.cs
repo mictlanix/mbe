@@ -33,6 +33,7 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Castle.ActiveRecord;
 using Mictlanix.BE.Model;
 
 namespace Mictlanix.BE.Web.Controllers
@@ -72,45 +73,49 @@ namespace Mictlanix.BE.Web.Controllers
         // POST: /Users/Edit/5
 
         [HttpPost]
-        public ActionResult Edit (User item)
+		public ActionResult Edit (User item)
 		{
 			if (!ModelState.IsValid) {
 				return View (item);
 			}
 
-			User user = Model.User.Find (item.UserName);
 			
-			user.Employee = Employee.Find (item.EmployeeId);
-			user.Email = item.Email;
-			user.IsAdministrator = item.IsAdministrator;
 
-			foreach (var i in Enum.GetValues(typeof(SystemObjects))) {
-				SystemObjects obj = (SystemObjects)i;
-				string prefix = Enum.GetName (typeof(SystemObjects), i);
-				AccessPrivilege privilege = user.Privileges.SingleOrDefault (x => x.Object == obj);
+			using (var scope = new TransactionScope ()) {
+				var user = Model.User.Find (item.UserName);
+				
+				user.Employee = Employee.Find (item.EmployeeId);
+				user.Email = item.Email;
+				user.IsAdministrator = item.IsAdministrator;
 
-				if (privilege == null) {
-					privilege = new AccessPrivilege { User = user, Object = obj };
+				foreach (var i in Enum.GetValues(typeof(SystemObjects))) {
+					var obj = (SystemObjects)i;
+					string prefix = Enum.GetName (typeof(SystemObjects), i);
+					var privilege = user.Privileges.SingleOrDefault (x => x.Object == obj);
+
+					if (privilege == null) {
+						privilege = new AccessPrivilege { User = user, Object = obj };
+					}
+
+					foreach (var j in Enum.GetValues(typeof(AccessRight))) {
+						AccessRight right = (AccessRight)j;
+						string name = prefix + Enum.GetName (typeof(AccessRight), j);
+						string value = Request.Params [name];
+
+						if (value == null)
+							continue;
+
+						if (value.Contains ("true"))
+							privilege.Privileges |= right;
+						else
+							privilege.Privileges &= ~right;
+					}
+
+					privilege.Save ();
 				}
 
-				foreach (var j in Enum.GetValues(typeof(AccessRight))) {
-					AccessRight right = (AccessRight)j;
-					string name = prefix + Enum.GetName (typeof(AccessRight), j);
-					string value = Request.Params [name];
-
-					if (value == null)
-						continue;
-
-					if (value.Contains ("true"))
-						privilege.Privileges |= right;
-					else
-						privilege.Privileges &= ~right;
-				}
-
-				privilege.Save ();
+				user.UpdateAndFlush ();
 			}
-
-			user.Update ();
 
 			return RedirectToAction ("Index");
 

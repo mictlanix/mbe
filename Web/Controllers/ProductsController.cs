@@ -114,8 +114,10 @@ namespace Mictlanix.BE.Web.Controllers
 			item.Supplier = Supplier.Find (item.SupplierId);
 			item.Category = Category.Find (item.CategoryId);
 			item.Photo = SavePhoto (file) ?? Configuration.DefaultPhotoFile;
-			
-			item.Save ();
+
+			using (var scope = new TransactionScope ()) {
+            	item.CreateAndFlush ();
+			}
 
 			return RedirectToAction ("Index");
 		}
@@ -142,8 +144,10 @@ namespace Mictlanix.BE.Web.Controllers
 			item.Supplier = Supplier.Find (item.SupplierId);
 			item.Category = Category.Find (item.CategoryId);
 			item.Photo = SavePhoto (file) ?? item.Photo;
-			
-			item.Save ();
+
+			using (var scope = new TransactionScope ()) {
+            	item.UpdateAndFlush ();
+			}
 
 			return RedirectToAction ("Index");
 		}
@@ -226,10 +230,10 @@ namespace Mictlanix.BE.Web.Controllers
             string hash;
             byte[] bytes = null;
 
-            using (MemoryStream ms = new MemoryStream())
+            using (MemoryStream ms = new MemoryStream ())
             {
-                img.Save(ms, img.RawFormat);
-                bytes = ms.ToArray();
+                img.Save (ms, img.RawFormat);
+                bytes = ms.ToArray ();
             }
 
             using (SHA1CryptoServiceProvider sha1 = new SHA1CryptoServiceProvider())

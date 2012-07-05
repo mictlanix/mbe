@@ -100,16 +100,10 @@ namespace Mictlanix.BE.Web.Controllers
         //
         // GET: /Returns/Details/5
 
-        public ActionResult Details(int id)
+        public ActionResult Details (int id)
         {
-            ReturnCustomer item = ReturnCustomer.Find(id);
-
-            item.ModificationTime = DateTime.Now;
-            item.Updater = SecurityHelpers.GetUser(User.Identity.Name).Employee;
-
-            item.Save();
-
-            return View(item);
+            ReturnCustomer item = ReturnCustomer.Find (id);
+            return View (item);
         }
 
         public ViewResult HistoricDetails(int id)
@@ -177,58 +171,61 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public JsonResult EditDetailQuantity(int id, decimal quantity)
         {
-            ReturnCustomerDetail detail = ReturnCustomerDetail.Find(id);
+            ReturnCustomerDetail detail = ReturnCustomerDetail.Find (id);
+            decimal sum = GetReturnableQuantity (detail.SalesOrderDetail.Id);
 
-            decimal sum = GetReturnableQuantity(detail.SalesOrderDetail.Id);
+			detail.Quantity = (quantity > 0 && quantity <= sum) ? quantity : sum;
 
-            if (quantity > 0 && quantity <= sum)
-            {
-                detail.Quantity = quantity;
-                detail.Save();
-                return Json(new { id = id, quantity = detail.Quantity, total = detail.Total.ToString("c") });
-            }
-            else
-            {
-                detail.Quantity = sum;
-                detail.Save();
-                return Json(new { id = id, quantity = sum, total = detail.Total.ToString("c") });
-            }
+			using (var scope = new TransactionScope ()) {
+				detail.UpdateAndFlush ();
+			}
 
+            return Json(new { id = id, quantity = detail.Quantity, total = detail.Total.ToString("c") });
         }
 
-        public ActionResult GetTotals(int id)
+        public ActionResult GetTotals (int id)
         {
-            var order = ReturnCustomer.Find(id);
-            return PartialView("_Totals", order);
+            var item = ReturnCustomer.Find (id);
+            return PartialView ("_Totals", item);
         }
 
         [HttpPost]
         public JsonResult RemoveDetail(int id)
         {
-            ReturnCustomerDetail item = ReturnCustomerDetail.Find(id);
-            item.Delete();
+            ReturnCustomerDetail item = ReturnCustomerDetail.Find (id);
+
+			using (var scope = new TransactionScope ()) {
+				item.DeleteAndFlush ();
+			}
+
             return Json(new { id = id, result = true });
         }
 
+		
+        //TODO: Falta realizar la salida del almacén 
         [HttpPost]
-        public ActionResult ConfirmReturn(int id)
+        public ActionResult ConfirmReturn (int id)
         {
             ReturnCustomer item = ReturnCustomer.Find(id);
 
             item.IsCompleted = true;
-            item.Save();
-            //TODO/ Falta realizar la salida del almacén 
+
+			using (var scope = new TransactionScope ()) {
+				item.UpdateAndFlush ();
+			}
+
             return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public ActionResult CancelReturn(int id)
+        public ActionResult CancelReturn (int id)
         {
             var item = ReturnCustomer.Find(id);
+			
+			item.IsCancelled = true;
 
-			using (var scope = new TransactionScope()) {
-				item.IsCancelled = true;
-				item.Save ();
+			using (var scope = new TransactionScope ()) {
+				item.UpdateAndFlush ();
 			}
 
             return RedirectToAction("Index");

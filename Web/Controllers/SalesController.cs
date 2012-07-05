@@ -117,12 +117,11 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ViewResult New ()
 		{
-			if (Configuration.PointOfSale == null)
-            {
-                return View("InvalidPointOfSale");
+			if (Configuration.PointOfSale == null) {
+                return View ("InvalidPointOfSale");
             }
 
-            return View(new SalesOrder { CustomerId = 1, Customer = Customer.Find(1) });
+            return View (new SalesOrder { CustomerId = 1, Customer = Customer.Find(1) });
         }
 
         [HttpPost]
@@ -144,6 +143,10 @@ namespace Mictlanix.BE.Web.Controllers
 				item.Serial = 1;
 			}
 			
+			item.Creator = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			item.CreationTime = DateTime.Now;
+			item.Updater = item.Creator;
+			item.ModificationTime = item.CreationTime;
 			item.Customer = Customer.Find (item.CustomerId);
 			item.SalesPerson = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 			item.Date = DateTime.Now;
@@ -178,7 +181,9 @@ namespace Mictlanix.BE.Web.Controllers
 		{
 			var order = SalesOrder.Find (item.Id);
 			var customer = Customer.Find (item.CustomerId);
-				
+
+			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			item.ModificationTime = DateTime.Now;
 			order.Details.ToList ();
 			order.Customer = customer;
 			order.IsCredit = item.IsCredit;
@@ -196,8 +201,7 @@ namespace Mictlanix.BE.Web.Controllers
         {
             var p = Product.Find(product);
 
-            var item = new SalesOrderDetail
-            {
+            var item = new SalesOrderDetail {
                 SalesOrder = SalesOrder.Find(order),
                 Product = p,
                 ProductCode = p.Code,
@@ -233,21 +237,23 @@ namespace Mictlanix.BE.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult EditDetailQuantity(int id, decimal quantity)
+        public JsonResult EditDetailQuantity (int id, decimal quantity)
         {
-            SalesOrderDetail detail = SalesOrderDetail.Find(id);
+            SalesOrderDetail detail = SalesOrderDetail.Find (id);
 
-            if (quantity > 0)
-            {
+            if (quantity > 0) {
                 detail.Quantity = quantity;
-                detail.Save();
+
+				using (var scope = new TransactionScope ()) {
+					detail.UpdateAndFlush ();
+				}
             }
 
             return Json(new { id = id, quantity = detail.Quantity, total = detail.Total.ToString("c") });
         }
 
         [HttpPost]
-        public JsonResult EditDetailDiscount(int id, string value)
+        public JsonResult EditDetailDiscount (int id, string value)
         {
             SalesOrderDetail detail = SalesOrderDetail.Find(id);
             bool success;
@@ -256,30 +262,27 @@ namespace Mictlanix.BE.Web.Controllers
             success = decimal.TryParse(value.TrimEnd(new char[] { ' ', '%' }), out discount);
             discount /= 100m;
 
-            if (success && discount >= 0 && discount <= 1)
-            {
+            if (success && discount >= 0 && discount <= 1) {
                 detail.Discount = discount;
-                detail.Save();
+
+				using (var scope = new TransactionScope ()) {
+					detail.UpdateAndFlush ();
+				}
             }
 
             return Json(new { id = id, discount = detail.Discount.ToString("p"), total = detail.Total.ToString("c") });
         }
 
         [HttpPost]
-        public JsonResult EditDeliveryOrder(int id, int value)
+        public JsonResult EditDeliveryOrder (int id, int value)
         {
-            SalesOrderDetail detail = SalesOrderDetail.Find(id);
+            SalesOrderDetail detail = SalesOrderDetail.Find (id);
 
-            if (value != 0)
-            {
-                detail.IsDeliveryOrder = true;
-                detail.Save();
-            }
-            else
-            {
-                detail.IsDeliveryOrder = false;
-                detail.Save();
-            }
+            detail.IsDeliveryOrder = (value != 0);
+
+			using (var scope = new TransactionScope ()) {
+				detail.UpdateAndFlush ();
+			}
 
             return Json(new { id = id, value = detail.IsDeliveryOrder });
         }
@@ -301,43 +304,56 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public JsonResult RemoveDetail(int id)
         {
-            SalesOrderDetail item = SalesOrderDetail.Find(id);
-            item.Delete();
+            var item = SalesOrderDetail.Find(id);
+
+			using (var scope = new TransactionScope ()) {
+				item.DeleteAndFlush ();
+			}
+
             return Json(new { id = id, result = true });
         }
 
         [HttpPost]
-        public ActionResult ConfirmOrder(int id)
+        public ActionResult ConfirmOrder (int id)
         {
-            SalesOrder item = SalesOrder.Find(id);
+            var item = SalesOrder.Find (id);
 
-            if (item.IsCredit)
-            {
+            if (item.IsCredit) {
                 item.IsPaid = true;
             }
 
+			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			item.ModificationTime = DateTime.Now;
             item.IsCompleted = true;
-            item.Save();
 
-            return RedirectToAction("New");
+			using (var scope = new TransactionScope ()) {
+				item.UpdateAndFlush ();
+			}
+
+            return RedirectToAction ("New");
         }
 
         [HttpPost]
-        public ActionResult CancelOrder(int id)
+        public ActionResult CancelOrder (int id)
         {
-            SalesOrder item = SalesOrder.Find(id);
-
+            var item = SalesOrder.Find (id);
+			
+			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			item.ModificationTime = DateTime.Now;
             item.IsCancelled = true;
-            item.Save();
 
-            return RedirectToAction("New");
+			using (var scope = new TransactionScope ()) {
+				item.UpdateAndFlush ();
+			}
+
+            return RedirectToAction ("New");
         }
 		
         public JsonResult GetSuggestions (int order, string pattern)
 		{
-			SalesOrder sales_order = SalesOrder.Find (order);
+			var sales_order = SalesOrder.Find (order);
 			int pl = sales_order.Customer.PriceList.Id;
-			ArrayList items = new ArrayList (15);
+			var items = new ArrayList (15);
 
 			var qry = from x in Product.Queryable
                       where x.Name.Contains (pattern) ||

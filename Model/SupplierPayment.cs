@@ -63,7 +63,7 @@ namespace Mictlanix.BE.Model
         public decimal Amount { get; set; }
 
         [Property]
-        [Display(Name = "Method", ResourceType = typeof(Resources))]
+        [Display(Name = "PaymentMethod", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         public PaymentMethod Method { get; set; }
 
@@ -73,7 +73,7 @@ namespace Mictlanix.BE.Model
         public DateTime Date { get; set; }
 
         [Property]
-        [Display(Name = "Reference", ResourceType = typeof(Resources))]
+        [Display(Name = "PaymentReference", ResourceType = typeof(Resources))]
         public string Reference { get; set; }
 
         [Property]

@@ -33,6 +33,8 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Castle.ActiveRecord;
+using NHibernate;
 using Mictlanix.BE.Model;
 
 namespace Mictlanix.BE.Web.Controllers
@@ -71,38 +73,41 @@ namespace Mictlanix.BE.Web.Controllers
         // POST: /Warehouses/Create
 
         [HttpPost]
-        public ActionResult Create(Warehouse warehouse)
+        public ActionResult Create (Warehouse item)
         {
-            if (ModelState.IsValid)
-            {
-                warehouse.Save();
-                return RedirectToAction("Index");
-            }
+            if (!ModelState.IsValid)
+            	return View (item);
+            
+			using (var scope = new TransactionScope ()) {
+				item.CreateAndFlush ();
+			}
 
-            return View(warehouse);
+			return RedirectToAction ("Index");
         }
 
         //
         // GET: /Warehouses/Edit/5
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit (int id)
         {
-            Warehouse warehouse = Warehouse.Find(id);
-            return View(warehouse);
+            Warehouse item = Warehouse.Find (id);
+            return View (item);
         }
 
         //
         // POST: /Warehouses/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(Warehouse warehouse)
+        public ActionResult Edit (Warehouse item)
         {
-            if (ModelState.IsValid)
-            {
-                warehouse.Save();
-                return RedirectToAction("Index");
-            }
-            return View(warehouse);
+            if (!ModelState.IsValid)
+            	return View (item);
+            
+			using (var scope = new TransactionScope ()) {
+				item.UpdateAndFlush ();
+			}
+
+			return RedirectToAction ("Index");
         }
 
         //
@@ -120,9 +125,16 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            Warehouse warehouse = Warehouse.Find(id);
-            warehouse.Delete();
-            return RedirectToAction("Index");
+			try {
+				using (var scope = new TransactionScope()) {
+					var item = Warehouse.Find (id);
+					item.DeleteAndFlush ();
+				}
+
+				return RedirectToAction ("Index");
+			} catch (TransactionException) {
+				return View ("DeleteUnsuccessful");
+			}
         }
 
 

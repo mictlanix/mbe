@@ -522,9 +522,6 @@
   <data name="Denomination" xml:space="preserve">
     <value>Denominación</value>
   </data>
-  <data name="Method" xml:space="preserve">
-    <value>Método de Pago</value>
-  </data>
   <data name="Close" xml:space="preserve">
     <value>Cerrar</value>
   </data>
@@ -589,7 +586,7 @@
     <value>Tarjeta de Débito</value>
   </data>
   <data name="GovernmentFunding" xml:space="preserve">
-    <value> FONACOT</value>
+    <value>FONACOT</value>
   </data>
   <data name="Payment" xml:space="preserve">
     <value>Pago</value>
@@ -1065,7 +1062,7 @@ Vencimiento: {0:d}</value>
     <value>Factura Nueva</value>
   </data>
   <data name="BillTo" xml:space="preserve">
-    <value>Datos de Facturación</value>
+    <value>Datos del Receptor</value>
   </data>
   <data name="Issuer" xml:space="preserve">
     <value>Emisor</value>
@@ -1433,5 +1430,29 @@ Realizada el: {0:d}</value>
   </data>
   <data name="FiscalDocumentId" xml:space="preserve">
     <value>ID</value>
+  </data>
+  <data name="TaxRegime" xml:space="preserve">
+    <value>Régimen Fiscal</value>
+  </data>
+  <data name="Unidentified" xml:space="preserve">
+    <value>No Identificado</value>
+  </data>
+  <data name="BankDeposit" xml:space="preserve">
+    <value>Depósito en Cuenta</value>
+  </data>
+  <data name="IssuedLocation" xml:space="preserve">
+    <value>Lugar de Expedición</value>
+  </data>
+  <data name="IssuedFrom" xml:space="preserve">
+    <value>Domicilio Fiscal</value>
+  </data>
+  <data name="IssuedAt" xml:space="preserve">
+    <value>Domicilio de Expedición</value>
+  </data>
+  <data name="PaymentMethod" xml:space="preserve">
+    <value>Método de Pago</value>
+  </data>
+  <data name="PaymentReference" xml:space="preserve">
+    <value>Referencia de Pago</value>
   </data>
 </root>

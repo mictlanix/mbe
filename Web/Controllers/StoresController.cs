@@ -33,6 +33,8 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Castle.ActiveRecord;
+using NHibernate;
 using Mictlanix.BE.Model;
 
 namespace Mictlanix.BE.Web.Controllers
@@ -64,54 +66,65 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Create()
         {
-            return View();
+			var item = new Store { 
+				Address = new Address {
+					TaxpayerId = "XXXXXXXXXXXX",
+					TaxpayerName = "XXX"
+				}
+			};
+
+            return View (item);
         }
 
         //
         // POST: /store/Create
 
         [HttpPost]
-        public ActionResult Create(Store store)
+        public ActionResult Create(Store item)
         {
-            if (ModelState.IsValid)
-            {
-                store.Save();
-                return RedirectToAction("Index");
-            }
-
-            return View(store);
+            if (!ModelState.IsValid)
+				return View (item);
+			
+			using (var scope = new TransactionScope()) {
+				item.Address.Create ();
+				item.CreateAndFlush ();
+			}
+			
+            return RedirectToAction ("Index");
         }
 
         //
         // GET: /Warehouses/Edit/5
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit (int id)
         {
-            Store store = Store.Find(id);
-            return View(store);
+            Store item = Store.Find(id);
+            return View (item);
         }
 
         //
         // POST: /store/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(Store store)
+        public ActionResult Edit (Store item)
         {
-            if (ModelState.IsValid)
-            {
-                store.Save();
-                return RedirectToAction("Index");
-            }
-            return View(store);
+            if (!ModelState.IsValid)
+				return View (item);
+
+			using (var scope = new TransactionScope()) {
+				item.Address.Update ();
+				item.UpdateAndFlush ();
+			}
+			
+			return RedirectToAction ("Index");
         }
 
         //
         // GET: /store/Delete/5
 
-        public ActionResult Delete(int id)
+        public ActionResult Delete (int id)
         {
-            Store store = Store.Find(id);
-            return View(store);
+            return View (Store.Find (id));
         }
 
         //
@@ -120,14 +133,17 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            Store store = Store.Find(id);
-            store.Delete();
-            return RedirectToAction("Index");
-        }
+			try {
+				using (var scope = new TransactionScope()) {
+					var item = Store.Find (id);
+					item.Delete ();
+					item.Address.Delete ();
+				}
 
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
+				return RedirectToAction ("Index");
+			} catch (TransactionException) {
+				return View ("DeleteUnsuccessful");
+			}
         }
 
         public JsonResult GetSuggestions(string pattern)

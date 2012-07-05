@@ -47,9 +47,9 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult Code128 (string id)
 		{
 			var ms = new MemoryStream (4 * 1024);
-			var barcode = Code128Rendering.MakeBarcodeImage (id, 2, false);
+			var img = Code128Rendering.MakeBarcodeImage (id, 2, false);
 			
-			barcode.Save (ms, ImageFormat.Png);
+			img.Save (ms, ImageFormat.Png);
 			ms.Seek (0, SeekOrigin.Begin);
 			var result = new FileStreamResult (ms, "image/png");
 			result.FileDownloadName = string.Format ("{0}.png", id);

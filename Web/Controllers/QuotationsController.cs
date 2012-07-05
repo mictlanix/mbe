@@ -147,7 +147,10 @@ namespace Mictlanix.BE.Web.Controllers
 			
 			var quote = SalesQuote.Find (item.Id);
 			quote.DueDate = item.DueDate;
-			quote.Save ();
+
+			using (var scope = new TransactionScope ()) {
+				quote.UpdateAndFlush ();
+			}
 
 			return PartialView ("_MasterView", quote);
         }
@@ -199,7 +202,10 @@ namespace Mictlanix.BE.Web.Controllers
             if (quantity > 0)
             {
                 detail.Quantity = quantity;
-                detail.Save();
+
+				using (var scope = new TransactionScope ()) {
+					detail.UpdateAndFlush ();
+				}
             }
 
             return Json(new { id = id, quantity = detail.Quantity, total = detail.Total.ToString("c") });
@@ -218,7 +224,10 @@ namespace Mictlanix.BE.Web.Controllers
             if (success && discount >= 0 && discount <= 1)
             {
                 detail.Discount = discount;
-                detail.Save();
+
+				using (var scope = new TransactionScope ()) {
+					detail.UpdateAndFlush ();
+				}
             }
 
             return Json(new { id = id, discount = detail.Discount.ToString("p"), total = detail.Total.ToString("c") });
@@ -249,7 +258,10 @@ namespace Mictlanix.BE.Web.Controllers
 			SalesQuote item = SalesQuote.Find (id);
 
 			item.IsCompleted = true;
-			item.Save ();
+			
+			using (var scope = new TransactionScope ()) {
+				item.UpdateAndFlush ();
+			}
 
 			return RedirectToAction ("Index");
         }
@@ -260,7 +272,10 @@ namespace Mictlanix.BE.Web.Controllers
 			SalesQuote item = SalesQuote.Find (id);
 
 			item.IsCancelled = true;
-			item.Save ();
+			
+			using (var scope = new TransactionScope ()) {
+				item.UpdateAndFlush ();
+			}
 
 			return RedirectToAction ("New");
         }
