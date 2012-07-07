@@ -543,8 +543,12 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public JsonResult RemoveDetail (int id)
 		{
-			FiscalDocumentDetail item = FiscalDocumentDetail.Find (id);
-			item.Delete ();
+			var item = FiscalDocumentDetail.Find (id);
+
+			using (var scope = new TransactionScope()) {
+				item.DeleteAndFlush ();
+			}
+
 			return Json (new { id = id, result = true });
 		}
 		

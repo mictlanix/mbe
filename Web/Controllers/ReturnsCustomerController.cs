@@ -192,7 +192,7 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public JsonResult RemoveDetail(int id)
         {
-            ReturnCustomerDetail item = ReturnCustomerDetail.Find (id);
+            var item = ReturnCustomerDetail.Find (id);
 
 			using (var scope = new TransactionScope ()) {
 				item.DeleteAndFlush ();
