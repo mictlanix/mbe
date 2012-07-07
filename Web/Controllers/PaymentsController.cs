@@ -306,7 +306,7 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public JsonResult RemovePayment (int id)
         {
-            CustomerPayment item = CustomerPayment.Find (id);
+            var item = CustomerPayment.Find (id);
             
 			using (var scope = new TransactionScope ()) {
             	item.DeleteAndFlush ();
