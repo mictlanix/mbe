@@ -201,8 +201,12 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public JsonResult RemoveReceiptDetail(int id)
         {
-            InventoryReceiptDetail item = InventoryReceiptDetail.Find(id);
-            item.Delete();
+            var item = InventoryReceiptDetail.Find(id);
+            
+			using (var scope = new TransactionScope()) {
+				item.DeleteAndFlush ();
+			}
+
             return Json(new { id = id, result = true });
         }
 
@@ -402,7 +406,7 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public JsonResult RemoveIssueDetail(int id)
         {
-            InventoryIssueDetail item = InventoryIssueDetail.Find(id);
+            var item = InventoryIssueDetail.Find(id);
 
 			using (var scope = new TransactionScope()) {
             	item.DeleteAndFlush ();
@@ -626,7 +630,7 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public JsonResult RemoveTransferDetail(int id)
         {
-            InventoryTransferDetail item = InventoryTransferDetail.Find(id);
+            var item = InventoryTransferDetail.Find(id);
 
 			using (var scope = new TransactionScope()) {
             	item.DeleteAndFlush ();
