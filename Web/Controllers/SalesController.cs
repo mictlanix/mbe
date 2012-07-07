@@ -276,7 +276,7 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public JsonResult EditDeliveryOrder (int id, int value)
         {
-            SalesOrderDetail detail = SalesOrderDetail.Find (id);
+            var detail = SalesOrderDetail.Find (id);
 
             detail.IsDeliveryOrder = (value != 0);
 

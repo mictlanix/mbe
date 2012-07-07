@@ -62,7 +62,7 @@ namespace Mictlanix.BE.Web.Helpers
 
 			return cfd;
 		}
-	
+
 		// Choose what version according to law
 		// v2.2 current version
 		// v2.0 before July 1, 2012
