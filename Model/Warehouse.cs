@@ -35,30 +35,39 @@ using Castle.ActiveRecord.Framework;
 
 namespace Mictlanix.BE.Model
 {
-    [ActiveRecord("warehouse")]
+    [ActiveRecord("warehouse", Lazy = true)]
     public class Warehouse : ActiveRecordLinqBase<Warehouse>
     {
         [PrimaryKey(PrimaryKeyType.Identity, "warehouse_id")]
-        public int Id { get; set; }
+        public virtual int Id { get; set; }
+
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+        [Display(Name = "Store", ResourceType = typeof(Resources))]
+        [UIHint("StoreSelector")]
+        public virtual int StoreId { get; set; }
+		
+        [BelongsTo("store")]
+        [Display(Name = "Store", ResourceType = typeof(Resources))]
+        public virtual Store Store { get; set; }
 
         [Property]
 		[ValidateIsUnique]
         [Display(Name = "Code", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(25, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Code { get; set; }
+        public virtual string Code { get; set; }
         
         [Property]
         [Display(Name = "Name", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
         [Property]
         [DataType(DataType.MultilineText)]
         [Display(Name = "Comment", ResourceType = typeof(Resources))]
         [StringLength(500, MinimumLength = 0)]
-        public string Comment { get; set; }
+        public virtual string Comment { get; set; }
 
         #region Override Base Methods
 

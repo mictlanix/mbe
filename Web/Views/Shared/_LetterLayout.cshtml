@@ -11,12 +11,12 @@
 <body>
     <header>
         <div id="logo" class="right floating">
-            <img src="@Url.Content("~/Content/images/logo.png")"
+            <img src="@Url.Content(ViewBag.StoreLogo)"
                  alt="@Configuration.LogoTitle"
                  title="@Configuration.LogoAlt"/>
         </div>
         <p></p>
-        <h1>@Configuration.Company</h1>
+        <h1>@ViewBag.StoreName</h1>
         @if (ViewBag.SkipAddress == null || !ViewBag.SkipAddress)
         {
         <h3>@Configuration.CompanyTaxpayer</h3>

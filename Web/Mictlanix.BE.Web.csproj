@@ -467,6 +467,8 @@
     <Content Include="Views\FiscalDocuments\Reports.cshtml" />
     <Content Include="Views\FiscalDocuments\Printv22.cshtml" />
     <Content Include="Views\FiscalDocuments\Printv20.cshtml" />
+    <Content Include="Views\Purchases\Print.cshtml" />
+    <Content Include="Views\SupplierReturns\Print.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />
@@ -758,7 +760,6 @@
     <Content Include="Views\Purchases\_PurchaseItem.cshtml" />
     <Content Include="Views\Purchases\Details.cshtml" />
     <Content Include="Views\Purchases\_PurchaseEditor.cshtml" />
-    <Content Include="Views\Purchases\_PrintPurchase.cshtml" />
     <Content Include="Views\SupplierPayments\Index.cshtml" />
     <Content Include="Views\SupplierPayments\NewPay.cshtml" />
     <Content Include="Views\AccountsPayables\AccountStatement.cshtml" />
@@ -787,7 +788,6 @@
     <Content Include="Views\SupplierReturns\HistoricDetails.cshtml" />
     <Content Include="Views\SupplierReturns\_SupplierReturnDetails.cshtml" />
     <Content Include="Views\AccountsPayables\Dates.cshtml" />
-    <Content Include="Views\SupplierReturns\_PrintSupplierReturn.cshtml" />
     <Content Include="Views\ReturnsCustomer\_CustomerReturnTicket.cshtml" />
     <Content Include="Views\Sales\_PromissoryNoteTicket.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\StoreSelector.cshtml" />

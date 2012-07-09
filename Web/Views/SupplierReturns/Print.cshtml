@@ -6,7 +6,9 @@
 @{
     Layout = "~/Views/Shared/_LetterLayout.cshtml";
     ViewBag.Title = Resources.Title_SupplierReturn;
-    //ViewBag.SkipAddress = true;
+    //FIXME: no store
+    ViewBag.StoreName = "x";
+    ViewBag.StoreLogo = "x";
 }
 <h2>@Resources.DisplayName_ReturnInformation</h2>
 <p></p>
