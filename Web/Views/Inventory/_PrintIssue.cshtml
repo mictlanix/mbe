@@ -6,6 +6,8 @@
 @{
     Layout = "~/Views/Shared/_LetterLayout.cshtml";
     ViewBag.Title = Resources.Title_InventoryIssue;
+    ViewBag.StoreName = Model.Warehouse.Store.Name;
+    ViewBag.StoreLogo = Model.Warehouse.Store.Logo;
 }
 <h2>@Resources.DisplayName_InventoryInformation</h2>
 <p></p>

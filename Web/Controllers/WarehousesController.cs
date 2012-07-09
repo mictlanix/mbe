@@ -44,29 +44,29 @@ namespace Mictlanix.BE.Web.Controllers
         //
         // GET: /Warehouses/
 
-        public ViewResult Index()
+        public ViewResult Index ()
         {
             var qry = from x in Warehouse.Queryable
                       select x;
 
-            return View(qry.ToList());
+            return View (qry.ToList());
         }
 
         //
         // GET: /Warehouses/Details/5
 
-        public ViewResult Details(int id)
+        public ViewResult Details (int id)
         {
-            Warehouse warehouse = Warehouse.Find(id);
-            return View(warehouse);
+            var item = Warehouse.Find (id);
+            return View (item);
         }
 
         //
         // GET: /Warehouses/Create
 
-        public ActionResult Create()
+        public ActionResult Create ()
         {
-            return View();
+            return View ();
         }
 
         //
@@ -78,6 +78,8 @@ namespace Mictlanix.BE.Web.Controllers
             if (!ModelState.IsValid)
             	return View (item);
             
+            item.Store = Store.Find (item.StoreId);
+
 			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
 			}
@@ -90,7 +92,7 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Edit (int id)
         {
-            Warehouse item = Warehouse.Find (id);
+            var item = Warehouse.Find (id);
             return View (item);
         }
 
@@ -103,8 +105,14 @@ namespace Mictlanix.BE.Web.Controllers
             if (!ModelState.IsValid)
             	return View (item);
             
+			var entity = Warehouse.Find (item.Id);
+
+			entity.Code = item.Code;
+			entity.Name = item.Name;
+			entity.Comment = item.Comment;
+
 			using (var scope = new TransactionScope ()) {
-				item.UpdateAndFlush ();
+				entity.UpdateAndFlush ();
 			}
 
 			return RedirectToAction ("Index");
@@ -113,10 +121,9 @@ namespace Mictlanix.BE.Web.Controllers
         //
         // GET: /Warehouses/Delete/5
 
-        public ActionResult Delete(int id)
+        public ActionResult Delete (int id)
         {
-            Warehouse warehouse = Warehouse.Find(id);
-            return View(warehouse);
+            return View (Warehouse.Find (id));
         }
 
         //
@@ -136,8 +143,6 @@ namespace Mictlanix.BE.Web.Controllers
 				return View ("DeleteUnsuccessful");
 			}
         }
-
-
 
         public JsonResult GetSuggestions(string pattern)
         {

@@ -50,7 +50,7 @@
 <script type="text/javascript">
     $(function() {
         $(".print").printPage({
-            url: "@Url.Action("PrintSupplierReturn", "SupplierReturns", new { id = Model.Id })"
+            url: "@Url.Action("Print", "SupplierReturns", new { id = Model.Id })"
         });
     });
 
