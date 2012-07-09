@@ -69,7 +69,7 @@
 <script type="text/javascript">
     $(function() {
         $(".print").printPage({
-            url: "@Url.Action("PrintPurchase", "Purchases", new { id = Model.Id })"
+            url: "@Url.Action("Print", "Purchases", new { id = Model.Id })"
         });
     });
 

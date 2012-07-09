@@ -53,13 +53,12 @@ namespace Mictlanix.BE.Web.Controllers
             return View(qry.ToList());
         }
 
-        // GET: /Purchases/PrintPurchase/
+        // GET: /Purchases/Print/
 
-        public ViewResult PrintPurchase(int id)
+        public ViewResult Print (int id)
         {
-            PurchaseOrder item = PurchaseOrder.Find(id);
-
-            return View("_PrintPurchase", item);
+            var item = PurchaseOrder.Find (id);
+            return View (item);
         }
 
         //
@@ -107,17 +106,16 @@ namespace Mictlanix.BE.Web.Controllers
  
         public ActionResult EditPurchase(int id)
         {
-            PurchaseOrder item = PurchaseOrder.Find(id);
+            var item = PurchaseOrder.Find (id);
 
-            if (item.IsCompleted || item.IsCancelled)
-            {
-                return RedirectToAction("Details", new { id = item.Id });
+            if (item.IsCompleted || item.IsCancelled) {
+                return RedirectToAction ("Details", new { id = item.Id });
             }
 
             if (Request.IsAjaxRequest())
-                return PartialView("_PurchaseEditor", item);
+                return PartialView ("_PurchaseEditor", item);
             else
-                return View(item);
+                return View (item);
         }
 
         //

@@ -138,8 +138,10 @@ namespace Mictlanix.BE.Web.Controllers
 			customer.CreditDays = item.CreditDays;
 			customer.CreditLimit = item.CreditLimit;
 			customer.Comment = item.Comment;
-			
-            customer.Update();
+
+			using (var scope = new TransactionScope()) {
+            	customer.UpdateAndFlush();
+			}
 			
             return RedirectToAction("Index");
         }
