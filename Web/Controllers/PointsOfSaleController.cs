@@ -43,41 +43,41 @@ namespace Mictlanix.BE.Web.Controllers
         //
         // GET: /PointSale/
 
-        public ViewResult Index()
+        public ViewResult Index ()
         {
             var qry = from x in PointOfSale.Queryable
                       select x;
 
-            return View(qry.ToList());
+            return View (qry.ToList ());
         }
 
         //
         // GET: /PointSale/Details/5
 
-        public ViewResult Details(int id)
+        public ViewResult Details (int id)
         {
-            PointOfSale pointSale = PointOfSale.Find(id);
-            return View(pointSale);
+            var item = PointOfSale.Find (id);
+            return View (item);
         }
 
         //
         // GET: /PointSale/Create
 
-        public ActionResult Create()
+        public ActionResult Create ()
         {
-            return View();
+            return View ();
         }
 
         //
         // POST: /PointSale/Create
 
         [HttpPost]
-        public ActionResult Create(PointOfSale item)
+        public ActionResult Create (PointOfSale item)
         {
             if (!ModelState.IsValid)
-            	return View(item);
+            	return View (item);
             
-            item.Store = Store.Find(item.StoreId);
+            item.Store = Store.Find (item.StoreId);
             
 			using (var scope = new TransactionScope ()) {
             	item.CreateAndFlush ();
@@ -91,7 +91,7 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Edit (int id)
         {
-            PointOfSale item = PointOfSale.Find (id);
+            var item = PointOfSale.Find (id);
             return View (item);
         }
 
@@ -104,10 +104,14 @@ namespace Mictlanix.BE.Web.Controllers
             if (!ModelState.IsValid)
             	return View (item);
             
-            item.Store = PointOfSale.Find (item.Id).Store;
-            
+			var entity = PointOfSale.Find (item.Id);
+
+			entity.Code = item.Code;
+			entity.Name = item.Name;
+			entity.Comment = item.Comment;
+
 			using (var scope = new TransactionScope ()) {
-            	item.UpdateAndFlush ();
+				entity.UpdateAndFlush ();
 			}
 
             return RedirectToAction ("Index");
@@ -116,10 +120,9 @@ namespace Mictlanix.BE.Web.Controllers
         //
         // GET: /PointSale/Delete/5
 
-        public ActionResult Delete(int id)
+        public ActionResult Delete (int id)
         {
-            PointOfSale item = PointOfSale.Find (id);
-            return View (item);
+            return View (PointOfSale.Find (id));
         }
 
         //

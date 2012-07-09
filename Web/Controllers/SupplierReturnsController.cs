@@ -73,29 +73,26 @@ namespace Mictlanix.BE.Web.Controllers
             }
         }
 
-        public ViewResult PrintSupplierReturn(int id)
+        public ViewResult Print(int id)
         {
-            SupplierReturn item = SupplierReturn.Find(id);
-
-            return View("_PrintSupplierReturn", item);
+            return View(SupplierReturn.Find (id));
         }
 
-
-        public ViewResult Historic()
+        public ViewResult Historic ()
         {
             var qry = from x in SupplierReturn.Queryable
                       where x.IsCompleted || x.IsCancelled
                       orderby x.Id descending
                       select x;
 
-            return View(qry.ToList());
+            return View (qry.ToList());
         }
 
-        public ViewResult HistoricDetails(int id)
+        public ViewResult HistoricDetails (int id)
         {
-            SupplierReturn order = SupplierReturn.Find(id);
+            var item = SupplierReturn.Find (id);
 
-            return View(order);
+            return View (item);
         }
 
 

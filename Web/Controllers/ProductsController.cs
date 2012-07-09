@@ -61,17 +61,13 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult Index(Search<Product> search)
         {
-            if (ModelState.IsValid)
-            {
+            if (ModelState.IsValid) {
                 search = GetProducts(search);
             }
 
-            if (Request.IsAjaxRequest())
-            {
+            if (Request.IsAjaxRequest()) {
                 return PartialView("_Index", search);
-            }
-            else
-            {
+            } else {
                 return View(search);
             }
         }
@@ -83,12 +79,9 @@ namespace Mictlanix.BE.Web.Controllers
         {
             Product product = Product.Find(id);
 
-            if (Request.IsAjaxRequest())
-            {
+            if (Request.IsAjaxRequest()) {
                 return PartialView("_Details", product);
-            }
-            else
-            {
+            } else {
                 return View(product);
             }
         }
@@ -127,8 +120,8 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Edit(int id)
         {
-            Product product = Product.Find(id);
-            return View(product);
+            Product item = Product.Find (id);
+            return View (item);
         }
 
         //
@@ -140,13 +133,33 @@ namespace Mictlanix.BE.Web.Controllers
 			if (!ModelState.IsValid)
 				return View (item);
             
-			item.IsTaxIncluded = Configuration.IsTaxIncluded;
-			item.Supplier = Supplier.Find (item.SupplierId);
-			item.Category = Category.Find (item.CategoryId);
-			item.Photo = SavePhoto (file) ?? item.Photo;
+			var entity = Product.Find (item.Id);
+
+			entity.Brand = item.Brand;
+			entity.Code = item.Code;
+			entity.Comment = item.Comment;
+			entity.Cost = item.Cost;
+			entity.IsInvoiceable = item.IsInvoiceable;
+			entity.IsPerishable = item.IsPerishable;
+			entity.IsSeriable = item.IsSeriable;
+			entity.IsTaxIncluded = item.IsTaxIncluded;
+			entity.Location = item.Location;
+			entity.Model = item.Model;
+			entity.Name = item.Name;
+			entity.Price1 = item.Price1;
+			entity.Price2 = item.Price2;
+			entity.Price3 = item.Price3;
+			entity.Price4 = item.Price4;
+			entity.SKU = item.SKU;
+			entity.TaxRate = item.TaxRate;
+			entity.UnitOfMeasurement = item.UnitOfMeasurement;
+			entity.IsTaxIncluded = Configuration.IsTaxIncluded;
+			entity.Supplier = Supplier.Find (item.SupplierId);
+			entity.Category = Category.Find (item.CategoryId);
+			entity.Photo = SavePhoto (file) ?? item.Photo;
 
 			using (var scope = new TransactionScope ()) {
-            	item.UpdateAndFlush ();
+            	entity.UpdateAndFlush ();
 			}
 
 			return RedirectToAction ("Index");
@@ -157,8 +170,8 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Delete(int id)
         {
-            Product product = Product.Find(id);
-            return View(product);
+            Product item = Product.Find(id);
+            return View(item);
         }
 
         //
