@@ -501,6 +501,9 @@
   <data name="SalesOrder" xml:space="preserve">
     <value>Orden de Venta</value>
   </data>
+  <data name="Sale" xml:space="preserve">
+  	<value>Venta</value>
+  </data>
   <data name="SalesPerson" xml:space="preserve">
     <value>Vendedor</value>
   </data>
@@ -1109,6 +1112,9 @@ Vencimiento: {0:d}</value>
   <data name="PurchaseOrderId" xml:space="preserve">
     <value>Folio de Compra</value>
   </data>
+  <data name="Purchase" xml:space="preserve">
+    <value>Compra</value>
+  </data>
   <data name="DisplayName_PurchasesOrders" xml:space="preserve">
     <value>Compras</value>
   </data>
@@ -1454,5 +1460,8 @@ Realizada el: {0:d}</value>
   </data>
   <data name="PaymentReference" xml:space="preserve">
     <value>Referencia de Pago</value>
+  </data>
+  <data name="KardexSource" xml:space="preserve">
+    <value>Tipo de Movimiento</value>
   </data>
 </root>

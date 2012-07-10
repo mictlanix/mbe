@@ -59,8 +59,16 @@ namespace Mictlanix.BE.Model
         [Property]
         [DisplayFormat(DataFormatString = "{0:0.####}")]
         [Display(Name = "Quantity", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
         public virtual decimal Quantity { get; set; }
+
+		[Property]
+        [Display(Name = "Reference", ResourceType = typeof(Resources))]
+        public virtual int Reference { get; set; }
+
+		[Property]
+        [Display(Name = "Source", ResourceType = typeof(Resources))]
+        public virtual KardexSource Source { get; set; }
+
 
         #region Override Base Methods
 

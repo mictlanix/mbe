@@ -120,6 +120,7 @@
     <Compile Include="SalesQuoteDetail.cs" />
     <Compile Include="FiscalDocument.cs" />
     <Compile Include="FiscalDocumentDetail.cs" />
+    <Compile Include="Constants\KardexSource.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">
