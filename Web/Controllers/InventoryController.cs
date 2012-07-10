@@ -94,6 +94,7 @@ namespace Mictlanix.BE.Web.Controllers
 			item.Updater = item.Creator;
 			item.Warehouse = Warehouse.Find (item.WarehouseId);
 
+
 			using (var scope = new TransactionScope()) {
 				item.CreateAndFlush ();
 			}
@@ -221,6 +222,20 @@ namespace Mictlanix.BE.Web.Controllers
             item.IsCompleted = true;
 
 			using (var scope = new TransactionScope()) {
+
+				foreach(var x in item.Details) {
+					var kardex = new Kardex {
+						Warehouse = item.Warehouse,
+						Product = x.Product,
+						Source = KardexSource.InventoryReceipt,
+						Quantity = x.Quantity,
+						Date = DateTime.Now,
+						Reference = item.Id
+					};
+
+					kardex.CreateAndFlush ();
+				}
+
             	item.UpdateAndFlush ();
 			}
 
