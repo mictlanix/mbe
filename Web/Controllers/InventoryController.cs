@@ -676,38 +676,38 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult ConfirmTransfer(int id)
         {
-            InventoryTransfer item = InventoryTransfer.Find(id);
+            var item = InventoryTransfer.Find(id);
 
             item.IsCompleted = true;
 
 			using (var scope = new TransactionScope()) {
+				var dt = DateTime.Now;
+
                 foreach (var x in item.Details)
                 {
                     var input = new Kardex
                     {
-                        Warehouse = item.From,
+                        Warehouse = item.To,
                         Product = x.Product,
-                        Source = KardexSource.InventoryReceipt,
+                        Source = KardexSource.InventoryTransfer,
                         Quantity = x.Quantity,
-                        Date = DateTime.Now,
+                        Date = dt,
                         Reference = item.Id
                     };
 
-                    input.CreateAndFlush();
-                }
-                foreach (var y in item.Details)
-                {
+                    input.Create();
+
                     var output = new Kardex
                     {
-                        Warehouse = item.To,
-                        Product = y.Product,
-                        Source = KardexSource.InventoryIssue,
-                        Quantity = y.Quantity * -1,
-                        Date = DateTime.Now,
+                        Warehouse = item.From,
+                        Product = x.Product,
+                        Source = KardexSource.InventoryTransfer,
+                        Quantity = -x.Quantity,
+                        Date = dt,
                         Reference = item.Id
                     };
 
-                    output.CreateAndFlush();
+                    output.Create();
                 }
                     
             	item.UpdateAndFlush ();
