@@ -50,6 +50,15 @@ namespace Mictlanix.BE.Model
         [Display(Name = "Store", ResourceType = typeof(Resources))]
         public virtual Store Store { get; set; }
 
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+        [Display(Name = "Warehouse", ResourceType = typeof(Resources))]
+        [UIHint("WarehouseSelector")]
+        public int WarehouseId { get; set; }
+		
+        [BelongsTo("warehouse")]
+        [Display(Name = "Warehouse", ResourceType = typeof(Resources))]
+        public virtual Warehouse Warehouse { get; set; }
+
         [Property]
 		[ValidateIsUnique]
         [Display(Name = "Code", ResourceType = typeof(Resources))]
