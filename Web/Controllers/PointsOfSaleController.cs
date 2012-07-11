@@ -78,6 +78,7 @@ namespace Mictlanix.BE.Web.Controllers
             	return View (item);
             
             item.Store = Store.Find (item.StoreId);
+			item.Warehouse = Warehouse.Find (item.WarehouseId);
             
 			using (var scope = new TransactionScope ()) {
             	item.CreateAndFlush ();
