@@ -441,6 +441,22 @@ namespace Mictlanix.BE.Web.Controllers
             item.IsCompleted = true;
 
 			using (var scope = new TransactionScope()) {
+
+                foreach (var x in item.Details)
+                {
+                    var kardex = new Kardex
+                    {
+                        Warehouse = item.Warehouse,
+                        Product = x.Product,
+                        Source = KardexSource.InventoryIssue,
+                        Quantity = x.Quantity * -1,
+                        Date = DateTime.Now,
+                        Reference = item.Id
+                    };
+
+                    kardex.CreateAndFlush();
+                }
+
             	item.UpdateAndFlush ();
 			}
 
@@ -665,6 +681,35 @@ namespace Mictlanix.BE.Web.Controllers
             item.IsCompleted = true;
 
 			using (var scope = new TransactionScope()) {
+                foreach (var x in item.Details)
+                {
+                    var input = new Kardex
+                    {
+                        Warehouse = item.From,
+                        Product = x.Product,
+                        Source = KardexSource.InventoryReceipt,
+                        Quantity = x.Quantity,
+                        Date = DateTime.Now,
+                        Reference = item.Id
+                    };
+
+                    input.CreateAndFlush();
+                }
+                foreach (var y in item.Details)
+                {
+                    var output = new Kardex
+                    {
+                        Warehouse = item.To,
+                        Product = y.Product,
+                        Source = KardexSource.InventoryIssue,
+                        Quantity = y.Quantity * -1,
+                        Date = DateTime.Now,
+                        Reference = item.Id
+                    };
+
+                    output.CreateAndFlush();
+                }
+                    
             	item.UpdateAndFlush ();
 			}
 
