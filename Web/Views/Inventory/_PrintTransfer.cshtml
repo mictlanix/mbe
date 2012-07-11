@@ -6,8 +6,8 @@
 @{
     Layout = "~/Views/Shared/_LetterLayout.cshtml";
     ViewBag.Title = Resources.Title_InventoryTransfer;
-    ViewBag.StoreName = Model.Warehouse.Store.Name;
-    ViewBag.StoreLogo = Model.Warehouse.Store.Logo;
+    ViewBag.StoreName = Model.From.Store.Name;
+    ViewBag.StoreLogo = Model.From.Store.Logo;
 }
 <h2>@Resources.DisplayName_InventoryInformation</h2>
 <p></p>
