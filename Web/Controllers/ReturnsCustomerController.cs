@@ -211,6 +211,21 @@ namespace Mictlanix.BE.Web.Controllers
             item.IsCompleted = true;
 
 			using (var scope = new TransactionScope ()) {
+				foreach( var x in item.Details)
+				{
+					var input = new Kardex
+                    {
+                        Warehouse = item.SalesOrder.PointOfSale.Warehouse,
+                        Product = x.Product,
+                        Source = KardexSource.Sale,
+                        Quantity = x.Quantity,
+                        Date = DateTime.Now,
+                        Reference = item.Id
+                    };
+
+                    input.Create();
+				}
+
 				item.UpdateAndFlush ();
 			}
 
