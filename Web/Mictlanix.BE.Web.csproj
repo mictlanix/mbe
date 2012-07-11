@@ -469,6 +469,7 @@
     <Content Include="Views\FiscalDocuments\Printv20.cshtml" />
     <Content Include="Views\Purchases\Print.cshtml" />
     <Content Include="Views\SupplierReturns\Print.cshtml" />
+    <Content Include="Views\PointsOfSale\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />
@@ -646,7 +647,6 @@
     <Content Include="Views\PointsOfSale\Delete.cshtml" />
     <Content Include="Views\PointsOfSale\Details.cshtml" />
     <Content Include="Views\PointsOfSale\Edit.cshtml" />
-    <Content Include="Views\PointsOfSale\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\_Menu.cshtml" />
