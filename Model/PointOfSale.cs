@@ -39,12 +39,12 @@ namespace Mictlanix.BE.Model
     public class PointOfSale : ActiveRecordLinqBase<PointOfSale>
     {
         [PrimaryKey(PrimaryKeyType.Identity, "point_sale_id")]
-        public int Id { get; set; }
+        public virtual int Id { get; set; }
 
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "Store", ResourceType = typeof(Resources))]
         [UIHint("StoreSelector")]
-        public int StoreId { get; set; }
+        public virtual int StoreId { get; set; }
 		
         [BelongsTo("store")]
         [Display(Name = "Store", ResourceType = typeof(Resources))]
@@ -53,7 +53,7 @@ namespace Mictlanix.BE.Model
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "Warehouse", ResourceType = typeof(Resources))]
         [UIHint("WarehouseSelector")]
-        public int WarehouseId { get; set; }
+        public virtual int WarehouseId { get; set; }
 		
         [BelongsTo("warehouse")]
         [Display(Name = "Warehouse", ResourceType = typeof(Resources))]
@@ -64,19 +64,19 @@ namespace Mictlanix.BE.Model
         [Display(Name = "Code", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(25, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Code { get; set; }
+        public virtual string Code { get; set; }
 
         [Property]
         [Display(Name = "Name", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
         [Property]
         [DataType(DataType.MultilineText)]
         [Display(Name = "Comment", ResourceType = typeof(Resources))]
         [StringLength(500, MinimumLength = 0)]
-        public string Comment { get; set; }
+        public virtual string Comment { get; set; }
 
         #region Override Base Methods
 
