@@ -1,5 +1,7 @@
 ﻿@using Mictlanix.BE
-@model Mictlanix.BE.Models.Kardex
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model Kardex
 
 @{
     ViewBag.Title = Resources.Title_Kardex;
@@ -15,11 +17,14 @@
             @Html.ValidationSummary(true)
             
             <div class="editor-label">
-                @Html.LabelFor(model => model.Warehouse)
-                @Html.TextBoxFor(model => model.WarehouseId)
-                @Html.ValidationMessageFor(model => model.Warehouse.Name)
-            </div>
-            
+            	@Html.LabelFor(model => model.Warehouse)
+	        </div>
+	        <div class="editor-field">
+	            @Html.EditorFor(model => model.WarehouseId)
+	            @Html.ValidationMessageFor(model => model.WarehouseId)
+	        </div>
+	        
+	            
             <p class="right">
                 <button type="submit" class="icon save">@Resources.Save</button>
             </p>
