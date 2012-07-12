@@ -157,6 +157,7 @@
     <Compile Include="Models\FiscalReport.cs" />
     <Compile Include="Models\Pair.cs" />
     <Compile Include="Controllers\FiscalDocumentsController.cs" />
+    <Compile Include="Controllers\KardexController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
@@ -470,6 +471,7 @@
     <Content Include="Views\Purchases\Print.cshtml" />
     <Content Include="Views\SupplierReturns\Print.cshtml" />
     <Content Include="Views\PointsOfSale\Index.cshtml" />
+    <Content Include="Views\Kardex\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />
@@ -837,5 +839,6 @@
   <ItemGroup />
   <ItemGroup>
     <Folder Include="Views\TaxpayerDocuments\" />
+    <Folder Include="Views\Kardex\" />
   </ItemGroup>
 </Project>

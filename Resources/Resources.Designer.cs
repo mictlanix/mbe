@@ -4061,5 +4061,35 @@ namespace Mictlanix.BE {
 				return ResourceManager.GetString ("PaymentReference", resourceCulture);
             }
         }
+		public static string KardexSource {
+			get {
+				return ResourceManager.GetString ("KardexSource", resourceCulture);
+            }
+        }
+		public static string DisplayName_Kardex {
+			get {
+				return ResourceManager.GetString ("DisplayName_Kardex", resourceCulture);
+            }
+        }
+		public static string Title_Kardex {
+			get {
+				return ResourceManager.GetString ("Title_Kardex", resourceCulture);
+            }
+        }
+		public static string DisplayName_WarehouseSelect {
+			get {
+				return ResourceManager.GetString ("DisplayName_WarehouseSelect", resourceCulture);
+            }
+        }
+		public static string Sale {
+			get {
+				return ResourceManager.GetString ("Sale", resourceCulture);
+            }
+        }
+		public static string Purchase {
+			get {
+				return ResourceManager.GetString ("Purchase", resourceCulture);
+            }
+        }
     }
 }
