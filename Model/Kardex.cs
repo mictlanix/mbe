@@ -47,6 +47,11 @@ namespace Mictlanix.BE.Model
         [DataType(DataType.DateTime)]
         [Display(Name = "Date", ResourceType = typeof(Resources))]
         public virtual DateTime Date { get; set; }
+		
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+        [Display(Name = "Warehouse", ResourceType = typeof(Resources))]
+        [UIHint("WarehouseSelector")]
+        public int WarehouseId { get; set; }
 
         [BelongsTo("warehouse")]
         [Display(Name = "Warehouse", ResourceType = typeof(Resources))]
