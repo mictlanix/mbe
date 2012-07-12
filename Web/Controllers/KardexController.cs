@@ -44,7 +44,7 @@ namespace Mictlanix.BE.Web.Controllers
     {
 		public ViewResult Index ()
 		{
-			return View ();
+			return View (new Kardex());
 		}
 	}
 }

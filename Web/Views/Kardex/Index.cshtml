@@ -1,7 +1,5 @@
 ﻿@using Mictlanix.BE
-@using Mictlanix.BE.Model
-@using Mictlanix.BE.Web.Models
-@model Kardex
+@model Mictlanix.BE.Models.Kardex
 
 @{
     ViewBag.Title = Resources.Title_Kardex;
@@ -19,7 +17,7 @@
             <div class="editor-label">
                 @Html.LabelFor(model => model.Warehouse)
                 @Html.TextBoxFor(model => model.WarehouseId)
-                @Html.ValidationMessageFor(model => model.WarehouseId)
+                @Html.ValidationMessageFor(model => model.Warehouse.Name)
             </div>
             
             <p class="right">
