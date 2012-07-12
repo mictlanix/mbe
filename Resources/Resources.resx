@@ -1176,7 +1176,7 @@ Realizada el: {0:d}</value>
   <data name="PurchasesSummary" xml:space="preserve">
     <value>Total de Compras</value>
   </data>
-  <data name="ReturnsSummary" xml:space="preserve">
+  <data name="sSummary" xml:space="preserve">
     <value>Total de Devoluciones</value>
   </data>
   <data name="DisplayName_PaymentInformation" xml:space="preserve">
@@ -1463,5 +1463,14 @@ Realizada el: {0:d}</value>
   </data>
   <data name="KardexSource" xml:space="preserve">
     <value>Tipo de Movimiento</value>
+  </data>
+  <data name="DisplayName_Kardex" xml:space="preserve">
+    <value>Kardex por Almacén</value>
+  </data>
+  <data name="Title_Kardex" xml:space="preserve">
+    <value>Kardex</value>
+  </data>
+  <data name="DisplayName_WarehouseSelect" xml:space="preserve">
+    <value>Selección de Almacén</value>
   </data>
 </root>

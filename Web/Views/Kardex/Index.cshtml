@@ -1,0 +1,30 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
+@model Kardex
+
+@{
+    ViewBag.Title = Resources.Title_Kardex;
+}
+
+<h2>@Resources.DisplayName_Kardex</h2> 
+
+<div id="master-section">
+    <fieldset>
+        <legend>@Resources.DisplayName_WarehouseSelect</legend>
+        @using (Html.BeginForm())
+        {
+            @Html.ValidationSummary(true)
+            
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Warehouse)
+                @Html.TextBoxFor(model => model.WarehouseId)
+                @Html.ValidationMessageFor(model => model.WarehouseId)
+            </div>
+            
+            <p class="right">
+                <button type="submit" class="icon save">@Resources.Save</button>
+            </p>
+        }
+    </fieldset>
+</div>
