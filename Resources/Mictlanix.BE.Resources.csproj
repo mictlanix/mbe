@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -8,7 +8,7 @@
     <ProjectGuid>{CBB1BA70-351E-4009-86FB-484810DC6364}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Business.Essentials</RootNamespace>
+    <RootNamespace>Mictlanix.BE</RootNamespace>
     <AssemblyName>Mictlanix.BE.Resources</AssemblyName>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

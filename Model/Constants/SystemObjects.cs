@@ -100,6 +100,8 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "SalesQuotes", ResourceType = typeof(Resources))]
 		SalesQuotes,
         [Display(Name = "FiscalReports", ResourceType = typeof(Resources))]
-        FiscalReports
+        FiscalReports,
+        [Display(Name = "Kardex", ResourceType = typeof(Resources))]
+        Kardex
     }
 }
