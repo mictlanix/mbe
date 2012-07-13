@@ -1,33 +1,57 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
-@model Kardex
-
+@model IEnumerable<Kardex>
+           
 @{
     ViewBag.Title = Resources.Title_Kardex;
 }
 
 <h2>@Resources.DisplayName_Kardex</h2> 
 
+
 <div id="master-section">
+@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))
+{
     <fieldset>
         <legend>@Resources.DisplayName_WarehouseSelect</legend>
-        @using (Html.BeginForm())
-        {
-            @Html.ValidationSummary(true)
             
-            <div class="editor-label">
-            	@Html.LabelFor(model => model.Warehouse)
-	        </div>
-	        <div class="editor-field">
-	            @Html.EditorFor(model => model.WarehouseId)
-	            @Html.ValidationMessageFor(model => model.WarehouseId)
-	        </div>
-	        
-	            
+            <div class="search-box">
+                <input type="text" id="warehouse" name="warehouse" />
+            </div>
             <p class="right">
-                <button type="submit" class="icon save">@Resources.Save</button>
+                <button type="submit" class="icon search">@Resources.Search</button>
             </p>
-        }
+
     </fieldset>
+}
 </div>
+<div id="activity-indicator">
+    <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
+</div>
+<div id="search-results">
+    
+</div>
+<script type="text/javascript">
+    function onSearchBegin() {
+        $("#search-results").html(null);
+    }
+</script>
+<style type="text/css">
+ul.token-input-list {
+  width:100%;
+}
+</style>
+
+<script type="text/javascript">
+    $(function () {
+        $("#warehouse").tokenInput("@Url.Action("GetSuggestions", "Warehouses")", {
+            hintText: "@Resources.HIntText",
+            noResultsText: "@Resources.NoResultsText",
+            searchingText: "@Resources.SearchingText",
+            queryParam: "pattern",
+            minChars: 1,
+            tokenLimit: 1
+        });
+    });
+</script>

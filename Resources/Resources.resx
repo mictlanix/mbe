@@ -502,7 +502,7 @@
     <value>Orden de Venta</value>
   </data>
   <data name="Sale" xml:space="preserve">
-  	<value>Venta</value>
+    <value>Venta</value>
   </data>
   <data name="SalesPerson" xml:space="preserve">
     <value>Vendedor</value>
@@ -1353,9 +1353,6 @@ Realizada el: {0:d}</value>
   <data name="DisplayName_TaxpayerDocuments" xml:space="preserve">
     <value>Series y Folios</value>
   </data>
-  <data name="DisplayName_TaxpayerDocuments" xml:space="preserve">
-    <value>Series y Folios</value>
-  </data>
   <data name="SerialStart" xml:space="preserve">
     <value>Folio Inicial</value>
   </data>
@@ -1472,5 +1469,14 @@ Realizada el: {0:d}</value>
   </data>
   <data name="DisplayName_WarehouseSelect" xml:space="preserve">
     <value>Selección de Almacén</value>
+  </data>
+  <data name="Consult" xml:space="preserve">
+    <value>Consultar</value>
+  </data>
+  <data name="Kardex" xml:space="preserve">
+    <value>Kardex</value>
+  </data>
+  <data name="WarehouseName" xml:space="preserve">
+    <value>Almacén {0}.</value>
   </data>
 </root>

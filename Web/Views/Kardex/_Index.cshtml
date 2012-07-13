@@ -1,0 +1,29 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model IEnumerable<Kardex>
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Kardex);
+}
+
+<h2>@Resources.WarehouseName </h2>
+
+<table>
+    <tr>
+        <th>
+            @Html.LabelFor(x => new Kardex().Product)
+        </th>
+        
+    </tr>
+@foreach (var item in Model)
+{
+    <tr>
+        <th>
+            @Html.DisplayFor(x => item.Product.Name)
+        </th>
+    </tr> 
+}
+</table>
