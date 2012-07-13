@@ -46,5 +46,15 @@ namespace Mictlanix.BE.Web.Controllers
 		{
 			return View ();
 		}
+
+        [HttpPost]
+        public ActionResult Index(int warehouse)
+        {
+            var qry = from x in Kardex.Queryable
+                      where x.Warehouse.Id == warehouse
+                      select x;
+                   
+            return PartialView ("_Index", qry.ToList());
+        }
 	}
 }

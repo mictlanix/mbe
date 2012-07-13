@@ -16,6 +16,22 @@ ul.token-input-list {
     clear: left;
 }
 
+ul.token-input-list warehouse {
+    overflow: hidden; 
+    height: auto !important; 
+    height: 1%;
+    width: 100%;
+    border: 1px solid #999;
+    cursor: text;
+    font-size: 12px;
+    font-family: Verdana;
+    z-index: 999;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+    list-style-type: none;
+    clear: left;
+}
 ul.token-input-list li {
     list-style-type: none;
 }
