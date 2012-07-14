@@ -12,32 +12,40 @@
 <table>
     <tr>
         <th>
-            @Html.LabelFor(x => new Kardex().Warehouse)
+            @Html.LabelFor(x => new Kardex().Date)
         </th>
         <th>
             @Html.LabelFor(x => new Kardex().Product)
         </th>
         <th>
+            @Html.LabelFor(x => new Kardex().Source)
+        </th>
+        <th>
             @Html.LabelFor(x => new Kardex().Quantity)
         </th>
-        <th></th>
         
     </tr>
 @foreach (var item in Model)
 {
     <tr>
         <td>
-            @Html.DisplayFor(x => item.Warehouse.Name)
+            @Html.DisplayFor(x => item.Date)
         </td>
         <td>
             @Html.DisplayFor(x => item.Product.Name)
         </td>
+        <td>
+            @item.Source.GetDisplayName()
+        </td>
         <td class="number">
             @Html.DisplayFor(x => item.Quantity)
         </td>
-        <td class="actions">
-            @Html.ActionLink(" ", "ProductDetails", new { product = item.Product.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
-        </td>
     </tr> 
 }
+    <tr>
+        <td></td>
+        <td></td>
+        <td class="right">@Resources.Total</td>
+        <td class="number">@Model.Sum(x => x.Quantity).ToString("0.####")</td>
+    </tr>
 </table>
