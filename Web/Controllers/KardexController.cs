@@ -28,6 +28,7 @@
 //
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -51,10 +52,24 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult Index(int warehouse)
         {
             var qry = from x in Kardex.Queryable
-                      where x.Warehouse.Id == warehouse
+                       where x.Warehouse.Id == warehouse
+                       select new { product = x.Product, warehouse = x.Warehouse, quantity = x.Quantity};
+            var list = from x in qry.ToList()
+                       group x by x.product into c
+                       select new Kardex { Product = c.Key, Quantity = c.Sum(y => y.quantity) };
+            
+            return PartialView ("_Index", list.ToList());
+        }
+
+        
+        public ViewResult ProductDetails(int product)
+        {
+            var qry = from x in Kardex.Queryable
+                      where x.Product.Id == product
                       select x;
                    
-            return PartialView ("_Index", qry.ToList());
+            return View ("ProductDetails", qry.ToList());
         }
+        
 	}
 }

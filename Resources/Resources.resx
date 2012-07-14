@@ -1479,4 +1479,7 @@ Realizada el: {0:d}</value>
   <data name="WarehouseName" xml:space="preserve">
     <value>Almacén {0}.</value>
   </data>
+  <data name="Source" xml:space="preserve">
+    <value>Tipo de Movimiento</value>
+  </data>
 </root>
