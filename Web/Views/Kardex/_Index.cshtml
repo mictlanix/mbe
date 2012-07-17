@@ -2,7 +2,7 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
-@model IEnumerable<Kardex>
+@model MasterDetails<Warehouse, Kardex>
 
 @{
     var CurrentUser = Html.CurrentUser() ?? new User();
@@ -12,9 +12,6 @@
 <table>
     <tr>
         <th>
-            @Html.LabelFor(x => new Kardex().Warehouse)
-        </th>
-        <th>
             @Html.LabelFor(x => new Kardex().Product)
         </th>
         <th>
@@ -23,12 +20,9 @@
         <th></th>
         
     </tr>
-@foreach (var item in Model)
+@foreach (var item in Model.Details)
 {
     <tr>
-        <td>
-            @Html.DisplayFor(x => item.Warehouse.Name)
-        </td>
         <td>
             @Html.DisplayFor(x => item.Product.Name)
         </td>
@@ -36,7 +30,7 @@
             @Html.DisplayFor(x => item.Quantity)
         </td>
         <td class="actions">
-            @Html.ActionLink(" ", "ProductDetails", new { product = item.Product.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+            @Html.ActionLink(" ", "ProductDetails", new { warehouse = Model.Master.Id, product = item.Product.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
         </td>
     </tr> 
 }

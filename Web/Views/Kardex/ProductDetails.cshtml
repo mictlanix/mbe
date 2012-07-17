@@ -2,50 +2,85 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
-@model IEnumerable<Kardex>
+@model MasterDetails<Warehouse, Kardex>
 
 @{
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Kardex);
 }
 
+<fieldset>
+    <legend>@Resources.MasterInformation</legend>
+    <div class="display-label">
+        @Html.LabelFor(x => new Kardex().Warehouse):
+        @Model.Master.Name
+    </div>
+    <div class="display-label">
+        @Html.LabelFor(x => new Kardex().Product):
+        @Model.Details.First().Product.Name
+    </div>
+   @* <div>
+        @Html.LabelFor(x => x.Master.StartDate)
+        @Html.EditorFor(x => x.Master.StartDate)
+    </div>
+    <div>
+        @Html.LabelFor(x => x.Master.EndDate)
+        @Html.EditorFor(x => x.Master.EndDate)
+    </div>*@
+</fieldset>
 <table>
     <tr>
         <th>
             @Html.LabelFor(x => new Kardex().Date)
         </th>
         <th>
-            @Html.LabelFor(x => new Kardex().Product)
-        </th>
-        <th>
             @Html.LabelFor(x => new Kardex().Source)
         </th>
         <th>
-            @Html.LabelFor(x => new Kardex().Quantity)
+            @Resources.Title_InventoryReceipt
+        </th>
+        <th>
+            @Resources.Title_InventoryIssue
+        </th>
+        <th>
+            @Resources.Total
         </th>
         
     </tr>
-@foreach (var item in Model)
+@foreach (var item in Model.Details)
 {
     <tr>
-        <td>
+        <td class="date">
             @Html.DisplayFor(x => item.Date)
         </td>
-        <td>
-            @Html.DisplayFor(x => item.Product.Name)
-        </td>
-        <td>
+        <td >
             @item.Source.GetDisplayName()
         </td>
+
         <td class="number">
-            @Html.DisplayFor(x => item.Quantity)
+            @if (item.Quantity > 0)
+            {
+                @item.Quantity.ToString("0.####")
+            }
         </td>
+        <td class="number">
+            @if (item.Quantity < 0)
+            {
+                @Math.Abs(item.Quantity).ToString("0.####")
+            }
+        </td>
+        <td></td>
     </tr> 
 }
     <tr>
         <td></td>
-        <td></td>
         <td class="right">@Resources.Total</td>
-        <td class="number">@Model.Sum(x => x.Quantity).ToString("0.####")</td>
+        <td></td>
+        <td></td>
+        <td class="number">@Model.Details.Sum(x => x.Quantity).ToString("0.####")</td>
     </tr>
 </table>
+
+<p>
+    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+</p>
