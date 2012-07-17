@@ -48,28 +48,32 @@ namespace Mictlanix.BE.Web.Controllers
 			return View ();
 		}
 
+        //FIXME: Query optimization (SUM function)
         [HttpPost]
-        public ActionResult Index(int warehouse)
+        public ActionResult Index(Warehouse item)
         {
             var qry = from x in Kardex.Queryable
-                       where x.Warehouse.Id == warehouse
-                       select new { product = x.Product, warehouse = x.Warehouse, quantity = x.Quantity};
+                      where x.Warehouse.Id == item.Id
+                      select new { product = x.Product, quantity = x.Quantity};
             var list = from x in qry.ToList()
                        group x by x.product into c
                        select new Kardex { Product = c.Key, Quantity = c.Sum(y => y.quantity) };
             
-            return PartialView ("_Index", list.ToList());
+            var warehouse = Warehouse.Find(item.Id);
+
+            return PartialView("_Index", new MasterDetails<Warehouse, Kardex> { Master = warehouse , Details = list.ToList() });
         }
 
-        
-        public ViewResult ProductDetails(int product)
+        public ViewResult ProductDetails(int warehouse, int product)
         {
             var qry = from x in Kardex.Queryable
-                      where x.Product.Id == product
+                      where x.Warehouse.Id == warehouse && x.Product.Id == product     
                       select x;
-                   
-            return View ("ProductDetails", qry.ToList());
+
+            return View("ProductDetails", new MasterDetails<Warehouse, Kardex> { Master = Warehouse.Find(warehouse), Details = qry.ToList() });
         }
         
 	}
 }
+
+//x.Date >= start.Date && x.Date <= end.Date.Add(new TimeSpan(23, 59, 59))
