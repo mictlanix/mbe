@@ -63,7 +63,7 @@ namespace Mictlanix.BE.Web.Controllers
                         orderby x.Name
                         select x;
 
-            return View(qry.ToList());
+            return View("_Index",qry.ToList());
         }
 
         //

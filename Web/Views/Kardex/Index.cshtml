@@ -1,7 +1,8 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
-@model IEnumerable<Kardex>
+@using Mictlanix.BE.Web.Models
+@model Warehouse
            
 @{
     ViewBag.Title = Resources.Title_Kardex;
@@ -15,9 +16,8 @@
 {
     <fieldset>
         <legend>@Resources.DisplayName_WarehouseSelect</legend>
-            
             <div class="search-box">
-                <input type="text" id="warehouse" name="warehouse" />
+                @Html.EditorFor(model => model.Id, "WarehouseSelector")
             </div>
             <p class="right">
                 <button type="submit" class="icon search">@Resources.Search</button>
@@ -45,13 +45,6 @@ ul.token-input-list {
 
 <script type="text/javascript">
     $(function () {
-        $("#warehouse").tokenInput("@Url.Action("GetSuggestions", "Warehouses")", {
-            hintText: "@Resources.HIntText",
-            noResultsText: "@Resources.NoResultsText",
-            searchingText: "@Resources.SearchingText",
-            queryParam: "pattern",
-            minChars: 1,
-            tokenLimit: 1
-        });
+
     });
 </script>

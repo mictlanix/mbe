@@ -142,6 +142,8 @@
     <Compile Include="Models\AccountsReceivableEntry.cs" />
     <Compile Include="Models\AccountsPayableEntry.cs" />
     <Compile Include="Models\AccountsPayableSummary.cs" />
+    <Compile Include="Models\ItemDateRange.cs" />
+    <Compile Include="Models\DateRange.cs" />
     <Compile Include="Models\MoneyCount.cs" />
     <Compile Include="Models\MasterDetails.cs" />
     <Compile Include="Models\Search.cs" />
@@ -555,7 +557,7 @@
     <Content Include="Views\Customers\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Customers\Index.cshtml" />
+    <Content Include="Views\Customers\_Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\PriceLists\Delete.cshtml" />
