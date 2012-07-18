@@ -1,0 +1,93 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model IEnumerable<SalesOrder>
+
+@{
+    ViewBag.Title = Resources.Title_SalesOrdersHistoric;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrdersHistoric);
+}
+
+<h2>@Mictlanix.BE.Resources.DisplayName_SalesOrdersHistoric</h2>
+
+<table>
+    <tr>
+        <th>
+            @Html.LabelFor(x => new SalesOrder().Id)
+        </th>
+
+        <th>
+            @Html.LabelFor(x => new SalesOrder().Date)
+        </th>
+
+        <th>
+            @Html.LabelFor(x => new SalesOrder().Customer)
+        </th>
+
+        <th>
+            @Html.LabelFor(x => new SalesOrder().DueDate)
+        </th>
+
+         <th>
+            @Html.LabelFor(x => new SalesOrder().SalesPerson)
+        </th>
+
+        <th>
+            @Html.LabelFor(x => new SalesOrder().PointOfSale)
+        </th>
+        
+        <th>
+            @Html.LabelFor(x => new SalesOrder().IsCancelled)
+        </th>
+
+        <th>
+            @Html.LabelFor(x => new SalesOrder().IsCompleted)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td class="number">
+            @Html.DisplayFor(modelItem => item.Id)
+        </td>
+       
+        <td class="center">
+            @Html.DisplayFor(modelItem => item.Date)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.Customer.Name)
+        </td>
+
+        <td class="center">
+            @Html.DisplayFor(modelItem => item.DueDate)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.SalesPerson.FirstName)
+            @Html.DisplayFor(modelItem => item.SalesPerson.LastName)
+        </td>
+        <td class="center">
+            @Html.DisplayFor(modelItem => item.PointOfSale.Name)
+        </td>
+        <td class="bool">@Html.DisplayFor(x => item.IsCancelled)</td>
+        <td class="bool">@Html.DisplayFor(x => item.IsCompleted)</td>
+        
+        <td class="actions">
+        	@if(Privilege.AllowRead)
+        	{
+            	@Html.ActionLink(" ", "HistoricDetails", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+            	@Html.ActionLink(" ", item.IsCredit ? "PrintPromissoryNote" : "PrintOrder", new { id = item.Id }, new { @class = "button icon print icon-only", @title = Resources.Print })
+            }
+        </td>
+    </tr>
+}
+
+</table>
+<script type="text/javascript">
+	$(function() {
+        $(".print").printPage();
+	});
+</script>
