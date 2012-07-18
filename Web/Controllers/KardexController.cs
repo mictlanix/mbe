@@ -66,13 +66,27 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ViewResult ProductDetails(int warehouse, int product)
         {
-            var qry = from x in Kardex.Queryable
-                      where x.Warehouse.Id == warehouse && x.Product.Id == product     
-                      select x;
+            ItemDateRange<Warehouse> item = new ItemDateRange<Warehouse>();
+            item.Item = Warehouse.Find(warehouse);
+            item.StartDate = DateTime.Now;
+            item.EndDate = DateTime.Now;
 
-            return View("ProductDetails", new MasterDetails<Warehouse, Kardex> { Master = Warehouse.Find(warehouse), Details = qry.ToList() });
+            Product auxProduct = Product.Find(product);
+
+            return View("ProductDetails", new Pair<ItemDateRange<Warehouse>, Product> { First = item , Second = auxProduct });
         }
-        
+
+        [HttpPost]
+        public ActionResult ProductDetails(Pair<ItemDateRange<Warehouse>, Product> item)
+        {
+            var qry = from x in Kardex.Queryable
+                          where x.Warehouse.Id == item.First.Item.Id && x.Product.Id == item.Second.Id &&
+                          x.Date >= item.First.StartDate && x.Date <= item.First.EndDate.Add(new TimeSpan(23, 59, 59))
+                          select x;
+            var warehouse = Warehouse.Find(item.First.Item.Id);
+          
+            return PartialView("_ProductDetails", new MasterDetails<Warehouse, Kardex> { Master = warehouse , Details = qry.ToList() });
+        }
 	}
 }
 
