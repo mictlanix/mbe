@@ -2,38 +2,46 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
-@model Pair<ItemDateRange<Warehouse>, Product>
+@model DateRange
 
 @{
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Kardex);
 }
 
-@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))
+@using (Ajax.BeginForm("ProductDetails", "Kardex", new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))
 {
     <fieldset>
         <legend>@Resources.MasterInformation</legend>
-        @Html.HiddenFor(x => x.First)
-        @Html.HiddenFor(x => x.Second)
-        @Html.HiddenFor(x => x.First.Item.Id)
-        @Html.HiddenFor(x => x.Second.Id)
+        @Html.Hidden("warehouse", (object)ViewBag.Warehouse.Id)
+        @Html.Hidden("product", (object)ViewBag.Product.Id)
         <div class="display-label">
             @Html.LabelFor(x => new Kardex().Warehouse):
-            @Model.First.Item.Name
+            @ViewBag.Warehouse.Name
         </div>
         <div class="display-label">
             @Html.LabelFor(x => new Kardex().Product):
-            @Model.Second.Name
+            @ViewBag.Product.Name
         </div>
-        <div>
-            @Html.LabelFor(x => x.First.StartDate)
-            @Html.EditorFor(x => x.First.StartDate)
-        </div>
-        <div>
-            @Html.LabelFor(x => x.First.EndDate)
-            @Html.EditorFor(x => x.First.EndDate)
-        </div>
-        <p><button type="submit" class="icon save">@Resources.Create</button></p>
+        <table class="nonborder">
+            <tr>
+                <td class="date nonborder">
+                    @Html.LabelFor(x => x.StartDate)
+                </td>
+                <td class="date nonborder">
+                    @Html.EditorFor(x => x.StartDate)
+                </td>
+                <td class="date nonborder">
+                    @Html.LabelFor(x => x.EndDate)
+                </td>
+                <td class="nonborder">
+                    @Html.EditorFor(x => x.EndDate)
+                </td>
+                <td class="right nonborder">
+                    <button type="submit" class="icon save">@Resources.Search</button>
+                </td>
+            </tr>
+        </table>
     </fieldset>
 }
 <div id="activity-indicator">
@@ -52,6 +60,11 @@
 
     });
 </script>
+<style type="text/css">
+.nonborder {
+  border-style:hidden;
+}
+</style>
 @*<table>
     <tr>
         <th>
