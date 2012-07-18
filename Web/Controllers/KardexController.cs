@@ -66,26 +66,25 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ViewResult ProductDetails(int warehouse, int product)
         {
-            ItemDateRange<Warehouse> item = new ItemDateRange<Warehouse>();
-            item.Item = Warehouse.Find(warehouse);
+            DateRange item = new DateRange();
             item.StartDate = DateTime.Now;
             item.EndDate = DateTime.Now;
 
-            Product auxProduct = Product.Find(product);
+            ViewBag.Warehouse = Warehouse.Find(warehouse);
+            ViewBag.Product = Product.Find(product);
 
-            return View("ProductDetails", new Pair<ItemDateRange<Warehouse>, Product> { First = item , Second = auxProduct });
+            return View("ProductDetails", item);
         }
 
         [HttpPost]
-        public ActionResult ProductDetails(Pair<ItemDateRange<Warehouse>, Product> item)
+        public ActionResult ProductDetails(int warehouse, int product, DateRange item)
         {
             var qry = from x in Kardex.Queryable
-                          where x.Warehouse.Id == item.First.Item.Id && x.Product.Id == item.Second.Id &&
-                          x.Date >= item.First.StartDate && x.Date <= item.First.EndDate.Add(new TimeSpan(23, 59, 59))
-                          select x;
-            var warehouse = Warehouse.Find(item.First.Item.Id);
+                      where x.Warehouse.Id == warehouse && x.Product.Id == product &&
+                            x.Date >= item.StartDate.Date && x.Date <= item.EndDate.Date.Add(new TimeSpan(23, 59, 59))
+                      select x;
           
-            return PartialView("_ProductDetails", new MasterDetails<Warehouse, Kardex> { Master = warehouse , Details = qry.ToList() });
+            return PartialView("_ProductDetails", qry.ToList());
         }
 	}
 }
