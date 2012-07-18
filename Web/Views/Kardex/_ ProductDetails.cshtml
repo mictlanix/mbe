@@ -2,57 +2,14 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
-@model Pair<ItemDateRange<Warehouse>, Product>
+@model MasterDetails<Warehouse, Kardex>
 
 @{
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Kardex);
 }
 
-@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))
-{
-    <fieldset>
-        <legend>@Resources.MasterInformation</legend>
-        @Html.HiddenFor(x => x.First)
-        @Html.HiddenFor(x => x.Second)
-        @Html.HiddenFor(x => x.First.Item.Id)
-        @Html.HiddenFor(x => x.Second.Id)
-        <div class="display-label">
-            @Html.LabelFor(x => new Kardex().Warehouse):
-            @Model.First.Item.Name
-        </div>
-        <div class="display-label">
-            @Html.LabelFor(x => new Kardex().Product):
-            @Model.Second.Name
-        </div>
-        <div>
-            @Html.LabelFor(x => x.First.StartDate)
-            @Html.EditorFor(x => x.First.StartDate)
-        </div>
-        <div>
-            @Html.LabelFor(x => x.First.EndDate)
-            @Html.EditorFor(x => x.First.EndDate)
-        </div>
-        <p><button type="submit" class="icon save">@Resources.Create</button></p>
-    </fieldset>
-}
-<div id="activity-indicator">
-    <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
-</div>
-<div id="search-results">
-
-</div>
-<script type="text/javascript">
-    function onSearchBegin() {
-        $("#search-results").html(null);
-    }
-</script>
-<script type="text/javascript">
-    $(function () {
-
-    });
-</script>
-@*<table>
+<table>
     <tr>
         <th>
             @Html.LabelFor(x => new Kardex().Date)
@@ -105,9 +62,6 @@
     </tr>
 </table>
 
-
 <p>
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </p>
-
-*@

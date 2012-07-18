@@ -804,6 +804,7 @@
     <Content Include="Views\Stores\Index.cshtml" />
     <Content Include="Views\Kardex\_Index.cshtml" />
     <Content Include="Views\Kardex\ProductDetails.cshtml" />
+    <Content Include="Views\Kardex\_ ProductDetails.cshtml" />
     <None Include="Views\ReturnsCustomer\_SalesItemReturn.cshtml" />
   </ItemGroup>
   <ItemGroup />

@@ -33,6 +33,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Web.Mvc;
 using System.Web.Security;
+using Mictlanix.BE.Model.Validation;
 using Mictlanix.BE.Model;
 
 namespace Mictlanix.BE.Web.Models
@@ -54,6 +55,7 @@ namespace Mictlanix.BE.Web.Models
 
         [DataType(DataType.Date)]
         [Display(Name = "EndDate", ResourceType = typeof(Resources))]
+        [DateGreaterThan("StartDate", ErrorMessageResourceName = "Validation_DateGreaterThan", ErrorMessageResourceType = typeof(Resources))]
         public DateTime EndDate { get; set; }
 	}
 }
