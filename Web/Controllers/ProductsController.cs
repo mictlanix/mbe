@@ -52,7 +52,16 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Index()
         {
-            return View(new Search<Product> { Limit = 100 });
+            var qry = from x in Product.Queryable
+                      orderby x.Name
+                      select x;
+
+            Search<Product> search = new Search<Product>();
+            search.Limit = Configuration.PageSize;
+            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            search.Total = qry.Count();
+
+            return View(search);
         }
 
         //
@@ -194,17 +203,29 @@ namespace Mictlanix.BE.Web.Controllers
 
         Search<Product> GetProducts(Search<Product> search)
         {
-            var qry = from x in Product.Queryable
-                      where x.Name.Contains(search.Pattern) ||
-                            x.Code.Contains(search.Pattern) ||
-                            x.SKU.Contains(search.Pattern) ||
-                            x.Brand.Contains(search.Pattern)
-                      orderby x.Name
-                      select x;
+            if (search.Pattern == null)
+            {
+                var qry = from x in Product.Queryable
+                          orderby x.Name
+                          select x;
+                
+                search.Total = qry.Count();
+                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            }
+            else
+            {
+                var qry = from x in Product.Queryable
+                          where x.Name.Contains(search.Pattern) ||
+                                x.Code.Contains(search.Pattern) ||
+                                x.SKU.Contains(search.Pattern) ||
+                                x.Brand.Contains(search.Pattern)
+                          orderby x.Name
+                          select x;
+                
+                search.Total = qry.Count();
+                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            }
 			
-			search.Total = qry.Count();
-            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-
             return search;
         }
 

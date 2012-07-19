@@ -2,36 +2,24 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
-@model Search<Customer>
+@model Search<Warehouse>
 
 @{
-    ViewBag.Title = Resources.Title_Customer;
+    ViewBag.Title = Resources.Title_Warehouse;
     var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Customers);
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Warehouses);
 }
 
 <p>@Html.ValidationMessageFor(x => x.Pattern)</p>
 
+
 <table>
     <tr>
         <th>
-            @Html.LabelFor(x => new Customer().Name)
+            @Html.LabelFor(x => new Warehouse().Code)
         </th>
-
         <th>
-            @Html.LabelFor(x => new Customer().Zone)
-        </th>
-
-        <th>
-            @Html.LabelFor(x => new Customer().PriceList)
-        </th>
-
-        <th>
-            @Html.LabelFor(x => new Customer().CreditLimit)
-        </th>
-
-        <th>
-            @Html.LabelFor(x => new Customer().CreditDays)
+            @Html.LabelFor(x => new Warehouse().Name)
         </th>
         <th></th>
     </tr>
@@ -39,19 +27,10 @@
 @foreach (var item in Model.Results) {
     <tr>
         <td>
-            @Html.DisplayFor(x => item.Name)
+            @Html.DisplayFor(modelItem => item.Code)
         </td>
         <td>
-            @Html.DisplayFor(x => item.Zone)
-        </td>
-        <td class="center">
-            @Html.DisplayFor(x => item.PriceList.Name)
-        </td>
-        <td class="number">
-            @Html.DisplayFor(x => item.CreditLimit)
-        </td>
-        <td class="number">
-            @Html.DisplayFor(x => item.CreditDays)
+            @Html.DisplayFor(modelItem => item.Name)
         </td>
         <td class="actions">
         	@if(Privilege.AllowUpdate)
@@ -72,6 +51,7 @@
 
 </table>
 
+
 <div class="buttons right">
 	<label class="button left">@Model.ToString()</label>@if (Model.HasPrev) {<a class="button middle icon prev icon-only" title="@Resources.PrevPage" href="javascript:void(0)"></a>}@if (Model.HasNext) {<a class="button right icon next icon-only" title="@Resources.NextPage" href="javascript:void(0)"></a>}
 </div>
@@ -83,7 +63,7 @@
             e.preventDefault();
             $("#activity-indicator").show();
             $("#search-results").hide();
-            $.post("/Customers/Index", { Pattern: "@Model.Pattern", Offset: "@(Model.Offset-Model.Limit)", Limit: "@Model.Limit" }, function (data) {
+            $.post("/Warehouses/Index", { Pattern: "@Model.Pattern", Offset: "@(Model.Offset-Model.Limit)", Limit: "@Model.Limit" }, function (data) {
                 $("#search-results").html(data);
                 $("#search-results").show();
                 $("#activity-indicator").hide();
@@ -100,7 +80,7 @@
             e.preventDefault();
             $("#activity-indicator").show();
             $("#search-results").hide();
-            $.post("/Customers/Index", { Pattern: "@Model.Pattern", Offset: "@(Model.Offset+Model.Limit)", Limit: "@Model.Limit" }, function (data) {
+            $.post("/Warehouses/Index", { Pattern: "@Model.Pattern", Offset: "@(Model.Offset+Model.Limit)", Limit: "@Model.Limit" }, function (data) {
                 $("#search-results").html(data);
                 $("#search-results").show();
                 $("#activity-indicator").hide();

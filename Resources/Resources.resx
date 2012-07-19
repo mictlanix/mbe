@@ -1485,4 +1485,7 @@ Realizada el: {0:d}</value>
   <data name="EndDate" xml:space="preserve">
     <value>Fecha Final</value>
   </data>
+  <data name="SearchForDate" xml:space="preserve">
+    <value>Búsqueda por Fecha</value>
+  </data>
 </root>

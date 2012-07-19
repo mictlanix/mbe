@@ -1,7 +1,8 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
-@model IEnumerable<Supplier>
+@using Mictlanix.BE.Web.Models
+@model Search<Supplier>
 
 @{
     ViewBag.Title = Resources.Title_Supplier;
@@ -17,62 +18,32 @@
     @Html.ActionLink(Resources.CreateNew, "Create", new { }, new { @class = "button icon add" })
 }
 </p>
-<table>
-    <tr>
-        <th>
-            @Html.LabelFor(x => new Supplier().Code)
-        </th>
 
-        <th>
-            @Html.LabelFor(x => new Supplier().Name)
-        </th>
-
-        <th>
-            @Html.LabelFor(x => new Supplier().Zone)
-        </th>
-           
-        <th>
-            @Html.LabelFor(x => new Supplier().CreditLimit)
-        </th>
-
-        <th>
-             @Html.LabelFor(x => new Supplier().CreditDays)
-        </th>
-        
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Code)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Zone)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreditLimit)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreditDays)
-        </td>
-        <td class="actions">
-        	@if(Privilege.AllowUpdate)
-        	{
-            	@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
-            }
-        	@if(Privilege.AllowRead)
-        	{
-            	@Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
-            }
-        	@if(Privilege.AllowDelete)
-        	{
-            	@Html.ActionLink(" ", "Delete", new { id = item.Id }, new { @class = "button icon delete icon-only", @title = Resources.Delete })
-            }
-        </td>
-    </tr>
+@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))
+{
+    <fieldset>
+        <legend>@Resources.Search</legend>
+        @Html.HiddenFor(x => x.Offset)
+        @Html.HiddenFor(x => x.Limit)
+        <div class="editor-label">
+            @Html.LabelFor(x => x.Pattern)
+        </div>
+        <div class="search-box">
+            <button type="submit" class="icon search">@Resources.Search</button>
+            <div class="search-field">
+                <input type="text" id="Pattern" name="Pattern" />
+            </div>
+        </div>
+    </fieldset>
 }
-</table>
+<div id="activity-indicator">
+    <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
+</div>
+<div id="search-results">
+    @Html.Partial("_Index")
+</div>
+<script type="text/javascript">
+    function onSearchBegin() {
+        $("#search-results").html(null);
+    }
+</script>

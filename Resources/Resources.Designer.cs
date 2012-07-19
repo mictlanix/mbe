@@ -3028,6 +3028,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Búsqueda por Fecha.
+        /// </summary>
+        public static string SearchForDate {
+            get {
+                return ResourceManager.GetString("SearchForDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Buscando....
         /// </summary>
         public static string SearchingText {

@@ -1,8 +1,9 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
-@model IEnumerable<Employee>
-
+@using Mictlanix.BE.Web.Models
+@model Search<Employee>
+           
 @{
     ViewBag.Title = Resources.Title_Employee;
     var CurrentUser = Html.CurrentUser() ?? new User();
@@ -17,70 +18,31 @@
     @Html.ActionLink(Resources.CreateNew, "Create", new { }, new { @class = "button icon add" })
 }
 </p>
-<table>
-    <tr>
-        <th>
-            @Html.LabelFor(x => new Employee().FirstName)
-        </th>
-        <th>
-            @Html.LabelFor(x => new Employee().LastName)
-        </th>
-        <th>
-            @Html.LabelFor(x => new Employee().Birthday)
-        </th>
-        <th>
-            @Html.LabelFor(x => new Employee().TaxpayerId)
-        </th>
-        <th>
-            @Html.LabelFor(x => new Employee().Gender)
-        </th>
-        <th>
-            @Html.LabelFor(x => new Employee().PersonalId)
-        </th>
-        <th>
-            @Html.LabelFor(x => new Employee().StartJobDate)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.FirstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.LastName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Birthday)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TaxpayerId)
-        </td>
-        <td>
-            @item.Gender.GetDisplayName()
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PersonalId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.StartJobDate)
-        </td>
-        <td class="actions">
-        	@if(Privilege.AllowUpdate)
-        	{
-            	@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
-            }
-        	@if(Privilege.AllowRead)
-        	{
-            	@Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
-            }
-        	@if(Privilege.AllowDelete)
-        	{
-            	@Html.ActionLink(" ", "Delete", new { id = item.Id }, new { @class = "button icon delete icon-only", @title = Resources.Delete })
-            }
-        </td>
-    </tr>
+@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))
+{
+    <fieldset>
+        <legend>@Resources.Search</legend>
+        @Html.HiddenFor(x => x.Offset)
+        @Html.HiddenFor(x => x.Limit)
+        <div class="editor-label">
+            @Html.LabelFor(x => x.Pattern)
+        </div>
+        <div class="search-box">
+            <button type="submit" class="icon search">@Resources.Search</button>
+            <div class="search-field">
+                <input type="text" id="Pattern" name="Pattern" />
+            </div>
+        </div>
+    </fieldset>
 }
-
-</table>
+<div id="activity-indicator">
+    <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
+</div>
+<div id="search-results">
+    @Html.Partial("_Index")
+</div>
+<script type="text/javascript">
+    function onSearchBegin() {
+        $("#search-results").html(null);
+    }
+</script>

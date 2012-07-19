@@ -35,6 +35,8 @@ using System.Web.Mvc;
 using Castle.ActiveRecord;
 using NHibernate.Exceptions;
 using Mictlanix.BE.Model;
+using Mictlanix.BE.Web.Models;
+using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers
 {
@@ -60,12 +62,55 @@ namespace Mictlanix.BE.Web.Controllers
         public ViewResult Index()
         {
             var qry = from x in Customer.Queryable
-                        orderby x.Name
-                        select x;
+                      orderby x.Name
+                      select x;
 
-            return View("_Index",qry.ToList());
+            Search<Customer> search = new Search<Customer>();
+            search.Limit = Configuration.PageSize;
+            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            search.Total = qry.Count();
+
+            return View(search);
         }
 
+        // POST: /Customers/
+
+        [HttpPost]
+        public ActionResult Index(Search<Customer> search)
+        {
+            if (ModelState.IsValid) {
+                search = GetCustomers(search);
+            }
+
+            if (Request.IsAjaxRequest()){
+                return PartialView("_Index", search);
+            } else {
+                return View(search);
+            }
+        }
+
+        Search<Customer> GetCustomers(Search<Customer> search)
+        {
+            if (search.Pattern == null) {
+                var qry = from x in Customer.Queryable
+                          orderby x.Name
+                          select x;
+
+                search.Total = qry.Count();
+                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            } else {
+                var qry = from x in Customer.Queryable
+                          where x.Name.Contains(search.Pattern) ||
+                          x.Zone.Contains(search.Pattern)
+                          orderby x.Name
+                          select x;
+
+                search.Total = qry.Count();
+                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            }
+
+            return search;
+        }
         //
         // GET: /Customer/Details/5
 
