@@ -35,6 +35,8 @@ using System.Web;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
 using Mictlanix.BE.Model;
+using Mictlanix.BE.Web.Models;
+using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers
 { 
@@ -59,11 +61,54 @@ namespace Mictlanix.BE.Web.Controllers
         public ViewResult Index()
         {
             var qry = from x in Category.Queryable
+                      orderby x.Name
                       select x;
 
-            return View(qry.ToList());
+            Search<Category> search = new Search<Category>();
+            search.Limit = Configuration.PageSize;
+            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            search.Total = qry.Count();
+
+            return View(search);
         }
 
+        // POST: /Categories/
+
+        [HttpPost]
+        public ActionResult Index(Search<Category> search)
+        {
+            if (ModelState.IsValid) {
+                search = GetCategories(search);
+            }
+
+            if (Request.IsAjaxRequest()) {
+                return PartialView("_Index", search);
+            } else {
+                return View(search);
+            }
+        }
+
+        Search<Category> GetCategories(Search<Category> search)
+        {
+            if (search.Pattern == null) {
+                var qry = from x in Category.Queryable
+                          orderby x.Name
+                          select x;
+
+                search.Total = qry.Count();
+                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            } else {
+                var qry = from x in Category.Queryable
+                          where x.Name.Contains(search.Pattern) 
+                          orderby x.Name
+                          select x;
+
+                search.Total = qry.Count();
+                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            }
+
+            return search;
+        }
         //
         // GET: /Categories/Details/5
 

@@ -64,12 +64,23 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ViewResult Historic()
         {
+            DateRange item = new DateRange();
+            item.StartDate = DateTime.Now;
+            item.EndDate = DateTime.Now;
+
+            return View("Historic", item);
+        }
+
+        [HttpPost]
+        public ActionResult Historic(DateRange item)
+        {
             var qry = from x in SalesOrder.Queryable
-                      where x.IsCompleted || x.IsCancelled
+                      where (x.IsCompleted || x.IsCancelled) && 
+                      (x.Date >= item.StartDate.Date && x.Date <= item.EndDate.Date.Add(new TimeSpan(23, 59, 59)))
                       orderby x.Id descending
                       select x;
 
-            return View(qry.ToList());
+            return PartialView("_Historic", qry.ToList());
         }
 
         public ViewResult PrintPromissoryNote (int id)

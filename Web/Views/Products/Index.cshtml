@@ -25,17 +25,20 @@
 
 @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))
 {
-    @Html.HiddenFor(x => x.Offset)
-    @Html.HiddenFor(x => x.Limit)
-    <div class="editor-label">
-        @Html.LabelFor(x => x.Pattern)
-    </div>
-    <div class="search-box">
-        <button type="submit" class="icon search">@Resources.Search</button>
-        <div class="search-field">
-            <input type="text" id="Pattern" name="Pattern" />
+    <fieldset>
+        <legend>@Resources.Search</legend>
+        @Html.HiddenFor(x => x.Offset)
+        @Html.HiddenFor(x => x.Limit)
+        <div class="editor-label">
+            @Html.LabelFor(x => x.Pattern)
         </div>
-    </div>
+        <div class="search-box">
+            <button type="submit" class="icon search">@Resources.Search</button>
+            <div class="search-field">
+                <input type="text" id="Pattern" name="Pattern" />
+            </div>
+        </div>
+    </fieldset>
 }
 <div id="activity-indicator">
     <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
