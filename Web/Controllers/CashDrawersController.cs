@@ -35,6 +35,8 @@ using System.Web;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
 using Mictlanix.BE.Model;
+using Mictlanix.BE.Web.Models;
+using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers
 {
@@ -46,9 +48,53 @@ namespace Mictlanix.BE.Web.Controllers
         public ViewResult Index()
         {
             var qry = from x in CashDrawer.Queryable
+                      orderby x.Name
                       select x;
 
-            return View(qry.ToList());
+            Search<CashDrawer> search = new Search<CashDrawer>();
+            search.Limit = Configuration.PageSize;
+            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            search.Total = qry.Count();
+
+            return View(search);
+        }
+
+        // POST: /Categories/
+
+        [HttpPost]
+        public ActionResult Index(Search<CashDrawer> search)
+        {
+            if (ModelState.IsValid) {
+                search = GetCashDrawers(search);
+            }
+
+            if (Request.IsAjaxRequest()) {
+                return PartialView("_Index", search);
+            } else {
+                return View(search);
+            }
+        }
+
+        Search<CashDrawer> GetCashDrawers(Search<CashDrawer> search)
+        {
+            if (search.Pattern == null) {
+                var qry = from x in CashDrawer.Queryable
+                          orderby x.Name
+                          select x;
+
+                search.Total = qry.Count();
+                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            } else {
+                var qry = from x in CashDrawer.Queryable
+                          where x.Name.Contains(search.Pattern) 
+                          orderby x.Name
+                          select x;
+
+                search.Total = qry.Count();
+                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            }
+
+            return search;
         }
 
         //

@@ -35,6 +35,8 @@ using System.Web.Mvc;
 using Castle.ActiveRecord;
 using NHibernate.Exceptions;
 using Mictlanix.BE.Model;
+using Mictlanix.BE.Web.Models;
+using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers
 {
@@ -62,7 +64,52 @@ namespace Mictlanix.BE.Web.Controllers
                       orderby x.Name
                       select x;
 
-            return View(qry.ToList());
+            Search<Supplier> search = new Search<Supplier>();
+            search.Limit = Configuration.PageSize;
+            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            search.Total = qry.Count();
+
+            return View(search);
+        }
+
+        // POST: /Suppliers/
+
+        [HttpPost]
+        public ActionResult Index(Search<Supplier> search)
+        {
+            if (ModelState.IsValid) {
+                search = GetSuppliers(search);
+            }
+
+            if (Request.IsAjaxRequest()) {
+                return PartialView("_Index", search);
+            } else {
+                return View(search);
+            }
+        }
+
+        Search<Supplier> GetSuppliers(Search<Supplier> search)
+        {
+            if (search.Pattern == null) {
+                var qry = from x in Supplier.Queryable
+                          orderby x.Name
+                          select x;
+
+                search.Total = qry.Count();
+                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            } else {
+                var qry = from x in Supplier.Queryable
+                          where x.Name.Contains(search.Pattern) ||
+                          x.Zone.Contains(search.Pattern) ||
+                          x.Code.Contains(search.Pattern)
+                          orderby x.Name
+                          select x;
+
+                search.Total = qry.Count();
+                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            }
+
+            return search;
         }
 
         //

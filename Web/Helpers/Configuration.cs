@@ -91,6 +91,10 @@ namespace Mictlanix.BE.Web.Helpers
 			get { return ConfigurationManager.AppSettings ["FiscalFilesPath"]; }
 		}
 		
+		public static int PageSize {
+			get { return int.Parse (ConfigurationManager.AppSettings ["PageSize"]); }
+		}
+		
 		#endregion
 		
 		#region Request's (Local) Settings
