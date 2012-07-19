@@ -36,6 +36,8 @@ using System.Web.Mvc;
 using Castle.ActiveRecord;
 using NHibernate;
 using Mictlanix.BE.Model;
+using Mictlanix.BE.Web.Models;
+using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers
 {
@@ -44,12 +46,56 @@ namespace Mictlanix.BE.Web.Controllers
         //
         // GET: /Warehouses/
 
-        public ViewResult Index ()
+        public ViewResult Index()
         {
             var qry = from x in Warehouse.Queryable
+                      orderby x.Name
                       select x;
 
-            return View (qry.ToList());
+            Search<Warehouse> search = new Search<Warehouse>();
+            search.Limit = Configuration.PageSize;
+            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            search.Total = qry.Count();
+
+            return View(search);
+        }
+
+        // POST: /Warehouses/
+
+        [HttpPost]
+        public ActionResult Index(Search<Warehouse> search)
+        {
+            if (ModelState.IsValid) {
+                search = GetWarehouses(search);
+            }
+
+            if (Request.IsAjaxRequest()) {
+                return PartialView("_Index", search);
+            } else {
+                return View(search);
+            }
+        }
+
+        Search<Warehouse> GetWarehouses(Search<Warehouse> search)
+        {
+            if (search.Pattern == null) {
+                var qry = from x in Warehouse.Queryable
+                          orderby x.Name
+                          select x;
+
+                search.Total = qry.Count();
+                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            } else {
+                var qry = from x in Warehouse.Queryable
+                          where x.Name.Contains(search.Pattern) 
+                          orderby x.Name
+                          select x;
+
+                search.Total = qry.Count();
+                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            }
+
+            return search;
         }
 
         //

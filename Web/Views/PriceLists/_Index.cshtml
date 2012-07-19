@@ -2,12 +2,12 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
-@model Search<Customer>
+@model Search<PriceList>
 
 @{
-    ViewBag.Title = Resources.Title_Customer;
+    ViewBag.Title = Resources.Title_PriceList;
     var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Customers);
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.PriceLists);
 }
 
 <p>@Html.ValidationMessageFor(x => x.Pattern)</p>
@@ -15,24 +15,17 @@
 <table>
     <tr>
         <th>
-            @Html.LabelFor(x => new Customer().Name)
+            @Html.LabelFor(x => new PriceList().Name)
         </th>
 
         <th>
-            @Html.LabelFor(x => new Customer().Zone)
+            @Html.LabelFor(x => new PriceList().HighProfitMargin)
         </th>
 
         <th>
-            @Html.LabelFor(x => new Customer().PriceList)
+            @Html.LabelFor(x => new PriceList().LowProfitMargin)
         </th>
-
-        <th>
-            @Html.LabelFor(x => new Customer().CreditLimit)
-        </th>
-
-        <th>
-            @Html.LabelFor(x => new Customer().CreditDays)
-        </th>
+        
         <th></th>
     </tr>
 
@@ -42,16 +35,10 @@
             @Html.DisplayFor(x => item.Name)
         </td>
         <td>
-            @Html.DisplayFor(x => item.Zone)
+            @Html.DisplayFor(x => item.HighProfitMargin)
         </td>
-        <td class="center">
-            @Html.DisplayFor(x => item.PriceList.Name)
-        </td>
-        <td class="number">
-            @Html.DisplayFor(x => item.CreditLimit)
-        </td>
-        <td class="number">
-            @Html.DisplayFor(x => item.CreditDays)
+        <td>
+            @Html.DisplayFor(x => item.LowProfitMargin)
         </td>
         <td class="actions">
         	@if(Privilege.AllowUpdate)
@@ -72,6 +59,7 @@
 
 </table>
 
+
 <div class="buttons right">
 	<label class="button left">@Model.ToString()</label>@if (Model.HasPrev) {<a class="button middle icon prev icon-only" title="@Resources.PrevPage" href="javascript:void(0)"></a>}@if (Model.HasNext) {<a class="button right icon next icon-only" title="@Resources.NextPage" href="javascript:void(0)"></a>}
 </div>
@@ -83,7 +71,7 @@
             e.preventDefault();
             $("#activity-indicator").show();
             $("#search-results").hide();
-            $.post("/Customers/Index", { Pattern: "@Model.Pattern", Offset: "@(Model.Offset-Model.Limit)", Limit: "@Model.Limit" }, function (data) {
+            $.post("/PriceLists/Index", { Pattern: "@Model.Pattern", Offset: "@(Model.Offset-Model.Limit)", Limit: "@Model.Limit" }, function (data) {
                 $("#search-results").html(data);
                 $("#search-results").show();
                 $("#activity-indicator").hide();
@@ -100,7 +88,7 @@
             e.preventDefault();
             $("#activity-indicator").show();
             $("#search-results").hide();
-            $.post("/Customers/Index", { Pattern: "@Model.Pattern", Offset: "@(Model.Offset+Model.Limit)", Limit: "@Model.Limit" }, function (data) {
+            $.post("/PriceLists/Index", { Pattern: "@Model.Pattern", Offset: "@(Model.Offset+Model.Limit)", Limit: "@Model.Limit" }, function (data) {
                 $("#search-results").html(data);
                 $("#search-results").show();
                 $("#activity-indicator").hide();

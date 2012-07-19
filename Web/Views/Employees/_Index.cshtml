@@ -2,12 +2,12 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
-@model Search<Customer>
+@model Search<Employee>
 
 @{
-    ViewBag.Title = Resources.Title_Customer;
+    ViewBag.Title = Resources.Title_Employee;
     var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Customers);
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Employees);
 }
 
 <p>@Html.ValidationMessageFor(x => x.Pattern)</p>
@@ -15,23 +15,25 @@
 <table>
     <tr>
         <th>
-            @Html.LabelFor(x => new Customer().Name)
+            @Html.LabelFor(x => new Employee().FirstName)
         </th>
-
         <th>
-            @Html.LabelFor(x => new Customer().Zone)
+            @Html.LabelFor(x => new Employee().LastName)
         </th>
-
         <th>
-            @Html.LabelFor(x => new Customer().PriceList)
+            @Html.LabelFor(x => new Employee().Birthday)
         </th>
-
         <th>
-            @Html.LabelFor(x => new Customer().CreditLimit)
+            @Html.LabelFor(x => new Employee().TaxpayerId)
         </th>
-
         <th>
-            @Html.LabelFor(x => new Customer().CreditDays)
+            @Html.LabelFor(x => new Employee().Gender)
+        </th>
+        <th>
+            @Html.LabelFor(x => new Employee().PersonalId)
+        </th>
+        <th>
+            @Html.LabelFor(x => new Employee().StartJobDate)
         </th>
         <th></th>
     </tr>
@@ -39,19 +41,25 @@
 @foreach (var item in Model.Results) {
     <tr>
         <td>
-            @Html.DisplayFor(x => item.Name)
+            @Html.DisplayFor(modelItem => item.FirstName)
         </td>
         <td>
-            @Html.DisplayFor(x => item.Zone)
+            @Html.DisplayFor(modelItem => item.LastName)
         </td>
-        <td class="center">
-            @Html.DisplayFor(x => item.PriceList.Name)
+        <td>
+            @Html.DisplayFor(modelItem => item.Birthday)
         </td>
-        <td class="number">
-            @Html.DisplayFor(x => item.CreditLimit)
+        <td>
+            @Html.DisplayFor(modelItem => item.TaxpayerId)
         </td>
-        <td class="number">
-            @Html.DisplayFor(x => item.CreditDays)
+        <td>
+            @item.Gender.GetDisplayName()
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PersonalId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.StartJobDate)
         </td>
         <td class="actions">
         	@if(Privilege.AllowUpdate)
@@ -72,6 +80,7 @@
 
 </table>
 
+
 <div class="buttons right">
 	<label class="button left">@Model.ToString()</label>@if (Model.HasPrev) {<a class="button middle icon prev icon-only" title="@Resources.PrevPage" href="javascript:void(0)"></a>}@if (Model.HasNext) {<a class="button right icon next icon-only" title="@Resources.NextPage" href="javascript:void(0)"></a>}
 </div>
@@ -83,7 +92,7 @@
             e.preventDefault();
             $("#activity-indicator").show();
             $("#search-results").hide();
-            $.post("/Customers/Index", { Pattern: "@Model.Pattern", Offset: "@(Model.Offset-Model.Limit)", Limit: "@Model.Limit" }, function (data) {
+            $.post("/Employees/Index", { Pattern: "@Model.Pattern", Offset: "@(Model.Offset-Model.Limit)", Limit: "@Model.Limit" }, function (data) {
                 $("#search-results").html(data);
                 $("#search-results").show();
                 $("#activity-indicator").hide();
@@ -100,7 +109,7 @@
             e.preventDefault();
             $("#activity-indicator").show();
             $("#search-results").hide();
-            $.post("/Customers/Index", { Pattern: "@Model.Pattern", Offset: "@(Model.Offset+Model.Limit)", Limit: "@Model.Limit" }, function (data) {
+            $.post("/Employees/Index", { Pattern: "@Model.Pattern", Offset: "@(Model.Offset+Model.Limit)", Limit: "@Model.Limit" }, function (data) {
                 $("#search-results").html(data);
                 $("#search-results").show();
                 $("#activity-indicator").hide();
