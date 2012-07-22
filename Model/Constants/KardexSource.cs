@@ -38,8 +38,8 @@ namespace Mictlanix.BE.Model
     {
         [Display(Name = "Sale", ResourceType = typeof(Resources))]
         Sale = 1,
-        [Display(Name = "Purchase", ResourceType = typeof(Resources))]
-        Purchase, 
+        [Display(Name = "CustomerReturn", ResourceType = typeof(Resources))]
+        CustomerReturn, 
 		[Display(Name = "InventoryIssue", ResourceType = typeof(Resources))]
         InventoryIssue,
 		[Display(Name = "InventoryReceipt", ResourceType = typeof(Resources))]

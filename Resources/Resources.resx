@@ -1488,4 +1488,7 @@ Realizada el: {0:d}</value>
   <data name="SearchForDate" xml:space="preserve">
     <value>Búsqueda por Fecha</value>
   </data>
+  <data name="CustomerReturn" xml:space="preserve">
+    <value>Devolución de Cliente</value>
+  </data>
 </root>
