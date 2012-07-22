@@ -811,6 +811,7 @@
     <Content Include="Views\PriceLists\_Index.cshtml" />
     <Content Include="Views\PointsOfSale\_Index.cshtml" />
     <Content Include="Views\CashDrawers\_Index.cshtml" />
+    <Content Include="Views\ReturnsCustomer\_Historic.cshtml" />
     <None Include="Views\ReturnsCustomer\_SalesItemReturn.cshtml" />
     <Content Include="Views\Sales\Historic.cshtml" />
     <Content Include="Views\Suppliers\_Index.cshtml" />
