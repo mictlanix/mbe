@@ -88,12 +88,35 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ViewResult Historic()
         {
+            DateRange item = new DateRange();
+            item.StartDate = DateTime.Now;
+            item.EndDate = DateTime.Now;
+
+            return View("Historic", item);
+        }
+
+        [HttpPost]
+        public ActionResult Historic(DateRange item, Search<ReturnCustomer> search)
+        {
+            ViewBag.CustomerReturnDates = item;
+            search.Limit = Configuration.PageSize;
+            search = GetCustomerReturns(item, search);
+
+            return PartialView("_Historic", search);
+        }
+
+        Search<ReturnCustomer> GetCustomerReturns(DateRange dates, Search<ReturnCustomer> search)
+        {
             var qry = from x in ReturnCustomer.Queryable
-                      where x.IsCompleted || x.IsCancelled
+                      where (x.IsCompleted || x.IsCancelled) &&
+                      (x.ModificationTime >= dates.StartDate.Date && x.ModificationTime <= dates.EndDate.Date.Add(new TimeSpan(23, 59, 59)))
                       orderby x.Id descending
                       select x;
 
-            return View(qry.ToList());
+            search.Total = qry.Count();
+            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+
+            return search;
         }
 
 
@@ -217,7 +240,7 @@ namespace Mictlanix.BE.Web.Controllers
                     {
                         Warehouse = item.SalesOrder.PointOfSale.Warehouse,
                         Product = x.Product,
-                        Source = KardexSource.Sale,
+                        Source = KardexSource.CustomerReturn,
                         Quantity = x.Quantity,
                         Date = DateTime.Now,
                         Reference = item.Id

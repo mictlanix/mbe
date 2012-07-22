@@ -203,17 +203,14 @@ namespace Mictlanix.BE.Web.Controllers
 
         Search<Product> GetProducts(Search<Product> search)
         {
-            if (search.Pattern == null)
-            {
+            if (search.Pattern == null) {
                 var qry = from x in Product.Queryable
                           orderby x.Name
                           select x;
                 
                 search.Total = qry.Count();
                 search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            }
-            else
-            {
+            } else {
                 var qry = from x in Product.Queryable
                           where x.Name.Contains(search.Pattern) ||
                                 x.Code.Contains(search.Pattern) ||
