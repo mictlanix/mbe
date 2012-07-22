@@ -34,6 +34,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
+using Castle.ActiveRecord.Queries;
+using NHibernate;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Helpers;
@@ -72,15 +74,27 @@ namespace Mictlanix.BE.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Historic(DateRange item)
+        public ActionResult Historic(DateRange item, Search<SalesOrder> search)
+        {
+            ViewBag.Dates = item;
+            search.Limit = Configuration.PageSize;   
+            search = GetSalesOrder(item, search);
+
+            return PartialView("_Historic", search);
+        }
+
+        Search<SalesOrder> GetSalesOrder(DateRange dates, Search<SalesOrder> search)
         {
             var qry = from x in SalesOrder.Queryable
-                      where (x.IsCompleted || x.IsCancelled) && 
-                      (x.Date >= item.StartDate.Date && x.Date <= item.EndDate.Date.Add(new TimeSpan(23, 59, 59)))
+                      where (x.IsCompleted || x.IsCancelled) &&
+                      (x.Date >= dates.StartDate.Date && x.Date <= dates.EndDate.Date.Add(new TimeSpan(23, 59, 59)))
                       orderby x.Id descending
                       select x;
 
-            return PartialView("_Historic", qry.ToList());
+            search.Total = qry.Count();
+            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            
+            return search;
         }
 
         public ViewResult PrintPromissoryNote (int id)
@@ -340,7 +354,7 @@ namespace Mictlanix.BE.Web.Controllers
 			using (var scope = new TransactionScope ()) {
 				foreach( var x in item.Details)
 				{
-					var output = new Kardex
+                    var input = new Kardex
                     {
                         Warehouse = item.PointOfSale.Warehouse,
                         Product = x.Product,
@@ -350,7 +364,7 @@ namespace Mictlanix.BE.Web.Controllers
                         Reference = item.Id
                     };
 
-                    output.Create();
+                    input.Create();
 				}
 
 				item.UpdateAndFlush ();
