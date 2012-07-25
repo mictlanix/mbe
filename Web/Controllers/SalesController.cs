@@ -85,6 +85,8 @@ namespace Mictlanix.BE.Web.Controllers
 
         Search<SalesOrder> GetSalesOrder(DateRange dates, Search<SalesOrder> search)
         {
+            var item = Configuration.PointOfSale;
+
             var qry = from x in SalesOrder.Queryable
                       where (x.IsCompleted || x.IsCancelled) &&
                       (x.Date >= dates.StartDate.Date && x.Date <= dates.EndDate.Date.Add(new TimeSpan(23, 59, 59)))

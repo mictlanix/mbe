@@ -1,7 +1,8 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
-@model IEnumerable<SupplierPayment>
+@using Mictlanix.BE.Web.Models
+@model Search<SupplierPayment>
 
 @{
     ViewBag.Title = Resources.Title_SuppliersPayments;
@@ -17,26 +18,33 @@
     @Html.ActionLink(Resources.NewPay, "NewPay", new { }, new { @class = "button icon add" })
 }
 </p>
-<table>
-    <tr>
-        <th>@Html.LabelFor(x => new SupplierPayment().Id)</th>
-        <th>@Html.LabelFor(x => new SupplierPayment().Date)</th>
-        <th>@Html.LabelFor(x => new SupplierPayment().Supplier)</th>
-        <th>@Html.LabelFor(x => new SupplierPayment().Amount)</th>
-        <th>@Html.LabelFor(x => new SupplierPayment().Method)</th>
-        <th></th>
-    </tr>
-@foreach (var item in Model) {
-    <tr>
-        <td class="number">@Html.DisplayFor(x => item.Id)</td>
-        <td class="date">@Html.DisplayFor(x => item.Date)</td>
-        <td>@Html.DisplayFor(x => item.Supplier.Name)</td>
-        <td class="number">@Html.DisplayFor(x => item.Amount)</td>
-        <td class="date">@item.Method.GetDisplayName()</td>
-        <td class="actions">
-            @Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
-        </td>
-    </tr>
+
+@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))
+{
+    <fieldset>
+        <legend>@Resources.Search</legend>
+        @Html.HiddenFor(x => x.Offset)
+        @Html.HiddenFor(x => x.Limit)
+        <div class="editor-label">
+            @Html.LabelFor(x => x.Pattern)
+        </div>
+        <div class="search-box">
+            <button type="submit" class="icon search">@Resources.Search</button>
+            <div class="search-field">
+                <input type="text" id="Pattern" name="Pattern" />
+            </div>
+        </div>
+    </fieldset>
 }
-</table>
+<div id="activity-indicator">
+    <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
+</div>
+<div id="search-results">
+    @Html.Partial("_Index")
+</div>
+<script type="text/javascript">
+    function onSearchBegin() {
+        $("#search-results").html(null);
+    }
+</script>
 @*@Model.Sum(x => x.Amount).ToString("c")*@

@@ -52,7 +52,57 @@ namespace Mictlanix.BE.Web.Controllers
                       orderby x.Id descending
                       select x;
 
-            return View(qry.ToList());
+            Search<InventoryReceipt> search = new Search<InventoryReceipt>();
+            search.Limit = Configuration.PageSize;
+            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            search.Total = qry.Count();
+
+            return View(search);
+        }
+
+        // POST: /Categories/
+
+        [HttpPost]
+        public ActionResult Receipts(Search<InventoryReceipt> search)
+        {
+            if (ModelState.IsValid)
+            {
+                search = GetInventoryReceipts(search);
+            }
+
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_Receipts", search);
+            }
+            else
+            {
+                return View(search);
+            }
+        }
+
+        Search<InventoryReceipt> GetInventoryReceipts(Search<InventoryReceipt> search)
+        {
+            if (search.Pattern == null)
+            {
+                var qry = from x in InventoryReceipt.Queryable
+                          orderby x.Id descending
+                          select x;
+
+                search.Total = qry.Count();
+                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            }
+            else
+            {
+                var qry = from x in InventoryReceipt.Queryable
+                          where x.Warehouse.Name.Contains(search.Pattern)
+                          orderby x.Id descending
+                          select x;
+
+                search.Total = qry.Count();
+                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            }
+
+            return search;
         }
 
         // GET: /Inventory/PrintReceipt/
@@ -272,7 +322,57 @@ namespace Mictlanix.BE.Web.Controllers
                       orderby x.Id descending
                       select x;
 
-            return View(qry.ToList());
+            Search<InventoryIssue> search = new Search<InventoryIssue>();
+            search.Limit = Configuration.PageSize;
+            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            search.Total = qry.Count();
+
+            return View(search);
+        }
+
+        // POST: /Issues/
+
+        [HttpPost]
+        public ActionResult Issues(Search<InventoryIssue> search)
+        {
+            if (ModelState.IsValid)
+            {
+                search = GetInventoryIssues(search);
+            }
+
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_Issues", search);
+            }
+            else
+            {
+                return View(search);
+            }
+        }
+
+        Search<InventoryIssue> GetInventoryIssues(Search<InventoryIssue> search)
+        {
+            if (search.Pattern == null)
+            {
+                var qry = from x in InventoryIssue.Queryable
+                          orderby x.Id descending
+                          select x;
+
+                search.Total = qry.Count();
+                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            }
+            else
+            {
+                var qry = from x in InventoryIssue.Queryable
+                          where x.Warehouse.Name.Contains(search.Pattern)
+                          orderby x.Id descending
+                          select x;
+
+                search.Total = qry.Count();
+                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            }
+
+            return search;
         }
 
         // GET: /Inventory/PrintIssue/
@@ -490,9 +590,61 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult Transfers()
         {
             var qry = from x in InventoryTransfer.Queryable
+                      orderby x.Id descending
                       select x;
 
-            return View(qry.ToList());
+            Search<InventoryTransfer> search = new Search<InventoryTransfer>();
+            search.Limit = Configuration.PageSize;
+            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            search.Total = qry.Count();
+
+            return View(search);
+        }
+
+        // POST: /InventoryTransfer/
+
+        [HttpPost]
+        public ActionResult Transfers(Search<InventoryTransfer> search)
+        {
+            if (ModelState.IsValid)
+            {
+                search = GetInventoryTransfers(search);
+            }
+
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_Transfers", search);
+            }
+            else
+            {
+                return View(search);
+            }
+        }
+
+        Search<InventoryTransfer> GetInventoryTransfers(Search<InventoryTransfer> search)
+        {
+            if (search.Pattern == null)
+            {
+                var qry = from x in InventoryTransfer.Queryable
+                          orderby x.Id descending
+                          select x;
+
+                search.Total = qry.Count();
+                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            }
+            else
+            {
+                var qry = from x in InventoryTransfer.Queryable
+                          where x.To.Name.Contains(search.Pattern) ||
+                          x.From.Name.Contains(search.Pattern)
+                          orderby x.Id descending
+                          select x;
+
+                search.Total = qry.Count();
+                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            }
+
+            return search;
         }
 
         //

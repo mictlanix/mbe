@@ -50,7 +50,57 @@ namespace Mictlanix.BE.Web.Controllers
                       orderby x.Id descending
                       select x;
 
-            return View(qry.ToList());
+            Search<PurchaseOrder> search = new Search<PurchaseOrder>();
+            search.Limit = Configuration.PageSize;
+            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            search.Total = qry.Count();
+
+            return View(search);
+        }
+
+        // POST: /Purchases/
+
+        [HttpPost]
+        public ActionResult Index(Search<PurchaseOrder> search)
+        {
+            if (ModelState.IsValid)
+            {
+                search = GetPurchaseOrders(search);
+            }
+
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_Index", search);
+            }
+            else
+            {
+                return View(search);
+            }
+        }
+
+        Search<PurchaseOrder> GetPurchaseOrders(Search<PurchaseOrder> search)
+        {
+            if (search.Pattern == null)
+            {
+                var qry = from x in PurchaseOrder.Queryable
+                          orderby x.Id descending
+                          select x;
+
+                search.Total = qry.Count();
+                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            }
+            else
+            {
+                var qry = from x in PurchaseOrder.Queryable
+                          where x.Supplier.Name.Contains(search.Pattern)
+                          orderby x.Id descending
+                          select x;
+
+                search.Total = qry.Count();
+                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            }
+
+            return search;
         }
 
         // GET: /Purchases/Print/
