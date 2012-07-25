@@ -812,11 +812,17 @@
     <Content Include="Views\PointsOfSale\_Index.cshtml" />
     <Content Include="Views\CashDrawers\_Index.cshtml" />
     <Content Include="Views\ReturnsCustomer\_Historic.cshtml" />
+    <Content Include="Views\Quotations\_Index.cshtml" />
+    <Content Include="Views\Inventory\_Receipts.cshtml" />
+    <Content Include="Views\Inventory\_Issues.cshtml" />
+    <Content Include="Views\Inventory\_Transfers.cshtml" />
+    <Content Include="Views\Purchases\_Index.cshtml" />
     <None Include="Views\ReturnsCustomer\_SalesItemReturn.cshtml" />
     <Content Include="Views\Sales\Historic.cshtml" />
     <Content Include="Views\Suppliers\_Index.cshtml" />
     <Content Include="Views\Warehouses\_Index.cshtml" />
     <Content Include="Views\Stores\_Index.cshtml" />
+    <Content Include="Views\SupplierPayments\_Index.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
