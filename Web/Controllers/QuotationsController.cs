@@ -56,9 +56,58 @@ namespace Mictlanix.BE.Web.Controllers
                       where x.Store.Id == item.Id
                       select x;
 
-			return View (qry.ToList ());
+            Search<SalesQuote> search = new Search<SalesQuote>();
+            search.Limit = Configuration.PageSize;
+            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            search.Total = qry.Count();
+
+            return View(search);
 		}
 
+        [HttpPost]
+        public ActionResult Index(Search<SalesQuote> search)
+        {
+            if (ModelState.IsValid)
+            {
+                search = GetQuotations(search);
+            }
+
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_Index", search);
+            }
+            else
+            {
+                return View(search);
+            }
+        }
+
+        Search<SalesQuote> GetQuotations(Search<SalesQuote> search)
+        {
+            var item = Configuration.Store;
+
+            if (search.Pattern == null)
+            {
+                var qry = from x in SalesQuote.Queryable
+                          where x.Store.Id == item.Id
+                          select x;
+
+                search.Total = qry.Count();
+                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            }
+            else
+            {
+                var qry = from x in SalesQuote.Queryable
+                          where x.Store.Id == item.Id &&
+                          x.Customer.Name.Contains(search.Pattern)
+                          select x;
+
+                search.Total = qry.Count();
+                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            }
+
+            return search;
+        }
         //
         // GET: /Quotations/New
 
