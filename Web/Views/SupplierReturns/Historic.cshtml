@@ -1,8 +1,8 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
-@model IEnumerable<SupplierReturn>
-
+@using Mictlanix.BE.Web.Models
+@model DateRange
 @{
     ViewBag.Title = Resources.Title_SupplierReturnHistoric;
     var CurrentUser = Html.CurrentUser() ?? new User();
@@ -11,34 +11,49 @@
 
 <h2>@Mictlanix.BE.Resources.DisplayName_SupplierReturnHistoric</h2>
 
-<table>
-        <tr>
-            <th>@Html.LabelFor(x => new SupplierReturn().Id)</th>
-            <th>@Html.LabelFor(x => new SupplierReturn().CreationTime)</th>
-            <th>@Html.LabelFor(x => new SupplierReturn().Supplier.Name)</th>
-            <th>@Html.LabelFor(x => new SupplierReturn().Creator)</th>
-            <th>@Html.LabelFor(x => new SupplierReturn().PurchaseOrder)</th>
-            <th>@Html.LabelFor(x => new SupplierReturn().IsCompleted)</th>
-            <th>@Html.LabelFor(x => new ReturnCustomer().IsCancelled)</th>
-            <th></th>
-        </tr>
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td class="number">@Html.DisplayFor(x => item.Id)</td>
-            <td class="date">@Html.DisplayFor(x => item.CreationTime)</td>
-            <td>@Html.DisplayFor(x => item.PurchaseOrder.Supplier.Name)</td>
-            <td>@Html.DisplayFor(x => item.Creator.Name)</td>
-            <td class="number">@Html.DisplayFor(x => item.PurchaseOrder.Id)</td>
-            <td class="bool">@Html.DisplayFor(x => item.IsCompleted)</td>
-            <td class="bool">@Html.DisplayFor(x => item.IsCancelled)</td>
-            <td class="actions">
-        	    @if(Privilege.AllowRead)
-        	    {
-            	    @Html.ActionLink(" ", "HistoricDetails", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
-                }
-            </td>
-    </tr>
+@using (Ajax.BeginForm("Historic", "SupplierReturns", new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))
+{
+    <fieldset>
+        <legend>@Resources.SearchForDate</legend>
+        <table class="nonborder">
+            <tr>
+                <td class="date nonborder">
+                    @Html.LabelFor(x => x.StartDate)
+                </td>
+                <td class="date nonborder">
+                    @Html.EditorFor(x => x.StartDate)
+                </td>
+                <td class="date nonborder">
+                    @Html.LabelFor(x => x.EndDate)
+                </td>
+                <td class="nonborder">
+                    @Html.EditorFor(x => x.EndDate)
+                </td>
+                <td class="right nonborder">
+                    <button type="submit" class="icon save">@Resources.Search</button>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
 }
+<div id="activity-indicator">
+    <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
+</div>
+<div id="search-results">
 
-</table>
+</div>
+<script type="text/javascript">
+    function onSearchBegin() {
+        $("#search-results").html(null);
+    }
+</script>
+<script type="text/javascript">
+    $(function () {
+
+    });
+</script>
+<style type="text/css">
+.nonborder {
+  border-style:hidden;
+}
+</style>
