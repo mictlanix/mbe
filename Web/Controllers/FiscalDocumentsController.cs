@@ -56,9 +56,53 @@ namespace Mictlanix.BE.Web.Controllers
 					  where !(!x.IsCompleted && x.IsCancelled)
 					  orderby x.IsCompleted, x.Issued descending
                       select x;
-			
-			return View (qry.ToList ());
+
+            Search<FiscalDocument> search = new Search<FiscalDocument>();
+            search.Limit = Configuration.PageSize;
+            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            search.Total = qry.Count();
+
+            return View(search);
 		}
+
+
+        [HttpPost]
+        public ActionResult Index(Search<FiscalDocument> search)
+        {
+            if (ModelState.IsValid) {
+                search = GetFiscalDocuments(search);
+            }
+
+            if (Request.IsAjaxRequest()) {
+                return PartialView("_Index", search);
+            } else {
+                return View(search);
+            }
+        }
+
+        Search<FiscalDocument> GetFiscalDocuments(Search<FiscalDocument> search)
+        {
+            if (search.Pattern == null) {
+                var qry = from x in FiscalDocument.Queryable
+                          where !(!x.IsCompleted && x.IsCancelled)
+                          orderby x.IsCompleted, x.Issued descending
+                          select x;
+
+                search.Total = qry.Count();
+                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            } else {
+                var qry = from x in FiscalDocument.Queryable
+                          where !(!x.IsCompleted && x.IsCancelled) &&
+                          x.Customer.Name.Contains(search.Pattern)
+                          orderby x.IsCompleted, x.Issued descending
+                          select x;
+
+                search.Total = qry.Count();
+                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+            }
+
+            return search;
+        }
 		
         public ViewResult Reports ()
 		{
