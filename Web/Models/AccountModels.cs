@@ -59,8 +59,9 @@ namespace Mictlanix.BE.Web.Models
     public class LogOnModel
     {
         [Required]
-        [Display(Name = "UserName", ResourceType = typeof(Resources))]
         [StringLength(20, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[RegularExpression(@"^[0-9a-zA-Z]+$", ErrorMessageResourceName = "Validation_UserName", ErrorMessageResourceType = typeof(Resources))]
+        [Display(Name = "UserName", ResourceType = typeof(Resources))]
         public string UserName { get; set; }
 
         [Required]
@@ -77,6 +78,7 @@ namespace Mictlanix.BE.Web.Models
     {
         [Required]
         [StringLength(20, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[RegularExpression(@"^[0-9a-zA-Z]+$", ErrorMessageResourceName = "Validation_UserName", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "UserName", ResourceType = typeof(Resources))]
         public string UserName { get; set; }
 
@@ -91,11 +93,6 @@ namespace Mictlanix.BE.Web.Models
         [StringLength(40, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "ConfirmPassword", ResourceType = typeof(Resources))]
         public string ConfirmPassword { get; set; }
-
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [Display(Name = "Employee", ResourceType = typeof(Resources))]
-        [UIHint("EmployeeSelector")]
-        public int EmployeeId { get; set; }
 
         [Required]
         [DataType(DataType.EmailAddress)]
