@@ -4178,5 +4178,14 @@ namespace Mictlanix.BE {
 				return ResourceManager.GetString("Reports", resourceCulture);
 			}
 		}
+
+		/// <summary>
+		///   Looks up a localized string similar to Nombre de usuario inválido debe tener sólo caracteres alfanuméricos sin espacios.
+		/// </summary>
+		public static string Validation_UserName {
+			get {
+				return ResourceManager.GetString("Validation_UserName", resourceCulture);
+			}
+		}
     }
 }

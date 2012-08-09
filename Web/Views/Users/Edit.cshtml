@@ -98,7 +98,9 @@
 </div>
 <script type="text/javascript">
     $(function () {
-        $("#EmployeeId").tokenInput("add", { id: "@Model.Employee.Id", name: "@Model.Employee.Name"});
+    	@if(Model.Employee != null) {
+        @:$("#EmployeeId").tokenInput("add", { id: "@Model.Employee.Id", name: "@Model.Employee.Name"});
+        }
         $("table tr:first th input:checkbox").click(function () {
             var checkedStatus = this.checked;
             $("table tr td input:checkbox[name$='" + this.name + "']").each(function () {
