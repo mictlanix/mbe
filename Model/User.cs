@@ -41,6 +41,7 @@ namespace Mictlanix.BE.Model
 
         [PrimaryKey("user_id")]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[RegularExpression(@"^[0-9a-zA-Z]+$", ErrorMessageResourceName = "Validation_UserName", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(20, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "UserName", ResourceType = typeof(Resources))]
         public string UserName { get; set; }

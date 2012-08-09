@@ -363,6 +363,9 @@
   <data name="Validation_StringLength" xml:space="preserve">
     <value>El campo {0} debe tener entre {2} y {1} caracteres de largo.</value>
   </data>
+  <data name="Validation_UserName" xml:space="preserve">
+    <value>Nombre de usuario inválido debe tener sólo caracteres alfanuméricos sin espacios.</value>
+  </data>
   <data name="Website" xml:space="preserve">
     <value>Sitio Web</value>
   </data>
