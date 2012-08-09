@@ -1040,7 +1040,7 @@ Vencimiento: {0:d}</value>
   <data name="NameAndSignature" xml:space="preserve">
     <value>Nombre y Firma</value>
   </data>
-  <data name="PersonDelivery" xml:space="preserve">
+  <data name="DeliveryPerson" xml:space="preserve">
     <value>Persona que Entrega</value>
   </data>
   <data name="PersonReceipt" xml:space="preserve">
@@ -1182,7 +1182,7 @@ Realizada el: {0:d}</value>
   <data name="DisplayName_PaymentInformation" xml:space="preserve">
     <value>Información del Pago</value>
   </data>
-  <data name="ReturnCustomer" xml:space="preserve">
+  <data name="CustomerReturn" xml:space="preserve">
     <value>Devolución</value>
   </data>
   <data name="ReturnOrderId" xml:space="preserve">
@@ -1191,13 +1191,13 @@ Realizada el: {0:d}</value>
   <data name="SalesOrderDetail" xml:space="preserve">
     <value>Orden de Venta</value>
   </data>
-  <data name="DisplayName_ReturnCustomer" xml:space="preserve">
+  <data name="DisplayName_CustomerReturn" xml:space="preserve">
     <value>Devolución a Clientes</value>
   </data>
   <data name="FolioSalesOrder" xml:space="preserve">
     <value>Folio de Venta</value>
   </data>
-  <data name="Title_ReturnCustomer" xml:space="preserve">
+  <data name="Title_CustomerReturn" xml:space="preserve">
     <value>Devolución a Cliente</value>
   </data>
   <data name="Return" xml:space="preserve">
@@ -1233,7 +1233,7 @@ Realizada el: {0:d}</value>
   <data name="DisplayName_CustomerReturnHistoric" xml:space="preserve">
     <value>Histórico Devoluciones a Clientes</value>
   </data>
-  <data name="DisplayName_ReturnCustomerDetails" xml:space="preserve">
+  <data name="DisplayName_CustomerReturnDetails" xml:space="preserve">
     <value>Detalles de la Devolución a Cliente</value>
   </data>
   <data name="DisplayName_SupplierReturnHistoric" xml:space="preserve">
@@ -1288,7 +1288,7 @@ Realizada el: {0:d}</value>
     <value>Orden de Despacho</value>
   </data>
   <data name="DeliveryOrder" xml:space="preserve">
-    <value>Orden de Despacho</value>
+    <value>Orden de Entrega</value>
   </data>
   <data name="DisplayName_EditInvoice" xml:space="preserve">
     <value>Editar Factura</value>
@@ -1488,7 +1488,10 @@ Realizada el: {0:d}</value>
   <data name="SearchForDate" xml:space="preserve">
     <value>Búsqueda por Fecha</value>
   </data>
-  <data name="CustomerReturn" xml:space="preserve">
-    <value>Devolución de Cliente</value>
+  <data name="Delivery" xml:space="preserve">
+    <value>Entrega</value>
+  </data>
+  <data name="Reports" xml:space="preserve">
+    <value>Reportes</value>
   </data>
 </root>

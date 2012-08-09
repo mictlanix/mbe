@@ -41,18 +41,18 @@ using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers
 {
-    public class KardexController : Controller
+    public class ReportsController : Controller
     {
-		public ViewResult Index ()
+		public ViewResult Kardex ()
 		{
 			return View ();
 		}
 
         //FIXME: Query optimization (SUM function)
         [HttpPost]
-        public ActionResult Index(Warehouse item)
+        public ActionResult Kardex(Warehouse item)
         {
-            var qry = from x in Kardex.Queryable
+            var qry = from x in Model.Kardex.Queryable
                       where x.Warehouse.Id == item.Id
                       select new { product = x.Product, quantity = x.Quantity};
             var list = from x in qry.ToList()
@@ -61,12 +61,12 @@ namespace Mictlanix.BE.Web.Controllers
             
             var warehouse = Warehouse.Find(item.Id);
 
-            return PartialView("_Index", new MasterDetails<Warehouse, Kardex> { Master = warehouse , Details = list.ToList() });
+            return PartialView("_Kardex", new MasterDetails<Warehouse, Kardex> { Master = warehouse , Details = list.ToList() });
         }
 
         public ViewResult ProductDetails(int warehouse, int product)
         {
-            DateRange item = new DateRange();
+            var item = new DateRange();
             item.StartDate = DateTime.Now;
             item.EndDate = DateTime.Now;
 
@@ -79,7 +79,7 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult ProductDetails(int warehouse, int product, DateRange item)
         {
-            var qry = from x in Kardex.Queryable
+            var qry = from x in Model.Kardex.Queryable
                       where x.Warehouse.Id == warehouse && x.Product.Id == product &&
                             x.Date >= item.StartDate.Date && x.Date <= item.EndDate.Date.Add(new TimeSpan(23, 59, 59))
                       select x;

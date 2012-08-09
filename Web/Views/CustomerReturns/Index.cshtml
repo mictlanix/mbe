@@ -2,16 +2,16 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
-@model IEnumerable<ReturnCustomer>
+@model IEnumerable<CustomerReturn>
 
 
 @{
-    ViewBag.Title = Resources.Title_ReturnCustomer;
+    ViewBag.Title = Resources.Title_CustomerReturn;
     var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.ReturnCustomer);
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CustomerReturns);
 }
 
-<h2>@Resources.DisplayName_ReturnCustomer</h2>
+<h2>@Resources.DisplayName_CustomerReturn</h2>
 <div id="tabs">
     <ul>
         <li><a href="#search-container">@Resources.DisplayName_SalesSearch</a></li>
@@ -39,14 +39,14 @@
     <div id="returns-container">
         <table>
             <tr>
-                <th>@Html.LabelFor(x => new ReturnCustomer().Id)</th>
-                <th>@Html.LabelFor(x => new ReturnCustomer().CreationTime)</th>
-                <th>@Html.LabelFor(x => new ReturnCustomer().SalesOrder.Customer)</th>
-                <th>@Html.LabelFor(x => new ReturnCustomer().SalesPerson)</th>
-                <th>@Html.LabelFor(x => new ReturnCustomer().Creator)</th>
-                <th>@Html.LabelFor(x => new ReturnCustomer().SalesOrder)</th>
-                <th>@Html.LabelFor(x => new ReturnCustomer().IsCompleted)</th>
-                <th>@Html.LabelFor(x => new ReturnCustomer().IsCancelled)</th>
+                <th>@Html.LabelFor(x => new CustomerReturn().Id)</th>
+                <th>@Html.LabelFor(x => new CustomerReturn().CreationTime)</th>
+                <th>@Html.LabelFor(x => new CustomerReturn().SalesOrder.Customer)</th>
+                <th>@Html.LabelFor(x => new CustomerReturn().SalesPerson)</th>
+                <th>@Html.LabelFor(x => new CustomerReturn().Creator)</th>
+                <th>@Html.LabelFor(x => new CustomerReturn().SalesOrder)</th>
+                <th>@Html.LabelFor(x => new CustomerReturn().IsCompleted)</th>
+                <th>@Html.LabelFor(x => new CustomerReturn().IsCancelled)</th>
                 <th></th>
             </tr>
         @foreach (var item in Model)
