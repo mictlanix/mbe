@@ -81,9 +81,13 @@ namespace Mictlanix.BE.Model
         [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string ProductName { get; set; }
 
-        [Property("delivery_order")]
-        [Display(Name = "DeliveryOrder", ResourceType = typeof(Resources))]
-        public bool IsDeliveryOrder { get; set; }
+        [Property("delivery")]
+        [Display(Name = "Delivery", ResourceType = typeof(Resources))]
+        public bool IsDelivery { get; set; }
+		
+        [BelongsTo("warehouse")]
+        [Display(Name = "Warehouse", ResourceType = typeof(Resources))]
+        public virtual Warehouse Warehouse { get; set; }
 
         [DataType(DataType.Currency)]
         [Display(Name = "Subtotal", ResourceType = typeof(Resources))]

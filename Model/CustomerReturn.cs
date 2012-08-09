@@ -1,5 +1,5 @@
 ﻿// 
-// ReturnCustomer.cs
+// CustomerReturn.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
@@ -36,12 +36,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Mictlanix.BE.Model
 {
-    [ActiveRecord("return_customer")]
-    public class ReturnCustomer : ActiveRecordLinqBase<ReturnCustomer>
+    [ActiveRecord("customer_return")]
+    public class CustomerReturn : ActiveRecordLinqBase<CustomerReturn>
     {
-        IList<ReturnCustomerDetail> details = new List<ReturnCustomerDetail>();
+        IList<CustomerReturnDetail> details = new List<CustomerReturnDetail>();
 
-        [PrimaryKey(PrimaryKeyType.Identity, "return_customer_id")]
+        [PrimaryKey(PrimaryKeyType.Identity, "customer_return_id")]
         [Display(Name = "ReturnOrderId", ResourceType = typeof(Resources))]
         [DisplayFormat(DataFormatString = "{0:000000}")]
         public int Id { get; set; }
@@ -97,8 +97,8 @@ namespace Mictlanix.BE.Model
         [Display(Name = "Cancelled", ResourceType = typeof(Resources))]
         public bool IsCancelled { get; set; }
 
-        [HasMany(typeof(ReturnCustomerDetail), Table = "return_customer_detail", ColumnKey = "return_customer")]
-        public IList<ReturnCustomerDetail> Details
+		[HasMany(typeof(CustomerReturnDetail), Table = "customer_return_detail", ColumnKey = "customer_return")]
+        public IList<CustomerReturnDetail> Details
         {
             get { return details; }
             set { details = value; }
@@ -134,7 +134,7 @@ namespace Mictlanix.BE.Model
 
         public override bool Equals(object obj)
         {
-            ReturnCustomer other = obj as ReturnCustomer;
+            CustomerReturn other = obj as CustomerReturn;
 
             if (other == null)
                 return false;

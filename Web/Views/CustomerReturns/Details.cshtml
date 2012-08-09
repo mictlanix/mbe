@@ -1,7 +1,7 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Models
-@model ReturnCustomer
+@model CustomerReturn
 
 @{
     ViewBag.Title = Resources.Return;
@@ -9,7 +9,7 @@
 
 <script src="@Url.Content("~/Scripts/jquery.jeditable.mini.js")" type="text/javascript"></script>
 
-<h2>@Resources.DisplayName_ReturnCustomer</h2> 
+<h2>@Resources.DisplayName_CustomerReturn</h2> 
 
 <div id="sales-order" style="margin-right:300px">
 @Html.Partial("_SalesInfoReturn")
@@ -32,7 +32,7 @@
     }
 </div>
 <div class="right floating">
-    @using (Html.BeginForm("CancelReturn", "ReturnsCustomer", new { id = Model.Id }))
+    @using (Html.BeginForm("CancelReturn", "CustomerReturns", new { id = Model.Id }))
     {
         <button type="submit" class="icon lock">@Resources.Cancel</button>
     }
@@ -52,7 +52,7 @@
 
 <script type="text/javascript">
     function updateTotals(){
-        $.get("/ReturnsCustomer/GetTotals/" + ReturnCustomer.Id, function (data) {
+        $.get("/CustomerReturns/GetTotals/" + CustomerReturn.Id, function (data) {
             $("#return-totals").html(data);
         });
     }
@@ -61,7 +61,7 @@
         var result = "Error";
 
         $.ajaxSetup({ async: false });
-        $.post("/ReturnsCustomer/EditDetailQuantity", { "id": id, "quantity": value }, function (data) {
+        $.post("/CustomerReturns/EditDetailQuantity", { "id": id, "quantity": value }, function (data) {
             var element = $("#item" + id + " div.quantity");
             element.html(data.quantity);
             element.siblings(".total").html(data.total);
@@ -82,7 +82,7 @@
             modal: true,
             buttons: {
                 @Resources.Delete: function () {
-                    $.post("/ReturnsCustomer/RemoveDetail", { "id": id }, function (data) {
+                    $.post("/CustomerReturns/RemoveDetail", { "id": id }, function (data) {
                         if(data.result) {
                             $("#item" + id).remove();
                             updateTotals();

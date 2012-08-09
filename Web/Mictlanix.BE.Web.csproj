@@ -17,26 +17,26 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>False</Optimize>
     <OutputPath>bin</OutputPath>
     <WarningLevel>4</WarningLevel>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugSymbols>true</DebugSymbols>
+    <DebugSymbols>True</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>True</Optimize>
     <OutputPath>bin</OutputPath>
     <WarningLevel>4</WarningLevel>
     <DefineConstants>TRACE</DefineConstants>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\packages\Antlr.3.1.3.42154\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Iesi.Collections">
-      <HintPath>..\Packages\Iesi.Collections.3.1.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
+      <HintPath>..\Packages\Iesi.Collections.1.0.1\lib\Iesi.Collections.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
@@ -120,7 +120,6 @@
     <Compile Include="Controllers\PriceListsController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\PurchasesController.cs" />
-    <Compile Include="Controllers\ReturnsCustomerController.cs" />
     <Compile Include="Controllers\SalesController.cs" />
     <Compile Include="Controllers\AccountsReceivablesController.cs" />
     <Compile Include="Controllers\SupplierAgreementsController.cs" />
@@ -159,7 +158,8 @@
     <Compile Include="Models\FiscalReport.cs" />
     <Compile Include="Models\Pair.cs" />
     <Compile Include="Controllers\FiscalDocumentsController.cs" />
-    <Compile Include="Controllers\KardexController.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
+    <Compile Include="Controllers\CustomerReturnsController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
@@ -453,7 +453,6 @@
     <Content Include="Views\Quotations\_DetailEditView.cshtml" />
     <Content Include="Views\Quotations\_DetailView.cshtml" />
     <Content Include="Views\Sales\_Totals.cshtml" />
-    <Content Include="Views\ReturnsCustomer\_Totals.cshtml" />
     <Content Include="Views\Purchases\_Totals.cshtml" />
     <Content Include="Views\SupplierReturns\_Totals.cshtml" />
     <Content Include="Views\Quotations\Details.cshtml" />
@@ -475,7 +474,6 @@
     <Content Include="Views\Purchases\Print.cshtml" />
     <Content Include="Views\SupplierReturns\Print.cshtml" />
     <Content Include="Views\PointsOfSale\Index.cshtml" />
-    <Content Include="Views\Kardex\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />
@@ -771,12 +769,7 @@
     <Content Include="Views\AccountsPayables\AccountStatement.cshtml" />
     <Content Include="Views\AccountsPayables\Index.cshtml" />
     <Content Include="Views\SupplierPayments\Details.cshtml" />
-    <Content Include="Views\ReturnsCustomer\Index.cshtml" />
-    <Content Include="Views\ReturnsCustomer\_Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\CategorySelector.cshtml" />
-    <Content Include="Views\ReturnsCustomer\Details.cshtml" />
-    <Content Include="Views\ReturnsCustomer\_ReturnItem.cshtml" />
-    <Content Include="Views\ReturnsCustomer\_SalesInfoReturn.cshtml" />
     <Content Include="Views\SupplierReturns\Index.cshtml" />
     <Content Include="Views\SupplierReturns\_Index.cshtml" />
     <Content Include="Views\SupplierReturns\EditSupplierReturn.cshtml" />
@@ -785,16 +778,11 @@
     <Content Include="Views\Sales\_Historic.cshtml" />
     <Content Include="Views\Sales\Details.cshtml" />
     <Content Include="Views\Sales\HistoricDetails.cshtml" />
-    <Content Include="Views\ReturnsCustomer\_DeleteReturn.cshtml" />
-    <Content Include="Views\ReturnsCustomer\Historic.cshtml" />
-    <Content Include="Views\ReturnsCustomer\HistoricDetails.cshtml" />
-    <Content Include="Views\ReturnsCustomer\_ReturnCustomerDetails.cshtml" />
     <Content Include="Views\SupplierReturns\_DeleteReturn.cshtml" />
     <Content Include="Views\SupplierReturns\Historic.cshtml" />
     <Content Include="Views\SupplierReturns\HistoricDetails.cshtml" />
     <Content Include="Views\SupplierReturns\_SupplierReturnDetails.cshtml" />
     <Content Include="Views\AccountsPayables\Dates.cshtml" />
-    <Content Include="Views\ReturnsCustomer\_CustomerReturnTicket.cshtml" />
     <Content Include="Views\Sales\_PromissoryNoteTicket.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\StoreSelector.cshtml" />
     <Content Include="Views\Stores\Create.cshtml" />
@@ -802,16 +790,12 @@
     <Content Include="Views\Stores\Details.cshtml" />
     <Content Include="Views\Stores\Edit.cshtml" />
     <Content Include="Views\Stores\Index.cshtml" />
-    <Content Include="Views\Kardex\_Index.cshtml" />
-    <Content Include="Views\Kardex\ProductDetails.cshtml" />
-    <Content Include="Views\Kardex\_ProductDetails.cshtml" />
     <Content Include="Views\Categories\_Index.cshtml" />
     <Content Include="Views\Customers\Index.cshtml" />
     <Content Include="Views\Employees\_Index.cshtml" />
     <Content Include="Views\PriceLists\_Index.cshtml" />
     <Content Include="Views\PointsOfSale\_Index.cshtml" />
     <Content Include="Views\CashDrawers\_Index.cshtml" />
-    <Content Include="Views\ReturnsCustomer\_Historic.cshtml" />
     <Content Include="Views\Quotations\_Index.cshtml" />
     <Content Include="Views\Inventory\_Receipts.cshtml" />
     <Content Include="Views\Inventory\_Issues.cshtml" />
@@ -819,13 +803,30 @@
     <Content Include="Views\Purchases\_Index.cshtml" />
     <Content Include="Views\FiscalDocuments\_Index.cshtml" />
     <Content Include="Views\AccountsReceivables\_Index.cshtml" />
-    <None Include="Views\ReturnsCustomer\_SalesItemReturn.cshtml" />
     <Content Include="Views\Sales\Historic.cshtml" />
     <Content Include="Views\Suppliers\_Index.cshtml" />
     <Content Include="Views\Warehouses\_Index.cshtml" />
     <Content Include="Views\Stores\_Index.cshtml" />
     <Content Include="Views\SupplierPayments\_Index.cshtml" />
     <Content Include="Views\SupplierReturns\_Historic.cshtml" />
+    <None Include="Views\Reports\_ ProductDetails.cshtml" />
+    <None Include="Views\Reports\_ProductDetails.cshtml" />
+    <None Include="Views\Reports\ProductDetails.cshtml" />
+    <None Include="Views\Reports\_Kardex.cshtml" />
+    <None Include="Views\Reports\Kardex.cshtml" />
+    <None Include="Views\CustomerReturns\_CustomerReturnTicket.cshtml" />
+    <None Include="Views\CustomerReturns\_DeleteReturn.cshtml" />
+    <None Include="Views\CustomerReturns\_Historic.cshtml" />
+    <None Include="Views\CustomerReturns\_Index.cshtml" />
+    <None Include="Views\CustomerReturns\_ReturnItem.cshtml" />
+    <None Include="Views\CustomerReturns\_SalesInfoReturn.cshtml" />
+    <None Include="Views\CustomerReturns\_SalesItemReturn.cshtml" />
+    <None Include="Views\CustomerReturns\_Totals.cshtml" />
+    <None Include="Views\CustomerReturns\Details.cshtml" />
+    <None Include="Views\CustomerReturns\Historic.cshtml" />
+    <None Include="Views\CustomerReturns\HistoricDetails.cshtml" />
+    <None Include="Views\CustomerReturns\Index.cshtml" />
+    <None Include="Views\CustomerReturns\_CustomerReturnDetails.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -858,8 +859,8 @@
       </FlavorProperties>
     </VisualStudio>
     <MonoDevelop>
-      <Properties VerifyCodeBehindFields="true" VerifyCodeBehindEvents="true">
-        <XspParameters Port="8080" Address="127.0.0.1" SslMode="None" SslProtocol="Default" KeyType="None" CertFile="" KeyFile="" PasswordOptions="None" Password="" Verbose="true" />
+      <Properties VerifyCodeBehindFields="True" VerifyCodeBehindEvents="True">
+        <XspParameters Port="8080" Address="127.0.0.1" SslMode="None" SslProtocol="Default" KeyType="None" CertFile="" KeyFile="" PasswordOptions="None" Password="" Verbose="True" />
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>

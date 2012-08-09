@@ -7,12 +7,12 @@
 @{
     ViewBag.Title = Resources.Title_CustomerReturnHistoric;
     var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.ReturnCustomerHistoric);
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CustomerReturnHistoric);
 }
 
 <h2>@Mictlanix.BE.Resources.DisplayName_CustomerReturnHistoric</h2>
 
-@using (Ajax.BeginForm("Historic", "ReturnsCustomer", new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))
+@using (Ajax.BeginForm("Historic", "CustomerReturns", new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))
 {
     <fieldset>
         <legend>@Resources.SearchForDate</legend>

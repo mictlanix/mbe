@@ -1,4 +1,4 @@
-﻿// 
+// 
 // SalesController.cs
 // 
 // Author:
@@ -303,13 +303,13 @@ namespace Mictlanix.BE.Web.Controllers
         {
             var detail = SalesOrderDetail.Find (id);
 
-            detail.IsDeliveryOrder = (value != 0);
+            detail.IsDelivery = (value != 0);
 
 			using (var scope = new TransactionScope ()) {
 				detail.UpdateAndFlush ();
 			}
 
-            return Json(new { id = id, value = detail.IsDeliveryOrder });
+            return Json(new { id = id, value = detail.IsDelivery });
         }
 
         public ActionResult GetTotals (int id)
@@ -342,29 +342,32 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult ConfirmOrder (int id)
         {
             var item = SalesOrder.Find (id);
-
-            if (item.IsCredit) {
-                item.IsPaid = true;
-            }
+			var warehouse = item.PointOfSale.Warehouse;
+			var dt = DateTime.Now;
 
 			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 			item.ModificationTime = DateTime.Now;
             item.IsCompleted = true;
 
+            if (item.IsCredit) {
+                item.IsPaid = true;
+            }
+
 			using (var scope = new TransactionScope ()) {
-				foreach( var x in item.Details)
-				{
-                    var input = new Kardex
-                    {
-                        Warehouse = item.PointOfSale.Warehouse,
+				foreach( var x in item.Details) {
+                    var input = new Kardex {
+                        Warehouse = warehouse,
                         Product = x.Product,
                         Source = KardexSource.Sale,
                         Quantity = -x.Quantity,
-                        Date = DateTime.Now,
+                        Date = dt,
                         Reference = item.Id
                     };
 
                     input.Create();
+
+					x.Warehouse = warehouse;
+					x.Update ();
 				}
 
 				item.UpdateAndFlush ();

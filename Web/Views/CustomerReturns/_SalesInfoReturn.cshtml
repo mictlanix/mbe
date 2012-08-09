@@ -1,11 +1,11 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
-@model ReturnCustomer
+@model CustomerReturn
 
 @{
     var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.ReturnCustomer);
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CustomerReturns);
 }
 
 <fieldset>
@@ -38,5 +38,5 @@
 
 </fieldset>
 <script type="text/javascript">
-    var ReturnCustomer = { Id: @Model.Id };
+    var CustomerReturn = { Id: @Model.Id };
 </script>
