@@ -137,7 +137,7 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Edit(int id)
         {
-            CashDrawer item = CashDrawer.Find(id);
+            var item = CashDrawer.Find(id);
             return View (item);
         }
 
@@ -150,10 +150,14 @@ namespace Mictlanix.BE.Web.Controllers
             if (!ModelState.IsValid)
 				return View(item);
             
-            item.Store = CashDrawer.Find (item.Id).Store;
+			var entity = CashDrawer.Find (item.Id);
+
+			entity.Code = item.Code;
+			entity.Name = item.Name;
+			entity.Comment = item.Comment;
             
 			using (var scope = new TransactionScope()) {
-            	item.UpdateAndFlush ();
+				entity.UpdateAndFlush ();
 			}
 
             return RedirectToAction("Index");

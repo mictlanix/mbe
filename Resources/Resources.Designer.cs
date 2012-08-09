@@ -637,15 +637,6 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Devolución de Cliente.
-        /// </summary>
-        public static string CustomerReturn {
-            get {
-                return ResourceManager.GetString("CustomerReturn", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Fecha y Hora.
         /// </summary>
         public static string Date {
@@ -673,7 +664,7 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Orden de Despacho.
+        ///   Looks up a localized string similar to Orden de Entrega.
         /// </summary>
         public static string DeliveryOrder {
             get {
@@ -1197,18 +1188,18 @@ namespace Mictlanix.BE {
         /// <summary>
         ///   Looks up a localized string similar to Devolución a Clientes.
         /// </summary>
-        public static string DisplayName_ReturnCustomer {
+        public static string DisplayName_CustomerReturn {
             get {
-                return ResourceManager.GetString("DisplayName_ReturnCustomer", resourceCulture);
+                return ResourceManager.GetString("DisplayName_CustomerReturn", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Detalles de la Devolución a Cliente.
         /// </summary>
-        public static string DisplayName_ReturnCustomerDetails {
+        public static string DisplayName_CustomerReturnDetails {
             get {
-                return ResourceManager.GetString("DisplayName_ReturnCustomerDetails", resourceCulture);
+                return ResourceManager.GetString("DisplayName_CustomerReturnDetails", resourceCulture);
             }
         }
         
@@ -2535,9 +2526,9 @@ namespace Mictlanix.BE {
         /// <summary>
         ///   Looks up a localized string similar to Persona que Entrega.
         /// </summary>
-        public static string PersonDelivery {
+        public static string DeliveryPerson {
             get {
-                return ResourceManager.GetString("PersonDelivery", resourceCulture);
+                return ResourceManager.GetString("DeliveryPerson", resourceCulture);
             }
         }
         
@@ -2886,9 +2877,9 @@ namespace Mictlanix.BE {
         /// <summary>
         ///   Looks up a localized string similar to Devolución.
         /// </summary>
-        public static string ReturnCustomer {
+        public static string CustomerReturn {
             get {
-                return ResourceManager.GetString("ReturnCustomer", resourceCulture);
+                return ResourceManager.GetString("CustomerReturn", resourceCulture);
             }
         }
         
@@ -3705,9 +3696,9 @@ namespace Mictlanix.BE {
         /// <summary>
         ///   Looks up a localized string similar to Devolución a Cliente.
         /// </summary>
-        public static string Title_ReturnCustomer {
+        public static string Title_CustomerReturn {
             get {
-                return ResourceManager.GetString("Title_ReturnCustomer", resourceCulture);
+                return ResourceManager.GetString("Title_CustomerReturn", resourceCulture);
             }
         }
         
@@ -4169,5 +4160,23 @@ namespace Mictlanix.BE {
                 return ResourceManager.GetString("Zone", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entrega.
+        /// </summary>
+        public static string Delivery {
+            get {
+                return ResourceManager.GetString("Delivery", resourceCulture);
+            }
+        }
+		
+		/// <summary>
+		///   Looks up a localized string similar to Reportes.
+		/// </summary>
+		public static string Reports {
+			get {
+				return ResourceManager.GetString("Reports", resourceCulture);
+			}
+		}
     }
 }

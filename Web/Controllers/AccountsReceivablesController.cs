@@ -68,7 +68,7 @@ namespace Mictlanix.BE.Web.Controllers
 
             qry_payments = null;
 
-            var qry_returns = (from x in ReturnCustomer.Queryable
+            var qry_returns = (from x in CustomerReturn.Queryable
                                where x.IsCompleted && x.SalesOrder.IsCredit
                                group x by x.Customer into c
                                select new
@@ -152,7 +152,7 @@ namespace Mictlanix.BE.Web.Controllers
             qry_sales.Clear();
             qry_sales = null;
 
-            var qry_returns = (from x in ReturnCustomer.Queryable
+            var qry_returns = (from x in CustomerReturn.Queryable
                                where x.IsCompleted && x.Customer.Id == item.Id && x.SalesOrder.IsCredit
                                select x).ToList();
 

@@ -1,36 +1,37 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
-@model IEnumerable<Mictlanix.BE.Model.ReturnCustomerDetail>
+@using Mictlanix.BE.Web.Helpers
+@model IEnumerable<CustomerReturnDetail>
 
 
 <table>
     <tr>
         <th>
-            @Html.LabelFor(x => new ReturnCustomerDetail().ProductCode)
+            @Html.LabelFor(x => new CustomerReturnDetail().ProductCode)
         </th>
 
         <th>
-            @Html.LabelFor(x => new ReturnCustomerDetail().ProductName)
+            @Html.LabelFor(x => new CustomerReturnDetail().ProductName)
         </th>
 
         <th>
-            @Html.LabelFor(x => new ReturnCustomerDetail().Quantity)
+            @Html.LabelFor(x => new CustomerReturnDetail().Quantity)
         </th>
 
         <th>
-            @Html.LabelFor(x => new ReturnCustomerDetail().Price)
+            @Html.LabelFor(x => new CustomerReturnDetail().Price)
         </th>
         
         <th>
-            @Html.LabelFor(x => new ReturnCustomerDetail().Discount)
+            @Html.LabelFor(x => new CustomerReturnDetail().Discount)
         </th>
 
         <th>
-            @Html.LabelFor(x => new ReturnCustomerDetail().TaxRate)
+            @Html.LabelFor(x => new CustomerReturnDetail().TaxRate)
         </th>
         
         <th>
-            @Html.LabelFor(x => new ReturnCustomerDetail().Total)
+            @Html.LabelFor(x => new CustomerReturnDetail().Total)
         </th>
     </tr>
 

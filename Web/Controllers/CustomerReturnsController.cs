@@ -1,5 +1,5 @@
 ﻿// 
-// ReturnsCustomerController.cs
+// CustomerReturnsController.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
@@ -41,7 +41,7 @@ using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers
 {
-    public class ReturnsCustomerController : Controller
+    public class CustomerReturnsController : Controller
     {
         //
         // GET: /Returns/
@@ -54,7 +54,7 @@ namespace Mictlanix.BE.Web.Controllers
 				return View ("InvalidStore");
 			}
 			
-			var qry = from x in ReturnCustomer.Queryable
+			var qry = from x in CustomerReturn.Queryable
                       where x.Store.Id == item.Id &&
 							!x.IsCancelled &&
 							!x.IsCompleted
@@ -81,7 +81,7 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ViewResult PrintCustomerReturn (int id)
 		{
-			ReturnCustomer item = ReturnCustomer.Find (id);
+			CustomerReturn item = CustomerReturn.Find (id);
 
 			return View ("_CustomerReturnTicket", item);
 		}
@@ -96,7 +96,7 @@ namespace Mictlanix.BE.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Historic(DateRange item, Search<ReturnCustomer> search)
+        public ActionResult Historic(DateRange item, Search<CustomerReturn> search)
         {
             ViewBag.CustomerReturnDates = item;
             search.Limit = Configuration.PageSize;
@@ -105,9 +105,9 @@ namespace Mictlanix.BE.Web.Controllers
             return PartialView("_Historic", search);
         }
 
-        Search<ReturnCustomer> GetCustomerReturns(DateRange dates, Search<ReturnCustomer> search)
+        Search<CustomerReturn> GetCustomerReturns(DateRange dates, Search<CustomerReturn> search)
         {
-            var qry = from x in ReturnCustomer.Queryable
+            var qry = from x in CustomerReturn.Queryable
                       where (x.IsCompleted || x.IsCancelled) &&
                       (x.ModificationTime >= dates.StartDate.Date && x.ModificationTime <= dates.EndDate.Date.Add(new TimeSpan(23, 59, 59)))
                       orderby x.Id descending
@@ -125,13 +125,13 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Details (int id)
         {
-            ReturnCustomer item = ReturnCustomer.Find (id);
+            CustomerReturn item = CustomerReturn.Find (id);
             return View (item);
         }
 
         public ViewResult HistoricDetails(int id)
         {
-            ReturnCustomer order = ReturnCustomer.Find(id);
+            CustomerReturn order = CustomerReturn.Find(id);
 
             return View(order);
         }
@@ -142,13 +142,13 @@ namespace Mictlanix.BE.Web.Controllers
 		public ActionResult CreateFromSalesOrder (int id)
 		{
 			var sales = SalesOrder.Find (id);
-			var item = new ReturnCustomer ();
+			var item = new CustomerReturn ();
 			
 			// Store and Serial
 			item.Store = sales.Store;
 			
 			try {
-				item.Serial = (from x in ReturnCustomer.Queryable
+				item.Serial = (from x in CustomerReturn.Queryable
 	            			   where x.Store.Id == item.Store.Id
 	                      	   select x.Serial).Max () + 1;
 			} catch {
@@ -172,7 +172,7 @@ namespace Mictlanix.BE.Web.Controllers
 					if (sum <= 0)
 						continue;
 					
-					var detail = new ReturnCustomerDetail {
+					var detail = new CustomerReturnDetail {
 	                    Order = item,
 	                    SalesOrderDetail = x,
 	                    Product = x.Product,
@@ -194,7 +194,7 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public JsonResult EditDetailQuantity(int id, decimal quantity)
         {
-            ReturnCustomerDetail detail = ReturnCustomerDetail.Find (id);
+            CustomerReturnDetail detail = CustomerReturnDetail.Find (id);
             decimal sum = GetReturnableQuantity (detail.SalesOrderDetail.Id);
 
 			detail.Quantity = (quantity > 0 && quantity <= sum) ? quantity : sum;
@@ -208,14 +208,14 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult GetTotals (int id)
         {
-            var item = ReturnCustomer.Find (id);
+            var item = CustomerReturn.Find (id);
             return PartialView ("_Totals", item);
         }
 
         [HttpPost]
         public JsonResult RemoveDetail(int id)
         {
-            var item = ReturnCustomerDetail.Find (id);
+            var item = CustomerReturnDetail.Find (id);
 
 			using (var scope = new TransactionScope ()) {
 				item.DeleteAndFlush ();
@@ -229,16 +229,12 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult ConfirmReturn (int id)
         {
-            ReturnCustomer item = ReturnCustomer.Find(id);
-
-            item.IsCompleted = true;
+			var item = CustomerReturn.Find (id);
 
 			using (var scope = new TransactionScope ()) {
-				foreach( var x in item.Details)
-				{
-					var input = new Kardex
-                    {
-                        Warehouse = item.SalesOrder.PointOfSale.Warehouse,
+				foreach( var x in item.Details) {
+					var input = new Kardex {
+                        Warehouse = x.SalesOrderDetail.Warehouse,
                         Product = x.Product,
                         Source = KardexSource.CustomerReturn,
                         Quantity = x.Quantity,
@@ -248,7 +244,8 @@ namespace Mictlanix.BE.Web.Controllers
 
                     input.Create();
 				}
-
+				
+            	item.IsCompleted = true;
 				item.UpdateAndFlush ();
 			}
 
@@ -258,7 +255,7 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult CancelReturn (int id)
         {
-            var item = ReturnCustomer.Find(id);
+            var item = CustomerReturn.Find(id);
 			
 			item.IsCancelled = true;
 
@@ -273,10 +270,10 @@ namespace Mictlanix.BE.Web.Controllers
         {
             var item = SalesOrderDetail.Find(id);
             string sql = @"SELECT SUM(d.quantity) quantity
-                           FROM return_customer_detail d INNER JOIN return_customer m ON d.return_customer = m.return_customer_id
+                           FROM customer_return_detail d INNER JOIN customer_return m ON d.customer_return = m.customer_return_id
                            WHERE m.completed <> 0 AND m.cancelled = 0 AND d.sales_order_detail = :detail ";
 
-            IList<decimal> quantities = (IList<decimal>)ActiveRecordMediator<ReturnCustomerDetail>.Execute(
+            IList<decimal> quantities = (IList<decimal>)ActiveRecordMediator<CustomerReturnDetail>.Execute(
                 delegate(ISession session, object instance) {
                     try {
                         return session.CreateSQLQuery(sql)
