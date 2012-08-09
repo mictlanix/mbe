@@ -44,44 +44,43 @@ namespace Mictlanix.BE.Web.Controllers
     {
         bool ValidateUser(string username, string password)
         {
-            User user = Model.User.Queryable.SingleOrDefault(x => x.UserName == username);
-            return user != null && user.Password ==  SecurityHelpers.SHA1(password);
+            var item = Model.User.Queryable.SingleOrDefault(x => x.UserName == username);
+            return item != null && item.Password ==  SecurityHelpers.SHA1(password);
         }
 
-        bool CreateUser(string username, string password, int employee, string email)
-        {
-            username = username.ToLower();
+        bool CreateUser (string username, string password, string email)
+		{
+			username = username.ToLower ();
 
-            if (Model.User.Queryable.Count(x => x.UserName == username) > 0)
-            {
-                throw new Exception(Mictlanix.BE.Resources.Message_UserNameAlreadyExists);
-            }
+			if (Model.User.Queryable.Count (x => x.UserName == username) > 0) {
+				throw new Exception (Mictlanix.BE.Resources.Message_UserNameAlreadyExists);
+			}
 
-            User user = new User
-            {
+			var item = new User {
                 UserName = username,
                 Password = SecurityHelpers.SHA1(password),
-                Employee = Employee.Find(employee),
-                Email = email
+				Email = email.ToLower()
             };
 
-            user.Create();
+			using (var scope = new TransactionScope()) {
+				item.CreateAndFlush ();
+			}
 
             return true;
         }
 
         bool ChangePassword(string username, string oldPassword, string newPassword)
         {
-            User user = Model.User.Find(username);
+            User item = Model.User.Find(username);
             string pwd = SecurityHelpers.SHA1(oldPassword);
 
-            if (user == null || user.Password != pwd)
+            if (item == null || item.Password != pwd)
                 return false;
 
-            user.Password = SecurityHelpers.SHA1(newPassword);
+            item.Password = SecurityHelpers.SHA1(newPassword);
 			
 			using (var scope = new TransactionScope()) {
-				user.Update ();
+				item.UpdateAndFlush ();
 			}
         
             return true;
@@ -101,27 +100,22 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult LogOn(LogOnModel model, string returnUrl)
         {
-            if (ModelState.IsValid)
-            {
-                model.UserName = model.UserName.ToLower();
+            if (!ModelState.IsValid)
+				return View(model);
+            
+			// force lowercase for usernames
+            model.UserName = model.UserName.ToLower();
 
-                if (ValidateUser(model.UserName, model.Password))
-                {
-                    FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
-                    if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
-                        && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
-                    {
-                        return Redirect(returnUrl);
-                    }
-                    else
-                    {
-                        return RedirectToAction("Index", "Home");
-                    }
+            if (ValidateUser(model.UserName, model.Password)) {
+                FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
+                if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
+                    && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\")) {
+                    return Redirect(returnUrl);
+                } else {
+                    return RedirectToAction("Index", "Home");
                 }
-                else
-                {
-                    ModelState.AddModelError("", Mictlanix.BE.Resources.Message_InvalidUserPassword);
-                }
+            } else {
+                ModelState.AddModelError("", Mictlanix.BE.Resources.Message_InvalidUserPassword);
             }
 
             // If we got this far, something failed, redisplay form
@@ -152,31 +146,26 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult Register(RegisterModel model)
         {
-            if (ModelState.IsValid)
-            {
-                // Attempt to register the user
-                model.UserName = model.UserName.ToLower();
+            if (!ModelState.IsValid)
+				return View(model);
+            
+			// force lowercase for usernames
+            model.UserName = model.UserName.ToLower();
 
-                try
-                {
-                    if (CreateUser(model.UserName, model.Password, model.EmployeeId, model.Email))
-                    {
-                        FormsAuthentication.SetAuthCookie(model.UserName, false);
-                        return RedirectToAction("Index", "Home");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", Mictlanix.BE.Resources.Message_UnknownError);
-                    }
+            try {
+				// Attempt to register the user
+                if (CreateUser(model.UserName, model.Password, model.Email)) {
+                    FormsAuthentication.SetAuthCookie(model.UserName, false);
+                    return RedirectToAction("Index", "Home");
+                } else {
+                    ModelState.AddModelError("", Mictlanix.BE.Resources.Message_UnknownError);
                 }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", ex.Message);                    
-                }
+            } catch (Exception ex) {
+                ModelState.AddModelError("", ex.Message);                    
             }
 
-            // If we got this far, something failed, redisplay form
-            return View(model);
+			// If we got this far, something failed, redisplay form
+			return View(model);
         }
 
         //
@@ -201,21 +190,15 @@ namespace Mictlanix.BE.Web.Controllers
                 // than return false in certain failure scenarios.
                 bool changePasswordSucceeded;
 
-                try
-                {
+                try {
                     changePasswordSucceeded = ChangePassword(User.Identity.Name, model.OldPassword, model.NewPassword);
-                }
-                catch (Exception)
-                {
+                } catch (Exception) {
                     changePasswordSucceeded = false;
                 }
 
-                if (changePasswordSucceeded)
-                {
+                if (changePasswordSucceeded) {
                     return RedirectToAction("ChangePasswordSuccess");
-                }
-                else
-                {
+                } else {
                     ModelState.AddModelError("", Mictlanix.BE.Resources.Message_ChangePasswordWrong);
                 }
             }
