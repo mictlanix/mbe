@@ -5,9 +5,9 @@
 @model IEnumerable<SalesOrder>
 
 @{
-    ViewBag.Title = Resources.Title_ReturnCustomer;
+    ViewBag.Title = Resources.Title_CustomerReturn;
     var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.ReturnCustomer);
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CustomerReturns);
 }
 
 <table>
@@ -64,7 +64,7 @@
         <td class="actions">
         @if (Privilege.AllowCreate)
         {
-            using (Html.BeginForm("CreateFromSalesOrder", "ReturnsCustomer", new { id = item.Id }))
+            using (Html.BeginForm("CreateFromSalesOrder", "CustomerReturns", new { id = item.Id }))
             {
                 <button type="submit" class="icon save">@Resources.Return</button>
             }

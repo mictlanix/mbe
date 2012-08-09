@@ -1,5 +1,5 @@
-﻿// 
-// ReturnCustomerDetail.cs
+// 
+// CustomerReturnDetail.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
@@ -35,15 +35,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Mictlanix.BE.Model
 {
-    [ActiveRecord("return_customer_detail")]
-    public class ReturnCustomerDetail : ActiveRecordLinqBase<ReturnCustomerDetail>
+    [ActiveRecord("customer_return_detail")]
+    public class CustomerReturnDetail : ActiveRecordLinqBase<CustomerReturnDetail>
     {
-        [PrimaryKey(PrimaryKeyType.Identity, "return_customer_detail_id")]
+        [PrimaryKey(PrimaryKeyType.Identity, "customer_return_detail_id")]
         public int Id { get; set; }
 
-        [BelongsTo("return_customer", Lazy = FetchWhen.OnInvoke)]
-        [Display(Name = "ReturnCustomer", ResourceType = typeof(Resources))]
-        public virtual ReturnCustomer Order { get; set; }
+        [BelongsTo("customer_return", Lazy = FetchWhen.OnInvoke)]
+        [Display(Name = "CustomerReturn", ResourceType = typeof(Resources))]
+        public virtual CustomerReturn Order { get; set; }
 
         [BelongsTo("product")]
         [Display(Name = "Product", ResourceType = typeof(Resources))]
@@ -120,7 +120,7 @@ namespace Mictlanix.BE.Model
 
         public override bool Equals(object obj)
         {
-            ReturnCustomerDetail other = obj as ReturnCustomerDetail;
+            CustomerReturnDetail other = obj as CustomerReturnDetail;
 
             if (other == null)
                 return false;

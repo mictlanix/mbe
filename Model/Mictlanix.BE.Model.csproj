@@ -80,8 +80,6 @@
     <Compile Include="Store.cs" />
     <Compile Include="SupplierReturnDetail.cs" />
     <Compile Include="SupplierReturn.cs" />
-    <Compile Include="ReturnCustomerDetail.cs" />
-    <Compile Include="ReturnCustomer.cs" />
     <Compile Include="SupplierPayment.cs" />
     <Compile Include="PurchaseOrderDetail.cs" />
     <Compile Include="PurchaseOrder.cs" />
@@ -121,6 +119,8 @@
     <Compile Include="FiscalDocument.cs" />
     <Compile Include="FiscalDocumentDetail.cs" />
     <Compile Include="Constants\KardexSource.cs" />
+    <Compile Include="CustomerReturn.cs" />
+    <Compile Include="CustomerReturnDetail.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">

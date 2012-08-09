@@ -2,24 +2,24 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
-@model Search<ReturnCustomer>
+@model Search<CustomerReturn>
 
 @{
     ViewBag.Title = Resources.Title_CustomerReturnHistoric;
     var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.ReturnCustomerHistoric);
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CustomerReturnHistoric);
 }
 
 <table>
         <tr>
-            <th>@Html.LabelFor(x => new ReturnCustomer().Id)</th>
-            <th>@Html.LabelFor(x => new ReturnCustomer().CreationTime)</th>
-            <th>@Html.LabelFor(x => new ReturnCustomer().SalesOrder.Customer)</th>
-            <th>@Html.LabelFor(x => new ReturnCustomer().SalesPerson)</th>
-            <th>@Html.LabelFor(x => new ReturnCustomer().Creator)</th>
-            <th>@Html.LabelFor(x => new ReturnCustomer().SalesOrder)</th>
-            <th>@Html.LabelFor(x => new ReturnCustomer().IsCompleted)</th>
-            <th>@Html.LabelFor(x => new ReturnCustomer().IsCancelled)</th>
+            <th>@Html.LabelFor(x => new CustomerReturn().Id)</th>
+            <th>@Html.LabelFor(x => new CustomerReturn().CreationTime)</th>
+            <th>@Html.LabelFor(x => new CustomerReturn().SalesOrder.Customer)</th>
+            <th>@Html.LabelFor(x => new CustomerReturn().SalesPerson)</th>
+            <th>@Html.LabelFor(x => new CustomerReturn().Creator)</th>
+            <th>@Html.LabelFor(x => new CustomerReturn().SalesOrder)</th>
+            <th>@Html.LabelFor(x => new CustomerReturn().IsCompleted)</th>
+            <th>@Html.LabelFor(x => new CustomerReturn().IsCancelled)</th>
             <th></th>
         </tr>
     @foreach (var item in Model.Results)
@@ -55,7 +55,7 @@
             e.preventDefault();
             $("#activity-indicator").show();
             $("#search-results").hide();
-            $.post("/ReturnsCustomer/Historic", { EndDate: "@ViewBag.CustomerReturnDates.EndDate", StartDate: "@ViewBag.CustomerReturnDates.StartDate", Pattern: "@Model.Pattern", Offset: "@(Model.Offset-Model.Limit)", Limit: "@Model.Limit" }, function (data) {
+            $.post("/CustomerReturns/Historic", { EndDate: "@ViewBag.CustomerReturnDates.EndDate", StartDate: "@ViewBag.CustomerReturnDates.StartDate", Pattern: "@Model.Pattern", Offset: "@(Model.Offset-Model.Limit)", Limit: "@Model.Limit" }, function (data) {
                 $("#search-results").html(data);
                 $("#search-results").show();
                 $("#activity-indicator").hide();
@@ -72,7 +72,7 @@
             e.preventDefault();
             $("#activity-indicator").show();
             $("#search-results").hide();
-            $.post("/ReturnsCustomer/Historic", { EndDate: "@ViewBag.CustomerReturnDates.EndDate", StartDate: "@ViewBag.CustomerReturnDates.StartDate", Pattern: "@Model.Pattern", Offset: "@(Model.Offset+Model.Limit)", Limit: "@Model.Limit" }, function (data) {
+            $.post("/CustomerReturns/Historic", { EndDate: "@ViewBag.CustomerReturnDates.EndDate", StartDate: "@ViewBag.CustomerReturnDates.StartDate", Pattern: "@Model.Pattern", Offset: "@(Model.Offset+Model.Limit)", Limit: "@Model.Limit" }, function (data) {
                 $("#search-results").html(data);
                 $("#search-results").show();
                 $("#activity-indicator").hide();

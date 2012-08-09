@@ -1,18 +1,18 @@
 ﻿@using Mictlanix.BE
-@using Mictlanix.BE.Web.Helpers;
-@using Mictlanix.BE.Model;
-@model Mictlanix.BE.Model.ReturnCustomer
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model CustomerReturn
 
  @{
     ViewBag.Title = Resources.Details;
     var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.ReturnCustomerHistoric);    
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CustomerReturnHistoric);    
 }
 
 <h2>@Resources.Details</h2>
 
 <fieldset>
-    <legend>@Resources.Title_ReturnCustomer</legend>
+    <legend>@Resources.Title_CustomerReturn</legend>
 
     <div class="display-label">
         @Html.LabelFor(model => model.Id) @Html.Label(":")
@@ -42,8 +42,8 @@
 </fieldset>
 
 <fieldset>
-    <legend>@Mictlanix.BE.Resources.DisplayName_ReturnCustomerDetails</legend>
-    @Html.Partial("_ReturnCustomerDetails", Model.Details)
+    <legend>@Mictlanix.BE.Resources.DisplayName_CustomerReturnDetails</legend>
+    @Html.Partial("_CustomerReturnDetails", Model.Details)
 </fieldset>
 <p>
     @Html.ActionLink(Resources.BackToList, "Historic", new { }, new { @class = "button icon back" })
