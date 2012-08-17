@@ -83,6 +83,14 @@ namespace Mictlanix.BE.Model
         [Display(Name = "Customer", ResourceType = typeof(Resources))]
         public virtual Customer Customer { get; set; }
 
+		[Display(Name = "ShipTo", ResourceType = typeof(Resources))]
+		[UIHint("AddressSelector")]
+		public virtual int ShipToId { get; set; }
+		
+		[BelongsTo("ship_to", Lazy = FetchWhen.OnInvoke)]
+		[Display(Name = "ShipTo", ResourceType = typeof(Resources))]
+		public virtual Address ShipTo { get; set; }
+
         [Property]
         [DataType(DataType.DateTime)]
         [Display(Name = "Date", ResourceType = typeof(Resources))]
@@ -109,13 +117,17 @@ namespace Mictlanix.BE.Model
         [Display(Name = "Completed", ResourceType = typeof(Resources))]
         public virtual bool IsCompleted { get; set; }
 
-        [Property("cancelled")]
-        [Display(Name = "Cancelled", ResourceType = typeof(Resources))]
-        public virtual bool IsCancelled { get; set; }
-
         [Property("paid")]
         [Display(Name = "Paid", ResourceType = typeof(Resources))]
         public virtual bool IsPaid { get; set; }
+		
+		[Property("delivered")]
+		[Display(Name = "Delivery", ResourceType = typeof(Resources))]
+		public virtual bool IsDelivered { get; set; }
+		
+		[Property("cancelled")]
+		[Display(Name = "Cancelled", ResourceType = typeof(Resources))]
+		public virtual bool IsCancelled { get; set; }
 
         [HasMany(typeof(SalesOrderDetail), Table = "sales_order_detail", ColumnKey = "sales_order", Lazy = true)]
         public virtual IList<SalesOrderDetail> Details

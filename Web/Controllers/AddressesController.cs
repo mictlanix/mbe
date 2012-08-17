@@ -209,6 +209,17 @@ namespace Mictlanix.BE.Web.Controllers
 			
             return RedirectToAction("Details", type, new { id = owner });
         }
+		
+		public JsonResult GetSuggestions2(int customer)
+		{
+			var qry = from x in Address.Queryable
+					  from y in x.Customers
+					  where y.Id == customer
+					  orderby x.Street
+					  select new { id = x.Id, name = x.ToString() };
+			
+			return Json(qry.ToList(), JsonRequestBehavior.AllowGet);
+		}
 
         public JsonResult GetSuggestions(int customer, string pattern)
         {

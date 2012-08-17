@@ -1,4 +1,4 @@
-﻿// 
+// 
 // InventoryController.cs
 // 
 // Author:
@@ -277,7 +277,7 @@ namespace Mictlanix.BE.Web.Controllers
 					var kardex = new Kardex {
 						Warehouse = item.Warehouse,
 						Product = x.Product,
-						Source = KardexSource.InventoryReceipt,
+						Source = TransactionType.InventoryReceipt,
 						Quantity = x.Quantity,
 						Date = DateTime.Now,
 						Reference = item.Id
@@ -548,7 +548,7 @@ namespace Mictlanix.BE.Web.Controllers
                     {
                         Warehouse = item.Warehouse,
                         Product = x.Product,
-                        Source = KardexSource.InventoryIssue,
+                        Source = TransactionType.InventoryIssue,
                         Quantity = x.Quantity * -1,
                         Date = DateTime.Now,
                         Reference = item.Id
@@ -841,7 +841,7 @@ namespace Mictlanix.BE.Web.Controllers
                     {
                         Warehouse = item.To,
                         Product = x.Product,
-                        Source = KardexSource.InventoryTransfer,
+                        Source = TransactionType.InventoryTransfer,
                         Quantity = x.Quantity,
                         Date = dt,
                         Reference = item.Id
@@ -853,7 +853,7 @@ namespace Mictlanix.BE.Web.Controllers
                     {
                         Warehouse = item.From,
                         Product = x.Product,
-                        Source = KardexSource.InventoryTransfer,
+                        Source = TransactionType.InventoryTransfer,
                         Quantity = -x.Quantity,
                         Date = dt,
                         Reference = item.Id
