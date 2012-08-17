@@ -11,18 +11,21 @@ SET warehouse = (SELECT p.warehouse
                  WHERE O.sales_order_id = sales_order)
 
 INSERT INTO kardex (warehouse,product,quantity,date,reference,source)
-SELECT warehouse,product,quantity,date,sales_order,1
+SELECT warehouse,product,-quantity,date,sales_order,1
 FROM sales_order_detail d INNER JOIN sales_order m ON m.sales_order_id = d.sales_order
 UNION ALL
 SELECT warehouse,d.product,d.quantity,creation_time,customer_return,2
 FROM customer_return_detail d INNER JOIN customer_return m ON m.customer_return_id = d.customer_return
                               INNER JOIN sales_order_detail d2 ON d2.sales_order_detail_id = d.sales_order_detail
 UNION ALL
-SELECT warehouse,product,quantity,creation_time,issue,3
+SELECT warehouse,product,-quantity,creation_time,issue,3
 FROM inventory_issue_detail d INNER JOIN inventory_issue m ON m.inventory_issue_id = d.issue
 UNION ALL
 SELECT warehouse,product,quantity,creation_time,receipt,4
 FROM inventory_receipt_detail d INNER JOIN inventory_receipt m ON m.inventory_receipt_id = d.receipt
 UNION ALL
-SELECT warehouse,product,quantity,creation_time,transfer,5
+SELECT warehouse,product,-quantity,creation_time,transfer,5
+FROM inventory_transfer_detail d INNER JOIN inventory_transfer m ON m.inventory_transfer_id = d.transfer
+UNION ALL
+SELECT warehouse_to,product,quantity,creation_time,transfer,5
 FROM inventory_transfer_detail d INNER JOIN inventory_transfer m ON m.inventory_transfer_id = d.transfer

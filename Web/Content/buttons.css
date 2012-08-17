@@ -78,50 +78,50 @@ button.icon-only,a.button.icon-only {
     padding:16px 16px;
 }
 button.icon.add,a.button.icon.add {
-    background:url(icons/add-item.png) no-repeat;
+    background:#f3f3f3 url(icons/add-item.png) no-repeat;
 }
 button.icon.edit,a.button.icon.edit {
-    background:url(icons/edit.png) no-repeat;
+    background:#f3f3f3 url(icons/edit.png) no-repeat;
 }
 button.icon.save,a.button.icon.save {
-    background:url(icons/save.png) no-repeat;
+    background:#f3f3f3 url(icons/save.png) no-repeat;
 }
 button.icon.delete,a.button.icon.delete {
-    background:url(icons/recycle-full.png) no-repeat;
+    background:#f3f3f3 url(icons/recycle-full.png) no-repeat;
 }
 button.icon.search,a.button.icon.search {
-    background:url(icons/search.png) no-repeat;
+    background:#f3f3f3 url(icons/search.png) no-repeat;
 }
 button.icon.cancel,a.button.icon.cancel {
-    background:url(icons/delete-item.png) no-repeat;
+    background:#f3f3f3 url(icons/delete-item.png) no-repeat;
 }
 button.icon.view,a.button.icon.view {
-    background:url(icons/view-item.png) no-repeat;
+    background:#f3f3f3 url(icons/view-item.png) no-repeat;
 }
 button.icon.back,a.button.icon.back {
-    background:url(icons/home.png) no-repeat;
+    background:#f3f3f3 url(icons/home.png) no-repeat;
 }
 button.icon.register,a.button.icon.register {
-    background:url(icons/agent.png) no-repeat;
+    background:#f3f3f3 url(icons/agent.png) no-repeat;
 }
 button.icon.logOn,a.button.icon.logOn {
-    background:url(icons/ID.png) no-repeat;
+    background:#f3f3f3 url(icons/ID.png) no-repeat;
 }
 button.icon.pay,a.button.icon.pay {
-    background:url(icons/dollar.png) no-repeat;
+    background:#f3f3f3 url(icons/dollar.png) no-repeat;
 }
 button.icon.print,a.button.icon.print {
-    background:url(icons/print.png) no-repeat;
+    background:#f3f3f3 url(icons/print.png) no-repeat;
 }
 button.icon.next,a.button.icon.next {
-    background:url(icons/next-item.png) no-repeat;
+    background:#f3f3f3 url(icons/next-item.png) no-repeat;
 }
 button.icon.prev,a.button.icon.prev {
-    background:url(icons/prev-item.png) no-repeat;
+    background:#f3f3f3 url(icons/prev-item.png) no-repeat;
 }
 button.icon.lock,a.button.icon.lock {
-    background:url(icons/lock.png) no-repeat;
+    background:#f3f3f3 url(icons/lock.png) no-repeat;
 }
 button.icon.download,a.button.icon.download {
-    background:url(icons/download.png) no-repeat;
+    background:#f3f3f3 url(icons/download.png) no-repeat;
 }

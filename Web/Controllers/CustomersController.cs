@@ -42,20 +42,6 @@ namespace Mictlanix.BE.Web.Controllers
 {
     public class CustomersController : Controller
     {
-        public JsonResult GetSuggestions(string pattern)
-        {
-            JsonResult result = new JsonResult();
-            var qry = from x in Customer.Queryable
-                      where x.Name.Contains(pattern) ||
-                            x.Zone.Contains(pattern)
-                      select new { id = x.Id, name = x.Name, hasCredit = (x.CreditDays > 0 && x.CreditLimit > 0) };
-
-            result = Json(qry.Take(15).ToList());
-            result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
-
-            return result;
-        }
-
         //
         // GET: /Customer/
 
@@ -218,9 +204,18 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 		}
 
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-        }
+		public JsonResult GetSuggestions(string pattern)
+		{
+			JsonResult result = new JsonResult();
+			var qry = from x in Customer.Queryable
+					  where x.Name.Contains(pattern) ||
+							x.Zone.Contains(pattern)
+					  select new { id = x.Id, name = x.Name, hasCredit = (x.CreditDays > 0 && x.CreditLimit > 0) };
+			
+			result = Json(qry.Take(15).ToList());
+			result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+			
+			return result;
+		}
     }
 }

@@ -34,10 +34,10 @@ using Castle.ActiveRecord.Framework;
 
 namespace Mictlanix.BE.Model
 {
-    public enum KardexSource : int 
+    public enum TransactionType : int 
     {
-        [Display(Name = "Sale", ResourceType = typeof(Resources))]
-        Sale = 1,
+		[Display(Name = "SalesOrder", ResourceType = typeof(Resources))]
+        SalesOrder = 1,
         [Display(Name = "CustomerReturn", ResourceType = typeof(Resources))]
         CustomerReturn, 
 		[Display(Name = "InventoryIssue", ResourceType = typeof(Resources))]
@@ -45,7 +45,11 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "InventoryReceipt", ResourceType = typeof(Resources))]
         InventoryReceipt,
 		[Display(Name = "InventoryTransfer", ResourceType = typeof(Resources))]
-        InventoryTransfer
+        InventoryTransfer,
+		[Display(Name = "PurchaseOrder", ResourceType = typeof(Resources))]
+		PurchaseOrder,
+		[Display(Name = "SupplierReturn", ResourceType = typeof(Resources))]
+		SupplierReturn
     }
 }
 

@@ -1,4 +1,4 @@
-﻿// 
+// 
 // Kardex.cs
 // 
 // Author:
@@ -72,7 +72,7 @@ namespace Mictlanix.BE.Model
 
 		[Property]
         [Display(Name = "Source", ResourceType = typeof(Resources))]
-        public virtual KardexSource Source { get; set; }
+        public virtual TransactionType Source { get; set; }
 
 
         #region Override Base Methods

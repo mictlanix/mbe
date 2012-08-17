@@ -221,6 +221,15 @@ namespace Mictlanix.BE {
                 return ResourceManager.GetString("BillTo", resourceCulture);
             }
         }
+
+		/// <summary>
+		///   Looks up a localized string similar to Datos de Entrega.
+		/// </summary>
+		public static string ShipTo {
+			get {
+				return ResourceManager.GetString("ShipTo", resourceCulture);
+			}
+		}
         
         /// <summary>
         ///   Looks up a localized string similar to Cumpleaños.
