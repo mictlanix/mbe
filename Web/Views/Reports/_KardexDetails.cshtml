@@ -32,16 +32,13 @@
         <td >
             @item.Source.GetDisplayName()
         </td>
-
         <td class="number">
-            @if (item.Quantity > 0)
-            {
+            @if (item.Quantity > 0) {
                 @item.Quantity.ToString("0.####")
             }
         </td>
         <td class="number">
-            @if (item.Quantity < 0)
-            {
+            @if (item.Quantity < 0) {
                 @Math.Abs(item.Quantity).ToString("0.####")
             }
         </td>

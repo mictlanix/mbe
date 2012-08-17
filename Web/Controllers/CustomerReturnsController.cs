@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CustomerReturnsController.cs
 // 
 // Author:
@@ -236,7 +236,7 @@ namespace Mictlanix.BE.Web.Controllers
 					var input = new Kardex {
                         Warehouse = x.SalesOrderDetail.Warehouse,
                         Product = x.Product,
-                        Source = KardexSource.CustomerReturn,
+                        Source = TransactionType.CustomerReturn,
                         Quantity = x.Quantity,
                         Date = DateTime.Now,
                         Reference = item.Id

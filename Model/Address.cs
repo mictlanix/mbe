@@ -165,7 +165,7 @@ namespace Mictlanix.BE.Model
 
         public override string ToString()
         {
-            return string.Format("{0} [{1}, {2}, {3}]", TaxpayerName, Street, Neighborhood, ZipCode);
+			return string.Format("{1}, {2}, {3} ({0})", TaxpayerName, StreetAndNumber, Neighborhood, ZipCode);
         }
 
 		public override bool Equals(object obj)

@@ -14,18 +14,18 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>none</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>False</Optimize>
     <OutputPath>bin\Debug</OutputPath>
     <WarningLevel>4</WarningLevel>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>True</Optimize>
     <OutputPath>bin\Release</OutputPath>
     <WarningLevel>4</WarningLevel>
     <DefineConstants>TRACE</DefineConstants>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DataAnnotationsExtensions">
@@ -118,9 +118,9 @@
     <Compile Include="SalesQuoteDetail.cs" />
     <Compile Include="FiscalDocument.cs" />
     <Compile Include="FiscalDocumentDetail.cs" />
-    <Compile Include="Constants\KardexSource.cs" />
     <Compile Include="CustomerReturn.cs" />
     <Compile Include="CustomerReturnDetail.cs" />
+    <Compile Include="Constants\TransactionType.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">

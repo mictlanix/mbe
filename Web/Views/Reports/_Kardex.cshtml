@@ -30,7 +30,7 @@
             @Html.DisplayFor(x => item.Quantity)
         </td>
         <td class="actions">
-            @Html.ActionLink(" ", "ProductDetails", new { warehouse = Model.Master.Id, product = item.Product.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+            @Html.ActionLink(" ", "KardexDetails", new { warehouse = Model.Master.Id, product = item.Product.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
         </td>
     </tr> 
 }
