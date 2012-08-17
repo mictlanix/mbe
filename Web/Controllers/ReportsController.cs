@@ -64,7 +64,7 @@ namespace Mictlanix.BE.Web.Controllers
             return PartialView("_Kardex", new MasterDetails<Warehouse, Kardex> { Master = warehouse , Details = list.ToList() });
         }
 
-        public ViewResult ProductDetails(int warehouse, int product)
+		public ViewResult KardexDetails(int warehouse, int product)
         {
             var item = new DateRange();
             item.StartDate = DateTime.Now;
@@ -73,20 +73,18 @@ namespace Mictlanix.BE.Web.Controllers
             ViewBag.Warehouse = Warehouse.Find(warehouse);
             ViewBag.Product = Product.Find(product);
 
-            return View("ProductDetails", item);
+            return View(item);
         }
 
         [HttpPost]
-        public ActionResult ProductDetails(int warehouse, int product, DateRange item)
+		public ActionResult KardexDetails(int warehouse, int product, DateRange item)
         {
             var qry = from x in Model.Kardex.Queryable
                       where x.Warehouse.Id == warehouse && x.Product.Id == product &&
                             x.Date >= item.StartDate.Date && x.Date <= item.EndDate.Date.Add(new TimeSpan(23, 59, 59))
                       select x;
           
-            return PartialView("_ProductDetails", qry.ToList());
+			return PartialView("_KardexDetails", qry.ToList());
         }
 	}
 }
-
-//x.Date >= start.Date && x.Date <= end.Date.Add(new TimeSpan(23, 59, 59))

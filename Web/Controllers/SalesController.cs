@@ -174,10 +174,18 @@ namespace Mictlanix.BE.Web.Controllers
 			item.ModificationTime = item.CreationTime;
 			item.Customer = Customer.Find (item.CustomerId);
 			item.SalesPerson = SecurityHelpers.GetUser (User.Identity.Name).Employee;
-			item.Date = DateTime.Now;
+			item.Date = item.CreationTime;
 			item.DueDate = item.IsCredit ? item.Date.AddDays (item.Customer.CreditDays) : item.Date;
 
+			if (item.ShipToId > 0) {
+				item.ShipTo = new Address ();
+				item.ShipTo.Copy (Address.TryFind (item.ShipToId));
+			}
+
 			using (var scope = new TransactionScope()) {
+				if (item.ShipTo != null) {
+					item.ShipTo.Create();
+				}
 				item.CreateAndFlush ();
 			}
 
@@ -224,31 +232,32 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public JsonResult AddDetail(int order, int product)
         {
-            var p = Product.Find(product);
-
+			var order_entity = SalesOrder.Find (order);
+			var product_entity = Product.TryFind (product);
+			
             var item = new SalesOrderDetail {
-                SalesOrder = SalesOrder.Find(order),
-                Product = p,
-                ProductCode = p.Code,
-                ProductName = p.Name,
-                Discount = 0,
-                TaxRate = p.TaxRate,
-                Quantity = 1,
+				SalesOrder = order_entity,
+				Product = product_entity,
+				Warehouse = order_entity.PointOfSale.Warehouse,
+                ProductCode = product_entity.Code,
+                ProductName = product_entity.Name,
+                TaxRate = product_entity.TaxRate,
+                Quantity = 1
             };
 
             switch (item.SalesOrder.Customer.PriceList.Id)
             {
                 case 1:
-                    item.Price = p.Price1;
+                    item.Price = product_entity.Price1;
                     break;
                 case 2:
-                    item.Price = p.Price2;
+                    item.Price = product_entity.Price2;
                     break;
                 case 3:
-                    item.Price = p.Price3;
+                    item.Price = product_entity.Price3;
                     break;
                 case 4:
-                    item.Price = p.Price4;
+                    item.Price = product_entity.Price4;
                     break;
             }
 
@@ -358,7 +367,7 @@ namespace Mictlanix.BE.Web.Controllers
                     var input = new Kardex {
                         Warehouse = warehouse,
                         Product = x.Product,
-                        Source = KardexSource.Sale,
+                        Source = TransactionType.SalesOrder,
                         Quantity = -x.Quantity,
                         Date = dt,
                         Reference = item.Id

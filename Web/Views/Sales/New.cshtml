@@ -21,11 +21,19 @@
                 @Html.TextBoxFor(model => model.CustomerId)
                 @Html.ValidationMessageFor(model => model.CustomerId)
             </div>
-            <div id="hasCredit" class="editor-label" style="display:none">
+            <div id="delivery-box" class="editor-label" style="display:inline-block">
+                <input id="delivery" name="delivery" type="checkbox" value="false">
+                <label for="delivery">Entrega</label>
+            </div>
+            <div id="hasCredit" class="editor-label" style="display:inline-block">
                 @Html.EditorFor(model => model.IsCredit)
                 @Html.LabelFor(model => model.IsCredit)
             </div>
-           
+            <div id="shipTo" class="editor-label" style="display:none">
+                @Html.LabelFor(x => x.ShipTo)
+                @Html.EditorFor(x => x.ShipToId)
+            </div>
+
             <p class="right">
                 <button type="submit" class="icon save">@Resources.Save</button>
             </p>
@@ -42,6 +50,8 @@ ul.token-input-list {
 </style>
 <script type="text/javascript">
     $(function () {
+    	$("#hasCredit,#delivery-box").hide("slow");
+    	
         $("#CustomerId").tokenInput("@Url.Action("GetSuggestions", "Customers")", {
             hintText: "@Resources.HIntText",
             noResultsText: "@Resources.NoResultsText",
@@ -51,13 +61,41 @@ ul.token-input-list {
             tokenLimit: 1,
             prePopulate: [{ id: "@Model.Customer.Id", name: "@Model.Customer.Name"}],
             onAdd: function (item) {
+            	if (item.id > 1) {
+                    $("#delivery-box").show("slow");
+                }
                 if (item.hasCredit) {
                     $("#hasCredit").show("slow");
                 }
             },
-            onDelete: function (item){
-                $("#IsCredit").attr("checked", false);                
-                $("#hasCredit").hide("slow");
+            onDelete: function (item) {
+                $("#IsCredit,#delivery").attr("checked", false);
+                $("#hasCredit,#delivery-box").hide("slow");
+            }
+        });
+        
+        $("#ShipToId").tokenInput(function() {
+			var customer = $("#CustomerId").tokenInput("get")[0];
+			
+			if(typeof(customer) === "undefined") {
+				customer = {id : 0};
+			}
+			
+			return "@Url.Action("GetSuggestions2", "Addresses", new { customer = 0 })" + customer.id; }, {
+            hintText: "@Resources.HIntText",
+            noResultsText: "@Resources.NoResultsText",
+            searchingText: "@Resources.SearchingText",          
+            queryParam: "pattern",tokenLimit: 1
+        });
+        
+        $("#delivery").change(function() {
+            var show = $(this).is(':checked');
+            
+            if (show) {
+                $("#shipTo").show("slow");
+            } else {
+                $("#shipTo").hide("slow");
+                $("#ShipToId").tokenInput("clear");
             }
         });
     });

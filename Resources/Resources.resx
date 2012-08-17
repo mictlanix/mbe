@@ -1070,6 +1070,9 @@ Vencimiento: {0:d}</value>
   <data name="BillTo" xml:space="preserve">
     <value>Datos del Receptor</value>
   </data>
+  <data name="ShipTo" xml:space="preserve">
+    <value>Datos de Entrega</value>
+  </data>
   <data name="Issuer" xml:space="preserve">
     <value>Emisor</value>
   </data>
