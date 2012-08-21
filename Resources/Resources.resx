@@ -1287,9 +1287,6 @@ Realizada el: {0:d}</value>
   <data name="Accept" xml:space="preserve">
     <value>Acepto</value>
   </data>
-  <data name="Person" xml:space="preserve">
-    <value>{0}</value>
-  </data>
   <data name="ReleaseOrder" xml:space="preserve">
     <value>Orden de Despacho</value>
   </data>
