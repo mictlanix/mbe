@@ -1,14 +1,34 @@
+CREATE SCHEMA mbe_ramos DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ;
 
 -- BEFORE MODEL CHANGES
 
 UPDATE sales_order_detail SET delivery_order = 0;
 
+ALTER TABLE return_customer_detail RENAME TO customer_return_detail;
+ALTER TABLE return_customer RENAME TO customer_return;
+
+ALTER TABLE customer_return_detail DROP FOREIGN KEY rcd_return_customer_fk;
+ALTER TABLE customer_return_detail CHANGE return_customer_detail_id customer_return_detail_id int(11);
+ALTER TABLE customer_return CHANGE return_customer_id customer_return_id int(11);
+ALTER TABLE customer_return_detail CHANGE COLUMN return_customer customer_return INT(11) NOT NULL, 
+	ADD CONSTRAINT crd_customer_return_fk FOREIGN KEY (customer_return) REFERENCES customer_return (customer_return_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+	ADD INDEX crd_customer_return_fk (customer_return ASC);
+
 -- APPLY MODEL CHANGES
+
+UPDATE point_sale SET warehouse = 1 WHERE point_sale_id = 1;
+UPDATE point_sale SET warehouse = 1 WHERE point_sale_id = 2;
+UPDATE point_sale SET warehouse = 1 WHERE point_sale_id = 3;
+UPDATE point_sale SET warehouse = 2 WHERE point_sale_id = 4;
+UPDATE point_sale SET warehouse = 3 WHERE point_sale_id = 6;
+UPDATE point_sale SET warehouse = 1 WHERE point_sale_id = 7;
+UPDATE point_sale SET warehouse = 1 WHERE point_sale_id = 9;
+UPDATE point_sale SET warehouse = 4 WHERE point_sale_id = 10;
 
 UPDATE sales_order_detail
 SET warehouse = (SELECT p.warehouse
                  FROM sales_order o INNER JOIN point_sale p ON o.point_sale = p.point_sale_id
-                 WHERE O.sales_order_id = sales_order)
+                 WHERE o.sales_order_id = sales_order);
 
 INSERT INTO kardex (warehouse,product,quantity,date,reference,source)
 SELECT warehouse,product,-quantity,date,sales_order,1
@@ -29,3 +49,7 @@ FROM inventory_transfer_detail d INNER JOIN inventory_transfer m ON m.inventory_
 UNION ALL
 SELECT warehouse_to,product,quantity,creation_time,transfer,5
 FROM inventory_transfer_detail d INNER JOIN inventory_transfer m ON m.inventory_transfer_id = d.transfer
+
+INSERT INTO `mbe_ramos`.`user` (`user_id`, `password`, `email`, `employee`) VALUES ('acabados', '7C4A8D09CA3762AF61E59520943DC26494F8941B', 'ramos_hermanos03@yahoo.com.mx', 2);
+UPDATE access_privilege SET user = 'acabados' WHERE user = 'tienda acabados';
+DELETE FROM `mbe_ramos`.`user` WHERE `user_id`='tienda acabados';
