@@ -2515,15 +2515,6 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0}.
-        /// </summary>
-        public static string Person {
-            get {
-                return ResourceManager.GetString("Person", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to CURP.
         /// </summary>
         public static string PersonalId {

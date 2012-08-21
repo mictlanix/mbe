@@ -474,6 +474,19 @@
     <Content Include="Views\Purchases\Print.cshtml" />
     <Content Include="Views\SupplierReturns\Print.cshtml" />
     <Content Include="Views\PointsOfSale\Index.cshtml" />
+    <Content Include="Views\CustomerReturns\_CustomerReturnTicket.cshtml" />
+    <Content Include="Views\CustomerReturns\_DeleteReturn.cshtml" />
+    <Content Include="Views\CustomerReturns\_Historic.cshtml" />
+    <Content Include="Views\CustomerReturns\_Index.cshtml" />
+    <Content Include="Views\CustomerReturns\_ReturnItem.cshtml" />
+    <Content Include="Views\CustomerReturns\_SalesInfoReturn.cshtml" />
+    <Content Include="Views\CustomerReturns\_SalesItemReturn.cshtml" />
+    <Content Include="Views\CustomerReturns\_Totals.cshtml" />
+    <Content Include="Views\CustomerReturns\Details.cshtml" />
+    <Content Include="Views\CustomerReturns\Historic.cshtml" />
+    <Content Include="Views\CustomerReturns\HistoricDetails.cshtml" />
+    <Content Include="Views\CustomerReturns\Index.cshtml" />
+    <Content Include="Views\CustomerReturns\_CustomerReturnDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />
@@ -811,19 +824,6 @@
     <Content Include="Views\SupplierReturns\_Historic.cshtml" />
     <None Include="Views\Reports\_Kardex.cshtml" />
     <None Include="Views\Reports\Kardex.cshtml" />
-    <None Include="Views\CustomerReturns\_CustomerReturnTicket.cshtml" />
-    <None Include="Views\CustomerReturns\_DeleteReturn.cshtml" />
-    <None Include="Views\CustomerReturns\_Historic.cshtml" />
-    <None Include="Views\CustomerReturns\_Index.cshtml" />
-    <None Include="Views\CustomerReturns\_ReturnItem.cshtml" />
-    <None Include="Views\CustomerReturns\_SalesInfoReturn.cshtml" />
-    <None Include="Views\CustomerReturns\_SalesItemReturn.cshtml" />
-    <None Include="Views\CustomerReturns\_Totals.cshtml" />
-    <None Include="Views\CustomerReturns\Details.cshtml" />
-    <None Include="Views\CustomerReturns\Historic.cshtml" />
-    <None Include="Views\CustomerReturns\HistoricDetails.cshtml" />
-    <None Include="Views\CustomerReturns\Index.cshtml" />
-    <None Include="Views\CustomerReturns\_CustomerReturnDetails.cshtml" />
     <None Include="Views\Reports\_KardexDetails.cshtml" />
     <None Include="Views\Reports\KardexDetails.cshtml" />
   </ItemGroup>
