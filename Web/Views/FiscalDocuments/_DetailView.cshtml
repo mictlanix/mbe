@@ -14,7 +14,8 @@
         <label>@Resources.Price:</label>
         <div class="value price">@Html.DisplayFor(x => x.Price)</div>
         <label>@Resources.TaxRate:</label>
-        <div class="value tax">@Html.DisplayFor(x => x.TaxRate)</div><br />
+        <div class="value tax">@Html.DisplayFor(x => x.TaxRate)</div>
+        <br />
         <label>@Resources.UnitOfMeasurement:</label>
         <div class="value um">@Model.UnitOfMeasurement</div>
         <label>@Resources.Quantity:</label>
@@ -23,5 +24,10 @@
         <div class="value discount">@Html.DisplayFor(x => x.Discount)</div>
         <label>@Resources.Amount:</label>
         <div class="value total">@Html.DisplayFor(x => x.Total)</div>
+        <br />
+        @if(Model.OrderDetail != null) {
+        <label>@Resources.SalesOrder:</label>
+        <div class="value">@Html.DisplayFor(x => x.OrderDetail.SalesOrder.Id)</div>
+        }
     </div>
 </li>

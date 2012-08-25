@@ -27,10 +27,10 @@
 	            @Html.ValidationMessageFor(model => model.DueDate)
 	        </div>
 	        
-            <p>
+            <div class="action-buttons">
             	<button type="submit" class="icon save">@Resources.Save</button>
         		@Ajax.ActionLink(Resources.Discard, "DiscardChanges", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "master-section" }, new { @class = "button icon cancel" })
-        	</p>
+        	</div>
         }
 </fieldset>
 <script type="text/javascript">

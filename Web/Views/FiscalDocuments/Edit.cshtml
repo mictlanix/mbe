@@ -1,6 +1,6 @@
 ﻿@using Mictlanix.BE
-@using Mictlanix.BE.Model;
-@using Mictlanix.BE.Web.Helpers;
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
 @model FiscalDocument
 
 @{
@@ -17,12 +17,7 @@
 
 <div id="details-section">
     <div id="items-container">
-        <ul id="items" class="list-items">
-        @foreach (var item in Model.Details)
-        {
-            @Html.Partial("_DetailEditView", item)
-        }
-        </ul>
+	@Html.Partial("_ItemsBlock", Model.Details)
     </div>
 	<div id="tabs" class="tabs-bottom">
 	    <ul>
@@ -33,7 +28,7 @@
 	        <input type="text" id="product-search" name="product-search" />
 	    </div>
 	    <div id="tabs-2">
-	        <input type="text" id="sales-order-search" name="sales-order-search" />
+	        <input type="text" id="order-search" name="order-search" />
 	    </div>
     </div>
 </div>
@@ -43,11 +38,14 @@
 <div id="back-to-list" style="clear:both">
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
-<div id="dialog-confirm" title="@Resources.Delete">
+<div id="confirm-dlg" class="dialog" title="@Resources.Delete">
 	<p>
         <span class="ui-icon ui-icon-circle-close" style="float:left; margin:3px 7px 20px 0;"></span>
         @Resources.Message_DeleteConfirmation
     </p>
+</div>
+<div id="notification-dlg" class="dialog" title="@Resources.Delete">
+	<p>@Resources.Message_NoInvoiceableItems</p>
 </div>
 <script type="text/javascript">
     function updateTotals(){
@@ -173,7 +171,7 @@
     }
     
     function removeItem(id) {
-        $("#dialog-confirm").dialog({
+        $("#confirm-dlg").dialog({
             resizable: true,
             height: 178,
             modal: true,
@@ -254,38 +252,33 @@
             }
         });
         
-	    @foreach (var item in Model.Details)
-	    {
-	    	<text>
-		        $("#item@(item.Id) div.name").editable(function(value,settings){
-		        	return editProductName(@item.Id, value);
-		        });
-		        
-		        $("#item@(item.Id) div.code").editable(function(value,settings){
-		        	return editProductCode(@item.Id, value);
-		        });
-		        
-		        $("#item@(item.Id) div.um").editable(function(value,settings){
-		        	return editUM(@item.Id, value);
-		        });
-		        
-		        $("#item@(item.Id) div.price").editable(function(value,settings){
-		        	return editPrice(@item.Id, value);
-		        },{ cssclass : "number" });
-		        
-		        $("#item@(item.Id) div.tax").editable(function(value,settings){
-		        	return editTaxRate(@item.Id, value);
-		        },{ cssclass : "number" });
-		        
-		        $("#item@(item.Id) div.quantity").editable(function(value,settings){
-		        	return editQuantity(@item.Id, value);
-		        },{ cssclass : "number" });
-		        
-		        $("#item@(item.Id) div.discount").editable(function(value,settings){
-		        	return editDiscount(@item.Id, value);
-		    	}, { cssclass : "number" });
-	        </text>
-	    }
+        $("#order-search").tokenInput("@Url.Action("GetOrders", "FiscalDocuments", new { id = Model.Id })", {
+            hintText: "@Resources.HIntText",
+            noResultsText: "@Resources.NoResultsText",
+            searchingText: "@Resources.SearchingText",          
+            queryParam: "pattern",minChars: 3,tokenLimit: 1,
+            onAdd: function (item) {
+                $.post("/FiscalDocuments/AddOrder", { "id": @Model.Id, "order": "" + item.id }, function (data) {
+                	if(data.result == 0) {
+                		$("#notification-dlg").dialog({
+				            width:400,resizable:false,modal:true,
+				            buttons: {
+								Ok: function() {
+									$(this).dialog("close");
+								}
+							}
+				        });
+                		$("#order-search").tokenInput("clear");
+                		return;
+                	}
+                    $.get("/FiscalDocuments/GetDetails/@Model.Id", function (data) {
+                        $("#items-container").html(data);
+                        $("#order-search").tokenInput("clear");
+                        updateTotals();
+                    });
+                }, "json");
+            }
+        });
     });
 </script>
 <style type="text/css">

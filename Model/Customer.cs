@@ -66,6 +66,10 @@ namespace Mictlanix.BE.Model
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         public int CreditDays { get; set; }
 
+		public bool HasCredit {
+			get { return CreditDays > 0 && CreditLimit > 0; }
+		}
+
         [Property]
         [DataType(DataType.MultilineText)]
         [Display(Name = "Comment", ResourceType = typeof(Resources))]

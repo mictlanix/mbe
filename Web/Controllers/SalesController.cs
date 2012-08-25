@@ -59,43 +59,11 @@ namespace Mictlanix.BE.Web.Controllers
                       where x.Store.Id == item.Store.Id &&
 							!x.IsCancelled &&
 							!x.IsCompleted
+					  orderby x.Id descending 
                       select x;
 
 			return View (qry.ToList ());
 		}
-
-        public ViewResult Historic()
-        {
-            DateRange item = new DateRange();
-            item.StartDate = DateTime.Now;
-            item.EndDate = DateTime.Now;
-
-            return View("Historic", item);
-        }
-
-        [HttpPost]
-        public ActionResult Historic(DateRange item, Search<SalesOrder> search)
-        {
-            ViewBag.Dates = item;
-            search.Limit = Configuration.PageSize;   
-            search = GetSalesOrder(item, search);
-
-            return PartialView("_Historic", search);
-        }
-
-        Search<SalesOrder> GetSalesOrder(DateRange dates, Search<SalesOrder> search)
-        {
-            var qry = from x in SalesOrder.Queryable
-                      where (x.IsCompleted || x.IsCancelled) &&
-                      (x.Date >= dates.StartDate.Date && x.Date <= dates.EndDate.Date.Add(new TimeSpan(23, 59, 59)))
-                      orderby x.Id descending
-                      select x;
-
-            search.Total = qry.Count();
-            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            
-            return search;
-        }
 
         public ViewResult PrintPromissoryNote (int id)
 		{
@@ -129,14 +97,6 @@ namespace Mictlanix.BE.Web.Controllers
 			return View (item);
         }
 
-        public ViewResult HistoricDetails (int id)
-		{
-			var item = SalesOrder.Find (id);
-
-			item.Details.ToList ();
-
-			return View (item);
-        }
         //
         // GET: /Sales/New
 
@@ -199,38 +159,52 @@ namespace Mictlanix.BE.Web.Controllers
 			var item = SalesOrder.Find (id);
 				
 			if (Request.IsAjaxRequest ())
-				return PartialView ("_Edit", item);
+				return PartialView ("_MasterEditView", item);
 			else {
 				item.Details.ToList ();
 				return View (item);
 			}
         }
-
-        //
-        // POST: /Customer/Edit/5
+		
+		public ActionResult DiscardChanges (int id)
+		{
+			return PartialView ("_MasterView", SalesOrder.TryFind (id));
+		}
 
         [HttpPost]
 		public ActionResult Edit (SalesOrder item)
 		{
-			var order = SalesOrder.Find (item.Id);
+			var entity = SalesOrder.Find (item.Id);
 			var customer = Customer.Find (item.CustomerId);
 
 			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 			item.ModificationTime = DateTime.Now;
-			order.Details.ToList ();
-			order.Customer = customer;
-			order.IsCredit = item.IsCredit;
-			order.DueDate = item.IsCredit ? order.Date.AddDays (customer.CreditDays) : order.Date;
-
-			using (var scope = new TransactionScope()) {
-				order.UpdateAndFlush ();
+			entity.Details.ToList ();
+			entity.Customer = customer;
+			entity.IsCredit = item.IsCredit;
+			entity.DueDate = item.IsCredit ? entity.Date.AddDays (customer.CreditDays) : entity.Date;
+			
+			if (item.ShipToId > 0) {
+				entity.ShipTo = entity.ShipTo ?? new Address ();
+				entity.ShipTo.Copy (Address.TryFind (item.ShipToId));
 			}
 
-			return PartialView ("_SalesInfo", order);
+			using (var scope = new TransactionScope()) {
+				if (item.ShipToId > 0) {
+					entity.ShipTo.Save ();
+				} else if (entity.ShipTo != null) {
+					entity.ShipTo.Delete ();
+					entity.ShipTo = null;
+				}
+
+				entity.UpdateAndFlush ();
+			}
+
+			return PartialView ("_MasterView", entity);
         }
 
         [HttpPost]
-        public JsonResult AddDetail(int order, int product)
+        public JsonResult AddDetail (int order, int product)
         {
 			var order_entity = SalesOrder.Find (order);
 			var product_entity = Product.TryFind (product);
@@ -330,13 +304,13 @@ namespace Mictlanix.BE.Web.Controllers
 			return PartialView ("_Totals", item);
         }
 
-        public ActionResult GetSalesItem (int id)
+		public ActionResult GetDetail (int id)
 		{
-			return PartialView ("_SalesItem", SalesOrderDetail.Find (id));
+			return PartialView ("_DetailEditView", SalesOrderDetail.Find (id));
         }
 
         [HttpPost]
-        public JsonResult RemoveDetail(int id)
+        public JsonResult RemoveDetail (int id)
         {
             var item = SalesOrderDetail.Find(id);
 
@@ -348,11 +322,9 @@ namespace Mictlanix.BE.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult ConfirmOrder (int id)
+        public ActionResult Confirm (int id)
         {
             var item = SalesOrder.Find (id);
-			var warehouse = item.PointOfSale.Warehouse;
-			var dt = DateTime.Now;
 
 			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 			item.ModificationTime = DateTime.Now;
@@ -360,10 +332,20 @@ namespace Mictlanix.BE.Web.Controllers
 
             if (item.IsCredit) {
                 item.IsPaid = true;
+
+				if (item.ShipTo == null) {
+					item.IsDelivered = true;
+				}
             }
 
 			using (var scope = new TransactionScope ()) {
-				foreach( var x in item.Details) {
+				var warehouse = item.PointOfSale.Warehouse;
+				var dt = DateTime.Now;
+
+				foreach (var x in item.Details) {
+					x.Warehouse = warehouse;
+					x.Update ();
+
                     var input = new Kardex {
                         Warehouse = warehouse,
                         Product = x.Product,
@@ -374,9 +356,6 @@ namespace Mictlanix.BE.Web.Controllers
                     };
 
                     input.Create();
-
-					x.Warehouse = warehouse;
-					x.Update ();
 				}
 
 				item.UpdateAndFlush ();
@@ -386,7 +365,7 @@ namespace Mictlanix.BE.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult CancelOrder (int id)
+        public ActionResult Cancel (int id)
         {
             var item = SalesOrder.Find (id);
 			
@@ -401,6 +380,46 @@ namespace Mictlanix.BE.Web.Controllers
             return RedirectToAction ("New");
         }
 		
+		public ViewResult Deliveries ()
+		{
+			var qry = from x in SalesOrder.Queryable
+				where x.ShipTo != null &&
+					!x.IsCancelled && !x.IsDelivered &&
+					x.IsCompleted && x.IsPaid
+					orderby x.Id descending 
+					select x;
+			
+			return View (qry.ToList ());
+		}
+
+		public ViewResult Delivery (int id)
+		{
+			var item = SalesOrder.Find (id);
+			return View (item);
+		}
+		
+		public ViewResult PrintDelivery (int id)
+		{
+			var item = SalesOrder.Find (id);
+			return View (item);
+		}
+		
+		[HttpPost]
+		public ActionResult ConfirmDelivery (int id)
+		{
+			var item = SalesOrder.Find (id);
+			
+			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			item.ModificationTime = DateTime.Now;
+			item.IsDelivered = true;
+
+			using (var scope = new TransactionScope ()) {
+				item.UpdateAndFlush ();
+			}
+			
+			return RedirectToAction ("Deliveries");
+		}
+
         public JsonResult GetSuggestions (int order, string pattern)
 		{
 			var sales_order = SalesOrder.Find (order);

@@ -86,5 +86,50 @@ namespace Mictlanix.BE.Web.Controllers
           
 			return PartialView("_KardexDetails", qry.ToList());
         }
+		
+		
+		public ViewResult SalesOrdersHistoric ()
+		{
+			DateRange item = new DateRange();
+			item.StartDate = DateTime.Now;
+			item.EndDate = DateTime.Now;
+			
+			return View(item);
+		}
+		
+		[HttpPost]
+		public ActionResult SalesOrdersHistoric(DateRange item, Search<SalesOrder> search)
+		{
+			ViewBag.Dates = item;
+			search.Limit = Configuration.PageSize;   
+			search = GetSalesOrder(item, search);
+			
+			return PartialView("_SalesOrdersHistoric", search);
+		}
+		
+		public ViewResult SalesOrdersHistoricDetails (int id)
+		{
+			var item = SalesOrder.Find (id);
+			
+			item.Details.ToList ();
+			
+			return View (item);
+		}
+
+		Search<SalesOrder> GetSalesOrder(DateRange dates, Search<SalesOrder> search)
+		{
+			var qry = from x in SalesOrder.Queryable
+				where (x.IsCompleted || x.IsCancelled) &&
+					(x.Date >= dates.StartDate.Date && x.Date <= dates.EndDate.Date.Add(new TimeSpan(23, 59, 59)))
+					orderby x.Id descending
+					select x;
+			
+			search.Total = qry.Count();
+			search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+			
+			return search;
+		}
+
+
 	}
 }
