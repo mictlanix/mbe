@@ -97,7 +97,10 @@
       <HintPath>..\Packages\NHibernate.3.0.0.4000\lib\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate.Search">
-      <HintPath>..\packages\Castle.Activerecord.3.0.0.1\lib\Net40\NHibernate.Search.dll</HintPath>
+      <HintPath>..\Packages\Castle.Activerecord.3.0.0.1\lib\Net40\NHibernate.Search.dll</HintPath>
+    </Reference>
+    <Reference Include="Lucene.Net">
+      <HintPath>..\Packages\Lucene.2.9.2.2\lib\Lucene.Net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -443,7 +446,6 @@
     <Content Include="Views\Shared\EditorTemplates\Address.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Address.cshtml" />
     <Content Include="Views\TaxpayerDocuments\_Index.cshtml" />
-    <Content Include="Views\Shared\_FiscalLayout.cshtml" />
     <Content Include="Views\Quotations\Index.cshtml" />
     <Content Include="Views\Quotations\New.cshtml" />
     <Content Include="Views\Quotations\Edit.cshtml" />
@@ -487,6 +489,17 @@
     <Content Include="Views\CustomerReturns\HistoricDetails.cshtml" />
     <Content Include="Views\CustomerReturns\Index.cshtml" />
     <Content Include="Views\CustomerReturns\_CustomerReturnDetails.cshtml" />
+    <Content Include="Views\Sales\_MasterView.cshtml" />
+    <Content Include="Views\Sales\_MasterEditView.cshtml" />
+    <Content Include="Views\Sales\_DetailEditView.cshtml" />
+    <Content Include="Views\Sales\_DetailView.cshtml" />
+    <Content Include="Views\Reports\_SalesOrdersHistoric.cshtml" />
+    <Content Include="Views\Reports\SalesOrdersHistoric.cshtml" />
+    <Content Include="Views\Reports\SalesOrdersHistoricDetails.cshtml" />
+    <Content Include="Views\Sales\Deliveries.cshtml" />
+    <Content Include="Views\Sales\Delivery.cshtml" />
+    <Content Include="Views\Sales\PrintDelivery.cshtml" />
+    <Content Include="Views\FiscalDocuments\_ItemsBlock.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />
@@ -679,17 +692,10 @@
     <Content Include="Views\Employees\Edit.cshtml" />
     <Content Include="Views\Employees\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\CustomerSelector.cshtml" />
-    <Content Include="Views\Sales\_SalesInfo.cshtml" />
-    <Content Include="Views\Sales\_Details.cshtml" />
-    <Content Include="Views\Sales\_SalesOrderDetails.cshtml" />
-    <Content Include="Views\Sales\_SalesItem.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Sales\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Sales\_Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\EditorTemplates\EmployeeSelector.cshtml" />
@@ -766,7 +772,6 @@
     <Content Include="Views\AccountsReceivables\AccountStatement.cshtml" />
     <Content Include="Views\AccountsReceivables\Index.cshtml" />
     <Content Include="Views\Inventory\_PrintReceipt.cshtml" />
-    <Content Include="Views\Shared\_LetterLayout.cshtml" />
     <Content Include="Views\Inventory\_PrintIssue.cshtml" />
     <Content Include="Views\Inventory\_PrintTransfer.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SupplierSelector.cshtml" />
@@ -788,9 +793,7 @@
     <Content Include="Views\SupplierReturns\EditSupplierReturn.cshtml" />
     <Content Include="Views\SupplierReturns\_PurchaseInfoReturn.cshtml" />
     <Content Include="Views\SupplierReturns\_ReturnItem.cshtml" />
-    <Content Include="Views\Sales\_Historic.cshtml" />
     <Content Include="Views\Sales\Details.cshtml" />
-    <Content Include="Views\Sales\HistoricDetails.cshtml" />
     <Content Include="Views\SupplierReturns\_DeleteReturn.cshtml" />
     <Content Include="Views\SupplierReturns\Historic.cshtml" />
     <Content Include="Views\SupplierReturns\HistoricDetails.cshtml" />
@@ -816,7 +819,6 @@
     <Content Include="Views\Purchases\_Index.cshtml" />
     <Content Include="Views\FiscalDocuments\_Index.cshtml" />
     <Content Include="Views\AccountsReceivables\_Index.cshtml" />
-    <Content Include="Views\Sales\Historic.cshtml" />
     <Content Include="Views\Suppliers\_Index.cshtml" />
     <Content Include="Views\Warehouses\_Index.cshtml" />
     <Content Include="Views\Stores\_Index.cshtml" />

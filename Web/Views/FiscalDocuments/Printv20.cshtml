@@ -1,10 +1,11 @@
 ﻿@using Mictlanix.BE
-@using Mictlanix.BE.Model;
-@using Mictlanix.BE.Web.Helpers;
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
+@using Mictlanix.BE.Web.Helpers
 @model FiscalDocument
 
 @{
-    Layout = "~/Views/Shared/_FiscalLayout.cshtml";
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
     ViewBag.Title = Resources.FiscalDocument;
     ViewBag.StoreName = Model.Store.Name;
     ViewBag.StoreLogo = Model.Store.Logo;

@@ -43,7 +43,7 @@
 <div id="return-totals">
     @Html.Partial("_Totals")
 </div>
-<div id="dialog-confirm" title="@Resources.Delete">
+<div id="confirm-dlg" class="dialog" title="@Resources.Delete">
 	<p>
         <span class="ui-icon ui-icon-circle-close" style="float:left; margin:3px 7px 20px 0;"></span>
         @Resources.Message_DeleteConfirmation
@@ -76,7 +76,7 @@
     }
 
     function removeItem(id) {
-        $("#dialog-confirm").dialog({
+        $("#confirm-dlg").dialog({
             resizable: true,
             height: 178,
             modal: true,

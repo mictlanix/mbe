@@ -46,7 +46,7 @@ div#logo {
   margin-top:14px;
   float:right;
 }
-#dialog-confirm {
+.dialog {
   display:none
 }
 .page {
@@ -83,6 +83,7 @@ div#logo {
 }
 .display-field, .editor-field {
   margin:1em 0 0 0;
+  min-height:18px;
 }
 .editable-warehouse, .editable-warehouse-ok{
   display:inline-block;
@@ -259,4 +260,9 @@ li div.value.name {
 }
 #master-section,#details-section {
   margin:10px 0;
+}
+.action-buttons {
+  margin:20px 0 2px;
+  clear:both;
+  text-align:right;
 }

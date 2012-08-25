@@ -17,6 +17,28 @@
 	    </div>
 	    <div style="margin:10px 250px 10px 10px">
 	        <h1>@ViewBag.StoreName</h1>
+	        @if (!string.IsNullOrEmpty (ViewBag.Taxpayer) && !string.IsNullOrEmpty (ViewBag.Taxpayer)) {
+	        <h4 class="black">
+	        	@if (!string.IsNullOrEmpty (ViewBag.TaxpayerName)) {
+	        		@ViewBag.TaxpayerName<br/>
+	        	}
+	        	@if (!string.IsNullOrEmpty (ViewBag.Taxpayer)) {
+	        		@ViewBag.Taxpayer
+	        	}
+	        </h4>
+	        }
+	        <h4>
+	        	@if (!string.IsNullOrEmpty (ViewBag.Taxpayer) &&
+	        		  string.IsNullOrEmpty (ViewBag.TaxpayerName)) {
+	        		<br/><b>@Resources.IssuedAt</b><br/>
+	        	}
+	        	@ViewBag.Address.StreetAndNumber<br/>
+	        	@ViewBag.Address.Neighborhood,
+	        	@ViewBag.Address.Locality,
+	        	@ViewBag.Address.ZipCode<br/>
+	        	@ViewBag.Address.Borough,
+	        	@ViewBag.Address.State
+	    	</h4>
     	</div>
         <h2>@ViewBag.Title</h2>
     </header>

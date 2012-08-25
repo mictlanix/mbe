@@ -1,22 +1,22 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
-@model SalesQuote
+@model SalesOrder
 
 @{
     var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesQuotes);
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders);
 }
 
 <fieldset>
-    <legend>@Resources.MasterInformation</legend>
+    <legend>@Resources.DisplayName_SalesInformation</legend>
 
     <div class="display-label right floating">
         @Html.LabelFor(model => model.Id):
         @Html.DisplayFor(model => model.Id)
     </div>
 
-    <div class="display-label right floating">
+    <div class="display-field right floating">
         @Html.LabelFor(model => model.Serial):
         @Html.DisplayFor(model => model.Serial)
     </div>
@@ -26,11 +26,14 @@
         @Html.DisplayFor(model => model.Date)
     </div>
 
-    <div class="display-label right floating">
-        @Html.LabelFor(model => model.DueDate)
+@if (Model.IsCredit)
+{
+    <div class="display-field right floating">
+        @Html.LabelFor(model => model.DueDate):
         @Html.DisplayFor(model => model.DueDate)
     </div>
-        
+}
+
     <div class="display-label">
         @Html.LabelFor(model => model.Customer)
     </div>
@@ -45,17 +48,36 @@
         @Html.DisplayFor(model => model.Customer.PriceList.Name)
     </div>
 
+@if(Model.ShipTo != null) {
+    <div class="display-label">
+        @Html.LabelFor(x => x.ShipTo)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(x => x.ShipTo.TaxpayerName)<br/>
+        @Html.DisplayFor(x => x.ShipTo.Street)
+        @Html.DisplayFor(x => x.ShipTo.ExteriorNumber)
+        @Html.DisplayFor(x => x.ShipTo.InteriorNumber)<br/>
+        @Html.DisplayFor(x => x.ShipTo.Neighborhood),
+        @Html.DisplayFor(x => x.ShipTo.Borough)<br/>
+        @Html.DisplayFor(x => x.ShipTo.State),
+        @Html.DisplayFor(x => x.ShipTo.Country),
+        @Html.DisplayFor(x => x.ShipTo.ZipCode)
+    </div>
+}
+
+@if(!Model.IsCompleted) {
     <div class="action-buttons">
-		@if(!Model.IsCompleted && !Model.IsCancelled)
+		@if(!Model.IsCancelled)
 		{
 	        @Ajax.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "master-section" }, new { id="edit-button", @class = "button icon edit", style = (Model.Details.Count > 0 ? "display:none" : "") })
 		}
 		@if(Privilege.AllowDelete && !Model.IsCancelled)
 		{
-		    using (Html.BeginForm("Cancel", "Quotations", new { id =  Model.Id }, FormMethod.Post, new { style = "display:inline" }))
+		    using (Html.BeginForm("Cancel", "Sales", new { id =  Model.Id }, FormMethod.Post, new { style = "display:inline" }))
 		    {
 				<button type="submit" class="icon cancel">@Resources.Cancel</button>
 		    }
 		}
     </div>
+}
 </fieldset>

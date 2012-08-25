@@ -248,7 +248,12 @@ namespace Mictlanix.BE.Web.Controllers
 		public ViewResult Print (int id)
 		{
 			var item = FiscalDocument.Find (id);
-			return View (string.Format("Printv{0:0}", item.Version * 10), item);
+
+			if (item.Version == 2.0m) {
+				return View ("Printv20", item);
+			} else {
+				return View ("Printv22", item);
+			}
 		}
 
         [HttpPost]
@@ -383,14 +388,13 @@ namespace Mictlanix.BE.Web.Controllers
 		{
 			return PartialView ("_DetailEditView", FiscalDocumentDetail.Find (id));
 		}
-		
+
         [HttpPost]
 		public JsonResult AddDetail (int id, int product)
 		{
 			var p = Product.Find (product);
 
-			var item = new FiscalDocumentDetail
-            {
+			var item = new FiscalDocumentDetail {
                 Document = FiscalDocument.Find (id),
                 Product = p,
                 ProductCode = p.Code,
@@ -561,7 +565,55 @@ namespace Mictlanix.BE.Web.Controllers
 
 			return Json (new { id = id, value = detail.Discount.ToString ("p"), total = detail.Total.ToString ("c") });
 		}
+
+		public ActionResult GetDetails (int id)
+		{
+			var item = FiscalDocument.Find (id);
+			return PartialView ("_ItemsBlock", item.Details);
+		}
 		
+		[HttpPost]
+		public JsonResult AddOrder (int id, int order)
+		{
+			var doc_entity = FiscalDocument.Find (id);
+			var order_entity = SalesOrder.Find (order);
+			var count = 0;
+
+			using (var scope = new TransactionScope()) {
+				foreach(var x in order_entity.Details) {
+					if (!x.Product.IsInvoiceable)
+						continue;
+					
+					decimal quantity = GetInvoiceableQuantity (x.Id);
+					
+					if (quantity == 0)
+						continue;
+					
+					var item = new FiscalDocumentDetail {
+						Document = doc_entity,
+						Product = x.Product,
+						OrderDetail = x,
+						ProductCode = x.ProductCode,
+						ProductName = x.ProductName,
+						UnitOfMeasurement = x.Product.UnitOfMeasurement,
+						Discount = x.Discount,
+						TaxRate = x.TaxRate,
+						Quantity = quantity,
+						Price = x.Price
+					};
+					
+					if (x.Product.IsTaxIncluded) {
+						item.Price = item.Price / (1m + item.TaxRate);
+					}
+					
+					item.Create ();
+					count++;
+				}
+			}
+			
+			return Json (new { id = id, result = count });
+		}
+
 		public ActionResult GetBatchSelector (string id)
 		{
 			var qry = from x in TaxpayerDocument.Queryable
@@ -598,12 +650,15 @@ namespace Mictlanix.BE.Web.Controllers
 		
 		public JsonResult GetSuggestions (int id, string pattern)
 		{
-			FiscalDocument invoice = FiscalDocument.Find (id);
-			int pl = invoice.Customer.PriceList.Id;
-			ArrayList items = new ArrayList (15);
+			int pl = (from x in FiscalDocument.Queryable
+					  where x.Id == id
+					  select x.Customer.PriceList.Id).Single();
+
+			var items = new ArrayList (15);
 
 			var qry = from x in Product.Queryable
-                      where x.Name.Contains (pattern) ||
+                      where x.IsInvoiceable &&
+					 		x.Name.Contains (pattern) ||
                             x.Code.Contains (pattern) ||
                             x.SKU.Contains (pattern)
 					  orderby x.Name
@@ -623,6 +678,44 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 
 			return Json (items, JsonRequestBehavior.AllowGet);
+		}
+
+		public JsonResult GetOrders (string pattern)
+		{
+			int id = 0;
+			int.TryParse(pattern, out id);
+			var qry = from x in SalesOrder.Queryable
+					  where x.IsCompleted && !x.IsCancelled &&
+						    x.IsPaid && x.Id == id
+					  select new { id = x.Id, name = string.Format("{0:00000} ({1})", x.Id, x.Date) };
+			
+			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
+		}
+
+		decimal GetInvoiceableQuantity(int id)
+		{
+			var item = SalesOrderDetail.Find (id);
+			string sql = @"SELECT IFNULL(SUM(d.quantity),0) quantity
+                           FROM fiscal_document_detail d INNER JOIN fiscal_document m ON d.document = m.fiscal_document_id
+                           WHERE m.completed <> 0 AND m.cancelled = 0 AND d.order_detail = :detail ";
+			
+			IList<decimal> quantities = (IList<decimal>)ActiveRecordMediator<CustomerReturnDetail>.Execute(
+				delegate(ISession session, object instance) {
+				try {
+					return session.CreateSQLQuery(sql)
+							.SetParameter("detail", id)
+							.SetMaxResults(1)
+							.List<decimal>();
+				} catch (Exception) {
+					return null;
+				}
+			}, null);
+			
+			if (quantities != null && quantities.Count > 0) {
+				return item.Quantity - quantities[0];
+			}
+			
+			return item.Quantity;
 		}
     }
 }

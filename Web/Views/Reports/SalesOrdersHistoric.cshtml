@@ -12,7 +12,7 @@
 
 <h2>@Mictlanix.BE.Resources.DisplayName_SalesOrdersHistoric</h2>
 
-@using (Ajax.BeginForm("Historic", "Sales", new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))
+@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))
 {
     <fieldset>
         <legend>@Resources.SearchForDate</legend>
