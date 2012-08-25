@@ -4,10 +4,13 @@
 @model InventoryIssue
 
 @{
-    Layout = "~/Views/Shared/_LetterLayout.cshtml";
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
     ViewBag.Title = Resources.Title_InventoryIssue;
     ViewBag.StoreName = Model.Warehouse.Store.Name;
     ViewBag.StoreLogo = Model.Warehouse.Store.Logo;
+    ViewBag.TaxpayerName = null;
+    ViewBag.Taxpayer = null;
+    ViewBag.Address = Model.Warehouse.Store.Address;
 }
 <h2>@Resources.DisplayName_InventoryInformation</h2>
 <p></p>

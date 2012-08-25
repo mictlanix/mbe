@@ -125,3 +125,9 @@ button.icon.lock,a.button.icon.lock {
 button.icon.download,a.button.icon.download {
     background:#f3f3f3 url(icons/download.png) no-repeat;
 }
+button.icon.delivery,a.button.icon.delivery {
+    background:#f3f3f3 url(icons/container.png) no-repeat;
+}
+button.icon.shipping,a.button.icon.shipping {
+    background:#f3f3f3 url(icons/van.png) no-repeat;
+}

@@ -68,8 +68,8 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult Index (int id)
 		{
 			var qry = from x in SalesOrder.Queryable
-                      where x.IsCompleted && x.IsPaid &&
-                            x.Id == id
+					  where x.IsCompleted && !x.IsCancelled &&
+							x.IsPaid && x.Id == id
                       select x;
 
 			if (Request.IsAjaxRequest ()) {

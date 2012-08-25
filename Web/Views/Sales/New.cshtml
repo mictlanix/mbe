@@ -23,7 +23,7 @@
             </div>
             <div id="delivery-box" class="editor-label" style="display:inline-block">
                 <input id="delivery" name="delivery" type="checkbox" value="false">
-                <label for="delivery">Entrega</label>
+                <label for="delivery">@Resources.Delivery</label>
             </div>
             <div id="hasCredit" class="editor-label" style="display:inline-block">
                 @Html.EditorFor(model => model.IsCredit)
@@ -33,10 +33,9 @@
                 @Html.LabelFor(x => x.ShipTo)
                 @Html.EditorFor(x => x.ShipToId)
             </div>
-
-            <p class="right">
+            <div class="action-buttons">
                 <button type="submit" class="icon save">@Resources.Save</button>
-            </p>
+            </div>
         }
     </fieldset>
 </div>
@@ -50,8 +49,6 @@ ul.token-input-list {
 </style>
 <script type="text/javascript">
     $(function () {
-    	$("#hasCredit,#delivery-box").hide("slow");
-    	
         $("#CustomerId").tokenInput("@Url.Action("GetSuggestions", "Customers")", {
             hintText: "@Resources.HIntText",
             noResultsText: "@Resources.NoResultsText",
@@ -74,6 +71,8 @@ ul.token-input-list {
             }
         });
         
+    	$("#hasCredit,#delivery-box").hide("slow");
+    	
         $("#ShipToId").tokenInput(function() {
 			var customer = $("#CustomerId").tokenInput("get")[0];
 			

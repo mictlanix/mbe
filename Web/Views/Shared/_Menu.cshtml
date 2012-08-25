@@ -160,6 +160,13 @@
                                    href="@Url.Action("Index", "Payments")">@Resources.Title_CustomerPayment</a>
                             </li>
                             }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Deliveries", "Sales") ? "gbm0l" : "")"
+                                   href="@Url.Action("Deliveries", "Sales")">@Resources.Deliveries</a>
+                            </li>
+                            }
                             @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesQuotes).AllowRead)
                             {
                             <li class="gbmtc">
@@ -351,8 +358,8 @@
                             @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrdersHistoric).AllowRead)
                             {
                             <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Historic", "Sales") ? "gbm0l" : "")"
-                                   href="@Url.Action("Historic", "Sales")">@Resources.Title_SalesOrdersHistoric</a>
+                                <a class="gbmt @(Html.IsMenuSelected("SalesOrdersHistoric", "Reports") ? "gbm0l" : "")"
+                                   href="@Url.Action("SalesOrdersHistoric", "Reports")">@Resources.Title_SalesOrdersHistoric</a>
                             </li>
                             }
                             @if (Html.GetPrivilege(CurrentUser, SystemObjects.CustomerReturnHistoric).AllowRead)

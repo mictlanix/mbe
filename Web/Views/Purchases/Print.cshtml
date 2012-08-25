@@ -4,31 +4,32 @@
 @model PurchaseOrder
 
 @{
-    Layout = "~/Views/Shared/_LetterLayout.cshtml";
-    ViewBag.Title = Resources.Title_PurchaseOrder;
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+    ViewBag.Title = Resources.PurchaseOrder;
     //FIXME: no store
-    ViewBag.StoreName = "x";
-    ViewBag.StoreLogo = "x";
+    ViewBag.StoreName = Configuration.Company;
+    ViewBag.StoreLogo = "~/Content/images/logo.png";
+    ViewBag.TaxpayerName = null;
+    ViewBag.Taxpayer = null;
+    ViewBag.Address = new Address ();
 }
-<h2>@Resources.DisplayName_PurchaseInformation</h2>
-<p></p>
-    <div class="display-label">
-        <b>@Html.LabelFor(model => model.Supplier):</b>
-        @Html.DisplayFor(model => model.Supplier.Name)
-    </div>
-    <div class="display-label">
-        <b>@Html.LabelFor(model => model.Id):</b>
-        @Html.DisplayFor(model => model.Id)
-    </div>
-    <div class="display-label">
-        <b>@Html.LabelFor(model => model.CreationTime):</b>
-        @Html.DisplayFor(model => model.CreationTime)
-    </div>
-    <div class="display-label">
-        <b>@Html.LabelFor(model => model.Comment):</b>
-        @Html.DisplayFor(model => model.Comment)
-    </div>
 
+<div class="display-label">
+    <b>@Html.LabelFor(model => model.Supplier):</b>
+    @Html.DisplayFor(model => model.Supplier.Name)
+</div>
+<div class="display-label">
+    <b>@Html.LabelFor(model => model.Id):</b>
+    @Html.DisplayFor(model => model.Id)
+</div>
+<div class="display-label">
+    <b>@Html.LabelFor(model => model.CreationTime):</b>
+    @Html.DisplayFor(model => model.CreationTime)
+</div>
+<div class="display-label">
+    <b>@Html.LabelFor(model => model.Comment):</b>
+    @Html.DisplayFor(model => model.Comment)
+</div>
 
 <table>
     <tr>

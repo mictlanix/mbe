@@ -1,6 +1,6 @@
 ﻿@using Mictlanix.BE
-@using Mictlanix.BE.Model
-@using Mictlanix.BE.Web.Models
+@using Mictlanix.BE.Model;
+@using Mictlanix.BE.Web.Helpers;
 @model SalesOrder
 
 @{
@@ -12,7 +12,7 @@
 <h2>@Resources.DisplayName_EditSale</h2> 
 
 <div id="master-section" style="margin-right:300px">
-@Html.Partial("_SalesInfo")
+@Html.Partial("_MasterView")
 </div>
  
 <div id="details-section" style="margin-right:300px">
@@ -20,7 +20,7 @@
         <ul id="items" class="list-items">
         @foreach (var item in Model.Details)
         {
-            @Html.Partial("_SalesItem", item) 
+            @Html.Partial("_DetailEditView", item) 
         }
         </ul>
     </div>
@@ -34,7 +34,7 @@
 <div id="sales-totals">
     @Html.Partial("_Totals")
 </div>
-<div id="dialog-confirm" title="@Resources.Delete">
+<div id="confirm-dlg" class="dialog" title="@Resources.Delete">
 	<p>
         <span class="ui-icon ui-icon-circle-close" style="float:left; margin:3px 7px 20px 0;"></span>
         @Resources.Message_DeleteConfirmation
@@ -45,7 +45,7 @@
         $.get("/Sales/GetTotals/" + @Model.Id, function (data) {
             $("#sales-totals").html(data);
             if($("#items").children().length === 0){
-                $("#edit-sales-order").show("slow");            
+                $("#edit-button").show("slow");            
             }
         });
     }
@@ -101,7 +101,7 @@
     }
 
     function removeItem(id) {
-        $("#dialog-confirm").dialog({
+        $("#confirm-dlg").dialog({
             resizable: true,
             height: 178,
             modal: true,
@@ -131,7 +131,7 @@
             queryParam: "pattern",minChars: 3,tokenLimit: 1,
             onAdd: function (item) {
                 $.post("/Sales/AddDetail", { "order": @Model.Id, "product": "" + item.id }, function (detail) {
-                    $.get("/Sales/GetSalesItem/" + detail.id, function (data) {
+                    $.get("/Sales/GetDetail/" + detail.id, function (data) {
                         $("#items").append(data);
                         $("#item" + detail.id + " div.quantity").editable(function (value, settings) {
                             return editQuantity(detail.id, value);
@@ -155,7 +155,7 @@
                         $("#product-search").tokenInput("clear");
                         updateTotals();
 
-                        $("#edit-sales-order").hide("slow");
+                        $("#edit-button").hide("slow");
                     });
 
                 }, "json");
