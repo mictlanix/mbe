@@ -1,0 +1,104 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model SalesOrder
+
+<fieldset>
+    <legend>@Resources.DisplayName_SalesInformation</legend>
+    @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "master-section" }))
+    {
+        @Html.ValidationSummary(true)
+
+	    <div class="editor-label">
+	        @Html.LabelFor(model => model.Customer)
+	    </div>
+	    <div class="editor-field">
+            @Html.TextBoxFor(model => model.CustomerId)
+            @Html.ValidationMessageFor(model => model.CustomerId)
+	    </div>
+
+		<div class="editor-field">
+	        <div id="delivery-box" style="display:inline-block">
+	            <input id="delivery" name="delivery" type="checkbox" value="false">
+	            <label for="delivery">@Resources.Delivery</label>
+	        </div>
+	        <div id="hasCredit" style="display:inline-block">
+	            @Html.EditorFor(model => model.IsCredit)
+	            @Html.LabelFor(model => model.IsCredit)
+	        </div>
+        </div>
+
+        <div id="shipTo" style="display:none">
+		    <div class="editor-label">
+		        @Html.LabelFor(model => model.ShipTo)
+		    </div>
+		    <div class="editor-field">
+	            @Html.TextBoxFor(model => model.ShipToId)
+		    </div>
+        </div>
+        
+        <div class="action-buttons">
+            <button type="submit" class="icon save">@Resources.Save</button>
+            @Ajax.ActionLink(Resources.Discard, "DiscardChanges", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "master-section" }, new { @class = "button icon cancel" })
+        </div>
+    }
+</fieldset>
+<script type="text/javascript">
+    $(function () {
+        $("#CustomerId").tokenInput("@Url.Action("GetSuggestions", "Customers")", {
+            hintText: "@Resources.HIntText",
+            noResultsText: "@Resources.NoResultsText",
+            searchingText: "@Resources.SearchingText",
+            queryParam: "pattern", minChars: 1, tokenLimit: 1,
+            prePopulate: [{ id: "@Model.Customer.Id", name: "@Model.Customer.Name"}],
+            onAdd: function (item) {
+                if (item.hasCredit) {
+                    $("#hasCredit").show("slow");
+                }
+            },
+            onDelete: function (item){
+                $("#IsCredit").attr("checked", false);                
+                $("#hasCredit").hide("slow");
+            }
+        });
+        
+        @if(Model.Customer.HasCredit) {
+        	@:$("#hasCredit").show();
+        } else {
+        	@:$("#hasCredit").hide();
+        }
+        
+        $("#ShipToId").tokenInput(function() {
+			var customer = $("#CustomerId").tokenInput("get")[0];
+			
+			if(typeof(customer) === "undefined") {
+				customer = {id : 0};
+			}
+			
+			return "@Url.Action("GetSuggestions2", "Addresses", new { customer = 0 })" + customer.id; }, {
+            hintText: "@Resources.HIntText",
+            noResultsText: "@Resources.NoResultsText",
+            searchingText: "@Resources.SearchingText",          
+            queryParam: "pattern",tokenLimit: 1
+        });
+        
+        @if(Model.ShipTo != null) {
+        <text>
+        	$("#ShipToId").tokenInput("add", { id: "@Model.ShipTo.Id", name: "@(Model.ShipTo.ToString ())"});
+        	$("#delivery").attr("checked", true);
+        	$("#shipTo").show();
+        </text>
+        }
+        
+        $("#delivery").change(function() {
+            var show = $(this).is(":checked");
+            
+            if (show) {
+                $("#shipTo").show("slow");
+            } else {
+                $("#shipTo").hide("slow");
+                $("#ShipToId").tokenInput("clear");
+            }
+        });
+    });
+</script>

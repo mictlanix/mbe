@@ -447,6 +447,9 @@
   <data name="Message_DeleteConfirmation" xml:space="preserve">
     <value>¿Está seguro de borrar esto?</value>
   </data>
+  <data name="Message_NoInvoiceableItems" xml:space="preserve">
+    <value>No se encontraron registros facturables.</value>
+  </data>
   <data name="Completed" xml:space="preserve">
     <value>Activo</value>
   </data>
@@ -502,7 +505,7 @@
     <value>Cantidad</value>
   </data>
   <data name="SalesOrder" xml:space="preserve">
-    <value>Orden de Venta</value>
+    <value>Venta</value>
   </data>
   <data name="Sale" xml:space="preserve">
     <value>Venta</value>
@@ -1113,7 +1116,7 @@ Vencimiento: {0:d}</value>
     <value>Número de Factura</value>
   </data>
   <data name="PurchaseOrder" xml:space="preserve">
-    <value>Orden de Compra</value>
+    <value>Compra</value>
   </data>
   <data name="PurchaseOrderId" xml:space="preserve">
     <value>Folio de Compra</value>
@@ -1195,13 +1198,10 @@ Realizada el: {0:d}</value>
     <value>Folio de la Devolución</value>
   </data>
   <data name="SalesOrderDetail" xml:space="preserve">
-    <value>Orden de Venta</value>
+    <value>Detalle de Venta</value>
   </data>
   <data name="DisplayName_CustomerReturn" xml:space="preserve">
     <value>Devolución a Clientes</value>
-  </data>
-  <data name="FolioSalesOrder" xml:space="preserve">
-    <value>Folio de Venta</value>
   </data>
   <data name="Title_CustomerReturn" xml:space="preserve">
     <value>Devolución a Cliente</value>
@@ -1212,11 +1212,8 @@ Realizada el: {0:d}</value>
   <data name="DisplayName_SupplierReturns" xml:space="preserve">
     <value>Devolución a Proveedores</value>
   </data>
-  <data name="FolioPurchaseOrder" xml:space="preserve">
-    <value>Folio de Compra</value>
-  </data>
   <data name="PurchaseOrderDetail" xml:space="preserve">
-    <value>Orden de Compra</value>
+    <value>Detalle de Compra</value>
   </data>
   <data name="SupplierReturn" xml:space="preserve">
     <value>Devolución a Proveedor</value>
@@ -1493,6 +1490,12 @@ Realizada el: {0:d}</value>
   </data>
   <data name="Delivery" xml:space="preserve">
     <value>Entrega</value>
+  </data>
+  <data name="Deliveries" xml:space="preserve">
+    <value>Entregas</value>
+  </data>
+  <data name="Delivered" xml:space="preserve">
+    <value>Entregado</value>
   </data>
   <data name="Reports" xml:space="preserve">
     <value>Reportes</value>

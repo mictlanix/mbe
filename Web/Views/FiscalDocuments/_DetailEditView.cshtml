@@ -1,5 +1,6 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
 @model FiscalDocumentDetail
 
 <li id="item@(Model.Id)">
@@ -22,7 +23,8 @@
         <label>@Resources.Price:</label>
         <div class="editable price">@Html.DisplayFor(x => x.Price)</div>
         <label>@Resources.TaxRate:</label>
-        <div class="editable tax">@Html.DisplayFor(x => x.TaxRate)</div><br />
+        <div class="editable tax">@Html.DisplayFor(x => x.TaxRate)</div>
+        <br />
         <label>@Resources.UnitOfMeasurement:</label>
         <div class="editable um">@Model.UnitOfMeasurement</div>
         <label>@Resources.Quantity:</label>
@@ -31,5 +33,10 @@
         <div class="editable discount">@Html.DisplayFor(x => x.Discount)</div>
         <label>@Resources.Amount:</label>
         <strong class="total">@Html.DisplayFor(x => x.Total)</strong>
+        <br />
+        @if(Model.OrderDetail != null) {
+        <label>@Resources.SalesOrder:</label>
+        <div class="value">@Html.DisplayFor(x => x.OrderDetail.SalesOrder.Id)</div>
+        }
     </div>
 </li>

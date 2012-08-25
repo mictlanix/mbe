@@ -1,5 +1,7 @@
 ﻿@using Mictlanix.BE
-@model Mictlanix.BE.Model.SalesOrderDetail
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model SalesOrderDetail
 
 <li id="item@(Model.Id)">
     <div class="photo">
@@ -25,6 +27,5 @@
         <div class="editable discount">@Model.Discount.ToString("p")</div>
         <b>@Resources.Amount:</b>
         <strong class="total">@Html.DisplayFor(x => x.Total)</strong>
-        @*<b>@Resources.DeliveryOrder:</b>@Html.CheckBoxFor(x => x.IsDeliveryOrder)*@
     </div>
 </li>

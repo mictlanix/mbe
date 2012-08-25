@@ -4,10 +4,13 @@
 @model InventoryTransfer
 
 @{
-    Layout = "~/Views/Shared/_LetterLayout.cshtml";
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
     ViewBag.Title = Resources.Title_InventoryTransfer;
     ViewBag.StoreName = Model.From.Store.Name;
     ViewBag.StoreLogo = Model.From.Store.Logo;
+    ViewBag.TaxpayerName = null;
+    ViewBag.Taxpayer = null;
+    ViewBag.Address = Model.From.Store.Address;
 }
 <h2>@Resources.DisplayName_InventoryInformation</h2>
 <p></p>

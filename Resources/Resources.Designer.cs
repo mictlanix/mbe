@@ -1618,24 +1618,6 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Folio de Compra.
-        /// </summary>
-        public static string FolioPurchaseOrder {
-            get {
-                return ResourceManager.GetString("FolioPurchaseOrder", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Folio de Venta.
-        /// </summary>
-        public static string FolioSalesOrder {
-            get {
-                return ResourceManager.GetString("FolioSalesOrder", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to {0}-CFD-{1}{2:D5}.xml.
         /// </summary>
         public static string Format_FiscalDocumentName {
@@ -4171,6 +4153,24 @@ namespace Mictlanix.BE {
         }
 		
 		/// <summary>
+		///   Looks up a localized string similar to Entregas.
+		/// </summary>
+		public static string Deliveries {
+			get {
+				return ResourceManager.GetString("Deliveries", resourceCulture);
+			}
+		}
+		
+		/// <summary>
+		///   Looks up a localized string similar to Entregado.
+		/// </summary>
+		public static string Delivered {
+			get {
+				return ResourceManager.GetString("Delivered", resourceCulture);
+			}
+		}
+		
+		/// <summary>
 		///   Looks up a localized string similar to Reportes.
 		/// </summary>
 		public static string Reports {
@@ -4185,6 +4185,15 @@ namespace Mictlanix.BE {
 		public static string Validation_UserName {
 			get {
 				return ResourceManager.GetString("Validation_UserName", resourceCulture);
+			}
+		}
+		
+		/// <summary>
+		///   Looks up a localized string similar to No se encontraron registros facturables.
+		/// </summary>
+		public static string Message_NoInvoiceableItems {
+			get {
+				return ResourceManager.GetString("Message_NoInvoiceableItems", resourceCulture);
 			}
 		}
     }

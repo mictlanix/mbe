@@ -316,11 +316,16 @@ namespace Mictlanix.BE.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult ConfirmPayment (int id)
-        {
-            var item = SalesOrder.Find (id);
+		public ActionResult ConfirmPayment (int id)
+		{
+			var item = SalesOrder.Find (id);
 
-            item.IsPaid = true;
+			item.IsPaid = true;
+
+			if (item.ShipTo == null) {
+				item.IsDelivered = true;
+			}
+
 			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 			item.ModificationTime = DateTime.Now;
 
