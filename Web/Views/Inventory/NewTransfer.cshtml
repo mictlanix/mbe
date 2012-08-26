@@ -39,9 +39,9 @@
                     @Html.EditorFor(model => model.Comment)
                 </div>
                 
-                <p class="right">
-                    <button type="submit" class="icon save">@Resources.Save</button>
-                </p>
+	            <div class="action-buttons">
+	                <button type="submit" class="icon save">@Resources.Save</button>
+	            </div>
             }
     </fieldset>
 </div>
@@ -55,13 +55,16 @@ ul.token-input-list {
 </style>
 <script type="text/javascript">
     $(function () {
-        @if(Model.From != null)
-        {
+        @if(Model.From != null) {
             @:$("#FromId").tokenInput("add", { id: "@Model.From.Id", name: "@Model.From.Name" });
         }
-        @if(Model.To != null)
-        {
+        @if(Model.To != null) {
             @:$("#ToId").tokenInput("add", { id: "@Model.To.Id", name: "@Model.To.Name" });
         }
+        
+        $('form').submit(function(){
+            $("button.save").attr("disabled", "disabled");
+		    $("button.save").html("@Resources.PleaseWait");
+		});
     });
 </script>

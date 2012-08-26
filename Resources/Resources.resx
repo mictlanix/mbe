@@ -1500,4 +1500,7 @@ Realizada el: {0:d}</value>
   <data name="Reports" xml:space="preserve">
     <value>Reportes</value>
   </data>
+  <data name="PleaseWait" xml:space="preserve">
+    <value>Espere, por favor...</value>
+  </data>
 </root>
