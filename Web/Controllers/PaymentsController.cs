@@ -202,10 +202,6 @@ namespace Mictlanix.BE.Web.Controllers
 		public JsonResult AddPayment (int order, int type, decimal amount, string reference)
 		{
 			var sales_order = SalesOrder.Find (order);
-
-			sales_order.Details.ToList ();
-			sales_order.Payments.ToList ();
-
 			var dt = DateTime.Now;
 			var employee = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 

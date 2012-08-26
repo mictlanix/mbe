@@ -4196,5 +4196,14 @@ namespace Mictlanix.BE {
 				return ResourceManager.GetString("Message_NoInvoiceableItems", resourceCulture);
 			}
 		}
+		
+		/// <summary>
+		///   Looks up a localized string similar to Espere, por favor...
+		/// </summary>
+		public static string PleaseWait {
+			get {
+				return ResourceManager.GetString("PleaseWait", resourceCulture);
+			}
+		}
     }
 }
