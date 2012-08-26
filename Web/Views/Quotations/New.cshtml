@@ -15,16 +15,14 @@
         @using (Html.BeginForm())
         {
             @Html.ValidationSummary(true)
-            
             <div class="editor-label">
                 @Html.LabelFor(model => model.Customer)
                 @Html.TextBoxFor(model => model.CustomerId)
                 @Html.ValidationMessageFor(model => model.CustomerId)
             </div>
-           
-            <p class="right">
+            <div class="action-buttons">
                 <button type="submit" class="icon save">@Resources.Save</button>
-            </p>
+            </div>
         }
     </fieldset>
 </div>
@@ -47,5 +45,10 @@ ul.token-input-list {
             tokenLimit: 1,
             prePopulate: [{ id: "@Model.Customer.Id", name: "@Model.Customer.Name"}]
         });
+        
+        $('form').submit(function(){
+            $("button.save").attr("disabled", "disabled");
+		    $("button.save").html("@Resources.PleaseWait");
+		});
     });
 </script>

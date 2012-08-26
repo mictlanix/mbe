@@ -12,8 +12,7 @@
 <div id="master-section">
     <fieldset>
         <legend>@Resources.DisplayName_SalesInformation</legend>
-        @using (Html.BeginForm())
-        {
+        @using (Html.BeginForm()) {
             @Html.ValidationSummary(true)
             
             <div class="editor-label">
@@ -97,5 +96,10 @@ ul.token-input-list {
                 $("#ShipToId").tokenInput("clear");
             }
         });
+        
+        $('form').submit(function(){
+            $("button.save").attr("disabled", "disabled");
+		    $("button.save").html("@Resources.PleaseWait");
+		});
     });
 </script>

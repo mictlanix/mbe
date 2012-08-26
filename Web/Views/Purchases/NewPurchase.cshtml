@@ -31,9 +31,9 @@
                     @Html.EditorFor(model => model.Comment)
                 </div>
                 
-                <p class="right">
+                <div class="action-buttons">
                     <button type="submit" class="icon save">@Resources.Save</button>
-                </p>
+                </div>
             }
     </fieldset>
 </div>
@@ -45,3 +45,11 @@ ul.token-input-list {
   width:100%;
 }
 </style>
+<script type="text/javascript">
+    $(function () {        
+        $('form').submit(function(){
+            $("button.save").attr("disabled", "disabled");
+		    $("button.save").html("@Resources.PleaseWait");
+		});
+    });
+</script>
