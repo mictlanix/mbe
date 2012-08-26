@@ -69,9 +69,9 @@
 		            </div>
 		        </div>
 
-                <p class="right">
+                <div class="action-buttons">
                     <button type="submit" class="icon save">@Resources.Save</button>
-                </p>
+                </div>
             }
     </fieldset>
 </div>
@@ -133,5 +133,10 @@ ul.token-input-list {
                 $("#reference").show("slow");
             }
         });
+        
+        $('form').submit(function(){
+            $("button.save").attr("disabled", "disabled");
+		    $("button.save").html("@Resources.PleaseWait");
+		});
     });
 </script>
