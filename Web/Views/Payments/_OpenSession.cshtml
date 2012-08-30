@@ -46,7 +46,17 @@
             </li>
         }
     </ul>
-    <p><button type="submit">@Resources.StartSession</button></p>
+    <div class="action-buttons">
+        <button type="submit" class="save">@Resources.StartSession</button>
+    </div>
     }
 }
 </div>
+<script type="text/javascript">
+    $(function () {        
+        $('form').submit(function(){
+            $("button.save").attr("disabled", "disabled");
+		    $("button.save").html("@Resources.PleaseWait");
+		});
+    });
+</script>

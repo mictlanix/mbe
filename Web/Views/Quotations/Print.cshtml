@@ -41,7 +41,7 @@
         <th class="line nowrap">@Resources.ProductCode</th>
         <th class="line">@Resources.ProductName</th>
         <th class="line nowrap">@Resources.Price</th>
-        <th class="line nowrap">@Resources.VAT</th>
+        <th class="line nowrap">@Resources.Discount_Abbr</th>
         <th class="line nowrap">@Resources.Amount</th>
     </tr>
 	@foreach (var item in Model.Details) {
@@ -50,8 +50,8 @@
         @*<td class="center line">@Html.DisplayFor(x => item.UnitOfMeasurement)</td>*@
         <td class="center line">@Html.DisplayFor(x => item.ProductCode)</td>
         <td class="line">@Html.DisplayFor(x => item.ProductName)</td>
-        <td class="number line">@Html.DisplayFor(x => item.Price)</td>
-        <td class="number line">@Html.DisplayFor(x => item.TaxRate)</td>
+        <td class="number line">@Html.DisplayFor(x => item.NetPrice)</td>
+        <td class="number line">@Html.DisplayFor(x => item.Discount)</td>
         <td class="number line">@Html.DisplayFor(x => item.Subtotal)</td>
     </tr>
 	}
