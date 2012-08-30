@@ -471,6 +471,9 @@
   <data name="Discount" xml:space="preserve">
     <value>Descuento</value>
   </data>
+  <data name="Discount_Abbr" xml:space="preserve">
+    <value>Desc.</value>
+  </data>
   <data name="DueDate" xml:space="preserve">
     <value>Fecha de Vencimiento</value>
   </data>
