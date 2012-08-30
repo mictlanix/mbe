@@ -94,6 +94,7 @@ td.title {
     font-weight:bold;
 }
 th {
+    padding:0 3px;
     font-size:18px;
     font-weight:bold;
 }
