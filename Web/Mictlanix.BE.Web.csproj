@@ -166,7 +166,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
-    <Content Include="Content\letter.css" />
     <Content Include="Content\images\loading-bar.gif" />
     <Content Include="Content\images\loading-circle.gif" />
     <Content Include="Content\images\logo.png" />
@@ -500,6 +499,7 @@
     <Content Include="Views\Sales\Delivery.cshtml" />
     <Content Include="Views\Sales\PrintDelivery.cshtml" />
     <Content Include="Views\FiscalDocuments\_ItemsBlock.cshtml" />
+    <Content Include="Content\print.css" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />

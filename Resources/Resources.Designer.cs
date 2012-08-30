@@ -4205,5 +4205,14 @@ namespace Mictlanix.BE {
 				return ResourceManager.GetString("PleaseWait", resourceCulture);
 			}
 		}
+		
+		/// <summary>
+		///   Looks up a localized string similar to Desc.
+		/// </summary>
+		public static string Discount_Abbr {
+			get {
+				return ResourceManager.GetString("Discount_Abbr", resourceCulture);
+			}
+		}
     }
 }

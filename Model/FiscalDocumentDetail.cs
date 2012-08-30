@@ -55,7 +55,6 @@ namespace Mictlanix.BE.Model
         [Property]
         [Display(Name = "Price", ResourceType = typeof(Resources))]
         [DisplayFormat(DataFormatString = "{0:C4}")]
-        //[DataType(DataType.Currency)]
         [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
         public decimal Price { get; set; }
 
