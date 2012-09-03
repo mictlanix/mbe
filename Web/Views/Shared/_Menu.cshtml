@@ -416,9 +416,8 @@
 	
     $(function () {
     	$(document).click(hidePopups);
-    	
-		$('.gbgt').click(function () {
-			event.stopPropagation();
+		$('.gbgt').click(function (e) {
+			e.stopPropagation();
 			hidePopups();
             $(this).parent().addClass('gbto');
             $(this).next().css({ "visibility": "visible" });
