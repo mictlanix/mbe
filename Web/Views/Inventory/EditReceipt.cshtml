@@ -11,14 +11,10 @@
 
 <h2>@Resources.DisplayName_EditInventoryReceipt</h2> 
 
-<div id="master-container">
+<div id="master-section">
 @Html.Partial("_ReceiptInfo")
 </div>
-<div id="details-container">
-    <div>
-        <label>@Resources.Product</label>
-        <input type="text" id="product-search" name="product-search" />
-    </div>
+<div id="details-section">
     <div id="items-container">
         <ul id="items" class="list-items">
         @foreach (var item in Model.Details)
@@ -26,6 +22,9 @@
             @Html.Partial("_ReceiptItem", item) 
         }
         </ul>
+    </div>
+    <div class="search-box">
+        <input type="text" id="product-search" name="product-search" />
     </div>
 </div>
 <div class="right floating">

@@ -12,7 +12,7 @@
 
 <h2>@Resources.DisplayName_SupplierReturns</h2> 
 
-<div id="master-container">
+<div id="master-section">
 @Html.Partial("_PurchaseInfoReturn")
 </div>
 @*<div class="editor-label">
@@ -21,7 +21,7 @@
 <div class="editor-field">
     @Html.EditorFor(model => model.Comment)
 </div>*@
-<div id="details-container">
+<div id="details-section">
     <div id="items-container">
         <ul id="items" class="list-items">
         @foreach (var item in Model.Details)
