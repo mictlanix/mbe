@@ -83,7 +83,7 @@ namespace Mictlanix.BE.Model
 
         [Property("interior_number")]
 		[Display(Name = "InteriorNumber", ResourceType = typeof(Resources))]
-		[StringLength(15, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[StringLength(15, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
 		public virtual string InteriorNumber { get; set; }
 
         [Property]
@@ -106,7 +106,7 @@ namespace Mictlanix.BE.Model
         [Property]
 		[Display(Name = "State", ResourceType = typeof(Resources))]
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[StringLength(80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[StringLength(80, MinimumLength = 2, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
 		public virtual string State { get; set; }
 
         [Property]
