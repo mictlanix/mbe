@@ -157,6 +157,9 @@ namespace Mictlanix.BE.Web.Controllers
             if (item.CashDrawer == null)
                 return View("InvalidCashDrawer");
 
+			if (GetSession() != null)
+				return RedirectToAction ("Index");
+
 			var cash_counts = item.CashCounts.Where(x => x.Quantity > 0).ToList();
 
             item.Start = DateTime.Now;
