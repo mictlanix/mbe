@@ -29,7 +29,7 @@
         @Html.DisplayFor(model => model.Comment)
     </div>
     <div class="right">
-        @Ajax.ActionLink(Resources.Edit, "EditReceipt", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "master-container" }, new { @class = "button icon edit" })
+        @Ajax.ActionLink(Resources.Edit, "EditReceipt", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "master-section" }, new { @class = "button icon edit" })
         @if(Privilege.AllowDelete)
         {
             using (Html.BeginForm("CancelReceipt", "Inventory", new { id = Model.Id }, FormMethod.Post, new { style = "display:inline" }))
