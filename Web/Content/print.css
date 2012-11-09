@@ -127,3 +127,6 @@ p.multiline {
   word-wrap:break-word;
   border:dashed 1px #3c3c3c;
 }
+.hilite {
+	font-weight:bold;
+}

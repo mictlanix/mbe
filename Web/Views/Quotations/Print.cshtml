@@ -17,11 +17,6 @@
 	<h3>@Html.DisplayFor(x => x.Serial)</h3>
 </div>
 
-<div class="display-label right floating">
-    @Html.LabelFor(x => x.Date)<br/>
-    @Html.DisplayFor(x => x.Date)
-</div>
-
 <div class="display-label">
     <h3>@Html.LabelFor(x => x.Customer)</h3>
 </div>
@@ -29,9 +24,9 @@
     @Html.DisplayFor(x => x.Customer.Name)<br/>
 </div>
 
-<div class="display-label">
-    @Html.LabelFor(x => x.DueDate)<br/>
-    @Html.DisplayFor(x => x.DueDate)
+<div class="display-label right">
+    @Html.LabelFor(x => x.Date)<br/>
+    @Html.DisplayFor(x => x.Date)
 </div>
 
 <table>
@@ -72,6 +67,11 @@
         <td class="number">@Html.DisplayFor(x => x.Total)</td>
     </tr>
 </table>
+
+<div class="display-label hilite">
+    @Html.LabelFor(x => x.DueDate):
+    @Html.DisplayFor(x => x.DueDate)
+</div>
 
 <div class="center signatures">
     @Resources.CreatedBy,<br/>

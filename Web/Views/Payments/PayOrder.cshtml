@@ -86,7 +86,7 @@
 
 <script type="text/javascript">
     function updateTotals() {
-        $.get("/Payments/GetSalesOrderBalance/" + SalesOrder.Id, function (data) {
+        $.get("/Payments/GetSalesOrderBalance/" + @Model.Id, function (data) {
             $("#sales-order-balance").html(data);
         });
     }
@@ -122,7 +122,7 @@
             var amount = $("#Amount").val();
             var reference = $("#Reference").val();
 
-            $.post("/Payments/AddPayment", { "order": SalesOrder.Id, "type": type, "amount": amount, "reference": reference }, function (detail) {
+            $.post("/Payments/AddPayment", { "order": @Model.Id, "type": type, "amount": amount, "reference": reference }, function (detail) {
                 $.get("/Payments/GetPayment/" + detail.id, function (data) {
                     $("#items").append(data);
                     $(".selection-options>li").removeClass("selected");

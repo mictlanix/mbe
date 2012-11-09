@@ -55,7 +55,7 @@ namespace Mictlanix.BE.Web.Controllers
             search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
             search.Total = qry.Count();
 
-            return View(search);
+            return View (search);
         }
 
         // POST: /Purchases/
@@ -63,18 +63,15 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult Index(Search<PurchaseOrder> search)
         {
-            if (ModelState.IsValid)
-            {
+            if (ModelState.IsValid) {
                 search = GetPurchaseOrders(search);
             }
 
-            if (Request.IsAjaxRequest())
-            {
+            if (Request.IsAjaxRequest()) {
                 return PartialView("_Index", search);
             }
-            else
-            {
-                return View(search);
+            else {
+                return View (search);
             }
         }
 
@@ -116,24 +113,24 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Details(int id)
         {
-            PurchaseOrder item = PurchaseOrder.Find(id);
+            var item = PurchaseOrder.Find(id);
 
-            return View(item);
+            return View (item);
         }
 
         //
         // GET: /Purchases/Create
 
-        public ActionResult NewPurchase()
+        public ActionResult New ()
         {
-            return View(new PurchaseOrder());
+            return View (new PurchaseOrder());
         } 
 
         //
         // POST: /Purchases/Create
 
         [HttpPost]
-        public ActionResult NewPurchase(PurchaseOrder item)
+        public ActionResult New (PurchaseOrder item)
         {
             item.Supplier = Supplier.Find(item.SupplierId);
             item.Creator = SecurityHelpers.GetUser(User.Identity.Name).Employee;
@@ -147,14 +144,14 @@ namespace Mictlanix.BE.Web.Controllers
 
             System.Diagnostics.Debug.WriteLine("New Purchase [Id = {0}]", item.Id);
 
-            return RedirectToAction("EditPurchase", new { id = item.Id });
+            return RedirectToAction("Edit", new { id = item.Id });
         }
 
         
         //
         // GET: /Purchases/Edit/5
  
-        public ActionResult EditPurchase(int id)
+        public ActionResult Edit (int id)
         {
             var item = PurchaseOrder.Find (id);
 
@@ -172,7 +169,7 @@ namespace Mictlanix.BE.Web.Controllers
         // POST: /Purchases/Edit/5
 
         [HttpPost]
-        public ActionResult EditPurchase(PurchaseOrder item)
+        public ActionResult Edit (PurchaseOrder item)
         {
             var order = PurchaseOrder.Find(item.Id);
 
@@ -185,8 +182,7 @@ namespace Mictlanix.BE.Web.Controllers
             	order.UpdateAndFlush ();
 			}
 
-            return PartialView("_PurchaseInfo", order);
-
+            return PartialView ("_PurchaseInfo", order);
         }
 
         //

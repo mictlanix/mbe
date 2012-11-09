@@ -144,7 +144,7 @@ namespace Mictlanix.BE.Web.Controllers
 				item.PaymentReference = Resources.Unidentified;
 			}
 
-			var batch = item.Issuer.Documents.Single (x => x.Batch == item.Batch);
+			var batch = item.Issuer.Documents.First (x => x.Batch == item.Batch);
 
 			// Fiscal doc's info
 			item.Type = batch.Type;
@@ -207,7 +207,7 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 			
 			var document = FiscalDocument.Find (item.Id);
-			var batch = item.Issuer.Documents.Single (x => x.Batch == item.Batch);
+			var batch = item.Issuer.Documents.First (x => x.Batch == item.Batch);
 
 			// updated info
 			document.Type = batch.Type;
@@ -286,19 +286,25 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
 		public ActionResult Confirm (int id)
 		{
-			FiscalDocument item;
-			TaxpayerDocument batch;
-
-			item = FiscalDocument.Find (id);
-			batch = item.Issuer.Documents.Single (x => x.Batch == item.Batch);
+			var item = FiscalDocument.TryFind (id);
 			
-			if (item.IsCompleted || item.IsCancelled) {
+			if (item == null || item.IsCompleted || item.IsCancelled) {
 				return RedirectToAction ("Index");
 			}
 			
 			int serial = (from x in FiscalDocument.Queryable
                           where x.Batch == item.Batch
                           select x.Serial).Max ().GetValueOrDefault () + 1;
+
+			var batch = (from x in item.Issuer.Documents
+						 where x.Batch == item.Batch && 
+							   x.SerialStart <= serial && 
+							   x.SerialEnd >= serial
+			             select x).SingleOrDefault ();
+
+			if (batch == null) {
+				return View ("InvalidBatch");
+			}
 
 			item.Type = batch.Type;
 			item.Serial = serial;
@@ -311,8 +317,8 @@ namespace Mictlanix.BE.Web.Controllers
 			item.Issued = doc.fecha;
 			item.OriginalString = doc.ToString ();
 			item.DigitalSeal = doc.sello;
-			item.Version = decimal.Parse (doc.version);
-			
+			item.Version = Convert.ToDecimal (doc.version);
+
 			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 			item.ModificationTime = DateTime.Now;
 			item.IsCompleted = true;

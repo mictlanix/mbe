@@ -54,6 +54,7 @@ namespace Mictlanix.BE.Web.Controllers
 			
 			var qry = from x in SalesQuote.Queryable
                       where x.Store.Id == item.Id
+					  orderby x.Id descending
                       select x;
 
             Search<SalesQuote> search = new Search<SalesQuote>();
@@ -86,20 +87,19 @@ namespace Mictlanix.BE.Web.Controllers
         {
             var item = Configuration.Store;
 
-            if (search.Pattern == null)
-            {
+            if (search.Pattern == null) {
                 var qry = from x in SalesQuote.Queryable
                           where x.Store.Id == item.Id
+						  orderby x.Id descending
                           select x;
 
                 search.Total = qry.Count();
                 search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            }
-            else
-            {
+            } else {
                 var qry = from x in SalesQuote.Queryable
                           where x.Store.Id == item.Id &&
-                          x.Customer.Name.Contains(search.Pattern)
+                                x.Customer.Name.Contains(search.Pattern)
+						  orderby x.Id descending
                           select x;
 
                 search.Total = qry.Count();

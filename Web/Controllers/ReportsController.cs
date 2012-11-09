@@ -86,8 +86,7 @@ namespace Mictlanix.BE.Web.Controllers
           
 			return PartialView("_KardexDetails", qry.ToList());
         }
-		
-		
+
 		public ViewResult SalesOrdersHistoric ()
 		{
 			DateRange item = new DateRange();
@@ -130,6 +129,30 @@ namespace Mictlanix.BE.Web.Controllers
 			return search;
 		}
 
+		public ViewResult ReceivedPayments ()
+		{
+			return View (new DateRange(DateTime.Now, DateTime.Now));
+		}
+
+		[HttpPost]
+		public ActionResult ReceivedPayments (int store, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays(1).AddSeconds(-1);
+			var qry = from x in CustomerPayment.Queryable
+					  where x.Store.Id == store &&
+					        x.Date >= start && x.Date <= end &&
+							x.Amount > 0
+					  select new ReceivedPayment {
+						Date = x.Date,
+						SalesOrder = x.SalesOrder.Id,
+						Serial = x.SalesOrder.Serial,
+						Customer = x.Customer,
+						Method = x.Method,
+						Amount = x.Amount };
+
+			return PartialView("_ReceivedPayments", qry.ToList());
+		}
 
 	}
 }
