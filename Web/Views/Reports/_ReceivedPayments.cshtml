@@ -24,4 +24,18 @@
         <td class="center nowrap stretch">@item.Method.GetDisplayName()</td>
     </tr> 
 }
+    <tr>
+    	<td class="right" colspan="4"><b>@Resources.Total</b></td>
+        <td class="number"><b>@Model.Sum(x => x.Amount).ToString("c")</b></td>
+        <td></td>
+    </tr>
+
+@foreach (var item in Model.GroupBy(x => x.Method)) {
+    <tr>
+    	<td class="right" colspan="4"><i>@item.Key.GetDisplayName()</i></td>
+        <td class="number"><i>@item.Sum(x => x.Amount).ToString("c")</i></td>
+        <td></td>
+    </tr>
+}
+
 </table>
