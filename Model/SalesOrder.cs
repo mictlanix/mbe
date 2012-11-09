@@ -96,6 +96,11 @@ namespace Mictlanix.BE.Model
         [Display(Name = "Date", ResourceType = typeof(Resources))]
         public virtual DateTime Date { get; set; }
 
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[Display(Name = "SalesPerson", ResourceType = typeof(Resources))]
+		[UIHint("EmployeeSelector")]
+		public virtual int SalesPersonId { get; set; }
+
         [BelongsTo("salesperson")]
         [Display(Name = "SalesPerson", ResourceType = typeof(Resources))]
         public virtual Employee SalesPerson { get; set; }

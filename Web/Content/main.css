@@ -158,6 +158,12 @@ table td.actions {
   white-space:nowrap;
   width:1px;
 }
+table td.fill {
+  width:100%;
+}
+table td.stretch {
+  width:1px;
+}
 ul.list-items {
     list-style-type:none;
     padding-left:0px;

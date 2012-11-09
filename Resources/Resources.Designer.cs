@@ -4214,5 +4214,41 @@ namespace Mictlanix.BE {
 				return ResourceManager.GetString("Discount_Abbr", resourceCulture);
 			}
 		}
+		
+		/// <summary>
+		///   Looks up a localized string similar to Seleccione un almacén.
+		/// </summary>
+		public static string ChooseWarehouse {
+			get {
+				return ResourceManager.GetString("ChooseWarehouse", resourceCulture);
+			}
+		}
+		
+		/// <summary>
+		///   Looks up a localized string similar to ...
+		/// </summary>
+		public static string InvalidBatch {
+			get {
+				return ResourceManager.GetString("InvalidBatch", resourceCulture);
+			}
+		}
+		
+		/// <summary>
+		///   Looks up a localized string similar to ...
+		/// </summary>
+		public static string Message_InvalidBatch {
+			get {
+				return ResourceManager.GetString("Message_InvalidBatch", resourceCulture);
+			}
+		}
+		
+		/// <summary>
+		///   Looks up a localized string similar to ...
+		/// </summary>
+		public static string ReceivedPayments {
+			get {
+				return ResourceManager.GetString("ReceivedPayments", resourceCulture);
+			}
+		}
     }
 }

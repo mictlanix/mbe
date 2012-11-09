@@ -10,6 +10,14 @@
         @Html.ValidationSummary(true)
 
 	    <div class="editor-label">
+        	@Html.LabelFor(model => model.SalesPerson)
+	    </div>
+        <div class="editor-label">
+            @Html.EditorFor(model => model.SalesPersonId)
+            @Html.ValidationMessageFor(model => model.SalesPersonId)
+        </div>
+            
+	    <div class="editor-label">
 	        @Html.LabelFor(model => model.Customer)
 	    </div>
 	    <div class="editor-field">
@@ -45,12 +53,18 @@
 </fieldset>
 <script type="text/javascript">
     $(function () {
+    	@if(Model.SalesPerson != null) {
+    		@:$("#SalesPersonId").tokenInput("add", { id: "@Model.SalesPerson.Id", name: "@Model.SalesPerson.Name"});
+    	}
+    	    	
         $("#CustomerId").tokenInput("@Url.Action("GetSuggestions", "Customers")", {
             hintText: "@Resources.HIntText",
             noResultsText: "@Resources.NoResultsText",
             searchingText: "@Resources.SearchingText",
             queryParam: "pattern", minChars: 1, tokenLimit: 1,
-            prePopulate: [{ id: "@Model.Customer.Id", name: "@Model.Customer.Name"}],
+            @if(Model.Customer != null) {
+            	@:prePopulate: [{ id: "@Model.Customer.Id", name: "@Model.Customer.Name"}],
+            }
             onAdd: function (item) {
                 if (item.hasCredit) {
                     $("#hasCredit").show("slow");

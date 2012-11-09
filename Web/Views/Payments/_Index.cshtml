@@ -52,10 +52,10 @@
             @Html.DisplayFor(x => item.SalesPerson.LastName)
         </td>
         <td class="center">
-            @Html.DisplayFor(x => item.PointOfSale.Name)
+            @Html.DisplayFor(x => item.PointOfSale.Code)
         </td>
         <td class="actions">
-        	@Html.ActionLink(Resources.Pay, "PayOrder", new { id = item.Id }, new { @class = "button icon pay" })
+        	@Html.ActionLink(" ", "PayOrder", new { id = item.Id }, new { @class = "button icon pay icon-only" })
         </td>
     </tr>
 }
