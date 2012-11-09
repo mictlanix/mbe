@@ -106,7 +106,14 @@ namespace Mictlanix.BE.Web.Controllers
                 return View ("InvalidPointOfSale");
             }
 
-            return View (new SalesOrder { CustomerId = 1, Customer = Customer.Find(1) });
+			var employee = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+
+            return View (new SalesOrder {
+				CustomerId = 1, 
+				Customer = Customer.Find(1),
+				SalesPersonId = employee.Id, 
+				SalesPerson = employee
+			});
         }
 
         [HttpPost]
@@ -117,7 +124,14 @@ namespace Mictlanix.BE.Web.Controllers
 			if (item.PointOfSale == null) {
 				return View ("InvalidPointOfSale");
 			}
-			
+
+			item.Customer = Customer.TryFind (item.CustomerId);
+			item.SalesPerson = Employee.TryFind (item.SalesPersonId);
+
+			if (item.Customer == null || item.SalesPerson == null) {
+				return View (item);
+			}
+
 			// Store and Serial
 			item.Store = item.PointOfSale.Store;
 			try {
@@ -133,7 +147,7 @@ namespace Mictlanix.BE.Web.Controllers
 			item.Updater = item.Creator;
 			item.ModificationTime = item.CreationTime;
 			item.Customer = Customer.Find (item.CustomerId);
-			item.SalesPerson = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			item.SalesPerson = Employee.Find (item.SalesPersonId);
 			item.Date = item.CreationTime;
 			item.DueDate = item.IsCredit ? item.Date.AddDays (item.Customer.CreditDays) : item.Date;
 
@@ -174,13 +188,18 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
 		public ActionResult Edit (SalesOrder item)
 		{
-			var entity = SalesOrder.Find (item.Id);
 			var customer = Customer.Find (item.CustomerId);
+			var salesperson = Employee.Find (item.SalesPersonId);
 
-			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
-			item.ModificationTime = DateTime.Now;
-			entity.Details.ToList ();
+			if (customer == null || salesperson == null) {
+				return View (item);
+			}
+			
+			var entity = SalesOrder.Find (item.Id);
+			entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			entity.ModificationTime = DateTime.Now;
 			entity.Customer = customer;
+			entity.SalesPerson = salesperson;
 			entity.IsCredit = item.IsCredit;
 			entity.DueDate = item.IsCredit ? entity.Date.AddDays (customer.CreditDays) : entity.Date;
 			

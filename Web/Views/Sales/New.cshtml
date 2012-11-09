@@ -16,10 +16,17 @@
             @Html.ValidationSummary(true)
             
             <div class="editor-label">
+                @Html.LabelFor(model => model.SalesPerson)
+                @Html.EditorFor(model => model.SalesPersonId)
+                @Html.ValidationMessageFor(model => model.SalesPersonId)
+            </div>
+            
+            <div class="editor-label">
                 @Html.LabelFor(model => model.Customer)
                 @Html.TextBoxFor(model => model.CustomerId)
                 @Html.ValidationMessageFor(model => model.CustomerId)
             </div>
+            
             <div id="delivery-box" class="editor-label" style="display:inline-block">
                 <input id="delivery" name="delivery" type="checkbox" value="false">
                 <label for="delivery">@Resources.Delivery</label>
@@ -48,14 +55,18 @@ ul.token-input-list {
 </style>
 <script type="text/javascript">
     $(function () {
+    	@if(Model.SalesPerson != null) {
+    		@:$("#SalesPersonId").tokenInput("add", { id: "@Model.SalesPerson.Id", name: "@Model.SalesPerson.Name"});
+    	}
+    	
         $("#CustomerId").tokenInput("@Url.Action("GetSuggestions", "Customers")", {
             hintText: "@Resources.HIntText",
             noResultsText: "@Resources.NoResultsText",
             searchingText: "@Resources.SearchingText",
-            queryParam: "pattern",
-            minChars: 1,
-            tokenLimit: 1,
-            prePopulate: [{ id: "@Model.Customer.Id", name: "@Model.Customer.Name"}],
+            queryParam: "pattern", minChars: 1, tokenLimit: 1,
+            @if(Model.Customer != null) {
+            	@:prePopulate: [{ id: "@Model.Customer.Id", name: "@Model.Customer.Name"}],
+            }
             onAdd: function (item) {
             	if (item.id > 1) {
                     $("#delivery-box").show("slow");

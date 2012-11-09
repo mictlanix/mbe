@@ -1506,4 +1506,16 @@ Realizada el: {0:d}</value>
   <data name="PleaseWait" xml:space="preserve">
     <value>Espere, por favor...</value>
   </data>
+  <data name="ChooseWarehouse" xml:space="preserve">
+    <value>Seleccione un almacén</value>
+  </data>
+  <data name="InvalidBatch" xml:space="preserve">
+    <value>Serie y Folios Inválidos</value>
+  </data>
+  <data name="Message_InvalidBatch" xml:space="preserve">
+    <value>La serie que eligió no cuenta con folios disponibles para nuevos documentos.</value>
+  </data>
+  <data name="ReceivedPayments" xml:space="preserve">
+    <value>Pagos Recibidos</value>
+  </data>
 </root>

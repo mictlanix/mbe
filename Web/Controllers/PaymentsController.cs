@@ -201,6 +201,30 @@ namespace Mictlanix.BE.Web.Controllers
 			return PartialView ("_SalesOrderBalance", item);
         }
 
+		[HttpPost]
+		public ActionResult Cancel (int id)
+		{
+			var item = SalesOrder.Find (id);
+
+			if (!item.IsCompleted || item.IsCancelled || item.IsPaid) {
+				return RedirectToAction ("Index");
+			}
+
+			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			item.ModificationTime = DateTime.Now;
+			item.IsCancelled = true;
+			
+			using (var scope = new TransactionScope ()) {
+				foreach(var payment in item.Payments) {
+					payment.Delete ();
+				}
+
+				item.UpdateAndFlush ();
+			}
+			
+			return RedirectToAction ("Index");
+		}
+
         [HttpPost]
 		public JsonResult AddPayment (int order, int type, decimal amount, string reference)
 		{
