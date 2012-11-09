@@ -48,13 +48,13 @@ namespace Mictlanix.BE.Web.Models
 		public DateTime Date { get; set; }
 
 		[Display(Name = "SalesOrderId", ResourceType = typeof(Resources))]
-		public int SalesOrder { get; set; }
+		public int? SalesOrder { get; set; }
 		
 		[Display(Name = "Serial", ResourceType = typeof(Resources))]
-		public int Serial { get; set; }
+		public int? Serial { get; set; }
 		
 		[Display(Name = "Customer", ResourceType = typeof(Resources))]
-		public virtual Customer Customer { get; set; }
+		public Customer Customer { get; set; }
 		
 		[Display(Name = "PaymentMethod", ResourceType = typeof(Resources))]
 		public PaymentMethod Method { get; set; }

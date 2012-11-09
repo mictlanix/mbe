@@ -32,7 +32,8 @@
     var ShowReportsMenu = Html.GetPrivilege(CurrentUser, SystemObjects.Kardex).AllowRead ||
                           Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrdersHistoric).AllowRead ||
                           Html.GetPrivilege(CurrentUser, SystemObjects.CustomerReturnHistoric).AllowRead ||
-                          Html.GetPrivilege(CurrentUser, SystemObjects.SupplierReturnHistoric).AllowRead;
+                          Html.GetPrivilege(CurrentUser, SystemObjects.SupplierReturnHistoric).AllowRead ||
+                          Html.GetPrivilege(CurrentUser, SystemObjects.ReceivedPayments).AllowRead;
 }
 
 <div id="gb">
@@ -348,6 +349,13 @@
                 <div id="reports-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
                     <div class="gbmc">
                         <ol class="gbmcc">
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.ReceivedPayments).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("ReceivedPayments", "Reports") ? "gbm0l" : "")"
+                                   href="@Url.Action("ReceivedPayments", "Reports")">@Resources.ReceivedPayments</a>
+                            </li>
+                            }
                             @if (Html.GetPrivilege(CurrentUser, SystemObjects.Kardex).AllowRead)
                             {
                             <li class="gbmtc">
