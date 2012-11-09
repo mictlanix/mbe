@@ -16,14 +16,6 @@
 @Html.Partial("_PurchaseInfo")
 </div>
 <div id="details-section">
-    <div class="selector-warehouse">
-        <label>@Resources.Warehouse</label>
-        <input type="text" id="warehouse-search" name="warehouse-search"/>
-    </div>
-    <div class="search-box">
-        <label>@Resources.Product</label>
-        <input type="text" id="product-search" name="product-search" />
-    </div>
     <div id="items-container">
         <ul id="items" class="list-items">
         @foreach (var item in Model.Details)
@@ -31,6 +23,12 @@
             @Html.Partial("_PurchaseItem", item) 
         }
         </ul>
+    </div>
+    <div class="selector-warehouse">
+        <input type="text" id="warehouse-search" name="warehouse-search"/>
+    </div>
+    <div class="search-box">
+        <input type="text" id="product-search" name="product-search" />
     </div>
 </div>
 <div id="purchases-totals">
@@ -151,7 +149,7 @@
 
     $(function () {
         $("#warehouse-search").tokenInput("@Url.Action("GetSuggestions", "Warehouses")", {
-            hintText: "@Resources.HIntText",
+            hintText: "@Resources.ChooseWarehouse",
             noResultsText: "@Resources.NoResultsText",
             searchingText: "@Resources.SearchingText",
             queryParam: "pattern",
