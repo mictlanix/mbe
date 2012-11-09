@@ -141,6 +141,9 @@ table {
     border:1px solid #DEDEDE;
     border-collapse:collapse;
 }
+table.noborder {
+    border:none;
+}
 table td {
     padding:5px;
     border:solid 1px #e8eef4;
@@ -187,8 +190,7 @@ ul.list-items li div.photo img {
   max-width:50px;
   max-height:50px;
 }
-ul.list-items li div.info 
-{
+ul.list-items li div.info {
   margin:0 0 0 60px;
 }
 ul.list-items li div.action-link {
