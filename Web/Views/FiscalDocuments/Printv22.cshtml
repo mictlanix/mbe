@@ -7,8 +7,7 @@
 @{
     Layout = "~/Views/Shared/_PrintLayout.cshtml";
     ViewBag.Title = Resources.FiscalDocument;
-    ViewBag.StoreName = Model.Store.Name;
-    ViewBag.StoreLogo = Model.Store.Logo;
+    ViewBag.Store = Model.Store;
     ViewBag.TaxpayerName = null;
     ViewBag.Taxpayer = Model.IssuedFrom.TaxpayerId;
     ViewBag.Address = Model.IssuedAt;

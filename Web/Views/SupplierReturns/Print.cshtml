@@ -7,8 +7,7 @@
     Layout = "~/Views/Shared/_PrintLayout.cshtml";
     ViewBag.Title = Resources.SupplierReturn;
     //FIXME: no store
-    ViewBag.StoreName = Configuration.Company;
-    ViewBag.StoreLogo = "~/Content/images/logo.png";
+    ViewBag.Store = new Store { Name = Configuration.Company, Logo = "~/Content/images/logo.png" };
     ViewBag.TaxpayerName = null;
     ViewBag.Taxpayer = null;
     ViewBag.Address = new Address ();

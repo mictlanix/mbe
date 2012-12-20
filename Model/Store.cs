@@ -60,7 +60,12 @@ namespace Mictlanix.BE.Model
 		
 		[Property]
 		[Display(Name = "Location", ResourceType = typeof(Resources))]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
 		public virtual string Location { get; set; }
+		
+		[Property("receipt_message")]
+		[Display(Name = "ReceiptMessage", ResourceType = typeof(Resources))]
+		public virtual string ReceiptMessage { get; set; }
 
         [Property]
         [DataType(DataType.MultilineText)]

@@ -43,6 +43,14 @@
             @Html.EditorFor(model => model.Logo)
             @Html.ValidationMessageFor(model => model.Logo)
         </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ReceiptMessage)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ReceiptMessage)
+            @Html.ValidationMessageFor(model => model.ReceiptMessage)
+        </div>
         
 		@Html.HiddenFor(x => x.Address.TaxpayerId)
 		@Html.HiddenFor(x => x.Address.TaxpayerName)

@@ -1,4 +1,6 @@
 ﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
 @using Mictlanix.BE.Web.Helpers
 <!DOCTYPE html>
 <html>
@@ -11,13 +13,14 @@
 <body>
     <header>
         <div id="logo">
-            <img src="@Url.Content(ViewBag.StoreLogo)" alt="@Configuration.LogoAlt" title="@Configuration.LogoTitle"/>
+        	@if(!string.IsNullOrEmpty(ViewBag.Store.Logo)) {
+            <img src="@Url.Content(ViewBag.Store.Logo)" alt="@Configuration.LogoAlt" title="@Configuration.LogoTitle"/>
+            }
         </div>
-        <h1>@ViewBag.Store</h1>
+        <h1>@ViewBag.Store.Name</h1>
         @if (ViewBag.SkipAddress == null || !ViewBag.SkipAddress)
         {
         <h3>@Configuration.CompanyTaxpayer</h3>
-        @*<h3>@Configuration.CompanyTaxpayerName</h3>*@
         <h3>@Configuration.CompanyAddress</h3>
         }
         <h2>@ViewBag.Title</h2>

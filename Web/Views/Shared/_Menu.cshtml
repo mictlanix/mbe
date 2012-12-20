@@ -33,7 +33,13 @@
                           Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrdersHistoric).AllowRead ||
                           Html.GetPrivilege(CurrentUser, SystemObjects.CustomerReturnHistoric).AllowRead ||
                           Html.GetPrivilege(CurrentUser, SystemObjects.SupplierReturnHistoric).AllowRead ||
-                          Html.GetPrivilege(CurrentUser, SystemObjects.ReceivedPayments).AllowRead;
+                          Html.GetPrivilege(CurrentUser, SystemObjects.ReceivedPayments).AllowRead ||
+                          Html.GetPrivilege(CurrentUser, SystemObjects.SalesByCustomer).AllowRead ||
+                          Html.GetPrivilege(CurrentUser, SystemObjects.SalesBySalesPerson).AllowRead ||
+                          Html.GetPrivilege(CurrentUser, SystemObjects.SalesByProduct).AllowRead ||
+                          Html.GetPrivilege(CurrentUser, SystemObjects.GrossProfitsByCustomer).AllowRead ||
+                          Html.GetPrivilege(CurrentUser, SystemObjects.GrossProfitsBySalesPerson).AllowRead ||
+                          Html.GetPrivilege(CurrentUser, SystemObjects.GrossProfitsByProduct).AllowRead;
 }
 
 <div id="gb">
@@ -382,6 +388,48 @@
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("Historic", "SupplierReturns") ? "gbm0l" : "")"
                                    href="@Url.Action("Historic", "SupplierReturns")">@Resources.Title_SupplierReturnHistoric</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesByCustomer).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("SalesByCustomer", "Reports") ? "gbm0l" : "")"
+                                   href="@Url.Action("SalesByCustomer", "Reports")">@Resources.SalesByCustomer</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesBySalesPerson).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("SalesBySalesPerson", "Reports") ? "gbm0l" : "")"
+                                   href="@Url.Action("SalesBySalesPerson", "Reports")">@Resources.SalesBySalesPerson</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesByProduct).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("SalesByProduct", "Reports") ? "gbm0l" : "")"
+                                   href="@Url.Action("SalesByProduct", "Reports")">@Resources.SalesByProduct</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.GrossProfitsByCustomer).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("GrossProfitsByCustomer", "Reports") ? "gbm0l" : "")"
+                                   href="@Url.Action("GrossProfitsByCustomer", "Reports")">@Resources.GrossProfitsByCustomer</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.GrossProfitsBySalesPerson).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("GrossProfitsBySalesPerson", "Reports") ? "gbm0l" : "")"
+                                   href="@Url.Action("GrossProfitsBySalesPerson", "Reports")">@Resources.GrossProfitsBySalesPerson</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.GrossProfitsByProduct).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("GrossProfitsByProduct", "Reports") ? "gbm0l" : "")"
+                                   href="@Url.Action("GrossProfitsByProduct", "Reports")">@Resources.GrossProfitsByProduct</a>
                             </li>
                             }
                         </ol>

@@ -7,8 +7,7 @@
 @{
     Layout = "~/Views/Shared/_TicketLayout.cshtml";
     ViewBag.Title = Resources.PromissoryNote;
-    ViewBag.Store = Model.Store.Name;
-    ViewBag.StoreLogo = Model.Store.Logo;
+    ViewBag.Store = Model.Store;
 }
 
 <div class="display-label right">
@@ -89,6 +88,12 @@
 <div class="display-field right">
     @Html.DisplayFor(model => model.SalesPerson.Name)
 </div>
+
+@if (!string.IsNullOrEmpty(Model.Store.ReceiptMessage)) {
+<div class="legend">
+    <p class="center">@Model.Store.ReceiptMessage</p>
+</div>
+}
 
 @section Footer {
 	<img src="@Url.Action("Code128", "Barcodes", new { id = string.Format("{0}", Html.DisplayFor(x => x.Id)) })" alt="@Html.DisplayFor(x => x.Id)" title="@Html.DisplayFor(x => x.Id)">
