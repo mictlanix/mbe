@@ -104,6 +104,18 @@ namespace Mictlanix.BE.Model
         [Display(Name = "Kardex", ResourceType = typeof(Resources))]
         Kardex,
 		[Display(Name = "ReceivedPayments", ResourceType = typeof(Resources))]
-		ReceivedPayments
+		ReceivedPayments,
+		[Display(Name = "SalesByCustomer", ResourceType = typeof(Resources))]
+		SalesByCustomer,
+		[Display(Name = "SalesBySalesPerson", ResourceType = typeof(Resources))]
+		SalesBySalesPerson,
+		[Display(Name = "SalesByProduct", ResourceType = typeof(Resources))]
+		SalesByProduct,
+		[Display(Name = "GrossProfitsByCustomer", ResourceType = typeof(Resources))]
+		GrossProfitsByCustomer,
+		[Display(Name = "GrossProfitsBySalesPerson", ResourceType = typeof(Resources))]
+		GrossProfitsBySalesPerson,
+		[Display(Name = "GrossProfitsByProduct", ResourceType = typeof(Resources))]
+		GrossProfitsByProduct
     }
 }

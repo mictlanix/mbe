@@ -38,29 +38,37 @@ using Mictlanix.BE.Model;
 
 namespace Mictlanix.BE.Web.Models
 {
-	public class ReceivedPayment
+	public class SummaryItem
 	{
-		public ReceivedPayment()
+		public SummaryItem()
 		{
 		}
 		
-		[DataType(DataType.Date)]
-		[Display(Name = "Date", ResourceType = typeof(Resources))]
-		public DateTime Date { get; set; }
+		[Display(Name = "Id", ResourceType = typeof(Resources))]
+		public string Id { get; set; }
 		
-		[Display(Name = "SalesOrderId", ResourceType = typeof(Resources))]
-		public int? SalesOrder { get; set; }
+		[Display(Name = "Name", ResourceType = typeof(Resources))]
+		public string Name { get; set; }
 		
-		[Display(Name = "Serial", ResourceType = typeof(Resources))]
-		public int? Serial { get; set; }
+		[Display(Name = "Units", ResourceType = typeof(Resources))]
+		public decimal Units { get; set; }
 		
-		[Display(Name = "Customer", ResourceType = typeof(Resources))]
-		public Customer Customer { get; set; }
+		[DataType(DataType.Currency)]
+		[Display(Name = "Total", ResourceType = typeof(Resources))]
+		public decimal Total { get; set; }
 		
-		[Display(Name = "PaymentMethod", ResourceType = typeof(Resources))]
-		public PaymentMethod Method { get; set; }
-		
-		[Display(Name = "Amount", ResourceType = typeof(Resources))]
-		public decimal Amount { get; set; }
+		[DataType(DataType.Currency)]
+		[Display(Name = "Taxes", ResourceType = typeof(Resources))]
+		public decimal Taxes { get; set; }
+
+		[DataType(DataType.Currency)]
+		[Display(Name = "Subtotal", ResourceType = typeof(Resources))]
+		public decimal Subtotal
+		{
+			get { return Total - Taxes; }
+		}
+
+		[Display(Name = "Category", ResourceType = typeof(Resources))]
+		public string Category { get; set; }
 	}
 }

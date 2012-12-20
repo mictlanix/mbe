@@ -6,8 +6,7 @@
 @{
     Layout = "~/Views/Shared/_PrintLayout.cshtml";
     ViewBag.Title = Resources.Title_InventoryReceipt;
-    ViewBag.StoreName = Model.Warehouse.Store.Name;
-    ViewBag.StoreLogo = Model.Warehouse.Store.Logo;
+    ViewBag.Store = Model.Warehouse.Store;
     ViewBag.TaxpayerName = null;
     ViewBag.Taxpayer = null;
     ViewBag.Address = Model.Warehouse.Store.Address;

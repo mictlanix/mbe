@@ -27,6 +27,20 @@
     <div class="display-field">
         @Html.DisplayFor(model => model.Name)
     </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Location)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Location)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.ReceiptMessage)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ReceiptMessage)
+    </div>
     
     @Html.DisplayFor(x => x.Address)
     
