@@ -6,8 +6,7 @@
 
 @{
     Layout = "~/Views/Shared/_TicketLayout.cshtml";
-    ViewBag.Store = Model.CashDrawer.Store.Name;
-    ViewBag.StoreLogo = Model.CashDrawer.Store.Logo;
+    ViewBag.Store = Model.CashDrawer.Store;
     ViewBag.SkipAddress = true;
 }
 <table>

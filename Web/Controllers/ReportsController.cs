@@ -48,20 +48,20 @@ namespace Mictlanix.BE.Web.Controllers
 			return View ();
 		}
 
-        //FIXME: Query optimization (SUM function)
         [HttpPost]
         public ActionResult Kardex(Warehouse item)
         {
             var qry = from x in Model.Kardex.Queryable
                       where x.Warehouse.Id == item.Id
-                      select new { product = x.Product, quantity = x.Quantity};
-            var list = from x in qry.ToList()
-                       group x by x.product into c
-                       select new Kardex { Product = c.Key, Quantity = c.Sum(y => y.quantity) };
-            
+					  group x by x.Product into g
+					  select new Kardex {
+						Product = g.Key,
+						Quantity = g.Sum(y => y.Quantity)
+					  };
+
             var warehouse = Warehouse.Find(item.Id);
 
-            return PartialView("_Kardex", new MasterDetails<Warehouse, Kardex> { Master = warehouse , Details = list.ToList() });
+			return PartialView("_Kardex", new MasterDetails<Warehouse, Kardex> { Master = warehouse , Details = qry.ToList() });
         }
 
 		public ViewResult KardexDetails(int warehouse, int product)
@@ -155,6 +155,275 @@ namespace Mictlanix.BE.Web.Controllers
 
 			return PartialView("_ReceivedPayments", qry.ToList());
 		}
+		
+		public ViewResult SalesByCustomer ()
+		{
+			ViewBag.Title = Resources.SalesByCustomer;
+			return View ("SummaryReport", new DateRange(DateTime.Now, DateTime.Now));
+		}
 
+		[HttpPost]
+		public ActionResult SalesByCustomer (int store, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var qry = from x in SalesOrder.Queryable
+						where x.Store.Id == store &&
+							x.IsCompleted &&
+							x.IsPaid &&
+							!x.IsCancelled &&
+							x.Date >= start &&
+							x.Date <= end
+						select new {
+							Id = x.Customer.Id,
+							Name = x.Customer.Name,
+							Units = x.Details.Sum(y => y.Quantity),
+							Total = x.Details.Sum(y => y.Quantity * y.Price),
+							Taxes = x.Details.Sum(y => y.Quantity * y.Price * y.TaxRate)
+						};
+			var qry2 = from x in qry.ToList()
+						group x by new { x.Id, x.Name } into g
+						select new SummaryItem {
+							Id = g.Key.Id.ToString(),
+							Name = g.Key.Name,
+							Units = g.Sum(x => x.Units),
+							Total = g.Sum(x => x.Total),
+							Taxes = g.Sum(x => x.Taxes)
+						};
+			var items = qry2.OrderByDescending (x => x.Total).ToList();
+
+			AnalyzeABC (items);
+
+			return PartialView("_SummaryReport", items);
+		}
+
+		public ViewResult SalesBySalesPerson ()
+		{
+			ViewBag.Title =  Resources.SalesBySalesPerson;
+			return View ("SummaryReport", new DateRange(DateTime.Now, DateTime.Now));
+		}
+		
+		[HttpPost]
+		public ActionResult SalesBySalesPerson (int store, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var qry = from x in SalesOrder.Queryable
+						where x.Store.Id == store &&
+							x.IsCompleted &&
+							x.IsPaid &&
+							!x.IsCancelled &&
+							x.Date >= start &&
+							x.Date <= end
+						select new {
+							Id = x.SalesPerson.Id,
+							Name = x.SalesPerson.FirstName + " " + x.SalesPerson.LastName,
+							Units = x.Details.Sum(y => y.Quantity),
+							Total = x.Details.Sum(y => y.Quantity * y.Price),
+							Taxes = x.Details.Sum(y => y.Quantity * y.Price * y.TaxRate)
+						};
+			var qry2 = from x in qry.ToList()
+						group x by new { x.Id, x.Name } into g
+						select new SummaryItem {
+							Id = g.Key.Id.ToString (),
+							Name = g.Key.Name,
+							Units = g.Sum(x => x.Units),
+							Total = g.Sum(x => x.Total),
+							Taxes = g.Sum(x => x.Taxes)
+						};
+			var items = qry2.OrderByDescending (x => x.Total).ToList();
+
+			AnalyzeABC (items);
+			
+			return PartialView("_SummaryReport", items);
+		}
+		
+		public ViewResult SalesByProduct ()
+		{
+			ViewBag.Title =  Resources.SalesByProduct;
+			return View ("SummaryReport", new DateRange(DateTime.Now, DateTime.Now));
+		}
+		
+		[HttpPost]
+		public ActionResult SalesByProduct (int store, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var qry = from x in SalesOrder.Queryable
+					  from y in x.Details
+						where x.Store.Id == store &&
+							x.IsCompleted &&
+							x.IsPaid &&
+							!x.IsCancelled &&
+							x.Date >= start &&
+							x.Date <= end
+						select new {
+							Id = y.ProductCode,
+							Name = y.ProductName,
+							Units = y.Quantity,
+							Total = y.Quantity * y.Price,
+							Taxes = y.Quantity * y.Price * y.TaxRate
+						};
+			var qry2 = from x in qry.ToList()
+						group x by new { x.Id, x.Name } into g
+						select new SummaryItem {
+							Id = g.Key.Id,
+							Name = g.Key.Name,
+							Units = g.Sum(x => x.Units),
+							Total = g.Sum(x => x.Total),
+							Taxes = g.Sum(x => x.Taxes),
+						};
+			var items = qry2.OrderByDescending (x => x.Total).ToList();
+			
+			AnalyzeABC (items);
+			
+			return PartialView("_SummaryReport", items);
+		}
+
+		public ViewResult GrossProfitsByCustomer ()
+		{
+			ViewBag.Title = Resources.GrossProfitsByCustomer;
+			return View ("SummaryReport", new DateRange(DateTime.Now, DateTime.Now));
+		}
+		
+		[HttpPost]
+		public ActionResult GrossProfitsByCustomer (int store, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var qry = from x in SalesOrder.Queryable
+						where x.Store.Id == store &&
+							x.IsCompleted &&
+							x.IsPaid &&
+							!x.IsCancelled &&
+							x.Date >= start &&
+							x.Date <= end
+						select new {
+							Id = x.Customer.Id,
+							Name = x.Customer.Name,
+							Units = x.Details.Sum(y => y.Quantity),
+							Total = x.Details.Sum(y => y.Quantity * (y.Price - y.Product.Cost)),
+							Taxes = x.Details.Sum(y => y.Quantity * (y.Price - y.Product.Cost) * y.TaxRate)
+						};
+			var qry2 = from x in qry.ToList()
+						group x by new { x.Id, x.Name } into g
+						select new SummaryItem {
+							Id = g.Key.Id.ToString (),
+							Name = g.Key.Name,
+							Units = g.Sum(x => x.Units),
+							Total = g.Sum(x => x.Total),
+							Taxes = g.Sum(x => x.Taxes)
+						};
+			var items = qry2.OrderByDescending (x => x.Total).ToList();
+			
+			AnalyzeABC (items);
+			
+			return PartialView("_SummaryReport", items);
+		}
+		
+		public ViewResult GrossProfitsBySalesPerson ()
+		{
+			ViewBag.Title = Resources.GrossProfitsBySalesPerson;
+			return View ("SummaryReport", new DateRange(DateTime.Now, DateTime.Now));
+		}
+		
+		[HttpPost]
+		public ActionResult GrossProfitsBySalesPerson (int store, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var qry = from x in SalesOrder.Queryable
+						where x.Store.Id == store &&
+							x.IsCompleted &&
+							x.IsPaid &&
+							!x.IsCancelled &&
+							x.Date >= start &&
+							x.Date <= end
+						select new {
+							Id = x.SalesPerson.Id,
+							Name = x.SalesPerson.FirstName + " " + x.SalesPerson.LastName,
+							Units = x.Details.Sum(y => y.Quantity),
+							Total = x.Details.Sum(y => y.Quantity * (y.Price - y.Product.Cost)),
+							Taxes = x.Details.Sum(y => y.Quantity * (y.Price - y.Product.Cost) * y.TaxRate)
+						};
+			var qry2 = from x in qry.ToList()
+						group x by new { x.Id, x.Name } into g
+						select new SummaryItem {
+							Id = g.Key.Id.ToString (),
+							Name = g.Key.Name,
+							Units = g.Sum(x => x.Units),
+							Total = g.Sum(x => x.Total),
+							Taxes = g.Sum(x => x.Taxes)
+						};
+			var items = qry2.OrderByDescending (x => x.Total).ToList();
+			
+			AnalyzeABC (items);
+			
+			return PartialView("_SummaryReport", items);
+		}
+
+		public ViewResult GrossProfitsByProduct ()
+		{
+			ViewBag.Title = Resources.GrossProfitsByProduct;
+			return View ("SummaryReport", new DateRange(DateTime.Now, DateTime.Now));
+		}
+		
+		[HttpPost]
+		public ActionResult GrossProfitsByProduct (int store, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var qry = from x in SalesOrder.Queryable
+						from y in x.Details
+							where x.Store.Id == store &&
+							x.IsCompleted &&
+							x.IsPaid &&
+							!x.IsCancelled &&
+							x.Date >= start &&
+							x.Date <= end
+						select new {
+							Id = y.ProductCode,
+							Name = y.ProductName,
+							Units = y.Quantity,
+							Total = y.Quantity * (y.Price - y.Product.Cost),
+							Taxes = y.Quantity * (y.Price - y.Product.Cost) * y.TaxRate
+						};
+			var qry2 = from x in qry.ToList()
+						group x by new { x.Id, x.Name } into g
+						select new SummaryItem {
+							Id = g.Key.Id,
+							Name = g.Key.Name,
+							Units = g.Sum(x => x.Units),
+							Total = g.Sum(x => x.Total),
+							Taxes = g.Sum(x => x.Taxes),
+						};
+			var items = qry2.OrderByDescending (x => x.Total).ToList();
+			
+			AnalyzeABC (items);
+			
+			return PartialView("_SummaryReport", items);
+		}
+
+		void AnalyzeABC (IEnumerable<SummaryItem> items)
+		{
+			decimal total = items.Sum(x => x.Total);
+			decimal sum = 0;
+			decimal pct;
+			
+			foreach (var item in items) {
+				pct = sum / total;
+				sum += item.Total;
+				
+				if(pct < 0m) {
+					item.Category = "X";
+				} else if(pct < 0.7m) {
+					item.Category = "A";
+				} else if(pct < 0.95m) {
+					item.Category = "B";
+				} else {
+					item.Category = "C";
+				}
+			}
+		}
 	}
 }

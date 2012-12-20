@@ -1,0 +1,41 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model DateRange
+
+<h2>@ViewBag.Title</h2>
+
+<div id="master-section">
+@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))
+{
+    <div class="search-box">
+    	<table class="noborder">
+	    	<tbody>
+		    	<tr>
+		    		<td>@Html.Editor("store", "StoreSelector")</td>
+		    		<td class="actions">@Html.EditorFor(x => x.StartDate) - @Html.EditorFor(x => x.EndDate)</td>
+		    	</tr>
+	    	</tbody>
+    	</table>
+    </div>
+    <div class="action-buttons">
+        <button type="submit" class="icon search">@Resources.Search</button>
+    </div>
+}
+</div>
+<div id="activity-indicator">
+    <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
+</div>
+<div id="search-results">
+</div>
+<script type="text/javascript">
+    function onSearchBegin() {
+        $("#search-results").html(null);
+    }
+</script>
+<style type="text/css">
+ul.token-input-list {
+  width:100%;
+}
+</style>

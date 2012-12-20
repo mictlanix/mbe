@@ -4250,5 +4250,95 @@ namespace Mictlanix.BE {
 				return ResourceManager.GetString("ReceivedPayments", resourceCulture);
 			}
 		}
+		
+		/// <summary>
+		///   Looks up a localized string similar to ...
+		/// </summary>
+		public static string Units {
+			get {
+				return ResourceManager.GetString("Units", resourceCulture);
+			}
+		}
+		
+		/// <summary>
+		///   Looks up a localized string similar to ...
+		/// </summary>
+		public static string Id {
+			get {
+				return ResourceManager.GetString("Id", resourceCulture);
+			}
+		}
+		
+		/// <summary>
+		///   Looks up a localized string similar to ...
+		/// </summary>
+		public static string SalesByCustomer {
+			get {
+				return ResourceManager.GetString("SalesByCustomer", resourceCulture);
+			}
+		}
+		
+		/// <summary>
+		///   Looks up a localized string similar to ...
+		/// </summary>
+		public static string SalesBySalesPerson {
+			get {
+				return ResourceManager.GetString("SalesBySalesPerson", resourceCulture);
+			}
+		}
+		
+		/// <summary>
+		///   Looks up a localized string similar to ...
+		/// </summary>
+		public static string SalesByProduct {
+			get {
+				return ResourceManager.GetString("SalesByProduct", resourceCulture);
+			}
+		}
+		
+		/// <summary>
+		///   Looks up a localized string similar to ...
+		/// </summary>
+		public static string GrossProfitsByCustomer {
+			get {
+				return ResourceManager.GetString("GrossProfitsByCustomer", resourceCulture);
+			}
+		}
+		
+		/// <summary>
+		///   Looks up a localized string similar to ...
+		/// </summary>
+		public static string GrossProfitsBySalesPerson {
+			get {
+				return ResourceManager.GetString("GrossProfitsBySalesPerson", resourceCulture);
+			}
+		}
+		
+		/// <summary>
+		///   Looks up a localized string similar to ...
+		/// </summary>
+		public static string GrossProfitsByProduct {
+			get {
+				return ResourceManager.GetString("GrossProfitsByProduct", resourceCulture);
+			}
+		}
+
+		/// <summary>
+		///   Looks up a localized string similar to ...
+		/// </summary>
+		public static string ChooseStore {
+			get {
+				return ResourceManager.GetString("ChooseStore", resourceCulture);
+			}
+		}
+		
+		/// <summary>
+		///   Looks up a localized string similar to ...
+		/// </summary>
+		public static string ReceiptMessage {
+			get {
+				return ResourceManager.GetString("ReceiptMessage", resourceCulture);
+			}
+		}
     }
 }

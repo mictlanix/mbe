@@ -1518,4 +1518,34 @@ Realizada el: {0:d}</value>
   <data name="ReceivedPayments" xml:space="preserve">
     <value>Pagos Recibidos</value>
   </data>
+  <data name="Units" xml:space="preserve">
+    <value>Unidades</value>
+  </data>
+  <data name="Id" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="SalesByCustomer" xml:space="preserve">
+    <value>Ventas por Cliente</value>
+  </data>
+  <data name="SalesBySalesPerson" xml:space="preserve">
+    <value>Ventas por Vendedor</value>
+  </data>
+  <data name="SalesByProduct" xml:space="preserve">
+    <value>Ventas por Producto</value>
+  </data>
+  <data name="GrossProfitsByCustomer" xml:space="preserve">
+    <value>Utilidad Bruta por Cliente</value>
+  </data>
+  <data name="GrossProfitsBySalesPerson" xml:space="preserve">
+    <value>Utilidad Bruta por Vendedor</value>
+  </data>
+  <data name="GrossProfitsByProduct" xml:space="preserve">
+    <value>Utilidad Bruta por Producto</value>
+  </data>
+  <data name="ChooseStore" xml:space="preserve">
+    <value>Seleccione una tienda</value>
+  </data>
+  <data name="ReceiptMessage" xml:space="preserve">
+    <value>Mensaje</value>
+  </data>
 </root>
