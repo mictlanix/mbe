@@ -38,7 +38,9 @@ namespace Mictlanix.BE.Model
 {
     [ActiveRecord("product")]
     public class Product : ActiveRecordLinqBase<Product>
-    {
+	{
+		IList<ProductPrice> prices = new List<ProductPrice>();
+
         [PrimaryKey(PrimaryKeyType.Identity, "product_id")]
         public int Id { get; set; }
 
@@ -104,30 +106,6 @@ namespace Mictlanix.BE.Model
         [Display(Name = "Comment", ResourceType = typeof(Resources))]
         public string Comment { get; set; }
 
-        [Property("price1")]
-        [Display(Name = "Price1", ResourceType = typeof(Resources))]
-        [DataType(DataType.Currency)]
-        [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
-        public decimal Price1 { get; set; }
-
-        [Property("price2")]
-        [Display(Name = "Price2", ResourceType = typeof(Resources))]
-        [DataType(DataType.Currency)]
-        [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
-        public decimal Price2 { get; set; }
-
-        [Property("price3")]
-        [Display(Name = "Price3", ResourceType = typeof(Resources))]
-        [DataType(DataType.Currency)]
-        [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
-        public decimal Price3 { get; set; }
-
-        [Property("price4")]
-        [Display(Name = "Price4", ResourceType = typeof(Resources))]
-        [DataType(DataType.Currency)]
-        [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
-        public decimal Price4 { get; set; }
-
         [Property("tax_rate")]
         [Display(Name = "TaxRate", ResourceType = typeof(Resources))]
         public decimal TaxRate { get; set; }
@@ -158,6 +136,13 @@ namespace Mictlanix.BE.Model
         [BelongsTo("supplier")]
         [Display(Name = "Supplier", ResourceType = typeof(Resources))]
         public virtual Supplier Supplier { get; set; }
+
+		[HasMany(typeof(ProductPrice), Table = "product_price", ColumnKey = "product")]
+		public IList<ProductPrice> Prices
+		{
+			get { return prices; }
+			set { prices = value; }
+		}
 
         #region Override Base Methods
 

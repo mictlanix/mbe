@@ -1,0 +1,106 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model Search<Product>
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Products);
+}
+
+<p>@Html.ValidationMessageFor(x => x.Pattern)</p>
+
+<table>
+    <tr>
+        <th></th>
+        <th>
+            @Html.LabelFor(x => new Product().Code)
+        </th>
+        <th>
+            @Html.LabelFor(x => new Product().SKU)
+        </th>
+        <th>
+            @Html.LabelFor(x => new Product().Name)
+        </th>
+        <th>
+            @Html.LabelFor(x => new Product().UnitOfMeasurement)
+        </th>
+        <th>
+        	@Resources.Cost / @Resources.Prices
+        </th>
+    </tr>
+
+@foreach (var item in Model.Results)
+{
+    <tr>
+        <td><img class="small" src="@Url.Content(item.Photo)" alt="@item.Code"/></td>
+        <td class="center">@Html.DisplayFor(x => item.Code)</td>
+        <td class="center">@Html.DisplayFor(x => item.SKU)</td>
+        <td>@Html.DisplayFor(x => item.Name)</td>
+        <td class="center">@Html.DisplayFor(x => item.UnitOfMeasurement)</td>
+        <td class="tabular">
+            <table>
+            	<tr>
+            		<th class="right">@Resources.Cost</th>
+            		<td class="number">@Html.DisplayFor(x => item.Cost)</td>
+            	</tr>
+            @foreach(var p in ViewBag.PriceLists) {
+				var price = item.Prices.SingleOrDefault(x => x.List.Id == p.Id) ??
+							new ProductPrice { List = new PriceList() };
+            	<tr>
+            		<th class="right nowrap">@p.Name</th>
+            		<td class="number editable" data-product="@item.Id" data-list="@price.List.Id">@Html.DisplayFor(x => price.Price)</td>
+            	</tr>
+        	}
+            </table>
+        </td>
+    </tr>
+}
+</table>
+<div class="buttons right">
+	<label class="button left">@Model.ToString()</label>@if (Model.HasPrev) {<a class="button middle icon prev icon-only" title="@Resources.PrevPage" href="javascript:void(0)"></a>}@if (Model.HasNext) {<a class="button right icon next icon-only" title="@Resources.NextPage" href="javascript:void(0)"></a>}
+</div>
+<script type="text/javascript">
+    $(function () {
+		$('.editable').editable(function(value, settings) { 
+		     console.log(this);
+		     console.log($(this).data("product"));
+		     console.log($(this).data("list"));
+		     console.log(value);
+		     console.log(settings);
+		     return value;
+		});
+ 
+@if (Model.HasPrev)
+{
+<text>
+    	$('a.prev').click(function (e) {
+    		e.preventDefault();
+    		$("#activity-indicator").show();
+    		$("#search-results").hide();
+    		$.post("@Url.Action("Index")", { Pattern: "@Model.Pattern", Offset: "@(Model.Offset-Model.Limit)", Limit: "@Model.Limit" }, function(data) {
+				$("#search-results").html(data);
+				$("#search-results").show();
+				$("#activity-indicator").hide();
+			});
+    	});
+</text>
+}
+@if (Model.HasNext)
+{
+<text>
+    	$('a.next').click(function (e) {
+    		e.preventDefault();
+    		$("#activity-indicator").show();
+    		$("#search-results").hide();
+    		$.post("@Url.Action("Index")", { Pattern: "@Model.Pattern", Offset: "@(Model.Offset+Model.Limit)", Limit: "@Model.Limit" }, function(data) {
+				$("#search-results").html(data);
+				$("#search-results").show();
+				$("#activity-indicator").hide();
+			});
+    	});
+</text>
+}
+    });
+</script>

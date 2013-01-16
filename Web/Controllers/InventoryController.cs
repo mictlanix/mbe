@@ -267,11 +267,16 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult ConfirmReceipt (int id)
         {
-            InventoryReceipt item = InventoryReceipt.Find (id);
+            var item = InventoryReceipt.TryFind (id);
+
+			if (item == null || item.IsCompleted || item.IsCancelled)
+				return RedirectToAction("Receipts");
 
             item.IsCompleted = true;
+			item.ModificationTime = DateTime.Now;
 
 			using (var scope = new TransactionScope()) {
+				item.UpdateAndFlush ();
 
 				foreach(var x in item.Details) {
 					var kardex = new Kardex {
@@ -279,14 +284,12 @@ namespace Mictlanix.BE.Web.Controllers
 						Product = x.Product,
 						Source = TransactionType.InventoryReceipt,
 						Quantity = x.Quantity,
-						Date = DateTime.Now,
+						Date = item.ModificationTime,
 						Reference = item.Id
 					};
 
 					kardex.CreateAndFlush ();
 				}
-
-            	item.UpdateAndFlush ();
 			}
 
             return RedirectToAction("Receipts");
@@ -427,19 +430,19 @@ namespace Mictlanix.BE.Web.Controllers
         //
         // GET: /Inventory/EditIssue/5
 
-        public ActionResult EditIssue(int id)
-        {
-            InventoryIssue item = InventoryIssue.Find(id);
+        public ActionResult EditIssue (int id)
+		{
+			InventoryIssue item = InventoryIssue.Find (id);
 
-            if (item.IsCompleted || item.IsCancelled)
-            {
-                return RedirectToAction("Issue", new { id = item.Id });
-            }
+			if (item.IsCompleted || item.IsCancelled) {
+				return RedirectToAction ("Issue", new { id = item.Id });
+			}
 
-            if (Request.IsAjaxRequest())
-                return PartialView("_IssueEditor", item);
-            else
-                return View(item);
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_IssueEditor", item);
+			} else {
+				return View (item);
+			}
         }
 
         //
@@ -536,31 +539,32 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult ConfirmIssue(int id)
         {
-            InventoryIssue item = InventoryIssue.Find(id);
+            InventoryIssue item = InventoryIssue.TryFind (id);
+			
+			if (item == null || item.IsCompleted || item.IsCancelled)
+				return RedirectToAction ("Issues");
 
             item.IsCompleted = true;
+			item.ModificationTime = DateTime.Now;
 
 			using (var scope = new TransactionScope()) {
+				item.UpdateAndFlush ();
 
-                foreach (var x in item.Details)
-                {
-                    var kardex = new Kardex
-                    {
+                foreach (var x in item.Details) {
+                    var kardex = new Kardex {
                         Warehouse = item.Warehouse,
                         Product = x.Product,
                         Source = TransactionType.InventoryIssue,
-                        Quantity = x.Quantity * -1,
-                        Date = DateTime.Now,
+                        Quantity = -x.Quantity,
+						Date = item.ModificationTime,
                         Reference = item.Id
                     };
 
                     kardex.CreateAndFlush();
                 }
-
-            	item.UpdateAndFlush ();
 			}
 
-            return RedirectToAction("Issues");
+            return RedirectToAction ("Issues");
         }
 
         //
@@ -761,8 +765,7 @@ namespace Mictlanix.BE.Web.Controllers
         {
             var p = Product.Find(product);
 
-            var item = new InventoryTransferDetail
-            {
+            var item = new InventoryTransferDetail {
                 Transfer = InventoryTransfer.Find(movement),
                 Product = p,
                 ProductCode = p.Code,
@@ -829,40 +832,39 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult ConfirmTransfer(int id)
         {
             var item = InventoryTransfer.Find(id);
-
-            item.IsCompleted = true;
+			
+			if (item == null || item.IsCompleted || item.IsCancelled)
+				return RedirectToAction("Transfers");
+			
+			item.IsCompleted = true;
+			item.ModificationTime = DateTime.Now;
 
 			using (var scope = new TransactionScope()) {
-				var dt = DateTime.Now;
+				item.UpdateAndFlush ();
 
-                foreach (var x in item.Details)
-                {
-                    var input = new Kardex
-                    {
+                foreach (var x in item.Details) {
+                    var input = new Kardex {
                         Warehouse = item.To,
                         Product = x.Product,
                         Source = TransactionType.InventoryTransfer,
                         Quantity = x.Quantity,
-                        Date = dt,
+						Date = item.ModificationTime,
                         Reference = item.Id
                     };
 
                     input.Create();
 
-                    var output = new Kardex
-                    {
+                    var output = new Kardex {
                         Warehouse = item.From,
                         Product = x.Product,
                         Source = TransactionType.InventoryTransfer,
                         Quantity = -x.Quantity,
-                        Date = dt,
+						Date = item.ModificationTime,
                         Reference = item.Id
                     };
 
                     output.Create();
                 }
-                    
-            	item.UpdateAndFlush ();
 			}
 
             return RedirectToAction("Transfers");

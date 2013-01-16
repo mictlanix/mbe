@@ -27,9 +27,6 @@
             @Html.LabelFor(x => new Product().UnitOfMeasurement)
         </th>
         <th>
-            @Mictlanix.BE.Resources.Prices
-        </th>
-        <th>
             @Html.LabelFor(x => new Product().Category)
         </th>
         <th></th>
@@ -57,26 +54,6 @@
         </td>
          <td>
             @Html.DisplayFor(modelItem => item.UnitOfMeasurement)
-        </td>
-        <td>
-            <table style="border:0;width:100%;text-align:right;">
-                <tr>
-                    <td title="@Resources.Price1" style="border:0;background:#F7F8E0 url('@Url.Content("~/Content/images/price1.png")') no-repeat left bottom;">
-                        @Html.DisplayFor(modelItem => item.Price1)
-                    </td>
-                    <td title="@Resources.Price2" style="border:0;background:#E6F8E0 url('@Url.Content("~/Content/images/price2.png")') no-repeat left bottom;">
-                        @Html.DisplayFor(modelItem => item.Price2)
-                    </td>
-                </tr>
-                <tr>
-                    <td title="@Resources.Price3" style="border:0;background:#E0F8F7 url('@Url.Content("~/Content/images/price3.png")') no-repeat left bottom;">
-                        @Html.DisplayFor(modelItem => item.Price3)
-                    </td>
-                    <td title="@Resources.Price4" style="border:0;background:#F8E0F7 url('@Url.Content("~/Content/images/price4.png")') no-repeat left bottom;">
-                        @Html.DisplayFor(modelItem => item.Price4)
-                    </td>
-                </tr>
-            </table>
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Category.Name)

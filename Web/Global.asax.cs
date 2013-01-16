@@ -16,6 +16,8 @@ namespace Mictlanix.BE.Web
 {
     public class MvcApplication : System.Web.HttpApplication
     {
+		static CultureInfo my_culture;
+
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
@@ -57,10 +59,18 @@ namespace Mictlanix.BE.Web
 
 			IConfigurationSource source = ConfigurationManager.GetSection ("activeRecord") as IConfigurationSource;
 			ActiveRecordStarter.Initialize (typeof(Category).Assembly, source);
+
+			my_culture = Thread.CurrentThread.CurrentCulture.Clone() as CultureInfo;
+
+			if (my_culture != null) {
+				my_culture.NumberFormat.CurrencyDecimalSeparator = ".";
+				my_culture.NumberFormat.NumberDecimalSeparator = ".";
+			}
 		}
 		
         protected void Application_BeginRequest (object sender, EventArgs e)
 		{
+			Thread.CurrentThread.CurrentCulture = my_culture;
 			HttpContext.Current.Items.Add ("ar.sessionscope", new SessionScope (FlushAction.Never));
 		}
 		
