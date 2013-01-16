@@ -103,6 +103,11 @@
             }
         });
 
+        $('form').submit(function(){
+            $("button.lock").attr("disabled", "disabled");
+		    $("button.lock").html("@Resources.PleaseWait");
+		});
+
     @foreach (var item in Model.Details)
     {
         @:$("#item@(item.Id) div.quantity").editable(function(value,settings){return editQuantity(@item.Id, value);});
