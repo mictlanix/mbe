@@ -2578,69 +2578,6 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mostrador.
-        /// </summary>
-        public static string Price1 {
-            get {
-                return ResourceManager.GetString("Price1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Supermostrador.
-        /// </summary>
-        public static string Price2 {
-            get {
-                return ResourceManager.GetString("Price2", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mayoreo.
-        /// </summary>
-        public static string Price3 {
-            get {
-                return ResourceManager.GetString("Price3", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Especial.
-        /// </summary>
-        public static string Price4 {
-            get {
-                return ResourceManager.GetString("Price4", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Precio x Kg.
-        /// </summary>
-        public static string Price5 {
-            get {
-                return ResourceManager.GetString("Price5", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Precio x Mts.
-        /// </summary>
-        public static string Price6 {
-            get {
-                return ResourceManager.GetString("Price6", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Precio x Pieza.
-        /// </summary>
-        public static string Price7 {
-            get {
-                return ResourceManager.GetString("Price7", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Lista de Precios.
         /// </summary>
         public static string PriceList {

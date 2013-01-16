@@ -165,6 +165,7 @@
     <Compile Include="Controllers\CustomerReturnsController.cs" />
     <Compile Include="Models\ReceivedPayment.cs" />
     <Compile Include="Models\SummaryItem.cs" />
+    <Compile Include="Controllers\PricingController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
@@ -283,10 +284,6 @@
     <Content Include="Content\images\false.png" />
     <Content Include="Content\images\header-bg.png" />
     <Content Include="Content\images\mtx-logo-small.png" />
-    <Content Include="Content\images\price1.png" />
-    <Content Include="Content\images\price2.png" />
-    <Content Include="Content\images\price3.png" />
-    <Content Include="Content\images\price4.png" />
     <Content Include="Content\images\true.png" />
     <Content Include="Content\main.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -513,6 +510,8 @@
     <Content Include="Views\Reports\_ReceivedPayments.cshtml" />
     <Content Include="Views\Reports\_SummaryReport.cshtml" />
     <Content Include="Views\Reports\SummaryReport.cshtml" />
+    <Content Include="Views\Pricing\Index.cshtml" />
+    <Content Include="Views\Pricing\_Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />
@@ -874,4 +873,7 @@
   </ProjectExtensions>
   <ItemGroup />
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Views\Pricing\" />
+  </ItemGroup>
 </Project>

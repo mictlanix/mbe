@@ -227,6 +227,10 @@ namespace Mictlanix.BE.Web.Controllers
         {
 			var order_entity = SalesOrder.Find (order);
 			var product_entity = Product.TryFind (product);
+			var price = (from x in ProductPrice.Queryable
+			             where x.Product.Id == product &&
+			             x.List.Id == order_entity.Customer.Id
+			             select x.Price).SingleOrDefault();
 			
             var item = new SalesOrderDetail {
 				SalesOrder = order_entity,
@@ -235,24 +239,9 @@ namespace Mictlanix.BE.Web.Controllers
                 ProductCode = product_entity.Code,
                 ProductName = product_entity.Name,
                 TaxRate = product_entity.TaxRate,
-                Quantity = 1
+                Quantity = 1,
+				Price = price
             };
-
-            switch (item.SalesOrder.Customer.PriceList.Id)
-            {
-                case 1:
-                    item.Price = product_entity.Price1;
-                    break;
-                case 2:
-                    item.Price = product_entity.Price2;
-                    break;
-                case 3:
-                    item.Price = product_entity.Price3;
-                    break;
-                case 4:
-                    item.Price = product_entity.Price4;
-                    break;
-            }
 
             using (var scope = new TransactionScope()) {
                 item.CreateAndFlush ();
@@ -443,29 +432,23 @@ namespace Mictlanix.BE.Web.Controllers
 		{
 			var sales_order = SalesOrder.Find (order);
 			int pl = sales_order.Customer.PriceList.Id;
-			var items = new ArrayList (15);
 
-			var qry = from x in Product.Queryable
-                      where x.Name.Contains (pattern) ||
-                            x.Code.Contains (pattern) ||
-                            x.SKU.Contains (pattern)
-					  orderby x.Name
-                      select x;
+			var qry = from x in ProductPrice.Queryable
+					  where x.List.Id == pl ||
+							x.Product.Name.Contains (pattern) ||
+							x.Product.Code.Contains (pattern) ||
+							x.Product.SKU.Contains (pattern)
+					  orderby x.Product.Name
+					  select new { 
+							id = x.Product.Id,
+							name = x.Product.Name, 
+							code = x.Product.Code, 
+							sku = x.Product.SKU, 
+							url = Url.Content(x.Product.Photo),
+							price = x.Price
+					  };
 
-			foreach (var x in qry.Take(15)) {
-				var item = new { 
-                    id = x.Id,
-                    name = x.Name, 
-                    code = x.Code, 
-                    sku = x.SKU, 
-                    url = Url.Content(x.Photo),
-                    price = (pl == 1 ? x.Price1 : (pl == 2 ? x.Price2 : (pl == 3 ? x.Price3 : x.Price4))).ToString ("c")
-                };
-                
-				items.Add (item);
-			}
-
-			return Json (items, JsonRequestBehavior.AllowGet);
+			return Json (qry.Take(15), JsonRequestBehavior.AllowGet);
 		}
     }
 }

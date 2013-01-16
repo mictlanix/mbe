@@ -129,16 +129,13 @@ namespace Mictlanix.BE.Web.Controllers
             if (!ModelState.IsValid)
             	return View (item);
             
-            PriceList priceList = PriceList.Find(item.PriceListId);
-            item.PriceList = priceList;
-
+			item.PriceList = PriceList.Find (item.PriceListId);
+			
 			using (var scope = new TransactionScope()) {
             	item.CreateAndFlush ();
 			}
             
-            return RedirectToAction("Index");
-
-
+            return RedirectToAction ("Index");
         }
 
         //

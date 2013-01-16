@@ -50,34 +50,34 @@ namespace Mictlanix.BE.Web.Controllers
         //
         // GET: /Products/
 
-        public ActionResult Index()
+        public ActionResult Index ()
         {
             var qry = from x in Product.Queryable
                       orderby x.Name
                       select x;
 
-            Search<Product> search = new Search<Product>();
+            var search = new Search<Product>();
             search.Limit = Configuration.PageSize;
             search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
             search.Total = qry.Count();
 
-            return View(search);
+            return View (search);
         }
 
         //
         // POST: /Products/
 
         [HttpPost]
-        public ActionResult Index(Search<Product> search)
+        public ActionResult Index (Search<Product> search)
         {
             if (ModelState.IsValid) {
                 search = GetProducts(search);
             }
 
             if (Request.IsAjaxRequest()) {
-                return PartialView("_Index", search);
+                return PartialView ("_Index", search);
             } else {
-                return View(search);
+                return View (search);
             }
         }
 
@@ -147,7 +147,6 @@ namespace Mictlanix.BE.Web.Controllers
 			entity.Brand = item.Brand;
 			entity.Code = item.Code;
 			entity.Comment = item.Comment;
-			entity.Cost = item.Cost;
 			entity.IsInvoiceable = item.IsInvoiceable;
 			entity.IsPerishable = item.IsPerishable;
 			entity.IsSeriable = item.IsSeriable;
@@ -155,10 +154,6 @@ namespace Mictlanix.BE.Web.Controllers
 			entity.Location = item.Location;
 			entity.Model = item.Model;
 			entity.Name = item.Name;
-			entity.Price1 = item.Price1;
-			entity.Price2 = item.Price2;
-			entity.Price3 = item.Price3;
-			entity.Price4 = item.Price4;
 			entity.SKU = item.SKU;
 			entity.TaxRate = item.TaxRate;
 			entity.UnitOfMeasurement = item.UnitOfMeasurement;
@@ -203,25 +198,23 @@ namespace Mictlanix.BE.Web.Controllers
 
         Search<Product> GetProducts(Search<Product> search)
         {
-            if (search.Pattern == null) {
-                var qry = from x in Product.Queryable
-                          orderby x.Name
-                          select x;
+			var qry = from x in Product.Queryable
+					  orderby x.Name
+					  select x;
+
+            if (!string.IsNullOrEmpty(search.Pattern)) {
+                qry = from x in Product.Queryable
+                      where x.Name.Contains(search.Pattern) ||
+                            x.Code.Contains(search.Pattern) ||
+                            x.SKU.Contains(search.Pattern) ||
+                            x.Brand.Contains(search.Pattern)
+                      orderby x.Name
+                      select x;
                 
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            } else {
-                var qry = from x in Product.Queryable
-                          where x.Name.Contains(search.Pattern) ||
-                                x.Code.Contains(search.Pattern) ||
-                                x.SKU.Contains(search.Pattern) ||
-                                x.Brand.Contains(search.Pattern)
-                          orderby x.Name
-                          select x;
-                
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
             }
+
+			search.Total = qry.Count();
+			search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
 			
             return search;
         }
@@ -269,8 +262,8 @@ namespace Mictlanix.BE.Web.Controllers
 
             using (SHA1CryptoServiceProvider sha1 = new SHA1CryptoServiceProvider())
             {
-                bytes = sha1.ComputeHash(bytes);
-                hash = BitConverter.ToString(bytes).Replace("-", "").ToLower();
+                bytes = sha1.ComputeHash (bytes);
+                hash = BitConverter.ToString (bytes).Replace ("-", "").ToLower ();
             }
 
             return hash;
