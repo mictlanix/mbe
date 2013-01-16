@@ -121,6 +121,7 @@
     <Compile Include="CustomerReturn.cs" />
     <Compile Include="CustomerReturnDetail.cs" />
     <Compile Include="Constants\TransactionType.cs" />
+    <Compile Include="ProductPrice.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">

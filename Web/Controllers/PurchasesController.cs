@@ -243,13 +243,13 @@ namespace Mictlanix.BE.Web.Controllers
         {
             PurchaseOrderDetail detail = PurchaseOrderDetail.Find(id);
             bool success;
-            decimal price;
+            decimal cost;
 
-            success = decimal.TryParse(value,System.Globalization.NumberStyles.AllowCurrencySymbol, null, out price);
+            success = decimal.TryParse(value,System.Globalization.NumberStyles.AllowCurrencySymbol, null, out cost);
 
-            if (success && price >= 0)
+            if (success && cost >= 0)
             {
-                detail.Price = price;
+                detail.Price = cost;
 
 				using (var scope = new TransactionScope ()) {
 	            	detail.UpdateAndFlush ();
@@ -333,7 +333,7 @@ namespace Mictlanix.BE.Web.Controllers
 
         //
         // POST: /Purchases/ConfirmPurchase/{id}
-
+		// TODO: Remove inventory stuff
         [HttpPost]
         public ActionResult ConfirmPurchase(int id)
         {
@@ -378,7 +378,9 @@ namespace Mictlanix.BE.Web.Controllers
 					x.Product.Update ();
 	            }
 
-	            item.IsCompleted = true;
+				item.IsCompleted = true;
+				item.ModificationTime = DateTime.Now;
+
 	            item.UpdateAndFlush ();
             }
 

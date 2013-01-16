@@ -399,6 +399,11 @@ namespace Mictlanix.BE.Web.Controllers
 		public JsonResult AddDetail (int id, int product)
 		{
 			var p = Product.Find (product);
+			var f = FiscalDocument.Find (id);
+			var price = (from x in ProductPrice.Queryable
+			             where x.Product.Id == product &&
+			             x.List.Id == f.Customer.PriceList.Id
+			             select x.Price).SingleOrDefault();
 
 			var item = new FiscalDocumentDetail {
                 Document = FiscalDocument.Find (id),
@@ -409,23 +414,9 @@ namespace Mictlanix.BE.Web.Controllers
                 Discount = 0,
                 TaxRate = p.TaxRate,
                 Quantity = 1,
+				Price = price
             };
-			
-			switch (item.Document.Customer.PriceList.Id) {
-			case 1:
-				item.Price = p.Price1;
-				break;
-			case 2:
-				item.Price = p.Price2;
-				break;
-			case 3:
-				item.Price = p.Price3;
-				break;
-			case 4:
-				item.Price = p.Price4;
-				break;
-			}
-			
+
 			if (p.IsTaxIncluded) {
 				item.Price = item.Price / (1m + item.TaxRate);
 			}
@@ -656,34 +647,25 @@ namespace Mictlanix.BE.Web.Controllers
 		
 		public JsonResult GetSuggestions (int id, string pattern)
 		{
-			int pl = (from x in FiscalDocument.Queryable
-					  where x.Id == id
-					  select x.Customer.PriceList.Id).Single();
-
-			var items = new ArrayList (15);
-
-			var qry = from x in Product.Queryable
-                      where x.IsInvoiceable &&
-					 		x.Name.Contains (pattern) ||
-                            x.Code.Contains (pattern) ||
-                            x.SKU.Contains (pattern)
-					  orderby x.Name
-                      select x;
-
-			foreach (var x in qry.Take(15)) {
-				var item = new { 
-                    id = x.Id,
-                    name = x.Name, 
-                    code = x.Code, 
-                    sku = x.SKU, 
-                    url = Url.Content (x.Photo),
-                    price = (pl == 1 ? x.Price1 : (pl == 2 ? x.Price2 : (pl == 3 ? x.Price3 : x.Price4))).ToString ("c")
-                };
-                
-				items.Add (item);
-			}
-
-			return Json (items, JsonRequestBehavior.AllowGet);
+			int pl = FiscalDocument.Queryable.Where(x => x.Id == id)
+					.Select(x => x.Customer.PriceList.Id)
+					.Single();
+			var qry = from x in ProductPrice.Queryable
+					where x.List.Id == pl ||
+						x.Product.Name.Contains (pattern) ||
+						x.Product.Code.Contains (pattern) ||
+						x.Product.SKU.Contains (pattern)
+					orderby x.Product.Name
+					select new {
+						id = x.Product.Id,
+						name = x.Product.Name, 
+						code = x.Product.Code, 
+						sku = x.Product.SKU, 
+						url = Url.Content(x.Product.Photo),
+						price = x.Price
+					};
+			
+			return Json (qry.Take(15), JsonRequestBehavior.AllowGet);
 		}
 
 		public JsonResult GetOrders (string pattern)

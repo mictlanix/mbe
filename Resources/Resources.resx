@@ -261,18 +261,6 @@
   <data name="Photo" xml:space="preserve">
     <value>Foto</value>
   </data>
-  <data name="Price1" xml:space="preserve">
-    <value>Mostrador</value>
-  </data>
-  <data name="Price2" xml:space="preserve">
-    <value>Supermostrador</value>
-  </data>
-  <data name="Price3" xml:space="preserve">
-    <value>Mayoreo</value>
-  </data>
-  <data name="Price4" xml:space="preserve">
-    <value>Especial</value>
-  </data>
   <data name="Reference" xml:space="preserve">
     <value>Referencia</value>
   </data>
@@ -434,15 +422,6 @@
   </data>
   <data name="Prices" xml:space="preserve">
     <value>Precios</value>
-  </data>
-  <data name="Price5" xml:space="preserve">
-    <value>Precio x Kg</value>
-  </data>
-  <data name="Price6" xml:space="preserve">
-    <value>Precio x Mts</value>
-  </data>
-  <data name="Price7" xml:space="preserve">
-    <value>Precio x Pieza</value>
   </data>
   <data name="Message_DeleteConfirmation" xml:space="preserve">
     <value>¿Está seguro de borrar esto?</value>

@@ -173,7 +173,7 @@ ul.list-items {
     margin-bottom:0px;
 }
 ul.list-items li:hover {
-  background:AliceBlue ;
+  background:AliceBlue;
 }
 ul.list-items li:first-child {
   border-top:1px solid #ddd;
@@ -273,4 +273,22 @@ li div.value.name {
   margin:20px 0 2px;
   clear:both;
   text-align:right;
+}
+.tabular table, .tabular th, .tabular td {
+	margin:0;
+	padding:4px 5px;
+	border:none;
+	border-collapse:collapse;
+	line-height:1;
+}
+.tabular tr:nth-child(odd)  { background-color:AliceBlue; }
+//.tabular tr:nth-child(even) { background-color:AliceBlue; }
+.tabular th, .tabular td {
+	border-bottom:solid 1px #e8eef4;
+}
+.tabular tr:last-child th, .tabular tr:last-child td {
+	border-bottom:none;
+}
+td.tabular {
+	padding:0;
 }
