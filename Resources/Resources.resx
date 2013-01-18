@@ -1527,4 +1527,22 @@ Realizada el: {0:d}</value>
   <data name="ReceiptMessage" xml:space="preserve">
     <value>Mensaje</value>
   </data>
+  <data name="Pricing" xml:space="preserve">
+    <value>Precios</value>
+  </data>
+  <data name="BestSellingProducts" xml:space="preserve">
+    <value>Productos Mejor Vendidos</value>
+  </data>
+  <data name="BestSellingProductsByCustomer" xml:space="preserve">
+    <value>Productos Mejor Vendidos por Cliente</value>
+  </data>
+  <data name="BestSellingProductsBySalesPerson" xml:space="preserve">
+    <value>Productos Mejor Vendidos por Vendedor</value>
+  </data>
+  <data name="ChooseEmployee" xml:space="preserve">
+    <value>Seleccione un empleado</value>
+  </data>
+  <data name="ChooseCustomer" xml:space="preserve">
+    <value>Seleccione un cliente</value>
+  </data>
 </root>

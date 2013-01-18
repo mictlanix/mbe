@@ -11,24 +11,21 @@
 
 <table>
     <tr>
-        <th>
-            @Html.LabelFor(x => new Kardex().Product)
-        </th>
-        <th>
-            @Html.LabelFor(x => new Kardex().Quantity)
-        </th>
+        <th>@Html.LabelFor(x => new Kardex().Product.Code)</th>
+        <th>@Html.LabelFor(x => new Kardex().Product.SKU)</th>
+        <th>@Html.LabelFor(x => new Kardex().Product)</th>
+        <th>@Html.LabelFor(x => new Kardex().Product.UnitOfMeasurement)</th>
+        <th>@Html.LabelFor(x => new Kardex().Quantity)</th>
         <th></th>
-        
     </tr>
 @foreach (var item in Model.Details)
 {
     <tr>
-        <td>
-            @Html.DisplayFor(x => item.Product.Name)
-        </td>
-        <td class="number">
-            @Html.DisplayFor(x => item.Quantity)
-        </td>
+        <td class="center">@Html.DisplayFor(x => item.Product.Code)</td>
+        <td class="center">@Html.DisplayFor(x => item.Product.SKU)</td>
+        <td>@Html.DisplayFor(x => item.Product.Name)</td>
+        <td class="center">@Html.DisplayFor(x => item.Product.UnitOfMeasurement)</td>
+        <td class="number">@Html.DisplayFor(x => item.Quantity)</td>
         <td class="actions">
             @Html.ActionLink(" ", "KardexDetails", new { warehouse = Model.Master.Id, product = item.Product.Id }, new { @class = "button icon view icon-only", title = Resources.Details, target = "_blank" })
         </td>
