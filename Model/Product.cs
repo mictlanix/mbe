@@ -137,7 +137,7 @@ namespace Mictlanix.BE.Model
         [Display(Name = "Supplier", ResourceType = typeof(Resources))]
         public virtual Supplier Supplier { get; set; }
 
-		[HasMany(typeof(ProductPrice), Table = "product_price", ColumnKey = "product")]
+		[HasMany(typeof(ProductPrice), Table = "product_price", ColumnKey = "product", Lazy = true)]
 		public IList<ProductPrice> Prices
 		{
 			get { return prices; }

@@ -44,7 +44,7 @@ namespace Mictlanix.BE.Model
 
         [PrimaryKey(PrimaryKeyType.Identity, "inventory_transfer_id")]
         [Display(Name = "InventoryTransferId", ResourceType = typeof(Resources))]
-        [DisplayFormat(DataFormatString = "{0:000000}")]
+		[DisplayFormat(DataFormatString = "{0:D8}")]
         public int Id { get; set; }
 
         [Property("creation_time")]

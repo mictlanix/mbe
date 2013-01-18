@@ -5,13 +5,11 @@
 @model Search<Product>
 
 @{
-    ViewBag.Title = Resources.Title_Product;
-    var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Products);
+    ViewBag.Title = Resources.Pricing;
 }
 <script src="@Url.Content("~/Scripts/jquery.jeditable.mini.js")" type="text/javascript"></script>
 
-<h2>@Resources.DisplayName_Products</h2>
+<h2>@Resources.Pricing</h2>
 
 @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))
 {
@@ -36,8 +34,3 @@
 <div id="search-results">
     @Html.Partial("_Index")
 </div>
-<script type="text/javascript">
-    function onSearchBegin() {
-        $("#search-results").html(null);
-    }
-</script>

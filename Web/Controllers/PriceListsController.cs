@@ -79,7 +79,6 @@ namespace Mictlanix.BE.Web.Controllers
         {
             if (search.Pattern == null) {
                 var qry = from x in PriceList.Queryable
-                          orderby x.Name
                           select x;
 
                 search.Total = qry.Count();
@@ -122,7 +121,10 @@ namespace Mictlanix.BE.Web.Controllers
         {
             if (!ModelState.IsValid)
             	return View(item);
-            
+			
+			item.LowProfitMargin /= 100m;
+			item.HighProfitMargin /= 100m;
+
 			using (var scope = new TransactionScope ()) {
             	item.CreateAndFlush ();
 			}
@@ -135,7 +137,11 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Edit (int id)
         {
-            PriceList item = PriceList.Find (id);
+			var item = PriceList.Find (id);
+			
+			item.LowProfitMargin *= 100m;
+			item.HighProfitMargin *= 100m;
+
             return View (item);
         }
 
@@ -148,6 +154,9 @@ namespace Mictlanix.BE.Web.Controllers
             if (!ModelState.IsValid)
             	return View (item);
             
+			item.LowProfitMargin /= 100m;
+			item.HighProfitMargin /= 100m;
+
 			using (var scope = new TransactionScope ()) {
             	item.UpdateAndFlush ();
 			}
@@ -160,7 +169,7 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Delete(int id)
         {
-            PriceList item = PriceList.Find(id);
+            var item = PriceList.Find(id);
             return View(item);
         }
 
@@ -170,7 +179,7 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            PriceList item = PriceList.Find (id);
+			var item = PriceList.Find (id);
             
 			using (var scope = new TransactionScope ()) {
             	item.DeleteAndFlush ();

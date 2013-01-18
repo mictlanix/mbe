@@ -46,18 +46,18 @@ namespace Mictlanix.BE.Model
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string Name { get; set; }
+		
+		[Property("low_profit_margin")]
+		[DisplayFormat(DataFormatString = "{0:p}")]
+		[Display(Name = "LowProfitMargin", ResourceType = typeof(Resources))]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		public decimal LowProfitMargin { get; set; }
 
         [Property("high_profit_margin")]
         [DisplayFormat(DataFormatString = "{0:p}")]
         [Display(Name = "HighProfitMargin", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         public decimal HighProfitMargin { get; set; }
-
-        [Property("low_profit_margin")]
-        [DisplayFormat(DataFormatString = "{0:p}")]
-        [Display(Name = "LowProfitMargin", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        public decimal LowProfitMargin { get; set; }
 
         #region Override Base Methods
 

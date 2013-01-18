@@ -64,7 +64,11 @@ namespace Mictlanix.BE.Web
 
 			if (my_culture != null) {
 				my_culture.NumberFormat.CurrencyDecimalSeparator = ".";
+				my_culture.NumberFormat.CurrencyGroupSeparator = ",";
 				my_culture.NumberFormat.NumberDecimalSeparator = ".";
+				my_culture.NumberFormat.NumberGroupSeparator = ",";
+				my_culture.NumberFormat.PercentDecimalSeparator = ".";
+				my_culture.NumberFormat.PercentGroupSeparator = ",";
 			}
 		}
 		

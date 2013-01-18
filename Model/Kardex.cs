@@ -68,12 +68,12 @@ namespace Mictlanix.BE.Model
 
 		[Property]
         [Display(Name = "Reference", ResourceType = typeof(Resources))]
+		[DisplayFormat(DataFormatString="{0:D8}")]
         public virtual int Reference { get; set; }
 
 		[Property]
         [Display(Name = "Source", ResourceType = typeof(Resources))]
         public virtual TransactionType Source { get; set; }
-
 
         #region Override Base Methods
 

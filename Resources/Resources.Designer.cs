@@ -4277,5 +4277,41 @@ namespace Mictlanix.BE {
 				return ResourceManager.GetString("ReceiptMessage", resourceCulture);
 			}
 		}
+
+		public static string Pricing {
+			get {
+				return ResourceManager.GetString("Pricing", resourceCulture);
+			}
+		}
+		
+		public static string BestSellingProducts {
+			get {
+				return ResourceManager.GetString("BestSellingProducts", resourceCulture);
+			}
+		}
+		
+		public static string BestSellingProductsByCustomer {
+			get {
+				return ResourceManager.GetString("BestSellingProductsByCustomer", resourceCulture);
+			}
+		}
+		
+		public static string BestSellingProductsBySalesPerson {
+			get {
+				return ResourceManager.GetString("BestSellingProductsBySalesPerson", resourceCulture);
+			}
+		}
+		
+		public static string ChooseEmployee {
+			get {
+				return ResourceManager.GetString("ChooseEmployee", resourceCulture);
+			}
+		}
+		
+		public static string ChooseCustomer {
+			get {
+				return ResourceManager.GetString("ChooseCustomer", resourceCulture);
+			}
+		}
     }
 }

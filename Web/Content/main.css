@@ -141,9 +141,6 @@ table {
     border:1px solid #DEDEDE;
     border-collapse:collapse;
 }
-table.noborder {
-    border:none;
-}
 table td {
     padding:5px;
     border:solid 1px #e8eef4;
@@ -153,6 +150,9 @@ table th {
     font-weight:normal;
     text-align:center;
     color:#DD4B39;
+}
+table.noborder, table.noborder td {
+    border:none;
 }
 table th label {
     color:#DD4B39;

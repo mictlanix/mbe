@@ -44,7 +44,7 @@ namespace Mictlanix.BE.Model
 
         [PrimaryKey(PrimaryKeyType.Identity, "sales_order_id")]
         [Display(Name = "SalesOrderId", ResourceType = typeof(Resources))]
-        [DisplayFormat(DataFormatString="{0:000000}")]
+		[DisplayFormat(DataFormatString="{0:D8}")]
         public virtual int Id { get; set; }
 		
         [Property("creation_time")]
@@ -71,7 +71,7 @@ namespace Mictlanix.BE.Model
 		
 		[Property("serial")]
 		[Display(Name = "Serial", ResourceType = typeof(Resources))]
-		[DisplayFormat(DataFormatString="{0:000000}")]
+		[DisplayFormat(DataFormatString="{0:D8}")]
 		public virtual int Serial { get; set; }
 
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
@@ -187,7 +187,7 @@ namespace Mictlanix.BE.Model
 
         public override string ToString()
         {
-            return string.Format("{0:000000} [{1}, {2}, {3}]", Id, Customer, Date, SalesPerson);
+			return string.Format("{0:D8} [{1}, {2}, {3}]", Id, Customer, Date, SalesPerson);
         }
 
         public override bool Equals(object obj)
