@@ -30,7 +30,7 @@
             @Html.DisplayFor(x => item.Date)
         </td>
         <td >
-            @item.Source.GetDisplayName()
+            @item.Source.GetDisplayName() (@Html.DisplayFor(x => item.Reference))
         </td>
         <td class="number">
             @if (item.Quantity > 0) {

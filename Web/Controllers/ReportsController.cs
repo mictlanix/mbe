@@ -43,6 +43,8 @@ namespace Mictlanix.BE.Web.Controllers
 {
     public class ReportsController : Controller
     {
+		#region Kardex
+		
 		public ViewResult Kardex ()
 		{
 			return View ();
@@ -51,6 +53,7 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult Kardex(Warehouse item)
         {
+			var warehouse = Warehouse.Find (item.Id);
             var qry = from x in Model.Kardex.Queryable
                       where x.Warehouse.Id == item.Id
 					  group x by x.Product into g
@@ -59,9 +62,10 @@ namespace Mictlanix.BE.Web.Controllers
 						Quantity = g.Sum(y => y.Quantity)
 					  };
 
-            var warehouse = Warehouse.Find(item.Id);
-
-			return PartialView("_Kardex", new MasterDetails<Warehouse, Kardex> { Master = warehouse , Details = qry.ToList() });
+			return PartialView("_Kardex", new MasterDetails<Warehouse, Kardex> { 
+				Master = warehouse,
+				Details = qry.ToList().OrderBy(x => x.Product.Name).ToList()
+			});
         }
 
 		public ViewResult KardexDetails(int warehouse, int product)
@@ -82,10 +86,15 @@ namespace Mictlanix.BE.Web.Controllers
             var qry = from x in Model.Kardex.Queryable
                       where x.Warehouse.Id == warehouse && x.Product.Id == product &&
                             x.Date >= item.StartDate.Date && x.Date <= item.EndDate.Date.Add(new TimeSpan(23, 59, 59))
+					  orderby x.Date
                       select x;
-          
+
 			return PartialView("_KardexDetails", qry.ToList());
         }
+
+		#endregion
+
+		#region Sales History
 
 		public ViewResult SalesOrdersHistoric ()
 		{
@@ -129,6 +138,10 @@ namespace Mictlanix.BE.Web.Controllers
 			return search;
 		}
 
+		#endregion
+
+		#region Payments
+
 		public ViewResult ReceivedPayments ()
 		{
 			return View (new DateRange(DateTime.Now, DateTime.Now));
@@ -155,9 +168,15 @@ namespace Mictlanix.BE.Web.Controllers
 
 			return PartialView("_ReceivedPayments", qry.ToList());
 		}
-		
+
+		#endregion
+
+		#region Sales
+
 		public ViewResult SalesByCustomer ()
 		{
+			ViewBag.EditorField = "store";
+			ViewBag.EditorTemplate = "StoreSelector";
 			ViewBag.Title = Resources.SalesByCustomer;
 			return View ("SummaryReport", new DateRange(DateTime.Now, DateTime.Now));
 		}
@@ -168,19 +187,20 @@ namespace Mictlanix.BE.Web.Controllers
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var qry = from x in SalesOrder.Queryable
-						where x.Store.Id == store &&
-							x.IsCompleted &&
-							x.IsPaid &&
-							!x.IsCancelled &&
-							x.Date >= start &&
-							x.Date <= end
-						select new {
-							Id = x.Customer.Id,
-							Name = x.Customer.Name,
-							Units = x.Details.Sum(y => y.Quantity),
-							Total = x.Details.Sum(y => y.Quantity * y.Price),
-							Taxes = x.Details.Sum(y => y.Quantity * y.Price * y.TaxRate)
-						};
+					from y in x.Details
+					where x.Store.Id == store &&
+						x.IsCompleted &&
+						x.IsPaid &&
+						!x.IsCancelled &&
+						x.Date >= start &&
+						x.Date <= end
+					select new {
+						Id = x.Customer.Id,
+						Name = x.Customer.Name,
+						Units = y.Quantity,
+						Total = y.Quantity * y.Price,
+						Subtotal = y.Quantity * y.Price / (y.TaxRate + 1m)
+					};
 			var qry2 = from x in qry.ToList()
 						group x by new { x.Id, x.Name } into g
 						select new SummaryItem {
@@ -188,7 +208,7 @@ namespace Mictlanix.BE.Web.Controllers
 							Name = g.Key.Name,
 							Units = g.Sum(x => x.Units),
 							Total = g.Sum(x => x.Total),
-							Taxes = g.Sum(x => x.Taxes)
+							Subtotal = g.Sum(x => x.Subtotal)
 						};
 			var items = qry2.OrderByDescending (x => x.Total).ToList();
 
@@ -199,6 +219,8 @@ namespace Mictlanix.BE.Web.Controllers
 
 		public ViewResult SalesBySalesPerson ()
 		{
+			ViewBag.EditorField = "store";
+			ViewBag.EditorTemplate = "StoreSelector";
 			ViewBag.Title =  Resources.SalesBySalesPerson;
 			return View ("SummaryReport", new DateRange(DateTime.Now, DateTime.Now));
 		}
@@ -209,28 +231,29 @@ namespace Mictlanix.BE.Web.Controllers
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var qry = from x in SalesOrder.Queryable
-						where x.Store.Id == store &&
-							x.IsCompleted &&
-							x.IsPaid &&
-							!x.IsCancelled &&
-							x.Date >= start &&
-							x.Date <= end
-						select new {
-							Id = x.SalesPerson.Id,
-							Name = x.SalesPerson.FirstName + " " + x.SalesPerson.LastName,
-							Units = x.Details.Sum(y => y.Quantity),
-							Total = x.Details.Sum(y => y.Quantity * y.Price),
-							Taxes = x.Details.Sum(y => y.Quantity * y.Price * y.TaxRate)
-						};
+					from y in x.Details
+					where x.Store.Id == store &&
+						x.IsCompleted &&
+						x.IsPaid &&
+						!x.IsCancelled &&
+						x.Date >= start &&
+						x.Date <= end
+					select new {
+						Id = x.SalesPerson.Id,
+						Name = x.SalesPerson.FirstName + " " + x.SalesPerson.LastName,
+						Units = y.Quantity,
+						Total = y.Quantity * y.Price,
+						Subtotal = y.Quantity * y.Price / (y.TaxRate + 1m)
+					};
 			var qry2 = from x in qry.ToList()
-						group x by new { x.Id, x.Name } into g
-						select new SummaryItem {
-							Id = g.Key.Id.ToString (),
-							Name = g.Key.Name,
-							Units = g.Sum(x => x.Units),
-							Total = g.Sum(x => x.Total),
-							Taxes = g.Sum(x => x.Taxes)
-						};
+					group x by new { x.Id, x.Name } into g
+					select new SummaryItem {
+						Id = g.Key.Id.ToString (),
+						Name = g.Key.Name,
+						Units = g.Sum(x => x.Units),
+						Total = g.Sum(x => x.Total),
+						Subtotal = g.Sum(x => x.Subtotal)
+					};
 			var items = qry2.OrderByDescending (x => x.Total).ToList();
 
 			AnalyzeABC (items);
@@ -240,6 +263,8 @@ namespace Mictlanix.BE.Web.Controllers
 		
 		public ViewResult SalesByProduct ()
 		{
+			ViewBag.EditorField = "store";
+			ViewBag.EditorTemplate = "StoreSelector";
 			ViewBag.Title =  Resources.SalesByProduct;
 			return View ("SummaryReport", new DateRange(DateTime.Now, DateTime.Now));
 		}
@@ -262,7 +287,7 @@ namespace Mictlanix.BE.Web.Controllers
 							Name = y.ProductName,
 							Units = y.Quantity,
 							Total = y.Quantity * y.Price,
-							Taxes = y.Quantity * y.Price * y.TaxRate
+							Subtotal = y.Quantity * y.Price / (y.TaxRate + 1m)
 						};
 			var qry2 = from x in qry.ToList()
 						group x by new { x.Id, x.Name } into g
@@ -271,7 +296,7 @@ namespace Mictlanix.BE.Web.Controllers
 							Name = g.Key.Name,
 							Units = g.Sum(x => x.Units),
 							Total = g.Sum(x => x.Total),
-							Taxes = g.Sum(x => x.Taxes),
+							Subtotal = g.Sum(x => x.Subtotal)
 						};
 			var items = qry2.OrderByDescending (x => x.Total).ToList();
 			
@@ -280,8 +305,14 @@ namespace Mictlanix.BE.Web.Controllers
 			return PartialView("_SummaryReport", items);
 		}
 
+		#endregion
+
+		#region Gross Profits
+
 		public ViewResult GrossProfitsByCustomer ()
 		{
+			ViewBag.EditorField = "store";
+			ViewBag.EditorTemplate = "StoreSelector";
 			ViewBag.Title = Resources.GrossProfitsByCustomer;
 			return View ("SummaryReport", new DateRange(DateTime.Now, DateTime.Now));
 		}
@@ -292,19 +323,20 @@ namespace Mictlanix.BE.Web.Controllers
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var qry = from x in SalesOrder.Queryable
-						where x.Store.Id == store &&
-							x.IsCompleted &&
-							x.IsPaid &&
-							!x.IsCancelled &&
-							x.Date >= start &&
-							x.Date <= end
-						select new {
-							Id = x.Customer.Id,
-							Name = x.Customer.Name,
-							Units = x.Details.Sum(y => y.Quantity),
-							Total = x.Details.Sum(y => y.Quantity * (y.Price - y.Product.Cost)),
-							Taxes = x.Details.Sum(y => y.Quantity * (y.Price - y.Product.Cost) * y.TaxRate)
-						};
+					from y in x.Details
+					where x.Store.Id == store &&
+						x.IsCompleted &&
+						x.IsPaid &&
+						!x.IsCancelled &&
+						x.Date >= start &&
+						x.Date <= end
+					select new {
+						Id = x.Customer.Id,
+						Name = x.Customer.Name,
+						Units = y.Quantity,
+						Total = y.Quantity * (y.Price - y.Product.Cost),
+						Subtotal = y.Quantity * (y.Price - y.Product.Cost) / (y.TaxRate + 1m)
+					};
 			var qry2 = from x in qry.ToList()
 						group x by new { x.Id, x.Name } into g
 						select new SummaryItem {
@@ -312,7 +344,7 @@ namespace Mictlanix.BE.Web.Controllers
 							Name = g.Key.Name,
 							Units = g.Sum(x => x.Units),
 							Total = g.Sum(x => x.Total),
-							Taxes = g.Sum(x => x.Taxes)
+							Subtotal = g.Sum(x => x.Subtotal)
 						};
 			var items = qry2.OrderByDescending (x => x.Total).ToList();
 			
@@ -323,6 +355,8 @@ namespace Mictlanix.BE.Web.Controllers
 		
 		public ViewResult GrossProfitsBySalesPerson ()
 		{
+			ViewBag.EditorField = "store";
+			ViewBag.EditorTemplate = "StoreSelector";
 			ViewBag.Title = Resources.GrossProfitsBySalesPerson;
 			return View ("SummaryReport", new DateRange(DateTime.Now, DateTime.Now));
 		}
@@ -333,19 +367,20 @@ namespace Mictlanix.BE.Web.Controllers
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var qry = from x in SalesOrder.Queryable
-						where x.Store.Id == store &&
-							x.IsCompleted &&
-							x.IsPaid &&
-							!x.IsCancelled &&
-							x.Date >= start &&
-							x.Date <= end
-						select new {
-							Id = x.SalesPerson.Id,
-							Name = x.SalesPerson.FirstName + " " + x.SalesPerson.LastName,
-							Units = x.Details.Sum(y => y.Quantity),
-							Total = x.Details.Sum(y => y.Quantity * (y.Price - y.Product.Cost)),
-							Taxes = x.Details.Sum(y => y.Quantity * (y.Price - y.Product.Cost) * y.TaxRate)
-						};
+					from y in x.Details
+					where x.Store.Id == store &&
+						x.IsCompleted &&
+						x.IsPaid &&
+						!x.IsCancelled &&
+						x.Date >= start &&
+						x.Date <= end
+					select new {
+						Id = x.SalesPerson.Id,
+						Name = x.SalesPerson.FirstName + " " + x.SalesPerson.LastName,
+						Units = y.Quantity,
+						Total = y.Quantity * (y.Price - y.Product.Cost),
+						Subtotal = y.Quantity * (y.Price - y.Product.Cost) / (y.TaxRate + 1m)
+					};
 			var qry2 = from x in qry.ToList()
 						group x by new { x.Id, x.Name } into g
 						select new SummaryItem {
@@ -353,7 +388,7 @@ namespace Mictlanix.BE.Web.Controllers
 							Name = g.Key.Name,
 							Units = g.Sum(x => x.Units),
 							Total = g.Sum(x => x.Total),
-							Taxes = g.Sum(x => x.Taxes)
+							Subtotal = g.Sum(x => x.Subtotal)
 						};
 			var items = qry2.OrderByDescending (x => x.Total).ToList();
 			
@@ -364,6 +399,8 @@ namespace Mictlanix.BE.Web.Controllers
 
 		public ViewResult GrossProfitsByProduct ()
 		{
+			ViewBag.EditorField = "store";
+			ViewBag.EditorTemplate = "StoreSelector";
 			ViewBag.Title = Resources.GrossProfitsByProduct;
 			return View ("SummaryReport", new DateRange(DateTime.Now, DateTime.Now));
 		}
@@ -386,7 +423,7 @@ namespace Mictlanix.BE.Web.Controllers
 							Name = y.ProductName,
 							Units = y.Quantity,
 							Total = y.Quantity * (y.Price - y.Product.Cost),
-							Taxes = y.Quantity * (y.Price - y.Product.Cost) * y.TaxRate
+							Subtotal = y.Quantity * (y.Price - y.Product.Cost) / (y.TaxRate + 1m)
 						};
 			var qry2 = from x in qry.ToList()
 						group x by new { x.Id, x.Name } into g
@@ -395,7 +432,7 @@ namespace Mictlanix.BE.Web.Controllers
 							Name = g.Key.Name,
 							Units = g.Sum(x => x.Units),
 							Total = g.Sum(x => x.Total),
-							Taxes = g.Sum(x => x.Taxes),
+							Subtotal = g.Sum(x => x.Subtotal),
 						};
 			var items = qry2.OrderByDescending (x => x.Total).ToList();
 			
@@ -404,6 +441,102 @@ namespace Mictlanix.BE.Web.Controllers
 			return PartialView("_SummaryReport", items);
 		}
 
+		#endregion
+
+		#region Best Selling Products
+
+		public ViewResult BestSellingProductsByCustomer ()
+		{
+			ViewBag.EditorField = "customer";
+			ViewBag.EditorTemplate = "CustomerSelector";
+			ViewBag.Title = Resources.BestSellingProductsByCustomer;
+			return View ("SummaryReport", new DateRange(DateTime.Now, DateTime.Now));
+		}
+		
+		[HttpPost]
+		public ActionResult BestSellingProductsByCustomer (int customer, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var qry = from x in SalesOrder.Queryable
+						from y in x.Details
+						where x.Customer.Id == customer &&
+							x.IsCompleted &&
+							x.IsPaid &&
+							!x.IsCancelled &&
+							x.Date >= start &&
+							x.Date <= end
+						select new {
+							Id = y.ProductCode,
+							Name = y.ProductName,
+							Units = y.Quantity,
+							Total = y.Quantity * y.Price,
+							Subtotal = y.Quantity * y.Price / (y.TaxRate + 1m)
+						};
+			var qry2 = from x in qry.ToList()
+						group x by new { x.Id, x.Name } into g
+						select new SummaryItem {
+							Id = g.Key.Id,
+							Name = g.Key.Name,
+							Units = g.Sum(x => x.Units),
+							Total = g.Sum(x => x.Total),
+							Subtotal = g.Sum(x => x.Subtotal),
+						};
+			var items = qry2.OrderByDescending (x => x.Total).ToList();
+			
+			AnalyzeABC (items);
+			
+			return PartialView("_SummaryReport", items);
+		}
+		
+		public ViewResult BestSellingProductsBySalesPerson ()
+		{
+			ViewBag.EditorField = "employee";
+			ViewBag.EditorTemplate = "EmployeeSelector";
+			ViewBag.Title = Resources.BestSellingProductsBySalesPerson;
+			return View ("SummaryReport", new DateRange(DateTime.Now, DateTime.Now));
+		}
+		
+		[HttpPost]
+		public ActionResult BestSellingProductsBySalesPerson (int employee, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var qry = from x in SalesOrder.Queryable
+					from y in x.Details
+					where x.SalesPerson.Id == employee &&
+						x.IsCompleted &&
+						x.IsPaid &&
+						!x.IsCancelled &&
+						x.Date >= start &&
+						x.Date <= end
+					select new {
+						Id = y.ProductCode,
+						Name = y.ProductName,
+						Units = y.Quantity,
+						Total = y.Quantity * y.Price,
+						Subtotal = y.Quantity * y.Price / (y.TaxRate + 1m)
+					};
+			var qry2 = from x in qry.ToList()
+					group x by new { x.Id, x.Name } into g
+					select new SummaryItem {
+						Id = g.Key.Id,
+						Name = g.Key.Name,
+						Units = g.Sum(x => x.Units),
+						Total = g.Sum(x => x.Total),
+						Subtotal = g.Sum(x => x.Subtotal)
+					};
+			var items = qry2.OrderByDescending (x => x.Total).ToList();
+			
+			AnalyzeABC (items);
+			
+			return PartialView("_SummaryReport", items);
+		}
+
+		#endregion
+		
+		#region Helpers
+		
 		void AnalyzeABC (IEnumerable<SummaryItem> items)
 		{
 			decimal total = items.Sum(x => x.Total);
@@ -425,5 +558,7 @@ namespace Mictlanix.BE.Web.Controllers
 				}
 			}
 		}
+		
+		#endregion
 	}
 }

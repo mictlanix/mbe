@@ -6,7 +6,7 @@
 
 @{
     var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Products);
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.PriceLists);
 }
 
 <p>@Html.ValidationMessageFor(x => x.Pattern)</p>
@@ -30,7 +30,6 @@
         	@Resources.Cost / @Resources.Prices
         </th>
     </tr>
-
 @foreach (var item in Model.Results)
 {
     <tr>
@@ -43,14 +42,13 @@
             <table>
             	<tr>
             		<th class="right">@Resources.Cost</th>
-            		<td class="number">@Html.DisplayFor(x => item.Cost)</td>
+            		<td class="number cost" data-product="@item.Id">@Html.DisplayFor(x => item.Cost)</td>
             	</tr>
             @foreach(var p in ViewBag.PriceLists) {
-				var price = item.Prices.SingleOrDefault(x => x.List.Id == p.Id) ??
-							new ProductPrice { List = new PriceList() };
+				var price = item.Prices.SingleOrDefault(x => x.List.Id == p.Id) ?? new ProductPrice ();
             	<tr>
             		<th class="right nowrap">@p.Name</th>
-            		<td class="number editable" data-product="@item.Id" data-list="@price.List.Id">@Html.DisplayFor(x => price.Price)</td>
+            		<td class="number price" data-product="@item.Id" data-list="@p.Id">@Html.DisplayFor(x => price.Price)</td>
             	</tr>
         	}
             </table>
@@ -59,48 +57,61 @@
 }
 </table>
 <div class="buttons right">
-	<label class="button left">@Model.ToString()</label>@if (Model.HasPrev) {<a class="button middle icon prev icon-only" title="@Resources.PrevPage" href="javascript:void(0)"></a>}@if (Model.HasNext) {<a class="button right icon next icon-only" title="@Resources.NextPage" href="javascript:void(0)"></a>}
+	<label class="button left">@Model.ToString()</label>@if (Model.HasPrev) {<a class="button middle icon prev icon-only paging" title="@Resources.PrevPage" href="javascript:void(0)"></a>}@if (Model.HasNext) {<a class="button right icon next icon-only paging" title="@Resources.NextPage" href="javascript:void(0)"></a>}
 </div>
 <script type="text/javascript">
     $(function () {
-		$('.editable').editable(function(value, settings) { 
-		     console.log(this);
-		     console.log($(this).data("product"));
-		     console.log($(this).data("list"));
-		     console.log(value);
-		     console.log(settings);
-		     return value;
+@if(Privilege.AllowUpdate) {
+<text>
+		$('.cost').addClass('editable').editable(function(value, settings) {
+			var e = $(this);
+			var product = e.data("product");
+			var result = "error";
+			
+	        $.ajaxSetup({ async: false });
+	        $.post('@Url.Action("EditCost")', { Id: product, Value: value }, function (data) {
+	            e.switchClass('editable', 'editable-ok').switchClass('editable-ok', 'editable', 3000);
+	            result = data.value;
+	        }, "json");
+	        $.ajaxSetup({ async: true });
+			
+			return result;
 		});
- 
-@if (Model.HasPrev)
-{
-<text>
-    	$('a.prev').click(function (e) {
+		$('.price').addClass('editable').editable(function(value, settings) {
+			var e = $(this);
+			var product = e.data("product");
+			var list = e.data("list");
+			var result = "error";
+			
+	        $.ajaxSetup({ async: false });
+	        $.post('@Url.Action("EditPrice")', { Product: product, List: list, Value: value }, function (data) {
+	            e.switchClass('editable', 'editable-ok').switchClass('editable-ok', 'editable', 3000);
+	            result = data.value;
+	        }, "json");
+	        $.ajaxSetup({ async: true });
+			
+			return result;
+		});
+ </text>
+ }
+    	$('a.paging').click(function (e) {
+  			var offset=@Model.Offset;
+    		
+  			if($(this).hasClass('next')) {
+  				offset+=@Model.Limit;
+  			} else {
+  				offset-=@Model.Limit;
+  			}
+  			
     		e.preventDefault();
     		$("#activity-indicator").show();
     		$("#search-results").hide();
-    		$.post("@Url.Action("Index")", { Pattern: "@Model.Pattern", Offset: "@(Model.Offset-Model.Limit)", Limit: "@Model.Limit" }, function(data) {
-				$("#search-results").html(data);
-				$("#search-results").show();
-				$("#activity-indicator").hide();
+    		
+    		$.post('@Url.Action("Index")', { Pattern: '@Model.Pattern', Offset: offset, Limit: @Model.Limit }, function(data) {
+				$('#search-results').html(data);
+				$('#search-results').show();
+				$('#activity-indicator').hide();
 			});
     	});
-</text>
-}
-@if (Model.HasNext)
-{
-<text>
-    	$('a.next').click(function (e) {
-    		e.preventDefault();
-    		$("#activity-indicator").show();
-    		$("#search-results").hide();
-    		$.post("@Url.Action("Index")", { Pattern: "@Model.Pattern", Offset: "@(Model.Offset+Model.Limit)", Limit: "@Model.Limit" }, function(data) {
-				$("#search-results").html(data);
-				$("#search-results").show();
-				$("#activity-indicator").hide();
-			});
-    	});
-</text>
-}
     });
 </script>

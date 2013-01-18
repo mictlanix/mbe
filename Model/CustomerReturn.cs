@@ -43,7 +43,7 @@ namespace Mictlanix.BE.Model
 
         [PrimaryKey(PrimaryKeyType.Identity, "customer_return_id")]
         [Display(Name = "ReturnOrderId", ResourceType = typeof(Resources))]
-        [DisplayFormat(DataFormatString = "{0:000000}")]
+		[DisplayFormat(DataFormatString = "{0:D8}")]
         public int Id { get; set; }
 		
 		[BelongsTo("store")]
@@ -52,7 +52,7 @@ namespace Mictlanix.BE.Model
 		
 		[Property("serial")]
 		[Display(Name = "Serial", ResourceType = typeof(Resources))]
-		[DisplayFormat(DataFormatString="{0:000000}")]
+		[DisplayFormat(DataFormatString="{0:D8}")]
 		public int Serial { get; set; }
 		
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]

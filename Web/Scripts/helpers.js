@@ -1,7 +1,7 @@
-﻿/// <reference path="jquery-1.5.1.js" />
-/// <reference path="jquery-ui.js" />
-
-$(function () {
+﻿$(function () {
     $.datepicker.setDefaults($.datepicker.regional["es"]);
     $('.date').datepicker({ dateFormat: "yy-mm-dd", changeYear: true });
 });
+function onSearchBegin() {
+    $("#search-results").html(null);
+}

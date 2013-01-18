@@ -10,14 +10,14 @@
                              Html.GetPrivilege(CurrentUser, SystemObjects.Suppliers).AllowRead ||
                              Html.GetPrivilege(CurrentUser, SystemObjects.Employees).AllowRead ||
                              Html.GetPrivilege(CurrentUser, SystemObjects.Warehouses).AllowRead ||
-                             Html.GetPrivilege(CurrentUser, SystemObjects.PriceLists).AllowRead ||
                              Html.GetPrivilege(CurrentUser, SystemObjects.PointsOfSale).AllowRead ||
                              Html.GetPrivilege(CurrentUser, SystemObjects.CashDrawers).AllowRead ||
                              Html.GetPrivilege(CurrentUser, SystemObjects.Stores).AllowRead;
     var ShowSalesMenu = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders).AllowRead ||
                         Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments).AllowRead ||
                         Html.GetPrivilege(CurrentUser, SystemObjects.CustomerReturns).AllowRead ||
-                        Html.GetPrivilege(CurrentUser, SystemObjects.SalesQuotes).AllowRead;
+                        Html.GetPrivilege(CurrentUser, SystemObjects.SalesQuotes).AllowRead ||
+                        Html.GetPrivilege(CurrentUser, SystemObjects.PriceLists).AllowRead;
     var ShowInventoryMenu = Html.GetPrivilege(CurrentUser, SystemObjects.InventoryReceipts).AllowRead ||
                             Html.GetPrivilege(CurrentUser, SystemObjects.InventoryIssues).AllowRead ||
                             Html.GetPrivilege(CurrentUser, SystemObjects.InventoryTransfers).AllowRead;
@@ -39,7 +39,9 @@
                           Html.GetPrivilege(CurrentUser, SystemObjects.SalesByProduct).AllowRead ||
                           Html.GetPrivilege(CurrentUser, SystemObjects.GrossProfitsByCustomer).AllowRead ||
                           Html.GetPrivilege(CurrentUser, SystemObjects.GrossProfitsBySalesPerson).AllowRead ||
-                          Html.GetPrivilege(CurrentUser, SystemObjects.GrossProfitsByProduct).AllowRead;
+                          Html.GetPrivilege(CurrentUser, SystemObjects.GrossProfitsByProduct).AllowRead ||
+                          Html.GetPrivilege(CurrentUser, SystemObjects.BestSellingProductsByCustomer).AllowRead ||
+                          Html.GetPrivilege(CurrentUser, SystemObjects.BestSellingProductsBySalesPerson).AllowRead;
 }
 
 <div id="gb">
@@ -107,13 +109,6 @@
                                    href="@Url.Action("Index", "Warehouses")">@Resources.Title_Warehouse</a>
                             </li>
                             }
-                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.PriceLists).AllowRead)
-                            {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "PriceLists") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "PriceLists")">@Resources.Title_PriceList</a>
-                            </li>
-                            }
                             @if (Html.GetPrivilege(CurrentUser, SystemObjects.Stores).AllowRead)
                             {
                             <li class="gbmtc">
@@ -153,6 +148,17 @@
                 <div id="sales-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
                     <div class="gbmc">
                         <ol class="gbmcc">
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.PriceLists).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "PriceLists") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "PriceLists")">@Resources.Title_PriceList</a>
+                            </li>
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "Pricing") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "Pricing")">@Resources.Pricing</a>
+                            </li>
+                            }
                             @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders).AllowRead)
                             {
                             <li class="gbmtc">
@@ -430,6 +436,20 @@
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("GrossProfitsByProduct", "Reports") ? "gbm0l" : "")"
                                    href="@Url.Action("GrossProfitsByProduct", "Reports")">@Resources.GrossProfitsByProduct</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.BestSellingProductsByCustomer).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("BestSellingProductsByCustomer", "Reports") ? "gbm0l" : "")"
+                                   href="@Url.Action("BestSellingProductsByCustomer", "Reports")">@Resources.BestSellingProductsByCustomer</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.BestSellingProductsBySalesPerson).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("BestSellingProductsBySalesPerson", "Reports") ? "gbm0l" : "")"
+                                   href="@Url.Action("BestSellingProductsBySalesPerson", "Reports")">@Resources.BestSellingProductsBySalesPerson</a>
                             </li>
                             }
                         </ol>

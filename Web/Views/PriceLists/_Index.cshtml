@@ -17,15 +17,12 @@
         <th>
             @Html.LabelFor(x => new PriceList().Name)
         </th>
-
-        <th>
-            @Html.LabelFor(x => new PriceList().HighProfitMargin)
-        </th>
-
         <th>
             @Html.LabelFor(x => new PriceList().LowProfitMargin)
         </th>
-        
+        <th>
+            @Html.LabelFor(x => new PriceList().HighProfitMargin)
+        </th>
         <th></th>
     </tr>
 
@@ -35,10 +32,10 @@
             @Html.DisplayFor(x => item.Name)
         </td>
         <td>
-            @Html.DisplayFor(x => item.HighProfitMargin)
+            @Html.DisplayFor(x => item.LowProfitMargin)
         </td>
         <td>
-            @Html.DisplayFor(x => item.LowProfitMargin)
+            @Html.DisplayFor(x => item.HighProfitMargin)
         </td>
         <td class="actions">
         	@if(Privilege.AllowUpdate)

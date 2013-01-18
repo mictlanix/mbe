@@ -13,14 +13,12 @@
     	<table class="noborder">
 	    	<tbody>
 		    	<tr>
-		    		<td>@Html.Editor("store", "StoreSelector")</td>
+		    		<td>@Html.Editor((string)ViewBag.EditorField, (string)ViewBag.EditorTemplate)</td>
 		    		<td class="actions">@Html.EditorFor(x => x.StartDate) - @Html.EditorFor(x => x.EndDate)</td>
+		    		<td class="actions"><button type="submit" class="icon search">@Resources.Search</button></td>
 		    	</tr>
 	    	</tbody>
     	</table>
-    </div>
-    <div class="action-buttons">
-        <button type="submit" class="icon search">@Resources.Search</button>
     </div>
 }
 </div>
@@ -29,13 +27,6 @@
 </div>
 <div id="search-results">
 </div>
-<script type="text/javascript">
-    function onSearchBegin() {
-        $("#search-results").html(null);
-    }
-</script>
 <style type="text/css">
-ul.token-input-list {
-  width:100%;
-}
+ul.token-input-list {width:100%;}
 </style>
