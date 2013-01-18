@@ -58,14 +58,14 @@ namespace Mictlanix.BE.Web.Models
 		public decimal Total { get; set; }
 		
 		[DataType(DataType.Currency)]
-		[Display(Name = "Taxes", ResourceType = typeof(Resources))]
-		public decimal Taxes { get; set; }
-
-		[DataType(DataType.Currency)]
 		[Display(Name = "Subtotal", ResourceType = typeof(Resources))]
-		public decimal Subtotal
+		public decimal Subtotal { get; set; }
+		
+		[DataType(DataType.Currency)]
+		[Display(Name = "Taxes", ResourceType = typeof(Resources))]
+		public decimal Taxes 
 		{
-			get { return Total - Taxes; }
+			get { return Total - Subtotal; }
 		}
 
 		[Display(Name = "Category", ResourceType = typeof(Resources))]

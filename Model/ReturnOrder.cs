@@ -43,7 +43,7 @@ namespace Mictlanix.BE.Model
 
         [PrimaryKey(PrimaryKeyType.Identity, "return_order_id")]
         [Display(Name = "ReturnOrderId", ResourceType = typeof(Resources))]
-        [DisplayFormat(DataFormatString = "{0:000000}")]
+		[DisplayFormat(DataFormatString = "{0:D8}")]
         public int Id { get; set; }
 
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]

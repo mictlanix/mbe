@@ -116,6 +116,10 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "GrossProfitsBySalesPerson", ResourceType = typeof(Resources))]
 		GrossProfitsBySalesPerson,
 		[Display(Name = "GrossProfitsByProduct", ResourceType = typeof(Resources))]
-		GrossProfitsByProduct
+		GrossProfitsByProduct,
+		[Display(Name = "BestSellingProductsByCustomer", ResourceType = typeof(Resources))]
+		BestSellingProductsByCustomer,
+		[Display(Name = "BestSellingProductsBySalesPerson", ResourceType = typeof(Resources))]
+		BestSellingProductsBySalesPerson
     }
 }

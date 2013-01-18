@@ -48,12 +48,12 @@
             <tr>
                 <th>@Resources.Module</th>
                 <th>
-                    @Html.CheckBox("Create")
-                    @Resources.Create
-                </th>
-                <th>
                     @Html.CheckBox("Read")
                     @Resources.Read
+                </th>
+                <th>
+                    @Html.CheckBox("Create")
+                    @Resources.Create
                 </th>
                 <th>
                     @Html.CheckBox("Update")
@@ -71,12 +71,12 @@
                     @(((SystemObjects)item).GetDisplayName())
                 </td>
                 <td>
-                    @Html.CheckBox(Enum.GetName(typeof(SystemObjects), item) + "Create",
-                                   Model.Privileges.Count(x => x.Object == (SystemObjects)item && (x.Privileges & AccessRight.Create) != 0) > 0)
-                </td>
-                <td>
                     @Html.CheckBox(Enum.GetName(typeof(SystemObjects), item) + "Read",
                                     Model.Privileges.Count(x => x.Object == (SystemObjects)item && (x.Privileges & AccessRight.Read) != 0) > 0)
+                </td>
+                <td>
+                    @Html.CheckBox(Enum.GetName(typeof(SystemObjects), item) + "Create",
+                                   Model.Privileges.Count(x => x.Object == (SystemObjects)item && (x.Privileges & AccessRight.Create) != 0) > 0)
                 </td>
                 <td>
                     @Html.CheckBox(Enum.GetName(typeof(SystemObjects), item) + "Update",

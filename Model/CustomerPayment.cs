@@ -65,7 +65,7 @@ namespace Mictlanix.BE.Model
 		
 		[Property("serial")]
 		[Display(Name = "Serial", ResourceType = typeof(Resources))]
-		[DisplayFormat(DataFormatString="{0:000000}")]
+		[DisplayFormat(DataFormatString="{0:D8}")]
 		public int Serial { get; set; }
 		
 		[BelongsTo("cash_session")]
