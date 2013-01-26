@@ -512,6 +512,7 @@
     <Content Include="Views\Pricing\Index.cshtml" />
     <Content Include="Views\Pricing\_Index.cshtml" />
     <Content Include="Scripts\helpers.js" />
+    <Content Include="Content\icons\prev-item.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />
@@ -747,7 +748,6 @@
     <Content Include="Views\Payments\CloseSessionConfirmed.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Content\icons\Thumbs.db" />
     <Content Include="Views\Products\_Details.cshtml" />
     <Content Include="Views\Products\_Index.cshtml" />
     <Content Include="Views\Sales\_SalesTicket.cshtml" />

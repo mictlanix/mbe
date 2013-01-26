@@ -831,7 +831,7 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult ConfirmTransfer(int id)
         {
-            var item = InventoryTransfer.Find(id);
+            var item = InventoryTransfer.TryFind (id);
 			
 			if (item == null || item.IsCompleted || item.IsCancelled)
 				return RedirectToAction("Transfers");
