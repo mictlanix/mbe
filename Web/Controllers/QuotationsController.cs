@@ -209,9 +209,9 @@ namespace Mictlanix.BE.Web.Controllers
         {
             var p = Product.Find (product);
 			var q = SalesQuote.Find (order);
+			int pl = q.Customer.PriceList.Id;
 			var price = (from x in ProductPrice.Queryable
-			             where x.Product.Id == product &&
-			             x.List.Id == q.Customer.PriceList.Id
+			             where x.Product.Id == product && x.List.Id == pl
 			             select x.Price).SingleOrDefault();
 
             var item = new SalesQuoteDetail {
@@ -330,10 +330,10 @@ namespace Mictlanix.BE.Web.Controllers
 			int pl = sales_order.Customer.PriceList.Id;
 			
 			var qry = from x in ProductPrice.Queryable
-					where x.List.Id == pl ||
+					where x.List.Id == pl && (
 						x.Product.Name.Contains (pattern) ||
 						x.Product.Code.Contains (pattern) ||
-						x.Product.SKU.Contains (pattern)
+						x.Product.SKU.Contains (pattern))
 					orderby x.Product.Name
 					select new {
 						id = x.Product.Id,

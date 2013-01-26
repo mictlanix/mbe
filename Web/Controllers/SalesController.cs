@@ -225,20 +225,20 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public JsonResult AddDetail (int order, int product)
         {
-			var order_entity = SalesOrder.Find (order);
-			var product_entity = Product.TryFind (product);
+			var s = SalesOrder.Find (order);
+			var p = Product.TryFind (product);
+			int pl = s.Customer.PriceList.Id;
 			var price = (from x in ProductPrice.Queryable
-			             where x.Product.Id == product &&
-			             x.List.Id == order_entity.Customer.Id
+			             where x.Product.Id == product && x.List.Id == pl
 			             select x.Price).SingleOrDefault();
 			
             var item = new SalesOrderDetail {
-				SalesOrder = order_entity,
-				Product = product_entity,
-				Warehouse = order_entity.PointOfSale.Warehouse,
-                ProductCode = product_entity.Code,
-                ProductName = product_entity.Name,
-                TaxRate = product_entity.TaxRate,
+				SalesOrder = s,
+				Product = p,
+				Warehouse = s.PointOfSale.Warehouse,
+                ProductCode = p.Code,
+                ProductName = p.Name,
+                TaxRate = p.TaxRate,
                 Quantity = 1,
 				Price = price
             };
@@ -434,10 +434,10 @@ namespace Mictlanix.BE.Web.Controllers
 			int pl = sales_order.Customer.PriceList.Id;
 
 			var qry = from x in ProductPrice.Queryable
-					  where x.List.Id == pl ||
+					  where x.List.Id == pl && (
 							x.Product.Name.Contains (pattern) ||
 							x.Product.Code.Contains (pattern) ||
-							x.Product.SKU.Contains (pattern)
+							x.Product.SKU.Contains (pattern))
 					  orderby x.Product.Name
 					  select new { 
 							id = x.Product.Id,

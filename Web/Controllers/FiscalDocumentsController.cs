@@ -400,9 +400,9 @@ namespace Mictlanix.BE.Web.Controllers
 		{
 			var p = Product.Find (product);
 			var f = FiscalDocument.Find (id);
+			int pl = f.Customer.PriceList.Id;
 			var price = (from x in ProductPrice.Queryable
-			             where x.Product.Id == product &&
-			             x.List.Id == f.Customer.PriceList.Id
+			             where x.Product.Id == product && x.List.Id == pl
 			             select x.Price).SingleOrDefault();
 
 			var item = new FiscalDocumentDetail {
@@ -651,10 +651,10 @@ namespace Mictlanix.BE.Web.Controllers
 					.Select(x => x.Customer.PriceList.Id)
 					.Single();
 			var qry = from x in ProductPrice.Queryable
-					where x.List.Id == pl ||
+					where x.List.Id == pl && (
 						x.Product.Name.Contains (pattern) ||
 						x.Product.Code.Contains (pattern) ||
-						x.Product.SKU.Contains (pattern)
+						x.Product.SKU.Contains (pattern))
 					orderby x.Product.Name
 					select new {
 						id = x.Product.Id,
