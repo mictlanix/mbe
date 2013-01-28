@@ -42,7 +42,7 @@ namespace Mictlanix.BE.Model
         {
         }
 
-        [PrimaryKey(PrimaryKeyType.Identity, "employee_id")]
+		[PrimaryKey(Column = "employee_id", Generator = PrimaryKeyType.Identity, UnsavedValue="-1")]
 		public virtual int Id { get; set; }
 
         [Property("first_name")]
@@ -86,6 +86,12 @@ namespace Mictlanix.BE.Model
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
 		public virtual DateTime StartJobDate { get; set; }
 		
+		[Property]
+		[DataType(DataType.MultilineText)]
+		[Display(Name = "Comment", ResourceType = typeof(Resources))]
+		[StringLength(500, MinimumLength = 0)]
+		public virtual string Comment { get; set; }
+
         #region Override Base Methods
 
         public override string ToString()

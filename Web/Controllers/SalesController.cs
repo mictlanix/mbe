@@ -441,9 +441,10 @@ namespace Mictlanix.BE.Web.Controllers
 					  orderby x.Product.Name
 					  select new { 
 							id = x.Product.Id,
-							name = x.Product.Name, 
-							code = x.Product.Code, 
-							sku = x.Product.SKU, 
+							name = x.Product.Name,
+							code = x.Product.Code,
+							model = x.Product.Model,
+							sku = x.Product.SKU,
 							url = Url.Content(x.Product.Photo),
 							price = x.Price
 					  };

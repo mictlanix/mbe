@@ -33,9 +33,9 @@ namespace Mictlanix.BE.Model
 {
     public enum GenderEnum : int
     {
+		[Display(Name = "Female", ResourceType = typeof(Resources))]
+		Female,
         [Display(Name = "Male", ResourceType = typeof(Resources))]
-        Male,
-        [Display(Name = "Female", ResourceType = typeof(Resources))]
-        Female
+        Male
     }
 }

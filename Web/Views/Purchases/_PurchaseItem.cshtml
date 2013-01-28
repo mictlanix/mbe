@@ -4,7 +4,6 @@
 @using Mictlanix.BE.Web.Helpers
 @model PurchaseOrderDetail
            
-
 <li id="item@(Model.Id)">
     <div class="photo">
         <img src="@Url.Content(Model.Product.Photo)" title="@Model.ProductName"/>
@@ -20,7 +19,8 @@
     </div>
     <div class="info">
         <b>@Model.ProductName</b><br/>
-        <b>@Resources.Code:</b> @Model.ProductCode 
+        <b>@Resources.Code:</b> @Model.ProductCode
+        <b>@Resources.Model:</b> @Model.Product.Model
         <b>@Resources.SKU:</b> @Model.Product.SKU<br/>
         <b>@Resources.Quantity:</b>
         <div class="editable quantity">@Model.Quantity.ToString("0.####")</div>
@@ -35,15 +35,3 @@
         &nbsp;
     </div>
 </li>
-
-@*<script type="text/javascript">
-    $(function () {
-        $(".editable_select").editable("@Url.Action("EditDetailWarehouse", "Purchases", new { id = Model.Id })",{
-            loadurl: "@Url.Action("List", "Warehouses", new { id = Model.Warehouse == null ? 0 : Model.Warehouse.Id })",
-            type: "select",
-            submit: "OK",
-            style: "inherit",
-            id: "warehouse"
-        });
-    });
-</script>*@
