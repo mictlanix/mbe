@@ -285,9 +285,10 @@ namespace Mictlanix.BE.Web.Controllers
 			foreach (var x in qry.Take(15)) {
 				var item = new { 
                     id = x.Id,
-                    name = x.Name, 
-                    code = x.Code, 
-                    sku = x.SKU, 
+                    name = x.Name,
+                    code = x.Code,
+					model = x.Model,
+                    sku = x.SKU,
                     url = Url.Content (x.Photo)
 				};
                 
