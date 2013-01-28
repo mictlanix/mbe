@@ -1,3 +1,8 @@
 
 -- data fix
 -- kardex fix
+
+-- invert gender
+UPDATE employee SET gender = 2 WHERE gender = 0;
+UPDATE employee SET gender = 0 WHERE gender = 1;
+UPDATE employee SET gender = 1 WHERE gender = 2;
