@@ -48,16 +48,11 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ViewResult Index()
         {
-            var qry = from x in Employee.Queryable
-                      orderby x.FirstName
-                      select x;
+            var search = new Search<Employee> {
+            	Limit = Configuration.PageSize
+			};
 
-            Search<Employee> search = new Search<Employee>();
-            search.Limit = Configuration.PageSize;
-            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            search.Total = qry.Count();
-
-            return View(search);
+			return View (GetEmployees(search));
         }
 
         // POST: /Employees/
@@ -78,23 +73,22 @@ namespace Mictlanix.BE.Web.Controllers
 
         Search<Employee> GetEmployees(Search<Employee> search)
         {
-            if (search.Pattern == null) {
-                var qry = from x in Employee.Queryable
-                          orderby x.FirstName
-                          select x;
+			var qry = from x in Employee.Queryable
+					  where x.Id > 0
+					  orderby x.FirstName
+					  select x;
 
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            } else {
-                var qry = from x in Employee.Queryable
-                          where x.FirstName.Contains(search.Pattern) ||
-                          x.LastName.Contains(search.Pattern)
-                          orderby x.FirstName
-                          select x;
-
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+			if (!string.IsNullOrEmpty(search.Pattern)) {
+                qry = from x in Employee.Queryable
+					  where x.Id > 0 && (
+							x.FirstName.Contains(search.Pattern) ||
+                      		x.LastName.Contains(search.Pattern))
+                      orderby x.FirstName
+                      select x;
             }
+			
+			search.Total = qry.Count();
+			search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
 
             return search;
         }
