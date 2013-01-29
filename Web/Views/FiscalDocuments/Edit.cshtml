@@ -49,7 +49,7 @@
 </div>
 <script type="text/javascript">
     function updateTotals(){
-    	$.get("/FiscalDocuments/GetTotals", { "id": @Model.Id }, function (data) {
+    	$.get('@Url.Action("GetTotals")', { "id": @Model.Id }, function (data) {
             $("#totals-section").html(data);
         });
     }
@@ -58,7 +58,7 @@
         var result = "Error";
 
         $.ajaxSetup({ async: false });
-        $.post("/FiscalDocuments/EditDetailProductName", { "id": id, "value": value }, function (data) {
+        $.post('@Url.Action("EditDetailProductName")', { "id": id, "value": value }, function (data) {
             var element = $("#item" + id + " div.name");
             element.html(data.value);
             element.switchClass("editable", "editable-ok").switchClass("editable-ok", "editable", 3000);
@@ -73,7 +73,7 @@
         var result = "Error";
 
         $.ajaxSetup({ async: false });
-        $.post("/FiscalDocuments/EditDetailProductCode", { "id": id, "value": value }, function (data) {
+        $.post('@Url.Action("EditDetailProductCode")', { "id": id, "value": value }, function (data) {
             var element = $("#item" + id + " div.code");
             element.html(data.value);
             element.switchClass("editable", "editable-ok").switchClass("editable-ok", "editable", 3000);
@@ -88,7 +88,7 @@
         var result = "Error";
 
         $.ajaxSetup({ async: false });
-        $.post("/FiscalDocuments/EditDetailUM", { "id": id, "value": value }, function (data) {
+        $.post('@Url.Action("EditDetailUM")', { "id": id, "value": value }, function (data) {
             var element = $("#item" + id + " div.um");
             element.html(data.value);
             element.switchClass("editable", "editable-ok").switchClass("editable-ok", "editable", 3000);
@@ -103,7 +103,7 @@
         var result = "Error";
 
         $.ajaxSetup({ async: false });
-        $.post("/FiscalDocuments/EditDetailPrice", { "id": id, "value": value }, function (data) {
+        $.post('@Url.Action("EditDetailPrice")', { "id": id, "value": value }, function (data) {
             var element = $("#item" + id + " div.price");
             element.html(data.value);
             element.siblings(".total").html(data.total);
@@ -121,7 +121,7 @@
         var result = "Error";
 
         $.ajaxSetup({ async: false });
-        $.post("/FiscalDocuments/EditDetailTaxRate", { "id": id, "value": value }, function (data) {
+        $.post('@Url.Action("EditDetailTaxRate")', { "id": id, "value": value }, function (data) {
             var element = $("#item" + id + " div.tax");
             element.html(data.value);
             element.switchClass("editable", "editable-ok").switchClass("editable-ok", "editable", 3000);
@@ -138,7 +138,7 @@
         var result = "Error";
 
         $.ajaxSetup({ async: false });
-        $.post("/FiscalDocuments/EditDetailQuantity", { "id": id, "value": value }, function (data) {
+        $.post('@Url.Action("EditDetailQuantity")', { "id": id, "value": value }, function (data) {
             var element = $("#item" + id + " div.quantity");
             element.html(data.value);
             element.siblings(".total").html(data.total);
@@ -156,7 +156,7 @@
         var result = "Error";
 
         $.ajaxSetup({ async: false });
-        $.post("/FiscalDocuments/EditDetailDiscount", { "id": id, "value": value }, function (data) {
+        $.post('@Url.Action("EditDetailDiscount")', { "id": id, "value": value }, function (data) {
             var element = $("#item" + id + " div.discount");
             element.html(data.value);
             element.siblings(".total").html(data.total);
@@ -177,7 +177,7 @@
             modal: true,
             buttons: {
                 @Resources.Delete: function () {
-                    $.post("/FiscalDocuments/RemoveDetail", { "id": id }, function (data) {
+                    $.post('@Url.Action("RemoveDetail")', { "id": id }, function (data) {
                         if(data.result) {
                             $("#item" + id).remove();
                             updateTotals();
@@ -205,8 +205,8 @@
             resultsFormatter: function(item){return ProductFormatter(item);},
             queryParam: "pattern",minChars: 3,tokenLimit: 1,
             onAdd: function (item) {
-                $.post("/FiscalDocuments/AddDetail", { "id": @Model.Id, "product": "" + item.id }, function (detail) {
-                    $.get("/FiscalDocuments/GetDetail/" + detail.id, function (data) {
+                $.post('@Url.Action("AddDetail")', { "id": @Model.Id, "product": "" + item.id }, function (detail) {
+                    $.get('@Url.Action("GetDetail")/' + detail.id, function (data) {
                         $("#items").append(data);
                         
                         // edit name
@@ -258,7 +258,7 @@
             searchingText: "@Resources.SearchingText",          
             queryParam: "pattern",minChars: 3,tokenLimit: 1,
             onAdd: function (item) {
-                $.post("/FiscalDocuments/AddOrder", { "id": @Model.Id, "order": "" + item.id }, function (data) {
+                $.post('@Url.Action("AddOrder")', { "id": @Model.Id, "order": "" + item.id }, function (data) {
                 	if(data.result == 0) {
                 		$("#notification-dlg").dialog({
 				            width:400,resizable:false,modal:true,
@@ -271,7 +271,7 @@
                 		$("#order-search").tokenInput("clear");
                 		return;
                 	}
-                    $.get("/FiscalDocuments/GetDetails/@Model.Id", function (data) {
+                    $.get('@Url.Action("GetDetails")/@Model.Id', function (data) {
                         $("#items-container").html(data);
                         $("#order-search").tokenInput("clear");
                         updateTotals();

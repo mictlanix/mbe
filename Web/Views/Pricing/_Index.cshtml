@@ -13,30 +13,18 @@
 
 <table>
     <tr>
-        <th></th>
-        <th>
-            @Html.LabelFor(x => new Product().Code)
-        </th>
-        <th>
-            @Html.LabelFor(x => new Product().SKU)
-        </th>
-        <th>
-            @Html.LabelFor(x => new Product().Name)
-        </th>
-        <th>
-            @Html.LabelFor(x => new Product().UnitOfMeasurement)
-        </th>
-        <th>
-        	@Resources.Cost / @Resources.Prices
-        </th>
+        <th>@Html.LabelFor(x => new Product().Code)</th>
+        <th>@Html.LabelFor(x => new Product().Name)</th>
+        <th>@Html.LabelFor(x => new Product().Model)</th>
+        <th>@Html.LabelFor(x => new Product().UnitOfMeasurement)</th>
+        <th>@Resources.Cost / @Resources.Prices</th>
     </tr>
 @foreach (var item in Model.Results)
 {
     <tr>
-        <td><img class="small" src="@Url.Content(item.Photo)" alt="@item.Code"/></td>
         <td class="center">@Html.DisplayFor(x => item.Code)</td>
-        <td class="center">@Html.DisplayFor(x => item.SKU)</td>
         <td>@Html.DisplayFor(x => item.Name)</td>
+        <td class="center">@Html.DisplayFor(x => item.Model)</td>
         <td class="center">@Html.DisplayFor(x => item.UnitOfMeasurement)</td>
         <td class="tabular">
             <table>

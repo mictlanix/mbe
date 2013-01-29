@@ -4,10 +4,10 @@
 @model Mictlanix.BE.Model.CustomerPayment
 <li id="payment@(Model.Id)">
     <div class="photo">
-        <img src="@Url.Content("~/Content/icons/dollar.png")" title="@Resources.Pay"/>
+        <img src="@Url.Content("~/Content/icons/dollar.png")" title="@Resources.Pay" />
     </div>
     <div class="action-link">
-        <a class="button icon-only icon delete" title="@Resources.Delete" href="/Payments/RemovePayment/@Model.Id"></a>
+        <a class="button icon-only icon delete" title="@Resources.Delete" href='@Url.Action("RemovePayment")/@Model.Id'></a>
         <script type="text/javascript">
             $("#payment@(Model.Id) a.delete").click(function(event){
                 event.preventDefault();

@@ -79,7 +79,7 @@
             tokenLimit: 1,
             prePopulate: [{ id: "@Model.Issuer.Id", name: "@Model.Issuer.Name"}],
             onAdd: function (item) {
-                $.get("/FiscalDocuments/GetBatchSelector/" + item.id, function (data) {
+                $.get('@Url.Action("GetBatchSelector")/' + item.id, function (data) {
 		            $("#div-batch").html(data);
 		        });
             },
@@ -88,7 +88,7 @@
             }
         });
         
-        $.get("/FiscalDocuments/GetBatchSelector/@Model.Issuer.Id", function (data) {
+        $.get('@Url.Action("GetBatchSelector")/@Model.Issuer.Id', function (data) {
             $("#div-batch").html(data);
         });
 

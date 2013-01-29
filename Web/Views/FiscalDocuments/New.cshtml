@@ -93,7 +93,7 @@ ul.token-input-list {
             minChars: 1,
             tokenLimit: 1,
             onAdd: function (item) {
-                $.get("/FiscalDocuments/GetBatchSelector/" + item.id, function (data) {
+                $.get('@Url.Action("GetBatchSelector")/' + item.id, function (data) {
 		            $("#div-batch").html(data);
 		        });
             },
