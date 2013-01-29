@@ -25,7 +25,7 @@
         </ul>
     </div>
     <div class="selector-warehouse">
-        <input type="text" id="warehouse-search" name="warehouse-search"/>
+        <input type="text" id="warehouse-search" name="warehouse-search" />
     </div>
     <div class="search-box">
         <input type="text" id="product-search" name="product-search" />
@@ -51,7 +51,7 @@
 </div>
 <script type="text/javascript">
     function updateTotals(){
-        $.get("/Purchases/GetTotals/" + PurchaseMovement.Id, function (data) {
+        $.get('@Url.Action("GetTotals")/' + PurchaseMovement.Id, function (data) {
             $("#purchases-totals").html(data);
         });
     }
@@ -60,7 +60,7 @@
         var result = "Error";
 
         $.ajaxSetup({ async: false });
-        $.post("/Purchases/EditPurchaseDetailQty", { "id": id, "quantity": value }, function (data) {
+        $.post('@Url.Action("EditPurchaseDetailQty")', { "id": id, "quantity": value }, function (data) {
             var element = $("#item" + id + " div.quantity");
             element.html(data.quantity);
             element.siblings(".total").html(data.total);
@@ -78,7 +78,7 @@
         var result = "Error";
 
         $.ajaxSetup({ async: false });
-        $.post("/Purchases/EditPurchaseDetailDiscount", { "id": id, "value": value }, function (data) {
+        $.post('@Url.Action("EditPurchaseDetailDiscount")', { "id": id, "value": value }, function (data) {
             var element = $("#item" + id + " div.discount");
             element.html(data.discount);
             element.siblings(".total").html(data.total);
@@ -96,7 +96,7 @@
         var result = "Error";
 
         $.ajaxSetup({ async: false });
-        $.post("/Purchases/EditPurchaseDetailPrice", { "id": id, "value": value }, function (data) {
+        $.post('@Url.Action("EditPurchaseDetailPrice")', { "id": id, "value": value }, function (data) {
             var element = $("#item" + id + " div.price");
             element.html(data.price);
             element.siblings(".total").html(data.total);
@@ -114,7 +114,7 @@
         var result = "Error";
 
         $.ajaxSetup({ async: false });
-        $.post("/Purchases/EditDetailWarehouse", { "id": id, "warehouse": value }, function (data) {
+        $.post('@Url.Action("EditDetailWarehouse")', { "id": id, "warehouse": value }, function (data) {
             var element = $("#item" + id + " div.warehouse");
             element.html(data.warehouse);
             element.switchClass("editable-warehouse", "editable-warehouse-ok").switchClass("editable-warehouse-ok", "editable-warehouse", 3000);
@@ -132,7 +132,7 @@
             modal: true,
             buttons: {
                 @Resources.Delete: function () {
-                    $.post("/Purchases/RemovePurchaseDetail", { "id": id }, function (data) {
+                    $.post('@Url.Action("RemovePurchaseDetail")', { "id": id }, function (data) {
                         if(data.result) {
                             $("#item" + id).remove();
                             updateTotals();
@@ -167,8 +167,8 @@
             queryParam: "pattern",minChars: 3,tokenLimit: 1,
             onAdd: function (item) {
                 var w =$("#warehouse-search").tokenInput("get")[0];
-                $.post("/Purchases/AddPurchaseDetail", { "movement": PurchaseMovement.Id, "warehouse": "" + w.id, "product": "" + item.id }, function (detail) {
-                    $.get("/Purchases/GetPurchaseItem/" + detail.id, function (data) {
+                $.post('@Url.Action("AddPurchaseDetail")', { "movement": PurchaseMovement.Id, "warehouse": "" + w.id, "product": "" + item.id }, function (detail) {
+                    $.get('@Url.Action("GetPurchaseItem")/' + detail.id, function (data) {
                         $("#items").append(data);
                         $("#item" + detail.id + " div.quantity").editable(function (value, settings) {
                             return editQuantity(detail.id, value);

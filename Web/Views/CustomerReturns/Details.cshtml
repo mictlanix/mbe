@@ -52,7 +52,7 @@
 
 <script type="text/javascript">
     function updateTotals(){
-        $.get("/CustomerReturns/GetTotals/" + CustomerReturn.Id, function (data) {
+        $.get('@Url.Action("GetTotals")/' + CustomerReturn.Id, function (data) {
             $("#return-totals").html(data);
         });
     }
@@ -61,7 +61,7 @@
         var result = "Error";
 
         $.ajaxSetup({ async: false });
-        $.post("/CustomerReturns/EditDetailQuantity", { "id": id, "quantity": value }, function (data) {
+        $.post('@Url.Action("GetTotals")', { "id": id, "quantity": value }, function (data) {
             var element = $("#item" + id + " div.quantity");
             element.html(data.quantity);
             element.siblings(".total").html(data.total);
@@ -82,7 +82,7 @@
             modal: true,
             buttons: {
                 @Resources.Delete: function () {
-                    $.post("/CustomerReturns/RemoveDetail", { "id": id }, function (data) {
+                    $.post('@Url.Action("RemoveDetail")', { "id": id }, function (data) {
                         if(data.result) {
                             $("#item" + id).remove();
                             updateTotals();

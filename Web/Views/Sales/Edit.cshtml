@@ -42,7 +42,7 @@
 </div>
 <script type="text/javascript">
     function updateTotals(){
-        $.get("/Sales/GetTotals/" + @Model.Id, function (data) {
+        $.get('@Url.Action("GetTotals")/' + @Model.Id, function (data) {
             $("#sales-totals").html(data);
             if($("#items").children().length === 0){
                 $("#edit-button").show("slow");            
@@ -54,7 +54,7 @@
         var result = "Error";
 
         $.ajaxSetup({ async: false });
-        $.post("/Sales/EditDetailQuantity", { "id": id, "quantity": value }, function (data) {
+        $.post('@Url.Action("EditDetailQuantity")', { "id": id, "quantity": value }, function (data) {
             var element = $("#item" + id + " div.quantity");
             element.html(data.quantity);
             element.siblings(".total").html(data.total);
@@ -72,7 +72,7 @@
         var result = "Error";
 
         $.ajaxSetup({ async: false });
-        $.post("/Sales/EditDetailDiscount", { "id": id, "value": value }, function (data) {
+        $.post('@Url.Action("EditDetailDiscount")', { "id": id, "value": value }, function (data) {
             var element = $("#item" + id + " div.discount");
             element.html(data.discount);
             element.siblings(".total").html(data.total);
@@ -90,7 +90,7 @@
         var result = "Error";
 
         $.ajaxSetup({ async: false });
-        $.post("/Sales/EditDeliveryOrder", { "id": id, "value": value }, function (data) {
+        $.post('@Url.Action("EditDeliveryOrder")', { "id": id, "value": value }, function (data) {
             var element = $("#item" + id + " checkbox");
             element.html(data.checkbox);
             result = data.checkbox;
@@ -107,7 +107,7 @@
             modal: true,
             buttons: {
                 @Resources.Delete: function () {
-                    $.post("/Sales/RemoveDetail", { "id": id }, function (data) {
+                    $.post('@Url.Action("RemoveDetail")', { "id": id }, function (data) {
                         if(data.result) {
                             $("#item" + id).remove();
                             updateTotals();
@@ -130,8 +130,8 @@
             resultsFormatter: function(item){return ProductFormatter(item);},
             queryParam: "pattern",minChars: 3,tokenLimit: 1,
             onAdd: function (item) {
-                $.post("/Sales/AddDetail", { "order": @Model.Id, "product": "" + item.id }, function (detail) {
-                    $.get("/Sales/GetDetail/" + detail.id, function (data) {
+                $.post('@Url.Action("AddDetail")', { "order": @Model.Id, "product": "" + item.id }, function (detail) {
+                    $.get('@Url.Action("GetDetail")/' + detail.id, function (data) {
                         $("#items").append(data);
                         $("#item" + detail.id + " div.quantity").editable(function (value, settings) {
                             return editQuantity(detail.id, value);

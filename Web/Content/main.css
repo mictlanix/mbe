@@ -292,3 +292,19 @@ li div.value.name {
 td.tabular {
 	padding:0;
 }
+td.labels {
+	position:relative;
+}
+td.labels div {
+	position:absolute;
+	bottom:2px;
+	right:0;
+}
+td.labels div > span {
+	background:#4986e7;
+	padding:1px 2px;
+	border-radius:2px;
+	color:white;
+	font-size:10px;
+	margin-right:2px;
+}

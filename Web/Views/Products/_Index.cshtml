@@ -14,21 +14,10 @@
 <table>
     <tr>
         <th></th>
-        <th>
-            @Html.LabelFor(x => new Product().Code)
-        </th>
-        <th>
-            @Html.LabelFor(x => new Product().SKU)
-        </th>
-        <th>
-            @Html.LabelFor(x => new Product().Name)
-        </th>
-        <th>
-            @Html.LabelFor(x => new Product().UnitOfMeasurement)
-        </th>
-        <th>
-            @Html.LabelFor(x => new Product().Category)
-        </th>
+        <th>@Html.LabelFor(x => new Product().Code)</th>
+        <th>@Html.LabelFor(x => new Product().Name)</th>
+        <th>@Html.LabelFor(x => new Product().Model)</th>
+        <th>@Html.LabelFor(x => new Product().UnitOfMeasurement)</th>
         <th></th>
     </tr>
 
@@ -43,21 +32,15 @@
                                     @class = "small tips"
                               })
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Code)
+        <td class="center">@Html.DisplayFor(modelItem => item.Code)</td>
+        <td class="labels">
+        	@Html.DisplayFor(modelItem => item.Name)
+        	@if(item.Category != null) {
+        	<div><span>@Html.DisplayFor(modelItem => item.Category.Name)</span></div>
+        	}
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.SKU)
-        </td>
-         <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-         <td>
-            @Html.DisplayFor(modelItem => item.UnitOfMeasurement)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Category.Name)
-        </td>
+        <td class="center">@Html.DisplayFor(modelItem => item.Model)</td>
+        <td class="center">@Html.DisplayFor(modelItem => item.UnitOfMeasurement)</td>
         <td class="actions">
         	@if(Privilege.AllowUpdate)
         	{
@@ -82,7 +65,7 @@
     		e.preventDefault();
     		$("#activity-indicator").show();
     		$("#search-results").hide();
-    		$.post("/Products/Index", { Pattern: "@Model.Pattern", Offset: "@(Model.Offset-Model.Limit)", Limit: "@Model.Limit" }, function(data) {
+    		$.post('@Url.Action("Index")', { Pattern: "@Model.Pattern", Offset: "@(Model.Offset-Model.Limit)", Limit: "@Model.Limit" }, function(data) {
 				$("#search-results").html(data);
 				$("#search-results").show();
 				$("#activity-indicator").hide();
@@ -99,7 +82,7 @@
     		e.preventDefault();
     		$("#activity-indicator").show();
     		$("#search-results").hide();
-    		$.post("/Products/Index", { Pattern: "@Model.Pattern", Offset: "@(Model.Offset+Model.Limit)", Limit: "@Model.Limit" }, function(data) {
+    		$.post('@Url.Action("Index")', { Pattern: "@Model.Pattern", Offset: "@(Model.Offset+Model.Limit)", Limit: "@Model.Limit" }, function(data) {
 				$("#search-results").html(data);
 				$("#search-results").show();
 				$("#activity-indicator").hide();

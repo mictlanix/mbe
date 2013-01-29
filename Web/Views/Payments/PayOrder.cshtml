@@ -86,7 +86,7 @@
 
 <script type="text/javascript">
     function updateTotals() {
-        $.get("/Payments/GetSalesOrderBalance/" + @Model.Id, function (data) {
+        $.get('@Url.Action("GetSalesOrderBalance")/' + @Model.Id, function (data) {
             $("#sales-order-balance").html(data);
         });
     }
@@ -98,7 +98,7 @@
             modal: true,
             buttons: {
                 @Resources.Delete: function () {
-                    $.post("/Payments/RemovePayment", { "id": id }, function (data) {
+                    $.post('@Url.Action("RemovePayment")', { "id": id }, function (data) {
                         if(data.result) {
                             $("#payment" + id).remove();
                             updateTotals();
@@ -122,8 +122,8 @@
             var amount = $("#Amount").val();
             var reference = $("#Reference").val();
 
-            $.post("/Payments/AddPayment", { "order": @Model.Id, "type": type, "amount": amount, "reference": reference }, function (detail) {
-                $.get("/Payments/GetPayment/" + detail.id, function (data) {
+            $.post('@Url.Action("AddPayment")', { "order": @Model.Id, "type": type, "amount": amount, "reference": reference }, function (detail) {
+                $.get('@Url.Action("GetPayment")/' + detail.id, function (data) {
                     $("#items").append(data);
                     $(".selection-options>li").removeClass("selected");
                     $(":input").not(":submit, :button, :radio").val("").removeAttr("selected");
