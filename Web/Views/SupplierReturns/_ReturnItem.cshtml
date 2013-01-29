@@ -7,10 +7,10 @@
 
 <li id="item@(Model.Id)">
     <div class="photo">
-        <img src="@Url.Content(Model.Product.Photo)" title="@Model.ProductName"/>
+        <img src="@Url.Content(Model.Product.Photo)" title="@Model.ProductName" />
     </div>
     <div class="action-link">
-        <a class="button icon-only icon delete" title="@Resources.Delete" href="/SupplierReturns/RemoveDetail/@Model.Id"></a>
+        <a class="button icon-only icon delete" title="@Resources.Delete" href='@Url.Action("RemoveDetail")/@Model.Id'></a>
         <script type="text/javascript">
             $("#item@(Model.Id) a.delete").click(function(event){
                 event.preventDefault();

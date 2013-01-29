@@ -56,7 +56,7 @@
             e.preventDefault();
             $("#activity-indicator").show();
             $("#search-results").hide();
-            $.post("/Categories/Index", { Pattern: "@Model.Pattern", Offset: "@(Model.Offset-Model.Limit)", Limit: "@Model.Limit" }, function (data) {
+            $.post('@Url.Action("Index")', { Pattern: "@Model.Pattern", Offset: "@(Model.Offset-Model.Limit)", Limit: "@Model.Limit" }, function (data) {
                 $("#search-results").html(data);
                 $("#search-results").show();
                 $("#activity-indicator").hide();
@@ -73,7 +73,7 @@
             e.preventDefault();
             $("#activity-indicator").show();
             $("#search-results").hide();
-            $.post("/Categories/Index", { Pattern: "@Model.Pattern", Offset: "@(Model.Offset+Model.Limit)", Limit: "@Model.Limit" }, function (data) {
+            $.post('@Url.Action("Index")', { Pattern: "@Model.Pattern", Offset: "@(Model.Offset+Model.Limit)", Limit: "@Model.Limit" }, function (data) {
                 $("#search-results").html(data);
                 $("#search-results").show();
                 $("#activity-indicator").hide();

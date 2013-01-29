@@ -14,7 +14,7 @@
     <header>
         <div id="logo">
         	@if(!string.IsNullOrEmpty(ViewBag.Store.Logo)) {
-            <img src="@Url.Content(ViewBag.Store.Logo)" alt="@Configuration.LogoAlt" title="@Configuration.LogoTitle"/>
+            <img src="@Url.Content(ViewBag.Store.Logo)" alt="@Configuration.LogoAlt" title="@Configuration.LogoTitle" />
             }
         </div>
         <h1>@ViewBag.Store.Name</h1>
