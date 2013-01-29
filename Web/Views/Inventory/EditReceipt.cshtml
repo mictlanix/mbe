@@ -47,7 +47,7 @@
         var result = "Error";
 
         $.ajaxSetup({ async: false });
-        $.post("/Inventory/EditReceiptDetailQty", { "id": id, "quantity": value }, function (data) {
+        $.post('@Url.Action("EditReceiptDetailQty")', { "id": id, "quantity": value }, function (data) {
             var element = $("#item" + id + " div.quantity");
             element.html(data.quantity);
             element.siblings(".total").html(data.total);
@@ -66,7 +66,7 @@
             modal: true,
             buttons: {
                 @Resources.Delete: function () {
-                    $.post("/Inventory/RemoveReceiptDetail", { "id": id }, function (data) {
+                    $.post('@Url.Action("RemoveReceiptDetail")', { "id": id }, function (data) {
                         if(data.result) {
                             $("#item" + id).remove();
                         }
@@ -88,8 +88,8 @@
             resultsFormatter: function(item){return ProductFormatter(item);},
             queryParam: "pattern",minChars: 3,tokenLimit: 1,
             onAdd: function (item) {
-                $.post("/Inventory/AddReceiptDetail", { "movement": InventoryMovement.Id, "product": "" + item.id }, function (detail) {
-                    $.get("/Inventory/GetReceiptItem/" + detail.id, function (data) {
+                $.post('@Url.Action("AddReceiptDetail")', { "movement": InventoryMovement.Id, "product": "" + item.id }, function (detail) {
+                    $.get('@Url.Action("GetReceiptItem")/' + detail.id, function (data) {
                         $("#items").append(data);
                         $("#item" + detail.id + " div.quantity").editable(function (value, settings) {
                             return editQuantity(detail.id, value);

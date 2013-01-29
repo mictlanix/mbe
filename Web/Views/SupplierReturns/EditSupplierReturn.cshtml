@@ -51,7 +51,7 @@
 </div>
 <script type="text/javascript">
     function updateTotals(){
-        $.get("/SupplierReturns/GetTotals/" + SupplierReturn.Id, function (data) {
+        $.get('@Url.Action("GetTotals")/' + SupplierReturn.Id, function (data) {
             $("#returns-totals").html(data);
         });
     }
@@ -60,7 +60,7 @@
         var result = "Error";
 
         $.ajaxSetup({ async: false });
-        $.post("/SupplierReturns/EditDetailQuantity", { "id": id, "quantity": value }, function (data) {
+        $.post('@Url.Action("EditDetailQuantity")', { "id": id, "quantity": value }, function (data) {
             var element = $("#item" + id + " div.quantity");
             element.html(data.quantity);
             element.siblings(".total").html(data.total);
@@ -79,7 +79,7 @@
 //        var result = "Error";
 
 //        $.ajaxSetup({ async: false });
-//        $.post("/Purchases/EditDetailWarehouse", { "id": id, "warehouse": value }, function (data) {
+//        $.post('@Url.Action("EditDetailWarehouse")', { "id": id, "warehouse": value }, function (data) {
 //            var element = $("#item" + id + " div.warehouse");
 //            element.html(data.warehouse);
 //            element.switchClass("editable-warehouse", "editable-warehouse-ok").switchClass("editable-warehouse-ok", "editable-warehouse", 3000);
@@ -97,7 +97,7 @@
             modal: true,
             buttons: {
                 @Resources.Delete: function () {
-                    $.post("/SupplierReturns/RemoveDetail", { "id": id }, function (data) {
+                    $.post('@Url.Action("RemoveDetail")', { "id": id }, function (data) {
                         if(data.result) {
                             $("#item" + id).remove();
                             updateTotals();
