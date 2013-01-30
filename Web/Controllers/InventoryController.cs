@@ -279,16 +279,8 @@ namespace Mictlanix.BE.Web.Controllers
 				item.UpdateAndFlush ();
 
 				foreach(var x in item.Details) {
-					var kardex = new Kardex {
-						Warehouse = item.Warehouse,
-						Product = x.Product,
-						Source = TransactionType.InventoryReceipt,
-						Quantity = x.Quantity,
-						Date = item.ModificationTime,
-						Reference = item.Id
-					};
-
-					kardex.CreateAndFlush ();
+					InventoryHelpers.ChangeNotification(TransactionType.InventoryReceipt, item.Id,
+					                                    item.ModificationTime, item.Warehouse, x.Product, x.Quantity);
 				}
 			}
 
@@ -551,16 +543,8 @@ namespace Mictlanix.BE.Web.Controllers
 				item.UpdateAndFlush ();
 
                 foreach (var x in item.Details) {
-                    var kardex = new Kardex {
-                        Warehouse = item.Warehouse,
-                        Product = x.Product,
-                        Source = TransactionType.InventoryIssue,
-                        Quantity = -x.Quantity,
-						Date = item.ModificationTime,
-                        Reference = item.Id
-                    };
-
-                    kardex.CreateAndFlush();
+					InventoryHelpers.ChangeNotification(TransactionType.InventoryIssue, item.Id,
+					                                    item.ModificationTime, item.Warehouse, x.Product, -x.Quantity);
                 }
 			}
 
@@ -677,7 +661,6 @@ namespace Mictlanix.BE.Web.Controllers
         {
             return View(new InventoryTransfer());
         }
-
 
         //
         // POST: /Inventory/NewTransfer
@@ -843,27 +826,10 @@ namespace Mictlanix.BE.Web.Controllers
 				item.UpdateAndFlush ();
 
                 foreach (var x in item.Details) {
-                    var input = new Kardex {
-                        Warehouse = item.To,
-                        Product = x.Product,
-                        Source = TransactionType.InventoryTransfer,
-                        Quantity = x.Quantity,
-						Date = item.ModificationTime,
-                        Reference = item.Id
-                    };
-
-                    input.Create();
-
-                    var output = new Kardex {
-                        Warehouse = item.From,
-                        Product = x.Product,
-                        Source = TransactionType.InventoryTransfer,
-                        Quantity = -x.Quantity,
-						Date = item.ModificationTime,
-                        Reference = item.Id
-                    };
-
-                    output.Create();
+					InventoryHelpers.ChangeNotification(TransactionType.InventoryTransfer, item.Id,
+					                                    item.ModificationTime, item.From, x.Product, -x.Quantity);
+					InventoryHelpers.ChangeNotification(TransactionType.InventoryTransfer, item.Id,
+					                                    item.ModificationTime, item.To, x.Product, x.Quantity);
                 }
 			}
 
@@ -888,5 +854,155 @@ namespace Mictlanix.BE.Web.Controllers
         }
 
         #endregion
-    }
+    
+		#region Lot & Serial Numbers
+
+		public ActionResult LotSerialNumbers ()
+		{
+			var qry = from x in LotSerialRequirement.Queryable
+					  select x;
+			
+			var search = new Search<LotSerialRequirement>();
+			search.Limit = Configuration.PageSize;
+			search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+			search.Total = qry.Count();
+
+			return View (search);
+		}
+		
+		[HttpPost]
+		public ActionResult LotSerialNumbers (Search<LotSerialRequirement> search)
+		{
+			if (!ModelState.IsValid) {
+				return View (search);
+			}
+			
+			var qry = from x in LotSerialRequirement.Queryable
+					  select x;
+
+			search.Total = qry.Count();
+			search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+
+			return PartialView ("_LotSerialNumbers", search);
+		}
+		
+		public ActionResult DiscardLotSerialNumbers (int id)
+		{
+			var rqmt = LotSerialRequirement.Find (id);
+			var qry = from x in LotSerialTracking.Queryable
+					  where x.Source == rqmt.Source &&
+							x.Reference == rqmt.Reference &&
+							x.Warehouse.Id == rqmt.Warehouse.Id &&
+							x.Product == rqmt.Product
+					  select x;
+			
+			using (var scope = new TransactionScope ()) {
+				foreach(var item in qry) {
+					item.Delete();
+				}
+				rqmt.DeleteAndFlush ();
+			}
+			
+			return Json(new { id = id, result = true });
+		}
+
+		public ActionResult AssignLotSerialNumbers (int id)
+		{
+			var rqmt = LotSerialRequirement.Find (id);
+			var qry = from x in LotSerialTracking.Queryable
+					  where x.Source == rqmt.Source &&
+							x.Reference == rqmt.Reference &&
+							x.Warehouse.Id == rqmt.Warehouse.Id &&
+							x.Product.Id == rqmt.Product.Id
+					  select x;
+
+			var item = new MasterDetails<LotSerialRequirement, LotSerialTracking> {
+				Master = rqmt,
+				Details = qry.ToList()
+			};
+
+			return View (item);
+		}
+
+		[HttpPost]
+		public ActionResult ConfirmLotSerialNumbers (int id)
+		{
+			var item = LotSerialRequirement.Find (id);
+			var qry = from x in LotSerialTracking.Queryable
+					  where x.Source == item.Source &&
+							x.Reference == item.Reference &&
+							x.Warehouse.Id == item.Warehouse.Id &&
+							x.Product.Id == item.Product.Id
+					  select x.Quantity;
+			decimal sum = qry.Count () > 0 ? qry.Sum () : 0;
+
+			if (item.Quantity != sum) {
+				return RedirectToAction ("AssignLotSerialNumbers", new { id = id });
+			}
+
+			using (var scope = new TransactionScope()) {
+				item.DeleteAndFlush();
+			}
+			
+			return RedirectToAction ("LotSerialNumbers");
+		}
+
+		public ActionResult GetLotSerialNumber (int id)
+		{
+			var item = LotSerialTracking.Find (id);
+
+			return PartialView("_LotSerialNumber", item);
+		}
+		
+		public ActionResult GetLotSerialNumberCount (int id)
+		{
+			var item = LotSerialRequirement.Find (id);
+			var qry = from x in LotSerialTracking.Queryable
+					  where x.Source == item.Source &&
+							x.Reference == item.Reference &&
+							x.Warehouse.Id == item.Warehouse.Id &&
+							x.Product.Id == item.Product.Id
+					  select x.Quantity;
+			decimal sum = qry.Count() > 0 ? qry.Sum() : 0;
+
+			return Json(new { id = item.Id, count = sum, total = item.Quantity }, JsonRequestBehavior.AllowGet);
+		}
+
+		[HttpPost]
+		public ActionResult AddLotSerialNumber (int id, decimal qty, string lot, DateTime? expiration, string serial)
+		{
+			var rqmt = LotSerialRequirement.Find (id);
+			var item = new LotSerialTracking {
+				Source = rqmt.Source,
+				Reference = rqmt.Reference,
+				Date = DateTime.Now,
+				Warehouse = rqmt.Warehouse,
+				Product = rqmt.Product,
+				Quantity = (rqmt.Quantity > 0 ? qty : -qty),
+				LotNumber = lot,
+				ExpirationDate = expiration,
+				SerialNumber = serial
+			};
+			
+			using (var scope = new TransactionScope()) {
+				item.CreateAndFlush();
+			}
+
+			return Json(new { id = item.Id, result = true });
+		}
+		
+		[HttpPost]
+		public ActionResult RemoveLotSerialNumber (int id)
+		{
+			var item = LotSerialTracking.Find (id);
+			
+			using (var scope = new TransactionScope()) {
+				item.DeleteAndFlush();
+			}
+
+			return Json(new { id = id, result = true });
+		}
+
+		#endregion
+	}
 }

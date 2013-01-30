@@ -4313,5 +4313,35 @@ namespace Mictlanix.BE {
 				return ResourceManager.GetString("ChooseCustomer", resourceCulture);
 			}
 		}
+		
+		public static string LotNumber {
+			get {
+				return ResourceManager.GetString("LotNumber", resourceCulture);
+			}
+		}
+		
+		public static string ExpirationDate {
+			get {
+				return ResourceManager.GetString("ExpirationDate", resourceCulture);
+			}
+		}
+		
+		public static string SerialNumber {
+			get {
+				return ResourceManager.GetString("SerialNumber", resourceCulture);
+			}
+		}
+		
+		public static string LotSerialNumbers {
+			get {
+				return ResourceManager.GetString("LotSerialNumbers", resourceCulture);
+			}
+		}
+		
+		public static string Message_DiscardConfirmation {
+			get {
+				return ResourceManager.GetString("Message_DiscardConfirmation", resourceCulture);
+			}
+		}
     }
 }

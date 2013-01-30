@@ -1,0 +1,20 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model Search<LotSerialRequirement>
+
+<h2>@Resources.LotSerialNumbers</h2>
+
+<div id='activity-indicator'>
+    <img alt='@Resources.Loading' src='@Url.Content("~/Content/images/loading-bar.gif")' />
+</div>
+<div id='search-results'>
+    @Html.Partial("_LotSerialNumbers")
+</div>
+<div id="confirm-dlg" class="dialog" title="@Resources.Discard">
+	<p>
+        <span class="ui-icon ui-icon-circle-close" style="float:left; margin:3px 7px 20px 0;"></span>
+        @Resources.Message_DiscardConfirmation
+    </p>
+</div>

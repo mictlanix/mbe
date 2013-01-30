@@ -1,11 +1,10 @@
 // 
-// Kardex.cs
+// LotSerialRequirement.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
-//   Eduardo Nieto <enieto@mictlanix.org>
 // 
-// Copyright (C) 2011 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2013 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -36,17 +35,21 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Mictlanix.BE.Model
 {
-    [ActiveRecord("kardex")]
-    public class Kardex : ActiveRecordLinqBase<Kardex>
+	[ActiveRecord("lot_serial_rqmt")]
+	public class LotSerialRequirement : ActiveRecordLinqBase<LotSerialRequirement>
     {
-        [PrimaryKey(PrimaryKeyType.Identity, "kardex_id")]
-        [Display(Name = "KardexId", ResourceType = typeof(Resources))]
+		[PrimaryKey(PrimaryKeyType.Identity, "lot_serial_rqmt_id")]
+        [Display(Name = "Id", ResourceType = typeof(Resources))]
         public virtual int Id { get; set; }
 
-        [Property]
-        [DataType(DataType.DateTime)]
-        [Display(Name = "Date", ResourceType = typeof(Resources))]
-        public virtual DateTime Date { get; set; }
+		[Property]
+		[Display(Name = "Source", ResourceType = typeof(Resources))]
+		public virtual TransactionType Source { get; set; }
+
+		[Property]
+		[Display(Name = "Reference", ResourceType = typeof(Resources))]
+		[DisplayFormat(DataFormatString="{0:D8}")]
+		public virtual int Reference { get; set; }
 
         [BelongsTo("warehouse")]
         [Display(Name = "Warehouse", ResourceType = typeof(Resources))]
@@ -60,15 +63,6 @@ namespace Mictlanix.BE.Model
         [DisplayFormat(DataFormatString = "{0:0.####}")]
         [Display(Name = "Quantity", ResourceType = typeof(Resources))]
         public virtual decimal Quantity { get; set; }
-
-		[Property]
-        [Display(Name = "Reference", ResourceType = typeof(Resources))]
-		[DisplayFormat(DataFormatString="{0:D8}")]
-        public virtual int Reference { get; set; }
-
-		[Property]
-        [Display(Name = "Source", ResourceType = typeof(Resources))]
-        public virtual TransactionType Source { get; set; }
 
         #region Override Base Methods
 
