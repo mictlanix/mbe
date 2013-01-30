@@ -224,25 +224,17 @@ namespace Mictlanix.BE.Web.Controllers
             return Json(new { id = id, result = true });
         }
 
-		
-        //TODO: Falta realizar la salida del almacén 
+        // TODO: Falta realizar la salida del almacén 
         [HttpPost]
         public ActionResult ConfirmReturn (int id)
         {
 			var item = CustomerReturn.Find (id);
+			var dt = DateTime.Now;
 
 			using (var scope = new TransactionScope ()) {
 				foreach( var x in item.Details) {
-					var input = new Kardex {
-                        Warehouse = x.SalesOrderDetail.Warehouse,
-                        Product = x.Product,
-                        Source = TransactionType.CustomerReturn,
-                        Quantity = x.Quantity,
-                        Date = DateTime.Now,
-                        Reference = item.Id
-                    };
-
-                    input.Create();
+					InventoryHelpers.ChangeNotification(TransactionType.CustomerReturn, item.Id, dt,
+					                                    x.SalesOrderDetail.Warehouse, x.Product, x.Quantity);
 				}
 				
             	item.IsCompleted = true;

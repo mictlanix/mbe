@@ -1,0 +1,139 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model MasterDetails<LotSerialRequirement, LotSerialTracking>
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.LotSerialNumbers);
+}
+
+<h2>@Resources.LotSerialNumbers</h2>
+
+<div id="master-section">
+	<fieldset>
+	    <div class="display-label right floating">
+	        @Html.LabelFor(x => x.Master.Source)
+	    </div>
+	    <div class="display-label">
+	        @Html.LabelFor(x => x.Master.Warehouse)
+	    </div>
+	    <div class="display-field right floating">
+	        @Model.Master.Source.GetDisplayName()
+	    </div>
+	    <div class="display-field">
+	        @Html.DisplayFor(x => x.Master.Warehouse.Name)
+	    </div>
+	    <div class="display-label right floating">
+	        @Html.LabelFor(x => x.Master.Reference)
+	    </div>
+	    <div class="display-label">
+	        @Html.LabelFor(x => x.Master.Product)
+	    </div>
+	    <div class="display-field right floating">
+	        @Html.DisplayFor(x => x.Master.Reference)
+	    </div>
+	    <div class="display-field">
+	        @Html.DisplayFor(x => x.Master.Product.Name)
+	    </div>
+	</fieldset>
+</div>
+<div id="details-section">
+	<table id='items'>
+	    <tr>
+	        <th class='stretch'>@Html.LabelFor(x => new LotSerialTracking().Quantity)</th>
+	        <th>@Html.LabelFor(x => new LotSerialTracking().LotNumber)</th>
+	        <th>@Html.LabelFor(x => new LotSerialTracking().ExpirationDate)</th>
+	        <th>@Html.LabelFor(x => new LotSerialTracking().SerialNumber)</th>
+	        <th></th>
+	    </tr>
+	@foreach (var item in Model.Details)
+	{
+		@Html.Partial("_LotSerialNumber", item)
+	}
+	@if(Privilege.AllowCreate) {
+	    <tr id='new'>
+	        <td class='number'>@Html.EditorFor(x => new LotSerialTracking().Quantity)</td>
+	        <td class='center'>@Html.EditorFor(x => new LotSerialTracking().LotNumber)</td>
+	        <td class='date'>@Html.EditorFor(x => new LotSerialTracking().ExpirationDate)</td>
+	        <td class='center'>@Html.EditorFor(x => new LotSerialTracking().SerialNumber)</td>
+	        <td class='actions'>
+	        	@Html.Hidden("Id", Model.Master.Id)
+	        	<a class='button icon add icon-only' href='@Url.Action("AddLotSerialNumber")' title='@Resources.Add'></a>
+	        </td>
+	    </tr>
+	}
+	    <tr id='totals'>
+	        <td id='count' class='number'>@Model.Details.Sum(x => Math.Abs(x.Quantity)).ToString("0.####") / @Math.Abs(Model.Master.Quantity).ToString("0.####")</td>
+	        <td colspan='4'></td>
+	    </tr>
+	</table>
+</div>
+
+<div class='right floating'>
+    @using (Html.BeginForm("ConfirmLotSerialNumbers", "Inventory", new { id = Model.Master.Id })) {
+        <button type="submit" class='icon lock'>@Resources.Complete</button>
+    }
+</div>
+<div id='back-to-list'>
+    @Html.ActionLink(Resources.BackToList, "LotSerialNumbers", new { }, new { @class = "button icon back" })
+</div>
+<script type="text/javascript">
+function insert (html) {
+	var ser = $.trim($('#SerialNumber').val());
+	
+	$('#new').before(html).prev().find('a.delete').click(remove);
+	$('#Quantity').val('1');
+	
+	if(ser.length == 0) {
+		$('#LotNumber').val('');
+		$('#ExpirationDate').val('');
+		$('#LotNumber').focus();
+	} else {
+		$('#SerialNumber').focus();
+	}
+}
+function add (e) {
+	e.preventDefault();
+	var url = this.href;
+	var qty = $('#Quantity').val();
+	var lot = $.trim($('#LotNumber').val());
+	var exp = $('#ExpirationDate').val();
+	var ser = $.trim($('#SerialNumber').val());
+
+	$.post(url, { id: @Model.Master.Id, qty: qty, lot: lot, expiration: exp, serial: ser }, function(data) {
+		if(data.result) {
+			$.get('@Url.Action("GetLotSerialNumber")/' + data.id, insert);
+			updateCount();
+			return;
+		}
+		alert('shit!');
+	}, 'json');
+}
+function remove (e) {
+	e.preventDefault();
+	var url = this.href;
+
+    $.post(url, function (data) {
+        if(data.result) {
+            $('#id\\:' + data.id).remove();
+            updateCount();
+        }
+    }, 'json');
+}
+function updateCount() {
+    $.get('@Url.Action("GetLotSerialNumberCount", new { id = Model.Master.Id })', function (data) {
+        $('#count').text(Math.abs(data.count) + ' / ' + Math.abs(data.total));
+    }, 'json');
+}
+$(function () {
+	$('#Quantity').val('1');
+	$('a.add').click(add);
+	$('a.delete').click(remove);
+});
+</script>
+<style type="text/css">
+input[type="text"]{width:90%;}
+.number>input{text-align:right;width:50px;}
+</style>

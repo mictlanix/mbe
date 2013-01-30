@@ -159,7 +159,7 @@ namespace Mictlanix.BE.Web.Controllers
 				return View (item);
 
 			using (var scope = new TransactionScope()) {
-				item.ReceiptMessage = item.ReceiptMessage.Trim();
+				item.ReceiptMessage = item.ReceiptMessage == null ? null : item.ReceiptMessage.Trim();
 				item.Address.Update ();
 				item.UpdateAndFlush ();
 			}

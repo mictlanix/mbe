@@ -424,7 +424,7 @@
     <value>Precios</value>
   </data>
   <data name="Message_DeleteConfirmation" xml:space="preserve">
-    <value>¿Está seguro de borrar esto?</value>
+    <value>¿Está seguro de borrar este elemento?</value>
   </data>
   <data name="Message_NoInvoiceableItems" xml:space="preserve">
     <value>No se encontraron registros facturables.</value>
@@ -1315,10 +1315,10 @@ Realizada el: {0:d}</value>
     <value>Pago en una sola exhibición</value>
   </data>
   <data name="PrivateKey" xml:space="preserve">
-    <value>FIEL</value>
+    <value>Clave Privada</value>
   </data>
   <data name="PrivateKeyPassword" xml:space="preserve">
-    <value>Contraseña de la FIEL</value>
+    <value>Contraseña de la Clave Privada</value>
   </data>
   <data name="FiscalDocumentType_Income" xml:space="preserve">
     <value>Ingreso</value>
@@ -1544,5 +1544,20 @@ Realizada el: {0:d}</value>
   </data>
   <data name="ChooseCustomer" xml:space="preserve">
     <value>Seleccione un cliente</value>
+  </data>
+  <data name="LotNumber" xml:space="preserve">
+    <value>Lote</value>
+  </data>
+  <data name="ExpirationDate" xml:space="preserve">
+    <value>Caducidad</value>
+  </data>
+  <data name="SerialNumber" xml:space="preserve">
+    <value>Número de Serie</value>
+  </data>
+  <data name="LotSerialNumbers" xml:space="preserve">
+    <value>Lotes y Números de Serie</value>
+  </data>
+  <data name="Message_DiscardConfirmation" xml:space="preserve">
+    <value>Este elemento será descartado de forma permanente y no se puede recuperar. ¿Estás seguro?</value>
   </data>
 </root>

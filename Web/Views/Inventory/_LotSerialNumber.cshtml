@@ -1,0 +1,22 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model LotSerialTracking
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.LotSerialNumbers);
+}
+
+<tr id='id:@Model.Id'>
+    <td class="number">@Math.Abs(Model.Quantity).ToString("0.####")</td>
+    <td class="center">@Html.DisplayFor(x => Model.LotNumber)</td>
+    <td class="date">@Html.DisplayFor(x => Model.ExpirationDate)</td>
+    <td class="center">@Html.DisplayFor(x => Model.SerialNumber)</td>
+    <td class="actions">
+	@if(Privilege.AllowDelete) {
+    	@Html.ActionLink(" ", "RemoveLotSerialNumber", new { id = Model.Id }, new { @class = "button icon delete icon-only", @title = Resources.Delete })
+    }
+    </td>
+</tr>
