@@ -13,22 +13,29 @@
                              Html.GetPrivilege(CurrentUser, SystemObjects.PointsOfSale).AllowRead ||
                              Html.GetPrivilege(CurrentUser, SystemObjects.CashDrawers).AllowRead ||
                              Html.GetPrivilege(CurrentUser, SystemObjects.Stores).AllowRead;
+                             
     var ShowSalesMenu = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders).AllowRead ||
                         Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments).AllowRead ||
                         Html.GetPrivilege(CurrentUser, SystemObjects.CustomerReturns).AllowRead ||
                         Html.GetPrivilege(CurrentUser, SystemObjects.SalesQuotes).AllowRead ||
                         Html.GetPrivilege(CurrentUser, SystemObjects.PriceLists).AllowRead;
+                        
     var ShowInventoryMenu = Html.GetPrivilege(CurrentUser, SystemObjects.InventoryReceipts).AllowRead ||
                             Html.GetPrivilege(CurrentUser, SystemObjects.InventoryIssues).AllowRead ||
-                            Html.GetPrivilege(CurrentUser, SystemObjects.InventoryTransfers).AllowRead;
+                            Html.GetPrivilege(CurrentUser, SystemObjects.InventoryTransfers).AllowRead ||
+                            Html.GetPrivilege(CurrentUser, SystemObjects.LotSerialNumbers).AllowRead;
+                            
     var ShowPurchasesMenu = Html.GetPrivilege(CurrentUser, SystemObjects.PurchasesOrders).AllowRead ||
                             Html.GetPrivilege(CurrentUser, SystemObjects.SupplierPayment).AllowRead ||
                             Html.GetPrivilege(CurrentUser, SystemObjects.SupplierReturns).AllowRead;
+                            
     var ShowAdministrationMenu = Html.GetPrivilege(CurrentUser, SystemObjects.AccountsReceivable).AllowRead ||
                             	 Html.GetPrivilege(CurrentUser, SystemObjects.AccountsPayable).AllowRead;
+                            	 
     var ShowFiscalDocumentsMenu = Html.GetPrivilege(CurrentUser, SystemObjects.FiscalDocuments).AllowRead ||
                             	  Html.GetPrivilege(CurrentUser, SystemObjects.FiscalReports).AllowRead ||
                             	  Html.GetPrivilege(CurrentUser, SystemObjects.Taxpayers).AllowRead;
+                            	  
     var ShowReportsMenu = Html.GetPrivilege(CurrentUser, SystemObjects.Kardex).AllowRead ||
                           Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrdersHistoric).AllowRead ||
                           Html.GetPrivilege(CurrentUser, SystemObjects.CustomerReturnHistoric).AllowRead ||
@@ -233,6 +240,14 @@
                                    href="@Url.Action("Transfers", "Inventory")">@Resources.Title_InventoryTransfer</a>
                             </li>
                             }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.LotSerialNumbers).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("LotSerialNumbers", "Inventory") ? "gbm0l" : "")"
+                                   href="@Url.Action("LotSerialNumbers", "Inventory")">@Resources.LotSerialNumbers</a>
+                            </li>
+                            }
+                            
                         </ol>
                     </div>
                 </div>

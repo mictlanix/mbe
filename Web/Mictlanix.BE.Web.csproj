@@ -166,6 +166,7 @@
     <Compile Include="Models\ReceivedPayment.cs" />
     <Compile Include="Models\SummaryItem.cs" />
     <Compile Include="Controllers\PricingController.cs" />
+    <Compile Include="Helpers\InventoryHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
@@ -514,6 +515,10 @@
     <Content Include="Scripts\helpers.js" />
     <Content Include="Content\icons\prev-item.png" />
     <Content Include="Content\images\na.png" />
+    <Content Include="Views\Inventory\LotSerialNumbers.cshtml" />
+    <Content Include="Views\Inventory\_LotSerialNumbers.cshtml" />
+    <Content Include="Views\Inventory\AssignLotSerialNumbers.cshtml" />
+    <Content Include="Views\Inventory\_LotSerialNumber.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />

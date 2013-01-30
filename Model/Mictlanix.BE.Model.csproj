@@ -120,6 +120,8 @@
     <Compile Include="CustomerReturnDetail.cs" />
     <Compile Include="Constants\TransactionType.cs" />
     <Compile Include="ProductPrice.cs" />
+    <Compile Include="LotSerialTracking.cs" />
+    <Compile Include="LotSerialRequirement.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">
