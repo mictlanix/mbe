@@ -353,17 +353,9 @@ namespace Mictlanix.BE.Web.Controllers
 				foreach (var x in item.Details) {
 					x.Warehouse = warehouse;
 					x.Update ();
-
-                    var input = new Kardex {
-                        Warehouse = warehouse,
-                        Product = x.Product,
-                        Source = TransactionType.SalesOrder,
-                        Quantity = -x.Quantity,
-                        Date = dt,
-                        Reference = item.Id
-                    };
-
-                    input.Create();
+					
+					InventoryHelpers.ChangeNotification(TransactionType.SalesOrder, item.Id,
+					                                    dt, warehouse, x.Product, -x.Quantity);
 				}
 
 				item.UpdateAndFlush ();
