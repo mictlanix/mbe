@@ -114,6 +114,15 @@ namespace Mictlanix.BE.Model
 		[Property]
         [Display(Name = "Type", ResourceType = typeof(Resources))]
         public virtual FiscalDocumentType Type { get; set; }
+		
+		[Property]
+		[Display(Name = "Currency", ResourceType = typeof(Resources))]
+		public virtual CurrencyCode Currency { get; set; }
+		
+		[Property("exchange_rate")]
+		[DisplayFormat(DataFormatString = "{0:0.0000}")]
+		[Display(Name = "ExchangeRate", ResourceType = typeof(Resources))]
+		public virtual decimal ExchangeRate { get; set; }
         
 		[Property]
 		[Display(Name = "Batch", ResourceType = typeof(Resources))]

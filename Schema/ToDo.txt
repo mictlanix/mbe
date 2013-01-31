@@ -6,3 +6,5 @@
 UPDATE employee SET gender = 2 WHERE gender = 0;
 UPDATE employee SET gender = 0 WHERE gender = 1;
 UPDATE employee SET gender = 1 WHERE gender = 2;
+
+UPDATE customer SET code = CONCAT('C', RIGHT(CONCAT('0000', customer_id), 4));

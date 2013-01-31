@@ -10,7 +10,14 @@
 <h3>@Resources.Message_DeleteConfirmation</h3>
 <fieldset>
     <legend>@Resources.Title_Customer</legend>
-
+    
+    <div class="display-label">
+        @Html.LabelFor(model => model.Code)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Code)
+    </div>
+    
     <div class="display-label">
         @Html.LabelFor(model => model.Name)
     </div>
