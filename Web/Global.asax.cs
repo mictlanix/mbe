@@ -70,6 +70,9 @@ namespace Mictlanix.BE.Web
 				my_culture.NumberFormat.PercentDecimalSeparator = ".";
 				my_culture.NumberFormat.PercentGroupSeparator = ",";
 			}
+			
+			Console.WriteLine("{0}", Helpers.Configuration.BaseCurrency);
+			Console.WriteLine("{0}", Helpers.Configuration.DefaultCurrency);
 		}
 		
         protected void Application_BeginRequest (object sender, EventArgs e)
