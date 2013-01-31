@@ -43,6 +43,13 @@ namespace Mictlanix.BE.Model
 
         [PrimaryKey(PrimaryKeyType.Identity, "customer_id")]
         public int Id { get; set; }
+		
+		[Property]
+		[ValidateIsUnique]
+		[Display(Name = "Code", ResourceType = typeof(Resources))]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[StringLength(25, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public string Code { get; set; }
 
         [Property]
         [Display(Name = "Name", ResourceType = typeof(Resources))]

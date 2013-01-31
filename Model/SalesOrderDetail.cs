@@ -73,12 +73,12 @@ namespace Mictlanix.BE.Model
 
 		[Property]
 		[Display(Name = "Currency", ResourceType = typeof(Resources))]
-		public CurrencyCode Currency { get; set; }
+		public virtual CurrencyCode Currency { get; set; }
 		
 		[Property("exchange_rate")]
 		[DisplayFormat(DataFormatString = "{0:0.0000}")]
 		[Display(Name = "ExchangeRate", ResourceType = typeof(Resources))]
-		public decimal ExchangeRate { get; set; }
+		public virtual decimal ExchangeRate { get; set; }
 
         [Property("product_code")]
         [Display(Name = "ProductCode", ResourceType = typeof(Resources))]
