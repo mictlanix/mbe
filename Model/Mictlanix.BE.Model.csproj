@@ -122,6 +122,7 @@
     <Compile Include="ProductPrice.cs" />
     <Compile Include="LotSerialTracking.cs" />
     <Compile Include="LotSerialRequirement.cs" />
+    <Compile Include="Constants\CurrencyCode.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">
