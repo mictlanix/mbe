@@ -14,56 +14,29 @@
 
 <table>
     <tr>
-        <th>
-            @Html.LabelFor(x => new Customer().Name)
-        </th>
-
-        <th>
-            @Html.LabelFor(x => new Customer().Zone)
-        </th>
-
-        <th>
-            @Html.LabelFor(x => new Customer().PriceList)
-        </th>
-
-        <th>
-            @Html.LabelFor(x => new Customer().CreditLimit)
-        </th>
-
-        <th>
-            @Html.LabelFor(x => new Customer().CreditDays)
-        </th>
+        <th>@Html.LabelFor(x => new Customer().Code)</th>
+        <th>@Html.LabelFor(x => new Customer().Name)</th>
+        <th>@Html.LabelFor(x => new Customer().PriceList)</th>
+        <th>@Html.LabelFor(x => new Customer().CreditLimit)</th>
+        <th>@Html.LabelFor(x => new Customer().CreditDays)</th>
         <th></th>
     </tr>
 
 @foreach (var item in Model.Results) {
     <tr>
-        <td>
-            @Html.DisplayFor(x => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(x => item.Zone)
-        </td>
-        <td class="center">
-            @Html.DisplayFor(x => item.PriceList.Name)
-        </td>
-        <td class="number">
-            @Html.DisplayFor(x => item.CreditLimit)
-        </td>
-        <td class="number">
-            @Html.DisplayFor(x => item.CreditDays)
-        </td>
+        <td>@Html.DisplayFor(x => item.Code)</td>
+        <td>@Html.DisplayFor(x => item.Name)</td>
+        <td>@Html.DisplayFor(x => item.PriceList.Name)</td>
+        <td>@Html.DisplayFor(x => item.CreditLimit)</td>
+        <td>@Html.DisplayFor(x => item.CreditDays)</td>
         <td class="actions">
-        	@if(Privilege.AllowUpdate)
-        	{
+        	@if(Privilege.AllowUpdate) {
             	@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
             }
-        	@if(Privilege.AllowRead)
-        	{
+        	@if(Privilege.AllowRead) {
             	@Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
             }
-        	@if(Privilege.AllowDelete)
-        	{
+        	@if(Privilege.AllowDelete) {
             	@Html.ActionLink(" ", "Delete", new { id = item.Id }, new { @class = "button icon delete icon-only", @title = Resources.Delete })
             }
         </td>
