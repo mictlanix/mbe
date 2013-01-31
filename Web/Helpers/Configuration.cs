@@ -94,7 +94,15 @@ namespace Mictlanix.BE.Web.Helpers
 		public static int PageSize {
 			get { return int.Parse (ConfigurationManager.AppSettings ["PageSize"]); }
 		}
-		
+
+		public static CurrencyCode BaseCurrency {
+			get { return (CurrencyCode)Enum.Parse (typeof(CurrencyCode), ConfigurationManager.AppSettings ["BaseCurrency"]); }
+		}
+
+		public static CurrencyCode DefaultCurrency {
+			get { return (CurrencyCode)Enum.Parse (typeof(CurrencyCode), ConfigurationManager.AppSettings ["DefaultCurrency"]); }
+		}
+
 		#endregion
 		
 		#region Request's (Local) Settings
