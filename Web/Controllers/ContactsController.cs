@@ -5,7 +5,7 @@
 //   Eddy Zavaleta <eddy@mictlanix.org>
 //   Eduardo Nieto <enieto@mictlanix.org>
 // 
-// Copyright (C) 2011 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -95,8 +95,6 @@ namespace Mictlanix.BE.Web.Controllers
 			using (var scope = new TransactionScope()) {
                 item.CreateAndFlush ();
 
-	            System.Diagnostics.Debug.WriteLine("New Contact [Id = {0}]", item.Id);
-				
                 if (type == "Suppliers") {
                     var supplier = Supplier.Find(owner);
 					supplier.Contacts.Add(item);

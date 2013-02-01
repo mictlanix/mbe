@@ -586,7 +586,7 @@
     <value>Transferencia</value>
   </data>
   <data name="Balance" xml:space="preserve">
-    <value>Balance</value>
+    <value>Saldo</value>
   </data>
   <data name="Paid" xml:space="preserve">
     <value>Pagado</value>
@@ -1560,4 +1560,7 @@ Realizada el: {0:d}</value>
   <data name="Message_DiscardConfirmation" xml:space="preserve">
     <value>Este elemento será descartado de forma permanente y no se puede recuperar. ¿Estás seguro?</value>
   </data>
+  <data name="OpeningBalance" xml:space="preserve">
+    <value>Saldo Inicial</value>
+  </data>  
 </root>

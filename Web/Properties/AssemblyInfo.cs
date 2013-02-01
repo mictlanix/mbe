@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Mictlanix")]
 [assembly: AssemblyProduct("Business Essentials")]
-[assembly: AssemblyCopyright("Copyright ©  2011 Eddy Zavaleta, Mictlanix and contributors.")]
+[assembly: AssemblyCopyright("Copyright ©  2011-2013 Eddy Zavaleta, Mictlanix and contributors.")]
 [assembly: AssemblyTrademark("Mictlanix BE")]
 [assembly: AssemblyCulture("")]
 

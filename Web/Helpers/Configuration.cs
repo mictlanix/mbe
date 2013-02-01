@@ -5,7 +5,7 @@
 //   Eddy Zavaleta <eddy@mictlanix.org>
 //   Eduardo Nieto <enieto@mictlanix.org>
 // 
-// Copyright (C) 2011 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -96,11 +96,19 @@ namespace Mictlanix.BE.Web.Helpers
 		}
 
 		public static CurrencyCode BaseCurrency {
-			get { return (CurrencyCode)Enum.Parse (typeof(CurrencyCode), ConfigurationManager.AppSettings ["BaseCurrency"]); }
+			get {
+				var currency = CurrencyCode.MXN;
+				Enum.TryParse (ConfigurationManager.AppSettings ["BaseCurrency"], out currency);
+				return currency;
+			}
 		}
 
 		public static CurrencyCode DefaultCurrency {
-			get { return (CurrencyCode)Enum.Parse (typeof(CurrencyCode), ConfigurationManager.AppSettings ["DefaultCurrency"]); }
+			get {
+				var currency = CurrencyCode.MXN;
+				Enum.TryParse (ConfigurationManager.AppSettings ["DefaultCurrency"], out currency);
+				return currency;
+			}
 		}
 
 		#endregion

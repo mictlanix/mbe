@@ -4343,5 +4343,11 @@ namespace Mictlanix.BE {
 				return ResourceManager.GetString("Message_DiscardConfirmation", resourceCulture);
 			}
 		}
+		
+		public static string OpeningBalance {
+			get {
+				return ResourceManager.GetString("OpeningBalance", resourceCulture);
+			}
+		}
     }
 }
