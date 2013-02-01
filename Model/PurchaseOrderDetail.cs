@@ -5,7 +5,7 @@
 //   Eddy Zavaleta <eddy@mictlanix.org>
 //   Eduardo Nieto <enieto@mictlanix.org>
 // 
-// Copyright (C) 2011 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -80,6 +80,10 @@ namespace Mictlanix.BE.Model
         [Display(Name = "TaxRate", ResourceType = typeof(Resources))]
         public decimal TaxRate { get; set; }
 		
+		[Property("tax_included")]
+		[Display(Name = "TaxIncluded", ResourceType = typeof(Resources))]
+		public bool IsTaxIncluded { get; set; }
+		
 		[Property]
 		[Display(Name = "Currency", ResourceType = typeof(Resources))]
 		public virtual CurrencyCode Currency { get; set; }
@@ -103,8 +107,8 @@ namespace Mictlanix.BE.Model
         [Display(Name = "Subtotal", ResourceType = typeof(Resources))]
         public decimal Subtotal
         {
-            get { return Math.Round(Total / (1 + TaxRate), 2, MidpointRounding.AwayFromZero); }
-        }
+			get { return ModelHelpers.Subtotal (Quantity, Price, ExchangeRate, Discount, TaxRate, IsTaxIncluded); }
+		}
 
         [DataType(DataType.Currency)]
         [Display(Name = "Taxes", ResourceType = typeof(Resources))]
@@ -117,8 +121,8 @@ namespace Mictlanix.BE.Model
         [Display(Name = "Total", ResourceType = typeof(Resources))]
         public decimal Total
         {
-            get { return Math.Round(Quantity * Price * (1 - Discount), 2, MidpointRounding.AwayFromZero); }
-        }
+			get { return ModelHelpers.Total (Quantity, Price, ExchangeRate, Discount, TaxRate, IsTaxIncluded); }
+		}
 
 
         #region Override Base Methods

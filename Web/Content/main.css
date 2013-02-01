@@ -308,3 +308,6 @@ td.labels div > span {
 	font-size:10px;
 	margin-right:2px;
 }
+.total {
+  font-weight:bold;
+}
