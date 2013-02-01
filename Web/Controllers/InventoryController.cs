@@ -5,7 +5,7 @@
 //   Eddy Zavaleta <eddy@mictlanix.org>
 //   Eduardo Nieto <enieto@mictlanix.org>
 // 
-// Copyright (C) 2011 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -149,8 +149,6 @@ namespace Mictlanix.BE.Web.Controllers
 				item.CreateAndFlush ();
 			}
 
-			System.Diagnostics.Debug.WriteLine ("New InventoryReceipt [Id = {0}]", item.Id);
-
             return RedirectToAction("EditReceipt", new { id = item.Id });
         }
 
@@ -213,8 +211,6 @@ namespace Mictlanix.BE.Web.Controllers
             using (var scope = new TransactionScope()) {
                 item.CreateAndFlush();
             }
-
-            System.Diagnostics.Debug.WriteLine("New InventoryReceiptDetail [Id = {0}]", item.Id);
 
             return Json(new { id = item.Id });
         }
@@ -414,8 +410,6 @@ namespace Mictlanix.BE.Web.Controllers
                 item.CreateAndFlush();
             }
 
-            System.Diagnostics.Debug.WriteLine("New InventoryIssue [Id = {0}]", item.Id);
-
             return RedirectToAction("EditIssue", new { id = item.Id });
         }
 
@@ -477,8 +471,6 @@ namespace Mictlanix.BE.Web.Controllers
             using (var scope = new TransactionScope()) {
                 item.CreateAndFlush();
             }
-
-            System.Diagnostics.Debug.WriteLine("New InventoryIssueDetail [Id = {0}]", item.Id);
 
             return Json(new { id = item.Id });
         }
@@ -685,8 +677,6 @@ namespace Mictlanix.BE.Web.Controllers
                 item.CreateAndFlush();
             }
 
-            System.Diagnostics.Debug.WriteLine("New InventoryTransfer [Id = {0}]", item.Id);
-
             return RedirectToAction("EditTransfer", new { id = item.Id });
         }
 
@@ -759,8 +749,6 @@ namespace Mictlanix.BE.Web.Controllers
             using (var scope = new TransactionScope()) {
                 item.CreateAndFlush ();
             }
-
-            System.Diagnostics.Debug.WriteLine("New InventoryTransferDetail [Id = {0}]", item.Id);
 
             return Json(new { id = item.Id });
         }

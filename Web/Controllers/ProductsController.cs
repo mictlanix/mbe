@@ -5,7 +5,7 @@
 //   Eddy Zavaleta <eddy@mictlanix.org>
 //   Eduardo Nieto <enieto@mictlanix.org>
 // 
-// Copyright (C) 2011 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -109,12 +109,13 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult Create (Product item, HttpPostedFileBase file)
 		{
+			item.Supplier = Supplier.TryFind (item.SupplierId);
+			item.Category = Category.TryFind (item.CategoryId);
+
 			if (!ModelState.IsValid)
 				return View (item);
             
 			item.IsTaxIncluded = Configuration.IsTaxIncluded;
-			item.Supplier = Supplier.Find (item.SupplierId);
-			item.Category = Category.Find (item.CategoryId);
 			item.Photo = SavePhoto (file) ?? Configuration.DefaultPhotoFile;
 
 			using (var scope = new TransactionScope ()) {
@@ -139,6 +140,9 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult Edit (Product item, HttpPostedFileBase file)
 		{
+			item.Supplier = Supplier.TryFind (item.SupplierId);
+			item.Category = Category.TryFind (item.CategoryId);
+
 			if (!ModelState.IsValid)
 				return View (item);
             
@@ -150,16 +154,15 @@ namespace Mictlanix.BE.Web.Controllers
 			entity.IsInvoiceable = item.IsInvoiceable;
 			entity.IsPerishable = item.IsPerishable;
 			entity.IsSeriable = item.IsSeriable;
-			entity.IsTaxIncluded = item.IsTaxIncluded;
+			entity.IsTaxIncluded = Configuration.IsTaxIncluded;
 			entity.Location = item.Location;
 			entity.Model = item.Model;
 			entity.Name = item.Name;
 			entity.SKU = item.SKU;
 			entity.TaxRate = item.TaxRate;
 			entity.UnitOfMeasurement = item.UnitOfMeasurement;
-			entity.IsTaxIncluded = Configuration.IsTaxIncluded;
-			entity.Supplier = Supplier.Find (item.SupplierId);
-			entity.Category = Category.Find (item.CategoryId);
+			entity.Supplier = item.Supplier;
+			entity.Category = item.Category;
 			entity.Photo = SavePhoto (file) ?? item.Photo;
 
 			using (var scope = new TransactionScope ()) {

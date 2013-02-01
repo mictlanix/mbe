@@ -4,52 +4,44 @@
 @using Mictlanix.BE.Web.Models
 @model IEnumerable<Kardex>
 
+@{
+	decimal balance = ViewBag.OpeningBalance;
+}
 <table>
     <tr>
-        <th>
-            @Html.LabelFor(x => new Kardex().Date)
-        </th>
-        <th>
-            @Html.LabelFor(x => new Kardex().Source)
-        </th>
-        <th>
-            @Resources.Title_InventoryReceipt
-        </th>
-        <th>
-            @Resources.Title_InventoryIssue
-        </th>
-        <th>
-            @Resources.Total
-        </th>
-        
+        <th>@Html.LabelFor(x => new Kardex().Date)</th>
+        <th>@Html.LabelFor(x => new Kardex().Source)</th>
+        <th>@Resources.Title_InventoryReceipt</th>
+        <th>@Resources.Title_InventoryIssue</th>
+        <th>@Resources.Balance</th>
+    </tr>
+    <tr>
+        <td class='right' colspan='2'>@Resources.OpeningBalance</td>
+        <td class='number' colspan='3'>@balance.ToString("0.####")</td>
     </tr>
 @foreach (var item in Model)
 {
+	balance += item.Quantity;
     <tr>
-        <td class="date">
-            @Html.DisplayFor(x => item.Date)
-        </td>
-        <td >
-            @item.Source.GetDisplayName() (@Html.DisplayFor(x => item.Reference))
-        </td>
-        <td class="number">
+        <td class='date'>@Html.DisplayFor(x => item.Date)</td>
+        <td>@item.Source.GetDisplayName() (@Html.DisplayFor(x => item.Reference))</td>
+        <td class='number'>
             @if (item.Quantity > 0) {
                 @item.Quantity.ToString("0.####")
             }
         </td>
-        <td class="number">
+        <td class='number'>
             @if (item.Quantity < 0) {
                 @Math.Abs(item.Quantity).ToString("0.####")
             }
         </td>
-        <td></td>
+        <td class='number'>@balance.ToString("0.####")</td>
     </tr> 
 }
-    <tr>
-        <td></td>
-        <td class="right">@Resources.Total</td>
-        <td></td>
-        <td></td>
-        <td class="number">@Model.Sum(x => x.Quantity).ToString("0.####")</td>
+    <tr class="total">
+        <td class='right' colspan='2'>@Resources.Total</td>
+        <td class='number'>@Model.Where(x => x.Quantity > 0).Sum(x => x.Quantity).ToString("0.####")</td>
+        <td class='number'>@Math.Abs(Model.Where(x => x.Quantity < 0).Sum(x => x.Quantity)).ToString("0.####")</td>
+        <td class='number'>@balance.ToString("0.####")</td>
     </tr>
 </table>

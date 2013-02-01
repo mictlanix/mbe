@@ -5,7 +5,7 @@
 //   Eddy Zavaleta <eddy@mictlanix.org>
 //   Eduardo Nieto <enieto@mictlanix.org>
 // 
-// Copyright (C) 2011 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -176,8 +176,6 @@ namespace Mictlanix.BE.Web.Controllers
 	            }
             }
 
-			System.Diagnostics.Debug.WriteLine("New CashSession [Id = {0}]", item.Id);
-
             return RedirectToAction ("Index");
         }
 
@@ -271,8 +269,6 @@ namespace Mictlanix.BE.Web.Controllers
 				item.CreateAndFlush ();
 			}
 
-			System.Diagnostics.Debug.WriteLine ("New Payment [Id = {0}]", item.Id);
-
 			return Json (new { id = item.Id });
 		}
 		
@@ -312,8 +308,6 @@ namespace Mictlanix.BE.Web.Controllers
 				item.CreateAndFlush ();
 			}
 
-			System.Diagnostics.Debug.WriteLine ("New Payment [Id = {0}]", item.Id);
-			
 			if (Request.IsAjaxRequest ()) {
 				return PartialView ("_CreditPaymentSuccesful", item);
 			}

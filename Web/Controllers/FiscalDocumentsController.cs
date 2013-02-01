@@ -4,7 +4,7 @@
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
 // 
-// Copyright (C) 2012 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2012-2013 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -168,8 +168,6 @@ namespace Mictlanix.BE.Web.Controllers
 				item.IssuedAt.Create ();
 				item.CreateAndFlush ();
 			}
-
-			System.Diagnostics.Debug.WriteLine ("New FiscalDocument [Id = {0}]", item.Id);
 
 			if (item.Id == 0) {
 				return View ("UnknownError");
@@ -413,6 +411,7 @@ namespace Mictlanix.BE.Web.Controllers
 				UnitOfMeasurement = p.UnitOfMeasurement,
                 Discount = 0,
                 TaxRate = p.TaxRate,
+				IsTaxIncluded = p.IsTaxIncluded,
                 Quantity = 1,
 				Price = price
             };
@@ -424,8 +423,6 @@ namespace Mictlanix.BE.Web.Controllers
 			using (var scope = new TransactionScope()) {
 				item.CreateAndFlush ();
 			}
-
-			System.Diagnostics.Debug.WriteLine ("New FiscalDocumentDetail [Id = {0}]", item.Id);
 
 			return Json (new { id = item.Id });
 		}
@@ -595,6 +592,7 @@ namespace Mictlanix.BE.Web.Controllers
 						UnitOfMeasurement = x.Product.UnitOfMeasurement,
 						Discount = x.Discount,
 						TaxRate = x.TaxRate,
+						IsTaxIncluded = x.IsTaxIncluded,
 						Quantity = quantity,
 						Price = x.Price
 					};

@@ -4,7 +4,7 @@
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
 // 
-// Copyright (C) 2012 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2012-2013 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -151,8 +151,6 @@ namespace Mictlanix.BE.Web.Controllers
 				item.CreateAndFlush ();
 			}
 
-			System.Diagnostics.Debug.WriteLine ("New SalesQuote [Id = {0}]", item.Id);
-
 			return RedirectToAction ("Edit", new { id = item.Id });
 		}
 
@@ -215,12 +213,13 @@ namespace Mictlanix.BE.Web.Controllers
 			             select x.Price).SingleOrDefault();
 
             var item = new SalesQuoteDetail {
-                SalesQuote = SalesQuote.Find(order),
+                SalesQuote = SalesQuote.Find (order),
                 Product = p,
                 ProductCode = p.Code,
                 ProductName = p.Name,
                 Discount = 0,
                 TaxRate = p.TaxRate,
+				IsTaxIncluded = p.IsTaxIncluded,
                 Quantity = 1,
 				Price = price
             };
@@ -228,8 +227,6 @@ namespace Mictlanix.BE.Web.Controllers
             using (var scope = new TransactionScope()) {
                 item.CreateAndFlush ();
             }
-
-            System.Diagnostics.Debug.WriteLine("New SalesQuoteDetail [Id = {0}]", item.Id);
 
             return Json(new { id = item.Id });
         }
