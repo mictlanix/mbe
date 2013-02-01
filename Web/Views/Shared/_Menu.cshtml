@@ -495,24 +495,3 @@
     <div id="gbx3"></div>
     <div id="gbx4"></div>
 </div>
-@if (Request.IsAuthenticated)
-{
-<script type="text/javascript">
-	function hidePopups() {
-    	$('.gbgt').each(function () {
-            $(this).parent().removeClass('gbto');
-            $(this).next().css({ "visibility": "hidden" });
-      	});
-	}
-	
-    $(function () {
-    	$(document).click(hidePopups);
-		$('.gbgt').click(function (e) {
-			e.stopPropagation();
-			hidePopups();
-            $(this).parent().addClass('gbto');
-            $(this).next().css({ "visibility": "visible" });
-        });
-    });
-</script>
-}

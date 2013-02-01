@@ -1,10 +1,10 @@
 ﻿// 
-// Pair.cs
+// ModelHelpers.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
 // 
-// Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2013 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -29,23 +29,34 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
-using System.Web.Mvc;
-using System.Web.Security;
-using Mictlanix.BE.Model;
 
-namespace Mictlanix.BE.Web.Models
+namespace Mictlanix.BE.Model
 {
-	public class Pair<T, U> {
-	    public Pair() {
-	    }
-	
-	    public Pair(T first, U second) {
-	        this.First = first;
-	        this.Second = second;
-	    }
+	public static class ModelHelpers
+	{
+		public static decimal Round (decimal d)
+		{
+			return Math.Round (d, 2, MidpointRounding.AwayFromZero);
+		}
+		
+		public static decimal Subtotal (decimal quantity, decimal price, decimal exchangeRate,
+		                                decimal discount, decimal taxRate, bool taxIncluded)
+		{
+			if (taxIncluded) {
+				return Round (quantity * price * exchangeRate * (1m - discount) / (1m + taxRate));
+			} else {
+				return Round (quantity * price * exchangeRate * (1m - discount));
+			}
+		}
 
-	    public T First { get; set; }
-	    public U Second { get; set; }
+		public static decimal Total (decimal quantity, decimal price, decimal exchangeRate,
+		                             decimal discount, decimal taxRate, bool taxIncluded)
+		{
+			if (taxIncluded) {
+				return Round (quantity * price * exchangeRate * (1m - discount));
+			} else {
+				return Round (quantity * price * exchangeRate * (1m - discount) * (1m + taxRate));
+			}
+		}
 	}
 }

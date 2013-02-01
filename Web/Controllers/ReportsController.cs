@@ -5,7 +5,7 @@
 //   Eddy Zavaleta <eddy@mictlanix.org>
 //   Eduardo Nieto <enieto@mictlanix.org>
 // 
-// Copyright (C) 2011 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -70,9 +70,10 @@ namespace Mictlanix.BE.Web.Controllers
 
 		public ViewResult KardexDetails(int warehouse, int product)
         {
-            var item = new DateRange();
-            item.StartDate = DateTime.Now;
-            item.EndDate = DateTime.Now;
+            var item = new DateRange {
+				StartDate = DateTime.Now,
+				EndDate = DateTime.Now
+			};
 
             ViewBag.Warehouse = Warehouse.Find(warehouse);
             ViewBag.Product = Product.Find(product);
@@ -83,11 +84,18 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
 		public ActionResult KardexDetails(int warehouse, int product, DateRange item)
         {
+			var balance = from x in Model.Kardex.Queryable
+						  where x.Warehouse.Id == warehouse && x.Product.Id == product &&
+								x.Date < item.StartDate.Date
+						  orderby x.Date
+						  select x.Quantity;
             var qry = from x in Model.Kardex.Queryable
                       where x.Warehouse.Id == warehouse && x.Product.Id == product &&
                             x.Date >= item.StartDate.Date && x.Date <= item.EndDate.Date.Add(new TimeSpan(23, 59, 59))
 					  orderby x.Date
                       select x;
+
+			ViewBag.OpeningBalance = balance.Count() > 0 ? balance.Sum () : 0;
 
 			return PartialView("_KardexDetails", qry.ToList());
         }

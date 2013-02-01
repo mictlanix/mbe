@@ -123,6 +123,7 @@
     <Compile Include="LotSerialTracking.cs" />
     <Compile Include="LotSerialRequirement.cs" />
     <Compile Include="Constants\CurrencyCode.cs" />
+    <Compile Include="Helpers\ModelHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">
@@ -138,4 +139,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+  </ItemGroup>
 </Project>
