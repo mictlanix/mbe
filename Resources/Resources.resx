@@ -1562,5 +1562,20 @@ Realizada el: {0:d}</value>
   </data>
   <data name="OpeningBalance" xml:space="preserve">
     <value>Saldo Inicial</value>
-  </data>  
+  </data>
+  <data name="Rate" xml:space="preserve">
+    <value>Tasa</value>
+  </data>
+  <data name="Base" xml:space="preserve">
+    <value>Tasa</value>
+  </data>
+  <data name="Target" xml:space="preserve">
+    <value>Objetivo</value>
+  </data>
+  <data name="Currency" xml:space="preserve">
+    <value>Moneda</value>
+  </data>
+  <data name="ExchangeRate" xml:space="preserve">
+    <value>Tipo de Cambio</value>
+  </data>
 </root>

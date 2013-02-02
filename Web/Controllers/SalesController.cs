@@ -223,7 +223,7 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public JsonResult AddDetail (int order, int product)
         {
-			var s = SalesOrder.Find (order);
+			var s = SalesOrder.TryFind (order);
 			var p = Product.TryFind (product);
 			int pl = s.Customer.PriceList.Id;
 			var price = (from x in ProductPrice.Queryable
@@ -239,7 +239,9 @@ namespace Mictlanix.BE.Web.Controllers
                 TaxRate = p.TaxRate,
 				IsTaxIncluded = p.IsTaxIncluded,
                 Quantity = 1,
-				Price = price
+				Price = price,
+				ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate(),
+				Currency = Configuration.DefaultCurrency
             };
 
             using (var scope = new TransactionScope()) {
@@ -426,7 +428,9 @@ namespace Mictlanix.BE.Web.Controllers
 					  where x.List.Id == pl && (
 							x.Product.Name.Contains (pattern) ||
 							x.Product.Code.Contains (pattern) ||
-							x.Product.SKU.Contains (pattern))
+							x.Product.Model.Contains (pattern) ||
+							x.Product.SKU.Contains (pattern) ||
+							x.Product.Brand.Contains (pattern))
 					  orderby x.Product.Name
 					  select new { 
 							id = x.Product.Id,

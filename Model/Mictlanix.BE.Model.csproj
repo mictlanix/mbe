@@ -124,6 +124,7 @@
     <Compile Include="LotSerialRequirement.cs" />
     <Compile Include="Constants\CurrencyCode.cs" />
     <Compile Include="Helpers\ModelHelpers.cs" />
+    <Compile Include="ExchangeRate.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">
