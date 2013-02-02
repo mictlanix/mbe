@@ -162,6 +162,7 @@ namespace Mictlanix.BE.Web.Controllers
 
 					var detail = new SupplierReturnDetail {
                         Order = item,
+						Warehouse = x.Warehouse,
                         PurchaseOrderDetail = x,
                         Product = x.Product,
                         ProductCode = x.ProductCode,
@@ -169,9 +170,10 @@ namespace Mictlanix.BE.Web.Controllers
                         Discount = x.Discount,
                         TaxRate = x.TaxRate,
 						IsTaxIncluded = x.IsTaxIncluded,
-                        Price = x.Price,
                         Quantity = qty,
-                        Warehouse = x.Warehouse
+						Price = x.Price,
+						ExchangeRate = x.ExchangeRate,
+						Currency = x.Currency
                     };
 
 					detail.Create ();

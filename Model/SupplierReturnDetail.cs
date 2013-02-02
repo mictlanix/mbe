@@ -88,7 +88,7 @@ namespace Mictlanix.BE.Model
 		public virtual CurrencyCode Currency { get; set; }
 		
 		[Property("exchange_rate")]
-		[DisplayFormat(DataFormatString = "{0:0.0000}")]
+		[DisplayFormat(DataFormatString = "{0:0.00##}")]
 		[Display(Name = "ExchangeRate", ResourceType = typeof(Resources))]
 		public virtual decimal ExchangeRate { get; set; }
 
