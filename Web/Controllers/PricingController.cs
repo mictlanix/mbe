@@ -70,6 +70,7 @@ namespace Mictlanix.BE.Web.Controllers
 				qry = from x in Product.Queryable
 					  where x.Name.Contains(search.Pattern) ||
 							x.Code.Contains(search.Pattern) ||
+							x.Model.Contains (search.Pattern) ||
 							x.SKU.Contains(search.Pattern) ||
 							x.Brand.Contains(search.Pattern)
 					  orderby x.Name
