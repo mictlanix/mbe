@@ -181,8 +181,10 @@ namespace Mictlanix.BE.Web.Controllers
 	                    Discount = x.Discount,
 	                    TaxRate = x.TaxRate,
 						IsTaxIncluded = x.IsTaxIncluded,
-	                    Price = x.Price,
-	                    Quantity = sum
+	                    Quantity = sum,
+						Price = x.Price,
+						ExchangeRate = x.ExchangeRate,
+						Currency = x.Currency
 	                };
 
 					detail.Create ();

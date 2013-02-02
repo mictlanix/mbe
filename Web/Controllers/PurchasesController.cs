@@ -199,10 +199,12 @@ namespace Mictlanix.BE.Web.Controllers
                 ProductCode = p.Code,
                 ProductName = p.Name,
                 Quantity = 1,
-                Price = p.Cost,
                 TaxRate = p.TaxRate,
 				IsTaxIncluded = p.IsTaxIncluded,
-                Discount = 0
+                Discount = 0,
+				Price = p.Cost,
+				ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate(),
+				Currency = Configuration.DefaultCurrency
             };
 
             using (var scope = new TransactionScope()) {

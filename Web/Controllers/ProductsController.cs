@@ -100,7 +100,7 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Create()
         {
-            return View(new Product { IsInvoiceable = true, TaxRate = 0.16m });
+            return View(new Product { IsInvoiceable = true, TaxRate = Configuration.VAT });
         }
 
         //
@@ -209,6 +209,7 @@ namespace Mictlanix.BE.Web.Controllers
                 qry = from x in Product.Queryable
                       where x.Name.Contains(search.Pattern) ||
                             x.Code.Contains(search.Pattern) ||
+							x.Model.Contains(search.Pattern) ||
                             x.SKU.Contains(search.Pattern) ||
                             x.Brand.Contains(search.Pattern)
                       orderby x.Name
@@ -281,7 +282,9 @@ namespace Mictlanix.BE.Web.Controllers
 			var qry = from x in Product.Queryable
                       where x.Name.Contains (pattern) ||
 							x.Code.Contains (pattern) ||
-							x.SKU.Contains (pattern)
+							x.Model.Contains (pattern) ||
+							x.SKU.Contains (pattern) ||
+							x.Brand.Contains (pattern)
 					  orderby x.Name
                       select x;
 			
