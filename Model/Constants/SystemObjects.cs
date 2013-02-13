@@ -122,6 +122,8 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "BestSellingProductsBySalesPerson", ResourceType = typeof(Resources))]
 		BestSellingProductsBySalesPerson,
 		[Display(Name = "LotSerialNumbers", ResourceType = typeof(Resources))]
-		LotSerialNumbers
+		LotSerialNumbers,
+		[Display(Name = "ExchangeRates", ResourceType = typeof(Resources))]
+		ExchangeRates
     }
 }

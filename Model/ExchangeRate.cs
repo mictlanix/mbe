@@ -41,7 +41,7 @@ namespace Mictlanix.BE.Model
         public virtual int Id { get; set; }
 		
 		[Property]
-		[DataType(DataType.DateTime)]
+		[DataType(DataType.Date)]
 		[Display(Name = "Date", ResourceType = typeof(Resources))]
 		public virtual DateTime Date { get; set; }
 

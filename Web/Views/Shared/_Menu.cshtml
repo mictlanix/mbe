@@ -12,7 +12,8 @@
                              Html.GetPrivilege(CurrentUser, SystemObjects.Warehouses).AllowRead ||
                              Html.GetPrivilege(CurrentUser, SystemObjects.PointsOfSale).AllowRead ||
                              Html.GetPrivilege(CurrentUser, SystemObjects.CashDrawers).AllowRead ||
-                             Html.GetPrivilege(CurrentUser, SystemObjects.Stores).AllowRead;
+                             Html.GetPrivilege(CurrentUser, SystemObjects.Stores).AllowRead ||
+                             Html.GetPrivilege(CurrentUser, SystemObjects.ExchangeRates).AllowRead;
                              
     var ShowSalesMenu = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders).AllowRead ||
                         Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments).AllowRead ||
@@ -135,6 +136,13 @@
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("Index", "CashDrawers") ? "gbm0l" : "")"
                                    href="@Url.Action("Index", "CashDrawers")">@Resources.Title_CashDrawer</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.ExchangeRates).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "ExchangeRates") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "ExchangeRates")">@Resources.ExchangeRates</a>
                             </li>
                             }
                         </ol>
