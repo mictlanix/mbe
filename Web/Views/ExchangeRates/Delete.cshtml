@@ -1,0 +1,50 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model ExchangeRate
+
+@{
+    ViewBag.Title = Resources.Delete;
+}
+
+<h2>@Resources.Delete</h2>
+
+<h3>@Resources.Message_DeleteConfirmation</h3>
+<fieldset>
+    <legend>@Resources.Title_Category</legend>
+
+    <div class="display-label">
+        @Html.LabelFor(x => x.Date)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(x => x.Date)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(x => x.Base)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(x => x.Base)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(x => x.Rate)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(x => x.Rate)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(x => x.Target)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(x => x.Target)
+    </div>
+
+</fieldset>
+@using (Html.BeginForm()) {
+    <p>
+        <button type="submit" class="icon delete">@Resources.Delete</button>
+        @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+    </p>
+}

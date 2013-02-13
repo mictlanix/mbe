@@ -1567,7 +1567,7 @@ Realizada el: {0:d}</value>
     <value>Tasa</value>
   </data>
   <data name="Base" xml:space="preserve">
-    <value>Tasa</value>
+    <value>Base</value>
   </data>
   <data name="Target" xml:space="preserve">
     <value>Objetivo</value>
@@ -1577,5 +1577,8 @@ Realizada el: {0:d}</value>
   </data>
   <data name="ExchangeRate" xml:space="preserve">
     <value>Tipo de Cambio</value>
+  </data>
+  <data name="ExchangeRates" xml:space="preserve">
+    <value>Tipos de Cambio</value>
   </data>
 </root>
