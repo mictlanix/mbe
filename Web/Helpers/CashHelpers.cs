@@ -54,17 +54,6 @@ namespace Mictlanix.BE.Web.Helpers
 			return items;
 		}
 
-		public static bool ValidateExchangeRate(DateTime date, CurrencyCode baseCurrency, CurrencyCode targetCurrency)
-		{
-			if (baseCurrency == targetCurrency)
-				return true;
-			
-			var item = ExchangeRate.Queryable.SingleOrDefault(x => x.Date == date && x.Base == baseCurrency &&
-			                                                  x.Target == targetCurrency);
-			
-			return item != null;
-		}
-
 		public static decimal GetExchangeRate(DateTime date, CurrencyCode baseCurrency, CurrencyCode targetCurrency)
 		{
 			if (baseCurrency == targetCurrency)
@@ -73,12 +62,17 @@ namespace Mictlanix.BE.Web.Helpers
 			var item = ExchangeRate.Queryable.SingleOrDefault(x => x.Date == date && x.Base == baseCurrency &&
 			                                                  x.Target == targetCurrency);
 
-			return item == null ? 0 : item.Rate;
+			return item == null ? 0m : item.Rate;
 		}
 		
 		public static decimal GetTodayDefaultExchangeRate()
 		{
 			return GetExchangeRate(DateTime.Today, Configuration.BaseCurrency, Configuration.DefaultCurrency);
+		}
+
+		public static bool ValidateExchangeRate()
+		{
+			return GetTodayDefaultExchangeRate() != 0m;
 		}
 	}
 }

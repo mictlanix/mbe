@@ -58,9 +58,8 @@ namespace Mictlanix.BE.Web.Controllers
 		[HttpPost]
 		public ActionResult Index (Search<Product> search)
 		{
-			if (!ModelState.IsValid) {
+			if (!ModelState.IsValid)
 				return View (search);
-			}
 
 			var qry = from x in Product.Queryable
 					  orderby x.Name

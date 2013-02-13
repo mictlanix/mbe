@@ -167,6 +167,7 @@
     <Compile Include="Models\SummaryItem.cs" />
     <Compile Include="Controllers\PricingController.cs" />
     <Compile Include="Helpers\InventoryHelpers.cs" />
+    <Compile Include="Controllers\ExchangeRatesController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
@@ -881,5 +882,11 @@
   <ItemGroup />
   <ItemGroup>
     <Folder Include="Views\Pricing\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Views\ExchangeRates\_Index.cshtml" />
+    <None Include="Views\ExchangeRates\Create.cshtml" />
+    <None Include="Views\ExchangeRates\Delete.cshtml" />
+    <None Include="Views\ExchangeRates\Index.cshtml" />
   </ItemGroup>
 </Project>

@@ -42,11 +42,11 @@
         </td>
         <td class="center">@Html.DisplayFor(x => item.PointOfSale.Name)</td>
         <td class="actions">
-        	@if(Privilege.AllowUpdate) {
-            	@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
-            }
         	@if(Privilege.AllowRead) {
             	@Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+            }
+        	@if(Privilege.AllowUpdate) {
+            	@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
             }
         </td>
     </tr>
