@@ -11,7 +11,13 @@
         <b>@Model.ProductName</b><br/>
         <b>@Resources.Code:</b> @Model.ProductCode
         <b>@Resources.Model:</b> @Model.Product.Model
-        <b>@Resources.SKU:</b> @Model.Product.SKU <br/>
+        @if(!string.IsNullOrEmpty(Model.Product.SKU)) {
+        <b>@Resources.SKU:</b> @Model.Product.SKU
+        }
+        @if(Model.ExchangeRate != 1m) {
+        <b>@Resources.ExchangeRate:</b> @Html.DisplayFor(x => x.ExchangeRate)
+        }
+        <br/>
         <b>@Resources.Price:</b> @Html.DisplayFor(x => x.Price)
         <b>@Resources.Quantity:</b>
         <div class="value quantity">@Model.Quantity.ToString("0.####")</div>

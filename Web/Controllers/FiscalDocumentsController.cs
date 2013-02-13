@@ -104,9 +104,9 @@ namespace Mictlanix.BE.Web.Controllers
             return search;
         }
 		
+		// FIXME: ugly performance
         public ViewResult Reports ()
 		{
-			// FIXME: ugly performance
 			var items = (from x in FiscalDocument.Queryable
 			             where x.IsCompleted
 						 select new FiscalReport {
@@ -154,6 +154,8 @@ namespace Mictlanix.BE.Web.Controllers
 			item.Updater = item.Creator;
 			item.Store = Configuration.Store;
 			item.IssuedLocation = item.Store.Location;
+			item.Currency = Configuration.DefaultCurrency;
+			item.ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate();
 
 			// Address info
 			item.BillTo = new Address (item.BillTo);
@@ -176,14 +178,14 @@ namespace Mictlanix.BE.Web.Controllers
 			return RedirectToAction ("Edit", new { id = item.Id });
 		}
 		
-        public ActionResult Edit(int id)
+        public ActionResult Edit (int id)
         {
             FiscalDocument item = FiscalDocument.Find(id);
 			
             if (Request.IsAjaxRequest())
                 return PartialView("_MasterEditView", item);
             else
-                return View(item);
+                return View (item);
         }
 
         [HttpPost]
@@ -285,11 +287,23 @@ namespace Mictlanix.BE.Web.Controllers
 		public ActionResult Confirm (int id)
 		{
 			var item = FiscalDocument.TryFind (id);
-			
+
 			if (item == null || item.IsCompleted || item.IsCancelled) {
 				return RedirectToAction ("Index");
 			}
-			
+
+			// quantity validation
+			foreach (var detail in item.Details) {
+				if (detail.Quantity <= 0) 
+					return RedirectToAction ("Edit", new { id = item.Id });
+
+				if (detail.OrderDetail == null)
+					continue;
+
+				if (detail.Quantity > detail.OrderDetail.Quantity) 
+					return RedirectToAction ("Edit", new { id = item.Id });
+			}
+
 			int serial = (from x in FiscalDocument.Queryable
                           where x.Batch == item.Batch
                           select x.Serial).Max ().GetValueOrDefault () + 1;
@@ -520,12 +534,18 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 		
         [HttpPost]
-        public JsonResult EditDetailQuantity(int id, decimal value)
-        {
-            FiscalDocumentDetail detail = FiscalDocumentDetail.Find(id);
+        public JsonResult EditDetailQuantity (int id, decimal value)
+		{
+			var detail = FiscalDocumentDetail.Find (id);
 
-            if (value > 0)
-            {
+			if (detail.OrderDetail != null) {
+				decimal max_qty = detail.Quantity + GetInvoiceableQuantity (detail.OrderDetail.Id);
+
+				if (max_qty < value)
+					value =  max_qty;
+			}
+
+            if (value > 0) {
                 detail.Quantity = value;
 
 				using (var scope = new TransactionScope()) {
@@ -575,9 +595,9 @@ namespace Mictlanix.BE.Web.Controllers
 					if (!x.Product.IsInvoiceable)
 						continue;
 					
-					decimal quantity = GetInvoiceableQuantity (x.Id);
+					decimal max_qty = GetInvoiceableQuantity (x.Id);
 					
-					if (quantity == 0)
+					if (max_qty <= 0)
 						continue;
 					
 					var item = new FiscalDocumentDetail {
@@ -590,7 +610,7 @@ namespace Mictlanix.BE.Web.Controllers
 						Discount = x.Discount,
 						TaxRate = x.TaxRate,
 						IsTaxIncluded = x.IsTaxIncluded,
-						Quantity = quantity,
+						Quantity = max_qty,
 						Price = x.Price,
 						ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate(),
 						Currency = Configuration.DefaultCurrency
@@ -676,12 +696,13 @@ namespace Mictlanix.BE.Web.Controllers
 			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
 		}
 
-		decimal GetInvoiceableQuantity(int id)
+		decimal GetInvoiceableQuantity (int id)
 		{
 			var item = SalesOrderDetail.Find (id);
+			decimal quantity = item.Quantity;
 			string sql = @"SELECT IFNULL(SUM(d.quantity),0) quantity
                            FROM fiscal_document_detail d INNER JOIN fiscal_document m ON d.document = m.fiscal_document_id
-                           WHERE m.completed <> 0 AND m.cancelled = 0 AND d.order_detail = :detail ";
+                           WHERE m.cancelled = 0 AND d.order_detail = :detail ";
 			
 			IList<decimal> quantities = (IList<decimal>)ActiveRecordMediator<CustomerReturnDetail>.Execute(
 				delegate(ISession session, object instance) {
@@ -696,10 +717,10 @@ namespace Mictlanix.BE.Web.Controllers
 			}, null);
 			
 			if (quantities != null && quantities.Count > 0) {
-				return item.Quantity - quantities[0];
+				quantity = item.Quantity - quantities[0];
 			}
 			
-			return item.Quantity;
+			return quantity > 0 ? quantity : 0;
 		}
     }
 }
