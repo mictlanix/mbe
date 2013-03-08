@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
+using Mictlanix.BE.Model.Validation;
 
 namespace Mictlanix.BE.Model
 {
@@ -46,11 +47,12 @@ namespace Mictlanix.BE.Model
 		public virtual DateTime Date { get; set; }
 
         [Property]
-		[ValidateIsUnique]
+		[Range(0.0001, double.MaxValue, ErrorMessageResourceName = "Validation_CannotBeZeroOrNegative", ErrorMessageResourceType = typeof(Resources))]
 		[Display(Name = "Rate", ResourceType = typeof(Resources))]
         public virtual decimal Rate { get; set; }
 
         [Property]
+		[Distinct("Target", ErrorMessageResourceName = "Validation_ShouldNotBeEquals", ErrorMessageResourceType = typeof(Resources))]
 		[Display(Name = "Base", ResourceType = typeof(Resources))]
         public virtual CurrencyCode Base { get; set; }
 		

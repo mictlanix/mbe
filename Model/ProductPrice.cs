@@ -1,5 +1,5 @@
 ﻿// 
-// PriceList.cs
+// ProductPrice.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
@@ -54,6 +54,10 @@ namespace Mictlanix.BE.Model
 		[DataType(DataType.Currency)]
 		[Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
 		public virtual decimal Price { get; set; }
+
+		[Property]
+		[Display(Name = "Currency", ResourceType = typeof(Resources))]
+		public virtual CurrencyCode Currency { get; set; }
 
         #region Override Base Methods
 

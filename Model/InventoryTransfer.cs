@@ -29,10 +29,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
-using System.ComponentModel.DataAnnotations;
 using Mictlanix.BE.Model.Validation;
 
 namespace Mictlanix.BE.Model
