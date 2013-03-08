@@ -80,7 +80,7 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Create ()
         {
-			return View (new ExchangeRate { Date = DateTime.Now, Base = Configuration.BaseCurrency });
+			return View (new ExchangeRate { Date = DateTime.Now, Target = Configuration.BaseCurrency });
         } 
 
         [HttpPost]
@@ -88,6 +88,17 @@ namespace Mictlanix.BE.Web.Controllers
         {
             if (!ModelState.IsValid)
             	return View (item);
+
+			var qry = from x in ExchangeRate.Queryable
+					  where x.Date == item.Date.Date && 
+							x.Base == item.Base && 
+							x.Target == item.Target
+					  select x;
+
+			if (qry.Count () > 0) {
+				ModelState.AddModelError("Date", Resources.ExchangeRateAlreadyExists);
+				return View (item);
+			}
 
 			using (var scope = new TransactionScope ()) {
             	item.CreateAndFlush ();
