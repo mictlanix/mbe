@@ -15,16 +15,14 @@
     <tr>
         <th class='date'>@Html.LabelFor(x => new ExchangeRate ().Date)</th>
         <th class=''>@Html.LabelFor(x => new ExchangeRate ().Base)</th>
-        <th class=''>@Html.LabelFor(x => new ExchangeRate ().Rate)</th>
         <th class=''>@Html.LabelFor(x => new ExchangeRate ().Target)</th>
-        <th></th>
+        <th class='actions'></th>
     </tr>
 @foreach (var item in Model.Results) {
     <tr>
         <td class='date'>@Html.DisplayFor(x => item.Date)</td>
-        <td class='number'>@Html.DisplayFor(x => item.Base)</td>
-        <td class='right'>@Html.DisplayFor(x => item.Rate)</td>
-        <td class='number'>@Html.DisplayFor(x => item.Target)</td>
+        <td class='right'>1 @Html.DisplayFor(x => item.Base)</td>
+        <td class='right'>@Html.DisplayFor(x => item.Rate) @Html.DisplayFor(x => item.Target)</td>
         <td class="actions">
     	@if(Privilege.AllowDelete) {
         	@Html.ActionLink(" ", "Delete", new { id = item.Id }, new { @class = "button icon delete icon-only", @title = Resources.Delete })

@@ -4385,5 +4385,18 @@ namespace Mictlanix.BE {
 				return ResourceManager.GetString("ExchangeRates", resourceCulture);
 			}
 		}
+		
+		public static string ExchangeRateAlreadyExists {
+			get {
+				return ResourceManager.GetString("ExchangeRateAlreadyExists", resourceCulture);
+			}
+		}
+		
+		public static string Validation_CannotBeZeroOrNegative {
+			get {
+				return ResourceManager.GetString("Validation_CannotBeZeroOrNegative", resourceCulture);
+			}
+		}
+
     }
 }
