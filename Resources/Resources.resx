@@ -1581,4 +1581,10 @@ Realizada el: {0:d}</value>
   <data name="ExchangeRates" xml:space="preserve">
     <value>Tipos de Cambio</value>
   </data>
+  <data name="ExchangeRateAlreadyExists" xml:space="preserve">
+    <value>El tipo de cambio ya existe para la fecha seleccionada.</value>
+  </data>
+  <data name="Validation_CannotBeZeroOrNegative" xml:space="preserve">
+    <value>El campo {0} no puede ser cero o negativo.</value>
+  </data>
 </root>

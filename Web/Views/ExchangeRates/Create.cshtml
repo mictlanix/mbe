@@ -26,23 +26,7 @@
             @Html.LabelFor(x => x.Base)
         </div>
         <div class="editor-field">
-        	@Html.HiddenFor(x => x.Base)
-        	@Html.DisplayFor(x => x.Base)
-        </div>
-        
-        <div class="editor-label">
-            @Html.LabelFor(x => x.Rate)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(x => x.Rate)
-            @Html.ValidationMessageFor(x => x.Date)
-        </div>
-        
-        <div class="editor-label">
-            @Html.LabelFor(x => x.Target)
-        </div>
-        <div class="editor-field">
-            <select id="target-list" name="Target">
+            <select id="target-list" name="Base">
             @foreach (var item in Enum.GetValues(typeof(CurrencyCode))) {
             	if(Configuration.DefaultCurrency == (CurrencyCode)item) {
                 <option value="@((int)item)" selected>@item.ToString()</option>
@@ -51,6 +35,23 @@
                 }
             }
             </select>
+            @Html.ValidationMessageFor(x => x.Base)
+        </div>
+        
+        <div class="editor-label">
+            @Html.LabelFor(x => x.Rate)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(x => x.Rate)
+            @Html.ValidationMessageFor(x => x.Rate)
+        </div>
+        
+        <div class="editor-label">
+            @Html.LabelFor(x => x.Target)
+        </div>
+        <div class="editor-field">
+        	@Html.HiddenFor(x => x.Target)
+        	@Html.DisplayFor(x => x.Target)
         </div>
         
         <p><button type="submit" class="icon save">@Resources.Create</button></p>
