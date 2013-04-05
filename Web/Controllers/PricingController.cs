@@ -1,4 +1,4 @@
-﻿// 
+// 
 // PricingController.cs
 // 
 // Author:
@@ -85,34 +85,41 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 		
 		[HttpPost]
-		public JsonResult EditCost (int id, string value)
+		public JsonResult EditPrice (int product, int list, string value)
 		{
 			decimal val;
 			bool success;
-			var item = Product.TryFind (id);
-
-			Console.WriteLine ("Product: {0}, {1}", id, item);
-
+			var p = Product.TryFind (product);
+			var l = PriceList.TryFind (list);
+			var item = ProductPrice.Queryable.SingleOrDefault (x => x.Product.Id == product && x.List.Id == list);
+			
+			if (item == null) {
+				item = new ProductPrice {
+					Product = p,
+					List = l
+				};
+			}
+			
 			success = decimal.TryParse (value.Trim (),
 			                            System.Globalization.NumberStyles.Currency,
 			                            null, out val);
 			
 			if (success && val >= 0) {
-				item.Cost = val;
+				item.Value = val;
 				
 				using (var scope = new TransactionScope()) {
-					item.UpdateAndFlush ();
+					item.SaveAndFlush ();
 				}
 			}
-
-			return Json (new {id = id, value = item.Cost.ToString ("c") });
+			
+			return Json (new {id = item.Id, value = item.Value.ToString ("c") });
 		}
 
 		[HttpPost]
-		public JsonResult EditPrice (int product, int list, string value)
+		public JsonResult EditCurrency (int product, int list, string value)
 		{
-			decimal val;
 			bool success;
+			CurrencyCode val;
 			var p = Product.TryFind (product);
 			var l = PriceList.TryFind (list);
 			var item = ProductPrice.Queryable.SingleOrDefault (x => x.Product.Id == product && x.List.Id == list);
@@ -124,19 +131,17 @@ namespace Mictlanix.BE.Web.Controllers
 				};
 			}
 
-			success = decimal.TryParse (value.Trim (),
-			                            System.Globalization.NumberStyles.Currency,
-			                            null, out val);
+			success = Enum.TryParse<CurrencyCode> (value.Trim (), out val);
 			
 			if (success && val >= 0) {
-				item.Price = val;
+				item.Currency = val;
 				
 				using (var scope = new TransactionScope()) {
 					item.SaveAndFlush ();
 				}
 			}
 			
-			return Json (new {id = item.Id, value = item.Price.ToString ("c") });
+			return Json (new {id = item.Id, value = item.Currency.ToString () });
 		}
     }
 }

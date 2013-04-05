@@ -49,24 +49,31 @@ namespace Mictlanix.BE.Web.Helpers
 		public static string ApplicationTitle {
 			get { return ConfigurationManager.AppSettings ["ApplicationTitle"]; }
 		}
+
 		public static string LogoTitle {
 			get { return ConfigurationManager.AppSettings ["LogoTitle"]; }
 		}
+
 		public static string LogoAlt {
 			get { return ConfigurationManager.AppSettings ["LogoAlt"]; }
 		}
+
 		public static string Company {
 			get { return ConfigurationManager.AppSettings ["Company"]; }
 		}
+
 		public static string CompanyAddress {
 			get { return ConfigurationManager.AppSettings ["CompanyAddress"]; }
 		}
+
 		public static string CompanyTaxpayer {
 			get { return ConfigurationManager.AppSettings ["CompanyTaxpayer"]; }
 		}
+
 		public static string CompanyTaxpayerName {
 			get { return ConfigurationManager.AppSettings ["CompanyTaxpayerName"]; }
 		}
+
 		public static string PromissoryNoteContent {
 			get { return ConfigurationManager.AppSettings ["PromissoryNoteContent"]; }
 		}
@@ -110,6 +117,10 @@ namespace Mictlanix.BE.Web.Helpers
 				return currency;
 			}
 		}
+		
+		public static int DefaultCustomer {
+			get { return int.Parse (ConfigurationManager.AppSettings ["DefaultCustomer"]); }
+		}
 
 		#endregion
 		
@@ -122,7 +133,11 @@ namespace Mictlanix.BE.Web.Helpers
 				if (cookie != null) {
 					return Store.TryFind (int.Parse (cookie.Value));
 				}
-				
+
+				if (Store.Queryable.Count () == 1) {
+					return Store.Queryable.FirstOrDefault ();
+				}
+
 				return null;
 			}
 		}
@@ -133,6 +148,10 @@ namespace Mictlanix.BE.Web.Helpers
 				
 				if (cookie != null) {
 					return PointOfSale.TryFind (int.Parse (cookie.Value));
+				}
+				
+				if (PointOfSale.Queryable.Count () == 1) {
+					return PointOfSale.Queryable.FirstOrDefault ();
 				}
 				
 				return null;
@@ -147,6 +166,10 @@ namespace Mictlanix.BE.Web.Helpers
 					return CashDrawer.TryFind (int.Parse (cookie.Value));
 				}
 				
+				if (CashDrawer.Queryable.Count () == 1) {
+					return CashDrawer.Queryable.FirstOrDefault ();
+				}
+
 				return null;
 			}
 		}

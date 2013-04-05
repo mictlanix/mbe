@@ -45,29 +45,28 @@
 }
 	
     <div class="display-label">
-        @Html.LabelFor(x => x.IssuedFrom)<br/>
-        @Html.DisplayFor(x => x.IssuedFrom.TaxpayerId)<br/>
-        @Html.DisplayFor(x => x.IssuedFrom.TaxpayerName)
+        @Html.LabelFor(x => x.Issuer)<br/>
+        @Html.DisplayFor(x => x.Issuer.Id)<br/>
+        @Html.DisplayFor(x => x.IssuerName)
     </div>
-    
-    
+
     <div class="display-label">
         @Html.LabelFor(x => x.Customer)<br/>
         @Html.DisplayFor(x => x.Customer.Name)
     </div>
     
     <div class="display-label">
-        @Html.LabelFor(x => x.BillTo)<br/>
-        @Html.DisplayFor(x => x.BillTo.TaxpayerId)<br/>
-        @Html.DisplayFor(x => x.BillTo.TaxpayerName)<br/>
-        @Html.DisplayFor(x => x.BillTo.Street)
-        @Html.DisplayFor(x => x.BillTo.ExteriorNumber)
-        @Html.DisplayFor(x => x.BillTo.InteriorNumber)<br/>
-        @Html.DisplayFor(x => x.BillTo.Neighborhood),
-        @Html.DisplayFor(x => x.BillTo.Borough)<br/>
-        @Html.DisplayFor(x => x.BillTo.State),
-        @Html.DisplayFor(x => x.BillTo.Country),
-        @Html.DisplayFor(x => x.BillTo.ZipCode)
+        @Html.LabelFor(x => x.Recipient)<br/>
+        @Html.DisplayFor(x => x.Recipient.Id)<br/>
+        @Html.DisplayFor(x => x.RecipientName)<br/>
+        @Html.DisplayFor(x => x.RecipientAddress.Street)
+        @Html.DisplayFor(x => x.RecipientAddress.ExteriorNumber)
+        @Html.DisplayFor(x => x.RecipientAddress.InteriorNumber)<br/>
+        @Html.DisplayFor(x => x.RecipientAddress.Neighborhood),
+        @Html.DisplayFor(x => x.RecipientAddress.Borough)<br/>
+        @Html.DisplayFor(x => x.RecipientAddress.State),
+        @Html.DisplayFor(x => x.RecipientAddress.Country),
+        @Html.DisplayFor(x => x.RecipientAddress.ZipCode)
     </div>
 
     <div class="right">

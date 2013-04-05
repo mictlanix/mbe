@@ -56,7 +56,7 @@ div#logo {
 .hidden {
   display:none;
 }
-.date,.bool,.number {
+.date,.bool,.number,.currency {
   white-space:nowrap;
   width:1px;
   text-align:center;
@@ -64,7 +64,7 @@ div#logo {
 .left {
   text-align:left;
 }
-.right,.number,input.number  {
+.right,.number,.currency,input.number,input.currency  {
   text-align:right;
 }
 .center {
@@ -84,23 +84,6 @@ div#logo {
 .display-field, .editor-field {
   margin:1em 0 0 0;
   min-height:18px;
-}
-.editable-warehouse, .editable-warehouse-ok{
-  display:inline-block;
-  margin:2px 0;
-  text-align:left;
-}
-.editable,.editable-ok {
-  display:inline-block;
-  margin:2px 0;
-  min-width:60px;
-  text-align:right;
-}
-.editable:hover,.editable-warehouse:hover {
-  background:#fffcc3;
-}
-.editable-ok,.editable-warehouse-ok {
-  background:#00CD00;
 }
 a.small img,img.small {
     max-width:80px;
@@ -275,14 +258,13 @@ li div.value.name {
   text-align:right;
 }
 .tabular table, .tabular th, .tabular td {
-	margin:0;
-	padding:4px 5px;
-	border:none;
-	border-collapse:collapse;
-	line-height:1;
+  margin:0;
+  padding:0 1px;
+  border:none;
+  border-collapse:collapse;
+  line-height:1;
 }
 .tabular tr:nth-child(odd)  { background-color:AliceBlue; }
-//.tabular tr:nth-child(even) { background-color:AliceBlue; }
 .tabular th, .tabular td {
 	border-bottom:solid 1px #e8eef4;
 }
@@ -310,4 +292,57 @@ td.labels div > span {
 }
 .total {
   font-weight:bold;
+}
+
+/* Edit In Place */
+.editable {
+  display:inline-block;
+  min-width:60px;
+  text-align:right;
+}
+.tabular .editable {
+  display:table-cell;
+  vertical-align:middle;
+}
+.editable:hover {
+  background:#fffcc3;
+}
+.editable form {
+  margin:0;
+  padding:0;
+}
+.editable select {
+  margin:0;
+  padding:1px;
+  font-size:11px;
+}
+.editable button {
+  margin:0 1px 0 3px;
+  padding:2px 4px 1px;
+  font-size:12px;
+}
+.editable.succesful {
+  background:#00CD00;
+}
+.editable.price {
+  min-width:60px;
+  height:19px;
+}
+.editable input {
+  margin:0;
+  padding:0;
+  border:0;
+  font-size:12px;
+}
+.editable.price input,.editable.tax input,
+.editable.discount input,.editable.quantity input {
+  text-align:right;
+}
+.editable.currency {
+  min-width:88px;
+  height:19px;
+  text-align:left;
+}
+.editable.code,.editable.um {
+  min-width:100px;
 }

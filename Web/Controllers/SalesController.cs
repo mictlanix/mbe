@@ -55,6 +55,10 @@ namespace Mictlanix.BE.Web.Controllers
 				return View ("InvalidPointOfSale");
 			}
 			
+			if (!CashHelpers.ValidateExchangeRate ()) {
+				return View ("InvalidExchangeRate");
+			}
+
 			var qry = from x in SalesOrder.Queryable
                       where x.Store.Id == item.Store.Id &&
 							!x.IsCancelled &&
@@ -109,8 +113,8 @@ namespace Mictlanix.BE.Web.Controllers
 			var employee = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 
             return View (new SalesOrder {
-				CustomerId = 1, 
-				Customer = Customer.Find(1),
+				CustomerId = Configuration.DefaultCustomer, 
+				Customer = Customer.Find (Configuration.DefaultCustomer),
 				SalesPersonId = employee.Id, 
 				SalesPerson = employee
 			});
@@ -127,6 +131,7 @@ namespace Mictlanix.BE.Web.Controllers
 
 			item.Customer = Customer.TryFind (item.CustomerId);
 			item.SalesPerson = Employee.TryFind (item.SalesPersonId);
+			item.ShipTo = Address.TryFind (item.ShipToId);
 
 			if (item.Customer == null || item.SalesPerson == null) {
 				return View (item);
@@ -151,15 +156,7 @@ namespace Mictlanix.BE.Web.Controllers
 			item.Date = item.CreationTime;
 			item.DueDate = item.IsCredit ? item.Date.AddDays (item.Customer.CreditDays) : item.Date;
 
-			if (item.ShipToId > 0) {
-				item.ShipTo = new Address ();
-				item.ShipTo.Copy (Address.TryFind (item.ShipToId));
-			}
-
 			using (var scope = new TransactionScope()) {
-				if (item.ShipTo != null) {
-					item.ShipTo.Create();
-				}
 				item.CreateAndFlush ();
 			}
 
@@ -186,34 +183,24 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
 		public ActionResult Edit (SalesOrder item)
 		{
-			var customer = Customer.Find (item.CustomerId);
-			var salesperson = Employee.Find (item.SalesPersonId);
+			item.Customer = Customer.Find (item.CustomerId);
+			item.SalesPerson = Employee.Find (item.SalesPersonId);
+			item.ShipTo = Address.TryFind (item.ShipToId);
 
-			if (customer == null || salesperson == null) {
+			if (item.Customer == null || item.SalesPerson == null) {
 				return View (item);
 			}
 			
 			var entity = SalesOrder.Find (item.Id);
 			entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 			entity.ModificationTime = DateTime.Now;
-			entity.Customer = customer;
-			entity.SalesPerson = salesperson;
+			entity.Customer = item.Customer;
+			entity.SalesPerson = item.SalesPerson;
+			entity.ShipTo = item.ShipTo;
 			entity.IsCredit = item.IsCredit;
-			entity.DueDate = item.IsCredit ? entity.Date.AddDays (customer.CreditDays) : entity.Date;
-			
-			if (item.ShipToId > 0) {
-				entity.ShipTo = entity.ShipTo ?? new Address ();
-				entity.ShipTo.Copy (Address.TryFind (item.ShipToId));
-			}
+			entity.DueDate = item.IsCredit ? entity.Date.AddDays (item.Customer.CreditDays) : entity.Date;
 
 			using (var scope = new TransactionScope()) {
-				if (item.ShipToId > 0) {
-					entity.ShipTo.Save ();
-				} else if (entity.ShipTo != null) {
-					entity.ShipTo.Delete ();
-					entity.ShipTo = null;
-				}
-
 				entity.UpdateAndFlush ();
 			}
 
@@ -226,10 +213,27 @@ namespace Mictlanix.BE.Web.Controllers
 			var s = SalesOrder.TryFind (order);
 			var p = Product.TryFind (product);
 			int pl = s.Customer.PriceList.Id;
+			var cost = (from x in ProductPrice.Queryable
+			            where x.Product.Id == product && x.List.Id == 0
+			            select x).SingleOrDefault();
 			var price = (from x in ProductPrice.Queryable
 			             where x.Product.Id == product && x.List.Id == pl
-			             select x.Price).SingleOrDefault();
+			             select x).SingleOrDefault();
 			
+			if (cost == null) {
+				cost = new ProductPrice {
+					Value = decimal.Zero,
+					Currency = Configuration.DefaultCurrency
+				};
+			}
+
+			if (price == null) {
+				price = new ProductPrice {
+					Value = decimal.MaxValue,
+					Currency = Configuration.DefaultCurrency
+				};
+			}
+
             var item = new SalesOrderDetail {
 				SalesOrder = s,
 				Product = p,
@@ -239,9 +243,10 @@ namespace Mictlanix.BE.Web.Controllers
                 TaxRate = p.TaxRate,
 				IsTaxIncluded = p.IsTaxIncluded,
                 Quantity = 1,
-				Price = price,
-				ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate(),
-				Currency = Configuration.DefaultCurrency
+				Cost = cost.Value * CashHelpers.GetTodayExchangeRate (cost.Currency, price.Currency),
+				Price = price.Value,
+				Currency = price.Currency,
+				ExchangeRate = CashHelpers.GetTodayExchangeRate (price.Currency)
             };
 
             using (var scope = new TransactionScope()) {
@@ -439,7 +444,7 @@ namespace Mictlanix.BE.Web.Controllers
 							model = x.Product.Model,
 							sku = x.Product.SKU,
 							url = Url.Content(x.Product.Photo),
-							price = x.Price
+							price = x.Value
 					  };
 
 			return Json (qry.Take(15), JsonRequestBehavior.AllowGet);

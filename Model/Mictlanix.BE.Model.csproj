@@ -110,7 +110,6 @@
     <Compile Include="Constants\PaymentMethod.cs" />
     <Compile Include="Constants\GenderEnum.cs" />
     <Compile Include="Taxpayer.cs" />
-    <Compile Include="TaxpayerDocument.cs" />
     <Compile Include="Constants\FiscalDocumentType.cs" />
     <Compile Include="SalesQuote.cs" />
     <Compile Include="SalesQuoteDetail.cs" />
@@ -125,6 +124,10 @@
     <Compile Include="Constants\CurrencyCode.cs" />
     <Compile Include="Helpers\ModelHelpers.cs" />
     <Compile Include="ExchangeRate.cs" />
+    <Compile Include="Constants\AddressType.cs" />
+    <Compile Include="CustomerTaxpayer.cs" />
+    <Compile Include="TaxpayerCertificate.cs" />
+    <Compile Include="TaxpayerBatch.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">

@@ -89,7 +89,7 @@
 				customer = {id : 0};
 			}
 			
-			return "@Url.Action("GetSuggestions2", "Addresses", new { customer = 0 })" + customer.id; }, {
+			return '@Url.Action("GetSuggestions", "Addresses", new { customer = 0 })' + customer.id; }, {
             hintText: "@Resources.HIntText",
             noResultsText: "@Resources.NoResultsText",
             searchingText: "@Resources.SearchingText",          

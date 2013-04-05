@@ -55,6 +55,12 @@ namespace Mictlanix.BE.Model
         [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
         public decimal Quantity { get; set; }
 
+		[Property]
+		[Display(Name = "Cost", ResourceType = typeof(Resources))]
+		[DataType(DataType.Currency)]
+		[Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
+		public decimal Cost { get; set; }
+
         [Property]
         [Display(Name = "Price", ResourceType = typeof(Resources))]
         [DataType(DataType.Currency)]

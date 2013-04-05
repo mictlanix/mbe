@@ -27,13 +27,13 @@
         <b>@Resources.ExchangeRate:</b> @Html.DisplayFor(x => x.ExchangeRate)
         }
         <br/>
-        <b>@Resources.Price:</b> @Html.DisplayFor(x => x.Price) @Configuration.BaseCurrency
+        <b>@Resources.Price:</b> @Html.DisplayFor(x => x.Price) @Html.DisplayFor(x => x.Currency)
         <b>@Resources.Quantity:</b>
         <div class="editable quantity">@Model.Quantity.ToString("0.####")</div>
         <b>@Resources.Discount:</b>
         <div class="editable discount">@Model.Discount.ToString("p")</div>
         <b>@Resources.TaxRate:</b> @Html.DisplayFor(x => x.TaxRate)
         <b>@Resources.Amount:</b>
-        <strong class="total">@Html.DisplayFor(x => x.Total) @Html.DisplayFor(x => x.Currency)</strong>
+        <strong class="total">@Html.DisplayFor(x => x.Total) @Configuration.BaseCurrency</strong>
     </div>
 </li>

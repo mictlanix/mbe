@@ -1,7 +1,7 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
-@model IEnumerable<TaxpayerDocument>
+@model IEnumerable<TaxpayerBatch>
 
 @{
     var CurrentUser = Html.CurrentUser() ?? new User();
@@ -9,12 +9,12 @@
 
 <table>
     <tr>
-        <th>@Html.LabelFor(x => new TaxpayerDocument().Batch)</th>
-        <th>@Html.LabelFor(x => new TaxpayerDocument().SerialStart)</th>
-        <th>@Html.LabelFor(x => new TaxpayerDocument().SerialEnd)</th>
-        <th>@Html.LabelFor(x => new TaxpayerDocument().Type)</th>
-        <th>@Html.LabelFor(x => new TaxpayerDocument().ApprovalNumber)</th>
-        <th>@Html.LabelFor(x => new TaxpayerDocument().ApprovalYear)</th>
+        <th>@Html.LabelFor(x => new TaxpayerBatch().Batch)</th>
+        <th>@Html.LabelFor(x => new TaxpayerBatch().SerialStart)</th>
+        <th>@Html.LabelFor(x => new TaxpayerBatch().SerialEnd)</th>
+        <th>@Html.LabelFor(x => new TaxpayerBatch().Type)</th>
+        <th>@Html.LabelFor(x => new TaxpayerBatch().ApprovalNumber)</th>
+        <th>@Html.LabelFor(x => new TaxpayerBatch().ApprovalYear)</th>
     </tr>
 
 @foreach (var item in Model) {

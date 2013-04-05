@@ -17,7 +17,7 @@
         <th>@Html.LabelFor(x => new FiscalDocument().Batch)</th>
         <th>@Html.LabelFor(x => new FiscalDocument().Serial)</th>
         <th class="date">@Html.LabelFor(x => new FiscalDocument().Issued)</th>
-        <th>@Html.LabelFor(x => new FiscalDocument().BillTo)</th>
+        <th>@Html.LabelFor(x => new FiscalDocument().Recipient)</th>
         <th>@Html.LabelFor(x => new FiscalDocument().IsCompleted)</th>
         <th>@Html.LabelFor(x => new FiscalDocument().IsCancelled)</th>
         <th></th>
@@ -31,8 +31,8 @@
         <td class="number">@Html.DisplayFor(x => item.Serial)</td>
         <td class="date">@Html.DisplayFor(x => item.Issued)</td>
         <td>
-        	@Html.DisplayFor(x => item.BillTo.TaxpayerId)
-        	@Html.DisplayFor(x => item.BillTo.TaxpayerName)
+        	@Html.DisplayFor(x => item.Recipient.Id)
+        	@Html.DisplayFor(x => item.RecipientName)
         </td>
         <td class="bool">@Html.DisplayFor(x => item.IsCompleted)</td>
         <td class="bool">@Html.DisplayFor(x => item.IsCancelled)</td>
