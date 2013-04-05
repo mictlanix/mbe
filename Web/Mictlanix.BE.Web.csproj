@@ -444,7 +444,6 @@
     <Content Include="Views\Shared\InvalidStore.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Address.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Address.cshtml" />
-    <Content Include="Views\TaxpayerDocuments\_Index.cshtml" />
     <Content Include="Views\Quotations\Index.cshtml" />
     <Content Include="Views\Quotations\New.cshtml" />
     <Content Include="Views\Quotations\Edit.cshtml" />
@@ -520,6 +519,10 @@
     <Content Include="Views\Inventory\_LotSerialNumbers.cshtml" />
     <Content Include="Views\Inventory\AssignLotSerialNumbers.cshtml" />
     <Content Include="Views\Inventory\_LotSerialNumber.cshtml" />
+    <Content Include="Views\Shared\InvalidExchangeRate.cshtml" />
+    <Content Include="Views\Taxpayers\_Batches.cshtml" />
+    <Content Include="Views\Taxpayers\_Certificates.cshtml" />
+    <Content Include="Views\Taxpayers\AddCertificate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />

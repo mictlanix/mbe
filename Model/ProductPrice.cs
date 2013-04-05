@@ -53,7 +53,7 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "Price", ResourceType = typeof(Resources))]
 		[DataType(DataType.Currency)]
 		[Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
-		public virtual decimal Price { get; set; }
+		public virtual decimal Value { get; set; }
 
 		[Property]
 		[Display(Name = "Currency", ResourceType = typeof(Resources))]
@@ -63,7 +63,7 @@ namespace Mictlanix.BE.Model
 
         public override string ToString()
         {
-			return string.Format("{1:c} [{0}]", Product, Price);
+			return string.Format("{1:c} [{0}]", Product, Value);
         }
 
         public override bool Equals(object obj)

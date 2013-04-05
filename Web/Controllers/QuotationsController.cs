@@ -52,6 +52,10 @@ namespace Mictlanix.BE.Web.Controllers
 				return View ("InvalidStore");
 			}
 			
+			if (!CashHelpers.ValidateExchangeRate ()) {
+				return View ("InvalidExchangeRate");
+			}
+			
 			var qry = from x in SalesQuote.Queryable
                       where x.Store.Id == item.Id
 					  orderby x.Id descending
@@ -119,7 +123,10 @@ namespace Mictlanix.BE.Web.Controllers
 				return View ("InvalidStore");
 			}
 
-            return View(new SalesQuote { CustomerId = 1, Customer = Customer.Find(1) });
+            return View (new SalesQuote {
+				CustomerId = Configuration.DefaultCustomer,
+				Customer = Customer.Find (Configuration.DefaultCustomer)
+			});
         }
 
         [HttpPost]
@@ -210,7 +217,7 @@ namespace Mictlanix.BE.Web.Controllers
 			int pl = q.Customer.PriceList.Id;
 			var price = (from x in ProductPrice.Queryable
 			             where x.Product.Id == product && x.List.Id == pl
-			             select x.Price).SingleOrDefault();
+			             select x.Value).SingleOrDefault();
 
             var item = new SalesQuoteDetail {
                 SalesQuote = SalesQuote.Find (order),
@@ -343,7 +350,7 @@ namespace Mictlanix.BE.Web.Controllers
 						model = x.Product.Model,
 						sku = x.Product.SKU,
 						url = Url.Content(x.Product.Photo),
-						price = x.Price
+						price = x.Value
 					};
 
 			return Json (qry.Take(15), JsonRequestBehavior.AllowGet);

@@ -39,17 +39,16 @@ namespace Mictlanix.BE.Web.Helpers
 {
 	internal static class CFDv2Helpers
 	{
-		static readonly DateTime CFDv22_DATE = new DateTime (2012, 7, 1, 0, 0, 0);
-
 		public static dynamic IssueCFD (FiscalDocument item)
 		{
 			var dt = DateTime.Now;
 			var cfd = InvoiceToCFD (item);
+			var cer = item.Issuer.Certificates.Single (x => x.Id == item.CertificateNumber);
 
 			cfd.fecha = new DateTime (dt.Year, dt.Month, dt.Day,
 					                  dt.Hour, dt.Minute, dt.Second,
 					                  DateTimeKind.Unspecified);
-			cfd.Sign (item.Issuer.KeyData, item.Issuer.KeyPassword);
+			cfd.Sign (cer.KeyData, cer.KeyPassword);
 
 			return cfd;
 		}
@@ -57,10 +56,16 @@ namespace Mictlanix.BE.Web.Helpers
 		public static dynamic SignCFD (FiscalDocument item)
 		{
 			var cfd = InvoiceToCFD (item);
+			var cer = item.Issuer.Certificates.Single (x => x.Id == item.CertificateNumber);
 
-			cfd.Sign (item.Issuer.KeyData, item.Issuer.KeyPassword);
+			cfd.Sign (cer.KeyData, cer.KeyPassword);
 
 			return cfd;
+		}
+
+		public static bool PrivateKeyTest (byte[] data, byte[] password)
+		{
+			return Mictlanix.CFDLib.Utils.PrivateKeyTest(data, password);
 		}
 
 		// Choose what version according to law
@@ -68,7 +73,7 @@ namespace Mictlanix.BE.Web.Helpers
 		// v2.0 before July 1, 2012
 		public static dynamic InvoiceToCFD (FiscalDocument item)
 		{
-			if (!item.Issued.HasValue || item.Issued >= CFDv22_DATE) {
+			if (!item.Issued.HasValue || item.Issued >= Mictlanix.CFDv22.Comprobante.RELEASE_DATE) {
 				return InvoiceToCFDv22 (item);
 			} else {
 				return InvoiceToCFDv20 (item);
@@ -77,6 +82,8 @@ namespace Mictlanix.BE.Web.Helpers
 
 		static Mictlanix.CFDv20.Comprobante InvoiceToCFDv20 (FiscalDocument item)
 		{
+			var cer = item.Issuer.Certificates.SingleOrDefault (x => x.Id == item.CertificateNumber);
+
 			var cfd = new Mictlanix.CFDv20.Comprobante
             {
                 tipoDeComprobante = (Mictlanix.CFDv20.ComprobanteTipoDeComprobante)item.Type,
@@ -87,39 +94,39 @@ namespace Mictlanix.BE.Web.Helpers
                 folio = item.Serial.ToString (),
                 fecha = item.Issued.GetValueOrDefault (),
                 formaDePago = Resources.SinglePayment,
-                certificado = SecurityHelpers.EncodeBase64 (item.Issuer.CertificateData),
+				certificado = (cer == null ? null : SecurityHelpers.EncodeBase64 (cer.CertificateData)),
                 Emisor = new Mictlanix.CFDv20.ComprobanteEmisor
-                {
-                    nombre = item.IssuedFrom.TaxpayerName,
-                    rfc = item.IssuedFrom.TaxpayerId,
+				{
+					rfc = item.Issuer.Id,
+                    nombre = item.IssuerName,
                     DomicilioFiscal = new Mictlanix.CFDv20.t_UbicacionFiscal
                     {
-                        calle = item.IssuedFrom.Street,
-                        noExterior = item.IssuedFrom.ExteriorNumber,
-                        noInterior = item.IssuedFrom.InteriorNumber,
-                        colonia = item.IssuedFrom.Neighborhood,
-                        codigoPostal = item.IssuedFrom.ZipCode,
-						localidad = item.IssuedFrom.Locality,
-                        municipio = item.IssuedFrom.Borough,
-                        estado = item.IssuedFrom.State,
-                        pais = item.IssuedFrom.Country
+                        calle = item.IssuerAddress.Street,
+						noExterior = item.IssuerAddress.ExteriorNumber,
+						noInterior = item.IssuerAddress.InteriorNumber,
+						colonia = item.IssuerAddress.Neighborhood,
+						codigoPostal = item.IssuerAddress.ZipCode,
+						localidad = item.IssuerAddress.Locality,
+						municipio = item.IssuerAddress.Borough,
+						estado = item.IssuerAddress.State,
+                        pais = item.IssuerAddress.Country
                     }
                 },
                 Receptor = new Mictlanix.CFDv20.ComprobanteReceptor
-                {
-                    nombre = item.BillTo.TaxpayerName,
-                    rfc = item.BillTo.TaxpayerId,
+				{
+					rfc = item.Recipient.Id,
+                    nombre = item.RecipientName,
                     Domicilio = new Mictlanix.CFDv20.t_Ubicacion
                     {
-                        calle = item.BillTo.Street,
-                        noExterior = item.BillTo.ExteriorNumber,
-                        noInterior = item.BillTo.InteriorNumber,
-                        colonia = item.BillTo.Neighborhood,
-                        codigoPostal = item.BillTo.ZipCode,
-						localidad = item.IssuedFrom.Locality,
-                        municipio = item.BillTo.Borough,
-                        estado = item.BillTo.State,
-                        pais = item.BillTo.Country
+						calle = item.RecipientAddress.Street,
+						noExterior = item.RecipientAddress.ExteriorNumber,
+						noInterior = item.RecipientAddress.InteriorNumber,
+						colonia = item.RecipientAddress.Neighborhood,
+						codigoPostal = item.RecipientAddress.ZipCode,
+						localidad = item.RecipientAddress.Locality,
+						municipio = item.RecipientAddress.Borough,
+						estado = item.RecipientAddress.State,
+						pais = item.RecipientAddress.Country
                     }
                 },
                 Conceptos = new Mictlanix.CFDv20.ComprobanteConcepto[item.Details.Count],
@@ -157,6 +164,8 @@ namespace Mictlanix.BE.Web.Helpers
 		
 		static Mictlanix.CFDv22.Comprobante InvoiceToCFDv22 (FiscalDocument item)
 		{
+			var cer = item.Issuer.Certificates.SingleOrDefault (x => x.Id == item.CertificateNumber);
+
 			var cfd = new Mictlanix.CFDv22.Comprobante
             {
                 tipoDeComprobante = (Mictlanix.CFDv22.ComprobanteTipoDeComprobante)item.Type,
@@ -173,26 +182,26 @@ namespace Mictlanix.BE.Web.Helpers
 				total = item.Total,
 				sello = item.DigitalSeal,
                 formaDePago = Resources.SinglePayment,
-                certificado = SecurityHelpers.EncodeBase64 (item.Issuer.CertificateData),
+				certificado = (cer == null ? null : SecurityHelpers.EncodeBase64 (cer.CertificateData)),
                 Emisor = new Mictlanix.CFDv22.ComprobanteEmisor
-                {
-                    nombre = item.IssuedFrom.TaxpayerName,
-                    rfc = item.IssuedFrom.TaxpayerId,
+				{
+					rfc = item.Issuer.Id,
+					nombre = item.IssuerName,
 					RegimenFiscal = new Mictlanix.CFDv22.ComprobanteEmisorRegimenFiscal [1] {
 						new Mictlanix.CFDv22.ComprobanteEmisorRegimenFiscal {
-							Regimen = item.IssuedFrom.TaxpayerRegime
+							Regimen = item.IssuerRegime
 						}
 					},
                     DomicilioFiscal = new Mictlanix.CFDv22.t_UbicacionFiscal {
-                        calle = item.IssuedFrom.Street,
-                        noExterior = item.IssuedFrom.ExteriorNumber,
-                        noInterior = item.IssuedFrom.InteriorNumber,
-                        colonia = item.IssuedFrom.Neighborhood,
-                        codigoPostal = item.IssuedFrom.ZipCode,
-						localidad = item.IssuedFrom.Locality,
-                        municipio = item.IssuedFrom.Borough,
-                        estado = item.IssuedFrom.State,
-                        pais = item.IssuedFrom.Country
+                        calle = item.IssuerAddress.Street,
+						noExterior = item.IssuerAddress.ExteriorNumber,
+						noInterior = item.IssuerAddress.InteriorNumber,
+						colonia = item.IssuerAddress.Neighborhood,
+						codigoPostal = item.IssuerAddress.ZipCode,
+						localidad = item.IssuerAddress.Locality,
+						municipio = item.IssuerAddress.Borough,
+						estado = item.IssuerAddress.State,
+						pais = item.IssuerAddress.Country
                     },
                     ExpedidoEn = (item.IssuedAt == null) ? null : new Mictlanix.CFDv22.t_Ubicacion {
                         calle = item.IssuedAt.Street,
@@ -207,20 +216,20 @@ namespace Mictlanix.BE.Web.Helpers
                     }
                 },
                 Receptor = new Mictlanix.CFDv22.ComprobanteReceptor
-                {
-                    nombre = item.BillTo.TaxpayerName,
-                    rfc = item.BillTo.TaxpayerId,
+				{
+					rfc = item.Recipient.Id,
+                    nombre = item.RecipientName,
                     Domicilio = new Mictlanix.CFDv22.t_Ubicacion
                     {
-                        calle = item.BillTo.Street,
-                        noExterior = item.BillTo.ExteriorNumber,
-                        noInterior = item.BillTo.InteriorNumber,
-                        colonia = item.BillTo.Neighborhood,
-                        codigoPostal = item.BillTo.ZipCode,
-						localidad = item.IssuedFrom.Locality,
-                        municipio = item.BillTo.Borough,
-                        estado = item.BillTo.State,
-                        pais = item.BillTo.Country
+                        calle = item.RecipientAddress.Street,
+						noExterior = item.RecipientAddress.ExteriorNumber,
+						noInterior = item.RecipientAddress.InteriorNumber,
+						colonia = item.RecipientAddress.Neighborhood,
+						codigoPostal = item.RecipientAddress.ZipCode,
+						localidad = item.RecipientAddress.Locality,
+						municipio = item.RecipientAddress.Borough,
+						estado = item.RecipientAddress.State,
+						pais = item.RecipientAddress.Country
                     }
                 },
                 Conceptos = new Mictlanix.CFDv22.ComprobanteConcepto[item.Details.Count],
@@ -273,7 +282,7 @@ namespace Mictlanix.BE.Web.Helpers
 				}
 				
 				var row = new CFDv2ReportItem {
-					Taxpayer = item.BillTo.TaxpayerId,
+					Taxpayer = item.Recipient.Id,
 					Batch = item.Batch,
 					Serial = item.Serial.Value,
 					ApprovalYear = item.ApprovalYear.Value,

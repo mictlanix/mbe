@@ -1,0 +1,27 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model IEnumerable<TaxpayerCertificate>
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+}
+
+<table>
+    <tr>
+        <th>@Html.LabelFor(x => new TaxpayerCertificate().Id)</th>
+        <th>@Html.LabelFor(x => new TaxpayerCertificate().NotBefore)</th>
+        <th>@Html.LabelFor(x => new TaxpayerCertificate().NotAfter)</th>
+        <th>@Html.LabelFor(x => new TaxpayerCertificate().IsActive)</th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td class="center">@Html.DisplayFor(x => item.Id)</td>
+        <td class="center">@Html.DisplayFor(x => item.NotBefore)</td>
+        <td class="center">@Html.DisplayFor(x => item.NotAfter)</td>
+        <td class="center">@Html.DisplayFor(x => item.IsActive)</td>
+    </tr>
+}
+
+</table>

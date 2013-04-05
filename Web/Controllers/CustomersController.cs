@@ -214,5 +214,18 @@ namespace Mictlanix.BE.Web.Controllers
 			
 			return result;
 		}
+		
+		public JsonResult ListTaxpayers (int id)
+		{
+			JsonResult result = new JsonResult();
+			var qry = from x in CustomerTaxpayer.Queryable
+					  where x.Customer.Id == id
+					  select new { id = x.Id, name = string.Format("{1} ({0})", x.Id, x.Name) };
+			
+			result = Json(qry.ToList());
+			result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+			
+			return result;
+		}
     }
 }

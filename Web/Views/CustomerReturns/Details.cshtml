@@ -65,7 +65,7 @@
             var element = $("#item" + id + " div.quantity");
             element.html(data.quantity);
             element.siblings(".total").html(data.total);
-            element.switchClass("editable", "editable-ok").switchClass("editable-ok", "editable", 3000);
+            element.addClass('succesful').switchClass('succesful', '', 3000);
             result = data.quantity;
         }, "json");
         $.ajaxSetup({ async: true });

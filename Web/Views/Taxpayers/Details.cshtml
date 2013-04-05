@@ -37,13 +37,6 @@
     
 	@Html.DisplayFor(x => x.Address)
 
-    <div class="display-label">
-        @Html.LabelFor(x => x.CertificateNumber)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(x => x.CertificateNumber)
-    </div>
-
 </fieldset>
 <p>
 @if(Privilege.AllowUpdate)
@@ -55,10 +48,19 @@
 
 <div id="tabs">
     <ul>
-        <li><a href="#tabs-1">@Resources.DisplayName_TaxpayerDocuments</a></li>
+        <li><a href="#tabs-1">@Resources.TaxpayerBatches</a></li>
+        <li><a href="#tabs-2">@Resources.Certificates</a></li>
     </ul>
     <div id="tabs-1">
-        @Html.Partial("../TaxpayerDocuments/_Index", Model.Documents)
+        @Html.Partial("_Batches", Model.Batches)
+    </div>
+    <div id="tabs-2">
+        @if(Privilege.AllowUpdate) {
+        <p>
+            @Html.ActionLink(Resources.Add, "AddCertificate", "Taxpayers", new { id = Model.Id }, new { @class = "button icon add" })
+        </p>
+		}
+        @Html.Partial("_Certificates", Model.Certificates)
     </div>
 </div>
 <script type="text/javascript">

@@ -94,23 +94,48 @@ namespace Mictlanix.BE.Model
         [BelongsTo("issuer")]
 		[Display(Name = "Issuer", ResourceType = typeof(Resources))]
 		public virtual Taxpayer Issuer { get; set; }
+		
+		[Property("issuer_name")]
+		[Display(Name = "IssuerName", ResourceType = typeof(Resources))]
+		public virtual string IssuerName { get; set; }
+		
+		[Property("issuer_regime")]
+		[Display(Name = "TaxRegime", ResourceType = typeof(Resources))]
+		public virtual string IssuerRegime { get; set; }
+		
+		[BelongsTo("issuer_address", Lazy = FetchWhen.OnInvoke)]
+		[Display(Name = "Address", ResourceType = typeof(Resources))]
+		public virtual Address IssuerAddress { get; set; }
+
+		[UIHint("AddressSelector")]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[Display(Name = "Recipient", ResourceType = typeof(Resources))]
+		public virtual string RecipientId { get; set; }
+
+		[BelongsTo("recipient")]
+		[Display(Name = "Recipient", ResourceType = typeof(Resources))]
+		public virtual CustomerTaxpayer Recipient { get; set; }
+		
+		[Property("recipient_name")]
+		[Display(Name = "RecipientName", ResourceType = typeof(Resources))]
+		public virtual string RecipientName { get; set; }
+		
+		[BelongsTo("recipient_address", Lazy = FetchWhen.OnInvoke)]
+		[Display(Name = "Address", ResourceType = typeof(Resources))]
+		public virtual Address RecipientAddress { get; set; }
+
+		[Property]
+		[Display(Name = "IssueDate", ResourceType = typeof(Resources))]
+		public virtual DateTime? Issued { get; set; }
+		
+		[BelongsTo("issued_at", Lazy = FetchWhen.OnInvoke)]
+		[Display(Name = "IssuedAt", ResourceType = typeof(Resources))]
+		public virtual Address IssuedAt { get; set; }
 
 		[Property("issued_location")]
 		[Display(Name = "IssuedLocation", ResourceType = typeof(Resources))]
 		public virtual string IssuedLocation { get; set; }
 
-		[BelongsTo("issued_from", Lazy = FetchWhen.OnInvoke)]
-		[Display(Name = "IssuedFrom", ResourceType = typeof(Resources))]
-		public virtual Address IssuedFrom { get; set; }
-		
-		[BelongsTo("issued_at", Lazy = FetchWhen.OnInvoke)]
-		[Display(Name = "IssuedAt", ResourceType = typeof(Resources))]
-		public virtual Address IssuedAt { get; set; }
-        
-		[Property]
-		[Display(Name = "IssueDate", ResourceType = typeof(Resources))]
-		public virtual DateTime? Issued { get; set; }
-		
 		[Property]
         [Display(Name = "Type", ResourceType = typeof(Resources))]
         public virtual FiscalDocumentType Type { get; set; }
@@ -144,7 +169,7 @@ namespace Mictlanix.BE.Model
 		[Property("certificate_number")]
 		[Display(Name = "CertificateNumber", ResourceType = typeof(Resources))]
 		[DisplayFormat(DataFormatString="{0:00000000000000000000}")]
-		public virtual decimal? CertificateNumber { get; set; }
+		public virtual ulong? CertificateNumber { get; set; }
 		
 		[Property("original_string")]
 		[Display(Name = "OriginalString", ResourceType = typeof(Resources))]
@@ -153,15 +178,6 @@ namespace Mictlanix.BE.Model
 		[Property("digital_seal")]
 		[Display(Name = "DigitalSeal", ResourceType = typeof(Resources))]
 		public virtual string DigitalSeal { get; set; }
-		
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[Display(Name = "BillTo", ResourceType = typeof(Resources))]
-		[UIHint("AddressSelector")]
-		public virtual int BillToId { get; set; }
-		
-        [BelongsTo("bill_to", Lazy = FetchWhen.OnInvoke)]
-        [Display(Name = "BillTo", ResourceType = typeof(Resources))]
-        public virtual Address BillTo { get; set; }
 
         [Property("payment_method")]
         [Display(Name = "PaymentMethod", ResourceType = typeof(Resources))]

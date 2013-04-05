@@ -8,9 +8,9 @@
     Layout = "~/Views/Shared/_PrintLayout.cshtml";
     ViewBag.Title = Resources.FiscalDocument;
     ViewBag.Store = Model.Store;
+    ViewBag.Taxpayer = Model.Issuer.Id;
     ViewBag.TaxpayerName = null;
-    ViewBag.Taxpayer = Model.IssuedFrom.TaxpayerId;
-    ViewBag.Address = Model.IssuedAt;
+    ViewBag.Address = Model.IssuedAt ?? Model.Store.Address;
 }
 
 <div class="display-label right floating">
@@ -24,20 +24,20 @@
 </div>
 
 <div class="display-label">
-    <h3>@Html.LabelFor(x => x.BillTo)</h3>
+    <h3>@Html.LabelFor(x => x.Recipient)</h3>
 </div>
 <div class="display-field">
-    @Html.DisplayFor(x => x.BillTo.TaxpayerName)<br/>
-    @Html.LabelFor(x => x.BillTo.TaxpayerId)
-    @Html.DisplayFor(x => x.BillTo.TaxpayerId)<br/>
-    @Html.DisplayFor(x => x.BillTo.Street)
-    @Html.DisplayFor(x => x.BillTo.ExteriorNumber)
-    @Html.DisplayFor(x => x.BillTo.InteriorNumber)<br/>
-    @Html.DisplayFor(x => x.BillTo.Neighborhood),
-    @Html.DisplayFor(x => x.BillTo.Borough)<br/>
-    @Html.DisplayFor(x => x.BillTo.State),
-    @Html.DisplayFor(x => x.BillTo.Country),
-    @Html.DisplayFor(x => x.BillTo.ZipCode)
+    @Html.LabelFor(x => x.Recipient.Id)
+    @Html.DisplayFor(x => x.Recipient.Id)<br/>
+    @Html.DisplayFor(x => x.RecipientName)<br/>
+    @Html.DisplayFor(x => x.RecipientAddress.Street)
+    @Html.DisplayFor(x => x.RecipientAddress.ExteriorNumber)
+    @Html.DisplayFor(x => x.RecipientAddress.InteriorNumber)<br/>
+    @Html.DisplayFor(x => x.RecipientAddress.Neighborhood),
+    @Html.DisplayFor(x => x.RecipientAddress.Borough)<br/>
+    @Html.DisplayFor(x => x.RecipientAddress.State),
+    @Html.DisplayFor(x => x.RecipientAddress.Country),
+    @Html.DisplayFor(x => x.RecipientAddress.ZipCode)
 </div>
 
 <table>
@@ -100,8 +100,8 @@
 	@Html.DisplayFor(x => x.ApprovalNumber)
 	@Html.LabelFor(x => x.ApprovalYear)
 	@Html.DisplayFor(x => x.ApprovalYear)<br/>
-    @Html.LabelFor(x => x.IssuedFrom.TaxpayerRegime):
-    @Html.DisplayFor(x => x.IssuedFrom.TaxpayerRegime)
+    @Html.LabelFor(x => x.IssuerRegime):
+    @Html.DisplayFor(x => x.IssuerRegime)
 </div>
 <div class="right">@Resources.FiscalDocumentLegend</div>
 <script type="text/javascript">
