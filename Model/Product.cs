@@ -78,16 +78,14 @@ namespace Mictlanix.BE.Model
         [StringLength(50, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string Location { get; set; }
 
-        [Property]
-        [Display(Name = "Cost", ResourceType = typeof(Resources))]
-        [DataType(DataType.Currency)]
-        [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
-        public decimal Cost { get; set; }
-
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [Property("unit_of_measurement")]
         [Display(Name = "UnitOfMeasurement", ResourceType = typeof(Resources))]
-        public string UnitOfMeasurement { get; set; }
+		public string UnitOfMeasurement { get; set; }
+		
+		[Property("stockable")]
+		[Display(Name = "Stockable", ResourceType = typeof(Resources))]
+		public bool IsStockable { get; set; }
 
         [Property("perishable")]
         [Display(Name = "Perishable", ResourceType = typeof(Resources))]

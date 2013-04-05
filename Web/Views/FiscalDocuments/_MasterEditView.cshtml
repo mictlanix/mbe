@@ -26,9 +26,9 @@
             </div>
 
             <div class="editor-label">
-                @Html.LabelFor(model => model.BillTo)
-                @Html.EditorFor(model => model.BillToId)
-                @Html.ValidationMessageFor(model => model.BillToId)
+                @Html.LabelFor(model => model.Recipient)
+                @Html.EditorFor(model => model.RecipientId)
+                @Html.ValidationMessageFor(model => model.RecipientId)
             </div>
 
 	        <div class="editor-field">
@@ -61,11 +61,11 @@
 	                @Html.EditorFor(x => x.PaymentReference)
 	            </div>
 	        </div>
-		        
-            <p>
+		    
+            <div class="action-buttons">
             	<button type="submit" class="icon save">@Resources.Save</button>
         		@Ajax.ActionLink(Resources.Discard, "DiscardChanges", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "master-section" }, new { @class = "button icon cancel" })
-        	</p>
+        	</div>
         }
 </fieldset>
 <script type="text/javascript">
@@ -94,21 +94,22 @@
 
         $("#CustomerId").tokenInput("add", { id: "@Model.Customer.Id", name: "@Model.Customer.Name"});
         
-        $("#BillToId").tokenInput(function() {
+        $("#RecipientId").tokenInput(function() {
 			var customer = $("#CustomerId").tokenInput("get")[0];
 			
 			if(typeof(customer) === "undefined") {
 				customer = {id : 0};
 			}
 			
-			return "@Url.Action("GetSuggestions", "Addresses", new { customer = 0 })" + customer.id; }, {
+			return '@Url.Action("ListTaxpayers", "Customers", new { id = 0 })' + customer.id;
+		}, {
             hintText: "@Resources.HIntText",
             noResultsText: "@Resources.NoResultsText",
             searchingText: "@Resources.SearchingText",          
             queryParam: "pattern",minChars: 3,tokenLimit: 1
         });
         
-        $("#BillToId").tokenInput("add", { id: "@Model.BillTo.Id", name: "@string.Format("{1} ({0})", Model.BillTo.TaxpayerId, Model.BillTo.TaxpayerName)"});
+        $("#RecipientId").tokenInput("add", { id: "@Model.Recipient.Id", name: '@string.Format("{1} ({0})", Model.Recipient.Id, Model.RecipientName)'});
         
         $(".selection-options>li").click(function () {
             $(".selection-options>li").removeClass("selected");

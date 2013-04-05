@@ -52,12 +52,16 @@ namespace Mictlanix.BE.Web.Controllers
 				return View ("InvalidStore");
 			}
 			
+			if (!CashHelpers.ValidateExchangeRate ()) {
+				return View ("InvalidExchangeRate");
+			}
+			
 			var qry = from x in FiscalDocument.Queryable
 					  where !(!x.IsCompleted && x.IsCancelled)
 					  orderby x.IsCompleted, x.Issued descending
                       select x;
 
-            Search<FiscalDocument> search = new Search<FiscalDocument>();
+            var search = new Search<FiscalDocument>();
             search.Limit = Configuration.PageSize;
             search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
             search.Total = qry.Count();
@@ -131,20 +135,34 @@ namespace Mictlanix.BE.Web.Controllers
 		{
 			item.Issuer = Taxpayer.TryFind (item.IssuerId);
 			item.Customer = Customer.TryFind (item.CustomerId);
-			item.BillTo = Address.TryFind (item.BillToId);
+			item.Recipient = CustomerTaxpayer.TryFind (item.RecipientId);
 			
 			if (!ModelState.IsValid) {
 				return View (item);
 			}
 			
+			// Store
+			item.Store = Configuration.Store;
+			item.IssuedAt = item.Store.Address;
+			item.IssuedLocation = item.Store.Location;
+
+			// Issuer
+			item.IssuerName = item.Issuer.Name;
+			item.IssuerRegime = item.Issuer.Regime;
+			item.IssuerAddress = item.Issuer.Address;
+			
+			// Recipient
+			item.RecipientName = item.Recipient.Name;
+			item.RecipientAddress = item.Recipient.Address;
+			
 			if (item.PaymentMethod == PaymentMethod.Unidentified ||
-				item.PaymentMethod == PaymentMethod.Cash) {
+			    item.PaymentMethod == PaymentMethod.Cash) {
 				item.PaymentReference = null;
 			} else if (string.IsNullOrEmpty(item.PaymentReference)) {
 				item.PaymentReference = Resources.Unidentified;
 			}
 
-			var batch = item.Issuer.Documents.First (x => x.Batch == item.Batch);
+			var batch = item.Issuer.Batches.First (x => x.Batch == item.Batch);
 
 			// Fiscal doc's info
 			item.Type = batch.Type;
@@ -152,21 +170,12 @@ namespace Mictlanix.BE.Web.Controllers
 			item.ModificationTime = item.CreationTime;
 			item.Creator = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 			item.Updater = item.Creator;
-			item.Store = Configuration.Store;
-			item.IssuedLocation = item.Store.Location;
 			item.Currency = Configuration.DefaultCurrency;
 			item.ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate();
 
-			// Address info
-			item.BillTo = new Address (item.BillTo);
-			item.IssuedFrom = new Address (item.Issuer.Address);
-			item.IssuedAt = new Address (item.Store.Address);
-
-			item.IssuedFrom.TaxpayerRegime = item.Issuer.Regime;
-
 			using (var scope = new TransactionScope()) {
-				item.BillTo.Create ();
-				item.IssuedFrom.Create ();
+				item.IssuerAddress.Create ();
+				item.RecipientAddress.Create ();
 				item.IssuedAt.Create ();
 				item.CreateAndFlush ();
 			}
@@ -193,21 +202,31 @@ namespace Mictlanix.BE.Web.Controllers
 		{
 			item.Issuer = Taxpayer.TryFind (item.IssuerId);
 			item.Customer = Customer.TryFind (item.CustomerId);
-			item.BillTo = Address.TryFind (item.BillToId);
+			item.Recipient = CustomerTaxpayer.TryFind (item.RecipientId);
 
 			if (!ModelState.IsValid) {
 				return View (item);
 			}
+
+			var document = FiscalDocument.Find (item.Id);
 			
+			// Issuer
+			item.IssuerName = item.Issuer.Name;
+			item.IssuerRegime = item.Issuer.Regime;
+			item.IssuerAddress = item.Issuer.Address;
+			
+			// Recipient
+			item.RecipientName = item.Recipient.Name;
+			item.RecipientAddress = item.Recipient.Address;
+
 			if (item.PaymentMethod == PaymentMethod.Unidentified ||
 			    item.PaymentMethod == PaymentMethod.Cash) {
 				item.PaymentReference = null;
 			} else if (string.IsNullOrEmpty(item.PaymentReference)) {
 				item.PaymentReference = Resources.Unidentified;
 			}
-			
-			var document = FiscalDocument.Find (item.Id);
-			var batch = item.Issuer.Documents.First (x => x.Batch == item.Batch);
+
+			var batch = item.Issuer.Batches.First (x => x.Batch == item.Batch);
 
 			// updated info
 			document.Type = batch.Type;
@@ -219,14 +238,10 @@ namespace Mictlanix.BE.Web.Controllers
 			document.PaymentMethod = item.PaymentMethod;
 			document.PaymentReference = item.PaymentReference;
 
-			// Address info
-			document.BillTo.Copy (item.BillTo);
-			document.IssuedFrom.Copy (document.Issuer.Address);
-			document.IssuedFrom.TaxpayerRegime = document.Issuer.Regime;
 
 			using (var scope = new TransactionScope()) {
-				document.BillTo.Update ();
-				document.IssuedFrom.Update ();
+				document.IssuerAddress.Update ();
+				document.RecipientAddress.Update ();
 				document.UpdateAndFlush ();
 			}
 
@@ -308,7 +323,7 @@ namespace Mictlanix.BE.Web.Controllers
                           where x.Batch == item.Batch
                           select x.Serial).Max ().GetValueOrDefault () + 1;
 
-			var batch = (from x in item.Issuer.Documents
+			var batch = (from x in item.Issuer.Batches
 						 where x.Batch == item.Batch && 
 							   x.SerialStart <= serial && 
 							   x.SerialEnd >= serial
@@ -322,7 +337,7 @@ namespace Mictlanix.BE.Web.Controllers
 			item.Serial = serial;
 			item.ApprovalNumber = batch.ApprovalNumber;
 			item.ApprovalYear = batch.ApprovalYear;
-			item.CertificateNumber = item.Issuer.CertificateNumber;
+			item.CertificateNumber = item.Issuer.Certificates.Single (x => x.IsActive).Id;
 
 			dynamic doc = CFDv2Helpers.IssueCFD (item);
 
@@ -415,7 +430,7 @@ namespace Mictlanix.BE.Web.Controllers
 			int pl = f.Customer.PriceList.Id;
 			var price = (from x in ProductPrice.Queryable
 			             where x.Product.Id == product && x.List.Id == pl
-			             select x.Price).SingleOrDefault();
+			             select x.Value).SingleOrDefault();
 
 			var item = new FiscalDocumentDetail {
                 Document = FiscalDocument.Find (id),
@@ -626,7 +641,7 @@ namespace Mictlanix.BE.Web.Controllers
 
 		public ActionResult GetBatchSelector (string id)
 		{
-			var qry = from x in TaxpayerDocument.Queryable
+			var qry = from x in TaxpayerBatch.Queryable
 					  where x.Taxpayer.Id == id
 					  select new { x.Batch, x.Type };
 			var list = from x in qry.ToList ()
@@ -678,7 +693,7 @@ namespace Mictlanix.BE.Web.Controllers
 						model = x.Product.Model,
 						sku = x.Product.SKU,
 						url = Url.Content(x.Product.Photo),
-						price = x.Price
+						price = x.Value
 					};
 			
 			return Json (qry.Take(15), JsonRequestBehavior.AllowGet);

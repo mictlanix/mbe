@@ -113,10 +113,7 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult Create()
         {
 			var item = new Store { 
-				Address = new Address {
-					TaxpayerId = "XXXXXXXXXXXX",
-					TaxpayerName = "XXX"
-				}
+				Address = new Address()
 			};
 
             return View (item);

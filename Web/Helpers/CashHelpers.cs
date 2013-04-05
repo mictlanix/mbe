@@ -54,25 +54,57 @@ namespace Mictlanix.BE.Web.Helpers
 			return items;
 		}
 
-		public static decimal GetExchangeRate(DateTime date, CurrencyCode baseCurrency, CurrencyCode targetCurrency)
+		static decimal GetExchangeRateA (DateTime date, CurrencyCode baseCurrency, CurrencyCode targetCurrency)
 		{
 			if (baseCurrency == targetCurrency)
-				return 1m;
-
+				return decimal.One;
+			
 			var item = ExchangeRate.Queryable.SingleOrDefault(x => x.Date == date && x.Base == baseCurrency &&
 			                                                  x.Target == targetCurrency);
+			
+			if (item != null)
+				return item.Rate;
+			
+			item = ExchangeRate.Queryable.SingleOrDefault(x => x.Date == date && x.Base == targetCurrency &&
+			                                              x.Target == baseCurrency);
+			
+			if (item != null)
+				return decimal.One / item.Rate;
 
-			return item == null ? 0m : item.Rate;
+			return decimal.Zero;
+		}
+
+		public static decimal GetExchangeRate (DateTime date, CurrencyCode baseCurrency, CurrencyCode targetCurrency)
+		{
+			var val = GetExchangeRateA (date, baseCurrency, targetCurrency);
+
+			if (val != decimal.Zero)
+				return val;
+
+			var val1 = GetExchangeRateA (date, baseCurrency, Configuration.BaseCurrency);
+			var val2 = GetExchangeRateA (date, targetCurrency, Configuration.BaseCurrency);
+
+			return val2 == decimal.Zero ? decimal.Zero : (val1 / val2);
 		}
 		
-		public static decimal GetTodayDefaultExchangeRate()
+		public static decimal GetTodayExchangeRate (CurrencyCode baseCurrency, CurrencyCode targetCurrency)
 		{
-			return GetExchangeRate(DateTime.Today, Configuration.BaseCurrency, Configuration.DefaultCurrency);
+			return GetExchangeRate (DateTime.Today, baseCurrency, targetCurrency);
+		}
+		
+		public static decimal GetTodayExchangeRate (CurrencyCode baseCurrency)
+		{
+			return GetExchangeRate (DateTime.Today, baseCurrency, Configuration.BaseCurrency);
 		}
 
-		public static bool ValidateExchangeRate()
+		public static decimal GetTodayDefaultExchangeRate()
 		{
-			return GetTodayDefaultExchangeRate() != 0m;
+			return GetExchangeRate (DateTime.Today, Configuration.DefaultCurrency, Configuration.BaseCurrency);
+		}
+
+		public static bool ValidateExchangeRate ()
+		{
+			return GetTodayDefaultExchangeRate () != 0m;
 		}
 	}
 }

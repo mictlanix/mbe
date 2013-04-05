@@ -33,6 +33,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Text;
+using System.Security.Cryptography.X509Certificates;
 using Castle.ActiveRecord;
 using NHibernate;
 using Mictlanix.BE.Model;
@@ -60,7 +61,7 @@ namespace Mictlanix.BE.Web.Controllers
         public ViewResult Details (string id)
 		{
 			var item = Taxpayer.Find (id);
-			item.Documents.ToList ();
+			item.Batches.ToList ();
 			
 			return View (item);
 		}
@@ -71,11 +72,7 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult Create ()
 		{
 			var item = new Taxpayer { 
-				Address = new Address {
-					TaxpayerId = "XXXXXXXXXXXX",
-					TaxpayerName = "XXX"
-				},
-				CertificateNumber = 0
+				Address = new Address ()
 			};
 			
 			if (Request.IsAjaxRequest ()) {
@@ -93,11 +90,9 @@ namespace Mictlanix.BE.Web.Controllers
 		{
 			if (!ModelState.IsValid)
 				return View (item);
-			
-			item.Address.TaxpayerId = item.Id;
-			item.Address.TaxpayerName = item.Name;
-			item.Address.TaxpayerRegime = item.Regime;
-			
+
+			// FIXME: taxpayer's certificates management
+			/*
 			foreach (var file in files) {
 				if (file != null && file.ContentLength > 0) {
 					var name = file.FileName.ToLower ();
@@ -110,6 +105,7 @@ namespace Mictlanix.BE.Web.Controllers
 					}
 				}
 			}
+			*/
 			
 			using (var scope = new TransactionScope()) {
 				item.Address.Create ();
@@ -146,19 +142,17 @@ namespace Mictlanix.BE.Web.Controllers
 		{
 			if (!ModelState.IsValid)
 				return View (item);
-			
-			item.Address.TaxpayerId = item.Id;
-			item.Address.TaxpayerName = item.Name;
-			item.Address.TaxpayerRegime = item.Regime;
-			
+
 			var taxpayer = Taxpayer.Find (item.Id);
 			
 			// update info
+			// FIXME: address updated
 			taxpayer.Name = item.Name;
 			taxpayer.Regime = item.Regime;
-			taxpayer.CertificateNumber = item.CertificateNumber;
-			taxpayer.Address.Copy (item.Address);
-			
+			taxpayer.Address = item.Address;
+
+			// FIXME: taxpayer's certificates management
+			/*
 			foreach (var file in files) {
 				if (file != null && file.ContentLength > 0) {
 					var name = file.FileName.ToLower ();
@@ -171,9 +165,9 @@ namespace Mictlanix.BE.Web.Controllers
 					}
 				}
 			}
-			
+			*/
+
 			using (var scope = new TransactionScope()) {
-				taxpayer.Address.Update ();
 				taxpayer.UpdateAndFlush ();
 			}
 
@@ -205,7 +199,67 @@ namespace Mictlanix.BE.Web.Controllers
 				return View ("DeleteUnsuccessful");
 			}
         }
-		
+
+		public ActionResult AddCertificate (string id)
+		{
+			var item = new TaxpayerCertificate {
+				TaxpayerId = id
+			};
+
+			return View (item);
+		}
+
+		[HttpPost]
+		public ActionResult AddCertificate (TaxpayerCertificate item, IEnumerable<HttpPostedFileBase> files)
+		{
+			if (!ModelState.IsValid)
+				return View (item);
+
+			foreach (var file in files) {
+				if (file != null && file.ContentLength > 0) {
+					var name = file.FileName.ToLower ();
+					
+					if (name.EndsWith (".cer")) {
+						item.CertificateData = FileToBytes (file);
+					} else if (name.EndsWith (".key")) {
+						item.KeyData = FileToBytes (file);
+						item.KeyPassword = Encoding.UTF8.GetBytes (item.KeyPassword2);
+					}
+				}
+			}
+			
+			//FIXME: validate wrong passphrase
+			if (!CFDv2Helpers.PrivateKeyTest (item.KeyData, item.KeyPassword)) {
+				return View (item);
+			}
+
+			string sn = string.Empty;
+			var cert = new X509Certificate2();
+			cert.Import(item.CertificateData);
+
+			foreach (var b in cert.GetSerialNumber()) {
+				sn = (char)b + sn;
+			}
+
+			//FIXME: Update on existing certificate number
+			item.Id = ulong.Parse (sn);
+			item.NotBefore = cert.NotBefore;
+			item.NotAfter = cert.NotAfter;
+			item.Taxpayer = Taxpayer.Find (item.TaxpayerId);
+			item.IsActive = true;
+
+			using (var scope = new TransactionScope()) {
+				foreach(var x in item.Taxpayer.Certificates) {
+					x.IsActive = false;
+					x.Update();
+				}
+				
+				item.CreateAndFlush ();
+			}
+
+			return RedirectToAction ("Details", new { id = item.TaxpayerId });
+		}
+
         public JsonResult GetSuggestions(string pattern)
         {
             var qry = from x in Taxpayer.Queryable

@@ -1375,15 +1375,6 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Series y Folios.
-        /// </summary>
-        public static string DisplayName_TaxpayerDocuments {
-            get {
-                return ResourceManager.GetString("DisplayName_TaxpayerDocuments", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Razones Sociales (Emisores de Facturas).
         /// </summary>
         public static string DisplayName_Taxpayers {
@@ -4397,6 +4388,107 @@ namespace Mictlanix.BE {
 				return ResourceManager.GetString("Validation_CannotBeZeroOrNegative", resourceCulture);
 			}
 		}
+		
+		public static string InvalidExchangeRate {
+			get {
+				return ResourceManager.GetString("InvalidExchangeRate", resourceCulture);
+			}
+		}
+		
+		public static string Message_InvalidExchangeRate {
+			get {
+				return ResourceManager.GetString("Message_InvalidExchangeRate", resourceCulture);
+			}
+		}
+		
+		public static string Other {
+			get {
+				return ResourceManager.GetString("Other", resourceCulture);
+			}
+		}
+		
+		public static string Home {
+			get {
+				return ResourceManager.GetString("Home", resourceCulture);
+			}
+		}
+		
+		public static string Work {
+			get {
+				return ResourceManager.GetString("Work", resourceCulture);
+			}
+		}
+		
+		public static string Business {
+			get {
+				return ResourceManager.GetString("Business", resourceCulture);
+			}
+		}
+		
+		public static string Fiscal {
+			get {
+				return ResourceManager.GetString("Fiscal", resourceCulture);
+			}
+		}
+		
+		public static string IssuerName {
+			get {
+				return ResourceManager.GetString("IssuerName", resourceCulture);
+			}
+		}
+		
+		public static string Recipient {
+			get {
+				return ResourceManager.GetString("Recipient", resourceCulture);
+			}
+		}
+		
+		public static string RecipientName {
+			get {
+				return ResourceManager.GetString("RecipientName", resourceCulture);
+			}
+		}
 
+		public static string Certificates {
+			get {
+				return ResourceManager.GetString("Certificates", resourceCulture);
+			}
+		}
+		
+		public static string Batches {
+			get {
+				return ResourceManager.GetString("Batches", resourceCulture);
+			}
+		}
+		
+		public static string TaxpayerBatches {
+			get {
+				return ResourceManager.GetString("TaxpayerBatches", resourceCulture);
+			}
+		}
+		
+		public static string Taxpayer {
+			get {
+				return ResourceManager.GetString("Taxpayer", resourceCulture);
+			}
+		}
+		
+		public static string NotBefore {
+			get {
+				return ResourceManager.GetString("NotBefore", resourceCulture);
+			}
+		}
+		
+		public static string NotAfter {
+			get {
+				return ResourceManager.GetString("NotAfter", resourceCulture);
+			}
+		}
+		
+		public static string Active {
+			get {
+				return ResourceManager.GetString("Active", resourceCulture);
+			}
+		}
     }
 }

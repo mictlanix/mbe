@@ -40,50 +40,39 @@ namespace Mictlanix.BE.Web.Controllers
 {
     public class AddressesController : Controller
     {
-        //
-        // GET: /Address/Details/5
-
         public ViewResult Details(int id)
         {
-            var item = Address.Find(id);
-            var customer = item.Customers.FirstOrDefault();
+            var item = Address.Find (id);
+            var customer = item.Customers.FirstOrDefault ();
 
-            if (customer == null)
-            {
-                var supplier = item.Suppliers.First();
+            if (customer == null) {
+                var supplier = item.Suppliers.First ();
                 ViewBag.OwnerId = supplier.Id;
                 ViewBag.OwnerType = "Suppliers";
-            }
-            else
-            {
+            } else {
                 ViewBag.OwnerId = customer.Id;
                 ViewBag.OwnerType = "Customers";
             }
 
-            return View(item);
+            return View (item);
         }
 
-        //
-        // GET: /Address/Create
-
-        public ActionResult CreateForSupplier(int id)
+        public ActionResult CreateForSupplier (int id)
         {
             ViewBag.OwnerId = id;
             ViewBag.OwnerType = "Suppliers";
-            return View("Create");
+            return View ("Create");
         }
 
-        public ActionResult CreateForCustomer(int id)
+        public ActionResult CreateForCustomer (int id)
         {
             ViewBag.OwnerId = id;
             ViewBag.OwnerType = "Customers";
-            return View("Create");
+            return View ("Create");
         }
-        //
-        // POST: /Address/Create
 
         [HttpPost]
-        public ActionResult Create(Address item)
+        public ActionResult Create (Address item)
         {
             if (!ModelState.IsValid)
             	return View(item);
@@ -110,9 +99,6 @@ namespace Mictlanix.BE.Web.Controllers
 			return RedirectToAction("Details", type, new { id = owner });
         }
 
-        //
-        // GET: /Address/Edit/5
-
         public ActionResult Edit(int id)
         {
         	var item = Address.Find(id);
@@ -133,9 +119,6 @@ namespace Mictlanix.BE.Web.Controllers
         	return View(item);
         }
 
-        //
-        // POST: /Address/Edit/5
-
         [HttpPost]
         public ActionResult Edit(Address address)
         {
@@ -152,9 +135,6 @@ namespace Mictlanix.BE.Web.Controllers
             }
             return View(address);
         }
-
-        //
-        // GET: /Address/Delete/5
 
         public ActionResult Delete(int id)
         {
@@ -175,9 +155,6 @@ namespace Mictlanix.BE.Web.Controllers
 
             return View(item);
         }
-
-        //
-        // POST: /Address/Delete/5
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
@@ -208,7 +185,7 @@ namespace Mictlanix.BE.Web.Controllers
             return RedirectToAction("Details", type, new { id = owner });
         }
 		
-		public JsonResult GetSuggestions2(int customer)
+		public JsonResult GetSuggestions (int customer)
 		{
 			var qry = from x in Address.Queryable
 					  from y in x.Customers
@@ -218,17 +195,5 @@ namespace Mictlanix.BE.Web.Controllers
 			
 			return Json(qry.ToList(), JsonRequestBehavior.AllowGet);
 		}
-
-        public JsonResult GetSuggestions(int customer, string pattern)
-        {
-            var qry = from x in Address.Queryable
-					  from y in x.Customers
-                      where y.Id == customer && (
-							x.TaxpayerId.Contains(pattern) ||
-							x.TaxpayerName.Contains(pattern))
-                      select new { id = x.Id, name = string.Format("{1} ({0})", x.TaxpayerId, x.TaxpayerName) };
-
-            return Json(qry.ToList(), JsonRequestBehavior.AllowGet);
-        }
     }
 }
