@@ -342,8 +342,8 @@ namespace Mictlanix.BE.Web.Controllers
 						Id = x.Customer.Id,
 						Name = x.Customer.Name,
 						Units = y.Quantity,
-						Total = y.Quantity * (y.Price - y.Product.Cost),
-						Subtotal = y.Quantity * (y.Price - y.Product.Cost) / (y.TaxRate + 1m)
+						Total = y.Quantity * (y.Price - y.Cost),
+						Subtotal = y.Quantity * (y.Price - y.Cost) / (y.TaxRate + 1m)
 					};
 			var qry2 = from x in qry.ToList()
 						group x by new { x.Id, x.Name } into g
@@ -386,8 +386,8 @@ namespace Mictlanix.BE.Web.Controllers
 						Id = x.SalesPerson.Id,
 						Name = x.SalesPerson.FirstName + " " + x.SalesPerson.LastName,
 						Units = y.Quantity,
-						Total = y.Quantity * (y.Price - y.Product.Cost),
-						Subtotal = y.Quantity * (y.Price - y.Product.Cost) / (y.TaxRate + 1m)
+						Total = y.Quantity * (y.Price - y.Cost),
+						Subtotal = y.Quantity * (y.Price - y.Cost) / (y.TaxRate + 1m)
 					};
 			var qry2 = from x in qry.ToList()
 						group x by new { x.Id, x.Name } into g
@@ -430,8 +430,8 @@ namespace Mictlanix.BE.Web.Controllers
 							Id = y.ProductCode,
 							Name = y.ProductName,
 							Units = y.Quantity,
-							Total = y.Quantity * (y.Price - y.Product.Cost),
-							Subtotal = y.Quantity * (y.Price - y.Product.Cost) / (y.TaxRate + 1m)
+							Total = y.Quantity * (y.Price - y.Cost),
+							Subtotal = y.Quantity * (y.Price - y.Cost) / (y.TaxRate + 1m)
 						};
 			var qry2 = from x in qry.ToList()
 						group x by new { x.Id, x.Name } into g

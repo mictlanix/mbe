@@ -1,4 +1,4 @@
-﻿// 
+// 
 // PurchasesController.cs
 // 
 // Author:
@@ -187,9 +187,12 @@ namespace Mictlanix.BE.Web.Controllers
         // POST: /Purchases/AddPurchaseDetail
 
         [HttpPost]
-        public JsonResult AddPurchaseDetail(int movement, int warehouse, int product)
+        public JsonResult AddPurchaseDetail (int movement, int warehouse, int product)
         {
-            var p = Product.Find(product);
+			var p = Product.Find (product);
+			var cost = (from x in ProductPrice.Queryable
+			            where x.Product.Id == product && x.List.Id == 0
+			            select x.Value).SingleOrDefault();
 
             var item = new PurchaseOrderDetail
             {
@@ -202,7 +205,7 @@ namespace Mictlanix.BE.Web.Controllers
                 TaxRate = p.TaxRate,
 				IsTaxIncluded = p.IsTaxIncluded,
                 Discount = 0,
-				Price = p.Cost,
+				Price = cost,
 				ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate(),
 				Currency = Configuration.DefaultCurrency
             };
@@ -334,7 +337,7 @@ namespace Mictlanix.BE.Web.Controllers
         // POST: /Purchases/ConfirmPurchase/{id}
 		// TODO: Remove inventory stuff
         [HttpPost]
-        public ActionResult ConfirmPurchase(int id)
+        public ActionResult ConfirmPurchase (int id)
         {
             PurchaseOrder item = PurchaseOrder.Find (id);
 
@@ -372,8 +375,9 @@ namespace Mictlanix.BE.Web.Controllers
                     }
                 }
 
+				// FIXME: Update cost from purchase
 	            foreach (var x in item.Details) {
-	                x.Product.Cost = x.Price;
+	                //x.Product.Cost = x.Price;
 					x.Product.Update ();
 	            }
 

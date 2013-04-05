@@ -1332,9 +1332,6 @@ Realizada el: {0:d}</value>
   <data name="Certificate" xml:space="preserve">
     <value>Certificado</value>
   </data>
-  <data name="DisplayName_TaxpayerDocuments" xml:space="preserve">
-    <value>Series y Folios</value>
-  </data>
   <data name="SerialStart" xml:space="preserve">
     <value>Folio Inicial</value>
   </data>
@@ -1586,5 +1583,56 @@ Realizada el: {0:d}</value>
   </data>
   <data name="Validation_CannotBeZeroOrNegative" xml:space="preserve">
     <value>El campo {0} no puede ser cero o negativo.</value>
+  </data>
+  <data name="InvalidExchangeRate" xml:space="preserve">
+    <value>Tipo de Cambio Inválido</value>
+  </data>
+  <data name="Message_InvalidExchangeRate" xml:space="preserve">
+    <value>No se ha establecido un tipo de cambio válido.</value>
+  </data>
+  <data name="Other" xml:space="preserve">
+    <value>Otro</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Casa</value>
+  </data>
+  <data name="Work" xml:space="preserve">
+    <value>Trabajo</value>
+  </data>
+  <data name="Business" xml:space="preserve">
+    <value>Negocio</value>
+  </data>
+  <data name="Fiscal" xml:space="preserve">
+    <value>Fiscal</value>
+  </data>
+  <data name="IssuerName" xml:space="preserve">
+    <value>Nombre del Emisor</value>
+  </data>
+  <data name="Recipient" xml:space="preserve">
+    <value>Receptor</value>
+  </data>
+  <data name="RecipientName" xml:space="preserve">
+    <value>Nombre del Receptor</value>
+  </data>
+  <data name="Certificates" xml:space="preserve">
+    <value>Certificados</value>
+  </data>
+  <data name="Batches" xml:space="preserve">
+    <value>Series</value>
+  </data>
+  <data name="TaxpayerBatches" xml:space="preserve">
+    <value>Series y Folios</value>
+  </data>
+  <data name="Taxpayer" xml:space="preserve">
+    <value>Contribuyente</value>
+  </data>
+  <data name="NotBefore" xml:space="preserve">
+    <value>Desde</value>
+  </data>
+  <data name="NotAfter" xml:space="preserve">
+    <value>Hasta</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Activo</value>
   </data>
 </root>

@@ -71,7 +71,7 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult Index (Search<Product> search)
         {
             if (ModelState.IsValid) {
-                search = GetProducts(search);
+                search = GetProducts (search);
             }
 
             if (Request.IsAjaxRequest()) {

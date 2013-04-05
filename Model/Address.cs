@@ -44,30 +44,20 @@ namespace Mictlanix.BE.Model
 		public Address ()
 		{
 		}
-		
+
+		/*
 		public Address (Address item)
 		{
 			Copy (item);
 		}
+		*/
 		
         [PrimaryKey(PrimaryKeyType.Identity, "address_id")]
 		public virtual int Id { get; set; }
-
-        [Property("taxpayer_id")]
-		[Display(Name = "TaxpayerId", ResourceType = typeof(Resources))]
-		[StringLength(13, MinimumLength = 12, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-		public virtual string TaxpayerId { get; set; }
-
-        [Property("taxpayer_name")]
-		[Display(Name = "TaxpayerName", ResourceType = typeof(Resources))]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[StringLength(250, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-		public virtual string TaxpayerName { get; set; }
-		
-        [Property("taxpayer_regime")]
-		[Display(Name = "TaxRegime", ResourceType = typeof(Resources))]
-		[StringLength(250, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-		public virtual string TaxpayerRegime { get; set; }
+				
+		[Property]
+		[Display(Name = "Type", ResourceType = typeof(Resources))]
+		public virtual AddressType Type { get; set; }
 
         [Property]
 		[Display(Name = "Street", ResourceType = typeof(Resources))]
@@ -140,16 +130,14 @@ namespace Mictlanix.BE.Model
             get { return customers; }
             set { customers = value; }
         }
-		
+
         public virtual string StreetAndNumber {
 			get { return string.Format ("{0} {1} {2}", Street, ExteriorNumber, InteriorNumber).Trim (); }
 		}
-		
+		/*
 		public virtual void Copy (Address item)
 		{
-			TaxpayerId = item.TaxpayerId;
-			TaxpayerName = item.TaxpayerName;
-			TaxpayerRegime = item.TaxpayerRegime;
+			Type = item.Type;
 			Street = item.Street;
 			ExteriorNumber = item.ExteriorNumber;
 			InteriorNumber = item.InteriorNumber;
@@ -160,12 +148,13 @@ namespace Mictlanix.BE.Model
 			Country = item.Country;
 			ZipCode = item.ZipCode;
 		}
-		
+		*/
+
 		#region Override Base Methods
 
         public override string ToString()
         {
-			return string.Format("{1}, {2}, {3} ({0})", TaxpayerName, StreetAndNumber, Neighborhood, ZipCode);
+			return string.Format("{0}, {1}, {2}", StreetAndNumber, Neighborhood, ZipCode);
         }
 
 		public override bool Equals(object obj)

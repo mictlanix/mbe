@@ -7,10 +7,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Mictlanix.BE.Model
 {   
-    [ActiveRecord("taxpayer_document")]
-    public class TaxpayerDocument : ActiveRecordLinqBase<TaxpayerDocument>
+    [ActiveRecord("taxpayer_batch")]
+    public class TaxpayerBatch : ActiveRecordLinqBase<TaxpayerBatch>
     {
-        [PrimaryKey(PrimaryKeyType.Identity, "taxpayer_document_id")]
+		[PrimaryKey(PrimaryKeyType.Identity, "taxpayer_batch_id")]
         public int Id { get; set; }
 		
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
@@ -57,7 +57,7 @@ namespace Mictlanix.BE.Model
 
 		public override bool Equals (object obj)
 		{
-			TaxpayerDocument other = obj as TaxpayerDocument;
+			TaxpayerBatch other = obj as TaxpayerBatch;
 
 			if (other == null)
 				return false;

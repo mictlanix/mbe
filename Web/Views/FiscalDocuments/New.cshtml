@@ -33,9 +33,9 @@
                 </div>
 
                 <div class="editor-label">
-                    @Html.LabelFor(x => x.BillTo)
-                    @Html.EditorFor(x => x.BillToId)
-                    @Html.ValidationMessageFor(x => x.BillToId)
+                    @Html.LabelFor(x => x.Recipient)
+                    @Html.EditorFor(x => x.RecipientId)
+                    @Html.ValidationMessageFor(x => x.RecipientId)
                 </div>
                 
 		        <div class="editor-field">
@@ -102,14 +102,15 @@ ul.token-input-list {
             }
         });
         
-        $("#BillToId").tokenInput(function() {
+        $("#RecipientId").tokenInput(function() {
 			var customer = $("#CustomerId").tokenInput("get")[0];
 			
 			if(typeof(customer) === "undefined") {
 				customer = {id : 0};
 			}
 			
-			return "@Url.Action("GetSuggestions", "Addresses", new { customer = 0 })" + customer.id; }, {
+			return '@Url.Action("ListTaxpayers", "Customers", new { id = 0 })' + customer.id;
+		}, {
             hintText: "@Resources.HIntText",
             noResultsText: "@Resources.NoResultsText",
             searchingText: "@Resources.SearchingText",          

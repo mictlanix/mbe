@@ -48,10 +48,11 @@ namespace Mictlanix.BE.Web.Controllers
         public ViewResult Index()
         {
             var qry = from x in PriceList.Queryable
+					  where x.Id > 0
                       orderby x.Name
                       select x;
 
-            Search<PriceList> search = new Search<PriceList>();
+            var search = new Search<PriceList>();
             search.Limit = Configuration.PageSize;
             search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
             search.Total = qry.Count();
@@ -65,7 +66,7 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult Index(Search<PriceList> search)
         {
             if (ModelState.IsValid) {
-                search = GetPriceList(search);
+                search = GetPriceList (search);
             }
 
             if (Request.IsAjaxRequest()) {
@@ -76,24 +77,23 @@ namespace Mictlanix.BE.Web.Controllers
         }
 
         Search<PriceList> GetPriceList(Search<PriceList> search)
-        {
-            if (search.Pattern == null) {
-                var qry = from x in PriceList.Queryable
-                          select x;
+		{
+			var qry = from x in PriceList.Queryable
+					  where x.Id > 0
+					  orderby x.Name
+					  select x;
 
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            } else {
-                var qry = from x in PriceList.Queryable
-                          where x.Name.Contains(search.Pattern) 
-                          orderby x.Name
-                          select x;
-
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            }
-
-            return search;
+			if (!string.IsNullOrEmpty(search.Pattern)) {
+                qry = from x in PriceList.Queryable
+				      where x.Id > 0 && x.Name.Contains (search.Pattern) 
+                      orderby x.Name
+                      select x;
+			}
+			
+			search.Total = qry.Count();
+			search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+			
+			return search;
         }
 
         //
@@ -101,8 +101,8 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ViewResult Details(int id)
         {
-            PriceList priceList = PriceList.Find(id);
-            return View(priceList);
+            var item = PriceList.Find (id);
+            return View (item);
         }
 
         //

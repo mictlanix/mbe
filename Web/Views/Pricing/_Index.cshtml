@@ -22,21 +22,22 @@
 @foreach (var item in Model.Results)
 {
     <tr>
-        <td class="center">@Html.DisplayFor(x => item.Code)</td>
+        <td class='center'>@Html.DisplayFor(x => item.Code)</td>
         <td>@Html.DisplayFor(x => item.Name)</td>
-        <td class="center">@Html.DisplayFor(x => item.Model)</td>
-        <td class="center">@Html.DisplayFor(x => item.UnitOfMeasurement)</td>
-        <td class="tabular">
+        <td class='center'>@Html.DisplayFor(x => item.Model)</td>
+        <td class='center'>@Html.DisplayFor(x => item.UnitOfMeasurement)</td>
+        <td class='tabular nowrap'>
             <table>
-            	<tr>
-            		<th class="right">@Resources.Cost</th>
-            		<td class="number cost" data-product="@item.Id">@Html.DisplayFor(x => item.Cost)</td>
-            	</tr>
             @foreach(var p in ViewBag.PriceLists) {
 				var price = item.Prices.SingleOrDefault(x => x.List.Id == p.Id) ?? new ProductPrice ();
-            	<tr>
-            		<th class="right nowrap">@p.Name</th>
-            		<td class="number price" data-product="@item.Id" data-list="@p.Id">@Html.DisplayFor(x => price.Price)</td>
+            	<tr data-product='@item.Id' data-list='@p.Id'>
+            		<th class='right nowrap'>@p.Name</th>
+            		<td class='nowrap'>
+            			<span class='price'>@Html.DisplayFor(x => price.Value)</span>
+        			</td>
+            		<td class='nowrap'>
+            			<span class='currency'>@Html.DisplayFor(x => price.Currency)</span>
+        			</td>
             	</tr>
         	}
             </table>
@@ -44,41 +45,49 @@
     </tr>
 }
 </table>
-<div class="buttons right">
-	<label class="button left">@Model.ToString()</label>@if (Model.HasPrev) {<a class="button middle icon prev icon-only paging" title="@Resources.PrevPage" href="javascript:void(0)"></a>}@if (Model.HasNext) {<a class="button right icon next icon-only paging" title="@Resources.NextPage" href="javascript:void(0)"></a>}
+<div class='buttons right'>
+	<label class='button left'>@Model.ToString()</label>@if (Model.HasPrev) {<a class='button middle icon prev icon-only paging' title='@Resources.PrevPage' href='javascript:void(0)'></a>}@if (Model.HasNext) {<a class='button right icon next icon-only paging' title='@Resources.NextPage' href='javascript:void(0)'></a>}
 </div>
-<script type="text/javascript">
+<script type='text/javascript'>
     $(function () {
 @if(Privilege.AllowUpdate) {
 <text>
-		$('.cost').addClass('editable').editable(function(value, settings) {
-			var e = $(this);
-			var product = e.data("product");
+		$('.price').addClass('editable').editable(function(value, settings) {
+			var myself = $(this);
+			var e = myself.closest('tr');
+			var product = e.data('product');
+			var list = e.data('list');
 			var result = "error";
 			
 	        $.ajaxSetup({ async: false });
-	        $.post('@Url.Action("EditCost")', { Id: product, Value: value }, function (data) {
-	            e.switchClass('editable', 'editable-ok').switchClass('editable-ok', 'editable', 3000);
+	        $.post('@Url.Action("EditPrice")', { Product: product, List: list, Value: value }, function (data) {
+	            myself.addClass('succesful').switchClass('succesful', '', 3000);
 	            result = data.value;
 	        }, "json");
 	        $.ajaxSetup({ async: true });
 			
 			return result;
 		});
-		$('.price').addClass('editable').editable(function(value, settings) {
-			var e = $(this);
-			var product = e.data("product");
-			var list = e.data("list");
+		
+		$('.currency').addClass('editable').editable(function(value, settings) {
+			var myself = $(this);
+			var e = myself.closest('tr');
+			var product = e.data('product');
+			var list = e.data('list');
 			var result = "error";
-			
+
 	        $.ajaxSetup({ async: false });
-	        $.post('@Url.Action("EditPrice")', { Product: product, List: list, Value: value }, function (data) {
-	            e.switchClass('editable', 'editable-ok').switchClass('editable-ok', 'editable', 3000);
+	        $.post('@Url.Action("EditCurrency")', { Product: product, List: list, Value: value }, function (data) {
+	            myself.addClass('succesful').switchClass('succesful', '', 3000);
 	            result = data.value;
 	        }, "json");
 	        $.ajaxSetup({ async: true });
-			
-			return result;
+
+			return value;
+		},{
+			data  :"{'@CurrencyCode.MXN':'MXN','USD':'USD','EUR':'EUR'}",
+		    type  :'select',
+		    submit:'OK'
 		});
  </text>
  }
@@ -92,8 +101,8 @@
   			}
   			
     		e.preventDefault();
-    		$("#activity-indicator").show();
-    		$("#search-results").hide();
+    		$('#activity-indicator').show();
+    		$('#search-results').hide();
     		
     		$.post('@Url.Action("Index")', { Pattern: '@Model.Pattern', Offset: offset, Limit: @Model.Limit }, function(data) {
 				$('#search-results').html(data);
