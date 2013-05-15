@@ -42,24 +42,19 @@ namespace Mictlanix.BE.Web.Controllers
 {
     public class CustomersController : Controller
     {
-        //
-        // GET: /Customer/
-
         public ViewResult Index()
         {
             var qry = from x in Customer.Queryable
                       orderby x.Name
                       select x;
 
-            Search<Customer> search = new Search<Customer>();
+            var search = new Search<Customer>();
             search.Limit = Configuration.PageSize;
-            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            search.Total = qry.Count();
+            search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+            search.Total = qry.Count ();
 
-            return View(search);
+            return View (search);
         }
-
-        // POST: /Customers/
 
         [HttpPost]
         public ActionResult Index(Search<Customer> search)
@@ -97,39 +92,25 @@ namespace Mictlanix.BE.Web.Controllers
 
             return search;
         }
-        //
-        // GET: /Customer/Details/5
 
-        public ViewResult Details(int id)
+        public ViewResult Details (int id)
         {
-			var item = Customer.Find(id);
-
-			item.Addresses.ToList();
-			item.Contacts.ToList();
-			
-			ViewBag.OwnerId = item.Id;
-			
-            return View(item);
+			var item = Customer.Find (id);
+            return View (item);
         }
-
-        //
-        // GET: /Customer/Create
 
         public ActionResult Create()
         {
             return View();
         }
 
-        //
-        // POST: /Customer/Create
-
         [HttpPost]
-        public ActionResult Create(Customer item)
-        {
+        public ActionResult Create (Customer item)
+		{
+			item.PriceList = PriceList.TryFind (item.PriceListId);
+
             if (!ModelState.IsValid)
             	return View (item);
-            
-			item.PriceList = PriceList.Find (item.PriceListId);
 			
 			using (var scope = new TransactionScope()) {
             	item.CreateAndFlush ();
@@ -138,17 +119,11 @@ namespace Mictlanix.BE.Web.Controllers
             return RedirectToAction ("Index");
         }
 
-        //
-        // GET: /Customer/Edit/5
-
         public ActionResult Edit(int id)
         {
-            Customer customer = Customer.Find(id);
-            return View(customer);
+            var item = Customer.Find(id);
+            return View (item);
         }
-
-        //
-        // POST: /Customer/Edit/5
 
         [HttpPost]
         public ActionResult Edit(Customer item)
@@ -158,33 +133,27 @@ namespace Mictlanix.BE.Web.Controllers
             if (!ModelState.IsValid)
             	return View(item);
 			
-			var customer = Customer.Find(item.Id);
+			var entity = Customer.Find(item.Id);
 			
-			customer.Name = item.Name;
-			customer.Zone = item.Zone;
-			customer.PriceList = item.PriceList;
-			customer.CreditDays = item.CreditDays;
-			customer.CreditLimit = item.CreditLimit;
-			customer.Comment = item.Comment;
+			entity.Name = item.Name;
+			entity.Zone = item.Zone;
+			entity.PriceList = item.PriceList;
+			entity.CreditDays = item.CreditDays;
+			entity.CreditLimit = item.CreditLimit;
+			entity.Comment = item.Comment;
 
 			using (var scope = new TransactionScope()) {
-            	customer.UpdateAndFlush();
+            	entity.UpdateAndFlush();
 			}
 			
             return RedirectToAction("Index");
         }
 
-        //
-        // GET: /Customer/Delete/5
-
         public ActionResult Delete(int id)
         {
-            Customer customer = Customer.Find(id);
-            return View(customer);
+            var item = Customer.Find (id);
+            return View (item);
         }
-
-        //
-        // POST: /Customer/Delete/5
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed (int id)
@@ -199,6 +168,24 @@ namespace Mictlanix.BE.Web.Controllers
 			} catch (GenericADOException) {
 				return View ("DeleteUnsuccessful");
 			}
+		}
+
+		public ActionResult Addresses (int id)
+		{
+			var item = Customer.Find (id);
+			return PartialView ("../Addresses/_Index", item.Addresses);
+		}
+		
+		public ActionResult Contacts (int id)
+		{
+			var item = Customer.Find (id);
+			return PartialView ("../Contacts/_Index", item.Contacts);
+		}
+		
+		public ActionResult Taxpayers (int id)
+		{
+			var item = Customer.Find (id);
+			return PartialView ("../CustomerTaxpayers/_Index", item.Taxpayers);
 		}
 
 		public JsonResult GetSuggestions(string pattern)

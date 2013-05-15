@@ -145,6 +145,9 @@ fieldset {
 legend {
     font-size: 1.2em;
     font-weight: bold;
+    border: 0;
+    width:auto;
+    padding:0 2px;
 }
 
 textarea {
@@ -232,9 +235,14 @@ nav,
     margin: 1em 0 0 0;
 }
 
-.display-field, 
+.display-field,
 .editor-field {
     margin: 0.5em 0 0 0;
+}
+
+.display-label label,.editor-label label,
+.display-field label,.editor-field label {
+    display:inline;
 }
 
 .text-box {

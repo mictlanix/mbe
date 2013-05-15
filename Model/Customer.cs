@@ -35,45 +35,47 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Mictlanix.BE.Model
 {
-    [ActiveRecord("customer")]
+	[ActiveRecord("customer", Lazy = true)]
     public class Customer : ActiveRecordLinqBase<Customer>
-    {
+	{
         IList<Address> addresses = new List<Address>();
-        IList<Contact> contacts = new List<Contact>();
+		IList<Contact> contacts = new List<Contact>();
+		IList<CustomerTaxpayer> taxpayers = new List<CustomerTaxpayer>();
 
         [PrimaryKey(PrimaryKeyType.Identity, "customer_id")]
-        public int Id { get; set; }
+		public virtual int Id { get; set; }
 		
 		[Property]
 		[ValidateIsUnique]
 		[Display(Name = "Code", ResourceType = typeof(Resources))]
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[RegularExpression(@"^\S+$", ErrorMessageResourceName = "Validation_NonWhiteSpace", ErrorMessageResourceType = typeof(Resources))]
 		[StringLength(25, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-		public string Code { get; set; }
+		public virtual string Code { get; set; }
 
         [Property]
         [Display(Name = "Name", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Name { get; set; }
+		public virtual string Name { get; set; }
 
         [Property]
         [Display(Name = "Zone", ResourceType = typeof(Resources))]
         [StringLength(250, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Zone { get; set; }
+		public virtual string Zone { get; set; }
 
         [Property("credit_limit")]
         [DataType(DataType.Currency)]
         [Display(Name = "CreditLimit", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        public decimal CreditLimit { get; set; }
+		public virtual decimal CreditLimit { get; set; }
 
         [Property("credit_days")]
         [Display(Name = "CreditDays", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        public int CreditDays { get; set; }
+		public virtual int CreditDays { get; set; }
 
-		public bool HasCredit {
+		public virtual bool HasCredit {
 			get { return CreditDays > 0 && CreditLimit > 0; }
 		}
 
@@ -81,30 +83,37 @@ namespace Mictlanix.BE.Model
         [DataType(DataType.MultilineText)]
         [Display(Name = "Comment", ResourceType = typeof(Resources))]
         [StringLength(500, MinimumLength = 0)]
-        public string Comment { get; set; }
+		public virtual string Comment { get; set; }
 
         [Display(Name = "PriceList", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
 		[UIHint("PriceListSelector")]
-		public int PriceListId { get; set; }
+		public virtual int PriceListId { get; set; }
 
         [BelongsTo("price_list")]
         [Display(Name = "PriceList", ResourceType = typeof(Resources))]
         public virtual PriceList PriceList { get; set; }
 
         [HasAndBelongsToMany(typeof(Address), Table = "customer_address", ColumnKey = "customer", ColumnRef = "address", Lazy = true)]
-        public IList<Address> Addresses
+		public virtual IList<Address> Addresses
         {
             get { return addresses; }
             set { addresses = value; }
         }
 
         [HasAndBelongsToMany(typeof(Contact), Table = "customer_contact", ColumnKey = "customer", ColumnRef = "contact", Lazy = true)]
-        public IList<Contact> Contacts
+		public virtual IList<Contact> Contacts
         {
             get { return contacts; }
             set { contacts = value; }
         }
+		
+		[HasMany( typeof(CustomerTaxpayer), Table = "customer_taxpayer", ColumnKey = "customer", Lazy = true)]
+		public virtual IList<CustomerTaxpayer> Taxpayers
+		{
+			get { return taxpayers; }
+			set { taxpayers = value; }
+		}
 
         #region Override Base Methods
 

@@ -28,10 +28,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
-using System.ComponentModel.DataAnnotations;
+using DataAnnotationsExtensions;
 
 namespace Mictlanix.BE.Model
 {   
@@ -52,11 +53,21 @@ namespace Mictlanix.BE.Model
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(250, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "TaxpayerName", ResourceType = typeof(Resources))]
-        public string Name { get; set; }
+		public string Name { get; set; }
+		
+		[Property]
+		[Email(ErrorMessageResourceName = "Validation_Email", ErrorMessageResourceType = typeof(Resources))]
+		[Display(Name = "Email", ResourceType = typeof(Resources))]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[StringLength(80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public string Email { get; set; }
 		
 		[BelongsTo("customer", NotNull = true, Lazy = FetchWhen.OnInvoke)]
 		[Display(Name = "Customer", ResourceType = typeof(Resources))]
 		public virtual Customer Customer { get; set; }
+
+		[Display(Name = "Address", ResourceType = typeof(Resources))]
+		public virtual bool HasAddress { get; set; }
 
 		[BelongsTo("address", Lazy = FetchWhen.OnInvoke)]
 		[Display(Name = "Address", ResourceType = typeof(Resources))]

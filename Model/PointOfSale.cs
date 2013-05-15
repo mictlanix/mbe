@@ -64,7 +64,8 @@ namespace Mictlanix.BE.Model
         [Display(Name = "Code", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(25, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public virtual string Code { get; set; }
+		[RegularExpression(@"^\S+$", ErrorMessageResourceName = "Validation_NonWhiteSpace", ErrorMessageResourceType = typeof(Resources))]
+		public virtual string Code { get; set; }
 
         [Property]
         [Display(Name = "Name", ResourceType = typeof(Resources))]

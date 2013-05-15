@@ -50,11 +50,9 @@ namespace Mictlanix.BE.Model
         public virtual Product Product { get; set; }
 
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [Display(Name = "SalesOrderDetail", ResourceType = typeof(Resources))]
         public int SalesOrderDetailId { get; set; }
 
         [BelongsTo("sales_order_detail")]
-        [Display(Name = "SalesOrderDetail", ResourceType = typeof(Resources))]
         public virtual SalesOrderDetail SalesOrderDetail { get; set; }
 
         [Property]

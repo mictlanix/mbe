@@ -35,7 +35,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Mictlanix.BE.Model
 {
-    [ActiveRecord("supplier")]
+	[ActiveRecord("supplier", Lazy = true)]
     public class Supplier : ActiveRecordLinqBase<Supplier>
     {
         IList<Address> addresses = new List<Address>();
@@ -44,65 +44,66 @@ namespace Mictlanix.BE.Model
         IList<SupplierAgreement> agrements = new List<SupplierAgreement>();
 
         [PrimaryKey(PrimaryKeyType.Identity, "supplier_id")]
-        public int Id { get; set; }
+		public virtual int Id { get; set; }
 
         [Property]
 		[ValidateIsUnique]
         [Display(Name = "Code", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [StringLength(25, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Code { get; set; }
+		[RegularExpression(@"^\S+$", ErrorMessageResourceName = "Validation_NonWhiteSpace", ErrorMessageResourceType = typeof(Resources))]
+		[StringLength(25, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public virtual string Code { get; set; }
 
         [Property]
         [Display(Name = "Name", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Name { get; set; }
+		public virtual string Name { get; set; }
 
         [Property]
         [Display(Name = "Zone", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(250, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Zone { get; set; }
+		public virtual string Zone { get; set; }
 
         [Property("credit_limit")]
         [DataType(DataType.Currency)]
         [Display(Name = "CreditLimit", ResourceType = typeof(Resources))]
-        public decimal CreditLimit { get; set; }
+		public virtual decimal CreditLimit { get; set; }
 
         [Property("credit_days")]
         [Display(Name = "CreditDays", ResourceType = typeof(Resources))]
-        public int CreditDays { get; set; }
+		public virtual int CreditDays { get; set; }
 
         [Property]
         [DataType(DataType.MultilineText)]
         [Display(Name = "Comment", ResourceType = typeof(Resources))]
         [StringLength(500, MinimumLength = 0)]
-        public string Comment { get; set; }
+		public virtual string Comment { get; set; }
 
         [HasAndBelongsToMany(typeof(Address), Table = "supplier_address", ColumnKey = "supplier", ColumnRef = "address", Lazy = true)]
-        public IList<Address> Addresses
+		public virtual IList<Address> Addresses
         {
             get { return addresses; }
             set { addresses = value; }
         }
 
         [HasAndBelongsToMany(typeof(Contact), Table = "supplier_contact", ColumnKey = "supplier", ColumnRef = "contact", Lazy = true)]
-        public IList<Contact> Contacts
+		public virtual IList<Contact> Contacts
         {
             get { return contacts; }
             set { contacts = value; }
         }
 
         [HasAndBelongsToMany(typeof(BankAccount), Table = "supplier_bank_account", ColumnKey = "supplier", ColumnRef = "bank_account", Lazy = true)]
-        public IList<BankAccount> BanksAccounts
+		public virtual IList<BankAccount> BanksAccounts
         {
             get { return accounts; }
             set { accounts = value; }
         }
 
         [HasMany( typeof(SupplierAgreement), Table = "supplier_agreement", ColumnKey = "supplier", Lazy = true)]
-        public IList<SupplierAgreement> Agreements
+		public virtual IList<SupplierAgreement> Agreements
         {
             get { return agrements; }
             set { agrements = value; }

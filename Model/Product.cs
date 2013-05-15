@@ -49,8 +49,9 @@ namespace Mictlanix.BE.Model
         [Display(Name = "Code", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [UniqueProductCode(ErrorMessageResourceName = "Validation_Duplicate", ErrorMessageResourceType = typeof(Resources))]
-        [StringLength(25, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Code { get; set; }
+		[RegularExpression(@"^\S+$", ErrorMessageResourceName = "Validation_NonWhiteSpace", ErrorMessageResourceType = typeof(Resources))]
+		[StringLength(25, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public virtual string Code { get; set; }
 
         [Property]
         [Display(Name = "SKU", ResourceType = typeof(Resources))]

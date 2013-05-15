@@ -1,0 +1,30 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model SalesOrderDetail
+
+<li id="item@(Model.Id)">
+    <div class="photo">
+        <img src="@Url.Content(Model.Product.Photo)" title="@Model.ProductName" />
+    </div>
+    <div class="info">
+        <b>@Model.ProductName</b><br/>
+        <b>@Resources.Code:</b> @Model.ProductCode
+        <b>@Resources.Model:</b> @Model.Product.Model
+        @if(!string.IsNullOrEmpty(Model.Product.SKU)) {
+        <b>@Resources.SKU:</b> @Model.Product.SKU
+        }
+        @if(Model.ExchangeRate != 1m) {
+        <b>@Resources.ExchangeRate:</b> @Html.DisplayFor(x => x.ExchangeRate)
+        }
+        <br/>
+        <b>@Resources.Price:</b> @Html.DisplayFor(x => x.Price) @Html.DisplayFor(x => x.Currency)
+        <b>@Resources.Quantity:</b>
+        <div class="value quantity">@Model.Quantity.ToString("0.####")</div>
+        <b>@Resources.Discount:</b>
+        <div class="value discount">@Model.Discount.ToString("p")</div>
+        <b>@Resources.TaxRate:</b> @Html.DisplayFor(x => x.TaxRate)
+        <b>@Resources.Amount:</b>
+        <div class="value total">@Html.DisplayFor(x => x.Total) @Configuration.BaseCurrency</div>
+    </div>
+</li>

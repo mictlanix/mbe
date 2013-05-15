@@ -1,0 +1,78 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@model CustomerTaxpayer
+
+<div style='overflow:hidden'>
+	<div class="row">
+	  	<div class="span2 field-required">@Html.LabelFor(x => x.Id)</div>
+		<div class="span6 field-required">@Html.LabelFor(x => x.Name)</div>
+	</div>
+	<div class="row">
+	  	<div class="span2">@Html.EditorFor(x => x.Id) @Html.ValidationMessageFor(x => x.Id)</div>
+		<div class="span6">@Html.EditorFor(x => x.Name) @Html.ValidationMessageFor(x => x.Name)</div>
+	</div>
+	<div class="row">
+	  	<div class="span8 field-required">@Html.LabelFor(x => x.Email)</div>
+	</div>
+	<div class="row">
+	  	<div class="span8">@Html.EditorFor(x => x.Email) @Html.ValidationMessageFor(x => x.Email)</div>
+	</div>
+	<div class="row">
+	  	<div class="span8">@Html.EditorFor(x => x.HasAddress)</div>
+	</div>
+	<div id='address-container' @if(Model == null || !Model.HasAddress) {<text>style='display:none'</text>}>
+		<div class="row">
+		  	<div class="span4 field-required">@Html.LabelFor(x => x.Address.Street)</div>
+			<div class="span2 field-required">@Html.LabelFor(x => x.Address.ExteriorNumber)</div>
+		  	<div class="span2">@Html.LabelFor(x => x.Address.InteriorNumber)</div>
+		</div>
+		<div class="row">
+		  	<div class="span4">@Html.EditorFor(x => x.Address.Street) @Html.ValidationMessageFor(x => x.Address.Street)</div>
+			<div class="span2">@Html.EditorFor(x => x.Address.ExteriorNumber) @Html.ValidationMessageFor(x => x.Address.ExteriorNumber)</div>
+		  	<div class="span2">@Html.EditorFor(x => x.Address.InteriorNumber) @Html.ValidationMessageFor(x => x.Address.InteriorNumber)</div>
+		</div>
+		<div class="row">
+		  	<div class="span2 field-required">@Html.LabelFor(x => x.Address.PostalCode)</div>
+		  	<div class="span3 field-required">@Html.LabelFor(x => x.Address.Neighborhood)</div>
+			<div class="span3">@Html.LabelFor(x => x.Address.Locality)</div>
+		</div>
+		<div class="row">
+		  	<div class="span2">@Html.EditorFor(x => x.Address.PostalCode) @Html.ValidationMessageFor(x => x.Address.PostalCode)</div>
+		  	<div class="span3">@Html.EditorFor(x => x.Address.Neighborhood) @Html.ValidationMessageFor(x => x.Address.Neighborhood)</div>
+			<div class="span3">@Html.EditorFor(x => x.Address.Locality) @Html.ValidationMessageFor(x => x.Address.Locality)</div>
+		</div>
+		<div class="row">
+		  	<div class="span4 field-required">@Html.LabelFor(x => x.Address.Borough)</div>
+		  	<div class="span4 field-required">@Html.LabelFor(x => x.Address.State)</div>
+		</div>
+		<div class="row">
+		  	<div class="span4">@Html.EditorFor(x => x.Address.Borough) @Html.ValidationMessageFor(x => x.Address.Borough)</div>
+		  	<div class="span4">@Html.EditorFor(x => x.Address.State) @Html.ValidationMessageFor(x => x.Address.State)</div>
+		</div>
+		<div class="row">
+		  	<div class="span4">@Html.LabelFor(x => x.Address.City)</div>
+			<div class="span4 field-required">@Html.LabelFor(x => x.Address.Country)</div>
+		</div>
+		<div class="row">
+		  	<div class="span4">@Html.EditorFor(x => x.Address.City) @Html.ValidationMessageFor(x => x.Address.City)</div>
+			<div class="span4">@Html.EditorFor(x => x.Address.Country) @Html.ValidationMessageFor(x => x.Address.Country)</div>
+		</div>
+		<div class="row">
+		  	<div class="span8">@Html.LabelFor(x => x.Address.Comment)</div>
+		</div>
+		<div class="row">
+		  	<div class="span8">@Html.EditorFor(x => x.Address.Comment) @Html.ValidationMessageFor(x => x.Address.Comment)</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+$("#HasAddress").change(function() {
+    var show = $(this).is(':checked');
+    
+    if (show) {
+        $("#address-container").show("fast");
+    } else {
+        $("#address-container").hide("fast");
+    }
+});
+</script>
