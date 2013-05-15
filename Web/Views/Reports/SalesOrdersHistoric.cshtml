@@ -5,12 +5,12 @@
 @model DateRange
 
 @{
-    ViewBag.Title = Resources.Title_SalesOrdersHistoric;
+    ViewBag.Title = Resources.SalesHistoric;
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrdersHistoric);
 }
 
-<h2>@Mictlanix.BE.Resources.DisplayName_SalesOrdersHistoric</h2>
+<h2>@Resources.SalesHistoric</h2>
 
 @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))
 {

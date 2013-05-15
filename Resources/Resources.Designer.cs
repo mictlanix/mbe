@@ -774,9 +774,9 @@ namespace Mictlanix.BE {
         /// <summary>
         ///   Looks up a localized string similar to Direcciones.
         /// </summary>
-        public static string DisplayName_Addresses {
+        public static string Addresses {
             get {
-                return ResourceManager.GetString("DisplayName_Addresses", resourceCulture);
+				return ResourceManager.GetString("Addresses", resourceCulture);
             }
         }
         
@@ -855,9 +855,9 @@ namespace Mictlanix.BE {
         /// <summary>
         ///   Looks up a localized string similar to Contactos.
         /// </summary>
-        public static string DisplayName_Contacts {
+        public static string Contacts {
             get {
-                return ResourceManager.GetString("DisplayName_Contacts", resourceCulture);
+                return ResourceManager.GetString("Contacts", resourceCulture);
             }
         }
         
@@ -1096,15 +1096,6 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Venta Nueva.
-        /// </summary>
-        public static string DisplayName_NewSale {
-            get {
-                return ResourceManager.GetString("DisplayName_NewSale", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Selección de Cliente.
         /// </summary>
         public static string DisplayName_PayCredit {
@@ -1247,31 +1238,13 @@ namespace Mictlanix.BE {
                 return ResourceManager.GetString("DisplayName_SalesInvoices", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Detalles de la Venta.
-        /// </summary>
-        public static string DisplayName_SalesOrderDetails {
-            get {
-                return ResourceManager.GetString("DisplayName_SalesOrderDetails", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Punto de Venta.
-        /// </summary>
-        public static string DisplayName_SalesOrders {
-            get {
-                return ResourceManager.GetString("DisplayName_SalesOrders", resourceCulture);
-            }
-        }
-        
+                
         /// <summary>
         ///   Looks up a localized string similar to Histórico de Ventas.
         /// </summary>
-        public static string DisplayName_SalesOrdersHistoric {
+		public static string SalesHistoric {
             get {
-                return ResourceManager.GetString("DisplayName_SalesOrdersHistoric", resourceCulture);
+				return ResourceManager.GetString("SalesHistoric", resourceCulture);
             }
         }
         
@@ -2055,15 +2028,6 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Punto de Venta.
-        /// </summary>
-        public static string Menu_SalesOrders {
-            get {
-                return ResourceManager.GetString("Menu_SalesOrders", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to El cambio de contraseña no fue exitoso. Por favor, corrija los errores y vuelva a intentarlo..
         /// </summary>
         public static string Message_ChangePasswordFail {
@@ -2334,12 +2298,9 @@ namespace Mictlanix.BE {
             }
         }
         
-        /// <summary>
-        ///   Looks up a localized string similar to Venta Nueva.
-        /// </summary>
-        public static string NewSale {
+		public static string NewSalesOrder {
             get {
-                return ResourceManager.GetString("NewSale", resourceCulture);
+				return ResourceManager.GetString("NewSalesOrder", resourceCulture);
             }
         }
         
@@ -2855,15 +2816,12 @@ namespace Mictlanix.BE {
                 return ResourceManager.GetString("SalesOrder", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Orden de Venta.
-        /// </summary>
-        public static string SalesOrderDetail {
-            get {
-                return ResourceManager.GetString("SalesOrderDetail", resourceCulture);
-            }
-        }
+
+		public static string SalesOrders {
+			get {
+				return ResourceManager.GetString("SalesOrders", resourceCulture);
+			}
+		}
         
         /// <summary>
         ///   Looks up a localized string similar to ID.
@@ -3541,15 +3499,6 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Venta Nueva.
-        /// </summary>
-        public static string Title_NewSale {
-            get {
-                return ResourceManager.GetString("Title_NewSale", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Abono de Crédito.
         /// </summary>
         public static string Title_PayCredit {
@@ -3636,24 +3585,6 @@ namespace Mictlanix.BE {
         public static string Title_SalesNote {
             get {
                 return ResourceManager.GetString("Title_SalesNote", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Ventas.
-        /// </summary>
-        public static string Title_SalesOrder {
-            get {
-                return ResourceManager.GetString("Title_SalesOrder", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Histórico de Ventas.
-        /// </summary>
-        public static string Title_SalesOrdersHistoric {
-            get {
-                return ResourceManager.GetString("Title_SalesOrdersHistoric", resourceCulture);
             }
         }
         
@@ -4056,9 +3987,9 @@ namespace Mictlanix.BE {
         /// <summary>
         ///   Looks up a localized string similar to C.P..
         /// </summary>
-        public static string ZipCode {
+        public static string PostalCode {
             get {
-                return ResourceManager.GetString("ZipCode", resourceCulture);
+                return ResourceManager.GetString("PostalCode", resourceCulture);
             }
         }
         
@@ -4488,6 +4419,42 @@ namespace Mictlanix.BE {
 		public static string Active {
 			get {
 				return ResourceManager.GetString("Active", resourceCulture);
+			}
+		}
+		
+		public static string Validation_NonWhiteSpace {
+			get {
+				return ResourceManager.GetString("Validation_NonWhiteSpace", resourceCulture);
+			}
+		}
+		
+		public static string Validation_DigitsOnly {
+			get {
+				return ResourceManager.GetString("Validation_DigitsOnly", resourceCulture);
+			}
+		}
+		
+		public static string City {
+			get {
+				return ResourceManager.GetString("City", resourceCulture);
+			}
+		}
+
+		public static string SuccessfulOperation {
+			get {
+				return ResourceManager.GetString("SuccessfulOperation", resourceCulture);
+			}
+		}
+		
+		public static string CustomerTaxpayers {
+			get {
+				return ResourceManager.GetString("CustomerTaxpayers", resourceCulture);
+			}
+		}
+		
+		public static string CustomerTaxpayerAlreadyExists {
+			get {
+				return ResourceManager.GetString("CustomerTaxpayerAlreadyExists", resourceCulture);
 			}
 		}
     }

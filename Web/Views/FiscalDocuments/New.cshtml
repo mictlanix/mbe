@@ -18,26 +18,42 @@
             {
                 @Html.ValidationSummary(true)
 
-                <div class="editor-label">
+                <div class="editor-field">
                     @Html.LabelFor(x => x.Issuer)
                     @Html.TextBoxFor(x => x.IssuerId)
                     @Html.ValidationMessageFor(x => x.IssuerId)
                 </div>
                 
-                <div id="div-batch" class="editor-label"></div>
+                <div id="div-batch" class="editor-field"></div>
 
-                <div class="editor-label">
+                <div class="editor-field">
                     @Html.LabelFor(x => x.Customer)
                     @Html.EditorFor(x => x.CustomerId)
                     @Html.ValidationMessageFor(x => x.CustomerId)
                 </div>
 
-                <div class="editor-label">
+                <div class="editor-field">
                     @Html.LabelFor(x => x.Recipient)
                     @Html.EditorFor(x => x.RecipientId)
                     @Html.ValidationMessageFor(x => x.RecipientId)
                 </div>
                 
+	            <div class="editor-field">
+	                @Html.LabelFor(x => x.Currency) /
+	                @Html.LabelFor(x => x.ExchangeRate)<br>
+		            <select id="status-list" name="Currency">
+		                @foreach (var item in Enum.GetValues(typeof(CurrencyCode))) {
+		                    <option value="@((int)item)">@(item)</option>
+		                }
+		            </select>
+	                @Html.TextBoxFor(x => x.ExchangeRate, new { @class = "number short" })
+	            </div>
+	            
+	            <div class="editor-field">
+	                @Html.LabelFor(x => x.Reference)<br/>
+	                @Html.EditorFor(x => x.Reference)
+	            </div>
+	            
 		        <div class="editor-field">
 		            <ul class="selection-options">
 		            @foreach (var item in new []{ PaymentMethod.Unidentified,
@@ -61,10 +77,10 @@
 		        </div>
 
 		        <div id="reference" style="display:none">
-		            <div class="display-label">
+		            <div class="editor-label">
 		                @Html.LabelFor(x => x.PaymentReference)
 		            </div>
-		            <div class="display-field">
+		            <div class="editor-field">
 		                @Html.EditorFor(x => x.PaymentReference)
 		            </div>
 		        </div>
@@ -102,6 +118,13 @@ ul.token-input-list {
             }
         });
         
+        @if (Model.Issuer != null) {
+        <text>
+        $('#IssuerId').tokenInput('add', { id: '@Model.Issuer.Id', name: '@string.Format("{1} ({0})", Model.Issuer.Id, Model.Issuer.Name)'});
+        $('#Batch').delay(500).val('@Model.Batch');
+        </text>
+        }
+        
         $("#RecipientId").tokenInput(function() {
 			var customer = $("#CustomerId").tokenInput("get")[0];
 			
@@ -117,27 +140,27 @@ ul.token-input-list {
             queryParam: "pattern",minChars: 3,tokenLimit: 1
         });
         
-    	$("#PaymentMethod").attr("checked", true);
-        $(".selection-options>li:first-child").addClass("selected");
+    	$('#PaymentMethod').attr('checked', true);
+        $('.selection-options>li:first-child').addClass('selected');
         
-        $(".selection-options>li").click(function () {
-            $(".selection-options>li").removeClass("selected");
-            $(this).addClass("selected");
+        $('.selection-options>li').click(function () {
+            $('.selection-options>li').removeClass('selected');
+            $(this).addClass('selected');
         });
         
-        $(":radio").change(function() {
-            var status = $("#PaymentMethod:checked").val();
+        $(':radio').change(function() {
+            var status = $('#PaymentMethod:checked').val();
             
-            if (status === "0" || status === "1") {
-                $("#reference").hide("slow");
+            if (status === '0' || status === '1') {
+                $('#reference').hide('slow');
             } else {
-                $("#reference").show("slow");
+                $('#reference').show('slow');
             }
         });
         
         $('form').submit(function(){
-            $("button.save").attr("disabled", "disabled");
-		    $("button.save").html("@Resources.PleaseWait");
+            $('button.save').attr('disabled', 'disabled');
+		    $('button.save').html('@Resources.PleaseWait');
 		});
     });
 </script>

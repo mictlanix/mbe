@@ -40,7 +40,7 @@
 </fieldset>
 <script type="text/javascript">
     $(function() {
-    	$(".print").die();
+    	$(".print").off();
         $(".print").printPage({
             url: "@Url.Action(Model.IsCredit ? "PrintPromissoryNote" : "PrintOrder", "Sales", new { id = Model.Id })"
         });

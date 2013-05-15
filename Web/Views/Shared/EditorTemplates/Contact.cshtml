@@ -1,0 +1,54 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@model Contact
+
+<div style='overflow:hidden'>
+	<div class="row">
+	  	<div class="span6 field-required">@Html.LabelFor(x => x.Name)</div>
+		<div class="span2">@Html.LabelFor(x => x.JobTitle)</div>
+	</div>
+	<div class="row">
+	  	<div class="span6">@Html.EditorFor(x => x.Name) @Html.ValidationMessageFor(x => x.Name)</div>
+		<div class="span2">@Html.EditorFor(x => x.JobTitle) @Html.ValidationMessageFor(x => x.JobTitle)</div>
+	</div>
+	<div class="row">
+	  	<div class="span5 field-required">@Html.LabelFor(x => x.Email)</div>
+	  	<div class="span2 field-required">@Html.LabelFor(x => x.Phone)</div>
+	  	<div class="span1">@Html.LabelFor(x => x.PhoneExt)</div>
+	</div>
+	<div class="row">
+	  	<div class="span5">@Html.EditorFor(x => x.Email) @Html.ValidationMessageFor(x => x.Email)</div>
+	  	<div class="span2">@Html.EditorFor(x => x.Phone) @Html.ValidationMessageFor(x => x.Phone)</div>
+	  	<div class="span1">@Html.EditorFor(x => x.PhoneExt) @Html.ValidationMessageFor(x => x.PhoneExt)</div>
+	</div>
+	<div class="row">
+	  	<div class="span3">@Html.LabelFor(x => x.Mobile)</div>
+		<div class="span3">@Html.LabelFor(x => x.Fax)</div>
+		<div class="span2">@Html.LabelFor(x => x.Birthday)</div>
+	</div>
+	<div class="row">
+	  	<div class="span3">@Html.EditorFor(x => x.Mobile) @Html.ValidationMessageFor(x => x.Mobile)</div>
+		<div class="span3">@Html.EditorFor(x => x.Fax) @Html.ValidationMessageFor(x => x.Fax)</div>
+		<div class="span2">@Html.EditorFor(x => x.Birthday) @Html.ValidationMessageFor(x => x.Birthday)</div>
+	</div>
+	<div class="row">
+	  	<div class="span4">@Html.LabelFor(x => x.Im)</div>
+		<div class="span4">@Html.LabelFor(x => x.Sip)</div>
+	</div>
+	<div class="row">
+	  	<div class="span4">@Html.EditorFor(x => x.Im) @Html.ValidationMessageFor(x => x.Im)</div>
+		<div class="span4">@Html.EditorFor(x => x.Sip) @Html.ValidationMessageFor(x => x.Sip)</div>
+	</div>
+	<div class="row">
+	  	<div class="span8">@Html.LabelFor(x => x.Website)</div>
+	</div>
+	<div class="row">
+	  	<div class="span8">@Html.EditorFor(x => x.Website) @Html.ValidationMessageFor(x => x.Website)</div>
+	</div>
+	<div class="row">
+	  	<div class="span8">@Html.LabelFor(x => x.Comment)</div>
+	</div>
+	<div class="row">
+	  	<div class="span8">@Html.EditorFor(x => x.Comment) @Html.ValidationMessageFor(x => x.Comment)</div>
+	</div>
+</div>

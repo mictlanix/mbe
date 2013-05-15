@@ -127,7 +127,13 @@ namespace Mictlanix.BE.Web.Controllers
 		
         public ViewResult New()
         {
-            return View();
+			var item = new FiscalDocument {
+				Issuer = Taxpayer.TryFind (Configuration.DefaultIssuer),
+				Batch = Configuration.DefaultBatch,
+				ExchangeRate = 1
+			};
+
+			return View (item);
         }
 
         [HttpPost]
@@ -237,7 +243,9 @@ namespace Mictlanix.BE.Web.Controllers
 			document.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 			document.PaymentMethod = item.PaymentMethod;
 			document.PaymentReference = item.PaymentReference;
-
+			document.Currency = item.Currency;
+			document.ExchangeRate = item.ExchangeRate;
+			document.Reference = item.Reference;
 
 			using (var scope = new TransactionScope()) {
 				document.IssuerAddress.Update ();
@@ -647,7 +655,7 @@ namespace Mictlanix.BE.Web.Controllers
 			var list = from x in qry.ToList ()
 					   select new SelectListItem {
 							Value = x.Batch,
-							Text = string.Format ("{0} - {1}", x.Batch, x.Type.GetDisplayName ())
+							Text = string.Format ("{0} ({1})", x.Batch, x.Type.GetDisplayName ())
 					   };
 
 			ViewBag.Items = list.ToList ();

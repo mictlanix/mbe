@@ -174,7 +174,7 @@
   <data name="Details" xml:space="preserve">
     <value>Detalles</value>
   </data>
-  <data name="DisplayName_Addresses" xml:space="preserve">
+  <data name="Addresses" xml:space="preserve">
     <value>Direcciones</value>
   </data>
   <data name="DisplayName_BankAccounts" xml:space="preserve">
@@ -183,7 +183,7 @@
   <data name="DisplayName_CashDrawers" xml:space="preserve">
     <value>Catálogo de Cajas</value>
   </data>
-  <data name="DisplayName_Contacts" xml:space="preserve">
+  <data name="Contacts" xml:space="preserve">
     <value>Contactos</value>
   </data>
   <data name="DisplayName_Customers" xml:space="preserve">
@@ -208,7 +208,7 @@
     <value>Correo</value>
   </data>
   <data name="ExteriorNumber" xml:space="preserve">
-    <value>Número Exterior</value>
+    <value>Núm. Ext.</value>
   </data>
   <data name="Fax" xml:space="preserve">
     <value>Fax</value>
@@ -220,7 +220,7 @@
     <value>Mensajero</value>
   </data>
   <data name="InteriorNumber" xml:space="preserve">
-    <value>Número Interior</value>
+    <value>Núm. Int.</value>
   </data>
   <data name="Invoiceable" xml:space="preserve">
     <value>Facturable</value>
@@ -235,7 +235,7 @@
     <value>Margen de Ganancia Bajo</value>
   </data>
   <data name="Mobile" xml:space="preserve">
-    <value>Celular</value>
+    <value>Móvil</value>
   </data>
   <data name="Model" xml:space="preserve">
     <value>Modelo</value>
@@ -256,7 +256,7 @@
     <value>Teléfono</value>
   </data>
   <data name="PhoneExt" xml:space="preserve">
-    <value>Extensión Telefónica</value>
+    <value>Extensión</value>
   </data>
   <data name="Photo" xml:space="preserve">
     <value>Foto</value>
@@ -360,7 +360,7 @@
   <data name="Yes" xml:space="preserve">
     <value>Si</value>
   </data>
-  <data name="ZipCode" xml:space="preserve">
+  <data name="PostalCode" xml:space="preserve">
     <value>C.P.</value>
   </data>
   <data name="Zone" xml:space="preserve">
@@ -487,7 +487,7 @@
     <value>Cantidad</value>
   </data>
   <data name="SalesOrder" xml:space="preserve">
-    <value>Venta</value>
+    <value>Pedido</value>
   </data>
   <data name="Sale" xml:space="preserve">
     <value>Venta</value>
@@ -537,14 +537,8 @@
   <data name="PointOfSale" xml:space="preserve">
     <value>Punto de Venta</value>
   </data>
-  <data name="DisplayName_SalesOrders" xml:space="preserve">
-    <value>Punto de Venta</value>
-  </data>
-  <data name="DisplayName_SalesOrderDetails" xml:space="preserve">
-    <value>Detalles de la Venta</value>
-  </data>
-  <data name="Title_SalesOrder" xml:space="preserve">
-    <value>Ventas</value>
+  <data name="SalesOrders" xml:space="preserve">
+    <value>Pedidos</value>
   </data>
   <data name="Totals" xml:space="preserve">
     <value>Totales</value>
@@ -561,8 +555,8 @@
   <data name="PriceList" xml:space="preserve">
     <value>Lista de Precios</value>
   </data>
-  <data name="NewSale" xml:space="preserve">
-    <value>Venta Nueva</value>
+  <data name="NewSalesOrder" xml:space="preserve">
+    <value>Pedido Nuevo</value>
   </data>
   <data name="Cash" xml:space="preserve">
     <value>Efectivo</value>
@@ -717,14 +711,8 @@
   <data name="DisplayName_EditSale" xml:space="preserve">
     <value>Editar Venta</value>
   </data>
-  <data name="DisplayName_NewSale" xml:space="preserve">
-    <value>Venta Nueva</value>
-  </data>
   <data name="DisplayName_SalesInformation" xml:space="preserve">
     <value>Información de la Venta</value>
-  </data>
-  <data name="Title_NewSale" xml:space="preserve">
-    <value>Venta Nueva</value>
   </data>
   <data name="Title_CustomerPayment" xml:space="preserve">
     <value>Caja de Cobro</value>
@@ -863,9 +851,6 @@
   </data>
   <data name="Inventory" xml:space="preserve">
     <value>Almacén</value>
-  </data>
-  <data name="Menu_SalesOrders" xml:space="preserve">
-    <value>Punto de Venta</value>
   </data>
   <data name="Title_SessionInfo" xml:space="preserve">
     <value>Información de la Sesión</value>
@@ -1179,9 +1164,6 @@ Realizada el: {0:d}</value>
   <data name="ReturnOrderId" xml:space="preserve">
     <value>Folio de la Devolución</value>
   </data>
-  <data name="SalesOrderDetail" xml:space="preserve">
-    <value>Detalle de Venta</value>
-  </data>
   <data name="DisplayName_CustomerReturn" xml:space="preserve">
     <value>Devolución a Clientes</value>
   </data>
@@ -1206,13 +1188,10 @@ Realizada el: {0:d}</value>
   <data name="Message_SupplierReturn" xml:space="preserve">
     <value>Devolución al proveedor {0} con folio de compra {1} y folio de devolución {2}.</value>
   </data>
-  <data name="DisplayName_SalesOrdersHistoric" xml:space="preserve">
-    <value>Histórico de Ventas</value>
-  </data>
   <data name="Title_Sale" xml:space="preserve">
     <value>Venta</value>
   </data>
-  <data name="Title_SalesOrdersHistoric" xml:space="preserve">
+  <data name="SalesHistoric" xml:space="preserve">
     <value>Histórico de Ventas</value>
   </data>
   <data name="DisplayName_CustomerReturnHistoric" xml:space="preserve">
@@ -1634,5 +1613,23 @@ Realizada el: {0:d}</value>
   </data>
   <data name="Active" xml:space="preserve">
     <value>Activo</value>
+  </data>
+  <data name="Validation_NonWhiteSpace" xml:space="preserve">
+    <value>El campo {0} no debe contener espacios.</value>
+  </data>
+  <data name="Validation_DigitsOnly" xml:space="preserve">
+    <value>El campo {0} sólo debe contener digitos.</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>Ciudad</value>
+  </data>
+  <data name="SuccessfulOperation" xml:space="preserve">
+    <value>La operación se realizo con éxito.</value>
+  </data>
+  <data name="CustomerTaxpayers" xml:space="preserve">
+    <value>Datos Fiscales</value>
+  </data>
+  <data name="CustomerTaxpayerAlreadyExists" xml:space="preserve">
+    <value>El RFC ya existe o está asociado a otro cliente.</value>
   </data>
 </root>

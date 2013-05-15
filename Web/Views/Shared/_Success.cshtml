@@ -2,8 +2,10 @@
 @model System.String
 
 <h2>@Resources.Succes</h2>
-
 <p>@Model</p>
-<p><a href="javascript:void(0);" class="close">@Resources.Close</a></p>
-
-
+<div class="action-buttons">
+	<button type="button" class="cancel">@Resources.Close</button>
+</div>
+<script type="text/javascript">
+bindCloseDialog(".cancel");
+</script>

@@ -125,20 +125,50 @@ namespace Mictlanix.BE.Web.Utils
 
 			return (prefix + soFar).Trim ();
 		}
-
-		public static string ToMXN (decimal val)
+		
+		public static string ToMXN(decimal d)
 		{
-			int pesos;
+			int units;
 			int cents;
 			string text;
-
-			val = Math.Round (val, 2, MidpointRounding.AwayFromZero);
-			pesos = (int)Math.Floor (val);
-			cents = (int)Math.Round ((val - pesos) * 100);
-			text = Convert (pesos);
-
-			return ((pesos == 1 && cents == 0) ? "un peso " : text + " pesos ") +
-                    cents.ToString ("00") + "/100 m. n.";
+			
+			d = Math.Round(d, 2, MidpointRounding.AwayFromZero);
+			units = (int)Math.Floor(d);
+			cents = (int)Math.Round((d - units) * 100);
+			text = Convert(units);
+			
+			return ((units == 1 && cents == 0) ? "un peso " : text + " pesos ") +
+				cents.ToString("00") + "/100 m. n.";
+		}
+		
+		public static string ToUSD(decimal d)
+		{
+			int units;
+			int cents;
+			string text;
+			
+			d = Math.Round(d, 2, MidpointRounding.AwayFromZero);
+			units = (int)Math.Floor(d);
+			cents = (int)Math.Round((d - units) * 100);
+			text = Convert(units);
+			
+			return ((units == 1 && cents == 0) ? "un dólar americano " : text + " doláres americanos ") +
+				cents.ToString("00") + "/100 USD";
+		}
+		
+		public static string ToEUR(decimal d)
+		{
+			int units;
+			int cents;
+			string text;
+			
+			d = Math.Round(d, 2, MidpointRounding.AwayFromZero);
+			units = (int)Math.Floor(d);
+			cents = (int)Math.Round((d - units) * 100);
+			text = Convert(units);
+			
+			return ((units == 1 && cents == 0) ? "un euro " : text + " euros ") +
+				cents.ToString("00") + "/100 EUR";
 		}
 	}
 }

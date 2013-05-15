@@ -42,22 +42,6 @@ namespace Mictlanix.BE.Web.Controllers
 {
     public class SuppliersController : Controller
     {
-        public JsonResult GetSuggestions(string pattern)
-        {
-            JsonResult result = new JsonResult();
-            var qry = from x in Supplier.Queryable
-                      where x.Name.Contains(pattern)
-                      select new { id = x.Id, name = x.Name };
-
-            result = Json(qry.Take(15).ToList());
-            result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
-
-            return result;
-        }
-
-        //
-        // GET: /Suppliers/
-
         public ViewResult Index()
         {
             var qry = from x in Supplier.Queryable
@@ -71,8 +55,6 @@ namespace Mictlanix.BE.Web.Controllers
 
             return View(search);
         }
-
-        // POST: /Suppliers/
 
         [HttpPost]
         public ActionResult Index(Search<Supplier> search)
@@ -112,9 +94,6 @@ namespace Mictlanix.BE.Web.Controllers
             return search;
         }
 
-        //
-        // GET: /Supplier/Details/5
-
         public ViewResult Details(int id)
         {
 			var item = Supplier.Find(id);
@@ -129,9 +108,6 @@ namespace Mictlanix.BE.Web.Controllers
             return View(item);
         }
 
-        //
-        // GET: /Supplier/Create
-
         public ActionResult Create()
         {
             if (Request.IsAjaxRequest())
@@ -141,9 +117,6 @@ namespace Mictlanix.BE.Web.Controllers
 
             return View();
         }
-
-        //
-        // POST: /Supplier/Create
 
         [HttpPost]
 		public ActionResult Create (Supplier item)
@@ -176,17 +149,11 @@ namespace Mictlanix.BE.Web.Controllers
             //return View("Index");
         }
 
-        //
-        // GET: /Supplier/Edit/5
-
         public ActionResult Edit(int id)
         {
             Supplier supplier = Supplier.Find(id);
             return View(supplier);
         }
-
-        //
-        // POST: /Supplier/Edit/5
 
         [HttpPost]
         public ActionResult Edit(Supplier item)
@@ -210,17 +177,11 @@ namespace Mictlanix.BE.Web.Controllers
 			return RedirectToAction("Index");
         }
 
-        //
-        // GET: /Supplier/Delete/5
-
         public ActionResult Delete(int id)
         {
             Supplier supplier = Supplier.Find(id);
             return View(supplier);
         }
-
-        //
-        // POST: /Supplier/Delete/5
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
@@ -236,13 +197,30 @@ namespace Mictlanix.BE.Web.Controllers
 				return View ("DeleteUnsuccessful");
 			}
         }
-
-        //
-        // GET: /Supplier/Delete/5
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-        }
+		
+		public ActionResult Addresses (int id)
+		{
+			var item = Supplier.Find (id);
+			return PartialView ("../Addresses/_Index", item.Addresses);
+		}
+		
+		public ActionResult Contacts (int id)
+		{
+			var item = Supplier.Find (id);
+			return PartialView ("../Contacts/_Index", item.Contacts);
+		}
+		
+		public JsonResult GetSuggestions(string pattern)
+		{
+			JsonResult result = new JsonResult();
+			var qry = from x in Supplier.Queryable
+				where x.Name.Contains(pattern)
+			select new { id = x.Id, name = x.Name };
+			
+			result = Json(qry.Take(15).ToList());
+			result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+			
+			return result;
+		}
     }
 }

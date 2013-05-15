@@ -54,7 +54,14 @@ namespace Mictlanix.BE.Model
         [Property("job_title")]
         [Display(Name = "JobTitle", ResourceType = typeof(Resources))]
         [StringLength(100, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string JobTitle { get; set; }
+		public string JobTitle { get; set; }
+		
+		[Property]
+		[Email(ErrorMessageResourceName = "Validation_Email", ErrorMessageResourceType = typeof(Resources))]
+		[Display(Name = "Email", ResourceType = typeof(Resources))]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[StringLength(80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public string Email { get; set; }
 
         [Property]
         [Display(Name = "Phone", ResourceType = typeof(Resources))]
@@ -82,13 +89,6 @@ namespace Mictlanix.BE.Model
         [Display(Name = "Website", ResourceType = typeof(Resources))]
         [StringLength(80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string Website { get; set; }
-
-        [Property]
-        [Email(ErrorMessageResourceName = "Validation_Email", ErrorMessageResourceType = typeof(Resources))]
-        [Display(Name = "Email", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [StringLength(80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Email { get; set; }
 
         [Property]
         [Display(Name = "Im", ResourceType = typeof(Resources))]

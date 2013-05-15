@@ -38,9 +38,6 @@
     <Reference Include="Iesi.Collections">
       <HintPath>..\Packages\Iesi.Collections.1.0.1\lib\Iesi.Collections.dll</HintPath>
     </Reference>
-    <Reference Include="log4net">
-      <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Remotion.Data.Linq">
       <HintPath>..\packages\NHibernate.3.0.0.4000\lib\Remotion.Data.Linq.dll</HintPath>
@@ -60,12 +57,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
-    <Reference Include="DataAnnotationsExtensions, Version=0.6.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\DataAnnotationsExtensions.0.6.0.0\lib\NETFramework40\DataAnnotationsExtensions.dll</HintPath>
-    </Reference>
-    <Reference Include="DataAnnotationsExtensions.ClientValidation, Version=0.6.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\DataAnnotationsExtensions.MVC3.0.6.0.0\lib\NETFramework40\DataAnnotationsExtensions.ClientValidation.dll</HintPath>
-    </Reference>
     <Reference Include="MySql.Data">
       <HintPath>..\packages\MySql.Data.6.4.4\lib\net40\mysql.data.dll</HintPath>
     </Reference>
@@ -101,6 +92,15 @@
     </Reference>
     <Reference Include="Lucene.Net">
       <HintPath>..\Packages\Lucene.2.9.2.2\lib\Lucene.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="DataAnnotationsExtensions">
+      <HintPath>..\packages\DataAnnotationsExtensions.1.1.0.0\lib\NETFramework40\DataAnnotationsExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="DataAnnotationsExtensions.ClientValidation">
+      <HintPath>..\packages\DataAnnotationsExtensions.MVC3.1.1.0.0\lib\NETFramework40\DataAnnotationsExtensions.ClientValidation.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +168,9 @@
     <Compile Include="Controllers\PricingController.cs" />
     <Compile Include="Helpers\InventoryHelpers.cs" />
     <Compile Include="Controllers\ExchangeRatesController.cs" />
+    <Compile Include="Controllers\SalesOrdersController.cs" />
+    <Compile Include="Controllers\DeliveryOrdersController.cs" />
+    <Compile Include="Controllers\CustomerTaxpayersController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
@@ -344,53 +347,14 @@
     <Content Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
-    <Content Include="Content\themes\flick\images\ui-bg_flat_0_aaaaaa_40x100.png" />
-    <Content Include="Content\themes\flick\images\ui-bg_flat_0_eeeeee_40x100.png" />
-    <Content Include="Content\themes\flick\images\ui-bg_flat_55_ffffff_40x100.png" />
-    <Content Include="Content\themes\flick\images\ui-bg_flat_75_ffffff_40x100.png" />
-    <Content Include="Content\themes\flick\images\ui-bg_glass_65_ffffff_1x400.png" />
-    <Content Include="Content\themes\flick\images\ui-bg_highlight-soft_100_f6f6f6_1x100.png" />
-    <Content Include="Content\themes\flick\images\ui-bg_highlight-soft_25_0073ea_1x100.png" />
-    <Content Include="Content\themes\flick\images\ui-bg_highlight-soft_50_dddddd_1x100.png" />
-    <Content Include="Content\themes\flick\images\ui-icons_0073ea_256x240.png" />
-    <Content Include="Content\themes\flick\images\ui-icons_454545_256x240.png" />
-    <Content Include="Content\themes\flick\images\ui-icons_666666_256x240.png" />
-    <Content Include="Content\themes\flick\images\ui-icons_ff0084_256x240.png" />
-    <Content Include="Content\themes\flick\images\ui-icons_ffffff_256x240.png" />
-    <Content Include="Content\themes\flick\jquery-ui-1.8.16.custom.css" />
-    <Content Include="Content\themes\flick\jquery-ui.css" />
-    <Content Include="Content\themes\flick\jquery.ui.accordion.css" />
-    <Content Include="Content\themes\flick\jquery.ui.all.css" />
-    <Content Include="Content\themes\flick\jquery.ui.autocomplete.css" />
-    <Content Include="Content\themes\flick\jquery.ui.base.css" />
-    <Content Include="Content\themes\flick\jquery.ui.button.css" />
-    <Content Include="Content\themes\flick\jquery.ui.core.css" />
-    <Content Include="Content\themes\flick\jquery.ui.datepicker.css" />
-    <Content Include="Content\themes\flick\jquery.ui.dialog.css" />
-    <Content Include="Content\themes\flick\jquery.ui.progressbar.css" />
-    <Content Include="Content\themes\flick\jquery.ui.resizable.css" />
-    <Content Include="Content\themes\flick\jquery.ui.selectable.css" />
-    <Content Include="Content\themes\flick\jquery.ui.slider.css" />
-    <Content Include="Content\themes\flick\jquery.ui.tabs.css" />
-    <Content Include="Content\themes\flick\jquery.ui.theme.css" />
     <Content Include="Content\token-input.css" />
     <Content Include="Global.asax" />
-    <Content Include="Scripts\jquery-1.6.4-vsdoc.js" />
-    <Content Include="Scripts\jquery-1.6.4.js" />
-    <Content Include="Scripts\jquery-1.6.4.min.js" />
-    <Content Include="Scripts\jquery-ui-1.8.16.js" />
-    <Content Include="Scripts\jquery-ui-1.8.16.min.js" />
-    <Content Include="Scripts\jquery-ui-i18n.js" />
-    <Content Include="Scripts\jquery-ui-i18n.min.js" />
     <Content Include="Scripts\jquery.cluetip.min.js" />
     <Content Include="Scripts\jquery.form.js" />
     <Content Include="Scripts\jquery.jeditable.mini.js" />
     <Content Include="Scripts\jquery.print-page.js" />
     <Content Include="Scripts\jquery.tokeninput.formatters.js" />
     <Content Include="Scripts\jquery.tokeninput.js" />
-    <Content Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -401,10 +365,6 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Content\Site.css" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\MicrosoftAjax.js" />
     <Content Include="Scripts\MicrosoftAjax.debug.js" />
     <Content Include="Scripts\MicrosoftMvcAjax.js" />
@@ -494,9 +454,6 @@
     <Content Include="Views\Reports\_SalesOrdersHistoric.cshtml" />
     <Content Include="Views\Reports\SalesOrdersHistoric.cshtml" />
     <Content Include="Views\Reports\SalesOrdersHistoricDetails.cshtml" />
-    <Content Include="Views\Sales\Deliveries.cshtml" />
-    <Content Include="Views\Sales\Delivery.cshtml" />
-    <Content Include="Views\Sales\PrintDelivery.cshtml" />
     <Content Include="Views\FiscalDocuments\_ItemsBlock.cshtml" />
     <Content Include="Content\print.css" />
     <Content Include="Views\Purchases\Edit.cshtml" />
@@ -523,6 +480,65 @@
     <Content Include="Views\Taxpayers\_Batches.cshtml" />
     <Content Include="Views\Taxpayers\_Certificates.cshtml" />
     <Content Include="Views\Taxpayers\AddCertificate.cshtml" />
+    <Content Include="Content\images\glyphicons-halflings-white.png" />
+    <Content Include="Content\images\glyphicons-halflings.png" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\jquery-1.9.1-vsdoc.js" />
+    <Content Include="Scripts\jquery-1.9.1.js" />
+    <Content Include="Scripts\jquery-1.9.1.min.js" />
+    <Content Include="Content\themes\base\jquery.ui.menu.css" />
+    <Content Include="Content\themes\base\jquery.ui.spinner.css" />
+    <Content Include="Content\themes\base\jquery.ui.tooltip.css" />
+    <Content Include="Content\themes\base\images\animated-overlay.gif" />
+    <Content Include="Content\themes\base\minified\jquery.ui.menu.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.spinner.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.tooltip.min.css" />
+    <Content Include="Content\themes\base\minified\images\animated-overlay.gif" />
+    <Content Include="Scripts\jquery-ui-1.10.2.js" />
+    <Content Include="Scripts\jquery-ui-1.10.2.min.js" />
+    <Content Include="Scripts\jquery-ui-i18n.js" />
+    <Content Include="Scripts\jquery-ui-i18n.min.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Content\themes\flick\jquery-ui.css" />
+    <Content Include="Content\themes\flick\jquery-ui.min.css" />
+    <Content Include="Content\themes\flick\jquery.ui.theme.css" />
+    <Content Include="Content\themes\flick\images\animated-overlay.gif" />
+    <Content Include="Content\themes\flick\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\flick\images\ui-bg_flat_0_eeeeee_40x100.png" />
+    <Content Include="Content\themes\flick\images\ui-bg_flat_55_ffffff_40x100.png" />
+    <Content Include="Content\themes\flick\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\flick\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\flick\images\ui-bg_highlight-soft_100_f6f6f6_1x100.png" />
+    <Content Include="Content\themes\flick\images\ui-bg_highlight-soft_25_0073ea_1x100.png" />
+    <Content Include="Content\themes\flick\images\ui-bg_highlight-soft_50_dddddd_1x100.png" />
+    <Content Include="Content\themes\flick\images\ui-icons_0073ea_256x240.png" />
+    <Content Include="Content\themes\flick\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\flick\images\ui-icons_666666_256x240.png" />
+    <Content Include="Content\themes\flick\images\ui-icons_ff0084_256x240.png" />
+    <Content Include="Content\themes\flick\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Views\Addresses\_Refresh.cshtml" />
+    <Content Include="Views\Contacts\_Refresh.cshtml" />
+    <Content Include="Views\Addresses\_Create.cshtml" />
+    <Content Include="Views\Addresses\_Delete.cshtml" />
+    <Content Include="Views\Addresses\_Details.cshtml" />
+    <Content Include="Views\Addresses\_Edit.cshtml" />
+    <Content Include="Views\Contacts\_Create.cshtml" />
+    <Content Include="Views\Contacts\_Delete.cshtml" />
+    <Content Include="Views\Contacts\_Details.cshtml" />
+    <Content Include="Views\Contacts\_Edit.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Contact.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Contact.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\CustomerTaxpayer.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CustomerTaxpayer.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Boolean.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />
@@ -637,18 +653,6 @@
     <Content Include="Views\Contacts\_Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Contacts\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Contacts\Details.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Contacts\Delete.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Contacts\Create.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Shared\DisplayTemplates\Boolean.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -686,10 +690,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\DeleteUnsuccessful.cshtml" />
-    <Content Include="Views\Addresses\Create.cshtml" />
-    <Content Include="Views\Addresses\Delete.cshtml" />
-    <Content Include="Views\Addresses\Details.cshtml" />
-    <Content Include="Views\Addresses\Edit.cshtml" />
     <Content Include="Views\Addresses\_Index.cshtml" />
     <Content Include="Views\BankAccounts\Create.cshtml" />
     <Content Include="Views\BankAccounts\Delete.cshtml" />
@@ -885,11 +885,40 @@
   <ItemGroup />
   <ItemGroup>
     <Folder Include="Views\Pricing\" />
+    <Folder Include="Views\SalesOrders\" />
+    <Folder Include="Views\DeliveryOrders\" />
+    <Folder Include="Content\themes\flick\" />
+    <Folder Include="Views\CustomerTaxpayers\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Views\ExchangeRates\_Index.cshtml" />
     <None Include="Views\ExchangeRates\Create.cshtml" />
     <None Include="Views\ExchangeRates\Delete.cshtml" />
     <None Include="Views\ExchangeRates\Index.cshtml" />
+    <None Include="Views\SalesOrders\Details.cshtml" />
+    <None Include="Views\SalesOrders\Edit.cshtml" />
+    <None Include="Views\SalesOrders\Index.cshtml" />
+    <None Include="Views\SalesOrders\New.cshtml" />
+    <None Include="Views\SalesOrders\_DetailEditView.cshtml" />
+    <None Include="Views\SalesOrders\_DetailView.cshtml" />
+    <None Include="Views\SalesOrders\_MasterEditView.cshtml" />
+    <None Include="Views\SalesOrders\_MasterView.cshtml" />
+    <None Include="Views\SalesOrders\_PromissoryNoteTicket.cshtml" />
+    <None Include="Views\SalesOrders\_SalesNote.cshtml" />
+    <None Include="Views\SalesOrders\_SalesTicket.cshtml" />
+    <None Include="Views\SalesOrders\_Totals.cshtml" />
+    <None Include="Views\DeliveryOrders\Details.cshtml" />
+    <None Include="Views\DeliveryOrders\Print.cshtml" />
+    <None Include="Views\DeliveryOrders\Index.cshtml" />
+    <None Include="Views\DeliveryOrders\_MasterView.cshtml" />
+    <None Include="Views\DeliveryOrders\_DetailView.cshtml" />
+    <None Include="Views\DeliveryOrders\_Totals.cshtml" />
+    <None Include="Scripts\jquery-1.9.1.min.map" />
+    <None Include="Views\CustomerTaxpayers\_Create.cshtml" />
+    <None Include="Views\CustomerTaxpayers\_Delete.cshtml" />
+    <None Include="Views\CustomerTaxpayers\_Details.cshtml" />
+    <None Include="Views\CustomerTaxpayers\_Edit.cshtml" />
+    <None Include="Views\CustomerTaxpayers\_Index.cshtml" />
+    <None Include="Views\CustomerTaxpayers\_Refresh.cshtml" />
   </ItemGroup>
 </Project>

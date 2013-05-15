@@ -122,6 +122,14 @@ namespace Mictlanix.BE.Web.Helpers
 			get { return int.Parse (ConfigurationManager.AppSettings ["DefaultCustomer"]); }
 		}
 
+		public static string DefaultIssuer {
+			get { return ConfigurationManager.AppSettings ["DefaultIssuer"]; }
+		}
+		
+		public static string DefaultBatch {
+			get { return ConfigurationManager.AppSettings ["DefaultBatch"]; }
+		}
+
 		#endregion
 		
 		#region Request's (Local) Settings
