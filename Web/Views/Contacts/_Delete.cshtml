@@ -1,0 +1,15 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model Contact
+
+@using (Ajax.BeginForm(new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "contactDlg" })) {
+	@Html.DisplayForModel()
+	<div class="action-buttons">
+		<button type="button" class="cancel">@Resources.Discard</button>
+		<button type="submit" class="icon delete">@Resources.Delete</button>
+	</div>
+}
+<script type="text/javascript">
+bindCloseDialog(".cancel");
+</script>

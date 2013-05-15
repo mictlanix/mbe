@@ -5,7 +5,7 @@
 @model Search<SalesOrder>
 
 @{
-    ViewBag.Title = Resources.Title_SalesOrdersHistoric;
+    ViewBag.Title = Resources.SalesHistoric;
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrdersHistoric);
 }
@@ -78,7 +78,7 @@
         	@if(Privilege.AllowRead)
         	{
             	@Html.ActionLink(" ", "SalesOrdersHistoricDetails", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
-            	@Html.ActionLink(" ", item.IsCredit ? "PrintPromissoryNote" : "PrintOrder", "Sales", new { id = item.Id }, new { @class = "button icon print icon-only", @title = Resources.Print })
+            	@Html.ActionLink(" ", "Print", "SalesOrders", new { id = item.Id }, new { @class = "button icon print icon-only", @title = Resources.Print })
             }
         </td>
     </tr>

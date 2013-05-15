@@ -1,0 +1,19 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model Contact
+
+@using (Ajax.BeginForm(new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "contactDlg" })) {
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(x => x.Id)
+	@Html.EditorForModel()
+	<div class="action-buttons">
+		<button type="button" class="cancel">@Resources.Discard</button>
+		<button type="submit" class="icon save">@Resources.Save</button>
+	</div>
+}
+<script type="text/javascript">
+$('#Birthday').datepicker({ dateFormat: "yy-mm-dd", changeYear: true });
+$('#Name').focus();
+bindCloseDialog(".cancel");
+</script>

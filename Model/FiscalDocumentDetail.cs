@@ -54,7 +54,6 @@ namespace Mictlanix.BE.Model
         public virtual Product Product { get; set; }
 		
         [BelongsTo("order_detail")]
-        [Display(Name = "OrderDetail", ResourceType = typeof(Resources))]
         public virtual SalesOrderDetail OrderDetail { get; set; }
 		
         [Property("product_code")]

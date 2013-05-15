@@ -47,9 +47,9 @@
 		    </text>
 		}
 		
-		$(".print").die();
+		$(".print").off();
         $(".print").printPage({
-          url: "@Url.Action("PrintOrder", "Sales", new { id = Model.Id })"
+          url: '@Url.Action("Print", "SalesOrders", new { id = Model.Id })'
         });
     });
 </script>

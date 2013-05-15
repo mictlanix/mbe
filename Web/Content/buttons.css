@@ -76,6 +76,8 @@ button.icon,a.button.icon {
 }
 button.icon-only,a.button.icon-only {
     padding:16px 16px;
+    width:0px;
+	height:0px;
 }
 button.icon.add,a.button.icon.add {
     background:#f3f3f3 url(icons/add-item.png) no-repeat;

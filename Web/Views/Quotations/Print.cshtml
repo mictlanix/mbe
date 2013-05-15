@@ -53,7 +53,7 @@
 
 <table>
     <tr>
-        <td rowspan="3" class="center">@Html.ToMXN(Model.Total)</td>
+        <td rowspan="3" class="center">@Html.CurrencyToString (Model.Total, Configuration.BaseCurrency)</td>
         <td class="number">@Html.LabelFor(x => x.Subtotal)</td>
         <td class="number">@Html.DisplayFor(x => x.Subtotal)</td>
     </tr>

@@ -26,7 +26,7 @@
             @Html.LabelFor(x => new Address ().State)
         </th>
          <th>
-            @Html.LabelFor(x => new Address ().ZipCode)
+            @Html.LabelFor(x => new Address ().PostalCode)
         </th>
 
         <th></th>
@@ -43,7 +43,7 @@
         </td>
         <td>@Html.DisplayFor(x => item.Address.Neighborhood)</td>
         <td>@Html.DisplayFor(x => item.Address.State)</td>
-        <td class="number">@Html.DisplayFor(x => item.Address.ZipCode)</td>
+        <td class="number">@Html.DisplayFor(x => item.Address.PostalCode)</td>
         <td class="actions">
         	@if(Privilege.AllowRead)
         	{

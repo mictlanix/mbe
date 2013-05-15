@@ -10,72 +10,34 @@
 
 <table>
     <tr>
-        <th>
-            @Html.LabelFor(x => new Address().TaxpayerId)
-        </th>
-
-        <th>
-            @Html.LabelFor(x => new Address().TaxpayerName)
-        </th>
-        <th>
-            @Html.LabelFor(x => new Address().Street)
-        </th>
-        <th>
-            @Html.LabelFor(x => new Address().Neighborhood)
-        </th>
-        <th>
-            @Html.LabelFor(x => new Address().Borough)
-        </th>
-        <th>
-            @Html.LabelFor(x => new Address().State)
-        </th>
-         <th>
-            @Html.LabelFor(x => new Address().ZipCode)
-        </th>
-
+        <th>@Html.LabelFor(x => new Address().StreetAndNumber)</th>
+        <th>@Html.LabelFor(x => new Address().Neighborhood)</th>
+        <th>@Html.LabelFor(x => new Address().Borough)</th>
+        <th>@Html.LabelFor(x => new Address().State)</th>
+        <th>@Html.LabelFor(x => new Address().PostalCode)</th>
         <th></th>
     </tr>
-
 @foreach (var item in Model) {
     <tr>
-        <td class="nowrap">
-            @Html.DisplayFor(x => item.TaxpayerId)
-        </td>
-        <td>
-            @Html.DisplayFor(x => item.TaxpayerName)
-        </td>
-        <td>
-            @Html.DisplayFor(x => item.Street)
-            @Html.DisplayFor(x => item.ExteriorNumber)
-            @Html.DisplayFor(x => item.InteriorNumber)
-        </td>
-        <td>
-            @Html.DisplayFor(x => item.Neighborhood)
-        </td>
-        <td>
-            @Html.DisplayFor(x => item.Borough)
-        </td>
-        <td>
-            @Html.DisplayFor(x => item.State)
-        </td>
-        <td class="number">
-            @Html.DisplayFor(x => item.ZipCode)
-        </td>
-        <td class="actions">
-        	@if(Privilege.AllowUpdate)
-        	{
-            	@Html.ActionLink(" ", "Edit", "Addresses", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
+        <td>@Html.DisplayFor(x => item.StreetAndNumber)</td>
+        <td>@Html.DisplayFor(x => item.Neighborhood)</td>
+        <td>@Html.DisplayFor(x => item.Borough)</td>
+        <td>@Html.DisplayFor(x => item.State)</td>
+        <td class='number'>@Html.DisplayFor(x => item.PostalCode)</td>
+        <td class='actions'>
+        	@if(Privilege.AllowUpdate){
+            	@Html.ActionLink(" ", "Edit", "Addresses", new { id = item.Id }, new { @class = "button icon edit icon-only openDialog", title = Resources.Edit, data_dialog_id = "addressDlg", data_dialog_title = Resources.Edit })
             }
-        	@if(Privilege.AllowRead)
-        	{
-            	@Html.ActionLink(" ", "Details", "Addresses", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+        	@if(Privilege.AllowRead){
+        	    @Html.ActionLink(" ", "Details", "Addresses", new { id = item.Id }, new { @class = "button icon view icon-only openDialog", title = Resources.Details, data_dialog_id = "addressDlg", data_dialog_title = Resources.Details })
             }
-        	@if(Privilege.AllowDelete)
-        	{
-            	@Html.ActionLink(" ", "Delete", "Addresses", new { id = item.Id }, new { @class = "button icon delete icon-only", @title = Resources.Delete })
+        	@if(Privilege.AllowDelete){
+            	@Html.ActionLink(" ", "Delete", "Addresses", new { id = item.Id }, new { @class = "button icon delete icon-only openDialog", @title = Resources.Delete, data_dialog_id = "addressDlg", data_dialog_title = Resources.Delete })
             }
         </td>
     </tr>
 }
-
 </table>
+<script type='text/javascript'>
+	bindOpenDialog('.openDialog');
+</script>

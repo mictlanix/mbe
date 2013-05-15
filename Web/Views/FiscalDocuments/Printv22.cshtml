@@ -37,7 +37,7 @@
     @Html.DisplayFor(x => x.RecipientAddress.Borough)<br/>
     @Html.DisplayFor(x => x.RecipientAddress.State),
     @Html.DisplayFor(x => x.RecipientAddress.Country),
-    @Html.DisplayFor(x => x.RecipientAddress.ZipCode)
+    @Html.DisplayFor(x => x.RecipientAddress.PostalCode)
 </div>
 
 <table>
@@ -65,7 +65,7 @@
 
 <table>
     <tr>
-        <td rowspan="3" class="center">@Html.ToMXN(Model.Total)</td>
+        <td rowspan="3" class="center">@Html.CurrencyToString(Model.Total, Model.Currency)</td>
         <td class="number">@Html.LabelFor(x => x.Subtotal)</td>
         <td class="number">@Html.DisplayFor(x => x.Subtotal)</td>
     </tr>

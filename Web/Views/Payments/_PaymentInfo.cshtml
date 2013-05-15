@@ -54,7 +54,6 @@
         @Html.LabelFor(x => x.ShipTo)
     </div>
     <div class="display-field">
-        @Html.DisplayFor(x => x.ShipTo.TaxpayerName)<br/>
         @Html.DisplayFor(x => x.ShipTo.Street)
         @Html.DisplayFor(x => x.ShipTo.ExteriorNumber)
         @Html.DisplayFor(x => x.ShipTo.InteriorNumber)<br/>
@@ -62,7 +61,7 @@
         @Html.DisplayFor(x => x.ShipTo.Borough)<br/>
         @Html.DisplayFor(x => x.ShipTo.State),
         @Html.DisplayFor(x => x.ShipTo.Country),
-        @Html.DisplayFor(x => x.ShipTo.ZipCode)
+        @Html.DisplayFor(x => x.ShipTo.PostalCode)
     </div>
 }
 

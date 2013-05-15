@@ -1,0 +1,47 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model IEnumerable<SalesOrder>
+
+@{
+    ViewBag.Title = Resources.Deliveries;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders);
+}
+
+<h2>@Resources.Deliveries</h2>
+
+<table>
+    <tr>
+        <th>@Html.LabelFor(x => new SalesOrder().Id)</th>
+        <th>@Html.LabelFor(x => new SalesOrder().Serial)</th>
+        <th>@Html.LabelFor(x => new SalesOrder().Date)</th>
+        <th>@Html.LabelFor(x => new SalesOrder().Customer)</th>
+        <th>@Html.LabelFor(x => new SalesOrder().DueDate)</th>
+        <th>@Html.LabelFor(x => new SalesOrder().SalesPerson)</th>
+        <th>@Html.LabelFor(x => new SalesOrder().PointOfSale)</th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td class="number">@Html.DisplayFor(modelItem => item.Id)</td>
+        <td class="number">@Html.DisplayFor(modelItem => item.Serial)</td>
+        <td class="center">@Html.DisplayFor(modelItem => item.Date)</td>
+        <td>@Html.DisplayFor(modelItem => item.Customer.Name)</td>
+        <td class="center">@Html.DisplayFor(modelItem => item.DueDate)</td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SalesPerson.FirstName)
+            @Html.DisplayFor(modelItem => item.SalesPerson.LastName)
+        </td>
+        <td class="center">@Html.DisplayFor(modelItem => item.PointOfSale.Name)</td>
+        <td class="actions">
+        	@if(Privilege.AllowRead)
+        	{
+            	@Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "button icon shipping icon-only", @title = Resources.Details })
+            }
+        </td>
+    </tr>
+}
+
+</table>

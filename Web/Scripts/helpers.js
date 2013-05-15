@@ -21,3 +21,35 @@ function hidePopups() {
         $(this).next().css({ "visibility": "hidden" });
   	});
 }
+function bindOpenDialog(selector) {
+	$(selector).off('click');
+    $(selector).on('click', function (e) {
+		var dlg = $('<div></div>');
+        e.preventDefault();
+
+        dlg.addClass('dialog')
+	        .attr('id', $(this).attr('data-dialog-id'))
+	        .appendTo('body')
+	        .dialog({
+	            title:$(this).attr('data-dialog-title'),
+	            close:function(){$(this).remove()},
+	            modal:true,
+	            resizable:false,
+	            width:666
+	        })
+	        .load(this.href, function() {
+				dlg.dialog('option', 'position', { my: 'center', at: 'center', of: window } );
+			});
+    });
+}
+function bindCloseDialog(selector) {
+	$(selector).off('click');
+	$(selector).on("click", function (e) {
+	    e.preventDefault();
+	    $(this).closest(".dialog").dialog("close");
+	});
+}
+function refreshDiv(selector){
+	var item = $(selector)
+	item.load(item.data('url'));
+}

@@ -31,6 +31,18 @@
     </div>
 }
 
+@if(Model.Currency != Configuration.BaseCurrency) {
+    <div class="display-label right floating">
+        @Html.LabelFor(x => x.Currency)
+        @Model.Currency.GetDisplayName()
+    </div>
+
+    <div class="display-label right floating">
+        @Html.LabelFor(x => x.ExchangeRate):
+        @Html.DisplayFor(x => x.ExchangeRate)
+    </div>
+}
+
     <div class="display-label right floating">
         @Html.LabelFor(x => x.PaymentMethod):
         @Model.PaymentMethod.GetDisplayName()
@@ -66,7 +78,7 @@
         @Html.DisplayFor(x => x.RecipientAddress.Borough)<br/>
         @Html.DisplayFor(x => x.RecipientAddress.State),
         @Html.DisplayFor(x => x.RecipientAddress.Country),
-        @Html.DisplayFor(x => x.RecipientAddress.ZipCode)
+        @Html.DisplayFor(x => x.RecipientAddress.PostalCode)
     </div>
 
     <div class="right">
