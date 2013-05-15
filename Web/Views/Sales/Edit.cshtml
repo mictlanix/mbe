@@ -86,20 +86,6 @@
         return result;
     }
 
-    function editDeliveryOrder(id, value) {
-        var result = "Error";
-
-        $.ajaxSetup({ async: false });
-        $.post('@Url.Action("EditDeliveryOrder")', { "id": id, "value": value }, function (data) {
-            var element = $("#item" + id + " checkbox");
-            element.html(data.checkbox);
-            result = data.checkbox;
-        }, "json");
-        $.ajaxSetup({ async: true });
-        
-        return result;
-    }
-
     function removeItem(id) {
         $("#confirm-dlg").dialog({
             resizable: true,
@@ -140,18 +126,6 @@
                             return editDiscount(detail.id, value);
                         }, { cssclass : "number" });
 
-                        $("#item" + detail.id + " input[name=IsDeliveryOrder]").bind("change", function() {
-                            var change = $("#item" + detail.id + " input[name=IsDeliveryOrder]").is(':checked');
-                            if(change == true)
-                            {
-                                editDeliveryOrder(detail.id, 1);
-                            }
-                            else
-                            {
-                                editDeliveryOrder(detail.id, 0);
-                            }
-                        });
-
                         $("#product-search").tokenInput("clear");
                         updateTotals();
 
@@ -171,12 +145,10 @@
         $(window).scroll();
     @foreach (var item in Model.Details)
     {
-        @:$("#item@(item.Id) div.quantity").editable(function(value,settings){return editQuantity(@item.Id, value);});
-        @:$("#item@(item.Id) div.discount").editable(function(value, settings){return editDiscount(@item.Id, value);});
-        @:$("#item@(item.Id) input[name=IsDeliveryOrder]").bind("change", function() {
-        @:    var change = $("#item@(item.Id) input[name=IsDeliveryOrder]").is(':checked'); 
-        @:    if(change == true){editDeliveryOrder(@item.Id, 1);} 
-        @:    else{editDeliveryOrder(@item.Id, 0);}});
+    	<text>
+        $("#item@(item.Id) div.quantity").editable(function(value,settings){return editQuantity(@item.Id, value);});
+        $("#item@(item.Id) div.discount").editable(function(value, settings){return editDiscount(@item.Id, value);});
+        </text>
     }
     });
 </script>

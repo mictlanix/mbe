@@ -193,7 +193,7 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "Reference", ResourceType = typeof(Resources))]
 		[StringLength(25, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
 		public virtual string Reference { get; set; }
-		
+
         [Property("completed")]
 		[Display(Name = "Completed", ResourceType = typeof(Resources))]
 		public virtual bool IsCompleted { get; set; }

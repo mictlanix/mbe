@@ -26,7 +26,7 @@
         <td>@Html.DisplayFor(x => item.Name)</td>
         <td class='center'>@Html.DisplayFor(x => item.Model)</td>
         <td class='center'>@Html.DisplayFor(x => item.UnitOfMeasurement)</td>
-        <td class='tabular nowrap'>
+        <td class='tabular nowrap stretch'>
             <table>
             @foreach(var p in ViewBag.PriceLists) {
 				var price = item.Prices.SingleOrDefault(x => x.List.Id == p.Id) ?? new ProductPrice ();
@@ -85,7 +85,7 @@
 
 			return value;
 		},{
-			data  :"{'@CurrencyCode.MXN':'MXN','USD':'USD','EUR':'EUR'}",
+			data  :"{'@CurrencyCode.MXN':'MXN','@CurrencyCode.USD':'USD','@CurrencyCode.EUR':'EUR'}",
 		    type  :'select',
 		    submit:'OK'
 		});

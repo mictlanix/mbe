@@ -34,155 +34,151 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
+using NHibernate.Exceptions;
 using Mictlanix.BE.Model;
 
 namespace Mictlanix.BE.Web.Controllers
 {
     public class AddressesController : Controller
     {
-        public ViewResult Details(int id)
-        {
-            var item = Address.Find (id);
-            var customer = item.Customers.FirstOrDefault ();
-
-            if (customer == null) {
-                var supplier = item.Suppliers.First ();
-                ViewBag.OwnerId = supplier.Id;
-                ViewBag.OwnerType = "Suppliers";
-            } else {
-                ViewBag.OwnerId = customer.Id;
-                ViewBag.OwnerType = "Customers";
-            }
-
-            return View (item);
-        }
-
-        public ActionResult CreateForSupplier (int id)
+		public ActionResult CreateCustomerAddress (int id)
         {
             ViewBag.OwnerId = id;
-            ViewBag.OwnerType = "Suppliers";
-            return View ("Create");
-        }
-
-        public ActionResult CreateForCustomer (int id)
-        {
-            ViewBag.OwnerId = id;
-            ViewBag.OwnerType = "Customers";
-            return View ("Create");
-        }
+			return PartialView ("_Create");
+		}
+		
+		public ActionResult CreateSupplierAddress (int id)
+		{
+			ViewBag.OwnerId = id;
+			return PartialView ("_Create");
+		}
 
         [HttpPost]
-        public ActionResult Create (Address item)
-        {
-            if (!ModelState.IsValid)
-            	return View(item);
-
-            int owner = int.Parse(Request.Params["OwnerId"]);
-            string type = Request.Params["OwnerType"];
+		public ActionResult CreateCustomerAddress (int owner, Address item)
+		{
+			if (!ModelState.IsValid) {
+				ViewBag.OwnerId = owner;
+				return PartialView ("_Create", item);
+			}
 
 			using (var scope = new TransactionScope()) {
-                item.CreateAndFlush();
-	            
-                if (type == "Suppliers") {
-					var supplier = Supplier.Find(owner);
-					supplier.Addresses.Add(item);
-					supplier.Update ();
-                }
+				var customer = Customer.Find (owner);
 
-                if (type == "Customers") {
-                    var customer = Customer.Find(owner);
-					customer.Addresses.Add(item);
-					customer.Update ();
-                }
+                item.CreateAndFlush ();
+				customer.Addresses.Add (item);
+				customer.Update ();
             }
 
-			return RedirectToAction("Details", type, new { id = owner });
-        }
-
-        public ActionResult Edit(int id)
-        {
-        	var item = Address.Find(id);
-            var customer = item.Customers.FirstOrDefault();
-
-            if (customer == null)
-            {
-                var supplier = item.Suppliers.First();
-                ViewBag.OwnerId = supplier.Id;
-                ViewBag.OwnerType = "Suppliers";
-            }
-            else
-            {
-                ViewBag.OwnerId = customer.Id;
-                ViewBag.OwnerType = "Customers";
-            }
+			return PartialView ("_Refresh");
+		}
+		
+		[HttpPost]
+		public ActionResult CreateSupplierAddress (int owner, Address item)
+		{
+			if (!ModelState.IsValid) {
+				ViewBag.OwnerId = owner;
+				return PartialView ("_Create", item);
+			}
 			
-        	return View(item);
+			using (var scope = new TransactionScope()) {
+				var supplier = Supplier.Find (owner);
+
+				item.CreateAndFlush ();
+				supplier.Addresses.Add (item);
+				supplier.Update ();
+			}
+			
+			return PartialView ("_Refresh");
+		}
+
+		public ActionResult Details (int id)
+		{
+			var item = Address.Find (id);
+			return PartialView ("_Details", item);
+		}
+
+        public ActionResult Edit (int id)
+        {
+        	var item = Address.Find (id);
+			return PartialView ("_Edit", item);
         }
 
         [HttpPost]
-        public ActionResult Edit(Address address)
+        public ActionResult Edit (Address item)
         {
-            if (ModelState.IsValid)
-            {
-                int owner = int.Parse(Request.Params["OwnerId"]);
-                string type = Request.Params["OwnerType"];
-
-				using (var scope = new TransactionScope()) {
-					address.Update ();
-				}
-
-                return RedirectToAction("Details", type, new { id = owner });
-            }
-            return View(address);
-        }
-
-        public ActionResult Delete(int id)
-        {
-            var item = Address.Find(id);
-            var customer = item.Customers.FirstOrDefault();
-
-            if (customer == null)
-            {
-                var supplier = item.Suppliers.First();
-                ViewBag.OwnerId = supplier.Id;
-                ViewBag.OwnerType = "Suppliers";
-            }
-            else
-            {
-                ViewBag.OwnerId = customer.Id;
-                ViewBag.OwnerType = "Customers";
-            }
-
-            return View(item);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            string type = Request.Params["OwnerType"];
-            int owner = int.Parse(Request.Params["OwnerId"]);
+            if (!ModelState.IsValid)
+				return PartialView ("_Edit", item);
 			
-            using (var scope = new TransactionScope()) {
-	            var item = Address.Find(id);
-				var customer = item.Customers.FirstOrDefault();
-	            var supplier = item.Suppliers.FirstOrDefault();
-	
-	            if (customer != null)
-	            {
-					customer.Addresses.Remove(item);
-					customer.Update ();
-	            }
-				
-	            if (supplier != null)
-	            {
-					supplier.Addresses.Remove(item);
-					supplier.Update ();
-	            }
-				
-				item.DeleteAndFlush ();
+			var entity = Address.Find (item.Id);
+
+			if (entity.Equals (item))
+				return PartialView ("_Refresh");
+
+			try {
+				using (var scope = new TransactionScope()) {
+					item.CreateAndFlush ();
+
+					foreach(var x in entity.Customers) {
+						x.Addresses.Remove (entity);
+						x.Addresses.Add (item);
+						x.Update ();
+					}
+					
+					foreach(var x in entity.Suppliers) {
+						x.Addresses.Remove (entity);
+						x.Addresses.Add (item);
+						x.Update ();
+					}
+
+					entity.Customers.Clear ();
+					entity.Suppliers.Clear ();
+					entity.DeleteAndFlush ();
+				}
+			} catch (GenericADOException ex) {
+				System.Diagnostics.Debug.WriteLine (ex);
+			}
+
+			return PartialView ("_Refresh");
+        }
+
+		public ActionResult Delete (int id)
+        {
+            var item = Address.Find (id);
+			return PartialView ("_Delete", item);
+        }
+
+        [HttpPost, ActionName ("Delete")]
+		public ActionResult DeleteConfirmed (int id)
+		{
+			try {
+				using (var scope = new TransactionScope()) {
+					var item = Address.Find (id);
+
+					foreach(var x in item.Customers) {
+						x.Addresses.Remove (item);
+						x.Update ();
+					}
+
+					foreach(var x in item.Suppliers) {
+						x.Addresses.Remove (item);
+						x.Update ();
+					}
+				}
+			} catch (GenericADOException ex) {
+				System.Diagnostics.Debug.WriteLine (ex);
+				return PartialView ("DeleteUnsuccessful");
+			}
+
+			try {
+				using (var scope = new TransactionScope()) {
+					var item = Address.Find (id);
+					item.DeleteAndFlush ();
+				}
+			} catch (GenericADOException ex) {
+				System.Diagnostics.Debug.WriteLine (ex);
 			}
 			
-            return RedirectToAction("Details", type, new { id = owner });
+			return PartialView ("_Refresh");
         }
 		
 		public JsonResult GetSuggestions (int customer)

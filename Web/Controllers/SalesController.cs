@@ -42,7 +42,7 @@ using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers
 {
-    public class SalesController : Controller
+    public class SalesXController : Controller
     {
         //
         // GET: /Sales/
@@ -293,20 +293,6 @@ namespace Mictlanix.BE.Web.Controllers
             return Json(new { id = id, discount = detail.Discount.ToString("p"), total = detail.Total.ToString("c") });
         }
 
-        [HttpPost]
-        public JsonResult EditDeliveryOrder (int id, int value)
-        {
-            var detail = SalesOrderDetail.Find (id);
-
-            detail.IsDelivery = (value != 0);
-
-			using (var scope = new TransactionScope ()) {
-				detail.UpdateAndFlush ();
-			}
-
-            return Json(new { id = id, value = detail.IsDelivery });
-        }
-
         public ActionResult GetTotals (int id)
 		{
 			var item = SalesOrder.Find (id);
@@ -344,11 +330,11 @@ namespace Mictlanix.BE.Web.Controllers
 
             if (item.IsCredit) {
                 item.IsPaid = true;
-
-				if (item.ShipTo == null) {
-					item.IsDelivered = true;
-				}
-            }
+			}
+			
+			if (item.ShipTo == null) {
+				item.IsDelivered = true;
+			}
 
 			using (var scope = new TransactionScope ()) {
 				var warehouse = item.PointOfSale.Warehouse;
@@ -383,46 +369,6 @@ namespace Mictlanix.BE.Web.Controllers
 
             return RedirectToAction ("New");
         }
-		
-		public ViewResult Deliveries ()
-		{
-			var qry = from x in SalesOrder.Queryable
-				where x.ShipTo != null &&
-					!x.IsCancelled && !x.IsDelivered &&
-					x.IsCompleted && x.IsPaid
-					orderby x.Id descending 
-					select x;
-			
-			return View (qry.ToList ());
-		}
-
-		public ViewResult Delivery (int id)
-		{
-			var item = SalesOrder.Find (id);
-			return View (item);
-		}
-		
-		public ViewResult PrintDelivery (int id)
-		{
-			var item = SalesOrder.Find (id);
-			return View (item);
-		}
-		
-		[HttpPost]
-		public ActionResult ConfirmDelivery (int id)
-		{
-			var item = SalesOrder.Find (id);
-			
-			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
-			item.ModificationTime = DateTime.Now;
-			item.IsDelivered = true;
-
-			using (var scope = new TransactionScope ()) {
-				item.UpdateAndFlush ();
-			}
-			
-			return RedirectToAction ("Deliveries");
-		}
 
         public JsonResult GetSuggestions (int order, string pattern)
 		{

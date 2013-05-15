@@ -122,10 +122,17 @@ namespace Mictlanix.BE.Web.Helpers
 
             return qry.ToList();
         }
-		
-		public static string ToMXN (this HtmlHelper helper, decimal val)
+
+		public static string CurrencyToString (this HtmlHelper helper, decimal val, CurrencyCode currency)
 		{
-			return CurrencyConverter.ToMXN (val).ToUpper ();
+			switch (currency) {
+			case CurrencyCode.USD:
+				return CurrencyConverter.ToUSD (val).ToUpper ();
+			case CurrencyCode.EUR:
+				return CurrencyConverter.ToEUR (val).ToUpper ();
+			default:
+				return CurrencyConverter.ToMXN (val).ToUpper ();
+			}
 		}
     }
 }

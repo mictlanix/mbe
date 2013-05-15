@@ -104,8 +104,6 @@ namespace Mictlanix.BE.Web.Controllers
             }
         }
 
-        // GET: /Payments/PrintCashCount/
-
         public ViewResult PrintCashCount (int id)
         {
             var info = new CashCountReport();
@@ -338,13 +336,8 @@ namespace Mictlanix.BE.Web.Controllers
 			var item = SalesOrder.Find (id);
 
 			item.IsPaid = true;
-
-			if (item.ShipTo == null) {
-				item.IsDelivered = true;
-			}
-
-			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 			item.ModificationTime = DateTime.Now;
+			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 
 			using (var scope = new TransactionScope ()) {
             	item.UpdateAndFlush ();

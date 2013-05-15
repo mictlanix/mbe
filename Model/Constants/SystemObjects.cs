@@ -51,7 +51,7 @@ namespace Mictlanix.BE.Model
         PriceLists,
         [Display(Name = "DisplayName_Employees", ResourceType = typeof(Resources))]
         Employees,
-        [Display(Name = "DisplayName_SalesOrders", ResourceType = typeof(Resources))]
+        [Display(Name = "SalesOrders", ResourceType = typeof(Resources))]
         SalesOrders,
         [Display(Name = "DisplayName_CustomerPayments", ResourceType = typeof(Resources))]
         CustomerPayments,
@@ -59,9 +59,9 @@ namespace Mictlanix.BE.Model
         PointsOfSale,
         [Display(Name = "DisplayName_CashDrawers", ResourceType = typeof(Resources))]
         CashDrawers,
-        [Display(Name = "DisplayName_Addresses", ResourceType = typeof(Resources))]
+        [Display(Name = "Addresses", ResourceType = typeof(Resources))]
         Addresses,
-        [Display(Name = "DisplayName_Contacts", ResourceType = typeof(Resources))]
+        [Display(Name = "Contacts", ResourceType = typeof(Resources))]
         Contacts,
         [Display(Name = "DisplayName_BankAccounts", ResourceType = typeof(Resources))]
 		BankAccounts,
@@ -89,8 +89,8 @@ namespace Mictlanix.BE.Model
         Taxpayers,
         [Display(Name = "DisplayName_SupplierReturns", ResourceType = typeof(Resources))]
         SupplierReturns,
-        [Display(Name = "DisplayName_SalesOrdersHistoric", ResourceType = typeof(Resources))]
-        SalesOrdersHistoric,
+		[Display(Name = "SalesHistoric", ResourceType = typeof(Resources))]
+        SalesHistoric,
         [Display(Name = "DisplayName_CustomerReturnHistoric", ResourceType = typeof(Resources))]
 		CustomerReturnHistoric,
         [Display(Name = "DisplayName_SupplierReturnHistoric", ResourceType = typeof(Resources))]

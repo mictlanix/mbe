@@ -35,7 +35,7 @@
 </fieldset>
 <script type="text/javascript">
     $(function() {
-    	$(".print").die();
+    	$(".print").off();
         $(".print").printPage({
             url: "@Url.Action("PrintCustomerReturn", "CustomerReturns", new { id = Model.Id })"
         });

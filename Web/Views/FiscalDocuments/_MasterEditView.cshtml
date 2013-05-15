@@ -11,24 +11,40 @@
         {
             @Html.ValidationSummary(true)
             
-            <div class="editor-label">
+            <div class="editor-field">
                 @Html.LabelFor(x => x.Issuer)
                 @Html.TextBoxFor(x => x.IssuerId)
                 @Html.ValidationMessageFor(x => x.IssuerId)
             </div>
             
-            <div id="div-batch" class="editor-label"></div>
+            <div id="div-batch" class="editor-field"></div>
             
-            <div class="editor-label">
+            <div class="editor-field">
                 @Html.LabelFor(model => model.Customer)
                 @Html.EditorFor(model => model.CustomerId)
                 @Html.ValidationMessageFor(model => model.CustomerId)
             </div>
 
-            <div class="editor-label">
+            <div class="editor-field">
                 @Html.LabelFor(model => model.Recipient)
                 @Html.EditorFor(model => model.RecipientId)
                 @Html.ValidationMessageFor(model => model.RecipientId)
+            </div>
+
+            <div class="editor-field">
+                @Html.LabelFor(x => x.Currency) /
+                @Html.LabelFor(x => x.ExchangeRate)<br>
+	            <select id="status-list" name="Currency">
+	                @foreach (var item in Enum.GetValues(typeof(CurrencyCode))) {
+	                    <option value="@((int)item)">@(item)</option>
+	                }
+	            </select>
+                @Html.TextBoxFor(x => x.ExchangeRate, new { @class = "number short" })
+            </div>
+	            
+            <div class="editor-field">
+                @Html.LabelFor(x => x.Reference)<br/>
+                @Html.EditorFor(x => x.Reference)
             </div>
 
 	        <div class="editor-field">
@@ -54,10 +70,10 @@
 	        </div>
 
 	        <div id="reference" style="display:none">
-	            <div class="display-label">
+	            <div class="editor-label">
 	                @Html.LabelFor(x => x.PaymentReference)
 	            </div>
-	            <div class="display-field">
+	            <div class="editor-field">
 	                @Html.EditorFor(x => x.PaymentReference)
 	            </div>
 	        </div>
@@ -70,63 +86,62 @@
 </fieldset>
 <script type="text/javascript">
     $(function () {
-        $("#IssuerId").tokenInput("@Url.Action("GetSuggestions", "Taxpayers")", {
-            hintText: "@Resources.HIntText",
-            noResultsText: "@Resources.NoResultsText",
-            searchingText: "@Resources.SearchingText",
-            queryParam: "pattern",
+        $('#IssuerId').tokenInput('@Url.Action("GetSuggestions", "Taxpayers")', {
+            hintText: '@Resources.HIntText',
+            noResultsText: '@Resources.NoResultsText',
+            searchingText: '@Resources.SearchingText',
+            queryParam: 'pattern',
             minChars: 1,
             tokenLimit: 1,
-            prePopulate: [{ id: "@Model.Issuer.Id", name: "@Model.Issuer.Name"}],
             onAdd: function (item) {
                 $.get('@Url.Action("GetBatchSelector")/' + item.id, function (data) {
-		            $("#div-batch").html(data);
+		            $('#div-batch').html(data);
+		            $('#Batch').val('@Model.Batch');
 		        });
             },
             onDelete: function (item){
-                $("#div-batch").html(null);
+                $('#div-batch').html(null);
             }
         });
         
-        $.get('@Url.Action("GetBatchSelector")/@Model.Issuer.Id', function (data) {
-            $("#div-batch").html(data);
-        });
-
-        $("#CustomerId").tokenInput("add", { id: "@Model.Customer.Id", name: "@Model.Customer.Name"});
+        $('#IssuerId').tokenInput('add', { id: '@Model.Issuer.Id', name: '@string.Format("{1} ({0})", Model.Issuer.Id, Model.IssuerName)'});
+        $('#CustomerId').tokenInput('add', { id: '@Model.Customer.Id', name: '@Model.Customer.Name'});
         
-        $("#RecipientId").tokenInput(function() {
-			var customer = $("#CustomerId").tokenInput("get")[0];
+        $('#RecipientId').tokenInput(function() {
+			var customer = $('#CustomerId').tokenInput('get')[0];
 			
-			if(typeof(customer) === "undefined") {
+			if(typeof(customer) === 'undefined') {
 				customer = {id : 0};
 			}
 			
 			return '@Url.Action("ListTaxpayers", "Customers", new { id = 0 })' + customer.id;
 		}, {
-            hintText: "@Resources.HIntText",
-            noResultsText: "@Resources.NoResultsText",
-            searchingText: "@Resources.SearchingText",          
-            queryParam: "pattern",minChars: 3,tokenLimit: 1
+            hintText: '@Resources.HIntText',
+            noResultsText: '@Resources.NoResultsText',
+            searchingText: '@Resources.SearchingText',
+            queryParam: 'pattern',
+            minChars: 3,
+            tokenLimit: 1
         });
         
-        $("#RecipientId").tokenInput("add", { id: "@Model.Recipient.Id", name: '@string.Format("{1} ({0})", Model.Recipient.Id, Model.RecipientName)'});
+        $('#RecipientId').tokenInput('add', { id: '@Model.Recipient.Id', name: '@string.Format("{1} ({0})", Model.Recipient.Id, Model.RecipientName)'});
         
-        $(".selection-options>li").click(function () {
-            $(".selection-options>li").removeClass("selected");
-            $(this).addClass("selected");
+        $('.selection-options>li').click(function () {
+            $('.selection-options>li').removeClass('selected');
+            $(this).addClass('selected');
         });
         
-        $(":radio").change(function() {
-            var status = $("#PaymentMethod:checked").val();
+        $(':radio').change(function() {
+            var status = $('#PaymentMethod:checked').val();
             
-            if (status === "0" || status === "1") {
-                $("#reference").hide("slow");
+            if (status === '0' || status === '1') {
+                $('#reference').hide('slow');
             } else {
-                $("#reference").show("slow");
+                $('#reference').show('slow');
             }
         });
         
-        $(":radio[value=" + @((int)Model.PaymentMethod) + "]").attr("checked", true).closest("li").addClass("selected");
-        $(":radio").change();
+        $(':radio[value=@((int)Model.PaymentMethod)]').attr("checked", true).closest("li").addClass("selected");
+        $(':radio').change();
     });
 </script>

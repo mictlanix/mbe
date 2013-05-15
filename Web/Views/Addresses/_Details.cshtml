@@ -1,0 +1,12 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model Address
+
+@Html.DisplayForModel()
+<div class="action-buttons">
+	<button type="button" class="cancel">@Resources.Close</button>
+</div>
+<script type="text/javascript">
+bindCloseDialog(".cancel");
+</script>
