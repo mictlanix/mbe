@@ -70,10 +70,6 @@ namespace Mictlanix.BE.Web.Helpers
 			get { return ConfigurationManager.AppSettings ["CompanyTaxpayer"]; }
 		}
 
-		public static string CompanyTaxpayerName {
-			get { return ConfigurationManager.AppSettings ["CompanyTaxpayerName"]; }
-		}
-
 		public static string PromissoryNoteContent {
 			get { return ConfigurationManager.AppSettings ["PromissoryNoteContent"]; }
 		}

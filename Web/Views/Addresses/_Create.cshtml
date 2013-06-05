@@ -5,7 +5,9 @@
 
 @using (Ajax.BeginForm(new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "addressDlg" })) {
     @Html.ValidationSummary(true)
-	@Html.EditorForModel()
+	<div style='overflow:hidden'>
+		@Html.EditorForModel()
+	</div>
 	@Html.Hidden("owner", (object)ViewBag.OwnerId)
 	<div class="action-buttons">
 		<button type="button" class="cancel">@Resources.Discard</button>

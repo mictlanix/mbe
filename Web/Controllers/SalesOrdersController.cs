@@ -43,9 +43,6 @@ namespace Mictlanix.BE.Web.Controllers
 {
 	public class SalesOrdersController : Controller
     {
-        //
-        // GET: /Sales/
-
         public ViewResult Index ()
 		{
 			var item = Configuration.PointOfSale;
@@ -86,9 +83,6 @@ namespace Mictlanix.BE.Web.Controllers
 
 			return View (item);
         }
-
-        //
-        // GET: /Sales/New
 
         public ViewResult New ()
 		{

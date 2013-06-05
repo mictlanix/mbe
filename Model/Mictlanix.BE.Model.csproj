@@ -132,6 +132,8 @@
     <Compile Include="TaxpayerCertificate.cs" />
     <Compile Include="TaxpayerBatch.cs" />
     <Compile Include="PostalCode.cs" />
+    <Compile Include="Constants\FiscalScheme.cs" />
+    <Compile Include="Constants\FiscalCertificationProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">

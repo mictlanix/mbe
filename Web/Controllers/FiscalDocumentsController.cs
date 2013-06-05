@@ -112,7 +112,8 @@ namespace Mictlanix.BE.Web.Controllers
         public ViewResult Reports ()
 		{
 			var items = (from x in FiscalDocument.Queryable
-			             where x.IsCompleted
+			             where x.Issuer.Scheme == FiscalScheme.CFD && 
+			             	   x.IsCompleted
 						 select new FiscalReport {
 							  TaxpayerId = x.Issuer.Id,
 							  TaxpayerName = x.Issuer.Name,
@@ -287,7 +288,7 @@ namespace Mictlanix.BE.Web.Controllers
 			if (!item.IsCompleted)
 				return RedirectToAction ("Index");
 
-			var doc = CFDv2Helpers.SignCFD (item);
+			var doc = CFDHelpers.SignCFD (item);
 			
 			item.OriginalString = doc.ToString ();
 			item.DigitalSeal = doc.sello;
@@ -328,7 +329,8 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 
 			int serial = (from x in FiscalDocument.Queryable
-                          where x.Batch == item.Batch
+			              where x.Issuer.Id == item.Issuer.Id &&
+			              		x.Batch == item.Batch
                           select x.Serial).Max ().GetValueOrDefault () + 1;
 
 			var batch = (from x in item.Issuer.Batches
@@ -346,10 +348,14 @@ namespace Mictlanix.BE.Web.Controllers
 			item.ApprovalNumber = batch.ApprovalNumber;
 			item.ApprovalYear = batch.ApprovalYear;
 			item.CertificateNumber = item.Issuer.Certificates.Single (x => x.IsActive).Id;
+			
+			var dt = DateTime.Now;
+			item.Issued = new DateTime (dt.Year, dt.Month, dt.Day,
+			                            dt.Hour, dt.Minute, dt.Second,
+			                            DateTimeKind.Unspecified);
 
-			dynamic doc = CFDv2Helpers.IssueCFD (item);
+			dynamic doc = CFDHelpers.SignCFD (item);
 
-			item.Issued = doc.fecha;
 			item.OriginalString = doc.ToString ();
 			item.DigitalSeal = doc.sello;
 			item.Version = Convert.ToDecimal (doc.version);
@@ -391,7 +397,7 @@ namespace Mictlanix.BE.Web.Controllers
 		public ActionResult Download (int id)
 		{
 			var item = FiscalDocument.Find (id);
-			var doc = CFDv2Helpers.InvoiceToCFD (item);
+			var doc = CFDHelpers.InvoiceToCFD (item);
 			var result = new FileStreamResult (doc.ToXmlStream (), "text/xml");
 			
 			result.FileDownloadName = string.Format (Resources.Format_FiscalDocumentName,
@@ -412,7 +418,7 @@ namespace Mictlanix.BE.Web.Controllers
 				(x.IsCancelled && x.CancellationDate >= start && x.CancellationDate < end))
 					  select x;
 			
-			foreach (var row in CFDv2Helpers.MonthlyReport(qry.ToList())) {
+			foreach (var row in CFDHelpers.MonthlyReport(qry.ToList())) {
 				sw.WriteLine (row);
 			}
 			

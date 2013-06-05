@@ -13,39 +13,66 @@
 
 <fieldset>
     <legend>@Resources.Title_Taxpayer</legend>
-
-    <div class="display-label">
-        @Html.LabelFor(x => x.Id)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(x => x.Id)
-    </div>
-
-    <div class="display-label">
-        @Html.LabelFor(x => x.Name)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(x => x.Name)
-    </div>
-
-    <div class="display-label">
-        @Html.LabelFor(x => x.Regime)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(x => x.Regime)
-    </div>
-    
-	@Html.DisplayFor(x => x.Address)
-
-</fieldset>
-<p>
-@if(Privilege.AllowUpdate)
-{
-    @Html.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new { @class = "button icon edit" })
+	
+	<div class="row-fluid">
+	  	<div class="span3">@Html.LabelFor(x => x.Id)</div>
+		<div class="span9">@Html.LabelFor(x => x.Name)</div>
+	</div>
+	<div class="row-fluid">
+	  	<div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.Id)</div></div>
+		<div class="span9"><div class="ro-field">@Html.DisplayFor(x => x.Name)</div></div>
+	</div>
+	<div class="row-fluid">
+	  	<div class="span12">@Html.LabelFor(x => x.Regime)</div>
+	</div>
+	<div class="row-fluid">
+	  	<div class="span12"><div class="ro-field">@Html.DisplayFor(x => x.Regime)</div></div>
+	</div>
+@if(Model.Address != null) {
+	<div class="row-fluid">
+	  	<div class="span6">@Html.LabelFor(x => x.Address.Street)</div>
+		<div class="span3">@Html.LabelFor(x => x.Address.ExteriorNumber)</div>
+	  	<div class="span3">@Html.LabelFor(x => x.Address.InteriorNumber)</div>
+	</div>
+	<div class="row-fluid">
+	  	<div class="span6"><div class="ro-field">@Html.DisplayFor(x => x.Address.Street)</div></div>
+		<div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.Address.ExteriorNumber)</div></div>
+	  	<div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.Address.InteriorNumber)</div></div>
+	</div>
+	<div class="row-fluid">
+	  	<div class="span4">@Html.LabelFor(x => x.Address.PostalCode)</div>
+	  	<div class="span4">@Html.LabelFor(x => x.Address.Neighborhood)</div>
+		<div class="span4">@Html.LabelFor(x => x.Address.Locality)</div>
+	</div>
+	<div class="row-fluid">
+	  	<div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.Address.PostalCode)</div></div>
+	  	<div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.Address.Neighborhood)</div></div>
+		<div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.Address.Locality)</div></div>
+	</div>
+	<div class="row-fluid">
+	  	<div class="span6">@Html.LabelFor(x => x.Address.Borough)</div>
+	  	<div class="span6">@Html.LabelFor(x => x.Address.State)</div>
+	</div>
+	<div class="row-fluid">
+	  	<div class="span6"><div class="ro-field">@Html.DisplayFor(x => x.Address.Borough)</div></div>
+	  	<div class="span6"><div class="ro-field">@Html.DisplayFor(x => x.Address.State)</div></div>
+	</div>
+	<div class="row-fluid">
+	  	<div class="span6">@Html.LabelFor(x => x.Address.City)</div>
+		<div class="span6">@Html.LabelFor(x => x.Address.Country)</div>
+	</div>
+	<div class="row-fluid">
+	  	<div class="span6"><div class="ro-field">@Html.DisplayFor(x => x.Address.City)</div></div>
+		<div class="span6"><div class="ro-field">@Html.DisplayFor(x => x.Address.Country)</div></div>
+	</div>
+	<div class="row-fluid">
+	  	<div class="span12">@Html.LabelFor(x => x.Address.Comment)</div>
+	</div>
+	<div class="row-fluid">
+	  	<div class="span12"><div class="ro-field">@Html.DisplayFor(x => x.Address.Comment)</div></div>
+	</div>
 }
-	@Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
-</p>
-
+</fieldset>
 <div id="tabs">
     <ul>
         <li><a href="#tabs-1">@Resources.TaxpayerBatches</a></li>
@@ -63,8 +90,12 @@
         @Html.Partial("_Certificates", Model.Certificates)
     </div>
 </div>
-<script type="text/javascript">
-    $(function () {
-        $("#tabs").tabs();
-    });
+<div class="row-fluid vspaced">
+    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+@if(Privilege.AllowUpdate) {
+	@Html.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new { @class = "button icon edit pull-right" })
+}
+</div>
+<script type='text/javascript'>
+$('#tabs').tabs();
 </script>

@@ -90,9 +90,7 @@ namespace Mictlanix.BE.Web.Controllers
 		public ActionResult Edit (string id)
         {
         	var item = CustomerTaxpayer.Find (id);
-
 			item.HasAddress = (item.Address != null);
-
 			return PartialView ("_Edit", item);
         }
 
@@ -119,6 +117,8 @@ namespace Mictlanix.BE.Web.Controllers
 				if(item.HasAddress) {
 					entity.Address = item.Address;
 					entity.Address.Create ();
+				} else {
+					entity.Address = null;
 				}
 
 				entity.UpdateAndFlush ();

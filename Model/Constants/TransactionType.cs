@@ -1,7 +1,8 @@
 // 
-// KardexSource.cs
+// TransactionType.cs
 // 
 // Author:
+//   Eddy Zavaleta <eddy@mictlanix.org>
 //   Eduardo Nieto <enieto@mictlanix.org>
 // 
 // Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.

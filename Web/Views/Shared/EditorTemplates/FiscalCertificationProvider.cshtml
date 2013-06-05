@@ -1,0 +1,13 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model FiscalCertificationProvider?
+
+@{
+    var values = Enum.GetValues(typeof(FiscalCertificationProvider)).Cast<FiscalCertificationProvider>();
+}
+<select id='@ViewData.TemplateInfo.GetFullHtmlFieldId("")' name='@ViewData.TemplateInfo.GetFullHtmlFieldName("")'>
+    @foreach (var item in values) {
+        <option value="@((int)item)" @(item == Model ? "selected" : string.Empty)>@item.GetDisplayName()</option>
+    }
+</select>
