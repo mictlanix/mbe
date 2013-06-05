@@ -37,22 +37,8 @@ using Mictlanix.CFDLib;
 
 namespace Mictlanix.BE.Web.Helpers
 {
-	internal static class CFDv2Helpers
+	internal static class CFDHelpers
 	{
-		public static dynamic IssueCFD (FiscalDocument item)
-		{
-			var dt = DateTime.Now;
-			var cfd = InvoiceToCFD (item);
-			var cer = item.Issuer.Certificates.Single (x => x.Id == item.CertificateNumber);
-
-			cfd.fecha = new DateTime (dt.Year, dt.Month, dt.Day,
-					                  dt.Hour, dt.Minute, dt.Second,
-					                  DateTimeKind.Unspecified);
-			cfd.Sign (cer.KeyData, cer.KeyPassword);
-
-			return cfd;
-		}
-
 		public static dynamic SignCFD (FiscalDocument item)
 		{
 			var cfd = InvoiceToCFD (item);

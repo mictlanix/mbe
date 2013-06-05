@@ -5,8 +5,10 @@
 
 @using (Ajax.BeginForm(new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "contactDlg" })) {
     @Html.ValidationSummary(true)
-    @Html.HiddenFor(x => x.Id)
-	@Html.EditorForModel()
+	<div style='overflow:hidden'>
+    	@Html.HiddenFor(x => x.Id)
+		@Html.EditorForModel()
+	</div>
 	<div class="action-buttons">
 		<button type="button" class="cancel">@Resources.Discard</button>
 		<button type="submit" class="icon save">@Resources.Save</button>

@@ -2,53 +2,51 @@
 @using Mictlanix.BE.Model
 @model Contact
 
-<div style='overflow:hidden'>
-	<div class="row">
-	  	<div class="span6">@Html.LabelFor(x => x.Name)</div>
-		<div class="span2">@Html.LabelFor(x => x.JobTitle)</div>
-	</div>
-	<div class="row">
-	  	<div class="span6"><div class="ro-field">@Html.DisplayFor(x => x.Name)</div></div>
-		<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.JobTitle)</div></div>
-	</div>
-	<div class="row">
-	  	<div class="span5">@Html.LabelFor(x => x.Email)</div>
-	  	<div class="span2">@Html.LabelFor(x => x.Phone)</div>
-	  	<div class="span1">@Html.LabelFor(x => x.PhoneExt)</div>
-	</div>
-	<div class="row">
-	  	<div class="span5"><div class="ro-field">@Html.DisplayFor(x => x.Email)</div></div>
-	  	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.Phone)</div></div>
-	  	<div class="span1"><div class="ro-field">@Html.DisplayFor(x => x.PhoneExt)</div></div>
-	</div>
-	<div class="row">
-	  	<div class="span3">@Html.LabelFor(x => x.Mobile)</div>
-		<div class="span3">@Html.LabelFor(x => x.Fax)</div>
-		<div class="span2">@Html.LabelFor(x => x.Birthday)</div>
-	</div>
-	<div class="row">
-	  	<div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.Mobile)</div></div>
-		<div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.Fax)</div></div>
-		<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.Birthday)</div></div>
-	</div>
-	<div class="row">
-	  	<div class="span4">@Html.LabelFor(x => x.Im)</div>
-		<div class="span4">@Html.LabelFor(x => x.Sip)</div>
-	</div>
-	<div class="row">
-	  	<div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.Im)</div></div>
-		<div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.Sip)</div></div>
-	</div>
-	<div class="row">
-	  	<div class="span8">@Html.LabelFor(x => x.Website)</div>
-	</div>
-	<div class="row">
-	  	<div class="span8"><div class="ro-field">@Html.DisplayFor(x => x.Website)</div></div>
-	</div>
-	<div class="row">
-	  	<div class="span8">@Html.LabelFor(x => x.Comment)</div>
-	</div>
-	<div class="row">
-	  	<div class="span8"><div class="ro-field">@Html.DisplayFor(x => x.Comment)</div></div>
-	</div>
+<div class="row">
+  	<div class="span6">@Html.LabelFor(x => x.Name)</div>
+	<div class="span2">@Html.LabelFor(x => x.JobTitle)</div>
+</div>
+<div class="row">
+  	<div class="span6"><div class="ro-field">@Html.DisplayFor(x => x.Name)</div></div>
+	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.JobTitle)</div></div>
+</div>
+<div class="row">
+  	<div class="span5">@Html.LabelFor(x => x.Email)</div>
+  	<div class="span2">@Html.LabelFor(x => x.Phone)</div>
+  	<div class="span1">@Html.LabelFor(x => x.PhoneExt)</div>
+</div>
+<div class="row">
+  	<div class="span5"><div class="ro-field">@Html.DisplayFor(x => x.Email)</div></div>
+  	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.Phone)</div></div>
+  	<div class="span1"><div class="ro-field">@Html.DisplayFor(x => x.PhoneExt)</div></div>
+</div>
+<div class="row">
+  	<div class="span3">@Html.LabelFor(x => x.Mobile)</div>
+	<div class="span3">@Html.LabelFor(x => x.Fax)</div>
+	<div class="span2">@Html.LabelFor(x => x.Birthday)</div>
+</div>
+<div class="row">
+  	<div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.Mobile)</div></div>
+	<div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.Fax)</div></div>
+	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.Birthday)</div></div>
+</div>
+<div class="row">
+  	<div class="span4">@Html.LabelFor(x => x.Im)</div>
+	<div class="span4">@Html.LabelFor(x => x.Sip)</div>
+</div>
+<div class="row">
+  	<div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.Im)</div></div>
+	<div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.Sip)</div></div>
+</div>
+<div class="row">
+  	<div class="span8">@Html.LabelFor(x => x.Website)</div>
+</div>
+<div class="row">
+  	<div class="span8"><div class="ro-field">@Html.DisplayFor(x => x.Website)</div></div>
+</div>
+<div class="row">
+  	<div class="span8">@Html.LabelFor(x => x.Comment)</div>
+</div>
+<div class="row">
+  	<div class="span8"><div class="ro-field">@Html.DisplayFor(x => x.Comment)</div></div>
 </div>

@@ -1299,13 +1299,13 @@ Realizada el: {0:d}</value>
   <data name="PrivateKeyPassword" xml:space="preserve">
     <value>Contraseña de la Clave Privada</value>
   </data>
-  <data name="FiscalDocumentType_Income" xml:space="preserve">
+  <data name="Income" xml:space="preserve">
     <value>Ingreso</value>
   </data>
-  <data name="FiscalDocumentType_Outcome" xml:space="preserve">
+  <data name="Outcome" xml:space="preserve">
     <value>Egreso</value>
   </data>
-  <data name="FiscalDocumentType_Transfer" xml:space="preserve">
+  <data name="Transfer" xml:space="preserve">
     <value>Traslado</value>
   </data>
   <data name="Certificate" xml:space="preserve">
@@ -1631,5 +1631,26 @@ Realizada el: {0:d}</value>
   </data>
   <data name="CustomerTaxpayerAlreadyExists" xml:space="preserve">
     <value>El RFC ya existe o está asociado a otro cliente.</value>
+  </data>
+  <data name="Scheme" xml:space="preserve">
+    <value>Esquema</value>
+  </data>
+  <data name="CFD" xml:space="preserve">
+    <value>Comprobante Fiscal Digital</value>
+  </data>
+  <data name="CFDI" xml:space="preserve">
+    <value>Comprobante Fiscal Digital Por Internet</value>
+  </data>
+  <data name="Diverza" xml:space="preserve">
+    <value>Diverza Información y Análisis, SAPI de CV</value>
+  </data>
+  <data name="MySuite" xml:space="preserve">
+    <value>Mysuite Services, SA de CV</value>
+  </data>
+  <data name="Provider" xml:space="preserve">
+    <value>Proveedor</value>
+  </data>
+  <data name="TaxpayerAlreadyExists" xml:space="preserve">
+    <value>El contribuyente (RFC) ya existe.</value>
   </data>
 </root>

@@ -1,17 +1,19 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
-@model CustomerTaxpayer
+@model Taxpayer
 
 @using (Ajax.BeginForm(new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "taxpayerDlg" })) {
+    @Html.ValidationSummary(true)
 	<div style='overflow:hidden'>
-		@Html.DisplayForModel()
+		@Html.EditorForModel()
 	</div>
 	<div class="action-buttons">
 		<button type="button" class="cancel">@Resources.Discard</button>
-		<button type="submit" class="icon delete">@Resources.Delete</button>
+		<button type="submit" class="icon save">@Resources.Create</button>
 	</div>
 }
 <script type="text/javascript">
+$('#Id').focus();
 bindCloseDialog(".cancel");
 </script>

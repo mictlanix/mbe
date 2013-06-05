@@ -1,10 +1,10 @@
 ﻿// 
-// FiscalDocumentType.cs
+// FiscalCertificationProvider.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
 // 
-// Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2013 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -34,13 +34,13 @@ using Castle.ActiveRecord.Framework;
 
 namespace Mictlanix.BE.Model
 {
-    public enum FiscalDocumentType : int
-    {
-        [Display(Name = "Income", ResourceType = typeof(Resources))]
-        Income,
-        [Display(Name = "Outcome", ResourceType = typeof(Resources))]
-        Outcome,
-		[Display(Name = "Transfer", ResourceType = typeof(Resources))]
-		Transfer
+	public enum FiscalCertificationProvider : int
+	{
+		[Display(Name = "None", ResourceType = typeof(Resources))]
+		None,
+		[Display(Name = "Diverza", ResourceType = typeof(Resources))]
+        Diverza,
+		[Display(Name = "MySuite", ResourceType = typeof(Resources))]
+        MySuite
     }
 }

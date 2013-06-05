@@ -1548,27 +1548,27 @@ namespace Mictlanix.BE {
         /// <summary>
         ///   Looks up a localized string similar to Ingreso.
         /// </summary>
-        public static string FiscalDocumentType_Income {
+        public static string Income {
             get {
-                return ResourceManager.GetString("FiscalDocumentType_Income", resourceCulture);
+                return ResourceManager.GetString("Income", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Egreso.
         /// </summary>
-        public static string FiscalDocumentType_Outcome {
+        public static string Outcome {
             get {
-                return ResourceManager.GetString("FiscalDocumentType_Outcome", resourceCulture);
+                return ResourceManager.GetString("Outcome", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Traslado.
         /// </summary>
-        public static string FiscalDocumentType_Transfer {
+        public static string Transfer {
             get {
-                return ResourceManager.GetString("FiscalDocumentType_Transfer", resourceCulture);
+                return ResourceManager.GetString("Transfer", resourceCulture);
             }
         }
         
@@ -4455,6 +4455,48 @@ namespace Mictlanix.BE {
 		public static string CustomerTaxpayerAlreadyExists {
 			get {
 				return ResourceManager.GetString("CustomerTaxpayerAlreadyExists", resourceCulture);
+			}
+		}
+		
+		public static string Scheme {
+			get {
+				return ResourceManager.GetString("Scheme", resourceCulture);
+			}
+		}
+		
+		public static string CFD {
+			get {
+				return ResourceManager.GetString("CFD", resourceCulture);
+			}
+		}
+		
+		public static string CFDI {
+			get {
+				return ResourceManager.GetString("CFDI", resourceCulture);
+			}
+		}
+		
+		public static string Diverza {
+			get {
+				return ResourceManager.GetString("Diverza", resourceCulture);
+			}
+		}
+		
+		public static string MySuite {
+			get {
+				return ResourceManager.GetString("MySuite", resourceCulture);
+			}
+		}
+		
+		public static string Provider {
+			get {
+				return ResourceManager.GetString("Provider", resourceCulture);
+			}
+		}
+		
+		public static string TaxpayerAlreadyExists {
+			get {
+				return ResourceManager.GetString("TaxpayerAlreadyExists", resourceCulture);
 			}
 		}
     }
