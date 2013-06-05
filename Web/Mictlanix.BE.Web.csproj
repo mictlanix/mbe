@@ -12,7 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Mictlanix.BE.Web</RootNamespace>
     <AssemblyName>Mictlanix.BE.Web</AssemblyName>
-    <MvcBuildViews>false</MvcBuildViews>
+    <MvcBuildViews>true</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -35,8 +35,14 @@
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\packages\Antlr.3.1.3.42154\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="Iesi.Collections">
       <HintPath>..\Packages\Iesi.Collections.1.0.1\lib\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Lucene.Net">
+      <HintPath>..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Remotion.Data.Linq">
@@ -53,7 +59,9 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Abstractions" />
-    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.Routing">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
@@ -65,12 +73,15 @@
     </Reference>
     <Reference Include="System.Web.Helpers">
       <HintPath>..\Packages\AspNetMVC.3.0.0.0\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.Mvc">
       <HintPath>..\Packages\AspNetMVC.3.0.0.0\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.WebPages">
       <HintPath>..\Packages\AspNetMVC.3.0.0.0\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Castle.ActiveRecord, Version=3.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc">
       <HintPath>..\packages\Castle.Activerecord.3.0.0.1\lib\Net40\Castle.ActiveRecord.dll</HintPath>
@@ -89,9 +100,6 @@
     </Reference>
     <Reference Include="NHibernate.Search">
       <HintPath>..\Packages\Castle.Activerecord.3.0.0.1\lib\Net40\NHibernate.Search.dll</HintPath>
-    </Reference>
-    <Reference Include="Lucene.Net">
-      <HintPath>..\Packages\Lucene.2.9.2.2\lib\Lucene.Net.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
@@ -887,13 +895,7 @@
   </ProjectExtensions>
   <ItemGroup />
   <ItemGroup />
-  <ItemGroup>
-    <Folder Include="Views\Pricing\" />
-    <Folder Include="Views\SalesOrders\" />
-    <Folder Include="Views\DeliveryOrders\" />
-    <Folder Include="Content\themes\flick\" />
-    <Folder Include="Views\CustomerTaxpayers\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="Views\ExchangeRates\_Index.cshtml" />
     <None Include="Views\ExchangeRates\Create.cshtml" />
