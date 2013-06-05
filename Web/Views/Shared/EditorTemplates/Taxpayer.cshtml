@@ -1,6 +1,6 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
-@model CustomerTaxpayer
+@model Taxpayer
 
 <div class="row">
   	<div class="span2 field-required">@Html.LabelFor(x => x.Id)</div>
@@ -11,10 +11,18 @@
 	<div class="span6">@Html.EditorFor(x => x.Name) @Html.ValidationMessageFor(x => x.Name)</div>
 </div>
 <div class="row">
-  	<div class="span8 field-required">@Html.LabelFor(x => x.Email)</div>
+  	<div class="span8 field-required">@Html.LabelFor(x => x.Regime)</div>
 </div>
 <div class="row">
-  	<div class="span8">@Html.EditorFor(x => x.Email) @Html.ValidationMessageFor(x => x.Email)</div>
+  	<div class="span8">@Html.EditorFor(x => x.Regime) @Html.ValidationMessageFor(x => x.Regime)</div>
+</div>
+<div class="row">
+  	<div class="span4 field-required">@Html.LabelFor(x => x.Scheme)</div>
+  	<div class="span4 field-required">@Html.LabelFor(x => x.Provider)</div>
+</div>
+<div class="row">
+  	<div class="span4">@Html.EditorFor(x => x.Scheme) @Html.ValidationMessageFor(x => x.Scheme)</div>
+  	<div class="span4">@Html.EditorFor(x => x.Provider) @Html.ValidationMessageFor(x => x.Provider)</div>
 </div>
 <div class="row">
   	<div class="span8">@Html.EditorFor(x => x.HasAddress)</div>

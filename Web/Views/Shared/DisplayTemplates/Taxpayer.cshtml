@@ -1,0 +1,29 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@model Taxpayer
+
+<div class="row">
+  	<div class="span2">@Html.LabelFor(x => x.Id)</div>
+	<div class="span6">@Html.LabelFor(x => x.Name)</div>
+</div>
+<div class="row">
+  	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.Id)</div></div>
+	<div class="span6"><div class="ro-field">@Html.DisplayFor(x => x.Name)</div></div>
+</div>
+<div class="row">
+  	<div class="span8">@Html.LabelFor(x => x.Regime)</div>
+</div>
+<div class="row">
+  	<div class="span8"><div class="ro-field">@Html.DisplayFor(x => x.Regime)</div></div>
+</div>
+@*<div class="row">
+  	<div class="span4">@Html.LabelFor(x => x.Scheme)</div>
+  	<div class="span4">@Html.LabelFor(x => x.Provider)</div>
+</div>
+<div class="row">
+  	<div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.Scheme)</div></div>
+  	<div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.Provider)</div></div>
+</div>*@
+@if(Model.Address != null) {
+	@Html.DisplayFor(x => x.Address)
+}

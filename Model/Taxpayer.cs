@@ -63,6 +63,19 @@ namespace Mictlanix.BE.Model
         [Display(Name = "TaxRegime", ResourceType = typeof(Resources))]
         public string Regime { get; set; }
 
+		[Property]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[Display(Name = "Scheme", ResourceType = typeof(Resources))]
+		public FiscalScheme Scheme { get; set; }
+
+		[Property]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[Display(Name = "Provider", ResourceType = typeof(Resources))]
+		public FiscalCertificationProvider Provider { get; set; }
+		
+		[Display(Name = "Address", ResourceType = typeof(Resources))]
+		public virtual bool HasAddress { get; set; }
+
 		[BelongsTo("address", Lazy = FetchWhen.OnInvoke)]
 		[Display(Name = "Address", ResourceType = typeof(Resources))]
 		public virtual Address Address { get; set; }

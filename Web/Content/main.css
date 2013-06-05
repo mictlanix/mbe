@@ -355,10 +355,12 @@ td.labels div > span {
 [class*="span"] input[type="text"]{
   width:100%;
 }
-
+[class*="span"] select{
+  width:100%;
+}
 [class*="span"] .ro-field{
   display:block;
-  height:20px;
+  min-height:20px;
   line-height:20px;
   vertical-align:middle;
   background:#F8F8F8;
