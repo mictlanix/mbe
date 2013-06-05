@@ -7,7 +7,7 @@
 @{
     ViewBag.Title = Resources.SalesHistoric;
     var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrdersHistoric);
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesHistoric);
 }
 
 <table>
