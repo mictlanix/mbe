@@ -4,7 +4,9 @@
 @model Contact
 
 @using (Ajax.BeginForm(new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "contactDlg" })) {
-	@Html.DisplayForModel()
+	<div style='overflow:hidden'>
+		@Html.DisplayForModel()
+	</div>
 	<div class="action-buttons">
 		<button type="button" class="cancel">@Resources.Discard</button>
 		<button type="submit" class="icon delete">@Resources.Delete</button>

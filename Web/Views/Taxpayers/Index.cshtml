@@ -12,9 +12,10 @@
 <h2>@Resources.DisplayName_Taxpayers</h2>
 
 <p>
-@if(Privilege.AllowCreate)
-{
-    @Html.ActionLink(Resources.CreateNew, "Create", new { }, new { @class = "button icon add" })
+@if(Privilege.AllowCreate) {
+    @Html.ActionLink(Resources.CreateNew, "Create", new { }, new { @class = "button icon add openDialog", data_dialog_id = "taxpayerDlg", data_dialog_title = Resources.New })
 }
 </p>
+<div id='taxpayers' data-url='@Url.Action("Index")'>
 @Html.Partial("_Index")
+</div>

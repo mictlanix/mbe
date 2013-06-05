@@ -2,63 +2,20 @@
 @using Mictlanix.BE.Model
 @model CustomerTaxpayer
 
-<div style='overflow:hidden'>
-	<div class="row">
-	  	<div class="span3">@Html.LabelFor(x => x.Id)</div>
-		<div class="span5">@Html.LabelFor(x => x.Name)</div>
-	</div>
-	<div class="row">
-	  	<div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.Id)</div></div>
-		<div class="span5"><div class="ro-field">@Html.DisplayFor(x => x.Name)</div></div>
-	</div>
-	<div class="row">
-	  	<div class="span8">@Html.LabelFor(x => x.Email)</div>
-	</div>
-	<div class="row">
-	  	<div class="span8"><div class="ro-field">@Html.DisplayFor(x => x.Email)</div></div>
-	</div>
-@if(Model.Address != null) {
-	<div class="row">
-	  	<div class="span4">@Html.LabelFor(x => x.Address.Street)</div>
-		<div class="span2">@Html.LabelFor(x => x.Address.ExteriorNumber)</div>
-	  	<div class="span2">@Html.LabelFor(x => x.Address.InteriorNumber)</div>
-	</div>
-	<div class="row">
-	  	<div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.Address.Street)</div></div>
-		<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.Address.ExteriorNumber)</div></div>
-	  	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.Address.InteriorNumber)</div></div>
-	</div>
-	<div class="row">
-	  	<div class="span2">@Html.LabelFor(x => x.Address.PostalCode)</div>
-	  	<div class="span3">@Html.LabelFor(x => x.Address.Neighborhood)</div>
-		<div class="span3">@Html.LabelFor(x => x.Address.Locality)</div>
-	</div>
-	<div class="row">
-	  	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.Address.PostalCode)</div></div>
-	  	<div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.Address.Neighborhood)</div></div>
-		<div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.Address.Locality)</div></div>
-	</div>
-	<div class="row">
-	  	<div class="span4">@Html.LabelFor(x => x.Address.Borough)</div>
-	  	<div class="span4">@Html.LabelFor(x => x.Address.State)</div>
-	</div>
-	<div class="row">
-	  	<div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.Address.Borough)</div></div>
-	  	<div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.Address.State)</div></div>
-	</div>
-	<div class="row">
-	  	<div class="span4">@Html.LabelFor(x => x.Address.City)</div>
-		<div class="span4">@Html.LabelFor(x => x.Address.Country)</div>
-	</div>
-	<div class="row">
-	  	<div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.Address.City)</div></div>
-		<div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.Address.Country)</div></div>
-	</div>
-	<div class="row">
-	  	<div class="span8">@Html.LabelFor(x => x.Address.Comment)</div>
-	</div>
-	<div class="row">
-	  	<div class="span8"><div class="ro-field">@Html.DisplayFor(x => x.Address.Comment)</div></div>
-	</div>
-}
+<div class="row">
+  	<div class="span3">@Html.LabelFor(x => x.Id)</div>
+	<div class="span5">@Html.LabelFor(x => x.Name)</div>
 </div>
+<div class="row">
+  	<div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.Id)</div></div>
+	<div class="span5"><div class="ro-field">@Html.DisplayFor(x => x.Name)</div></div>
+</div>
+<div class="row">
+  	<div class="span8">@Html.LabelFor(x => x.Email)</div>
+</div>
+<div class="row">
+  	<div class="span8"><div class="ro-field">@Html.DisplayFor(x => x.Email)</div></div>
+</div>
+@if(Model.Address != null) {
+	@Html.DisplayFor(x => x.Address)
+}

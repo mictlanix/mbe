@@ -36,6 +36,7 @@ using System.Text;
 using System.Security.Cryptography.X509Certificates;
 using Castle.ActiveRecord;
 using NHibernate;
+using NHibernate.Exceptions;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Helpers;
 
@@ -43,161 +44,142 @@ namespace Mictlanix.BE.Web.Controllers
 {
     public class TaxpayersController : Controller
     {
-        //
-        // GET: /Suppliers/
-
-        public ViewResult Index()
+		public ActionResult Index()
         {
             var qry = from x in Taxpayer.Queryable
                       orderby x.Name
                       select x;
 
-            return View(qry.ToList());
-        }
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_Index", qry.ToList ());
+			}
 
-        //
-        // GET: /Taxpayer/Details/5
+            return View (qry.ToList ());
+        }
 
         public ViewResult Details (string id)
 		{
 			var item = Taxpayer.Find (id);
-			item.Batches.ToList ();
-			
 			return View (item);
 		}
-
-        //
-        // GET: /Taxpayer/Create
 
         public ActionResult Create ()
 		{
-			var item = new Taxpayer { 
-				Address = new Address ()
-			};
-			
-			if (Request.IsAjaxRequest ()) {
-				return PartialView ("_Create", item);
-			}
-
-			return View (item);
+			return PartialView ("_Create");
 		}
-
-        //
-        // POST: /Taxpayer/Create
 
         [HttpPost]
-        public ActionResult Create (Taxpayer item, IEnumerable<HttpPostedFileBase> files)
+        public ActionResult Create (Taxpayer item)
 		{
-			if (!ModelState.IsValid)
-				return View (item);
-
-			// FIXME: taxpayer's certificates management
-			/*
-			foreach (var file in files) {
-				if (file != null && file.ContentLength > 0) {
-					var name = file.FileName.ToLower ();
-					
-					if (name.EndsWith (".cer")) {
-						item.CertificateData = FileToBytes (file);
-					} else if (name.EndsWith (".key")) {
-						item.KeyData = FileToBytes (file);
-						item.KeyPassword = Encoding.UTF8.GetBytes (item.KeyPassword2);
-					}
-				}
+			var entity = Taxpayer.TryFind (item.Id);
+			
+			if(entity != null) {
+				ModelState.AddModelError ("", Resources.CustomerTaxpayerAlreadyExists);
 			}
-			*/
+			
+			if(!item.HasAddress) {
+				ModelState.Where(x => x.Key.StartsWith("Address.")).ToList().ForEach(x => x.Value.Errors.Clear());
+				item.Address = null;
+			}
+			
+			if (!ModelState.IsValid) {
+				return PartialView ("_Create", item);
+			}
 			
 			using (var scope = new TransactionScope()) {
-				item.Address.Create ();
-				item.CreateAndFlush ();
+				if(item.HasAddress) {
+					item.Address.Create ();
+				}
+				
+				item.Create ();
 			}
 			
-			return RedirectToAction ("Index");
+			return PartialView ("_Refresh");			
 		}
-		
-		byte[] FileToBytes (HttpPostedFileBase file)
-		{
-			using (var stream = file.InputStream) {
-				var data = new byte[file.ContentLength];
-				stream.Read (data, 0, file.ContentLength);
-				return data;
-			}
-		}
-		
-        //
-        // GET: /Taxpayer/Edit/5
 
         public ActionResult Edit (string id)
 		{
 			var item = Taxpayer.Find (id);
-
-			return View (item);
+			item.HasAddress = (item.Address != null);
+			return PartialView ("_Edit", item);
 		}
-
-        //
-        // POST: /Taxpayer/Edit/5
 
         [HttpPost]
-		public ActionResult Edit (Taxpayer item, IEnumerable<HttpPostedFileBase> files)
+		public ActionResult Edit (Taxpayer item)
 		{
-			if (!ModelState.IsValid)
-				return View (item);
-
-			var taxpayer = Taxpayer.Find (item.Id);
+			if(!item.HasAddress) {
+				ModelState.Where(x => x.Key.StartsWith("Address.")).ToList().ForEach(x => x.Value.Errors.Clear());
+				item.Address = null;
+			}
 			
-			// update info
-			// FIXME: address updated
-			taxpayer.Name = item.Name;
-			taxpayer.Regime = item.Regime;
-			taxpayer.Address = item.Address;
-
-			// FIXME: taxpayer's certificates management
-			/*
-			foreach (var file in files) {
-				if (file != null && file.ContentLength > 0) {
-					var name = file.FileName.ToLower ();
-					
-					if (name.EndsWith (".cer")) {
-						taxpayer.CertificateData = FileToBytes (file);
-					} else if (name.EndsWith (".key")) {
-						taxpayer.KeyData = FileToBytes (file);
-						taxpayer.KeyPassword = Encoding.UTF8.GetBytes (item.KeyPassword2);
+			if (!ModelState.IsValid) {
+				return PartialView ("_Edit", item);
+			}
+			
+			var entity = Taxpayer.Find (item.Id);
+			var address = entity.Address;
+			
+			entity.HasAddress = (address != null);
+			entity.Name = item.Name;
+			entity.Regime = item.Regime;
+			entity.Scheme = item.Scheme;
+			entity.Provider = item.Provider;
+			
+			using (var scope = new TransactionScope()) {
+				if(item.HasAddress) {
+					entity.Address = item.Address;
+					entity.Address.Create ();
+				} else {
+					entity.Address = null;
+				}
+				
+				entity.UpdateAndFlush ();
+			}
+			
+			if(address != null) {
+				try {
+					using (var scope = new TransactionScope()) {
+						address.DeleteAndFlush ();
 					}
+				} catch (Exception ex) {
+					System.Diagnostics.Debug.WriteLine (ex);
 				}
 			}
-			*/
-
-			using (var scope = new TransactionScope()) {
-				taxpayer.UpdateAndFlush ();
-			}
-
-			return RedirectToAction ("Index");
+			
+			return PartialView ("_Refresh");
 		}
 
-        //
-        // GET: /Taxpayer/Delete/5
-
         public ActionResult Delete(string id)
-        {
-            return View (Taxpayer.Find (id));
+		{
+			var item = Taxpayer.Find (id);
+			return PartialView ("_Delete", item);
         }
-
-        //
-        // POST: /Taxpayer/Delete/5
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(string id)
-        {
+		{
+			var item = Taxpayer.Find (id);
+			
 			try {
-				using (var scope = new TransactionScope()) {
-					var item = Taxpayer.Find (id);
+				using (var scope = new TransactionScope ()) {
 					item.DeleteAndFlush ();
 				}
-
-				return RedirectToAction ("Index");
-			} catch (TransactionException) {
-				return View ("DeleteUnsuccessful");
+			} catch (GenericADOException ex) {
+				System.Diagnostics.Debug.WriteLine (ex);
+				return PartialView ("DeleteUnsuccessful");
 			}
+			
+			if (item.Address != null) {
+				try {
+					using (var scope = new TransactionScope()) {
+						item.Address.DeleteAndFlush ();
+					}
+				} catch (Exception ex) {
+					System.Diagnostics.Debug.WriteLine (ex);
+				}
+			}
+			
+			return PartialView ("_Refresh");
         }
 
 		public ActionResult AddCertificate (string id)
@@ -229,7 +211,7 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 			
 			//FIXME: validate wrong passphrase
-			if (!CFDv2Helpers.PrivateKeyTest (item.KeyData, item.KeyPassword)) {
+			if (!CFDHelpers.PrivateKeyTest (item.KeyData, item.KeyPassword)) {
 				return View (item);
 			}
 
@@ -268,6 +250,15 @@ namespace Mictlanix.BE.Web.Controllers
                       select new { id = x.Id, name = string.Format ("{1} ({0})", x.Id, x.Name) };
 
             return Json(qry.Take(15).ToList(), JsonRequestBehavior.AllowGet);
-        }
+		}
+		
+		byte[] FileToBytes (HttpPostedFileBase file)
+		{
+			using (var stream = file.InputStream) {
+				var data = new byte[file.ContentLength];
+				stream.Read (data, 0, file.ContentLength);
+				return data;
+			}
+		}
     }
 }

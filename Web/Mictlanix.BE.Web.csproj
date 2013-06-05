@@ -154,7 +154,6 @@
     <Compile Include="Utils\Code128Rendering.cs" />
     <Compile Include="Controllers\TaxpayersController.cs" />
     <Compile Include="Helpers\Configuration.cs" />
-    <Compile Include="Helpers\CFDv2Helpers.cs" />
     <Compile Include="Models\LocalSettings.cs" />
     <Compile Include="Utils\CurrencyConverter.cs" />
     <Compile Include="Controllers\QuotationsController.cs" />
@@ -171,6 +170,7 @@
     <Compile Include="Controllers\SalesOrdersController.cs" />
     <Compile Include="Controllers\DeliveryOrdersController.cs" />
     <Compile Include="Controllers\CustomerTaxpayersController.cs" />
+    <Compile Include="Helpers\CFDHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
@@ -390,10 +390,7 @@
     <Content Include="Views\Payments\_CreditPayment.cshtml" />
     <Content Include="Views\Payments\_CashPayment.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\PriceListSelector.cshtml" />
-    <Content Include="Views\Taxpayers\Create.cshtml" />
-    <Content Include="Views\Taxpayers\Delete.cshtml" />
     <Content Include="Views\Taxpayers\Details.cshtml" />
-    <Content Include="Views\Taxpayers\Edit.cshtml" />
     <Content Include="Views\Taxpayers\_Index.cshtml" />
     <Content Include="Views\Taxpayers\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\TaxpayerSelector.cshtml" />
@@ -539,6 +536,13 @@
     <Content Include="Views\Shared\DisplayTemplates\CustomerTaxpayer.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\CustomerTaxpayer.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Boolean.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Taxpayer.cshtml" />
+    <Content Include="Views\Taxpayers\_Create.cshtml" />
+    <Content Include="Views\Taxpayers\_Edit.cshtml" />
+    <Content Include="Views\Taxpayers\_Delete.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FiscalScheme.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FiscalCertificationProvider.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Taxpayer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />
@@ -920,5 +924,6 @@
     <None Include="Views\CustomerTaxpayers\_Edit.cshtml" />
     <None Include="Views\CustomerTaxpayers\_Index.cshtml" />
     <None Include="Views\CustomerTaxpayers\_Refresh.cshtml" />
+    <None Include="Views\Taxpayers\_Refresh.cshtml" />
   </ItemGroup>
 </Project>

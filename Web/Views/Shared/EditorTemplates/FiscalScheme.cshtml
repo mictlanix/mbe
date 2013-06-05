@@ -1,0 +1,14 @@
+﻿@using System.Collections.Generic
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model FiscalScheme?
+
+@{
+    var values = Enum.GetValues(typeof(FiscalScheme)).Cast<FiscalScheme>();
+}
+<select id='@ViewData.TemplateInfo.GetFullHtmlFieldId("")' name='@ViewData.TemplateInfo.GetFullHtmlFieldName("")'>
+    @foreach (var item in values) {
+        <option value="@((int)item)" @(item == Model ? "selected" : string.Empty)>@item.GetDisplayName()</option>
+    }
+</select>
