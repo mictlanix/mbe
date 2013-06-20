@@ -85,7 +85,7 @@ namespace Mictlanix.BE.Model
 
 		[Display(Name = "ShipTo", ResourceType = typeof(Resources))]
 		[UIHint("AddressSelector")]
-		public virtual int ShipToId { get; set; }
+		public virtual int? ShipToId { get; set; }
 		
 		[BelongsTo("ship_to", Lazy = FetchWhen.OnInvoke)]
 		[Display(Name = "ShipTo", ResourceType = typeof(Resources))]

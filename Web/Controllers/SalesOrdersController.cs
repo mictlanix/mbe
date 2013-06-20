@@ -42,7 +42,7 @@ using Mictlanix.BE.Web.Helpers;
 namespace Mictlanix.BE.Web.Controllers
 {
 	public class SalesOrdersController : Controller
-    {
+	{
         public ViewResult Index ()
 		{
 			var item = Configuration.PointOfSale;
@@ -54,25 +54,58 @@ namespace Mictlanix.BE.Web.Controllers
 			if (!CashHelpers.ValidateExchangeRate ()) {
 				return View ("InvalidExchangeRate");
 			}
+			
+			var search = SearchSalesOrders (new Search<SalesOrder> {
+				Limit = Configuration.PageSize
+			});
+			
+			return View (search);
+		}
+		
+		[HttpPost]
+		public ActionResult Index (Search<SalesOrder> search)
+		{
+			if (ModelState.IsValid) {
+				search = SearchSalesOrders (search);
+			}
+			
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_Index", search);
+			} else {
+				return View (search);
+			}
+		}
+		
+		Search<SalesOrder> SearchSalesOrders (Search<SalesOrder> search)
+		{
+			var item = Configuration.PointOfSale;
 
-			var qry = from x in SalesOrder.Queryable
-                      where x.Store.Id == item.Store.Id &&
-							!x.IsCancelled &&
-							!x.IsCompleted
-					  orderby x.Id descending 
-                      select x;
+			if (string.IsNullOrEmpty (search.Pattern)) {
+				var qry = from x in SalesOrder.Queryable
+						  where x.Store.Id == item.Store.Id
+						  orderby x.IsCompleted, x.Date descending
+						  select x;
+				
+				search.Total = qry.Count ();
+				search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+			} else {
+				var qry = from x in SalesOrder.Queryable
+						  where x.Store.Id == item.Store.Id &&
+						        x.Customer.Name.Contains (search.Pattern)
+						  orderby x.IsCompleted, x.Date descending
+						  select x;
 
-			return View (qry.ToList ());
+				search.Total = qry.Count ();
+				search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+			}
+			
+			return search;
 		}
 		
 		public ViewResult Print (int id)
 		{
 			var item = SalesOrder.Find (id);
-
-			if (item.IsCredit)
-				return View ("_PromissoryNoteTicket", item);
-			else
-				return View ("_SalesTicket", item);
+			return View (item);
 		}
 
         public ViewResult Details (int id)
@@ -104,17 +137,20 @@ namespace Mictlanix.BE.Web.Controllers
 		public ActionResult New (SalesOrder item)
 		{
 			item.PointOfSale = Configuration.PointOfSale;
-
+			
 			if (item.PointOfSale == null) {
 				return View ("InvalidPointOfSale");
 			}
-
+			
 			item.Customer = Customer.TryFind (item.CustomerId);
 			item.SalesPerson = Employee.TryFind (item.SalesPersonId);
-			item.ShipTo = Address.TryFind (item.ShipToId);
-
+			
 			if (item.Customer == null || item.SalesPerson == null) {
 				return View (item);
+			}
+			
+			if (item.ShipToId != null) {
+				item.ShipTo = Address.TryFind (item.ShipToId);
 			}
 
 			// Store and Serial
@@ -146,13 +182,12 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult Edit (int id)
 		{
 			var item = SalesOrder.Find (id);
-				
-			if (Request.IsAjaxRequest ())
+
+			if (Request.IsAjaxRequest ()){
 				return PartialView ("_MasterEditView", item);
-			else {
-				item.Details.ToList ();
-				return View (item);
 			}
+
+			return View (item);
         }
 		
 		public ActionResult DiscardChanges (int id)
@@ -165,7 +200,10 @@ namespace Mictlanix.BE.Web.Controllers
 		{
 			item.Customer = Customer.Find (item.CustomerId);
 			item.SalesPerson = Employee.Find (item.SalesPersonId);
-			item.ShipTo = Address.TryFind (item.ShipToId);
+
+			if (item.ShipToId.HasValue && item.ShipToId > 0) {
+				item.ShipTo = Address.TryFind (item.ShipToId);
+			}
 
 			if (item.Customer == null || item.SalesPerson == null) {
 				return View (item);

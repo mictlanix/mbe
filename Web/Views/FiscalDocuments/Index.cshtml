@@ -1,7 +1,7 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
-@using Mictlanix.BE.Web.Models
 @using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
 @model Search<FiscalDocument>
 
 @{
@@ -13,14 +13,11 @@
 <h2>@Resources.FiscalDocuments</h2>
 
 <p>
-@if(Privilege.AllowCreate)
-{
+@if(Privilege.AllowCreate) {
     @Html.ActionLink(Resources.New, "New", new { }, new { @class = "button icon add" })
 }
 </p>
-
-@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))
-{
+@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
     <fieldset>
         <legend>@Resources.Search</legend>
         @Html.HiddenFor(x => x.Offset)

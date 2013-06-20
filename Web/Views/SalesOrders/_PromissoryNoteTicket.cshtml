@@ -5,7 +5,7 @@
 @model SalesOrder
 
 @{
-    Layout = "~/Views/Shared/_TicketLayout.cshtml";
+    Layout = Configuration.ReceiptLayout;
     ViewBag.Title = Resources.PromissoryNote;
     ViewBag.Store = Model.Store;
 }

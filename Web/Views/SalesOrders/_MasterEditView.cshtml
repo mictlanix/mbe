@@ -5,45 +5,36 @@
 
 <fieldset>
     <legend>@Resources.DisplayName_SalesInformation</legend>
-    @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "master-section" }))
-    {
+    @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "master-section" })) {
         @Html.ValidationSummary(true)
 
 	    <div class="editor-label">
-        	@Html.LabelFor(model => model.SalesPerson)
+        	@Html.LabelFor(x => x.SalesPerson)
 	    </div>
         <div class="editor-label">
-            @Html.EditorFor(model => model.SalesPersonId)
-            @Html.ValidationMessageFor(model => model.SalesPersonId)
+            @Html.EditorFor(x => x.SalesPersonId)
+            @Html.ValidationMessageFor(x => x.SalesPersonId)
         </div>
             
 	    <div class="editor-label">
-	        @Html.LabelFor(model => model.Customer)
+	        @Html.LabelFor(x => x.Customer)
 	    </div>
 	    <div class="editor-field">
-            @Html.TextBoxFor(model => model.CustomerId)
-            @Html.ValidationMessageFor(model => model.CustomerId)
+            @Html.TextBoxFor(x => x.CustomerId)
+            @Html.ValidationMessageFor(x => x.CustomerId)
 	    </div>
 
-		<div class="editor-field">
-	        <div id="delivery-box" style="display:inline-block">
-	            <input id="delivery" name="delivery" type="checkbox" value="false">
-	            <label for="delivery">@Resources.Delivery</label>
-	        </div>
-	        <div id="hasCredit" style="display:inline-block">
-	            @Html.EditorFor(model => model.IsCredit)
-	            @Html.LabelFor(model => model.IsCredit)
-	        </div>
+		<div id="hasCredit" class="editor-field">
+            @Html.EditorFor(x => x.IsCredit)
         </div>
 
-        <div id="shipTo" style="display:none">
-		    <div class="editor-label">
-		        @Html.LabelFor(model => model.ShipTo)
-		    </div>
-		    <div class="editor-field">
-	            @Html.TextBoxFor(model => model.ShipToId)
-		    </div>
+        <div id="delivery-box" class="editor-label">
+            <input id="delivery" name="delivery" type="checkbox" value="false" style='float:left;margin:3px 3px 0 0'>
+            <label for='delivery'>@Resources.ShipTo</label>
         </div>
+	    <div id="shipTo" class="editor-field" style="display:none">
+            @Html.TextBoxFor(x => x.ShipToId)
+	    </div>
         
         <div class="action-buttons">
             <button type="submit" class="icon save">@Resources.Save</button>
@@ -77,9 +68,9 @@
         });
         
         @if(Model.Customer.HasCredit) {
-        	@:$("#hasCredit").show();
+        	<text>$("#hasCredit").show();</text>
         } else {
-        	@:$("#hasCredit").hide();
+        	<text>$("#hasCredit").hide();</text>
         }
         
         $("#ShipToId").tokenInput(function() {

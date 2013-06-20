@@ -35,7 +35,8 @@
 	        @Html.DisplayFor(x => x.Master.Reference)
 	    </div>
 	    <div class="display-field">
-	        @Html.DisplayFor(x => x.Master.Product.Name)
+	        @Html.DisplayFor(x => x.Master.Product.Name)<br/>
+        	@Resources.Code: @Model.Master.Product.Code @Resources.Model: @Model.Master.Product.Model
 	    </div>
 	</fieldset>
 </div>
@@ -129,8 +130,16 @@ function updateCount() {
 }
 $(function () {
 	$('#Quantity').val('1');
+	$("#SerialNumber").focus(function(){
+    	this.select();
+	});
 	$('a.add').click(add);
 	$('a.delete').click(remove);
+	$('#SerialNumber').bind('keypress', function(e){
+	   if (e.keyCode == 13) {
+	     $('a.add').click();
+	   }
+	});
 });
 </script>
 <style type="text/css">

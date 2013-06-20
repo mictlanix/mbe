@@ -35,9 +35,6 @@
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\packages\Antlr.3.1.3.42154\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
     <Reference Include="Iesi.Collections">
       <HintPath>..\Packages\Iesi.Collections.1.0.1\lib\Iesi.Collections.dll</HintPath>
     </Reference>
@@ -59,9 +56,7 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Abstractions" />
-    <Reference Include="System.Web.Routing">
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
@@ -73,15 +68,12 @@
     </Reference>
     <Reference Include="System.Web.Helpers">
       <HintPath>..\Packages\AspNetMVC.3.0.0.0\System.Web.Helpers.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.Mvc">
       <HintPath>..\Packages\AspNetMVC.3.0.0.0\System.Web.Mvc.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.WebPages">
       <HintPath>..\Packages\AspNetMVC.3.0.0.0\System.Web.WebPages.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Castle.ActiveRecord, Version=3.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc">
       <HintPath>..\packages\Castle.Activerecord.3.0.0.1\lib\Net40\Castle.ActiveRecord.dll</HintPath>
@@ -110,6 +102,9 @@
     <Reference Include="DataAnnotationsExtensions.ClientValidation">
       <HintPath>..\packages\DataAnnotationsExtensions.MVC3.1.1.0.0\lib\NETFramework40\DataAnnotationsExtensions.ClientValidation.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\Packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RegisterClientValidationExtensions.cs" />
@@ -131,7 +126,6 @@
     <Compile Include="Controllers\PriceListsController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\PurchasesController.cs" />
-    <Compile Include="Controllers\SalesController.cs" />
     <Compile Include="Controllers\AccountsReceivablesController.cs" />
     <Compile Include="Controllers\SupplierAgreementsController.cs" />
     <Compile Include="Controllers\SupplierPaymentsController.cs" />
@@ -179,6 +173,7 @@
     <Compile Include="Controllers\DeliveryOrdersController.cs" />
     <Compile Include="Controllers\CustomerTaxpayersController.cs" />
     <Compile Include="Helpers\CFDHelpers.cs" />
+    <Compile Include="Controllers\POSController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
@@ -372,7 +367,6 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Content\Site.css" />
     <Content Include="Scripts\MicrosoftAjax.js" />
     <Content Include="Scripts\MicrosoftAjax.debug.js" />
     <Content Include="Scripts\MicrosoftMvcAjax.js" />
@@ -417,7 +411,6 @@
     <Content Include="Views\Quotations\_MasterView.cshtml" />
     <Content Include="Views\Quotations\_DetailEditView.cshtml" />
     <Content Include="Views\Quotations\_DetailView.cshtml" />
-    <Content Include="Views\Sales\_Totals.cshtml" />
     <Content Include="Views\Purchases\_Totals.cshtml" />
     <Content Include="Views\SupplierReturns\_Totals.cshtml" />
     <Content Include="Views\Quotations\Details.cshtml" />
@@ -452,10 +445,6 @@
     <Content Include="Views\CustomerReturns\HistoricDetails.cshtml" />
     <Content Include="Views\CustomerReturns\Index.cshtml" />
     <Content Include="Views\CustomerReturns\_CustomerReturnDetails.cshtml" />
-    <Content Include="Views\Sales\_MasterView.cshtml" />
-    <Content Include="Views\Sales\_MasterEditView.cshtml" />
-    <Content Include="Views\Sales\_DetailEditView.cshtml" />
-    <Content Include="Views\Sales\_DetailView.cshtml" />
     <Content Include="Views\Reports\_SalesOrdersHistoric.cshtml" />
     <Content Include="Views\Reports\SalesOrdersHistoric.cshtml" />
     <Content Include="Views\Reports\SalesOrdersHistoricDetails.cshtml" />
@@ -551,6 +540,42 @@
     <Content Include="Views\Shared\EditorTemplates\FiscalScheme.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\FiscalCertificationProvider.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Taxpayer.cshtml" />
+    <Content Include="Views\ExchangeRates\_Index.cshtml" />
+    <Content Include="Views\ExchangeRates\Create.cshtml" />
+    <Content Include="Views\ExchangeRates\Delete.cshtml" />
+    <Content Include="Views\ExchangeRates\Index.cshtml" />
+    <Content Include="Views\CustomerTaxpayers\_Create.cshtml" />
+    <Content Include="Views\CustomerTaxpayers\_Delete.cshtml" />
+    <Content Include="Views\CustomerTaxpayers\_Details.cshtml" />
+    <Content Include="Views\CustomerTaxpayers\_Edit.cshtml" />
+    <Content Include="Views\CustomerTaxpayers\_Index.cshtml" />
+    <Content Include="Views\CustomerTaxpayers\_Refresh.cshtml" />
+    <Content Include="Views\POS\_Totals.cshtml" />
+    <Content Include="Views\POS\_MasterView.cshtml" />
+    <Content Include="Views\POS\_MasterEditView.cshtml" />
+    <Content Include="Views\POS\_DetailEditView.cshtml" />
+    <Content Include="Views\POS\_DetailView.cshtml" />
+    <Content Include="Views\POS\Index.cshtml" />
+    <Content Include="Views\POS\New.cshtml" />
+    <Content Include="Views\POS\Edit.cshtml" />
+    <Content Include="Views\POS\_SalesTicket.cshtml" />
+    <Content Include="Views\POS\_SalesNote.cshtml" />
+    <Content Include="Views\POS\Details.cshtml" />
+    <Content Include="Views\POS\_PromissoryNoteTicket.cshtml" />
+    <Content Include="Views\SalesOrders\_Index.cshtml" />
+    <Content Include="Views\SalesOrders\Details.cshtml" />
+    <Content Include="Views\SalesOrders\Edit.cshtml" />
+    <Content Include="Views\SalesOrders\Index.cshtml" />
+    <Content Include="Views\SalesOrders\New.cshtml" />
+    <Content Include="Views\SalesOrders\_DetailEditView.cshtml" />
+    <Content Include="Views\SalesOrders\_DetailView.cshtml" />
+    <Content Include="Views\SalesOrders\_MasterEditView.cshtml" />
+    <Content Include="Views\SalesOrders\_MasterView.cshtml" />
+    <Content Include="Views\SalesOrders\_PromissoryNoteTicket.cshtml" />
+    <Content Include="Views\SalesOrders\_Totals.cshtml" />
+    <Content Include="Views\SalesOrders\Print.cshtml" />
+    <Content Include="Views\Shared\_LetterheadLayout.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FiscalPaymentMethod.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />
@@ -692,9 +717,6 @@
     <Content Include="Views\Shared\DisplayTemplates\Image.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Sales\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Users\Delete.cshtml" />
     <Content Include="Views\Users\Details.cshtml" />
     <Content Include="Views\Users\Edit.cshtml" />
@@ -720,7 +742,6 @@
     <Content Include="Views\Suppliers\Create.cshtml" />
     <Content Include="Views\Suppliers\EditorTemplates\Supplier.cshtml" />
     <Content Include="Views\Shared\_Success.cshtml" />
-    <Content Include="Views\Sales\New.cshtml" />
     <Content Include="Views\Employees\Create.cshtml" />
     <Content Include="Views\Employees\Delete.cshtml" />
     <Content Include="Views\Employees\Details.cshtml" />
@@ -728,9 +749,6 @@
     <Content Include="Views\Employees\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\CustomerSelector.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Sales\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\EditorTemplates\EmployeeSelector.cshtml" />
@@ -772,9 +790,7 @@
   <ItemGroup>
     <Content Include="Views\Products\_Details.cshtml" />
     <Content Include="Views\Products\_Index.cshtml" />
-    <Content Include="Views\Sales\_SalesTicket.cshtml" />
     <Content Include="Views\Shared\_TicketLayout.cshtml" />
-    <Content Include="Views\Sales\_SalesNote.cshtml" />
     <Content Include="Views\Payments\_OpenSession.cshtml" />
     <Content Include="Views\Payments\CloseSession.cshtml" />
     <Content Include="Views\Payments\_CashCountTicket.cshtml" />
@@ -825,13 +841,11 @@
     <Content Include="Views\SupplierReturns\EditSupplierReturn.cshtml" />
     <Content Include="Views\SupplierReturns\_PurchaseInfoReturn.cshtml" />
     <Content Include="Views\SupplierReturns\_ReturnItem.cshtml" />
-    <Content Include="Views\Sales\Details.cshtml" />
     <Content Include="Views\SupplierReturns\_DeleteReturn.cshtml" />
     <Content Include="Views\SupplierReturns\Historic.cshtml" />
     <Content Include="Views\SupplierReturns\HistoricDetails.cshtml" />
     <Content Include="Views\SupplierReturns\_SupplierReturnDetails.cshtml" />
     <Content Include="Views\AccountsPayables\Dates.cshtml" />
-    <Content Include="Views\Sales\_PromissoryNoteTicket.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\StoreSelector.cshtml" />
     <Content Include="Views\Stores\Create.cshtml" />
     <Content Include="Views\Stores\Delete.cshtml" />
@@ -897,22 +911,6 @@
   <ItemGroup />
   <ItemGroup />
   <ItemGroup>
-    <None Include="Views\ExchangeRates\_Index.cshtml" />
-    <None Include="Views\ExchangeRates\Create.cshtml" />
-    <None Include="Views\ExchangeRates\Delete.cshtml" />
-    <None Include="Views\ExchangeRates\Index.cshtml" />
-    <None Include="Views\SalesOrders\Details.cshtml" />
-    <None Include="Views\SalesOrders\Edit.cshtml" />
-    <None Include="Views\SalesOrders\Index.cshtml" />
-    <None Include="Views\SalesOrders\New.cshtml" />
-    <None Include="Views\SalesOrders\_DetailEditView.cshtml" />
-    <None Include="Views\SalesOrders\_DetailView.cshtml" />
-    <None Include="Views\SalesOrders\_MasterEditView.cshtml" />
-    <None Include="Views\SalesOrders\_MasterView.cshtml" />
-    <None Include="Views\SalesOrders\_PromissoryNoteTicket.cshtml" />
-    <None Include="Views\SalesOrders\_SalesNote.cshtml" />
-    <None Include="Views\SalesOrders\_SalesTicket.cshtml" />
-    <None Include="Views\SalesOrders\_Totals.cshtml" />
     <None Include="Views\DeliveryOrders\Details.cshtml" />
     <None Include="Views\DeliveryOrders\Print.cshtml" />
     <None Include="Views\DeliveryOrders\Index.cshtml" />
@@ -920,12 +918,6 @@
     <None Include="Views\DeliveryOrders\_DetailView.cshtml" />
     <None Include="Views\DeliveryOrders\_Totals.cshtml" />
     <None Include="Scripts\jquery-1.9.1.min.map" />
-    <None Include="Views\CustomerTaxpayers\_Create.cshtml" />
-    <None Include="Views\CustomerTaxpayers\_Delete.cshtml" />
-    <None Include="Views\CustomerTaxpayers\_Details.cshtml" />
-    <None Include="Views\CustomerTaxpayers\_Edit.cshtml" />
-    <None Include="Views\CustomerTaxpayers\_Index.cshtml" />
-    <None Include="Views\CustomerTaxpayers\_Refresh.cshtml" />
     <None Include="Views\Taxpayers\_Refresh.cshtml" />
   </ItemGroup>
 </Project>

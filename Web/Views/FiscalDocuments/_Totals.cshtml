@@ -28,13 +28,10 @@
     </div>
 </fieldset>
 
-@if(!Model.IsCompleted && !Model.IsCancelled)
-{
+@if (!Model.IsCompleted && !Model.IsCancelled) {
 <div class="right floating">
-    @if (Model.Total > 0)
-    {
-        using (Html.BeginForm("Confirm", "FiscalDocuments", new { id = Model.Id }))
-        {
+    @if (Model.Total > 0) {
+        using (Html.BeginForm("Confirm", "FiscalDocuments", new { id = Model.Id })) {
         	<button id="complete" type="submit">@Resources.CompleteInvoice</button><br />
         }
     }

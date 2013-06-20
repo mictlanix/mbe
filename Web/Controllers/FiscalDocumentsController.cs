@@ -55,76 +55,51 @@ namespace Mictlanix.BE.Web.Controllers
 			if (!CashHelpers.ValidateExchangeRate ()) {
 				return View ("InvalidExchangeRate");
 			}
-			
-			var qry = from x in FiscalDocument.Queryable
-					  where !(!x.IsCompleted && x.IsCancelled)
-					  orderby x.IsCompleted, x.Issued descending
-                      select x;
 
-            var search = new Search<FiscalDocument>();
-            search.Limit = Configuration.PageSize;
-            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            search.Total = qry.Count();
+			var search = SearchFiscalDocuments (new Search<FiscalDocument> {
+				Limit = Configuration.PageSize
+			});
 
-            return View(search);
+			return View (search);
 		}
 
-
         [HttpPost]
-        public ActionResult Index(Search<FiscalDocument> search)
+        public ActionResult Index (Search<FiscalDocument> search)
         {
             if (ModelState.IsValid) {
-                search = GetFiscalDocuments(search);
+                search = SearchFiscalDocuments (search);
             }
 
-            if (Request.IsAjaxRequest()) {
-                return PartialView("_Index", search);
+            if (Request.IsAjaxRequest ()) {
+                return PartialView ("_Index", search);
             } else {
-                return View(search);
+                return View (search);
             }
         }
 
-        Search<FiscalDocument> GetFiscalDocuments(Search<FiscalDocument> search)
+        Search<FiscalDocument> SearchFiscalDocuments (Search<FiscalDocument> search)
         {
-            if (search.Pattern == null) {
+            if (string.IsNullOrEmpty (search.Pattern)) {
                 var qry = from x in FiscalDocument.Queryable
                           where !(!x.IsCompleted && x.IsCancelled)
                           orderby x.IsCompleted, x.Issued descending
                           select x;
 
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+                search.Total = qry.Count ();
+                search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
             } else {
                 var qry = from x in FiscalDocument.Queryable
                           where !(!x.IsCompleted && x.IsCancelled) &&
-                          x.Customer.Name.Contains(search.Pattern)
+                                x.Customer.Name.Contains(search.Pattern)
                           orderby x.IsCompleted, x.Issued descending
                           select x;
 
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+                search.Total = qry.Count ();
+                search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
             }
 
             return search;
         }
-		
-		// FIXME: ugly performance
-        public ViewResult Reports ()
-		{
-			var items = (from x in FiscalDocument.Queryable
-			             where x.Issuer.Scheme == FiscalScheme.CFD && 
-			             	   x.IsCompleted
-						 select new FiscalReport {
-							  TaxpayerId = x.Issuer.Id,
-							  TaxpayerName = x.Issuer.Name,
-							  Month = x.Issued.Value.Month,
-							  Year = x.Issued.Value.Year
-						  }).ToList().Distinct ()
-						.OrderByDescending (x => x.Year)
-						.OrderByDescending (x => x.Month);
-
-			return View (items.ToList ());
-		}
 		
         public ViewResult New()
         {
@@ -655,13 +630,13 @@ namespace Mictlanix.BE.Web.Controllers
 
 		public ActionResult GetBatchSelector (string id)
 		{
-			var qry = from x in TaxpayerBatch.Queryable
+			var qry = (from x in TaxpayerBatch.Queryable
 					  where x.Taxpayer.Id == id
-					  select new { x.Batch, x.Type };
+					  select x.Batch).Distinct ();
 			var list = from x in qry.ToList ()
 					   select new SelectListItem {
-							Value = x.Batch,
-							Text = string.Format ("{0} ({1})", x.Batch, x.Type.GetDisplayName ())
+							Value = x,
+							Text = x
 					   };
 
 			ViewBag.Items = list.ToList ();
@@ -750,6 +725,24 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 			
 			return quantity > 0 ? quantity : 0;
+		}
+		
+		// FIXME: ugly performance
+		public ViewResult Reports ()
+		{
+			var items = (from x in FiscalDocument.Queryable
+			             where x.Issuer.Scheme == FiscalScheme.CFD && 
+			             x.IsCompleted
+			             select new FiscalReport {
+				TaxpayerId = x.Issuer.Id,
+				TaxpayerName = x.Issuer.Name,
+				Month = x.Issued.Value.Month,
+				Year = x.Issued.Value.Year
+			}).ToList().Distinct ()
+				.OrderByDescending (x => x.Year)
+					.OrderByDescending (x => x.Month);
+			
+			return View (items.ToList ());
 		}
     }
 }
