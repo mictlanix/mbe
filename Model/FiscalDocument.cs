@@ -182,6 +182,7 @@ namespace Mictlanix.BE.Model
         [Property("payment_method")]
         [Display(Name = "PaymentMethod", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[UIHint("FiscalPaymentMethod")]
         public virtual PaymentMethod PaymentMethod { get; set; }
 		
         [Property("payment_reference")]

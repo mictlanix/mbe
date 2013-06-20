@@ -124,6 +124,8 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "LotSerialNumbers", ResourceType = typeof(Resources))]
 		LotSerialNumbers,
 		[Display(Name = "ExchangeRates", ResourceType = typeof(Resources))]
-		ExchangeRates
+		ExchangeRates,
+		[Display(Name = "PointOfSale", ResourceType = typeof(Resources))]
+		POS
     }
 }

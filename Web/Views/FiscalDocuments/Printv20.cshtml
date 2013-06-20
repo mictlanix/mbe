@@ -5,7 +5,7 @@
 @model FiscalDocument
 
 @{
-    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+    Layout = Configuration.PrintLayout;
     ViewBag.Title = Resources.FiscalDocument;
     ViewBag.Store = Model.Store;
     ViewBag.Taxpayer = Model.Issuer.Id;

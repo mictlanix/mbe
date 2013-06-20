@@ -48,25 +48,8 @@
             </div>
 
 	        <div class="editor-field">
-	            <ul class="selection-options">
-	            @foreach (var item in new []{ PaymentMethod.Unidentified,
-	            							  PaymentMethod.Cash,
-	            							  PaymentMethod.DebitCard,
-	            							  PaymentMethod.CreditCard,
-	            							  PaymentMethod.Check,
-	            							  PaymentMethod.BankDeposit,
-	            							  PaymentMethod.WireTransfer }) {
-	                <li>
-		                <label>
-		                    @Html.RadioButtonFor(x => x.PaymentMethod, (int)item)
-		                    <span class="option-desc">
-			                    <span class="icon dollar">@Resources.Payment</span>
-			                    <span class="text">@item.GetDisplayName()</span>
-		                    </span>
-		                </label>
-		            </li>
-	            }
-	            </ul>
+                @Html.LabelFor(x => x.PaymentMethod)<br/>
+	        	@Html.EditorFor(x => x.PaymentMethod)
 	        </div>
 
 	        <div id="reference" style="display:none">
@@ -125,14 +108,9 @@
         });
         
         $('#RecipientId').tokenInput('add', { id: '@Model.Recipient.Id', name: '@string.Format("{1} ({0})", Model.Recipient.Id, Model.RecipientName)'});
-        
-        $('.selection-options>li').click(function () {
-            $('.selection-options>li').removeClass('selected');
-            $(this).addClass('selected');
-        });
-        
-        $(':radio').change(function() {
-            var status = $('#PaymentMethod:checked').val();
+                
+        $('#PaymentMethod').change(function() {
+            var status = $('#PaymentMethod').val();
             
             if (status === '0' || status === '1') {
                 $('#reference').hide('slow');
@@ -140,8 +118,6 @@
                 $('#reference').show('slow');
             }
         });
-        
-        $(':radio[value=@((int)Model.PaymentMethod)]').attr("checked", true).closest("li").addClass("selected");
-        $(':radio').change();
+        $('#PaymentMethod').change();
     });
 </script>

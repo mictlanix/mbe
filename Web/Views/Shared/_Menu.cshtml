@@ -17,6 +17,7 @@
                              Html.GetPrivilege(CurrentUser, SystemObjects.ExchangeRates).AllowRead;
                              
     var ShowSalesMenu = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders).AllowRead ||
+                        Html.GetPrivilege(CurrentUser, SystemObjects.POS).AllowRead ||
                         Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments).AllowRead ||
                         Html.GetPrivilege(CurrentUser, SystemObjects.CustomerReturns).AllowRead ||
                         Html.GetPrivilege(CurrentUser, SystemObjects.SalesQuotes).AllowRead;
@@ -177,6 +178,13 @@
                                    href="@Url.Action("Index", "Pricing")">@Resources.Pricing</a>
                             </li>
                             }
+                            @*@if (Html.GetPrivilege(CurrentUser, SystemObjects.POS).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "POS") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "POS")">@Resources.PointOfSale</a>
+                            </li>
+                            }*@
                             @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders).AllowRead)
                             {
                             <li class="gbmtc">

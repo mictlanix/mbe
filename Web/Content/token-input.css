@@ -4,16 +4,25 @@ ul.token-input-list {
     height: auto !important; 
     height: 1%;
     width: 400px;
-    border: 1px solid #999;
+    border:1px solid #ccc;
     cursor: text;
-    font-size: 12px;
     font-family: Verdana;
     z-index: 999;
-    margin: 0;
-    padding: 0;
+    margin:0;
+    padding:1px;
     background-color: #fff;
     list-style-type: none;
     clear: left;
+  color:#555;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  vertical-align: middle;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
 
 ul.token-input-list warehouse {
@@ -23,7 +32,7 @@ ul.token-input-list warehouse {
     width: 100%;
     border: 1px solid #999;
     cursor: text;
-    font-size: 12px;
+    font-size:14px;
     font-family: Verdana;
     z-index: 999;
     margin: 0;
@@ -37,41 +46,48 @@ ul.token-input-list li {
 }
 
 ul.token-input-list li input {
-    border: 0;
-    width: 350px;
-    padding: 3px 8px;
+    border:0;
+    padding:0;
+    margin:3px 6px;
+    font-size:14px;
     background-color: white;
     -webkit-appearance: caret;
+    -moz-appearance:    caret;
+    appearance:         caret;
 }
 
 li.token-input-token {
     overflow: hidden; 
     height: auto !important; 
     height: 1%;
-    margin: 3px;
-    padding: 3px 5px;
-    background-color: #d0efa0;
+    padding:2px 4px;
+    background-color:rgba(82, 168, 236, 0.25);
     color: #000;
-    font-weight: bold;
     cursor: default;
     display: block;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
 }
 
 li.token-input-token p {
-    float: left;
-    padding: 0;
-    margin: 0;
+    float:left;
+    padding:0;
+    margin:0;
+    font-size:14px;
 }
 
 li.token-input-token span {
-    float: right;
-    color: #777;
-    cursor: pointer;
+    float:right;
+    color:#777;
+    cursor:pointer;
+    margin:2px 0 0;
 }
 
 li.token-input-selected-token {
-    background-color: #08844e;
+    background-color:rgba(82, 168, 236, 1);
     color: #fff;
+    font-weight:bold;
 }
 
 li.token-input-selected-token span {
@@ -87,7 +103,6 @@ div.token-input-dropdown {
     border-right: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
     cursor: default;
-    font-size: 12px;
     font-family: Verdana;
     z-index: 1;
 }
@@ -95,7 +110,6 @@ div.token-input-dropdown {
 div.token-input-dropdown p {
     margin: 0;
     padding: 5px;
-    font-weight: bold;
     color: #777;
 }
 
@@ -108,6 +122,7 @@ div.token-input-dropdown ul li {
     background-color: #fff;
     padding: 3px;
     list-style-type: none;
+    font-size:14px;
 }
 
 div.token-input-dropdown ul li.token-input-dropdown-item {
@@ -124,6 +139,6 @@ div.token-input-dropdown ul li em {
 }
 
 div.token-input-dropdown ul li.token-input-selected-dropdown-item {
-    background-color: #d0efa0;
+    background-color:rgba(82, 168, 236, 0.25);
 }
 

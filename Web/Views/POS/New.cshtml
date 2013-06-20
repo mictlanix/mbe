@@ -7,7 +7,7 @@
     ViewBag.Title = Resources.NewSalesOrder;
 }
 
-<h2>@Resources.NewSalesOrder</h2> 
+<h2>@Resources.NewSale</h2> 
 
 <div id="master-section">
     <fieldset>
@@ -31,14 +31,17 @@
                 <input id="delivery" name="delivery" type="checkbox" value="false">
                 <label for="delivery">@Resources.Delivery</label>
             </div>
+            
             <div id="hasCredit" class="editor-label" style="display:inline-block">
                 @Html.EditorFor(model => model.IsCredit)
                 @Html.LabelFor(model => model.IsCredit)
             </div>
+
             <div id="shipTo" class="editor-label" style="display:none">
                 @Html.LabelFor(x => x.ShipTo)
                 @Html.EditorFor(x => x.ShipToId)
             </div>
+            
             <div class="action-buttons">
                 <button type="submit" class="icon save">@Resources.Save</button>
             </div>
