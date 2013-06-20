@@ -874,7 +874,7 @@ namespace Mictlanix.BE.Web.Controllers
 			return PartialView ("_LotSerialNumbers", search);
 		}
 		
-		public ActionResult DiscardLotSerialNumbers (int id)
+		public JsonResult DiscardLotSerialNumbers (int id)
 		{
 			var rqmt = LotSerialRequirement.Find (id);
 			var qry = from x in LotSerialTracking.Queryable
@@ -891,7 +891,7 @@ namespace Mictlanix.BE.Web.Controllers
 				rqmt.DeleteAndFlush ();
 			}
 			
-			return Json(new { id = id, result = true });
+			return Json(new { id = id, result = true }, JsonRequestBehavior.AllowGet);
 		}
 
 		public ActionResult AssignLotSerialNumbers (int id)
@@ -942,7 +942,7 @@ namespace Mictlanix.BE.Web.Controllers
 			return PartialView("_LotSerialNumber", item);
 		}
 		
-		public ActionResult GetLotSerialNumberCount (int id)
+		public JsonResult GetLotSerialNumberCount (int id)
 		{
 			var item = LotSerialRequirement.Find (id);
 			var qry = from x in LotSerialTracking.Queryable
@@ -957,7 +957,7 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 
 		[HttpPost]
-		public ActionResult AddLotSerialNumber (int id, decimal qty, string lot, DateTime? expiration, string serial)
+		public JsonResult AddLotSerialNumber (int id, decimal qty, string lot, DateTime? expiration, string serial)
 		{
 			var rqmt = LotSerialRequirement.Find (id);
 			var item = new LotSerialTracking {
@@ -980,7 +980,7 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 		
 		[HttpPost]
-		public ActionResult RemoveLotSerialNumber (int id)
+		public JsonResult RemoveLotSerialNumber (int id)
 		{
 			var item = LotSerialTracking.Find (id);
 			

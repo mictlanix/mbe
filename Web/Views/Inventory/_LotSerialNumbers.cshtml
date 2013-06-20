@@ -58,7 +58,7 @@
     		$("#activity-indicator").show();
     		$("#search-results").hide();
     		
-    		$.post('@Url.Action("Index")', { Pattern: '@Model.Pattern', Offset: offset, Limit: @Model.Limit }, function(data) {
+    		$.post('@Url.Action("LotSerialNumbers")', { Pattern: '@Model.Pattern', Offset: offset, Limit: @Model.Limit }, function(data) {
 				$('#search-results').html(data);
 				$('#search-results').show();
 				$('#activity-indicator').hide();

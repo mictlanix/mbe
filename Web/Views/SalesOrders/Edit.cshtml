@@ -7,19 +7,17 @@
     ViewBag.Title = Resources.Edit;
 }
 
-<script src="@Url.Content("~/Scripts/jquery.jeditable.mini.js")" type="text/javascript"></script>
-
+<script src='@Url.Content("~/Scripts/jquery.jeditable.mini.js")' type='text/javascript'></script>
 <h2>@Resources.DisplayName_EditSale</h2> 
 
-<div id="master-section" style="margin-right:300px">
+<div id="master-section">
 @Html.Partial("_MasterView")
 </div>
- 
-<div id="details-section" style="margin-right:300px">
+
+<div id="details-section">
     <div id="items-container">
         <ul id="items" class="list-items">
-        @foreach (var item in Model.Details)
-        {
+        @foreach (var item in Model.Details) {
             @Html.Partial("_DetailEditView", item) 
         }
         </ul>
@@ -28,12 +26,19 @@
         <input type="text" id="product-search" name="product-search" />
     </div>
 </div>
-<div id="back-to-list">
-    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
-</div>
-<div id="sales-totals">
+<div id="totals-section" class="pull-right" style="width:300px">
     @Html.Partial("_Totals")
 </div>
+<div class="clearfix"></div>
+<div id='back-to-list' class="pull-left">
+    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+</div>
+<div id='confirm-button' class='pull-right' @if (Model.Total == 0m) {<text>style='display:none'</text>}>
+	@using (Html.BeginForm("Confirm", "SalesOrders", new { id = Model.Id })) {
+	    <button id="complete" type="submit">@Resources.CompleteSale</button>
+	}
+</div>
+<div class="clearfix"></div>
 <div id="confirm-dlg" class="dialog" title="@Resources.Delete">
 	<p>
         <span class="ui-icon ui-icon-circle-close" style="float:left; margin:3px 7px 20px 0;"></span>
@@ -43,9 +48,10 @@
 <script type="text/javascript">
     function updateTotals(){
         $.get('@Url.Action("GetTotals")/' + @Model.Id, function (data) {
-            $("#sales-totals").html(data);
+            $("#totals-section").html(data);
             if($("#items").children().length === 0){
-                $("#edit-button").show("slow");            
+                $("#edit-button").show("slow");
+                $("#confirm-button").hide("slow");
             }
         });
     }
@@ -130,24 +136,18 @@
                         updateTotals();
 
                         $("#edit-button").hide("slow");
+                        $("#confirm-button").show("slow");
                     });
 
                 }, "json");
             }
         });
 
-        $(window).scroll(function() {
-            var y = 98 + $("div.page").offset().top - $(this).scrollTop();
-            $('#sales-totals').animate({ top: (y > 0 ? y : 10) + "px" }, 
-                { queue: false, duration: 500, easing: 'easeInOutSine' });
-        });
-
-        $(window).scroll();
     @foreach (var item in Model.Details)
     {
     	<text>
         $("#item@(item.Id) div.quantity").editable(function(value,settings){return editQuantity(@item.Id, value);});
-        $("#item@(item.Id) div.discount").editable(function(value, settings){return editDiscount(@item.Id, value);});
+        $("#item@(item.Id) div.discount").editable(function(value,settings){return editDiscount(@item.Id, value);});
         </text>
     }
     });

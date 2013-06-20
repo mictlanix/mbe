@@ -1,11 +1,10 @@
 // 
-// SalesController.cs
+// POSController.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
-//   Eduardo Nieto <enieto@mictlanix.org>
 // 
-// Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2013 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -42,11 +41,8 @@ using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers
 {
-    public class SalesXController : Controller
+    public class POSController : Controller
     {
-        //
-        // GET: /Sales/
-
         public ViewResult Index ()
 		{
 			var item = Configuration.PointOfSale;
@@ -78,8 +74,6 @@ namespace Mictlanix.BE.Web.Controllers
             return View("_PromissoryNoteTicket", item);
         }
 
-        // GET: /Sales/PrintOrder/
-
         public ViewResult PrintOrder (int id)
 		{
 			var item = SalesOrder.Find (id);
@@ -90,8 +84,6 @@ namespace Mictlanix.BE.Web.Controllers
             return View(item.IsCompleted || item.IsCredit ? "_SalesTicket" : "_SalesNote", item);
         }
 
-        // GET: /Sales/Details/
-
         public ViewResult Details (int id)
 		{
 			var item = SalesOrder.Find (id);
@@ -100,9 +92,6 @@ namespace Mictlanix.BE.Web.Controllers
 
 			return View (item);
         }
-
-        //
-        // GET: /Sales/New
 
         public ViewResult New ()
 		{
@@ -131,10 +120,13 @@ namespace Mictlanix.BE.Web.Controllers
 
 			item.Customer = Customer.TryFind (item.CustomerId);
 			item.SalesPerson = Employee.TryFind (item.SalesPersonId);
-			item.ShipTo = Address.TryFind (item.ShipToId);
-
+			
 			if (item.Customer == null || item.SalesPerson == null) {
 				return View (item);
+			}
+
+			if (item.ShipToId != null) {
+				item.ShipTo = Address.TryFind (item.ShipToId);
 			}
 
 			// Store and Serial

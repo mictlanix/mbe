@@ -23,7 +23,7 @@
         @if (!Model.IsCredit || (CustomerHelpers.CalcDebt(Model.Customer.Id) + Model.Total) <= Model.Customer.CreditLimit)
         {
             if (Model.Total > 0) {
-                using (Html.BeginForm("Confirm", "Sales", new { id = Model.Id })) {
+                using (Html.BeginForm("Confirm", "POS", new { id = Model.Id })) {
                 <button type="button" class="icon print">@Resources.Print</button>
                 <button id="complete" type="submit">@Resources.CompleteSale</button><br />
                 }
@@ -42,7 +42,7 @@
     $(function() {
     	$(".print").off();
         $(".print").printPage({
-            url: "@Url.Action(Model.IsCredit ? "PrintPromissoryNote" : "PrintOrder", "Sales", new { id = Model.Id })"
+            url: '@Url.Action(Model.IsCredit ? "PrintPromissoryNote" : "PrintOrder", "POS", new { id = Model.Id })'
         });
     });
 </script>

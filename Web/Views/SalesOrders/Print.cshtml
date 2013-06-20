@@ -1,37 +1,69 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model;
 @using Mictlanix.BE.Web.Helpers;
-@model SalesQuote
+@model SalesOrder
 
 @{
     Layout = Configuration.PrintLayout;
-    ViewBag.Title = Resources.SalesQuote;
+    ViewBag.Title = Resources.SalesOrder;
     ViewBag.Store = Model.Store;
     ViewBag.TaxpayerName = null;
     ViewBag.Taxpayer = null;
     ViewBag.Address = Model.Store.Address;
 }
 
-<div class="display-label right floating">
-	<h3>@Html.DisplayFor(x => x.Serial)</h3>
-</div>
 
-<div class="display-label">
-    <h3>@Html.LabelFor(x => x.Customer)</h3>
-</div>
-<div class="display-field">
-    @Html.DisplayFor(x => x.Customer.Name)<br/>
-</div>
+<div class="left floating">
+	<div class="display-label">
+	    <h3>@Html.LabelFor(x => x.Customer)</h3>
+	</div>
+	<div class="display-field">
+	    @Html.DisplayFor(x => x.Customer.Name)
+	</div>
 
-<div class="display-label right">
-    @Html.LabelFor(x => x.Date)<br/>
-    @Html.DisplayFor(x => x.Date)
+	@if(Model.ShipTo != null) {
+	    <div class="display-label">
+	        <b>@Html.LabelFor(x => x.ShipTo)</b>
+	    </div>
+	    <div class="display-field">
+	        @Html.DisplayFor(x => x.ShipTo.Street)
+	        @Html.DisplayFor(x => x.ShipTo.ExteriorNumber)
+	        @Html.DisplayFor(x => x.ShipTo.InteriorNumber)<br/>
+	        @Html.DisplayFor(x => x.ShipTo.Neighborhood),
+	        @Html.DisplayFor(x => x.ShipTo.Borough)<br/>
+	        @Html.DisplayFor(x => x.ShipTo.State),
+	        @Html.DisplayFor(x => x.ShipTo.Country),
+	        @Html.DisplayFor(x => x.ShipTo.PostalCode)
+	    </div>
+	}
 </div>
+<div class="right">
+	<div class="display-label">
+		<h3>@Html.LabelFor(x => x.Serial)</h3>
+	</div>
+	<div class="display-field">
+	    @Html.DisplayFor(x => x.Serial)
+	</div>
+		
+	<div class="display-label">
+	    <b>@Html.LabelFor(x => x.SalesPerson)</b><br/>
+	    @Html.DisplayFor(x => x.SalesPerson.Name)
+	</div>
 
+	<div class="display-label">
+	    <b>@Html.LabelFor(x => x.Date)</b><br/>
+	    @Html.DisplayFor(x => x.Date)
+	</div>
+
+	<div class="display-label">
+	    <b>@Html.LabelFor(x => x.DueDate)</b><br/>
+	    @Html.DisplayFor(x => x.DueDate)
+	</div>
+</div>
+<div class="clearfix"></div>
 <table>
     <tr>
         <th class="line nowrap"></th>
-        @*<th class="line nowrap">@Resources.UnitOfMeasurement</th>*@
         <th class="line nowrap">@Resources.ProductCode</th>
         <th class="line">@Resources.ProductName</th>
         <th class="line nowrap">@Resources.Price</th>
@@ -41,7 +73,6 @@
 	@foreach (var item in Model.Details) {
     <tr>
         <td class="number line">@Html.DisplayFor(x => item.Quantity)</td>
-        @*<td class="center line">@Html.DisplayFor(x => item.UnitOfMeasurement)</td>*@
         <td class="center line">@Html.DisplayFor(x => item.ProductCode)</td>
         <td class="line">@Html.DisplayFor(x => item.ProductName)</td>
         <td class="number line">@Html.DisplayFor(x => item.NetPrice)</td>
@@ -67,18 +98,6 @@
     </tr>
 </table>
 
-<div class="display-label hilite">
-    @Html.LabelFor(x => x.DueDate):
-    @Html.DisplayFor(x => x.DueDate)
-</div>
-
-<div class="center signatures">
-    @Resources.CreatedBy,<br/>
-    @Html.DisplayFor(x => Model.SalesPerson.Name)
-</div>
-
 <script type="text/javascript">
-	$(function() {
-        window.print();
-	});
+$(function() { window.print(); });
 </script>

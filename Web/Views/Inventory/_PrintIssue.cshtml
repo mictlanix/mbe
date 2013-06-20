@@ -4,7 +4,7 @@
 @model InventoryIssue
 
 @{
-    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+    Layout = Configuration.PrintLayout;
     ViewBag.Title = Resources.Title_InventoryIssue;
     ViewBag.Store = Model.Warehouse.Store;
     ViewBag.TaxpayerName = null;

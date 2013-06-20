@@ -18,8 +18,7 @@
 <div id="details-section">
     <div id="items-container">
         <ul id="items" class="list-items">
-        @foreach (var item in Model.Details)
-        {
+        @foreach (var item in Model.Details) {
             @Html.Partial("_IssueItem", item) 
         }
         </ul>
@@ -29,8 +28,7 @@
     </div>
 </div>
 <div class="right floating">
-    @using (Html.BeginForm("ConfirmIssue", "Inventory", new { id = Model.Id }))
-    {
+    @using (Html.BeginForm("ConfirmIssue", "Inventory", new { id = Model.Id })) {
         <button type="submit" class="icon lock">@Resources.Complete</button>
     }
 </div>

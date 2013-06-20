@@ -4,7 +4,7 @@
 @model InventoryReceipt
 
 @{
-    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+    Layout = Configuration.PrintLayout;
     ViewBag.Title = Resources.Title_InventoryReceipt;
     ViewBag.Store = Model.Warehouse.Store;
     ViewBag.TaxpayerName = null;

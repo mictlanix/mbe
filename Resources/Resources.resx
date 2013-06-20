@@ -555,6 +555,9 @@
   <data name="PriceList" xml:space="preserve">
     <value>Lista de Precios</value>
   </data>
+  <data name="NewSale" xml:space="preserve">
+    <value>Venta Nueva</value>
+  </data>
   <data name="NewSalesOrder" xml:space="preserve">
     <value>Pedido Nuevo</value>
   </data>
@@ -1652,5 +1655,8 @@ Realizada el: {0:d}</value>
   </data>
   <data name="TaxpayerAlreadyExists" xml:space="preserve">
     <value>El contribuyente (RFC) ya existe.</value>
+  </data>
+  <data name="Stockable" xml:space="preserve">
+    <value>Inventariable</value>
   </data>
 </root>

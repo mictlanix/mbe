@@ -4,17 +4,16 @@
 @model IEnumerable<SalesOrder>
 
 @{
-    ViewBag.Title = Resources.SalesOrders;
+    ViewBag.Title = Resources.PointOfSale;
     var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders);
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.POS);
 }
 
-<h2>@Resources.SalesOrders</h2>
+<h2>@Resources.PointOfSale</h2>
 
 <p>
-@if(Privilege.AllowCreate)
-{
-    @Html.ActionLink(Resources.NewSalesOrder, "New", new { }, new { @class = "button icon add" })
+@if(Privilege.AllowCreate) {
+    @Html.ActionLink(Resources.NewSale, "New", new { }, new { @class = "button icon add" })
 }
 </p>
 <table>
