@@ -2296,7 +2296,13 @@ namespace Mictlanix.BE {
             get {
                 return ResourceManager.GetString("NewQuote", resourceCulture);
             }
-        }
+		}
+		
+		public static string NewSale {
+			get {
+				return ResourceManager.GetString("NewSale", resourceCulture);
+			}
+		}
         
 		public static string NewSalesOrder {
             get {
@@ -4497,6 +4503,12 @@ namespace Mictlanix.BE {
 		public static string TaxpayerAlreadyExists {
 			get {
 				return ResourceManager.GetString("TaxpayerAlreadyExists", resourceCulture);
+			}
+		}
+		
+		public static string Stockable {
+			get {
+				return ResourceManager.GetString("Stockable", resourceCulture);
 			}
 		}
     }

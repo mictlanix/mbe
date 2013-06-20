@@ -4,7 +4,7 @@
 @model SalesOrder
 
 @{
-    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+    Layout = Configuration.PrintLayout;
     ViewBag.Title = Resources.Delivery;
     ViewBag.Store = Model.Store;
     ViewBag.TaxpayerName = null;

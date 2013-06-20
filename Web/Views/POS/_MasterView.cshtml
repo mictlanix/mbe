@@ -73,7 +73,7 @@
 		}
 		@if(Privilege.AllowDelete && !Model.IsCancelled)
 		{
-		    using (Html.BeginForm("Cancel", "Sales", new { id =  Model.Id }, FormMethod.Post, new { style = "display:inline" }))
+		    using (Html.BeginForm("Cancel", "POS", new { id =  Model.Id }, FormMethod.Post, new { style = "display:inline" }))
 		    {
 				<button type="submit" class="icon cancel">@Resources.Cancel</button>
 		    }

@@ -4,7 +4,7 @@
 @model InventoryTransfer
 
 @{
-    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+    Layout = Configuration.PrintLayout;
     ViewBag.Title = Resources.Title_InventoryTransfer;
     ViewBag.Store = Model.From.Store;
     ViewBag.TaxpayerName = null;

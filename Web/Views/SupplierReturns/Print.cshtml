@@ -4,7 +4,7 @@
 @model SupplierReturn
 
 @{
-    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+    Layout = Configuration.PrintLayout;
     ViewBag.Title = Resources.SupplierReturn;
     //FIXME: no store
     ViewBag.Store = new Store { Name = Configuration.Company, Logo = "~/Content/images/logo.png" };

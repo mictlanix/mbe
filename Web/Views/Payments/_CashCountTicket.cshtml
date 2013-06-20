@@ -5,7 +5,7 @@
 @model CashCountReport
 
 @{
-    Layout = "~/Views/Shared/_TicketLayout.cshtml";
+    Layout = Configuration.ReceiptLayout;
     ViewBag.Store = Model.CashDrawer.Store;
     ViewBag.SkipAddress = true;
 }

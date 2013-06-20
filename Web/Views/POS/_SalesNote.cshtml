@@ -3,7 +3,7 @@
 @model SalesOrder
 
 @{
-    Layout = "~/Views/Shared/_TicketLayout.cshtml";
+    Layout = Configuration.ReceiptLayout;
     ViewBag.Title = Resources.Title_SalesNote;
     ViewBag.Store = Model.Store;
     ViewBag.SkipAddress = true;

@@ -1,16 +1,97 @@
-﻿body {
+﻿/*----------------------------------------------------------
+CSS from ASP.NET MVC 3 template (Site.css)
+----------------------------------------------------------*/
+header,
+footer,
+nav,
+section {
+    display: block;
+}
+#main {
+    padding: 30px 30px 15px 30px;
+    background: white;
+    -moz-box-shadow: 0 0 6px #a6a6a6;
+    -webkit-box-shadow: 0 0 6px #a6a6a6;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px 4px 4px 4px;
+}
+footer, 
+#footer {
+    
+    color: #999;
+    padding: 10px 0;
+    text-align: center;
+    line-height: normal;
+    margin: 0 0 30px 0;
+    font-size: .9em;
+    border-radius: 0 0 4px 4px;
+    -webkit-border-radius: 0 0 4px 4px;
+    -moz-border-radius: 0 0 4px 4px;
+}
+.clear {
+    clear:both;
+}
+.error {
+    color:red;
+}
+.field-validation-error {
+    color: #ff0000;
+}
+.field-validation-valid {
+    display: none;
+}
+.input-validation-error {
+    border: 1px solid #ff0000;
+    background-color: #ffeeee;
+}
+.validation-summary-errors {
+    font-weight: bold;
+    color: #ff0000;
+}
+.validation-summary-valid {
+    display: none;
+}
+.display-label label,.editor-label label,
+.display-field label,.editor-field label {
+    display:inline;
+}
+.display-label, .editor-label {
+    margin: 1em 0 0 0;
+}
+.display-field, .editor-field {
+  margin:1em 0 0 0;
+  min-height:18px;
+}
+/*--------------------------------------------------------*/
+body {
     background:transparent url(images/body-bg.png);
     color:#333;
     font:normal 13px arial,sans-serif;
     margin:0;
     padding:0;
 }
-h2 
-{
+p, ul {
+    margin-bottom: 20px;
+    line-height: 1.6em;
+}
+h1, h2, h3 {
+    font-size: 1.5em;
+    color: #000;
+}
+h1 {
+    font-size: 2em;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+h2 {
     font:normal 20px Arial,sans-serif;
     line-height:30px;
     color:#DD4B39;
     padding: 0 0 10px 0;
+}
+h3 {
+    font-size: 1.2em;
 }
 img {
   border:none;
@@ -35,6 +116,14 @@ header, #header {
   width:95%;
 }
 header h1, #header h1 {
+  font-weight: bold;
+  padding: 5px 0;
+  margin: 0;
+  color: #fff;
+  border: none;
+  line-height: 2em;
+  font-size: 32px !important;
+  text-shadow: 1px 1px 2px #111;
   margin-top:45px;
   color:#205aaf;
 }
@@ -50,7 +139,7 @@ div#logo {
   display:none
 }
 .page {
-  min-width:800px;
+  min-width:900px;
   margin:10px 20px;
 }
 .hidden {
@@ -81,10 +170,6 @@ div#logo {
   float:right;
   clear:right;
 }
-.display-field, .editor-field {
-  margin:1em 0 0 0;
-  min-height:18px;
-}
 a.small img,img.small {
     max-width:80px;
     max-height:80px;
@@ -94,18 +179,34 @@ a.medium img,img.medium {
     max-height:200px;
 }
 p.multiline {
-    margin: 0;
+    margin:0;
     width:700px;
     word-wrap:break-word;
 }
 fieldset {
-  padding: 0 1.4em 1em 1.4em;
+  border:1px solid #ddd;
+  padding:0 1.4em 1em 1.4em;
+  margin:0 0 1.5em 0;
+}
+legend {
+  font-size:1.2em;
+  font-weight:bold;
+  border:0;
+  width:auto;
+  padding:0 2px;
+  margin-bottom:0px;
 }
 label {
   color:#888;
   font-size:15px;
   font-weight:normal;
   line-height:1.2em;
+}
+.text-box {
+  width:30em;
+}
+.text-box.multi-line {
+  height:4em;
 }
 input[type="text"], 
 input[type="password"] {
@@ -119,6 +220,15 @@ input[type="text"].date {
 }
 input[type="text"].short {
   width:80px;
+}
+textarea {
+  min-height:4em;
+}
+select {
+  border: 1px solid #ccc;
+  padding: 2px;
+  font-size: 1.2em;
+  color: #444;
 }
 table {
     width:100%;
@@ -221,7 +331,7 @@ ul.list-items li div.action-link {
   clear:none;
 }
 ul.token-input-list {
-    margin:2px 0;
+    margin:2px 0 10px;
     font:inherit;
     border:1px solid #ccc;
 }
@@ -299,7 +409,7 @@ td.labels div > span {
 .editable {
   display:inline-block;
   min-width:60px;
-  text-align:right;
+//text-align:right;
 }
 .tabular .editable {
   display:table-cell;
@@ -324,6 +434,9 @@ td.labels div > span {
 }
 .editable.succesful {
   background:#00CD00;
+}
+.editable.name {
+  min-width:300px;
 }
 .editable.price {
   min-width:60px;

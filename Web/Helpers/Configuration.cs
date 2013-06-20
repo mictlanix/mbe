@@ -126,6 +126,18 @@ namespace Mictlanix.BE.Web.Helpers
 			get { return ConfigurationManager.AppSettings ["DefaultBatch"]; }
 		}
 
+		public static string MainLayout {
+			get { return ConfigurationManager.AppSettings ["MainLayout"]; }
+		}
+		
+		public static string PrintLayout {
+			get { return ConfigurationManager.AppSettings ["PrintLayout"]; }
+		}
+		
+		public static string ReceiptLayout {
+			get { return ConfigurationManager.AppSettings ["ReceiptLayout"]; }
+		}
+
 		#endregion
 		
 		#region Request's (Local) Settings

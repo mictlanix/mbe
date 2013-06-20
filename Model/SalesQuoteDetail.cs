@@ -65,7 +65,7 @@ namespace Mictlanix.BE.Model
 		[DataType(DataType.Currency)]
 		public decimal NetPrice
 		{
-			get { return Price / (1 + TaxRate); }
+			get { return IsTaxIncluded ? Price / (1 + TaxRate) : Price; }
 		}
 
         [Property]

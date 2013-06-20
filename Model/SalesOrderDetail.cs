@@ -66,6 +66,13 @@ namespace Mictlanix.BE.Model
         [DataType(DataType.Currency)]
         [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
         public decimal Price { get; set; }
+		
+		[Display(Name = "Price", ResourceType = typeof(Resources))]
+		[DataType(DataType.Currency)]
+		public decimal NetPrice
+		{
+			get { return IsTaxIncluded ? Price / (1 + TaxRate) : Price; }
+		}
 
         [Property]
         [DisplayFormat(DataFormatString = "{0:p}")]

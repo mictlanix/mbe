@@ -5,7 +5,7 @@
 @model CustomerReturn
 
 @{
-    Layout = "~/Views/Shared/_TicketLayout.cshtml";
+    Layout = Configuration.ReceiptLayout;
     ViewBag.Title = Resources.Title_CustomerReturnNote;
     ViewBag.Store = Model.Store;
 } 
