@@ -87,7 +87,6 @@ namespace Mictlanix.BE.Web.Controllers
 			var balance = from x in Model.Kardex.Queryable
 						  where x.Warehouse.Id == warehouse && x.Product.Id == product &&
 								x.Date < item.StartDate.Date
-						  orderby x.Date
 						  select x.Quantity;
             var qry = from x in Model.Kardex.Queryable
                       where x.Warehouse.Id == warehouse && x.Product.Id == product &&
@@ -95,11 +94,39 @@ namespace Mictlanix.BE.Web.Controllers
 					  orderby x.Date
                       select x;
 
-			ViewBag.OpeningBalance = balance.Count() > 0 ? balance.Sum () : 0;
+			ViewBag.OpeningBalance = balance.Count() > 0 ? balance.Sum () : 0m;
 
 			return PartialView("_KardexDetails", qry.ToList());
         }
 
+		#endregion
+
+		#region Serial Numbers
+		
+		public ViewResult SerialNumbers ()
+		{
+			return View ();
+		}
+
+		[HttpPost]
+		public ActionResult SerialNumbers (int warehouse, int product, DateRange item)
+		{
+			var balance = from x in LotSerialTracking.Queryable
+						  where x.Warehouse.Id == warehouse && x.Product.Id == product &&
+								x.Date < item.StartDate.Date
+						  select x.Quantity;
+
+			var qry = from x in LotSerialTracking.Queryable
+					  where x.Warehouse.Id == warehouse && x.Product.Id == product &&
+							x.Date >= item.StartDate.Date && x.Date <= item.EndDate.Date.Add(new TimeSpan(23, 59, 59))
+					  orderby x.Date
+					  select x;
+			
+			ViewBag.OpeningBalance = balance.Count() > 0 ? balance.Sum () : 0m;
+			
+			return PartialView ("_SerialNumbers", qry.ToList());
+		}
+		
 		#endregion
 
 		#region Sales History

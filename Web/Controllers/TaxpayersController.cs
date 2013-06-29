@@ -210,33 +210,42 @@ namespace Mictlanix.BE.Web.Controllers
 				}
 			}
 			
-			//FIXME: validate wrong passphrase
 			if (!CFDHelpers.PrivateKeyTest (item.KeyData, item.KeyPassword)) {
+				ModelState.AddModelError ("KeyPassword", Resources.Validation_InvalidPassword);
 				return View (item);
 			}
 
 			string sn = string.Empty;
-			var cert = new X509Certificate2();
-			cert.Import(item.CertificateData);
+			var cert = new X509Certificate2 ();
+			cert.Import (item.CertificateData);
 
 			foreach (var b in cert.GetSerialNumber()) {
 				sn = (char)b + sn;
 			}
 
-			//FIXME: Update on existing certificate number
 			item.Id = ulong.Parse (sn);
-			item.NotBefore = cert.NotBefore;
-			item.NotAfter = cert.NotAfter;
-			item.Taxpayer = Taxpayer.Find (item.TaxpayerId);
-			item.IsActive = true;
+			var entity = TaxpayerCertificate.Queryable.SingleOrDefault (x => x.Id == item.Id);
 
-			using (var scope = new TransactionScope()) {
-				foreach(var x in item.Taxpayer.Certificates) {
+			if (entity == null) {
+				entity = new TaxpayerCertificate ();
+			}
+
+			entity.Id = item.Id;
+			entity.CertificateData = item.CertificateData;
+			entity.KeyData = item.KeyData;
+			entity.KeyPassword = item.KeyPassword;
+			entity.NotBefore = cert.NotBefore;
+			entity.NotAfter = cert.NotAfter;
+			entity.Taxpayer = Taxpayer.Find (item.TaxpayerId);
+
+			using (var scope = new TransactionScope ()) {
+				foreach(var x in entity.Taxpayer.Certificates) {
 					x.IsActive = false;
-					x.Update();
+					x.Update ();
 				}
 				
-				item.CreateAndFlush ();
+				entity.IsActive = true;
+				entity.SaveAndFlush ();
 			}
 
 			return RedirectToAction ("Details", new { id = item.TaxpayerId });

@@ -1,0 +1,50 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model DateRange
+           
+@{
+    ViewBag.Title = Resources.SerialNumbers;
+}
+
+<h2>@Resources.SerialNumbers</h2> 
+
+<div id="master-section">
+@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
+	
+	<div class="row-fluid">
+	  	<div class="span9">
+	  		<label for="warehouse">@Resources.Warehouse</label>
+	  		@Html.Editor("warehouse", "WarehouseSelector")
+  		</div>
+		<div class="span2">
+            @Html.LabelFor(x => x.StartDate)
+            @Html.EditorFor(x => x.StartDate)
+        </div>
+		<div class="span1"></div>
+	</div>
+	<div class="row-fluid">
+	  	<div class="span9">
+	  		<label for="product">@Resources.Product</label>
+	  		@Html.Editor("product", "ProductSelector")
+  		</div>
+		<div class="span2">
+			@Html.LabelFor(x => x.EndDate)
+			@Html.EditorFor(x => x.EndDate)
+		</div>
+		<div class="span1">
+			<label for="product">&nbsp;</label>
+			<button type="submit" class="icon search">@Resources.Search</button>
+		</div>
+	</div>
+}
+</div>
+<div id="activity-indicator">
+    <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
+</div>
+<div id="search-results">
+</div>
+<style type="text/css">
+ul.token-input-list {width:100%;}
+</style>

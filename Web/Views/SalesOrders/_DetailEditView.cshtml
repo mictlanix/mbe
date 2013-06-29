@@ -3,37 +3,56 @@
 @using Mictlanix.BE.Web.Helpers
 @model SalesOrderDetail
 
-<li id="item@(Model.Id)">
-    <div class="photo">
-        <img src="@Url.Content(Model.Product.Photo)" title="@Model.ProductName" />
+<li id='id:@Model.Id'>
+    <div class='photo'>
+        <img src='@Url.Content(Model.Product.Photo)' title='@Model.ProductName' />
     </div>
-    <div class="action-link">
-        <a class="button icon-only icon delete" title="@Resources.Delete" href='@Url.Action("RemoveDetail")/@Model.Id'></a>
-        <script type="text/javascript">
-            $("#item@(Model.Id) a.delete").click(function(event){
-                event.preventDefault();
-                removeItem(@Model.Id);
-            });
-        </script>
+    <div class='action-link'>
+        <a class='button icon-only icon delete' title='@Resources.Delete' href='@Url.Action("RemoveDetail", new { id = Model.Id })'></a>
     </div>
-    <div class="info">
+    <div class='info'>
         <b>@Model.ProductName</b><br/>
         <b>@Resources.Code:</b> @Model.ProductCode
         <b>@Resources.Model:</b> @Model.Product.Model
         @if(!string.IsNullOrEmpty(Model.Product.SKU)) {
         <b>@Resources.SKU:</b> @Model.Product.SKU
         }
-        @if(Model.ExchangeRate != 1m) {
-        <b>@Resources.ExchangeRate:</b> @Html.DisplayFor(x => x.ExchangeRate)
-        }
+        <b>@Resources.ExchangeRate:</b>
+        <span class='rate'>@Html.DisplayFor(x => x.ExchangeRate)</span>
         <br/>
-        <b>@Resources.Price:</b> @Html.DisplayFor(x => x.Price) @Html.DisplayFor(x => x.Currency)
+        <b>@Resources.Price:</b>
+        <a class='editable price' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("EditDetailPrice", new { id = Model.Id })'>@Model.Price.ToString("c")</a>
+        <a class='editable currency' data-type='select' data-placement='right' data-source='@Url.Action("Currencies", "ExchangeRates")' data-pk='@Model.Id' data-value='@((int)Model.Currency)' data-url='@Url.Action("EditDetailCurrency", new { id = Model.Id })'>@Model.Currency.ToString()</a>
         <b>@Resources.Quantity:</b>
-        <div class="editable quantity">@Model.Quantity.ToString("0.####")</div>
+        <a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("EditDetailQuantity", new { id = Model.Id })'>@Model.Quantity.ToString("0.####")</a>
         <b>@Resources.Discount:</b>
-        <div class="editable discount">@Model.Discount.ToString("p")</div>
+        <a class='editable discount' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("EditDetailDiscount", new { id = Model.Id })'>@Model.Discount.ToString("p")</a>
         <b>@Resources.TaxRate:</b> @Html.DisplayFor(x => x.TaxRate)
         <b>@Resources.Amount:</b>
-        <strong class="total">@Html.DisplayFor(x => x.Total) @Configuration.BaseCurrency</strong>
+        <span class='total'>@Model.Total.ToString("c")</span> @Configuration.BaseCurrency
     </div>
 </li>
+<script type='text/javascript'>
+$('#id\\:@Model.Id .editable').editable({
+	success: function(response, newValue) {
+        if ('rate' in response) {
+          	$(this).siblings('.rate').html(response.rate);
+        }
+		$(this).siblings('.total').html(response.total);
+        updateTotals();
+    },
+    display: function(value, response) {
+        if (typeof response === 'undefined') {
+        	$(this).html(value);
+        } else if (Array.isArray(response)) {
+          	$(this).html(response[value].text);
+        } else {
+          	$(this).html(response.value);
+        }
+    }
+});
+$('#id\\:@Model.Id a.delete').click(function(e){
+    e.preventDefault();
+    removeItem(@Model.Id);
+});
+</script>

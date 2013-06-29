@@ -1,11 +1,10 @@
 ﻿// 
-// SupplierAgreementsController.cs
+// LabelsController.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
-//   Eduardo Nieto <enieto@mictlanix.org>
 // 
-// Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2013 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -34,100 +33,100 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
+using NHibernate.Exceptions;
 using Mictlanix.BE.Model;
+using Mictlanix.BE.Web.Models;
+using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers
-{
-    public class SupplierAgreementsController : Controller
+{ 
+    public class LabelsController : Controller
     {
-        //
-        // GET: /SupplierAgreements/Details/5
+        public ViewResult Index ()
+        {
+            var qry = from x in Label.Queryable
+                      orderby x.Name
+                      select x;
+
+            var search = new Search<Label>();
+			search.Results = qry.ToList ();
+			search.Limit = search.Results.Count;
+            search.Total = qry.Count ();
+
+            return View (search);
+        }
 
         public ViewResult Details (int id)
         {
-            var item = SupplierAgreement.Find (id);
-
-            ViewBag.OwnerId = item.Supplier.Id;
-			
+            var item = Label.Find(id);
             return View (item);
         }
 
-        //
-        // GET: /SupplierAgreements/Create
-
-        public ActionResult CreateForSupplier (int id)
+        public ActionResult Create()
         {
-            var supplier = Supplier.Find(id);
-            return View ("Create", new SupplierAgreement { SupplierId = id, Supplier = supplier });
-        }
-
-        //
-        // POST: /SupplierAgreements/Create
+            return View ();
+        } 
 
         [HttpPost]
-        public ActionResult Create (SupplierAgreement item)
+        public ActionResult Create(Label item)
         {
             if (!ModelState.IsValid)
             	return View (item);
-            
-            item.Supplier = Supplier.Find (item.SupplierId);
 
-			using (var scope = new TransactionScope ()) {
-				item.CreateAndFlush ();
+			using (var scope = new TransactionScope()) {
+            	item.CreateAndFlush ();
 			}
 
-			return RedirectToAction ("Details", "Suppliers", new { id = item.Supplier.Id });
+            return RedirectToAction ("Index");
         }
-
-        //
-        // GET: /SupplierAgreements/Edit/5
-
+        
         public ActionResult Edit (int id)
         {
-            var item = SupplierAgreement.Find (id);
+            var item = Label.Find (id);
             return View (item);
         }
 
-        //
-        // POST: /SupplierAgreements/Edit/5
-
         [HttpPost]
-        public ActionResult Edit(SupplierAgreement item)
+        public ActionResult Edit (Label item)
         {
             if (!ModelState.IsValid)
-            	return View (item);
+            	return View(item);
             
-            item.Supplier = SupplierAgreement.Find (item.Id).Supplier;
-
-			using (var scope = new TransactionScope ()) {
-				item.UpdateAndFlush ();
+			using (var scope = new TransactionScope()) {
+            	item.UpdateAndFlush ();
 			}
-
-			return RedirectToAction ("Details", "Suppliers", new { id = item.Supplier.Id });
+			
+            return RedirectToAction("Index");
         }
-
-        //
-        // GET: /SupplierAgreements/Delete/5
 
         public ActionResult Delete (int id)
         {
-            var item = SupplierAgreement.Find (id);
+            var item = Label.Find(id);
             return View (item);
         }
 
-        //
-        // POST: /SupplierAgreements/Delete/5
-
-        [HttpPost, ActionName ("Delete")]
+        [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed (int id)
-        {
-            SupplierAgreement item = SupplierAgreement.Find (id);
-
-			using (var scope = new TransactionScope ()) {
-				item.DeleteAndFlush ();
+		{
+			try {
+				using (var scope = new TransactionScope()) {
+					var item = Label.Find (id);
+					item.DeleteAndFlush ();
+				}
+				
+				return RedirectToAction ("Index");
+			} catch (GenericADOException) {
+				return View ("DeleteUnsuccessful");
 			}
+		}
 
-            return RedirectToAction ("Details", "Suppliers", new { id = item.Supplier.Id });
-        }
+		public JsonResult GetSuggestions(string pattern)
+		{
+			var qry = from x in Label.Queryable
+				where x.Name.Contains(pattern) 
+			select new { id = x.Id, name = x.Name};
+			
+			return Json(qry.Take(15).ToList(), JsonRequestBehavior.AllowGet);
+		}
     }
 }

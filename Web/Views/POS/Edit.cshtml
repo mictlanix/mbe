@@ -112,7 +112,7 @@
         $("#product-search").tokenInput('@Url.Action("GetSuggestions", "POS", new { order = Model.Id })', {
             hintText: "@Resources.HIntText",
             noResultsText: "@Resources.NoResultsText",
-            searchingText: "@Resources.SearchingText",          
+            searchingText: "@Resources.SearchingText",
             resultsFormatter: function(item){return ProductFormatter(item);},
             queryParam: "pattern",minChars: 3,tokenLimit: 1,
             onAdd: function (item) {

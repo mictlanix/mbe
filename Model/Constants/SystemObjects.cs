@@ -39,8 +39,8 @@ namespace Mictlanix.BE.Model
     {
         [Display(Name = "DisplayName_Products", ResourceType = typeof(Resources))]
         Products,
-        [Display(Name = "DisplayName_Categories", ResourceType = typeof(Resources))]
-        Categories,
+		[Display(Name = "Labels", ResourceType = typeof(Resources))]
+        Labels,
         [Display(Name = "DisplayName_Customers", ResourceType = typeof(Resources))]
         Customers,
         [Display(Name = "DisplayName_Suppliers", ResourceType = typeof(Resources))]
@@ -126,6 +126,8 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "ExchangeRates", ResourceType = typeof(Resources))]
 		ExchangeRates,
 		[Display(Name = "PointOfSale", ResourceType = typeof(Resources))]
-		POS
+		POS,
+		[Display(Name = "SerialNumbers", ResourceType = typeof(Resources))]
+		SerialNumbersReport
     }
 }

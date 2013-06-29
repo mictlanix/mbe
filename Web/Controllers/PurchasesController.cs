@@ -41,9 +41,6 @@ namespace Mictlanix.BE.Web.Controllers
 {
     public class PurchasesController : Controller
     {
-        //
-        // GET: /Purchases/
-
         public ActionResult Index()
         {
             var qry = from x in PurchaseOrder.Queryable
@@ -57,8 +54,6 @@ namespace Mictlanix.BE.Web.Controllers
 
             return View (search);
         }
-
-        // POST: /Purchases/
 
         [HttpPost]
         public ActionResult Index(Search<PurchaseOrder> search)
@@ -100,16 +95,11 @@ namespace Mictlanix.BE.Web.Controllers
             return search;
         }
 
-        // GET: /Purchases/Print/
-
         public ViewResult Print (int id)
         {
             var item = PurchaseOrder.Find (id);
             return View (item);
         }
-
-        //
-        // GET: /Purchases/Details/5
 
         public ActionResult Details(int id)
         {
@@ -118,16 +108,10 @@ namespace Mictlanix.BE.Web.Controllers
             return View (item);
         }
 
-        //
-        // GET: /Purchases/Create
-
         public ActionResult New ()
         {
             return View (new PurchaseOrder());
         } 
-
-        //
-        // POST: /Purchases/Create
 
         [HttpPost]
         public ActionResult New (PurchaseOrder item)
@@ -145,10 +129,6 @@ namespace Mictlanix.BE.Web.Controllers
             return RedirectToAction("Edit", new { id = item.Id });
         }
 
-        
-        //
-        // GET: /Purchases/Edit/5
- 
         public ActionResult Edit (int id)
         {
             var item = PurchaseOrder.Find (id);
@@ -162,9 +142,6 @@ namespace Mictlanix.BE.Web.Controllers
             else
                 return View (item);
         }
-
-        //
-        // POST: /Purchases/Edit/5
 
         [HttpPost]
         public ActionResult Edit (PurchaseOrder item)
@@ -182,9 +159,6 @@ namespace Mictlanix.BE.Web.Controllers
 
             return PartialView ("_PurchaseInfo", order);
         }
-
-        //
-        // POST: /Purchases/AddPurchaseDetail
 
         [HttpPost]
         public JsonResult AddPurchaseDetail (int movement, int warehouse, int product)
@@ -217,9 +191,6 @@ namespace Mictlanix.BE.Web.Controllers
             return Json(new { id = item.Id });
         }
 
-        //
-        // POST: /Purchases/EditPurchaseDetailQty
-
         [HttpPost]
         public JsonResult EditPurchaseDetailQty(int id, decimal quantity)
         {
@@ -236,9 +207,6 @@ namespace Mictlanix.BE.Web.Controllers
 
             return Json(new { id = id, quantity = detail.Quantity, total = detail.Total.ToString("c") });
         }
-
-        //
-        // POST: /Purchases/EditPurchaseDetailPrice
 
         [HttpPost]
         public JsonResult EditPurchaseDetailPrice(int id, string value)
@@ -260,9 +228,6 @@ namespace Mictlanix.BE.Web.Controllers
 
             return Json(new { id = id, price = detail.Price.ToString("c"), total = detail.Total.ToString("c") });
         }
-
-        //
-        // POST: /Purchases/EditPurchaseDetailDiscount
 
         [HttpPost]
         public JsonResult EditPurchaseDetailDiscount(int id, string value)
@@ -286,9 +251,6 @@ namespace Mictlanix.BE.Web.Controllers
             return Json(new { id = id, discount = detail.Discount.ToString("p"), total = detail.Total.ToString("c") });
         }
 
-        //
-        // POST: /Purchases/EditDetailWarehouse
-
         [HttpPost]
         public JsonResult EditDetailWarehouse(int id, int warehouse)
         {
@@ -304,9 +266,6 @@ namespace Mictlanix.BE.Web.Controllers
             return Json(new { id = id, warehouse = detail.Warehouse.Name });
         }
 
-        //
-        // GET: /Purchases/GetPurchaseItem/{id}
-
         public ActionResult GetPurchaseItem(int id)
         {
             return PartialView("_PurchaseItem", PurchaseOrderDetail.Find(id));
@@ -317,9 +276,6 @@ namespace Mictlanix.BE.Web.Controllers
             var order = PurchaseOrder.Find(id);
             return PartialView("_Totals", order);
         }
-
-        //
-        // POST: /Purchases/RemovePurchaseDetail/{id}
 
         [HttpPost]
         public JsonResult RemovePurchaseDetail(int id)
@@ -333,8 +289,6 @@ namespace Mictlanix.BE.Web.Controllers
             return Json(new { id = id, result = true });
         }
 
-        //
-        // POST: /Purchases/ConfirmPurchase/{id}
 		// TODO: Remove inventory stuff
         [HttpPost]
         public ActionResult ConfirmPurchase (int id)
@@ -375,23 +329,28 @@ namespace Mictlanix.BE.Web.Controllers
                     }
                 }
 
-				// FIXME: Update cost from purchase
 	            foreach (var x in item.Details) {
-	                //x.Product.Cost = x.Price;
-					x.Product.Update ();
+					var price = x.Product.Prices.SingleOrDefault (t => t.List.Id == 0);
+
+					if (price == null) {
+						price = new ProductPrice {
+							List = PriceList.Find (0),
+							Product = x.Product
+						};
+					}
+
+					price.Value = x.Price;
+					price.Currency = x.Currency;
+					price.Save ();
 	            }
 
 				item.IsCompleted = true;
 				item.ModificationTime = DateTime.Now;
-
 	            item.UpdateAndFlush ();
             }
 
             return RedirectToAction("Index");
         }
-
-        //
-        // POST: /Purchases/CancelPurchase/{id}
 
         [HttpPost]
         public ActionResult CancelPurchase(int id)

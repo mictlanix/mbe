@@ -96,7 +96,7 @@ namespace Mictlanix.BE.Web.Controllers
 					  select x;
 
 			if (qry.Count () > 0) {
-				ModelState.AddModelError("Date", Resources.ExchangeRateAlreadyExists);
+				ModelState.AddModelError ("Date", Resources.ExchangeRateAlreadyExists);
 				return View (item);
 			}
 
@@ -124,5 +124,16 @@ namespace Mictlanix.BE.Web.Controllers
 
             return RedirectToAction ("Index");
         }
+
+		public JsonResult Currencies ()
+		{
+			var qry = from x in Enum.GetValues (typeof(CurrencyCode)).Cast<CurrencyCode> ()
+			          select new {
+						  value = (int)x,
+						  text = x.ToString ()
+					  };
+
+			return Json (qry.ToList(), JsonRequestBehavior.AllowGet);
+		}
     }
 }

@@ -1,11 +1,10 @@
 ﻿// 
-// Category.cs
+// Label.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.org>
-//   Eduardo Nieto <enieto@mictlanix.org>
 // 
-// Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2013 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -35,10 +34,10 @@ using Castle.ActiveRecord.Framework;
 
 namespace Mictlanix.BE.Model
 {
-    [ActiveRecord("category")]
-    public class Category : ActiveRecordLinqBase<Category>
+	[ActiveRecord("label")]
+    public class Label : ActiveRecordLinqBase<Label>
     {
-        [PrimaryKey(PrimaryKeyType.Identity, "category_id")]
+		[PrimaryKey(PrimaryKeyType.Identity, "label_id")]
         public int Id { get; set; }
 
         [Property]
@@ -62,7 +61,7 @@ namespace Mictlanix.BE.Model
 
         public override bool Equals(object obj)
         {
-            Category other = obj as Category;
+            Label other = obj as Label;
 
             if (other == null)
                 return false;

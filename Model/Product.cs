@@ -40,6 +40,15 @@ namespace Mictlanix.BE.Model
     public class Product : ActiveRecordLinqBase<Product>
 	{
 		IList<ProductPrice> prices = new List<ProductPrice>();
+		IList<Label> labels = new List<Label>();
+
+		public Product ()
+		{
+			IsSalable = true;
+			IsStockable = true;
+			IsPurchasable = true;
+			IsInvoiceable = true;
+		}
 
         [PrimaryKey(PrimaryKeyType.Identity, "product_id")]
         public int Id { get; set; }
@@ -94,7 +103,15 @@ namespace Mictlanix.BE.Model
 
         [Property("seriable")]
         [Display(Name = "Seriable", ResourceType = typeof(Resources))]
-        public bool IsSeriable { get; set; }
+		public bool IsSeriable { get; set; }
+		
+		[Property("purchasable")]
+		[Display(Name = "Purchasable", ResourceType = typeof(Resources))]
+		public bool IsPurchasable { get; set; }
+		
+		[Property("salable")]
+		[Display(Name = "Salable", ResourceType = typeof(Resources))]
+		public bool IsSalable { get; set; }
 
         [Property("invoiceable")]
         [Display(Name = "Invoiceable", ResourceType = typeof(Resources))]
@@ -119,15 +136,6 @@ namespace Mictlanix.BE.Model
         public string Photo { get; set; }
 
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [Display(Name = "Category", ResourceType = typeof(Resources))]
-        [UIHint("CategorySelector")]
-        public int CategoryId { get; set; }
-
-        [BelongsTo("category")]
-        [Display(Name = "Category", ResourceType = typeof(Resources))]
-        public virtual Category Category { get; set; }
-
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "Supplier", ResourceType = typeof(Resources))]
         [UIHint("SupplierSelector")]
 		public int SupplierId { get; set; }
@@ -135,6 +143,13 @@ namespace Mictlanix.BE.Model
         [BelongsTo("supplier")]
         [Display(Name = "Supplier", ResourceType = typeof(Resources))]
         public virtual Supplier Supplier { get; set; }
+		
+		[HasAndBelongsToMany(typeof(Label), Table = "product_label", ColumnKey = "product", ColumnRef = "label", Lazy = true)]
+		public virtual IList<Label> Labels
+		{
+			get { return labels; }
+			set { labels = value; }
+		}
 
 		[HasMany(typeof(ProductPrice), Table = "product_price", ColumnKey = "product", Lazy = true)]
 		public IList<ProductPrice> Prices

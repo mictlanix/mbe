@@ -1,0 +1,53 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model IEnumerable<LotSerialTracking>
+
+@{
+	decimal balance = ViewBag.OpeningBalance;
+}
+<table>
+    <tr>
+        <th>@Html.LabelFor(x => new LotSerialTracking().Date)</th>
+        <th>@Html.LabelFor(x => new LotSerialTracking().Source)</th>
+        <th>@Html.LabelFor(x => new LotSerialTracking().LotNumber)</th>
+        <th>@Html.LabelFor(x => new LotSerialTracking().ExpirationDate)</th>
+        <th>@Html.LabelFor(x => new LotSerialTracking().SerialNumber)</th>
+        <th>@Resources.Title_InventoryReceipt</th>
+        <th>@Resources.Title_InventoryIssue</th>
+        <th>@Resources.Balance</th>
+    </tr>
+    <tr>
+        <td class='right' colspan='5'>@Resources.OpeningBalance</td>
+        <td class='number' colspan='3'>@balance.ToString("0.####")</td>
+    </tr>
+@foreach (var item in Model)
+{
+	balance += item.Quantity;
+    <tr>
+        <td class='date'>@Html.DisplayFor(x => item.Date)</td>
+        <td>@item.Source.GetDisplayName() (@Html.DisplayFor(x => item.Reference))</td>
+        <td class='center'>@Html.DisplayFor(x => item.LotNumber)</td>
+        <td class='date'>@Html.DisplayFor(x => item.ExpirationDate)</td>
+        <td class='center'>@Html.DisplayFor(x => item.SerialNumber)</td>
+        <td class='number'>
+            @if (item.Quantity > 0) {
+                @item.Quantity.ToString("0.####")
+            }
+        </td>
+        <td class='number'>
+            @if (item.Quantity < 0) {
+                @Math.Abs(item.Quantity).ToString("0.####")
+            }
+        </td>
+        <td class='number'>@balance.ToString("0.####")</td>
+    </tr> 
+}
+    <tr class="total">
+        <td class='right' colspan='5'>@Resources.Total</td>
+        <td class='number'>@Model.Where(x => x.Quantity > 0).Sum(x => x.Quantity).ToString("0.####")</td>
+        <td class='number'>@Math.Abs(Model.Where(x => x.Quantity < 0).Sum(x => x.Quantity)).ToString("0.####")</td>
+        <td class='number'>@balance.ToString("0.####")</td>
+    </tr>
+</table>
