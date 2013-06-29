@@ -13,13 +13,10 @@
 
 <fieldset>
     <legend>@Resources.Title_Product</legend>
-
     @Html.Partial("_Details")
-
 </fieldset>
 <p>
-@if(Privilege.AllowUpdate)
-{
+@if(Privilege.AllowUpdate) {
     @Html.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new { @class = "button icon edit" })
 }
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button" })

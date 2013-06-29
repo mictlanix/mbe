@@ -1,5 +1,8 @@
-﻿@using Mictlanix.BE;
-@model Mictlanix.BE.Model.Product
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model Product
 
 @{
     ViewBag.Title = Resources.Edit;
@@ -7,8 +10,7 @@
 
 <h2>@Resources.Edit</h2>
 
-@using (Html.BeginForm("Edit", "Products", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
+@using (Html.BeginForm("Edit", "Products", FormMethod.Post, new { enctype = "multipart/form-data" })) {
     @Html.ValidationSummary(true)
     <fieldset>
         <legend>@Resources.Title_Product</legend>
@@ -77,7 +79,7 @@
             @Html.LabelFor(model => model.UnitOfMeasurement)
         </div>
         <div class="editor-field">
-            @Html.EditorFor(model => model.UnitOfMeasurement)
+            @Html.EditorFor(model => model.UnitOfMeasurement, "UnitOfMeasurement")
         </div>
         
         <div class="editor-label">
@@ -104,14 +106,6 @@
         </div>
 
         <div class="editor-label">
-            @Html.LabelFor(model => model.Category)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.CategoryId)
-            @Html.ValidationMessageFor(model => model.CategoryId)
-        </div>
-
-        <div class="editor-label">
             @Html.LabelFor(model => model.Supplier)
         </div>
         <div class="editor-field">
@@ -126,7 +120,6 @@
             @Html.EditorFor(model => model.Comment)
         </div>
 
-        
         <p><button type="submit" class="icon save">@Resources.Save</button></p>
     </fieldset>
 }
@@ -137,13 +130,8 @@
 
 <script type="text/javascript">
     $(function () {
-        @if(Model.Supplier != null)
-        {
+        @if(Model.Supplier != null) {
             @:$("#SupplierId").tokenInput("add", { id: "@Model.Supplier.Id", name: "@Model.Supplier.Name" });
-        }
-        @if(Model.Category != null)
-        {
-            @:$("#CategoryId").tokenInput("add", { id: "@Model.Category.Id", name: "@Model.Category.Name" });
         }
     });
 </script>

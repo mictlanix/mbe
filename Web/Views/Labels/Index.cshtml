@@ -1,0 +1,22 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers;
+@using Mictlanix.BE.Web.Models;
+@model Search<Label>
+
+@{
+    ViewBag.Title = Resources.Labels;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Labels);
+}
+
+<h2>@Resources.Labels</h2>
+
+<p>
+@if(Privilege.AllowCreate) {
+    @Html.ActionLink(Resources.CreateNew, "Create", new { }, new { @class = "button icon add" })
+}
+</p>
+<div id="search-results">
+    @Html.Partial("_Index")
+</div>

@@ -1,27 +1,27 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
-@model Category
+@model Label
 
 @{
     ViewBag.Title = Resources.Details;
     var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Categories);
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Labels);
 }
 
 <h2>@Resources.Details</h2>
 
 <fieldset>
-    <legend>@Resources.Title_Category</legend>
+    <legend>@Resources.Labels</legend>
 
-    <div class="display-label">
+    <div class="display-Label">
         @Html.LabelFor(model => model.Name)
     </div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Name)
     </div>
 
-    <div class="display-label">
+    <div class="display-Label">
         @Html.LabelFor(model => model.Comment)
     </div>
     <div class="display-field">

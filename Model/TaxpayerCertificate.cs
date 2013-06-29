@@ -42,11 +42,9 @@ namespace Mictlanix.BE.Model
 		{
 		}
 
-		//FIXME: DataFormatString change for D20
 		[PrimaryKey(PrimaryKeyType.Assigned, "taxpayer_certificate_id")]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
 		[Display(Name = "CertificateNumber", ResourceType = typeof(Resources))]
-		[DisplayFormat(DataFormatString="{0:00000000000000000000}", ApplyFormatInEditMode = true)]
+		[DisplayFormat(DataFormatString="{0:D20}", ApplyFormatInEditMode = true)]
 		public virtual ulong Id { get; set; }
 
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]

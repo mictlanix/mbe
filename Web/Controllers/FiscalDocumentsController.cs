@@ -732,15 +732,14 @@ namespace Mictlanix.BE.Web.Controllers
 		{
 			var items = (from x in FiscalDocument.Queryable
 			             where x.Issuer.Scheme == FiscalScheme.CFD && 
-			             x.IsCompleted
+		             			x.IsCompleted
 			             select new FiscalReport {
-				TaxpayerId = x.Issuer.Id,
-				TaxpayerName = x.Issuer.Name,
-				Month = x.Issued.Value.Month,
-				Year = x.Issued.Value.Year
-			}).ToList().Distinct ()
-				.OrderByDescending (x => x.Year)
-					.OrderByDescending (x => x.Month);
+							TaxpayerId = x.Issuer.Id,
+							TaxpayerName = x.Issuer.Name,
+							Month = x.Issued.Value.Month,
+							Year = x.Issued.Value.Year
+						}).ToList().Distinct ()
+						.OrderByDescending (x => x.Year).OrderByDescending (x => x.Month);
 			
 			return View (items.ToList ());
 		}

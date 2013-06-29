@@ -151,10 +151,5 @@ namespace Mictlanix.BE.Web.Controllers
 			
             return RedirectToAction("Details", "Suppliers", new { id = owner });
         }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-        }
     }
 }

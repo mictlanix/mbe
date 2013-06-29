@@ -71,7 +71,6 @@
     <Compile Include="CashCount.cs" />
     <Compile Include="CashDrawer.cs" />
     <Compile Include="CashSession.cs" />
-    <Compile Include="Category.cs" />
     <Compile Include="BankAccount.cs" />
     <Compile Include="Address.cs" />
     <Compile Include="AccessPrivilege.cs" />
@@ -134,6 +133,8 @@
     <Compile Include="PostalCode.cs" />
     <Compile Include="Constants\FiscalScheme.cs" />
     <Compile Include="Constants\FiscalCertificationProvider.cs" />
+    <Compile Include="Constants\UnitOfMeasurement.cs" />
+    <Compile Include="Label.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">

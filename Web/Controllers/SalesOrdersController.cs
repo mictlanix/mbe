@@ -273,21 +273,71 @@ namespace Mictlanix.BE.Web.Controllers
 
             return Json(new { id = item.Id });
         }
+		
+		[HttpPost]
+		public JsonResult EditDetailPrice (int id, string value)
+		{
+			var detail = SalesOrderDetail.Find (id);
+			bool success;
+			decimal val;
+
+			success = decimal.TryParse (value.Trim (),
+			                            System.Globalization.NumberStyles.Currency,
+			                            null, out val);
+
+			if (success && val >= 0) {
+				detail.Price = val;
+
+				using (var scope = new TransactionScope()) {
+					detail.Update ();
+				}
+			}
+
+			return Json (new { id = id, value = detail.Price.ToString ("C4"), total = detail.Total.ToString ("c") });
+		}
+
+		[HttpPost]
+		public ActionResult EditDetailCurrency (int id, string value)
+		{
+			var detail = SalesOrderDetail.Find (id);
+			CurrencyCode val;
+			bool success;
+
+			success = Enum.TryParse<CurrencyCode> (value.Trim (), out val);
+
+			if (success) {
+				decimal rate = CashHelpers.GetTodayExchangeRate (val);
+
+				if (rate == 0) {
+					Response.StatusCode = 400;
+					return Content (Resources.Message_InvalidExchangeRate);
+				}
+
+				detail.Currency = val;
+				detail.ExchangeRate = CashHelpers.GetTodayExchangeRate (val);
+
+				using (var scope = new TransactionScope()) {
+					detail.Update ();
+				}
+			}
+
+			return Json (new { id = id, value = detail.Currency.ToString (), rate = detail.ExchangeRate, total = detail.Total.ToString ("c") });
+		}
 
         [HttpPost]
-        public JsonResult EditDetailQuantity (int id, decimal quantity)
+		public JsonResult EditDetailQuantity (int id, decimal value)
         {
-            SalesOrderDetail detail = SalesOrderDetail.Find (id);
+            var detail = SalesOrderDetail.Find (id);
 
-            if (quantity > 0) {
-                detail.Quantity = quantity;
+            if (value > 0) {
+                detail.Quantity = value;
 
 				using (var scope = new TransactionScope ()) {
 					detail.UpdateAndFlush ();
 				}
             }
 
-            return Json(new { id = id, quantity = detail.Quantity, total = detail.Total.ToString("c") });
+			return Json(new { id = id, value = detail.Quantity, total = detail.Total.ToString ("c") });
         }
 
         [HttpPost]
@@ -308,7 +358,7 @@ namespace Mictlanix.BE.Web.Controllers
 				}
             }
 
-            return Json(new { id = id, discount = detail.Discount.ToString("p"), total = detail.Total.ToString("c") });
+			return Json(new { id = id, value = detail.Discount.ToString("p"), total = detail.Total.ToString("c") });
         }
 
         public ActionResult GetTotals (int id)
