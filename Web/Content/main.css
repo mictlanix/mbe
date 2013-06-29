@@ -66,10 +66,7 @@ footer,
 /*--------------------------------------------------------*/
 body {
     background:transparent url(images/body-bg.png);
-    color:#333;
-    font:normal 13px arial,sans-serif;
-    margin:0;
-    padding:0;
+
 }
 p, ul {
     margin-bottom: 20px;
@@ -97,7 +94,7 @@ img {
   border:none;
 }
 a:link,a:visited,a:active {
-    color:#36C;
+    /*color:#36C;*/
     text-decoration:none;
 }
 a:hover {
@@ -211,9 +208,7 @@ label {
 input[type="text"], 
 input[type="password"] {
   border:1px solid #ccc;
-  font-size:1.2em;
   color:#444;
-  width:382px;
 }
 input[type="text"].date {
   width:120px;
@@ -273,6 +268,7 @@ ul.list-items li:first-child {
   border-top:1px solid #ddd;
 }
 ul.list-items li {
+  padding:2px 0;
   border-bottom:1px solid #ddd;
 }
 ul.list-items li div.photo {
@@ -385,23 +381,7 @@ li div.value.name {
 td.tabular {
 	padding:0;
 }
-td.labels {
-	position:relative;
-}
-td.labels div {
-	position:absolute;
-	bottom:2px;
-	right:0;
-}
-td.labels div > span {
-	background:#4986e7;
-	padding:1px 2px;
-	border-radius:2px;
-	color:white;
-	font-size:10px;
-	margin-right:2px;
-}
-.total {
+tr.total, td.total {
   font-weight:bold;
 }
 
@@ -409,53 +389,24 @@ td.labels div > span {
 .editable {
   display:inline-block;
   min-width:60px;
-//text-align:right;
-}
-.tabular .editable {
-  display:table-cell;
-  vertical-align:middle;
+  cursor:pointer;
 }
 .editable:hover {
-  background:#fffcc3;
-}
-.editable form {
-  margin:0;
-  padding:0;
-}
-.editable select {
-  margin:0;
-  padding:1px;
-  font-size:11px;
-}
-.editable button {
-  margin:0 1px 0 3px;
-  padding:2px 4px 1px;
-  font-size:12px;
-}
-.editable.succesful {
-  background:#00CD00;
+//  background:#fffcc3;
 }
 .editable.name {
   min-width:300px;
 }
 .editable.price {
   min-width:60px;
-  height:19px;
-}
-.editable input {
-  margin:0;
-  padding:0;
-  border:0;
-  font-size:12px;
-}
-.editable.price input,.editable.tax input,
-.editable.discount input,.editable.quantity input {
-  text-align:right;
 }
 .editable.currency {
-  min-width:88px;
-  height:19px;
-  text-align:left;
+  min-width:auto;
+  width:auto;
+}
+.editable.price,.editable.tax,
+.editable.discount,.editable.quantity {
+  text-align:right;
 }
 .editable.code,.editable.um {
   min-width:100px;

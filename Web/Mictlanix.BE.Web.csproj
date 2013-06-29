@@ -113,7 +113,6 @@
     <Compile Include="Controllers\BankAccountsController.cs" />
     <Compile Include="Controllers\BarcodesController.cs" />
     <Compile Include="Controllers\CashDrawersController.cs" />
-    <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\ContactsController.cs" />
     <Compile Include="Controllers\AccountsPayablesController.cs" />
     <Compile Include="Controllers\StoresController.cs" />
@@ -174,6 +173,7 @@
     <Compile Include="Controllers\CustomerTaxpayersController.cs" />
     <Compile Include="Helpers\CFDHelpers.cs" />
     <Compile Include="Controllers\POSController.cs" />
+    <Compile Include="Controllers\LabelsController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
@@ -354,7 +354,6 @@
     <Content Include="Global.asax" />
     <Content Include="Scripts\jquery.cluetip.min.js" />
     <Content Include="Scripts\jquery.form.js" />
-    <Content Include="Scripts\jquery.jeditable.mini.js" />
     <Content Include="Scripts\jquery.print-page.js" />
     <Content Include="Scripts\jquery.tokeninput.formatters.js" />
     <Content Include="Scripts\jquery.tokeninput.js" />
@@ -576,6 +575,22 @@
     <Content Include="Views\SalesOrders\Print.cshtml" />
     <Content Include="Views\Shared\_LetterheadLayout.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\FiscalPaymentMethod.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\UnitOfMeasurement.cshtml" />
+    <Content Include="Views\Labels\Index.cshtml" />
+    <Content Include="Views\Labels\Details.cshtml" />
+    <Content Include="Views\Labels\Create.cshtml" />
+    <Content Include="Views\Labels\Edit.cshtml" />
+    <Content Include="Views\Labels\Delete.cshtml" />
+    <Content Include="Views\Labels\_Index.cshtml" />
+    <Content Include="Views\Products\_Labels.cshtml" />
+    <Content Include="Views\Products\_EditLabels.cshtml" />
+    <Content Include="Views\Reports\SerialNumbers.cshtml" />
+    <Content Include="Views\Reports\_SerialNumbers.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ProductSelector.cshtml" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap-editable.js" />
+    <Content Include="Scripts\bootstrap-editable.min.js" />
+    <Content Include="Content\bootstrap-editable.css" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />
@@ -598,21 +613,6 @@
       <Project>{63EBACD8-7BB0-480F-81BF-5E0690B27112}</Project>
       <Name>Mictlanix.CFDLib</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Categories\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Categories\Details.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Categories\Create.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Categories\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Categories\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Index.cshtml" />
@@ -835,7 +835,6 @@
     <Content Include="Views\AccountsPayables\AccountStatement.cshtml" />
     <Content Include="Views\AccountsPayables\Index.cshtml" />
     <Content Include="Views\SupplierPayments\Details.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\CategorySelector.cshtml" />
     <Content Include="Views\SupplierReturns\Index.cshtml" />
     <Content Include="Views\SupplierReturns\_Index.cshtml" />
     <Content Include="Views\SupplierReturns\EditSupplierReturn.cshtml" />
@@ -852,7 +851,6 @@
     <Content Include="Views\Stores\Details.cshtml" />
     <Content Include="Views\Stores\Edit.cshtml" />
     <Content Include="Views\Stores\Index.cshtml" />
-    <Content Include="Views\Categories\_Index.cshtml" />
     <Content Include="Views\Customers\Index.cshtml" />
     <Content Include="Views\Employees\_Index.cshtml" />
     <Content Include="Views\PriceLists\_Index.cshtml" />

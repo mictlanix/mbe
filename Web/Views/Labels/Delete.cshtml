@@ -1,5 +1,5 @@
 ﻿@using Mictlanix.BE
-@model Mictlanix.BE.Model.Category
+@model Mictlanix.BE.Model.Label
 
 @{
     ViewBag.Title = Resources.Delete;
@@ -9,16 +9,16 @@
 
 <h3>@Resources.Message_DeleteConfirmation</h3>
 <fieldset>
-    <legend>@Resources.Title_Category</legend>
+    <legend>@Resources.Labels</legend>
 
-    <div class="display-label">
+    <div class="display-Label">
         @Html.LabelFor(model => model.Name)
     </div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Name)
     </div>
 
-    <div class="display-label">
+    <div class="display-Label">
         @Html.LabelFor(model => model.Comment)
     </div>
     <div class="display-field">

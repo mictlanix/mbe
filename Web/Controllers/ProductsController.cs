@@ -47,9 +47,6 @@ namespace Mictlanix.BE.Web.Controllers
 {
     public class ProductsController : Controller
     {
-        //
-        // GET: /Products/
-
         public ActionResult Index ()
         {
             var qry = from x in Product.Queryable
@@ -63,9 +60,6 @@ namespace Mictlanix.BE.Web.Controllers
 
             return View (search);
         }
-
-        //
-        // POST: /Products/
 
         [HttpPost]
         public ActionResult Index (Search<Product> search)
@@ -81,9 +75,6 @@ namespace Mictlanix.BE.Web.Controllers
             }
         }
 
-        //
-        // GET: /Products/Details/5
-
         public ActionResult Details(int id)
         {
             Product product = Product.Find(id);
@@ -95,22 +86,15 @@ namespace Mictlanix.BE.Web.Controllers
             }
         }
 
-        //
-        // GET: /Products/Create
-
         public ActionResult Create()
         {
             return View(new Product { IsInvoiceable = true, TaxRate = Configuration.VAT });
         }
 
-        //
-        // POST: /Products/Create
-
         [HttpPost]
         public ActionResult Create (Product item, HttpPostedFileBase file)
 		{
 			item.Supplier = Supplier.TryFind (item.SupplierId);
-			item.Category = Category.TryFind (item.CategoryId);
 
 			if (!ModelState.IsValid)
 				return View (item);
@@ -141,7 +125,6 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult Edit (Product item, HttpPostedFileBase file)
 		{
 			item.Supplier = Supplier.TryFind (item.SupplierId);
-			item.Category = Category.TryFind (item.CategoryId);
 
 			if (!ModelState.IsValid)
 				return View (item);
@@ -161,8 +144,6 @@ namespace Mictlanix.BE.Web.Controllers
 			entity.SKU = item.SKU;
 			entity.TaxRate = item.TaxRate;
 			entity.UnitOfMeasurement = item.UnitOfMeasurement;
-			entity.Supplier = item.Supplier;
-			entity.Category = item.Category;
 			entity.Photo = SavePhoto (file) ?? item.Photo;
 
 			using (var scope = new TransactionScope ()) {
@@ -172,17 +153,11 @@ namespace Mictlanix.BE.Web.Controllers
 			return RedirectToAction ("Index");
 		}
 
-        //
-        // GET: /Products/Delete/5
-
         public ActionResult Delete(int id)
         {
-            Product item = Product.Find(id);
+            var item = Product.Find(id);
             return View(item);
         }
-
-        //
-        // POST: /Products/Delete/5
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed (int id)
@@ -273,9 +248,6 @@ namespace Mictlanix.BE.Web.Controllers
             return hash;
         }
 
-		// AJAX
-		// GET: /Products/GetSuggestions
-
 		public JsonResult GetSuggestions (string pattern)
 		{
 			ArrayList items = new ArrayList (15);
@@ -302,6 +274,50 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 			
 			return Json (items, JsonRequestBehavior.AllowGet);
+		}
+		
+		public ActionResult Labels (int id)
+		{
+			var item = Product.Find (id);
+			return PartialView ("_Labels", item.Labels);
+		}
+
+		public ActionResult EditLabels (int id)
+		{
+			var item = Product.Find (id);
+			var items = new Dictionary<Label, bool>();
+
+			foreach(var label in Label.Queryable.OrderBy (x => x.Name).ToList ()) {
+				items.Add (label, item.Labels.Contains (label));
+			}
+
+			return PartialView ("_EditLabels", items);
+		}
+
+		[HttpPost]
+		public ActionResult AddLabel (int id, int value)
+		{
+			var entity = Product.Find (id);
+
+			using (var scope = new TransactionScope ()) {
+				entity.Labels.Add (Label.Find (value));
+				entity.UpdateAndFlush ();
+			}
+
+			return PartialView ("_Labels", entity.Labels);
+		}
+
+		[HttpPost]
+		public ActionResult RemoveLabel (int id, int value)
+		{
+			var entity = Product.Find (id);
+
+			using (var scope = new TransactionScope ()) {
+				entity.Labels.Remove (Label.Find (value));
+				entity.UpdateAndFlush ();
+			}
+
+			return PartialView ("_Labels", entity.Labels);
 		}
     }
 }

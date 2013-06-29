@@ -828,9 +828,9 @@ namespace Mictlanix.BE {
         /// <summary>
         ///   Looks up a localized string similar to Líneas de Producto.
         /// </summary>
-        public static string DisplayName_Categories {
+		public static string Labels {
             get {
-                return ResourceManager.GetString("DisplayName_Categories", resourceCulture);
+				return ResourceManager.GetString("Labels", resourceCulture);
             }
         }
         
@@ -3298,15 +3298,6 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Líneas de Producto.
-        /// </summary>
-        public static string Title_Category {
-            get {
-                return ResourceManager.GetString("Title_Category", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Contraseña.
         /// </summary>
         public static string Title_ChangePassword {
@@ -4260,6 +4251,12 @@ namespace Mictlanix.BE {
 			}
 		}
 		
+		public static string SerialNumbers {
+			get {
+				return ResourceManager.GetString("SerialNumbers", resourceCulture);
+			}
+		}
+		
 		public static string LotSerialNumbers {
 			get {
 				return ResourceManager.GetString("LotSerialNumbers", resourceCulture);
@@ -4509,6 +4506,114 @@ namespace Mictlanix.BE {
 		public static string Stockable {
 			get {
 				return ResourceManager.GetString("Stockable", resourceCulture);
+			}
+		}
+		
+		public static string NA {
+			get {
+				return ResourceManager.GetString("NA", resourceCulture);
+			}
+		}
+		
+		public static string Piece {
+			get {
+				return ResourceManager.GetString("Piece", resourceCulture);
+			}
+		}
+		
+		public static string Box {
+			get {
+				return ResourceManager.GetString("Box", resourceCulture);
+			}
+		}
+		
+		public static string Set {
+			get {
+				return ResourceManager.GetString("Set", resourceCulture);
+			}
+		}
+		
+		public static string Bottle {
+			get {
+				return ResourceManager.GetString("Bottle", resourceCulture);
+			}
+		}
+		
+		public static string Tens {
+			get {
+				return ResourceManager.GetString("Tens", resourceCulture);
+			}
+		}
+		
+		public static string Hundreds {
+			get {
+				return ResourceManager.GetString("Hundreds", resourceCulture);
+			}
+		}
+		
+		public static string Thousands {
+			get {
+				return ResourceManager.GetString("Thousands", resourceCulture);
+			}
+		}
+		
+		public static string Gram {
+			get {
+				return ResourceManager.GetString("Gram", resourceCulture);
+			}
+		}
+		
+		public static string Kilogram {
+			get {
+				return ResourceManager.GetString("Kilogram", resourceCulture);
+			}
+		}
+		
+		public static string Tonne {
+			get {
+				return ResourceManager.GetString("Tonne", resourceCulture);
+			}
+		}
+		
+		public static string LinearMeter {
+			get {
+				return ResourceManager.GetString("LinearMeter", resourceCulture);
+			}
+		}
+		
+		public static string SquareMeter {
+			get {
+				return ResourceManager.GetString("SquareMeter", resourceCulture);
+			}
+		}
+		
+		public static string CubicMeter {
+			get {
+				return ResourceManager.GetString("CubicMeter", resourceCulture);
+			}
+		}
+		
+		public static string Liter {
+			get {
+				return ResourceManager.GetString("Liter", resourceCulture);
+			}
+		}
+		
+		public static string Barrel {
+			get {
+				return ResourceManager.GetString("Barrel", resourceCulture);
+			}
+		}
+		
+		public static string Purchasable {
+			get {
+				return ResourceManager.GetString("Purchasable", resourceCulture);
+			}
+		}
+		
+		public static string Salable {
+			get {
+				return ResourceManager.GetString("Salable", resourceCulture);
 			}
 		}
     }

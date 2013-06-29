@@ -51,7 +51,7 @@ namespace Mictlanix.BE.Web.Helpers
 
 		public static bool PrivateKeyTest (byte[] data, byte[] password)
 		{
-			return Mictlanix.CFDLib.Utils.PrivateKeyTest(data, password);
+			return Mictlanix.CFDLib.Utils.PrivateKeyTest (data, password);
 		}
 
 		// Choose what version according to law
