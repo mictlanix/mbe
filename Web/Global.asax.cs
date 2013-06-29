@@ -26,24 +26,36 @@ namespace Mictlanix.BE.Web
         public static void RegisterRoutes (RouteCollection routes)
 		{
 			routes.IgnoreRoute ("{resource}.axd/{*pathInfo}");
-			
+
 			routes.MapRoute (
-                "Barcodes", // Route name
-                "Barcodes/{action}/{id}.png", // URL with parameters
-                new {controller = "Barcodes", action = "Code128" } // Parameter defaults
+                "Barcodes",
+                "Barcodes/{action}/{id}.png",
+                new { controller = "Barcodes", action = "Code128" }
 			);
 			
 			routes.MapRoute (
-                "FiscalReport", // Route name
-                "FiscalDocuments/Report/{taxpayer}/{year}/{month}", // URL with parameters
-                new {controller = "FiscalDocuments", action = "Report", year = @"\d{4}", month = @"\d{2}" } // Parameter defaults
+                "FiscalReport",
+                "FiscalDocuments/Report/{taxpayer}/{year}/{month}",
+				new { controller = "FiscalDocuments", action = "Report", taxpayer = Helpers.Configuration.DefaultIssuer, year = @"\d{4}", month = @"\d{2}" }
 			);
 			
-            routes.MapRoute(
-                "Default", // Route name
-                "{controller}/{action}/{id}", // URL with parameters
-                new {  controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameter defaults
-            );
+			routes.MapRoute (
+				"Products_AddLabel",
+				"Products/{id}/AddLabel/{value}",
+				new { controller = "Products", action = "AddLabel", id = @"\d+", value = @"\d+" }
+			);
+			
+			routes.MapRoute (
+				"Products_RemoveLabel",
+				"Products/{id}/RemoveLabel/{value}",
+				new { controller = "Products", action = "AddLabel", id = @"\d+", value = @"\d+" }
+			);
+			
+			routes.MapRoute(
+				"Default", // Route name
+				"{controller}/{action}/{id}", // URL with parameters
+				new { controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameter defaults
+			);
         }
 
         protected void Application_Start ()
@@ -58,7 +70,7 @@ namespace Mictlanix.BE.Web
 #endif
 
 			IConfigurationSource source = ConfigurationManager.GetSection ("activeRecord") as IConfigurationSource;
-			ActiveRecordStarter.Initialize (typeof(Category).Assembly, source);
+			ActiveRecordStarter.Initialize (typeof(Product).Assembly, source);
 
 			my_culture = Thread.CurrentThread.CurrentCulture.Clone() as CultureInfo;
 

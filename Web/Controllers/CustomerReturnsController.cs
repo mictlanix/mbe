@@ -227,7 +227,6 @@ namespace Mictlanix.BE.Web.Controllers
             return Json(new { id = id, result = true });
         }
 
-        // TODO: Falta realizar la salida del almacén 
         [HttpPost]
         public ActionResult ConfirmReturn (int id)
         {

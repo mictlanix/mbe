@@ -42,10 +42,7 @@ namespace Mictlanix.BE.Web.Controllers
 {
     public class AccountsPayablesController : Controller
     {
-        //
-        // GET: /Statements/
         // TODO: Obtimise DB qry al memory
-
         public ActionResult Index()
         {
             var results = new List<AccountsPayableSummary>();

@@ -303,9 +303,6 @@
   <data name="Title_CashDrawer" xml:space="preserve">
     <value>Cajas</value>
   </data>
-  <data name="Title_Category" xml:space="preserve">
-    <value>Líneas de Producto</value>
-  </data>
   <data name="Title_Contact" xml:space="preserve">
     <value>Contactos</value>
   </data>
@@ -337,7 +334,7 @@
     <value>El usuario y/o contraseña son invalidos.</value>
   </data>
   <data name="Validation_InvalidPassword" xml:space="preserve">
-    <value>La contraseña actual es inválida.</value>
+    <value>La contraseña es inválida.</value>
   </data>
   <data name="Validation_PasswordDoNotMatch" xml:space="preserve">
     <value>La nueva contraseña y la confirmación no coinciden.</value>
@@ -615,8 +612,8 @@
   <data name="UserName" xml:space="preserve">
     <value>Usuario</value>
   </data>
-  <data name="DisplayName_Categories" xml:space="preserve">
-    <value>Líneas de Producto</value>
+  <data name="Labels" xml:space="preserve">
+    <value>Etiquetas</value>
   </data>
   <data name="None" xml:space="preserve">
     <value>Nínguno</value>
@@ -1533,6 +1530,9 @@ Realizada el: {0:d}</value>
   <data name="SerialNumber" xml:space="preserve">
     <value>Número de Serie</value>
   </data>
+  <data name="SerialNumbers" xml:space="preserve">
+    <value>Números de Serie</value>
+  </data>
   <data name="LotSerialNumbers" xml:space="preserve">
     <value>Lotes y Números de Serie</value>
   </data>
@@ -1658,5 +1658,59 @@ Realizada el: {0:d}</value>
   </data>
   <data name="Stockable" xml:space="preserve">
     <value>Inventariable</value>
+  </data>
+  <data name="NA" xml:space="preserve">
+    <value>NA</value>
+  </data>
+  <data name="Piece" xml:space="preserve">
+    <value>Pieza</value>
+  </data>
+  <data name="Box" xml:space="preserve">
+    <value>Caja</value>
+  </data>
+  <data name="Set" xml:space="preserve">
+    <value>Juego</value>
+  </data>
+  <data name="Bottle" xml:space="preserve">
+    <value>Botella</value>
+  </data>
+  <data name="Tens" xml:space="preserve">
+    <value>Decenas</value>
+  </data>
+  <data name="Hundreds" xml:space="preserve">
+    <value>Cientos</value>
+  </data>
+  <data name="Thousands" xml:space="preserve">
+    <value>Millar</value>
+  </data>
+  <data name="Gram" xml:space="preserve">
+    <value>g</value>
+  </data>
+  <data name="Kilogram" xml:space="preserve">
+    <value>kg</value>
+  </data>
+  <data name="Tonne" xml:space="preserve">
+    <value>t</value>
+  </data>
+  <data name="LinearMeter" xml:space="preserve">
+    <value>m</value>
+  </data>
+  <data name="SquareMeter" xml:space="preserve">
+    <value>m²</value>
+  </data>
+  <data name="CubicMeter" xml:space="preserve">
+    <value>m³</value>
+  </data>
+  <data name="Liter" xml:space="preserve">
+    <value>l</value>
+  </data>
+  <data name="Barrel" xml:space="preserve">
+    <value>Barril</value>
+  </data>
+  <data name="Purchasable" xml:space="preserve">
+    <value>Comprable</value>
+  </data>
+  <data name="Salable" xml:space="preserve">
+    <value>Vendible</value>
   </data>
 </root>

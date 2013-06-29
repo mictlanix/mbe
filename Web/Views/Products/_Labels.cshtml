@@ -1,0 +1,8 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model IEnumerable<Label>
+
+@foreach (var label in Model.OrderBy (x => x.Name)) {
+	<span class='label'>@Html.DisplayFor(x => label.Name)</span>
+}
