@@ -41,9 +41,6 @@ namespace Mictlanix.BE.Web.Controllers
 {
     public class QuotationsController : Controller
     {
-        //
-        // GET: /Quotations/
-
         public ViewResult Index ()
 		{
 			var item = Configuration.Store;
@@ -55,72 +52,62 @@ namespace Mictlanix.BE.Web.Controllers
 			if (!CashHelpers.ValidateExchangeRate ()) {
 				return View ("InvalidExchangeRate");
 			}
-			
-			var qry = from x in SalesQuote.Queryable
-                      where x.Store.Id == item.Id
-					  orderby x.Id descending
-                      select x;
 
-            Search<SalesQuote> search = new Search<SalesQuote>();
-            search.Limit = Configuration.PageSize;
-            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            search.Total = qry.Count();
+			var search = SearchQuotations (new Search<SalesQuote> {
+				Limit = Configuration.PageSize
+			});
 
-            return View(search);
+			return View (search);
 		}
 
         [HttpPost]
         public ActionResult Index(Search<SalesQuote> search)
-        {
-            if (ModelState.IsValid)
-            {
-                search = GetQuotations(search);
-            }
+		{
+			if (ModelState.IsValid) {
+				search = SearchQuotations (search);
+			}
 
-            if (Request.IsAjaxRequest())
-            {
-                return PartialView("_Index", search);
-            }
-            else
-            {
-                return View(search);
-            }
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_Index", search);
+			} else {
+				return View (search);
+			}
         }
 
-        Search<SalesQuote> GetQuotations(Search<SalesQuote> search)
-        {
+		Search<SalesQuote> SearchQuotations (Search<SalesQuote> search)
+		{
+			IQueryable<SalesQuote> qry;
             var item = Configuration.Store;
 
             if (search.Pattern == null) {
-                var qry = from x in SalesQuote.Queryable
-                          where x.Store.Id == item.Id
-						  orderby x.Id descending
-                          select x;
-
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+                qry = from x in SalesQuote.Queryable
+                      where x.Store.Id == item.Id
+					  orderby x.Id descending
+                      select x;
             } else {
-                var qry = from x in SalesQuote.Queryable
-                          where x.Store.Id == item.Id &&
-                                x.Customer.Name.Contains(search.Pattern)
-						  orderby x.Id descending
-                          select x;
+                qry = from x in SalesQuote.Queryable
+                      where x.Store.Id == item.Id &&
+                            x.Customer.Name.Contains(search.Pattern)
+					  orderby x.Id descending
+                      select x;
+			}
 
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            }
+			search.Total = qry.Count();
+			search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
 
             return search;
         }
-        //
-        // GET: /Quotations/New
 
         public ViewResult New ()
 		{
 			var item = Configuration.Store;
-			
+
 			if (item == null) {
 				return View ("InvalidStore");
+			}
+
+			if (!CashHelpers.ValidateExchangeRate ()) {
+				return View ("InvalidExchangeRate");
 			}
 
             return View (new SalesQuote {
@@ -161,14 +148,10 @@ namespace Mictlanix.BE.Web.Controllers
 			return RedirectToAction ("Edit", new { id = item.Id });
 		}
 
-        // GET: /Quotations/Details/
-
         public ViewResult Details(int id)
         {
             return View(SalesQuote.Find(id));
         }
-
-        // GET: /Quotations/Print/
 
         public ViewResult Print (int id)
 		{
@@ -177,6 +160,10 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Edit (int id)
 		{
+			if (!CashHelpers.ValidateExchangeRate ()) {
+				return View ("InvalidExchangeRate");
+			}
+
 			SalesQuote item = SalesQuote.Find (id);
 
 			if (Request.IsAjaxRequest ())
@@ -238,37 +225,85 @@ namespace Mictlanix.BE.Web.Controllers
             }
 
             return Json(new { id = item.Id });
-        }
+		}
+
+		[HttpPost]
+		public JsonResult EditDetailPrice (int id, string value)
+		{
+			var detail = SalesQuoteDetail.Find (id);
+			bool success;
+			decimal val;
+
+			success = decimal.TryParse (value.Trim (),
+			                            System.Globalization.NumberStyles.Currency,
+			                            null, out val);
+
+			if (success && val >= 0) {
+				detail.Price = val;
+
+				using (var scope = new TransactionScope()) {
+					detail.Update ();
+				}
+			}
+
+			return Json (new { id = id, value = detail.Price.ToString ("C4"), total = detail.Total.ToString ("c") });
+		}
+
+		[HttpPost]
+		public ActionResult EditDetailCurrency (int id, string value)
+		{
+			var detail = SalesQuoteDetail.Find (id);
+			CurrencyCode val;
+			bool success;
+
+			success = Enum.TryParse<CurrencyCode> (value.Trim (), out val);
+
+			if (success) {
+				decimal rate = CashHelpers.GetTodayExchangeRate (val);
+
+				if (rate == 0) {
+					Response.StatusCode = 400;
+					return Content (Resources.Message_InvalidExchangeRate);
+				}
+
+				detail.Currency = val;
+				detail.ExchangeRate = CashHelpers.GetTodayExchangeRate (val);
+
+				using (var scope = new TransactionScope ()) {
+					detail.Update ();
+				}
+			}
+
+			return Json (new { id = id, value = detail.Currency.ToString (), rate = detail.ExchangeRate, total = detail.Total.ToString ("c") });
+		}
 
         [HttpPost]
-        public JsonResult EditDetailQuantity(int id, decimal quantity)
+		public JsonResult EditDetailQuantity (int id, decimal value)
         {
-            SalesQuoteDetail detail = SalesQuoteDetail.Find(id);
+            var detail = SalesQuoteDetail.Find (id);
 
-            if (quantity > 0)
-            {
-                detail.Quantity = quantity;
+			if (value > 0) {
+				detail.Quantity = value;
 
 				using (var scope = new TransactionScope ()) {
 					detail.UpdateAndFlush ();
 				}
             }
 
-            return Json(new { id = id, quantity = detail.Quantity, total = detail.Total.ToString("c") });
+			return Json(new { id = id, value = detail.Quantity, total = detail.Total.ToString("c") });
         }
 
         [HttpPost]
-        public JsonResult EditDetailDiscount(int id, string value)
+        public JsonResult EditDetailDiscount (int id, string value)
         {
-            SalesQuoteDetail detail = SalesQuoteDetail.Find(id);
+            var detail = SalesQuoteDetail.Find (id);
             bool success;
             decimal discount;
 
-            success = decimal.TryParse(value.TrimEnd(new char[] { ' ', '%' }), out discount);
+            success = decimal.TryParse (value.TrimEnd(new char[] { ' ', '%' }), out discount);
             discount /= 100m;
 
-            if (success && discount >= 0 && discount <= 1)
-            {
+            if (success && discount >= 0 && discount <= 1) {
                 detail.Discount = discount;
 
 				using (var scope = new TransactionScope ()) {
@@ -276,7 +311,7 @@ namespace Mictlanix.BE.Web.Controllers
 				}
             }
 
-            return Json(new { id = id, discount = detail.Discount.ToString("p"), total = detail.Total.ToString("c") });
+			return Json(new { id = id, value = detail.Discount.ToString("p"), total = detail.Total.ToString("c") });
         }
 
         public ActionResult GetTotals(int id)

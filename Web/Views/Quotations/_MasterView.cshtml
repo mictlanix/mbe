@@ -46,14 +46,11 @@
     </div>
 
     <div class="action-buttons">
-		@if(!Model.IsCompleted && !Model.IsCancelled)
-		{
-	        @Ajax.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "master-section" }, new { id="edit-button", @class = "button icon edit", style = (Model.Details.Count > 0 ? "display:none" : "") })
+		@if(!Model.IsCompleted && !Model.IsCancelled) {
+	        @Ajax.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "master-section" }, new { id = "edit-button", @class = "button icon edit", style = (Model.Details.Count > 0 ? "display:none" : "") })
 		}
-		@if(Privilege.AllowDelete && !Model.IsCancelled)
-		{
-		    using (Html.BeginForm("Cancel", "Quotations", new { id =  Model.Id }, FormMethod.Post, new { style = "display:inline" }))
-		    {
+		@if(Privilege.AllowDelete && !Model.IsCancelled) {
+		    using (Html.BeginForm("Cancel", "Quotations", new { id =  Model.Id }, FormMethod.Post, new { style = "display:inline" })) {
 				<button type="submit" class="icon cancel">@Resources.Cancel</button>
 		    }
 		}

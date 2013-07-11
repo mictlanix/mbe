@@ -26,17 +26,15 @@
         <td>@Html.DisplayFor(x => item.Name)</td>
         <td class='center'>@Html.DisplayFor(x => item.Model)</td>
         <td class='center'>@Html.DisplayFor(x => item.UnitOfMeasurement)</td>
-        <td class='tabular nowrap stretch'>
-            <table>
+        <td class='nowrap stretch'>
+            <table class='tabular'>
             @foreach(var p in ViewBag.PriceLists) {
 				var price = item.Prices.SingleOrDefault(x => x.List.Id == p.Id) ?? new ProductPrice ();
-            	<tr data-product='@item.Id' data-list='@p.Id'>
+            	<tr>
             		<th class='right nowrap'>@p.Name</th>
             		<td class='nowrap'>
-            			<span class='price'>@Html.DisplayFor(x => price.Value)</span>
-        			</td>
-            		<td class='nowrap'>
-            			<span class='currency'>@Html.DisplayFor(x => price.Currency)</span>
+            		    <a class='editable price' data-type='text' data-placement='left' data-pk='@price.Product.Id' data-url='@Url.Action("EditPrice", new { product = price.Product.Id, list = p.Id })'>@Html.DisplayFor(x => price.Value)</a>
+            		    <a class='editable currency' data-type='select' data-placement='left' data-source='@Url.Action("Currencies", "ExchangeRates")' data-pk='@price.Product.Id' data-value='@((int)price.Currency)' data-url='@Url.Action("EditCurrency", new { product = price.Product.Id, list = p.Id })'>@Html.DisplayFor(x => price.Currency)</a>
         			</td>
             	</tr>
         	}
@@ -49,66 +47,41 @@
 	<label class='button left'>@Model.ToString()</label>@if (Model.HasPrev) {<a class='button middle icon prev icon-only paging' title='@Resources.PrevPage' href='javascript:void(0)'></a>}@if (Model.HasNext) {<a class='button right icon next icon-only paging' title='@Resources.NextPage' href='javascript:void(0)'></a>}
 </div>
 <script type='text/javascript'>
-    $(function () {
-@if(Privilege.AllowUpdate) {
-<text>
-		$('.price').addClass('editable').editable(function(value, settings) {
-			var myself = $(this);
-			var e = myself.closest('tr');
-			var product = e.data('product');
-			var list = e.data('list');
-			var result = "error";
-			
-	        $.ajaxSetup({ async: false });
-	        $.post('@Url.Action("EditPrice")', { Product: product, List: list, Value: value }, function (data) {
-	            myself.addClass('succesful').switchClass('succesful', '', 3000);
-	            result = data.value;
-	        }, "json");
-	        $.ajaxSetup({ async: true });
-			
-			return result;
-		});
+$(function () {
+	$('a.paging').click(function (e) {
+		var offset=@Model.Offset;
 		
-		$('.currency').addClass('editable').editable(function(value, settings) {
-			var myself = $(this);
-			var e = myself.closest('tr');
-			var product = e.data('product');
-			var list = e.data('list');
-			var result = "error";
-
-	        $.ajaxSetup({ async: false });
-	        $.post('@Url.Action("EditCurrency")', { Product: product, List: list, Value: value }, function (data) {
-	            myself.addClass('succesful').switchClass('succesful', '', 3000);
-	            result = data.value;
-	        }, "json");
-	        $.ajaxSetup({ async: true });
-
-			return value;
-		},{
-			data  :"{'@CurrencyCode.MXN':'MXN','@CurrencyCode.USD':'USD','@CurrencyCode.EUR':'EUR'}",
-		    type  :'select',
-		    submit:'OK'
+		if($(this).hasClass('next')) {
+			offset+=@Model.Limit;
+		} else {
+			offset-=@Model.Limit;
+		}
+		
+		e.preventDefault();
+		$('#activity-indicator').show();
+		$('#search-results').hide();
+		
+		$.post('@Url.Action("Index")', { Pattern: '@Model.Pattern', Offset: offset, Limit: @Model.Limit }, function(data) {
+			$('#search-results').html(data);
+			$('#search-results').show();
+			$('#activity-indicator').hide();
 		});
- </text>
- }
-    	$('a.paging').click(function (e) {
-  			var offset=@Model.Offset;
-    		
-  			if($(this).hasClass('next')) {
-  				offset+=@Model.Limit;
-  			} else {
-  				offset-=@Model.Limit;
-  			}
-  			
-    		e.preventDefault();
-    		$('#activity-indicator').show();
-    		$('#search-results').hide();
-    		
-    		$.post('@Url.Action("Index")', { Pattern: '@Model.Pattern', Offset: offset, Limit: @Model.Limit }, function(data) {
-				$('#search-results').html(data);
-				$('#search-results').show();
-				$('#activity-indicator').hide();
-			});
-    	});
-    });
+	});
+
+	@if(Privilege.AllowUpdate) {
+	<text>
+	$('.editable').editable({
+	    display: function(value, response) {
+	        if (typeof response === 'undefined') {
+	        	$(this).html(value);
+	        } else if (Array.isArray(response)) {
+	          	$(this).html(response[value].text);
+	        } else {
+	          	$(this).html(response.value);
+	        }
+	    }
+	});
+	</text>
+	}
+});
 </script>

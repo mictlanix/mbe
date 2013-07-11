@@ -7,155 +7,72 @@
     ViewBag.Title = Resources.Edit;
 }
 
-<script src="@Url.Content("~/Scripts/jquery.jeditable.mini.js")" type="text/javascript"></script>
-
 <h2>@Resources.SalesQuote</h2>
 
-<div id="master-section">
+<div id='master-section'>
 @Html.Partial("_MasterView")
 </div>
-
-<div id="details-section">
-    <div id="items-container">
-        <ul id="items" class="list-items">
-        @foreach (var item in Model.Details)
-        {
+<div id='details-section'>
+    <div id='items-container'>
+        <ul id='items' class='list-items'>
+        @foreach (var item in Model.Details) {
             @Html.Partial("_DetailEditView", item) 
         }
         </ul>
     </div>
-    <div class="search-box">
-        <input type="text" id="product-search" name="product-search" />
+    <div class='search-box'>
+        <input type='text' id='product-search' name='product-search' />
     </div>
 </div>
-<div id="totals-section" class="right floating" style="width:300px">
+<div id='totals-section' class='pull-right' style='width:300px'>
     @Html.Partial("_Totals")
 </div>
-<div id="back-to-list" style="clear:both">
+<div class='clearfix'></div>
+<div id='back-to-list' class='pull-left'>
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
-<div id="confirm-dlg" class="dialog" title="@Resources.Delete">
-	<p>
-        <span class="ui-icon ui-icon-circle-close" style="float:left; margin:3px 7px 20px 0;"></span>
-        @Resources.Message_DeleteConfirmation
-    </p>
+<div id='confirm-button' class='pull-right' @if (Model.Total == 0m) {<text>style='display:none'</text>}>
+	@using (Html.BeginForm("Confirm", "Quotations", new { id = Model.Id })) {
+	    <button id='complete' type='submit'>@Resources.CompleteSale</button>
+	}
 </div>
+<div class='clearfix'></div>
 <script type="text/javascript">
-    function updateTotals(){
-        $.get('@Url.Action("GetTotals")/' + @Model.Id, function (data) {
-            $("#totals-section").html(data);
-            if($("#items").children().length === 0){
-                $("#edit-button").show("slow");            
-            }
-        });
-    }
-
-    function editQuantity(id, value) {
-        var result = "Error";
-
-        $.ajaxSetup({ async: false });
-        $.post('@Url.Action("EditDetailQuantity")', { "id": id, "quantity": value }, function (data) {
-            var element = $("#item" + id + " div.quantity");
-            element.html(data.quantity);
-            element.siblings(".total").html(data.total);
-            element.addClass('succesful').switchClass('succesful', '', 3000);
-            result = data.quantity;
-        }, "json");
-        $.ajaxSetup({ async: true });
-
-        updateTotals();
-
-        return result;
-    }
-
-    function editDiscount(id, value) {
-        var result = "Error";
-
-        $.ajaxSetup({ async: false });
-        $.post('@Url.Action("EditDetailDiscount")', { "id": id, "value": value }, function (data) {
-            var element = $("#item" + id + " div.discount");
-            element.html(data.discount);
-            element.siblings(".total").html(data.total);
-            element.addClass('succesful').switchClass('succesful', '', 3000);
-            result = data.discount;
-        }, "json");
-        $.ajaxSetup({ async: true });
-        
-        updateTotals();
-
-        return result;
-    }
-
-    function removeItem(id) {
-        $("#confirm-dlg").dialog({
-            resizable: true,
-            height: 178,
-            modal: true,
-            buttons: {
-                @Resources.Delete: function () {
-                    $.post('@Url.Action("RemoveDetail")', { "id": id }, function (data) {
-                        if(data.result) {
-                            $("#item" + id).remove();
-                            updateTotals();
-                        }
-                    }, "json");
-                    $(this).dialog("close");
-                },
-                @Resources.Close: function () {
-                    $(this).dialog("close");
-                }
-            }
-        });
-    }
-
-    $(function () {
-        $('#product-search').tokenInput('@Url.Action("GetSuggestions", "Quotations", new { order = Model.Id })', {
-            hintText: "@Resources.HIntText",
-            noResultsText: "@Resources.NoResultsText",
-            searchingText: "@Resources.SearchingText",          
-            resultsFormatter: function(item){return ProductFormatter(item);},
-            queryParam: "pattern",minChars: 3,tokenLimit: 1,
-            onAdd: function (item) {
-                $.post('@Url.Action("AddDetail")', { "order": @Model.Id, "product": "" + item.id }, function (detail) {
-                    $.get('@Url.Action("GetDetail")/' + detail.id, function (data) {
-                        $("#items").append(data);
-                        
-                        $("#item" + detail.id + " div.quantity").editable(function (value, settings) {
-                            return editQuantity(detail.id, value);
-                        }, { cssclass : "number" });
-                        
-                        $("#item" + detail.id + " div.discount").editable(function (value, settings) {
-                            return editDiscount(detail.id, value);
-                        }, { cssclass : "number" });
-
-                        $("#product-search").tokenInput("clear");
-                        updateTotals();
-                        
-                        $("#edit-button").hide("slow");
-                    });
-
-                }, "json");
-            }
-        });
-
-		@foreach (var item in Model.Details)
-		{
-	    	<text>
-		        $("#item@(item.Id) div.quantity").editable(function(value,settings){
-		        	return editQuantity(@item.Id, value);
-		        });
-		        $("#item@(item.Id) div.discount").editable(function(value, settings){
-		        	return editDiscount(@item.Id, value);
-		        });
-	    	</text>
-    	}
+function updateTotals(){
+    $.get('@Url.Action("GetTotals", new { id = Model.Id })', function(data) {
+        $('#totals-section').html(data);
+        if ($('#items li').length == 0) {
+            $('#edit-button').show('slow');
+            $('#confirm-button').hide('slow');
+        }
     });
+}
+
+$(function () {
+    $('#product-search').tokenInput('@Url.Action("GetSuggestions", "SalesOrders", new { order = Model.Id })', {
+        hintText:'@Resources.HIntText',
+        noResultsText:'@Resources.NoResultsText',
+        searchingText:'@Resources.SearchingText',          
+        resultsFormatter:function(item){return ProductFormatter(item);},
+        queryParam:'pattern',minChars:3,tokenLimit:1,
+        onAdd:function (item) {
+            $.post('@Url.Action("AddDetail")', { 'order': @Model.Id, 'product': '' + item.id }, function (detail) {
+                $.get('@Url.Action("GetDetail")/' + detail.id, function (data) {
+                    $('#items').append(data);
+                    $('#product-search').tokenInput('clear');
+                    
+                    updateTotals();
+
+                    $('#edit-button').hide('slow');
+                    $('#confirm-button').show('slow');
+                });
+            }, 'json');
+        }
+    });
+
+});
 </script>
-<style type="text/css">
-ul.token-input-list {
-  width:100%;
-}
-div.token-input-dropdown {
-  width:650px;
-}
+<style type='text/css'>
+ul.token-input-list {width:100%;}
+div.token-input-dropdown {width:650px;}
 </style>

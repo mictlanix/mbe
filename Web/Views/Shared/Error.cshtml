@@ -1,9 +1,8 @@
-﻿@model System.Web.Mvc.HandleErrorInfo
+﻿@using Mictlanix.BE
+@model System.Web.Mvc.HandleErrorInfo
 
 @{
-    ViewBag.Title = "Error";
+    ViewBag.Title = @Resources.Error;
 }
 
-<h2>
-    Sorry, an error occurred while processing your request.
-</h2>
+<h2>@Resources.Message_UnknownError</h2>
