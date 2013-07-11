@@ -2,7 +2,7 @@
 // DeliveryOrdersController.cs
 // 
 // Author:
-//   Eddy Zavaleta <eddy@mictlanix.org>
+//   Eddy Zavaleta <eddy@mictlanix.com>
 // 
 // Copyright (C) 2013 Eddy Zavaleta, Mictlanix, and contributors.
 // 
