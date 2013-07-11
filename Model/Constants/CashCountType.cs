@@ -2,7 +2,7 @@
 // CashCountType.cs
 // 
 // Author:
-//   Eduardo Nieto <enieto@mictlanix.org>
+//   Eduardo Nieto <enieto@mictlanix.com>
 // 
 // Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.
 // 

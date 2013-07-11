@@ -2,8 +2,8 @@
 // AccountsPayablesController.cs
 // 
 // Author:
-//   Eddy Zavaleta <eddy@mictlanix.org>
-//   Eduardo Nieto <enieto@mictlanix.org>
+//   Eddy Zavaleta <eddy@mictlanix.com>
+//   Eduardo Nieto <enieto@mictlanix.com>
 // 
 // Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.
 // 
