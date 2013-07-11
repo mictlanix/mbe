@@ -78,25 +78,24 @@ namespace Mictlanix.BE.Web.Controllers
         }
 
         Search<FiscalDocument> SearchFiscalDocuments (Search<FiscalDocument> search)
-        {
+		{
+			IQueryable<FiscalDocument> qry;
+
             if (string.IsNullOrEmpty (search.Pattern)) {
-                var qry = from x in FiscalDocument.Queryable
-                          where !(!x.IsCompleted && x.IsCancelled)
-                          orderby x.IsCompleted, x.Issued descending
-                          select x;
-
-                search.Total = qry.Count ();
-                search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+                qry = from x in FiscalDocument.Queryable
+                      where !(!x.IsCompleted && x.IsCancelled)
+                      orderby x.IsCompleted, x.Issued descending
+                      select x;
             } else {
-                var qry = from x in FiscalDocument.Queryable
-                          where !(!x.IsCompleted && x.IsCancelled) &&
-                                x.Customer.Name.Contains(search.Pattern)
-                          orderby x.IsCompleted, x.Issued descending
-                          select x;
+                qry = from x in FiscalDocument.Queryable
+                      where !(!x.IsCompleted && x.IsCancelled) &&
+                            x.Customer.Name.Contains(search.Pattern)
+                      orderby x.IsCompleted, x.Issued descending
+                      select x;
+			}
 
-                search.Total = qry.Count ();
-                search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
-            }
+			search.Total = qry.Count ();
+			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
 
             return search;
         }

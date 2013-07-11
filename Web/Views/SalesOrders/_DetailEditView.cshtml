@@ -8,28 +8,31 @@
         <img src='@Url.Content(Model.Product.Photo)' title='@Model.ProductName' />
     </div>
     <div class='action-link'>
-        <a class='button icon-only icon delete' title='@Resources.Delete' href='@Url.Action("RemoveDetail", new { id = Model.Id })'></a>
+        <a class='button icon-only icon delete' title='@Resources.Message_DeleteConfirmation'
+		   data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id' data-url='@Url.Action("RemoveDetail", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
     </div>
     <div class='info'>
-        <b>@Model.ProductName</b><br/>
-        <b>@Resources.Code:</b> @Model.ProductCode
-        <b>@Resources.Model:</b> @Model.Product.Model
+        <span class='thick'>@Html.DisplayFor(x => x.ProductName)</span>
+        <br/>
+        <b>@Resources.Code: </b><span>@Html.DisplayFor(x => x.ProductCode)</span>
+        <b>@Resources.Model: </b><span>@Html.DisplayFor(x => x.Product.Model)</span>
         @if(!string.IsNullOrEmpty(Model.Product.SKU)) {
-        <b>@Resources.SKU:</b> @Model.Product.SKU
+        <b>@Resources.SKU: </b><span>@Html.DisplayFor(x => x.Product.SKU)</span>
         }
         <b>@Resources.ExchangeRate:</b>
         <span class='rate'>@Html.DisplayFor(x => x.ExchangeRate)</span>
         <br/>
         <b>@Resources.Price:</b>
-        <a class='editable price' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("EditDetailPrice", new { id = Model.Id })'>@Model.Price.ToString("c")</a>
-        <a class='editable currency' data-type='select' data-placement='right' data-source='@Url.Action("Currencies", "ExchangeRates")' data-pk='@Model.Id' data-value='@((int)Model.Currency)' data-url='@Url.Action("EditDetailCurrency", new { id = Model.Id })'>@Model.Currency.ToString()</a>
+        <a class='editable price' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("EditDetailPrice", new { id = Model.Id })'>@Html.DisplayFor(x => x.Price)</a>
+        <a class='editable currency' data-type='select' data-placement='right' data-source='@Url.Action("Currencies", "ExchangeRates")' data-pk='@Model.Id' data-value='@((int)Model.Currency)' data-url='@Url.Action("EditDetailCurrency", new { id = Model.Id })'>@Html.DisplayFor(x => x.Currency)</a>
         <b>@Resources.Quantity:</b>
-        <a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("EditDetailQuantity", new { id = Model.Id })'>@Model.Quantity.ToString("0.####")</a>
+        <a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("EditDetailQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
         <b>@Resources.Discount:</b>
-        <a class='editable discount' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("EditDetailDiscount", new { id = Model.Id })'>@Model.Discount.ToString("p")</a>
+        <a class='editable discount' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("EditDetailDiscount", new { id = Model.Id })'>@Html.DisplayFor(x => x.Discount)</a>
         <b>@Resources.TaxRate:</b> @Html.DisplayFor(x => x.TaxRate)
         <b>@Resources.Amount:</b>
-        <span class='total'>@Model.Total.ToString("c")</span> @Configuration.BaseCurrency
+        <span class='total'>@Html.DisplayFor(x => x.Total)</span>
+        <span>@Configuration.BaseCurrency</span>
     </div>
 </li>
 <script type='text/javascript'>
@@ -51,8 +54,11 @@ $('#id\\:@Model.Id .editable').editable({
         }
     }
 });
-$('#id\\:@Model.Id a.delete').click(function(e){
-    e.preventDefault();
-    removeItem(@Model.Id);
+
+$('#id\\:@Model.Id a.delete').editable({
+	success: function(response, newValue) {
+        $('#id\\:@Model.Id').remove();
+        updateTotals();
+    }
 });
 </script>

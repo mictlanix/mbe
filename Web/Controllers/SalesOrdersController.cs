@@ -78,26 +78,24 @@ namespace Mictlanix.BE.Web.Controllers
 		
 		Search<SalesOrder> SearchSalesOrders (Search<SalesOrder> search)
 		{
+			IQueryable<SalesOrder> qry;
 			var item = Configuration.PointOfSale;
 
 			if (string.IsNullOrEmpty (search.Pattern)) {
-				var qry = from x in SalesOrder.Queryable
-						  where x.Store.Id == item.Store.Id
-						  orderby x.IsCompleted, x.Date descending
-						  select x;
-				
-				search.Total = qry.Count ();
-				search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+				qry = from x in SalesOrder.Queryable
+					  where x.Store.Id == item.Store.Id
+					  orderby x.IsCompleted, x.Date descending
+					  select x;				
 			} else {
-				var qry = from x in SalesOrder.Queryable
-						  where x.Store.Id == item.Store.Id &&
-						        x.Customer.Name.Contains (search.Pattern)
-						  orderby x.IsCompleted, x.Date descending
-						  select x;
-
-				search.Total = qry.Count ();
-				search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+				qry = from x in SalesOrder.Queryable
+					  where x.Store.Id == item.Store.Id &&
+					        x.Customer.Name.Contains (search.Pattern)
+					  orderby x.IsCompleted, x.Date descending
+					  select x;
 			}
+
+			search.Total = qry.Count ();
+			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
 			
 			return search;
 		}
@@ -122,6 +120,10 @@ namespace Mictlanix.BE.Web.Controllers
 			if (Configuration.PointOfSale == null) {
                 return View ("InvalidPointOfSale");
             }
+			
+			if (!CashHelpers.ValidateExchangeRate ()) {
+				return View ("InvalidExchangeRate");
+			}
 
 			var employee = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 
@@ -181,6 +183,10 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Edit (int id)
 		{
+			if (!CashHelpers.ValidateExchangeRate ()) {
+				return View ("InvalidExchangeRate");
+			}
+
 			var item = SalesOrder.Find (id);
 
 			if (Request.IsAjaxRequest ()){

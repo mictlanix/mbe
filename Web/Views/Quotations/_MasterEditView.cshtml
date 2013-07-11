@@ -5,8 +5,7 @@
 
 <fieldset>
     <legend>@Resources.DisplayName_SalesInformation</legend>
-        @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "master-section" }))
-        {
+        @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "master-section" })) {
             @Html.ValidationSummary(true)
             
             @Html.HiddenFor(model => model.Date)
@@ -34,9 +33,8 @@
         }
 </fieldset>
 <script type="text/javascript">
-    $(function () {
-        $("#CustomerId").tokenInput("add", { id: "@Model.Customer.Id", name: "@Model.Customer.Name"});
-        
-	    $('.date').datepicker({ dateFormat: "yy-mm-dd", changeYear: true });
-    });
+$(function () {
+    $("#CustomerId").tokenInput("add", { id: "@Model.Customer.Id", name: "@Model.Customer.Name"});
+    $('.date').datepicker({ dateFormat: "yy-mm-dd", changeYear: true });
+});
 </script>

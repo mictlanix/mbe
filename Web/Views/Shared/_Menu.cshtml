@@ -161,11 +161,16 @@
                 <div id="sales-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
                     <div class="gbmc">
                         <ol class="gbmcc">
-                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.PriceLists).AllowRead)
-                            {
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.PriceLists).AllowRead) {
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("Index", "Pricing") ? "gbm0l" : "")"
                                    href="@Url.Action("Index", "Pricing")">@Resources.Pricing</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesQuotes).AllowRead) {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "Quotations") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "Quotations")">@Resources.SalesQuotes</a>
                             </li>
                             }
                             @*@if (Html.GetPrivilege(CurrentUser, SystemObjects.POS).AllowRead)
@@ -175,36 +180,25 @@
                                    href="@Url.Action("Index", "POS")">@Resources.PointOfSale</a>
                             </li>
                             }*@
-                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders).AllowRead)
-                            {
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders).AllowRead) {
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("Index", "SalesOrders") ? "gbm0l" : "")"
                                    href="@Url.Action("Index", "SalesOrders")">@Resources.SalesOrders</a>
                             </li>
                             }
-                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments).AllowRead)
-                            {
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments).AllowRead) {
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("Index", "Payments") ? "gbm0l" : "")"
                                    href="@Url.Action("Index", "Payments")">@Resources.Title_CustomerPayment</a>
                             </li>
                             }
-                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders).AllowRead)
-                            {
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders).AllowRead) {
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("Index", "DeliveryOrders") ? "gbm0l" : "")"
                                    href="@Url.Action("Index", "DeliveryOrders")">@Resources.Deliveries</a>
                             </li>
                             }
-                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesQuotes).AllowRead)
-                            {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "Quotations") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "Quotations")">@Resources.SalesQuotes</a>
-                            </li>
-                            }
-                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.CustomerReturns).AllowRead)
-                            {
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.CustomerReturns).AllowRead) {
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("Index", "CustomerReturns") ? "gbm0l" : "")"
                                    href="@Url.Action("Index", "CustomerReturns")">@Resources.Title_CustomerReturn</a>

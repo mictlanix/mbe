@@ -46,7 +46,7 @@ footer,
     background-color: #ffeeee;
 }
 .validation-summary-errors {
-    font-weight: bold;
+    font-weight:bold;
     color: #ff0000;
 }
 .validation-summary-valid {
@@ -255,6 +255,7 @@ table td.fill {
 }
 table td.stretch {
   width:1px;
+  padding:0;
 }
 ul.list-items {
   margin:0;
@@ -364,49 +365,49 @@ li div.value.name {
   clear:both;
   text-align:right;
 }
-.tabular table, .tabular th, .tabular td {
+table.tabular, table.tabular th, table.tabular td {
   margin:0;
   padding:0 1px;
   border:none;
   border-collapse:collapse;
   line-height:1;
 }
-.tabular tr:nth-child(odd)  { background-color:AliceBlue; }
-.tabular th, .tabular td {
+table.tabular th, table.tabular td {
+  padding:2px 1px;
+}
+table.tabular tr:nth-child(odd)  { background-color:AliceBlue; }
+table.tabular th, table.tabular td {
 	border-bottom:solid 1px #e8eef4;
 }
-.tabular tr:last-child th, .tabular tr:last-child td {
+table.tabular tr:last-child th, table.tabular tr:last-child td {
 	border-bottom:none;
 }
-td.tabular {
-	padding:0;
-}
-tr.total, td.total {
+tr.total,td.total,span.thick {
   font-weight:bold;
+}
+span.thick {
+
 }
 
 /* Edit In Place */
 .editable {
   display:inline-block;
-  min-width:60px;
   cursor:pointer;
 }
-.editable:hover {
-//  background:#fffcc3;
+.editable.price,.editable.tax,
+.editable.discount,.editable.quantity {
+  min-width:60px;
+  text-align:right;
 }
 .editable.name {
   min-width:300px;
 }
 .editable.price {
-  min-width:60px;
+  min-width:80px;
 }
 .editable.currency {
   min-width:auto;
   width:auto;
-}
-.editable.price,.editable.tax,
-.editable.discount,.editable.quantity {
-  text-align:right;
 }
 .editable.code,.editable.um {
   min-width:100px;
@@ -435,7 +436,6 @@ tr.total, td.total {
   width:auto;
   margin:0 0 10px;
 }
-
 .field-required label:after {
 	content: ' * ';
 	color:red;
