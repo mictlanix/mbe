@@ -51,6 +51,12 @@ namespace Mictlanix.BE.Web
 				new { controller = "Products", action = "AddLabel", id = @"\d+", value = @"\d+" }
 			);
 			
+			routes.MapRoute (
+				"Pricing_EditPrice",
+				"Pricing/{product}/EditPrice/{list}/{value}",
+				new { controller = "Pricing", action = "EditPrice", product = @"\d+", list = @"\d+", value = UrlParameter.Optional }
+			);
+
 			routes.MapRoute(
 				"Default", // Route name
 				"{controller}/{action}/{id}", // URL with parameters
