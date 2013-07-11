@@ -7,70 +7,44 @@
     ViewBag.Title = Resources.Edit;
 }
 
-<h2>@Resources.DisplayName_EditSale</h2> 
+<h2>@Resources.SalesOrder</h2> 
 
-<div id="master-section">
+<div id='master-section'>
 @Html.Partial("_MasterView")
 </div>
 
-<div id="details-section">
-    <div id="items-container">
-        <ul id="items" class="list-items">
+<div id='details-section'>
+    <div id='items-container'>
+        <ul id='items' class='list-items'>
         @foreach (var item in Model.Details) {
             @Html.Partial("_DetailEditView", item) 
         }
         </ul>
     </div>
-    <div class="search-box">
-        <input type="text" id="product-search" name="product-search" />
+    <div class='search-box'>
+        <input type='text' id='product-search' name='product-search' />
     </div>
 </div>
-<div id="totals-section" class="pull-right" style="width:300px">
+<div id='totals-section' class='pull-right' style='width:300px'>
     @Html.Partial("_Totals")
 </div>
-<div class="clearfix"></div>
-<div id='back-to-list' class="pull-left">
+<div class='clearfix'></div>
+<div id='back-to-list' class='pull-left'>
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
 <div id='confirm-button' class='pull-right' @if (Model.Total == 0m) {<text>style='display:none'</text>}>
 	@using (Html.BeginForm("Confirm", "SalesOrders", new { id = Model.Id })) {
-	    <button id="complete" type="submit">@Resources.CompleteSale</button>
+	    <button id='complete' type='submit'>@Resources.CompleteSale</button>
 	}
 </div>
-<div class="clearfix"></div>
-<div id="confirm-dlg" class="dialog" title="@Resources.Delete">
-	<p>
-        <span class="ui-icon ui-icon-circle-close" style="float:left; margin:3px 7px 20px 0;"></span>
-        @Resources.Message_DeleteConfirmation
-    </p>
-</div>
-<script type="text/javascript">
+<div class='clearfix'></div>
+<script type='text/javascript'>
 function updateTotals(){
     $.get('@Url.Action("GetTotals", new { id = Model.Id })', function(data) {
-        $("#totals-section").html(data);
-        if ($("#items").children().length === 0) {
-            $("#edit-button").show("slow");
-            $("#confirm-button").hide("slow");
-        }
-    });
-}
-
-function removeItem(id) {
-    $('#confirm-dlg').dialog({
-        resizable:true,height:178,modal:true,
-        buttons: {
-            @Resources.Delete: function () {
-                $.post('@Url.Action("RemoveDetail")', { 'id': id }, function (data) {
-                    if(data.result) {
-                        $('#id\\:' + id).remove();
-                        updateTotals();
-                    }
-                }, 'json');
-                $(this).dialog('close');
-            },
-            @Resources.Close: function () {
-                $(this).dialog('close');
-            }
+        $('#totals-section').html(data);
+        if ($('#items li').length === 0) {
+            $('#edit-button').show('slow');
+            $('#confirm-button').hide('slow');
         }
     });
 }

@@ -708,8 +708,8 @@
   <data name="CompleteSale" xml:space="preserve">
     <value>Finalizar Venta</value>
   </data>
-  <data name="DisplayName_EditSale" xml:space="preserve">
-    <value>Editar Venta</value>
+  <data name="EditSalesOrder" xml:space="preserve">
+    <value>Editar Pedido</value>
   </data>
   <data name="DisplayName_SalesInformation" xml:space="preserve">
     <value>Información de la Venta</value>
@@ -903,9 +903,6 @@
   <data name="Warehouse" xml:space="preserve">
     <value>Almacén</value>
   </data>
-  <data name="DisplayName_EditInventoryReceipt" xml:space="preserve">
-    <value>Editar Entrada</value>
-  </data>
   <data name="DisplayName_NewInventoryReceipt" xml:space="preserve">
     <value>Nueva Entrada al Almacén</value>
   </data>
@@ -921,9 +918,6 @@
   <data name="Complete" xml:space="preserve">
     <value>Finalizar</value>
   </data>
-  <data name="DisplayName_EditInventoryIssue" xml:space="preserve">
-    <value>Editar Salida</value>
-  </data>
   <data name="DisplayName_NewInventoryIssue" xml:space="preserve">
     <value>Nueva Salida del Almacén</value>
   </data>
@@ -932,9 +926,6 @@
   </data>
   <data name="Title_NewInventoryTransfer" xml:space="preserve">
     <value>Nuevo Traspaso</value>
-  </data>
-  <data name="DisplayName_EditInventoryTransfer" xml:space="preserve">
-    <value>Editar Traspaso</value>
   </data>
   <data name="DisplayName_NewInventoryTransfer" xml:space="preserve">
     <value>Nuevo Traspaso Entre Almacenes</value>
@@ -1106,9 +1097,6 @@ Vencimiento: {0:d}</value>
   <data name="Title_NewPurchase" xml:space="preserve">
     <value>Nueva Compra</value>
   </data>
-  <data name="DisplayName_EditPurchase" xml:space="preserve">
-    <value>Editar Compra</value>
-  </data>
   <data name="QuantityDelivered" xml:space="preserve">
     <value>Cantidad Recibida</value>
   </data>
@@ -1250,9 +1238,6 @@ Realizada el: {0:d}</value>
   </data>
   <data name="DeliveryOrder" xml:space="preserve">
     <value>Orden de Entrega</value>
-  </data>
-  <data name="DisplayName_EditInvoice" xml:space="preserve">
-    <value>Editar Factura</value>
   </data>
   <data name="DisplayName_InvoiceInformation" xml:space="preserve">
     <value>Información de la Factura</value>
@@ -1660,7 +1645,7 @@ Realizada el: {0:d}</value>
     <value>Inventariable</value>
   </data>
   <data name="NA" xml:space="preserve">
-    <value>NA</value>
+    <value>N/A</value>
   </data>
   <data name="Piece" xml:space="preserve">
     <value>Pieza</value>

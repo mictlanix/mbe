@@ -914,61 +914,7 @@ namespace Mictlanix.BE {
                 return ResourceManager.GetString("DisplayName_DataSupplier", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Editar Salida.
-        /// </summary>
-        public static string DisplayName_EditInventoryIssue {
-            get {
-                return ResourceManager.GetString("DisplayName_EditInventoryIssue", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Editar Entrada.
-        /// </summary>
-        public static string DisplayName_EditInventoryReceipt {
-            get {
-                return ResourceManager.GetString("DisplayName_EditInventoryReceipt", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Editar Traspaso.
-        /// </summary>
-        public static string DisplayName_EditInventoryTransfer {
-            get {
-                return ResourceManager.GetString("DisplayName_EditInventoryTransfer", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Editar Factura.
-        /// </summary>
-        public static string DisplayName_EditInvoice {
-            get {
-                return ResourceManager.GetString("DisplayName_EditInvoice", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Editar Compra.
-        /// </summary>
-        public static string DisplayName_EditPurchase {
-            get {
-                return ResourceManager.GetString("DisplayName_EditPurchase", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Editar Venta.
-        /// </summary>
-        public static string DisplayName_EditSale {
-            get {
-                return ResourceManager.GetString("DisplayName_EditSale", resourceCulture);
-            }
-        }
-        
+                
         /// <summary>
         ///   Looks up a localized string similar to Catálogo de Empleados.
         /// </summary>

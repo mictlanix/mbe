@@ -67,9 +67,8 @@
 
 @if(!Model.IsCompleted) {
     <div class="action-buttons">
-		@if(!Model.IsCancelled)
-		{
-	        @Ajax.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "master-section" }, new { id="edit-button", @class = "button icon edit", style = (Model.Details.Count > 0 ? "display:none" : "") })
+		@if(!Model.IsCancelled) {
+	        @Ajax.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "master-section" }, new { id = "edit-button", @class = "button icon edit", style = (Model.Details.Count > 0 ? "display:none" : "") })
 		}
 		@if(Privilege.AllowDelete && !Model.IsCancelled)
 		{
