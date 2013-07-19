@@ -1,13 +1,13 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model;
 @using Mictlanix.BE.Web.Helpers;
-@model InventoryReceipt
+@model InventoryIssue
 
 @{
-    ViewBag.Title = Resources.Title_InventoryReceipt;
+    ViewBag.Title = Resources.Title_InventoryIssue;
 }
 
-<h2>@Resources.DisplayName_InventoryReceipts</h2>
+<h2>@Resources.DisplayName_InventoryIssues</h2>
 
 <fieldset>
     <legend>@Resources.DisplayName_InventoryInformation</legend>
@@ -34,13 +34,13 @@
     <table>
         <tr>
             <th>
-                @Html.LabelFor(x => new InventoryReceiptDetail().Quantity)
+                @Html.LabelFor(x => new InventoryIssueDetail().Quantity)
             </th>
             <th>
-                @Html.LabelFor(x => new InventoryReceiptDetail().ProductCode)
+                @Html.LabelFor(x => new InventoryIssueDetail().ProductCode)
             </th>
             <th>
-                @Html.LabelFor(x => new InventoryReceiptDetail().ProductName)
+                @Html.LabelFor(x => new InventoryIssueDetail().ProductName)
             </th>
         </tr>
     @foreach (var item in Model.Details) {
@@ -60,16 +60,8 @@
     <p></p>
 </div>
 <div class="right floating">
-    <button type="button" class="icon print">@Resources.Print</button>     
+	@Html.ActionLink(Resources.Print, "PrintIssue", new { id = Model.Id }, new { @class = "button icon print", title = Resources.Print, target = "_blank" })
 </div>
 <div id="back-to-list">
-    @Html.ActionLink(Resources.BackToList, "Receipts", new { }, new { @class = "button icon back" })
+    @Html.ActionLink(Resources.BackToList, "Issues", new { }, new { @class = "button icon back" })
 </div>
-
-<script type="text/javascript">
-    $(function() {
-        $(".print").printPage({
-            url: "@Url.Action("PrintReceipt", "Inventory", new { id = Model.Id })"
-        });
-    });
-</script>
