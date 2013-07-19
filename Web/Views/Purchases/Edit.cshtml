@@ -11,9 +11,8 @@
 <h2>@Resources.PurchaseOrder</h2> 
 
 <div id='master-section'>
-@Html.Partial("_MasterView")
+	@Html.Partial("_MasterView")
 </div>
-
 <div id='details-section'>
     <div id='items-container'>
         <ul id='items' class='list-items'>
@@ -30,19 +29,18 @@
     </div>
 </div>
 <div id='totals-section' class='pull-right' style='width:300px'>
-    @Html.Partial("_Totals")
+	@Html.Partial("_Totals")
 </div>
 <div class='clearfix'></div>
 <div id='back-to-list' class='pull-left'>
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
 <div id='confirm-button' class='pull-right' @if (Model.Total == 0m) {<text>style='display:none'</text>}>
-	@using (Html.BeginForm("Confirm", "Purchases", new { id = Model.Id })) {
-	    <button id='complete' type='submit'>@Resources.CompleteSale</button>
-	}
+@using (Html.BeginForm("Confirm", "Purchases", new { id = Model.Id })) {
+    <button id='complete' type='submit'>@Resources.CompleteSale</button>
+}
 </div>
 <div class='clearfix'></div>
-
 <script type="text/javascript">
 function updateTotals(){
 	$.get('@Url.Action("GetTotals", new { id = Model.Id })', function(data) {
@@ -53,7 +51,6 @@ function updateTotals(){
         }
 	});
 }
-
 $(function () {
     $('#warehouse-search').tokenInput('@Url.Action("GetSuggestions", "Warehouses")', {
         hintText: '@Resources.ChooseWarehouse',
@@ -73,7 +70,7 @@ $(function () {
         resultsFormatter: function(item){return ProductFormatter(item);},
         queryParam: 'pattern',minChars: 3,tokenLimit: 1,
         onAdd: function (item) {
-            var w =$('#warehouse-search').tokenInput("get")[0];
+            var w = $('#warehouse-search').tokenInput("get")[0];
             $.post('@Url.Action("AddPurchaseDetail")', { 'movement': PurchaseMovement.Id, 'warehouse': '' + w.id, 'product': '' + item.id }, function (detail) {
                 $.get('@Url.Action("GetDetail")/' + detail.id, function (data) {
                     $('#items').append(data);                

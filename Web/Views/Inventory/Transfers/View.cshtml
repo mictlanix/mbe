@@ -66,17 +66,8 @@
     <p></p>
 </div>
 <div class="right floating">
-    <button type="button" class="icon print">@Resources.Print</button>     
+	@Html.ActionLink(Resources.Print, "PrintTransfer", new { id = Model.Id }, new { @class = "button icon print", title = Resources.Print, target = "_blank" })
 </div>
 <div id="back-to-list">
     @Html.ActionLink(Resources.BackToList, "Transfers", new { }, new { @class = "button icon back" })
 </div>
-
-<script type="text/javascript">
-    $(function() {
-        $(".print").printPage({
-            url: "@Url.Action("PrintTransfer", "Inventory", new { id = Model.Id })"
-        });
-    });
-
-</script>
