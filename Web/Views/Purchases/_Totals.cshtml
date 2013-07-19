@@ -1,24 +1,28 @@
 ﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
-@model Mictlanix.BE.Model.PurchaseOrder
-
-<div class="right">
-@*<fieldset>
+@model PurchaseOrder
+<fieldset>
     <legend>@Resources.Totals</legend>
-*@
-    <div class="display-label" style="display:inline" >
-        <b>@Html.LabelFor(x => x.Subtotal):</b>
+
+    <div class="display-label left floating">
+        @Html.LabelFor(x => x.Subtotal)
+    </div>
+    <div class="display-field right floating">
         @Html.DisplayFor(x => x.Subtotal)
     </div>
-    <div class="display-label" style="display:inline-block" >
-        <b>@Html.LabelFor(x => x.Taxes):</b>
+
+    <div class="display-label left floating">
+        @Html.LabelFor(x => x.Taxes)
+    </div>
+    <div class="display-field right floating">
         @Html.DisplayFor(x => x.Taxes)
     </div>
-    <div class="display-label" style="display:inline-block" >
-        <b>@Html.LabelFor(x => x.Total):</b>
+    
+    <div class="display-label left floating">
+        @Html.LabelFor(x => x.Total)
+    </div>
+    <div class="display-field right floating">
         @Html.DisplayFor(x => x.Total)
     </div>
-    <p></p>
-@*
-</fieldset>*@
-</div>
+</fieldset>

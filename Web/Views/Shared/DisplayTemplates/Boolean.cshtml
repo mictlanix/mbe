@@ -1,7 +1,8 @@
-﻿@model Boolean
+﻿@using Mictlanix.BE
+@model Boolean
 
 @if (Model) {
-    <img src="@Url.Content("~/Content/images/true.png")" alt="@Mictlanix.BE.Resources.Yes" title="@Mictlanix.BE.Resources.Yes" />
+    <img src='@Url.Content("~/Content/images/true.png")' alt='@Resources.Yes' title='@Resources.Yes' />
 } else {
-    <img src="@Url.Content("~/Content/images/false.png")" alt="@Mictlanix.BE.Resources.No" title="@Mictlanix.BE.Resources.No" />
+    <img src='@Url.Content("~/Content/images/false.png")' alt='@Resources.No' title='@Resources.No' />
 }

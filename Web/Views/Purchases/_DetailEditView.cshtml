@@ -1,7 +1,7 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
-@model SalesOrderDetail
+@model PurchaseOrderDetail
 
 <li id='id:@Model.Id'>
     <div class='photo'>
@@ -22,17 +22,20 @@
         <b>@Resources.ExchangeRate:</b>
         <span class='rate'>@Html.DisplayFor(x => x.ExchangeRate)</span>
         <br/>
+        <b>@Resources.Quantity:</b>
+        <a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("EditDetailQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
         <b>@Resources.Price:</b>
         <a class='editable price' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("EditDetailPrice", new { id = Model.Id })'>@Html.DisplayFor(x => x.Price)</a>
         <a class='editable currency' data-type='select' data-placement='right' data-source='@Url.Action("Currencies", "ExchangeRates")' data-pk='@Model.Id' data-value='@((int)Model.Currency)' data-url='@Url.Action("EditDetailCurrency", new { id = Model.Id })'>@Html.DisplayFor(x => x.Currency)</a>
-        <b>@Resources.Quantity:</b>
-        <a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("EditDetailQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
         <b>@Resources.Discount:</b>
         <a class='editable discount' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("EditDetailDiscount", new { id = Model.Id })'>@Html.DisplayFor(x => x.Discount)</a>
         <b>@Resources.TaxRate:</b> @Html.DisplayFor(x => x.TaxRate)
         <b>@Resources.Amount:</b>
-        <span class='total'>@Html.DisplayFor(x => x.Total)</span>
-        <span>@Configuration.BaseCurrency</span>
+        <span class='editable total'>@Html.DisplayFor(x => x.Total)</span>
+        <span class='editable total'>@Configuration.BaseCurrency</span>
+        <br />
+        <b>@Resources.Warehouse:</b>
+        <a class='editable warehouse' data-type='select' data-inputclass='editable name' data-placement='bottom' data-source='@Url.Action("List", "Warehouses")' data-pk='@Model.Id' data-value='@Model.Warehouse.Id' data-url='@Url.Action("EditDetailWarehouse", new { id = Model.Id })'>@Model.Warehouse</a>
     </div>
 </li>
 <script type='text/javascript'>
@@ -48,7 +51,10 @@ $('#id\\:@Model.Id a.editable').editable({
         if (typeof response === 'undefined') {
         	$(this).html(value);
         } else if (Array.isArray(response)) {
-          	$(this).html(response[value].text);
+        	arr = $.grep(response, function(o){
+  				return o.value == value;
+			});
+          	$(this).html(arr[0].text);
         } else {
           	$(this).html(response.value);
         }

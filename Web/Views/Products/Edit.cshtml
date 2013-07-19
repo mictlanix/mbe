@@ -29,95 +29,92 @@
             </div>
         </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Code)
+     	<div class="editor-label">
+            @Html.LabelFor(x => x.Code)
         </div>
         <div class="editor-field">
-            @Html.EditorFor(model => model.Code)
-            @Html.ValidationMessageFor(model => model.Code)
+            @Html.EditorFor(x => x.Code)
+            @Html.ValidationMessageFor(x => x.Code)
         </div>
         <div class="editor-label">
-            @Html.LabelFor(model => model.SKU)
+            @Html.LabelFor(x => x.Name)
         </div>
         <div class="editor-field">
-            @Html.EditorFor(model => model.SKU)
-            @Html.ValidationMessageFor(model => model.SKU)
-        </div>
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Name)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Name)
-            @Html.ValidationMessageFor(model => model.Name)
+            @Html.EditorFor(x => x.Name)
+            @Html.ValidationMessageFor(x => x.Name)
         </div>
 
         <div class="editor-label">
-            @Html.LabelFor(model => model.Brand)
+            @Html.LabelFor(x => x.SKU)
         </div>
         <div class="editor-field">
-            @Html.EditorFor(model => model.Brand)
-            @Html.ValidationMessageFor(model => model.Brand)
+            @Html.EditorFor(x => x.SKU)
+            @Html.ValidationMessageFor(x => x.SKU)
         </div>
 
         <div class="editor-label">
-            @Html.LabelFor(model => model.Model)
+            @Html.LabelFor(x => x.Model)
         </div>
         <div class="editor-field">
-            @Html.EditorFor(model => model.Model)
-            @Html.ValidationMessageFor(model => model.Model)
+            @Html.EditorFor(x => x.Model)
+            @Html.ValidationMessageFor(x => x.Model)
         </div>
 
         <div class="editor-label">
-            @Html.LabelFor(model => model.Location)
+            @Html.LabelFor(x => x.Brand)
         </div>
         <div class="editor-field">
-            @Html.EditorFor(model => model.Location)
-            @Html.ValidationMessageFor(model => model.Location)
+            @Html.EditorFor(x => x.Brand)
+            @Html.ValidationMessageFor(x => x.Brand)
         </div>
 
         <div class="editor-label">
-            @Html.LabelFor(model => model.UnitOfMeasurement)
+            @Html.LabelFor(x => x.Supplier)
         </div>
         <div class="editor-field">
-            @Html.EditorFor(model => model.UnitOfMeasurement, "UnitOfMeasurement")
+            @Html.EditorFor(x => x.SupplierId)
+            @Html.ValidationMessageFor(x => x.SupplierId)
         </div>
         
         <div class="editor-label">
-            @Html.CheckBoxFor(model => model.IsPerishable)
-            @Html.LabelFor(model => model.IsPerishable)
-        </div>
-        <div class="editor-label">
-            @Html.CheckBoxFor(model => model.IsSeriable)
-            @Html.LabelFor(model => model.IsSeriable)
-        </div>
-         <div class="editor-label">
-            @Html.CheckBoxFor(model => model.IsInvoiceable)
-            @Html.LabelFor(model => model.IsInvoiceable)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.TaxRate)
-        </div>
-        <div>
-            <select id="TaxRate" name="TaxRate">
-                <option value="0" @(Model.TaxRate == 0 ? "selected='selected'" : "")>0%</option>
-                <option value="0.16" @(Model.TaxRate != 0 ? "selected='selected'" : "")>16%</option>
-            </select>
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Supplier)
+            @Html.LabelFor(x => x.UnitOfMeasurement)
         </div>
         <div class="editor-field">
-            @Html.EditorFor(model => model.SupplierId)
-            @Html.ValidationMessageFor(model => model.SupplierId)
+            @Html.EditorFor(x => x.UnitOfMeasurement)
         </div>
         
         <div class="editor-label">
-            @Html.LabelFor(model => model.Comment)
+            @Html.LabelFor(x => x.Location)
         </div>
         <div class="editor-field">
-            @Html.EditorFor(model => model.Comment)
+            @Html.EditorFor(x => x.Location)
+            @Html.ValidationMessageFor(x => x.Location)
+        </div>
+
+        <div class="editor-label">
+            @Html.EditorFor(x => x.IsStockable)
+        </div>
+        <div class="editor-label">
+            @Html.EditorFor(x => x.IsPerishable)
+        </div>
+        <div class="editor-label">
+            @Html.EditorFor(x => x.IsSeriable)
+        </div>
+        <div class="editor-label">
+            @Html.EditorFor(x => x.IsPurchasable)
+        </div>
+        <div class="editor-label">
+            @Html.EditorFor(x => x.IsSalable)
+        </div>
+        <div class="editor-label">
+            @Html.EditorFor(x => x.IsInvoiceable)
+        </div>
+        
+        <div class="editor-label">
+            @Html.LabelFor(x => x.Comment)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(x => x.Comment)
         </div>
 
         <p><button type="submit" class="icon save">@Resources.Save</button></p>
@@ -129,9 +126,9 @@
 </div>
 
 <script type="text/javascript">
-    $(function () {
-        @if(Model.Supplier != null) {
-            @:$("#SupplierId").tokenInput("add", { id: "@Model.Supplier.Id", name: "@Model.Supplier.Name" });
-        }
-    });
+$(function () {
+    @if(Model.Supplier != null) {
+        @:$("#SupplierId").tokenInput("add", { id: "@Model.Supplier.Id", name: "@Model.Supplier.Name" });
+    }
+});
 </script>
