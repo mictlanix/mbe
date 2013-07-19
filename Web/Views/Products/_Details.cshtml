@@ -20,13 +20,6 @@
     </div>
 
     <div class="display-label">
-        @Html.LabelFor(model => model.SKU)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.SKU)
-    </div>
-
-    <div class="display-label">
         @Html.LabelFor(model => model.Name)
     </div>
     <div class="display-field">
@@ -34,10 +27,10 @@
     </div>
 
     <div class="display-label">
-        @Html.LabelFor(model => model.Brand)
+        @Html.LabelFor(model => model.SKU)
     </div>
     <div class="display-field">
-        @Html.DisplayFor(model => model.Brand)
+        @Html.DisplayFor(model => model.SKU)
     </div>
 
     <div class="display-label">
@@ -48,10 +41,17 @@
     </div>
 
     <div class="display-label">
-        @Html.LabelFor(model => model.Location)
+        @Html.LabelFor(model => model.Brand)
     </div>
     <div class="display-field">
-        @Html.DisplayFor(model => model.Location)
+        @Html.DisplayFor(model => model.Brand)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.Supplier)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Supplier.Name)
     </div>
 
     <div class="display-label">
@@ -59,6 +59,20 @@
     </div>
     <div class="display-field">
         @Html.DisplayFor(model => model.UnitOfMeasurement)
+    </div>
+    
+    <div class="display-label">
+        @Html.LabelFor(model => model.Location)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Location)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.IsStockable)
+    </div>
+    <div class="display-checkbox">
+        @Html.DisplayFor(model => model.IsStockable)
     </div>
 
     <div class="display-label">
@@ -76,24 +90,24 @@
     </div>
 
     <div class="display-label">
+        @Html.LabelFor(model => model.IsPurchasable)
+    </div>
+    <div class="display-checkbox">
+        @Html.DisplayFor(model => model.IsPurchasable)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(model => model.IsSalable)
+    </div>
+    <div class="display-checkbox">
+        @Html.DisplayFor(model => model.IsSalable)
+    </div>
+
+    <div class="display-label">
         @Html.LabelFor(model => model.IsInvoiceable)
     </div>
     <div class="display-checkbox">
         @Html.DisplayFor(model => model.IsInvoiceable)
-    </div>
-
-    <div class="display-label">
-        @Html.LabelFor(model => model.TaxRate)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.TaxRate)
-    </div>
-
-    <div class="display-label">
-        @Html.LabelFor(model => model.Supplier)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Supplier.Name)
     </div>
 
     <div class="display-label">

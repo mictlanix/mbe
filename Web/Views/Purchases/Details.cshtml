@@ -4,73 +4,26 @@
 @model PurchaseOrder
 
 @{
-    ViewBag.Title = Resources.Title_PurchaseOrder;
+    ViewBag.Title = Resources.PurchaseOrder;
 }
 
-<h2>@Resources.DisplayName_PurchasesOrders</h2>
+<h2>@Resources.PurchaseOrder</h2>
 
-<fieldset>
-    <legend>@Resources.DisplayName_PurchaseInformation</legend>
-    <div class="display-label right floating">
-        @Html.LabelFor(model => model.Id):
-        @Html.DisplayFor(model => model.Id)
-    </div>
-    <div class="display-label right floating">
-        @Html.LabelFor(model => model.CreationTime):
-        @Html.DisplayFor(model => model.CreationTime)
-    </div>
-    <div class="display-label">
-        @Html.LabelFor(model => model.Supplier)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Supplier.Name)
-    </div>
-    <div class="display-label">
-        @Html.LabelFor(model => model.Comment)
-        @Html.DisplayFor(model => model.Comment)
-    </div>
-</fieldset>
-<div>
-    <table>
-        <tr>
-            <th>
-                @Html.LabelFor(x => new PurchaseOrderDetail().Quantity)
-            </th>
-            <th>
-                @Html.LabelFor(x => new PurchaseOrderDetail().ProductCode)
-            </th>
-            <th>
-                @Html.LabelFor(x => new PurchaseOrderDetail().ProductName)
-            </th>
-        </tr>
-    @foreach (var item in Model.Details) {
-        <tr>
-            <td class="number">
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            <td class="center">
-                @Html.DisplayFor(modelItem => item.ProductCode)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductName)
-            </td>
-        </tr>
-    }
-    </table>
-    <p></p>
+<div id="master-section">
+	@Html.Partial("_MasterView")
 </div>
-<div class="right floating">
-    <button type="button" class="icon print">@Resources.Print</button>     
+<div id="details-section">
+    <div id="items-container">
+        <ul id="items" class="list-items">
+        @foreach (var item in Model.Details) {
+            @Html.Partial("_DetailView", item) 
+        }
+        </ul>
+    </div>
 </div>
-<div id="backTo">
+<div id="totals-section" class="right floating" style="width:300px">
+    @Html.Partial("_Totals")
+</div>
+<div id="back-to-list" style="clear:both">
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
-
-<script type="text/javascript">
-    $(function() {
-        $(".print").printPage({
-            url: "@Url.Action("Print", "Purchases", new { id = Model.Id })"
-        });
-    });
-
-</script>

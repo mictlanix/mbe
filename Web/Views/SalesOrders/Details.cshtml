@@ -4,20 +4,18 @@
 @model SalesOrder
 
 @{
-    ViewBag.Title = Resources.Details;
+    ViewBag.Title = Resources.SalesOrder;
 }
 
-<h2>@Resources.Details</h2>
+<h2>@Resources.SalesOrder</h2>
 
 <div id="master-section">
 	@Html.Partial("_MasterView")
 </div>
-
 <div id="details-section">
     <div id="items-container">
         <ul id="items" class="list-items">
-        @foreach (var item in Model.Details)
-        {
+        @foreach (var item in Model.Details) {
             @Html.Partial("_DetailView", item) 
         }
         </ul>

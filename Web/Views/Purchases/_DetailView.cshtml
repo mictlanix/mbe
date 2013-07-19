@@ -1,11 +1,11 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
-@model SalesOrderDetail
+@model PurchaseOrderDetail
 
 <li id='id:@Model.Id'>
-    <div class='photo'>
-        <img src='@Url.Content(Model.Product.Photo)' title='@Model.ProductName' />
+    <div class="photo">
+        <img src="@Url.Content(Model.Product.Photo)" title="@Model.ProductName" />
     </div>
     <div class='info'>
         <span class='thick'>@Html.DisplayFor(x => x.ProductName)</span>
@@ -30,5 +30,8 @@
         <b>@Resources.Amount:</b>
         <span class='editable total'>@Html.DisplayFor(x => x.Total)</span>
         <span class='editable currency'>@Configuration.BaseCurrency</span>
+        <br />
+        <b>@Resources.Warehouse:</b>
+        <span class='editable warehouse'>@Model.Warehouse</span>
     </div>
 </li>

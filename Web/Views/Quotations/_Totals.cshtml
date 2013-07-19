@@ -6,10 +6,10 @@
     <legend>@Resources.Totals</legend>
 
     <div class="display-label left floating">
-        @Html.LabelFor(x => x.Total)
+        @Html.LabelFor(x => x.Subtotal)
     </div>
     <div class="display-field right floating">
-        @Html.DisplayFor(x => x.Total)
+        @Html.DisplayFor(x => x.Subtotal)
     </div>
 
     <div class="display-label left floating">
@@ -17,5 +17,12 @@
     </div>
     <div class="display-field right floating">
         @Html.DisplayFor(x => x.Taxes)
+    </div>
+    
+    <div class="display-label left floating">
+        @Html.LabelFor(x => x.Total)
+    </div>
+    <div class="display-field right floating">
+        @Html.DisplayFor(x => x.Total)
     </div>
 </fieldset>

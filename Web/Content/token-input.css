@@ -1,21 +1,21 @@
 /* Example tokeninput style #1: Token vertical list*/
 ul.token-input-list {
-    overflow: hidden; 
-    height: auto !important; 
-    height: 1%;
-    width: 400px;
-    border:1px solid #ccc;
-    cursor: text;
-    font-family: Verdana;
-    z-index: 999;
-    margin:0;
-    padding:1px;
-    background-color: #fff;
-    list-style-type: none;
-    clear: left;
-  color:#555;
-  background-color: #ffffff;
-  border: 1px solid #cccccc;
+	overflow: hidden; 
+	height: auto !important; 
+	height: 1%;
+	width: 400px;
+	border:1px solid #ccc;
+	cursor: text;
+	font-family: Verdana;
+	z-index: 999;
+	margin:0;
+	padding:1px;
+	background-color: #fff;
+	list-style-type: none;
+	clear: left;
+	color:#555;
+	background-color: #ffffff;
+	border: 1px solid #cccccc;
   vertical-align: middle;
   -webkit-border-radius: 4px;
      -moz-border-radius: 4px;
@@ -81,7 +81,7 @@ li.token-input-token span {
     float:right;
     color:#777;
     cursor:pointer;
-    margin:2px 0 0;
+    margin:0;
 }
 
 li.token-input-selected-token {
