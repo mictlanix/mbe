@@ -595,9 +595,34 @@
     <Content Include="Views\Purchases\_MasterEditView.cshtml" />
     <Content Include="Views\Purchases\_DetailEditView.cshtml" />
     <Content Include="Views\Purchases\_DetailView.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />
+    <Content Include="Views\Inventory\Receipts\Index.cshtml" />
+    <Content Include="Views\Inventory\Receipts\_Index.cshtml" />
+    <Content Include="Views\Inventory\Receipts\Edit.cshtml" />
+    <Content Include="Views\Inventory\Receipts\Print.cshtml" />
+    <Content Include="Views\Inventory\Receipts\_DetailEditView.cshtml" />
+    <Content Include="Views\Inventory\Receipts\_MasterEditView.cshtml" />
+    <Content Include="Views\Inventory\Receipts\_MasterView.cshtml" />
+    <Content Include="Views\Inventory\Receipts\New.cshtml" />
+    <Content Include="Views\Inventory\Receipts\View.cshtml" />
+    <Content Include="Views\Inventory\Issues\Edit.cshtml" />
+    <Content Include="Views\Inventory\Issues\Index.cshtml" />
+    <Content Include="Views\Inventory\Issues\New.cshtml" />
+    <Content Include="Views\Inventory\Issues\Print.cshtml" />
+    <Content Include="Views\Inventory\Issues\View.cshtml" />
+    <Content Include="Views\Inventory\Issues\_DetailEditView.cshtml" />
+    <Content Include="Views\Inventory\Issues\_Index.cshtml" />
+    <Content Include="Views\Inventory\Issues\_MasterEditView.cshtml" />
+    <Content Include="Views\Inventory\Issues\_MasterView.cshtml" />
+    <Content Include="Views\Inventory\Transfers\Edit.cshtml" />
+    <Content Include="Views\Inventory\Transfers\Index.cshtml" />
+    <Content Include="Views\Inventory\Transfers\New.cshtml" />
+    <Content Include="Views\Inventory\Transfers\Print.cshtml" />
+    <Content Include="Views\Inventory\Transfers\View.cshtml" />
+    <Content Include="Views\Inventory\Transfers\_DetailEditView.cshtml" />
+    <Content Include="Views\Inventory\Transfers\_Index.cshtml" />
+    <Content Include="Views\Inventory\Transfers\_MasterEditView.cshtml" />
+    <Content Include="Views\Inventory\Transfers\_MasterView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
@@ -799,35 +824,11 @@
     <Content Include="Views\Payments\CloseSession.cshtml" />
     <Content Include="Views\Payments\_CashCountTicket.cshtml" />
     <Content Include="Views\Payments\_SessionInfoPrinter.cshtml" />
-    <Content Include="Views\Inventory\Receipts.cshtml" />
-    <Content Include="Views\Inventory\Issues.cshtml" />
-    <Content Include="Views\Inventory\Transfers.cshtml" />
-    <Content Include="Views\Inventory\NewReceipt.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\WarehouseSelector.cshtml" />
-    <Content Include="Views\Inventory\EditReceipt.cshtml" />
-    <Content Include="Views\Inventory\_ReceiptInfo.cshtml" />
-    <Content Include="Views\Inventory\_ReceiptItem.cshtml" />
-    <Content Include="Views\Inventory\_ReceiptEditor.cshtml" />
-    <Content Include="Views\Inventory\Receipt.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\MultilineText.cshtml" />
-    <Content Include="Views\Inventory\_IssueEditor.cshtml" />
-    <Content Include="Views\Inventory\_IssueInfo.cshtml" />
-    <Content Include="Views\Inventory\_IssueItem.cshtml" />
-    <Content Include="Views\Inventory\EditIssue.cshtml" />
-    <Content Include="Views\Inventory\NewIssue.cshtml" />
-    <Content Include="Views\Inventory\Issue.cshtml" />
-    <Content Include="Views\Inventory\_TransferEditor.cshtml" />
-    <Content Include="Views\Inventory\_TransferItem.cshtml" />
-    <Content Include="Views\Inventory\_TransferInfo.cshtml" />
-    <Content Include="Views\Inventory\EditTransfer.cshtml" />
-    <Content Include="Views\Inventory\Transfer.cshtml" />
-    <Content Include="Views\Inventory\NewTransfer.cshtml" />
     <Content Include="Views\Payments\_Index.cshtml" />
     <Content Include="Views\AccountsReceivables\AccountStatement.cshtml" />
     <Content Include="Views\AccountsReceivables\Index.cshtml" />
-    <Content Include="Views\Inventory\_PrintReceipt.cshtml" />
-    <Content Include="Views\Inventory\_PrintIssue.cshtml" />
-    <Content Include="Views\Inventory\_PrintTransfer.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SupplierSelector.cshtml" />
     <Content Include="Views\Purchases\Index.cshtml" />
     <Content Include="Views\Purchases\Details.cshtml" />
@@ -858,9 +859,6 @@
     <Content Include="Views\PointsOfSale\_Index.cshtml" />
     <Content Include="Views\CashDrawers\_Index.cshtml" />
     <Content Include="Views\Quotations\_Index.cshtml" />
-    <Content Include="Views\Inventory\_Receipts.cshtml" />
-    <Content Include="Views\Inventory\_Issues.cshtml" />
-    <Content Include="Views\Inventory\_Transfers.cshtml" />
     <Content Include="Views\Purchases\_Index.cshtml" />
     <Content Include="Views\FiscalDocuments\_Index.cshtml" />
     <Content Include="Views\AccountsReceivables\_Index.cshtml" />
@@ -918,5 +916,11 @@
     <None Include="Views\DeliveryOrders\_Totals.cshtml" />
     <None Include="Scripts\jquery-1.9.1.min.map" />
     <None Include="Views\Taxpayers\_Refresh.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\Inventory\Receipts\" />
+    <Folder Include="Views\Inventory\" />
+    <Folder Include="Views\Inventory\Issues\" />
+    <Folder Include="Views\Inventory\Transfers\" />
   </ItemGroup>
 </Project>

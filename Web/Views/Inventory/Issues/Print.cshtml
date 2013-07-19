@@ -1,50 +1,47 @@
 ﻿@using Mictlanix.BE
-@using Mictlanix.BE.Model;
-@using Mictlanix.BE.Web.Helpers;
-@model InventoryReceipt
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model InventoryIssue
 
 @{
     Layout = Configuration.PrintLayout;
-    ViewBag.Title = Resources.Title_InventoryReceipt;
+    ViewBag.Title = Resources.Title_InventoryIssue;
     ViewBag.Store = Model.Warehouse.Store;
     ViewBag.TaxpayerName = null;
     ViewBag.Taxpayer = null;
     ViewBag.Address = Model.Warehouse.Store.Address;
 }
 <h2>@Resources.DisplayName_InventoryInformation</h2>
-<p></p>
-    <div class="display-label">
-        <b>@Html.LabelFor(model => model.Warehouse):</b>
-        @Html.DisplayFor(model => model.Warehouse.Name)
-    </div>
-    <div class="display-label">
-        <b>@Html.LabelFor(model => model.Id):</b>
-        @Html.DisplayFor(model => model.Id)
-    </div>
-    <div class="display-label">
-        <b>@Resources.CreatedBy:</b>
-        @Html.DisplayFor(model => model.Creator.Name)
-    </div>
-    <div class="display-label">
-        <b>@Html.LabelFor(model => model.CreationTime):</b>
-        @Html.DisplayFor(model => model.CreationTime)
-    </div>
-    <div class="display-label">
-        <b>@Html.LabelFor(model => model.Comment):</b>
-        @Html.DisplayFor(model => model.Comment)
-    </div>
-
-
+<div class="display-label">
+    <b>@Html.LabelFor(model => model.Warehouse):</b>
+    @Html.DisplayFor(model => model.Warehouse.Name)
+</div>
+<div class="display-label">
+    <b>@Html.LabelFor(model => model.Id):</b>
+    @Html.DisplayFor(model => model.Id)
+</div>
+<div class="display-label">
+    <b>@Resources.CreatedBy:</b>
+    @Html.DisplayFor(model => model.Creator.Name)
+</div>
+<div class="display-label">
+    <b>@Html.LabelFor(model => model.CreationTime):</b>
+    @Html.DisplayFor(model => model.CreationTime)
+</div>
+<div class="display-label">
+    <b>@Html.LabelFor(model => model.Comment):</b>
+    @Html.DisplayFor(model => model.Comment)
+</div>
 <table>
     <tr>
         <th class="line border">
-            @Html.LabelFor(x => new InventoryReceiptDetail().Quantity)
+            @Html.LabelFor(x => new InventoryIssueDetail().Quantity)
         </th>
         <th class="line border">
-            @Html.LabelFor(x => new InventoryReceiptDetail().ProductCode)
+            @Html.LabelFor(x => new InventoryIssueDetail().ProductCode)
         </th>
         <th class="line">
-            @Html.LabelFor(x => new InventoryReceiptDetail().ProductName)
+            @Html.LabelFor(x => new InventoryIssueDetail().ProductName)
         </th>
     </tr>
 @foreach (var item in Model.Details) {
@@ -61,7 +58,6 @@
     </tr>
 }
 </table>
-
 <section class="signatures">
     <table>
         <tr>
@@ -79,3 +75,8 @@
         </tr>
     </table>
 </section>
+<script type="text/javascript">
+$(function() {
+    window.print();
+});
+</script>

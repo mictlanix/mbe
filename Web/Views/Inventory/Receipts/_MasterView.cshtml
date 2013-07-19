@@ -29,16 +29,11 @@
         @Html.DisplayFor(model => model.Comment)
     </div>
     <div class="right">
-        @Ajax.ActionLink(Resources.Edit, "EditReceipt", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "master-section" }, new { @class = "button icon edit" })
-        @if(Privilege.AllowDelete)
-        {
-            using (Html.BeginForm("CancelReceipt", "Inventory", new { id = Model.Id }, FormMethod.Post, new { style = "display:inline" }))
-            {
+        @Ajax.ActionLink(Resources.Edit, "EditReceipt", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "master-section" }, new { id = "edit-button", @class = "button icon edit" })
+        @if(Privilege.AllowDelete) {
+            using (Html.BeginForm("CancelReceipt", "Inventory", new { id = Model.Id }, FormMethod.Post, new { style = "display:inline" })) {
                 <button type="submit" class="icon cancel">@Resources.Cancel</button>
             }
         }
     </div>
 </fieldset>
-<script type="text/javascript">
-    var InventoryMovement = { Id: @Model.Id };
-</script>

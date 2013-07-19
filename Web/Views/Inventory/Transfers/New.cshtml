@@ -54,17 +54,16 @@ ul.token-input-list {
 }
 </style>
 <script type="text/javascript">
-    $(function () {
-        @if(Model.From != null) {
-            @:$("#FromId").tokenInput("add", { id: "@Model.From.Id", name: "@Model.From.Name" });
-        }
-        @if(Model.To != null) {
-            @:$("#ToId").tokenInput("add", { id: "@Model.To.Id", name: "@Model.To.Name" });
-        }
-        
-        $('form').submit(function(){
-            $("button.save").attr("disabled", "disabled");
-		    $("button.save").html("@Resources.PleaseWait");
-		});
-    });
+$(function () {
+    @if(Model.From != null) {
+        @:$("#FromId").tokenInput("add", { id: "@Model.From.Id", name: "@Model.From.Name" });
+    }
+    @if(Model.To != null) {
+        @:$("#ToId").tokenInput("add", { id: "@Model.To.Id", name: "@Model.To.Name" });
+    }
+    $('form').submit(function(){
+        $("button.save").attr("disabled", "disabled");
+	    $("button.save").html("@Resources.PleaseWait");
+	});
+});
 </script>
