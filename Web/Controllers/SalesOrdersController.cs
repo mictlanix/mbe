@@ -183,14 +183,14 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Edit (int id)
 		{
-			if (!CashHelpers.ValidateExchangeRate ()) {
-				return View ("InvalidExchangeRate");
-			}
-
 			var item = SalesOrder.Find (id);
 
-			if (Request.IsAjaxRequest ()){
+			if (Request.IsAjaxRequest ()) {
 				return PartialView ("_MasterEditView", item);
+			}
+
+			if (!CashHelpers.ValidateExchangeRate ()) {
+				return View ("InvalidExchangeRate");
 			}
 
 			return View (item);
@@ -349,15 +349,15 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public JsonResult EditDetailDiscount (int id, string value)
         {
-            SalesOrderDetail detail = SalesOrderDetail.Find(id);
+            var detail = SalesOrderDetail.Find(id);
             bool success;
-            decimal discount;
+            decimal val;
 
-            success = decimal.TryParse(value.TrimEnd(new char[] { ' ', '%' }), out discount);
-            discount /= 100m;
+            success = decimal.TryParse(value.TrimEnd(new char[] { ' ', '%' }), out val);
+            val /= 100m;
 
-            if (success && discount >= 0 && discount <= 1) {
-                detail.Discount = discount;
+            if (success && val >= 0 && val <= 1) {
+                detail.Discount = val;
 
 				using (var scope = new TransactionScope ()) {
 					detail.UpdateAndFlush ();
@@ -381,13 +381,13 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public JsonResult RemoveDetail (int id)
         {
-            var item = SalesOrderDetail.Find(id);
+            var item = SalesOrderDetail.Find (id);
 
 			using (var scope = new TransactionScope ()) {
 				item.DeleteAndFlush ();
 			}
 
-            return Json(new { id = id, result = true });
+            return Json (new { id = id, result = true });
         }
 
         [HttpPost]

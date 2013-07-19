@@ -112,7 +112,7 @@ namespace Mictlanix.BE.Web.Controllers
 				}
 			}
 			
-			return Json (new {id = item.Id, value = item.Value.ToString ("c") });
+			return Json (new { id = item.Id, value = item.Value.ToString ("c") });
 		}
 
 		[HttpPost]
@@ -141,7 +141,35 @@ namespace Mictlanix.BE.Web.Controllers
 				}
 			}
 			
-			return Json (new {id = item.Id, value = item.Currency.ToString () });
+			return Json (new { id = item.Id, value = item.Currency.ToString () });
+		}
+
+		[HttpPost]
+		public JsonResult EditTaxRate (int id, decimal value)
+		{
+			var item = Product.Find(id);
+
+			if (value >= 0) {
+				item.TaxRate = value;
+				item.IsTaxIncluded = Configuration.IsTaxIncluded;
+
+				using (var scope = new TransactionScope ()) {
+					item.UpdateAndFlush ();
+				}
+			}
+
+			return Json (new { id = id, value = item.TaxRate.ToString ("p") });
+		}
+
+		// TODO: db catalog
+		public JsonResult TaxRates ()
+		{
+			var rates = new [] {
+				new { value = 0.00, text = " 0 %" },
+				new { value = 0.16, text = "16 %" }
+			};
+
+			return Json (rates, JsonRequestBehavior.AllowGet);
 		}
     }
 }

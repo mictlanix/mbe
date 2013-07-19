@@ -88,7 +88,7 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Create()
         {
-            return View(new Product { IsInvoiceable = true, TaxRate = Configuration.VAT });
+            return View(new Product ());
         }
 
         [HttpPost]
@@ -100,6 +100,7 @@ namespace Mictlanix.BE.Web.Controllers
 				return View (item);
             
 			item.IsTaxIncluded = Configuration.IsTaxIncluded;
+			item.TaxRate = Configuration.VAT;
 			item.Photo = SavePhoto (file) ?? Configuration.DefaultPhotoFile;
 
 			using (var scope = new TransactionScope ()) {
@@ -109,17 +110,11 @@ namespace Mictlanix.BE.Web.Controllers
 			return RedirectToAction ("Index");
 		}
 
-        //
-        // GET: /Products/Edit/5
-
         public ActionResult Edit(int id)
         {
             Product item = Product.Find (id);
             return View (item);
         }
-
-        //
-        // POST: /Products/Edit/5
 
         [HttpPost]
         public ActionResult Edit (Product item, HttpPostedFileBase file)
@@ -134,15 +129,16 @@ namespace Mictlanix.BE.Web.Controllers
 			entity.Brand = item.Brand;
 			entity.Code = item.Code;
 			entity.Comment = item.Comment;
-			entity.IsInvoiceable = item.IsInvoiceable;
+			entity.IsStockable = item.IsStockable;
 			entity.IsPerishable = item.IsPerishable;
 			entity.IsSeriable = item.IsSeriable;
-			entity.IsTaxIncluded = Configuration.IsTaxIncluded;
+			entity.IsPurchasable = item.IsPurchasable;
+			entity.IsSalable = item.IsSalable;
+			entity.IsInvoiceable = item.IsInvoiceable;
 			entity.Location = item.Location;
 			entity.Model = item.Model;
 			entity.Name = item.Name;
 			entity.SKU = item.SKU;
-			entity.TaxRate = item.TaxRate;
 			entity.UnitOfMeasurement = item.UnitOfMeasurement;
 			entity.Photo = SavePhoto (file) ?? item.Photo;
 
