@@ -42,55 +42,49 @@ namespace Mictlanix.BE.Web.Controllers
     public class PurchasesController : Controller
     {
         public ActionResult Index()
-        {
-            var qry = from x in PurchaseOrder.Queryable
-                      orderby x.Id descending
-                      select x;
+		{
+			if (!CashHelpers.ValidateExchangeRate ()) {
+				return View ("InvalidExchangeRate");
+			}
 
-            Search<PurchaseOrder> search = new Search<PurchaseOrder>();
-            search.Limit = Configuration.PageSize;
-            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            search.Total = qry.Count();
+			var search = SearchPurchaseOrders (new Search<PurchaseOrder> {
+				Limit = Configuration.PageSize
+			});
 
-            return View (search);
+			return View (search);
         }
 
         [HttpPost]
         public ActionResult Index(Search<PurchaseOrder> search)
         {
             if (ModelState.IsValid) {
-                search = GetPurchaseOrders(search);
+				search = SearchPurchaseOrders (search);
             }
 
-            if (Request.IsAjaxRequest()) {
-                return PartialView("_Index", search);
-            }
-            else {
+            if (Request.IsAjaxRequest ()) {
+                return PartialView ("_Index", search);
+            } else {
                 return View (search);
             }
         }
 
-        Search<PurchaseOrder> GetPurchaseOrders(Search<PurchaseOrder> search)
-        {
-            if (search.Pattern == null)
-            {
-                var qry = from x in PurchaseOrder.Queryable
-                          orderby x.Id descending
-                          select x;
+		Search<PurchaseOrder> SearchPurchaseOrders (Search<PurchaseOrder> search)
+		{
+			IQueryable<PurchaseOrder> qry;
 
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            }
-            else
-            {
-                var qry = from x in PurchaseOrder.Queryable
-                          where x.Supplier.Name.Contains(search.Pattern)
-                          orderby x.Id descending
-                          select x;
+            if (search.Pattern == null) {
+                qry = from x in PurchaseOrder.Queryable
+                      orderby x.Id descending
+                      select x;
+            } else {
+                qry = from x in PurchaseOrder.Queryable
+                      where x.Supplier.Name.Contains (search.Pattern)
+                      orderby x.Id descending
+                      select x;
+			}
 
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            }
+			search.Total = qry.Count ();
+			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
 
             return search;
         }
@@ -103,61 +97,75 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Details(int id)
         {
-            var item = PurchaseOrder.Find(id);
+            var item = PurchaseOrder.Find (id);
 
             return View (item);
         }
 
         public ActionResult New ()
-        {
+		{
+			if (!CashHelpers.ValidateExchangeRate ()) {
+				return View ("InvalidExchangeRate");
+			}
+
             return View (new PurchaseOrder());
         } 
 
         [HttpPost]
         public ActionResult New (PurchaseOrder item)
         {
-            item.Supplier = Supplier.Find(item.SupplierId);
-            item.Creator = SecurityHelpers.GetUser(User.Identity.Name).Employee;
+            item.Supplier = Supplier.Find (item.SupplierId);
+            item.Creator = SecurityHelpers.GetUser (User.Identity.Name).Employee;
             item.Updater = item.Creator;
             item.CreationTime = DateTime.Now;
             item.ModificationTime = item.CreationTime;
 
-            using (var scope = new TransactionScope()) {
-                item.CreateAndFlush();
+            using (var scope = new TransactionScope ()) {
+                item.CreateAndFlush ();
             }
 
-            return RedirectToAction("Edit", new { id = item.Id });
+            return RedirectToAction ("Edit", new { id = item.Id });
         }
 
         public ActionResult Edit (int id)
-        {
-            var item = PurchaseOrder.Find (id);
+		{
+			var item = PurchaseOrder.Find (id);
+
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_MasterEditView", item);
+			}
+
+			if (!CashHelpers.ValidateExchangeRate ()) {
+				return View ("InvalidExchangeRate");
+			}
 
             if (item.IsCompleted || item.IsCancelled) {
                 return RedirectToAction ("Details", new { id = item.Id });
             }
 
-            if (Request.IsAjaxRequest())
-                return PartialView ("_PurchaseEditor", item);
-            else
-                return View (item);
-        }
+			return View (item);
+		}
+
+		public ActionResult DiscardChanges (int id)
+		{
+			return PartialView ("_MasterView", PurchaseOrder.TryFind (id));
+		}
 
         [HttpPost]
         public ActionResult Edit (PurchaseOrder item)
         {
-            var order = PurchaseOrder.Find(item.Id);
+            var entity = PurchaseOrder.Find (item.Id);
 
-            order.Supplier = Supplier.Find(item.SupplierId);
-            order.Updater = SecurityHelpers.GetUser(User.Identity.Name).Employee;
-            order.ModificationTime = DateTime.Now;
-            order.Comment = item.Comment;
+            entity.Supplier = Supplier.Find (item.SupplierId);
+            entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+            entity.ModificationTime = DateTime.Now;
+            entity.Comment = item.Comment;
 
 			using (var scope = new TransactionScope ()) {
-            	order.UpdateAndFlush ();
+            	entity.UpdateAndFlush ();
 			}
 
-            return PartialView ("_PurchaseInfo", order);
+			return PartialView ("_MasterView", entity);
         }
 
         [HttpPost]
@@ -192,55 +200,82 @@ namespace Mictlanix.BE.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult EditPurchaseDetailQty(int id, decimal quantity)
+		public JsonResult EditDetailQuantity (int id, decimal value)
         {
-            PurchaseOrderDetail detail = PurchaseOrderDetail.Find(id);
+            var detail = PurchaseOrderDetail.Find (id);
 
-            if (quantity > 0)
-            {
-                detail.Quantity = quantity;
+            if (value > 0) {
+                detail.Quantity = value;
 
 				using (var scope = new TransactionScope ()) {
 	            	detail.UpdateAndFlush ();
 				}
             }
 
-            return Json(new { id = id, quantity = detail.Quantity, total = detail.Total.ToString("c") });
+			return Json (new { id = id, value = detail.Quantity, total = detail.Total.ToString ("c") });
         }
 
         [HttpPost]
-        public JsonResult EditPurchaseDetailPrice(int id, string value)
+        public JsonResult EditDetailPrice (int id, string value)
         {
-            PurchaseOrderDetail detail = PurchaseOrderDetail.Find(id);
+            var detail = PurchaseOrderDetail.Find (id);
             bool success;
-            decimal cost;
+            decimal val;
 
-            success = decimal.TryParse(value,System.Globalization.NumberStyles.AllowCurrencySymbol, null, out cost);
+			success = decimal.TryParse (value.Trim (),
+			                            System.Globalization.NumberStyles.Currency,
+			                            null, out val);
 
-            if (success && cost >= 0)
-            {
-                detail.Price = cost;
+            if (success && val >= 0) {
+                detail.Price = val;
 
 				using (var scope = new TransactionScope ()) {
 	            	detail.UpdateAndFlush ();
 				}
             }
 
-            return Json(new { id = id, price = detail.Price.ToString("c"), total = detail.Total.ToString("c") });
-        }
+			return Json(new { id = id, value = detail.Price.ToString ("c"), total = detail.Total.ToString ("c") });
+		}
+
+		[HttpPost]
+		public ActionResult EditDetailCurrency (int id, string value)
+		{
+			var detail = PurchaseOrderDetail.Find (id);
+			CurrencyCode val;
+			bool success;
+
+			success = Enum.TryParse<CurrencyCode> (value.Trim (), out val);
+
+			if (success) {
+				decimal rate = CashHelpers.GetTodayExchangeRate (val);
+
+				if (rate == 0) {
+					Response.StatusCode = 400;
+					return Content (Resources.Message_InvalidExchangeRate);
+				}
+
+				detail.Currency = val;
+				detail.ExchangeRate = CashHelpers.GetTodayExchangeRate (val);
+
+				using (var scope = new TransactionScope()) {
+					detail.Update ();
+				}
+			}
+
+			return Json (new { id = id, value = detail.Currency.ToString (), rate = detail.ExchangeRate, total = detail.Total.ToString ("c") });
+		}
 
         [HttpPost]
-        public JsonResult EditPurchaseDetailDiscount(int id, string value)
+        public JsonResult EditDetailDiscount (int id, string value)
         {
-            PurchaseOrderDetail detail = PurchaseOrderDetail.Find(id);
+            var detail = PurchaseOrderDetail.Find (id);
             bool success;
             decimal discount;
 
-            success = decimal.TryParse(value.TrimEnd(new char[] { ' ', '%' }), out discount);
+            success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out discount);
             discount /= 100m;
 
-            if (success && discount >= 0 && discount <= 1)
-            {
+            if (success && discount >= 0 && discount <= 1) {
                 detail.Discount = discount;
 
 				using (var scope = new TransactionScope ()) {
@@ -248,37 +283,36 @@ namespace Mictlanix.BE.Web.Controllers
 				}
             }
 
-            return Json(new { id = id, discount = detail.Discount.ToString("p"), total = detail.Total.ToString("c") });
+			return Json (new { id = id, value = detail.Discount.ToString ("p"), total = detail.Total.ToString ("c") });
         }
 
         [HttpPost]
-        public JsonResult EditDetailWarehouse(int id, int warehouse)
+		public JsonResult EditDetailWarehouse (int id, int value)
         {
-            PurchaseOrderDetail detail = PurchaseOrderDetail.Find(id);
+            var detail = PurchaseOrderDetail.Find (id);
 
-            detail.WarehouseId = warehouse;
-            detail.Warehouse = Warehouse.Find(detail.WarehouseId);
+			detail.Warehouse = Warehouse.Find (value);
 
 			using (var scope = new TransactionScope ()) {
             	detail.UpdateAndFlush ();
 			}
 
-            return Json(new { id = id, warehouse = detail.Warehouse.Name });
-        }
+			return Json (new { id = id, value = detail.Warehouse.Name });
+		}
 
-        public ActionResult GetPurchaseItem(int id)
-        {
-            return PartialView("_PurchaseItem", PurchaseOrderDetail.Find(id));
-        }
-
-        public ActionResult GetTotals(int id)
-        {
-            var order = PurchaseOrder.Find(id);
-            return PartialView("_Totals", order);
-        }
+		public ActionResult GetTotals (int id)
+		{
+			var order = PurchaseOrder.Find(id);
+			return PartialView("_Totals", order);
+		}
+		
+		public ActionResult GetDetail (int id)
+		{
+			return PartialView ("_DetailEditView", PurchaseOrderDetail.Find (id));
+		}
 
         [HttpPost]
-        public JsonResult RemovePurchaseDetail(int id)
+        public JsonResult RemoveDetail (int id)
         {
             var item = PurchaseOrderDetail.Find(id);
             
@@ -291,7 +325,7 @@ namespace Mictlanix.BE.Web.Controllers
 
 		// TODO: Remove inventory stuff
         [HttpPost]
-        public ActionResult ConfirmPurchase (int id)
+        public ActionResult Confirm (int id)
         {
             PurchaseOrder item = PurchaseOrder.Find (id);
 
@@ -353,7 +387,7 @@ namespace Mictlanix.BE.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult CancelPurchase(int id)
+        public ActionResult Cancel (int id)
         {
             var item = PurchaseOrder.Find (id);
             

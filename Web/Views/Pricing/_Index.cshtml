@@ -15,17 +15,27 @@
     <tr>
         <th>@Html.LabelFor(x => new Product().Code)</th>
         <th>@Html.LabelFor(x => new Product().Name)</th>
-        <th>@Html.LabelFor(x => new Product().Model)</th>
         <th>@Html.LabelFor(x => new Product().UnitOfMeasurement)</th>
+        <th>@Html.LabelFor(x => new Product().TaxRate)</th>
+        <th>@Html.LabelFor(x => new Product().IsTaxIncluded)</th>
         <th>@Resources.Cost / @Resources.Prices</th>
     </tr>
 @foreach (var item in Model.Results)
 {
     <tr>
         <td class='center'>@Html.DisplayFor(x => item.Code)</td>
-        <td>@Html.DisplayFor(x => item.Name)</td>
-        <td class='center'>@Html.DisplayFor(x => item.Model)</td>
+        <td>
+        	@Html.DisplayFor(x => item.Name)<br/>
+    		@if (!string.IsNullOrEmpty (item.Model)) {
+	        <i>@Resources.Model:</i> @item.Model
+	        }
+	        @if (!string.IsNullOrEmpty (item.SKU)) {
+	        <i>@Resources.SKU:</i> @item.SKU
+	        }
+        </td>
         <td class='center'>@Html.DisplayFor(x => item.UnitOfMeasurement)</td>
+        <td class='center'><a class='editable tax' data-type='select' data-placement='bottom' data-source='@Url.Action("TaxRates")' data-pk='@item.Id' data-value='@item.TaxRate' data-url='@Url.Action("EditTaxRate", new { id = item.Id })'>@Html.DisplayFor(x => item.TaxRate)</a></td>
+        <td class='center'>@Html.DisplayFor(x => item.IsTaxIncluded)</td>
         <td class='nowrap stretch'>
             <table class='tabular'>
             @foreach(var p in ViewBag.PriceLists) {
@@ -70,12 +80,15 @@ $(function () {
 
 	@if(Privilege.AllowUpdate) {
 	<text>
-	$('.editable').editable({
+	$('a.editable').editable({
 	    display: function(value, response) {
 	        if (typeof response === 'undefined') {
 	        	$(this).html(value);
 	        } else if (Array.isArray(response)) {
-	          	$(this).html(response[value].text);
+	          	arr = $.grep(response, function(o){
+	  				return o.value == value;
+				});
+          		$(this).html(arr[0].text);
 	        } else {
 	          	$(this).html(response.value);
 	        }

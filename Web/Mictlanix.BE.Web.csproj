@@ -591,6 +591,10 @@
     <Content Include="Scripts\bootstrap-editable.js" />
     <Content Include="Scripts\bootstrap-editable.min.js" />
     <Content Include="Content\bootstrap-editable.css" />
+    <Content Include="Views\Purchases\_MasterView.cshtml" />
+    <Content Include="Views\Purchases\_MasterEditView.cshtml" />
+    <Content Include="Views\Purchases\_DetailEditView.cshtml" />
+    <Content Include="Views\Purchases\_DetailView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Products\Create.cshtml" />
@@ -826,10 +830,7 @@
     <Content Include="Views\Inventory\_PrintTransfer.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SupplierSelector.cshtml" />
     <Content Include="Views\Purchases\Index.cshtml" />
-    <Content Include="Views\Purchases\_PurchaseInfo.cshtml" />
-    <Content Include="Views\Purchases\_PurchaseItem.cshtml" />
     <Content Include="Views\Purchases\Details.cshtml" />
-    <Content Include="Views\Purchases\_PurchaseEditor.cshtml" />
     <Content Include="Views\SupplierPayments\Index.cshtml" />
     <Content Include="Views\SupplierPayments\NewPay.cshtml" />
     <Content Include="Views\AccountsPayables\AccountStatement.cshtml" />

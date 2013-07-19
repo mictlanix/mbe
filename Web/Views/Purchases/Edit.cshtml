@@ -8,205 +8,91 @@
     ViewBag.Title = Resources.Edit;
 }
 
-<script src="@Url.Content("~/Scripts/jquery.jeditable.mini.js")" type="text/javascript"></script>
-
 <h2>@Resources.PurchaseOrder</h2> 
 
-<div id="master-section">
-@Html.Partial("_PurchaseInfo")
+<div id='master-section'>
+@Html.Partial("_MasterView")
 </div>
-<div id="details-section">
-    <div id="items-container">
-        <ul id="items" class="list-items">
-        @foreach (var item in Model.Details)
-        {
-            @Html.Partial("_PurchaseItem", item) 
+
+<div id='details-section'>
+    <div id='items-container'>
+        <ul id='items' class='list-items'>
+        @foreach (var item in Model.Details) {
+            @Html.Partial("_DetailEditView", item) 
         }
         </ul>
     </div>
     <div class="selector-warehouse">
         <input type="text" id="warehouse-search" name="warehouse-search" />
     </div>
-    <div class="search-box">
-        <input type="text" id="product-search" name="product-search" />
+    <div class='search-box'>
+        <input type='text' id='product-search' name='product-search' />
     </div>
 </div>
-<div id="purchases-totals">
+<div id='totals-section' class='pull-right' style='width:300px'>
     @Html.Partial("_Totals")
 </div>
-<div class="right floating">
-    @using (Html.BeginForm("ConfirmPurchase", "Purchases", new { id = Model.Id }))
-    {
-        <button type="submit" class="icon lock">@Resources.Complete</button>
-    }
-</div>
-<div id="backTo">
+<div class='clearfix'></div>
+<div id='back-to-list' class='pull-left'>
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
-<div id="confirm-dlg" class="dialog" title="@Resources.Delete">
-	<p>
-        <span class="ui-icon ui-icon-circle-close" style="float:left; margin:3px 7px 20px 0;"></span>
-        @Resources.Message_DeleteConfirmation
-    </p>
+<div id='confirm-button' class='pull-right' @if (Model.Total == 0m) {<text>style='display:none'</text>}>
+	@using (Html.BeginForm("Confirm", "Purchases", new { id = Model.Id })) {
+	    <button id='complete' type='submit'>@Resources.CompleteSale</button>
+	}
 </div>
+<div class='clearfix'></div>
+
 <script type="text/javascript">
-    function updateTotals(){
-        $.get('@Url.Action("GetTotals")/' + PurchaseMovement.Id, function (data) {
-            $("#purchases-totals").html(data);
-        });
-    }
+function updateTotals(){
+	$.get('@Url.Action("GetTotals", new { id = Model.Id })', function(data) {
+		$('#totals-section').html(data);
+        if ($('#items li').length === 0) {
+            $('#edit-button').show('slow');
+            $('#confirm-button').hide('slow');
+        }
+	});
+}
 
-    function editQuantity(id, value) {
-        var result = "Error";
-
-        $.ajaxSetup({ async: false });
-        $.post('@Url.Action("EditPurchaseDetailQty")', { "id": id, "quantity": value }, function (data) {
-            var element = $("#item" + id + " div.quantity");
-            element.html(data.quantity);
-            element.siblings(".total").html(data.total);
-            element.addClass('succesful').switchClass('succesful', '', 3000);
-            result = data.quantity;
-        }, "json");
-        $.ajaxSetup({ async: true });
-
-        updateTotals();
-
-        return result;
-    }
-
-    function editDiscount(id, value) {
-        var result = "Error";
-
-        $.ajaxSetup({ async: false });
-        $.post('@Url.Action("EditPurchaseDetailDiscount")', { "id": id, "value": value }, function (data) {
-            var element = $("#item" + id + " div.discount");
-            element.html(data.discount);
-            element.siblings(".total").html(data.total);
-            element.addClass('succesful').switchClass('succesful', '', 3000);
-            result = data.discount;
-        }, "json");
-        $.ajaxSetup({ async: true });
-        
-        updateTotals();
-
-        return result;
-    }
-
-    function editPrice(id, value) {
-        var result = "Error";
-
-        $.ajaxSetup({ async: false });
-        $.post('@Url.Action("EditPurchaseDetailPrice")', { "id": id, "value": value }, function (data) {
-            var element = $("#item" + id + " div.price");
-            element.html(data.price);
-            element.siblings(".total").html(data.total);
-            element.addClass('succesful').switchClass('succesful', '', 3000);
-            result = data.price;
-        }, "json");
-        $.ajaxSetup({ async: true });
-        
-        updateTotals();
-
-        return result;
-    }
-
-    function editWarehouse(id, value) {
-        var result = "Error";
-
-        $.ajaxSetup({ async: false });
-        $.post('@Url.Action("EditDetailWarehouse")', { "id": id, "warehouse": value }, function (data) {
-            var element = $("#item" + id + " div.warehouse");
-            element.html(data.warehouse);
-            element.addClass('succesful').switchClass('succesful', '', 3000);
-            result = data.warehouse;
-        }, "json");
-        $.ajaxSetup({ async: true });
-
-        return result;
-    }
-
-    function removeItem(id) {
-        $("#confirm-dlg").dialog({
-            resizable: true,
-            height: 178,
-            modal: true,
-            buttons: {
-                @Resources.Delete: function () {
-                    $.post('@Url.Action("RemovePurchaseDetail")', { "id": id }, function (data) {
-                        if(data.result) {
-                            $("#item" + id).remove();
-                            updateTotals();
-                        }
-                    }, "json");
-                    $(this).dialog("close");
-                },
-                @Resources.Close: function () {
-                    $(this).dialog("close");
-                }
-            }
-        });
-    }
-
-    $(function () {
-        $("#warehouse-search").tokenInput("@Url.Action("GetSuggestions", "Warehouses")", {
-            hintText: "@Resources.ChooseWarehouse",
-            noResultsText: "@Resources.NoResultsText",
-            searchingText: "@Resources.SearchingText",
-            queryParam: "pattern",
-            minChars: 1,
-            tokenLimit: 1,
-            onAdd: function () { $(".search-box").show("slow"); },
-            onDelete: function () { $(".search-box").hide(); }
-        });
-
-        $("#product-search").tokenInput("@Url.Action("GetSuggestions", "Products")", {
-            hintText: "@Resources.HIntText",
-            noResultsText: "@Resources.NoResultsText",
-            searchingText: "@Resources.SearchingText",          
-            resultsFormatter: function(item){return ProductFormatter(item);},
-            queryParam: "pattern",minChars: 3,tokenLimit: 1,
-            onAdd: function (item) {
-                var w =$("#warehouse-search").tokenInput("get")[0];
-                $.post('@Url.Action("AddPurchaseDetail")', { "movement": PurchaseMovement.Id, "warehouse": "" + w.id, "product": "" + item.id }, function (detail) {
-                    $.get('@Url.Action("GetPurchaseItem")/' + detail.id, function (data) {
-                        $("#items").append(data);
-                        $("#item" + detail.id + " div.quantity").editable(function (value, settings) {
-                            return editQuantity(detail.id, value);
-                        }, { cssclass : "number" });
-                        $("#item" + detail.id + " div.price").editable(function (value, settings) {
-                            return editPrice(detail.id, value);
-                        }, { cssclass : "number" });
-                        $("#item" + detail.id + " div.discount").editable(function (value, settings) {
-                            return editDiscount(detail.id, value);
-                        }, { cssclass : "number" });
-                        $("#item" + detail.id + " div.warehouse").editable(function (value, settings) {
-                            return editWarehouse(detail.id, value);
-                        }, {loadurl: "@Url.Action("List", "Warehouses")", type: "select", submit: "OK", style: "inherit"});
-                    
-                        $("#product-search").tokenInput("clear");
-                        updateTotals();
-                    });
-
-                }, "json");
-            }
-        });
-
-    @foreach (var item in Model.Details)
-    {
-        @:$("#item@(item.Id) div.quantity").editable(function(value,settings){return editQuantity(@item.Id, value);});
-        @:$("#item@(item.Id) div.price").editable(function(value,settings){return editPrice(@item.Id, value);});
-        @:$("#item@(item.Id) div.discount").editable(function(value,settings){return editDiscount(@item.Id, value);});
-        @:$("#item@(item.Id) div.warehouse").editable(function(value,settings){return editWarehouse(@item.Id, value);}, { loadurl: "@Url.Action("List", "Warehouses")", type: "select", submit: "OK", style: "inherit"});        
-    }
-
-        $(".search-box").hide();
+$(function () {
+    $('#warehouse-search').tokenInput('@Url.Action("GetSuggestions", "Warehouses")', {
+        hintText: '@Resources.ChooseWarehouse',
+        noResultsText: '@Resources.NoResultsText',
+        searchingText: '@Resources.SearchingText',
+        queryParam: 'pattern',
+        minChars: 1,
+        tokenLimit: 1,
+        onAdd: function () { $('.search-box').show('slow'); },
+        onDelete: function () { $('.search-box').hide(); }
     });
+
+    $('#product-search').tokenInput('@Url.Action("GetSuggestions", "Products")', {
+        hintText: '@Resources.HIntText',
+        noResultsText: '@Resources.NoResultsText',
+        searchingText: '@Resources.SearchingText',          
+        resultsFormatter: function(item){return ProductFormatter(item);},
+        queryParam: 'pattern',minChars: 3,tokenLimit: 1,
+        onAdd: function (item) {
+            var w =$('#warehouse-search').tokenInput("get")[0];
+            $.post('@Url.Action("AddPurchaseDetail")', { 'movement': PurchaseMovement.Id, 'warehouse': '' + w.id, 'product': '' + item.id }, function (detail) {
+                $.get('@Url.Action("GetDetail")/' + detail.id, function (data) {
+                    $('#items').append(data);                
+                    $('#product-search').tokenInput('clear');
+
+                    updateTotals();
+
+                    $('#edit-button').hide('slow');
+                    $('#confirm-button').show('slow');
+                });
+
+            }, 'json');
+        }
+    });
+
+    $('.search-box').hide();
+});
 </script>
-<style type="text/css">
-ul.token-input-list {
-  width:100%;
-}
-div.token-input-dropdown {
-  width:650px;
-}
+<style type='text/css'>
+ul.token-input-list {width:100%;}
+div.token-input-dropdown {width:650px;}
 </style>

@@ -394,6 +394,9 @@ span.thick {
   display:inline-block;
   cursor:pointer;
 }
+span.editable {
+  cursor:inherit;
+}
 .editable.price,.editable.tax,
 .editable.discount,.editable.quantity {
   min-width:60px;

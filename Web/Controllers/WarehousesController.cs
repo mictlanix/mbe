@@ -43,9 +43,6 @@ namespace Mictlanix.BE.Web.Controllers
 {
     public class WarehousesController : Controller
     {
-        //
-        // GET: /Warehouses/
-
         public ViewResult Index()
         {
             var qry = from x in Warehouse.Queryable
@@ -59,8 +56,6 @@ namespace Mictlanix.BE.Web.Controllers
 
             return View(search);
         }
-
-        // POST: /Warehouses/
 
         [HttpPost]
         public ActionResult Index(Search<Warehouse> search)
@@ -98,25 +93,16 @@ namespace Mictlanix.BE.Web.Controllers
             return search;
         }
 
-        //
-        // GET: /Warehouses/Details/5
-
         public ViewResult Details (int id)
         {
             var item = Warehouse.Find (id);
             return View (item);
         }
 
-        //
-        // GET: /Warehouses/Create
-
         public ActionResult Create ()
         {
             return View ();
         }
-
-        //
-        // POST: /Warehouses/Create
 
         [HttpPost]
         public ActionResult Create (Warehouse item)
@@ -133,17 +119,11 @@ namespace Mictlanix.BE.Web.Controllers
 			return RedirectToAction ("Index");
         }
 
-        //
-        // GET: /Warehouses/Edit/5
-
         public ActionResult Edit (int id)
         {
             var item = Warehouse.Find (id);
             return View (item);
         }
-
-        //
-        // POST: /Warehouses/Edit/5
 
         [HttpPost]
         public ActionResult Edit (Warehouse item)
@@ -164,16 +144,10 @@ namespace Mictlanix.BE.Web.Controllers
 			return RedirectToAction ("Index");
         }
 
-        //
-        // GET: /Warehouses/Delete/5
-
         public ActionResult Delete (int id)
         {
             return View (Warehouse.Find (id));
         }
-
-        //
-        // POST: /Warehouses/Delete/5
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
@@ -200,16 +174,16 @@ namespace Mictlanix.BE.Web.Controllers
             return Json(qry.Take(15).ToList(), JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult List()
+        public JsonResult List ()
         {
             var qry = from x in Warehouse.Queryable
-                      select new { id = x.Id, name = x.Name };
+					  orderby x.Name
+					  select new { 
+						value = x.Id,
+						text = x.Name
+					  };
 
-            var dict = qry.ToDictionary(x => x.id.ToString(), x => x.name);
-
-            //dict.Add("selected", id.ToString());
-
-            return Json(dict, JsonRequestBehavior.AllowGet);
+			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
         }
     }
 }
