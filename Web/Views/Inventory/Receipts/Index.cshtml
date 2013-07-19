@@ -13,14 +13,12 @@
 <h2>@Resources.DisplayName_InventoryReceipts</h2>
 
 <p>
-@if(Privilege.AllowCreate)
-{
+@if(Privilege.AllowCreate) {
     @Html.ActionLink(Resources.CreateNew, "NewReceipt", new { }, new { @class = "button icon add" })
 }
 </p>
 
-@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))
-{
+@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
     <fieldset>
         <legend>@Resources.Search</legend>
         @Html.HiddenFor(x => x.Offset)
@@ -40,5 +38,5 @@
     <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
 </div>
 <div id="search-results">
-    @Html.Partial("_Receipts")
+    @Html.Partial("Receipts/_Index")
 </div>

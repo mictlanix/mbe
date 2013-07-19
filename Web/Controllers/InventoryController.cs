@@ -43,97 +43,66 @@ namespace Mictlanix.BE.Web.Controllers
     {
         #region Receipts
 
-        //
-        // GET: /Inventory/Receipts
+        public ActionResult Receipts ()
+		{
+			var search = SearchReceipts (new Search<InventoryReceipt> {
+				Limit = Configuration.PageSize
+			});
 
-        public ActionResult Receipts()
-        {
-            var qry = from x in InventoryReceipt.Queryable
-                      orderby x.Id descending
-                      select x;
-
-            Search<InventoryReceipt> search = new Search<InventoryReceipt>();
-            search.Limit = Configuration.PageSize;
-            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            search.Total = qry.Count();
-
-            return View(search);
+			return View("Receipts/Index", search);
         }
-
-        // POST: /Categories/
 
         [HttpPost]
-        public ActionResult Receipts(Search<InventoryReceipt> search)
-        {
-            if (ModelState.IsValid)
-            {
-                search = GetInventoryReceipts(search);
-            }
+        public ActionResult Receipts (Search<InventoryReceipt> search)
+		{
+			if (ModelState.IsValid) {
+				search = SearchReceipts (search);
+			}
 
-            if (Request.IsAjaxRequest())
-            {
-                return PartialView("_Receipts", search);
-            }
-            else
-            {
-                return View(search);
-            }
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("Receipts/_Index", search);
+			}
+
+			return View ("Receipts/Index", search);
         }
 
-        Search<InventoryReceipt> GetInventoryReceipts(Search<InventoryReceipt> search)
-        {
-            if (search.Pattern == null)
-            {
-                var qry = from x in InventoryReceipt.Queryable
-                          orderby x.Id descending
-                          select x;
+		Search<InventoryReceipt> SearchReceipts (Search<InventoryReceipt> search)
+		{
+			IQueryable<InventoryReceipt> qry;
 
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            }
-            else
-            {
-                var qry = from x in InventoryReceipt.Queryable
-                          where x.Warehouse.Name.Contains(search.Pattern)
-                          orderby x.Id descending
-                          select x;
+            if (search.Pattern == null) {
+                qry = from x in InventoryReceipt.Queryable
+                      orderby x.Id descending
+                      select x;
+            } else {
+                qry = from x in InventoryReceipt.Queryable
+                      where x.Warehouse.Name.Contains(search.Pattern)
+                      orderby x.Id descending
+                      select x;
+			}
 
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            }
+			search.Total = qry.Count ();
+			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
 
             return search;
         }
 
-        // GET: /Inventory/PrintReceipt/
+		public ViewResult Receipt (int id)
+		{
+			var item = InventoryReceipt.Find (id);
+			return View ("Receipts/View", item);
+		}
 
-        public ViewResult PrintReceipt(int id)
+        public ViewResult PrintReceipt (int id)
         {
-            InventoryReceipt item = InventoryReceipt.Find(id);
-
-            return View("_PrintReceipt",item);
-        }
-        //
-        // GET: /Inventory/Receipt/{id}
-
-        public ViewResult Receipt(int id)
-        {
-            InventoryReceipt item = InventoryReceipt.Find(id);
-
-            return View(item);
+            var item = InventoryReceipt.Find(id);
+			return View("Receipts/Print",item);
         }
 
-        //
-        // GET: /Inventory/NewReceipt
-
-        public ViewResult NewReceipt()
+        public ViewResult NewReceipt ()
         {
-            return View(new InventoryReceipt());
+			return View("Receipts/New", new InventoryReceipt ());
         }
-
-
-        //
-        // POST: /Inventory/NewReceipt
 
         [HttpPost]
 		public ActionResult NewReceipt (InventoryReceipt item)
@@ -144,63 +113,56 @@ namespace Mictlanix.BE.Web.Controllers
 			item.Updater = item.Creator;
 			item.Warehouse = Warehouse.Find (item.WarehouseId);
 
-
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
 			}
 
-            return RedirectToAction("EditReceipt", new { id = item.Id });
+            return RedirectToAction ("EditReceipt", new { id = item.Id });
         }
 
-        //
-        // GET: /Inventory/EditReceipt/5
-
-        public ActionResult EditReceipt(int id)
+        public ActionResult EditReceipt (int id)
         {
-            InventoryReceipt item = InventoryReceipt.Find(id);
+            var item = InventoryReceipt.Find (id);
 
-            if (item.IsCompleted || item.IsCancelled)
-            {
-                return RedirectToAction("Receipt", new { id = item.Id });
+            if (item.IsCompleted || item.IsCancelled) {
+                return RedirectToAction ("Receipt", new { id = item.Id });
             }
 
-            if (Request.IsAjaxRequest())
-                return PartialView("_ReceiptEditor", item);
+            if (Request.IsAjaxRequest ())
+				return PartialView ("Receipts/_MasterEditView", item);
             else
-                return View(item);
+				return View ("Receipts/Edit", item);
         }
 
-        //
-        // POST: /Inventory/EditReceipt
+		public ActionResult DiscardReceiptChanges (int id)
+		{
+			return PartialView ("Receipts/_MasterView", InventoryReceipt.TryFind (id));
+		}
 
         [HttpPost]
-        public ActionResult EditReceipt(InventoryReceipt item)
+        public ActionResult EditReceipt (InventoryReceipt item)
         {
             var movement = InventoryReceipt.Find (item.Id);
 
-            movement.Warehouse = Warehouse.Find(item.WarehouseId);
-            movement.Updater = SecurityHelpers.GetUser(User.Identity.Name).Employee;
+            movement.Warehouse = Warehouse.Find (item.WarehouseId);
+            movement.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
             movement.ModificationTime = DateTime.Now;
             movement.Comment = item.Comment;
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
             	movement.UpdateAndFlush ();
 			}
 
-            return PartialView("_ReceiptInfo", movement);
+			return PartialView ("Receipts/_MasterView", movement);
         }
 
-        //
-        // POST: /Inventory/AddReceiptDetail
-
         [HttpPost]
-        public JsonResult AddReceiptDetail(int movement, int product)
+        public JsonResult AddReceiptDetail (int movement, int product)
         {
             var p = Product.Find(product);
 
-            var item = new InventoryReceiptDetail
-            {
-                Receipt = InventoryReceipt.Find(movement),
+            var item = new InventoryReceiptDetail {
+                Receipt = InventoryReceipt.Find (movement),
                 Product = p,
                 ProductCode = p.Code,
                 ProductName = p.Name,
@@ -208,57 +170,45 @@ namespace Mictlanix.BE.Web.Controllers
                 QuantityOrdered = 0
             };
 
-            using (var scope = new TransactionScope()) {
-                item.CreateAndFlush();
+            using (var scope = new TransactionScope ()) {
+                item.CreateAndFlush ();
             }
 
-            return Json(new { id = item.Id });
+            return Json (new { id = item.Id });
         }
 
-        //
-        // POST: /Inventory/EditReceiptDetailQty
-
         [HttpPost]
-        public JsonResult EditReceiptDetailQty(int id, decimal quantity)
+		public JsonResult EditReceiptDetailQuantity (int id, decimal value)
         {
-            InventoryReceiptDetail detail = InventoryReceiptDetail.Find(id);
+            var detail = InventoryReceiptDetail.Find (id);
 
-            if (quantity > 0) {
-                detail.Quantity = quantity;
+            if (value >= 0) {
+                detail.Quantity = value;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 	            	detail.UpdateAndFlush ();
 				}
             }
 
-            return Json(new { id = id, quantity = detail.Quantity });
+			return Json (new { id = id, value = detail.Quantity });
         }
 
-        //
-        // GET: /Inventory/GetReceiptItem/{id}
-
-        public ActionResult GetReceiptItem(int id)
+        public ActionResult GetReceiptItem (int id)
         {
-            return PartialView("_ReceiptItem", InventoryReceiptDetail.Find(id));
+			return PartialView ("Receipts/_DetailEditView", InventoryReceiptDetail.Find (id));
         }
-
-        //
-        // POST: /Inventory/RemoveReceiptDetail/{id}
 
         [HttpPost]
-        public JsonResult RemoveReceiptDetail(int id)
+        public JsonResult RemoveReceiptDetail (int id)
         {
-            var item = InventoryReceiptDetail.Find(id);
+            var item = InventoryReceiptDetail.Find (id);
             
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				item.DeleteAndFlush ();
 			}
 
-            return Json(new { id = id, result = true });
+            return Json (new { id = id, result = true });
         }
-
-        //
-        // POST: /Inventory/ConfirmReceipt/{id}
 
         [HttpPost]
         public ActionResult ConfirmReceipt (int id)
@@ -266,583 +216,474 @@ namespace Mictlanix.BE.Web.Controllers
             var item = InventoryReceipt.TryFind (id);
 
 			if (item == null || item.IsCompleted || item.IsCancelled)
-				return RedirectToAction("Receipts");
+				return RedirectToAction ("Receipts");
 
             item.IsCompleted = true;
 			item.ModificationTime = DateTime.Now;
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				item.UpdateAndFlush ();
 
-				foreach(var x in item.Details) {
-					InventoryHelpers.ChangeNotification(TransactionType.InventoryReceipt, item.Id,
-					                                    item.ModificationTime, item.Warehouse, x.Product, x.Quantity);
+				foreach (var x in item.Details) {
+					InventoryHelpers.ChangeNotification (TransactionType.InventoryReceipt, item.Id,
+					                                     item.ModificationTime, item.Warehouse, x.Product, x.Quantity);
 				}
 			}
 
-            return RedirectToAction("Receipts");
+            return RedirectToAction ("Receipts");
         }
-
-        //
-        // POST: /Inventory/CancelReceipt/{id}
 
         [HttpPost]
         public ActionResult CancelReceipt (int id)
         {
-            InventoryReceipt item = InventoryReceipt.Find(id);
+            var item = InventoryReceipt.Find (id);
 
             item.IsCancelled = true;
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
             	item.UpdateAndFlush ();
 			}
 
-            return RedirectToAction("Receipts");
+            return RedirectToAction ("Receipts");
         }
         
         #endregion
 
-        #region Issues
+		#region Issues
 
-        //
-        // GET: /Inventory/Issues
-
-        public ActionResult Issues()
-        {
-            var qry = from x in InventoryIssue.Queryable
-                      orderby x.Id descending
-                      select x;
-
-            Search<InventoryIssue> search = new Search<InventoryIssue>();
-            search.Limit = Configuration.PageSize;
-            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            search.Total = qry.Count();
-
-            return View(search);
-        }
-
-        // POST: /Issues/
-
-        [HttpPost]
-        public ActionResult Issues(Search<InventoryIssue> search)
-        {
-            if (ModelState.IsValid)
-            {
-                search = GetInventoryIssues(search);
-            }
-
-            if (Request.IsAjaxRequest())
-            {
-                return PartialView("_Issues", search);
-            }
-            else
-            {
-                return View(search);
-            }
-        }
-
-        Search<InventoryIssue> GetInventoryIssues(Search<InventoryIssue> search)
-        {
-            if (search.Pattern == null)
-            {
-                var qry = from x in InventoryIssue.Queryable
-                          orderby x.Id descending
-                          select x;
-
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            }
-            else
-            {
-                var qry = from x in InventoryIssue.Queryable
-                          where x.Warehouse.Name.Contains(search.Pattern)
-                          orderby x.Id descending
-                          select x;
-
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            }
-
-            return search;
-        }
-
-        // GET: /Inventory/PrintIssue/
-
-        public ViewResult PrintIssue(int id)
-        {
-            InventoryIssue item = InventoryIssue.Find(id);
-
-            return View("_PrintIssue", item);
-        }
-
-        //
-        // GET: /Inventory/Issue/{id}
-
-        public ViewResult Issue(int id)
-        {
-            InventoryIssue item = InventoryIssue.Find(id);
-
-            return View(item);
-        }
-
-        //
-        // GET: /Inventory/NewIssue
-
-        public ViewResult NewIssue()
-        {
-            return View(new InventoryIssue());
-        }
-
-
-        //
-        // POST: /Inventory/NewIssue
-
-        [HttpPost]
-        public ActionResult NewIssue(InventoryIssue item)
-        {
-            item.CreationTime = DateTime.Now;
-            item.ModificationTime = item.CreationTime;
-            item.Creator = SecurityHelpers.GetUser(User.Identity.Name).Employee;
-            item.Updater = item.Creator;
-            item.Warehouse = Warehouse.Find(item.WarehouseId);
-
-            using (var scope = new TransactionScope()) {
-                item.CreateAndFlush();
-            }
-
-            return RedirectToAction("EditIssue", new { id = item.Id });
-        }
-
-        //
-        // GET: /Inventory/EditIssue/5
-
-        public ActionResult EditIssue (int id)
+		public ActionResult Issues ()
 		{
-			InventoryIssue item = InventoryIssue.Find (id);
+			var search = SearchIssues (new Search<InventoryIssue> {
+				Limit = Configuration.PageSize
+			});
+
+			return View("Issues/Index", search);
+		}
+
+		[HttpPost]
+		public ActionResult Issues (Search<InventoryIssue> search)
+		{
+			if (ModelState.IsValid) {
+				search = SearchIssues (search);
+			}
+
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("Issues/_Index", search);
+			}
+
+			return View ("Issues/Index", search);
+		}
+
+		Search<InventoryIssue> SearchIssues (Search<InventoryIssue> search)
+		{
+			IQueryable<InventoryIssue> qry;
+
+			if (search.Pattern == null) {
+				qry = from x in InventoryIssue.Queryable
+					orderby x.Id descending
+						select x;
+			} else {
+				qry = from x in InventoryIssue.Queryable
+					where x.Warehouse.Name.Contains(search.Pattern)
+						orderby x.Id descending
+						select x;
+			}
+
+			search.Total = qry.Count ();
+			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+
+			return search;
+		}
+
+		public ViewResult Issue (int id)
+		{
+			var item = InventoryIssue.Find (id);
+			return View ("Issues/View", item);
+		}
+
+		public ViewResult PrintIssue (int id)
+		{
+			var item = InventoryIssue.Find(id);
+			return View("Issues/Print",item);
+		}
+
+		public ViewResult NewIssue ()
+		{
+			return View("Issues/New", new InventoryIssue ());
+		}
+
+		[HttpPost]
+		public ActionResult NewIssue (InventoryIssue item)
+		{
+			item.CreationTime = DateTime.Now;
+			item.ModificationTime = item.CreationTime;
+			item.Creator = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			item.Updater = item.Creator;
+			item.Warehouse = Warehouse.Find (item.WarehouseId);
+
+			using (var scope = new TransactionScope ()) {
+				item.CreateAndFlush ();
+			}
+
+			return RedirectToAction ("EditIssue", new { id = item.Id });
+		}
+
+		public ActionResult EditIssue (int id)
+		{
+			var item = InventoryIssue.Find (id);
 
 			if (item.IsCompleted || item.IsCancelled) {
 				return RedirectToAction ("Issue", new { id = item.Id });
 			}
 
-			if (Request.IsAjaxRequest ()) {
-				return PartialView ("_IssueEditor", item);
-			} else {
-				return View (item);
+			if (Request.IsAjaxRequest ())
+				return PartialView ("Issues/_MasterEditView", item);
+			else
+				return View ("Issues/Edit", item);
+		}
+
+		public ActionResult DiscardIssueChanges (int id)
+		{
+			return PartialView ("Issues/_MasterView", InventoryIssue.TryFind (id));
+		}
+
+		[HttpPost]
+		public ActionResult EditIssue (InventoryIssue item)
+		{
+			var movement = InventoryIssue.Find (item.Id);
+
+			movement.Warehouse = Warehouse.Find (item.WarehouseId);
+			movement.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			movement.ModificationTime = DateTime.Now;
+			movement.Comment = item.Comment;
+
+			using (var scope = new TransactionScope ()) {
+				movement.UpdateAndFlush ();
 			}
-        }
 
-        //
-        // POST: /Inventory/EditIssue
+			return PartialView ("Issues/_MasterView", movement);
+		}
 
-        [HttpPost]
-        public ActionResult EditIssue(InventoryIssue item)
-        {
-            var movement = InventoryIssue.Find(item.Id);
-            var warehouse = Warehouse.Find(item.WarehouseId);
+		[HttpPost]
+		public JsonResult AddIssueDetail (int movement, int product)
+		{
+			var p = Product.Find(product);
 
-            movement.Warehouse = warehouse;
-            movement.Updater = SecurityHelpers.GetUser(User.Identity.Name).Employee;
-            movement.ModificationTime = DateTime.Now;
-            movement.Comment = item.Comment;
+			var item = new InventoryIssueDetail {
+				Issue = InventoryIssue.Find (movement),
+				Product = p,
+				ProductCode = p.Code,
+				ProductName = p.Name,
+				Quantity = 1
+			};
 
-			using (var scope = new TransactionScope()) {
-            	movement.UpdateAndFlush ();
+			using (var scope = new TransactionScope ()) {
+				item.CreateAndFlush ();
 			}
 
-            return PartialView("_IssueInfo", movement);
-        }
+			return Json (new { id = item.Id });
+		}
 
-        //
-        // POST: /Inventory/AddIssueDetail
+		[HttpPost]
+		public JsonResult EditIssueDetailQuantity (int id, decimal value)
+		{
+			var detail = InventoryIssueDetail.Find (id);
 
-        [HttpPost]
-        public JsonResult AddIssueDetail(int movement, int product)
-        {
-            var p = Product.Find(product);
+			if (value >= 0) {
+				detail.Quantity = value;
 
-            var item = new InventoryIssueDetail {
-                Issue = InventoryIssue.Find(movement),
-                Product = p,
-                ProductCode = p.Code,
-                ProductName = p.Name,
-                Quantity = 1,
-            };
-
-            using (var scope = new TransactionScope()) {
-                item.CreateAndFlush();
-            }
-
-            return Json(new { id = item.Id });
-        }
-
-        //
-        // POST: /Inventory/EditIssueDetailQty
-
-        [HttpPost]
-        public JsonResult EditIssueDetailQty(int id, decimal quantity)
-        {
-            InventoryIssueDetail detail = InventoryIssueDetail.Find(id);
-
-            if (quantity > 0) {
-                detail.Quantity = quantity;
-
-				using (var scope = new TransactionScope()) {
-	            	detail.UpdateAndFlush ();
+				using (var scope = new TransactionScope ()) {
+					detail.UpdateAndFlush ();
 				}
-            }
-
-            return Json(new { id = id, quantity = detail.Quantity });
-        }
-
-        //
-        // GET: /Inventory/GetIssueItem/{id}
-
-        public ActionResult GetIssueItem(int id)
-        {
-            return PartialView("_IssueItem", InventoryIssueDetail.Find(id));
-        }
-
-        //
-        // POST: /Inventory/RemoveIssueDetail/{id}
-
-        [HttpPost]
-        public JsonResult RemoveIssueDetail(int id)
-        {
-            var item = InventoryIssueDetail.Find(id);
-
-			using (var scope = new TransactionScope()) {
-            	item.DeleteAndFlush ();
 			}
 
-            return Json(new { id = id, result = true });
-        }
+			return Json (new { id = id, value = detail.Quantity });
+		}
 
-        //
-        // POST: /Inventory/ConfirmIssue/{id}
+		public ActionResult GetIssueItem (int id)
+		{
+			return PartialView ("Issues/_DetailEditView", InventoryIssueDetail.Find (id));
+		}
 
-        [HttpPost]
-        public ActionResult ConfirmIssue(int id)
-        {
-            InventoryIssue item = InventoryIssue.TryFind (id);
-			
+		[HttpPost]
+		public JsonResult RemoveIssueDetail (int id)
+		{
+			var item = InventoryIssueDetail.Find (id);
+
+			using (var scope = new TransactionScope ()) {
+				item.DeleteAndFlush ();
+			}
+
+			return Json (new { id = id, result = true });
+		}
+
+		[HttpPost]
+		public ActionResult ConfirmIssue (int id)
+		{
+			var item = InventoryIssue.TryFind (id);
+
 			if (item == null || item.IsCompleted || item.IsCancelled)
 				return RedirectToAction ("Issues");
 
-            item.IsCompleted = true;
-			item.ModificationTime = DateTime.Now;
-
-			using (var scope = new TransactionScope()) {
-				item.UpdateAndFlush ();
-
-                foreach (var x in item.Details) {
-					InventoryHelpers.ChangeNotification(TransactionType.InventoryIssue, item.Id,
-					                                    item.ModificationTime, item.Warehouse, x.Product, -x.Quantity);
-                }
-			}
-
-            return RedirectToAction ("Issues");
-        }
-
-        //
-        // POST: /Inventory/CancelIssue/{id}
-
-        [HttpPost]
-        public ActionResult CancelIssue (int id)
-        {
-            InventoryIssue item = InventoryIssue.Find(id);
-
-            item.IsCancelled = true;
-
-			using (var scope = new TransactionScope()) {
-            	item.UpdateAndFlush ();
-			}
-
-            return RedirectToAction("Issues");
-        }
-
-        #endregion
-
-        #region Transfers
-
-        //
-        // GET: /Inventory/Transfers
-
-        public ActionResult Transfers()
-        {
-            var qry = from x in InventoryTransfer.Queryable
-                      orderby x.Id descending
-                      select x;
-
-            Search<InventoryTransfer> search = new Search<InventoryTransfer>();
-            search.Limit = Configuration.PageSize;
-            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            search.Total = qry.Count();
-
-            return View(search);
-        }
-
-        // POST: /InventoryTransfer/
-
-        [HttpPost]
-        public ActionResult Transfers(Search<InventoryTransfer> search)
-        {
-            if (ModelState.IsValid)
-            {
-                search = GetInventoryTransfers(search);
-            }
-
-            if (Request.IsAjaxRequest())
-            {
-                return PartialView("_Transfers", search);
-            }
-            else
-            {
-                return View(search);
-            }
-        }
-
-        Search<InventoryTransfer> GetInventoryTransfers(Search<InventoryTransfer> search)
-        {
-            if (search.Pattern == null)
-            {
-                var qry = from x in InventoryTransfer.Queryable
-                          orderby x.Id descending
-                          select x;
-
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            }
-            else
-            {
-                var qry = from x in InventoryTransfer.Queryable
-                          where x.To.Name.Contains(search.Pattern) ||
-                          x.From.Name.Contains(search.Pattern)
-                          orderby x.Id descending
-                          select x;
-
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            }
-
-            return search;
-        }
-
-        //
-        // GET: /Inventory/Transfer/{id}
-
-        public ViewResult Transfer(int id)
-        {
-            InventoryTransfer item = InventoryTransfer.Find(id);
-
-            return View(item);
-        }
-
-        // GET: /Inventory/PrintTransfer/
-
-        public ViewResult PrintTransfer(int id)
-        {
-            InventoryTransfer item = InventoryTransfer.Find(id);
-
-            return View("_PrintTransfer", item);
-        }
-
-        //
-        // GET: /Inventory/NewTransfer
-
-        public ViewResult NewTransfer()
-        {
-            return View(new InventoryTransfer());
-        }
-
-        //
-        // POST: /Inventory/NewTransfer
-
-        [HttpPost]
-        public ActionResult NewTransfer(InventoryTransfer item)
-        {
-            item.From = Warehouse.TryFind(item.FromId);
-            item.To = Warehouse.TryFind(item.ToId);
-
-            if (!ModelState.IsValid)
-            {
-                return View(item);
-            }
-			
-            item.CreationTime = DateTime.Now;
-            item.ModificationTime = item.CreationTime;
-            item.Creator = SecurityHelpers.GetUser(User.Identity.Name).Employee;
-            item.Updater = item.Creator;
-
-            using (var scope = new TransactionScope()) {
-                item.CreateAndFlush();
-            }
-
-            return RedirectToAction("EditTransfer", new { id = item.Id });
-        }
-
-        //
-        // GET: /Inventory/EditTransfer/5
-
-        public ActionResult EditTransfer(int id)
-        {
-            InventoryTransfer item = InventoryTransfer.Find(id);
-
-            if (item.IsCompleted || item.IsCancelled)
-            {
-                return RedirectToAction("Transfer", new { id = item.Id });
-            }
-
-            if (Request.IsAjaxRequest())
-                return PartialView("_TransferEditor", item);
-            else
-                return View(item);
-        }
-
-        //
-        // POST: /Inventory/EditTransfer
-
-        [HttpPost]
-        public ActionResult EditTransfer(InventoryTransfer item)
-        {
-            item.From = Warehouse.TryFind(item.FromId);
-            item.To = Warehouse.TryFind(item.ToId);
-
-            if (!ModelState.IsValid)
-            {
-                if (Request.IsAjaxRequest())
-                    return PartialView("_TransferEditor", item);
-                else
-                    return View(item);
-            }
-
-            var movement = InventoryTransfer.Find(item.Id);
-
-            movement.From = item.From;
-            movement.To = item.To;
-            movement.Updater = SecurityHelpers.GetUser(User.Identity.Name).Employee;
-            movement.ModificationTime = DateTime.Now;
-            movement.Comment = item.Comment;
-
-			using (var scope = new TransactionScope()) {
-            	movement.UpdateAndFlush ();
-			}
-
-            return PartialView("_TransferInfo", movement);
-        }
-
-        //
-        // POST: /Inventory/AddTransferDetail
-
-        [HttpPost]
-        public JsonResult AddTransferDetail(int movement, int product)
-        {
-            var p = Product.Find(product);
-
-            var item = new InventoryTransferDetail {
-                Transfer = InventoryTransfer.Find(movement),
-                Product = p,
-                ProductCode = p.Code,
-                ProductName = p.Name,
-                Quantity = 1,
-            };
-
-            using (var scope = new TransactionScope()) {
-                item.CreateAndFlush ();
-            }
-
-            return Json(new { id = item.Id });
-        }
-
-        //
-        // POST: /Inventory/EditTransferDetailQty
-
-        [HttpPost]
-        public JsonResult EditTransferDetailQty(int id, decimal quantity)
-        {
-            InventoryTransferDetail detail = InventoryTransferDetail.Find(id);
-
-            if (quantity > 0)
-            {
-                detail.Quantity = quantity;
-
-				using (var scope = new TransactionScope()) {
-	            	detail.UpdateAndFlush ();
-				}
-            }
-
-            return Json(new { id = id, quantity = detail.Quantity });
-        }
-
-        //
-        // GET: /Inventory/GetTransferItem/{id}
-
-        public ActionResult GetTransferItem(int id)
-        {
-            return PartialView("_TransferItem", InventoryTransferDetail.Find(id));
-        }
-
-        //
-        // POST: /Inventory/RemoveTransferDetail/{id}
-
-        [HttpPost]
-        public JsonResult RemoveTransferDetail(int id)
-        {
-            var item = InventoryTransferDetail.Find(id);
-
-			using (var scope = new TransactionScope()) {
-            	item.DeleteAndFlush ();
-			}
-
-            return Json(new { id = id, result = true });
-        }
-
-        //
-        // POST: /Inventory/ConfirmTransfer/{id}
-
-        [HttpPost]
-        public ActionResult ConfirmTransfer(int id)
-        {
-            var item = InventoryTransfer.TryFind (id);
-			
-			if (item == null || item.IsCompleted || item.IsCancelled)
-				return RedirectToAction("Transfers");
-			
 			item.IsCompleted = true;
 			item.ModificationTime = DateTime.Now;
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				item.UpdateAndFlush ();
 
-                foreach (var x in item.Details) {
+				foreach (var x in item.Details) {
+					InventoryHelpers.ChangeNotification (TransactionType.InventoryIssue, item.Id,
+					                                     item.ModificationTime, item.Warehouse, x.Product, -x.Quantity);
+				}
+			}
+
+			return RedirectToAction ("Issues");
+		}
+
+		[HttpPost]
+		public ActionResult CancelIssue (int id)
+		{
+			var item = InventoryIssue.Find (id);
+
+			item.IsCancelled = true;
+
+			using (var scope = new TransactionScope ()) {
+				item.UpdateAndFlush ();
+			}
+
+			return RedirectToAction ("Issues");
+		}
+
+		#endregion
+
+		#region Transfers
+
+		public ActionResult Transfers ()
+		{
+			var search = SearchTransfers (new Search<InventoryTransfer> {
+				Limit = Configuration.PageSize
+			});
+
+			return View("Transfers/Index", search);
+		}
+
+		[HttpPost]
+		public ActionResult Transfers (Search<InventoryTransfer> search)
+		{
+			if (ModelState.IsValid) {
+				search = SearchTransfers (search);
+			}
+
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("Transfers/_Index", search);
+			}
+
+			return View ("Transfers/Index", search);
+		}
+
+		Search<InventoryTransfer> SearchTransfers (Search<InventoryTransfer> search)
+		{
+			IQueryable<InventoryTransfer> qry;
+
+			if (search.Pattern == null) {
+				qry = from x in InventoryTransfer.Queryable
+					  orderby x.Id descending
+					  select x;
+			} else {
+				qry = from x in InventoryTransfer.Queryable
+					  where x.To.Name.Contains(search.Pattern) ||
+							x.From.Name.Contains(search.Pattern)
+					  orderby x.Id descending
+					  select x;
+			}
+
+			search.Total = qry.Count ();
+			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+
+			return search;
+		}
+
+		public ViewResult Transfer (int id)
+		{
+			var item = InventoryTransfer.Find (id);
+			return View ("Transfers/View", item);
+		}
+
+		public ViewResult PrintTransfer (int id)
+		{
+			var item = InventoryTransfer.Find(id);
+			return View("Transfers/Print",item);
+		}
+
+		public ViewResult NewTransfer ()
+		{
+			return View("Transfers/New", new InventoryTransfer ());
+		}
+
+		[HttpPost]
+		public ActionResult NewTransfer (InventoryTransfer item)
+		{
+			item.From = Warehouse.TryFind(item.FromId);
+			item.To = Warehouse.TryFind(item.ToId);
+
+			if (!ModelState.IsValid) {
+				return View(item);
+			}
+
+			item.CreationTime = DateTime.Now;
+			item.ModificationTime = item.CreationTime;
+			item.Creator = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			item.Updater = item.Creator;
+
+			using (var scope = new TransactionScope ()) {
+				item.CreateAndFlush ();
+			}
+
+			return RedirectToAction ("EditTransfer", new { id = item.Id });
+		}
+
+		public ActionResult EditTransfer (int id)
+		{
+			var item = InventoryTransfer.Find (id);
+
+			if (item.IsCompleted || item.IsCancelled) {
+				return RedirectToAction ("Transfer", new { id = item.Id });
+			}
+
+			if (Request.IsAjaxRequest ())
+				return PartialView ("Transfers/_MasterEditView", item);
+			else
+				return View ("Transfers/Edit", item);
+		}
+
+		public ActionResult DiscardTransferChanges (int id)
+		{
+			return PartialView ("Transfers/_MasterView", InventoryTransfer.TryFind (id));
+		}
+
+		[HttpPost]
+		public ActionResult EditTransfer (InventoryTransfer item)
+		{
+			item.From = Warehouse.TryFind(item.FromId);
+			item.To = Warehouse.TryFind(item.ToId);
+
+			if (!ModelState.IsValid) {
+				if (Request.IsAjaxRequest()) {
+					return PartialView("Transfers/_MasterEditView", item);
+				}
+
+				return View(item);
+			}
+
+			var movement = InventoryTransfer.Find (item.Id);
+			
+			movement.From = item.From;
+			movement.To = item.To;
+			movement.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			movement.ModificationTime = DateTime.Now;
+			movement.Comment = item.Comment;
+
+			using (var scope = new TransactionScope ()) {
+				movement.UpdateAndFlush ();
+			}
+
+			return PartialView ("Transfers/_MasterView", movement);
+		}
+
+		[HttpPost]
+		public JsonResult AddTransferDetail (int movement, int product)
+		{
+			var p = Product.Find(product);
+
+			var item = new InventoryTransferDetail {
+				Transfer = InventoryTransfer.Find (movement),
+				Product = p,
+				ProductCode = p.Code,
+				ProductName = p.Name,
+				Quantity = 1
+			};
+
+			using (var scope = new TransactionScope ()) {
+				item.CreateAndFlush ();
+			}
+
+			return Json (new { id = item.Id });
+		}
+
+		[HttpPost]
+		public JsonResult EditTransferDetailQuantity (int id, decimal value)
+		{
+			var detail = InventoryTransferDetail.Find (id);
+
+			if (value >= 0) {
+				detail.Quantity = value;
+
+				using (var scope = new TransactionScope ()) {
+					detail.UpdateAndFlush ();
+				}
+			}
+
+			return Json (new { id = id, value = detail.Quantity });
+		}
+
+		public ActionResult GetTransferItem (int id)
+		{
+			return PartialView ("Transfers/_DetailEditView", InventoryTransferDetail.Find (id));
+		}
+
+		[HttpPost]
+		public JsonResult RemoveTransferDetail (int id)
+		{
+			var item = InventoryTransferDetail.Find (id);
+
+			using (var scope = new TransactionScope ()) {
+				item.DeleteAndFlush ();
+			}
+
+			return Json (new { id = id, result = true });
+		}
+
+		[HttpPost]
+		public ActionResult ConfirmTransfer (int id)
+		{
+			var item = InventoryTransfer.TryFind (id);
+
+			if (item == null || item.IsCompleted || item.IsCancelled)
+				return RedirectToAction ("Transfers");
+
+			item.IsCompleted = true;
+			item.ModificationTime = DateTime.Now;
+
+			using (var scope = new TransactionScope ()) {
+				item.UpdateAndFlush ();
+
+				foreach (var x in item.Details) {
 					InventoryHelpers.ChangeNotification(TransactionType.InventoryTransfer, item.Id,
 					                                    item.ModificationTime, item.From, x.Product, -x.Quantity);
 					InventoryHelpers.ChangeNotification(TransactionType.InventoryTransfer, item.Id,
 					                                    item.ModificationTime, item.To, x.Product, x.Quantity);
-                }
+				}
 			}
 
-            return RedirectToAction("Transfers");
-        }
+			return RedirectToAction ("Transfers");
+		}
 
-        //
-        // POST: /Inventory/CancelTransfer/{id}
+		[HttpPost]
+		public ActionResult CancelTransfer (int id)
+		{
+			var item = InventoryTransfer.Find (id);
 
-        [HttpPost]
-        public ActionResult CancelTransfer (int id)
-        {
-            InventoryTransfer item = InventoryTransfer.Find(id);
+			item.IsCancelled = true;
 
-            item.IsCancelled = true;
-
-			using (var scope = new TransactionScope()) {
-            	item.UpdateAndFlush ();
+			using (var scope = new TransactionScope ()) {
+				item.UpdateAndFlush ();
 			}
 
-            return RedirectToAction("Transfers");
-        }
+			return RedirectToAction ("Transfers");
+		}
 
-        #endregion
-    
+		#endregion
+
 		#region Lot & Serial Numbers
 
 		public ActionResult LotSerialNumbers ()

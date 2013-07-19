@@ -1,0 +1,51 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
+@model InventoryReceiptDetail
+
+<li id='id:@Model.Id'>
+    <div class='photo'>
+        <img src='@Url.Content(Model.Product.Photo)' title='@Model.ProductName' />
+    </div>
+    <div class='action-link'>
+        <a class='button icon-only icon delete' title='@Resources.Message_DeleteConfirmation'
+		   data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id' data-url='@Url.Action("RemoveReceiptDetail", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
+    </div>
+    <div class='info'>
+        <span class='thick'>@Html.DisplayFor(x => x.ProductName)</span>
+        <br/>
+        <b>@Resources.Code: </b><span>@Html.DisplayFor(x => x.ProductCode)</span>
+        <b>@Resources.Model: </b><span>@Html.DisplayFor(x => x.Product.Model)</span>
+        @if(!string.IsNullOrEmpty(Model.Product.SKU)) {
+        <b>@Resources.SKU: </b><span>@Html.DisplayFor(x => x.Product.SKU)</span>
+        }
+        <br/>
+        @if(@Model.QuantityOrdered > 0) {
+        <b>@Resources.QuantityOrdered: </b>
+        <span class='editable quantity'>@Html.DisplayFor(x => x.QuantityOrdered)</span>
+        <b>@Resources.QuantityDelivered: </b>
+        } else {
+        <b>@Resources.Quantity: </b>
+        }
+        <a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("EditReceiptDetailQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
+    </div>
+</li>
+<script type='text/javascript'>
+$('#id\\:@Model.Id a.editable').editable({
+    display: function(value, response) {
+        if (typeof response === 'undefined') {
+        	$(this).html(value);
+        } else {
+          	$(this).html(response.value);
+        }
+    }
+});
+$('#id\\:@Model.Id a.delete').editable({
+	success: function(response, newValue) {
+        $('#id\\:@Model.Id').remove();
+        if ($('#items li').length === 0) {
+            $('#confirm-button').hide('slow');
+        }
+    }
+});
+</script>

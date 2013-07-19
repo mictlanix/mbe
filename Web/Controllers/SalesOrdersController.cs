@@ -71,9 +71,9 @@ namespace Mictlanix.BE.Web.Controllers
 			
 			if (Request.IsAjaxRequest ()) {
 				return PartialView ("_Index", search);
-			} else {
-				return View (search);
 			}
+
+			return View (search);
 		}
 		
 		Search<SalesOrder> SearchSalesOrders (Search<SalesOrder> search)

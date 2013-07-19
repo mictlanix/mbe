@@ -48,13 +48,15 @@ $('#id\\:@Model.Id a.editable').editable({
         if (typeof response === 'undefined') {
         	$(this).html(value);
         } else if (Array.isArray(response)) {
-          	$(this).html(response[value].text);
+          	arr = $.grep(response, function(o){
+  				return o.value == value;
+			});
+          	$(this).html(arr[0].text);
         } else {
           	$(this).html(response.value);
         }
     }
 });
-
 $('#id\\:@Model.Id a.delete').editable({
 	success: function(response, newValue) {
         $('#id\\:@Model.Id').remove();
