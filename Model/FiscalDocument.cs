@@ -233,5 +233,23 @@ namespace Mictlanix.BE.Model
 		public virtual decimal Total {
 			get { return Details.Sum (x => x.Total); }
 		}
+
+		[DataType(DataType.Currency)]
+		[Display(Name = "Subtotal", ResourceType = typeof(Resources))]
+		public virtual decimal SubtotalEx {
+			get { return Details.Sum (x => x.SubtotalEx); }
+		}
+
+		[DataType(DataType.Currency)]
+		[Display(Name = "Taxes", ResourceType = typeof(Resources))]
+		public virtual decimal TaxesEx {
+			get { return TotalEx - SubtotalEx; }
+		}
+
+		[DataType(DataType.Currency)]
+		[Display(Name = "Total", ResourceType = typeof(Resources))]
+		public virtual decimal TotalEx {
+			get { return Details.Sum (x => x.TotalEx); }
+		}
 	}
 }

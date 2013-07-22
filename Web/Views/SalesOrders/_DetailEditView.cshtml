@@ -14,10 +14,15 @@
     <div class='info'>
         <span class='thick'>@Html.DisplayFor(x => x.ProductName)</span>
         <br/>
-        <b>@Resources.Code: </b><span>@Html.DisplayFor(x => x.ProductCode)</span>
-        <b>@Resources.Model: </b><span>@Html.DisplayFor(x => x.Product.Model)</span>
+        <b>@Resources.Code: </b>
+        <span>@Html.DisplayFor(x => x.ProductCode)</span>
+        @if (!string.IsNullOrEmpty (Model.Product.Model)) {
+        <b>@Resources.Model: </b>
+        <span>@Html.DisplayFor(x => x.Product.Model)</span>
+        }
         @if(!string.IsNullOrEmpty(Model.Product.SKU)) {
-        <b>@Resources.SKU: </b><span>@Html.DisplayFor(x => x.Product.SKU)</span>
+        <b>@Resources.SKU: </b>
+        <span>@Html.DisplayFor(x => x.Product.SKU)</span>
         }
         <b>@Resources.ExchangeRate:</b>
         <span class='rate'>@Html.DisplayFor(x => x.ExchangeRate)</span>
@@ -31,8 +36,8 @@
         <a class='editable discount' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("EditDetailDiscount", new { id = Model.Id })'>@Html.DisplayFor(x => x.Discount)</a>
         <b>@Resources.TaxRate:</b> @Html.DisplayFor(x => x.TaxRate)
         <b>@Resources.Amount:</b>
-        <span class='total'>@Html.DisplayFor(x => x.Total)</span>
-        <span>@Configuration.BaseCurrency</span>
+        <span class='editable total'>@Html.DisplayFor(x => x.Total)</span>
+        <span class='editable currency'>@Configuration.BaseCurrency</span>
     </div>
 </li>
 <script type='text/javascript'>

@@ -1318,7 +1318,7 @@ Realizada el: {0:d}</value>
     <value>Comprobante Fiscal</value>
   </data>
   <data name="TaxIncluded" xml:space="preserve">
-    <value>Incluye Impuestos</value>
+    <value>IVA Incluido</value>
   </data>
   <data name="VAT" xml:space="preserve">
     <value>IVA</value>
@@ -1660,10 +1660,10 @@ Realizada el: {0:d}</value>
     <value>Botella</value>
   </data>
   <data name="Tens" xml:space="preserve">
-    <value>Decenas</value>
+    <value>Decena</value>
   </data>
   <data name="Hundreds" xml:space="preserve">
-    <value>Cientos</value>
+    <value>Ciento</value>
   </data>
   <data name="Thousands" xml:space="preserve">
     <value>Millar</value>
