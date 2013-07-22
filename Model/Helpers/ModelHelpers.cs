@@ -38,7 +38,7 @@ namespace Mictlanix.BE.Model
 		{
 			return Math.Round (d, 2, MidpointRounding.AwayFromZero);
 		}
-		
+
 		public static decimal Subtotal (decimal quantity, decimal price, decimal exchangeRate,
 		                                decimal discount, decimal taxRate, bool taxIncluded)
 		{

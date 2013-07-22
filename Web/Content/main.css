@@ -241,19 +241,19 @@ table th {
     color:#DD4B39;
 }
 table.noborder, table.noborder td {
-    border:none;
+  border:none;
 }
-table th label {
-    color:#DD4B39;
+th label {
+  color:#DD4B39;
 }
-table td.actions {
+td.actions {
   white-space:nowrap;
   width:1px;
 }
-table td.fill {
+td.fill {
   width:100%;
 }
-table td.stretch {
+td.stretch, th.stretch {
   width:1px;
   padding:0;
 }

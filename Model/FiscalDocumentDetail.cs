@@ -84,6 +84,12 @@ namespace Mictlanix.BE.Model
         [DisplayFormat(DataFormatString = "{0:C4}")]
         [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
         public decimal Price { get; set; }
+		
+		[Display(Name = "Price", ResourceType = typeof(Resources))]
+		[DisplayFormat(DataFormatString = "{0:C4}")]
+		public decimal NetPrice {
+			get { return IsTaxIncluded ? Price / (1 + TaxRate) : Price; }
+		}
 
         [Property]
         [DisplayFormat(DataFormatString = "{0:p}")]
@@ -110,9 +116,8 @@ namespace Mictlanix.BE.Model
 
         [DataType(DataType.Currency)]
         [Display(Name = "Subtotal", ResourceType = typeof(Resources))]
-        public decimal Subtotal
-        {
-			get { return ModelHelpers.Subtotal (Quantity, Price, ExchangeRate, Discount, TaxRate, IsTaxIncluded); }
+        public decimal Subtotal {
+			get { return ModelHelpers.Subtotal (Quantity, Price, 1, Discount, TaxRate, IsTaxIncluded); }
 		}
 
 		[DataType(DataType.Currency)]
@@ -124,6 +129,24 @@ namespace Mictlanix.BE.Model
         [DataType(DataType.Currency)]
 		[Display(Name = "Total", ResourceType = typeof(Resources))]
         public decimal Total {
+			get { return ModelHelpers.Total (Quantity, Price, 1, Discount, TaxRate, IsTaxIncluded); }
+		}
+		
+		[DataType(DataType.Currency)]
+		[Display(Name = "Subtotal", ResourceType = typeof(Resources))]
+		public decimal SubtotalEx {
+			get { return ModelHelpers.Subtotal (Quantity, Price, ExchangeRate, Discount, TaxRate, IsTaxIncluded); }
+		}
+
+		[DataType(DataType.Currency)]
+		[Display(Name = "Taxes", ResourceType = typeof(Resources))]
+		public decimal TaxesEx {
+			get { return Total - Subtotal; }
+		}
+
+		[DataType(DataType.Currency)]
+		[Display(Name = "Total", ResourceType = typeof(Resources))]
+		public decimal TotalEx {
 			get { return ModelHelpers.Total (Quantity, Price, ExchangeRate, Discount, TaxRate, IsTaxIncluded); }
 		}
     }

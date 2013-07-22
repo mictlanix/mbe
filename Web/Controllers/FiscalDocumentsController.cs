@@ -203,11 +203,12 @@ namespace Mictlanix.BE.Web.Controllers
 			if (item.PaymentMethod == PaymentMethod.Unidentified ||
 			    item.PaymentMethod == PaymentMethod.Cash) {
 				item.PaymentReference = null;
-			} else if (string.IsNullOrEmpty(item.PaymentReference)) {
+			} else if (string.IsNullOrEmpty (item.PaymentReference)) {
 				item.PaymentReference = Resources.Unidentified;
 			}
 
 			var batch = item.Issuer.Batches.First (x => x.Batch == item.Batch);
+			bool changed = document.Currency != item.Currency || document.ExchangeRate != item.ExchangeRate;
 
 			// updated info
 			document.Type = batch.Type;
@@ -225,6 +226,15 @@ namespace Mictlanix.BE.Web.Controllers
 			using (var scope = new TransactionScope()) {
 				document.IssuerAddress.Update ();
 				document.RecipientAddress.Update ();
+
+				if (changed) {
+					foreach (var x in document.Details) {
+						x.Currency = document.Currency;
+						x.ExchangeRate = document.ExchangeRate;
+						x.Update ();
+					}
+				}
+
 				document.UpdateAndFlush ();
 			}
 
@@ -428,12 +438,16 @@ namespace Mictlanix.BE.Web.Controllers
 				UnitOfMeasurement = p.UnitOfMeasurement,
                 Discount = 0,
                 TaxRate = p.TaxRate,
-				IsTaxIncluded = p.IsTaxIncluded,
+				IsTaxIncluded = false,
                 Quantity = 1,
 				Price = price,
 				ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate(),
 				Currency = Configuration.DefaultCurrency
             };
+
+			if (p.IsTaxIncluded) {
+				item.Price = item.Price / (1 + item.TaxRate);
+			}
 
 			using (var scope = new TransactionScope()) {
 				item.CreateAndFlush ();
@@ -445,8 +459,8 @@ namespace Mictlanix.BE.Web.Controllers
 		[HttpPost]
 		public JsonResult EditDetailProductName (int id, string value)
 		{
-			FiscalDocumentDetail detail = FiscalDocumentDetail.Find (id);
-			string val = string.Format ("{0}", value).Trim ();
+			var detail = FiscalDocumentDetail.Find (id);
+			string val = (value ?? string.Empty).Trim ();
 			
 			if (val.Length > 0) {
 				detail.ProductName = val;
@@ -456,13 +470,13 @@ namespace Mictlanix.BE.Web.Controllers
 				}
 			}
 
-			return Json (new { id = id, value = detail.ProductName });
+			return Json (new { id = detail.Id, value = detail.ProductName });
 		}
 		
 		[HttpPost]
 		public JsonResult EditDetailProductCode (int id, string value)
 		{
-			FiscalDocumentDetail detail = FiscalDocumentDetail.Find (id);
+			var detail = FiscalDocumentDetail.Find (id);
 			string val = string.Format ("{0}", value).Trim ();
 			
 			if (val.Length > 0) {
@@ -473,13 +487,13 @@ namespace Mictlanix.BE.Web.Controllers
 				}
 			}
 
-			return Json (new { id = id, value = detail.ProductCode });
+			return Json (new { id = detail.Id, value = detail.ProductCode });
 		}
 		
 		[HttpPost]
 		public JsonResult EditDetailUM (int id, string value)
 		{
-			FiscalDocumentDetail detail = FiscalDocumentDetail.Find (id);
+			var detail = FiscalDocumentDetail.Find (id);
 			string val = string.Format ("{0}", value).Trim ();
 			
 			if (val.Length > 0) {
@@ -490,13 +504,41 @@ namespace Mictlanix.BE.Web.Controllers
 				}
 			}
 
-			return Json (new { id = id, value = detail.UnitOfMeasurement });
+			return Json (new { id = detail.Id, value = detail.UnitOfMeasurement });
+		}
+
+		[HttpPost]
+		public JsonResult EditDetailQuantity (int id, decimal value)
+		{
+			var detail = FiscalDocumentDetail.Find (id);
+
+			if (detail.OrderDetail != null) {
+				decimal max_qty = detail.Quantity + GetInvoiceableQuantity (detail.OrderDetail.Id);
+
+				if (max_qty < value)
+					value =  max_qty;
+			}
+
+			if (value > 0) {
+				detail.Quantity = value;
+
+				using (var scope = new TransactionScope()) {
+					detail.Update ();
+				}
+			}
+
+			return Json (new { 
+				id = detail.Id,
+				value = detail.FormattedValueFor (x => x.Quantity),
+				subtotal = detail.FormattedValueFor (x => x.Subtotal), 
+				subtotal2 = detail.FormattedValueFor (x => x.SubtotalEx)
+			});
 		}
 
 		[HttpPost]
 		public JsonResult EditDetailPrice (int id, string value)
 		{
-			FiscalDocumentDetail detail = FiscalDocumentDetail.Find (id);
+			var detail = FiscalDocumentDetail.Find (id);
 			bool success;
 			decimal val;
 
@@ -512,55 +554,16 @@ namespace Mictlanix.BE.Web.Controllers
 				}
 			}
 
-			return Json (new {id = id, value = detail.Price.ToString ("C4"), total = detail.Total.ToString ("c") });
+			return Json (new {
+				id = detail.Id,
+				value = detail.FormattedValueFor (x => x.Price),
+				subtotal = detail.FormattedValueFor (x => x.Subtotal), 
+				subtotal2 = detail.FormattedValueFor (x => x.SubtotalEx)
+			});
 		}
-		
+
 		[HttpPost]
-		public JsonResult EditDetailTaxRate (int id, string value)
-		{
-			FiscalDocumentDetail detail = FiscalDocumentDetail.Find (id);
-			bool success;
-			decimal val;
-
-			success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out val);
-			val /= 100m;
-			
-			if (success && (val == 0m || val == Configuration.VAT)) {
-				detail.TaxRate = val;
-
-				using (var scope = new TransactionScope()) {
-					detail.Update ();
-				}
-			}
-
-			return Json (new { id = id, value = detail.TaxRate.ToString ("p") });
-		}
-		
-        [HttpPost]
-        public JsonResult EditDetailQuantity (int id, decimal value)
-		{
-			var detail = FiscalDocumentDetail.Find (id);
-
-			if (detail.OrderDetail != null) {
-				decimal max_qty = detail.Quantity + GetInvoiceableQuantity (detail.OrderDetail.Id);
-
-				if (max_qty < value)
-					value =  max_qty;
-			}
-
-            if (value > 0) {
-                detail.Quantity = value;
-
-				using (var scope = new TransactionScope()) {
-					detail.Update ();
-				}
-            }
-
-            return Json(new { id = id, value = detail.Quantity, total = detail.Total.ToString("c") });
-        }
-
-        [HttpPost]
-        public JsonResult EditDetailDiscount (int id, string value)
+		public JsonResult EditDetailDiscount (int id, string value)
 		{
 			FiscalDocumentDetail detail = FiscalDocumentDetail.Find (id);
 			bool success;
@@ -577,7 +580,36 @@ namespace Mictlanix.BE.Web.Controllers
 				}
 			}
 
-			return Json (new { id = id, value = detail.Discount.ToString ("p"), total = detail.Total.ToString ("c") });
+			return Json (new { 
+				id = detail.Id,
+				value = detail.FormattedValueFor (x => x.Discount),
+				subtotal = detail.FormattedValueFor (x => x.Subtotal), 
+				subtotal2 = detail.FormattedValueFor (x => x.SubtotalEx)
+			});
+		}
+		
+		[HttpPost]
+		public JsonResult EditDetailTaxRate (int id, string value)
+		{
+			var detail = FiscalDocumentDetail.Find (id);
+			bool success;
+			decimal val;
+
+			success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out val);
+			val /= 100m;
+			
+			if (success && (val == 0m || val == Configuration.VAT)) {
+				detail.TaxRate = val;
+
+				using (var scope = new TransactionScope()) {
+					detail.Update ();
+				}
+			}
+
+			return Json (new { 
+				id = detail.Id,
+				value = detail.FormattedValueFor (x => x.TaxRate)
+			});
 		}
 
 		public ActionResult GetDetails (int id)
@@ -615,9 +647,17 @@ namespace Mictlanix.BE.Web.Controllers
 						IsTaxIncluded = x.IsTaxIncluded,
 						Quantity = max_qty,
 						Price = x.Price,
-						ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate(),
-						Currency = Configuration.DefaultCurrency
+						ExchangeRate = doc_entity.ExchangeRate,
+						Currency = doc_entity.Currency
 					};
+
+					if (x.IsTaxIncluded) {
+						item.Price = item.Price / (1 + item.TaxRate);
+					}
+
+					if (x.Currency != doc_entity.Currency) {
+						item.Price = x.Price * x.ExchangeRate;
+					}
 
 					item.Create ();
 					count++;

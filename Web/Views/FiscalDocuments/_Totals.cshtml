@@ -11,6 +11,7 @@
     </div>
     <div class="display-field right floating">
         @Html.DisplayFor(x => x.Subtotal)
+        @Html.DisplayFor(x => x.Currency)
     </div>
 
     <div class="display-label left floating">
@@ -18,14 +19,12 @@
     </div>
     <div class="display-field right floating">
         @Html.DisplayFor(x => x.Taxes)
+        @Html.DisplayFor(x => x.Currency)
     </div>
     
-    <div class="display-label left floating">
-        @Html.LabelFor(x => x.Total)
-    </div>
-    <div class="display-field right floating">
-        @Html.DisplayFor(x => x.Total)
-    </div>
+    <div class="display-label left floating">@Html.LabelFor(x => x.Total)</div>
+    <div class="display-field right floating">@Html.DisplayFor(x => x.Total) @Html.DisplayFor(x => x.Currency)</div>
+    <div class="display-field right floating"><i>(@Html.DisplayFor(x => x.TotalEx) @Configuration.BaseCurrency)</i></div>
 </fieldset>
 
 @if (!Model.IsCompleted && !Model.IsCancelled) {

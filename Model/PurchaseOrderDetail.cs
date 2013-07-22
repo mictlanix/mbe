@@ -70,6 +70,12 @@ namespace Mictlanix.BE.Model
         [DataType(DataType.Currency)]
         [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
         public decimal Price { get; set; }
+		
+		[Display(Name = "Price", ResourceType = typeof(Resources))]
+		[DataType(DataType.Currency)]
+		public decimal NetPrice {
+			get { return IsTaxIncluded ? Price / (1 + TaxRate) : Price; }
+		}
 
         [Property]
         [DisplayFormat(DataFormatString = "{0:p}")]
@@ -105,22 +111,19 @@ namespace Mictlanix.BE.Model
 
         [DataType(DataType.Currency)]
         [Display(Name = "Subtotal", ResourceType = typeof(Resources))]
-        public decimal Subtotal
-        {
+        public decimal Subtotal {
 			get { return ModelHelpers.Subtotal (Quantity, Price, ExchangeRate, Discount, TaxRate, IsTaxIncluded); }
 		}
 
         [DataType(DataType.Currency)]
         [Display(Name = "Taxes", ResourceType = typeof(Resources))]
-        public decimal Taxes
-        {
+        public decimal Taxes {
             get { return Total - Subtotal; }
         }
 
         [DataType(DataType.Currency)]
         [Display(Name = "Total", ResourceType = typeof(Resources))]
-        public decimal Total
-        {
+        public decimal Total {
 			get { return ModelHelpers.Total (Quantity, Price, ExchangeRate, Discount, TaxRate, IsTaxIncluded); }
 		}
 
