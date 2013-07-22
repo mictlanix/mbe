@@ -27,8 +27,8 @@
 
 @if (!Model.IsCompleted) {
     <div class="action-buttons">
-        @if (Model.IsCredit && (CustomerHelpers.CalcDebt (Model.Customer.Id) + Model.Total) > Model.Customer.CreditLimit) {
-            var difference = CustomerHelpers.CalcDebt(Model.Customer.Id) + Model.Total - Model.Customer.CreditLimit;
+        @if (Model.IsCredit && (Model.Customer.Debt () + Model.Total) > Model.Customer.CreditLimit) {
+            var difference = Model.Customer.Debt () + Model.Total - Model.Customer.CreditLimit;
             @Resources.CreditLimitExceeded<br />
             @difference.ToString("c")
         }
