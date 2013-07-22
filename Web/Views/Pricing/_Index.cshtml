@@ -15,10 +15,10 @@
     <tr>
         <th>@Html.LabelFor(x => new Product().Code)</th>
         <th>@Html.LabelFor(x => new Product().Name)</th>
-        <th>@Html.LabelFor(x => new Product().UnitOfMeasurement)</th>
-        <th>@Html.LabelFor(x => new Product().TaxRate)</th>
-        <th>@Html.LabelFor(x => new Product().IsTaxIncluded)</th>
-        <th>@Resources.Cost / @Resources.Prices</th>
+        <th class='stretch'>@Html.LabelFor(x => new Product().UnitOfMeasurement)</th>
+        <th class='stretch'>@Html.LabelFor(x => new Product().TaxRate)</th>
+        <th class='stretch'>@Html.LabelFor(x => new Product().IsTaxIncluded)</th>
+        <th class='stretch'>@Resources.Cost / @Resources.Prices</th>
     </tr>
 @foreach (var item in Model.Results)
 {
@@ -36,7 +36,7 @@
         <td class='center'>@Html.DisplayFor(x => item.UnitOfMeasurement)</td>
         <td class='center'><a class='editable tax' data-type='select' data-placement='bottom' data-source='@Url.Action("TaxRates")' data-pk='@item.Id' data-value='@item.TaxRate' data-url='@Url.Action("EditTaxRate", new { id = item.Id })'>@Html.DisplayFor(x => item.TaxRate)</a></td>
         <td class='center'>@Html.DisplayFor(x => item.IsTaxIncluded)</td>
-        <td class='nowrap stretch'>
+        <td class='stretch nowrap'>
             <table class='tabular'>
             @foreach(var p in ViewBag.PriceLists) {
 				var price = item.Prices.SingleOrDefault(x => x.List.Id == p.Id) ?? new ProductPrice ();

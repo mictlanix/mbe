@@ -10,8 +10,12 @@
     <div class='info'>
         <span class='thick'>@Html.DisplayFor(x => x.ProductName)</span>
         <br/>
-        <b>@Resources.Code: </b><span>@Html.DisplayFor(x => x.ProductCode)</span>
-        <b>@Resources.Model: </b><span>@Html.DisplayFor(x => x.Product.Model)</span>
+        <b>@Resources.Code: </b>
+        <span>@Html.DisplayFor(x => x.ProductCode)</span>
+        @if(!string.IsNullOrEmpty(Model.Product.Model)) {
+        <b>@Resources.Model: </b>
+        <span>@Html.DisplayFor(x => x.Product.Model)</span>
+        }
         @if(!string.IsNullOrEmpty(Model.Product.SKU)) {
         <b>@Resources.SKU: </b><span>@Html.DisplayFor(x => x.Product.SKU)</span>
         }

@@ -1,4 +1,4 @@
-﻿// 
+// 
 // HtmlHelpers.cs
 // 
 // Author:
@@ -99,28 +99,6 @@ namespace Mictlanix.BE.Web.Helpers
             string ctl = html.ViewContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString();
             string atn = html.ViewContext.Controller.ValueProvider.GetValue("action").RawValue.ToString();
             return ctl == controller && atn == action;
-        }
-
-        public static string GetDisplayName(this Enum member)
-        {
-            string display_name = Enum.GetName(member.GetType(), member);
-
-            var prop_info = member.GetType().GetField(display_name);
-            var attrs = prop_info.GetCustomAttributes(typeof(DisplayAttribute), false);
-
-            if (attrs.Count() != 0)
-                display_name = ((DisplayAttribute)attrs[0]).GetName();
-
-            return display_name;
-        }
-
-        public static IList<Warehouse> GetWarehouse(this HtmlHelper helper)
-        {
-            var qry = from x in Warehouse.Queryable
-                      orderby x.Name
-                      select x;
-
-            return qry.ToList();
         }
 
 		public static string CurrencyToString (this HtmlHelper helper, decimal val, CurrencyCode currency)

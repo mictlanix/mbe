@@ -1,42 +1,72 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model FiscalDocumentDetail
 
-<li id="item@(Model.Id)">
-    <div class="photo">
-        <img src="@Url.Content(Model.Product.Photo)" title="@Model.ProductName" />
+<li id='id:@Model.Id'>
+    <div class='photo'>
+        <img src='@Url.Content(Model.Product.Photo)' title='@Model.ProductName' />
     </div>
-    <div class="action-link">
-        <a class="button icon-only icon delete" title="@Resources.Delete" href='@Url.Action("AddOrder")/@Model.Id'></a>
-        <script type="text/javascript">
-            $("#item@(Model.Id) a.delete").click(function(event){
-                event.preventDefault();
-                removeItem(@Model.Id);
-            });
-        </script>
+    <div class='action-link'>
+    @if(Model.OrderDetail != null) {
+        <span class='label label-info' title='@Resources.SalesOrder'>@Html.DisplayFor(x => x.OrderDetail.SalesOrder.Id)</span>
+    }
+        <a class='button icon-only icon delete' title='@Resources.Message_DeleteConfirmation'
+		   data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id' data-url='@Url.Action("RemoveDetail", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
     </div>
-    <div class="info">
-        <div class="editable name">@Model.ProductName</div><br/>
-        <label>@Resources.Code:</label>
-        <div class="editable code">@Model.ProductCode</div>
-        <label>@Resources.Price:</label>
-        <div class="editable price">@Html.DisplayFor(x => x.Price)</div>
-        <label>@Resources.TaxRate:</label>
-        <div class="editable tax">@Html.DisplayFor(x => x.TaxRate)</div>
-        <br />
-        <label>@Resources.UnitOfMeasurement:</label>
-        <div class="editable um">@Model.UnitOfMeasurement</div>
-        <label>@Resources.Quantity:</label>
-        <div class="editable quantity right">@Html.DisplayFor(x => x.Quantity)</div>
-        <label>@Resources.Discount:</label>
-        <div class="editable discount">@Html.DisplayFor(x => x.Discount)</div>
-        <label>@Resources.Amount:</label>
-        <strong class="total">@Html.DisplayFor(x => x.Total)</strong>
-        <br />
-        @if(Model.OrderDetail != null) {
-        <label>@Resources.SalesOrder:</label>
-        <div class="value">@Html.DisplayFor(x => x.OrderDetail.SalesOrder.Id)</div>
-        }
+    <div class='info'>
+        <a class='editable name input-xxlarge' data-type='text' data-inputclass='input-xxlarge' data-placement='bottom' data-pk='@Model.Id' data-url='@Url.Action("EditDetailProductName", new { id = Model.Id })'>@Html.DisplayFor(x => x.ProductName)</a>
+        <br/>
+        <b>@Resources.Code: </b>
+        <a class='editable code' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("EditDetailProductCode", new { id = Model.Id })'>@Html.DisplayFor(x => x.ProductCode)</a>
+        <b>@Resources.UnitOfMeasurement: </b>
+        <a class='editable um' data-type='select' data-placement='right' data-source='@Url.Action("UnitsOfMeasurement", "Products")' data-pk='@Model.Id' data-value='@Model.UnitOfMeasurement' data-url='@Url.Action("EditDetailUM", new { id = Model.Id })'>@Html.DisplayFor(x => x.UnitOfMeasurement)</a>
+        <br/>
+        <b>@Resources.Quantity: </b>
+        <a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("EditDetailQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
+        <b>@Resources.Price: </b>
+        <a class='editable price' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("EditDetailPrice", new { id = Model.Id })'>@Html.DisplayFor(x => x.Price)</a>        
+        <span class='editable currency'>@Html.DisplayFor(x => x.Currency)</span>
+        <b>@Resources.Discount: </b>
+        <a class='editable discount' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("EditDetailDiscount", new { id = Model.Id })'>@Html.DisplayFor(x => x.Discount)</a>
+        <b>@Resources.TaxRate: </b>
+        <a class='editable tax' data-type='select' data-placement='right' data-source='@Url.Action("TaxRates", "Pricing")' data-pk='@Model.Id' data-value='@Model.TaxRate.ToString("0.####")' data-url='@Url.Action("EditTaxRate", new { id = Model.Id })'>@Html.DisplayFor(x => x.TaxRate)</a>
+        <b>@Resources.Amount: </b>
+        <span class='editable subtotal'>@Html.DisplayFor(x => x.Subtotal)</span>
+        <i>
+        	(<span class='editable subtotal2'>@Html.DisplayFor(x => x.SubtotalEx)</span>
+        	<span class='editable currency'>@Configuration.BaseCurrency</span>)
+        </i>
     </div>
 </li>
+<script type='text/javascript'>
+$('#id\\:@Model.Id a.editable').editable({
+	success: function(response, newValue) {
+		if ('subtotal' in response) {
+			$(this).siblings('.subtotal').html(response.subtotal);
+		}
+		if ('subtotal2' in response) {
+			$(this).siblings('.subtotal2').html(response.subtotal2);
+		}
+        updateTotals();
+    },
+    display: function(value, response) {
+        if (typeof response === 'undefined') {
+        	$(this).html(value);
+        } else if (Array.isArray(response)) {
+          	arr = $.grep(response, function(o){
+  				return o.value == value;
+			});
+          	$(this).html(arr[0].text);
+        } else {
+          	$(this).html(response.value);
+        }
+    }
+});
+$('#id\\:@Model.Id a.delete').editable({
+	success: function(response, newValue) {
+        $('#id\\:@Model.Id').remove();
+        updateTotals();
+    }
+});
+</script>

@@ -5,10 +5,10 @@
     <legend>@Resources.Totals</legend>
 
     <div class="display-label left floating">
-        @Html.LabelFor(x => x.Total)
+        @Html.LabelFor(x => x.Subtotal)
     </div>
     <div class="display-field right floating">
-        @Html.DisplayFor(x => x.Total)
+        @Html.DisplayFor(x => x.Subtotal)
     </div>
 
     <div class="display-label left floating">
@@ -17,32 +17,21 @@
     <div class="display-field right floating">
         @Html.DisplayFor(x => x.Taxes)
     </div>
+    
+    <div class="display-label left floating">
+        @Html.LabelFor(x => x.Total)
+    </div>
+    <div class="display-field right floating">
+        @Html.DisplayFor(x => x.Total)
+    </div>
 
-@if(!Model.IsCompleted) {
+@if (!Model.IsCompleted) {
     <div class="action-buttons">
-        @if (!Model.IsCredit || (CustomerHelpers.CalcDebt(Model.Customer.Id) + Model.Total) <= Model.Customer.CreditLimit)
-        {
-            if (Model.Total > 0) {
-                using (Html.BeginForm("Confirm", "POS", new { id = Model.Id })) {
-                <button type="button" class="icon print">@Resources.Print</button>
-                <button id="complete" type="submit">@Resources.CompleteSale</button><br />
-                }
-            }
-        }
-        else
-        {
-            var difference = CustomerHelpers.CalcDebt(Model.Customer.Id) + Model.Total - Model.Customer.CreditLimit;
+        @if (Model.IsCredit && (Model.Customer.Debt () + Model.Total) > Model.Customer.CreditLimit) {
+            var difference = Model.Customer.Debt () + Model.Total - Model.Customer.CreditLimit;
             @Resources.CreditLimitExceeded<br />
             @difference.ToString("c")
         }
     </div>
 }
 </fieldset>
-<script type="text/javascript">
-    $(function() {
-    	$(".print").off();
-        $(".print").printPage({
-            url: '@Url.Action(Model.IsCredit ? "PrintPromissoryNote" : "PrintOrder", "POS", new { id = Model.Id })'
-        });
-    });
-</script>

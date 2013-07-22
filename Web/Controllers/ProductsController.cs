@@ -315,5 +315,16 @@ namespace Mictlanix.BE.Web.Controllers
 
 			return PartialView ("_Labels", entity.Labels);
 		}
+
+		public JsonResult UnitsOfMeasurement ()
+		{
+			var qry = from x in Enum.GetValues (typeof(UnitOfMeasurement)).Cast<UnitOfMeasurement> ()
+					  select new {
+						  value = x.GetDisplayName (),
+						  text = x.GetDisplayName ()
+					  };
+
+			return Json (qry.ToList(), JsonRequestBehavior.AllowGet);
+		}
     }
 }
