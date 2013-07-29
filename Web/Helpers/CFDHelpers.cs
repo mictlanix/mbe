@@ -142,7 +142,7 @@ namespace Mictlanix.BE.Web.Helpers
             {
                 impuesto = Mictlanix.CFDv20.ComprobanteImpuestosTrasladoImpuesto.IVA,
                 importe = item.Taxes,
-                tasa = Configuration.VAT * 100m
+                tasa = Configuration.DefaultVAT * 100m
             };
 
 			return cfd;
@@ -242,7 +242,7 @@ namespace Mictlanix.BE.Web.Helpers
             {
                 impuesto = Mictlanix.CFDv22.ComprobanteImpuestosTrasladoImpuesto.IVA,
                 importe = item.Taxes,
-                tasa = Configuration.VAT * 100m
+                tasa = Configuration.DefaultVAT * 100m
             };
 
 			return cfd;

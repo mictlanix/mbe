@@ -39,6 +39,7 @@ using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers
 {
+	[Authorize]
     public class PaymentsController : Controller
     {
         public ActionResult Index ()
@@ -55,7 +56,8 @@ namespace Mictlanix.BE.Web.Controllers
             }
 
             var qry = from x in SalesOrder.Queryable
-                      where x.IsCompleted && !x.IsPaid && !x.IsCancelled && !x.IsCredit
+					  where x.IsCompleted && !x.IsCancelled &&
+							!x.IsPaid && x.Terms == PaymentTerms.Immediate
 					  orderby x.Id descending
                       select x;
 
@@ -80,16 +82,15 @@ namespace Mictlanix.BE.Web.Controllers
 			if (id != null && id > 0) {
 				var qry = from x in SalesOrder.Queryable
 	                      where x.IsCompleted && !x.IsPaid && 
-								!x.IsCancelled && !x.IsCredit &&
+								!x.IsCancelled && x.Terms == PaymentTerms.Immediate &&
 								x.Id == id
-						  orderby x.Id descending
 	                      select x;
 
 				items = qry.ToList ();
 			} else {
 				var qry = from x in SalesOrder.Queryable
 	                      where x.IsCompleted && !x.IsPaid && 
-								!x.IsCancelled && !x.IsCredit
+								!x.IsCancelled && x.Terms == PaymentTerms.Immediate
 						  orderby x.Id descending
 	                      select x;
 
@@ -99,10 +100,15 @@ namespace Mictlanix.BE.Web.Controllers
             if (Request.IsAjaxRequest()) {
                 return PartialView ("_Index", items);
             }
-            else {
-                return View (new MasterDetails<CashSession, SalesOrder> { Master = session, Details = items }); 
-            }
+
+			return View (new MasterDetails<CashSession, SalesOrder> { Master = session, Details = items });
         }
+		
+		public ViewResult Print (int id)
+		{
+			var item = SalesOrder.Find (id);
+			return View (item);
+		}
 
         public ViewResult PrintCashCount (int id)
         {
@@ -200,32 +206,32 @@ namespace Mictlanix.BE.Web.Controllers
 		[HttpPost]
 		public ActionResult Cancel (int id)
 		{
-			var item = SalesOrder.Find (id);
+			var entity = SalesOrder.Find (id);
 
-			if (!item.IsCompleted || item.IsCancelled || item.IsPaid) {
+			if (!entity.IsCompleted || entity.IsCancelled || entity.IsPaid) {
 				return RedirectToAction ("Index");
 			}
 
-			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
-			item.ModificationTime = DateTime.Now;
-			item.IsCancelled = true;
+			entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			entity.ModificationTime = DateTime.Now;
+			entity.IsCancelled = true;
 			
 			using (var scope = new TransactionScope ()) {
-				foreach(var payment in item.Payments) {
-					payment.Delete ();
+				foreach(var item in entity.Payments) {
+					item.Delete ();
 				}
 
-				item.UpdateAndFlush ();
+				entity.UpdateAndFlush ();
 			}
 			
 			return RedirectToAction ("Index");
 		}
 
         [HttpPost]
-		public JsonResult AddPayment (int order, int type, decimal amount, string reference)
+		public JsonResult AddPayment (int id, int type, decimal amount, string reference)
 		{
-			var sales_order = SalesOrder.Find (order);
 			var dt = DateTime.Now;
+			var sales_order = SalesOrder.Find (id);
 			var employee = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 
 			var item = new CustomerPayment {
@@ -272,8 +278,7 @@ namespace Mictlanix.BE.Web.Controllers
 		
         public ActionResult CreditPayment ()
         {
-            if (Request.IsAjaxRequest ())
-            {
+            if (Request.IsAjaxRequest ()) {
                 return PartialView("_CreditPayment", new CustomerPayment());
             }
 			
@@ -283,24 +288,30 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult CreditPayment (CustomerPayment item)
 		{
+			item.Customer = Customer.TryFind (item.CustomerId);
+
+			if (!ModelState.IsValid) {
+				return PartialView ("_CreditPayment", item);
+			}
+
+			// Store and Serial
+			item.CashSession = GetSession ();
+			item.Store = item.CashSession.CashDrawer.Store;
+
+			try {
+				item.Serial = (from x in CustomerPayment.Queryable
+				               where x.Store.Id == item.Store.Id
+				               select x.Serial).Max () + 1;
+			} catch {
+				item.Serial = 1;
+			}
+
 			item.Creator = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 			item.CreationTime = DateTime.Now;
 			item.Updater = item.Creator;
 			item.ModificationTime = item.CreationTime;
-			item.CashSession = GetSession ();
-			item.Customer = Customer.Find (item.CustomerId);
 			item.Date = DateTime.Now;
 			item.Change = 0m;
-			
-			// Store and Serial
-			item.Store = item.CashSession.CashDrawer.Store;
-			try {
-				item.Serial = (from x in CustomerPayment.Queryable
-	            			   where x.Store.Id == item.Store.Id
-	                      	   select x.Serial).Max () + 1;
-			} catch {
-				item.Serial = 1;
-			}
 
 			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();

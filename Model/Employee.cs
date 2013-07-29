@@ -59,6 +59,11 @@ namespace Mictlanix.BE.Model
 
         [Display(Name = "Name", ResourceType = typeof(Resources))]
 		public virtual string Name { get { return string.Format("{0} {1}", FirstName, LastName).Trim(); } }
+		
+		[Property]
+		[Display(Name = "Gender", ResourceType = typeof(Resources))]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		public virtual GenderEnum Gender { get; set; }
 
         [Property]
 		[DataType(DataType.Date)]
@@ -69,11 +74,6 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "TaxpayerId", ResourceType = typeof(Resources))]
 		[StringLength(13, MinimumLength = 12, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
 		public virtual string TaxpayerId { get; set; }
-
-        [Property]
-		[Display(Name = "Gender", ResourceType = typeof(Resources))]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		public virtual GenderEnum Gender { get; set; }
 
         [Property("personal_id")]
 		[Display(Name = "PersonalId", ResourceType = typeof(Resources))]

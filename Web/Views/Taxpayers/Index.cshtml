@@ -13,7 +13,7 @@
 
 <p>
 @if(Privilege.AllowCreate) {
-    @Html.ActionLink(Resources.CreateNew, "Create", new { }, new { @class = "button icon add openDialog", data_dialog_id = "taxpayerDlg", data_dialog_title = Resources.New })
+    @Html.ActionLink(Resources.CreateNew, "Create", new { }, new { @class = "button icon add open-modal", data_modal_id = "taxpayer-modal" })
 }
 </p>
 <div id='taxpayers' data-url='@Url.Action("Index")'>

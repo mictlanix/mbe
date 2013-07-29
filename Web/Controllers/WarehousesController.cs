@@ -41,6 +41,7 @@ using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers
 {
+	[Authorize]
     public class WarehousesController : Controller
     {
         public ViewResult Index()

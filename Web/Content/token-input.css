@@ -45,15 +45,24 @@ ul.token-input-list li {
     list-style-type: none;
 }
 
-ul.token-input-list li input {
-    border:0;
-    padding:0;
-    margin:3px 6px;
-    font-size:14px;
-    background-color: white;
-    -webkit-appearance: caret;
-    -moz-appearance:    caret;
-    appearance:         caret;
+ul.token-input-list li input,
+ul.token-input-list li input:focus {
+  padding:0;
+  margin:3px 6px;
+  font-size:14px;
+  background-color: white;
+  border:0;
+  outline:0;
+  -webkit-appearance:caret;
+     -moz-appearance:caret;
+          appearance:caret;
+  -webkit-box-shadow:none;
+     -moz-box-shadow:none;
+          box-shadow:none;
+  -webkit-transition:none;
+     -moz-transition:none;
+       -o-transition:none;
+          transition:none;
 }
 
 li.token-input-token {

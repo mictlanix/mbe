@@ -1,7 +1,4 @@
-﻿@using Mictlanix.BE
-@using Mictlanix.BE.Model
-@using Mictlanix.BE.Web.Helpers
-<script type="text/javascript">
-	refreshDiv('#addresses');
-	$('#addressDlg').dialog("close");
+﻿<script type='text/javascript'>
+$('#addresses').loadUrl();
+$('#address-modal').modal('hide');
 </script>

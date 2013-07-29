@@ -9,114 +9,109 @@
 
 <h2>@Resources.FiscalDocument</h2> 
 
-<div id="master-section">
+<div id='master-section'>
 @Html.Partial("_MasterView")
 </div>
-
-<div id="details-section">
-    <div id="items-container">
+<div id='details-section'>
+    <div id='items-container' data-url='@Url.Action("GetDetails", new { id = Model.Id })'>
 	@Html.Partial("_ItemsBlock", Model.Details)
     </div>
-	<div id="tabs" class="tabs-bottom">
-	    <ul>
-	        <li><a href="#tabs-1">@Resources.Product</a></li>
-	        <li><a href="#tabs-2">@Resources.SalesOrder</a></li>
+	<div class='tabbable tabs-below'>
+	    <div class='tab-content'>
+		    <div id='tab-1' class='tab-pane active'>
+		        <input type='text' id='product-search' name='product-search' />
+		    </div>
+		    <div id='tab-2' class='tab-pane'>
+		        <input type='text' id='order-search' name='order-search' />
+		    </div>
+		</div>
+	    <ul class='nav nav-tabs'>
+	        <li class='active'><a href='#tab-1' data-toggle='tab'>@Resources.Product</a></li>
+	        <li><a href='#tab-2' data-toggle='tab'>@Resources.SalesOrder</a></li>
 	    </ul>
-	    <div id="tabs-1">
-	        <input type="text" id="product-search" name="product-search" />
-	    </div>
-	    <div id="tabs-2">
-	        <input type="text" id="order-search" name="order-search" />
-	    </div>
     </div>
 </div>
-<div id="totals-section" class="right floating" style="width:300px">
+<div id='totals-section' class='right floating' style='width:300px'>
     @Html.Partial("_Totals")
 </div>
-<div id="back-to-list" style="clear:both">
+<div class='clearfix'></div>
+<div id='back-to-list' class='pull-left'>
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
-<div id="confirm-dlg" class="dialog" title="@Resources.Delete">
-	<p>
-        <span class="ui-icon ui-icon-circle-close" style="float:left; margin:3px 7px 20px 0;"></span>
-        @Resources.Message_DeleteConfirmation
-    </p>
+<div id='confirm-button' class='pull-right' @if (Model.Details.Count == 0) {<text>style='display:none'</text>}>
+@using (Html.BeginForm("Confirm", "FiscalDocuments", new { id = Model.Id })) {
+    <button id='complete' type='submit'>@Resources.Complete</button>
+}
 </div>
-<div id="notification-dlg" class="dialog" title="@Resources.Delete">
-	<p>@Resources.Message_NoInvoiceableItems</p>
+<div class='clearfix'></div>
+<div id='notification-modal' class='modal hide fade'>
+	<div class='modal-header'>
+		<button type='button' class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3>@Resources.Notification</h3>
+	</div>
+	<div class='modal-body'>
+		<p>@Resources.Message_NoInvoiceableItems</p>
+	</div>
+	<div class='modal-footer'>
+		<button type='button' class='btn' data-dismiss='modal'>@Resources.Close</button>
+	</div>
 </div>
-<script type="text/javascript">
+<script type='text/javascript'>
 function updateTotals(){
-	$.get('@Url.Action("GetTotals")', { "id": @Model.Id }, function (data) {
-		$("#totals-section").html(data);
+	$.get('@Url.Action("GetTotals")', { id: @Model.Id }, function (data) {
+		$('#totals-section').html(data);
+        if ($('#items li').length === 0) {
+        	$('#edit-button').show('slow');
+            $('#confirm-button').hide('slow');
+        }
 	});
 }
-$(function () {
-	$("#tabs").tabs();
-	$(".tabs-bottom .ui-tabs-nav, .tabs-bottom .ui-tabs-nav > *")
-		.removeClass( "ui-corner-all ui-corner-top" )
-		.addClass( "ui-corner-bottom" );
-	
-    $("#product-search").tokenInput("@Url.Action("GetSuggestions", "FiscalDocuments", new { id = Model.Id })", {
-        hintText: "@Resources.HIntText",
-        noResultsText: "@Resources.NoResultsText",
-        searchingText: "@Resources.SearchingText",          
-        resultsFormatter: function(item){return ProductFormatter(item);},
-        queryParam: "pattern",minChars: 3,tokenLimit: 1,
-        onAdd: function (item) {
-            $.post('@Url.Action("AddDetail")', { "id": @Model.Id, "product": "" + item.id }, function (detail) {
+$(function () {	
+    $('#product-search').tokenInput('@Url.Action("GetSuggestions", "FiscalDocuments", new { id = Model.Id })', {
+        hintText:'@Resources.HIntText',
+        noResultsText:'@Resources.NoResultsText',
+        searchingText:'@Resources.SearchingText',          
+        resultsFormatter:function(item){return ProductFormatter(item);},
+        queryParam:'pattern',minChars:3,tokenLimit:1,
+        onAdd:function(item) {
+            $.post('@Url.Action("AddDetail")', { id: @Model.Id, product: '' + item.id }, function (detail) {
                 $.get('@Url.Action("GetDetail")/' + detail.id, function (data) {
-                    $("#items").append(data);
+                    $('#items').append(data);
+                    $('#product-search').tokenInput('clear');
                     
-
-                    $("#product-search").tokenInput("clear");
                     updateTotals();
+                    
+                    $('#edit-button').hide('slow');
+                    $('#confirm-button').show('slow');
                 });
-
-            }, "json");
+            }, 'json');
         }
     });
-    
-    $("#order-search").tokenInput("@Url.Action("GetOrders", "FiscalDocuments", new { id = Model.Id })", {
-        hintText: "@Resources.HIntText",
-        noResultsText: "@Resources.NoResultsText",
-        searchingText: "@Resources.SearchingText",          
-        queryParam: "pattern",minChars: 3,tokenLimit: 1,
-        onAdd: function (item) {
-            $.post('@Url.Action("AddOrder")', { "id": @Model.Id, "order": "" + item.id }, function (data) {
+    $('#order-search').tokenInput('@Url.Action("GetOrders", "FiscalDocuments", new { id = Model.Id })', {
+        hintText:'@Resources.HIntText',
+        noResultsText:'@Resources.NoResultsText',
+        searchingText:'@Resources.SearchingText',          
+        queryParam:'pattern',minChars:3,tokenLimit:1,
+        onAdd:function(item) {
+            $.post('@Url.Action("AddOrder", new { id = Model.Id })', { order: '' + item.id }, function (data) {
             	if(data.result == 0) {
-            		$("#notification-dlg").dialog({
-			            width:400,resizable:false,modal:true,
-			            buttons: {
-							Ok: function() {
-								$(this).dialog("close");
-							}
-						}
-			        });
-            		$("#order-search").tokenInput("clear");
+            		$('#notification-modal').modal();
+            		$('#order-search').tokenInput('clear');
             		return;
             	}
-                $.get('@Url.Action("GetDetails")/@Model.Id', function (data) {
-                    $("#items-container").html(data);
-                    $("#order-search").tokenInput("clear");
-                    updateTotals();
-                });
-            }, "json");
+            	
+            	$('#items-container').loadUrl();
+                $('#order-search').tokenInput('clear');
+                $('#edit-button').hide('slow');
+                $('#confirm-button').show('slow');
+
+                updateTotals();
+            }, 'json');
         }
     });
 });
 </script>
-<style type="text/css">
-ul.token-input-list {
-  width:100%;
-}
-div.token-input-dropdown {
-  width:650px;
-}
-.ui-widget-content { border:0; }
-.tabs-bottom { position: relative; } 
-.tabs-bottom .ui-tabs-panel { padding: 0 2px 0 0; height: 72px; overflow: auto; } 
-.tabs-bottom .ui-tabs-nav { position: absolute !important; left: 0; bottom: 0; right:0; padding: 0 0.2em 0.2em 0; } 
-.tabs-bottom .ui-tabs-nav li { float:right; margin-top: -2px !important; margin-bottom: 1px !important; border-top: none; border-bottom-width: 1px; }
-.ui-tabs-selected { margin-top: -3px !important; }
+<style type='text/css'>
+ul.token-input-list {width:100%;}
+div.token-input-dropdown {width:650px;}
 </style>

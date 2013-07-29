@@ -39,6 +39,7 @@ using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers
 {
+	[Authorize]
     public class PurchasesController : Controller
     {
         public ActionResult Index()

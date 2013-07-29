@@ -40,6 +40,7 @@ using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers
 {
+	[Authorize]
     public class AccountsPayablesController : Controller
     {
         // TODO: Obtimise DB qry al memory

@@ -4,77 +4,54 @@
 @using Mictlanix.BE.Web.Models
 @model CustomerPayment
 
-<link href="@Url.Content("~/Content/selection-options.css")" rel="stylesheet" type="text/css" />
-
-@using (Ajax.BeginForm("CreditPayment", "Payments", new AjaxOptions { UpdateTargetId = "credit-payment" }))
-{
+@using (Ajax.BeginForm("CreditPayment", "Payments", new AjaxOptions { UpdateTargetId = "credit-payment" })) {
     @Html.ValidationSummary(true)
     
-    <div class="editor-label">
-        @Html.LabelFor(x => x.Customer)
+    <div class="row-fluid">
+        <div class="span12">@Html.LabelFor(x => x.Customer)</div>
+    </div>
+	<div class="row-fluid">
+		<div class="span12">
         @Html.EditorFor(x => x.CustomerId)
         @Html.ValidationMessageFor(x => x.CustomerId)
-    </div>
-    <div class="display-label">
-        @Html.LabelFor(x => x.Amount)
-    </div>
-    <div class="display-field">
-        @Html.EditorFor(x => x.Amount)
-        @Html.ValidationMessageFor(x => x.Amount)
-    </div>
-    <div class="display-label">
-        @Html.LabelFor(x => x.Method)
-    </div>
-    <div class="editor-field">
-        <ul class="selection-options">
-        @foreach (var item in Enum.GetValues(typeof(PaymentMethod)))
-        {
-            <li>
-                <label>
-                    @Html.RadioButtonFor(x => x.Method, (int)item)
-                    <span class="option-desc">
-                        <span class="icon dollar">@Resources.Pay</span>
-                        <span class="text">@(((PaymentMethod)item).GetDisplayName())</span>
-                    </span>
-                </label>
-            </li>
+        </div>
+	</div>
+    
+	<div class="row-fluid">
+	  	<div class="span3">@Html.LabelFor(x => x.Amount)</div>
+		<div class="span3">@Html.LabelFor(x => x.Reference)</div>
+	</div>
+	<div class="row-fluid">
+	  	<div class="span3">@Html.EditorFor(x => x.Amount) @Html.ValidationMessageFor(x => x.Amount)</div>
+		<div class="span3">@Html.EditorFor(x => x.Reference)</div>
+	</div>
+	
+	@Html.HiddenFor(x => x.Method)
+	
+    <div class="btn-toolbar">
+    	@Html.LabelFor(x => new CustomerPayment().Method)
+        <div class="btn-group">
+        @foreach (var item in new []{ PaymentMethod.Cash,
+        							  PaymentMethod.DebitCard,
+        							  PaymentMethod.CreditCard,
+        							  PaymentMethod.Check,
+        							  PaymentMethod.BankDeposit,
+        							  PaymentMethod.WireTransfer,
+        							  PaymentMethod.GovernmentFunding }) {
+        	<button class="pay btn" type="button" data-value='@((int)item)'>@item.GetDisplayName()</button>
         }
-        </ul>
-        @Html.ValidationMessageFor(x => x.Method)
+		</div>
     </div>
-    <div id="reference" style="display:none">
-        <div class="display-label">
-            @Html.LabelFor(x => x.Reference)
-        </div>
-        <div class="display-field">
-            @Html.EditorFor(x => x.Reference)
-        </div>
-    </div>
-    <p class="right"><button id="pay" type="submit" class="icon pay">@Resources.Pay</button></p>
 }
 <style type="text/css">
-ul.token-input-list {
-  width:100%;
-}
+ul.token-input-list { width:100%; }
 </style>
 <script type="text/javascript">
-    $(function () {
-        $("#Method").attr("checked", true);
-        $(".selection-options>li:first-child").addClass("selected");
-
-        $(":radio").change(function() {
-            var status = $("#Method:checked").val();
-            
-            if (status === "4" || status === "5") {
-                $("#reference").show("slow");
-            } else {
-                $("#reference").hide("slow");
-            }
-        });
-
-        $(".selection-options>li").click(function () {
-            $(".selection-options>li").removeClass("selected");
-            $(this).addClass("selected");
-        });
+$(function () {
+	$(".pay").click(function () {
+		var type = $(this).data('value');
+		$('#Method').val(type);
+		$(this).closest('form').submit();
     });
+});
 </script>

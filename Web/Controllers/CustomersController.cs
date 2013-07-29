@@ -40,6 +40,7 @@ using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers
 {
+	[Authorize]
     public class CustomersController : Controller
     {
         public ViewResult Index()
@@ -188,18 +189,14 @@ namespace Mictlanix.BE.Web.Controllers
 			return PartialView ("../CustomerTaxpayers/_Index", item.Taxpayers);
 		}
 
-		public JsonResult GetSuggestions(string pattern)
+		public JsonResult GetSuggestions (string pattern)
 		{
-			JsonResult result = new JsonResult();
 			var qry = from x in Customer.Queryable
 					  where x.Name.Contains(pattern) ||
 							x.Zone.Contains(pattern)
 					  select new { id = x.Id, name = x.Name, hasCredit = (x.CreditDays > 0 && x.CreditLimit > 0) };
-			
-			result = Json(qry.Take(15).ToList());
-			result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
-			
-			return result;
+
+			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
 		}
 		
 		public JsonResult ListTaxpayers (int id)

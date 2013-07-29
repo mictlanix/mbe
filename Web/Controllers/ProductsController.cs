@@ -45,6 +45,7 @@ using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers
 {
+	[Authorize]
     public class ProductsController : Controller
     {
         public ActionResult Index ()
@@ -99,8 +100,9 @@ namespace Mictlanix.BE.Web.Controllers
 			if (!ModelState.IsValid)
 				return View (item);
             
+			item.TaxRate = Configuration.DefaultVAT;
 			item.IsTaxIncluded = Configuration.IsTaxIncluded;
-			item.TaxRate = Configuration.VAT;
+			item.PriceType = Configuration.DefaultPriceType;
 			item.Photo = SavePhoto (file) ?? Configuration.DefaultPhotoFile;
 
 			using (var scope = new TransactionScope ()) {

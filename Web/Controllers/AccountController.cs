@@ -159,8 +159,8 @@ namespace Mictlanix.BE.Web.Controllers
             return View();
         }
 
-        [Authorize]
-        [HttpPost]
+		[HttpPost]
+		[Authorize]
         public ActionResult ChangePassword(ChangePasswordModel model)
         {
             if (ModelState.IsValid)
@@ -186,11 +186,13 @@ namespace Mictlanix.BE.Web.Controllers
             return View(model);
         }
 
+		[Authorize]
         public ActionResult ChangePasswordSuccess ()
 		{
 			return View ();
 		}
-		
+
+		[Authorize]
 		public ActionResult LocalSettings ()
 		{
 			LocalSettings item = new LocalSettings {
@@ -203,6 +205,7 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 		
 		[HttpPost]
+		[Authorize]
 		public ActionResult LocalSettings (LocalSettings item)
 		{
 			item.Store = Store.TryFind (item.StoreId);

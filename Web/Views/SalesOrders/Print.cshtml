@@ -12,7 +12,6 @@
     ViewBag.Address = Model.Store.Address;
 }
 
-
 <div class="left floating">
 	<div class="display-label">
 	    <h3>@Html.LabelFor(x => x.Customer)</h3>
@@ -84,7 +83,7 @@
 
 <table>
     <tr>
-        <td rowspan="3" class="center">@Html.CurrencyToString(Model.Total, Configuration.BaseCurrency)</td>
+        <td rowspan="3" class="center">@Html.CurrencyToString(Model.Total, Model.Currency)</td>
         <td class="number">@Html.LabelFor(x => x.Subtotal)</td>
         <td class="number">@Html.DisplayFor(x => x.Subtotal)</td>
     </tr>

@@ -1,0 +1,60 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model SalesOrder
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders);
+}
+
+<fieldset>
+	<div class='row-fluid'>
+		<div class='span8'>
+	  		<dl class=''>
+				<dt>@Resources.Customer</dt>
+				<dd>@Html.DisplayFor(x => x.Customer.Name)</dd>
+				@if (Model.Contact != null) {
+				<dt>@Resources.Contact</dt>
+				<dd>@Html.DisplayFor(x => x.Contact, "String")</dd>
+			    }
+		        @if (Model.ShipTo != null) {
+				<dt>@Resources.ShipTo</dt>
+				<dd>@Html.DisplayFor(x => x.ShipTo, "String")</dd>
+	        	}
+				<dt>@Resources.SalesPerson</dt>
+				<dd>@Html.DisplayFor(x => x.SalesPerson.Name)</dd>
+			</dl>
+		</div>
+	  	<div class='span4'>
+	  		<dl class='dl-horizontal'>
+				<dt>@Resources.Serial</dt>
+				<dd>
+					<span>@Html.DisplayFor(x => x.Serial)</span>
+					<i class="icon-exclamation-sign" data-toggle='tooltip' title='@Resources.Id @Html.DisplayFor(x => x.Id)'></i>
+				</dd>
+				<dt>@Resources.Date</dt>
+				<dd>@Html.DisplayFor(x => x.Date)</dd>
+				<dt>@Resources.PromiseDate</dt>
+				<dd>@Html.DisplayFor(x => x.PromiseDate)</dd>
+				<dt>@Resources.Currency</dt>
+				<dd>@Html.DisplayFor(x => x.Currency)</dd>
+				<dt>@Resources.ExchangeRate</dt>
+				<dd>@Html.DisplayFor(x => x.ExchangeRate)</dd>
+				<dt>@Resources.PaymentTerms</dt>
+				<dd>@Model.Terms.GetDisplayName()</dd>
+				<dt>@Resources.DueDate</dt>
+				<dd>@Html.DisplayFor(x => x.DueDate)</dd>
+			</dl>
+  		</div>
+	</div>
+@if(Privilege.AllowDelete && !Model.IsCancelled) {
+	<div class='row-fluid'>
+  		<div class='span12'>
+	    @using (Html.BeginForm("Cancel", "Payments", new { id =  Model.Id }, FormMethod.Post, new { @class = "modal-form pull-right" })) {
+			<button type="submit" class="icon cancel">@Resources.Cancel</button>
+	    }
+  		</div>
+	</div>
+}
+</fieldset>

@@ -54,7 +54,7 @@
 		@Html.Partial("_LotSerialNumber", item)
 	}
 	@if(Privilege.AllowCreate) {
-	    <tr id='new'>
+	    <tr id='new' class='form-inline'>
 	        <td class='number'>@Html.EditorFor(x => new LotSerialTracking().Quantity)</td>
 	        <td class='center'>@Html.EditorFor(x => new LotSerialTracking().LotNumber)</td>
 	        <td class='date'>@Html.EditorFor(x => new LotSerialTracking().ExpirationDate)</td>

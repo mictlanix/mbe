@@ -40,22 +40,17 @@ using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers
 {
+	[Authorize]
     public class EmployeesController : Controller
     {
-
-        //
-        // GET: /Employee/
-
         public ViewResult Index()
         {
             var search = new Search<Employee> {
             	Limit = Configuration.PageSize
 			};
 
-			return View (GetEmployees(search));
+			return View (GetEmployees (search));
         }
-
-        // POST: /Employees/
 
         [HttpPost]
         public ActionResult Index(Search<Employee> search)
@@ -93,25 +88,16 @@ namespace Mictlanix.BE.Web.Controllers
             return search;
         }
 
-        //
-        // GET: /Employee/Details/5
-
         public ViewResult Details (int id)
         {
             var item = Employee.Find(id);
             return View (item);
         }
 
-        //
-        // GET: /Employee/Create
-
         public ActionResult Create()
         {
             return View();
         }
-
-        //
-        // POST: /Employee/Create
 
         [HttpPost]
         public ActionResult Create (Employee item)
@@ -126,17 +112,11 @@ namespace Mictlanix.BE.Web.Controllers
 			return RedirectToAction ("Index");
         }
 
-        //
-        // GET: /Warehouses/Edit/5
-
         public ActionResult Edit (int id)
         {
             var item = Employee.Find (id);
             return View (item);
         }
-
-        //
-        // POST: /Employee/Edit/5
 
         [HttpPost]
         public ActionResult Edit(Employee item)
@@ -151,17 +131,11 @@ namespace Mictlanix.BE.Web.Controllers
             return RedirectToAction ("Index");
         }
 
-        //
-        // GET: /Employee/Delete/5
-
         public ActionResult Delete (int id)
         {
             var item = Employee.Find (id);
             return View (item);
         }
-
-        //
-        // POST: /Warehouses/Delete/5
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed (int id)
@@ -178,9 +152,6 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 		}
 
-        // AJAX
-        // GET: /Employees/GetSuggestions
-
         public JsonResult GetSuggestions (string pattern)
         {
             var qry = from x in Employee.Queryable
@@ -188,7 +159,7 @@ namespace Mictlanix.BE.Web.Controllers
                             x.LastName.Contains(pattern)
                       select new { id = x.Id, name = x.FirstName + " " + x.LastName };
 
-            return Json(qry.Take(15).ToList(), JsonRequestBehavior.AllowGet);
+            return Json(qry.ToList (), JsonRequestBehavior.AllowGet);
         }
     }
 }
