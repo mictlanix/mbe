@@ -41,6 +41,7 @@ using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers
 {
+	[Authorize]
 	public class SalesOrdersController : Controller
 	{
         public ViewResult Index ()
@@ -61,7 +62,7 @@ namespace Mictlanix.BE.Web.Controllers
 			
 			return View (search);
 		}
-		
+
 		[HttpPost]
 		public ActionResult Index (Search<SalesOrder> search)
 		{
@@ -84,13 +85,13 @@ namespace Mictlanix.BE.Web.Controllers
 			if (string.IsNullOrEmpty (search.Pattern)) {
 				qry = from x in SalesOrder.Queryable
 					  where x.Store.Id == item.Store.Id
-					  orderby x.IsCompleted, x.Date descending
-					  select x;				
+					  orderby (x.IsCompleted ? 1 : 0) + (x.IsCancelled ? 1 : 0), x.Date descending
+					  select x;
 			} else {
 				qry = from x in SalesOrder.Queryable
 					  where x.Store.Id == item.Store.Id &&
 					        x.Customer.Name.Contains (search.Pattern)
-					  orderby x.IsCompleted, x.Date descending
+					  orderby (x.IsCompleted ? 1 : 0) + (x.IsCancelled ? 1 : 0), x.Date descending
 					  select x;
 			}
 
@@ -99,6 +100,12 @@ namespace Mictlanix.BE.Web.Controllers
 			
 			return search;
 		}
+
+		public ViewResult View (int id)
+		{
+			var item = SalesOrder.Find (id);
+			return View (item);
+		}
 		
 		public ViewResult Print (int id)
 		{
@@ -106,53 +113,19 @@ namespace Mictlanix.BE.Web.Controllers
 			return View (item);
 		}
 
-        public ViewResult Details (int id)
-		{
-			var item = SalesOrder.Find (id);
-
-			item.Details.ToList ();
-
-			return View (item);
-        }
-
-        public ViewResult New ()
-		{
-			if (Configuration.PointOfSale == null) {
-                return View ("InvalidPointOfSale");
-            }
-			
-			if (!CashHelpers.ValidateExchangeRate ()) {
-				return View ("InvalidExchangeRate");
-			}
-
-			var employee = SecurityHelpers.GetUser (User.Identity.Name).Employee;
-
-            return View (new SalesOrder {
-				CustomerId = Configuration.DefaultCustomer, 
-				Customer = Customer.Find (Configuration.DefaultCustomer),
-				SalesPersonId = employee.Id, 
-				SalesPerson = employee
-			});
-        }
-
         [HttpPost]
-		public ActionResult New (SalesOrder item)
+		public ActionResult New ()
 		{
+			var item = new SalesOrder ();
+
 			item.PointOfSale = Configuration.PointOfSale;
 			
 			if (item.PointOfSale == null) {
 				return View ("InvalidPointOfSale");
 			}
-			
-			item.Customer = Customer.TryFind (item.CustomerId);
-			item.SalesPerson = Employee.TryFind (item.SalesPersonId);
-			
-			if (item.Customer == null || item.SalesPerson == null) {
-				return View (item);
-			}
-			
-			if (item.ShipToId != null) {
-				item.ShipTo = Address.TryFind (item.ShipToId);
+
+			if (!CashHelpers.ValidateExchangeRate ()) {
+				return View ("InvalidExchangeRate");
 			}
 
 			// Store and Serial
@@ -169,10 +142,14 @@ namespace Mictlanix.BE.Web.Controllers
 			item.CreationTime = DateTime.Now;
 			item.Updater = item.Creator;
 			item.ModificationTime = item.CreationTime;
-			item.Customer = Customer.Find (item.CustomerId);
-			item.SalesPerson = Employee.Find (item.SalesPersonId);
+			item.Customer = Customer.TryFind (Configuration.DefaultCustomer);
+			item.SalesPerson = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 			item.Date = item.CreationTime;
-			item.DueDate = item.IsCredit ? item.Date.AddDays (item.Customer.CreditDays) : item.Date;
+			item.PromiseDate = item.Date;
+			item.Terms = PaymentTerms.Immediate;
+			item.DueDate = item.Date;
+			item.Currency = Configuration.DefaultCurrency;
+			item.ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate ();
 
 			using (var scope = new TransactionScope()) {
 				item.CreateAndFlush ();
@@ -195,48 +172,276 @@ namespace Mictlanix.BE.Web.Controllers
 
 			return View (item);
         }
-		
-		public ActionResult DiscardChanges (int id)
+
+		public JsonResult Contacts (int id)
 		{
-			return PartialView ("_MasterView", SalesOrder.TryFind (id));
+			var item = SalesOrder.TryFind (id);
+			var qry = from x in item.Customer.Contacts
+					  select new { value = x.Id, text = x.ToString () };
+
+			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
+		}
+		
+		public JsonResult Addresses (int id)
+		{
+			var item = SalesOrder.TryFind (id);
+			var qry = from x in item.Customer.Addresses
+					  select new { value = x.Id, text = x.ToString () };
+
+			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
+		}
+		
+		public JsonResult Terms ()
+		{
+			var qry = from x in Enum.GetValues (typeof(PaymentTerms)).Cast<PaymentTerms> ()
+					  select new {
+						value = (int)x,
+						text = x.GetDisplayName ()
+					  };
+
+			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
+		}
+
+		[HttpPost]
+		public JsonResult SetCustomer (int id, int value)
+		{
+			var entity = SalesOrder.Find (id);
+			var item = Customer.TryFind (value);
+
+			if (item != null) {
+				entity.Customer = item;
+				entity.Contact = null;
+				entity.ShipTo = null;
+
+				if (entity.Terms == PaymentTerms.NetD && !entity.Customer.HasCredit) {
+					entity.Terms = PaymentTerms.Immediate;
+				}
+
+				switch (entity.Terms) {
+				case PaymentTerms.Immediate:
+					entity.DueDate = entity.Date;
+					break;
+				case PaymentTerms.NetD:
+					entity.DueDate = entity.Date.AddDays (entity.Customer.CreditDays);
+					break;
+				}
+
+				entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+				entity.ModificationTime = DateTime.Now;
+
+				using (var scope = new TransactionScope()) {
+					entity.Update ();
+				}
+			}
+
+			return Json (new {
+				id = id,
+				value = entity.FormattedValueFor (x => x.Customer),
+				terms = entity.Terms,
+				termsText = entity.Terms.GetDisplayName (),
+				dueDate = entity.FormattedValueFor (x => x.DueDate)
+			});
+		}
+
+		[HttpPost]
+		public JsonResult SetSalesPerson (int id, int value)
+		{
+			var entity = SalesOrder.Find (id);
+			var item = Employee.TryFind (value);
+
+			if (item != null) {
+				entity.SalesPerson = item;
+				entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+				entity.ModificationTime = DateTime.Now;
+
+				using (var scope = new TransactionScope()) {
+					entity.Update ();
+				}
+			}
+
+			return Json (new { id = id, value = entity.SalesPerson.ToString () });
+		}
+
+		[HttpPost]
+		public JsonResult SetContact (int id, int value)
+		{
+			var entity = SalesOrder.Find (id);
+			var item = Contact.TryFind (value);
+
+			if (item != null) {
+				entity.Contact = item;
+				entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+				entity.ModificationTime = DateTime.Now;
+
+				using (var scope = new TransactionScope()) {
+					entity.Update ();
+				}
+			}
+
+			return Json (new { id = id, value = entity.Contact.ToString () });
+		}
+
+		[HttpPost]
+		public JsonResult SetShipTo (int id, int value)
+		{
+			var entity = SalesOrder.Find (id);
+			var item = Address.TryFind (value);
+
+			if (item != null) {
+				entity.ShipTo = item;
+				entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+				entity.ModificationTime = DateTime.Now;
+
+				using (var scope = new TransactionScope()) {
+					entity.Update ();
+				}
+			}
+
+			return Json (new { id = id, value = entity.ShipTo.ToString () });
+		}
+
+		[HttpPost]
+		public JsonResult SetPromiseDate (int id, DateTime? value)
+		{
+			var entity = SalesOrder.Find (id);
+
+			if (value != null) {
+				entity.PromiseDate = value.Value;
+				entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+				entity.ModificationTime = DateTime.Now;
+
+				using (var scope = new TransactionScope()) {
+					entity.Update ();
+				}
+			}
+
+			return Json (new { id = id, value = entity.FormattedValueFor (x => x.PromiseDate) });
+		}
+
+		[HttpPost]
+		public ActionResult SetCurrency (int id, string value)
+		{
+			var entity = SalesOrder.Find (id);
+			CurrencyCode val;
+			bool success;
+
+			success = Enum.TryParse<CurrencyCode> (value.Trim (), out val);
+
+			if (success) {
+				decimal rate = CashHelpers.GetTodayExchangeRate (val);
+
+				if (rate == 0m) {
+					Response.StatusCode = 400;
+					return Content (Resources.Message_InvalidExchangeRate);
+				}
+
+				entity.Currency = val;
+				entity.ExchangeRate = rate;
+				entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+				entity.ModificationTime = DateTime.Now;
+
+				using (var scope = new TransactionScope()) {
+					foreach (var item in entity.Details) {
+						item.Currency = val;
+						item.ExchangeRate = rate;
+						item.Update ();
+					}
+
+					entity.UpdateAndFlush ();
+				}
+			}
+
+			return Json (new { 
+				id = entity.Id,
+				value = entity.FormattedValueFor (x => x.Currency),
+				rate = entity.FormattedValueFor (x => x.ExchangeRate),
+				itemsChanged = success
+			});
+		}
+		
+		[HttpPost]
+		public ActionResult SetExchangeRate (int id, string value)
+		{
+			var entity = SalesOrder.Find (id);
+			bool success;
+			decimal val;
+
+			success = decimal.TryParse (value.Trim (), out val);
+
+			if (success) {
+				if (val <= 0m) {
+					Response.StatusCode = 400;
+					return Content (Resources.Message_InvalidExchangeRate);
+				}
+
+				entity.ExchangeRate = val;
+				entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+				entity.ModificationTime = DateTime.Now;
+
+				using (var scope = new TransactionScope()) {
+					foreach (var item in entity.Details) {
+						item.ExchangeRate = val;
+						item.Update ();
+					}
+
+					entity.UpdateAndFlush ();
+				}
+			}
+
+			return Json (new { 
+				id = entity.Id,
+				value = entity.FormattedValueFor (x => x.ExchangeRate),
+				itemsChanged = success
+			});
+		}
+
+		[HttpPost]
+		public ActionResult SetTerms (int id, string value)
+		{
+			var entity = SalesOrder.Find (id);
+			PaymentTerms val;
+			bool success;
+
+			success = Enum.TryParse<PaymentTerms> (value.Trim (), out val);
+
+			if (success) {
+				if (val == PaymentTerms.NetD && !entity.Customer.HasCredit) {
+					Response.StatusCode = 400;
+					return Content (Resources.CreditLimitIsNotSet);
+				}
+
+				entity.Terms = val;
+				entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+				entity.ModificationTime = DateTime.Now;
+
+				switch (entity.Terms) {
+				case PaymentTerms.Immediate:
+					entity.DueDate = entity.Date;
+					break;
+				case PaymentTerms.NetD:
+					entity.DueDate = entity.Date.AddDays (entity.Customer.CreditDays);
+					break;
+				}
+
+				using (var scope = new TransactionScope()) {
+					entity.Update ();
+				}
+			}
+
+			return Json (new {
+				id = id,
+				value = entity.Terms,
+				dueDate = entity.FormattedValueFor (x => x.DueDate),
+				totalsChanged = success
+			});
 		}
 
         [HttpPost]
-		public ActionResult Edit (SalesOrder item)
-		{
-			item.Customer = Customer.Find (item.CustomerId);
-			item.SalesPerson = Employee.Find (item.SalesPersonId);
-
-			if (item.ShipToId.HasValue && item.ShipToId > 0) {
-				item.ShipTo = Address.TryFind (item.ShipToId);
-			}
-
-			if (item.Customer == null || item.SalesPerson == null) {
-				return View (item);
-			}
-			
-			var entity = SalesOrder.Find (item.Id);
-			entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
-			entity.ModificationTime = DateTime.Now;
-			entity.Customer = item.Customer;
-			entity.SalesPerson = item.SalesPerson;
-			entity.ShipTo = item.ShipTo;
-			entity.IsCredit = item.IsCredit;
-			entity.DueDate = item.IsCredit ? entity.Date.AddDays (item.Customer.CreditDays) : entity.Date;
-
-			using (var scope = new TransactionScope()) {
-				entity.UpdateAndFlush ();
-			}
-
-			return PartialView ("_MasterView", entity);
-        }
-
-        [HttpPost]
-        public JsonResult AddDetail (int order, int product)
+        public JsonResult AddItem (int order, int product)
         {
-			var s = SalesOrder.TryFind (order);
+			var entity = SalesOrder.TryFind (order);
 			var p = Product.TryFind (product);
-			int pl = s.Customer.PriceList.Id;
+			int pl = entity.Customer.PriceList.Id;
 			var cost = (from x in ProductPrice.Queryable
 			            where x.Product.Id == product && x.List.Id == 0
 			            select x).SingleOrDefault();
@@ -259,18 +464,18 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 
             var item = new SalesOrderDetail {
-				SalesOrder = s,
+				SalesOrder = entity,
 				Product = p,
-				Warehouse = s.PointOfSale.Warehouse,
+				Warehouse = entity.PointOfSale.Warehouse,
                 ProductCode = p.Code,
                 ProductName = p.Name,
                 TaxRate = p.TaxRate,
 				IsTaxIncluded = p.IsTaxIncluded,
                 Quantity = 1,
-				Cost = cost.Value * CashHelpers.GetTodayExchangeRate (cost.Currency, price.Currency),
-				Price = price.Value,
-				Currency = price.Currency,
-				ExchangeRate = CashHelpers.GetTodayExchangeRate (price.Currency)
+				Cost = cost.Value * CashHelpers.GetTodayExchangeRate (cost.Currency, Configuration.BaseCurrency),
+				Price = price.Value * CashHelpers.GetTodayExchangeRate (price.Currency, entity.Currency),
+				Currency = entity.Currency,
+				ExchangeRate = entity.ExchangeRate
             };
 
             using (var scope = new TransactionScope()) {
@@ -278,12 +483,33 @@ namespace Mictlanix.BE.Web.Controllers
             }
 
             return Json(new { id = item.Id });
-        }
+		}
+
+		[HttpPost]
+		public JsonResult SetItemQuantity (int id, decimal value)
+		{
+			var entity = SalesOrderDetail.Find (id);
+
+			if (value > 0) {
+				entity.Quantity = value;
+
+				using (var scope = new TransactionScope ()) {
+					entity.UpdateAndFlush ();
+				}
+			}
+			
+			return Json (new { 
+				id = entity.Id,
+				value = entity.FormattedValueFor (x => x.Quantity),
+				subtotal = entity.FormattedValueFor (x => x.Subtotal), 
+				subtotal2 = entity.FormattedValueFor (x => x.SubtotalEx)
+			});
+		}
 		
 		[HttpPost]
-		public JsonResult EditDetailPrice (int id, string value)
+		public JsonResult SetItemPrice (int id, string value)
 		{
-			var detail = SalesOrderDetail.Find (id);
+			var entity = SalesOrderDetail.Find (id);
 			bool success;
 			decimal val;
 
@@ -292,64 +518,25 @@ namespace Mictlanix.BE.Web.Controllers
 			                            null, out val);
 
 			if (success && val >= 0) {
-				detail.Price = val;
+				entity.Price = val;
 
 				using (var scope = new TransactionScope()) {
-					detail.Update ();
+					entity.Update ();
 				}
 			}
-
-			return Json (new { id = id, value = detail.Price.ToString ("C4"), total = detail.Total.ToString ("c") });
-		}
-
-		[HttpPost]
-		public ActionResult EditDetailCurrency (int id, string value)
-		{
-			var detail = SalesOrderDetail.Find (id);
-			CurrencyCode val;
-			bool success;
-
-			success = Enum.TryParse<CurrencyCode> (value.Trim (), out val);
-
-			if (success) {
-				decimal rate = CashHelpers.GetTodayExchangeRate (val);
-
-				if (rate == 0) {
-					Response.StatusCode = 400;
-					return Content (Resources.Message_InvalidExchangeRate);
-				}
-
-				detail.Currency = val;
-				detail.ExchangeRate = CashHelpers.GetTodayExchangeRate (val);
-
-				using (var scope = new TransactionScope()) {
-					detail.Update ();
-				}
-			}
-
-			return Json (new { id = id, value = detail.Currency.ToString (), rate = detail.ExchangeRate, total = detail.Total.ToString ("c") });
+			
+			return Json (new {
+				id = entity.Id,
+				value = entity.FormattedValueFor (x => x.Price),
+				subtotal = entity.FormattedValueFor (x => x.Subtotal), 
+				subtotal2 = entity.FormattedValueFor (x => x.SubtotalEx)
+			});
 		}
 
         [HttpPost]
-		public JsonResult EditDetailQuantity (int id, decimal value)
+        public JsonResult SetItemDiscount (int id, string value)
         {
-            var detail = SalesOrderDetail.Find (id);
-
-            if (value > 0) {
-                detail.Quantity = value;
-
-				using (var scope = new TransactionScope ()) {
-					detail.UpdateAndFlush ();
-				}
-            }
-
-			return Json(new { id = id, value = detail.Quantity, total = detail.Total.ToString ("c") });
-        }
-
-        [HttpPost]
-        public JsonResult EditDetailDiscount (int id, string value)
-        {
-            var detail = SalesOrderDetail.Find(id);
+            var entity = SalesOrderDetail.Find (id);
             bool success;
             decimal val;
 
@@ -357,29 +544,64 @@ namespace Mictlanix.BE.Web.Controllers
             val /= 100m;
 
             if (success && val >= 0 && val <= 1) {
-                detail.Discount = val;
+                entity.Discount = val;
 
 				using (var scope = new TransactionScope ()) {
-					detail.UpdateAndFlush ();
+					entity.UpdateAndFlush ();
 				}
             }
+			
+			return Json (new { 
+				id = entity.Id,
+				value = entity.FormattedValueFor (x => x.Discount),
+				subtotal = entity.FormattedValueFor (x => x.Subtotal), 
+				subtotal2 = entity.FormattedValueFor (x => x.SubtotalEx)
+			});
+		}
 
-			return Json(new { id = id, value = detail.Discount.ToString("p"), total = detail.Total.ToString("c") });
+		[HttpPost]
+		public JsonResult SetItemTaxRate (int id, string value)
+		{
+			var entity = SalesOrderDetail.Find (id);
+			bool success;
+			decimal val;
+
+			success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out val);
+
+			// TODO: VAT value range validation
+			if (success) {
+				entity.TaxRate = val;
+
+				using (var scope = new TransactionScope()) {
+					entity.Update ();
+				}
+			}
+
+			return Json (new { 
+				id = entity.Id,
+				value = entity.FormattedValueFor (x => x.TaxRate)
+			});
+		}
+
+		public ActionResult Item (int id)
+		{
+			return PartialView ("_ItemEditorView", SalesOrderDetail.Find (id));
         }
+		
+		public ActionResult Items (int id)
+		{
+			var item = SalesOrder.Find (id);
+			return PartialView ("_Items", item.Details);
+		}
 
-        public ActionResult GetTotals (int id)
+		public ActionResult Totals (int id)
 		{
 			var item = SalesOrder.Find (id);
 			return PartialView ("_Totals", item);
-        }
-
-		public ActionResult GetDetail (int id)
-		{
-			return PartialView ("_DetailEditView", SalesOrderDetail.Find (id));
-        }
+		}
 
         [HttpPost]
-        public JsonResult RemoveDetail (int id)
+        public JsonResult RemoveItem (int id)
         {
             var item = SalesOrderDetail.Find (id);
 
@@ -422,23 +644,27 @@ namespace Mictlanix.BE.Web.Controllers
 				item.UpdateAndFlush ();
 			}
 
-            return RedirectToAction ("New");
+            return RedirectToAction ("Index");
         }
 
         [HttpPost]
         public ActionResult Cancel (int id)
         {
-            var item = SalesOrder.Find (id);
+            var entity = SalesOrder.Find (id);
 			
-			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
-			item.ModificationTime = DateTime.Now;
-            item.IsCancelled = true;
-
-			using (var scope = new TransactionScope ()) {
-				item.UpdateAndFlush ();
+			if (entity.IsCancelled || entity.IsPaid) {
+				return RedirectToAction ("Index");
 			}
 
-            return RedirectToAction ("New");
+			entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			entity.ModificationTime = DateTime.Now;
+            entity.IsCancelled = true;
+
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
+			}
+
+			return RedirectToAction ("Index");
         }
 
         public JsonResult GetSuggestions (int order, string pattern)

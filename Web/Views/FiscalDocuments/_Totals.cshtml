@@ -26,13 +26,3 @@
     <div class="display-field right floating">@Html.DisplayFor(x => x.Total) @Html.DisplayFor(x => x.Currency)</div>
     <div class="display-field right floating"><i>(@Html.DisplayFor(x => x.TotalEx) @Configuration.BaseCurrency)</i></div>
 </fieldset>
-
-@if (!Model.IsCompleted && !Model.IsCancelled) {
-<div class="right floating">
-    @if (Model.Total > 0) {
-        using (Html.BeginForm("Confirm", "FiscalDocuments", new { id = Model.Id })) {
-        	<button id="complete" type="submit">@Resources.CompleteInvoice</button><br />
-        }
-    }
-</div>
-}

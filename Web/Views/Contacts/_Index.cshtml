@@ -27,19 +27,19 @@
         <td class='right'>@Html.DisplayFor(modelItem => item.Mobile)</td>
         <td class='right'>@Html.DisplayFor(modelItem => item.Fax)</td>
         <td class='actions'>
-        	@if(Privilege.AllowUpdate) {
-            	@Html.ActionLink(" ", "Edit", "Contacts", new { id = item.Id }, new { @class = "button icon edit icon-only openDialog", @title = Resources.Edit, data_dialog_id = "contactDlg", data_dialog_title = Resources.Edit })
-            }
         	@if(Privilege.AllowRead) {
-            	@Html.ActionLink(" ", "Details", "Contacts", new { id = item.Id }, new { @class = "button icon view icon-only openDialog", @title = Resources.Details, data_dialog_id = "contactDlg", data_dialog_title = Resources.Details })
+            	@Html.ActionLink(" ", "Details", "Contacts", new { id = item.Id }, new { @class = "button icon view icon-only open-modal", @title = Resources.Details, data_modal_id = "contact-modal" })
+            }
+        	@if(Privilege.AllowUpdate) {
+            	@Html.ActionLink(" ", "Edit", "Contacts", new { id = item.Id }, new { @class = "button icon edit icon-only open-modal", @title = Resources.Edit, data_modal_id = "contact-modal" })
             }
         	@if(Privilege.AllowDelete) {
-            	@Html.ActionLink(" ", "Delete", "Contacts", new { id = item.Id }, new { @class = "button icon delete icon-only openDialog", @title = Resources.Delete, data_dialog_id = "contactDlg", data_dialog_title = Resources.Delete })
+            	@Html.ActionLink(" ", "Delete", "Contacts", new { id = item.Id }, new { @class = "button icon delete icon-only open-modal", @title = Resources.Delete, data_modal_id = "contact-modal" })
             }
         </td>
     </tr>
 }
 </table>
 <script type='text/javascript'>
-	bindOpenDialog('.openDialog');
+bindModal('.open-modal');
 </script>

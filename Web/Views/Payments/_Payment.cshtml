@@ -6,14 +6,9 @@
     <div class="photo">
         <img src="@Url.Content("~/Content/icons/dollar.png")" title="@Resources.Pay" />
     </div>
-    <div class="action-link">
-        <a class="button icon-only icon delete" title="@Resources.Delete" href='@Url.Action("RemovePayment")/@Model.Id'></a>
-        <script type="text/javascript">
-            $("#payment@(Model.Id) a.delete").click(function(event){
-                event.preventDefault();
-                removeItem(@Model.Id);
-            });
-        </script>
+    <div class='action-link'>
+        <a class='button icon-only icon delete' title='@Resources.Message_DeleteConfirmation'
+		   data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id' data-url='@Url.Action("RemovePayment", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
     </div>
     <div class="info">
         <label>@Resources.Amount:</label>
@@ -28,3 +23,11 @@
         }
     </div>
 </li>
+<script type='text/javascript'>
+$('#payment@(Model.Id) a.delete').editable({
+	success: function(response, newValue) {
+        $('#payment@(Model.Id)').remove();
+        updateTotals();
+    }
+});
+</script>

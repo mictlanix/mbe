@@ -39,7 +39,8 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers
-{ 
+{
+	[Authorize]
     public class LabelsController : Controller
     {
         public ViewResult Index ()

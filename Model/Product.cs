@@ -117,11 +117,6 @@ namespace Mictlanix.BE.Model
         [Display(Name = "Invoiceable", ResourceType = typeof(Resources))]
         public bool IsInvoiceable { get; set; }
 
-        [Property]
-        [DataType(DataType.MultilineText)]
-        [Display(Name = "Comment", ResourceType = typeof(Resources))]
-        public string Comment { get; set; }
-
         [Property("tax_rate")]
         [Display(Name = "TaxRate", ResourceType = typeof(Resources))]
         public decimal TaxRate { get; set; }
@@ -130,6 +125,15 @@ namespace Mictlanix.BE.Model
         [Display(Name = "TaxIncluded", ResourceType = typeof(Resources))]
         public bool IsTaxIncluded { get; set; }
 		
+		[Property("price_type")]
+		[Display(Name = "PriceType", ResourceType = typeof(Resources))]
+		public PriceType PriceType { get; set; }
+
+		[Display(Name = "VariablePricing", ResourceType = typeof(Resources))]
+		public bool HasVariablePricing {
+			get { return PriceType != PriceType.Fixed; }
+		}
+
 		[Property]
         [UIHint("Image")]
         [Display(Name = "Photo", ResourceType = typeof(Resources))]
@@ -142,7 +146,12 @@ namespace Mictlanix.BE.Model
 
         [BelongsTo("supplier")]
         [Display(Name = "Supplier", ResourceType = typeof(Resources))]
-        public virtual Supplier Supplier { get; set; }
+		public virtual Supplier Supplier { get; set; }
+
+		[Property]
+		[DataType(DataType.MultilineText)]
+		[Display(Name = "Comment", ResourceType = typeof(Resources))]
+		public string Comment { get; set; }
 		
 		[HasAndBelongsToMany(typeof(Label), Table = "product_label", ColumnKey = "product", ColumnRef = "label", Lazy = true)]
 		public virtual IList<Label> Labels

@@ -198,12 +198,12 @@
                                    href="@Url.Action("Index", "DeliveryOrders")">@Resources.Deliveries</a>
                             </li>
                             }
-                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.CustomerReturns).AllowRead) {
+                            @*@if (Html.GetPrivilege(CurrentUser, SystemObjects.CustomerReturns).AllowRead) {
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("Index", "CustomerReturns") ? "gbm0l" : "")"
                                    href="@Url.Action("Index", "CustomerReturns")">@Resources.Title_CustomerReturn</a>
                             </li>
-                            }
+                            }*@
                         </ol>
                     </div>
                 </div>
@@ -269,27 +269,24 @@
                 <div id="purchases-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
                     <div class="gbmc">
                         <ol class="gbmcc">
-                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.PurchasesOrders).AllowRead)
-                            {
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.PurchasesOrders).AllowRead) {
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("Index", "Purchases") ? "gbm0l" : "")"
                                    href="@Url.Action("Index", "Purchases")">@Resources.Title_PurchaseOrder</a>
                             </li>
                             }
-                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SupplierPayment).AllowRead)
-                            {
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SupplierPayment).AllowRead) {
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("Index", "SupplierPayments") ? "gbm0l" : "")"
                                    href="@Url.Action("Index", "SupplierPayments")">@Resources.Title_SuppliersPayments</a>
                             </li>
                             }
-                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SupplierReturns).AllowRead)
-                            {
+                            @*@if (Html.GetPrivilege(CurrentUser, SystemObjects.SupplierReturns).AllowRead) {
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("Index", "SupplierReturns") ? "gbm0l" : "")"
                                    href="@Url.Action("Index", "SupplierReturns")">@Resources.Title_SupplierReturn</a>
                             </li>
-                            }
+                            }*@
                         </ol>
                     </div>
                 </div>

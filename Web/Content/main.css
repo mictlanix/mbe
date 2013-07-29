@@ -132,9 +132,6 @@ div#logo {
   margin-top:14px;
   float:right;
 }
-.dialog {
-  display:none
-}
 .page {
   min-width:900px;
   margin:10px 20px;
@@ -152,6 +149,9 @@ div#logo {
 }
 .right,.number,.currency,input.number,input.currency  {
   text-align:right;
+}
+.editable-popup.right {
+  text-align:left;
 }
 .center {
   text-align:center;
@@ -231,14 +231,14 @@ table {
     border-collapse:collapse;
 }
 table td {
-    padding:5px;
+    padding:0 4px;
     border:solid 1px #e8eef4;
 }
 table th {
-    padding: 6px 5px;
-    font-weight:normal;
-    text-align:center;
-    color:#DD4B39;
+  padding:4px 8px;
+  font-weight:normal;
+  text-align:center;
+  color:#DD4B39;
 }
 table.noborder, table.noborder td {
   border:none;
@@ -372,15 +372,17 @@ table.tabular, table.tabular th, table.tabular td {
   border-collapse:collapse;
   line-height:1;
 }
-table.tabular th, table.tabular td {
-  padding:2px 1px;
+table.tabular th {
+  padding:4px 2px 0 5px;
 }
-table.tabular tr:nth-child(odd)  { background-color:AliceBlue; }
+table.tabular td {
+  padding:2px 1px 0;
+}
 table.tabular th, table.tabular td {
-	border-bottom:solid 1px #e8eef4;
+  border-bottom:solid 1px #e8eef4;
 }
 table.tabular tr:last-child th, table.tabular tr:last-child td {
-	border-bottom:none;
+  border-bottom:none;
 }
 tr.total,td.total,span.thick {
   font-weight:bold;
@@ -397,10 +399,13 @@ span.thick {
 span.editable {
   cursor:inherit;
 }
-.editable.price,.editable.tax,
-.editable.discount,.editable.quantity {
+.editable.price,.editable.quantity,
+.editable.discount,.editable.tax {
   min-width:60px;
   text-align:right;
+}
+.editable.discount,.editable.tax {
+  min-width:40px;
 }
 .editable.name {
   min-width:300px;
@@ -420,13 +425,26 @@ span.editable {
 }
 
 /* Bootstrap styles */
-[class*="span"] input[type="text"]{
+.nav-tabs {
+  margin-bottom: 0;
+}
+.tab-pane {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-top: 0;
+}
+.tabs-below .tab-pane {
+  border: 1px solid #ddd;
+  border-bottom: 0;
+}
+.input-micro {
+  width: 30px;
+}
+[class*="span"] > input[type="text"],
+[class*="span"] > select {
   width:100%;
 }
-[class*="span"] select{
-  width:100%;
-}
-[class*="span"] .ro-field{
+[class*="span"] .ro-field {
   display:block;
   min-height:20px;
   line-height:20px;
@@ -434,7 +452,7 @@ span.editable {
   background:#F8F8F8;
   border-radius:4px;
   padding:6px;
-  font-size:1.2em;
+  font-size:1em;
   color:#444;
   width:auto;
   margin:0 0 10px;
@@ -442,4 +460,52 @@ span.editable {
 .field-required label:after {
 	content: ' * ';
 	color:red;
+}
+
+.labeled-frames {
+  margin-top: 5px;
+  margin-left: 0;
+  list-style: none;
+  overflow: hidden; /* clear floats */
+}
+.labeled-frames li {
+  position: relative;
+  float: left;
+  margin:5px 0;
+  padding:29px 30px 19px;
+  background-color: #fff;
+  text-align:center;
+  border: 1px solid #ddd;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+}
+.labeled-frames li + li {
+  margin-left: 10px;
+}
+.labeled-frames li > span.caption {
+  display:inline-block;
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 60px;
+  text-align:center;
+  font-size: 12px;
+  font-weight: bold;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  color: #9da0a4;
+  -webkit-border-radius: 4px 0 4px 0;
+     -moz-border-radius: 4px 0 4px 0;
+          border-radius: 4px 0 4px 0;
+}
+.labeled-frames li > span.value {
+  display:block;
+  font-weight:bold;
+  font-size: 1.2em;
+}
+.labeled-frames li > span.value.muted {
+  display:block;
+  font-weight:normal;
+  font-size: 1em;
 }

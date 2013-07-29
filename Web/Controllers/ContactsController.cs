@@ -39,31 +39,30 @@ using Mictlanix.BE.Model;
 
 namespace Mictlanix.BE.Web.Controllers
 {
+	[Authorize]
     public class ContactsController : Controller
 	{
 		public ActionResult CreateCustomerContact (int id)
 		{
-			ViewBag.OwnerId = id;
 			return PartialView ("_Create");
 		}
 
 		public ActionResult CreateSupplierContact (int id)
         {
-            ViewBag.OwnerId = id;
 			return PartialView ("_Create");
 		}
 		
 		[HttpPost]
-		public ActionResult CreateCustomerContact (int owner, Contact item)
+		public ActionResult CreateCustomerContact (int id, Contact item)
 		{
 			if (!ModelState.IsValid) {
-				ViewBag.OwnerId = owner;
 				return PartialView ("_Create", item);
 			}
 			
 			using (var scope = new TransactionScope()) {
-				var customer = Customer.Find (owner);
-				
+				var customer = Customer.Find (id);
+
+				item.Id = 0;
 				item.CreateAndFlush ();
 				customer.Contacts.Add (item);
 				customer.Update ();
@@ -73,16 +72,16 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 		
 		[HttpPost]
-		public ActionResult CreateSupplierContact (int owner, Contact item)
+		public ActionResult CreateSupplierContact (int id, Contact item)
 		{
 			if (!ModelState.IsValid) {
-				ViewBag.OwnerId = owner;
 				return PartialView ("_Create", item);
 			}
-			
+
 			using (var scope = new TransactionScope()) {
-				var supplier = Supplier.Find (owner);
-				
+				var supplier = Supplier.Find (id);
+
+				item.Id = 0;
 				item.CreateAndFlush ();
 				supplier.Contacts.Add (item);
 				supplier.Update ();
@@ -149,7 +148,7 @@ namespace Mictlanix.BE.Web.Controllers
 					var item = Contact.Find (id);
 					item.DeleteAndFlush ();
 				}
-			} catch (GenericADOException ex) {
+			} catch (Exception ex) {
 				System.Diagnostics.Debug.WriteLine (ex);
 			}
 			

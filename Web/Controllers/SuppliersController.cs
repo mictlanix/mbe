@@ -40,6 +40,7 @@ using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers
 {
+	[Authorize]
     public class SuppliersController : Controller
     {
         public ViewResult Index()

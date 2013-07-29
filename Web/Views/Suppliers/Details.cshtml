@@ -42,44 +42,43 @@
 	  	<div class="span12"><div class="ro-field">@Html.DisplayFor(x => x.Comment)</div></div>
 	</div>
 </fieldset>
-<div id="tabs">
-    <ul>
-        <li><a href="#tabs-1">@Resources.Addresses</a></li>
-        <li><a href="#tabs-2">@Resources.Contacts</a></li>
-        <li><a href="#tabs-3">@Resources.DisplayName_BankAccounts</a></li>
-        <li><a href="#tabs-4">@Resources.DisplayName_SupplierAgreements</a></li>
+<div class='tabbable'>
+    <ul class='nav nav-tabs'>
+        <li class='active'><a href='#tab-1' data-toggle='tab'>@Resources.Addresses</a></li>
+        <li><a href='#tab-2' data-toggle='tab'>@Resources.Contacts</a></li>
+        <li><a href='#tab-3' data-toggle='tab'>@Resources.DisplayName_BankAccounts</a></li>
+        <li><a href='#tab-4' data-toggle='tab'>@Resources.DisplayName_SupplierAgreements</a></li>
     </ul>
-    <div id="tabs-1">
-    @if(AllowCreateAddresses) {
-        <p>@Html.ActionLink(Resources.CreateNew, "CreateSupplierAddress", "Addresses", new { id = Model.Id }, new { @class = "button icon add openDialog", data_dialog_id = "addressDlg", data_dialog_title = Resources.New })</p>
-    }
-        <div id='addresses' data-url='@Url.Action("Addresses", new { id = Model.Id })'>@Html.Partial("../Addresses/_Index", Model.Addresses)</div>
-    </div>
-    <div id="tabs-2">
-    @if(AllowCreateContacts) {
-        <p>@Html.ActionLink(Resources.CreateNew, "CreateSupplierContact", "Contacts", new { id = Model.Id }, new { @class = "button icon add openDialog", data_dialog_id = "contactDlg", data_dialog_title = Resources.New })</p>
-    }
-        <div id='contacts' data-url='@Url.Action("Contacts", new { id = Model.Id })'>@Html.Partial("../Contacts/_Index", Model.Contacts)</div>
-    </div>
-    <div id="tabs-3">
-    @if(AllowCreateBankAccounts) {
-        <p>@Html.ActionLink(Resources.CreateNew, "CreateForSupplier", "BankAccounts", new { id = Model.Id }, new { @class = "button icon add" })</p>
-    }
-        @Html.Partial("../BankAccounts/_Index", Model.BanksAccounts)
-    </div>
-    <div id="tabs-4">
-    @if(AllowCreateAgreements) {
-        <p>@Html.ActionLink(Resources.CreateNew, "CreateForSupplier", "SupplierAgreements", new { id = Model.Id }, new { @class = "button icon add" })</p>
-    }
-        @Html.Partial("../SupplierAgreements/_Index", Model.Agreements)
-    </div>
+    <div class="tab-content">
+	    <div id='tab-1' class='tab-pane active'>
+	    @if(AllowCreateAddresses) {
+	        <p>@Html.ActionLink(Resources.CreateNew, "CreateSupplierAddress", "Addresses", new { id = Model.Id }, new { @class = "button icon add open-modal", data_modal_id = "address-modal" })</p>
+	    }
+	        <div id='addresses' data-url='@Url.Action("Addresses", new { id = Model.Id })'>@Html.Partial("../Addresses/_Index", Model.Addresses)</div>
+	    </div>
+	    <div id='tab-2' class='tab-pane'>
+	    @if(AllowCreateContacts) {
+	        <p>@Html.ActionLink(Resources.CreateNew, "CreateSupplierContact", "Contacts", new { id = Model.Id }, new { @class = "button icon add open-modal", data_modal_id = "contact-modal" })</p>
+	    }
+	        <div id='contacts' data-url='@Url.Action("Contacts", new { id = Model.Id })'>@Html.Partial("../Contacts/_Index", Model.Contacts)</div>
+	    </div>
+	    <div id='tab-3' class='tab-pane'>
+	    @if(AllowCreateBankAccounts) {
+	        <p>@Html.ActionLink(Resources.CreateNew, "CreateForSupplier", "BankAccounts", new { id = Model.Id }, new { @class = "button icon add" })</p>
+	    }
+	        @Html.Partial("../BankAccounts/_Index", Model.BanksAccounts)
+	    </div>
+	    <div id='tab-4' class='tab-pane'>
+	    @if(AllowCreateAgreements) {
+	        <p>@Html.ActionLink(Resources.CreateNew, "CreateForSupplier", "SupplierAgreements", new { id = Model.Id }, new { @class = "button icon add" })</p>
+	    }
+	        @Html.Partial("../SupplierAgreements/_Index", Model.Agreements)
+	    </div>
+	</div>
 </div>
 <div class="row-fluid vspaced">
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
-@if(Privilege.AllowUpdate) {
+@if (Privilege.AllowUpdate) {
 	@Html.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new { @class = "button icon edit pull-right" })
 }
 </div>
-<script type='text/javascript'>
-$('#tabs').tabs();
-</script>

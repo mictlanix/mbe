@@ -853,15 +853,6 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Contactos.
-        /// </summary>
-        public static string Contacts {
-            get {
-                return ResourceManager.GetString("Contacts", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Crédito.
         /// </summary>
         public static string DisplayName_CreditPayment {
@@ -3261,14 +3252,17 @@ namespace Mictlanix.BE {
             }
         }
         
-        /// <summary>
-        ///   Looks up a localized string similar to Contactos.
-        /// </summary>
-        public static string Title_Contact {
+        public static string Contacts {
             get {
-                return ResourceManager.GetString("Title_Contact", resourceCulture);
+                return ResourceManager.GetString("Contacts", resourceCulture);
             }
-        }
+		}
+
+		public static string Contact {
+			get {
+				return ResourceManager.GetString("Contact", resourceCulture);
+			}
+		}
         
         /// <summary>
         ///   Looks up a localized string similar to Clientes.
@@ -4560,6 +4554,84 @@ namespace Mictlanix.BE {
 		public static string Salable {
 			get {
 				return ResourceManager.GetString("Salable", resourceCulture);
+			}
+		}
+
+		public static string PromiseDate {
+			get {
+				return ResourceManager.GetString("PromiseDate", resourceCulture);
+			}
+		}
+
+		public static string VariablePricing {
+			get {
+				return ResourceManager.GetString("VariablePricing", resourceCulture);
+			}
+		}
+
+		public static string PriceType {
+			get {
+				return ResourceManager.GetString("PriceType", resourceCulture);
+			}
+		}
+
+		public static string Fixed {
+			get {
+				return ResourceManager.GetString("Fixed", resourceCulture);
+			}
+		}
+
+		public static string Variable {
+			get {
+				return ResourceManager.GetString("Variable", resourceCulture);
+			}
+		}
+
+		public static string PaymentTerms {
+			get {
+				return ResourceManager.GetString("PaymentTerms", resourceCulture);
+			}
+		}
+
+		public static string Immediate {
+			get {
+				return ResourceManager.GetString("Immediate", resourceCulture);
+			}
+		}
+
+		public static string NetD {
+			get {
+				return ResourceManager.GetString("NetD", resourceCulture);
+			}
+		}
+
+		public static string Empty {
+			get {
+				return ResourceManager.GetString("Empty", resourceCulture);
+			}
+		}
+
+		public static string Notification {
+			get {
+				return ResourceManager.GetString("Notification", resourceCulture);
+			}
+		}
+
+		public static string CreditLimitIsNotSet {
+			get {
+				return ResourceManager.GetString("CreditLimitIsNotSet", resourceCulture);
+			}
+		}
+
+		public static string DateFormatString {
+			get {
+				return ResourceManager.GetString("DateFormatString", resourceCulture);
+			}
+		}
+
+		public static string DateTimeFormatString {
+			get {
+				return ResourceManager.GetString("DateTimeFormatString", resourceCulture);
 			}
 		}
     }

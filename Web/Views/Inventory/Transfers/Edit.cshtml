@@ -53,8 +53,8 @@ $(function () {
     });
 
     $('form').submit(function(){
-        $("button.lock").attr("disabled", "disabled");
-	    $("button.lock").html("@Resources.PleaseWait");
+        $('button.lock').prop('disabled', true);
+	    $('button.lock').html('@Resources.PleaseWait');
 	});
 });
 </script>

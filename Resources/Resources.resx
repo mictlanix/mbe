@@ -183,9 +183,6 @@
   <data name="DisplayName_CashDrawers" xml:space="preserve">
     <value>Catálogo de Cajas</value>
   </data>
-  <data name="Contacts" xml:space="preserve">
-    <value>Contactos</value>
-  </data>
   <data name="DisplayName_Customers" xml:space="preserve">
     <value>Catálogo de Clientes</value>
   </data>
@@ -303,8 +300,11 @@
   <data name="Title_CashDrawer" xml:space="preserve">
     <value>Cajas</value>
   </data>
-  <data name="Title_Contact" xml:space="preserve">
+  <data name="Contacts" xml:space="preserve">
     <value>Contactos</value>
+  </data>
+  <data name="Contact" xml:space="preserve">
+    <value>Contacto</value>
   </data>
   <data name="Title_Customer" xml:space="preserve">
     <value>Clientes</value>
@@ -544,7 +544,7 @@
     <value>Subtotal</value>
   </data>
   <data name="Taxes" xml:space="preserve">
-    <value>I.V.A.</value>
+    <value>IVA</value>
   </data>
   <data name="Total" xml:space="preserve">
     <value>Total</value>
@@ -775,7 +775,7 @@
     <value>Ticket Para Pago</value>
   </data>
   <data name="CreditLimitExceeded" xml:space="preserve">
-    <value>Límite de Crédito Excedido Por:</value>
+    <value>Límite de Crédito Excedido</value>
   </data>
   <data name="Denominations" xml:space="preserve">
     <value>0.2,0.5,1,2,5,10,20,50,100,200,500,1000</value>
@@ -1697,5 +1697,44 @@ Realizada el: {0:d}</value>
   </data>
   <data name="Salable" xml:space="preserve">
     <value>Vendible</value>
+  </data>
+  <data name="PromiseDate" xml:space="preserve">
+    <value>Fecha Promesa</value>
+  </data>
+  <data name="VariablePricing" xml:space="preserve">
+    <value>Precio Variable</value>
+  </data>
+  <data name="PriceType" xml:space="preserve">
+    <value>Tipo de Precio</value>
+  </data>
+  <data name="Fixed" xml:space="preserve">
+    <value>Fijo</value>
+  </data>
+  <data name="Variable" xml:space="preserve">
+    <value>Variable</value>
+  </data>
+  <data name="PaymentTerms" xml:space="preserve">
+    <value>Condiciones de Pago</value>
+  </data>
+  <data name="Immediate" xml:space="preserve">
+    <value>Contado</value>
+  </data>
+  <data name="NetD" xml:space="preserve">
+    <value>Crédito</value>
+  </data>
+  <data name="Empty" xml:space="preserve">
+    <value>Vacío</value>
+  </data>
+  <data name="Notification" xml:space="preserve">
+    <value>Notificación</value>
+  </data>
+  <data name="CreditLimitIsNotSet" xml:space="preserve">
+    <value>El límite de crédito no está configurado.</value>
+  </data>
+  <data name="DateFormatString" xml:space="preserve">
+    <value>yyyy-MM-dd</value>
+  </data>
+  <data name="DateTimeFormatString" xml:space="preserve">
+    <value>yyyy-MM-dd HH:mm:ss</value>
   </data>
 </root>

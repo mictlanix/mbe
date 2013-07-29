@@ -3,18 +3,20 @@
 @using Mictlanix.BE.Web.Helpers
 @model Taxpayer
 
-@using (Ajax.BeginForm(new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "taxpayerDlg" })) {
+<div class='modal-header'>
+	<button type='button' class='close' data-dismiss='modal'>&times;</button>
+	<h3>@Resources.Taxpayer</h3>
+</div>
+<div class='modal-body'>
+@using (Ajax.BeginForm(null, null, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "taxpayer-modal" }, new { @class = "modal-form" })) {
     @Html.ValidationSummary(true)
 	<div style='overflow:hidden'>
-		@Html.EditorForModel()
+	@Html.EditorForModel()
 	</div>
-	<div class="action-buttons">
-		<button type="button" class="cancel">@Resources.Discard</button>
-		<button type="submit" class="icon save">@Resources.Save</button>
-	</div>
+	<script type="text/javascript">$('#Id').attr('readonly', true);</script>
 }
-<script type="text/javascript">
-$('#Id').attr('readonly', true);
-$('#Name').focus();
-bindCloseDialog(".cancel");
-</script>
+</div>
+<div class='modal-footer'>
+	<button type='button' class='btn' data-dismiss='modal'>@Resources.Discard</button>
+	<button type='submit' class='btn btn-primary' onclick='$("#taxpayer-modal form").submit();'>@Resources.Save</button>
+</div>

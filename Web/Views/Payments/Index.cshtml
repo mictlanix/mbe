@@ -15,23 +15,21 @@
 
 @Html.Partial("_SessionInfo", Model.Master)
 
-@if (Privilege.AllowUpdate)
-{
-    <div id="tabs">
-        <ul>
-            <li><a href="#cash-payment">@Resources.DisplayName_CashPayment</a></li>
-            <li><a href="#credit-payment">@Resources.DisplayName_CreditPayment</a></li>
-        </ul>
-        <div id="cash-payment">
-            @Html.Partial("_CashPayment", Model.Details)
-        </div>
-        <div id="credit-payment">
-            @Html.Partial("_CreditPayment", new CustomerPayment())
-        </div>
-    </div>
-	<script type="text/javascript">
-	    $(function () {
-	        $("#tabs").tabs();
-	    });
-	</script>
+@if (Privilege.AllowUpdate) {
+<div class='tabbable'>
+    <ul class='nav nav-tabs'>
+        <li class='active'><a href='#tab-1' data-toggle='tab'>@Resources.DisplayName_CashPayment</a></li>
+        <li><a href='#tab-2' data-toggle='tab'>@Resources.DisplayName_CreditPayment</a></li>
+    </ul>
+    <div class="tab-content">
+	    <div id='tab-1' class='tab-pane active'>
+	        @Html.Partial("_CashPayment", Model.Details)
+	    </div>
+	    <div id='tab-2' class='tab-pane'>
+	    	<div id='credit-payment'>
+	        	@Html.Partial("_CreditPayment", new CustomerPayment())
+	        </div>
+	    </div>
+	</div>
+</div>
 }

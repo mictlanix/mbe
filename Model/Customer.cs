@@ -119,7 +119,7 @@ namespace Mictlanix.BE.Model
 
         public override string ToString()
         {
-            return string.Format("{0} [{1}, {2}, {3}]", Name, CreditLimit, CreditDays, PriceList);
+            return string.Format("{0}", Name);
         }
 
         public override bool Equals(object obj)

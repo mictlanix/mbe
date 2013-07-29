@@ -39,31 +39,30 @@ using Mictlanix.BE.Model;
 
 namespace Mictlanix.BE.Web.Controllers
 {
+	[Authorize]
     public class AddressesController : Controller
     {
 		public ActionResult CreateCustomerAddress (int id)
         {
-            ViewBag.OwnerId = id;
 			return PartialView ("_Create");
 		}
 		
 		public ActionResult CreateSupplierAddress (int id)
 		{
-			ViewBag.OwnerId = id;
 			return PartialView ("_Create");
 		}
 
         [HttpPost]
-		public ActionResult CreateCustomerAddress (int owner, Address item)
+		public ActionResult CreateCustomerAddress (int id, Address item)
 		{
 			if (!ModelState.IsValid) {
-				ViewBag.OwnerId = owner;
 				return PartialView ("_Create", item);
 			}
 
 			using (var scope = new TransactionScope()) {
-				var customer = Customer.Find (owner);
+				var customer = Customer.Find (id);
 
+				item.Id = 0;
                 item.CreateAndFlush ();
 				customer.Addresses.Add (item);
 				customer.Update ();
@@ -73,16 +72,16 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 		
 		[HttpPost]
-		public ActionResult CreateSupplierAddress (int owner, Address item)
+		public ActionResult CreateSupplierAddress (int id, Address item)
 		{
 			if (!ModelState.IsValid) {
-				ViewBag.OwnerId = owner;
 				return PartialView ("_Create", item);
 			}
 			
 			using (var scope = new TransactionScope()) {
-				var supplier = Supplier.Find (owner);
+				var supplier = Supplier.Find (id);
 
+				item.Id = 0;
 				item.CreateAndFlush ();
 				supplier.Addresses.Add (item);
 				supplier.Update ();
@@ -114,27 +113,30 @@ namespace Mictlanix.BE.Web.Controllers
 			if (entity.Equals (item))
 				return PartialView ("_Refresh");
 
+			using (var scope = new TransactionScope()) {
+				item.CreateAndFlush ();
+
+				foreach(var x in entity.Customers) {
+					x.Addresses.Remove (entity);
+					x.Addresses.Add (item);
+					x.Update ();
+				}
+				
+				foreach(var x in entity.Suppliers) {
+					x.Addresses.Remove (entity);
+					x.Addresses.Add (item);
+					x.Update ();
+				}
+
+				entity.Customers.Clear ();
+				entity.Suppliers.Clear ();
+			}
+			
 			try {
 				using (var scope = new TransactionScope()) {
-					item.CreateAndFlush ();
-
-					foreach(var x in entity.Customers) {
-						x.Addresses.Remove (entity);
-						x.Addresses.Add (item);
-						x.Update ();
-					}
-					
-					foreach(var x in entity.Suppliers) {
-						x.Addresses.Remove (entity);
-						x.Addresses.Add (item);
-						x.Update ();
-					}
-
-					entity.Customers.Clear ();
-					entity.Suppliers.Clear ();
 					entity.DeleteAndFlush ();
 				}
-			} catch (GenericADOException ex) {
+			} catch (Exception ex) {
 				System.Diagnostics.Debug.WriteLine (ex);
 			}
 
@@ -174,7 +176,7 @@ namespace Mictlanix.BE.Web.Controllers
 					var item = Address.Find (id);
 					item.DeleteAndFlush ();
 				}
-			} catch (GenericADOException ex) {
+			} catch (Exception ex) {
 				System.Diagnostics.Debug.WriteLine (ex);
 			}
 			

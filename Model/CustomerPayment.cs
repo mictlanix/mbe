@@ -87,9 +87,9 @@ namespace Mictlanix.BE.Model
 
         [Property]
         [DataType(DataType.Currency)]
-        [Display(Name = "Amount", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
-        public decimal Amount { get; set; }
+		[Range(0.0001, double.MaxValue, ErrorMessageResourceName = "Validation_CannotBeZeroOrNegative", ErrorMessageResourceType = typeof(Resources))]
+		[Display(Name = "Amount", ResourceType = typeof(Resources))]
+		public decimal Amount { get; set; }
 
         [Property("cash_change")]
         [DataType(DataType.Currency)]
