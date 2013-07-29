@@ -12,11 +12,12 @@
 
 <h2>@Resources.SalesOrders</h2>
 
-<p>
 @if(Privilege.AllowCreate) {
-    @Html.ActionLink(Resources.NewSalesOrder, "New", new { }, new { @class = "button icon add" })
+    using (Html.BeginForm("New", "SalesOrders", null, FormMethod.Post, new { @class = "modal-form" })) {
+		<button type="submit" class="icon add">@Resources.NewSalesOrder</button>
+    }
 }
-</p>
+
 @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
     <fieldset>
         <legend>@Resources.Search</legend>

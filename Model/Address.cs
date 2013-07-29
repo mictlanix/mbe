@@ -138,7 +138,7 @@ namespace Mictlanix.BE.Model
 
         public override string ToString()
         {
-			return string.Format("{0}, {1}, {2}", StreetAndNumber, Neighborhood, PostalCode);
+			return string.Format("{0}, {1}, {2}", StreetAndNumber, State, PostalCode);
         }
 
 		public override bool Equals(object obj)

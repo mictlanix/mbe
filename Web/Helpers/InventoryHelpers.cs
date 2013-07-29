@@ -38,15 +38,18 @@ namespace Mictlanix.BE.Web.Helpers
 {
 	public static class InventoryHelpers
 	{
-		public static void ChangeNotification(TransactionType source, int reference, DateTime dt,
-		                                      Warehouse warehouse, Product product, decimal quantity)
+		public static void ChangeNotification (TransactionType source, int reference, DateTime dt,
+		                                       Warehouse warehouse, Product product, decimal quantity)
 		{
-			KardexRegister(source, reference, dt, warehouse, product, quantity);
-			LotSerialRegister(source, reference, warehouse, product, quantity);
+			if (!product.IsStockable)
+				return;
+
+			KardexRegister (source, reference, dt, warehouse, product, quantity);
+			LotSerialRegister (source, reference, warehouse, product, quantity);
 		}
 
-		static void KardexRegister(TransactionType source, int reference, DateTime dt,
-		                                  Warehouse warehouse, Product product, decimal quantity)
+		static void KardexRegister (TransactionType source, int reference, DateTime dt,
+		                            Warehouse warehouse, Product product, decimal quantity)
 		{
 			var item = new Kardex {
 				Source = source,
@@ -57,13 +60,13 @@ namespace Mictlanix.BE.Web.Helpers
 				Quantity = quantity
 			};
 			
-			item.Create();
+			item.Create ();
 		}
 		
-		static void LotSerialRegister(TransactionType source, int reference, Warehouse warehouse,
-		                              Product product, decimal quantity)
+		static void LotSerialRegister (TransactionType source, int reference, Warehouse warehouse,
+		                               Product product, decimal quantity)
 		{
-			if(!product.IsPerishable && !product.IsSeriable)
+			if (!product.IsPerishable && !product.IsSeriable)
 				return;
 
 			var rqmt = new LotSerialRequirement {
@@ -74,7 +77,7 @@ namespace Mictlanix.BE.Web.Helpers
 				Quantity = quantity
 			};
 			
-			rqmt.Create();
+			rqmt.Create ();
 		}
 	}
 }

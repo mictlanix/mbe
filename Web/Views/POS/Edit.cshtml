@@ -34,12 +34,6 @@
 <div id="sales-totals">
     @Html.Partial("_Totals")
 </div>
-<div id="confirm-dlg" class="dialog" title="@Resources.Delete">
-	<p>
-        <span class="ui-icon ui-icon-circle-close" style="float:left; margin:3px 7px 20px 0;"></span>
-        @Resources.Message_DeleteConfirmation
-    </p>
-</div>
 <script type="text/javascript">
     function updateTotals(){
         $.get('@Url.Action("GetTotals")/' + @Model.Id, function (data) {
@@ -84,28 +78,6 @@
         updateTotals();
 
         return result;
-    }
-
-    function removeItem(id) {
-        $("#confirm-dlg").dialog({
-            resizable: true,
-            height: 178,
-            modal: true,
-            buttons: {
-                @Resources.Delete: function () {
-                    $.post('@Url.Action("RemoveDetail")', { "id": id }, function (data) {
-                        if(data.result) {
-                            $("#item" + id).remove();
-                            updateTotals();
-                        }
-                    }, "json");
-                    $(this).dialog("close");
-                },
-                @Resources.Close: function () {
-                    $(this).dialog("close");
-                }
-            }
-        });
     }
 
     $(function () {

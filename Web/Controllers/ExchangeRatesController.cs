@@ -39,6 +39,7 @@ using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers
 { 
+	[Authorize]
 	public class ExchangeRatesController : Controller
     {
         public ViewResult Index ()
@@ -133,7 +134,7 @@ namespace Mictlanix.BE.Web.Controllers
 						  text = x.ToString ()
 					  };
 
-			return Json (qry.ToList(), JsonRequestBehavior.AllowGet);
+			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
 		}
     }
 }

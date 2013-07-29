@@ -136,6 +136,8 @@
     <Compile Include="Constants\FiscalCertificationProvider.cs" />
     <Compile Include="Constants\UnitOfMeasurement.cs" />
     <Compile Include="Label.cs" />
+    <Compile Include="Constants\PriceType.cs" />
+    <Compile Include="Constants\PaymentTerms.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">

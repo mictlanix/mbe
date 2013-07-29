@@ -73,22 +73,22 @@
 	</div>
 }
 </fieldset>
-<div id="tabs">
-    <ul>
-        <li><a href="#tabs-1">@Resources.TaxpayerBatches</a></li>
-        <li><a href="#tabs-2">@Resources.Certificates</a></li>
+<div class='tabbable'>
+    <ul class='nav nav-tabs'>
+        <li class='active'><a href='#tab-1' data-toggle='tab'>@Resources.TaxpayerBatches</a></li>
+        <li><a href='#tab-2' data-toggle='tab'>@Resources.Certificates</a></li>
     </ul>
-    <div id="tabs-1">
-        @Html.Partial("_Batches", Model.Batches)
-    </div>
-    <div id="tabs-2">
+    <div class="tab-content">
+	    <div id='tab-1' class='tab-pane active'>
+	        @Html.Partial("_Batches", Model.Batches)
+	    </div>
+	    <div id='tab-2' class='tab-pane'>
         @if(Privilege.AllowUpdate) {
-        <p>
-            @Html.ActionLink(Resources.Add, "AddCertificate", "Taxpayers", new { id = Model.Id }, new { @class = "button icon add" })
-        </p>
+	        <p>@Html.ActionLink(Resources.Add, "AddCertificate", "Taxpayers", new { id = Model.Id }, new { @class = "button icon add" })</p>
 		}
-        @Html.Partial("_Certificates", Model.Certificates)
-    </div>
+	        @Html.Partial("_Certificates", Model.Certificates)
+	    </div>
+	</div>
 </div>
 <div class="row-fluid vspaced">
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
@@ -96,6 +96,3 @@
 	@Html.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new { @class = "button icon edit pull-right" })
 }
 </div>
-<script type='text/javascript'>
-$('#tabs').tabs();
-</script>

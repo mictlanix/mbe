@@ -83,6 +83,10 @@ namespace Mictlanix.BE.Model
         [Display(Name = "Customer", ResourceType = typeof(Resources))]
         public virtual Customer Customer { get; set; }
 
+		[BelongsTo("contact", Lazy = FetchWhen.OnInvoke)]
+		[Display(Name = "Contact", ResourceType = typeof(Resources))]
+		public virtual Contact Contact { get; set; }
+
 		[Display(Name = "ShipTo", ResourceType = typeof(Resources))]
 		[UIHint("AddressSelector")]
 		public virtual int? ShipToId { get; set; }
@@ -95,6 +99,11 @@ namespace Mictlanix.BE.Model
         [DataType(DataType.DateTime)]
         [Display(Name = "Date", ResourceType = typeof(Resources))]
         public virtual DateTime Date { get; set; }
+		
+		[Property("promise_date")]
+		[DataType(DataType.Date)]
+		[Display(Name = "PromiseDate", ResourceType = typeof(Resources))]
+		public virtual DateTime PromiseDate { get; set; }
 
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
 		[Display(Name = "SalesPerson", ResourceType = typeof(Resources))]
@@ -109,9 +118,23 @@ namespace Mictlanix.BE.Model
         [Display(Name = "PointOfSale", ResourceType = typeof(Resources))]
         public virtual PointOfSale PointOfSale { get; set; }
 
-        [Property("credit")]
+		[Property("payment_terms")]
+		[Display(Name = "PaymentTerms", ResourceType = typeof(Resources))]
+		public virtual PaymentTerms Terms { get; set; }
+
         [Display(Name = "Credit", ResourceType = typeof(Resources))]
-        public virtual bool IsCredit { get; set; }
+        public virtual bool IsCredit {
+			get { return Terms != PaymentTerms.Immediate; }
+		}
+		
+		[Property]
+		[Display(Name = "Currency", ResourceType = typeof(Resources))]
+		public virtual CurrencyCode Currency { get; set; }
+
+		[Property("exchange_rate")]
+		[DisplayFormat(DataFormatString = "{0:0.00##}")]
+		[Display(Name = "ExchangeRate", ResourceType = typeof(Resources))]
+		public virtual decimal ExchangeRate { get; set; }
 
         [Property("due_date")]
         [DataType(DataType.Date)]
@@ -181,7 +204,25 @@ namespace Mictlanix.BE.Model
         public virtual decimal Balance
         {
             get { return Paid - Total; }
-        }
+		}
+
+		[DataType(DataType.Currency)]
+		[Display(Name = "Subtotal", ResourceType = typeof(Resources))]
+		public virtual decimal SubtotalEx {
+			get { return Details.Sum (x => x.SubtotalEx); }
+		}
+
+		[DataType(DataType.Currency)]
+		[Display(Name = "Taxes", ResourceType = typeof(Resources))]
+		public virtual decimal TaxesEx {
+			get { return TotalEx - SubtotalEx; }
+		}
+
+		[DataType(DataType.Currency)]
+		[Display(Name = "Total", ResourceType = typeof(Resources))]
+		public virtual decimal TotalEx {
+			get { return Details.Sum (x => x.TotalEx); }
+		}
 
         #region Override Base Methods
 

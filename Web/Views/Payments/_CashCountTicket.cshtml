@@ -114,13 +114,12 @@
     <tr>
         <td colspan="2">
             <table>
-            @foreach (var item in Model.CashCounts.OrderBy(x => x.Denomination)) 
-            {
+            @foreach (var item in Model.CashCounts.OrderBy(x => x.Denomination)) {
                 <tr>
                     <td class="right" style="width:50%">
                         @Html.DisplayFor(modelItem => item.Quantity)
                     </td>
-                    <td class="center">×</td>
+                    <td class="center">&times;</td>
                     <td class="right">
                         @Html.DisplayFor(modelItem => item.Denomination)
                     </td>

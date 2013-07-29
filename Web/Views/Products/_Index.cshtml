@@ -16,7 +16,7 @@
         <th></th>
         <th>@Html.LabelFor(x => new Product().Code)</th>
         <th>@Html.LabelFor(x => new Product().Name)</th>
-        <th>@Html.LabelFor(x => new Product().UnitOfMeasurement)</th>
+        <th class='nowrap'>@Html.LabelFor(x => new Product().UnitOfMeasurement)</th>
         <th></th>
     </tr>
 
@@ -67,7 +67,6 @@
 	<label class='button left'>@Model.ToString()</label>@if (Model.HasPrev) {<a class='button middle icon prev icon-only paging' title='@Resources.PrevPage' href='javascript:void(0)'></a>}@if (Model.HasNext) {<a class='button right icon next icon-only paging' title='@Resources.NextPage' href='javascript:void(0)'></a>}
 </div>
 <script type="text/javascript">
-$('a.tips').cluetip({ showTitle: false, width:600 });
 $('a.paging').click(function (e) {
 	var offset=@Model.Offset;
 	

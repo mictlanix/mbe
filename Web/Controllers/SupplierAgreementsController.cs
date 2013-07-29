@@ -38,6 +38,7 @@ using Mictlanix.BE.Model;
 
 namespace Mictlanix.BE.Web.Controllers
 {
+	[Authorize]
     public class SupplierAgreementsController : Controller
     {
         //

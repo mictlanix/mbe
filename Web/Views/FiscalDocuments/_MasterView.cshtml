@@ -31,7 +31,6 @@
     </div>
 }
 
-@if(Model.Currency != Configuration.BaseCurrency) {
     <div class="display-label right floating">
         @Html.LabelFor(x => x.Currency)
         @Model.Currency.GetDisplayName()
@@ -41,7 +40,6 @@
         @Html.LabelFor(x => x.ExchangeRate):
         @Html.DisplayFor(x => x.ExchangeRate)
     </div>
-}
 
     <div class="display-label right floating">
         @Html.LabelFor(x => x.PaymentMethod):

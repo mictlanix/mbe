@@ -30,6 +30,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -82,8 +83,8 @@ namespace Mictlanix.BE.Web.Helpers
 			get { return ConfigurationManager.AppSettings ["DefaultPhotoFile"]; }
 		}
 		
-		public static decimal VAT {
-			get { return decimal.Parse (ConfigurationManager.AppSettings ["VAT"]); }
+		public static decimal DefaultVAT {
+			get { return Convert.ToDecimal (ConfigurationManager.AppSettings ["DefaultVAT"]); }
 		}
 		
 		public static bool IsTaxIncluded {
@@ -113,9 +114,17 @@ namespace Mictlanix.BE.Web.Helpers
 				return currency;
 			}
 		}
-		
+
 		public static int DefaultCustomer {
-			get { return int.Parse (ConfigurationManager.AppSettings ["DefaultCustomer"]); }
+			get { return Convert.ToInt32 (ConfigurationManager.AppSettings ["DefaultCustomer"]); }
+		}
+		
+		public static PriceType DefaultPriceType {
+			get {
+				var val = PriceType.Fixed;
+				Enum.TryParse<PriceType> (ConfigurationManager.AppSettings ["DefaultPriceType"], out val);
+				return val;
+			}
 		}
 
 		public static string DefaultIssuer {
@@ -136,6 +145,10 @@ namespace Mictlanix.BE.Web.Helpers
 		
 		public static string ReceiptLayout {
 			get { return ConfigurationManager.AppSettings ["ReceiptLayout"]; }
+		}
+
+		public static string Language {
+			get { return CultureInfo.CurrentCulture.TwoLetterISOLanguageName; }
 		}
 
 		#endregion

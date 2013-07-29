@@ -37,7 +37,8 @@ using Castle.ActiveRecord;
 using Mictlanix.BE.Model;
 
 namespace Mictlanix.BE.Web.Controllers
-{ 
+{
+	[Authorize]
     public class UsersController : Controller
     {
         //

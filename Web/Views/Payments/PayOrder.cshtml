@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Models
@@ -8,147 +8,69 @@
     ViewBag.Title = Resources.Payment;
 }
 
-<link href="@Url.Content("~/Content/selection-options.css")" rel="stylesheet" type="text/css" />
-
-
 <h2>@Resources.Payment</h2> 
 
 <div id="pay-order">
-@Html.Partial("_PaymentInfo")
+@Html.Partial("_DisplayView")
 </div>
-
-<fieldset>
-    <legend>@Mictlanix.BE.Resources.Payment</legend>
-
-    <div id="form">
-        <div class="display-label">
-            @Html.LabelFor(model => new CustomerPayment().Amount)
-        </div>
-        <div class="display-field">
-            @Html.EditorFor(model => new CustomerPayment().Amount)
-        </div>
-        <div class="display-label">
-            @Html.LabelFor(model => new CustomerPayment().Method)
-        </div>
-        <div class="editor-field">
-            <ul class="selection-options">
-            @foreach (var item in new []{ PaymentMethod.Cash,
-            							  PaymentMethod.DebitCard,
-            							  PaymentMethod.CreditCard,
-            							  PaymentMethod.Check,
-            							  PaymentMethod.BankDeposit,
-            							  PaymentMethod.WireTransfer,
-            							  PaymentMethod.GovernmentFunding }) {
-                <li>
-	                <label>
-	                    @Html.RadioButtonFor(model => new CustomerPayment().Method, (int)item)
-	                    <span class="option-desc">
-		                    <span class="icon dollar">@Resources.Pay</span>
-		                    <span class="text">@item.GetDisplayName()</span>
-	                    </span>
-	                </label>
-	            </li>
-            }
-            </ul>
-        </div>
-        <div id="reference" style="display:none">
-            <div class="display-label">
-                @Html.LabelFor(model => new CustomerPayment().Reference)
-            </div>
-            <div class="display-field">
-                @Html.EditorFor(model => new CustomerPayment().Reference)
-            </div>
-        </div>
-        <div class="right">
-            <p><button id="pay" type="submit" class="icon pay">@Resources.Pay</button></p>
-        </div>
-    </div>
-    <div id="items-container">
-        <ul id="items" class="list-items">
-        @foreach (var item in Model.Payments)
-        {
-            @Html.Partial("_Payment", item) 
-        }
-        </ul>
-    </div>
-</fieldset>
-
+<div id="items-container">
+    <ul id="items" class="list-items">
+    @foreach (var item in Model.Payments) {
+        @Html.Partial("_Payment", item) 
+    }
+    </ul>
+</div>
+<div id="form">
+	<fieldset>
+	    <legend>@Resources.Payment</legend>
+		<div class="row-fluid">
+		  	<div class="span3">@Html.LabelFor(x => new CustomerPayment().Amount)</div>
+			<div class="span3">@Html.LabelFor(x => new CustomerPayment().Reference)</div>
+		</div>
+		<div class="row-fluid">
+		  	<div class="span3"><input id='amount' class='text-right' type='text' value='0.00'></div>
+			<div class="span3"><input id='reference' class='text-right' type='text' value=''></div>
+		</div>
+	    <div class="btn-toolbar">
+	    	@Html.LabelFor(x => new CustomerPayment().Method)
+	        <div class="btn-group">
+	        @foreach (var item in new []{ PaymentMethod.Cash,
+	        							  PaymentMethod.DebitCard,
+	        							  PaymentMethod.CreditCard,
+	        							  PaymentMethod.Check,
+	        							  PaymentMethod.BankDeposit,
+	        							  PaymentMethod.WireTransfer,
+	        							  PaymentMethod.GovernmentFunding }) {
+	        	<button class="pay btn" data-value='@((int)item)'>@item.GetDisplayName()</button>
+	        }
+			</div>
+	    </div>
+	</fieldset>
+</div>
 <div id="sales-order-balance">
     @Html.Partial("_SalesOrderBalance")
 </div>
-
-<div id="confirm-dlg" class="dialog" title="@Resources.Delete">
-	<p>
-        <span class="ui-icon ui-icon-circle-close" style="float:left; margin:3px 7px 20px 0;"></span>
-        @Resources.Message_DeleteConfirmation
-    </p>
-</div>
-
 <script type="text/javascript">
-    function updateTotals() {
-        $.get('@Url.Action("GetSalesOrderBalance")/' + @Model.Id, function (data) {
-            $("#sales-order-balance").html(data);
-        });
-    }
-
-    function removeItem(id) {
-        $("#confirm-dlg").dialog({
-            resizable: true,
-            height: 178,
-            modal: true,
-            buttons: {
-                @Resources.Delete: function () {
-                    $.post('@Url.Action("RemovePayment")', { "id": id }, function (data) {
-                        if(data.result) {
-                            $("#payment" + id).remove();
-                            updateTotals();
-                        }
-                    }, "json");
-                    $(this).dialog("close");
-                },
-                @Resources.Close: function () {
-                    $(this).dialog("close");
-                }
-            }
-        });
-    }
-
-    $(function () {
-        $("#Method").attr("checked", true);
-        $(".selection-options>li:first-child").addClass("selected");
-
-        $("#pay").click(function () {
-            var type = $("#Method:checked").val();
-            var amount = $("#Amount").val();
-            var reference = $("#Reference").val();
-
-            $.post('@Url.Action("AddPayment")', { "order": @Model.Id, "type": type, "amount": amount, "reference": reference }, function (detail) {
-                $.get('@Url.Action("GetPayment")/' + detail.id, function (data) {
-                    $("#items").append(data);
-                    $(".selection-options>li").removeClass("selected");
-                    $(":input").not(":submit, :button, :radio").val("").removeAttr("selected");
-                    $("#reference").hide("slow");
-                    $("#Method").attr("checked", true);
-                    $(".selection-options>li:first-child").addClass("selected");
-                    updateTotals();
-                });
-
-            }, "json");
-        });
-
-        $(":radio").change(function() {
-            var status = $("#Method:checked").val();
-            
-            if (status === "4" || status === "5") {
-                $("#reference").show("slow");
-            } else {
-                $("#reference").hide("slow");
-            }
-        });
-    
-        $(".selection-options>li").click(function () {
-            $(".selection-options>li").removeClass("selected");
-            $(this).addClass("selected");
-        });
+function updateTotals() {
+    $.get('@Url.Action("GetSalesOrderBalance", new { id = Model.Id })', function (data) {
+        $("#sales-order-balance").html(data);
     });
+}
+$(function () {
+	$('[data-toggle="tooltip"]').tooltip();
+    $(".pay").click(function () {
+        var type = $(this).data('value');
+        var amount = $("#amount").val();
+        var reference = $("#reference").val();
+
+        $.post('@Url.Action("AddPayment", new { id = Model.Id })', { 'type': type, 'amount': amount, 'reference': reference }, function (detail) {
+            $.get('@Url.Action("GetPayment")/' + detail.id, function (data) {
+                $('#items').append(data);
+                $("#amount,#reference").val('');
+                updateTotals();
+            });
+
+        }, "json");
+    });
+});
 </script>

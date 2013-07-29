@@ -8,38 +8,3 @@
     @Html.Partial("_DetailEditView", item)
 }
 </ul>
-<script type="text/javascript">
-$(function () {
-@foreach (var item in Model) {
-<text>
-    $("#item@(item.Id) div.name").editable(function(value,settings){
-    	return editProductName(@item.Id, value);
-    });
-    
-    $("#item@(item.Id) div.code").editable(function(value,settings){
-    	return editProductCode(@item.Id, value);
-    });
-    
-    $("#item@(item.Id) div.um").editable(function(value,settings){
-    	return editUM(@item.Id, value);
-    });
-    
-    $("#item@(item.Id) div.price").editable(function(value,settings){
-    	return editPrice(@item.Id, value);
-    },{ cssclass : "number" });
-    
-    $("#item@(item.Id) div.tax").editable(function(value,settings){
-    	return editTaxRate(@item.Id, value);
-    },{ cssclass : "number" });
-    
-    $("#item@(item.Id) div.quantity").editable(function(value,settings){
-    	return editQuantity(@item.Id, value);
-    },{ cssclass : "number" });
-    
-    $("#item@(item.Id) div.discount").editable(function(value,settings){
-    	return editDiscount(@item.Id, value);
-	}, { cssclass : "number" });
-</text>
-}
-});
-</script>
