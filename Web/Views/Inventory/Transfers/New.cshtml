@@ -62,8 +62,8 @@ $(function () {
         @:$("#ToId").tokenInput("add", { id: "@Model.To.Id", name: "@Model.To.Name" });
     }
     $('form').submit(function(){
-        $("button.save").attr("disabled", "disabled");
-	    $("button.save").html("@Resources.PleaseWait");
+        $('button.save').prop('disabled', true);
+	    $('button.save').html('@Resources.PleaseWait');
 	});
 });
 </script>

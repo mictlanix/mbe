@@ -37,6 +37,7 @@ using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers
 {
+	[Authorize]
     public class PricingController : Controller
     {
 		public ActionResult Index ()
@@ -85,7 +86,7 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 		
 		[HttpPost]
-		public JsonResult EditPrice (int product, int list, string value)
+		public JsonResult SetPrice (int product, int list, string value)
 		{
 			decimal val;
 			bool success;
@@ -96,7 +97,8 @@ namespace Mictlanix.BE.Web.Controllers
 			if (item == null) {
 				item = new ProductPrice {
 					Product = p,
-					List = l
+					List = l,
+					Currency = Configuration.DefaultCurrency
 				};
 			}
 			
@@ -112,11 +114,11 @@ namespace Mictlanix.BE.Web.Controllers
 				}
 			}
 			
-			return Json (new { id = item.Id, value = item.Value.ToString ("c") });
+			return Json (new { id = item.Id, value = item.FormattedValueFor (x => x.Value) });
 		}
 
 		[HttpPost]
-		public JsonResult EditCurrency (int product, int list, string value)
+		public JsonResult SetCurrency (int product, int list, string value)
 		{
 			bool success;
 			CurrencyCode val;
@@ -145,9 +147,9 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 
 		[HttpPost]
-		public JsonResult EditTaxRate (int id, decimal value)
+		public JsonResult SetTaxRate (int id, decimal value)
 		{
-			var item = Product.Find(id);
+			var item = Product.Find (id);
 
 			if (value >= 0) {
 				item.TaxRate = value;
@@ -158,14 +160,46 @@ namespace Mictlanix.BE.Web.Controllers
 				}
 			}
 
-			return Json (new { id = id, value = item.TaxRate.ToString ("p") });
+			return Json (new { id = id, value = item.FormattedValueFor (x => x.TaxRate) });
+		}
+
+		[HttpPost]
+		public JsonResult SetPriceType (int id, string value)
+		{
+			bool success;
+			PriceType val;
+			var item = Product.Find (id);
+
+			success = Enum.TryParse<PriceType> (value.Trim (), out val);
+
+			if (success && val >= 0) {
+				item.PriceType = val;
+
+				using (var scope = new TransactionScope ()) {
+					item.UpdateAndFlush ();
+				}
+			}
+
+			return Json (new { id = id, value = item.PriceType.GetDisplayName () });
+		}
+
+		public JsonResult PriceTypes ()
+		{
+			var qry = from x in Enum.GetValues (typeof(PriceType)).Cast<PriceType> ()
+				select new {
+				value = (int)x,
+				text = x.GetDisplayName ()
+			};
+
+			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
 		}
 
 		// TODO: db catalog
 		public JsonResult TaxRates ()
 		{
 			var rates = new [] {
-				new { value = 0.00, text = " 0 %" },
+				new { value = 0.00, text = "0 %" },
+				new { value = 0.11, text = "11 %" },
 				new { value = 0.16, text = "16 %" }
 			};
 

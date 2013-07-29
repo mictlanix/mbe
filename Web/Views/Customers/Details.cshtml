@@ -43,35 +43,36 @@
 	  	<div class="span12"><div class="ro-field">@Html.DisplayFor(x => x.Comment)</div></div>
 	</div>
 </fieldset>
-<div id='tabs'>
-    <ul>
-        <li><a href='#tab-1'>@Resources.CustomerTaxpayers</a></li>
-        <li><a href='#tab-2'>@Resources.Addresses</a></li>
-        <li><a href='#tab-3'>@Resources.Contacts</a></li>
+<div class='tabbable'>
+    <ul class='nav nav-tabs'>
+        <li class='active'><a href='#tab-1' data-toggle='tab'>@Resources.CustomerTaxpayers</a></li>
+        <li><a href='#tab-2' data-toggle='tab'>@Resources.Addresses</a></li>
+        <li><a href='#tab-3' data-toggle='tab'>@Resources.Contacts</a></li>
     </ul>
-    <div id='tab-1'>
+    <div class="tab-content">
+	    <div id='tab-1' class='tab-pane active'>
     	@if(AllowCreateAddresses) {
-        <p>@Html.ActionLink(Resources.CreateNew, "Create", "CustomerTaxpayers", new { owner = Model.Id }, new { @class = "button icon add openDialog", data_dialog_id = "taxpayerDlg", data_dialog_title = Resources.New })</p>
+	        <p>@Html.ActionLink(Resources.CreateNew, "Create", "CustomerTaxpayers", new { customer = Model.Id }, new { @class = "button icon add open-modal", data_modal_id = "taxpayer-modal" })</p>
     	}
-    	<div id='taxpayers' data-url='@Url.Action("Taxpayers", new { id = Model.Id })'>@Html.Partial("../CustomerTaxpayers/_Index", Model.Taxpayers)</div>
-    </div>
-    <div id='tab-2'>
+	    	<div id='taxpayers' data-url='@Url.Action("Taxpayers", new { id = Model.Id })'>@Html.Partial("../CustomerTaxpayers/_Index", Model.Taxpayers)</div>
+	    </div>
+	    <div id='tab-2' class='tab-pane'>
     	@if(AllowCreateAddresses) {
-        <p>@Html.ActionLink(Resources.CreateNew, "CreateCustomerAddress", "Addresses", new { id = Model.Id }, new { @class = "button icon add openDialog", data_dialog_id = "addressDlg", data_dialog_title = Resources.New })</p>
+	        <p>@Html.ActionLink(Resources.CreateNew, "CreateCustomerAddress", "Addresses", new { id = Model.Id }, new { @class = "button icon add open-modal", data_modal_id = "address-modal" })</p>
     	}
-    	<div id='addresses' data-url='@Url.Action("Addresses", new { id = Model.Id })'>@Html.Partial("../Addresses/_Index", Model.Addresses)</div>
-    </div>
-    <div id='tab-3'>
+	    	<div id='addresses' data-url='@Url.Action("Addresses", new { id = Model.Id })'>@Html.Partial("../Addresses/_Index", Model.Addresses)</div>
+	    </div>
+	    <div id='tab-3' class='tab-pane'>
     	@if(AllowCreateContacts) {
-        <p>@Html.ActionLink(Resources.CreateNew, "CreateCustomerContact", "Contacts", new { id = Model.Id }, new { @class = "button icon add openDialog", data_dialog_id = "contactDlg", data_dialog_title = Resources.New })</p>
+	        <p>@Html.ActionLink(Resources.CreateNew, "CreateCustomerContact", "Contacts", new { id = Model.Id }, new { @class = "button icon add open-modal", data_modal_id = "contact-modal" })</p>
     	}
-        <div id='contacts' data-url='@Url.Action("Contacts", new { id = Model.Id })'>@Html.Partial("../Contacts/_Index", Model.Contacts)</div>
+	        <div id='contacts' data-url='@Url.Action("Contacts", new { id = Model.Id })'>@Html.Partial("../Contacts/_Index", Model.Contacts)</div>
+	    </div>
     </div>
 </div>
 <div class="row-fluid vspaced">
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+@if (Privilege.AllowUpdate) {
 	@Html.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new { @class = "button icon edit pull-right" })
+}
 </div>
-<script type='text/javascript'>
-$('#tabs').tabs();
-</script>

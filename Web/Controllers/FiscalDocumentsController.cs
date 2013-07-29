@@ -42,6 +42,7 @@ using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers
 {
+	[Authorize]
     public class FiscalDocumentsController : Controller
     {
         public ViewResult Index ()
@@ -151,8 +152,8 @@ namespace Mictlanix.BE.Web.Controllers
 			item.ModificationTime = item.CreationTime;
 			item.Creator = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 			item.Updater = item.Creator;
-			item.Currency = Configuration.DefaultCurrency;
-			item.ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate();
+			item.Currency = Configuration.BaseCurrency;
+			item.ExchangeRate = 1;
 
 			using (var scope = new TransactionScope()) {
 				item.IssuerAddress.Create ();
@@ -185,21 +186,6 @@ namespace Mictlanix.BE.Web.Controllers
 			item.Customer = Customer.TryFind (item.CustomerId);
 			item.Recipient = CustomerTaxpayer.TryFind (item.RecipientId);
 
-			if (!ModelState.IsValid) {
-				return View (item);
-			}
-
-			var document = FiscalDocument.Find (item.Id);
-			
-			// Issuer
-			item.IssuerName = item.Issuer.Name;
-			item.IssuerRegime = item.Issuer.Regime;
-			item.IssuerAddress = item.Issuer.Address;
-			
-			// Recipient
-			item.RecipientName = item.Recipient.Name;
-			item.RecipientAddress = item.Recipient.Address;
-
 			if (item.PaymentMethod == PaymentMethod.Unidentified ||
 			    item.PaymentMethod == PaymentMethod.Cash) {
 				item.PaymentReference = null;
@@ -207,38 +193,54 @@ namespace Mictlanix.BE.Web.Controllers
 				item.PaymentReference = Resources.Unidentified;
 			}
 
+			if (!ModelState.IsValid) {
+				return View (item);
+			}
+
+			var entity = FiscalDocument.Find (item.Id);
 			var batch = item.Issuer.Batches.First (x => x.Batch == item.Batch);
-			bool changed = document.Currency != item.Currency || document.ExchangeRate != item.ExchangeRate;
+			bool changed = entity.Currency != item.Currency || entity.ExchangeRate != item.ExchangeRate;
+			
+			// Issuer
+			entity.Issuer = item.Issuer;
+			entity.IssuerName = item.Issuer.Name;
+			entity.IssuerRegime = item.Issuer.Regime;
+			entity.IssuerAddress = item.Issuer.Address;
+			
+			// Recipient
+			entity.Recipient = item.Recipient;
+			entity.RecipientName = item.Recipient.Name;
+			entity.RecipientAddress = item.Recipient.Address;
 
 			// updated info
-			document.Type = batch.Type;
-			document.Batch = item.Batch;
-			document.Issuer = item.Issuer;
-			document.Customer = item.Customer;
-			document.ModificationTime = DateTime.Now;
-			document.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
-			document.PaymentMethod = item.PaymentMethod;
-			document.PaymentReference = item.PaymentReference;
-			document.Currency = item.Currency;
-			document.ExchangeRate = item.ExchangeRate;
-			document.Reference = item.Reference;
+			entity.Type = batch.Type;
+			entity.Batch = item.Batch;
+			entity.Issuer = item.Issuer;
+			entity.Customer = item.Customer;
+			entity.ModificationTime = DateTime.Now;
+			entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			entity.PaymentMethod = item.PaymentMethod;
+			entity.PaymentReference = item.PaymentReference;
+			entity.Currency = item.Currency;
+			entity.ExchangeRate = item.ExchangeRate;
+			entity.Reference = item.Reference;
 
 			using (var scope = new TransactionScope()) {
-				document.IssuerAddress.Update ();
-				document.RecipientAddress.Update ();
+				//entity.IssuerAddress.Update ();
+				//entity.RecipientAddress.Update ();
 
 				if (changed) {
-					foreach (var x in document.Details) {
-						x.Currency = document.Currency;
-						x.ExchangeRate = document.ExchangeRate;
+					foreach (var x in entity.Details) {
+						x.Currency = entity.Currency;
+						x.ExchangeRate = entity.ExchangeRate;
 						x.Update ();
 					}
 				}
 
-				document.UpdateAndFlush ();
+				entity.UpdateAndFlush ();
 			}
 
-			return PartialView ("_MasterView", document);
+			return PartialView ("_MasterView", entity);
 		}
 		
 		public ActionResult DiscardChanges (int id)
@@ -428,7 +430,7 @@ namespace Mictlanix.BE.Web.Controllers
 			int pl = f.Customer.PriceList.Id;
 			var price = (from x in ProductPrice.Queryable
 			             where x.Product.Id == product && x.List.Id == pl
-			             select x.Value).SingleOrDefault();
+			             select x).SingleOrDefault();
 
 			var item = new FiscalDocumentDetail {
                 Document = FiscalDocument.Find (id),
@@ -440,10 +442,14 @@ namespace Mictlanix.BE.Web.Controllers
                 TaxRate = p.TaxRate,
 				IsTaxIncluded = false,
                 Quantity = 1,
-				Price = price,
-				ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate(),
-				Currency = Configuration.DefaultCurrency
-            };
+				Price = price.Value,
+				ExchangeRate = f.ExchangeRate,
+				Currency = f.Currency
+			};
+
+			if (price.Currency != f.Currency) {
+				item.Price = price.Value * CashHelpers.GetTodayExchangeRate (price.Currency, f.Currency);
+			}
 
 			if (p.IsTaxIncluded) {
 				item.Price = item.Price / (1 + item.TaxRate);
@@ -510,35 +516,35 @@ namespace Mictlanix.BE.Web.Controllers
 		[HttpPost]
 		public JsonResult EditDetailQuantity (int id, decimal value)
 		{
-			var detail = FiscalDocumentDetail.Find (id);
+			var entity = FiscalDocumentDetail.Find (id);
 
-			if (detail.OrderDetail != null) {
-				decimal max_qty = detail.Quantity + GetInvoiceableQuantity (detail.OrderDetail.Id);
+			if (entity.OrderDetail != null) {
+				decimal max_qty = entity.Quantity + GetInvoiceableQuantity (entity.OrderDetail.Id);
 
 				if (max_qty < value)
 					value =  max_qty;
 			}
 
 			if (value > 0) {
-				detail.Quantity = value;
+				entity.Quantity = value;
 
 				using (var scope = new TransactionScope()) {
-					detail.Update ();
+					entity.Update ();
 				}
 			}
 
 			return Json (new { 
-				id = detail.Id,
-				value = detail.FormattedValueFor (x => x.Quantity),
-				subtotal = detail.FormattedValueFor (x => x.Subtotal), 
-				subtotal2 = detail.FormattedValueFor (x => x.SubtotalEx)
+				id = entity.Id,
+				value = entity.FormattedValueFor (x => x.Quantity),
+				subtotal = entity.FormattedValueFor (x => x.Subtotal), 
+				subtotal2 = entity.FormattedValueFor (x => x.SubtotalEx)
 			});
 		}
 
 		[HttpPost]
 		public JsonResult EditDetailPrice (int id, string value)
 		{
-			var detail = FiscalDocumentDetail.Find (id);
+			var entity = FiscalDocumentDetail.Find (id);
 			bool success;
 			decimal val;
 
@@ -547,25 +553,25 @@ namespace Mictlanix.BE.Web.Controllers
 			                            null, out val);
 
 			if (success && val >= 0) {
-				detail.Price = val;
+				entity.Price = val;
 
 				using (var scope = new TransactionScope()) {
-					detail.Update ();
+					entity.Update ();
 				}
 			}
 
 			return Json (new {
-				id = detail.Id,
-				value = detail.FormattedValueFor (x => x.Price),
-				subtotal = detail.FormattedValueFor (x => x.Subtotal), 
-				subtotal2 = detail.FormattedValueFor (x => x.SubtotalEx)
+				id = entity.Id,
+				value = entity.FormattedValueFor (x => x.Price),
+				subtotal = entity.FormattedValueFor (x => x.Subtotal), 
+				subtotal2 = entity.FormattedValueFor (x => x.SubtotalEx)
 			});
 		}
 
 		[HttpPost]
 		public JsonResult EditDetailDiscount (int id, string value)
 		{
-			FiscalDocumentDetail detail = FiscalDocumentDetail.Find (id);
+			var entity = FiscalDocumentDetail.Find (id);
 			bool success;
 			decimal val;
 
@@ -573,42 +579,42 @@ namespace Mictlanix.BE.Web.Controllers
 			val /= 100m;
 
 			if (success && val >= 0 && val <= 1) {
-				detail.Discount = val;
+				entity.Discount = val;
 
 				using (var scope = new TransactionScope()) {
-					detail.Update ();
+					entity.Update ();
 				}
 			}
 
 			return Json (new { 
-				id = detail.Id,
-				value = detail.FormattedValueFor (x => x.Discount),
-				subtotal = detail.FormattedValueFor (x => x.Subtotal), 
-				subtotal2 = detail.FormattedValueFor (x => x.SubtotalEx)
+				id = entity.Id,
+				value = entity.FormattedValueFor (x => x.Discount),
+				subtotal = entity.FormattedValueFor (x => x.Subtotal), 
+				subtotal2 = entity.FormattedValueFor (x => x.SubtotalEx)
 			});
 		}
 		
 		[HttpPost]
 		public JsonResult EditDetailTaxRate (int id, string value)
 		{
-			var detail = FiscalDocumentDetail.Find (id);
+			var entity = FiscalDocumentDetail.Find (id);
 			bool success;
 			decimal val;
 
 			success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out val);
-			val /= 100m;
-			
-			if (success && (val == 0m || val == Configuration.VAT)) {
-				detail.TaxRate = val;
+
+			// TODO: VAT value range validation
+			if (success) {
+				entity.TaxRate = val;
 
 				using (var scope = new TransactionScope()) {
-					detail.Update ();
+					entity.Update ();
 				}
 			}
 
 			return Json (new { 
-				id = detail.Id,
-				value = detail.FormattedValueFor (x => x.TaxRate)
+				id = entity.Id,
+				value = entity.FormattedValueFor (x => x.TaxRate)
 			});
 		}
 
@@ -651,12 +657,12 @@ namespace Mictlanix.BE.Web.Controllers
 						Currency = doc_entity.Currency
 					};
 
-					if (x.IsTaxIncluded) {
-						item.Price = item.Price / (1 + item.TaxRate);
-					}
-
 					if (x.Currency != doc_entity.Currency) {
 						item.Price = x.Price * x.ExchangeRate;
+					}
+
+					if (x.IsTaxIncluded) {
+						item.Price = item.Price / (1 + item.TaxRate);
 					}
 
 					item.Create ();

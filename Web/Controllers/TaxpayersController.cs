@@ -42,6 +42,7 @@ using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers
 {
+	[Authorize]
     public class TaxpayersController : Controller
     {
 		public ActionResult Index()
@@ -71,13 +72,15 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult Create (Taxpayer item)
 		{
-			var entity = Taxpayer.TryFind (item.Id);
-			
-			if(entity != null) {
-				ModelState.AddModelError ("", Resources.CustomerTaxpayerAlreadyExists);
+			if (!string.IsNullOrEmpty (item.Id)) {
+				var entity = Taxpayer.TryFind (item.Id);
+
+				if(entity != null) {
+					ModelState.AddModelError ("", Resources.CustomerTaxpayerAlreadyExists);
+				}
 			}
 			
-			if(!item.HasAddress) {
+			if (!item.HasAddress) {
 				ModelState.Where(x => x.Key.StartsWith("Address.")).ToList().ForEach(x => x.Value.Errors.Clear());
 				item.Address = null;
 			}

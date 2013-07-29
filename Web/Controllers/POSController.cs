@@ -41,6 +41,7 @@ using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers
 {
+	[Authorize]
     public class POSController : Controller
     {
         public ViewResult Index ()
@@ -189,7 +190,7 @@ namespace Mictlanix.BE.Web.Controllers
 			entity.Customer = item.Customer;
 			entity.SalesPerson = item.SalesPerson;
 			entity.ShipTo = item.ShipTo;
-			entity.IsCredit = item.IsCredit;
+			//entity.IsCredit = item.IsCredit;
 			entity.DueDate = item.IsCredit ? entity.Date.AddDays (item.Customer.CreditDays) : entity.Date;
 
 			using (var scope = new TransactionScope()) {

@@ -41,9 +41,6 @@ namespace Mictlanix.BE.Web.Controllers
 {
     public class BarcodesController : Controller
     {
-        //
-        // GET: /Barcodes/Code128/abc123
-
         public ActionResult Code128 (string id)
 		{
 			var ms = new MemoryStream (4 * 1024);
@@ -56,6 +53,5 @@ namespace Mictlanix.BE.Web.Controllers
 
 			return result;
 		}
-
     }
 }

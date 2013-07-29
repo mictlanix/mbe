@@ -30,12 +30,13 @@
         </td>
         <td class="number">@Math.Abs(item.Quantity).ToString("0.####")</td>
         <td class="actions">
-        	@if(Privilege.AllowUpdate) {            
-            	@Html.ActionLink(" ", "AssignLotSerialNumbers", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
-            }
-        	@if(Privilege.AllowDelete) {
-            	@Html.ActionLink(" ", "DiscardLotSerialNumbers", new { id = item.Id }, new { @class = "button icon cancel icon-only", @title = Resources.Discard })
-            }
+    	@if(Privilege.AllowUpdate) {            
+        	@Html.ActionLink(" ", "AssignLotSerialNumbers", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
+        }
+    	@if(Privilege.AllowDelete) {
+	        <a class='button icon-only icon delete' title='@Resources.Message_DiscardConfirmation'
+		   		data-type='checklist' data-placement='left' data-pk='@item.Id' data-source='{}' data-value='@item.Id' data-url='@Url.Action("DiscardLotSerialNumbers", new { id = item.Id })' data-emptytext='' data-emptyclass=''></a>
+        }
         </td>
     </tr>
 }
@@ -64,27 +65,11 @@
 				$('#activity-indicator').hide();
 			});
     	});
-    	
-    	$('a.cancel').click(function (e) {
-    		e.preventDefault();
-    		var url = this.href;
-    		
-	        $('#confirm-dlg').dialog({
-	            modal:true,resizable:false,width:400,
-	            buttons: {
-	                '@Resources.Discard': function () {
-	                    $.post(url, function (data) {
-	                        if(data.result) {
-	                            $('#id\\:' + data.id).remove();
-	                        }
-	                    }, 'json');
-	                    $(this).dialog('close');
-	                },
-	                '@Resources.Close': function () {
-	                    $(this).dialog('close');
-	                }
-	            }
-	        });
-    	});
+
+		$('a.delete').editable({
+			success: function(response, newValue) {
+		        $(this).closest('tr').remove();
+		    }
+		});
     });
 </script>

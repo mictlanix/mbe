@@ -3,15 +3,18 @@
 @using Mictlanix.BE.Web.Helpers
 @model Contact
 
-@using (Ajax.BeginForm(new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "contactDlg" })) {
+<div class='modal-header'>
+	<button type='button' class='close' data-dismiss='modal'>&times;</button>
+	<h3>@Resources.Contact</h3>
+</div>
+<div class='modal-body'>
+@using (Ajax.BeginForm(null, null, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "contact-modal" }, new { @class = "modal-form" })) {
 	<div style='overflow:hidden'>
 		@Html.DisplayForModel()
 	</div>
-	<div class="action-buttons">
-		<button type="button" class="cancel">@Resources.Discard</button>
-		<button type="submit" class="icon delete">@Resources.Delete</button>
-	</div>
 }
-<script type="text/javascript">
-bindCloseDialog(".cancel");
-</script>
+</div>
+<div class='modal-footer'>
+	<button type='button' class='btn' data-dismiss='modal'>@Resources.Discard</button>
+	<button type='submit' class='btn btn-danger' onclick='$("#contact-modal form").submit();'>@Resources.Delete</button>
+</div>

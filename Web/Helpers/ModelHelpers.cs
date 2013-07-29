@@ -68,18 +68,29 @@ namespace Mictlanix.BE.Web.Helpers
 			IQueryable<decimal> qry;
 
 			qry = from x in CustomerPayment.Queryable
-				where x.SalesOrder == null && x.Customer.Id == entity.Id
-					select x.Amount;
-			var paid = qry.Count() > 0 ? qry.ToList().Sum() : 0;
+				  where x.SalesOrder == null && x.Customer.Id == entity.Id
+				  select x.Amount;
+			var paid = qry.Count () > 0 ? qry.Sum () : 0;
 
 			qry = from x in SalesOrder.Queryable
-				from y in x.Details
-					where x.IsCredit && x.IsCompleted &&
-					x.Customer.Id == entity.Id
-					select y.Quantity * y.Price * (1 - y.Discount);
-			var bought = qry.Count() > 0 ? qry.ToList().Sum() : 0;
+				  from y in x.Details
+				  where x.Terms == PaymentTerms.NetD &&
+						x.IsCompleted && !x.IsCancelled &&
+						x.Customer.Id == entity.Id
+				  select y.Quantity * y.Price * y.ExchangeRate * (1 - y.Discount) * (y.IsTaxIncluded ? 1m : (1m + y.TaxRate));
+			var bought = qry.Count () > 0 ? qry.Sum () : 0;
 
 			return bought - paid;
+		}
+
+		public static bool IsOverCreditLimit (this SalesOrder entity)
+		{
+			return (entity.Customer.Debt () + entity.TotalEx) > entity.Customer.CreditLimit;
+		}
+
+		public static decimal AmountOverCreditLimit (this SalesOrder entity)
+		{
+			return entity.Customer.Debt () + entity.TotalEx - entity.Customer.CreditLimit;
 		}
     }
 }

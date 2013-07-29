@@ -11,27 +11,27 @@
 
 <table>
     <tr>
-        <th class="number">@Html.LabelFor(x => new FiscalDocument().Id)</th>
-        <th>@Html.LabelFor(x => new FiscalDocument().Customer)</th>
-        <th>@Html.LabelFor(x => new FiscalDocument().Batch)</th>
-        <th>@Html.LabelFor(x => new FiscalDocument().Serial)</th>
-        <th class="date">@Html.LabelFor(x => new FiscalDocument().Issued)</th>
-        <th>@Html.LabelFor(x => new FiscalDocument().Recipient)</th>
-        <th>@Html.LabelFor(x => new FiscalDocument().IsCompleted)</th>
-        <th>@Html.LabelFor(x => new FiscalDocument().IsCancelled)</th>
+        <th>@Resources.FiscalDocumentId</th>
+        <th>@Resources.Issuer</th>
+        <th>@Resources.Batch</th>
+        <th>@Resources.Serial</th>
+        <th class='nowrap'>@Resources.IssueDate</th>
+        <th>@Resources.Recipient</th>
+        <th>@Resources.Completed</th>
+        <th>@Resources.Cancelled</th>
         <th></th>
     </tr>
-
 @foreach (var item in Model.Results) {
     <tr>
         <td class="number">@Html.DisplayFor(x => item.Id)</td>
-        <td>@Html.DisplayFor(x => item.Customer.Name)</td>
+        <td class="number center">@Html.DisplayFor(x => item.Issuer.Id)</td>
         <td class="number center">@Html.DisplayFor(x => item.Batch)</td>
         <td class="number">@Html.DisplayFor(x => item.Serial)</td>
-        <td class="date">@Html.DisplayFor(x => item.Issued)</td>
+        <td class="center"><small>@Html.DisplayFor(x => item.Issued)</small></td>
         <td>
-        	@Html.DisplayFor(x => item.Recipient.Id)
-        	@Html.DisplayFor(x => item.RecipientName)
+        	<small>@Html.DisplayFor(x => item.Customer.Name)</small><br/>
+        	<small>@Html.DisplayFor(x => item.Recipient.Id)</small>
+        	<small>@Html.DisplayFor(x => item.RecipientName)</small>
         </td>
         <td class="bool">@Html.DisplayFor(x => item.IsCompleted)</td>
         <td class="bool">@Html.DisplayFor(x => item.IsCancelled)</td>

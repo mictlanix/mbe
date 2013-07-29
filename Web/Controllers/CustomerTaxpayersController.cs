@@ -39,21 +39,25 @@ using Mictlanix.BE.Model;
 
 namespace Mictlanix.BE.Web.Controllers
 {
+	[Authorize]
 	public class CustomerTaxpayersController : Controller
     {
-		public ActionResult Create (int owner)
+		public ActionResult Create (int customer)
         {
-			ViewBag.OwnerId = owner;
 			return PartialView ("_Create");
 		}
 
         [HttpPost]
-		public ActionResult Create (int owner, CustomerTaxpayer item)
+		public ActionResult Create (int customer, CustomerTaxpayer item)
 		{
-			var entity = CustomerTaxpayer.TryFind (item.Id);
+			ModelState ["Customer"].Errors.Clear ();
 
-			if(entity != null) {
-				ModelState.AddModelError ("", Resources.CustomerTaxpayerAlreadyExists);
+			if (!string.IsNullOrEmpty (item.Id)) {
+				var entity = CustomerTaxpayer.TryFind (item.Id);
+
+				if(entity != null) {
+					ModelState.AddModelError ("", Resources.CustomerTaxpayerAlreadyExists);
+				}
 			}
 
 			if(!item.HasAddress) {
@@ -62,18 +66,17 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 
 			if (!ModelState.IsValid) {
-				ViewBag.OwnerId = owner;
 				return PartialView ("_Create", item);
 			}
 
 			using (var scope = new TransactionScope()) {
-				item.Customer = Customer.Find (owner);
+				item.Customer = Customer.Find (customer);
 
 				if(item.HasAddress) {
 					item.Address.Create ();
 				}
 
-                item.Create ();
+				item.CreateAndFlush ();
 				item.Customer.Taxpayers.Add (item);
 				item.Customer.Update ();
 			}
@@ -150,16 +153,14 @@ namespace Mictlanix.BE.Web.Controllers
 
 			try {
 				using (var scope = new TransactionScope()) {
-					item.Customer.Taxpayers.Remove (item);
-					item.Customer.Update ();
 					item.DeleteAndFlush ();
 				}
-			} catch (GenericADOException ex) {
+			} catch (Exception ex) {
 				System.Diagnostics.Debug.WriteLine (ex);
 				return PartialView ("DeleteUnsuccessful");
 			}
 			
-			if(item.Address != null) {
+			if (item.Address != null) {
 				try {
 					using (var scope = new TransactionScope()) {
 						item.Address.DeleteAndFlush ();

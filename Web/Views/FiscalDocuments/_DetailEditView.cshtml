@@ -33,10 +33,11 @@
         <a class='editable tax' data-type='select' data-placement='right' data-source='@Url.Action("TaxRates", "Pricing")' data-pk='@Model.Id' data-value='@Model.TaxRate.ToString("0.####")' data-url='@Url.Action("EditTaxRate", new { id = Model.Id })'>@Html.DisplayFor(x => x.TaxRate)</a>
         <b>@Resources.Amount: </b>
         <span class='editable subtotal'>@Html.DisplayFor(x => x.Subtotal)</span>
-        <i>
-        	(<span class='editable subtotal2'>@Html.DisplayFor(x => x.SubtotalEx)</span>
-        	<span class='editable currency'>@Configuration.BaseCurrency</span>)
-        </i>
+        <span class='editable currency'>@Html.DisplayFor(x => x.Currency)</span>
+        @if (Model.Currency != Configuration.BaseCurrency) {
+        	<span class='muted subtotal2'>@Html.DisplayFor(x => x.SubtotalEx)</span>
+        	<span class='muted currency'>@Configuration.BaseCurrency</span>
+        }
     </div>
 </li>
 <script type='text/javascript'>
@@ -48,12 +49,13 @@ $('#id\\:@Model.Id a.editable').editable({
 		if ('subtotal2' in response) {
 			$(this).siblings('.subtotal2').html(response.subtotal2);
 		}
-        updateTotals();
+        $('#totals-section').loadUrl();
     },
     display: function(value, response) {
-        if (typeof response === 'undefined') {
-        	$(this).html(value);
-        } else if (Array.isArray(response)) {
+        if (typeof response === 'undefined') 
+        	return;
+
+        if (Array.isArray(response)) {
           	arr = $.grep(response, function(o){
   				return o.value == value;
 			});
@@ -66,7 +68,10 @@ $('#id\\:@Model.Id a.editable').editable({
 $('#id\\:@Model.Id a.delete').editable({
 	success: function(response, newValue) {
         $('#id\\:@Model.Id').remove();
-        updateTotals();
+		$('#totals-section').loadUrl();
+	    if ($('#items li').length === 0) {
+	        $('#confirm-button').hide('slow');
+	    }
     }
 });
 </script>

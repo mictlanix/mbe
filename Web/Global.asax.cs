@@ -56,6 +56,12 @@ namespace Mictlanix.BE.Web
 				"Pricing/{product}/EditPrice/{list}/{value}",
 				new { controller = "Pricing", action = "EditPrice", product = @"\d+", list = @"\d+", value = UrlParameter.Optional }
 			);
+			
+			routes.MapRoute (
+				"CustomerTaxpayers_Create",
+				"CustomerTaxpayers/Create/{customer}",
+				new { controller = "CustomerTaxpayers", action = "Create", customer = @"\d+" }
+			);
 
 			routes.MapRoute(
 				"Default", // Route name
@@ -87,6 +93,7 @@ namespace Mictlanix.BE.Web
 				my_culture.NumberFormat.NumberGroupSeparator = ",";
 				my_culture.NumberFormat.PercentDecimalSeparator = ".";
 				my_culture.NumberFormat.PercentGroupSeparator = ",";
+				my_culture.DateTimeFormat.ShortDatePattern = Resources.DateFormatString;
 			}
 		}
 		
