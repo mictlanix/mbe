@@ -33,7 +33,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
-using Castle.ActiveRecord.Queries;
 using NHibernate;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
@@ -161,10 +160,6 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult Edit (int id)
 		{
 			var item = SalesOrder.Find (id);
-
-			if (Request.IsAjaxRequest ()) {
-				return PartialView ("_MasterEditView", item);
-			}
 
 			if (!CashHelpers.ValidateExchangeRate ()) {
 				return View ("InvalidExchangeRate");
@@ -472,17 +467,55 @@ namespace Mictlanix.BE.Web.Controllers
                 TaxRate = p.TaxRate,
 				IsTaxIncluded = p.IsTaxIncluded,
                 Quantity = 1,
-				Cost = cost.Value * CashHelpers.GetTodayExchangeRate (cost.Currency, Configuration.BaseCurrency),
-				Price = price.Value * CashHelpers.GetTodayExchangeRate (price.Currency, entity.Currency),
+				Cost = cost.Value,
+				Price = price.Value,
 				Currency = entity.Currency,
 				ExchangeRate = entity.ExchangeRate
             };
+			
+			if (cost.Currency != entity.Currency) {
+				item.Cost = cost.Value * CashHelpers.GetTodayExchangeRate (cost.Currency, entity.Currency);
+			}
+
+			if (price.Currency != entity.Currency) {
+				item.Price = price.Value * CashHelpers.GetTodayExchangeRate (price.Currency, entity.Currency);
+			}
 
             using (var scope = new TransactionScope()) {
                 item.CreateAndFlush ();
             }
 
             return Json(new { id = item.Id });
+		}
+		
+		[HttpPost]
+		public JsonResult RemoveItem (int id)
+		{
+			var item = SalesOrderDetail.Find (id);
+
+			using (var scope = new TransactionScope ()) {
+				item.DeleteAndFlush ();
+			}
+
+			return Json (new { id = id, result = true });
+		}
+		
+		public ActionResult Item (int id)
+		{
+			var item = SalesOrderDetail.Find (id);
+			return PartialView ("_ItemEditorView", item);
+		}
+
+		public ActionResult Items (int id)
+		{
+			var item = SalesOrder.Find (id);
+			return PartialView ("_Items", item.Details);
+		}
+
+		public ActionResult Totals (int id)
+		{
+			var item = SalesOrder.Find (id);
+			return PartialView ("_Totals", item);
 		}
 
 		[HttpPost]
@@ -501,8 +534,8 @@ namespace Mictlanix.BE.Web.Controllers
 			return Json (new { 
 				id = entity.Id,
 				value = entity.FormattedValueFor (x => x.Quantity),
-				subtotal = entity.FormattedValueFor (x => x.Subtotal), 
-				subtotal2 = entity.FormattedValueFor (x => x.SubtotalEx)
+				total = entity.FormattedValueFor (x => x.Total), 
+				total2 = entity.FormattedValueFor (x => x.TotalEx)
 			});
 		}
 		
@@ -528,8 +561,8 @@ namespace Mictlanix.BE.Web.Controllers
 			return Json (new {
 				id = entity.Id,
 				value = entity.FormattedValueFor (x => x.Price),
-				subtotal = entity.FormattedValueFor (x => x.Subtotal), 
-				subtotal2 = entity.FormattedValueFor (x => x.SubtotalEx)
+				total = entity.FormattedValueFor (x => x.Total), 
+				total2 = entity.FormattedValueFor (x => x.TotalEx)
 			});
 		}
 
@@ -554,8 +587,8 @@ namespace Mictlanix.BE.Web.Controllers
 			return Json (new { 
 				id = entity.Id,
 				value = entity.FormattedValueFor (x => x.Discount),
-				subtotal = entity.FormattedValueFor (x => x.Subtotal), 
-				subtotal2 = entity.FormattedValueFor (x => x.SubtotalEx)
+				total = entity.FormattedValueFor (x => x.Total), 
+				total2 = entity.FormattedValueFor (x => x.TotalEx)
 			});
 		}
 
@@ -579,38 +612,11 @@ namespace Mictlanix.BE.Web.Controllers
 
 			return Json (new { 
 				id = entity.Id,
-				value = entity.FormattedValueFor (x => x.TaxRate)
+				value = entity.FormattedValueFor (x => x.TaxRate),
+				total = entity.FormattedValueFor (x => x.Total), 
+				total2 = entity.FormattedValueFor (x => x.TotalEx)
 			});
 		}
-
-		public ActionResult Item (int id)
-		{
-			return PartialView ("_ItemEditorView", SalesOrderDetail.Find (id));
-        }
-		
-		public ActionResult Items (int id)
-		{
-			var item = SalesOrder.Find (id);
-			return PartialView ("_Items", item.Details);
-		}
-
-		public ActionResult Totals (int id)
-		{
-			var item = SalesOrder.Find (id);
-			return PartialView ("_Totals", item);
-		}
-
-        [HttpPost]
-        public JsonResult RemoveItem (int id)
-        {
-            var item = SalesOrderDetail.Find (id);
-
-			using (var scope = new TransactionScope ()) {
-				item.DeleteAndFlush ();
-			}
-
-            return Json (new { id = id, result = true });
-        }
 
         [HttpPost]
         public ActionResult Confirm (int id)

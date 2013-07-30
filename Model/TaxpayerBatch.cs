@@ -7,46 +7,46 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Mictlanix.BE.Model
 {   
-    [ActiveRecord("taxpayer_batch")]
+	[ActiveRecord("taxpayer_batch", Lazy = true)]
     public class TaxpayerBatch : ActiveRecordLinqBase<TaxpayerBatch>
     {
 		[PrimaryKey(PrimaryKeyType.Identity, "taxpayer_batch_id")]
-        public int Id { get; set; }
+		public virtual int Id { get; set; }
 		
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
 		[Display(Name = "Taxpayer", ResourceType = typeof(Resources))]
 		[UIHint("TaxpayerSelector")]
-		public string TaxpayerId { get; set; }
+		public virtual string TaxpayerId { get; set; }
 		
 		[BelongsTo("taxpayer")]
 		[Display(Name = "Taxpayer", ResourceType = typeof(Resources))]
-		public Taxpayer Taxpayer { get; set; }
+		public virtual Taxpayer Taxpayer { get; set; }
 		
 		[Property]
 		[Display(Name = "Batch", ResourceType = typeof(Resources))]
-		public string Batch { get; set; }
+		public virtual string Batch { get; set; }
 		
 		[Property("serial_start")]
         [Display(Name = "SerialStart", ResourceType = typeof(Resources))]
-        public int SerialStart { get; set; }
+		public virtual int SerialStart { get; set; }
 		
 		[Property("serial_end")]
         [Display(Name = "SerialEnd", ResourceType = typeof(Resources))]
-        public int SerialEnd { get; set; }
+		public virtual int SerialEnd { get; set; }
 		
 		[Property("approval_number")]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "ApprovalNumber", ResourceType = typeof(Resources))]
-        public int ApprovalNumber { get; set; }
+		public virtual int ApprovalNumber { get; set; }
 		
 		[Property("approval_year")]
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
 		[Display(Name = "ApprovalYear", ResourceType = typeof(Resources))]
-		public int ApprovalYear { get; set; }
+		public virtual int ApprovalYear { get; set; }
 		
 		[Property]
         [Display(Name = "Type", ResourceType = typeof(Resources))]
-        public FiscalDocumentType Type { get; set; }
+		public virtual FiscalDocumentType Type { get; set; }
 		
 		#region Override Base Methods
 

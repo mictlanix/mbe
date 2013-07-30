@@ -78,15 +78,6 @@ namespace Mictlanix.BE.Model
 		public virtual string Comment { get; set; }
 		
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[Display(Name = "Customer", ResourceType = typeof(Resources))]
-		[UIHint("CustomerSelector")]
-		public virtual int CustomerId { get; set; }
-
-        [BelongsTo("customer")]
-        [Display(Name = "Customer", ResourceType = typeof(Resources))]
-        public virtual Customer Customer { get; set; }
-		
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
 		[Display(Name = "Issuer", ResourceType = typeof(Resources))]
 		[UIHint("TaxpayerSelector")]
 		public virtual string IssuerId { get; set; }
@@ -106,6 +97,15 @@ namespace Mictlanix.BE.Model
 		[BelongsTo("issuer_address", Lazy = FetchWhen.OnInvoke)]
 		[Display(Name = "Address", ResourceType = typeof(Resources))]
 		public virtual Address IssuerAddress { get; set; }
+
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[Display(Name = "Customer", ResourceType = typeof(Resources))]
+		[UIHint("CustomerSelector")]
+		public virtual int CustomerId { get; set; }
+
+		[BelongsTo("customer")]
+		[Display(Name = "Customer", ResourceType = typeof(Resources))]
+		public virtual Customer Customer { get; set; }
 
 		[UIHint("AddressSelector")]
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
@@ -172,16 +172,17 @@ namespace Mictlanix.BE.Model
 		public virtual ulong? CertificateNumber { get; set; }
 		
 		[Property("original_string")]
+		[UIHint("Breakable")]
 		[Display(Name = "OriginalString", ResourceType = typeof(Resources))]
 		public virtual string OriginalString { get; set; }
-		
+
 		[Property("digital_seal")]
+		[UIHint("Breakable")]
 		[Display(Name = "DigitalSeal", ResourceType = typeof(Resources))]
 		public virtual string DigitalSeal { get; set; }
 
         [Property("payment_method")]
         [Display(Name = "PaymentMethod", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
 		[UIHint("FiscalPaymentMethod")]
         public virtual PaymentMethod PaymentMethod { get; set; }
 		

@@ -10,63 +10,38 @@
 <h2>@Resources.FiscalDocument</h2> 
 
 <div id='master-section'>
-@Html.Partial("_MasterView")
+	@Html.Partial("_EditorView")
+</div>
+<div class='control-group text-right'>
+	<a id='add-items' class='btn' data-url='@Url.Action("AddItems", new { id = Model.Id })'
+	   data-type='text' data-placement='left' data-pk='@Model.Id' data-value=''
+	   data-display='false' data-emptytext='' data-emptyclass='' data-highlight='false'>
+		<i class='icon-plus'></i> @Resources.SalesOrder
+	</a>
 </div>
 <div id='details-section'>
-    <div id='items-container' data-url='@Url.Action("GetDetails", new { id = Model.Id })'>
-	@Html.Partial("_ItemsBlock", Model.Details)
+    <div id='items-container' data-url='@Url.Action("Items", new { id = Model.Id })'>
+		@Html.Partial("_Items", Model.Details)
     </div>
-	<div class='tabbable tabs-below'>
-	    <div class='tab-content'>
-		    <div id='tab-1' class='tab-pane active'>
-		        <input type='text' id='product-search' name='product-search' />
-		    </div>
-		    <div id='tab-2' class='tab-pane'>
-		        <input type='text' id='order-search' name='order-search' />
-		    </div>
-		</div>
-	    <ul class='nav nav-tabs'>
-	        <li class='active'><a href='#tab-1' data-toggle='tab'>@Resources.Product</a></li>
-	        <li><a href='#tab-2' data-toggle='tab'>@Resources.SalesOrder</a></li>
-	    </ul>
+    <div class='search-box'>
+        <input type='text' id='product-search' name='product-search' />
     </div>
 </div>
-<div id='totals-section' class='right floating' style='width:300px'>
+<div id='totals-section' class='pull-right' data-url='@Url.Action("Totals", new { id = Model.Id })'>
     @Html.Partial("_Totals")
 </div>
 <div class='clearfix'></div>
 <div id='back-to-list' class='pull-left'>
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
-<div id='confirm-button' class='pull-right' @if (Model.Details.Count == 0) {<text>style='display:none'</text>}>
+<div id='confirm-button' class='pull-right @(Model.Details.Count == 0 ? "hide" : "")'>
 @using (Html.BeginForm("Confirm", "FiscalDocuments", new { id = Model.Id })) {
     <button id='complete' type='submit'>@Resources.Complete</button>
 }
 </div>
 <div class='clearfix'></div>
-<div id='notification-modal' class='modal hide fade'>
-	<div class='modal-header'>
-		<button type='button' class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3>@Resources.Notification</h3>
-	</div>
-	<div class='modal-body'>
-		<p>@Resources.Message_NoInvoiceableItems</p>
-	</div>
-	<div class='modal-footer'>
-		<button type='button' class='btn' data-dismiss='modal'>@Resources.Close</button>
-	</div>
-</div>
 <script type='text/javascript'>
-function updateTotals(){
-	$.get('@Url.Action("GetTotals")', { id: @Model.Id }, function (data) {
-		$('#totals-section').html(data);
-        if ($('#items li').length === 0) {
-        	$('#edit-button').show('slow');
-            $('#confirm-button').hide('slow');
-        }
-	});
-}
-$(function () {	
+$(function () {
     $('#product-search').tokenInput('@Url.Action("GetSuggestions", "FiscalDocuments", new { id = Model.Id })', {
         hintText:'@Resources.HIntText',
         noResultsText:'@Resources.NoResultsText',
@@ -74,41 +49,24 @@ $(function () {
         resultsFormatter:function(item){return ProductFormatter(item);},
         queryParam:'pattern',minChars:3,tokenLimit:1,
         onAdd:function(item) {
-            $.post('@Url.Action("AddDetail")', { id: @Model.Id, product: '' + item.id }, function (detail) {
-                $.get('@Url.Action("GetDetail")/' + detail.id, function (data) {
+            $.post('@Url.Action("AddItem", new { id = Model.Id })', { 'product': item.id }, function (detail) {
+                $.get('@Url.Action("Item", new { id = 0 })' + detail.id, function (data) {
                     $('#items').append(data);
+                    $('#totals-section').loadUrl();
                     $('#product-search').tokenInput('clear');
-                    
-                    updateTotals();
-                    
-                    $('#edit-button').hide('slow');
                     $('#confirm-button').show('slow');
                 });
             }, 'json');
         }
     });
-    $('#order-search').tokenInput('@Url.Action("GetOrders", "FiscalDocuments", new { id = Model.Id })', {
-        hintText:'@Resources.HIntText',
-        noResultsText:'@Resources.NoResultsText',
-        searchingText:'@Resources.SearchingText',          
-        queryParam:'pattern',minChars:3,tokenLimit:1,
-        onAdd:function(item) {
-            $.post('@Url.Action("AddOrder", new { id = Model.Id })', { order: '' + item.id }, function (data) {
-            	if(data.result == 0) {
-            		$('#notification-modal').modal();
-            		$('#order-search').tokenInput('clear');
-            		return;
-            	}
-            	
-            	$('#items-container').loadUrl();
-                $('#order-search').tokenInput('clear');
-                $('#edit-button').hide('slow');
-                $('#confirm-button').show('slow');
-
-                updateTotals();
-            }, 'json');
-        }
-    });
+    $('#add-items').editable({
+		success: function(response, newValue) {
+        	$('#items-container').loadUrl();
+        	$('#totals-section').loadUrl();
+            $('#confirm-button').show('slow');
+            setTimeout(function(){$('#add-items').editable('setValue', '');},500);
+	    }
+	}).removeClass('editable-click');
 });
 </script>
 <style type='text/css'>

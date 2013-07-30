@@ -36,7 +36,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Mictlanix.BE.Model
 {   
-	[ActiveRecord("taxpayer_certificate")]
+	[ActiveRecord("taxpayer_certificate", Lazy = true)]
 	public class TaxpayerCertificate : ActiveRecordLinqBase<TaxpayerCertificate>
     {
 		public TaxpayerCertificate ()
@@ -71,19 +71,19 @@ namespace Mictlanix.BE.Model
 		
 		[DataType(DataType.Password)]
         [Display(Name = "PrivateKeyPassword", ResourceType = typeof(Resources))]
-        public string KeyPassword2 { get; set; }
+		public virtual string KeyPassword2 { get; set; }
 		
 		[Property("valid_from")]
 		[Display(Name = "NotBefore", ResourceType = typeof(Resources))]
-		public DateTime NotBefore { get; set; }
+		public virtual DateTime NotBefore { get; set; }
 		
 		[Property("valid_to")]
 		[Display(Name = "NotAfter", ResourceType = typeof(Resources))]
-		public DateTime NotAfter { get; set; }
+		public virtual DateTime NotAfter { get; set; }
 
 		[Property("active")]
 		[Display(Name = "Active", ResourceType = typeof(Resources))]
-		public bool IsActive { get; set; }
+		public virtual bool IsActive { get; set; }
 
         #region Override Base Methods
 
