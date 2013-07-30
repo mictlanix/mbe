@@ -64,7 +64,7 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "Price", ResourceType = typeof(Resources))]
 		[DataType(DataType.Currency)]
 		public decimal NetPrice {
-			get { return IsTaxIncluded ? ModelHelpers.PriceRounding (Price / (1 + TaxRate)) : Price; }
+			get { return ModelHelpers.PriceRounding (IsTaxIncluded ? Price / (1 + TaxRate) : Price); }
 		}
 
         [Property]
