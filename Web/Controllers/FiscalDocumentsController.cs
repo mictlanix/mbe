@@ -801,6 +801,7 @@ namespace Mictlanix.BE.Web.Controllers
 			});
 		}
 
+		/*
 		[HttpPost]
 		public ActionResult Sign (int id)
 		{
@@ -812,7 +813,7 @@ namespace Mictlanix.BE.Web.Controllers
 			var doc = CFDHelpers.SignCFD (item);
 
 			item.OriginalString = doc.ToString ();
-			item.DigitalSeal = doc.sello;
+			item.IssuerDigitalSeal = doc.sello;
 
 			// save to database
 			using (var scope = new TransactionScope()) {
@@ -827,6 +828,7 @@ namespace Mictlanix.BE.Web.Controllers
 
 			return RedirectToAction ("Index");
 		}
+		*/
 
 		[HttpPost]
 		public ActionResult Confirm (int id)
@@ -868,32 +870,45 @@ namespace Mictlanix.BE.Web.Controllers
 			item.Serial = serial;
 			item.ApprovalNumber = batch.ApprovalNumber;
 			item.ApprovalYear = batch.ApprovalYear;
-			item.CertificateNumber = item.Issuer.Certificates.Single (x => x.IsActive).Id;
+			item.IssuerCertificateNumber = item.Issuer.Certificates.Single (x => x.IsActive).Id;
 
 			var dt = DateTime.Now;
 			item.Issued = new DateTime (dt.Year, dt.Month, dt.Day,
 			                            dt.Hour, dt.Minute, dt.Second,
 			                            DateTimeKind.Unspecified);
 
-			dynamic doc = CFDHelpers.SignCFD (item);
+			dynamic doc;
 
-			item.OriginalString = doc.ToString ();
-			item.DigitalSeal = doc.sello;
+			if (item.Issuer.Scheme == FiscalScheme.CFDI) {
+				doc = CFDHelpers.StampCFD (item);
+				var tfd = doc.Complemento [0] as CFDv32.TimbreFiscalDigital;
+
+				item.StampId = tfd.UUID;
+				item.Stamped = tfd.FechaTimbrado;
+				item.AuthorityDigitalSeal = tfd.selloSAT;
+				item.AuthorityCertificateNumber = tfd.noCertificadoSAT;
+				item.OriginalString = tfd.ToString ();
+			} else {
+				doc = CFDHelpers.SignCFD (item);
+				item.OriginalString = doc.ToString ();
+			}
+
+			item.IssuerDigitalSeal = doc.sello;
 			item.Version = Convert.ToDecimal (doc.version);
-
 			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 			item.ModificationTime = DateTime.Now;
 			item.IsCompleted = true;
+			
+			// save to orginal xml
+			var doc_xml = new FiscalDocumentXml {
+				Id = item.Id,
+				Data = doc.ToXmlString ()
+			};
 
 			using (var scope = new TransactionScope()) {
+				doc_xml.Create ();
 				item.UpdateAndFlush ();
 			}
-
-			// save to filesystem
-			var filename = string.Format (Resources.Format_FiscalDocumentPath,
-			                              Server.MapPath (Configuration.FiscalFilesPath),
-			                              item.Issuer.Id, item.Batch, item.Serial);
-			System.IO.File.WriteAllText (filename, doc.ToXmlString ());
 
 			return RedirectToAction ("Index");
 		}
@@ -917,12 +932,19 @@ namespace Mictlanix.BE.Web.Controllers
 
 		public ActionResult Download (int id)
 		{
-			var item = FiscalDocument.Find (id);
-			var doc = CFDHelpers.InvoiceToCFD (item);
-			var result = new FileStreamResult (doc.ToXmlStream (), "text/xml");
+			Stream xml = null;
+			var entity = FiscalDocument.TryFind (id);
+			var item = FiscalDocumentXml.TryFind (id);
 
+			if (item == null) {
+				xml = CFDHelpers.InvoiceToCFD (entity).ToXmlStream ();
+			} else {
+				xml = new MemoryStream (Encoding.UTF8.GetBytes (item.Data));
+			}
+
+			var result = new FileStreamResult (xml, "text/xml");
 			result.FileDownloadName = string.Format (Resources.Format_FiscalDocumentName,
-			                                         item.Issuer.Id, item.Batch, item.Serial);
+			                                         entity.Issuer.Id, entity.Batch, entity.Serial);
 
 			return result;
 		}
@@ -1016,6 +1038,15 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 			
 			return quantity > 0 ? quantity : 0;
+		}
+		
+		public ActionResult QRCode (int id)
+		{
+			var item = FiscalDocument.Find (id);
+			var data = string.Format ("?re={0}&rr={1}&tt={2:0000000000.000000}&id={3}",
+			                          item.Issuer.Id, item.Recipient.Id, item.Total, item.StampId);
+
+			return BarcodesController.QRCodeAction (data);
 		}
     }
 }
