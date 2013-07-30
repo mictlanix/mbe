@@ -36,7 +36,7 @@ using DataAnnotationsExtensions;
 
 namespace Mictlanix.BE.Model
 {   
-	[ActiveRecord("customer_taxpayer")]
+	[ActiveRecord("customer_taxpayer", Lazy = true)]
 	public class CustomerTaxpayer : ActiveRecordLinqBase<CustomerTaxpayer>
     {
 		public CustomerTaxpayer ()
@@ -47,20 +47,20 @@ namespace Mictlanix.BE.Model
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(13, MinimumLength = 12, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "TaxpayerId", ResourceType = typeof(Resources))]
-        public string Id { get; set; }
+		public virtual string Id { get; set; }
 		
         [Property]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(250, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "TaxpayerName", ResourceType = typeof(Resources))]
-		public string Name { get; set; }
+		public virtual string Name { get; set; }
 		
 		[Property]
 		[Email(ErrorMessageResourceName = "Validation_Email", ErrorMessageResourceType = typeof(Resources))]
 		[Display(Name = "Email", ResourceType = typeof(Resources))]
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
 		[StringLength(80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-		public string Email { get; set; }
+		public virtual string Email { get; set; }
 		
 		[BelongsTo("customer", NotNull = true, Lazy = FetchWhen.OnInvoke)]
 		[Display(Name = "Customer", ResourceType = typeof(Resources))]

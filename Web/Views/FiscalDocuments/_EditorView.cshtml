@@ -1,0 +1,225 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model FiscalDocument
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.FiscalDocuments);
+}
+
+<fieldset>
+	<div class='row-fluid'>
+		<div class='span8'>
+	  		<dl class=''>
+				<dt>@Resources.Issuer</dt>
+				<dd>
+			        <a id='issuer' data-type='select2' data-placement='right' data-pk='@Model.Id' 
+			        	data-value='@Model.Issuer.Id' data-url='@Url.Action("SetIssuer", new { id = Model.Id })'
+			        	data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+			        	@Html.DisplayFor(x => x.Issuer, "String")
+			        </a>
+				</dd>
+				<dt>@Resources.Customer</dt>
+				<dd>
+			        <a id='customer' data-type='select2' data-placement='right' data-pk='@Model.Id' 
+			        	data-value='@Model.Customer.Id' data-url='@Url.Action("SetCustomer", new { id = Model.Id })'
+			        	data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+			        	@Html.DisplayFor(x => x.Customer.Name)
+			        </a>
+			    </dd>
+			    </dd>
+				<dt>@Resources.Recipient</dt>
+				<dd>
+			        <a id='recipient' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id'
+			        	data-value='@Model.Recipient.Id' data-source='@Url.Action("Recipients", new { id = Model.Id })'
+			        	data-source-cache='false' data-url='@Url.Action("SetRecipient", new { id = Model.Id })'
+			        	data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+			        	@Html.DisplayFor(x => x.Recipient, "String")
+			        </a>
+				</dd>
+				<dt>@Resources.Reference</dt>
+				<dd>
+			        <a class='editable' data-type='text' data-placement='right' data-pk='@Model.Id' 
+			        	data-value='@Model.Reference' data-url='@Url.Action("SetReference", new { id = Model.Id })'
+			        	data-inputclass='input-large' data-emptytext='@Resources.Empty'>
+			        	@Html.DisplayFor(x => x.Reference)
+			        </a>
+				</dd>
+			</dl>
+		</div>
+	  	<div class='span4'>
+	  		<dl class='dl-horizontal'>
+				<dt>@Resources.Id</dt>
+				<dd>@Html.DisplayFor(x => x.Id)</dd>
+				<dt>@Resources.Type</dt>
+				<dd id='type'>@Model.Type.GetDisplayName()</dd>
+				<dt>@Resources.Batch</dt>
+				<dd>
+			        <a id='batch' class='editable' data-type='select' data-placement='left' data-pk='@Model.Id'
+			        	data-value='@Model.Batch' data-source='@Url.Action("Batches", new { id = Model.Id })'
+			        	data-source-cache='false' data-url='@Url.Action("SetBatch", new { id = Model.Id })'
+			        	data-emptytext='@Resources.Empty'>
+			        	@Html.DisplayFor(x => x.Batch)
+			        </a>
+		        </dd>
+				<dt>@Resources.Currency</dt>
+				<dd>
+			        <a class='editable currency' data-type='select' data-placement='left' data-pk='@Model.Id'
+			        	data-value='@((int)Model.Currency)' data-source='@Url.Action("Currencies", "ExchangeRates")'
+			        	data-url='@Url.Action("SetCurrency", new { id = Model.Id })'
+			        	data-emptytext='@Resources.Empty'>
+			        	@Html.DisplayFor(x => x.Currency)
+			        </a>
+				</dd>
+				<dt>@Resources.ExchangeRate</dt>
+				<dd>
+			        <a id='exchange-rate' class='editable' data-type='text' data-placement='left' data-pk='@Model.Id' 
+			        	data-value='@Html.DisplayFor(x => x.ExchangeRate)' data-url='@Url.Action("SetExchangeRate", new { id = Model.Id })'
+			        	data-inputclass='input-mini' data-emptytext='@Resources.Empty'>
+			        	@Html.DisplayFor(x => x.ExchangeRate)
+			        </a>
+				</dd>
+				<dt>@Resources.PaymentMethod</dt>
+				<dd>
+			        <a class='editable' data-type='select' data-placement='left' data-pk='@Model.Id'
+			        	data-value='@((int)Model.PaymentMethod)' data-source='@Url.Action("PaymentMethods")'
+			        	data-url='@Url.Action("SetPaymentMethod", new { id = Model.Id })'
+			        	data-inputclass='input-large' data-emptytext='@Resources.Empty'>
+			        	@Model.PaymentMethod.GetDisplayName()
+			        </a>
+				</dd>
+				<dt>@Resources.PaymentReference</dt>
+				<dd>
+			        <a id='payment-ref' class='editable' data-type='text' data-placement='left' data-pk='@Model.Id' 
+			        	data-value='@Model.PaymentReference' data-url='@Url.Action("SetPaymentReference", new { id = Model.Id })'
+			        	data-emptytext='@Resources.Empty'>
+			        	@Html.DisplayFor(x => x.PaymentReference)
+			        </a>
+				</dd>
+			</dl>
+  		</div>
+	</div>
+@if(Privilege.AllowDelete && !Model.IsCancelled) {
+	<div class='row-fluid'>
+  		<div class='span12'>
+	    @using (Html.BeginForm("Cancel", "SalesOrders", new { id =  Model.Id }, FormMethod.Post, new { @class = "modal-form pull-right" })) {
+			<button type="submit" class="icon cancel">@Resources.Cancel</button>
+	    }
+  		</div>
+	</div>
+}
+</fieldset>
+<script type='text/javascript'>
+$('#Id').tooltip();
+$('#issuer').editable({
+    select2: {
+	    ajax: {
+	        url: '@Url.Action("GetSuggestions", "Taxpayers")',
+	        dataType: 'json',
+	        type: 'POST',
+	        data: function(term,page,context) {
+	        	return { pattern:term };
+	        },
+	        results: function(data,page) {
+	            return { results:data };
+	        }
+	    },
+	    initSelection: function(element, callback) {
+	        var data = {
+	        	id: $('#issuer').data('value'),
+	        	name: $('#issuer').text()
+        	};
+	        callback(data);
+	    },
+	    formatResult: function(result ) {
+	        return result.name;
+	    },
+	    formatSelection: function(selection) {
+	        return selection.name;
+	    }
+	},
+	success: function(response, newValue) {
+		$('#type').text(response.type);
+		$('#batch').text(response.batch)
+				   .editable('setValue', response.batch);
+    },
+    display: function(value, response) {
+    	if (typeof response !== 'undefined') {
+			$(this).html(response.value);
+		}
+    }
+});
+$('#customer').editable({
+    select2: {
+    	minimumInputLength: 3,
+	    ajax: {
+	        url: '@Url.Action("GetSuggestions", "Customers")',
+	        dataType: 'json',
+	        type: 'POST',
+	        data: function(term,page,context) {
+	        	return { pattern:term };
+	        },
+	        results: function(data,page) {
+	            return { results:data };
+	        }
+	    },
+	    initSelection: function(element, callback) {
+	        var data = {
+	        	id: $('#customer').data('value'),
+	        	name: $('#customer').text()
+        	};
+	        callback(data);
+	    },
+	    formatResult: function(result ) {
+	        return result.name;
+	    },
+	    formatSelection: function(selection) {
+	        return selection.name;
+	    }
+	},
+	success: function(response, newValue) {
+		$('#recipient').text(response.recipientText)
+				       .editable('setValue', response.recipient);
+    },
+    display: function(value, response) {
+    	if (typeof response !== 'undefined') {
+			$(this).html(response.value);
+		}
+    }
+});
+$('a.editable').editable({
+	success: function(response, newValue) {
+		if('rate' in response) {
+			$('#exchange-rate').text(response.rate)
+							   .editable('setValue', response.rate);
+        }
+        if('type' in response) {
+			$('#type').text(response.type);
+        }
+        if('paymentReference' in response) {
+			$('#payment-ref').text(response.paymentReference)
+							 .editable('setValue', response.paymentReference);
+        }
+		if('itemsChanged' in response) {
+			$('#items-container').loadUrl();
+			$('#totals-section').loadUrl();
+		}
+    },
+    display: function(value, response) {
+		if (typeof response === 'undefined')
+        	return;
+        
+        if (Array.isArray(response)) {
+          	var arr = $.grep(response, function(o){
+  				return o.value == value;
+			});
+			if (arr.length != 0) {
+          		$(this).html(arr[0].text);
+          	}
+        } else {
+          	$(this).html(response.value);
+        }
+    }
+});
+</script>

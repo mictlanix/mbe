@@ -423,9 +423,6 @@
   <data name="Message_DeleteConfirmation" xml:space="preserve">
     <value>¿Está seguro de borrar este elemento?</value>
   </data>
-  <data name="Message_NoInvoiceableItems" xml:space="preserve">
-    <value>No se encontraron registros facturables.</value>
-  </data>
   <data name="Completed" xml:space="preserve">
     <value>Activo</value>
   </data>
@@ -1736,5 +1733,20 @@ Realizada el: {0:d}</value>
   </data>
   <data name="DateTimeFormatString" xml:space="preserve">
     <value>yyyy-MM-dd HH:mm:ss</value>
+  </data>
+  <data name="BatchRangeNotFound" xml:space="preserve">
+    <value>No hay series configuradas.</value>
+  </data>
+  <data name="TaxpayerNotFound" xml:space="preserve">
+    <value>No se encontraron datos fiscales.</value>
+  </data>
+  <data name="PaymentReferenceNotRequired" xml:space="preserve">
+    <value>La referencia de pago no es requerida.</value>
+  </data>
+  <data name="SalesOrderNotFound" xml:space="preserve">
+    <value>No se encontró el pedido.</value>
+  </data>
+  <data name="InvoiceableItemsNotFound" xml:space="preserve">
+    <value>No se encontraron registros facturables.</value>
   </data>
 </root>

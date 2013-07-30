@@ -3,26 +3,26 @@
 @using Mictlanix.BE.Web.Helpers
 @model FiscalDocument
 
-<fieldset>
-    <legend>@Resources.Totals</legend>
-
-    <div class="display-label left floating">
-        @Html.LabelFor(x => x.Subtotal)
-    </div>
-    <div class="display-field right floating">
-        @Html.DisplayFor(x => x.Subtotal)
-        @Html.DisplayFor(x => x.Currency)
-    </div>
-
-    <div class="display-label left floating">
-        @Html.LabelFor(x => x.Taxes)
-    </div>
-    <div class="display-field right floating">
-        @Html.DisplayFor(x => x.Taxes)
-        @Html.DisplayFor(x => x.Currency)
-    </div>
-    
-    <div class="display-label left floating">@Html.LabelFor(x => x.Total)</div>
-    <div class="display-field right floating">@Html.DisplayFor(x => x.Total) @Html.DisplayFor(x => x.Currency)</div>
-    <div class="display-field right floating"><i>(@Html.DisplayFor(x => x.TotalEx) @Configuration.BaseCurrency)</i></div>
-</fieldset>
+<ul class='labeled-frames'>
+    <li>
+    	<span class='caption'>@Resources.Subtotal</span>
+    	<span class='value'>@Html.DisplayFor(x => x.Subtotal) @Html.DisplayFor(x => x.Currency)</span>
+    @if (Model.Currency != Configuration.BaseCurrency) {
+        <span class='value muted'>(@Html.DisplayFor(x => x.SubtotalEx) @Configuration.BaseCurrency)</span>
+    }
+    </li>
+    <li>
+    	<span class='caption'>@Resources.Taxes</span>
+        <span class='value'>@Html.DisplayFor(x => x.Taxes) @Html.DisplayFor(x => x.Currency)</span>
+    @if (Model.Currency != Configuration.BaseCurrency) {
+        <span class='value muted'>(@Html.DisplayFor(x => x.TaxesEx) @Configuration.BaseCurrency)</span>
+    }
+    </li>
+    <li>
+    	<span class='caption'>@Resources.Total</span>
+        <span class='value'>@Html.DisplayFor(x => x.Total) @Html.DisplayFor(x => x.Currency)</span>
+    @if (Model.Currency != Configuration.BaseCurrency) {
+        <span class='value muted'>(@Html.DisplayFor(x => x.TotalEx) @Configuration.BaseCurrency)</span>
+    }
+    </li>
+</ul>
