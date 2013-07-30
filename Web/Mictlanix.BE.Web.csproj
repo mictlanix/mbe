@@ -379,15 +379,7 @@
     <Content Include="Views\FiscalDocuments\Edit.cshtml" />
     <Content Include="Views\FiscalDocuments\New.cshtml" />
     <Content Include="Views\FiscalDocuments\_Totals.cshtml" />
-    <Content Include="Views\FiscalDocuments\_MasterView.cshtml" />
-    <Content Include="Views\FiscalDocuments\_MasterEditView.cshtml" />
-    <Content Include="Views\FiscalDocuments\_DetailEditView.cshtml" />
-    <Content Include="Views\FiscalDocuments\_DetailView.cshtml" />
-    <Content Include="Views\FiscalDocuments\_BatchSelector.cshtml" />
-    <Content Include="Views\FiscalDocuments\Details.cshtml" />
     <Content Include="Views\FiscalDocuments\Reports.cshtml" />
-    <Content Include="Views\FiscalDocuments\Printv22.cshtml" />
-    <Content Include="Views\FiscalDocuments\Printv20.cshtml" />
     <Content Include="Views\Purchases\Print.cshtml" />
     <Content Include="Views\SupplierReturns\Print.cshtml" />
     <Content Include="Views\PointsOfSale\Index.cshtml" />
@@ -407,7 +399,6 @@
     <Content Include="Views\Reports\_SalesOrdersHistoric.cshtml" />
     <Content Include="Views\Reports\SalesOrdersHistoric.cshtml" />
     <Content Include="Views\Reports\SalesOrdersHistoricDetails.cshtml" />
-    <Content Include="Views\FiscalDocuments\_ItemsBlock.cshtml" />
     <Content Include="Content\print.css" />
     <Content Include="Views\Purchases\Edit.cshtml" />
     <Content Include="Views\Purchases\New.cshtml" />
@@ -695,6 +686,15 @@
     <Content Include="Views\SalesOrders\_DisplayView.cshtml" />
     <Content Include="Views\SalesOrders\_EditorView.cshtml" />
     <Content Include="Views\Payments\_DisplayView.cshtml" />
+    <Content Include="Views\FiscalDocuments\_DisplayView.cshtml" />
+    <Content Include="Views\FiscalDocuments\_EditorView.cshtml" />
+    <Content Include="Views\FiscalDocuments\_ItemDisplayView.cshtml" />
+    <Content Include="Views\FiscalDocuments\_ItemEditorView.cshtml" />
+    <Content Include="Views\FiscalDocuments\_Items.cshtml" />
+    <Content Include="Views\FiscalDocuments\View.cshtml" />
+    <Content Include="Views\FiscalDocuments\Print20.cshtml" />
+    <Content Include="Views\FiscalDocuments\Print22.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Breakable.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

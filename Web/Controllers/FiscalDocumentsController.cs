@@ -101,12 +101,24 @@ namespace Mictlanix.BE.Web.Controllers
             return search;
         }
 		
+		public ViewResult View (int id)
+		{
+			var item = FiscalDocument.Find (id);
+			return View (item);
+		}
+
+		public ViewResult Print (int id)
+		{
+			var item = FiscalDocument.Find (id);
+			var view = string.Format ("Print{0:00}", item.Version * 10);
+
+			return View (view, item);
+		}
+
         public ViewResult New()
         {
 			var item = new FiscalDocument {
-				Issuer = Taxpayer.TryFind (Configuration.DefaultIssuer),
-				Batch = Configuration.DefaultBatch,
-				ExchangeRate = 1
+				Issuer = Taxpayer.TryFind (Configuration.DefaultIssuer)
 			};
 
 			return View (item);
@@ -115,10 +127,20 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
 		public ActionResult New (FiscalDocument item)
 		{
+			TaxpayerBatch batch = null;
+
 			item.Issuer = Taxpayer.TryFind (item.IssuerId);
 			item.Customer = Customer.TryFind (item.CustomerId);
 			item.Recipient = CustomerTaxpayer.TryFind (item.RecipientId);
-			
+
+			if (item.Issuer != null) {
+				batch = item.Issuer.Batches.FirstOrDefault ();
+			}
+
+			if (batch == null) {
+				ModelState.AddModelError ("IssuerId", Resources.BatchRangeNotFound);
+			}
+
 			if (!ModelState.IsValid) {
 				return View (item);
 			}
@@ -136,34 +158,22 @@ namespace Mictlanix.BE.Web.Controllers
 			// Recipient
 			item.RecipientName = item.Recipient.Name;
 			item.RecipientAddress = item.Recipient.Address;
-			
-			if (item.PaymentMethod == PaymentMethod.Unidentified ||
-			    item.PaymentMethod == PaymentMethod.Cash) {
-				item.PaymentReference = null;
-			} else if (string.IsNullOrEmpty(item.PaymentReference)) {
-				item.PaymentReference = Resources.Unidentified;
-			}
 
-			var batch = item.Issuer.Batches.First (x => x.Batch == item.Batch);
 
 			// Fiscal doc's info
+			item.Batch = batch.Batch;
 			item.Type = batch.Type;
-			item.CreationTime = DateTime.Now;
-			item.ModificationTime = item.CreationTime;
-			item.Creator = SecurityHelpers.GetUser (User.Identity.Name).Employee;
-			item.Updater = item.Creator;
 			item.Currency = Configuration.BaseCurrency;
 			item.ExchangeRate = 1;
+			item.PaymentMethod = PaymentMethod.Unidentified;
+			item.PaymentReference = null;
+			item.CreationTime = DateTime.Now;
+			item.Creator = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			item.ModificationTime = item.CreationTime;
+			item.Updater = item.Creator;
 
 			using (var scope = new TransactionScope()) {
-				item.IssuerAddress.Create ();
-				item.RecipientAddress.Create ();
-				item.IssuedAt.Create ();
 				item.CreateAndFlush ();
-			}
-
-			if (item.Id == 0) {
-				return View ("UnknownError");
 			}
 
 			return RedirectToAction ("Edit", new { id = item.Id });
@@ -171,129 +181,654 @@ namespace Mictlanix.BE.Web.Controllers
 		
         public ActionResult Edit (int id)
         {
-            FiscalDocument item = FiscalDocument.Find(id);
+            var item = FiscalDocument.Find(id);
 			
-            if (Request.IsAjaxRequest())
-                return PartialView("_MasterEditView", item);
-            else
-                return View (item);
+			if (!CashHelpers.ValidateExchangeRate ()) {
+				return View ("InvalidExchangeRate");
+			}
+
+			return View (item);
         }
 
-        [HttpPost]
-		public ActionResult Edit (FiscalDocument item)
-		{
-			item.Issuer = Taxpayer.TryFind (item.IssuerId);
-			item.Customer = Customer.TryFind (item.CustomerId);
-			item.Recipient = CustomerTaxpayer.TryFind (item.RecipientId);
+		/* Edit
 
-			if (item.PaymentMethod == PaymentMethod.Unidentified ||
-			    item.PaymentMethod == PaymentMethod.Cash) {
-				item.PaymentReference = null;
-			} else if (string.IsNullOrEmpty (item.PaymentReference)) {
-				item.PaymentReference = Resources.Unidentified;
-			}
 
-			if (!ModelState.IsValid) {
-				return View (item);
-			}
-
-			var entity = FiscalDocument.Find (item.Id);
-			var batch = item.Issuer.Batches.First (x => x.Batch == item.Batch);
-			bool changed = entity.Currency != item.Currency || entity.ExchangeRate != item.ExchangeRate;
-			
-			// Issuer
-			entity.Issuer = item.Issuer;
-			entity.IssuerName = item.Issuer.Name;
-			entity.IssuerRegime = item.Issuer.Regime;
-			entity.IssuerAddress = item.Issuer.Address;
-			
-			// Recipient
-			entity.Recipient = item.Recipient;
-			entity.RecipientName = item.Recipient.Name;
-			entity.RecipientAddress = item.Recipient.Address;
-
-			// updated info
-			entity.Type = batch.Type;
-			entity.Batch = item.Batch;
-			entity.Issuer = item.Issuer;
-			entity.Customer = item.Customer;
-			entity.ModificationTime = DateTime.Now;
-			entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 			entity.PaymentMethod = item.PaymentMethod;
 			entity.PaymentReference = item.PaymentReference;
 			entity.Currency = item.Currency;
 			entity.ExchangeRate = item.ExchangeRate;
 			entity.Reference = item.Reference;
 
-			using (var scope = new TransactionScope()) {
-				//entity.IssuerAddress.Update ();
-				//entity.RecipientAddress.Update ();
+		}*/
 
-				if (changed) {
-					foreach (var x in entity.Details) {
-						x.Currency = entity.Currency;
-						x.ExchangeRate = entity.ExchangeRate;
-						x.Update ();
-					}
+		public JsonResult Batches (int id)
+		{
+			var item = FiscalDocument.TryFind (id);
+			var qry = from x in TaxpayerBatch.Queryable
+					  where x.Taxpayer.Id == item.Issuer.Id
+			          select x.Batch;
+			var list = from x in qry.Distinct ().ToList ()
+					   select new { value = x, text = x };
+
+			return Json (list.ToList (), JsonRequestBehavior.AllowGet);
+		}
+
+		public JsonResult Recipients (int id)
+		{
+			var item = FiscalDocument.TryFind (id);
+			var qry = from x in item.Customer.Taxpayers
+					  select new { value = x.Id, text = x.ToString () };
+
+			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
+		}
+		
+		public JsonResult PaymentMethods ()
+		{
+			var query = from x in new []{ PaymentMethod.Unidentified, PaymentMethod.Cash,
+										  PaymentMethod.DebitCard, PaymentMethod.CreditCard,
+										  PaymentMethod.Check, PaymentMethod.BankDeposit,
+										  PaymentMethod.WireTransfer }
+						select new { value = (int)x, text = x.GetDisplayName () };
+
+			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
+		}
+
+		[HttpPost]
+		public ActionResult SetIssuer (int id, string value)
+		{
+			var entity = FiscalDocument.Find (id);
+			var item = Taxpayer.TryFind (value);
+
+			if (item != null) {
+				var batch = item.Batches.FirstOrDefault ();
+
+				if (batch == null) {
+					Response.StatusCode = 400;
+					return Content (Resources.BatchRangeNotFound);
 				}
 
-				entity.UpdateAndFlush ();
+				entity.Issuer = item;
+				entity.IssuerName = item.Name;
+				entity.IssuerRegime = item.Regime;
+				entity.IssuerAddress = item.Address;
+				entity.Batch = batch.Batch;
+				entity.Type = batch.Type;
+				entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+				entity.ModificationTime = DateTime.Now;
+
+				using (var scope = new TransactionScope()) {
+					entity.Update ();
+				}
 			}
 
-			return PartialView ("_MasterView", entity);
-		}
-		
-		public ActionResult DiscardChanges (int id)
-		{
-			return PartialView ("_MasterView", FiscalDocument.TryFind (id));
+			return Json (new {
+				id = id,
+				value = entity.FormattedValueFor (x => x.Issuer),
+				batch = entity.FormattedValueFor (x => x.Batch),
+				type = entity.Type.GetDisplayName ()
+			});
 		}
 
-        public ViewResult Details (int id)
+		[HttpPost]
+		public ActionResult SetCustomer (int id, int value)
 		{
-			FiscalDocument item = FiscalDocument.Find (id);
+			var entity = FiscalDocument.Find (id);
+			var item = Customer.TryFind (value);
 
-			return View (item);
+			if (item != null) {
+				var recipient = item.Taxpayers.FirstOrDefault ();
+				
+				if (recipient == null) {
+					Response.StatusCode = 400;
+					return Content (Resources.TaxpayerNotFound);
+				}
+
+				entity.Customer = item;
+				entity.Recipient = recipient;
+				entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+				entity.ModificationTime = DateTime.Now;
+
+				using (var scope = new TransactionScope()) {
+					entity.Update ();
+				}
+			}
+
+			return Json (new {
+				id = id,
+				value = entity.FormattedValueFor (x => x.Customer),
+				recipient = entity.Recipient.Id,
+				recipientText = entity.FormattedValueFor (x => x.Recipient)
+			});
 		}
 		
-		public ViewResult Print (int id)
+		[HttpPost]
+		public ActionResult SetRecipient (int id, string value)
+		{
+			var entity = FiscalDocument.Find (id);
+			var item = CustomerTaxpayer.TryFind (value);
+
+			if (item != null) {
+				entity.Recipient = item;
+				entity.RecipientName = item.Name;
+				entity.RecipientAddress = item.Address;
+				entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+				entity.ModificationTime = DateTime.Now;
+
+				using (var scope = new TransactionScope()) {
+					entity.Update ();
+				}
+			}
+
+			return Json (new {
+				id = id,
+				value = entity.FormattedValueFor (x => x.Recipient)
+			});
+		}
+
+		[HttpPost]
+		public ActionResult SetBatch (int id, string value)
+		{
+			var entity = FiscalDocument.Find (id);
+
+			if (value != null) {
+				var batch = entity.Issuer.Batches.SingleOrDefault (x => x.Batch == value);
+
+				if (batch == null) {
+					Response.StatusCode = 400;
+					return Content (Resources.InvalidBatch);
+				}
+
+				entity.Batch = batch.Batch;
+				entity.Type = batch.Type;
+				entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+				entity.ModificationTime = DateTime.Now;
+
+				using (var scope = new TransactionScope()) {
+					entity.Update ();
+				}
+			}
+			
+			return Json (new {
+				id = id,
+				value = entity.FormattedValueFor (x => x.Batch),
+				type = entity.Type.GetDisplayName ()
+			});
+		}
+		
+		[HttpPost]
+		public ActionResult SetReference (int id, string value)
+		{
+			var entity = FiscalDocument.Find (id);
+
+			entity.Reference = string.Format("{0}", value).Trim ();
+			entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			entity.ModificationTime = DateTime.Now;
+
+			using (var scope = new TransactionScope()) {
+				entity.Update ();
+			}
+
+			return Json (new {
+				id = id,
+				value = entity.FormattedValueFor (x => x.Reference)
+			});
+		}
+
+		[HttpPost]
+		public ActionResult SetCurrency (int id, string value)
+		{
+			var entity = FiscalDocument.Find (id);
+			CurrencyCode val;
+			bool success;
+
+			success = Enum.TryParse<CurrencyCode> (value.Trim (), out val);
+
+			if (success) {
+				decimal rate = CashHelpers.GetTodayExchangeRate (val);
+
+				if (rate == 0m) {
+					Response.StatusCode = 400;
+					return Content (Resources.Message_InvalidExchangeRate);
+				}
+
+				entity.Currency = val;
+				entity.ExchangeRate = rate;
+				entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+				entity.ModificationTime = DateTime.Now;
+
+				using (var scope = new TransactionScope()) {
+					foreach (var item in entity.Details) {
+						item.Currency = val;
+						item.ExchangeRate = rate;
+						item.Update ();
+					}
+
+					entity.UpdateAndFlush ();
+				}
+			}
+
+			return Json (new { 
+				id = entity.Id,
+				value = entity.FormattedValueFor (x => x.Currency),
+				rate = entity.FormattedValueFor (x => x.ExchangeRate),
+				itemsChanged = success
+			});
+		}
+		
+		[HttpPost]
+		public ActionResult SetExchangeRate (int id, string value)
+		{
+			var entity = FiscalDocument.Find (id);
+			bool success;
+			decimal val;
+
+			success = decimal.TryParse (value.Trim (), out val);
+
+			if (success) {
+				if (val <= 0m) {
+					Response.StatusCode = 400;
+					return Content (Resources.Message_InvalidExchangeRate);
+				}
+
+				entity.ExchangeRate = val;
+				entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+				entity.ModificationTime = DateTime.Now;
+
+				using (var scope = new TransactionScope()) {
+					foreach (var item in entity.Details) {
+						item.ExchangeRate = val;
+						item.Update ();
+					}
+
+					entity.UpdateAndFlush ();
+				}
+			}
+
+			return Json (new { 
+				id = entity.Id,
+				value = entity.FormattedValueFor (x => x.ExchangeRate),
+				itemsChanged = success
+			});
+		}
+		
+		[HttpPost]
+		public ActionResult SetPaymentMethod (int id, string value)
+		{
+			var entity = FiscalDocument.Find (id);
+			PaymentMethod val;
+			bool success;
+
+			success = Enum.TryParse<PaymentMethod> (value.Trim (), out val);
+
+			if (success) {
+				entity.PaymentMethod = val;
+				entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+				entity.ModificationTime = DateTime.Now;
+
+				if (val == PaymentMethod.Unidentified || val == PaymentMethod.Cash) {
+					entity.PaymentReference = null;
+				} else if (string.IsNullOrEmpty (entity.PaymentReference)) {
+					entity.PaymentReference = Resources.Unidentified;
+				}
+
+				using (var scope = new TransactionScope()) {
+					entity.Update ();
+				}
+			}
+
+			return Json (new {
+				id = id,
+				value = entity.PaymentMethod,
+				paymentReference = entity.FormattedValueFor (x => x.PaymentReference)
+			});
+		}
+		
+		[HttpPost]
+		public ActionResult SetPaymentReference (int id, string value)
+		{
+			var entity = FiscalDocument.Find (id);
+
+			if (entity.PaymentMethod == PaymentMethod.Unidentified ||
+			    entity.PaymentMethod == PaymentMethod.Cash) {
+				Response.StatusCode = 400;
+				return Content (Resources.PaymentReferenceNotRequired);
+			}
+
+			entity.PaymentReference = string.Format("{0}", value).Trim ();
+			entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			entity.ModificationTime = DateTime.Now;
+
+			if (string.IsNullOrEmpty (entity.PaymentReference)) {
+				entity.PaymentReference = Resources.Unidentified;
+			}
+
+			using (var scope = new TransactionScope()) {
+				entity.Update ();
+			}
+
+			return Json (new {
+				id = id,
+				value = entity.FormattedValueFor (x => x.PaymentReference)
+			});
+		}
+
+		[HttpPost]
+		public JsonResult AddItem (int id, int product)
+		{
+			var p = Product.Find (product);
+			var entity = FiscalDocument.Find (id);
+			int pl = entity.Customer.PriceList.Id;
+			var price = (from x in ProductPrice.Queryable
+			             where x.Product.Id == product && x.List.Id == pl
+			             select x).SingleOrDefault();
+
+			var item = new FiscalDocumentDetail {
+				Document = FiscalDocument.Find (id),
+				Product = p,
+				ProductCode = p.Code,
+				ProductName = p.Name,
+				UnitOfMeasurement = p.UnitOfMeasurement,
+				Discount = 0,
+				TaxRate = p.TaxRate,
+				IsTaxIncluded = p.IsTaxIncluded,
+				Quantity = 1,
+				Price = price.Value,
+				ExchangeRate = entity.ExchangeRate,
+				Currency = entity.Currency
+			};
+
+			if (price.Currency != entity.Currency) {
+				item.Price = price.Value * CashHelpers.GetTodayExchangeRate (price.Currency, entity.Currency);
+			}
+
+			using (var scope = new TransactionScope()) {
+				item.CreateAndFlush ();
+			}
+
+			return Json (new { id = item.Id });
+		}
+		
+		[HttpPost]
+		public ActionResult AddItems (int id, string value)
+		{
+			SalesOrder sales_order = null;
+			int sales_order_id = 0;
+
+			if (int.TryParse (value, out sales_order_id)) {
+				sales_order = SalesOrder.TryFind (sales_order_id);
+			}
+
+			if (sales_order == null) {
+				Response.StatusCode = 400;
+				return Content (Resources.SalesOrderNotFound);
+			}
+
+			var entity = FiscalDocument.Find (id);
+			var count = 0;
+
+			using (var scope = new TransactionScope()) {
+				foreach(var x in sales_order.Details) {
+					if (!x.Product.IsInvoiceable)
+						continue;
+
+					decimal max_qty = GetInvoiceableQuantity (x.Id);
+
+					if (max_qty <= 0)
+						continue;
+
+					var item = new FiscalDocumentDetail {
+						Document = entity,
+						Product = x.Product,
+						OrderDetail = x,
+						ProductCode = x.ProductCode,
+						ProductName = x.ProductName,
+						UnitOfMeasurement = x.Product.UnitOfMeasurement,
+						Discount = x.Discount,
+						TaxRate = x.TaxRate,
+						IsTaxIncluded = x.IsTaxIncluded,
+						Quantity = max_qty,
+						Price = x.Price,
+						ExchangeRate = entity.ExchangeRate,
+						Currency = entity.Currency
+					};
+
+					if (x.Currency != entity.Currency) {
+						item.Price = x.Price * CashHelpers.GetTodayExchangeRate (x.Currency, entity.Currency);
+					}
+
+					if (x.IsTaxIncluded) {
+						item.Price = item.Price / (1 + item.TaxRate);
+					}
+
+					item.Create ();
+					count++;
+				}
+			}
+			
+			if (count == 0) {
+				Response.StatusCode = 400;
+				return Content (Resources.InvoiceableItemsNotFound);
+			}
+
+			return Json (new { id = id, value = string.Empty, itemsChanged = count });
+		}
+
+		[HttpPost]
+		public JsonResult RemoveItem (int id)
+		{
+			var item = FiscalDocumentDetail.Find (id);
+
+			using (var scope = new TransactionScope()) {
+				item.DeleteAndFlush ();
+			}
+
+			return Json (new { id = id, result = true });
+		}
+
+		public ActionResult Item (int id)
+		{
+			var item = FiscalDocumentDetail.Find (id);
+			return PartialView ("_ItemEditorView", item);
+		}
+		
+		public ActionResult Items (int id)
 		{
 			var item = FiscalDocument.Find (id);
-
-			if (item.Version == 2.0m) {
-				return View ("Printv20", item);
-			} else {
-				return View ("Printv22", item);
-			}
+			return PartialView ("_Items", item.Details);
 		}
 
-        [HttpPost]
+		public ActionResult Totals (int id)
+		{
+			var order = FiscalDocument.Find(id);
+			return PartialView ("_Totals", order);
+		}
+
+		[HttpPost]
+		public JsonResult SetItemProductName (int id, string value)
+		{
+			var detail = FiscalDocumentDetail.Find (id);
+			string val = (value ?? string.Empty).Trim ();
+			
+			if (val.Length > 0) {
+				detail.ProductName = val;
+
+				using (var scope = new TransactionScope()) {
+					detail.Update ();
+				}
+			}
+
+			return Json (new { id = detail.Id, value = detail.ProductName });
+		}
+		
+		[HttpPost]
+		public JsonResult SetItemProductCode (int id, string value)
+		{
+			var detail = FiscalDocumentDetail.Find (id);
+			string val = string.Format ("{0}", value).Trim ();
+			
+			if (val.Length > 0) {
+				detail.ProductCode = val;
+
+				using (var scope = new TransactionScope()) {
+					detail.Update ();
+				}
+			}
+
+			return Json (new { id = detail.Id, value = detail.ProductCode });
+		}
+		
+		[HttpPost]
+		public JsonResult SetItemUM (int id, string value)
+		{
+			var detail = FiscalDocumentDetail.Find (id);
+			string val = string.Format ("{0}", value).Trim ();
+			
+			if (val.Length > 0) {
+				detail.UnitOfMeasurement = val;
+
+				using (var scope = new TransactionScope()) {
+					detail.Update ();
+				}
+			}
+
+			return Json (new { id = detail.Id, value = detail.UnitOfMeasurement });
+		}
+
+		[HttpPost]
+		public JsonResult SetItemQuantity (int id, decimal value)
+		{
+			var entity = FiscalDocumentDetail.Find (id);
+
+			if (entity.OrderDetail != null) {
+				decimal max_qty = entity.Quantity + GetInvoiceableQuantity (entity.OrderDetail.Id);
+
+				if (max_qty < value)
+					value =  max_qty;
+			}
+
+			if (value > 0) {
+				entity.Quantity = value;
+
+				using (var scope = new TransactionScope()) {
+					entity.Update ();
+				}
+			}
+
+			return Json (new { 
+				id = entity.Id,
+				value = entity.FormattedValueFor (x => x.Quantity),
+				total = entity.FormattedValueFor (x => x.Total), 
+				total2 = entity.FormattedValueFor (x => x.TotalEx)
+			});
+		}
+
+		[HttpPost]
+		public JsonResult SetItemPrice (int id, string value)
+		{
+			var entity = FiscalDocumentDetail.Find (id);
+			bool success;
+			decimal val;
+
+			success = decimal.TryParse (value.Trim (),
+			                            System.Globalization.NumberStyles.Currency,
+			                            null, out val);
+
+			if (success && val >= 0) {
+				entity.Price = val;
+
+				using (var scope = new TransactionScope()) {
+					entity.Update ();
+				}
+			}
+
+			return Json (new {
+				id = entity.Id,
+				value = entity.FormattedValueFor (x => x.Price),
+				total = entity.FormattedValueFor (x => x.Total), 
+				total2 = entity.FormattedValueFor (x => x.TotalEx)
+			});
+		}
+
+		[HttpPost]
+		public JsonResult SetItemDiscount (int id, string value)
+		{
+			var entity = FiscalDocumentDetail.Find (id);
+			bool success;
+			decimal val;
+
+			success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out val);
+			val /= 100m;
+
+			if (success && val >= 0 && val <= 1) {
+				entity.Discount = val;
+
+				using (var scope = new TransactionScope()) {
+					entity.Update ();
+				}
+			}
+
+			return Json (new { 
+				id = entity.Id,
+				value = entity.FormattedValueFor (x => x.Discount),
+				total = entity.FormattedValueFor (x => x.Total), 
+				total2 = entity.FormattedValueFor (x => x.TotalEx)
+			});
+		}
+		
+		[HttpPost]
+		public JsonResult SetItemTaxRate (int id, string value)
+		{
+			var entity = FiscalDocumentDetail.Find (id);
+			bool success;
+			decimal val;
+
+			success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out val);
+
+			// TODO: VAT value range validation
+			if (success) {
+				entity.TaxRate = val;
+
+				using (var scope = new TransactionScope()) {
+					entity.Update ();
+				}
+			}
+
+			return Json (new { 
+				id = entity.Id,
+				value = entity.FormattedValueFor (x => x.TaxRate),
+				total = entity.FormattedValueFor (x => x.Total), 
+				total2 = entity.FormattedValueFor (x => x.TotalEx)
+			});
+		}
+
+		[HttpPost]
 		public ActionResult Sign (int id)
 		{
 			FiscalDocument item = FiscalDocument.Find (id);
-			
+
 			if (!item.IsCompleted)
 				return RedirectToAction ("Index");
 
 			var doc = CFDHelpers.SignCFD (item);
-			
+
 			item.OriginalString = doc.ToString ();
 			item.DigitalSeal = doc.sello;
-			
+
 			// save to database
 			using (var scope = new TransactionScope()) {
-            	item.UpdateAndFlush ();
+				item.UpdateAndFlush ();
 			}
 
 			// save to filesystem
 			var filename = string.Format (Resources.Format_FiscalDocumentPath,
-	                                      Server.MapPath (Configuration.FiscalFilesPath),
-                                          item.Issuer.Id, item.Batch, item.Serial);
+			                              Server.MapPath (Configuration.FiscalFilesPath),
+			                              item.Issuer.Id, item.Batch, item.Serial);
 			System.IO.File.WriteAllText (filename, doc.ToXmlString ());
 
 			return RedirectToAction ("Index");
 		}
 
-        [HttpPost]
+		[HttpPost]
 		public ActionResult Confirm (int id)
 		{
 			var item = FiscalDocument.TryFind (id);
@@ -316,13 +851,13 @@ namespace Mictlanix.BE.Web.Controllers
 
 			int serial = (from x in FiscalDocument.Queryable
 			              where x.Issuer.Id == item.Issuer.Id &&
-			              		x.Batch == item.Batch
-                          select x.Serial).Max ().GetValueOrDefault () + 1;
+			              x.Batch == item.Batch
+			              select x.Serial).Max ().GetValueOrDefault () + 1;
 
 			var batch = (from x in item.Issuer.Batches
-						 where x.Batch == item.Batch && 
-							   x.SerialStart <= serial && 
-							   x.SerialEnd >= serial
+			             where x.Batch == item.Batch && 
+			             x.SerialStart <= serial && 
+			             x.SerialEnd >= serial
 			             select x).SingleOrDefault ();
 
 			if (batch == null) {
@@ -334,7 +869,7 @@ namespace Mictlanix.BE.Web.Controllers
 			item.ApprovalNumber = batch.ApprovalNumber;
 			item.ApprovalYear = batch.ApprovalYear;
 			item.CertificateNumber = item.Issuer.Certificates.Single (x => x.IsActive).Id;
-			
+
 			var dt = DateTime.Now;
 			item.Issued = new DateTime (dt.Year, dt.Month, dt.Day,
 			                            dt.Hour, dt.Minute, dt.Second,
@@ -349,21 +884,21 @@ namespace Mictlanix.BE.Web.Controllers
 			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 			item.ModificationTime = DateTime.Now;
 			item.IsCompleted = true;
-			
+
 			using (var scope = new TransactionScope()) {
 				item.UpdateAndFlush ();
 			}
-			
+
 			// save to filesystem
 			var filename = string.Format (Resources.Format_FiscalDocumentPath,
-	                                      Server.MapPath (Configuration.FiscalFilesPath),
-                                          item.Issuer.Id, item.Batch, item.Serial);
+			                              Server.MapPath (Configuration.FiscalFilesPath),
+			                              item.Issuer.Id, item.Batch, item.Serial);
 			System.IO.File.WriteAllText (filename, doc.ToXmlString ());
 
 			return RedirectToAction ("Index");
 		}
-		
-        [HttpPost]
+
+		[HttpPost]
 		public ActionResult Cancel (int id)
 		{
 			var item = FiscalDocument.Find (id);
@@ -371,27 +906,41 @@ namespace Mictlanix.BE.Web.Controllers
 			item.CancellationDate = DateTime.Now;
 			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 			item.ModificationTime = DateTime.Now;
-            item.IsCancelled = true;
+			item.IsCancelled = true;
 
 			using (var scope = new TransactionScope()) {
-            	item.UpdateAndFlush ();
+				item.UpdateAndFlush ();
 			}
 
-            return RedirectToAction("Index");
-        }
+			return RedirectToAction("Index");
+		}
 
 		public ActionResult Download (int id)
 		{
 			var item = FiscalDocument.Find (id);
 			var doc = CFDHelpers.InvoiceToCFD (item);
 			var result = new FileStreamResult (doc.ToXmlStream (), "text/xml");
-			
+
 			result.FileDownloadName = string.Format (Resources.Format_FiscalDocumentName,
 			                                         item.Issuer.Id, item.Batch, item.Serial);
-			
+
 			return result;
 		}
 		
+		public ViewResult Reports ()
+		{
+			var qry = from x in FiscalDocument.Queryable
+					  where x.Issuer.Scheme == FiscalScheme.CFD && x.IsCompleted
+					  orderby x.Issued descending
+					  select new { x.Issuer.Id, x.Issuer.Name, x.Issued.Value.Month, x.Issued.Value.Year };
+			var items = from x in qry.ToList ().Distinct ()
+						select new FiscalReport {
+							TaxpayerId = x.Id, TaxpayerName = x.Name, Month = x.Month, Year = x.Year
+						};
+
+			return View (items.ToList ());
+		}
+
 		public ActionResult Report (string taxpayer, int year, int month)
 		{
 			var ms = new MemoryStream ();
@@ -400,349 +949,46 @@ namespace Mictlanix.BE.Web.Controllers
 			var start = new DateTime (year, month, 1, 0, 0, 0, DateTimeKind.Unspecified);
 			var end = start.AddMonths (1);
 			var qry = from x in FiscalDocument.Queryable
-					  where x.IsCompleted && ((x.Issued >= start && x.Issued < end) ||
-				(x.IsCancelled && x.CancellationDate >= start && x.CancellationDate < end))
-					  select x;
-			
+				where x.IsCompleted && ((x.Issued >= start && x.Issued < end) ||
+				                        (x.IsCancelled && x.CancellationDate >= start && x.CancellationDate < end))
+					select x;
+
 			foreach (var row in CFDHelpers.MonthlyReport(qry.ToList())) {
 				sw.WriteLine (row);
 			}
-			
+
 			sw.Flush ();
 			ms.Seek (0, SeekOrigin.Begin);
 
 			result.FileDownloadName = string.Format (Resources.Format_FiscalReportName,
 			                                         taxpayer, year, month);
-			
+
 			return result;
 		}
-		
-		public ActionResult GetDetail (int id)
-		{
-			return PartialView ("_DetailEditView", FiscalDocumentDetail.Find (id));
-		}
 
-        [HttpPost]
-		public JsonResult AddDetail (int id, int product)
-		{
-			var p = Product.Find (product);
-			var f = FiscalDocument.Find (id);
-			int pl = f.Customer.PriceList.Id;
-			var price = (from x in ProductPrice.Queryable
-			             where x.Product.Id == product && x.List.Id == pl
-			             select x).SingleOrDefault();
-
-			var item = new FiscalDocumentDetail {
-                Document = FiscalDocument.Find (id),
-                Product = p,
-                ProductCode = p.Code,
-                ProductName = p.Name,
-				UnitOfMeasurement = p.UnitOfMeasurement,
-                Discount = 0,
-                TaxRate = p.TaxRate,
-				IsTaxIncluded = false,
-                Quantity = 1,
-				Price = price.Value,
-				ExchangeRate = f.ExchangeRate,
-				Currency = f.Currency
-			};
-
-			if (price.Currency != f.Currency) {
-				item.Price = price.Value * CashHelpers.GetTodayExchangeRate (price.Currency, f.Currency);
-			}
-
-			if (p.IsTaxIncluded) {
-				item.Price = item.Price / (1 + item.TaxRate);
-			}
-
-			using (var scope = new TransactionScope()) {
-				item.CreateAndFlush ();
-			}
-
-			return Json (new { id = item.Id });
-		}
-		
-		[HttpPost]
-		public JsonResult EditDetailProductName (int id, string value)
-		{
-			var detail = FiscalDocumentDetail.Find (id);
-			string val = (value ?? string.Empty).Trim ();
-			
-			if (val.Length > 0) {
-				detail.ProductName = val;
-
-				using (var scope = new TransactionScope()) {
-					detail.Update ();
-				}
-			}
-
-			return Json (new { id = detail.Id, value = detail.ProductName });
-		}
-		
-		[HttpPost]
-		public JsonResult EditDetailProductCode (int id, string value)
-		{
-			var detail = FiscalDocumentDetail.Find (id);
-			string val = string.Format ("{0}", value).Trim ();
-			
-			if (val.Length > 0) {
-				detail.ProductCode = val;
-
-				using (var scope = new TransactionScope()) {
-					detail.Update ();
-				}
-			}
-
-			return Json (new { id = detail.Id, value = detail.ProductCode });
-		}
-		
-		[HttpPost]
-		public JsonResult EditDetailUM (int id, string value)
-		{
-			var detail = FiscalDocumentDetail.Find (id);
-			string val = string.Format ("{0}", value).Trim ();
-			
-			if (val.Length > 0) {
-				detail.UnitOfMeasurement = val;
-
-				using (var scope = new TransactionScope()) {
-					detail.Update ();
-				}
-			}
-
-			return Json (new { id = detail.Id, value = detail.UnitOfMeasurement });
-		}
-
-		[HttpPost]
-		public JsonResult EditDetailQuantity (int id, decimal value)
-		{
-			var entity = FiscalDocumentDetail.Find (id);
-
-			if (entity.OrderDetail != null) {
-				decimal max_qty = entity.Quantity + GetInvoiceableQuantity (entity.OrderDetail.Id);
-
-				if (max_qty < value)
-					value =  max_qty;
-			}
-
-			if (value > 0) {
-				entity.Quantity = value;
-
-				using (var scope = new TransactionScope()) {
-					entity.Update ();
-				}
-			}
-
-			return Json (new { 
-				id = entity.Id,
-				value = entity.FormattedValueFor (x => x.Quantity),
-				subtotal = entity.FormattedValueFor (x => x.Subtotal), 
-				subtotal2 = entity.FormattedValueFor (x => x.SubtotalEx)
-			});
-		}
-
-		[HttpPost]
-		public JsonResult EditDetailPrice (int id, string value)
-		{
-			var entity = FiscalDocumentDetail.Find (id);
-			bool success;
-			decimal val;
-
-			success = decimal.TryParse (value.Trim (),
-			                            System.Globalization.NumberStyles.Currency,
-			                            null, out val);
-
-			if (success && val >= 0) {
-				entity.Price = val;
-
-				using (var scope = new TransactionScope()) {
-					entity.Update ();
-				}
-			}
-
-			return Json (new {
-				id = entity.Id,
-				value = entity.FormattedValueFor (x => x.Price),
-				subtotal = entity.FormattedValueFor (x => x.Subtotal), 
-				subtotal2 = entity.FormattedValueFor (x => x.SubtotalEx)
-			});
-		}
-
-		[HttpPost]
-		public JsonResult EditDetailDiscount (int id, string value)
-		{
-			var entity = FiscalDocumentDetail.Find (id);
-			bool success;
-			decimal val;
-
-			success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out val);
-			val /= 100m;
-
-			if (success && val >= 0 && val <= 1) {
-				entity.Discount = val;
-
-				using (var scope = new TransactionScope()) {
-					entity.Update ();
-				}
-			}
-
-			return Json (new { 
-				id = entity.Id,
-				value = entity.FormattedValueFor (x => x.Discount),
-				subtotal = entity.FormattedValueFor (x => x.Subtotal), 
-				subtotal2 = entity.FormattedValueFor (x => x.SubtotalEx)
-			});
-		}
-		
-		[HttpPost]
-		public JsonResult EditDetailTaxRate (int id, string value)
-		{
-			var entity = FiscalDocumentDetail.Find (id);
-			bool success;
-			decimal val;
-
-			success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out val);
-
-			// TODO: VAT value range validation
-			if (success) {
-				entity.TaxRate = val;
-
-				using (var scope = new TransactionScope()) {
-					entity.Update ();
-				}
-			}
-
-			return Json (new { 
-				id = entity.Id,
-				value = entity.FormattedValueFor (x => x.TaxRate)
-			});
-		}
-
-		public ActionResult GetDetails (int id)
-		{
-			var item = FiscalDocument.Find (id);
-			return PartialView ("_ItemsBlock", item.Details);
-		}
-		
-		[HttpPost]
-		public JsonResult AddOrder (int id, int order)
-		{
-			var doc_entity = FiscalDocument.Find (id);
-			var order_entity = SalesOrder.Find (order);
-			var count = 0;
-
-			using (var scope = new TransactionScope()) {
-				foreach(var x in order_entity.Details) {
-					if (!x.Product.IsInvoiceable)
-						continue;
-					
-					decimal max_qty = GetInvoiceableQuantity (x.Id);
-					
-					if (max_qty <= 0)
-						continue;
-					
-					var item = new FiscalDocumentDetail {
-						Document = doc_entity,
-						Product = x.Product,
-						OrderDetail = x,
-						ProductCode = x.ProductCode,
-						ProductName = x.ProductName,
-						UnitOfMeasurement = x.Product.UnitOfMeasurement,
-						Discount = x.Discount,
-						TaxRate = x.TaxRate,
-						IsTaxIncluded = x.IsTaxIncluded,
-						Quantity = max_qty,
-						Price = x.Price,
-						ExchangeRate = doc_entity.ExchangeRate,
-						Currency = doc_entity.Currency
-					};
-
-					if (x.Currency != doc_entity.Currency) {
-						item.Price = x.Price * x.ExchangeRate;
-					}
-
-					if (x.IsTaxIncluded) {
-						item.Price = item.Price / (1 + item.TaxRate);
-					}
-
-					item.Create ();
-					count++;
-				}
-			}
-			
-			return Json (new { id = id, result = count });
-		}
-
-		public ActionResult GetBatchSelector (string id)
-		{
-			var qry = (from x in TaxpayerBatch.Queryable
-					  where x.Taxpayer.Id == id
-					  select x.Batch).Distinct ();
-			var list = from x in qry.ToList ()
-					   select new SelectListItem {
-							Value = x,
-							Text = x
-					   };
-
-			ViewBag.Items = list.ToList ();
-			
-			return PartialView ("_BatchSelector");
-		}
-		
-        public ActionResult GetTotals (int id)
-        {
-            var order = FiscalDocument.Find(id);
-            return PartialView ("_Totals", order);
-        }
-
-        [HttpPost]
-        public JsonResult RemoveDetail (int id)
-		{
-			var item = FiscalDocumentDetail.Find (id);
-
-			using (var scope = new TransactionScope()) {
-				item.DeleteAndFlush ();
-			}
-
-			return Json (new { id = id, result = true });
-		}
-		
 		public JsonResult GetSuggestions (int id, string pattern)
 		{
-			int pl = FiscalDocument.Queryable.Where(x => x.Id == id)
-					.Select(x => x.Customer.PriceList.Id)
-					.Single();
-			var qry = from x in ProductPrice.Queryable
-					where x.List.Id == pl && (
-						x.Product.Name.Contains (pattern) ||
-						x.Product.Code.Contains (pattern) ||
-						x.Product.Model.Contains (pattern) ||
-						x.Product.SKU.Contains (pattern) ||
-						x.Product.Brand.Contains (pattern))
-					orderby x.Product.Name
-					select new {
-						id = x.Product.Id,
-						name = x.Product.Name,
-						code = x.Product.Code,
-						model = x.Product.Model,
-						sku = x.Product.SKU,
-						url = Url.Content(x.Product.Photo),
-						price = x.Value
-					};
+			int pl = FiscalDocument.Queryable.Where (x => x.Id == id)
+					.Select (x => x.Customer.PriceList.Id).Single ();
+			var query = from x in ProductPrice.Queryable
+						where x.List.Id == pl && (
+							x.Product.Name.Contains (pattern) ||
+							x.Product.Code.Contains (pattern) ||
+							x.Product.Model.Contains (pattern) ||
+							x.Product.SKU.Contains (pattern) ||
+							x.Product.Brand.Contains (pattern))
+						orderby x.Product.Name
+						select new {
+							id = x.Product.Id,
+							name = x.Product.Name,
+							code = x.Product.Code,
+							model = x.Product.Model,
+							sku = x.Product.SKU,
+							url = Url.Content(x.Product.Photo),
+							price = x.Value
+						};
 			
-			return Json (qry.Take(15), JsonRequestBehavior.AllowGet);
-		}
-
-		public JsonResult GetOrders (string pattern)
-		{
-			int id = 0;
-			int.TryParse(pattern, out id);
-			var qry = from x in SalesOrder.Queryable
-					  where x.IsCompleted && !x.IsCancelled &&
-						    x.IsPaid && x.Id == id
-					  select new { id = x.Id, name = string.Format("{0:00000} ({1})", x.Id, x.Date) };
-			
-			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
+			return Json (query.Take (15), JsonRequestBehavior.AllowGet);
 		}
 
 		decimal GetInvoiceableQuantity (int id)
@@ -770,23 +1016,6 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 			
 			return quantity > 0 ? quantity : 0;
-		}
-		
-		// FIXME: ugly performance
-		public ViewResult Reports ()
-		{
-			var items = (from x in FiscalDocument.Queryable
-			             where x.Issuer.Scheme == FiscalScheme.CFD && 
-		             			x.IsCompleted
-			             select new FiscalReport {
-							TaxpayerId = x.Issuer.Id,
-							TaxpayerName = x.Issuer.Name,
-							Month = x.Issued.Value.Month,
-							Year = x.Issued.Value.Year
-						}).ToList().Distinct ()
-						.OrderByDescending (x => x.Year).OrderByDescending (x => x.Month);
-			
-			return View (items.ToList ());
 		}
     }
 }

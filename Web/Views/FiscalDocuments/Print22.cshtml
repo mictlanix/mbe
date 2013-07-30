@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Models
 @using Mictlanix.BE.Web.Helpers
@@ -56,7 +56,7 @@
         <td class="center line">@Html.DisplayFor(x => item.UnitOfMeasurement)</td>
         <td class="center line">@Html.DisplayFor(x => item.ProductCode)</td>
         <td class="line">@Html.DisplayFor(x => item.ProductName)</td>
-        <td class="number line">@Html.DisplayFor(x => item.Price)</td>
+        <td class="number line">@Html.DisplayFor(x => item.NetPrice)</td>
         <td class="number line">@Html.DisplayFor(x => item.TaxRate)</td>
         <td class="number line">@Html.DisplayFor(x => item.Subtotal)</td>
     </tr>
@@ -103,6 +103,7 @@
     @Html.LabelFor(x => x.IssuerRegime):
     @Html.DisplayFor(x => x.IssuerRegime)
 </div>
+
 <div class="right">@Resources.FiscalDocumentLegend</div>
 <script type="text/javascript">
 	$(function() {
