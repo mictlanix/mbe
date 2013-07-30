@@ -39,6 +39,8 @@ namespace Mictlanix.BE.Web.Helpers
 {
 	internal static class CFDHelpers
 	{
+		public static readonly DateTime FIX_DATE = new DateTime (2013, 7, 30, 0, 0, 0);
+
 		public static dynamic SignCFD (FiscalDocument item)
 		{
 			var cfd = InvoiceToCFD (item);
@@ -134,7 +136,7 @@ namespace Mictlanix.BE.Web.Helpers
                     noIdentificacion = detail.ProductCode,
                     descripcion = detail.ProductName,
                     valorUnitario = detail.NetPrice,
-                    importe = detail.Subtotal
+					importe = (!item.Issued.HasValue || item.Issued > FIX_DATE ? detail.Subtotal :  detail.Total) // FIXME: CFD Total -> Subtotal
                 };
 			}
 
@@ -235,7 +237,7 @@ namespace Mictlanix.BE.Web.Helpers
                     noIdentificacion = detail.ProductCode,
                     descripcion = detail.ProductName,
                     valorUnitario = detail.NetPrice,
-                    importe = detail.Subtotal
+					importe = (!item.Issued.HasValue || item.Issued > FIX_DATE ? detail.Subtotal :  detail.Total) // FIXME: CFD Total -> Subtotal
                 };
 			}
 
