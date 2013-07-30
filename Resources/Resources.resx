@@ -1058,9 +1058,6 @@ Vencimiento: {0:d}</value>
   <data name="OriginalString" xml:space="preserve">
     <value>Cadena Original</value>
   </data>
-  <data name="DigitalSeal" xml:space="preserve">
-    <value>Sello Digital</value>
-  </data>
   <data name="Title_Taxpayer" xml:space="preserve">
     <value>Razones Sociales</value>
   </data>
@@ -1748,5 +1745,23 @@ Realizada el: {0:d}</value>
   </data>
   <data name="InvoiceableItemsNotFound" xml:space="preserve">
     <value>No se encontraron registros facturables.</value>
+  </data>
+  <data name="IssuerDigitalSeal" xml:space="preserve">
+    <value>Sello Digital del Emisor</value>
+  </data>
+  <data name="AuthorityDigitalSeal" xml:space="preserve">
+    <value>Sello Digital del SAT</value>
+  </data>
+  <data name="AuthorityCertificateNumber" xml:space="preserve">
+    <value>Certificado Digital SAT</value>
+  </data>
+  <data name="StampDate" xml:space="preserve">
+    <value>Fecha de Certificación</value>
+  </data>
+  <data name="StampId" xml:space="preserve">
+    <value>Folio Fiscal</value>
+  </data>
+  <data name="FiscalDocumentLegendV3" xml:space="preserve">
+    <value>Este documento es una representación impresa de un CFDI.</value>
   </data>
 </root>

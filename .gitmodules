@@ -1,3 +1,6 @@
 [submodule "CFDLib"]
 	path = CFDLib
 	url = git@github.com:mictlanix/cfdlib.git
+[submodule "DiverzaClient"]
+	path = DiverzaClient
+	url = git@github.com:mictlanix/diverza-client.git

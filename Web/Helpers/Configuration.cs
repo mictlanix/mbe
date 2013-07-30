@@ -150,6 +150,22 @@ namespace Mictlanix.BE.Web.Helpers
 		public static string Language {
 			get { return CultureInfo.CurrentCulture.TwoLetterISOLanguageName; }
 		}
+		
+		public static string DiverzaUrl {
+			get { return ConfigurationManager.AppSettings ["DiverzaUrl"]; }
+		}
+		
+		public static string DiverzaCert {
+			get { return ConfigurationManager.AppSettings ["DiverzaCert"]; }
+		}
+
+		public static string DiverzaCertPasswd {
+			get { return ConfigurationManager.AppSettings ["DiverzaCertPasswd"]; }
+		}
+
+		public static string DiverzaPartnerCode {
+			get { return ConfigurationManager.AppSettings ["DiverzaPartnerCode"]; }
+		}
 
 		#endregion
 		

@@ -81,12 +81,12 @@
 <p class="right">@Resources.SinglePayment</p>
 
 <div id="digital-signature">
-	@Html.LabelFor(x => x.DigitalSeal)<br/>
-	@Html.DisplayFor(x => x.DigitalSeal)<br/>
+	@Html.LabelFor(x => x.IssuerDigitalSeal)<br/>
+	@Html.DisplayFor(x => x.IssuerDigitalSeal)<br/>
 	@Html.LabelFor(x => x.OriginalString)<br/>
 	@Html.DisplayFor(x => x.OriginalString)<br/>
-	@Html.LabelFor(x => x.CertificateNumber)
-	@Html.DisplayFor(x => x.CertificateNumber)
+	@Html.LabelFor(x => x.IssuerCertificateNumber)
+	@Html.DisplayFor(x => x.IssuerCertificateNumber)
 	@Html.LabelFor(x => x.ApprovalNumber)
 	@Html.DisplayFor(x => x.ApprovalNumber)
 	@Html.LabelFor(x => x.ApprovalYear)

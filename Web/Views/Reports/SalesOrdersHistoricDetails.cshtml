@@ -3,27 +3,31 @@
 @using Mictlanix.BE.Web.Helpers;
 @model SalesOrder
 
-<h2>@Resources.Details</h2>
+<h2>@Resources.SalesOrder</h2>
 
 <div id="master-section">
-	@Html.Partial("../Sales/_MasterView")
+	@Html.Partial("../SalesOrders/_DisplayView")
 </div>
 
 <div id="details-section">
     <div id="items-container">
         <ul id="items" class="list-items">
-        @foreach (var item in Model.Details)
-        {
-            @Html.Partial("../Sales/_DetailView", item) 
+        @foreach (var item in Model.Details) {
+            @Html.Partial("../SalesOrders/_ItemDisplayView", item) 
         }
         </ul>
     </div>
 </div>
-<div id="totals-section" class="right floating" style="width:300px">
-    @Html.Partial("../Sales/_Totals")
+<div id='totals-section' class='pull-right'>
+    @Html.Partial("../SalesOrders/_Totals")
 </div>
-
-<div id="back-to-list" style="clear:both">
+<div class='clearfix'></div>
+<div id='back-to-list' class='pull-left'>
     @Html.ActionLink(Resources.BackToList, "SalesOrdersHistoric", new { }, new { @class = "button icon back" })
 </div>
-
+<div class='clearfix'></div>
+<script type='text/javascript'>
+$(function () {
+	$('[data-toggle="tooltip"]').tooltip();
+});
+</script>

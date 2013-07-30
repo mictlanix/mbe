@@ -138,6 +138,7 @@
     <Compile Include="Label.cs" />
     <Compile Include="Constants\PriceType.cs" />
     <Compile Include="Constants\PaymentTerms.cs" />
+    <Compile Include="FiscalDocumentXml.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">

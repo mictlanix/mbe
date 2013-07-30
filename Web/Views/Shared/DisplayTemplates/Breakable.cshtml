@@ -1,2 +1,2 @@
 ﻿@model string
-@foreach (char c in Model) {<text>@c&#8203;</text>}
+@foreach (char c in Model ?? "") {<text>@c&#8203;</text>}

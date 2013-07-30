@@ -727,15 +727,6 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sello Digital.
-        /// </summary>
-        public static string DigitalSeal {
-            get {
-                return ResourceManager.GetString("DigitalSeal", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Descartar.
         /// </summary>
         public static string Discard {
@@ -4653,6 +4644,42 @@ namespace Mictlanix.BE {
 		public static string InvoiceableItemsNotFound {
 			get {
 				return ResourceManager.GetString("InvoiceableItemsNotFound", resourceCulture);
+			}
+		}
+
+		public static string IssuerDigitalSeal {
+			get {
+				return ResourceManager.GetString("IssuerDigitalSeal", resourceCulture);
+			}
+		}
+
+		public static string AuthorityDigitalSeal {
+			get {
+				return ResourceManager.GetString("AuthorityDigitalSeal", resourceCulture);
+			}
+		}
+
+		public static string AuthorityCertificateNumber {
+			get {
+				return ResourceManager.GetString("AuthorityCertificateNumber", resourceCulture);
+			}
+		}
+
+		public static string StampDate {
+			get {
+				return ResourceManager.GetString("StampDate", resourceCulture);
+			}
+		}
+
+		public static string StampId {
+			get {
+				return ResourceManager.GetString("StampId", resourceCulture);
+			}
+		}
+
+		public static string FiscalDocumentLegendV3 {
+			get {
+				return ResourceManager.GetString("FiscalDocumentLegendV3", resourceCulture);
 			}
 		}
     }
