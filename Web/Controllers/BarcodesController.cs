@@ -36,6 +36,8 @@ using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using Mictlanix.BE.Web.Utils;
+using Gma.QrCodeNet.Encoding;
+using Gma.QrCodeNet.Encoding.Windows.Render;
 
 namespace Mictlanix.BE.Web.Controllers
 {
@@ -47,6 +49,30 @@ namespace Mictlanix.BE.Web.Controllers
 			var img = Code128Rendering.MakeBarcodeImage (id, 2, false);
 			
 			img.Save (ms, ImageFormat.Png);
+			ms.Seek (0, SeekOrigin.Begin);
+			var result = new FileStreamResult (ms, "image/png");
+			result.FileDownloadName = string.Format ("{0}.png", id);
+
+			return result;
+		}
+
+		public ActionResult QRCode (string id)
+		{
+			return QRCodeAction (id);
+		}
+
+		internal static ActionResult QRCodeAction (string id)
+		{
+			var encoder = new QrEncoder ();
+			var ms = new MemoryStream (4 * 1024);
+			var render = new GraphicsRenderer(new FixedCodeSize(300, QuietZoneModules.Zero));
+			QrCode code;
+
+			if (!encoder.TryEncode(id, out code))
+				return null;
+
+			render.WriteToStream (code.Matrix, ImageFormat.Png, ms, new Point(300, 300));
+
 			ms.Seek (0, SeekOrigin.Begin);
 			var result = new FileStreamResult (ms, "image/png");
 			result.FileDownloadName = string.Format ("{0}.png", id);

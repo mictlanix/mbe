@@ -106,6 +106,9 @@
       <HintPath>..\Packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="System.Numerics" />
+    <Reference Include="Gma.QrCodeNet.Encoding">
+      <HintPath>..\Packages\QrCode.Net.0.4.0.0\lib\net35\Gma.QrCodeNet.Encoding.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Model\Mictlanix.BE.Model.csproj">
@@ -119,6 +122,10 @@
     <ProjectReference Include="..\CFDLib\Mictlanix.CFDLib.csproj">
       <Project>{63EBACD8-7BB0-480F-81BF-5E0690B27112}</Project>
       <Name>Mictlanix.CFDLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DiverzaClient\Mictlanix.DiverzaClient\Mictlanix.DiverzaClient.csproj">
+      <Project>{342326A6-0782-4544-8664-D8D9734E1235}</Project>
+      <Name>Mictlanix.DiverzaClient</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -695,6 +702,8 @@
     <Content Include="Views\FiscalDocuments\Print20.cshtml" />
     <Content Include="Views\FiscalDocuments\Print22.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Breakable.cshtml" />
+    <Content Include="Views\FiscalDocuments\Print32.cshtml" />
+    <Content Include="Views\FiscalDocuments\Print00.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

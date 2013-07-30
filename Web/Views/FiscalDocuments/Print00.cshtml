@@ -1,4 +1,4 @@
-@using Mictlanix.BE
+﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Models
 @using Mictlanix.BE.Web.Helpers
@@ -14,18 +14,18 @@
 }
 
 <div class="display-label right floating">
-	<h3>@Html.DisplayFor(x => x.Batch) @Html.DisplayFor(x => x.Serial)</h3>
-</div>
-<div class="display-label right floating">
-    @Html.LabelFor(x => x.Issued)<br/>
-    @Html.DisplayFor(x => x.Issued)<br/>
-    @Html.LabelFor(x => x.IssuedLocation)<br/>
-    @Html.DisplayFor(x => x.IssuedLocation)
+	<h3>@Html.LabelFor(x => x.Id) @Html.DisplayFor(x => x.Id)</h3>
 </div>
 
 <div class="display-label">
     <h3>@Html.LabelFor(x => x.Recipient)</h3>
 </div>
+
+<div class="display-label right floating">
+    @Html.LabelFor(x => x.IssuedLocation)<br/>
+    @Html.DisplayFor(x => x.IssuedLocation)
+</div>
+
 <div class="display-field">
     @Html.LabelFor(x => x.Recipient.Id)
     @Html.DisplayFor(x => x.Recipient.Id)<br/>
@@ -39,6 +39,8 @@
     @Html.DisplayFor(x => x.RecipientAddress.Country),
     @Html.DisplayFor(x => x.RecipientAddress.PostalCode)
 </div>
+
+<div class="clearfix"></div>
 
 <table>
     <tr>
@@ -90,24 +92,8 @@
 	}
 </div>
 
-<div id="digital-signature">
-	@Html.LabelFor(x => x.IssuerDigitalSeal)<br/>
-	@Html.DisplayFor(x => x.IssuerDigitalSeal)<br/>
-	@Html.LabelFor(x => x.OriginalString)<br/>
-	@Html.DisplayFor(x => x.OriginalString)<br/>
-	@Html.LabelFor(x => x.IssuerCertificateNumber)
-	@Html.DisplayFor(x => x.IssuerCertificateNumber)
-	@Html.LabelFor(x => x.ApprovalNumber)
-	@Html.DisplayFor(x => x.ApprovalNumber)
-	@Html.LabelFor(x => x.ApprovalYear)
-	@Html.DisplayFor(x => x.ApprovalYear)<br/>
-    @Html.LabelFor(x => x.IssuerRegime):
-    @Html.DisplayFor(x => x.IssuerRegime)
-</div>
-
-<div class="right">@Resources.FiscalDocumentLegend</div>
 <script type="text/javascript">
 	$(function() {
-        window.print();
+        //window.print();
 	});
 </script>

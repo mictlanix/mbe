@@ -166,20 +166,37 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "ApprovalYear", ResourceType = typeof(Resources))]
 		public virtual int? ApprovalYear { get; set; }
 		
-		[Property("certificate_number")]
+		[Property("issuer_certificate_number")]
 		[Display(Name = "CertificateNumber", ResourceType = typeof(Resources))]
 		[DisplayFormat(DataFormatString="{0:00000000000000000000}")]
-		public virtual ulong? CertificateNumber { get; set; }
+		public virtual ulong? IssuerCertificateNumber { get; set; }
 		
 		[Property("original_string")]
 		[UIHint("Breakable")]
 		[Display(Name = "OriginalString", ResourceType = typeof(Resources))]
 		public virtual string OriginalString { get; set; }
 
-		[Property("digital_seal")]
+		[Property("stamp_uuid")]
+		[Display(Name = "StampId", ResourceType = typeof(Resources))]
+		public virtual string StampId { get; set; }
+
+		[Property]
+		[Display(Name = "StampDate", ResourceType = typeof(Resources))]
+		public virtual DateTime? Stamped { get; set; }
+
+		[Property("issuer_digital_seal")]
 		[UIHint("Breakable")]
-		[Display(Name = "DigitalSeal", ResourceType = typeof(Resources))]
-		public virtual string DigitalSeal { get; set; }
+		[Display(Name = "IssuerDigitalSeal", ResourceType = typeof(Resources))]
+		public virtual string IssuerDigitalSeal { get; set; }
+		
+		[Property("authority_digital_seal")]
+		[UIHint("Breakable")]
+		[Display(Name = "AuthorityDigitalSeal", ResourceType = typeof(Resources))]
+		public virtual string AuthorityDigitalSeal { get; set; }
+
+		[Property("authority_certificate_number")]
+		[Display(Name = "AuthorityCertificateNumber", ResourceType = typeof(Resources))]
+		public virtual string AuthorityCertificateNumber { get; set; }
 
         [Property("payment_method")]
         [Display(Name = "PaymentMethod", ResourceType = typeof(Resources))]
