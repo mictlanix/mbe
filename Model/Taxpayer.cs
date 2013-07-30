@@ -35,7 +35,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Mictlanix.BE.Model
 {   
-    [ActiveRecord("taxpayer")]
+	[ActiveRecord("taxpayer", Lazy = true)]
     public class Taxpayer : ActiveRecordLinqBase<Taxpayer>
     {
 		IList<TaxpayerBatch> batches = new List<TaxpayerBatch>();
@@ -49,29 +49,29 @@ namespace Mictlanix.BE.Model
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(13, MinimumLength = 12, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "TaxpayerId", ResourceType = typeof(Resources))]
-        public string Id { get; set; }
+		public virtual string Id { get; set; }
 		
         [Property]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(250, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "TaxpayerName", ResourceType = typeof(Resources))]
-        public string Name { get; set; }
+		public virtual string Name { get; set; }
 
 		[Property]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(250, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "TaxRegime", ResourceType = typeof(Resources))]
-        public string Regime { get; set; }
+		public virtual string Regime { get; set; }
 
 		[Property]
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
 		[Display(Name = "Scheme", ResourceType = typeof(Resources))]
-		public FiscalScheme Scheme { get; set; }
+		public virtual FiscalScheme Scheme { get; set; }
 
 		[Property]
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
 		[Display(Name = "Provider", ResourceType = typeof(Resources))]
-		public FiscalCertificationProvider Provider { get; set; }
+		public virtual FiscalCertificationProvider Provider { get; set; }
 		
 		[Display(Name = "Address", ResourceType = typeof(Resources))]
 		public virtual bool HasAddress { get; set; }
@@ -81,13 +81,13 @@ namespace Mictlanix.BE.Model
 		public virtual Address Address { get; set; }
 		
 		[HasMany(typeof(TaxpayerCertificate), Table = "taxpayer_certificate", ColumnKey = "taxpayer", Lazy = true)]
-		public IList<TaxpayerCertificate> Certificates {
+		public virtual IList<TaxpayerCertificate> Certificates {
 			get { return certificates; }
 			set { certificates = value; }
 		}
 
 		[HasMany(typeof(TaxpayerBatch), Table = "taxpayer_document", ColumnKey = "taxpayer", Lazy = true)]
-		public IList<TaxpayerBatch> Batches {
+		public virtual IList<TaxpayerBatch> Batches {
 			get { return batches; }
 			set { batches = value; }
 		}

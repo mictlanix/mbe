@@ -34,7 +34,12 @@ namespace Mictlanix.BE.Model
 {
 	public static class ModelHelpers
 	{
-		public static decimal Round (decimal d)
+		public static decimal PriceRounding (decimal d)
+		{
+			return Math.Round (d, 6, MidpointRounding.AwayFromZero);
+		}
+
+		public static decimal TotalRounding (decimal d)
 		{
 			return Math.Round (d, 2, MidpointRounding.AwayFromZero);
 		}
@@ -43,9 +48,9 @@ namespace Mictlanix.BE.Model
 		                                decimal discount, decimal taxRate, bool taxIncluded)
 		{
 			if (taxIncluded) {
-				return Round (quantity * price * exchangeRate * (1m - discount) / (1m + taxRate));
+				return TotalRounding (quantity * price * exchangeRate * (1m - discount) / (1m + taxRate));
 			} else {
-				return Round (quantity * price * exchangeRate * (1m - discount));
+				return TotalRounding (quantity * price * exchangeRate * (1m - discount));
 			}
 		}
 
@@ -53,9 +58,9 @@ namespace Mictlanix.BE.Model
 		                             decimal discount, decimal taxRate, bool taxIncluded)
 		{
 			if (taxIncluded) {
-				return Round (quantity * price * exchangeRate * (1m - discount));
+				return TotalRounding (quantity * price * exchangeRate * (1m - discount));
 			} else {
-				return Round (quantity * price * exchangeRate * (1m - discount) * (1m + taxRate));
+				return TotalRounding (quantity * price * exchangeRate * (1m - discount) * (1m + taxRate));
 			}
 		}
 	}

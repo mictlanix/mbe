@@ -133,11 +133,12 @@ namespace Mictlanix.BE.Web.Helpers
                     unidad = detail.UnitOfMeasurement,
                     noIdentificacion = detail.ProductCode,
                     descripcion = detail.ProductName,
-                    valorUnitario = detail.Price,
-                    importe = detail.Total
+                    valorUnitario = detail.NetPrice,
+                    importe = detail.Subtotal
                 };
 			}
 
+			// TODO: VAT Summaries
 			cfd.Impuestos.Traslados [0] = new Mictlanix.CFDv20.ComprobanteImpuestosTraslado
             {
                 impuesto = Mictlanix.CFDv20.ComprobanteImpuestosTrasladoImpuesto.IVA,
@@ -233,11 +234,12 @@ namespace Mictlanix.BE.Web.Helpers
                     unidad = detail.UnitOfMeasurement,
                     noIdentificacion = detail.ProductCode,
                     descripcion = detail.ProductName,
-                    valorUnitario = Math.Round (detail.Price, 6, MidpointRounding.AwayFromZero),
-                    importe = detail.Total
+                    valorUnitario = detail.NetPrice,
+                    importe = detail.Subtotal
                 };
 			}
 
+			// TODO: VAT Summaries
 			cfd.Impuestos.Traslados [0] = new Mictlanix.CFDv22.ComprobanteImpuestosTraslado
             {
                 impuesto = Mictlanix.CFDv22.ComprobanteImpuestosTrasladoImpuesto.IVA,

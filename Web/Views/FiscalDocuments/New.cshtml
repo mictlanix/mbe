@@ -7,135 +7,79 @@
     ViewBag.Title = Resources.Title_NewInvoice;
 }
 
-<link href="@Url.Content("~/Content/selection-options.css")" rel="stylesheet" type="text/css" />
-
 <h2>@Resources.DisplayName_NewInvoice</h2> 
 
-<div id="sales-invoice">
-    <fieldset>
-        <legend>@Resources.DisplayName_InvoiceInformation</legend>
-            @using (Html.BeginForm())
-            {
-                @Html.ValidationSummary(true)
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+    
+    <div class='control-group'>
+		<div class='row-fluid'>
+		    <div class="span12">@Html.LabelFor(x => x.Issuer)</div>
+	    </div>
+		<div class='row-fluid'>
+		    <div class="span12">
+		        @Html.EditorFor(x => x.IssuerId)
+		        @Html.ValidationMessageFor(x => x.IssuerId)
+		    </div>
+	    </div>
+		<div class='row-fluid'>
+		    <div class="span12">@Html.LabelFor(x => x.Customer)</div>
+	    </div>
+		<div class='row-fluid'>
+		    <div class="span12">
+		        @Html.EditorFor(x => x.CustomerId)
+		        @Html.ValidationMessageFor(x => x.CustomerId)
+		    </div>
+	    </div>
 
-                <div class="editor-field">
-                    @Html.LabelFor(x => x.Issuer)
-                    @Html.TextBoxFor(x => x.IssuerId)
-                    @Html.ValidationMessageFor(x => x.IssuerId)
-                </div>
-                
-                <div id="div-batch" class="editor-field"></div>
-
-                <div class="editor-field">
-                    @Html.LabelFor(x => x.Customer)
-                    @Html.EditorFor(x => x.CustomerId)
-                    @Html.ValidationMessageFor(x => x.CustomerId)
-                </div>
-
-                <div class="editor-field">
-                    @Html.LabelFor(x => x.Recipient)
-                    @Html.EditorFor(x => x.RecipientId)
-                    @Html.ValidationMessageFor(x => x.RecipientId)
-                </div>
-                
-	            <div class="editor-field">
-	                @Html.LabelFor(x => x.Currency) /
-	                @Html.LabelFor(x => x.ExchangeRate)<br>
-		            <select id="status-list" name="Currency">
-		                @foreach (var item in Enum.GetValues(typeof(CurrencyCode))) {
-		                    <option value="@((int)item)">@(item)</option>
-		                }
-		            </select>
-	                @Html.TextBoxFor(x => x.ExchangeRate, new { @class = "number short" })
-	            </div>
-	            
-	            <div class="editor-field">
-	                @Html.LabelFor(x => x.Reference)<br/>
-	                @Html.EditorFor(x => x.Reference)
-	            </div>
-	            
-		        <div class="editor-field">
-	                @Html.LabelFor(x => x.PaymentMethod)<br/>
-		        	@Html.EditorFor(x => x.PaymentMethod)
-		        </div>
-
-		        <div id="reference" style="display:none">
-		            <div class="editor-label">
-		                @Html.LabelFor(x => x.PaymentReference)
-		            </div>
-		            <div class="editor-field">
-		                @Html.EditorFor(x => x.PaymentReference)
-		            </div>
-		        </div>
-
-                <div class="action-buttons">
-                    <button type="submit" class="icon save">@Resources.Save</button>
-                </div>
-            }
-    </fieldset>
-</div>
-<div id="back-to-list">
-    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
-</div>
-<style type="text/css">
-ul.token-input-list {
-  width:100%;
+		<div class='row-fluid'>
+		    <div class="span12">@Html.LabelFor(x => x.Recipient)</div>
+	    </div>
+		<div class='row-fluid'>
+		    <div class="span12">
+		        @Html.EditorFor(x => x.RecipientId)
+		        @Html.ValidationMessageFor(x => x.RecipientId)
+		    </div>
+	    </div>
+    </div>
+	<div class='row-fluid'>
+	    <div class="span2">
+		    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+	    </div>
+	    <div class="span2 text-right pull-right">
+	        <button type="submit" class="icon save">@Resources.Save</button>
+	    </div>
+    </div>
 }
+<style type="text/css">
+ul.token-input-list { width:100%; }
+div.token-input-dropdown {width:650px;}
 </style>
-<script type="text/javascript">
-    $(function () {
-        $("#IssuerId").tokenInput("@Url.Action("GetSuggestions", "Taxpayers")", {
-            hintText: "@Resources.HIntText",
-            noResultsText: "@Resources.NoResultsText",
-            searchingText: "@Resources.SearchingText",
-            queryParam: "pattern",
-            minChars: 1,
-            tokenLimit: 1,
-            onAdd: function (item) {
-                $.get('@Url.Action("GetBatchSelector")/' + item.id, function (data) {
-		            $("#div-batch").html(data);
-		        });
-            },
-            onDelete: function (item){
-                $("#div-batch").html(null);
-            }
-        });
-        
-        @if (Model.Issuer != null) {
-        <text>
-        $('#IssuerId').tokenInput('add', { id: '@Model.Issuer.Id', name: '@string.Format("{1} ({0})", Model.Issuer.Id, Model.Issuer.Name)'});
-        $('#Batch').delay(500).val('@Model.Batch');
-        </text>
-        }
-        
-        $("#RecipientId").tokenInput(function() {
-			var customer = $("#CustomerId").tokenInput("get")[0];
-			
-			if(typeof(customer) === "undefined") {
-				customer = {id : 0};
-			}
-			
-			return '@Url.Action("ListTaxpayers", "Customers", new { id = 0 })' + customer.id;
-		}, {
-            hintText: "@Resources.HIntText",
-            noResultsText: "@Resources.NoResultsText",
-            searchingText: "@Resources.SearchingText",          
-            queryParam: "pattern",minChars: 3,tokenLimit: 1
-        });
-        
-        $('#PaymentMethod').change(function() {
-            var status = $('#PaymentMethod').val();
-            
-            if (status === '0' || status === '1') {
-                $('#reference').hide('slow');
-            } else {
-                $('#reference').show('slow');
-            }
-        });
-        
-        $('form').submit(function(){
-            $('button.save').attr('disabled', 'disabled');
-		    $('button.save').html('@Resources.PleaseWait');
-		});
+<script type='text/javascript'>
+function getUrl() {
+	var customer = $('#CustomerId').tokenInput('get')[0];
+	if(typeof(customer) === 'undefined') {
+		customer = {id : 0};
+	}
+	return '@Url.Action("ListTaxpayers", "Customers", new { id = 0 })' + customer.id;
+}
+$(function () {        
+    $('#RecipientId').tokenInput(getUrl, {
+        hintText: "@Resources.HIntText",
+        noResultsText: "@Resources.NoResultsText",
+        searchingText: "@Resources.SearchingText",          
+        queryParam: "pattern",minChars: 0,tokenLimit: 1
     });
+    
+    $('form').submit(function(){
+    	var count = $("#IssuerId").tokenInput("get").length +
+    				$("#CustomerId").tokenInput("get").length +
+    				$("#RecipientId").tokenInput("get").length;
+    	
+    	if(count != 3) return false;
+
+        $('button.save').prop('disabled', true);
+	    $('button.save').html('@Resources.PleaseWait');
+	});
+});
 </script>

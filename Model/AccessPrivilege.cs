@@ -34,11 +34,11 @@ using Castle.ActiveRecord.Framework;
 
 namespace Mictlanix.BE.Model
 {
-    [ActiveRecord("access_privilege")]
+	[ActiveRecord("access_privilege", Lazy = true)]
     public class AccessPrivilege : ActiveRecordLinqBase<AccessPrivilege>
     {
         [PrimaryKey(PrimaryKeyType.Identity, "access_privilege_id")]
-        public int Id { get; set; }
+		public virtual int Id { get; set; }
 
         [BelongsTo("user")]
         [Display(Name = "User", ResourceType = typeof(Resources))]
@@ -47,32 +47,32 @@ namespace Mictlanix.BE.Model
         [Property()]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "SystemObject", ResourceType = typeof(Resources))]
-        public SystemObjects Object { get; set; }
+		public virtual SystemObjects Object { get; set; }
 
         [Property]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "Privileges", ResourceType = typeof(Resources))]
-        public AccessRight Privileges { get; set; }
+		public virtual AccessRight Privileges { get; set; }
 
-        public bool AllowCreate
+		public virtual bool AllowCreate
         {
             get { return (Privileges & AccessRight.Create) == AccessRight.Create; }
             set { Privileges = value ? Privileges | AccessRight.Create : Privileges & ~AccessRight.Create; }
         }
 
-        public bool AllowRead
+		public virtual bool AllowRead
         {
             get { return (Privileges & AccessRight.Read) == AccessRight.Read; }
             set { Privileges = value ? Privileges | AccessRight.Read : Privileges & ~AccessRight.Read; }
         }
 
-        public bool AllowUpdate
+		public virtual bool AllowUpdate
         {
             get { return (Privileges & AccessRight.Update) == AccessRight.Update; }
             set { Privileges = value ? Privileges | AccessRight.Update : Privileges & ~AccessRight.Update; }
         }
 
-        public bool AllowDelete
+		public virtual bool AllowDelete
         {
             get { return (Privileges & AccessRight.Delete) == AccessRight.Delete; }
             set { Privileges = value ? Privileges | AccessRight.Delete : Privileges & ~AccessRight.Delete; }

@@ -36,34 +36,34 @@ using Mictlanix.BE.Model.Validation;
 
 namespace Mictlanix.BE.Model
 {
-    [ActiveRecord("supplier_agreement")]
+	[ActiveRecord("supplier_agreement", Lazy = true)]
     public class SupplierAgreement : ActiveRecordLinqBase<SupplierAgreement>
     {
         [PrimaryKey(PrimaryKeyType.Identity, "supplier_agreement_id")]
-        public int Id { get; set; }
+		public virtual int Id { get; set; }
 
         [Property]
         [DataType(DataType.Date)]
         [Display(Name = "Start", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        public DateTime? Start { get; set; }
+		public virtual DateTime? Start { get; set; }
 
         [Property]
         [DataType(DataType.Date)]
         [Display(Name = "End", ResourceType = typeof(Resources))]
         [DateGreaterThan("Start", ErrorMessageResourceName = "Validation_DateGreaterThan", ErrorMessageResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        public DateTime? End { get; set; }
+		public virtual DateTime? End { get; set; }
 
         [Property]
         [Display(Name = "Comment", ResourceType = typeof(Resources))]
         [DataType(DataType.MultilineText)]
         [StringLength(500, MinimumLength = 0)]
-        public string Comment { get; set; }
+		public virtual string Comment { get; set; }
 
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "Supplier", ResourceType = typeof(Resources))]
-        public int SupplierId { get; set; }
+		public virtual int SupplierId { get; set; }
 
         [BelongsTo("supplier", Lazy = FetchWhen.OnInvoke)]
         [Display(Name = "Supplier", ResourceType = typeof(Resources))]

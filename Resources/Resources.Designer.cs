@@ -3985,15 +3985,6 @@ namespace Mictlanix.BE {
 		}
 		
 		/// <summary>
-		///   Looks up a localized string similar to No se encontraron registros facturables.
-		/// </summary>
-		public static string Message_NoInvoiceableItems {
-			get {
-				return ResourceManager.GetString("Message_NoInvoiceableItems", resourceCulture);
-			}
-		}
-		
-		/// <summary>
 		///   Looks up a localized string similar to Espere, por favor...
 		/// </summary>
 		public static string PleaseWait {
@@ -4632,6 +4623,36 @@ namespace Mictlanix.BE {
 		public static string DateTimeFormatString {
 			get {
 				return ResourceManager.GetString("DateTimeFormatString", resourceCulture);
+			}
+		}
+
+		public static string BatchRangeNotFound {
+			get {
+				return ResourceManager.GetString("BatchRangeNotFound", resourceCulture);
+			}
+		}
+
+		public static string TaxpayerNotFound {
+			get {
+				return ResourceManager.GetString("TaxpayerNotFound", resourceCulture);
+			}
+		}
+
+		public static string PaymentReferenceNotRequired {
+			get {
+				return ResourceManager.GetString("PaymentReferenceNotRequired", resourceCulture);
+			}
+		}
+
+		public static string SalesOrderNotFound {
+			get {
+				return ResourceManager.GetString("SalesOrderNotFound", resourceCulture);
+			}
+		}
+
+		public static string InvoiceableItemsNotFound {
+			get {
+				return ResourceManager.GetString("InvoiceableItemsNotFound", resourceCulture);
 			}
 		}
     }
