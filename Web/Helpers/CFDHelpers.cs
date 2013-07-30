@@ -32,8 +32,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.IO;
 using System.Text;
+using System.Security.Cryptography.X509Certificates;
 using Mictlanix.BE.Model;
 using Mictlanix.CFDLib;
+using Mictlanix.DiverzaClient;
 
 namespace Mictlanix.BE.Web.Helpers
 {
@@ -44,9 +46,31 @@ namespace Mictlanix.BE.Web.Helpers
 		public static dynamic SignCFD (FiscalDocument item)
 		{
 			var cfd = InvoiceToCFD (item);
-			var cer = item.Issuer.Certificates.Single (x => x.Id == item.CertificateNumber);
+			var cer = item.Issuer.Certificates.Single (x => x.Id == item.IssuerCertificateNumber);
 
 			cfd.Sign (cer.KeyData, cer.KeyPassword);
+
+			return cfd;
+		}
+		
+		public static dynamic StampCFD (FiscalDocument item)
+		{
+			var cfd = SignCFD (item);
+
+			if (item.Issuer.Provider == FiscalCertificationProvider.Diverza) {
+				var cert = new X509Certificate2 ( Configuration.DiverzaCert, Configuration.DiverzaCertPasswd);
+				var cli = new DiverzaClient.DiverzaClient (Configuration.DiverzaUrl, cert);
+				var id = string.Format ("{0}-{1:D6}-{2}-{3:D6}", Configuration.DiverzaPartnerCode,
+				                        item.Id, item.Batch, item.Serial);
+				var tfd = cli.Stamp (id, cfd);
+				cfd.Complemento = new List<object>();
+				cfd.Complemento.Add (tfd);
+
+				/*
+				Console.WriteLine (tfd.ToXmlString ());
+				Console.WriteLine (tfd.ToString ());
+				*/
+			}
 
 			return cfd;
 		}
@@ -56,28 +80,37 @@ namespace Mictlanix.BE.Web.Helpers
 			return Mictlanix.CFDLib.Utils.PrivateKeyTest (data, password);
 		}
 
-		// Choose what version according to law
-		// v2.2 current version
-		// v2.0 before July 1, 2012
 		public static dynamic InvoiceToCFD (FiscalDocument item)
 		{
-			if (!item.Issued.HasValue || item.Issued >= Mictlanix.CFDv22.Comprobante.RELEASE_DATE) {
+			switch (Convert.ToInt32(item.Version * 10)) {
+			case 32:
+				return InvoiceToCFDv32 (item);
+			case 22:
 				return InvoiceToCFDv22 (item);
-			} else {
+			case 20:
 				return InvoiceToCFDv20 (item);
 			}
+			
+			switch (item.Issuer.Scheme) {
+			case FiscalScheme.CFD:
+				return InvoiceToCFDv22 (item);
+			case FiscalScheme.CFDI:
+				return InvoiceToCFDv32 (item);
+			}
+
+			return null;
 		}
 
 		static Mictlanix.CFDv20.Comprobante InvoiceToCFDv20 (FiscalDocument item)
 		{
-			var cer = item.Issuer.Certificates.SingleOrDefault (x => x.Id == item.CertificateNumber);
+			var cer = item.Issuer.Certificates.SingleOrDefault (x => x.Id == item.IssuerCertificateNumber);
 
 			var cfd = new Mictlanix.CFDv20.Comprobante
             {
                 tipoDeComprobante = (Mictlanix.CFDv20.ComprobanteTipoDeComprobante)item.Type,
                 noAprobacion = item.ApprovalNumber.ToString (),
                 anoAprobacion = item.ApprovalYear.ToString (),
-                noCertificado = item.CertificateNumber.ToString ().PadLeft (20, '0'),
+                noCertificado = item.IssuerCertificateNumber.ToString ().PadLeft (20, '0'),
                 serie = item.Batch,
                 folio = item.Serial.ToString (),
                 fecha = item.Issued.GetValueOrDefault (),
@@ -124,7 +157,7 @@ namespace Mictlanix.BE.Web.Helpers
                 },
 				subTotal = item.Subtotal,
 				total = item.Total,
-				sello = item.DigitalSeal
+				sello = item.IssuerDigitalSeal
             };
             
 			int i = 0;
@@ -153,14 +186,14 @@ namespace Mictlanix.BE.Web.Helpers
 		
 		static Mictlanix.CFDv22.Comprobante InvoiceToCFDv22 (FiscalDocument item)
 		{
-			var cer = item.Issuer.Certificates.SingleOrDefault (x => x.Id == item.CertificateNumber);
+			var cer = item.Issuer.Certificates.SingleOrDefault (x => x.Id == item.IssuerCertificateNumber);
 
 			var cfd = new Mictlanix.CFDv22.Comprobante
             {
                 tipoDeComprobante = (Mictlanix.CFDv22.ComprobanteTipoDeComprobante)item.Type,
                 noAprobacion = item.ApprovalNumber.ToString (),
                 anoAprobacion = item.ApprovalYear.ToString (),
-                noCertificado = item.CertificateNumber.ToString ().PadLeft (20, '0'),
+                noCertificado = item.IssuerCertificateNumber.ToString ().PadLeft (20, '0'),
                 serie = item.Batch,
                 folio = item.Serial.ToString (),
                 fecha = item.Issued.GetValueOrDefault (),
@@ -169,7 +202,7 @@ namespace Mictlanix.BE.Web.Helpers
 				LugarExpedicion = item.IssuedLocation,
 				subTotal = item.Subtotal,
 				total = item.Total,
-				sello = item.DigitalSeal,
+				sello = item.IssuerDigitalSeal,
                 formaDePago = Resources.SinglePayment,
 				certificado = (cer == null ? null : SecurityHelpers.EncodeBase64 (cer.CertificateData)),
                 Emisor = new Mictlanix.CFDv22.ComprobanteEmisor
@@ -181,7 +214,7 @@ namespace Mictlanix.BE.Web.Helpers
 							Regimen = item.IssuerRegime
 						}
 					},
-                    DomicilioFiscal = new Mictlanix.CFDv22.t_UbicacionFiscal {
+					DomicilioFiscal = (item.IssuerAddress == null) ? null : new Mictlanix.CFDv22.t_UbicacionFiscal {
                         calle = item.IssuerAddress.Street,
 						noExterior = item.IssuerAddress.ExteriorNumber,
 						noInterior = item.IssuerAddress.InteriorNumber,
@@ -252,6 +285,105 @@ namespace Mictlanix.BE.Web.Helpers
 			return cfd;
 		}
 		
+		static Mictlanix.CFDv32.Comprobante InvoiceToCFDv32 (FiscalDocument item)
+		{
+			var cer = item.Issuer.Certificates.SingleOrDefault (x => x.Id == item.IssuerCertificateNumber);
+
+			var cfd = new Mictlanix.CFDv32.Comprobante
+			{
+				tipoDeComprobante = (Mictlanix.CFDv32.ComprobanteTipoDeComprobante)item.Type,
+				noCertificado = item.IssuerCertificateNumber.ToString ().PadLeft (20, '0'),
+				serie = item.Batch,
+				folio = item.Serial.ToString (),
+				fecha = item.Issued.GetValueOrDefault (),
+				metodoDePago = item.PaymentMethod.GetDisplayName(),
+				NumCtaPago = item.PaymentReference,
+				LugarExpedicion = item.IssuedLocation,
+				subTotal = item.Subtotal,
+				total = item.Total,
+				sello = item.IssuerDigitalSeal,
+				formaDePago = Resources.SinglePayment,
+				certificado = (cer == null ? null : SecurityHelpers.EncodeBase64 (cer.CertificateData)),
+				Emisor = new Mictlanix.CFDv32.ComprobanteEmisor
+				{
+					rfc = item.Issuer.Id,
+					nombre = item.IssuerName,
+					RegimenFiscal = new Mictlanix.CFDv32.ComprobanteEmisorRegimenFiscal [1] {
+						new Mictlanix.CFDv32.ComprobanteEmisorRegimenFiscal {
+							Regimen = item.IssuerRegime
+						}
+					},
+					DomicilioFiscal = (item.IssuerAddress == null) ? null : new Mictlanix.CFDv32.t_UbicacionFiscal {
+						calle = item.IssuerAddress.Street,
+						noExterior = item.IssuerAddress.ExteriorNumber,
+						noInterior = item.IssuerAddress.InteriorNumber,
+						colonia = item.IssuerAddress.Neighborhood,
+						codigoPostal = item.IssuerAddress.PostalCode,
+						localidad = item.IssuerAddress.Locality,
+						municipio = item.IssuerAddress.Borough,
+						estado = item.IssuerAddress.State,
+						pais = item.IssuerAddress.Country
+					},
+					ExpedidoEn = (item.IssuedAt == null) ? null : new Mictlanix.CFDv32.t_Ubicacion {
+						calle = item.IssuedAt.Street,
+						noExterior = item.IssuedAt.ExteriorNumber,
+						noInterior = item.IssuedAt.InteriorNumber,
+						colonia = item.IssuedAt.Neighborhood,
+						codigoPostal = item.IssuedAt.PostalCode,
+						localidad = item.IssuedAt.Locality,
+						municipio = item.IssuedAt.Borough,
+						estado = item.IssuedAt.State,
+						pais = item.IssuedAt.Country
+					}
+				},
+				Receptor = new Mictlanix.CFDv32.ComprobanteReceptor
+				{
+					rfc = item.Recipient.Id,
+					nombre = item.RecipientName,
+					Domicilio = new Mictlanix.CFDv32.t_Ubicacion
+					{
+						calle = item.RecipientAddress.Street,
+						noExterior = item.RecipientAddress.ExteriorNumber,
+						noInterior = item.RecipientAddress.InteriorNumber,
+						colonia = item.RecipientAddress.Neighborhood,
+						codigoPostal = item.RecipientAddress.PostalCode,
+						localidad = item.RecipientAddress.Locality,
+						municipio = item.RecipientAddress.Borough,
+						estado = item.RecipientAddress.State,
+						pais = item.RecipientAddress.Country
+					}
+				},
+				Conceptos = new Mictlanix.CFDv32.ComprobanteConcepto[item.Details.Count],
+				Impuestos = new Mictlanix.CFDv32.ComprobanteImpuestos
+				{
+					Traslados = new Mictlanix.CFDv32.ComprobanteImpuestosTraslado[1]
+				}
+			};
+
+			int i = 0;
+			foreach (var detail in item.Details) {
+				cfd.Conceptos [i++] = new Mictlanix.CFDv32.ComprobanteConcepto
+				{
+					cantidad = detail.Quantity,
+					unidad = detail.UnitOfMeasurement,
+					noIdentificacion = detail.ProductCode,
+					descripcion = detail.ProductName,
+					valorUnitario = detail.NetPrice,
+					importe = detail.Subtotal
+				};
+			}
+
+			// TODO: VAT Summaries
+			cfd.Impuestos.Traslados [0] = new Mictlanix.CFDv32.ComprobanteImpuestosTraslado
+			{
+				impuesto = Mictlanix.CFDv32.ComprobanteImpuestosTrasladoImpuesto.IVA,
+				importe = item.Taxes,
+				tasa = Configuration.DefaultVAT * 100m
+			};
+
+			return cfd;
+		}
+
 		public static IEnumerable<CFDv2ReportItem> MonthlyReport (IEnumerable<FiscalDocument> items)
 		{
 			var list = new List<CFDv2ReportItem> (items.Count ());

@@ -1,4 +1,4 @@
-@using Mictlanix.BE
+﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Models
 @using Mictlanix.BE.Web.Helpers
@@ -16,16 +16,20 @@
 <div class="display-label right floating">
 	<h3>@Html.DisplayFor(x => x.Batch) @Html.DisplayFor(x => x.Serial)</h3>
 </div>
+
+<div class="display-label">
+    <h3>@Html.LabelFor(x => x.Recipient)</h3>
+</div>
+
 <div class="display-label right floating">
+    @Html.LabelFor(x => x.StampId)<br/>
+    @Html.DisplayFor(x => x.StampId)<br/>
     @Html.LabelFor(x => x.Issued)<br/>
     @Html.DisplayFor(x => x.Issued)<br/>
     @Html.LabelFor(x => x.IssuedLocation)<br/>
     @Html.DisplayFor(x => x.IssuedLocation)
 </div>
 
-<div class="display-label">
-    <h3>@Html.LabelFor(x => x.Recipient)</h3>
-</div>
 <div class="display-field">
     @Html.LabelFor(x => x.Recipient.Id)
     @Html.DisplayFor(x => x.Recipient.Id)<br/>
@@ -39,6 +43,8 @@
     @Html.DisplayFor(x => x.RecipientAddress.Country),
     @Html.DisplayFor(x => x.RecipientAddress.PostalCode)
 </div>
+
+<div class="clearfix"></div>
 
 <table>
     <tr>
@@ -90,24 +96,33 @@
 	}
 </div>
 
-<div id="digital-signature">
-	@Html.LabelFor(x => x.IssuerDigitalSeal)<br/>
-	@Html.DisplayFor(x => x.IssuerDigitalSeal)<br/>
-	@Html.LabelFor(x => x.OriginalString)<br/>
-	@Html.DisplayFor(x => x.OriginalString)<br/>
-	@Html.LabelFor(x => x.IssuerCertificateNumber)
-	@Html.DisplayFor(x => x.IssuerCertificateNumber)
-	@Html.LabelFor(x => x.ApprovalNumber)
-	@Html.DisplayFor(x => x.ApprovalNumber)
-	@Html.LabelFor(x => x.ApprovalYear)
-	@Html.DisplayFor(x => x.ApprovalYear)<br/>
-    @Html.LabelFor(x => x.IssuerRegime):
-    @Html.DisplayFor(x => x.IssuerRegime)
-</div>
+<table>
+    <tr>
+        <td class="number">
+    		<img width='150' height='150' style='margin:10px 0 0 0' src='@Url.Action("QRCode", new { id = Model.Id })' />
+        </td>
+        <td id="digital-signature">
+		    @Html.LabelFor(x => x.AuthorityCertificateNumber):
+		    @Html.DisplayFor(x => x.AuthorityCertificateNumber)
+		    @Html.LabelFor(x => x.Stamped):
+		    @Html.DisplayFor(x => x.Stamped)<br/>
+			@Html.LabelFor(x => x.OriginalString)<br/>
+			@Html.DisplayFor(x => x.OriginalString)<br/>
+			@Html.LabelFor(x => x.IssuerDigitalSeal)<br/>
+			@Html.DisplayFor(x => x.IssuerDigitalSeal)<br/>
+			@Html.LabelFor(x => x.AuthorityDigitalSeal)<br/>
+			@Html.DisplayFor(x => x.AuthorityDigitalSeal)<br/>	
+			@Html.LabelFor(x => x.IssuerCertificateNumber):
+			@Html.DisplayFor(x => x.IssuerCertificateNumber)<br/>
+		    @Html.LabelFor(x => x.IssuerRegime):
+		    @Html.DisplayFor(x => x.IssuerRegime)
+		</td>
+    </tr>
+</table>
 
-<div class="right">@Resources.FiscalDocumentLegend</div>
+<div class="right">@Resources.FiscalDocumentLegendV3</div>
 <script type="text/javascript">
 	$(function() {
-        window.print();
+        //window.print();
 	});
 </script>
