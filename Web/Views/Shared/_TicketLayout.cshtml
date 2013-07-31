@@ -18,11 +18,17 @@
             }
         </div>
         <h1>@ViewBag.Store.Name</h1>
-        @if (ViewBag.SkipAddress == null || !ViewBag.SkipAddress)
-        {
-        <h3>@Configuration.CompanyTaxpayer</h3>
-        <h3>@Configuration.CompanyAddress</h3>
-        }
+    @if (ViewBag.SkipAddress == null || !ViewBag.SkipAddress) {
+        <h3>@ViewBag.Store.Taxpayer</h3>
+        <h3>
+        	@ViewBag.Address.StreetAndNumber
+        	@ViewBag.Address.Neighborhood,
+        	@ViewBag.Address.Locality,
+        	@ViewBag.Address.PostalCode
+        	@ViewBag.Address.Borough,
+        	@ViewBag.Address.State
+    	</h3>
+    }
         <h2>@ViewBag.Title</h2>
     </header>
     <section id="main">

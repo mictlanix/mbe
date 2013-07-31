@@ -36,7 +36,7 @@ namespace Mictlanix.BE.Web
 			routes.MapRoute (
                 "FiscalReport",
                 "FiscalDocuments/Report/{taxpayer}/{year}/{month}",
-				new { controller = "FiscalDocuments", action = "Report", taxpayer = Helpers.Configuration.DefaultIssuer, year = @"\d{4}", month = @"\d{2}" }
+				new { controller = "FiscalDocuments", action = "Report", taxpayer = @"\w{12,13}", year = @"\d{4}", month = @"\d{2}" }
 			);
 			
 			routes.MapRoute (

@@ -116,9 +116,15 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 
         public ViewResult New()
-        {
+		{
+			var store = Configuration.Store;
+
+			if (store == null) {
+				return View ("InvalidStore");
+			}
+
 			var item = new FiscalDocument {
-				Issuer = Taxpayer.TryFind (Configuration.DefaultIssuer)
+				Issuer = Taxpayer.TryFind (store.Taxpayer)
 			};
 
 			return View (item);
@@ -868,8 +874,6 @@ namespace Mictlanix.BE.Web.Controllers
 
 			item.Type = batch.Type;
 			item.Serial = serial;
-			item.ApprovalNumber = batch.ApprovalNumber;
-			item.ApprovalYear = batch.ApprovalYear;
 			item.IssuerCertificateNumber = item.Issuer.Certificates.Single (x => x.IsActive).Id;
 
 			var dt = DateTime.Now;
@@ -890,6 +894,8 @@ namespace Mictlanix.BE.Web.Controllers
 				item.OriginalString = tfd.ToString ();
 			} else {
 				doc = CFDHelpers.SignCFD (item);
+				item.ApprovalNumber = batch.ApprovalNumber;
+				item.ApprovalYear = batch.ApprovalYear;
 				item.OriginalString = doc.ToString ();
 			}
 
