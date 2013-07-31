@@ -63,14 +63,6 @@ namespace Mictlanix.BE.Web.Helpers
 			get { return ConfigurationManager.AppSettings ["Company"]; }
 		}
 
-		public static string CompanyAddress {
-			get { return ConfigurationManager.AppSettings ["CompanyAddress"]; }
-		}
-
-		public static string CompanyTaxpayer {
-			get { return ConfigurationManager.AppSettings ["CompanyTaxpayer"]; }
-		}
-
 		public static string PromissoryNoteContent {
 			get { return ConfigurationManager.AppSettings ["PromissoryNoteContent"]; }
 		}
@@ -127,10 +119,6 @@ namespace Mictlanix.BE.Web.Helpers
 			}
 		}
 
-		public static string DefaultIssuer {
-			get { return ConfigurationManager.AppSettings ["DefaultIssuer"]; }
-		}
-		
 		public static string DefaultBatch {
 			get { return ConfigurationManager.AppSettings ["DefaultBatch"]; }
 		}

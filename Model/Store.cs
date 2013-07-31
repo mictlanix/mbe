@@ -52,7 +52,11 @@ namespace Mictlanix.BE.Model
         [Display(Name = "Name", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public virtual string Name { get; set; }
+		public virtual string Name { get; set; }
+
+		[Property("taxpayer")]
+		[Display(Name = "Taxpayer", ResourceType = typeof(Resources))]
+		public virtual string Taxpayer { get; set; }
 		
 		[Property]
 		[UIHint("Image")]

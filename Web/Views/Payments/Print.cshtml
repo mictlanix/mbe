@@ -8,6 +8,7 @@
     Layout = Configuration.ReceiptLayout;
     ViewBag.Title = Resources.Title_SalesTicket;
     ViewBag.Store = Model.Store;
+    ViewBag.Address = Model.Store.Address;
 }
 
 <div class="display-label right">
@@ -25,8 +26,7 @@
     @Html.DisplayFor(model => model.Customer.Name)
 </div>
 
-@if (Model.IsCredit)
-{
+@if (Model.IsCredit) {
     <div class="display-label date">
         @Html.LabelFor(model => model.DueDate)<br/>
         @Html.DisplayFor(model => model.DueDate)
@@ -34,8 +34,7 @@
 }
 
 <table>
-@foreach (var item in Model.Details)
-{
+@foreach (var item in Model.Details) {
     <tr>
         <td class="line number" rowspan="2">
             @Html.DisplayFor(x => item.Quantity)

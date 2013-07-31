@@ -31,6 +31,14 @@
         </div>
 
         <div class="editor-label">
+            @Html.LabelFor(model => model.Taxpayer)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Taxpayer)
+            @Html.ValidationMessageFor(model => model.Taxpayer)
+        </div>
+
+        <div class="editor-label">
             @Html.LabelFor(model => model.Location)
         </div>
         <div class="editor-field">

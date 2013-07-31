@@ -51,7 +51,15 @@ namespace Mictlanix.BE.Web.Controllers
 			search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
 			search.Total = qry.Count();
 			
-			ViewBag.PriceLists = PriceList.Queryable.ToList();
+			var list = PriceList.Queryable.ToList ();
+			var privilege = SecurityHelpers.GetUser (User.Identity.Name)
+							.Privileges.SingleOrDefault (x => x.Object == SystemObjects.PriceLists);
+
+			if (privilege == null || !privilege.AllowUpdate) {
+				list.Remove (list.Single (x => x.Id == 0));
+			}
+
+			ViewBag.PriceLists = list;
 
 			return View (search);
 		}

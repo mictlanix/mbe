@@ -9,3 +9,4 @@ CFDs
 *.user
 *.resources
 *.Publish.xml
+*.pfx

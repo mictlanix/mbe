@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
@@ -22,8 +22,7 @@
         <th class='input-small'>@Resources.PriceType</th>
         <th class=''>@Resources.Cost / @Resources.Prices</th>
     </tr>
-@foreach (var item in Model.Results)
-{
+@foreach (var item in Model.Results) {
     <tr>
         <td class='center'>@Html.DisplayFor(x => item.Code)</td>
         <td>
@@ -37,11 +36,19 @@
         </td>
         <td class='stretch center'>@Html.DisplayFor(x => item.UnitOfMeasurement)</td>
         <td class='stretch center'>
+        @if (Privilege.AllowUpdate) {
         	<a class='editable tax' data-inputclass='input-small' data-type='select' data-placement='bottom' data-source='@Url.Action("TaxRates")' data-pk='@item.Id' data-value='@item.TaxRate.ToString("0.####")' data-url='@Url.Action("SetTaxRate", new { id = item.Id })'>@Html.DisplayFor(x => item.TaxRate)</a>
+    	} else {
+			<span>@Html.DisplayFor(x => item.TaxRate)</span>
+		}
     	</td>
         <td class='stretch center'>@Html.DisplayFor(x => item.IsTaxIncluded)</td>
         <td class='stretch center'>
+        @if (Privilege.AllowUpdate) {
             <a class='editable' data-type='select' data-placement='bottom' data-source='@Url.Action("PriceTypes")' data-pk='@item.Id' data-value='@((int)item.PriceType)' data-url='@Url.Action("SetPriceType", new { id = item.Id })'>@item.PriceType.GetDisplayName()</a>
+        } else {
+			<span>@item.PriceType.GetDisplayName()</span>
+		}
         </td>
         <td class='stretch nowrap'>
             <table class='tabular'>
@@ -50,13 +57,18 @@
             	<tr>
             		<th class='right nowrap muted'>@p.Name</th>
             		<td class='nowrap'>
-            		    <a class='editable price' data-type='text' data-placement='left' data-pk='@price.Product.Id' data-url='@Url.Action("SetPrice", new { product = price.Product.Id, list = p.Id })'>@Html.DisplayFor(x => price.Value)</a>
-            		    <a class='editable currency' data-type='select' data-placement='left' data-source='@Url.Action("Currencies", "ExchangeRates")' data-pk='@price.Product.Id' data-value='@((int)price.Currency)' data-url='@Url.Action("SetCurrency", new { product = price.Product.Id, list = p.Id })'>@Html.DisplayFor(x => price.Currency)</a>
+            		@if (Privilege.AllowUpdate) {
+           		    	<a class='editable price' data-type='text' data-placement='left' data-pk='@item.Id' data-url='@Url.Action("SetPrice", new { product = item.Id, list = p.Id })'>@Html.DisplayFor(x => price.Value)</a>
+						<a class='editable currency' data-type='select' data-placement='left' data-source='@Url.Action("Currencies", "ExchangeRates")' data-pk='@item.Id' data-value='@((int)price.Currency)' data-url='@Url.Action("SetCurrency", new { product = item.Id, list = p.Id })'>@Html.DisplayFor(x => price.Currency)</a>
+        			} else {
+        				<span class='pull-right'>@Html.DisplayFor(x => price.Value) @Html.DisplayFor(x => price.Currency)</span>
+        			}
         			</td>
             	</tr>
         	}
             </table>
         </td>
+
     </tr>
 }
 </table>
