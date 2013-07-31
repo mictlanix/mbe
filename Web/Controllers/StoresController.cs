@@ -44,63 +44,49 @@ namespace Mictlanix.BE.Web.Controllers
 	[Authorize]
     public class StoresController : Controller
     {
-        //
-        // GET: /Store/
-
-        public ViewResult Index()
+        public ViewResult Index ()
         {
-            var qry = from x in Store.Queryable
-                      orderby x.Name
-                      select x;
+			var search = SearchStores (new Search<Store> {
+				Limit = Configuration.PageSize
+			});
 
-            Search<Store> search = new Search<Store>();
-            search.Limit = Configuration.PageSize;
-            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            search.Total = qry.Count();
-
-            return View(search);
+			return View (search);
         }
-
-        // POST: /Stores/
 
         [HttpPost]
-        public ActionResult Index(Search<Store> search)
-        {
-            if (ModelState.IsValid) {
-                search = GetStores(search);
-            }
+        public ActionResult Index (Search<Store> search)
+		{
+			if (ModelState.IsValid) {
+				search = SearchStores (search);
+			}
 
             if (Request.IsAjaxRequest()) {
-                return PartialView("_Index", search);
-            } else {
-                return View(search);
+                return PartialView ("_Index", search);
             }
+
+			return View (search);
         }
 
-        Search<Store> GetStores(Search<Store> search)
-        {
-            if (search.Pattern == null) {
-                var qry = from x in Store.Queryable
-                          orderby x.Name
-                          select x;
+		Search<Store> SearchStores (Search<Store> search)
+		{
+			IQueryable<Store> query;
 
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+			if (string.IsNullOrEmpty (search.Pattern)) {
+                query = from x in Store.Queryable
+                        orderby x.Name
+                        select x;
             } else {
-                var qry = from x in Store.Queryable
-                          where x.Name.Contains(search.Pattern) 
-                          orderby x.Name
-                          select x;
+				query = from x in Store.Queryable
+						where x.Name.Contains(search.Pattern) 
+						orderby x.Name
+						select x;
+			}
 
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            }
+			search.Total = query.Count ();
+			search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
 
             return search;
         }
-
-        //
-        // GET: /Store/Details/5
 
         public ViewResult Details(int id)
         {
@@ -108,29 +94,24 @@ namespace Mictlanix.BE.Web.Controllers
             return View(store);
         }
 
-        //
-        // GET: /store/Create
-
         public ActionResult Create()
         {
 			var item = new Store { 
-				Address = new Address()
+				Address = new Address ()
 			};
 
             return View (item);
         }
 
-        //
-        // POST: /store/Create
-
         [HttpPost]
-        public ActionResult Create(Store item)
+        public ActionResult Create (Store item)
         {
-            if (!ModelState.IsValid)
+			if (!ModelState.IsValid) {
 				return View (item);
-			
-			using (var scope = new TransactionScope()) {
-				item.ReceiptMessage = item.ReceiptMessage.Trim();
+			}
+
+			using (var scope = new TransactionScope ()) {
+				item.ReceiptMessage = string.Format("{0}", item.ReceiptMessage).Trim ();
 				item.Address.Create ();
 				item.CreateAndFlush ();
 			}
@@ -138,17 +119,11 @@ namespace Mictlanix.BE.Web.Controllers
             return RedirectToAction ("Index");
         }
 
-        //
-        // GET: /Warehouses/Edit/5
-
         public ActionResult Edit (int id)
         {
             Store item = Store.Find(id);
             return View (item);
         }
-
-        //
-        // POST: /store/Edit/5
 
         [HttpPost]
         public ActionResult Edit (Store item)
@@ -156,25 +131,43 @@ namespace Mictlanix.BE.Web.Controllers
             if (!ModelState.IsValid)
 				return View (item);
 
+			var entity = Store.Find (item.Id);
+			var address = entity.Address;
+			
+			entity.Code = item.Code;
+			entity.Name = item.Name;
+			entity.Taxpayer = item.Taxpayer;
+			entity.Logo = item.Logo;
+			entity.Location = item.Location;
+			entity.ReceiptMessage = string.Format("{0}", item.ReceiptMessage).Trim ();
+			entity.Comment = item.Comment;
+
 			using (var scope = new TransactionScope()) {
-				item.ReceiptMessage = item.ReceiptMessage == null ? null : item.ReceiptMessage.Trim();
-				item.Address.Update ();
-				item.UpdateAndFlush ();
+				if (!address.Equals (item.Address)) {
+					entity.Address = item.Address;
+					entity.Address.Create ();
+				}
+
+				entity.UpdateAndFlush ();
+			}
+			
+			if (!address.Equals (item.Address)) {
+				try {
+					using (var scope = new TransactionScope()) {
+						address.DeleteAndFlush ();
+					}
+				} catch (Exception ex) {
+					System.Diagnostics.Debug.WriteLine (ex);
+				}
 			}
 			
 			return RedirectToAction ("Index");
         }
 
-        //
-        // GET: /store/Delete/5
-
         public ActionResult Delete (int id)
         {
             return View (Store.Find (id));
         }
-
-        //
-        // POST: /store/Delete/5
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
@@ -192,14 +185,14 @@ namespace Mictlanix.BE.Web.Controllers
 			}
         }
 
-        public JsonResult GetSuggestions(string pattern)
+        public JsonResult GetSuggestions (string pattern)
         {
             var qry = from x in Store.Queryable
                       where x.Name.Contains(pattern) ||
-                      x.Code.Contains(pattern)
+                      		x.Code.Contains(pattern)
                       select new { id = x.Id, name = x.Name };
 
-            return Json(qry.Take(15).ToList(), JsonRequestBehavior.AllowGet);
+            return Json (qry.Take (15).ToList (), JsonRequestBehavior.AllowGet);
         }
     }
 }

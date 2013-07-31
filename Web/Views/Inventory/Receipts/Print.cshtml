@@ -78,6 +78,12 @@
 </section>
 <script type="text/javascript">
 $(function() {
-    window.print();
+	$('body, select, input, textarea, button, submit, form').prop('disabled', true);
+	window.print();
+	setTimeout(function() {
+	    $('body').bind('mousemove click keypress', function () {
+	        window.close();                      
+	    });
+	}, 500);
 });
 </script>

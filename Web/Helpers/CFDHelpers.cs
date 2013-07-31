@@ -41,7 +41,7 @@ namespace Mictlanix.BE.Web.Helpers
 {
 	internal static class CFDHelpers
 	{
-		public static readonly DateTime FIX_DATE = new DateTime (2013, 7, 30, 0, 0, 0);
+		public static readonly DateTime FIX_DATE = new DateTime (2013, 7, 30, 19, 30, 0);
 
 		public static dynamic SignCFD (FiscalDocument item)
 		{
@@ -58,18 +58,13 @@ namespace Mictlanix.BE.Web.Helpers
 			var cfd = SignCFD (item);
 
 			if (item.Issuer.Provider == FiscalCertificationProvider.Diverza) {
-				var cert = new X509Certificate2 ( Configuration.DiverzaCert, Configuration.DiverzaCertPasswd);
+				var cert = new X509Certificate2 (Configuration.DiverzaCert, Configuration.DiverzaCertPasswd);
 				var cli = new DiverzaClient.DiverzaClient (Configuration.DiverzaUrl, cert);
 				var id = string.Format ("{0}-{1:D6}-{2}-{3:D6}", Configuration.DiverzaPartnerCode,
 				                        item.Id, item.Batch, item.Serial);
 				var tfd = cli.Stamp (id, cfd);
 				cfd.Complemento = new List<object>();
 				cfd.Complemento.Add (tfd);
-
-				/*
-				Console.WriteLine (tfd.ToXmlString ());
-				Console.WriteLine (tfd.ToString ());
-				*/
 			}
 
 			return cfd;
