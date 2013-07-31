@@ -63,7 +63,10 @@ function getUrl() {
 	}
 	return '@Url.Action("ListTaxpayers", "Customers", new { id = 0 })' + customer.id;
 }
-$(function () {        
+$(function () {
+@if (Model.Issuer != null) {
+	<text>$("#IssuerId").tokenInput("add", { id: "@Model.Issuer.Id", name: "@Model.Issuer.Name"});</text>
+}
     $('#RecipientId').tokenInput(getUrl, {
         hintText: "@Resources.HIntText",
         noResultsText: "@Resources.NoResultsText",

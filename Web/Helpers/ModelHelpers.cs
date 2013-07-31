@@ -70,7 +70,7 @@ namespace Mictlanix.BE.Web.Helpers
 			qry = from x in CustomerPayment.Queryable
 				  where x.SalesOrder == null && x.Customer.Id == entity.Id
 				  select x.Amount;
-			var paid = qry.Count () > 0 ? qry.Sum () : 0;
+			var paid = qry.Count () > 0 ? qry.ToList ().Sum () : 0;
 
 			qry = from x in SalesOrder.Queryable
 				  from y in x.Details
@@ -78,7 +78,7 @@ namespace Mictlanix.BE.Web.Helpers
 						x.IsCompleted && !x.IsCancelled &&
 						x.Customer.Id == entity.Id
 				  select y.Quantity * y.Price * y.ExchangeRate * (1 - y.Discount) * (y.IsTaxIncluded ? 1m : (1m + y.TaxRate));
-			var bought = qry.Count () > 0 ? qry.Sum () : 0;
+			var bought = qry.Count () > 0 ? qry.ToList ().Sum () : 0;
 
 			return bought - paid;
 		}
