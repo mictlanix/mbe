@@ -602,10 +602,6 @@ namespace Mictlanix.BE.Web.Controllers
 						item.Price = x.Price * CashHelpers.GetTodayExchangeRate (x.Currency, entity.Currency);
 					}
 
-					if (x.IsTaxIncluded) {
-						item.Price = item.Price / (1 + item.TaxRate);
-					}
-
 					item.Create ();
 					count++;
 				}
