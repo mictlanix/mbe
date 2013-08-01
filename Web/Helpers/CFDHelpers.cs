@@ -236,7 +236,7 @@ namespace Mictlanix.BE.Web.Helpers
 				{
 					rfc = item.Recipient.Id,
                     nombre = item.RecipientName,
-                    Domicilio = new Mictlanix.CFDv22.t_Ubicacion
+					Domicilio = (item.RecipientAddress == null) ? null : new Mictlanix.CFDv22.t_Ubicacion
                     {
                         calle = item.RecipientAddress.Street,
 						noExterior = item.RecipientAddress.ExteriorNumber,
