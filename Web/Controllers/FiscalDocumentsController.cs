@@ -817,16 +817,16 @@ namespace Mictlanix.BE.Web.Controllers
 			item.OriginalString = doc.ToString ();
 			item.IssuerDigitalSeal = doc.sello;
 
+			// save to orginal xml
+			var doc_xml = new FiscalDocumentXml {
+				Id = item.Id,
+				Data = doc.ToXmlString ()
+			};
+
 			// save to database
 			using (var scope = new TransactionScope()) {
 				item.UpdateAndFlush ();
 			}
-
-			// save to filesystem
-			var filename = string.Format (Resources.Format_FiscalDocumentPath,
-			                              Server.MapPath (Configuration.FiscalFilesPath),
-			                              item.Issuer.Id, item.Batch, item.Serial);
-			System.IO.File.WriteAllText (filename, doc.ToXmlString ());
 
 			return RedirectToAction ("Index");
 		}
