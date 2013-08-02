@@ -55,10 +55,6 @@ namespace Mictlanix.BE.Web.Helpers
 			get { return ConfigurationManager.AppSettings ["LogoTitle"]; }
 		}
 
-		public static string LogoAlt {
-			get { return ConfigurationManager.AppSettings ["LogoAlt"]; }
-		}
-
 		public static string Company {
 			get { return ConfigurationManager.AppSettings ["Company"]; }
 		}
@@ -82,11 +78,7 @@ namespace Mictlanix.BE.Web.Helpers
 		public static bool IsTaxIncluded {
 			get { return Convert.ToBoolean (ConfigurationManager.AppSettings ["IsTaxIncluded"]); }
 		}
-		
-		public static string FiscalFilesPath {
-			get { return ConfigurationManager.AppSettings ["FiscalFilesPath"]; }
-		}
-		
+
 		public static int PageSize {
 			get { return int.Parse (ConfigurationManager.AppSettings ["PageSize"]); }
 		}
