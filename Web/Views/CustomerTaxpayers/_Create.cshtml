@@ -8,7 +8,7 @@
 	<h3>@Resources.CustomerTaxpayers</h3>
 </div>
 <div class='modal-body'>
-@using (Ajax.BeginForm(null, null, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "taxpayer-modal" }, new { @class = "modal-form" })) {
+@using (Ajax.BeginForm(null, null, new { customerId = Html.ViewContext.Controller.ValueProvider.GetValue("customerId").RawValue }, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "taxpayer-modal" }, new { @class = "modal-form" })) {
     @Html.ValidationSummary(true)
 	<div style='overflow:hidden'>
 	@Html.EditorForModel()

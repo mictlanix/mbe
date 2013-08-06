@@ -51,17 +51,15 @@ namespace Mictlanix.BE.Web.Controllers
         {
             var results = new List<AccountsReceivableSummary>();
             var qry_payments = (from x in CustomerPayment.Queryable
-                            where x.SalesOrder == null
-                            group x by x.Customer into c
-                            select new
-                            {
-                                Customer = c.Key,
-                                Payments = c.ToList()
-                            }).ToList();
+	                            where x.SalesOrder == null
+	                            group x by x.Customer into c
+	                            select new {
+	                                Customer = c.Key,
+	                                Payments = c.ToList()
+	                            }).ToList();
 
             var payments = (from x in qry_payments
-                            select new AccountsReceivableSummary
-                            {
+                            select new AccountsReceivableSummary {
                                 Customer = x.Customer,
                                 PaymentsSummary = x.Payments.Sum(y => y.Amount)
                             }).ToList();
@@ -69,35 +67,31 @@ namespace Mictlanix.BE.Web.Controllers
             qry_payments = null;
 
             var qry_returns = (from x in CustomerReturn.Queryable
-                               where x.IsCompleted && x.SalesOrder.IsCredit
+                               where x.IsCompleted && x.SalesOrder.Terms != PaymentTerms.Immediate
                                group x by x.Customer into c
-                               select new
-                               {
+                               select new {
                                    Customer = c.Key,
                                    Returns = c.ToList()
                                }).ToList();
 
             var returns = (from x in qry_returns
-                           select new AccountsReceivableSummary
-                           {
+                           select new AccountsReceivableSummary {
                                Customer = x.Customer,
                                ReturnsSummary = x.Returns.Sum(y => y.Total)
-                           }).ToList();
+                           }).ToList ();
 
             qry_returns = null;
 
             var qry_sales = (from x in SalesOrder.Queryable
-                      where x.IsCredit && x.IsCompleted
-                      group x by x.Customer into c
-                      select new
-                      {
-                          Customer = c.Key,
-                          Sales = c.ToList()
-                      }).ToList();
+			                 where x.Terms != PaymentTerms.Immediate && x.IsCompleted
+		                     group x by x.Customer into c
+		                     select new {
+		                          Customer = c.Key,
+		                          Sales = c.ToList()
+		                      }).ToList();
 
             var sales = from x in qry_sales
-                        select new AccountsReceivableSummary
-                        {
+                        select new AccountsReceivableSummary {
                             Customer = x.Customer,
                             SalesSummary = x.Sales.Sum(y => y.Total)
                         };
@@ -136,7 +130,7 @@ namespace Mictlanix.BE.Web.Controllers
             Customer item = Customer.Find(id);
             var results = new List<AccountsReceivableEntry>();
             var qry_sales = (from x in SalesOrder.Queryable
-                             where x.IsCompleted && x.IsCredit &&
+                             where x.IsCompleted && x.Terms != PaymentTerms.Immediate &&
                                    x.Customer.Id == item.Id
                              select x).ToList();
             var sales = (from x in qry_sales
@@ -153,7 +147,8 @@ namespace Mictlanix.BE.Web.Controllers
             qry_sales = null;
 
             var qry_returns = (from x in CustomerReturn.Queryable
-                               where x.IsCompleted && x.Customer.Id == item.Id && x.SalesOrder.IsCredit
+			                   where x.IsCompleted && x.Customer.Id == item.Id &&
+			                   		 x.SalesOrder.Terms != PaymentTerms.Immediate
                                select x).ToList();
 
             var returns = (from x in qry_returns
