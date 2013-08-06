@@ -1,37 +1,39 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
-@model Mictlanix.BE.Model.SalesOrder
-<fieldset>
-    <legend>@Resources.Totals</legend>
+@model SalesOrder
 
-    <div class="display-label left floating">
-        @Html.LabelFor(x => x.Subtotal)
-    </div>
-    <div class="display-field right floating">
-        @Html.DisplayFor(x => x.Subtotal)
-    </div>
-
-    <div class="display-label left floating">
-        @Html.LabelFor(x => x.Taxes)
-    </div>
-    <div class="display-field right floating">
-        @Html.DisplayFor(x => x.Taxes)
-    </div>
-    
-    <div class="display-label left floating">
-        @Html.LabelFor(x => x.Total)
-    </div>
-    <div class="display-field right floating">
-        @Html.DisplayFor(x => x.Total)
-    </div>
-
-@if (!Model.IsCompleted) {
-    <div class="action-buttons">
-        @if (Model.IsCredit && (Model.Customer.Debt () + Model.Total) > Model.Customer.CreditLimit) {
-            var difference = Model.Customer.Debt () + Model.Total - Model.Customer.CreditLimit;
-            @Resources.CreditLimitExceeded<br />
-            @difference.ToString("c")
-        }
-    </div>
+@if (!Model.IsCompleted && !Model.IsCancelled && Model.IsCredit && Model.IsOverCreditLimit ()) {
+<div class="alert alert-error">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <strong>@Resources.CreditLimitExceeded</strong>
+  @Model.AmountOverCreditLimit().ToString("c") @Configuration.BaseCurrency
+</div>
+<script type='text/javascript'>$(function(){$('#confirm-button').hide()});</script>
+} else if (Model.Details.Count > 0) {
+<script type='text/javascript'>$(function(){$('#confirm-button').show()});</script>
 }
-</fieldset>
+
+<ul class='labeled-frames'>
+    <li>
+    	<span class='caption'>@Resources.Subtotal</span>
+    	<span class='value'>@Html.DisplayFor(x => x.Subtotal) @Html.DisplayFor(x => x.Currency)</span>
+    @if (Model.Currency != Configuration.BaseCurrency) {
+        <span class='value muted'>(@Html.DisplayFor(x => x.SubtotalEx) @Configuration.BaseCurrency)</span>
+    }
+    </li>
+    <li>
+    	<span class='caption'>@Resources.Taxes</span>
+        <span class='value'>@Html.DisplayFor(x => x.Taxes) @Html.DisplayFor(x => x.Currency)</span>
+    @if (Model.Currency != Configuration.BaseCurrency) {
+        <span class='value muted'>(@Html.DisplayFor(x => x.TaxesEx) @Configuration.BaseCurrency)</span>
+    }
+    </li>
+    <li>
+    	<span class='caption'>@Resources.Total</span>
+        <span class='value'>@Html.DisplayFor(x => x.Total) @Html.DisplayFor(x => x.Currency)</span>
+    @if (Model.Currency != Configuration.BaseCurrency) {
+        <span class='value muted'>(@Html.DisplayFor(x => x.TotalEx) @Configuration.BaseCurrency)</span>
+    }
+    </li>
+</ul>

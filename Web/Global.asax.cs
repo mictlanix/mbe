@@ -59,8 +59,8 @@ namespace Mictlanix.BE.Web
 			
 			routes.MapRoute (
 				"CustomerTaxpayers_Create",
-				"CustomerTaxpayers/Create/{customer}",
-				new { controller = "CustomerTaxpayers", action = "Create", customer = @"\d+" }
+				"CustomerTaxpayers/Create/{customerId}",
+				new { controller = "CustomerTaxpayers", action = "Create", customerId = @"\d+" }
 			);
 
 			routes.MapRoute(

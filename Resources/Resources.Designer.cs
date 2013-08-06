@@ -3528,9 +3528,9 @@ namespace Mictlanix.BE {
         /// <summary>
         ///   Looks up a localized string similar to Ticket de Venta.
         /// </summary>
-        public static string Title_SalesTicket {
+		public static string SalesReceipt {
             get {
-                return ResourceManager.GetString("Title_SalesTicket", resourceCulture);
+				return ResourceManager.GetString("SalesReceipt", resourceCulture);
             }
         }
         
@@ -4407,9 +4407,9 @@ namespace Mictlanix.BE {
 			}
 		}
 		
-		public static string MySuite {
+		public static string FiscoClic {
 			get {
-				return ResourceManager.GetString("MySuite", resourceCulture);
+				return ResourceManager.GetString("FiscoClic", resourceCulture);
 			}
 		}
 		

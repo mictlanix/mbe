@@ -42,15 +42,17 @@ namespace Mictlanix.BE.Web.Controllers
 	[Authorize]
 	public class CustomerTaxpayersController : Controller
     {
-		public ActionResult Create (int customer)
+		public ActionResult Create (int customerId)
         {
 			return PartialView ("_Create");
 		}
 
         [HttpPost]
-		public ActionResult Create (int customer, CustomerTaxpayer item)
+		public ActionResult Create (int customerId, CustomerTaxpayer item)
 		{
-			ModelState ["Customer"].Errors.Clear ();
+			if (ModelState.Keys.Contains ("Customer")) {
+				ModelState ["Customer"].Errors.Clear ();
+			}
 
 			if (!string.IsNullOrEmpty (item.Id)) {
 				var entity = CustomerTaxpayer.TryFind (item.Id);
@@ -61,7 +63,7 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 
 			if(!item.HasAddress) {
-				ModelState.Where(x => x.Key.StartsWith("Address.")).ToList().ForEach(x => x.Value.Errors.Clear());
+				ModelState.Where (x => x.Key.StartsWith("Address.")).ToList ().ForEach (x => x.Value.Errors.Clear());
 				item.Address = null;
 			}
 
@@ -70,7 +72,7 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 
 			using (var scope = new TransactionScope()) {
-				item.Customer = Customer.Find (customer);
+				item.Customer = Customer.Find (customerId);
 
 				if(item.HasAddress) {
 					item.Address.Create ();

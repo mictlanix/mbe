@@ -877,10 +877,9 @@ namespace Mictlanix.BE.Web.Controllers
 			                            dt.Hour, dt.Minute, dt.Second,
 			                            DateTimeKind.Unspecified);
 
-			dynamic doc;
+			dynamic doc = CFDHelpers.StampCFD (item);
 
 			if (item.Issuer.Scheme == FiscalScheme.CFDI) {
-				doc = CFDHelpers.StampCFD (item);
 				var tfd = doc.Complemento [0] as CFDv32.TimbreFiscalDigital;
 
 				item.StampId = tfd.UUID;
