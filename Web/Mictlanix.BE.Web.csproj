@@ -482,18 +482,6 @@
     <Content Include="Views\CustomerTaxpayers\_Edit.cshtml" />
     <Content Include="Views\CustomerTaxpayers\_Index.cshtml" />
     <Content Include="Views\CustomerTaxpayers\_Refresh.cshtml" />
-    <Content Include="Views\POS\_Totals.cshtml" />
-    <Content Include="Views\POS\_MasterView.cshtml" />
-    <Content Include="Views\POS\_MasterEditView.cshtml" />
-    <Content Include="Views\POS\_DetailEditView.cshtml" />
-    <Content Include="Views\POS\_DetailView.cshtml" />
-    <Content Include="Views\POS\Index.cshtml" />
-    <Content Include="Views\POS\New.cshtml" />
-    <Content Include="Views\POS\Edit.cshtml" />
-    <Content Include="Views\POS\_SalesTicket.cshtml" />
-    <Content Include="Views\POS\_SalesNote.cshtml" />
-    <Content Include="Views\POS\Details.cshtml" />
-    <Content Include="Views\POS\_PromissoryNoteTicket.cshtml" />
     <Content Include="Views\SalesOrders\_Index.cshtml" />
     <Content Include="Views\SalesOrders\Edit.cshtml" />
     <Content Include="Views\SalesOrders\Index.cshtml" />
@@ -704,6 +692,17 @@
     <Content Include="Views\Shared\DisplayTemplates\Breakable.cshtml" />
     <Content Include="Views\FiscalDocuments\Print32.cshtml" />
     <Content Include="Views\FiscalDocuments\Print00.cshtml" />
+    <Content Include="Views\POS\Edit.cshtml" />
+    <Content Include="Views\POS\Index.cshtml" />
+    <Content Include="Views\POS\Print.cshtml" />
+    <Content Include="Views\POS\View.cshtml" />
+    <Content Include="Views\POS\_DisplayView.cshtml" />
+    <Content Include="Views\POS\_EditorView.cshtml" />
+    <Content Include="Views\POS\_Index.cshtml" />
+    <Content Include="Views\POS\_ItemDisplayView.cshtml" />
+    <Content Include="Views\POS\_ItemEditorView.cshtml" />
+    <Content Include="Views\POS\_Items.cshtml" />
+    <Content Include="Views\POS\_Totals.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -1,7 +1,8 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
-@model IEnumerable<SalesOrder>
+@using Mictlanix.BE.Web.Models
+@model Search<SalesOrder>
 
 @{
     ViewBag.Title = Resources.PointOfSale;
@@ -11,44 +12,31 @@
 
 <h2>@Resources.PointOfSale</h2>
 
-<p>
 @if(Privilege.AllowCreate) {
-    @Html.ActionLink(Resources.NewSale, "New", new { }, new { @class = "button icon add" })
-}
-</p>
-<table>
-    <tr>
-        <th>@Html.LabelFor(x => new SalesOrder().Id)</th>
-        <th>@Html.LabelFor(x => new SalesOrder().Store)</th>
-        <th>@Html.LabelFor(x => new SalesOrder().Serial)</th>
-        <th>@Html.LabelFor(x => new SalesOrder().Date)</th>
-        <th>@Html.LabelFor(x => new SalesOrder().Customer)</th>
-        <th>@Html.LabelFor(x => new SalesOrder().SalesPerson)</th>
-        <th>@Html.LabelFor(x => new SalesOrder().PointOfSale)</th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td class="number">@Html.DisplayFor(x => item.Id)</td>
-        <td class="center">@Html.DisplayFor(x => item.Store.Name)</td>
-        <td class="number">@Html.DisplayFor(x => item.Serial)</td>
-        <td class="date">@Html.DisplayFor(x => item.Date)</td>
-        <td>@Html.DisplayFor(x => item.Customer.Name)</td>
-        <td class="center">
-        	@Html.DisplayFor(x => item.SalesPerson.FirstName)
-        	@Html.DisplayFor(x => item.SalesPerson.LastName)
-        </td>
-        <td class="center">@Html.DisplayFor(x => item.PointOfSale.Name)</td>
-        <td class="actions">
-        	@if(Privilege.AllowRead) {
-            	@Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
-            }
-        	@if(Privilege.AllowUpdate) {
-            	@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
-            }
-        </td>
-    </tr>
+    using (Html.BeginForm("New", "POS", null, FormMethod.Post, new { @class = "modal-form" })) {
+		<button type="submit" class="icon add">@Resources.NewSalesOrder</button>
+    }
 }
 
-</table>
+@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
+    <fieldset>
+        <legend>@Resources.Search</legend>
+        @Html.HiddenFor(x => x.Offset)
+        @Html.HiddenFor(x => x.Limit)
+        <div class='editor-label'>
+            @Html.LabelFor(x => x.Pattern)
+        </div>
+        <div class='search-box'>
+            <button type='submit' class='icon search'>@Resources.Search</button>
+            <div class='search-field'>
+                <input type='text' id='Pattern' name='Pattern' />
+            </div>
+        </div>
+    </fieldset>
+}
+<div id='activity-indicator'>
+    <img alt='@Resources.Loading' src='@Url.Content("~/Content/images/loading-bar.gif")' />
+</div>
+<div id='search-results'>
+    @Html.Partial("_Index")
+</div>

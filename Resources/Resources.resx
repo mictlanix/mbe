@@ -762,7 +762,7 @@
   <data name="Loading" xml:space="preserve">
     <value>Cargando...</value>
   </data>
-  <data name="Title_SalesTicket" xml:space="preserve">
+  <data name="SalesReceipt" xml:space="preserve">
     <value>Ticket de Venta</value>
   </data>
   <data name="Print" xml:space="preserve">
@@ -1626,8 +1626,8 @@ Realizada el: {0:d}</value>
   <data name="Diverza" xml:space="preserve">
     <value>Diverza Información y Análisis, SAPI de CV</value>
   </data>
-  <data name="MySuite" xml:space="preserve">
-    <value>Mysuite Services, SA de CV</value>
+  <data name="FiscoClic" xml:space="preserve">
+    <value>3SIT Integración y Soluciones S. de R.L. de C.V.</value>
   </data>
   <data name="Provider" xml:space="preserve">
     <value>Proveedor</value>
