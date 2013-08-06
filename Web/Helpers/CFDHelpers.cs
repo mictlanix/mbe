@@ -35,7 +35,7 @@ using System.Text;
 using System.Security.Cryptography.X509Certificates;
 using Mictlanix.BE.Model;
 using Mictlanix.CFDLib;
-using Mictlanix.DiverzaClient;
+using Mictlanix.Diverza.Client;
 
 namespace Mictlanix.BE.Web.Helpers
 {
@@ -55,19 +55,22 @@ namespace Mictlanix.BE.Web.Helpers
 		
 		public static dynamic StampCFD (FiscalDocument item)
 		{
-			var cfd = SignCFD (item);
-
-			if (item.Issuer.Provider == FiscalCertificationProvider.Diverza) {
+			switch (item.Issuer.Provider) {
+			case FiscalCertificationProvider.Diverza:
+				var cfd = SignCFD (item);
 				var cert = new X509Certificate2 (Configuration.DiverzaCert, Configuration.DiverzaCertPasswd);
-				var cli = new DiverzaClient.DiverzaClient (Configuration.DiverzaUrl, cert);
+				var cli = new DiverzaClient (Configuration.DiverzaUrl, cert);
 				var id = string.Format ("{0}-{1:D6}-{2}-{3:D6}", Configuration.DiverzaPartnerCode,
 				                        item.Id, item.Batch, item.Serial);
 				var tfd = cli.Stamp (id, cfd);
-				cfd.Complemento = new List<object>();
-				cfd.Complemento.Add (tfd);
-			}
 
-			return cfd;
+				cfd.Complemento = new List<object> ();
+				cfd.Complemento.Add (tfd);
+
+				return cfd;
+			default:
+				return SignCFD (item);
+			}
 		}
 
 		public static bool PrivateKeyTest (byte[] data, byte[] password)
@@ -182,9 +185,7 @@ namespace Mictlanix.BE.Web.Helpers
 		static Mictlanix.CFDv22.Comprobante InvoiceToCFDv22 (FiscalDocument item)
 		{
 			var cer = item.Issuer.Certificates.SingleOrDefault (x => x.Id == item.IssuerCertificateNumber);
-
-			var cfd = new Mictlanix.CFDv22.Comprobante
-            {
+			var cfd = new Mictlanix.CFDv22.Comprobante {
                 tipoDeComprobante = (Mictlanix.CFDv22.ComprobanteTipoDeComprobante)item.Type,
                 noAprobacion = item.ApprovalNumber.ToString (),
                 anoAprobacion = item.ApprovalYear.ToString (),
@@ -200,8 +201,7 @@ namespace Mictlanix.BE.Web.Helpers
 				sello = item.IssuerDigitalSeal,
                 formaDePago = Resources.SinglePayment,
 				certificado = (cer == null ? null : SecurityHelpers.EncodeBase64 (cer.CertificateData)),
-                Emisor = new Mictlanix.CFDv22.ComprobanteEmisor
-				{
+                Emisor = new Mictlanix.CFDv22.ComprobanteEmisor {
 					rfc = item.Issuer.Id,
 					nombre = item.IssuerName,
 					RegimenFiscal = new Mictlanix.CFDv22.ComprobanteEmisorRegimenFiscal [1] {
@@ -232,12 +232,10 @@ namespace Mictlanix.BE.Web.Helpers
                         pais = item.IssuedAt.Country
                     }
                 },
-                Receptor = new Mictlanix.CFDv22.ComprobanteReceptor
-				{
+                Receptor = new Mictlanix.CFDv22.ComprobanteReceptor {
 					rfc = item.Recipient.Id,
                     nombre = item.RecipientName,
-					Domicilio = (item.RecipientAddress == null) ? null : new Mictlanix.CFDv22.t_Ubicacion
-                    {
+					Domicilio = (item.RecipientAddress == null) ? null : new Mictlanix.CFDv22.t_Ubicacion {
                         calle = item.RecipientAddress.Street,
 						noExterior = item.RecipientAddress.ExteriorNumber,
 						noInterior = item.RecipientAddress.InteriorNumber,
@@ -249,17 +247,15 @@ namespace Mictlanix.BE.Web.Helpers
 						pais = item.RecipientAddress.Country
                     }
                 },
-                Conceptos = new Mictlanix.CFDv22.ComprobanteConcepto[item.Details.Count],
-                Impuestos = new Mictlanix.CFDv22.ComprobanteImpuestos
-                {
-                    Traslados = new Mictlanix.CFDv22.ComprobanteImpuestosTraslado[1]
+                Conceptos = new Mictlanix.CFDv22.ComprobanteConcepto [item.Details.Count],
+                Impuestos = new Mictlanix.CFDv22.ComprobanteImpuestos {
+                    Traslados = new Mictlanix.CFDv22.ComprobanteImpuestosTraslado [1]
                 }
             };
             
 			int i = 0;
 			foreach (var detail in item.Details) {
-				cfd.Conceptos [i++] = new Mictlanix.CFDv22.ComprobanteConcepto
-                {
+				cfd.Conceptos [i++] = new Mictlanix.CFDv22.ComprobanteConcepto {
                     cantidad = detail.Quantity,
                     unidad = detail.UnitOfMeasurement,
                     noIdentificacion = detail.ProductCode,
@@ -270,8 +266,7 @@ namespace Mictlanix.BE.Web.Helpers
 			}
 
 			// TODO: VAT Summaries
-			cfd.Impuestos.Traslados [0] = new Mictlanix.CFDv22.ComprobanteImpuestosTraslado
-            {
+			cfd.Impuestos.Traslados [0] = new Mictlanix.CFDv22.ComprobanteImpuestosTraslado {
                 impuesto = Mictlanix.CFDv22.ComprobanteImpuestosTrasladoImpuesto.IVA,
                 importe = item.Taxes,
                 tasa = Configuration.DefaultVAT * 100m
@@ -283,9 +278,7 @@ namespace Mictlanix.BE.Web.Helpers
 		static Mictlanix.CFDv32.Comprobante InvoiceToCFDv32 (FiscalDocument item)
 		{
 			var cer = item.Issuer.Certificates.SingleOrDefault (x => x.Id == item.IssuerCertificateNumber);
-
-			var cfd = new Mictlanix.CFDv32.Comprobante
-			{
+			var cfd = new CFDv32.Comprobante {
 				tipoDeComprobante = (Mictlanix.CFDv32.ComprobanteTipoDeComprobante)item.Type,
 				noCertificado = item.IssuerCertificateNumber.ToString ().PadLeft (20, '0'),
 				serie = item.Batch,
@@ -299,8 +292,7 @@ namespace Mictlanix.BE.Web.Helpers
 				sello = item.IssuerDigitalSeal,
 				formaDePago = Resources.SinglePayment,
 				certificado = (cer == null ? null : SecurityHelpers.EncodeBase64 (cer.CertificateData)),
-				Emisor = new Mictlanix.CFDv32.ComprobanteEmisor
-				{
+				Emisor = new Mictlanix.CFDv32.ComprobanteEmisor {
 					rfc = item.Issuer.Id,
 					nombre = item.IssuerName,
 					RegimenFiscal = new Mictlanix.CFDv32.ComprobanteEmisorRegimenFiscal [1] {
@@ -331,12 +323,10 @@ namespace Mictlanix.BE.Web.Helpers
 						pais = item.IssuedAt.Country
 					}
 				},
-				Receptor = new Mictlanix.CFDv32.ComprobanteReceptor
-				{
+				Receptor = new Mictlanix.CFDv32.ComprobanteReceptor {
 					rfc = item.Recipient.Id,
 					nombre = item.RecipientName,
-					Domicilio = new Mictlanix.CFDv32.t_Ubicacion
-					{
+					Domicilio = (item.RecipientAddress == null) ? null : new Mictlanix.CFDv32.t_Ubicacion {
 						calle = item.RecipientAddress.Street,
 						noExterior = item.RecipientAddress.ExteriorNumber,
 						noInterior = item.RecipientAddress.InteriorNumber,
@@ -348,17 +338,15 @@ namespace Mictlanix.BE.Web.Helpers
 						pais = item.RecipientAddress.Country
 					}
 				},
-				Conceptos = new Mictlanix.CFDv32.ComprobanteConcepto[item.Details.Count],
-				Impuestos = new Mictlanix.CFDv32.ComprobanteImpuestos
-				{
-					Traslados = new Mictlanix.CFDv32.ComprobanteImpuestosTraslado[1]
+				Conceptos = new Mictlanix.CFDv32.ComprobanteConcepto [item.Details.Count],
+				Impuestos = new Mictlanix.CFDv32.ComprobanteImpuestos {
+					Traslados = new Mictlanix.CFDv32.ComprobanteImpuestosTraslado [1]
 				}
 			};
 
 			int i = 0;
 			foreach (var detail in item.Details) {
-				cfd.Conceptos [i++] = new Mictlanix.CFDv32.ComprobanteConcepto
-				{
+				cfd.Conceptos [i++] = new Mictlanix.CFDv32.ComprobanteConcepto {
 					cantidad = detail.Quantity,
 					unidad = detail.UnitOfMeasurement,
 					noIdentificacion = detail.ProductCode,
@@ -369,8 +357,7 @@ namespace Mictlanix.BE.Web.Helpers
 			}
 
 			// TODO: VAT Summaries
-			cfd.Impuestos.Traslados [0] = new Mictlanix.CFDv32.ComprobanteImpuestosTraslado
-			{
+			cfd.Impuestos.Traslados [0] = new Mictlanix.CFDv32.ComprobanteImpuestosTraslado {
 				impuesto = Mictlanix.CFDv32.ComprobanteImpuestosTrasladoImpuesto.IVA,
 				importe = item.Taxes,
 				tasa = Configuration.DefaultVAT * 100m

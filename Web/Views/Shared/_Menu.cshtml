@@ -173,13 +173,13 @@
                                    href="@Url.Action("Index", "Quotations")">@Resources.SalesQuotes</a>
                             </li>
                             }
-                            @*@if (Html.GetPrivilege(CurrentUser, SystemObjects.POS).AllowRead)
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.POS).AllowRead)
                             {
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("Index", "POS") ? "gbm0l" : "")"
                                    href="@Url.Action("Index", "POS")">@Resources.PointOfSale</a>
                             </li>
-                            }*@
+                            }
                             @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders).AllowRead) {
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("Index", "SalesOrders") ? "gbm0l" : "")"

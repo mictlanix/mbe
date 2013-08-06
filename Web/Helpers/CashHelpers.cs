@@ -45,8 +45,7 @@ namespace Mictlanix.BE.Web.Helpers
 			IList<CashCount> items = new List<CashCount> (denominations.Length);
 
 			foreach (var item in denominations) {
-				items.Add (new CashCount
-                {
+				items.Add (new CashCount {
                     Denomination = decimal.Parse (item)
                 });
 			}
