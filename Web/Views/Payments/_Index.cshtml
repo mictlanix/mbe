@@ -13,7 +13,7 @@
 
 <table>
     <tr>
-        <th>@Html.LabelFor(x => new SalesOrder().Serial)</th>
+        <th>@Html.LabelFor(x => new SalesOrder().Id)</th>
         <th>@Html.LabelFor(x => new SalesOrder().Date)</th>
         <th>@Html.LabelFor(x => new SalesOrder().Customer)</th>
         <th>@Html.LabelFor(x => new SalesOrder().SalesPerson)</th>
@@ -23,8 +23,8 @@
 @foreach (var item in Model) {
     <tr>
         <td class="number">
-        	@Html.DisplayFor(x => item.Serial)
-        	<i class="icon-exclamation-sign" data-toggle='tooltip' title='@Resources.Id @Html.DisplayFor(x => item.Id)'></i>
+        	@Html.DisplayFor(x => item.Id)
+        	<i class='icon-exclamation-sign' data-toggle='tooltip' title='@Resources.Serial @Html.DisplayFor(x => item.Serial)'></i>
         </td>
         <td class="date">@Html.DisplayFor(x => item.Date)</td>
         <td>@Html.DisplayFor(x => item.Customer.Name)</td>

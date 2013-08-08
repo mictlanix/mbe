@@ -80,23 +80,23 @@ namespace Mictlanix.BE.Web.Controllers
 
         Search<FiscalDocument> SearchFiscalDocuments (Search<FiscalDocument> search)
 		{
-			IQueryable<FiscalDocument> qry;
+			IQueryable<FiscalDocument> query;
 
             if (string.IsNullOrEmpty (search.Pattern)) {
-                qry = from x in FiscalDocument.Queryable
-                      where !(!x.IsCompleted && x.IsCancelled)
-                      orderby x.IsCompleted, x.Issued descending
-                      select x;
+                query = from x in FiscalDocument.Queryable
+                      	where !(!x.IsCompleted && x.IsCancelled)
+						orderby (x.IsCompleted ? 1 : 0) + (x.IsCancelled ? 1 : 0), x.Issued descending
+                      	select x;
             } else {
-                qry = from x in FiscalDocument.Queryable
-                      where !(!x.IsCompleted && x.IsCancelled) &&
-                            x.Customer.Name.Contains(search.Pattern)
-                      orderby x.IsCompleted, x.Issued descending
-                      select x;
+                query = from x in FiscalDocument.Queryable
+                      	where !(!x.IsCompleted && x.IsCancelled) &&
+                        	  x.Customer.Name.Contains(search.Pattern)
+						orderby (x.IsCompleted ? 1 : 0) + (x.IsCancelled ? 1 : 0), x.Issued descending
+                      	select x;
 			}
 
-			search.Total = qry.Count ();
-			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+			search.Total = query.Count ();
+			search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
 
             return search;
         }
@@ -1022,7 +1022,7 @@ namespace Mictlanix.BE.Web.Controllers
                            FROM fiscal_document_detail d INNER JOIN fiscal_document m ON d.document = m.fiscal_document_id
                            WHERE m.cancelled = 0 AND d.order_detail = :detail ";
 			
-			IList<decimal> quantities = (IList<decimal>)ActiveRecordMediator<CustomerReturnDetail>.Execute(
+			IList<decimal> quantities = (IList<decimal>)ActiveRecordMediator<CustomerRefundDetail>.Execute(
 				delegate(ISession session, object instance) {
 				try {
 					return session.CreateSQLQuery(sql)

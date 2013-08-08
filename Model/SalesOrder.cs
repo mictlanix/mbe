@@ -43,27 +43,9 @@ namespace Mictlanix.BE.Model
         IList<CustomerPayment> payments = new List<CustomerPayment>();
 
         [PrimaryKey(PrimaryKeyType.Identity, "sales_order_id")]
-        [Display(Name = "SalesOrderId", ResourceType = typeof(Resources))]
+        [Display(Name = "Id", ResourceType = typeof(Resources))]
 		[DisplayFormat(DataFormatString="{0:D8}")]
-        public virtual int Id { get; set; }
-		
-        [Property("creation_time")]
-		[DataType(DataType.DateTime)]
-		[Display(Name = "CreationTime", ResourceType = typeof(Resources))]
-		public virtual DateTime CreationTime { get; set; }
-
-        [Property("modification_time")]
-		[DataType(DataType.DateTime)]
-		[Display(Name = "ModificationTime", ResourceType = typeof(Resources))]
-		public virtual DateTime ModificationTime { get; set; }
-
-        [BelongsTo("creator", Lazy = FetchWhen.OnInvoke)]
-        [Display(Name = "Creator", ResourceType = typeof(Resources))]
-        public virtual Employee Creator { get; set; }
-
-        [BelongsTo("updater", Lazy = FetchWhen.OnInvoke)]
-        [Display(Name = "Updater", ResourceType = typeof(Resources))]
-        public virtual Employee Updater { get; set; }
+		public virtual int Id { get; set; }
 
 		[BelongsTo("store")]
 		[Display(Name = "Store", ResourceType = typeof(Resources))]
@@ -74,11 +56,6 @@ namespace Mictlanix.BE.Model
 		[DisplayFormat(DataFormatString="{0:D8}")]
 		public virtual int Serial { get; set; }
 
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [Display(Name = "Customer", ResourceType = typeof(Resources))]
-        [UIHint("CustomerSelector")]
-        public virtual int CustomerId { get; set; }
-
         [BelongsTo("customer", NotNull = true, Fetch = FetchEnum.Join)]
         [Display(Name = "Customer", ResourceType = typeof(Resources))]
         public virtual Customer Customer { get; set; }
@@ -87,10 +64,6 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "Contact", ResourceType = typeof(Resources))]
 		public virtual Contact Contact { get; set; }
 
-		[Display(Name = "ShipTo", ResourceType = typeof(Resources))]
-		[UIHint("AddressSelector")]
-		public virtual int? ShipToId { get; set; }
-		
 		[BelongsTo("ship_to", Lazy = FetchWhen.OnInvoke)]
 		[Display(Name = "ShipTo", ResourceType = typeof(Resources))]
 		public virtual Address ShipTo { get; set; }
@@ -104,11 +77,6 @@ namespace Mictlanix.BE.Model
 		[DataType(DataType.Date)]
 		[Display(Name = "PromiseDate", ResourceType = typeof(Resources))]
 		public virtual DateTime PromiseDate { get; set; }
-
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[Display(Name = "SalesPerson", ResourceType = typeof(Resources))]
-		[UIHint("EmployeeSelector")]
-		public virtual int SalesPersonId { get; set; }
 
         [BelongsTo("salesperson")]
         [Display(Name = "SalesPerson", ResourceType = typeof(Resources))]
@@ -192,20 +160,6 @@ namespace Mictlanix.BE.Model
             get { return Details.Sum(x => x.Total); }
         }
 
-        [DataType(DataType.Currency)]
-        [Display(Name = "Paid", ResourceType = typeof(Resources))]
-        public virtual decimal Paid
-        {
-            get { return Payments.Sum(x => x.Amount + x.Change.GetValueOrDefault()); }
-        }
-
-        [DataType(DataType.Currency)]
-        [Display(Name = "Balance", ResourceType = typeof(Resources))]
-        public virtual decimal Balance
-        {
-            get { return Paid - Total; }
-		}
-
 		[DataType(DataType.Currency)]
 		[Display(Name = "Subtotal", ResourceType = typeof(Resources))]
 		public virtual decimal SubtotalEx {
@@ -223,6 +177,36 @@ namespace Mictlanix.BE.Model
 		public virtual decimal TotalEx {
 			get { return Details.Sum (x => x.TotalEx); }
 		}
+
+		[DataType(DataType.Currency)]
+		[Display(Name = "Paid", ResourceType = typeof(Resources))]
+		public virtual decimal Paid {
+			get { return Payments.Sum (x => x.Amount + x.Change.GetValueOrDefault()); }
+		}
+
+		[DataType(DataType.Currency)]
+		[Display(Name = "Balance", ResourceType = typeof(Resources))]
+		public virtual decimal Balance {
+			get { return Paid - Total; }
+		}
+
+		[BelongsTo("creator", Lazy = FetchWhen.OnInvoke)]
+		[Display(Name = "Creator", ResourceType = typeof(Resources))]
+		public virtual Employee Creator { get; set; }
+
+		[Property("creation_time")]
+		[DataType(DataType.DateTime)]
+		[Display(Name = "CreationTime", ResourceType = typeof(Resources))]
+		public virtual DateTime CreationTime { get; set; }
+
+		[BelongsTo("updater", Lazy = FetchWhen.OnInvoke)]
+		[Display(Name = "Updater", ResourceType = typeof(Resources))]
+		public virtual Employee Updater { get; set; }
+
+		[Property("modification_time")]
+		[DataType(DataType.DateTime)]
+		[Display(Name = "ModificationTime", ResourceType = typeof(Resources))]
+		public virtual DateTime ModificationTime { get; set; }
 
         #region Override Base Methods
 

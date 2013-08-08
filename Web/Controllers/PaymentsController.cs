@@ -185,11 +185,18 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult PayOrder (int id)
 		{
+			var drawer = Configuration.CashDrawer;
+			var session = GetSession ();
+
+			if (drawer == null) {
+				return View ("InvalidCashDrawer");
+			}
+
+			if (session == null) {
+				return RedirectToAction ("OpenSession");
+			}
+
 			var item = SalesOrder.Find (id);
-
-			item.Details.ToList ();
-			item.Payments.ToList ();
-
 			return View (item);
         }
 		

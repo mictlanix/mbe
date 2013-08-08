@@ -5,12 +5,12 @@
 @model DateRange
 
 @{
-    ViewBag.Title = Resources.SalesHistoric;
+    ViewBag.Title = Resources.SalesOrdersHistoric;
     var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesHistoric);
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrdersHistoric);
 }
 
-<h2>@Resources.SalesHistoric</h2>
+<h2>@Resources.SalesOrdersHistoric</h2>
 
 @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))
 {

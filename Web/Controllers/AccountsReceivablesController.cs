@@ -66,7 +66,7 @@ namespace Mictlanix.BE.Web.Controllers
 
             qry_payments = null;
 
-            var qry_returns = (from x in CustomerReturn.Queryable
+            var qry_returns = (from x in CustomerRefund.Queryable
                                where x.IsCompleted && x.SalesOrder.Terms != PaymentTerms.Immediate
                                group x by x.Customer into c
                                select new {
@@ -146,7 +146,7 @@ namespace Mictlanix.BE.Web.Controllers
             qry_sales.Clear();
             qry_sales = null;
 
-            var qry_returns = (from x in CustomerReturn.Queryable
+            var qry_returns = (from x in CustomerRefund.Queryable
 			                   where x.IsCompleted && x.Customer.Id == item.Id &&
 			                   		 x.SalesOrder.Terms != PaymentTerms.Immediate
                                select x).ToList();
