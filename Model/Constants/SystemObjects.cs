@@ -81,18 +81,18 @@ namespace Mictlanix.BE.Model
         PurchasesOrders,
         [Display(Name = "DisplayName_SupplierPayment", ResourceType = typeof(Resources))]
         SupplierPayment,
-		[Display(Name = "DisplayName_CustomerReturn", ResourceType = typeof(Resources))]
-		CustomerReturns,
+		[Display(Name = "CustomerRefunds", ResourceType = typeof(Resources))]
+		CustomerRefunds,
         [Display(Name = "FiscalDocuments", ResourceType = typeof(Resources))]
         FiscalDocuments,
         [Display(Name = "DisplayName_Taxpayers", ResourceType = typeof(Resources))]
         Taxpayers,
         [Display(Name = "DisplayName_SupplierReturns", ResourceType = typeof(Resources))]
         SupplierReturns,
-		[Display(Name = "SalesHistoric", ResourceType = typeof(Resources))]
-        SalesHistoric,
-        [Display(Name = "DisplayName_CustomerReturnHistoric", ResourceType = typeof(Resources))]
-		CustomerReturnHistoric,
+		[Display(Name = "SalesOrdersHistoric", ResourceType = typeof(Resources))]
+        SalesOrdersHistoric,
+		[Display(Name = "CustomerRefundsHistoric", ResourceType = typeof(Resources))]
+		CustomerRefundsHistoric,
         [Display(Name = "DisplayName_SupplierReturnHistoric", ResourceType = typeof(Resources))]
         SupplierReturnHistoric,
         [Display(Name = "DisplayName_Stores", ResourceType = typeof(Resources))]

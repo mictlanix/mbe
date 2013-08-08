@@ -2,11 +2,11 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Models
 @using Mictlanix.BE.Web.Helpers
-@model CustomerReturn
+@model CustomerRefund
 
 @{
     Layout = Configuration.ReceiptLayout;
-    ViewBag.Title = Resources.Title_CustomerReturnNote;
+    ViewBag.Title = Resources.CustomerRefundReceipt;
     ViewBag.Store = Model.Store;
     ViewBag.Address = Model.Store.Address;
 } 
@@ -19,10 +19,10 @@
 </div>
 
 <div class="display-label right">
-    @Html.LabelFor(model => model.ModificationTime)
+    @Html.LabelFor(model => model.Date)
 </div>
 <div class="display-field date right">
-    @Html.DisplayFor(model => model.ModificationTime)
+    @Html.DisplayFor(model => model.Date)
 </div>
 
 <div class="display-label">
@@ -39,8 +39,7 @@
     @Html.DisplayFor(model => model.SalesOrder.Customer.Name)
 </div>
 <table>
-@foreach (var item in Model.Details)
-{
+@foreach (var item in Model.Details) {
     <tr>
         <td class="line number" rowspan="2">
             @Html.DisplayFor(modelItem => item.Quantity)
@@ -86,5 +85,18 @@
 </div>
 
 @section Footer {
-	<img src="@Url.Action("Code128", "Barcodes", new { id = string.Format("{0}", Html.DisplayFor(x => x.Id)) })" alt="@Html.DisplayFor(x => x.Id)" title="@Html.DisplayFor(x => x.Id)">
+	<img src='@Url.Action("Code128", "Barcodes", new { id = string.Format("{0}", Html.DisplayFor(x => x.Id)) })' alt=''>
+	<p>@Resources.Id: @Html.DisplayFor(x => x.Id)</p>
 }
+
+<script type="text/javascript">
+$(function() {
+	$('body, select, input, textarea, button, submit, form').prop('disabled', true);
+	window.print();
+	setTimeout(function() {
+	    $('body').bind('mousemove click keypress', function () {
+	        window.close();                      
+	    });
+	}, 500);
+});
+</script>
