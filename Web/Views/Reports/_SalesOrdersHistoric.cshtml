@@ -5,9 +5,9 @@
 @model Search<SalesOrder>
 
 @{
-    ViewBag.Title = Resources.SalesHistoric;
+    ViewBag.Title = Resources.SalesOrdersHistoric;
     var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesHistoric);
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrdersHistoric);
 }
 
 <table>

@@ -1,64 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
-    Microsoft ResX Schema 
-    
-    Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
-    associated with the data types.
-    
-    Example:
-    
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
-                
-    There are any number of "resheader" rows that contain simple 
-    name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
-    mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
-    extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
-    read any of the formats listed below.
-    
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
-    
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
-
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -526,7 +467,7 @@
     <value>Masculino</value>
   </data>
   <data name="SalesOrderId" xml:space="preserve">
-    <value>ID</value>
+    <value>ID del Pedido</value>
   </data>
   <data name="PointOfSale" xml:space="preserve">
     <value>Punto de Venta</value>
@@ -1140,17 +1081,23 @@ Realizada el: {0:d}</value>
   <data name="DisplayName_PaymentInformation" xml:space="preserve">
     <value>Información del Pago</value>
   </data>
-  <data name="CustomerReturn" xml:space="preserve">
-    <value>Devolución</value>
+  <data name="CustomerRefund" xml:space="preserve">
+    <value>Devolución a Cliente</value>
+  </data>
+  <data name="CustomerRefunds" xml:space="preserve">
+    <value>Devoluciones a Cliente</value>
+  </data>
+  <data name="CustomerRefundsHistoric" xml:space="preserve">
+    <value>Histórico Devoluciones a Clientes</value>
+  </data>
+  <data name="CustomerRefundDetails" xml:space="preserve">
+    <value>Detalles de la Devolución a Cliente</value>
+  </data>
+  <data name="CustomerRefundReceipt" xml:space="preserve">
+    <value>Ticket de Devolución</value>
   </data>
   <data name="ReturnOrderId" xml:space="preserve">
     <value>Folio de la Devolución</value>
-  </data>
-  <data name="DisplayName_CustomerReturn" xml:space="preserve">
-    <value>Devolución a Clientes</value>
-  </data>
-  <data name="Title_CustomerReturn" xml:space="preserve">
-    <value>Devolución a Cliente</value>
   </data>
   <data name="Return" xml:space="preserve">
     <value>Devolución</value>
@@ -1173,24 +1120,14 @@ Realizada el: {0:d}</value>
   <data name="Title_Sale" xml:space="preserve">
     <value>Venta</value>
   </data>
-  <data name="SalesHistoric" xml:space="preserve">
+  <data name="SalesOrdersHistoric" xml:space="preserve">
     <value>Histórico de Ventas</value>
-  </data>
-  <data name="DisplayName_CustomerReturnHistoric" xml:space="preserve">
-    <value>Histórico Devoluciones a Clientes</value>
-  </data>
-  <data name="DisplayName_CustomerReturnDetails" xml:space="preserve">
-    <value>Detalles de la Devolución a Cliente</value>
   </data>
   <data name="DisplayName_SupplierReturnHistoric" xml:space="preserve">
     <value>Histórico Devoluciones a Proveedores</value>
   </data>
-  <data name="Message_DeleteReturn" xml:space="preserve">
-    <value>Todos los productos de esta venta ya se han devuelto.
-Por favor cancele la devolución.</value>
-  </data>
-  <data name="Title_CustomerReturnHistoric" xml:space="preserve">
-    <value>Histórico Devolución a Cliente</value>
+  <data name="RefundableItemsNotFound" xml:space="preserve">
+    <value>No se encontraron registros retornables.</value>
   </data>
   <data name="Title_SupplierReturnHistoric" xml:space="preserve">
     <value>Histórico Devolución a Proveedor</value>
@@ -1201,10 +1138,10 @@ Por favor cancele la devolución.</value>
   <data name="DisplayName_PurchaseSearch" xml:space="preserve">
     <value>Búsqueda de Compras</value>
   </data>
-  <data name="DisplayName_ReturnIncomplete" xml:space="preserve">
+  <data name="RefundIncomplete" xml:space="preserve">
     <value>Devoluciones Pendientes</value>
   </data>
-  <data name="DisplayName_SalesSearch" xml:space="preserve">
+  <data name="SalesSearch" xml:space="preserve">
     <value>Búsqueda de Ventas</value>
   </data>
   <data name="Format_ReturnPurchaseDescription" xml:space="preserve">
@@ -1217,9 +1154,6 @@ Realizada el: {0:d}</value>
   </data>
   <data name="DisplayName_ReturnInformation" xml:space="preserve">
     <value>Información de la Devolución</value>
-  </data>
-  <data name="Title_CustomerReturnNote" xml:space="preserve">
-    <value>Ticket de Devolución</value>
   </data>
   <data name="PromissoryNote" xml:space="preserve">
     <value>Pagaré</value>
@@ -1763,5 +1697,14 @@ Realizada el: {0:d}</value>
   </data>
   <data name="FiscalDocumentLegendV3" xml:space="preserve">
     <value>Este documento es una representación impresa de un CFDI.</value>
+  </data>
+  <data name="SalesOrderDate" xml:space="preserve">
+    <value>Fecha del Pedido</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>Cuidado</value>
+  </data>
+  <data name="QuantitiesHaveChanged" xml:space="preserve">
+    <value>Las cantidades han cambiado.</value>
   </data>
 </root>

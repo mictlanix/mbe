@@ -136,11 +136,7 @@ namespace Mictlanix.BE.Web.Controllers
 			} catch {
 				item.Serial = 1;
 			}
-			
-			item.Creator = SecurityHelpers.GetUser (User.Identity.Name).Employee;
-			item.CreationTime = DateTime.Now;
-			item.Updater = item.Creator;
-			item.ModificationTime = item.CreationTime;
+
 			item.Customer = Customer.TryFind (Configuration.DefaultCustomer);
 			item.SalesPerson = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 			item.Date = item.CreationTime;
@@ -149,6 +145,11 @@ namespace Mictlanix.BE.Web.Controllers
 			item.DueDate = item.Date;
 			item.Currency = Configuration.DefaultCurrency;
 			item.ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate ();
+			
+			item.Creator = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			item.CreationTime = DateTime.Now;
+			item.Updater = item.Creator;
+			item.ModificationTime = item.CreationTime;
 
 			using (var scope = new TransactionScope()) {
 				item.CreateAndFlush ();

@@ -183,7 +183,6 @@
     <Compile Include="Models\Pair.cs" />
     <Compile Include="Controllers\FiscalDocumentsController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
-    <Compile Include="Controllers\CustomerReturnsController.cs" />
     <Compile Include="Models\ReceivedPayment.cs" />
     <Compile Include="Models\SummaryItem.cs" />
     <Compile Include="Controllers\PricingController.cs" />
@@ -196,6 +195,7 @@
     <Compile Include="Controllers\POSController.cs" />
     <Compile Include="Controllers\LabelsController.cs" />
     <Compile Include="Helpers\ModelHelpers.cs" />
+    <Compile Include="Controllers\CustomerRefundsController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
@@ -390,19 +390,6 @@
     <Content Include="Views\Purchases\Print.cshtml" />
     <Content Include="Views\SupplierReturns\Print.cshtml" />
     <Content Include="Views\PointsOfSale\Index.cshtml" />
-    <Content Include="Views\CustomerReturns\_CustomerReturnTicket.cshtml" />
-    <Content Include="Views\CustomerReturns\_DeleteReturn.cshtml" />
-    <Content Include="Views\CustomerReturns\_Historic.cshtml" />
-    <Content Include="Views\CustomerReturns\_Index.cshtml" />
-    <Content Include="Views\CustomerReturns\_ReturnItem.cshtml" />
-    <Content Include="Views\CustomerReturns\_SalesInfoReturn.cshtml" />
-    <Content Include="Views\CustomerReturns\_SalesItemReturn.cshtml" />
-    <Content Include="Views\CustomerReturns\_Totals.cshtml" />
-    <Content Include="Views\CustomerReturns\Details.cshtml" />
-    <Content Include="Views\CustomerReturns\Historic.cshtml" />
-    <Content Include="Views\CustomerReturns\HistoricDetails.cshtml" />
-    <Content Include="Views\CustomerReturns\Index.cshtml" />
-    <Content Include="Views\CustomerReturns\_CustomerReturnDetails.cshtml" />
     <Content Include="Views\Reports\_SalesOrdersHistoric.cshtml" />
     <Content Include="Views\Reports\SalesOrdersHistoric.cshtml" />
     <Content Include="Views\Reports\SalesOrdersHistoricDetails.cshtml" />
@@ -703,6 +690,20 @@
     <Content Include="Views\POS\_ItemEditorView.cshtml" />
     <Content Include="Views\POS\_Items.cshtml" />
     <Content Include="Views\POS\_Totals.cshtml" />
+    <Content Include="Views\CustomerRefunds\_Index.cshtml" />
+    <Content Include="Views\CustomerRefunds\_Totals.cshtml" />
+    <Content Include="Views\CustomerRefunds\Index.cshtml" />
+    <Content Include="Views\CustomerRefunds\Print.cshtml" />
+    <Content Include="Views\Reports\CustomerRefundsHistoricDetails.cshtml" />
+    <Content Include="Views\Reports\CustomerRefundsHistoric.cshtml" />
+    <Content Include="Views\Reports\_CustomerRefundsHistoric.cshtml" />
+    <Content Include="Views\Reports\_CustomerRefundDetails.cshtml" />
+    <Content Include="Views\CustomerRefunds\Edit.cshtml" />
+    <Content Include="Views\CustomerRefunds\_EditorView.cshtml" />
+    <Content Include="Views\CustomerRefunds\_ItemEditorView.cshtml" />
+    <Content Include="Views\CustomerRefunds\View.cshtml" />
+    <Content Include="Views\CustomerRefunds\_DisplayView.cshtml" />
+    <Content Include="Views\CustomerRefunds\_ItemDisplayView.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -736,7 +737,7 @@
     </VisualStudio>
     <MonoDevelop>
       <Properties VerifyCodeBehindFields="True" VerifyCodeBehindEvents="True">
-        <XspParameters Port="8080" Address="127.0.0.1" SslMode="None" SslProtocol="Default" KeyType="None" CertFile="" KeyFile="" PasswordOptions="None" Password="" Verbose="True" />
+        <XspParameters Port="8080" Address="0.0.0.0" SslMode="None" SslProtocol="Default" KeyType="None" CertFile="" KeyFile="" PasswordOptions="None" Password="" Verbose="True" />
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>

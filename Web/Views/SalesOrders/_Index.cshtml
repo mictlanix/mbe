@@ -11,29 +11,29 @@
 
 <table>
     <tr>
-        <th>@Html.LabelFor(x => new SalesOrder().Serial)</th>
-        <th>@Html.LabelFor(x => new SalesOrder().Date)</th>
-        <th>@Html.LabelFor(x => new SalesOrder().Customer)</th>
-        <th>@Html.LabelFor(x => new SalesOrder().SalesPerson)</th>
-        <th>@Html.LabelFor(x => new FiscalDocument().IsCompleted)</th>
-        <th>@Html.LabelFor(x => new FiscalDocument().IsCancelled)</th>
+        <th>@Resources.Id</th>
+        <th>@Resources.Date</th>
+        <th>@Resources.Customer</th>
+        <th>@Resources.SalesPerson</th>
+        <th>@Resources.Completed</th>
+        <th>@Resources.Cancelled</th>
         <th></th>
     </tr>
 @foreach (var item in Model.Results) {
     <tr>
-        <td class="number">
-        	@Html.DisplayFor(x => item.Serial)
-        	<i class="icon-exclamation-sign" data-toggle='tooltip' title='@Resources.Id @Html.DisplayFor(x => item.Id)'></i>
+        <td class='number'>
+        	@Html.DisplayFor(x => item.Id)
+        	<i class='icon-exclamation-sign' data-toggle='tooltip' title='@Resources.Serial @Html.DisplayFor(x => item.Serial)'></i>
         </td>
-        <td class="date">@Html.DisplayFor(x => item.Date)</td>
+        <td class='date'>@Html.DisplayFor(x => item.Date)</td>
         <td>@Html.DisplayFor(x => item.Customer.Name)</td>
-        <td class="center">
+        <td class='center'>
         	@Html.DisplayFor(x => item.SalesPerson.FirstName)
         	@Html.DisplayFor(x => item.SalesPerson.LastName)
         </td>
-        <td class="bool">@Html.DisplayFor(x => item.IsCompleted)</td>
-        <td class="bool">@Html.DisplayFor(x => item.IsCancelled)</td>
-        <td class="actions">
+        <td class='bool'>@Html.DisplayFor(x => item.IsCompleted)</td>
+        <td class='bool'>@Html.DisplayFor(x => item.IsCancelled)</td>
+        <td class='actions'>
         	@if (Privilege.AllowRead && (item.IsCompleted || item.IsCancelled)) {
             	@Html.ActionLink(" ", "View", new { id = item.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
             }
@@ -44,10 +44,10 @@
     </tr>
 }
 </table>
-<div class="buttons right">
+<div class='buttons right'>
 	<label class='button left'>@Model.ToString()</label>@if (Model.HasPrev) {<a class='button middle icon prev icon-only paging' title='@Resources.PrevPage' href='javascript:void(0)'></a>}@if (Model.HasNext) {<a class='button right icon next icon-only paging' title='@Resources.NextPage' href='javascript:void(0)'></a>}
 </div>
-<script type="text/javascript">
+<script type='text/javascript'>
 $('[data-toggle="tooltip"]').tooltip();
 $('a.paging').click(function (e) {
 	var offset=@Model.Offset;

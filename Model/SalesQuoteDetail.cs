@@ -103,7 +103,7 @@ namespace Mictlanix.BE.Model
         [DataType(DataType.Currency)]
         [Display(Name = "Subtotal", ResourceType = typeof(Resources))]
         public decimal Subtotal {
-			get { return ModelHelpers.Subtotal (Quantity, Price, ExchangeRate, Discount, TaxRate, IsTaxIncluded); }
+			get { return ModelHelpers.Subtotal (Quantity, Price, 1, Discount, TaxRate, IsTaxIncluded); }
 		}
 
         [DataType(DataType.Currency)]
@@ -115,6 +115,24 @@ namespace Mictlanix.BE.Model
         [DataType(DataType.Currency)]
         [Display(Name = "Total", ResourceType = typeof(Resources))]
         public decimal Total {
+			get { return ModelHelpers.Total (Quantity, Price, 1, Discount, TaxRate, IsTaxIncluded); }
+		}
+
+		[DataType(DataType.Currency)]
+		[Display(Name = "Subtotal", ResourceType = typeof(Resources))]
+		public decimal SubtotalEx {
+			get { return ModelHelpers.Subtotal (Quantity, Price, ExchangeRate, Discount, TaxRate, IsTaxIncluded); }
+		}
+
+		[DataType(DataType.Currency)]
+		[Display(Name = "Taxes", ResourceType = typeof(Resources))]
+		public decimal TaxesEx {
+			get { return TotalEx - SubtotalEx; }
+		}
+
+		[DataType(DataType.Currency)]
+		[Display(Name = "Total", ResourceType = typeof(Resources))]
+		public decimal TotalEx {
 			get { return ModelHelpers.Total (Quantity, Price, ExchangeRate, Discount, TaxRate, IsTaxIncluded); }
 		}
 

@@ -118,8 +118,6 @@
     <Compile Include="SalesQuoteDetail.cs" />
     <Compile Include="FiscalDocument.cs" />
     <Compile Include="FiscalDocumentDetail.cs" />
-    <Compile Include="CustomerReturn.cs" />
-    <Compile Include="CustomerReturnDetail.cs" />
     <Compile Include="Constants\TransactionType.cs" />
     <Compile Include="ProductPrice.cs" />
     <Compile Include="LotSerialTracking.cs" />
@@ -139,6 +137,8 @@
     <Compile Include="Constants\PriceType.cs" />
     <Compile Include="Constants\PaymentTerms.cs" />
     <Compile Include="FiscalDocumentXml.cs" />
+    <Compile Include="CustomerRefund.cs" />
+    <Compile Include="CustomerRefundDetail.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">

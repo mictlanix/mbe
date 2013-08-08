@@ -144,7 +144,7 @@ namespace Mictlanix.BE.Model
 		[DataType(DataType.Currency)]
 		[Display(Name = "Taxes", ResourceType = typeof(Resources))]
 		public decimal TaxesEx {
-			get { return Total - Subtotal; }
+			get { return TotalEx - SubtotalEx; }
 		}
 
 		[DataType(DataType.Currency)]

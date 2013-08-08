@@ -48,7 +48,7 @@ namespace Mictlanix.BE.Web.Models
 		[Display(Name = "Date", ResourceType = typeof(Resources))]
 		public DateTime Date { get; set; }
 		
-		[Display(Name = "SalesOrderId", ResourceType = typeof(Resources))]
+		[Display(Name = "SalesOrder", ResourceType = typeof(Resources))]
 		public int? SalesOrder { get; set; }
 		
 		[Display(Name = "Serial", ResourceType = typeof(Resources))]
