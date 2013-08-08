@@ -1,7 +1,7 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
-@model SalesOrderDetail
+@model CustomerRefundDetail
 
 <li id='id:@Model.Id'>
     <div class='photo'>
@@ -34,7 +34,7 @@
         <span class='editable subtotal'>@Html.DisplayFor(x => x.Subtotal)</span>
         <span class='editable currency'>@Html.DisplayFor(x => x.Currency)</span>
         @if (Model.Currency != Configuration.BaseCurrency) {
-			<i class='subtotal2 icon-exclamation-sign' data-toggle='tooltip' title='@Html.DisplayFor(x => x.SubtotalEx) @Configuration.BaseCurrency'></i>
+			<i class='total2 icon-exclamation-sign' data-toggle='tooltip' title='@Html.DisplayFor(x => x.TotalEx) @Configuration.BaseCurrency'></i>
         }
     </div>
 </li>

@@ -862,15 +862,6 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Histórico Devoluciones a Clientes.
-        /// </summary>
-        public static string DisplayName_CustomerReturnHistoric {
-            get {
-                return ResourceManager.GetString("DisplayName_CustomerReturnHistoric", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Catálogo de Clientes.
         /// </summary>
         public static string DisplayName_Customers {
@@ -1113,30 +1104,9 @@ namespace Mictlanix.BE {
             }
         }
         
-        /// <summary>
-        ///   Looks up a localized string similar to Devolución a Clientes.
-        /// </summary>
-        public static string DisplayName_CustomerReturn {
+		public static string RefundIncomplete {
             get {
-                return ResourceManager.GetString("DisplayName_CustomerReturn", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Detalles de la Devolución a Cliente.
-        /// </summary>
-        public static string DisplayName_CustomerReturnDetails {
-            get {
-                return ResourceManager.GetString("DisplayName_CustomerReturnDetails", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Devoluciones Pendientes.
-        /// </summary>
-        public static string DisplayName_ReturnIncomplete {
-            get {
-                return ResourceManager.GetString("DisplayName_ReturnIncomplete", resourceCulture);
+				return ResourceManager.GetString("RefundIncomplete", resourceCulture);
             }
         }
         
@@ -1170,9 +1140,9 @@ namespace Mictlanix.BE {
         /// <summary>
         ///   Looks up a localized string similar to Histórico de Ventas.
         /// </summary>
-		public static string SalesHistoric {
+		public static string SalesOrdersHistoric {
             get {
-				return ResourceManager.GetString("SalesHistoric", resourceCulture);
+				return ResourceManager.GetString("SalesOrdersHistoric", resourceCulture);
             }
         }
         
@@ -1197,9 +1167,9 @@ namespace Mictlanix.BE {
         /// <summary>
         ///   Looks up a localized string similar to Búsqueda de Ventas.
         /// </summary>
-        public static string DisplayName_SalesSearch {
+        public static string SalesSearch {
             get {
-                return ResourceManager.GetString("DisplayName_SalesSearch", resourceCulture);
+                return ResourceManager.GetString("SalesSearch", resourceCulture);
             }
         }
         
@@ -1995,9 +1965,9 @@ namespace Mictlanix.BE {
         ///   Looks up a localized string similar to Todos los productos de esta venta ya se han devuelto.
         ///Por favor cancele la devolución..
         /// </summary>
-        public static string Message_DeleteReturn {
+		public static string RefundableItemsNotFound {
             get {
-                return ResourceManager.GetString("Message_DeleteReturn", resourceCulture);
+				return ResourceManager.GetString("RefundableItemsNotFound", resourceCulture);
             }
         }
         
@@ -2680,15 +2650,6 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Devolución.
-        /// </summary>
-        public static string CustomerReturn {
-            get {
-                return ResourceManager.GetString("CustomerReturn", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Folio de la Devolución.
         /// </summary>
         public static string ReturnOrderId {
@@ -3271,25 +3232,7 @@ namespace Mictlanix.BE {
             get {
                 return ResourceManager.GetString("Title_CustomerPayment", resourceCulture);
             }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Histórico Devolución a Cliente.
-        /// </summary>
-        public static string Title_CustomerReturnHistoric {
-            get {
-                return ResourceManager.GetString("Title_CustomerReturnHistoric", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Ticket de Devolución.
-        /// </summary>
-        public static string Title_CustomerReturnNote {
-            get {
-                return ResourceManager.GetString("Title_CustomerReturnNote", resourceCulture);
-            }
-        }
+		}
         
         /// <summary>
         ///   Looks up a localized string similar to Empleados.
@@ -3478,16 +3421,37 @@ namespace Mictlanix.BE {
             get {
                 return ResourceManager.GetString("Title_Register", resourceCulture);
             }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Devolución a Cliente.
-        /// </summary>
-        public static string Title_CustomerReturn {
-            get {
-                return ResourceManager.GetString("Title_CustomerReturn", resourceCulture);
-            }
-        }
+		}
+
+		public static string CustomerRefund {
+			get {
+				return ResourceManager.GetString("CustomerRefund", resourceCulture);
+			}
+		}
+
+		public static string CustomerRefunds {
+			get {
+				return ResourceManager.GetString("CustomerRefunds", resourceCulture);
+			}
+		}
+
+		public static string CustomerRefundsHistoric {
+			get {
+				return ResourceManager.GetString("CustomerRefundsHistoric", resourceCulture);
+			}
+		}
+
+		public static string CustomerRefundDetails {
+			get {
+				return ResourceManager.GetString("CustomerRefundDetails", resourceCulture);
+			}
+		}
+
+		public static string CustomerRefundReceipt {
+			get {
+				return ResourceManager.GetString("CustomerRefundReceipt", resourceCulture);
+			}
+		}
         
         /// <summary>
         ///   Looks up a localized string similar to Venta.
@@ -4680,6 +4644,24 @@ namespace Mictlanix.BE {
 		public static string FiscalDocumentLegendV3 {
 			get {
 				return ResourceManager.GetString("FiscalDocumentLegendV3", resourceCulture);
+			}
+		}
+
+		public static string SalesOrderDate {
+			get {
+				return ResourceManager.GetString("SalesOrderDate", resourceCulture);
+			}
+		}
+		
+		public static string Warning {
+			get {
+				return ResourceManager.GetString("Warning", resourceCulture);
+			}
+		}
+		
+		public static string QuantitiesHaveChanged {
+			get {
+				return ResourceManager.GetString("QuantitiesHaveChanged", resourceCulture);
 			}
 		}
     }
