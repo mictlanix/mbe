@@ -24,8 +24,6 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
-
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
@@ -65,20 +63,20 @@ namespace Mictlanix.BE.Web.Helpers
 
 		public static decimal Debt (this Customer entity)
 		{
-			IQueryable<decimal> qry;
+			IQueryable<decimal> query;
 
-			qry = from x in CustomerPayment.Queryable
-				  where x.SalesOrder == null && x.Customer.Id == entity.Id
-				  select x.Amount;
-			var paid = qry.Count () > 0 ? qry.ToList ().Sum () : 0;
+			query = from x in CustomerPayment.Queryable
+					where x.SalesOrder == null && x.Customer.Id == entity.Id
+					select x.Amount;
+			var paid = query.Count () > 0 ? query.ToList ().Sum () : 0;
 
-			qry = from x in SalesOrder.Queryable
-				  from y in x.Details
-				  where x.Terms == PaymentTerms.NetD &&
+			query = from x in SalesOrder.Queryable
+					from y in x.Details
+					where x.Terms == PaymentTerms.NetD &&
 						x.IsCompleted && !x.IsCancelled &&
 						x.Customer.Id == entity.Id
-				  select y.Quantity * y.Price * y.ExchangeRate * (1 - y.Discount) * (y.IsTaxIncluded ? 1m : (1m + y.TaxRate));
-			var bought = qry.Count () > 0 ? qry.ToList ().Sum () : 0;
+				  	select y.Quantity * y.Price * y.ExchangeRate * (1 - y.Discount) * (y.IsTaxIncluded ? 1m : (1m + y.TaxRate));
+			var bought = query.Count () > 0 ? query.ToList ().Sum () : 0;
 
 			return bought - paid;
 		}

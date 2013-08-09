@@ -80,13 +80,13 @@ namespace Mictlanix.BE.Web.Controllers
 			if (string.IsNullOrEmpty (search.Pattern)) {
 				query = from x in CustomerRefund.Queryable
 						where x.Store.Id == item.Id
-						orderby (x.IsCompleted ? 1 : 0) + (x.IsCancelled ? 1 : 0), x.Date descending, x.Id descending
+						orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending, x.Id descending
 						select x;
 			} else {
 				query = from x in CustomerRefund.Queryable
 						where x.Store.Id == item.Id &&
 							  x.Customer.Name.Contains (search.Pattern)
-						orderby (x.IsCompleted ? 1 : 0) + (x.IsCancelled ? 1 : 0), x.Date descending, x.Id descending
+						orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending, x.Id descending
 						select x;
 			}
 
@@ -281,7 +281,7 @@ namespace Mictlanix.BE.Web.Controllers
 				entity.UpdateAndFlush ();
 			}
 
-            return RedirectToAction ("Index");
+			return RedirectToAction ("View", new { id = entity.Id });
         }
 
         [HttpPost]

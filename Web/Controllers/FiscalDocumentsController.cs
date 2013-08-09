@@ -85,13 +85,16 @@ namespace Mictlanix.BE.Web.Controllers
             if (string.IsNullOrEmpty (search.Pattern)) {
                 query = from x in FiscalDocument.Queryable
                       	where !(!x.IsCompleted && x.IsCancelled)
-						orderby (x.IsCompleted ? 1 : 0) + (x.IsCancelled ? 1 : 0), x.Issued descending
+						orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Issued descending
                       	select x;
             } else {
                 query = from x in FiscalDocument.Queryable
-                      	where !(!x.IsCompleted && x.IsCancelled) &&
-                        	  x.Customer.Name.Contains(search.Pattern)
-						orderby (x.IsCompleted ? 1 : 0) + (x.IsCancelled ? 1 : 0), x.Issued descending
+						where !(!x.IsCompleted && x.IsCancelled) && (
+							x.Issuer.Id.Contains (search.Pattern) ||
+							x.Recipient.Id.Contains (search.Pattern) ||
+							x.RecipientName.Contains (search.Pattern) ||
+							x.Customer.Name.Contains (search.Pattern))
+						orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Issued descending
                       	select x;
 			}
 
