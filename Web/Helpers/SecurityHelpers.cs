@@ -39,27 +39,26 @@ namespace Mictlanix.BE.Web.Helpers
 {
     public static class SecurityHelpers
     {
-        public static User CurrentUser(this HtmlHelper helper)
+        public static User CurrentUser (this HtmlHelper helper)
         {
-			User user = helper.ViewContext.HttpContext.Items["CurrentUser"] as User;
+			var user = helper.ViewContext.HttpContext.Items ["CurrentUser"] as User;
 			
-			if (user == null)
-			{
-				user = GetUser(helper, helper.ViewContext.HttpContext.User.Identity.Name);
-				helper.ViewContext.HttpContext.Items["CurrentUser"] = user;
+			if (user == null) {
+				user = GetUser (helper, helper.ViewContext.HttpContext.User.Identity.Name);
+				helper.ViewContext.HttpContext.Items ["CurrentUser"] = user;
 			}
 			
             return user;
         }
 
-        internal static User GetUser(this HtmlHelper helper, string username)
+        internal static User GetUser (this HtmlHelper helper, string username)
         {
-            return GetUser(username);
+            return GetUser (username);
         }
 
-        internal static User GetUser(string username)
+        internal static User GetUser (string username)
         {
-            return User.TryFind(username);
+            return User.TryFind (username);
         }
 
         public static AccessPrivilege GetPrivilege (this HtmlHelper helper, User user, SystemObjects obj)
@@ -69,12 +68,16 @@ namespace Mictlanix.BE.Web.Helpers
 
 		internal static string SHA1 (string text)
 		{
+			if (string.IsNullOrEmpty (text)) {
+				return null;
+			}
+
 			byte[] bytes = Encoding.Default.GetBytes ("" + text);
-			SHA1CryptoServiceProvider sha1 = new SHA1CryptoServiceProvider ();
+			var sha1 = new SHA1CryptoServiceProvider ();
 
 			return BitConverter.ToString (sha1.ComputeHash (bytes)).Replace ("-", "");
 		}
-		
+
 		internal static byte[] DecodeBase64 (string data)
 		{
 			return System.Convert.FromBase64String (data);
