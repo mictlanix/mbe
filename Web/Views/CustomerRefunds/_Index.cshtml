@@ -5,8 +5,8 @@
 @model Search<CustomerRefund>
 
 @{
-    var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CustomerRefunds);
+    var CurrentUser = Html.CurrentUser () ?? new User ();
+    var Privilege = Html.GetPrivilege (CurrentUser, SystemObjects.CustomerRefunds);
 }
 
 <table>
@@ -36,6 +36,9 @@
         }
         @if (Privilege.AllowUpdate && !item.IsCompleted && !item.IsCancelled) {
         	@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
+        }
+    	@if (Privilege.AllowRead && (item.IsCompleted || item.IsCancelled)) {
+        	@Html.ActionLink(" ", "Print", new { id = item.Id }, new { @class = "button icon print icon-only", title = Resources.Details, target = "_blank" })
         }
         </td>
     </tr>

@@ -47,7 +47,7 @@
 @if(Privilege.AllowDelete && !Model.IsCancelled) {
 	<div class='row-fluid'>
   		<div class='span12'>
-	    @using (Html.BeginForm("Cancel", "SalesOrders", new { id =  Model.Id }, FormMethod.Post, new { @class = "modal-form pull-right" })) {
+	    @using (Html.BeginForm("Cancel", "FiscalDocuments", new { id =  Model.Id }, FormMethod.Post, new { @class = "modal-form pull-right" })) {
 			<button type="submit" class="icon cancel">@Resources.Cancel</button>
 	    }
   		</div>

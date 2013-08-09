@@ -79,24 +79,24 @@ namespace Mictlanix.BE.Web.Controllers
 
 		Search<SalesOrder> SearchSalesOrders (Search<SalesOrder> search)
 		{
-			IQueryable<SalesOrder> qry;
+			IQueryable<SalesOrder> query;
 			var item = Configuration.PointOfSale;
 
 			if (string.IsNullOrEmpty (search.Pattern)) {
-				qry = from x in SalesOrder.Queryable
-					where x.Store.Id == item.Store.Id
-						orderby (x.IsCompleted ? 1 : 0) + (x.IsCancelled ? 1 : 0), x.Date descending
+				query = from x in SalesOrder.Queryable
+						where x.Store.Id == item.Store.Id
+						orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending
 						select x;
 			} else {
-				qry = from x in SalesOrder.Queryable
-					where x.Store.Id == item.Store.Id &&
+				query = from x in SalesOrder.Queryable
+						where x.Store.Id == item.Store.Id &&
 						x.Customer.Name.Contains (search.Pattern)
-						orderby (x.IsCompleted ? 1 : 0) + (x.IsCancelled ? 1 : 0), x.Date descending
+						orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending
 						select x;
 			}
 
-			search.Total = qry.Count ();
-			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+			search.Total = query.Count ();
+			search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
 
 			return search;
 		}
