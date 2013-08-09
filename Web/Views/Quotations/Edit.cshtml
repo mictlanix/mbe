@@ -49,7 +49,7 @@ function updateTotals(){
 }
 
 $(function () {
-    $('#product-search').tokenInput('@Url.Action("GetSuggestions", "SalesOrders", new { order = Model.Id })', {
+    $('#product-search').tokenInput('@Url.Action("GetSuggestions", "Quotations", new { order = Model.Id })', {
         hintText:'@Resources.HIntText',
         noResultsText:'@Resources.NoResultsText',
         searchingText:'@Resources.SearchingText',          
