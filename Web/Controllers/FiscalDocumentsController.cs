@@ -970,22 +970,23 @@ namespace Mictlanix.BE.Web.Controllers
 		public ActionResult Report (string taxpayer, int year, int month)
 		{
 			var ms = new MemoryStream ();
-			var result = new FileStreamResult (ms, "text/plain");
-			StreamWriter sw = new StreamWriter (ms, Encoding.UTF8);
+			var sw = new StreamWriter (ms, Encoding.UTF8);
 			var start = new DateTime (year, month, 1, 0, 0, 0, DateTimeKind.Unspecified);
 			var end = start.AddMonths (1);
-			var qry = from x in FiscalDocument.Queryable
-				where x.IsCompleted && ((x.Issued >= start && x.Issued < end) ||
-				                        (x.IsCancelled && x.CancellationDate >= start && x.CancellationDate < end))
-					select x;
+			var query = from x in FiscalDocument.Queryable
+						where x.Issuer.Id == taxpayer &&
+							  x.IsCompleted && ((x.Issued >= start && x.Issued < end) ||
+							  (x.IsCancelled && x.CancellationDate >= start && x.CancellationDate < end))
+						select x;
 
-			foreach (var row in CFDHelpers.MonthlyReport(qry.ToList())) {
+			foreach (var row in CFDHelpers.MonthlyReport (query.ToList())) {
 				sw.WriteLine (row);
 			}
 
 			sw.Flush ();
 			ms.Seek (0, SeekOrigin.Begin);
-
+			
+			var result = new FileStreamResult (ms, "text/plain");
 			result.FileDownloadName = string.Format (Resources.Format_FiscalReportName,
 			                                         taxpayer, year, month);
 

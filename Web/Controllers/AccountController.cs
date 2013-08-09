@@ -45,7 +45,7 @@ namespace Mictlanix.BE.Web.Controllers
         bool ValidateUser(string username, string password)
         {
             var item = Model.User.Queryable.SingleOrDefault(x => x.UserName == username);
-            return item != null && item.Password ==  SecurityHelpers.SHA1(password);
+            return item != null && item.Password ==  SecurityHelpers.SHA1 (password);
         }
 
         bool CreateUser (string username, string password, string email)
@@ -58,7 +58,7 @@ namespace Mictlanix.BE.Web.Controllers
 
 			var item = new User {
                 UserName = username,
-                Password = SecurityHelpers.SHA1(password),
+                Password = SecurityHelpers.SHA1 (password),
 				Email = email.ToLower()
             };
 
@@ -72,12 +72,12 @@ namespace Mictlanix.BE.Web.Controllers
         bool ChangePassword(string username, string oldPassword, string newPassword)
         {
             User item = Model.User.Find(username);
-            string pwd = SecurityHelpers.SHA1(oldPassword);
+            string pwd = SecurityHelpers.SHA1 (oldPassword);
 
             if (item == null || item.Password != pwd)
                 return false;
 
-            item.Password = SecurityHelpers.SHA1(newPassword);
+            item.Password = SecurityHelpers.SHA1 (newPassword);
 			
 			using (var scope = new TransactionScope()) {
 				item.UpdateAndFlush ();
@@ -170,15 +170,15 @@ namespace Mictlanix.BE.Web.Controllers
                 bool changePasswordSucceeded;
 
                 try {
-                    changePasswordSucceeded = ChangePassword(User.Identity.Name, model.OldPassword, model.NewPassword);
+                    changePasswordSucceeded = ChangePassword (User.Identity.Name, model.OldPassword, model.NewPassword);
                 } catch (Exception) {
                     changePasswordSucceeded = false;
                 }
 
                 if (changePasswordSucceeded) {
-                    return RedirectToAction("ChangePasswordSuccess");
+                    return RedirectToAction ("ChangePasswordSuccess");
                 } else {
-                    ModelState.AddModelError("", Mictlanix.BE.Resources.Message_ChangePasswordWrong);
+                    ModelState.AddModelError ("", Mictlanix.BE.Resources.Message_ChangePasswordWrong);
                 }
             }
 
