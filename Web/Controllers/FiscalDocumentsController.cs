@@ -340,7 +340,7 @@ namespace Mictlanix.BE.Web.Controllers
 			var entity = FiscalDocument.Find (id);
 
 			if (value != null) {
-				var batch = entity.Issuer.Batches.SingleOrDefault (x => x.Batch == value);
+				var batch = entity.Issuer.Batches.FirstOrDefault (x => x.Batch == value);
 
 				if (batch == null) {
 					Response.StatusCode = 400;

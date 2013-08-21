@@ -5,12 +5,12 @@
 @model DateRange
 
 @{
-    ViewBag.Title = Resources.Title_CustomerRefundsHistoric;
+    ViewBag.Title = Resources.CustomerRefundsHistoric;
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CustomerRefundsHistoric);
 }
 
-<h2>@Mictlanix.BE.Resources.DisplayName_CustomerRefundsHistoric</h2>
+<h2>@Mictlanix.BE.Resources.CustomerRefundsHistoric</h2>
 
 @using (Ajax.BeginForm("Historic", "CustomerRefunds", new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))
 {
