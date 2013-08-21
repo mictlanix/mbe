@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -620,7 +620,6 @@
     <Content Include="Views\SupplierReturns\EditSupplierReturn.cshtml" />
     <Content Include="Views\SupplierReturns\_PurchaseInfoReturn.cshtml" />
     <Content Include="Views\SupplierReturns\_ReturnItem.cshtml" />
-    <Content Include="Views\SupplierReturns\_DeleteReturn.cshtml" />
     <Content Include="Views\SupplierReturns\Historic.cshtml" />
     <Content Include="Views\SupplierReturns\HistoricDetails.cshtml" />
     <Content Include="Views\SupplierReturns\_SupplierReturnDetails.cshtml" />
@@ -741,7 +740,5 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
-  <ItemGroup>
-    <Folder Include="Views\POS\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>
