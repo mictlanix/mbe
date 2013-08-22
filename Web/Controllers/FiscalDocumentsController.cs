@@ -233,13 +233,17 @@ namespace Mictlanix.BE.Web.Controllers
 		
 		public JsonResult PaymentMethods ()
 		{
-			var query = from x in new []{ PaymentMethod.Unidentified, PaymentMethod.Cash,
-										  PaymentMethod.DebitCard, PaymentMethod.CreditCard,
-										  PaymentMethod.Check, PaymentMethod.BankDeposit,
-										  PaymentMethod.WireTransfer }
-						select new { value = (int)x, text = x.GetDisplayName () };
+			var items = new ArrayList ();
 
-			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
+			items.Add (new { value = (int)PaymentMethod.Unidentified, text = PaymentMethod.Unidentified.GetDisplayName ()});
+			items.Add (new { value = (int)PaymentMethod.Cash,         text = PaymentMethod.Cash.GetDisplayName ()});
+			items.Add (new { value = (int)PaymentMethod.DebitCard,    text = PaymentMethod.DebitCard.GetDisplayName ()});
+			items.Add (new { value = (int)PaymentMethod.CreditCard,   text = PaymentMethod.CreditCard.GetDisplayName ()});
+			items.Add (new { value = (int)PaymentMethod.Check,        text = PaymentMethod.Check.GetDisplayName ()});
+			items.Add (new { value = (int)PaymentMethod.BankDeposit,  text = PaymentMethod.BankDeposit.GetDisplayName ()});
+			items.Add (new { value = (int)PaymentMethod.WireTransfer, text = PaymentMethod.WireTransfer.GetDisplayName ()});
+
+			return Json (items, JsonRequestBehavior.AllowGet);
 		}
 
 		[HttpPost]
@@ -947,7 +951,7 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 
 			var result = new FileStreamResult (xml, "text/xml");
-			result.FileDownloadName = string.Format (Resources.Format_FiscalDocumentName,
+			result.FileDownloadName = string.Format (Resources.FiscalDocumentFilenameFormatString + ".xml",
 			                                         entity.Issuer.Id, entity.Batch, entity.Serial);
 
 			return result;
@@ -996,7 +1000,7 @@ namespace Mictlanix.BE.Web.Controllers
 		public JsonResult GetSuggestions (int id, string pattern)
 		{
 			int pl = FiscalDocument.Queryable.Where (x => x.Id == id)
-					.Select (x => x.Customer.PriceList.Id).Single ();
+								.Select (x => x.Customer.PriceList.Id).Single ();
 			var query = from x in ProductPrice.Queryable
 						where x.List.Id == pl && (
 							x.Product.Name.Contains (pattern) ||
@@ -1006,16 +1010,17 @@ namespace Mictlanix.BE.Web.Controllers
 							x.Product.Brand.Contains (pattern))
 						orderby x.Product.Name
 						select new {
-							id = x.Product.Id,
-							name = x.Product.Name,
-							code = x.Product.Code,
-							model = x.Product.Model,
-							sku = x.Product.SKU,
-							url = Url.Content(x.Product.Photo),
-							price = x.Value
+							x.Product.Id, x.Product.Name, x.Product.Code,
+							x.Product.Model, x.Product.SKU, x.Product.Photo, Price = x.Value
 						};
-			
-			return Json (query.Take (15), JsonRequestBehavior.AllowGet);
+
+			var items = from x in query.Take (15).ToList ()
+						select new {
+							id = x.Id, name = x.Name, code = x.Code, model = x.Model,
+							sku = x.SKU, url = Url.Content (x.Photo), price = x.Price
+						};
+
+			return Json (items.ToList (), JsonRequestBehavior.AllowGet);
 		}
 
 		decimal GetInvoiceableQuantity (int id)

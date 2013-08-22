@@ -19,8 +19,10 @@
 			    </dd>
 				<dt>@Resources.Recipient</dt>
 				<dd>@Html.DisplayFor(x => x.Recipient, "String")</dd>
+			@if (!string.IsNullOrEmpty (Model.Reference)) {
 				<dt>@Resources.Reference</dt>
 				<dd>@Html.DisplayFor(x => x.Reference)</dd>
+			}
 			</dl>
 		</div>
 	  	<div class='span4'>
@@ -39,8 +41,10 @@
 				<dd>@Html.DisplayFor(x => x.ExchangeRate)</dd>
 				<dt>@Resources.PaymentMethod</dt>
 				<dd>@Model.PaymentMethod.GetDisplayName()</dd>
+			@if (!string.IsNullOrEmpty (Model.PaymentReference)) {
 				<dt>@Resources.PaymentReference</dt>
 				<dd>@Html.DisplayFor(x => x.PaymentReference)</dd>
+			}
 			</dl>
   		</div>
 	</div>

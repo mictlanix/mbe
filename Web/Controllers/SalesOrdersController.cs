@@ -675,30 +675,30 @@ namespace Mictlanix.BE.Web.Controllers
 			return RedirectToAction ("Index");
         }
 
-        public JsonResult GetSuggestions (int order, string pattern)
+		// TODO: Rename param: order -> id
+		public JsonResult GetSuggestions (int order, string pattern)
 		{
-			var sales_order = SalesOrder.Find (order);
-			int pl = sales_order.Customer.PriceList.Id;
-
-			var qry = from x in ProductPrice.Queryable
-					  where x.List.Id == pl && (
+			int pl = SalesOrder.Queryable.Where (x => x.Id == order)
+							.Select (x => x.Customer.PriceList.Id).Single ();
+			var query = from x in ProductPrice.Queryable
+						where x.List.Id == pl && (
 							x.Product.Name.Contains (pattern) ||
 							x.Product.Code.Contains (pattern) ||
 							x.Product.Model.Contains (pattern) ||
 							x.Product.SKU.Contains (pattern) ||
 							x.Product.Brand.Contains (pattern))
-					  orderby x.Product.Name
-					  select new { 
-							id = x.Product.Id,
-							name = x.Product.Name,
-							code = x.Product.Code,
-							model = x.Product.Model,
-							sku = x.Product.SKU,
-							url = Url.Content(x.Product.Photo),
-							price = x.Value
-					  };
+						orderby x.Product.Name
+						select new {
+							x.Product.Id, x.Product.Name, x.Product.Code,
+							x.Product.Model, x.Product.SKU, x.Product.Photo, Price = x.Value
+						};
+			var items = from x in query.Take (15).ToList ()
+						select new {
+							id = x.Id, name = x.Name, code = x.Code, model = x.Model,
+							sku = x.SKU, url = Url.Content (x.Photo), price = x.Price
+						};
 
-			return Json (qry.Take(15), JsonRequestBehavior.AllowGet);
+			return Json (items.ToList (), JsonRequestBehavior.AllowGet);
 		}
     }
 }
