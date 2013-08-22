@@ -111,10 +111,6 @@ namespace Mictlanix.BE.Web.Helpers
 			}
 		}
 
-		public static string DefaultBatch {
-			get { return ConfigurationManager.AppSettings ["DefaultBatch"]; }
-		}
-
 		public static string MainLayout {
 			get { return ConfigurationManager.AppSettings ["MainLayout"]; }
 		}

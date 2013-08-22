@@ -36,7 +36,7 @@ function bindModal(selector) {
 				$modal.attr('id', $(this).attr('data-modal-id'))
 					  .addClass('modal hide fade')
 					  .attr('tabindex', -1)
-					  .css('width', 666);
+					  .css('width', 682);
 			}
 			
 			$modal.load(url, '', function(){

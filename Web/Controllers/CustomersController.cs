@@ -117,7 +117,7 @@ namespace Mictlanix.BE.Web.Controllers
             	item.CreateAndFlush ();
 			}
             
-            return RedirectToAction ("Index");
+			return RedirectToAction ("Details", new { id = item.Id });
         }
 
         public ActionResult Edit(int id)
@@ -135,7 +135,8 @@ namespace Mictlanix.BE.Web.Controllers
             	return View(item);
 			
 			var entity = Customer.Find(item.Id);
-			
+
+			entity.Code = item.Code;
 			entity.Name = item.Name;
 			entity.Zone = item.Zone;
 			entity.PriceList = item.PriceList;
