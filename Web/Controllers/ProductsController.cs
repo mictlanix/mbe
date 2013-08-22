@@ -248,29 +248,21 @@ namespace Mictlanix.BE.Web.Controllers
 
 		public JsonResult GetSuggestions (string pattern)
 		{
-			ArrayList items = new ArrayList (15);
-			var qry = from x in Product.Queryable
-                      where x.Name.Contains (pattern) ||
+			var query = from x in Product.Queryable
+						where x.Name.Contains (pattern) ||
 							x.Code.Contains (pattern) ||
 							x.Model.Contains (pattern) ||
 							x.SKU.Contains (pattern) ||
 							x.Brand.Contains (pattern)
-					  orderby x.Name
-                      select x;
-			
-			foreach (var x in qry.Take(15)) {
-				var item = new { 
-                    id = x.Id,
-                    name = x.Name,
-                    code = x.Code,
-					model = x.Model,
-                    sku = x.SKU,
-                    url = Url.Content (x.Photo)
-				};
-                
-				items.Add (item);
-			}
-			
+						orderby x.Name
+						select x;
+
+			var items = from x in query.Take (15).ToList ()
+				select new {
+				id = x.Id, name = x.Name, code = x.Code, model = x.Model,
+				sku = x.SKU, url = Url.Content (x.Photo)
+			};
+
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}
 		
