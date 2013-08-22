@@ -1233,11 +1233,8 @@ Realizada el: {0:d}</value>
   <data name="Discard" xml:space="preserve">
     <value>Descartar</value>
   </data>
-  <data name="Format_FiscalDocumentPath" xml:space="preserve">
-    <value>{0}/{1}-CFD-{2}{3:D5}.xml</value>
-  </data>
-  <data name="Format_FiscalDocumentName" xml:space="preserve">
-    <value>{0}-CFD-{1}{2:D5}.xml</value>
+  <data name="FiscalDocumentFilenameFormatString" xml:space="preserve">
+    <value>{0}-CFD-{1}{2:D5}</value>
   </data>
   <data name="Download" xml:space="preserve">
     <value>Descargar</value>

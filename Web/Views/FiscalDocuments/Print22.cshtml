@@ -6,6 +6,8 @@
 
 @{
     Layout = Configuration.PrintLayout;
+    ViewBag.WindowTitle = string.Format (Resources.FiscalDocumentFilenameFormatString,
+                                         Model.Issuer.Id, Model.Batch, Model.Serial);
     ViewBag.Title = Resources.FiscalDocument;
     ViewBag.Store = Model.Store;
     ViewBag.Taxpayer = Model.Issuer.Id;
@@ -21,6 +23,11 @@
     @Html.DisplayFor(x => x.Issued)<br/>
     @Html.LabelFor(x => x.IssuedLocation)<br/>
     @Html.DisplayFor(x => x.IssuedLocation)
+@if (!string.IsNullOrEmpty (Model.Reference)) {
+    <br/>
+    @Html.LabelFor(x => x.Reference)<text>:</text>
+    @Html.DisplayFor(x => x.Reference)
+}
 </div>
 
 <div class="display-label">

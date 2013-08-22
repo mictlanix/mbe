@@ -1482,18 +1482,9 @@ namespace Mictlanix.BE {
         /// <summary>
         ///   Looks up a localized string similar to {0}-CFD-{1}{2:D5}.xml.
         /// </summary>
-        public static string Format_FiscalDocumentName {
+		public static string FiscalDocumentFilenameFormatString {
             get {
-                return ResourceManager.GetString("Format_FiscalDocumentName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0}/{1}-CFD-{2}{3:D5}.xml.
-        /// </summary>
-        public static string Format_FiscalDocumentPath {
-            get {
-                return ResourceManager.GetString("Format_FiscalDocumentPath", resourceCulture);
+				return ResourceManager.GetString("FiscalDocumentFilenameFormatString", resourceCulture);
             }
         }
         
