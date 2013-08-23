@@ -23,6 +23,7 @@
 	@Html.EditorFor(x => x.Address)
 </div>
 <script type="text/javascript">
+$("#Id").css('text-transform', 'uppercase');
 $("#HasAddress").change(function() {
     var show = $(this).is(':checked');
     
