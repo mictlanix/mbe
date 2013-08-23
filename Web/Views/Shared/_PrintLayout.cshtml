@@ -32,13 +32,15 @@
 	        </h4>
 	        }
 	        <h4>
-	        	@if (!string.IsNullOrEmpty (ViewBag.Taxpayer) &&
-	        		  string.IsNullOrEmpty (ViewBag.TaxpayerName)) {
-	        		<br/><b>@Resources.IssuedAt</b><br/>
-	        	}
+        	@if (!string.IsNullOrEmpty (ViewBag.Taxpayer) &&
+        		  string.IsNullOrEmpty (ViewBag.TaxpayerName)) {
+        		<br/><b>@Resources.IssuedAt</b><br/>
+        	}
 	        	@ViewBag.Address.StreetAndNumber<br/>
 	        	@ViewBag.Address.Neighborhood,
-	        	@ViewBag.Address.Locality,
+        	@if (!string.IsNullOrEmpty (ViewBag.Address.Locality)) {
+	        	<text>@ViewBag.Address.Locality,</text>
+        	}
 	        	@ViewBag.Address.PostalCode<br/>
 	        	@ViewBag.Address.Borough,
 	        	@ViewBag.Address.State
