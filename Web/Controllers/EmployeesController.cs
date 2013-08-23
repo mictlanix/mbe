@@ -3,7 +3,6 @@
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.com>
-//   Eduardo Nieto <enieto@mictlanix.com>
 // 
 // Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.
 // 
@@ -43,124 +42,140 @@ namespace Mictlanix.BE.Web.Controllers
 	[Authorize]
     public class EmployeesController : Controller
     {
-        public ViewResult Index()
+        public ViewResult Index ()
         {
-            var search = new Search<Employee> {
-            	Limit = Configuration.PageSize
-			};
+			var search = SearchEmployees (new Search<Employee> {
+				Limit = Configuration.PageSize
+			});
 
-			return View (GetEmployees (search));
+			return View (search);
         }
 
         [HttpPost]
-        public ActionResult Index(Search<Employee> search)
+        public ActionResult Index (Search<Employee> search)
         {
             if (ModelState.IsValid) {
-                search = GetEmployees(search);
-            }
+				search = SearchEmployees (search);
+			}
 
-            if (Request.IsAjaxRequest()) {
-                return PartialView("_Index", search);
-            } else {
-                return View(search);
-            }
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_Index", search);
+			}
+
+			return View (search);
         }
 
-        Search<Employee> GetEmployees(Search<Employee> search)
-        {
-			var qry = from x in Employee.Queryable
-					  where x.Id > 0
-					  orderby x.FirstName
-					  select x;
+		Search<Employee> SearchEmployees (Search<Employee> search)
+		{
+			IQueryable<Employee> query;
+			var pattern = string.Format("{0}", search.Pattern).Trim ();
 
-			if (!string.IsNullOrEmpty(search.Pattern)) {
-                qry = from x in Employee.Queryable
-					  where x.Id > 0 && (
-							x.FirstName.Contains(search.Pattern) ||
-                      		x.LastName.Contains(search.Pattern))
-                      orderby x.FirstName
-                      select x;
+			if (string.IsNullOrEmpty (pattern)) {
+				query = from x in Employee.Queryable
+						orderby x.FirstName
+						select x;
+			} else {
+				query = from x in Employee.Queryable
+						where x.FirstName.Contains (pattern) ||
+							x.LastName.Contains (pattern)
+						orderby x.FirstName
+						select x;
             }
 			
-			search.Total = qry.Count();
-			search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+			search.Total = query.Count ();
+			search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
 
             return search;
         }
 
-        public ViewResult Details (int id)
+		public ActionResult Details (int id)
         {
-            var item = Employee.Find(id);
-            return View (item);
+            var item = Employee.Find (id);
+			return PartialView ("_Details", item);
         }
 
         public ActionResult Create()
         {
-            return View();
+			return PartialView ("_Create");
         }
 
         [HttpPost]
         public ActionResult Create (Employee item)
-        {
-            if (!ModelState.IsValid)
-            	return View (item);
+		{
+			if (!ModelState.IsValid) {
+				return PartialView ("_Create", item);
+			}
 
 			using (var scope = new TransactionScope ()) {
             	item.CreateAndFlush ();
 			}
 
-			return RedirectToAction ("Index");
+			return PartialView ("_Refresh");
         }
 
         public ActionResult Edit (int id)
         {
             var item = Employee.Find (id);
-            return View (item);
+			return PartialView ("_Edit", item);
         }
 
         [HttpPost]
         public ActionResult Edit(Employee item)
-        {
-            if (!ModelState.IsValid)
-            	return View (item);
+		{
+			if (!ModelState.IsValid) {
+				return PartialView ("_Edit", item);
+			}
             
 			using (var scope = new TransactionScope ()) {
             	item.UpdateAndFlush ();
 			}
 
-            return RedirectToAction ("Index");
+			return PartialView ("_Refresh");
         }
 
         public ActionResult Delete (int id)
         {
             var item = Employee.Find (id);
-            return View (item);
+			return PartialView ("_Delete", item);
         }
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed (int id)
 		{
+			var item = Employee.Find (id);
+
 			try {
 				using (var scope = new TransactionScope()) {
-					var item = Employee.Find (id);
 					item.DeleteAndFlush ();
 				}
-
-				return RedirectToAction ("Index");
-			} catch (GenericADOException) {
-				return View ("DeleteUnsuccessful");
+			} catch (Exception) {
+				return PartialView ("DeleteUnsuccessful");
 			}
+
+			return PartialView ("_Refresh");
 		}
 
         public JsonResult GetSuggestions (string pattern)
         {
-            var qry = from x in Employee.Queryable
-                      where x.FirstName.Contains(pattern) ||
-                            x.LastName.Contains(pattern)
-                      select new { id = x.Id, name = x.FirstName + " " + x.LastName };
+            var query = from x in Employee.Queryable
+						where x.IsActive && (
+							x.FirstName.Contains (pattern) ||
+							x.LastName.Contains (pattern))
+						select new { id = x.Id, name = x.FirstName + " " + x.LastName };
 
-            return Json(qry.ToList (), JsonRequestBehavior.AllowGet);
+            return Json (query.ToList (), JsonRequestBehavior.AllowGet);
         }
+		
+		public JsonResult SalesPeople (string pattern)
+		{
+			var query = from x in Employee.Queryable
+						where x.IsActive && x.IsSalesPerson && (
+							x.FirstName.Contains (pattern) ||
+							x.LastName.Contains (pattern))
+						select new { id = x.Id, name = x.FirstName + " " + x.LastName };
+
+			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
+		}
     }
 }
 

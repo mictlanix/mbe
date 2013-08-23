@@ -1,0 +1,42 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@model Employee
+
+<div class="row">
+  	<div class="span3">@Html.LabelFor(x => x.FirstName)</div>
+	<div class="span3">@Html.LabelFor(x => x.LastName)</div>
+  	<div class="span2">@Html.LabelFor(x => x.Nickname)</div>
+</div>
+<div class="row">
+  	<div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.FirstName)</div></div>
+	<div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.LastName)</div></div>
+  	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.Nickname)</div></div>
+</div>
+<div class="row">
+	<div class="span2">@Html.LabelFor(x => x.Gender)</div>
+  	<div class="span2">@Html.LabelFor(x => x.Birthday)</div>
+	<div class="span2">@Html.LabelFor(x => x.StartJobDate)</div>
+	<div class="span2">@Html.LabelFor(x => x.IsActive)</div>
+</div>
+<div class="row">
+	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.Gender)</div></div>
+  	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.Birthday)</div></div>
+	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.StartJobDate)</div></div>
+	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.IsActive)</div></div>
+</div>
+<div class="row">
+  	<div class="span2">@Html.LabelFor(x => x.TaxpayerId)</div>
+	<div class="span4">@Html.LabelFor(x => x.PersonalId)</div>
+	<div class="span2">@Html.LabelFor(x => x.IsSalesPerson)</div>
+</div>
+<div class="row">
+  	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.TaxpayerId)</div></div>
+	<div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.PersonalId)</div></div>
+	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.IsSalesPerson)</div></div>
+</div>
+<div class="row">
+  	<div class="span8">@Html.LabelFor(x => x.Comment)</div>
+</div>
+<div class="row">
+  	<div class="span8"><div class="ro-field">@Html.DisplayFor(x => x.Comment)</div></div>
+</div>

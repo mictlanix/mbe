@@ -4655,5 +4655,11 @@ namespace Mictlanix.BE {
 				return ResourceManager.GetString("QuantitiesHaveChanged", resourceCulture);
 			}
 		}
+
+		public static string Nickname {
+			get {
+				return ResourceManager.GetString("Nickname", resourceCulture);
+			}
+		}
     }
 }

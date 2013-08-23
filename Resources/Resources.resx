@@ -401,7 +401,7 @@
     <value>Género</value>
   </data>
   <data name="LastName" xml:space="preserve">
-    <value>Apellido</value>
+    <value>Apellidos</value>
   </data>
   <data name="PersonalId" xml:space="preserve">
     <value>CURP</value>
@@ -1703,5 +1703,8 @@ Realizada el: {0:d}</value>
   </data>
   <data name="QuantitiesHaveChanged" xml:space="preserve">
     <value>Las cantidades han cambiado.</value>
+  </data>
+  <data name="Nickname" xml:space="preserve">
+    <value>Nombre Preferido</value>
   </data>
 </root>

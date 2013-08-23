@@ -94,10 +94,10 @@ namespace Mictlanix.BE.Web.Controllers
 					item.Address.Create ();
 				}
 				
-				item.Create ();
+				item.CreateAndFlush ();
 			}
 			
-			return PartialView ("_Refresh");			
+			return PartialView ("_Refresh");
 		}
 
         public ActionResult Edit (string id)
