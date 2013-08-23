@@ -48,27 +48,50 @@ namespace Mictlanix.BE.Model
         [Property("first_name")]
 		[Display(Name = "FirstName", ResourceType = typeof(Resources))]
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[StringLength(100, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[StringLength(100, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
 		public virtual string FirstName { get; set; }
 
         [Property("last_name")]
 		[Display(Name = "LastName", ResourceType = typeof(Resources))]
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[StringLength(100, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[StringLength(100, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
 		public virtual string LastName { get; set; }
+
+		[Property]
+		[Display(Name = "Nickname", ResourceType = typeof(Resources))]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[StringLength(50, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public virtual string Nickname { get; set; }
 
         [Display(Name = "Name", ResourceType = typeof(Resources))]
 		public virtual string Name { get { return string.Format("{0} {1}", FirstName, LastName).Trim(); } }
-		
+
 		[Property]
 		[Display(Name = "Gender", ResourceType = typeof(Resources))]
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
 		public virtual GenderEnum Gender { get; set; }
+		
+		[Property("sales_person")]
+		[Display(Name = "SalesPerson", ResourceType = typeof(Resources))]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		public virtual bool IsSalesPerson { get; set; }
+
+		[Property("active")]
+		[Display(Name = "Active", ResourceType = typeof(Resources))]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		public virtual bool IsActive { get; set; }
 
         [Property]
 		[DataType(DataType.Date)]
 		[Display(Name = "Birthday", ResourceType = typeof(Resources))]
-		public virtual DateTime? Birthday { get; set; }
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		public virtual DateTime Birthday { get; set; }
+
+		[Property("start_job_date")]
+		[DataType(DataType.Date)]
+		[Display(Name = "StartJobDate", ResourceType = typeof(Resources))]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		public virtual DateTime StartJobDate { get; set; }
 
         [Property("taxpayer_id")]
 		[Display(Name = "TaxpayerId", ResourceType = typeof(Resources))]
@@ -79,12 +102,6 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "PersonalId", ResourceType = typeof(Resources))]
 		[StringLength(18, MinimumLength = 18, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
 		public virtual string PersonalId { get; set; }
-
-        [Property("start_job_date")]
-		[DataType(DataType.Date)]
-		[Display(Name = "StartJobDate", ResourceType = typeof(Resources))]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		public virtual DateTime StartJobDate { get; set; }
 		
 		[Property]
 		[DataType(DataType.MultilineText)]

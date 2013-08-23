@@ -157,7 +157,7 @@ $('#customer').editable({
 $('#salesperson').editable({
     select2: {
 	    ajax: {
-	        url: '@Url.Action("GetSuggestions", "Employees")',
+	        url: '@Url.Action("SalesPeople", "Employees")',
 	        dataType: 'json',
 	        type: 'POST',
 	        data: function(term,page,context) {
