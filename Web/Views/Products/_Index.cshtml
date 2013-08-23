@@ -19,7 +19,6 @@
         <th class='nowrap'>@Html.LabelFor(x => new Product().UnitOfMeasurement)</th>
         <th></th>
     </tr>
-
 @foreach (var item in Model.Results) {
     <tr>
         <td class='stretch'>
@@ -27,10 +26,10 @@
                               new { alt = Resources.Details,
                                     title = Resources.Details,
                                     rel = Url.Action("Details", new { id = item.Id }),
-                                    @class = "small tips"
+                                    @class = "small"
                               })
         </td>
-        <td class="stretch center">@Html.DisplayFor(x => item.Code)</td>
+        <td class="center">@Html.DisplayFor(x => item.Code)</td>
         <td style='position:relative'>
         	<p>
         		@Html.DisplayFor(x => item.Name)<br/>
@@ -46,7 +45,7 @@
         	</div>
 			<div class='btn-group' style='position:absolute;bottom:2px;right:2px'>
 				<a class='btn btn-mini dropdown-toggle labels' data-toggle='dropdown' data-key='@item.Id' href="#">
-					<i class="icon-tags"></i> Etiquetas<span class="caret"></span>
+					<i class="icon-tags"></i> <span class="caret"></span>
 				</a>
 				<ul class='dropdown-menu'></ul>
 			</div>
