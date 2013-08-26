@@ -45,7 +45,7 @@ namespace Mictlanix.BE.Web.Controllers
 	[Authorize]
     public class TaxpayersController : Controller
     {
-		public ActionResult Index()
+		public ActionResult Index ()
         {
             var qry = from x in Taxpayer.Queryable
                       orderby x.Name
@@ -58,9 +58,14 @@ namespace Mictlanix.BE.Web.Controllers
             return View (qry.ToList ());
         }
 
-        public ViewResult Details (string id)
+		public ActionResult Details (string id)
 		{
 			var item = Taxpayer.Find (id);
+
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_Details", item);
+			}
+
 			return View (item);
 		}
 
