@@ -100,6 +100,7 @@ namespace Mictlanix.BE.Web.Controllers
 			if (!ModelState.IsValid)
 				return View (item);
             
+			item.MinimumOrderQuantity = 1;
 			item.TaxRate = Configuration.DefaultVAT;
 			item.IsTaxIncluded = Configuration.IsTaxIncluded;
 			item.PriceType = Configuration.DefaultPriceType;

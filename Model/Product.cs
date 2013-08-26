@@ -136,6 +136,15 @@ namespace Mictlanix.BE.Model
 		}
 
 		[Property]
+		[Display(Name = "Currency", ResourceType = typeof(Resources))]
+		public virtual CurrencyCode Currency { get; set; }
+		
+		[Property("min_order_qty")]
+		[DisplayFormat(DataFormatString = "{0:0.####}")]
+		[Display(Name = "MinimumOrderQuantity", ResourceType = typeof(Resources))]
+		public virtual decimal MinimumOrderQuantity { get; set; }
+
+		[Property]
         [UIHint("Image")]
         [Display(Name = "Photo", ResourceType = typeof(Resources))]
         public string Photo { get; set; }

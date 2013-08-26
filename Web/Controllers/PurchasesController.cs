@@ -375,7 +375,6 @@ namespace Mictlanix.BE.Web.Controllers
 					}
 
 					price.Value = x.Price;
-					price.Currency = x.Currency;
 					price.Save ();
 	            }
 

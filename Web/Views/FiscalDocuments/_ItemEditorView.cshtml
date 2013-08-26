@@ -30,7 +30,7 @@
         <b>@Resources.Discount: </b>
         <a class='editable discount' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemDiscount", new { id = Model.Id })'>@Html.DisplayFor(x => x.Discount)</a>
         <b>@Resources.TaxRate: </b>
-        <a class='editable tax' data-type='select' data-autotext='never' data-placement='right' data-source='@Url.Action("TaxRates", "Pricing")' data-pk='@Model.Id' data-value='@Model.TaxRate.ToString("0.####")' data-url='@Url.Action("SetItemTaxRate", new { id = Model.Id })'>@Html.DisplayFor(x => x.TaxRate)</a>
+        <a class='editable tax' data-type='select' data-placement='right' data-autotext='never' data-source='@Url.Action("TaxRates", "Pricing")' data-pk='@Model.Id' data-value='@Model.TaxRate.ToString("0.####")' data-url='@Url.Action("SetItemTaxRate", new { id = Model.Id })'>@Html.DisplayFor(x => x.TaxRate)</a>
         <b>@Resources.Amount: </b>
         <span class='editable total'>@Html.DisplayFor(x => x.Total)</span>
         <span class='editable currency'>@Html.DisplayFor(x => x.Currency)</span>
@@ -59,9 +59,9 @@ $('#id\\:@Model.Id a.editable').editable({
           	arr = $.grep(response, function(o){
   				return o.value == value;
 			});
-			if (arr.length != 0) {
-          		$(this).html(arr[0].text);
-          	}
+      		if(arr.length > 0) {
+      			$(this).html(arr[0].text);
+  			}
         } else {
           	$(this).html(response.value);
         }
