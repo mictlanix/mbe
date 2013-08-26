@@ -55,10 +55,6 @@ namespace Mictlanix.BE.Model
 		[Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
 		public virtual decimal Value { get; set; }
 
-		[Property]
-		[Display(Name = "Currency", ResourceType = typeof(Resources))]
-		public virtual CurrencyCode Currency { get; set; }
-
         #region Override Base Methods
 
         public override string ToString()

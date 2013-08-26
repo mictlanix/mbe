@@ -9,3 +9,12 @@ ALTER TABLE employee
 	CHANGE COLUMN `birthday` `birthday` DATE NOT NULL;
 
 UPDATE employee SET active = 1, sales_person = 1;
+
+ALTER TABLE product_price 
+  DROP COLUMN `currency`;
+
+ALTER TABLE product
+  ADD COLUMN `currency` INT(11) NOT NULL AFTER `price_type`,
+  ADD COLUMN `min_order_qty` INT(11) NOT NULL AFTER `currency`;
+
+UPDATE product SET currency = 0, min_order_qty = 1;
