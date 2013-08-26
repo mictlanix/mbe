@@ -24,9 +24,6 @@
     	@if (Privilege.AllowRead) {
         	@Html.ActionLink(" ", "Details", "Taxpayers", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
         }
-    	@if (Privilege.AllowUpdate) {
-        	@Html.ActionLink(" ", "Edit", "Taxpayers", new { id = item.Id }, new { @class = "button icon edit icon-only open-modal", @title = Resources.Edit, data_modal_id = "taxpayer-modal" })
-        }
     	@if (Privilege.AllowDelete) {
         	@Html.ActionLink(" ", "Delete", "Taxpayers", new { id = item.Id }, new { @class = "button icon delete icon-only open-modal", @title = Resources.Delete, data_modal_id = "taxpayer-modal" })
         }

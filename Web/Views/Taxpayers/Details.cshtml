@@ -10,70 +10,10 @@
 }
 
 <h2>@Resources.Details</h2>
-
-<fieldset>
-    <legend>@Resources.Title_Taxpayer</legend>
-	
-	<div class="row-fluid">
-	  	<div class="span3">@Html.LabelFor(x => x.Id)</div>
-		<div class="span9">@Html.LabelFor(x => x.Name)</div>
-	</div>
-	<div class="row-fluid">
-	  	<div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.Id)</div></div>
-		<div class="span9"><div class="ro-field">@Html.DisplayFor(x => x.Name)</div></div>
-	</div>
-	<div class="row-fluid">
-	  	<div class="span12">@Html.LabelFor(x => x.Regime)</div>
-	</div>
-	<div class="row-fluid">
-	  	<div class="span12"><div class="ro-field">@Html.DisplayFor(x => x.Regime)</div></div>
-	</div>
-@if(Model.Address != null) {
-	<div class="row-fluid">
-	  	<div class="span6">@Html.LabelFor(x => x.Address.Street)</div>
-		<div class="span3">@Html.LabelFor(x => x.Address.ExteriorNumber)</div>
-	  	<div class="span3">@Html.LabelFor(x => x.Address.InteriorNumber)</div>
-	</div>
-	<div class="row-fluid">
-	  	<div class="span6"><div class="ro-field">@Html.DisplayFor(x => x.Address.Street)</div></div>
-		<div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.Address.ExteriorNumber)</div></div>
-	  	<div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.Address.InteriorNumber)</div></div>
-	</div>
-	<div class="row-fluid">
-	  	<div class="span4">@Html.LabelFor(x => x.Address.PostalCode)</div>
-	  	<div class="span4">@Html.LabelFor(x => x.Address.Neighborhood)</div>
-		<div class="span4">@Html.LabelFor(x => x.Address.Locality)</div>
-	</div>
-	<div class="row-fluid">
-	  	<div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.Address.PostalCode)</div></div>
-	  	<div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.Address.Neighborhood)</div></div>
-		<div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.Address.Locality)</div></div>
-	</div>
-	<div class="row-fluid">
-	  	<div class="span6">@Html.LabelFor(x => x.Address.Borough)</div>
-	  	<div class="span6">@Html.LabelFor(x => x.Address.State)</div>
-	</div>
-	<div class="row-fluid">
-	  	<div class="span6"><div class="ro-field">@Html.DisplayFor(x => x.Address.Borough)</div></div>
-	  	<div class="span6"><div class="ro-field">@Html.DisplayFor(x => x.Address.State)</div></div>
-	</div>
-	<div class="row-fluid">
-	  	<div class="span6">@Html.LabelFor(x => x.Address.City)</div>
-		<div class="span6">@Html.LabelFor(x => x.Address.Country)</div>
-	</div>
-	<div class="row-fluid">
-	  	<div class="span6"><div class="ro-field">@Html.DisplayFor(x => x.Address.City)</div></div>
-		<div class="span6"><div class="ro-field">@Html.DisplayFor(x => x.Address.Country)</div></div>
-	</div>
-	<div class="row-fluid">
-	  	<div class="span12">@Html.LabelFor(x => x.Address.Comment)</div>
-	</div>
-	<div class="row-fluid">
-	  	<div class="span12"><div class="ro-field">@Html.DisplayFor(x => x.Address.Comment)</div></div>
-	</div>
-}
-</fieldset>
-<div class='tabbable'>
+<div id='master-section' class='refreshable' data-url='@Url.Action("Details", new { id = Model.Id })'>
+	@Html.Partial("_Details")
+</div>
+<div id='details-section' class='tabbable'>
     <ul class='nav nav-tabs'>
         <li class='active'><a href='#tab-1' data-toggle='tab'>@Resources.TaxpayerBatches</a></li>
         <li><a href='#tab-2' data-toggle='tab'>@Resources.Certificates</a></li>
@@ -93,6 +33,9 @@
 <div class="row-fluid vspaced">
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 @if(Privilege.AllowUpdate) {
-	@Html.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new { @class = "button icon edit pull-right" })
+	@Html.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new { @class = "button icon edit open-modal pull-right", data_modal_id = "taxpayer-modal" })
 }
 </div>
+<script type='text/javascript'>
+bindModal('.open-modal');
+</script>

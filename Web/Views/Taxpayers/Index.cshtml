@@ -16,6 +16,6 @@
     @Html.ActionLink(Resources.CreateNew, "Create", new { }, new { @class = "button icon add open-modal", data_modal_id = "taxpayer-modal" })
 }
 </p>
-<div id='taxpayers' data-url='@Url.Action("Index")'>
+<div id='taxpayers' class='refreshable' data-url='@Url.Action("Index")'>
 @Html.Partial("_Index")
 </div>
