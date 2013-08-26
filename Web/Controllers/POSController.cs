@@ -447,15 +447,13 @@ namespace Mictlanix.BE.Web.Controllers
 
 			if (cost == null) {
 				cost = new ProductPrice {
-					Value = decimal.Zero,
-					Currency = Configuration.DefaultCurrency
+					Value = decimal.Zero				
 				};
 			}
 
 			if (price == null) {
 				price = new ProductPrice {
-					Value = decimal.MaxValue,
-					Currency = Configuration.DefaultCurrency
+					Value = decimal.MaxValue
 				};
 			}
 
@@ -467,19 +465,16 @@ namespace Mictlanix.BE.Web.Controllers
 				ProductName = p.Name,
 				TaxRate = p.TaxRate,
 				IsTaxIncluded = p.IsTaxIncluded,
-				Quantity = 1,
+				Quantity = p.MinimumOrderQuantity,
 				Cost = cost.Value,
 				Price = price.Value,
 				Currency = entity.Currency,
 				ExchangeRate = entity.ExchangeRate
 			};
 
-			if (cost.Currency != entity.Currency) {
-				item.Cost = cost.Value * CashHelpers.GetTodayExchangeRate (cost.Currency, entity.Currency);
-			}
-
-			if (price.Currency != entity.Currency) {
-				item.Price = price.Value * CashHelpers.GetTodayExchangeRate (price.Currency, entity.Currency);
+			if (p.Currency != entity.Currency) {
+				item.Cost = cost.Value * CashHelpers.GetTodayExchangeRate (p.Currency, entity.Currency);
+				item.Price = price.Value * CashHelpers.GetTodayExchangeRate (p.Currency, entity.Currency);
 			}
 
 			using (var scope = new TransactionScope()) {
@@ -524,12 +519,15 @@ namespace Mictlanix.BE.Web.Controllers
 		{
 			var entity = SalesOrderDetail.Find (id);
 
-			if (value > 0) {
-				entity.Quantity = value;
+			if (value < entity.Product.MinimumOrderQuantity) {
+				Response.StatusCode = 400;
+				return Content (string.Format (Resources.MinimumQuantityRequired, entity.Product.MinimumOrderQuantity));
+			}
 
-				using (var scope = new TransactionScope ()) {
-					entity.UpdateAndFlush ();
-				}
+			entity.Quantity = value;
+
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
 			}
 
 			return Json (new { 
