@@ -1707,4 +1707,11 @@ Realizada el: {0:d}</value>
   <data name="Nickname" xml:space="preserve">
     <value>Nombre Preferido</value>
   </data>
+  <data name="MinimumOrderQuantity" xml:space="preserve">
+    <value>Cantidad Mínima</value>
+  </data>
+  <data name="MinimumQuantityRequired" xml:space="preserve">
+    <value>Cantidad mínima requerida: {0:0.####}.</value>
+  </data>
+  
 </root>

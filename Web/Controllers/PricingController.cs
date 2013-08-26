@@ -105,8 +105,7 @@ namespace Mictlanix.BE.Web.Controllers
 			if (item == null) {
 				item = new ProductPrice {
 					Product = p,
-					List = l,
-					Currency = Configuration.DefaultCurrency
+					List = l
 				};
 			}
 			
@@ -126,20 +125,11 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 
 		[HttpPost]
-		public JsonResult SetCurrency (int product, int list, string value)
+		public JsonResult SetCurrency (int id, string value)
 		{
 			bool success;
 			CurrencyCode val;
-			var p = Product.TryFind (product);
-			var l = PriceList.TryFind (list);
-			var item = ProductPrice.Queryable.SingleOrDefault (x => x.Product.Id == product && x.List.Id == list);
-
-			if (item == null) {
-				item = new ProductPrice {
-					Product = p,
-					List = l
-				};
-			}
+			var item = Product.TryFind (id);
 
 			success = Enum.TryParse<CurrencyCode> (value.Trim (), out val);
 			
@@ -153,22 +143,38 @@ namespace Mictlanix.BE.Web.Controllers
 			
 			return Json (new { id = item.Id, value = item.Currency.ToString () });
 		}
+		
+		[HttpPost]
+		public JsonResult SetMOQ (int id, decimal value)
+		{
+			var entity = Product.Find (id);
+
+			if (value > 0) {
+				entity.MinimumOrderQuantity = value;
+
+				using (var scope = new TransactionScope ()) {
+					entity.UpdateAndFlush ();
+				}
+			}
+
+			return Json (new { id = id, value = entity.FormattedValueFor (x => x.MinimumOrderQuantity) });
+		}
 
 		[HttpPost]
 		public JsonResult SetTaxRate (int id, decimal value)
 		{
-			var item = Product.Find (id);
+			var entity = Product.Find (id);
 
 			if (value >= 0) {
-				item.TaxRate = value;
-				item.IsTaxIncluded = Configuration.IsTaxIncluded;
+				entity.TaxRate = value;
+				entity.IsTaxIncluded = Configuration.IsTaxIncluded;
 
 				using (var scope = new TransactionScope ()) {
-					item.UpdateAndFlush ();
+					entity.UpdateAndFlush ();
 				}
 			}
 
-			return Json (new { id = id, value = item.FormattedValueFor (x => x.TaxRate) });
+			return Json (new { id = id, value = entity.FormattedValueFor (x => x.TaxRate) });
 		}
 
 		[HttpPost]

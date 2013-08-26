@@ -4661,5 +4661,17 @@ namespace Mictlanix.BE {
 				return ResourceManager.GetString("Nickname", resourceCulture);
 			}
 		}
+
+		public static string MinimumOrderQuantity {
+			get {
+				return ResourceManager.GetString("MinimumOrderQuantity", resourceCulture);
+			}
+		}
+
+		public static string MinimumQuantityRequired {
+			get {
+				return ResourceManager.GetString("MinimumQuantityRequired", resourceCulture);
+			}
+		}
     }
 }

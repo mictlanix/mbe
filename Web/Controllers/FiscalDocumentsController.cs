@@ -550,8 +550,8 @@ namespace Mictlanix.BE.Web.Controllers
 				Currency = entity.Currency
 			};
 
-			if (price.Currency != entity.Currency) {
-				item.Price = price.Value * CashHelpers.GetTodayExchangeRate (price.Currency, entity.Currency);
+			if (p.Currency != entity.Currency) {
+				item.Price = price.Value * CashHelpers.GetTodayExchangeRate (p.Currency, entity.Currency);
 			}
 
 			using (var scope = new TransactionScope()) {

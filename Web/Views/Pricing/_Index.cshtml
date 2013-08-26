@@ -7,7 +7,7 @@
 @{
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.PriceLists);
-    var DefaultPrice = new ProductPrice { Currency = Configuration.DefaultCurrency };
+    var DefaultPrice = new ProductPrice ();
 }
 
 <p>@Html.ValidationMessageFor(x => x.Pattern)</p>
@@ -17,10 +17,12 @@
         <th class=''>@Resources.Code</th>
         <th class=''>@Resources.Name</th>
         <th class='nowrap'>@Resources.UnitOfMeasurement</th>
+        <th class=''>@Resources.MinimumOrderQuantity</th>
         <th class=''>@Resources.TaxRate</th>
         <th class=''>@Resources.TaxIncluded</th>
         <th class='input-small'>@Resources.PriceType</th>
         <th class=''>@Resources.Cost / @Resources.Prices</th>
+        <th class=''>@Resources.Currency</th>
     </tr>
 @foreach (var item in Model.Results) {
     <tr>
@@ -37,7 +39,14 @@
         <td class='stretch center'>@Html.DisplayFor(x => item.UnitOfMeasurement)</td>
         <td class='stretch center'>
         @if (Privilege.AllowUpdate) {
-        	<a class='editable tax' data-inputclass='input-small' data-type='select' data-placement='bottom' data-source='@Url.Action("TaxRates")' data-pk='@item.Id' data-value='@item.TaxRate.ToString("0.####")' data-url='@Url.Action("SetTaxRate", new { id = item.Id })'>@Html.DisplayFor(x => item.TaxRate)</a>
+        	<a class='editable' data-inputclass='input-small' data-type='text' data-placement='bottom' data-autotext='never' data-pk='@item.Id' data-value='@Html.DisplayFor(x => item.MinimumOrderQuantity)' data-url='@Url.Action("SetMOQ", new { id = item.Id })'>@Html.DisplayFor(x => item.MinimumOrderQuantity)</a>
+    	} else {
+			<span>@Html.DisplayFor(x => item.MinimumOrderQuantity)</span>
+		}
+    	</td>
+        <td class='stretch center'>
+        @if (Privilege.AllowUpdate) {
+        	<a class='editable tax' data-inputclass='input-small' data-type='select' data-placement='bottom' data-autotext='never' data-source='@Url.Action("TaxRates")' data-pk='@item.Id' data-value='@item.TaxRate.ToString("0.####")' data-url='@Url.Action("SetTaxRate", new { id = item.Id })'>@Html.DisplayFor(x => item.TaxRate)</a>
     	} else {
 			<span>@Html.DisplayFor(x => item.TaxRate)</span>
 		}
@@ -59,16 +68,21 @@
             		<td class='nowrap'>
             		@if (Privilege.AllowUpdate) {
            		    	<a class='editable price' data-type='text' data-placement='left' data-pk='@item.Id' data-url='@Url.Action("SetPrice", new { product = item.Id, list = p.Id })'>@Html.DisplayFor(x => price.Value)</a>
-						<a class='editable currency' data-type='select' data-placement='left' data-source='@Url.Action("Currencies", "ExchangeRates")' data-pk='@item.Id' data-value='@((int)price.Currency)' data-url='@Url.Action("SetCurrency", new { product = item.Id, list = p.Id })'>@Html.DisplayFor(x => price.Currency)</a>
         			} else {
-        				<span class='pull-right'>@Html.DisplayFor(x => price.Value) @Html.DisplayFor(x => price.Currency)</span>
+        				<span class='pull-right'>@Html.DisplayFor(x => price.Value)</span>
         			}
         			</td>
             	</tr>
         	}
             </table>
         </td>
-
+        <td class='stretch center'>
+        @if (Privilege.AllowUpdate) {
+			<a class='editable currency' data-type='select' data-placement='left' data-source='@Url.Action("Currencies", "ExchangeRates")' data-pk='@item.Id' data-value='@((int)item.Currency)' data-url='@Url.Action("SetCurrency", new { id = item.Id })'>@Html.DisplayFor(x => item.Currency)</a>
+        } else {
+			<span>@Html.DisplayFor(x => item.Currency)</span>
+		}
+        </td>
     </tr>
 }
 </table>
@@ -101,14 +115,16 @@ $(function () {
 	<text>
 	$('a.editable').editable({
 	    display: function(value, response) {
-	        if (typeof response === 'undefined') {
-	        	$(this).html(value);
-	        } else if (Array.isArray(response)) {
+	    	if (typeof response === 'undefined') 
+        		return;
+        	
+	        if (Array.isArray(response)) {
 	          	arr = $.grep(response, function(o){
 	  				return o.value == value;
 				});
-          		if(arr.length > 0)
+          		if(arr.length > 0) {
           			$(this).html(arr[0].text);
+      			}
 	        } else {
 	          	$(this).html(response.value);
 	        }

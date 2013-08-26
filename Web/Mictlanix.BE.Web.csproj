@@ -707,6 +707,7 @@
     <Content Include="Views\Shared\EditorTemplates\Employee.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\GenderEnum.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Employee.cshtml" />
+    <Content Include="Views\Taxpayers\_Details.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
