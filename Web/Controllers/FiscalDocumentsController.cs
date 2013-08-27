@@ -47,9 +47,7 @@ namespace Mictlanix.BE.Web.Controllers
     {
         public ViewResult Index ()
 		{
-			var item = Configuration.Store;
-			
-			if (item == null) {
+			if (Configuration.Store == null) {
 				return View ("InvalidStore");
 			}
 			
@@ -127,7 +125,7 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 
 			var item = new FiscalDocument {
-				Issuer = Taxpayer.TryFind (store.Taxpayer)
+				Issuer =  store.Taxpayer
 			};
 
 			return View (item);
