@@ -11,7 +11,7 @@
     ViewBag.Title = Resources.FiscalDocument;
     ViewBag.Store = Model.Store;
     ViewBag.Taxpayer = Model.Issuer.Id;
-    ViewBag.TaxpayerName = null;
+    ViewBag.TaxpayerName = Model.IssuerName;
     ViewBag.Address = Model.IssuedAt ?? Model.Store.Address;
 }
 
