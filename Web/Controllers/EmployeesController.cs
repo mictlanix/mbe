@@ -42,11 +42,15 @@ namespace Mictlanix.BE.Web.Controllers
 	[Authorize]
     public class EmployeesController : Controller
     {
-        public ViewResult Index ()
+		public ActionResult Index ()
         {
 			var search = SearchEmployees (new Search<Employee> {
 				Limit = Configuration.PageSize
 			});
+
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_Index", search);
+			}
 
 			return View (search);
         }
@@ -90,8 +94,8 @@ namespace Mictlanix.BE.Web.Controllers
 
 		public ActionResult Details (int id)
         {
-            var item = Employee.Find (id);
-			return PartialView ("_Details", item);
+			var entity = Employee.Find (id);
+			return PartialView ("_Details", entity);
         }
 
         public ActionResult Create()
@@ -115,12 +119,12 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Edit (int id)
         {
-            var item = Employee.Find (id);
-			return PartialView ("_Edit", item);
+			var entity = Employee.Find (id);
+			return PartialView ("_Edit", entity);
         }
 
         [HttpPost]
-        public ActionResult Edit(Employee item)
+        public ActionResult Edit (Employee item)
 		{
 			if (!ModelState.IsValid) {
 				return PartialView ("_Edit", item);
@@ -135,18 +139,18 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Delete (int id)
         {
-            var item = Employee.Find (id);
-			return PartialView ("_Delete", item);
+			var entity = Employee.Find (id);
+			return PartialView ("_Delete", entity);
         }
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed (int id)
 		{
-			var item = Employee.Find (id);
+			var entity = Employee.Find (id);
 
 			try {
 				using (var scope = new TransactionScope()) {
-					item.DeleteAndFlush ();
+					entity.DeleteAndFlush ();
 				}
 			} catch (Exception) {
 				return PartialView ("DeleteUnsuccessful");

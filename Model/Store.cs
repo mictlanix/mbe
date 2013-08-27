@@ -54,10 +54,15 @@ namespace Mictlanix.BE.Model
         [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
 		public virtual string Name { get; set; }
 
-		[Property("taxpayer")]
 		[Display(Name = "Taxpayer", ResourceType = typeof(Resources))]
-		public virtual string Taxpayer { get; set; }
-		
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[UIHint("TaxpayerSelector")]
+		public virtual string TaxpayerId { get; set; }
+
+		[BelongsTo("taxpayer")]
+		[Display(Name = "Taxpayer", ResourceType = typeof(Resources))]
+		public virtual Taxpayer Taxpayer { get; set; }
+
 		[Property]
 		[UIHint("Image")]
 		[Display(Name = "Logo", ResourceType = typeof(Resources))]
@@ -71,12 +76,6 @@ namespace Mictlanix.BE.Model
 		[Property("receipt_message")]
 		[Display(Name = "ReceiptMessage", ResourceType = typeof(Resources))]
 		public virtual string ReceiptMessage { get; set; }
-
-        [Property]
-        [DataType(DataType.MultilineText)]
-        [Display(Name = "Comment", ResourceType = typeof(Resources))]
-        [StringLength(500, MinimumLength = 0)]
-        public virtual string Comment { get; set; }
 		
 		[BelongsTo("address", Lazy = FetchWhen.OnInvoke)]
 		[Display(Name = "Address", ResourceType = typeof(Resources))]
