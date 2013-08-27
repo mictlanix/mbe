@@ -3,7 +3,6 @@
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.com>
-//   Eduardo Nieto <enieto@mictlanix.com>
 // 
 // Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.
 // 
@@ -26,7 +25,6 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -44,11 +42,15 @@ namespace Mictlanix.BE.Web.Controllers
 	[Authorize]
     public class StoresController : Controller
     {
-        public ViewResult Index ()
+		public ActionResult Index ()
         {
 			var search = SearchStores (new Search<Store> {
 				Limit = Configuration.PageSize
 			});
+
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_Index", search);
+			}
 
 			return View (search);
         }
@@ -60,7 +62,7 @@ namespace Mictlanix.BE.Web.Controllers
 				search = SearchStores (search);
 			}
 
-            if (Request.IsAjaxRequest()) {
+            if (Request.IsAjaxRequest ()) {
                 return PartialView ("_Index", search);
             }
 
@@ -70,14 +72,15 @@ namespace Mictlanix.BE.Web.Controllers
 		Search<Store> SearchStores (Search<Store> search)
 		{
 			IQueryable<Store> query;
+			var pattern = string.Format("{0}", search.Pattern).Trim ();
 
-			if (string.IsNullOrEmpty (search.Pattern)) {
+			if (string.IsNullOrEmpty (pattern)) {
                 query = from x in Store.Queryable
                         orderby x.Name
                         select x;
             } else {
 				query = from x in Store.Queryable
-						where x.Name.Contains(search.Pattern) 
+						where x.Name.Contains (pattern) 
 						orderby x.Name
 						select x;
 			}
@@ -88,26 +91,22 @@ namespace Mictlanix.BE.Web.Controllers
             return search;
         }
 
-        public ViewResult Details(int id)
+		public ActionResult Details (int id)
         {
-            Store store = Store.Find(id);
-            return View(store);
+            var entity = Store.Find (id);
+			return PartialView ("_Details", entity);
         }
 
-        public ActionResult Create()
+        public ActionResult Create ()
         {
-			var item = new Store { 
-				Address = new Address ()
-			};
-
-            return View (item);
+			return PartialView ("_Create");
         }
 
         [HttpPost]
         public ActionResult Create (Store item)
-        {
+		{
 			if (!ModelState.IsValid) {
-				return View (item);
+				return PartialView ("_Create", item);
 			}
 
 			using (var scope = new TransactionScope ()) {
@@ -116,31 +115,33 @@ namespace Mictlanix.BE.Web.Controllers
 				item.CreateAndFlush ();
 			}
 			
-            return RedirectToAction ("Index");
+			return PartialView ("_Refresh");
         }
 
         public ActionResult Edit (int id)
-        {
-            Store item = Store.Find(id);
-            return View (item);
+		{
+			var entity = Store.Find (id);
+			return PartialView ("_Edit", entity);
         }
 
         [HttpPost]
         public ActionResult Edit (Store item)
         {
-            if (!ModelState.IsValid)
-				return View (item);
+			item.Taxpayer = Taxpayer.TryFind (item.TaxpayerId);
+
+			if (!ModelState.IsValid || item.Taxpayer == null) {
+				return PartialView ("_Edit", item);
+			}
 
 			var entity = Store.Find (item.Id);
 			var address = entity.Address;
 			
 			entity.Code = item.Code;
 			entity.Name = item.Name;
-			entity.Taxpayer = item.Taxpayer;
+			entity.Taxpayer = Taxpayer.Find (item.TaxpayerId);
 			entity.Logo = item.Logo;
 			entity.Location = item.Location;
 			entity.ReceiptMessage = string.Format("{0}", item.ReceiptMessage).Trim ();
-			entity.Comment = item.Comment;
 
 			using (var scope = new TransactionScope()) {
 				if (!address.Equals (item.Address)) {
@@ -161,38 +162,40 @@ namespace Mictlanix.BE.Web.Controllers
 				}
 			}
 			
-			return RedirectToAction ("Index");
+			return PartialView ("_Refresh");
         }
 
         public ActionResult Delete (int id)
-        {
-            return View (Store.Find (id));
+		{
+			var entity = Store.Find (id);
+			return PartialView ("_Delete", entity);
         }
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+			var entity = Store.Find (id);
+
 			try {
 				using (var scope = new TransactionScope()) {
-					var item = Store.Find (id);
-					item.Delete ();
-					item.Address.Delete ();
+					entity.Delete ();
+					entity.Address.Delete ();
 				}
-
-				return RedirectToAction ("Index");
 			} catch (TransactionException) {
-				return View ("DeleteUnsuccessful");
+				return PartialView ("DeleteUnsuccessful");
 			}
+
+			return PartialView ("_Refresh");
         }
 
         public JsonResult GetSuggestions (string pattern)
         {
-            var qry = from x in Store.Queryable
-                      where x.Name.Contains(pattern) ||
-                      		x.Code.Contains(pattern)
-                      select new { id = x.Id, name = x.Name };
+            var query = from x in Store.Queryable
+						where x.Code.Contains (pattern) ||
+							x.Name.Contains (pattern)
+                      	select new { id = x.Id, name = x.Name };
 
-            return Json (qry.Take (15).ToList (), JsonRequestBehavior.AllowGet);
+            return Json (query.Take (15).ToList (), JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -89,7 +89,7 @@
 
 @if (Model.IsCredit) {
 <div class="legend">
-    @string.Format(Configuration.PromissoryNoteContent, Model.Customer.Name, Model.Total, Model.DueDate) 
+    @string.Format(Configuration.PromissoryNoteContent, Model.Customer.Name, Model.Total, Model.DueDate, Model.Store.Taxpayer.Name)
 </div>
 <div class="signature">
     @Model.Customer.Name<br/>

@@ -45,9 +45,11 @@ namespace Mictlanix.BE.Web.Controllers
 	{
         public ViewResult Index ()
 		{
-			var item = Configuration.PointOfSale;
-			
-			if (item == null) {
+			if (Configuration.Store == null) {
+				return View ("InvalidStore");
+			}
+
+			if (Configuration.PointOfSale == null) {
 				return View ("InvalidPointOfSale");
 			}
 			
@@ -79,18 +81,18 @@ namespace Mictlanix.BE.Web.Controllers
 		Search<SalesOrder> SearchSalesOrders (Search<SalesOrder> search)
 		{
 			IQueryable<SalesOrder> query;
-			var item = Configuration.PointOfSale;
+			var item = Configuration.Store;
 
 			if (string.IsNullOrEmpty (search.Pattern)) {
 				query = from x in SalesOrder.Queryable
-					  	where x.Store.Id == item.Store.Id
+					  	where x.Store.Id == item.Id
 						orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending
 					  	select x;
 			} else {
 				query = from x in SalesOrder.Queryable
-					  	where x.Store.Id == item.Store.Id && (
+					  	where x.Store.Id == item.Id && (
 							x.Customer.Name.Contains (search.Pattern) ||
-							x.SalesPerson.Name.Contains (search.Pattern))
+							(x.SalesPerson.FirstName + " " + x.SalesPerson.LastName).Contains (search.Pattern))
 						orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending
 					  	select x;
 			}

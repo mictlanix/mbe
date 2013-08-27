@@ -263,11 +263,11 @@ namespace Mictlanix.BE.Web.Controllers
 			return RedirectToAction ("Details", new { id = item.TaxpayerId });
 		}
 
-        public JsonResult GetSuggestions(string pattern)
+        public JsonResult GetSuggestions (string pattern)
         {
             var qry = from x in Taxpayer.Queryable
-                      where x.Id.Contains(pattern) ||
-							x.Name.Contains(pattern)
+                      where x.Id.Contains (pattern) ||
+							x.Name.Contains (pattern)
                       select new { id = x.Id, name = string.Format ("{1} ({0})", x.Id, x.Name) };
 
             return Json(qry.Take(15).ToList(), JsonRequestBehavior.AllowGet);
