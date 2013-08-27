@@ -1,0 +1,35 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@model Store
+
+<div class="row">
+  	<div class="span2">@Html.LabelFor(x => x.Code)</div>
+	<div class="span6">@Html.LabelFor(x => x.Name)</div>
+</div>
+<div class="row">
+  	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.Code)</div></div>
+	<div class="span6"><div class="ro-field">@Html.DisplayFor(x => x.Name)</div></div>
+</div>
+<div class="row">
+  	<div class="span8">@Html.LabelFor(x => x.Taxpayer)</div>
+</div>
+<div class="row">
+  	<div class="span8"><div class="ro-field">@Html.DisplayFor(x => x.Taxpayer, "String")</div></div>
+</div>
+<div class="row">
+  	<div class="span4">@Html.LabelFor(x => x.Location)</div>
+  	<div class="span4">@Html.LabelFor(x => x.Logo)</div>
+</div>
+<div class="row">
+  	<div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.Location)</div></div>
+  	<div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.Logo, "String")</div></div>
+</div>
+<div class="row">
+  	<div class="span8">@Html.LabelFor(x => x.ReceiptMessage)</div>
+</div>
+<div class="row">
+  	<div class="span8"><div class="ro-field">@Html.DisplayFor(x => x.ReceiptMessage)</div></div>
+</div>
+<div id='address-container'>
+	@Html.DisplayFor(x => x.Address)
+</div>
