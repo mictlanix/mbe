@@ -73,7 +73,7 @@
 
 <table>
     <tr>
-        <td rowspan="3" class="center">@Html.CurrencyToString(Model.Total, Model.Currency)</td>
+        <td rowspan="2" class="center">@Html.CurrencyToString(Model.Total, Model.Currency)</td>
         <td class="number">@Html.LabelFor(x => x.Subtotal)</td>
         <td class="number">@Html.DisplayFor(x => x.Subtotal)</td>
     </tr>
@@ -82,13 +82,21 @@
         <td class="number">@Html.DisplayFor(x => x.Taxes)</td>
     </tr>
     <tr>
+    	<td class="center uppercase">@Resources.SinglePayment</td>
         <td class="number">@Html.LabelFor(x => x.Total)</td>
         <td class="number">@Html.DisplayFor(x => x.Total)</td>
     </tr>
 </table>
 
 <div class="right">
-	@Resources.SinglePayment<br/>
+@if(Model.Currency != CurrencyCode.MXN) {
+<text>
+	@Html.LabelFor(x => x.Currency):
+	@Model.Currency.GetDisplayName()<br/>
+	@Html.LabelFor(x => x.ExchangeRate):
+	@Html.DisplayFor(x => x.ExchangeRate)<br/>
+</text>
+}
 	@Html.LabelFor(x => x.PaymentMethod):
 	@Model.PaymentMethod.GetDisplayName()
 	@if (Model.PaymentMethod != PaymentMethod.Unidentified &&

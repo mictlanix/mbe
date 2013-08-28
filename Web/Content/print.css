@@ -95,7 +95,7 @@ td.title {
 }
 th {
     padding:0 3px;
-    font-size:18px;
+    font-size:13px;
     font-weight:bold;
 }
 th.line {
@@ -141,4 +141,7 @@ p.multiline {
 }
 .clearfix:after {
   clear: both;
+}
+.uppercase {
+  text-transform:uppercase;
 }
