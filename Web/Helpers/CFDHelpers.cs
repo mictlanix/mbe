@@ -36,12 +36,29 @@ using System.Security.Cryptography.X509Certificates;
 using Mictlanix.BE.Model;
 using Mictlanix.CFDLib;
 using Mictlanix.Diverza.Client;
+using Mictlanix.FiscoClic.Client;
 
 namespace Mictlanix.BE.Web.Helpers
 {
 	internal static class CFDHelpers
 	{
 		public static readonly DateTime FIX_DATE = new DateTime (2013, 7, 30, 19, 30, 0);
+
+		public static dynamic IssueCFD (FiscalDocument item)
+		{
+			if (item.Issuer.Scheme == FiscalScheme.CFD) {
+				return SignCFD (item);
+			}
+
+			switch (item.Issuer.Provider) {
+				case FiscalCertificationProvider.Diverza:
+				return DiverzaStampCFD (item);
+				case FiscalCertificationProvider.FiscoClic:
+				return FiscoClicStampCFD (item);
+				default:
+				return null;
+			}
+		}
 
 		public static dynamic SignCFD (FiscalDocument item)
 		{
@@ -52,25 +69,36 @@ namespace Mictlanix.BE.Web.Helpers
 
 			return cfd;
 		}
-		
-		public static dynamic StampCFD (FiscalDocument item)
+
+		// TODO: credentials per taxpayer
+		static Mictlanix.CFDv32.Comprobante DiverzaStampCFD (FiscalDocument item)
 		{
-			switch (item.Issuer.Provider) {
-			case FiscalCertificationProvider.Diverza:
-				var cfd = SignCFD (item);
-				var cert = new X509Certificate2 (Configuration.DiverzaCert, Configuration.DiverzaCertPasswd);
-				var cli = new DiverzaClient (Configuration.DiverzaUrl, cert);
-				var id = string.Format ("{0}-{1:D6}-{2}-{3:D6}", Configuration.DiverzaPartnerCode,
-				                        item.Id, item.Batch, item.Serial);
-				var tfd = cli.Stamp (id, cfd);
+			var cfd = SignCFD (item);
+			var cert = new X509Certificate2 (Configuration.DiverzaCert, Configuration.DiverzaCertPasswd);
+			var cli = new DiverzaClient (Configuration.DiverzaUrl, cert);
+			var id = string.Format ("{0}-{1:D6}-{2}-{3:D6}", Configuration.DiverzaPartnerCode,
+			                        item.Id, item.Batch, item.Serial);
+			var tfd = cli.Stamp (id, cfd);
 
-				cfd.Complemento = new List<object> ();
-				cfd.Complemento.Add (tfd);
+			cfd.Complemento = new List<object> ();
+			cfd.Complemento.Add (tfd);
 
-				return cfd;
-			default:
-				return SignCFD (item);
-			}
+			return cfd;
+		}
+
+		// TODO: credentials per taxpayer
+		static Mictlanix.CFDv32.Comprobante FiscoClicStampCFD (FiscalDocument item)
+		{
+			var cfd = SignCFD (item);
+			var cli = new FiscoClicClient (Configuration.FiscoClickUser,
+			                               Configuration.FiscoClickPasswd,
+			                               Configuration.FiscoClickUrl);
+			var tfd = cli.Stamp (cfd);
+
+			cfd.Complemento = new List<object> ();
+			cfd.Complemento.Add (tfd);
+
+			return cfd;
 		}
 
 		public static bool PrivateKeyTest (byte[] data, byte[] password)

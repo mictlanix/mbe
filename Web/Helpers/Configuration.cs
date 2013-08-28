@@ -143,6 +143,18 @@ namespace Mictlanix.BE.Web.Helpers
 			get { return ConfigurationManager.AppSettings ["DiverzaPartnerCode"]; }
 		}
 
+		public static string FiscoClickUrl {
+			get { return ConfigurationManager.AppSettings ["FiscoClickUrl"]; }
+		}
+
+		public static string FiscoClickUser {
+			get { return ConfigurationManager.AppSettings ["FiscoClickUser"]; }
+		}
+
+		public static string FiscoClickPasswd {
+			get { return ConfigurationManager.AppSettings ["FiscoClickPasswd"]; }
+		}
+
 		#endregion
 		
 		#region Request's (Local) Settings
