@@ -188,7 +188,11 @@ namespace Mictlanix.BE.Web.Controllers
 		
         public ActionResult Edit (int id)
         {
-            var item = FiscalDocument.Find(id);
+			var item = FiscalDocument.Find(id);
+
+			if (item.IsCompleted || item.IsCancelled) {
+				return RedirectToAction ("View", new { id = item.Id });
+			}
 			
 			if (!CashHelpers.ValidateExchangeRate ()) {
 				return View ("InvalidExchangeRate");
@@ -840,6 +844,10 @@ namespace Mictlanix.BE.Web.Controllers
 		[HttpPost]
 		public ActionResult Confirm (int id)
 		{
+			dynamic doc;
+			int serial;
+			TaxpayerBatch batch;
+			var dt = DateTime.Now;
 			var item = FiscalDocument.TryFind (id);
 
 			if (item == null || item.IsCompleted || item.IsCancelled) {
@@ -858,16 +866,16 @@ namespace Mictlanix.BE.Web.Controllers
 					return RedirectToAction ("Edit", new { id = item.Id });
 			}
 
-			int serial = (from x in FiscalDocument.Queryable
-			              where x.Issuer.Id == item.Issuer.Id &&
-			              x.Batch == item.Batch
-			              select x.Serial).Max ().GetValueOrDefault () + 1;
+			serial = (from x in FiscalDocument.Queryable
+		              where x.Issuer.Id == item.Issuer.Id &&
+		              	x.Batch == item.Batch
+		              select x.Serial).Max ().GetValueOrDefault () + 1;
 
-			var batch = (from x in item.Issuer.Batches
-			             where x.Batch == item.Batch && 
+			batch = (from x in item.Issuer.Batches
+		             where x.Batch == item.Batch && 
 			             x.SerialStart <= serial && 
 			             x.SerialEnd >= serial
-			             select x).SingleOrDefault ();
+		             select x).SingleOrDefault ();
 
 			if (batch == null) {
 				return View ("InvalidBatch");
@@ -876,13 +884,15 @@ namespace Mictlanix.BE.Web.Controllers
 			item.Type = batch.Type;
 			item.Serial = serial;
 			item.IssuerCertificateNumber = item.Issuer.Certificates.Single (x => x.IsActive).Id;
-
-			var dt = DateTime.Now;
 			item.Issued = new DateTime (dt.Year, dt.Month, dt.Day,
 			                            dt.Hour, dt.Minute, dt.Second,
 			                            DateTimeKind.Unspecified);
 
-			dynamic doc = CFDHelpers.StampCFD (item);
+			try {
+				doc = CFDHelpers.IssueCFD (item);
+			} catch (Exception ex) {
+				return View ("Error", ex);
+			}
 
 			if (item.Issuer.Scheme == FiscalScheme.CFDI) {
 				var tfd = doc.Complemento [0] as CFDv32.TimbreFiscalDigital;
@@ -893,7 +903,6 @@ namespace Mictlanix.BE.Web.Controllers
 				item.AuthorityCertificateNumber = tfd.noCertificadoSAT;
 				item.OriginalString = tfd.ToString ();
 			} else {
-				doc = CFDHelpers.SignCFD (item);
 				item.ApprovalNumber = batch.ApprovalNumber;
 				item.ApprovalYear = batch.ApprovalYear;
 				item.OriginalString = doc.ToString ();
