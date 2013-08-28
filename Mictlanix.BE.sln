@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mictlanix.CFDLib", "CFDLib\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mictlanix.DiverzaClient", "DiverzaClient\Mictlanix.DiverzaClient\Mictlanix.DiverzaClient.csproj", "{342326A6-0782-4544-8664-D8D9734E1235}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mictlanix.FiscoClicClient", "FiscoClicClient\Mictlanix.FiscoClicClient\Mictlanix.FiscoClicClient.csproj", "{944C2166-9CF9-4740-BAA3-6E7C5AE62872}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{63EBACD8-7BB0-480F-81BF-5E0690B27112}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63EBACD8-7BB0-480F-81BF-5E0690B27112}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63EBACD8-7BB0-480F-81BF-5E0690B27112}.Release|Any CPU.Build.0 = Release|Any CPU
+		{944C2166-9CF9-4740-BAA3-6E7C5AE62872}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{944C2166-9CF9-4740-BAA3-6E7C5AE62872}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{944C2166-9CF9-4740-BAA3-6E7C5AE62872}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{944C2166-9CF9-4740-BAA3-6E7C5AE62872}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CBB1BA70-351E-4009-86FB-484810DC6364}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CBB1BA70-351E-4009-86FB-484810DC6364}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBB1BA70-351E-4009-86FB-484810DC6364}.Release|Any CPU.ActiveCfg = Release|Any CPU
