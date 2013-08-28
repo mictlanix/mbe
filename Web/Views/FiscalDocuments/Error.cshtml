@@ -1,0 +1,12 @@
+﻿@using Mictlanix.BE
+@model Exception
+
+@{
+    ViewBag.Title = Resources.Error;
+}
+
+<h2>@Resources.Error</h2>
+<p>@Model.ToString()</p>
+<h3>StackTrace</h3>
+<p>@Model.StackTrace</p>
+<p>@Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })</p>

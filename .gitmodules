@@ -4,3 +4,6 @@
 [submodule "DiverzaClient"]
 	path = DiverzaClient
 	url = git@github.com:mictlanix/diverza-client.git
+[submodule "FiscoClicClient"]
+	path = FiscoClicClient
+	url = git@github.com:mictlanix/fiscoclick-client.git

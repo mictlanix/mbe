@@ -127,6 +127,10 @@
       <Project>{342326A6-0782-4544-8664-D8D9734E1235}</Project>
       <Name>Mictlanix.DiverzaClient</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FiscoClicClient\Mictlanix.FiscoClicClient\Mictlanix.FiscoClicClient.csproj">
+      <Project>{944C2166-9CF9-4740-BAA3-6E7C5AE62872}</Project>
+      <Name>Mictlanix.FiscoClicClient</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RegisterClientValidationExtensions.cs" />
@@ -711,6 +715,7 @@
     <Content Include="Views\Stores\_Edit.cshtml" />
     <Content Include="Views\Stores\_Delete.cshtml" />
     <Content Include="Scripts\jquery.min.map" />
+    <Content Include="Views\FiscalDocuments\Error.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
