@@ -522,6 +522,25 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 
 		[HttpPost]
+		public JsonResult SetItemProductName (int id, string value)
+		{
+			var entity = SalesOrderDetail.Find (id);
+			string val = (value ?? string.Empty).Trim ();
+
+			if (val.Length == 0) {
+				entity.ProductName = entity.Product.Name;
+			} else {
+				entity.ProductName = val;
+			}
+
+			using (var scope = new TransactionScope()) {
+				entity.UpdateAndFlush ();
+			}
+
+			return Json (new { id = entity.Id, value = entity.ProductName });
+		}
+
+		[HttpPost]
 		public ActionResult SetItemQuantity (int id, decimal value)
 		{
 			var entity = SalesOrderDetail.Find (id);

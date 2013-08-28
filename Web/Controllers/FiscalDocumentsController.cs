@@ -657,18 +657,20 @@ namespace Mictlanix.BE.Web.Controllers
 		[HttpPost]
 		public JsonResult SetItemProductName (int id, string value)
 		{
-			var detail = FiscalDocumentDetail.Find (id);
+			var entity = FiscalDocumentDetail.Find (id);
 			string val = (value ?? string.Empty).Trim ();
 			
-			if (val.Length > 0) {
-				detail.ProductName = val;
-
-				using (var scope = new TransactionScope()) {
-					detail.Update ();
-				}
+			if (val.Length == 0) {
+				entity.ProductName = entity.Product.Name;
+			} else {
+				entity.ProductName = val;
 			}
 
-			return Json (new { id = detail.Id, value = detail.ProductName });
+			using (var scope = new TransactionScope()) {
+				entity.UpdateAndFlush ();
+			}
+
+			return Json (new { id = entity.Id, value = entity.ProductName });
 		}
 		
 		[HttpPost]
@@ -681,7 +683,7 @@ namespace Mictlanix.BE.Web.Controllers
 				detail.ProductCode = val;
 
 				using (var scope = new TransactionScope()) {
-					detail.Update ();
+					detail.UpdateAndFlush ();
 				}
 			}
 
@@ -698,7 +700,7 @@ namespace Mictlanix.BE.Web.Controllers
 				detail.UnitOfMeasurement = val;
 
 				using (var scope = new TransactionScope()) {
-					detail.Update ();
+					detail.UpdateAndFlush ();
 				}
 			}
 
@@ -721,7 +723,7 @@ namespace Mictlanix.BE.Web.Controllers
 				entity.Quantity = value;
 
 				using (var scope = new TransactionScope()) {
-					entity.Update ();
+					entity.UpdateAndFlush ();
 				}
 			}
 
@@ -748,7 +750,7 @@ namespace Mictlanix.BE.Web.Controllers
 				entity.Price = val;
 
 				using (var scope = new TransactionScope()) {
-					entity.Update ();
+					entity.UpdateAndFlush ();
 				}
 			}
 
@@ -774,7 +776,7 @@ namespace Mictlanix.BE.Web.Controllers
 				entity.Discount = val;
 
 				using (var scope = new TransactionScope()) {
-					entity.Update ();
+					entity.UpdateAndFlush ();
 				}
 			}
 
@@ -800,7 +802,7 @@ namespace Mictlanix.BE.Web.Controllers
 				entity.TaxRate = val;
 
 				using (var scope = new TransactionScope()) {
-					entity.Update ();
+					entity.UpdateAndFlush ();
 				}
 			}
 

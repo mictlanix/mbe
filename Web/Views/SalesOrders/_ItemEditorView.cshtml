@@ -12,25 +12,29 @@
 		   data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id' data-url='@Url.Action("RemoveItem", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
     </div>
     <div class='info'>
+    @if (Model.Product.HasVariablePricing) {
+ 		<a class='editable name input-xxlarge' data-type='text' data-inputclass='input-xxlarge' data-placement='bottom' data-pk='@Model.Id' data-url='@Url.Action("SetItemProductName", new { id = Model.Id })'>@Html.DisplayFor(x => x.ProductName)</a>
+    } else {
         <span class='thick'>@Html.DisplayFor(x => x.ProductName)</span>
+    }
         <br/>
         <b>@Resources.Code: </b>
         <span>@Html.DisplayFor(x => x.ProductCode)</span>
-        @if (!string.IsNullOrEmpty (Model.Product.Model)) {
+    @if (!string.IsNullOrEmpty (Model.Product.Model)) {
         <b>@Resources.Model: </b>
         <span>@Html.DisplayFor(x => x.Product.Model)</span>
-        }
-        @if (!string.IsNullOrEmpty (Model.Product.SKU)) {
+    }
+    @if (!string.IsNullOrEmpty (Model.Product.SKU)) {
         <b>@Resources.SKU: </b>
         <span>@Html.DisplayFor(x => x.Product.SKU)</span>
-        }
+    }
         <br/>
         <b>@Resources.Price:</b>
-        @if (Model.Product.HasVariablePricing) {
+    @if (Model.Product.HasVariablePricing) {
         <a class='editable price' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemPrice", new { id = Model.Id })'>@Html.DisplayFor(x => x.Price)</a>
-        } else {
+    } else {
         <span class='editable price'>@Html.DisplayFor(x => x.Price)</span>
-        }
+    }
         <span class='editable currency'>@Html.DisplayFor(x => x.Currency)</span>
         <b>@Resources.Quantity:</b>
         <a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
@@ -41,20 +45,24 @@
         <b>@Resources.Amount:</b>
         <span class='editable total'>@Html.DisplayFor(x => x.Total)</span>
         <span class='editable currency'>@Html.DisplayFor(x => x.Currency)</span>
-        @if (Model.Currency != Configuration.BaseCurrency) {
-			<i class="total2 icon-exclamation-sign" data-toggle='tooltip' title='@Html.DisplayFor(x => x.TotalEx) @Configuration.BaseCurrency'></i>
-        }
+    @if (Model.Currency != Configuration.BaseCurrency) {
+		<i class="total2 icon-exclamation-sign" data-toggle='tooltip' title='@Html.DisplayFor(x => x.TotalEx) @Configuration.BaseCurrency'></i>
+    }
     </div>
 </li>
 <script type='text/javascript'>
 $('#id\\:@Model.Id [data-toggle="tooltip"]').tooltip();
 $('#id\\:@Model.Id a.editable').editable({
 	success: function(response, newValue) {
+		var $this = $(this);
 		if ('total' in response) {
-			$(this).siblings('.total').html(response.total);
+			$this.siblings('.total').html(response.total);
 		}
 		if ('total2' in response) {
-			$(this).siblings('.total2').attr('data-original-title', response.total2 + ' @Configuration.BaseCurrency');
+			$this.siblings('.total2').attr('data-original-title', response.total2 + ' @Configuration.BaseCurrency');
+		}
+		if ($this.hasClass('name')) {
+			setTimeout(function(){$this.editable('setValue', response.value);},500);
 		}
         $('#totals-section').loadUrl();
     },
