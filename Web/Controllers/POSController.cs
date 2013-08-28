@@ -165,6 +165,10 @@ namespace Mictlanix.BE.Web.Controllers
 		{
 			var item = SalesOrder.Find (id);
 
+			if (item.IsCompleted || item.IsCancelled) {
+				return RedirectToAction ("View", new { id = item.Id });
+			}
+
 			if (!CashHelpers.ValidateExchangeRate ()) {
 				return View ("InvalidExchangeRate");
 			}
