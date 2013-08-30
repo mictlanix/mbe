@@ -119,6 +119,7 @@ namespace Mictlanix.BE.Web.Controllers
 		[HttpPost]
 		public ActionResult New ()
 		{
+			var dt = DateTime.Now;
 			var item = new SalesOrder ();
 
 			item.PointOfSale = Configuration.PointOfSale;
@@ -141,16 +142,12 @@ namespace Mictlanix.BE.Web.Controllers
 				item.Serial = 1;
 			}
 
-			item.Creator = SecurityHelpers.GetUser (User.Identity.Name).Employee;
-			item.CreationTime = DateTime.Now;
-			item.Updater = item.Creator;
-			item.ModificationTime = item.CreationTime;
 			item.Customer = Customer.TryFind (Configuration.DefaultCustomer);
 			item.SalesPerson = SecurityHelpers.GetUser (User.Identity.Name).Employee;
-			item.Date = item.CreationTime;
-			item.PromiseDate = item.Date;
+			item.Date = dt;
+			item.PromiseDate = dt;
 			item.Terms = PaymentTerms.Immediate;
-			item.DueDate = item.Date;
+			item.DueDate = dt;
 			item.Currency = Configuration.DefaultCurrency;
 			item.ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate ();
 
