@@ -935,6 +935,14 @@ namespace Mictlanix.BE.Web.Controllers
 		{
 			var item = FiscalDocument.Find (id);
 
+			try {
+				if (!CFDHelpers.CancelCFD (item)) {
+					return View ("Error", new InvalidOperationException (Resources.WebServiceReturnedFalse));
+				}
+			} catch (Exception ex) {
+				return View ("Error", ex);
+			}
+
 			item.CancellationDate = DateTime.Now;
 			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 			item.ModificationTime = DateTime.Now;
@@ -954,7 +962,7 @@ namespace Mictlanix.BE.Web.Controllers
 			var item = FiscalDocumentXml.TryFind (id);
 
 			if (item == null) {
-				xml = CFDHelpers.InvoiceToCFD (entity).ToXmlStream ();
+				return View ("Error", new FileNotFoundException ());
 			} else {
 				xml = new MemoryStream (Encoding.UTF8.GetBytes (item.Data));
 			}
