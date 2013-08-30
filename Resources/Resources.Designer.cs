@@ -4673,5 +4673,11 @@ namespace Mictlanix.BE {
 				return ResourceManager.GetString("MinimumQuantityRequired", resourceCulture);
 			}
 		}
+
+		public static string WebServiceReturnedFalse {
+			get {
+				return ResourceManager.GetString("WebServiceReturnedFalse", resourceCulture);
+			}
+		}
     }
 }
