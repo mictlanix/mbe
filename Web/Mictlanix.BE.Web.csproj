@@ -312,7 +312,6 @@
     <Content Include="Content\icons\view-item.png" />
     <Content Include="Content\icons\wifi.png" />
     <Content Include="Content\icons\world.png" />
-    <Content Include="Content\jquery.cluetip.css" />
     <Content Include="Content\selection-options.css" />
     <Content Include="Content\images\body-bg.png" />
     <Content Include="Content\images\false.png" />
