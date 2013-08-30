@@ -1713,5 +1713,8 @@ Realizada el: {0:d}</value>
   <data name="MinimumQuantityRequired" xml:space="preserve">
     <value>Cantidad mínima requerida: {0:0.####}.</value>
   </data>
+  <data name="WebServiceReturnedFalse" xml:space="preserve">
+    <value>El servicio web regresó "falso" como resultado.</value>
+  </data>
   
 </root>

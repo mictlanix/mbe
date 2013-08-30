@@ -42,7 +42,8 @@ namespace Mictlanix.BE.Web.Helpers
 {
 	internal static class CFDHelpers
 	{
-		public static readonly DateTime FIX_DATE = new DateTime (2013, 7, 30, 19, 30, 0);
+		static readonly DateTime FIX_DATE = new DateTime (2013, 7, 30, 19, 30, 0);
+		static readonly decimal CFDI_MIN_VERSION = 3.0m;
 
 		public static dynamic IssueCFD (FiscalDocument item)
 		{
@@ -52,12 +53,32 @@ namespace Mictlanix.BE.Web.Helpers
 
 			switch (item.Issuer.Provider) {
 				case FiscalCertificationProvider.Diverza:
-				return DiverzaStampCFD (item);
+				return DiverzaStamp (item);
 				case FiscalCertificationProvider.FiscoClic:
-				return FiscoClicStampCFD (item);
+				return FiscoClicStamp (item);
 				default:
 				return null;
 			}
+		}
+		
+		public static bool CancelCFD (FiscalDocument item)
+		{
+			if (item.IsCancelled) {
+				return false;
+			}
+
+			if (!item.IsCompleted || item.Version < CFDI_MIN_VERSION) {
+				return true;
+			}
+
+			switch (item.Issuer.Provider) {
+			case FiscalCertificationProvider.Diverza:
+				return DiverzaCancel (item);
+			case FiscalCertificationProvider.FiscoClic:
+				return FiscoClicCancel (item);
+			}
+
+			return true;
 		}
 
 		public static dynamic SignCFD (FiscalDocument item)
@@ -71,7 +92,7 @@ namespace Mictlanix.BE.Web.Helpers
 		}
 
 		// TODO: credentials per taxpayer
-		static Mictlanix.CFDv32.Comprobante DiverzaStampCFD (FiscalDocument item)
+		static Mictlanix.CFDv32.Comprobante DiverzaStamp (FiscalDocument item)
 		{
 			var cfd = SignCFD (item);
 			var cert = new X509Certificate2 (Configuration.DiverzaCert, Configuration.DiverzaCertPasswd);
@@ -86,8 +107,14 @@ namespace Mictlanix.BE.Web.Helpers
 			return cfd;
 		}
 
+		// TODO: implement it
+		static bool DiverzaCancel (FiscalDocument item)
+		{
+			return true;
+		}
+
 		// TODO: credentials per taxpayer
-		static Mictlanix.CFDv32.Comprobante FiscoClicStampCFD (FiscalDocument item)
+		static Mictlanix.CFDv32.Comprobante FiscoClicStamp (FiscalDocument item)
 		{
 			var cfd = SignCFD (item);
 			var cli = new FiscoClicClient (Configuration.FiscoClickUser,
@@ -99,6 +126,16 @@ namespace Mictlanix.BE.Web.Helpers
 			cfd.Complemento.Add (tfd);
 
 			return cfd;
+		}
+		
+		// TODO: credentials per taxpayer
+		static bool FiscoClicCancel (FiscalDocument item)
+		{
+			var cli = new FiscoClicClient (Configuration.FiscoClickUser,
+			                               Configuration.FiscoClickPasswd,
+			                               Configuration.FiscoClickUrl);
+
+			return cli.Cancel (item.Issuer.Id, item.StampId);
 		}
 
 		public static bool PrivateKeyTest (byte[] data, byte[] password)
