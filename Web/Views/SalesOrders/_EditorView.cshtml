@@ -46,12 +46,17 @@
 				</dd>
 				<dt>@Resources.SalesPerson</dt>
 				<dd>
-			        <a id='salesperson' data-type='select2' data-placement='right' data-pk='@Model.Id' 
+			        <a id='salesperson' data-type='select2' data-placement='right' data-pk='@Model.Id'
 			        	data-value='@Model.SalesPerson.Id' data-url='@Url.Action("SetSalesPerson", new { id = Model.Id })'
 			        	data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
 			        	@Html.DisplayFor(x => x.SalesPerson.Name)
 			        </a>
 		        </dd>
+				<dt>@Resources.Comment</dt>
+				<dd>
+					<a id="comment" data-type="textarea" data-placement='right' data-pk='@Model.Id'
+						data-url='@Url.Action("SetComment", new { id = Model.Id })'
+						data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>@Model.Comment</a>
 			</dl>
 		</div>
 	  	<div class='span4'>
@@ -191,6 +196,14 @@ $('#promise-date').editable({
 	datepicker: {
     	language:'@Configuration.Language'
 	}
+});
+$('#comment').editable({
+    
+});
+$('#edit-comment').click(function(e) {
+	e.stopPropagation();
+	e.preventDefault();
+	$('#comment').editable('toggle');
 });
 $('a.editable').editable({
 	success: function(response, newValue) {

@@ -58,7 +58,7 @@ namespace Mictlanix.BE.Model
         [Property]
         [Display(Name = "Comment", ResourceType = typeof(Resources))]
         [DataType(DataType.MultilineText)]
-        [StringLength(500, MinimumLength = 0)]
+		[StringLength(500, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
 		public virtual string Comment { get; set; }
 
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
