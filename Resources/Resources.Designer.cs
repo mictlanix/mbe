@@ -4679,5 +4679,11 @@ namespace Mictlanix.BE {
 				return ResourceManager.GetString("WebServiceReturnedFalse", resourceCulture);
 			}
 		}
+
+		public static string ItemAlreadyCompletedOrCancelled {
+			get {
+				return ResourceManager.GetString("ItemAlreadyCompletedOrCancelled", resourceCulture);
+			}
+		}
     }
 }
