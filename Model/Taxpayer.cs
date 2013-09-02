@@ -72,7 +72,7 @@ namespace Mictlanix.BE.Model
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
 		[Display(Name = "Provider", ResourceType = typeof(Resources))]
 		public virtual FiscalCertificationProvider Provider { get; set; }
-		
+
 		[Display(Name = "Address", ResourceType = typeof(Resources))]
 		public virtual bool HasAddress { get; set; }
 

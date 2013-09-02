@@ -238,7 +238,7 @@ namespace Mictlanix.BE.Web.Controllers
 				entity.ModificationTime = DateTime.Now;
 
 				using (var scope = new TransactionScope()) {
-					entity.Update ();
+					entity.UpdateAndFlush ();
 				}
 			}
 
@@ -268,7 +268,7 @@ namespace Mictlanix.BE.Web.Controllers
 				entity.ModificationTime = DateTime.Now;
 
 				using (var scope = new TransactionScope()) {
-					entity.Update ();
+					entity.UpdateAndFlush ();
 				}
 			}
 
@@ -292,7 +292,7 @@ namespace Mictlanix.BE.Web.Controllers
 				entity.ModificationTime = DateTime.Now;
 
 				using (var scope = new TransactionScope()) {
-					entity.Update ();
+					entity.UpdateAndFlush ();
 				}
 			}
 
@@ -316,11 +316,33 @@ namespace Mictlanix.BE.Web.Controllers
 				entity.ModificationTime = DateTime.Now;
 
 				using (var scope = new TransactionScope()) {
-					entity.Update ();
+					entity.UpdateAndFlush ();
 				}
 			}
 
 			return Json (new { id = id, value = entity.ShipTo.ToString () });
+		}
+		
+		[HttpPost]
+		public ActionResult SetComment (int id, string value)
+		{
+			var entity = SalesOrder.Find (id);
+			string val = (value ?? string.Empty).Trim ();
+
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			entity.Comment = (value.Length == 0) ? null : val;
+			entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			entity.ModificationTime = DateTime.Now;
+
+			using (var scope = new TransactionScope()) {
+				entity.UpdateAndFlush ();
+			}
+
+			return Json (new { id = id, value = entity.FormattedValueFor (x => x.PromiseDate) });
 		}
 
 		[HttpPost]
@@ -339,7 +361,7 @@ namespace Mictlanix.BE.Web.Controllers
 				entity.ModificationTime = DateTime.Now;
 
 				using (var scope = new TransactionScope()) {
-					entity.Update ();
+					entity.UpdateAndFlush ();
 				}
 			}
 
@@ -467,7 +489,7 @@ namespace Mictlanix.BE.Web.Controllers
 				}
 
 				using (var scope = new TransactionScope()) {
-					entity.Update ();
+					entity.UpdateAndFlush ();
 				}
 			}
 
