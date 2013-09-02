@@ -95,7 +95,7 @@ namespace Mictlanix.BE.Model
         [Property]
         [DataType(DataType.MultilineText)]
         [Display(Name = "Comment", ResourceType = typeof(Resources))]
-        [StringLength(500, MinimumLength = 0)]
+		[StringLength(500, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string Comment { get; set; }
 
         [HasMany(typeof(InventoryTransferDetail), Table = "inventory_transfer_detail", ColumnKey = "transfer")]

@@ -51,7 +51,7 @@ namespace Mictlanix.BE.Web.Helpers
 				return SignCFD (item);
 			}
 
-			switch (item.Issuer.Provider) {
+			switch (item.Provider) {
 				case FiscalCertificationProvider.Diverza:
 				return DiverzaStamp (item);
 				case FiscalCertificationProvider.FiscoClic:
@@ -71,7 +71,7 @@ namespace Mictlanix.BE.Web.Helpers
 				return true;
 			}
 
-			switch (item.Issuer.Provider) {
+			switch (item.Provider) {
 			case FiscalCertificationProvider.Diverza:
 				return DiverzaCancel (item);
 			case FiscalCertificationProvider.FiscoClic:
