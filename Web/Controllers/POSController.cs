@@ -25,7 +25,6 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -33,7 +32,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
-using Castle.ActiveRecord.Queries;
 using NHibernate;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
@@ -42,7 +40,7 @@ using Mictlanix.BE.Web.Helpers;
 namespace Mictlanix.BE.Web.Controllers
 {
 	[Authorize]
-    public class POSController : Controller
+	public class POSController : Controller
 	{
 		public ViewResult Index ()
 		{
@@ -150,6 +148,11 @@ namespace Mictlanix.BE.Web.Controllers
 			item.DueDate = dt;
 			item.Currency = Configuration.DefaultCurrency;
 			item.ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate ();
+			
+			item.Creator = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			item.CreationTime = dt;
+			item.Updater = item.Creator;
+			item.ModificationTime = dt;
 
 			using (var scope = new TransactionScope()) {
 				item.CreateAndFlush ();
@@ -176,37 +179,42 @@ namespace Mictlanix.BE.Web.Controllers
 		public JsonResult Contacts (int id)
 		{
 			var item = SalesOrder.TryFind (id);
-			var qry = from x in item.Customer.Contacts
-				select new { value = x.Id, text = x.ToString () };
+			var query = from x in item.Customer.Contacts
+						select new { value = x.Id, text = x.ToString () };
 
-			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
+			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
 		}
 
 		public JsonResult Addresses (int id)
 		{
 			var item = SalesOrder.TryFind (id);
-			var qry = from x in item.Customer.Addresses
-				select new { value = x.Id, text = x.ToString () };
+			var query = from x in item.Customer.Addresses
+						select new { value = x.Id, text = x.ToString () };
 
-			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
+			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
 		}
 
 		public JsonResult Terms ()
 		{
-			var qry = from x in Enum.GetValues (typeof(PaymentTerms)).Cast<PaymentTerms> ()
-				select new {
-				value = (int)x,
-				text = x.GetDisplayName ()
-			};
+			var query = from x in Enum.GetValues (typeof(PaymentTerms)).Cast<PaymentTerms> ()
+						select new {
+							value = (int)x,
+							text = x.GetDisplayName ()
+						};
 
-			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
+			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
 		}
 
 		[HttpPost]
-		public JsonResult SetCustomer (int id, int value)
+		public ActionResult SetCustomer (int id, int value)
 		{
 			var entity = SalesOrder.Find (id);
 			var item = Customer.TryFind (value);
+
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
 
 			if (item != null) {
 				entity.Customer = item;
@@ -218,10 +226,10 @@ namespace Mictlanix.BE.Web.Controllers
 				}
 
 				switch (entity.Terms) {
-					case PaymentTerms.Immediate:
+				case PaymentTerms.Immediate:
 					entity.DueDate = entity.Date;
 					break;
-					case PaymentTerms.NetD:
+				case PaymentTerms.NetD:
 					entity.DueDate = entity.Date.AddDays (entity.Customer.CreditDays);
 					break;
 				}
@@ -244,10 +252,15 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 
 		[HttpPost]
-		public JsonResult SetSalesPerson (int id, int value)
+		public ActionResult SetSalesPerson (int id, int value)
 		{
 			var entity = SalesOrder.Find (id);
 			var item = Employee.TryFind (value);
+
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
 
 			if (item != null) {
 				entity.SalesPerson = item;
@@ -263,10 +276,15 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 
 		[HttpPost]
-		public JsonResult SetContact (int id, int value)
+		public ActionResult SetContact (int id, int value)
 		{
 			var entity = SalesOrder.Find (id);
 			var item = Contact.TryFind (value);
+
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
 
 			if (item != null) {
 				entity.Contact = item;
@@ -282,10 +300,15 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 
 		[HttpPost]
-		public JsonResult SetShipTo (int id, int value)
+		public ActionResult SetShipTo (int id, int value)
 		{
 			var entity = SalesOrder.Find (id);
 			var item = Address.TryFind (value);
+
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
 
 			if (item != null) {
 				entity.ShipTo = item;
@@ -301,9 +324,14 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 
 		[HttpPost]
-		public JsonResult SetPromiseDate (int id, DateTime? value)
+		public ActionResult SetPromiseDate (int id, DateTime? value)
 		{
 			var entity = SalesOrder.Find (id);
+
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
 
 			if (value != null) {
 				entity.PromiseDate = value.Value;
@@ -324,6 +352,11 @@ namespace Mictlanix.BE.Web.Controllers
 			var entity = SalesOrder.Find (id);
 			CurrencyCode val;
 			bool success;
+
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
 
 			success = Enum.TryParse<CurrencyCode> (value.Trim (), out val);
 
@@ -366,6 +399,11 @@ namespace Mictlanix.BE.Web.Controllers
 			bool success;
 			decimal val;
 
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
 			success = decimal.TryParse (value.Trim (), out val);
 
 			if (success) {
@@ -402,6 +440,11 @@ namespace Mictlanix.BE.Web.Controllers
 			PaymentTerms val;
 			bool success;
 
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
 			success = Enum.TryParse<PaymentTerms> (value.Trim (), out val);
 
 			if (success) {
@@ -415,10 +458,10 @@ namespace Mictlanix.BE.Web.Controllers
 				entity.ModificationTime = DateTime.Now;
 
 				switch (entity.Terms) {
-					case PaymentTerms.Immediate:
+				case PaymentTerms.Immediate:
 					entity.DueDate = entity.Date;
 					break;
-					case PaymentTerms.NetD:
+				case PaymentTerms.NetD:
 					entity.DueDate = entity.Date.AddDays (entity.Customer.CreditDays);
 					break;
 				}
@@ -437,21 +480,26 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 
 		[HttpPost]
-		public JsonResult AddItem (int order, int product)
+		public ActionResult AddItem (int order, int product)
 		{
 			var entity = SalesOrder.TryFind (order);
 			var p = Product.TryFind (product);
 			int pl = entity.Customer.PriceList.Id;
 			var cost = (from x in ProductPrice.Queryable
 			            where x.Product.Id == product && x.List.Id == 0
-			            select x).SingleOrDefault();
+			            select x).SingleOrDefault ();
 			var price = (from x in ProductPrice.Queryable
 			             where x.Product.Id == product && x.List.Id == pl
-			             select x).SingleOrDefault();
+			             select x).SingleOrDefault ();
+
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
 
 			if (cost == null) {
 				cost = new ProductPrice {
-					Value = decimal.Zero				
+					Value = decimal.Zero
 				};
 			}
 
@@ -485,16 +533,21 @@ namespace Mictlanix.BE.Web.Controllers
 				item.CreateAndFlush ();
 			}
 
-			return Json(new { id = item.Id });
+			return Json (new { id = item.Id });
 		}
 
 		[HttpPost]
-		public JsonResult RemoveItem (int id)
+		public ActionResult RemoveItem (int id)
 		{
-			var item = SalesOrderDetail.Find (id);
+			var entity = SalesOrderDetail.Find (id);
+
+			if (entity.SalesOrder.IsCompleted || entity.SalesOrder.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
 
 			using (var scope = new TransactionScope ()) {
-				item.DeleteAndFlush ();
+				entity.DeleteAndFlush ();
 			}
 
 			return Json (new { id = id, result = true });
@@ -502,27 +555,32 @@ namespace Mictlanix.BE.Web.Controllers
 
 		public ActionResult Item (int id)
 		{
-			var item = SalesOrderDetail.Find (id);
-			return PartialView ("_ItemEditorView", item);
+			var entity = SalesOrderDetail.Find (id);
+			return PartialView ("_ItemEditorView", entity);
 		}
 
 		public ActionResult Items (int id)
 		{
-			var item = SalesOrder.Find (id);
-			return PartialView ("_Items", item.Details);
+			var entity = SalesOrder.Find (id);
+			return PartialView ("_Items", entity.Details);
 		}
 
 		public ActionResult Totals (int id)
 		{
-			var item = SalesOrder.Find (id);
-			return PartialView ("_Totals", item);
+			var entity = SalesOrder.Find (id);
+			return PartialView ("_Totals", entity);
 		}
 
 		[HttpPost]
-		public JsonResult SetItemProductName (int id, string value)
+		public ActionResult SetItemProductName (int id, string value)
 		{
 			var entity = SalesOrderDetail.Find (id);
 			string val = (value ?? string.Empty).Trim ();
+
+			if (entity.SalesOrder.IsCompleted || entity.SalesOrder.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
 
 			if (val.Length == 0) {
 				entity.ProductName = entity.Product.Name;
@@ -541,6 +599,11 @@ namespace Mictlanix.BE.Web.Controllers
 		public ActionResult SetItemQuantity (int id, decimal value)
 		{
 			var entity = SalesOrderDetail.Find (id);
+
+			if (entity.SalesOrder.IsCompleted || entity.SalesOrder.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
 
 			if (value < entity.Product.MinimumOrderQuantity) {
 				Response.StatusCode = 400;
@@ -562,11 +625,16 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 
 		[HttpPost]
-		public JsonResult SetItemPrice (int id, string value)
+		public ActionResult SetItemPrice (int id, string value)
 		{
 			var entity = SalesOrderDetail.Find (id);
 			bool success;
 			decimal val;
+
+			if (entity.SalesOrder.IsCompleted || entity.SalesOrder.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
 
 			success = decimal.TryParse (value.Trim (),
 			                            System.Globalization.NumberStyles.Currency,
@@ -576,7 +644,7 @@ namespace Mictlanix.BE.Web.Controllers
 				entity.Price = val;
 
 				using (var scope = new TransactionScope()) {
-					entity.Update ();
+					entity.UpdateAndFlush ();
 				}
 			}
 
@@ -589,13 +657,18 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 
 		[HttpPost]
-		public JsonResult SetItemDiscount (int id, string value)
+		public ActionResult SetItemDiscount (int id, string value)
 		{
 			var entity = SalesOrderDetail.Find (id);
 			bool success;
 			decimal val;
 
-			success = decimal.TryParse(value.TrimEnd(new char[] { ' ', '%' }), out val);
+			if (entity.SalesOrder.IsCompleted || entity.SalesOrder.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out val);
 			val /= 100m;
 
 			if (success && val >= 0 && val <= 1) {
@@ -615,11 +688,16 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 
 		[HttpPost]
-		public JsonResult SetItemTaxRate (int id, string value)
+		public ActionResult SetItemTaxRate (int id, string value)
 		{
 			var entity = SalesOrderDetail.Find (id);
 			bool success;
 			decimal val;
+
+			if (entity.SalesOrder.IsCompleted || entity.SalesOrder.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
 
 			success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out val);
 
@@ -643,40 +721,44 @@ namespace Mictlanix.BE.Web.Controllers
 		[HttpPost]
 		public ActionResult Confirm (int id)
 		{
-			var item = SalesOrder.Find (id);
+			var entity = SalesOrder.TryFind (id);
 
-			item.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
-			item.ModificationTime = DateTime.Now;
-			item.IsCompleted = true;
-
-			if (item.IsCredit) {
-				item.IsPaid = true;
+			if (entity == null || entity.IsCompleted || entity.IsCancelled) {
+				return RedirectToAction ("Index");
 			}
 
-			if (item.ShipTo == null) {
-				item.IsDelivered = true;
+			entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			entity.ModificationTime = DateTime.Now;
+			entity.IsCompleted = true;
+
+			if (entity.IsCredit) {
+				entity.IsPaid = true;
+			}
+
+			if (entity.ShipTo == null) {
+				entity.IsDelivered = true;
 			}
 
 			using (var scope = new TransactionScope ()) {
-				var warehouse = item.PointOfSale.Warehouse;
+				var warehouse = entity.PointOfSale.Warehouse;
 				var dt = DateTime.Now;
 
-				foreach (var x in item.Details) {
+				foreach (var x in entity.Details) {
 					x.Warehouse = warehouse;
 					x.Update ();
 
-					InventoryHelpers.ChangeNotification(TransactionType.SalesOrder, item.Id,
+					InventoryHelpers.ChangeNotification (TransactionType.SalesOrder, entity.Id,
 					                                    dt, warehouse, x.Product, -x.Quantity);
 				}
 
-				item.UpdateAndFlush ();
+				entity.UpdateAndFlush ();
 			}
 
-			if (item.IsCredit) {
-				return RedirectToAction ("View", new { id = item .Id });
+			if (entity.IsCredit) {
+				return RedirectToAction ("View", new { id = entity.Id });
 			}
 
-			return RedirectToAction ("PayOrder", "Payments", new { id = item .Id });
+			return RedirectToAction ("PayOrder", "Payments", new { id = entity.Id });
 		}
 
 		[HttpPost]
@@ -703,7 +785,7 @@ namespace Mictlanix.BE.Web.Controllers
 		public JsonResult GetSuggestions (int order, string pattern)
 		{
 			int pl = SalesOrder.Queryable.Where (x => x.Id == order)
-								.Select (x => x.Customer.PriceList.Id).Single ();
+						.Select (x => x.Customer.PriceList.Id).Single ();
 			var query = from x in ProductPrice.Queryable
 						where x.List.Id == pl && (
 							x.Product.Name.Contains (pattern) ||
@@ -725,5 +807,4 @@ namespace Mictlanix.BE.Web.Controllers
 			return Json (items.ToList (), JsonRequestBehavior.AllowGet);
 		}
 	}
-
 }
