@@ -300,6 +300,8 @@ namespace Mictlanix.BE.Web.Controllers
 
 				entity.Customer = item;
 				entity.Recipient = recipient;
+				entity.RecipientName = recipient.Name;
+				entity.RecipientAddress = recipient.Address;
 				entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
 				entity.ModificationTime = DateTime.Now;
 
