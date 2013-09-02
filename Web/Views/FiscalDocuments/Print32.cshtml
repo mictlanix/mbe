@@ -30,6 +30,11 @@
     @Html.DisplayFor(x => x.Issued)<br/>
     @Html.LabelFor(x => x.IssuedLocation)<br/>
     @Html.DisplayFor(x => x.IssuedLocation)
+@if (!string.IsNullOrEmpty (Model.Reference)) {
+    <br/>
+    @Html.LabelFor(x => x.Reference)<text>:</text>
+    @Html.DisplayFor(x => x.Reference)
+}
 </div>
 
 <div class="display-field">

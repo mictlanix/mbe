@@ -1716,5 +1716,7 @@ Realizada el: {0:d}</value>
   <data name="WebServiceReturnedFalse" xml:space="preserve">
     <value>El servicio web regresó "falso" como resultado.</value>
   </data>
-  
+  <data name="ItemAlreadyCompletedOrCancelled" xml:space="preserve">
+    <value>El elemento ha sido finalizado o cancelado.</value>
+  </data>
 </root>
