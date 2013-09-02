@@ -124,6 +124,12 @@ namespace Mictlanix.BE.Model
 		[Property("cancelled")]
 		[Display(Name = "Cancelled", ResourceType = typeof(Resources))]
 		public virtual bool IsCancelled { get; set; }
+		
+		[Property]
+		[DataType(DataType.MultilineText)]
+		[Display(Name = "Comment", ResourceType = typeof(Resources))]
+		[StringLength(500, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public virtual string Comment { get; set; }
 
         [HasMany(typeof(SalesOrderDetail), Table = "sales_order_detail", ColumnKey = "sales_order", Lazy = true)]
         public virtual IList<SalesOrderDetail> Details
