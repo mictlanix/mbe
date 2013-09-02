@@ -4685,5 +4685,11 @@ namespace Mictlanix.BE {
 				return ResourceManager.GetString("ItemAlreadyCompletedOrCancelled", resourceCulture);
 			}
 		}
+
+		public static string FiscalDocumentQRCodeFormatString {
+			get {
+				return ResourceManager.GetString("FiscalDocumentQRCodeFormatString", resourceCulture);
+			}
+		}
     }
 }

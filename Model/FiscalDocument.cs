@@ -74,7 +74,7 @@ namespace Mictlanix.BE.Model
         [Property]
 		[DataType(DataType.MultilineText)]
 		[Display(Name = "Comment", ResourceType = typeof(Resources))]
-		[StringLength(500, MinimumLength = 0)]
+		[StringLength(500, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
 		public virtual string Comment { get; set; }
 		
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
@@ -225,8 +225,11 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "CancellationDate", ResourceType = typeof(Resources))]		
 		public virtual DateTime? CancellationDate { get; set; }
 		
-		[Property()]
+		[Property]
 		public virtual decimal Version { get; set; }
+		
+		[Property]
+		public virtual FiscalCertificationProvider Provider { get; set; }
 
         [HasMany(typeof(FiscalDocumentDetail), Table = "fiscal_document_detail", ColumnKey = "document", Lazy = true)]
 		public virtual IList<FiscalDocumentDetail> Details {
