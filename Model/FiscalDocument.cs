@@ -107,14 +107,17 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "Customer", ResourceType = typeof(Resources))]
 		public virtual Customer Customer { get; set; }
 
+		/*
 		[UIHint("AddressSelector")]
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
 		[Display(Name = "Recipient", ResourceType = typeof(Resources))]
 		public virtual string RecipientId { get; set; }
+		*/
 
-		[BelongsTo("recipient")]
+		//[BelongsTo("recipient")]
+		[Property("recipient")]
 		[Display(Name = "Recipient", ResourceType = typeof(Resources))]
-		public virtual CustomerTaxpayer Recipient { get; set; }
+		public virtual string Recipient { get; set; }
 		
 		[Property("recipient_name")]
 		[Display(Name = "RecipientName", ResourceType = typeof(Resources))]
