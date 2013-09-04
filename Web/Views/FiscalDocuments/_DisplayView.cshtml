@@ -18,7 +18,7 @@
 				<dd>@Html.DisplayFor(x => x.Customer.Name)</dd>
 			    </dd>
 				<dt>@Resources.Recipient</dt>
-				<dd>@Html.DisplayFor(x => x.Recipient, "String")</dd>
+				<dd>@Html.DisplayFor(x => x.RecipientName) (@Html.DisplayFor(x => x.Recipient))</dd>
 			@if (!string.IsNullOrEmpty (Model.Reference)) {
 				<dt>@Resources.Reference</dt>
 				<dd>@Html.DisplayFor(x => x.Reference)</dd>

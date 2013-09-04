@@ -198,7 +198,7 @@ namespace Mictlanix.BE.Web.Helpers
                 },
                 Receptor = new Mictlanix.CFDv20.ComprobanteReceptor
 				{
-					rfc = item.Recipient.Id,
+					rfc = item.Recipient,
                     nombre = item.RecipientName,
                     Domicilio = new Mictlanix.CFDv20.t_Ubicacion
                     {
@@ -298,7 +298,7 @@ namespace Mictlanix.BE.Web.Helpers
                     }
                 },
                 Receptor = new Mictlanix.CFDv22.ComprobanteReceptor {
-					rfc = item.Recipient.Id,
+					rfc = item.Recipient,
                     nombre = item.RecipientName,
 					Domicilio = (item.RecipientAddress == null) ? null : new Mictlanix.CFDv22.t_Ubicacion {
                         calle = item.RecipientAddress.Street,
@@ -389,7 +389,7 @@ namespace Mictlanix.BE.Web.Helpers
 					}
 				},
 				Receptor = new Mictlanix.CFDv32.ComprobanteReceptor {
-					rfc = item.Recipient.Id,
+					rfc = item.Recipient,
 					nombre = item.RecipientName,
 					Domicilio = (item.RecipientAddress == null) ? null : new Mictlanix.CFDv32.t_Ubicacion {
 						calle = item.RecipientAddress.Street,
@@ -451,7 +451,7 @@ namespace Mictlanix.BE.Web.Helpers
 				}
 				
 				var row = new CFDv2ReportItem {
-					Taxpayer = item.Recipient.Id,
+					Taxpayer = item.Recipient,
 					Batch = item.Batch,
 					Serial = item.Serial.Value,
 					ApprovalYear = item.ApprovalYear.Value,
