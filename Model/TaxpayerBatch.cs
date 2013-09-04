@@ -37,12 +37,12 @@ namespace Mictlanix.BE.Model
 		[Property("approval_number")]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "ApprovalNumber", ResourceType = typeof(Resources))]
-		public virtual int ApprovalNumber { get; set; }
+		public virtual int? ApprovalNumber { get; set; }
 		
 		[Property("approval_year")]
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
 		[Display(Name = "ApprovalYear", ResourceType = typeof(Resources))]
-		public virtual int ApprovalYear { get; set; }
+		public virtual int? ApprovalYear { get; set; }
 		
 		[Property]
         [Display(Name = "Type", ResourceType = typeof(Resources))]

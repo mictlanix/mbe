@@ -37,8 +37,8 @@
 	    </div>
 		<div class='row-fluid'>
 		    <div class="span12">
-		        @Html.EditorFor(x => x.RecipientId)
-		        @Html.ValidationMessageFor(x => x.RecipientId)
+		        @Html.EditorFor(x => x.Recipient)
+		        @Html.ValidationMessageFor(x => x.Recipient)
 		    </div>
 	    </div>
     </div>
@@ -67,17 +67,20 @@ $(function () {
 @if (Model.Issuer != null) {
 	<text>$("#IssuerId").tokenInput("add", { id: "@Model.Issuer.Id", name: "@Model.Issuer.Name"});</text>
 }
-    $('#RecipientId').tokenInput(getUrl, {
+    $('#Recipient').tokenInput(getUrl, {
         hintText: "@Resources.HIntText",
         noResultsText: "@Resources.NoResultsText",
         searchingText: "@Resources.SearchingText",          
         queryParam: "pattern",minChars: 0,tokenLimit: 1
+@if (!string.IsNullOrEmpty (Model.Recipient)) {
+	<text>,prePopulate: [{ id: "@Model.Recipient", name: "@Model.RecipientName"}]</text>
+}
     });
     
     $('form').submit(function(){
     	var count = $("#IssuerId").tokenInput("get").length +
     				$("#CustomerId").tokenInput("get").length +
-    				$("#RecipientId").tokenInput("get").length;
+    				$("#Recipient").tokenInput("get").length;
     	
     	if(count != 3) return false;
 

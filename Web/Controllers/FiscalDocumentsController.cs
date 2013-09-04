@@ -88,7 +88,7 @@ namespace Mictlanix.BE.Web.Controllers
 				query = from x in FiscalDocument.Queryable
 						where !(!x.IsCompleted && x.IsCancelled) && (
 							x.Issuer.Id.Contains (search.Pattern) ||
-							x.Recipient.Id.Contains (search.Pattern) ||
+							x.Recipient.Contains (search.Pattern) ||
 							x.RecipientName.Contains (search.Pattern) ||
 							x.Customer.Name.Contains (search.Pattern))
 						orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Issued descending
@@ -137,7 +137,12 @@ namespace Mictlanix.BE.Web.Controllers
 
 			item.Issuer = Taxpayer.TryFind (item.IssuerId);
 			item.Customer = Customer.TryFind (item.CustomerId);
-			item.Recipient = CustomerTaxpayer.TryFind (item.RecipientId);
+			var recipient = CustomerTaxpayer.TryFind (item.Recipient);
+
+			if (recipient != null) {
+				item.Recipient = recipient.Id;
+				item.RecipientName = recipient.Name;
+			}
 
 			if (item.Issuer != null) {
 				batch = item.Issuer.Batches.FirstOrDefault ();
@@ -162,9 +167,7 @@ namespace Mictlanix.BE.Web.Controllers
 			item.IssuerAddress = item.Issuer.Address;
 			
 			// Recipient
-			item.RecipientName = item.Recipient.Name;
-			item.RecipientAddress = item.Recipient.Address;
-
+			item.RecipientAddress = recipient.Address;
 
 			// Fiscal doc's info
 			item.Batch = batch.Batch;
@@ -297,7 +300,7 @@ namespace Mictlanix.BE.Web.Controllers
 				}
 
 				entity.Customer = item;
-				entity.Recipient = recipient;
+				entity.Recipient = recipient.Id;
 				entity.RecipientName = recipient.Name;
 				entity.RecipientAddress = recipient.Address;
 				entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
@@ -311,7 +314,7 @@ namespace Mictlanix.BE.Web.Controllers
 			return Json (new {
 				id = id,
 				value = entity.FormattedValueFor (x => x.Customer),
-				recipient = entity.Recipient.Id,
+				recipient = entity.Recipient,
 				recipientText = entity.FormattedValueFor (x => x.Recipient)
 			});
 		}
@@ -328,7 +331,7 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 
 			if (item != null) {
-				entity.Recipient = item;
+				entity.Recipient = item.Id;
 				entity.RecipientName = item.Name;
 				entity.RecipientAddress = item.Address;
 				entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
@@ -941,10 +944,12 @@ namespace Mictlanix.BE.Web.Controllers
 			entity.Type = batch.Type;
 			entity.Serial = serial;
 			entity.Provider = entity.Issuer.Provider;
-			entity.IssuerCertificateNumber = entity.Issuer.Certificates.Single (x => x.IsActive).Id;
+			entity.ApprovalYear = batch.ApprovalYear;
+			entity.ApprovalNumber = batch.ApprovalNumber;
 			entity.Issued = new DateTime (dt.Year, dt.Month, dt.Day,
-			                            dt.Hour, dt.Minute, dt.Second,
-			                            DateTimeKind.Unspecified);
+			                              dt.Hour, dt.Minute, dt.Second,
+			                              DateTimeKind.Unspecified);
+			entity.IssuerCertificateNumber = entity.Issuer.Certificates.Single (x => x.IsActive).Id;
 
 			try {
 				doc = CFDHelpers.IssueCFD (entity);
@@ -961,8 +966,6 @@ namespace Mictlanix.BE.Web.Controllers
 				entity.AuthorityCertificateNumber = tfd.noCertificadoSAT;
 				entity.OriginalString = tfd.ToString ();
 			} else {
-				entity.ApprovalNumber = batch.ApprovalNumber;
-				entity.ApprovalYear = batch.ApprovalYear;
 				entity.OriginalString = doc.ToString ();
 			}
 
@@ -972,7 +975,6 @@ namespace Mictlanix.BE.Web.Controllers
 			entity.ModificationTime = DateTime.Now;
 			entity.IsCompleted = true;
 			
-			// save xml
 			var doc_xml = new FiscalDocumentXml {
 				Id = entity.Id,
 				Data = doc.ToXmlString ()
@@ -1130,7 +1132,7 @@ namespace Mictlanix.BE.Web.Controllers
 		{
 			var item = FiscalDocument.Find (id);
 			var data = string.Format (Resources.FiscalDocumentQRCodeFormatString,
-			                          item.Issuer.Id, item.Recipient.Id, item.Total, item.StampId);
+			                          item.Issuer.Id, item.Recipient, item.Total, item.StampId);
 
 			return BarcodesController.QRCodeAction (data);
 		}
