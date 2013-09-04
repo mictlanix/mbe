@@ -32,10 +32,10 @@
 				<dt>@Resources.Recipient</dt>
 				<dd>
 			        <a id='recipient' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id'
-			        	data-value='@Model.Recipient.Id' data-source='@Url.Action("Recipients", new { id = Model.Id })'
+			        	data-value='@Model.Recipient' data-source='@Url.Action("Recipients", new { id = Model.Id })'
 			        	data-source-cache='false' data-url='@Url.Action("SetRecipient", new { id = Model.Id })'
 			        	data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
-			        	@Html.DisplayFor(x => x.Recipient, "String")
+			        	@Html.DisplayFor(x => x.RecipientName) (@Html.DisplayFor(x => x.Recipient))
 			        </a>
 				</dd>
 				<dt>@Resources.Reference</dt>
