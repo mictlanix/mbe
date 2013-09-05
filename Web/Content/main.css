@@ -175,11 +175,6 @@ a.medium img,img.medium {
     max-width:200px;
     max-height:200px;
 }
-p.multiline {
-    margin:0;
-    width:700px;
-    word-wrap:break-word;
-}
 fieldset {
   border:1px solid #ddd;
   padding:0 1.4em 1em 1.4em;
@@ -422,6 +417,9 @@ span.editable {
 }
 .vspaced {
   margin:20px 0 2px;
+}
+.pre-wrapped {
+   white-space: pre-wrap;
 }
 
 /* Bootstrap styles */

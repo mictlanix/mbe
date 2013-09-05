@@ -26,7 +26,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Mictlanix.BE
+namespace Mictlanix.BE.Model
 {
 	public enum PaymentTerms
 	{

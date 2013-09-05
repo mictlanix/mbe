@@ -342,7 +342,7 @@ namespace Mictlanix.BE.Web.Controllers
 				entity.UpdateAndFlush ();
 			}
 
-			return Json (new { id = id, value = entity.FormattedValueFor (x => x.PromiseDate) });
+			return Json (new { id = id, value = entity.Comment });
 		}
 
 		[HttpPost]
