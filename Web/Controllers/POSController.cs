@@ -324,6 +324,28 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 
 		[HttpPost]
+		public ActionResult SetComment (int id, string value)
+		{
+			var entity = SalesOrder.Find (id);
+			string val = (value ?? string.Empty).Trim ();
+
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			entity.Comment = (value.Length == 0) ? null : val;
+			entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
+			entity.ModificationTime = DateTime.Now;
+
+			using (var scope = new TransactionScope()) {
+				entity.UpdateAndFlush ();
+			}
+
+			return Json (new { id = id, value = entity.Comment });
+		}
+
+		[HttpPost]
 		public ActionResult SetPromiseDate (int id, DateTime? value)
 		{
 			var entity = SalesOrder.Find (id);

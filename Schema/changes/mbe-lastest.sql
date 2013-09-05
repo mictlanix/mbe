@@ -9,3 +9,8 @@ ALTER TABLE `fiscal_document`
 
 ALTER TABLE `fiscal_document` 
   ADD COLUMN `provider` INT(11) NOT NULL AFTER `version`;
+
+ALTER TABLE `fiscal_document_detail` 
+  CHANGE COLUMN `product_code` `product_code` VARCHAR(35) NULL DEFAULT NULL;
+
+

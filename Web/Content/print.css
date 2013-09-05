@@ -113,11 +113,6 @@ th.border{
 .signatures {
     margin:5em 0;
 }
-p.multiline {
-    margin: 0;
-    width:182mm;
-    word-wrap:break-word;
-}
 #digital-signature {
   margin-top:20px;
   padding:2px;
