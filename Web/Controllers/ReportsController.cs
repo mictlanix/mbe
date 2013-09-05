@@ -570,7 +570,7 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 
 		#endregion
-		
+
 		#region Helpers
 		
 		void AnalyzeABC (IEnumerable<SummaryItem> items)
