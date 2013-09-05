@@ -928,7 +928,7 @@ namespace Mictlanix.BE.Web.Controllers
 
 			serial = (from x in FiscalDocument.Queryable
 		              where x.Issuer.Id == entity.Issuer.Id &&
-				x.Batch == entity.Batch
+							x.Batch == entity.Batch
 		              select x.Serial).Max ().GetValueOrDefault () + 1;
 
 			batch = (from x in entity.Issuer.Batches
@@ -999,10 +999,10 @@ namespace Mictlanix.BE.Web.Controllers
 
 			try {
 				if (!CFDHelpers.CancelCFD (entity)) {
-					return View ("Error", new InvalidOperationException (Resources.WebServiceReturnedFalse));
+					return View (Resources.Error, new InvalidOperationException (Resources.WebServiceReturnedFalse));
 				}
 			} catch (Exception ex) {
-				return View ("Error", ex);
+				return View (Resources.Error, ex);
 			}
 
 			entity.CancellationDate = DateTime.Now;
@@ -1022,9 +1022,9 @@ namespace Mictlanix.BE.Web.Controllers
 			var item = FiscalDocumentXml.TryFind (id);
 
 			if (item == null) {
-				return View ("Error", new FileNotFoundException ());
+				return View (Resources.Error, new FileNotFoundException ());
 			}
-
+			
 			var entity = FiscalDocument.TryFind (id);
 			var xml = new MemoryStream (Encoding.UTF8.GetBytes (item.Data));
 			var result = new FileStreamResult (xml, "text/xml");

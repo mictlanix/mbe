@@ -55,19 +55,16 @@ namespace Mictlanix.BE.Web.Controllers
                 return RedirectToAction ("OpenSession");
             }
 
-            var qry = from x in SalesOrder.Queryable
-					  where x.IsCompleted && !x.IsCancelled &&
-							!x.IsPaid && x.Terms == PaymentTerms.Immediate
-					  orderby x.Id descending
-                      select x;
+			var search = SearchSalesOrders (new Search<SalesOrder> {
+				Limit = int.MaxValue
+			});
 
-            return View (new MasterDetails<CashSession, SalesOrder> { Master = session, Details = qry.ToList() });
+			return View (new MasterDetails<CashSession, SalesOrder> { Master = session, Details = search.Results });
         }
 
         [HttpPost]
-		public ActionResult Index (int? id)
+		public ActionResult Index (string id)
 		{
-			IList<SalesOrder> items;
 			var drawer = Configuration.CashDrawer;
 			var session = GetSession ();
 
@@ -79,31 +76,54 @@ namespace Mictlanix.BE.Web.Controllers
 				return RedirectToAction ("OpenSession");
 			}
 
-			if (id != null && id > 0) {
-				var qry = from x in SalesOrder.Queryable
-	                      where x.IsCompleted && !x.IsPaid && 
-								!x.IsCancelled && x.Terms == PaymentTerms.Immediate &&
-								x.Id == id
-	                      select x;
-
-				items = qry.ToList ();
-			} else {
-				var qry = from x in SalesOrder.Queryable
-	                      where x.IsCompleted && !x.IsPaid && 
-								!x.IsCancelled && x.Terms == PaymentTerms.Immediate
-						  orderby x.Id descending
-	                      select x;
-
-				items = qry.ToList ();
-            }
+			var search = SearchSalesOrders (new Search<SalesOrder> {
+				Limit = int.MaxValue,
+				Pattern = id
+			});
 
             if (Request.IsAjaxRequest()) {
-                return PartialView ("_Index", items);
+				return PartialView ("_Index", search.Results);
             }
 
-			return View (new MasterDetails<CashSession, SalesOrder> { Master = session, Details = items });
+			return View (new MasterDetails<CashSession, SalesOrder> { Master = session, Details = search.Results });
         }
-		
+
+		Search<SalesOrder> SearchSalesOrders (Search<SalesOrder> search)
+		{
+			IQueryable<SalesOrder> query;
+			var item = Configuration.Store;
+			var pattern = (search.Pattern ?? string.Empty).Trim ();
+			int id = 0;
+
+			if (int.TryParse (pattern, out id) && id > 0) {
+				query = from x in SalesOrder.Queryable
+						where x.Store.Id == item.Id && x.IsCompleted && !x.IsCancelled &&
+							!x.IsPaid && x.Terms == PaymentTerms.Immediate &&
+							x.Id == id
+						orderby x.Date descending
+						select x;
+			} else if (string.IsNullOrEmpty (pattern)) {
+				query = from x in SalesOrder.Queryable
+						where x.Store.Id == item.Id && x.IsCompleted && !x.IsCancelled &&
+							!x.IsPaid && x.Terms == PaymentTerms.Immediate
+						orderby x.Date descending
+						select x;
+			} else {
+				query = from x in SalesOrder.Queryable
+						where x.Store.Id == item.Id && x.IsCompleted && !x.IsCancelled &&
+							!x.IsPaid && x.Terms == PaymentTerms.Immediate &&
+							(x.Customer.Name.Contains (pattern) ||
+						 	(x.SalesPerson.FirstName + " " + x.SalesPerson.LastName).Contains (pattern))
+						orderby x.Date descending
+						select x;
+			}
+
+			search.Total = query.Count ();
+			search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
+
+			return search;
+		}
+
 		public ViewResult Print (int id)
 		{
 			var item = SalesOrder.Find (id);
