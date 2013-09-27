@@ -1,0 +1,50 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model IEnumerable<SalesOrder>
+
+<table class='table table-condensed'>
+	<thead>
+	    <tr>
+	        <th class='nowrap center'>@Resources.SalesOrder</th>
+	        <th class='nowrap center'>@Resources.ProductName</th>
+	        <th class='nowrap center'>@Resources.Quantity</th>
+	        <th class='nowrap center'>@Resources.Price</th>
+	        <th class='nowrap center'>@Resources.Subtotal</th>
+	        <th class='nowrap center'>@Resources.Taxes</th>
+	        <th class='nowrap center'>@Resources.Total</th>
+	    </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+    <tr>
+    	<td>@Html.DisplayFor(x => item.Id)</td>
+        <td class='date' colspan='6'>@item.Date.ToShortDateString()</td>
+    </tr>
+	foreach (var detail in item.Details) {
+    <tr>
+    	<td class='number' />
+        <td>@Html.DisplayFor(x => detail.ProductName)</td>
+        <td class='currency'>@Html.DisplayFor(x => detail.Quantity)</td>
+        <td class='currency'>@Html.DisplayFor(x => detail.NetPrice)</td>
+        <td class='currency'>@Html.DisplayFor(x => detail.SubtotalEx)</td>
+        <td class='currency' />
+        <td class='currency' />
+    </tr>
+	}
+    <tr class='info'>
+        <td colspan='4' />
+        <td class='currency'>@Html.DisplayFor(x => item.SubtotalEx)</td>
+        <td class='currency'>@Html.DisplayFor(x => item.TaxesEx)</td>
+        <td class='currency'>@Html.DisplayFor(x => item.TotalEx)</td>
+    </tr>
+}
+    <tr class='warning'>
+        <td class='center' colspan='4'><b>@Resources.Totals</b></td>
+        <td class='number'><b>@Model.Sum(x => x.SubtotalEx).ToString("c")</b></td>
+        <td class='number'><b>@Model.Sum(x => x.TaxesEx).ToString("c")</b></td>
+        <td class='number'><b>@Model.Sum(x => x.TotalEx).ToString("c")</b></td>
+    </tr>
+    </tbody>
+</table>

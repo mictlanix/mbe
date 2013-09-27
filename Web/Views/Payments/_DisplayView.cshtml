@@ -30,7 +30,11 @@
 	  		<dl class='dl-horizontal'>
 				<dt>@Resources.Id</dt>
 				<dd>
+				@if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders).AllowRead) {
+					<a href='@Url.Action("View", "SalesOrders", new { id = Model.Id })' target='_blank'>@Html.DisplayFor(x => x.Id)</a>
+				} else {
 					<span>@Html.DisplayFor(x => x.Id)</span>
+				}
 					<i class='icon-exclamation-sign' data-toggle='tooltip' title='@Resources.Serial @Html.DisplayFor(x => x.Serial)'></i>
 				</dd>
 				<dt>@Resources.Date</dt>

@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Mictlanix.BE.Model;
@@ -91,10 +92,17 @@ namespace Mictlanix.BE.Web.Helpers
 
             string anchorHtml = anchorBuilder.ToString(TagRenderMode.Normal);
 
-            return MvcHtmlString.Create(anchorHtml);
-        }
+            return MvcHtmlString.Create (anchorHtml);
+		}
 
-        public static bool IsMenuSelected(this HtmlHelper html, string action, string controller)
+		public static MvcHtmlString DisplayNameFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression)
+		{
+			var metadata = ModelMetadata.FromLambdaExpression (expression, html.ViewData);
+
+			return MvcHtmlString.Create (metadata.DisplayName);
+		}
+
+        public static bool IsMenuSelected (this HtmlHelper html, string action, string controller)
         {
             string ctl = html.ViewContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString();
             string atn = html.ViewContext.Controller.ValueProvider.GetValue("action").RawValue.ToString();

@@ -140,3 +140,8 @@ th.border{
 .uppercase {
   text-transform:uppercase;
 }
+.pre-wrapped {
+  white-space:pre-wrap;
+  margin:2px;
+  font-size:smaller;
+}

@@ -1,0 +1,42 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model Product
+<tr id='id:@Model.Id'>
+    <td class='stretch'>
+    	<img src='@Url.Content(Model.Photo)' alt='' class='small' />
+    </td>
+    <td class="center">@Html.DisplayFor(x => x.Code)</td>
+    <td style='position:relative'>
+    	<p>
+    		@Html.DisplayFor(x => x.Name)<br/>
+    		@if (!string.IsNullOrEmpty (Model.Model)) {
+	        <i>@Resources.Model:</i> @Model.Model
+	        }
+	        @if (!string.IsNullOrEmpty (Model.SKU)) {
+	        <i>@Resources.SKU:</i> @Model.SKU
+	        }
+		</p>
+    	<div id='labels-@Model.Id' style='position:absolute;bottom:2px'>
+			@Html.Partial("_Labels", Model.Labels)
+    	</div>
+		<div class='btn-group' style='position:absolute;bottom:2px;right:2px'>
+			<a class='btn btn-mini dropdown-toggle labels' data-toggle='dropdown' data-key='@Model.Id' href="#">
+				<i class="icon-tags"></i> <span class="caret"></span>
+			</a>
+			<ul class='dropdown-menu'></ul>
+		</div>
+    </td>
+    <td class="stretch center">@Html.DisplayFor(x => x.UnitOfMeasurement)</td>
+    <td class="actions">
+    	@if(ViewBag.Privilege.AllowRead) {
+        	@Html.ActionLink(" ", "View", new { id = Model.Id }, new { @class = "button icon view icon-only open-modal", title = Resources.Details, data_modal_id = "product-modal" })
+        }
+    	@if(ViewBag.Privilege.AllowUpdate) {
+        	@Html.ActionLink(" ", "Edit", new { id = Model.Id }, new { @class = "button icon edit icon-only open-modal", title = Resources.Edit, data_modal_id = "product-modal" })
+        }
+    	@if(ViewBag.Privilege.AllowDelete) {
+        	@Html.ActionLink(" ", "Delete", new { id = Model.Id }, new { @class = "button icon delete icon-only open-modal", title = Resources.Delete, data_modal_id = "product-modal" })
+        }
+    </td>
+</tr>

@@ -1722,4 +1722,34 @@ Realizada el: {0:d}</value>
   <data name="FiscalDocumentQRCodeFormatString" xml:space="preserve">
     <value>?re={0}&amp;rr={1}&amp;tt={2:0000000000.000000}&amp;id={3}</value>
   </data>
+  <data name="CustomerDebt" xml:space="preserve">
+    <value>Adeudos del Cliente</value>
+  </data>
+  <data name="SalesOrderSummary" xml:space="preserve">
+    <value>Resumen de Ventas</value>
+  </data>
+  <data name="Invoice" xml:space="preserve">
+    <value>Factura</value>
+  </data>
+  <data name="FeeReceipt" xml:space="preserve">
+    <value>Recibo de Honorarios</value>
+  </data>
+  <data name="RentReceipt" xml:space="preserve">
+    <value>Recibo de Arrendamiento</value>
+  </data>
+  <data name="DebitNote" xml:space="preserve">
+    <value>Nota de Cargo</value>
+  </data>
+  <data name="CreditNote" xml:space="preserve">
+    <value>Nota de Crédito</value>
+  </data>
+  <data name="Second" xml:space="preserve">
+    <value>s</value>
+  </data>
+  <data name="Minute" xml:space="preserve">
+    <value>min</value>
+  </data>
+  <data name="Hour" xml:space="preserve">
+    <value>h</value>
+  </data>
 </root>

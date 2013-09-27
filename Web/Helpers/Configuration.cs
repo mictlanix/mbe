@@ -155,6 +155,10 @@ namespace Mictlanix.BE.Web.Helpers
 			get { return ConfigurationManager.AppSettings ["FiscoClickPasswd"]; }
 		}
 
+		public static decimal DefaultPrice {
+			get { return Convert.ToDecimal (ConfigurationManager.AppSettings ["DefaultPrice"]); }
+		}
+
 		#endregion
 		
 		#region Request's (Local) Settings
