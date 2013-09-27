@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Models
 @using Mictlanix.BE.Web.Helpers
@@ -18,14 +18,7 @@
 <div class="display-label right floating">
 	<h3>@Html.DisplayFor(x => x.Batch) @Html.DisplayFor(x => x.Serial)</h3>
 </div>
-
-<div class="display-label">
-    <h3>@Html.LabelFor(x => x.Recipient)</h3>
-</div>
-
 <div class="display-label right floating">
-    @Html.LabelFor(x => x.StampId)<br/>
-    @Html.DisplayFor(x => x.StampId)<br/>
     @Html.LabelFor(x => x.Issued)<br/>
     @Html.DisplayFor(x => x.Issued)<br/>
     @Html.LabelFor(x => x.IssuedLocation)<br/>
@@ -37,6 +30,9 @@
 }
 </div>
 
+<div class="display-label">
+    <h3>@Html.LabelFor(x => x.Recipient)</h3>
+</div>
 <div class="display-field">
     @Resources.TaxpayerId
     @Html.DisplayFor(x => x.Recipient)<br/>
@@ -51,8 +47,6 @@
     @Html.DisplayFor(x => x.RecipientAddress.PostalCode)
 </div>
 
-<div class="clearfix"></div>
-
 <table>
     <tr>
         <th class="line nowrap"></th>
@@ -60,7 +54,7 @@
         <th class="line nowrap">@Resources.ProductCode</th>
         <th class="line">@Resources.ProductName</th>
         <th class="line nowrap">@Resources.Price</th>
-        <th class="line nowrap">@Resources.Discount</th>
+        <th class="line nowrap">@Resources.VAT</th>
         <th class="line nowrap">@Resources.Amount</th>
     </tr>
 	@foreach (var item in Model.Details) {
@@ -70,7 +64,7 @@
         <td class="center line">@Html.DisplayFor(x => item.ProductCode)</td>
         <td class="line">@Html.DisplayFor(x => item.ProductName)</td>
         <td class="number line">@Html.DisplayFor(x => item.NetPrice)</td>
-        <td class="number line">@Html.DisplayFor(x => item.Discount)</td>
+        <td class="number line">@Html.DisplayFor(x => item.TaxRate)</td>
         <td class="number line">@Html.DisplayFor(x => item.Subtotal)</td>
     </tr>
 	}
@@ -78,7 +72,7 @@
 
 <table>
     <tr>
-        <td rowspan="2" class="center">@Html.CurrencyToString(Model.Total, Model.Currency)</td>
+        <td rowspan="3" class="center">@Html.CurrencyToString(Model.Total, Model.Currency)</td>
         <td class="number">@Html.LabelFor(x => x.Subtotal)</td>
         <td class="number">@Html.DisplayFor(x => x.Subtotal)</td>
     </tr>
@@ -87,21 +81,13 @@
         <td class="number">@Html.DisplayFor(x => x.Taxes)</td>
     </tr>
     <tr>
-    	<td class="center uppercase">@Resources.SinglePayment</td>
         <td class="number">@Html.LabelFor(x => x.Total)</td>
         <td class="number">@Html.DisplayFor(x => x.Total)</td>
     </tr>
 </table>
 
 <div class="right">
-@if(Model.Currency != CurrencyCode.MXN) {
-<text>
-	@Html.LabelFor(x => x.Currency):
-	@Model.Currency.GetDisplayName()<br/>
-	@Html.LabelFor(x => x.ExchangeRate):
-	@Html.DisplayFor(x => x.ExchangeRate)<br/>
-</text>
-}
+	@Resources.SinglePayment<br/>
 	@Html.LabelFor(x => x.PaymentMethod):
 	@Model.PaymentMethod.GetDisplayName()
 	@if (Model.PaymentMethod != PaymentMethod.Unidentified &&
@@ -111,31 +97,22 @@
 	}
 </div>
 
-<table>
-    <tr>
-        <td class="number">
-    		<img width='150' height='150' style='margin:10px 0 0 0' src='@Url.Action("QRCode", new { id = Model.Id })' />
-        </td>
-        <td id="digital-signature">
-		    @Html.LabelFor(x => x.AuthorityCertificateNumber):
-		    @Html.DisplayFor(x => x.AuthorityCertificateNumber)
-		    @Html.LabelFor(x => x.Stamped):
-		    @Html.DisplayFor(x => x.Stamped)<br/>
-			@Html.LabelFor(x => x.OriginalString)<br/>
-			@Html.DisplayFor(x => x.OriginalString)<br/>
-			@Html.LabelFor(x => x.IssuerDigitalSeal)<br/>
-			@Html.DisplayFor(x => x.IssuerDigitalSeal)<br/>
-			@Html.LabelFor(x => x.AuthorityDigitalSeal)<br/>
-			@Html.DisplayFor(x => x.AuthorityDigitalSeal)<br/>	
-			@Html.LabelFor(x => x.IssuerCertificateNumber):
-			@Html.DisplayFor(x => x.IssuerCertificateNumber)<br/>
-		    @Html.LabelFor(x => x.IssuerRegime):
-		    @Html.DisplayFor(x => x.IssuerRegime)
-		</td>
-    </tr>
-</table>
+<div id="digital-signature">
+	@Html.LabelFor(x => x.IssuerDigitalSeal)<br/>
+	@Html.DisplayFor(x => x.IssuerDigitalSeal)<br/>
+	@Html.LabelFor(x => x.OriginalString)<br/>
+	@Html.DisplayFor(x => x.OriginalString)<br/>
+	@Html.LabelFor(x => x.IssuerCertificateNumber)
+	@Html.DisplayFor(x => x.IssuerCertificateNumber)
+	@Html.LabelFor(x => x.ApprovalNumber)
+	@Html.DisplayFor(x => x.ApprovalNumber)
+	@Html.LabelFor(x => x.ApprovalYear)
+	@Html.DisplayFor(x => x.ApprovalYear)<br/>
+    @Html.LabelFor(x => x.IssuerRegime):
+    @Html.DisplayFor(x => x.IssuerRegime)
+</div>
 
-<div class="right">@Resources.FiscalDocumentLegendV3</div>
+<div class="right">@Resources.FiscalDocumentLegend</div>
 <script type="text/javascript">
 $(function() {
 	$('body, select, input, textarea, button, submit, form').prop('disabled', true);

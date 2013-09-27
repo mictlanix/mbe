@@ -91,7 +91,7 @@ namespace Mictlanix.BE.Web.Controllers
 				query = from x in SalesOrder.Queryable
 						where x.Store.Id == item.Id && (
 							x.Customer.Name.Contains (search.Pattern) ||
-							(x.SalesPerson.FirstName + " " + x.SalesPerson.LastName).Contains (search.Pattern))
+							x.SalesPerson.Nickname.Contains (search.Pattern))
 						orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending
 						select x;
 			}
@@ -615,6 +615,25 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 
 			return Json (new { id = entity.Id, value = entity.ProductName });
+		}
+
+		[HttpPost]
+		public ActionResult SetItemComment (int id, string value)
+		{
+			var entity = SalesOrderDetail.Find (id);
+
+			if (entity.SalesOrder.IsCompleted || entity.SalesOrder.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			entity.Comment = string.IsNullOrWhiteSpace (value) ? null : value.Trim ();
+
+			using (var scope = new TransactionScope()) {
+				entity.UpdateAndFlush ();
+			}
+
+			return Json (new { id = id, value = entity.Comment });
 		}
 
 		[HttpPost]

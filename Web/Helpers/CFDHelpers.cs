@@ -166,7 +166,7 @@ namespace Mictlanix.BE.Web.Helpers
 		{
 			var cer = item.Issuer.Certificates.SingleOrDefault (x => x.Id == item.IssuerCertificateNumber);
 			var cfd = new CFDv32.Comprobante {
-				tipoDeComprobante = (Mictlanix.CFDv32.ComprobanteTipoDeComprobante)item.Type,
+				tipoDeComprobante = (Mictlanix.CFDv32.ComprobanteTipoDeComprobante)FDT2TDC (item.Type),
 				noCertificado = item.IssuerCertificateNumber.ToString ().PadLeft (20, '0'),
 				serie = item.Batch,
 				folio = item.Serial.ToString (),
@@ -257,7 +257,7 @@ namespace Mictlanix.BE.Web.Helpers
 		{
 			var cer = item.Issuer.Certificates.SingleOrDefault (x => x.Id == item.IssuerCertificateNumber);
 			var cfd = new Mictlanix.CFDv22.Comprobante {
-				tipoDeComprobante = (Mictlanix.CFDv22.ComprobanteTipoDeComprobante)item.Type,
+				tipoDeComprobante = (Mictlanix.CFDv22.ComprobanteTipoDeComprobante)FDT2TDC (item.Type),
 				noAprobacion = item.ApprovalNumber.ToString (),
 				anoAprobacion = item.ApprovalYear.ToString (),
 				noCertificado = item.IssuerCertificateNumber.ToString ().PadLeft (20, '0'),
@@ -351,7 +351,7 @@ namespace Mictlanix.BE.Web.Helpers
 			var cer = item.Issuer.Certificates.SingleOrDefault (x => x.Id == item.IssuerCertificateNumber);
 
 			var cfd = new Mictlanix.CFDv20.Comprobante {
-				tipoDeComprobante = (Mictlanix.CFDv20.ComprobanteTipoDeComprobante)item.Type,
+				tipoDeComprobante = (Mictlanix.CFDv20.ComprobanteTipoDeComprobante)FDT2TDC (item.Type),
 				noAprobacion = item.ApprovalNumber.ToString (),
 				anoAprobacion = item.ApprovalYear.ToString (),
 				noCertificado = item.IssuerCertificateNumber.ToString ().PadLeft (20, '0'),
@@ -455,7 +455,7 @@ namespace Mictlanix.BE.Web.Helpers
 					Amount = item.Total,
 					Taxes = item.Taxes,
 					IsActive = state,
-					Type = (CFDv2ReportItemType)item.Type
+					Type = (CFDv2ReportItemType)FDT2TDC (item.Type)
 				};
 				
 				list.Add (row);
@@ -468,6 +468,22 @@ namespace Mictlanix.BE.Web.Helpers
 			}
 			
 			return list;
+		}
+
+		// FiscalDocumentType -> TipoDeComprobante
+		static int FDT2TDC (FiscalDocumentType type)
+		{
+			switch (type) {
+			case FiscalDocumentType.Invoice:
+			case FiscalDocumentType.FeeReceipt:
+			case FiscalDocumentType.RentReceipt:
+			case FiscalDocumentType.DebitNote:
+				return (int)Mictlanix.CFDv32.ComprobanteTipoDeComprobante.ingreso;
+			case FiscalDocumentType.CreditNote:
+				return (int)Mictlanix.CFDv32.ComprobanteTipoDeComprobante.egreso;
+			}
+
+			throw new ArgumentOutOfRangeException ("type");
 		}
 	}
 }

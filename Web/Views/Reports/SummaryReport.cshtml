@@ -6,27 +6,25 @@
 
 <h2>@ViewBag.Title</h2>
 
-<div id="master-section">
-@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))
-{
-    <div class="search-box">
-    	<table class="noborder">
+<div id='master-section'>
+@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
+    <div class='search-box'>
+    	<table class='noborder'>
 	    	<tbody>
 		    	<tr>
 		    		<td>@Html.Editor((string)ViewBag.EditorField, (string)ViewBag.EditorTemplate)</td>
-		    		<td class="actions">@Html.EditorFor(x => x.StartDate) - @Html.EditorFor(x => x.EndDate)</td>
-		    		<td class="actions"><button type="submit" class="icon search">@Resources.Search</button></td>
+		    		<td class='actions'>@Html.EditorFor(x => x.StartDate) - @Html.EditorFor(x => x.EndDate)</td>
+		    		<td class='actions no-print'><button type='submit' class='icon search'>@Resources.Search</button></td>
 		    	</tr>
 	    	</tbody>
     	</table>
     </div>
 }
 </div>
-<div id="activity-indicator">
-    <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
+<div id='activity-indicator'>
+    <img alt='@Resources.Loading' src='@Url.Content("~/Content/images/loading-bar.gif")' />
 </div>
-<div id="search-results">
-</div>
-<style type="text/css">
+<div id='search-results'></div>
+<style type='text/css'>
 ul.token-input-list {width:100%;}
 </style>

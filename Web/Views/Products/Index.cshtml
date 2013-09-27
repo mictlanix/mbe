@@ -12,11 +12,9 @@
 
 <h2>@Resources.DisplayName_Products</h2>
 
-<p>
 @if(Privilege.AllowCreate) {
-    @Html.ActionLink(Resources.CreateNew, "Create", new { }, new { @class = "button icon add" })
+    @Html.ActionLink(Resources.CreateNew, "Create", null, new { @class = "button icon add open-modal", data_modal_id = "product-modal" })
 }
-</p>
 
 <div id='master-section'>
 @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
@@ -28,9 +26,9 @@
 	</div>
 }
 </div>
-<div id="activity-indicator">
-    <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
+<div id='activity-indicator'>
+    <img alt='@Resources.Loading' src='@Url.Content("~/Content/images/loading-bar.gif")' />
 </div>
-<div id="search-results">
+<div id='search-results'>
     @Html.Partial("_Index")
 </div>

@@ -4691,5 +4691,65 @@ namespace Mictlanix.BE {
 				return ResourceManager.GetString("FiscalDocumentQRCodeFormatString", resourceCulture);
 			}
 		}
+
+		public static string CustomerDebt {
+			get {
+				return ResourceManager.GetString("CustomerDebt", resourceCulture);
+			}
+		}
+
+		public static string SalesOrderSummary {
+			get {
+				return ResourceManager.GetString("SalesOrderSummary", resourceCulture);
+			}
+		}
+
+		public static string Invoice {
+			get {
+				return ResourceManager.GetString("Invoice", resourceCulture);
+			}
+		}
+
+		public static string FeeReceipt {
+			get {
+				return ResourceManager.GetString("FeeReceipt", resourceCulture);
+			}
+		}
+
+		public static string RentReceipt {
+			get {
+				return ResourceManager.GetString("RentReceipt", resourceCulture);
+			}
+		}
+
+		public static string DebitNote {
+			get {
+				return ResourceManager.GetString("DebitNote", resourceCulture);
+			}
+		}
+
+		public static string CreditNote {
+			get {
+				return ResourceManager.GetString("CreditNote", resourceCulture);
+			}
+		}
+
+		public static string Second {
+			get {
+				return ResourceManager.GetString("Second", resourceCulture);
+			}
+		}
+
+		public static string Minute {
+			get {
+				return ResourceManager.GetString("Minute", resourceCulture);
+			}
+		}
+
+		public static string Hour {
+			get {
+				return ResourceManager.GetString("Hour", resourceCulture);
+			}
+		}
     }
 }

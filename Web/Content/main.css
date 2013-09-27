@@ -139,21 +139,21 @@ div#logo {
 .hidden {
   display:none;
 }
-.date,.bool,.number,.currency {
+.date,.bool,.number,.currency,input.date,td.date {
   white-space:nowrap;
   width:1px;
   text-align:center;
 }
-.left {
+.left,th.left,td.left {
   text-align:left;
 }
-.right,.number,.currency,input.number,input.currency  {
+.right,th.right,td.right,.number,input.number,td.number,.currency,input.currency,td.currency  {
   text-align:right;
 }
 .editable-popup.right {
   text-align:left;
 }
-.center {
+.center,th.center,td.center {
   text-align:center;
 }
 .nowrap {
@@ -419,7 +419,9 @@ span.editable {
   margin:20px 0 2px;
 }
 .pre-wrapped {
-   white-space: pre-wrap;
+  white-space:pre-wrap;
+  margin-bottom:0;
+  font-size:smaller;
 }
 
 /* Bootstrap styles */
@@ -506,4 +508,10 @@ span.editable {
   display:block;
   font-weight:normal;
   font-size: 1em;
+}
+
+@media print {
+	.no-print, .no-print * {
+	    display: none !important;
+	}
 }

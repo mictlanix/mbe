@@ -36,11 +36,15 @@ namespace Mictlanix.BE.Model
 {
     public enum FiscalDocumentType : int
     {
-        [Display(Name = "Income", ResourceType = typeof(Resources))]
-        Income,
-        [Display(Name = "Outcome", ResourceType = typeof(Resources))]
-        Outcome,
-		[Display(Name = "Transfer", ResourceType = typeof(Resources))]
-		Transfer
+		[Display(Name = "Invoice", ResourceType = typeof(Resources))]
+		Invoice,
+		[Display(Name = "FeeReceipt", ResourceType = typeof(Resources))]
+		FeeReceipt,
+		[Display(Name = "RentReceipt", ResourceType = typeof(Resources))]
+		RentReceipt,
+		[Display(Name = "DebitNote", ResourceType = typeof(Resources))]
+		DebitNote,
+		[Display(Name = "CreditNote", ResourceType = typeof(Resources))]
+		CreditNote = 100
     }
 }

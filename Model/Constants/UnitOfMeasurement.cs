@@ -64,7 +64,13 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "Bottle", ResourceType = typeof(Resources))]
 		Bottle,
 		[Display(Name = "Barrel", ResourceType = typeof(Resources))]
-		Barrel
+		Barrel,
+		[Display(Name = "Second", ResourceType = typeof(Resources))]
+		Second,
+		[Display(Name = "Minute", ResourceType = typeof(Resources))]
+		Minute,
+		[Display(Name = "Hour", ResourceType = typeof(Resources))]
+		Hour
     }
 }
 

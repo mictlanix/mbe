@@ -39,8 +39,8 @@ namespace Mictlanix.BE.Model
     [ActiveRecord("product")]
     public class Product : ActiveRecordLinqBase<Product>
 	{
-		IList<ProductPrice> prices = new List<ProductPrice>();
 		IList<Label> labels = new List<Label>();
+		IList<ProductPrice> prices = new List<ProductPrice>();
 
 		public Product ()
 		{
@@ -63,25 +63,25 @@ namespace Mictlanix.BE.Model
 		public virtual string Code { get; set; }
 
         [Property]
-        [Display(Name = "SKU", ResourceType = typeof(Resources))]
-        [StringLength(25, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string SKU { get; set; }
-
-        [Property]
         [Display(Name = "Name", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Name { get; set; }
+		public string Name { get; set; }
+
+		[Property]
+		[Display(Name = "Model", ResourceType = typeof(Resources))]
+		[StringLength(100, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public string Model { get; set; }
 
         [Property]
         [Display(Name = "Brand", ResourceType = typeof(Resources))]
         [StringLength(100, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Brand { get; set; }
+		public string Brand { get; set; }
 
-        [Property]
-        [Display(Name = "Model", ResourceType = typeof(Resources))]
-        [StringLength(100, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Model { get; set; }
+		[Property]
+		[Display(Name = "SKU", ResourceType = typeof(Resources))]
+		[StringLength(25, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public string SKU { get; set; }
 
         [Property]
         [Display(Name = "Location", ResourceType = typeof(Resources))]

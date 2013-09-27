@@ -66,7 +66,13 @@ namespace Mictlanix.BE.Model
         [Display(Name = "ProductName", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string ProductName { get; set; }
+		public string ProductName { get; set; }
+
+		[Property]
+		[DataType(DataType.MultilineText)]
+		[Display(Name = "Comment", ResourceType = typeof(Resources))]
+		[StringLength(500, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public virtual string Comment { get; set; }
 		
         [Property("unit_of_measurement")]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]

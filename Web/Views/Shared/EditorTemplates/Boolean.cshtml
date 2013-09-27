@@ -1,7 +1,8 @@
-﻿@model Boolean?
+﻿@using Mictlanix.BE.Web.Helpers
+@model Boolean?
 
 @if(Model == null) {
-	<div>@Html.CheckBox("", new { style = "float:left;margin:3px 3px 0 0" }) @Html.LabelFor(x => x)</div>
+	<label style='display:inline-block;margin-right:5px'>@Html.CheckBox("", new { style = "float:left;margin:3px 3px 0 0" }) @Html.DisplayNameFor(x => x)</label>
 } else {
-	<div>@Html.CheckBox("", Model.Value, new { style = "float:left;margin:3px 3px 0 0" }) @Html.LabelFor(x => x)</div>
+	<label style='display:inline-block;margin-right:5px'>@Html.CheckBox("", Model.Value, new { style = "float:left;margin:3px 3px 0 0" }) @Html.DisplayNameFor(x => x)</label>
 }

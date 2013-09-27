@@ -9,6 +9,7 @@
         $(this).next().css({ "visibility": "visible" });
     });
 	
+	$.fn.editableContainer.defaults.onblur = 'ignore';
     $('input.date').datepicker({ language: 'es', format: 'yyyy-mm-dd' });
 });
 function onSearchBegin() {
