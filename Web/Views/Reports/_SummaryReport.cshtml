@@ -6,32 +6,31 @@
 
 <table>
     <tr>
-        <th class="nowrap">@Html.LabelFor(x => new SummaryItem().Id)</th>
-        <th class="nowrap">@Html.LabelFor(x => new SummaryItem().Name)</th>
-        <th class="nowrap">@Html.LabelFor(x => new SummaryItem().Units)</th>
-        <th class="nowrap">@Html.LabelFor(x => new SummaryItem().Subtotal)</th>
-        <th class="nowrap">@Html.LabelFor(x => new SummaryItem().Taxes)</th>
-        <th class="nowrap">@Html.LabelFor(x => new SummaryItem().Total)</th>
-        <th class="nowrap"></th>
+        <th class='nowrap'>@Html.LabelFor(x => new SummaryItem().Id)</th>
+        <th class='nowrap'>@Html.LabelFor(x => new SummaryItem().Name)</th>
+        <th class='nowrap'>@Html.LabelFor(x => new SummaryItem().Units)</th>
+        <th class='nowrap'>@Html.LabelFor(x => new SummaryItem().Subtotal)</th>
+        <th class='nowrap'>@Html.LabelFor(x => new SummaryItem().Taxes)</th>
+        <th class='nowrap'>@Html.LabelFor(x => new SummaryItem().Total)</th>
+        <th class='nowrap'></th>
     </tr>
-@foreach (var item in Model)
-{
+@foreach (var item in Model) {
     <tr>
-        <td class="number">@Html.DisplayFor(x => item.Id)</td>
+        <td class='number'>@Html.DisplayFor(x => item.Id)</td>
         <td>@Html.DisplayFor(x => item.Name)</td>
-        <td class="number">@Html.DisplayFor(x => item.Units)</td>
-        <td class="number">@Html.DisplayFor(x => item.Subtotal)</td>
-        <td class="number">@Html.DisplayFor(x => item.Taxes)</td>
-        <td class="number">@Html.DisplayFor(x => item.Total)</td>
-        <td class="center stretch">@Html.DisplayFor(x => item.Category)</td>
+        <td class='number'>@Html.DisplayFor(x => item.Units)</td>
+        <td class='number'>@Html.DisplayFor(x => item.Subtotal)</td>
+        <td class='number'>@Html.DisplayFor(x => item.Taxes)</td>
+        <td class='number'>@Html.DisplayFor(x => item.Total)</td>
+        <td class='center stretch'>@Html.DisplayFor(x => item.Category)</td>
     </tr> 
 }
     <tr>
-    	<td class="right" colspan="2"><b>@Resources.Total</b></td>
-        <td class="number"><b>@Model.Sum(x => x.Units)</b></td>
-        <td class="number"><b>@Model.Sum(x => x.Subtotal).ToString("c")</b></td>
-        <td class="number"><b>@Model.Sum(x => x.Taxes).ToString("c")</b></td>
-        <td class="number"><b>@Model.Sum(x => x.Total).ToString("c")</b></td>
+    	<td class='right' colspan='2'><b>@Resources.Total</b></td>
+        <td class='number'><b>@Model.Sum(x => x.Units)</b></td>
+        <td class='number'><b>@Model.Sum(x => x.Subtotal).ToString("c")</b></td>
+        <td class='number'><b>@Model.Sum(x => x.Taxes).ToString("c")</b></td>
+        <td class='number'><b>@Model.Sum(x => x.Total).ToString("c")</b></td>
         <td></td>
     </tr>
 </table>

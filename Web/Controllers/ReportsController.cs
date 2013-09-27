@@ -134,42 +134,35 @@ namespace Mictlanix.BE.Web.Controllers
 
 		public ViewResult SalesOrdersHistoric ()
 		{
-			DateRange item = new DateRange();
-			item.StartDate = DateTime.Now;
-			item.EndDate = DateTime.Now;
-			
-			return View(item);
+			return View (new DateRange (DateTime.Now, DateTime.Now));
 		}
 		
 		[HttpPost]
-		public ActionResult SalesOrdersHistoric(DateRange item, Search<SalesOrder> search)
+		public ActionResult SalesOrdersHistoric (DateRange item, Search<SalesOrder> search)
 		{
 			ViewBag.Dates = item;
 			search.Limit = Configuration.PageSize;   
 			search = GetSalesOrder(item, search);
 			
-			return PartialView("_SalesOrdersHistoric", search);
+			return PartialView ("_SalesOrdersHistoric", search);
 		}
 		
 		public ViewResult SalesOrdersHistoricDetails (int id)
 		{
 			var item = SalesOrder.Find (id);
-			
-			item.Details.ToList ();
-			
 			return View (item);
 		}
 
-		Search<SalesOrder> GetSalesOrder(DateRange dates, Search<SalesOrder> search)
+		Search<SalesOrder> GetSalesOrder (DateRange dates, Search<SalesOrder> search)
 		{
-			var qry = from x in SalesOrder.Queryable
-				where (x.IsCompleted || x.IsCancelled) &&
-					(x.Date >= dates.StartDate.Date && x.Date <= dates.EndDate.Date.Add(new TimeSpan(23, 59, 59)))
-					orderby x.Id descending
-					select x;
+			var query = from x in SalesOrder.Queryable
+						where (x.IsCompleted || x.IsCancelled) &&
+							(x.Date >= dates.StartDate.Date && x.Date <= dates.EndDate.Date.Add(new TimeSpan(23, 59, 59)))
+						orderby x.Id descending
+						select x;
 			
-			search.Total = qry.Count();
-			search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+			search.Total = query.Count();
+			search.Results = query.Skip(search.Offset).Take(search.Limit).ToList();
 			
 			return search;
 		}
@@ -570,6 +563,53 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 
 		#endregion
+
+		public ViewResult CustomerDebt ()
+		{
+			ViewBag.EditorField = "customer";
+			ViewBag.EditorTemplate = "CustomerSelector";
+			ViewBag.Title = Resources.CustomerDebt;
+			return View ("SummaryReport", new DateRange(DateTime.Now.AddDays(1-DateTime.Now.Day), DateTime.Now));
+		}
+
+		[HttpPost]
+		public ActionResult CustomerDebt (int customer, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var query = from x in SalesOrder.Queryable
+						where x.Customer.Id == customer &&
+							x.IsCompleted && !x.IsCancelled && !x.IsPaid &&
+							x.Date >= start && x.Date <= end
+						orderby x.Date
+						select x;
+
+			return PartialView ("_CustomerDebt", query.ToList ());
+		}
+
+		public ViewResult SalesOrderSummary ()
+		{
+			ViewBag.EditorField = "store";
+			ViewBag.EditorTemplate = "StoreSelector";
+			ViewBag.Title = Resources.SalesOrderSummary;
+			return View ("SummaryReport", new DateRange (DateTime.Now, DateTime.Now));
+		}
+
+		[HttpPost]
+		public ActionResult SalesOrderSummary (int store, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var query = from x in SalesOrder.Queryable
+						where x.Store.Id == store &&
+							x.IsCompleted && !x.IsCancelled &&
+							x.Date >= start && x.Date <= end
+						orderby x.Date
+						select x;
+
+			return PartialView ("_SalesOrderSummary", query.ToList ());
+		}
+
 
 		#region Helpers
 		

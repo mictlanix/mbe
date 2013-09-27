@@ -26,7 +26,6 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -46,86 +45,129 @@ using Mictlanix.BE.Web.Helpers;
 namespace Mictlanix.BE.Web.Controllers
 {
 	[Authorize]
-    public class ProductsController : Controller
-    {
-        public ActionResult Index ()
-        {
-            var qry = from x in Product.Queryable
-                      orderby x.Name
-                      select x;
+	public class ProductsController : Controller
+	{
+		public ActionResult Index ()
+		{
+			var search = SearchProducts (new Search<Product> {
+				Limit = Configuration.PageSize
+			});
 
-            var search = new Search<Product>();
-            search.Limit = Configuration.PageSize;
-            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            search.Total = qry.Count();
+			return View (search);
+		}
 
-            return View (search);
-        }
+		[HttpPost]
+		public ActionResult Index (Search<Product> search)
+		{
+			if (ModelState.IsValid) {
+				search = SearchProducts (search);
+			}
 
-        [HttpPost]
-        public ActionResult Index (Search<Product> search)
-        {
-            if (ModelState.IsValid) {
-                search = GetProducts (search);
-            }
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_Index", search);
+			}
 
-            if (Request.IsAjaxRequest()) {
-                return PartialView ("_Index", search);
-            } else {
-                return View (search);
-            }
-        }
+			return View (search);
+		}
 
-        public ActionResult Details(int id)
-        {
-            Product product = Product.Find(id);
+		Search<Product> SearchProducts (Search<Product> search)
+		{
+			IQueryable<Product> query;
+			var pattern = (search.Pattern ?? string.Empty).Trim ();
 
-            if (Request.IsAjaxRequest()) {
-                return PartialView("_Details", product);
-            } else {
-                return View(product);
-            }
-        }
+			if (string.IsNullOrEmpty (pattern)) {
+				query = from x in Product.Queryable
+						orderby x.Name
+						select x;
+			} else {
+				query = from x in Product.Queryable
+						where x.Name.Contains (pattern) ||
+							x.Code.Contains (pattern) ||
+							x.Model.Contains (pattern) ||
+							x.SKU.Contains (pattern) ||
+							x.Brand.Contains (pattern)
+						orderby x.Name
+						select x;
 
-        public ActionResult Create()
-        {
-            return View(new Product ());
-        }
+			}
+			
+			search.Total = query.Count ();
+			search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
 
-        [HttpPost]
-        public ActionResult Create (Product item, HttpPostedFileBase file)
+			return search;
+		}
+
+		public ActionResult Create ()
+		{
+			return PartialView ("_Create", new Product ());
+		}
+
+		[HttpPost]
+		public ActionResult Create (Product item)
 		{
 			item.Supplier = Supplier.TryFind (item.SupplierId);
 
-			if (!ModelState.IsValid)
-				return View (item);
+			if (!ModelState.IsValid) {
+				return PartialView ("_Create", item);
+			}
             
 			item.MinimumOrderQuantity = 1;
 			item.TaxRate = Configuration.DefaultVAT;
 			item.IsTaxIncluded = Configuration.IsTaxIncluded;
 			item.PriceType = Configuration.DefaultPriceType;
-			item.Photo = SavePhoto (file) ?? Configuration.DefaultPhotoFile;
+			item.Photo = Configuration.DefaultPhotoFile;
 
 			using (var scope = new TransactionScope ()) {
-            	item.CreateAndFlush ();
+				item.Create ();
+
+				foreach (var l in PriceList.Queryable.ToList ()) {
+					var price = new ProductPrice {
+						Product = item,
+						List = l,
+						Value = Configuration.DefaultPrice
+					};
+					price.Create ();
+				}
+
+				scope.Flush ();
 			}
 
-			return RedirectToAction ("Index");
+			return PartialView ("_CreateSuccesful", item);
 		}
 
-        public ActionResult Edit(int id)
-        {
-            Product item = Product.Find (id);
-            return View (item);
-        }
+		[HttpPost]
+		public ActionResult SetPhoto (int id, HttpPostedFileBase file)
+		{
+			var entity = Product.Find (id);
 
-        [HttpPost]
-        public ActionResult Edit (Product item, HttpPostedFileBase file)
+			entity.Photo = SavePhoto (file) ?? Configuration.DefaultPhotoFile;
+
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
+			}
+
+			return Json (new { id = id, url = Url.Content (entity.Photo) });
+		}
+
+		public ActionResult View (int id)
+		{
+			var entity = Product.Find (id);
+			return PartialView ("_View", entity);
+		}
+
+		public ActionResult Edit (int id)
+		{
+			var entity = Product.Find (id);
+			return PartialView ("_Edit", entity);
+		}
+
+		[HttpPost]
+		public ActionResult Edit (Product item)
 		{
 			item.Supplier = Supplier.TryFind (item.SupplierId);
 
 			if (!ModelState.IsValid)
-				return View (item);
+				return PartialView ("_Edit", item);
             
 			var entity = Product.Find (item.Id);
 
@@ -143,61 +185,44 @@ namespace Mictlanix.BE.Web.Controllers
 			entity.Name = item.Name;
 			entity.SKU = item.SKU;
 			entity.UnitOfMeasurement = item.UnitOfMeasurement;
-			entity.Photo = SavePhoto (file) ?? item.Photo;
+			entity.Supplier = item.Supplier;
 
 			using (var scope = new TransactionScope ()) {
-            	entity.UpdateAndFlush ();
+				entity.UpdateAndFlush ();
 			}
 
-			return RedirectToAction ("Index");
+			return PartialView ("_Refresh");
 		}
 
-        public ActionResult Delete(int id)
-        {
-            var item = Product.Find(id);
-            return View(item);
-        }
+		public ActionResult Delete (int id)
+		{
+			var item = Product.Find (id);
+			return PartialView ("_Delete", item);
+		}
 
-        [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed (int id)
-        {
+		[HttpPost, ActionName ("Delete")]
+		public ActionResult DeleteConfirmed (int id)
+		{
+			var item = Product.Find (id);
+
 			try {
 				using (var scope = new TransactionScope()) {
-					var item = Product.Find (id);
+
+					foreach (var x in item.Prices) {
+						x.DeleteAndFlush ();
+					}
+
 					item.DeleteAndFlush ();
 				}
-
-				return RedirectToAction ("Index");
-			} catch (GenericADOException) {
-				return View ("DeleteUnsuccessful");
+			} catch (Exception ex) {
+				System.Diagnostics.Debug.WriteLine (ex);
+				return PartialView ("DeleteUnsuccessful");
 			}
-        }
 
-        Search<Product> GetProducts(Search<Product> search)
-        {
-			var qry = from x in Product.Queryable
-					  orderby x.Name
-					  select x;
+			return PartialView ("_DeleteSuccesful", item);
+		}
 
-            if (!string.IsNullOrEmpty(search.Pattern)) {
-                qry = from x in Product.Queryable
-                      where x.Name.Contains(search.Pattern) ||
-                            x.Code.Contains(search.Pattern) ||
-							x.Model.Contains(search.Pattern) ||
-                            x.SKU.Contains(search.Pattern) ||
-                            x.Brand.Contains(search.Pattern)
-                      orderby x.Name
-                      select x;
-                
-            }
-
-			search.Total = qry.Count();
-			search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-			
-            return search;
-        }
-
-        string SavePhoto (HttpPostedFileBase file)
+		string SavePhoto (HttpPostedFileBase file)
 		{
 			if (file == null || file.ContentLength == 0)
 				return null;
@@ -213,7 +238,7 @@ namespace Mictlanix.BE.Web.Controllers
 				}
 			}
 		}
-		
+
 		string HashFromStream (Stream stream)
 		{
 			string hash;
@@ -226,35 +251,33 @@ namespace Mictlanix.BE.Web.Controllers
 
 			return hash;
 		}
-		
-        string HashFromImage(Image img)
-        {
-            string hash;
-            byte[] bytes = null;
 
-            using (MemoryStream ms = new MemoryStream ())
-            {
-                img.Save (ms, img.RawFormat);
-                bytes = ms.ToArray ();
-            }
+		string HashFromImage (Image img)
+		{
+			string hash;
+			byte[] bytes = null;
 
-            using (SHA1CryptoServiceProvider sha1 = new SHA1CryptoServiceProvider())
-            {
-                bytes = sha1.ComputeHash (bytes);
-                hash = BitConverter.ToString (bytes).Replace ("-", "").ToLower ();
-            }
+			using (MemoryStream ms = new MemoryStream ()) {
+				img.Save (ms, img.RawFormat);
+				bytes = ms.ToArray ();
+			}
 
-            return hash;
-        }
+			using (SHA1CryptoServiceProvider sha1 = new SHA1CryptoServiceProvider()) {
+				bytes = sha1.ComputeHash (bytes);
+				hash = BitConverter.ToString (bytes).Replace ("-", "").ToLower ();
+			}
+
+			return hash;
+		}
 
 		public JsonResult GetSuggestions (string pattern)
 		{
 			var query = from x in Product.Queryable
 						where x.Name.Contains (pattern) ||
-							x.Code.Contains (pattern) ||
-							x.Model.Contains (pattern) ||
-							x.SKU.Contains (pattern) ||
-							x.Brand.Contains (pattern)
+			            x.Code.Contains (pattern) ||
+			            x.Model.Contains (pattern) ||
+			            x.SKU.Contains (pattern) ||
+			            x.Brand.Contains (pattern)
 						orderby x.Name
 						select x;
 
@@ -266,7 +289,7 @@ namespace Mictlanix.BE.Web.Controllers
 
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}
-		
+
 		public ActionResult Labels (int id)
 		{
 			var item = Product.Find (id);
@@ -276,9 +299,9 @@ namespace Mictlanix.BE.Web.Controllers
 		public ActionResult EditLabels (int id)
 		{
 			var item = Product.Find (id);
-			var items = new Dictionary<Label, bool>();
+			var items = new Dictionary<Label, bool> ();
 
-			foreach(var label in Label.Queryable.OrderBy (x => x.Name).ToList ()) {
+			foreach (var label in Label.Queryable.OrderBy (x => x.Name).ToList ()) {
 				items.Add (label, item.Labels.Contains (label));
 			}
 
@@ -319,7 +342,7 @@ namespace Mictlanix.BE.Web.Controllers
 						  text = x.GetDisplayName ()
 					  };
 
-			return Json (qry.ToList(), JsonRequestBehavior.AllowGet);
+			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
 		}
-    }
+	}
 }

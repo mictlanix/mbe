@@ -71,6 +71,8 @@ namespace Mictlanix.BE.Web.Controllers
 				return PartialView ("_Create", item);
 			}
 
+			item.Id = item.Id.ToUpper ();
+
 			using (var scope = new TransactionScope()) {
 				item.Customer = Customer.Find (customerId);
 

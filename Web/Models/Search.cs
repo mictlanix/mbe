@@ -42,7 +42,6 @@ namespace Mictlanix.BE.Web.Models
             Results = new List<T>();
         }
 
-        //[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "Pattern", ResourceType = typeof(Resources))]
         [StringLength(42, MinimumLength = 2, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string Pattern { get; set; }

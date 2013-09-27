@@ -128,6 +128,10 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "PointOfSale", ResourceType = typeof(Resources))]
 		POS,
 		[Display(Name = "SerialNumbers", ResourceType = typeof(Resources))]
-		SerialNumbersReport
+		SerialNumbersReport,
+		[Display(Name = "CustomerDebt", ResourceType = typeof(Resources))]
+		CustomerDebtReport,
+		[Display(Name = "SalesOrderSummary", ResourceType = typeof(Resources))]
+		SalesOrderSummaryReport
     }
 }
