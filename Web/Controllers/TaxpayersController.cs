@@ -60,13 +60,13 @@ namespace Mictlanix.BE.Web.Controllers
 
 		public ActionResult Details (string id)
 		{
-			var item = Taxpayer.Find (id);
+			var entity = Taxpayer.Find (id);
 
 			if (Request.IsAjaxRequest ()) {
-				return PartialView ("_Details", item);
+				return PartialView ("_Details", entity);
 			}
 
-			return View (item);
+			return View (entity);
 		}
 
         public ActionResult Create ()
@@ -93,6 +93,8 @@ namespace Mictlanix.BE.Web.Controllers
 			if (!ModelState.IsValid) {
 				return PartialView ("_Create", item);
 			}
+
+			item.Id = item.Id.ToUpper ();
 			
 			using (var scope = new TransactionScope()) {
 				if(item.HasAddress) {

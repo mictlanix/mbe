@@ -22,10 +22,10 @@
         <td>@Html.DisplayFor(x => item.Address, "String")</td>
         <td class="actions">
     	@if (Privilege.AllowRead) {
-        	@Html.ActionLink(" ", "Details", "Taxpayers", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+        	@Html.ActionLink(" ", "Details", "Taxpayers", new { id = item.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
         }
     	@if (Privilege.AllowDelete) {
-        	@Html.ActionLink(" ", "Delete", "Taxpayers", new { id = item.Id }, new { @class = "button icon delete icon-only open-modal", @title = Resources.Delete, data_modal_id = "taxpayer-modal" })
+        	@Html.ActionLink(" ", "Delete", "Taxpayers", new { id = item.Id }, new { @class = "button icon delete icon-only open-modal", title = Resources.Delete, data_modal_id = "taxpayer-modal" })
         }
         </td>
     </tr>

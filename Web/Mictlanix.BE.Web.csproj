@@ -489,7 +489,6 @@
     <Content Include="Views\Purchases\_MasterEditView.cshtml" />
     <Content Include="Views\Purchases\_DetailEditView.cshtml" />
     <Content Include="Views\Purchases\_DetailView.cshtml" />
-    <Content Include="Views\Products\Create.cshtml" />
     <Content Include="Views\Inventory\Receipts\Index.cshtml" />
     <Content Include="Views\Inventory\Receipts\_Index.cshtml" />
     <Content Include="Views\Inventory\Receipts\Edit.cshtml" />
@@ -518,9 +517,6 @@
     <Content Include="Views\Inventory\Transfers\_MasterEditView.cshtml" />
     <Content Include="Views\Inventory\Transfers\_MasterView.cshtml" />
     <Content Include="Views\Products\Index.cshtml" />
-    <Content Include="Views\Products\Delete.cshtml" />
-    <Content Include="Views\Products\Details.cshtml" />
-    <Content Include="Views\Products\Edit.cshtml" />
     <Content Include="Views\Suppliers\Index.cshtml" />
     <Content Include="Views\Suppliers\Edit.cshtml" />
     <Content Include="Views\Suppliers\Details.cshtml" />
@@ -587,7 +583,6 @@
     <Content Include="Views\CashDrawers\Index.cshtml" />
     <Content Include="Views\Payments\_SessionInfo.cshtml" />
     <Content Include="Views\Payments\CloseSessionConfirmed.cshtml" />
-    <Content Include="Views\Products\_Details.cshtml" />
     <Content Include="Views\Products\_Index.cshtml" />
     <Content Include="Views\Shared\_TicketLayout.cshtml" />
     <Content Include="Views\Payments\_OpenSession.cshtml" />
@@ -709,6 +704,19 @@
     <Content Include="Views\Stores\_Delete.cshtml" />
     <Content Include="Scripts\jquery.min.map" />
     <Content Include="Views\FiscalDocuments\Error.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Product.cshtml" />
+    <Content Include="Views\Products\_Create.cshtml" />
+    <Content Include="Views\Products\_Edit.cshtml" />
+    <Content Include="Views\Products\_Delete.cshtml" />
+    <Content Include="Views\Products\_View.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Product.cshtml" />
+    <Content Include="Views\Products\_Refresh.cshtml" />
+    <Content Include="Views\Products\_DeleteSuccesful.cshtml" />
+    <Content Include="Views\Products\_CreateSuccesful.cshtml" />
+    <Content Include="Views\Products\_Item.cshtml" />
+    <Content Include="Views\Reports\_CustomerDebt.cshtml" />
+    <Content Include="Views\Reports\_SalesOrderSummary.cshtml" />
+    <Content Include="Views\FiscalDocuments\Print20Dataprint.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

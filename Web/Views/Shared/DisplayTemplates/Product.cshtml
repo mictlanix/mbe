@@ -1,0 +1,53 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model Product
+
+<div class='row'>
+  	<div class='span2'>@Html.LabelFor(x => x.Code)</div>
+	<div class='span6'>@Html.LabelFor(x => x.Name)</div>
+</div>
+<div class='row'>
+  	<div class='span2'><div class='ro-field'>@Html.DisplayFor(x => x.Code)</div></div>
+	<div class='span6'><div class='ro-field'>@Html.DisplayFor(x => x.Name)</div></div>
+</div>
+<div class='row'>
+  	<div class='span2'>@Html.LabelFor(x => x.UnitOfMeasurement)</div>
+  	<div class='span3'>@Html.LabelFor(x => x.Model)</div>
+  	<div class='span3'>@Html.LabelFor(x => x.Brand)</div>
+</div>
+<div class='row'>
+  	<div class='span2'><div class='ro-field'>@Html.DisplayFor(x => x.UnitOfMeasurement)</div></div>
+  	<div class='span3'><div class='ro-field'>@Html.DisplayFor(x => x.Model)</div></div>
+  	<div class='span3'><div class='ro-field'>@Html.DisplayFor(x => x.Brand)</div></div>
+</div>
+<div class='row'>
+	<div class='span4'>@Html.LabelFor(x => x.SKU)</div>
+  	<div class='span4'>@Html.LabelFor(x => x.Location)</div>
+</div>
+<div class='row'>
+	<div class='span4'><div class='ro-field'>@Html.DisplayFor(x => x.SKU)</div></div>
+  	<div class='span4'><div class='ro-field'>@Html.DisplayFor(x => x.Location)</div></div>
+</div>
+<div class='row'>
+  	<div class='span8'>@Html.LabelFor(x => x.Supplier)</div>
+</div>
+<div class='row'>
+  	<div class='span8'><div class='ro-field'>@Html.DisplayFor(x => x.Supplier)</div></div>
+</div>
+<div class='row'>
+  	<div class='span8'>@Html.LabelFor(x => x.Comment)</div>
+</div>
+<div class='row'>
+  	<div class='span8'><div class='ro-field'>@Html.DisplayFor(x => x.Comment)</div></div>
+</div>
+<div class='row'>
+	<div class='span8 text-center'>
+		@Html.DisplayFor(x => x.IsStockable) @Html.DisplayNameFor(x => x.IsStockable)
+		@Html.DisplayFor(x => x.IsPerishable) @Html.DisplayNameFor(x => x.IsPerishable)
+		@Html.DisplayFor(x => x.IsSeriable) @Html.DisplayNameFor(x => x.IsSeriable)
+		@Html.DisplayFor(x => x.IsPurchasable) @Html.DisplayNameFor(x => x.IsPurchasable)
+		@Html.DisplayFor(x => x.IsSalable) @Html.DisplayNameFor(x => x.IsSalable)
+		@Html.DisplayFor(x => x.IsInvoiceable) @Html.DisplayNameFor(x => x.IsInvoiceable)
+	</div>
+</div>
