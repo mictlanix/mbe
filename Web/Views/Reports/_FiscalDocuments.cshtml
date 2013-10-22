@@ -1,0 +1,38 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model IEnumerable<FiscalDocument>
+
+<table class='table table-condensed'>
+	<thead>
+	    <tr>
+			<th class='nowrap center'>@Resources.FiscalDocumentId</th>
+			<th class='nowrap center'>@Resources.Batch</th>
+			<th class='nowrap center'>@Resources.Serial</th>
+			<th class='nowrap'>@Resources.IssueDate</th>
+			<th class='nowrap center'>@Resources.TaxpayerId</th>
+			<th class='nowrap center'>@Resources.TaxpayerName</th>
+			<th class='nowrap center'>@Resources.Cancelled</th>
+			<th class='nowrap center'>@Resources.Subtotal</th>
+			<th class='nowrap center'>@Resources.VAT</th>
+			<th class='nowrap center'>@Resources.Total</th>
+	    </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+    <tr>
+        <td class='number'>@Html.DisplayFor(x => item.Id)</td>
+        <td class='number center'>@Html.DisplayFor(x => item.Batch)</td>
+        <td class='number'>@Html.DisplayFor(x => item.Serial)</td>
+        <td class='date'>@Html.DisplayFor(x => item.Issued)</td>
+        <td class='date'>@Html.DisplayFor(x => item.Recipient)</td>
+        <td class=''>@Html.DisplayFor(x => item.RecipientName)</td>
+        <td class='bool center'>@Html.DisplayFor(x => item.IsCancelled)</td>
+        <td class='currency'>@Html.DisplayFor(x => item.SubtotalEx)</td>
+        <td class='currency'>@Html.DisplayFor(x => item.TaxesEx)</td>
+        <td class='currency'>@Html.DisplayFor(x => item.TotalEx)</td>
+    </tr>
+}
+    </tbody>
+</table>

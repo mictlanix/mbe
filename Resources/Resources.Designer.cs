@@ -4751,5 +4751,17 @@ namespace Mictlanix.BE {
 				return ResourceManager.GetString("Hour", resourceCulture);
 			}
 		}
+
+		public static string FiscalDocumentsReport {
+			get {
+				return ResourceManager.GetString("FiscalDocumentsReport", resourceCulture);
+			}
+		}
+
+		public static string LotsAndSerialNumbers {
+			get {
+				return ResourceManager.GetString("LotsAndSerialNumbers", resourceCulture);
+			}
+		}
     }
 }

@@ -1752,4 +1752,10 @@ Realizada el: {0:d}</value>
   <data name="Hour" xml:space="preserve">
     <value>h</value>
   </data>
+  <data name="FiscalDocumentsReport" xml:space="preserve">
+    <value>Listado de Comprobantes Fiscales</value>
+  </data>
+  <data name="LotsAndSerialNumbers" xml:space="preserve">
+    <value>Lotes y Series</value>
+  </data>
 </root>

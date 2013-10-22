@@ -1107,14 +1107,17 @@ namespace Mictlanix.BE.Web.Controllers
 			decimal quantity = item.Quantity;
 			string sql = @"SELECT IFNULL(SUM(d.quantity),0) quantity
                            FROM fiscal_document_detail d INNER JOIN fiscal_document m ON d.document = m.fiscal_document_id
-                           WHERE m.cancelled = 0 AND d.order_detail = :detail ";
+                           WHERE m.cancelled = 0 AND d.order_detail = :detail
+						   UNION ALL
+						   SELECT IFNULL(SUM(d.quantity),0) quantity
+						   FROM customer_refund_detail d INNER JOIN customer_refund m ON d.customer_refund = m.customer_refund_id
+						   WHERE m.cancelled = 0 AND d.sales_order_detail = :detail";
 			
 			IList<decimal> quantities = (IList<decimal>)ActiveRecordMediator<CustomerRefundDetail>.Execute (
 				delegate(ISession session, object instance) {
 				try {
 					return session.CreateSQLQuery (sql)
 							.SetParameter ("detail", id)
-							.SetMaxResults (1)
 							.List<decimal> ();
 				} catch (Exception) {
 					return null;
@@ -1122,7 +1125,7 @@ namespace Mictlanix.BE.Web.Controllers
 			}, null);
 			
 			if (quantities != null && quantities.Count > 0) {
-				quantity = item.Quantity - quantities [0];
+				quantity = item.Quantity - quantities.Sum();
 			}
 			
 			return quantity > 0 ? quantity : 0;
