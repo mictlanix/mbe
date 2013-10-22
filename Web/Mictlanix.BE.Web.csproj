@@ -718,6 +718,8 @@
     <Content Include="Views\Reports\_SalesOrderSummary.cshtml" />
     <Content Include="Views\FiscalDocuments\Print20Dataprint.cshtml" />
     <Content Include="Views\Reports\_FiscalDocuments.cshtml" />
+    <Content Include="Views\FiscalDocuments\Pdf32.cshtml" />
+    <Content Include="Views\Reports\_SalesPersonOrders.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
