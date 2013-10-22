@@ -1758,4 +1758,7 @@ Realizada el: {0:d}</value>
   <data name="LotsAndSerialNumbers" xml:space="preserve">
     <value>Lotes y Series</value>
   </data>
+  <data name="SalesPersonOrders" xml:space="preserve">
+    <value>Pedidos Por Vendedor</value>
+  </data>
 </root>

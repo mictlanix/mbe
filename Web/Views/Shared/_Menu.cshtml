@@ -54,7 +54,8 @@
                           Html.GetPrivilege(CurrentUser, SystemObjects.BestSellingProductsBySalesPerson).AllowRead ||
                           Html.GetPrivilege(CurrentUser, SystemObjects.CustomerDebtReport).AllowRead ||
                           Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrderSummaryReport).AllowRead ||
-                          Html.GetPrivilege(CurrentUser, SystemObjects.FiscalDocumentsReport).AllowRead;
+                          Html.GetPrivilege(CurrentUser, SystemObjects.FiscalDocumentsReport).AllowRead ||
+                          Html.GetPrivilege(CurrentUser, SystemObjects.SalesPersonOrdersReport).AllowRead;
 }
 
 <div id="gb" class='no-print'>
@@ -461,6 +462,12 @@
                                    href="@Url.Action("BestSellingProductsByCustomer", "Reports")">@Resources.BestSellingProductsByCustomer</a>
                             </li>
                             }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.BestSellingProductsBySalesPerson).AllowRead) {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("BestSellingProductsBySalesPerson", "Reports") ? "gbm0l" : "")"
+                                   href="@Url.Action("BestSellingProductsBySalesPerson", "Reports")">@Resources.BestSellingProductsBySalesPerson</a>
+                            </li>
+                            }
                             @if (Html.GetPrivilege(CurrentUser, SystemObjects.CustomerDebtReport).AllowRead) {
                             <li class='gbmtc'>
                                 <a class='gbmt @(Html.IsMenuSelected("CustomerDebt", "Reports") ? "gbm0l" : "")'
@@ -479,6 +486,13 @@
                                    href='@Url.Action("FiscalDocuments", "Reports")'>@Resources.FiscalDocumentsReport</a>
                             </li>
                             }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesPersonOrdersReport).AllowRead) {
+                            <li class='gbmtc'>
+                                <a class='gbmt @(Html.IsMenuSelected("SalesPersonOrders", "Reports") ? "gbm0l" : "")'
+                                   href='@Url.Action("SalesPersonOrders", "Reports")'>@Resources.SalesPersonOrders</a>
+                            </li>
+                            }
+
                         </ol>
                     </div>
                 </div>

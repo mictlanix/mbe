@@ -134,6 +134,8 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "SalesOrderSummary", ResourceType = typeof(Resources))]
 		SalesOrderSummaryReport,
 		[Display(Name = "FiscalDocumentsReport", ResourceType = typeof(Resources))]
-		FiscalDocumentsReport
+		FiscalDocumentsReport,
+		[Display(Name = "SalesPersonOrders", ResourceType = typeof(Resources))]
+		SalesPersonOrdersReport
     }
 }
