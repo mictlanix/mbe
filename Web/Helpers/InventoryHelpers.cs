@@ -69,15 +69,28 @@ namespace Mictlanix.BE.Web.Helpers
 			if (!product.IsPerishable && !product.IsSeriable)
 				return;
 
-			var rqmt = new LotSerialRequirement {
-				Source = source,
-				Reference = reference,
-				Warehouse = warehouse,
-				Product = product,
-				Quantity = quantity
-			};
-			
-			rqmt.Create ();
+			var query = from x in LotSerialRequirement.Queryable
+						where x.Source == source &&
+							x.Reference == reference &&
+			            	x.Warehouse.Id == warehouse.Id &&
+							x.Product == product
+						select x;
+			var rqmt = query.SingleOrDefault ();
+
+			if (rqmt != null) {
+				rqmt.Quantity += quantity;
+				rqmt.Update ();
+			} else {
+				rqmt = new LotSerialRequirement {
+					Source = source,
+					Reference = reference,
+					Warehouse = warehouse,
+					Product = product,
+					Quantity = quantity
+				};
+				
+				rqmt.Create ();
+			}
 		}
 	}
 }

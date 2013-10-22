@@ -610,6 +610,27 @@ namespace Mictlanix.BE.Web.Controllers
 			return PartialView ("_SalesOrderSummary", query.ToList ());
 		}
 
+		public ViewResult FiscalDocuments ()
+		{
+			ViewBag.EditorField = "taxpayer";
+			ViewBag.EditorTemplate = "TaxpayerSelector";
+			ViewBag.Title = Resources.SalesOrderSummary;
+			return View ("SummaryReport", new DateRange (DateTime.Now, DateTime.Now));
+		}
+
+		[HttpPost]
+		public ActionResult FiscalDocuments (string taxpayer, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var query = from x in FiscalDocument.Queryable
+			            where x.Issuer.Id == taxpayer && x.IsCompleted &&
+			            	x.Issued >= start && x.Issued <= end
+			            orderby x.Issued
+			            select x;
+
+			return PartialView ("_FiscalDocuments", query.ToList ());
+		}
 
 		#region Helpers
 		
