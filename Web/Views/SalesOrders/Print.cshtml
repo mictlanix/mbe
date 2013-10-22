@@ -22,7 +22,7 @@
 
 	@if(Model.ShipTo != null) {
 	    <div class="display-label">
-	        <b>@Html.LabelFor(x => x.ShipTo)</b>
+	    	<b>@Html.LabelFor(x => x.ShipTo)</b>
 	    </div>
 	    <div class="display-field">
 	        @Html.DisplayFor(x => x.ShipTo.Street)
@@ -38,12 +38,9 @@
 </div>
 <div class="right">
 	<div class="display-label">
-		<h3>@Html.LabelFor(x => x.Serial)</h3>
+		<h3># @Html.DisplayFor(x => x.Id)</h3>
 	</div>
-	<div class="display-field">
-	    @Html.DisplayFor(x => x.Serial)
-	</div>
-		
+	
 	<div class="display-label">
 	    <b>@Html.LabelFor(x => x.SalesPerson)</b><br/>
 	    @Html.DisplayFor(x => x.SalesPerson.Name)

@@ -127,11 +127,13 @@ namespace Mictlanix.BE.Model
 		ExchangeRates,
 		[Display(Name = "PointOfSale", ResourceType = typeof(Resources))]
 		POS,
-		[Display(Name = "SerialNumbers", ResourceType = typeof(Resources))]
+		[Display(Name = "LotsAndSerialNumbers", ResourceType = typeof(Resources))]
 		SerialNumbersReport,
 		[Display(Name = "CustomerDebt", ResourceType = typeof(Resources))]
 		CustomerDebtReport,
 		[Display(Name = "SalesOrderSummary", ResourceType = typeof(Resources))]
-		SalesOrderSummaryReport
+		SalesOrderSummaryReport,
+		[Display(Name = "FiscalDocumentsReport", ResourceType = typeof(Resources))]
+		FiscalDocumentsReport
     }
 }
