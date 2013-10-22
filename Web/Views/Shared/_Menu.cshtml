@@ -53,7 +53,8 @@
                           Html.GetPrivilege(CurrentUser, SystemObjects.BestSellingProductsByCustomer).AllowRead ||
                           Html.GetPrivilege(CurrentUser, SystemObjects.BestSellingProductsBySalesPerson).AllowRead ||
                           Html.GetPrivilege(CurrentUser, SystemObjects.CustomerDebtReport).AllowRead ||
-                          Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrderSummaryReport).AllowRead;
+                          Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrderSummaryReport).AllowRead ||
+                          Html.GetPrivilege(CurrentUser, SystemObjects.FiscalDocumentsReport).AllowRead;
 }
 
 <div id="gb" class='no-print'>
@@ -393,7 +394,7 @@
                             @if (Html.GetPrivilege(CurrentUser, SystemObjects.SerialNumbersReport).AllowRead) {
                             <li class="gbmtc">
                                 <a class='gbmt @(Html.IsMenuSelected("SerialNumbers", "Reports") ? "gbm0l" : "")'
-                                   href='@Url.Action("SerialNumbers", "Reports")'>@Resources.SerialNumbers</a>
+                                   href='@Url.Action("SerialNumbers", "Reports")'>@Resources.LotsAndSerialNumbers</a>
                             </li>
                             }
                             @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrdersHistoric).AllowRead) {
@@ -470,6 +471,12 @@
                             <li class='gbmtc'>
                                 <a class='gbmt @(Html.IsMenuSelected("SalesOrderSummary", "Reports") ? "gbm0l" : "")'
                                    href='@Url.Action("SalesOrderSummary", "Reports")'>@Resources.SalesOrderSummary</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.FiscalDocumentsReport).AllowRead) {
+                            <li class='gbmtc'>
+                                <a class='gbmt @(Html.IsMenuSelected("FiscalDocuments", "Reports") ? "gbm0l" : "")'
+                                   href='@Url.Action("FiscalDocuments", "Reports")'>@Resources.FiscalDocumentsReport</a>
                             </li>
                             }
                         </ol>
