@@ -115,6 +115,14 @@ namespace Mictlanix.BE.Web.Controllers
 			return View (view, item);
 		}
 
+		public ViewResult Pdf (int id)
+		{
+			var item = FiscalDocument.Find (id);
+			var view = string.Format ("Pdf{0:00}", item.Version * 10);
+
+			return View (view, item);
+		}
+
 		public ViewResult New ()
 		{
 			var store = Configuration.Store;

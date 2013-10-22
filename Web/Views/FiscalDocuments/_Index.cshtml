@@ -40,6 +40,7 @@
         	@if (Privilege.AllowRead) {
             	@Html.ActionLink(" ", "View", new { id = item.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
             	@Html.ActionLink(" ", "Print", new { id = item.Id }, new { @class = "button icon print icon-only", title = Resources.Print, target = "_blank" })
+            	@Html.ActionLink(" ", "Pdf", new { id = item.Id }, new { @class = "button icon badge icon-only", title = Resources.Print, target = "_blank" })
             }
         	@if (Privilege.AllowUpdate && !item.IsCompleted && !item.IsCancelled) {
             	@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", title = Resources.Edit })

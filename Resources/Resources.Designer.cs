@@ -4763,5 +4763,11 @@ namespace Mictlanix.BE {
 				return ResourceManager.GetString("LotsAndSerialNumbers", resourceCulture);
 			}
 		}
+
+		public static string SalesPersonOrders {
+			get {
+				return ResourceManager.GetString("SalesPersonOrders", resourceCulture);
+			}
+		}
     }
 }
