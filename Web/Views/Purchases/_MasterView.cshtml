@@ -32,7 +32,7 @@
         @Ajax.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "master-section" }, new { @class = "button icon edit" })
         @if(Privilege.AllowDelete)
         {
-            using (Html.BeginForm("CancelPurchase", "Purchases", new { id = Model.Id }, FormMethod.Post, new { style = "display:inline" }))
+            using (Html.BeginForm("Cancel", "Purchases", new { id = Model.Id }, FormMethod.Post, new { style = "display:inline" }))
             {
                 <button type="submit" class="icon cancel">@Resources.Cancel</button>
             }

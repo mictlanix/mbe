@@ -632,6 +632,29 @@ namespace Mictlanix.BE.Web.Controllers
 			return PartialView ("_FiscalDocuments", query.ToList ());
 		}
 
+		public ViewResult SalesPersonOrders ()
+		{
+			ViewBag.EditorField = "employee";
+			ViewBag.EditorTemplate = "EmployeeSelector";
+			ViewBag.Title = Resources.SalesPersonOrders;
+			return View ("SummaryReport", new DateRange (DateTime.Now, DateTime.Now));
+		}
+
+		[HttpPost]
+		public ActionResult SalesPersonOrders (int employee, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var query = from x in SalesOrder.Queryable
+		            	where x.SalesPerson.Id == employee &&
+				            x.IsCompleted && !x.IsCancelled &&
+				            x.Date >= start && x.Date <= end
+			            orderby x.Date
+			            select x;
+
+			return PartialView ("_SalesPersonOrders", query.ToList ());
+		}
+
 		#region Helpers
 		
 		void AnalyzeABC (IEnumerable<SummaryItem> items)

@@ -132,3 +132,6 @@ button.icon.delivery,a.button.icon.delivery {
 button.icon.shipping,a.button.icon.shipping {
     background:#f3f3f3 url(icons/van.png) no-repeat;
 }
+button.icon.badge,a.button.icon.badge {
+    background:#f3f3f3 url(icons/badge.png) no-repeat;
+}
