@@ -65,7 +65,7 @@ function getUrl() {
 }
 $(function () {
 @if (Model.Issuer != null) {
-	<text>$("#IssuerId").tokenInput("add", { id: "@Model.Issuer.Id", name: "@Model.Issuer.Name"});</text>
+	<text>$("#IssuerId").tokenInput("add", { id: "@Model.Issuer.Id", name: "@Model.Issuer.ToString()"});</text>
 }
     $('#Recipient').tokenInput(getUrl, {
         hintText: "@Resources.HIntText",
