@@ -95,7 +95,9 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 
 			item.Id = item.Id.ToUpper ();
-			
+			item.Name = string.IsNullOrWhiteSpace (item.Name) ? null : item.Name.Trim ();
+			item.Regime = item.Regime.Trim ();
+
 			using (var scope = new TransactionScope()) {
 				if(item.HasAddress) {
 					item.Address.Create ();
@@ -130,8 +132,8 @@ namespace Mictlanix.BE.Web.Controllers
 			var address = entity.Address;
 			
 			entity.HasAddress = (address != null);
-			entity.Name = item.Name;
-			entity.Regime = item.Regime;
+			entity.Name = string.IsNullOrWhiteSpace (item.Name) ? null : item.Name.Trim ();
+			entity.Regime = item.Regime.Trim ();
 			entity.Scheme = item.Scheme;
 			entity.Provider = item.Provider;
 			
@@ -267,12 +269,12 @@ namespace Mictlanix.BE.Web.Controllers
 
         public JsonResult GetSuggestions (string pattern)
         {
-            var qry = from x in Taxpayer.Queryable
-                      where x.Id.Contains (pattern) ||
+			var query = from x in Taxpayer.Queryable
+                      	where x.Id.Contains (pattern) ||
 							x.Name.Contains (pattern)
-                      select new { id = x.Id, name = string.Format ("{1} ({0})", x.Id, x.Name) };
+			            select new { id = x.Id, name = x.ToString () };
 
-            return Json(qry.Take(15).ToList(), JsonRequestBehavior.AllowGet);
+			return Json(query.Take (15).ToList (), JsonRequestBehavior.AllowGet);
 		}
 		
 		byte[] FileToBytes (HttpPostedFileBase file)

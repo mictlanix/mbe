@@ -52,7 +52,6 @@ namespace Mictlanix.BE.Model
 		public virtual string Id { get; set; }
 		
         [Property]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(250, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "TaxpayerName", ResourceType = typeof(Resources))]
 		public virtual string Name { get; set; }
@@ -96,7 +95,8 @@ namespace Mictlanix.BE.Model
 
 		public override string ToString ()
 		{
-			return string.Format ("{1} ({0})", Id, Name);
+			var format = string.IsNullOrWhiteSpace (Name) ? "{0}" : "{0} ({1})";
+			return string.Format (format, Id, Name);
 		}
 
 		public override bool Equals (object obj)
