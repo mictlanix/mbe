@@ -8,7 +8,9 @@
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.LotSerialNumbers);
 }
-
+<div class="buttons right">
+	<label class="button left">@Model.ToString()</label>@if (Model.HasPrev) {<a class="button middle icon prev icon-only paging" title="@Resources.PrevPage" href="javascript:void(0)"></a>}@if (Model.HasNext) {<a class="button right icon next icon-only paging" title="@Resources.NextPage" href="javascript:void(0)"></a>}
+</div>
 <table>
     <tr>
         <th>@Html.LabelFor(x => new LotSerialRequirement().Source)</th>
