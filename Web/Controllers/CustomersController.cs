@@ -83,7 +83,8 @@ namespace Mictlanix.BE.Web.Controllers
             } else {
                 var qry = from x in Customer.Queryable
                           where x.Name.Contains(search.Pattern) ||
-                          x.Zone.Contains(search.Pattern)
+					          x.Code.Contains(search.Pattern) ||
+					          x.Zone.Contains(search.Pattern)
                           orderby x.Name
                           select x;
 
