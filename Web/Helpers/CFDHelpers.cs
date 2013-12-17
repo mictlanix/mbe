@@ -251,6 +251,8 @@ namespace Mictlanix.BE.Web.Helpers
 				importe = item.Taxes,
 				tasa = Configuration.DefaultVAT * 100m
 			};
+			cfd.Impuestos.totalImpuestosTrasladados = cfd.Impuestos.Traslados.Sum (x => x.importe);
+			cfd.Impuestos.totalImpuestosTrasladadosSpecified = true;
 
 			return cfd;
 		}
@@ -346,6 +348,8 @@ namespace Mictlanix.BE.Web.Helpers
 				importe = item.Taxes,
 				tasa = Configuration.DefaultVAT * 100m
 			};
+			cfd.Impuestos.totalImpuestosTrasladados = cfd.Impuestos.Traslados.Sum (x => x.importe);
+			cfd.Impuestos.totalImpuestosTrasladadosSpecified = true;
 
 			return cfd;
 		}
