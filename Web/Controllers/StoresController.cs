@@ -105,6 +105,8 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult Create (Store item)
 		{
+			item.Taxpayer = Taxpayer.TryFind (item.TaxpayerId);
+
 			if (!ModelState.IsValid) {
 				return PartialView ("_Create", item);
 			}
