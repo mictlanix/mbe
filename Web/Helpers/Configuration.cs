@@ -143,16 +143,32 @@ namespace Mictlanix.BE.Web.Helpers
 			get { return ConfigurationManager.AppSettings ["DiverzaPartnerCode"]; }
 		}
 
-		public static string FiscoClickUrl {
-			get { return ConfigurationManager.AppSettings ["FiscoClickUrl"]; }
+		public static string FiscoClicUrl {
+			get { return ConfigurationManager.AppSettings ["FiscoClicUrl"]; }
 		}
 
-		public static string FiscoClickUser {
-			get { return ConfigurationManager.AppSettings ["FiscoClickUser"]; }
+		public static string FiscoClicUser {
+			get { return ConfigurationManager.AppSettings ["FiscoClicUser"]; }
 		}
 
-		public static string FiscoClickPasswd {
-			get { return ConfigurationManager.AppSettings ["FiscoClickPasswd"]; }
+		public static string FiscoClicPasswd {
+			get { return ConfigurationManager.AppSettings ["FiscoClicPasswd"]; }
+		}
+
+		public static string ServisimUrl {
+			get { return ConfigurationManager.AppSettings ["ServisimUrl"]; }
+		}
+
+		public static string ServisimUser {
+			get { return ConfigurationManager.AppSettings ["ServisimUser"]; }
+		}
+
+		public static string ServisimPasswd {
+			get { return ConfigurationManager.AppSettings ["ServisimPasswd"]; }
+		}
+
+		public static string ServisimPartnerCode {
+			get { return ConfigurationManager.AppSettings ["ServisimPartnerCode"]; }
 		}
 
 		public static decimal DefaultPrice {

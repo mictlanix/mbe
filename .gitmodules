@@ -7,3 +7,6 @@
 [submodule "FiscoClicClient"]
 	path = FiscoClicClient
 	url = git@github.com:mictlanix/fiscoclick-client.git
+[submodule "ServisimClient"]
+	path = ServisimClient
+	url = git@github.com:mictlanix/servisim-client.git

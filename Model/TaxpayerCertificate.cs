@@ -45,8 +45,7 @@ namespace Mictlanix.BE.Model
 
 		[PrimaryKey(PrimaryKeyType.Assigned, "taxpayer_certificate_id")]
 		[Display(Name = "CertificateNumber", ResourceType = typeof(Resources))]
-		[DisplayFormat(DataFormatString="{0:D20}", ApplyFormatInEditMode = true)]
-		public virtual ulong Id { get; set; }
+		public virtual string Id { get; set; }
 
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
 		[Display(Name = "Taxpayer", ResourceType = typeof(Resources))]
@@ -91,15 +90,15 @@ namespace Mictlanix.BE.Model
 		{
 			return string.Format ("{0}", Id);
 		}
-
+			
 		public override bool Equals (object obj)
 		{
 			TaxpayerCertificate other = obj as TaxpayerCertificate;
 
 			if (other == null)
 				return false;
-			
-			if (Id == 0 && other.Id == 0)
+
+			if (string.IsNullOrEmpty(Id) && string.IsNullOrEmpty(other.Id))
 				return (object)this == other;
 			else
 				return Id == other.Id;
@@ -107,8 +106,8 @@ namespace Mictlanix.BE.Model
 
 		public override int GetHashCode ()
 		{
-			if (Id == 0)
-				return base.GetHashCode();
+			if (string.IsNullOrEmpty (Id))
+				return base.GetHashCode ();
 
 			return string.Format ("{0}#{1}", GetType ().FullName, Id).GetHashCode ();
 		}

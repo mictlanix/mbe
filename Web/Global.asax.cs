@@ -63,6 +63,19 @@ namespace Mictlanix.BE.Web
 				new { controller = "CustomerTaxpayers", action = "Create", customerId = @"\d+" }
 			);
 
+			routes.MapRoute (
+				"Inventory_AssignLotSerialNumbers",
+				"Inventory/AssignLotSerialNumbers/{source}/{reference}",
+				new { controller = "Inventory", action = "AssignLotSerialNumbers", source = @"\d+", reference = @"\d+" }
+			);
+
+			routes.MapRoute (
+				"Inventory_SetWarehouse",
+				"Inventory/SetWarehouse/{source}/{reference}",
+				new { controller = "Inventory", action = "SetWarehouse", source = @"\d+", reference = @"\d+" }
+			);
+
+
 			routes.MapRoute(
 				"Default", // Route name
 				"{controller}/{action}/{id}", // URL with parameters

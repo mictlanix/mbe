@@ -41,11 +41,20 @@ namespace Mictlanix.BE.Web.Helpers
 		public static void ChangeNotification (TransactionType source, int reference, DateTime dt,
 		                                       Warehouse warehouse, Product product, decimal quantity)
 		{
+			ChangeNotification (source, reference, dt, warehouse, product, quantity, false);
+		}
+
+		public static void ChangeNotification (TransactionType source, int reference, DateTime dt,
+			Warehouse warehouse, Product product, decimal quantity, bool skipSerials)
+		{
 			if (!product.IsStockable)
 				return;
 
 			KardexRegister (source, reference, dt, warehouse, product, quantity);
-			LotSerialRegister (source, reference, warehouse, product, quantity);
+
+			if (!skipSerials) {
+				LotSerialRegister (source, reference, warehouse, product, quantity);
+			}
 		}
 
 		static void KardexRegister (TransactionType source, int reference, DateTime dt,

@@ -171,8 +171,8 @@ namespace Mictlanix.BE.Model
 		
 		[Property("issuer_certificate_number")]
 		[Display(Name = "CertificateNumber", ResourceType = typeof(Resources))]
-		[DisplayFormat(DataFormatString="{0:00000000000000000000}")]
-		public virtual ulong? IssuerCertificateNumber { get; set; }
+		//[DisplayFormat(DataFormatString="{0:00000000000000000000}")]
+		public virtual string IssuerCertificateNumber { get; set; }
 		
 		[Property("original_string")]
 		[UIHint("Breakable")]

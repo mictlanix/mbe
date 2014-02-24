@@ -510,6 +510,10 @@ span.editable {
   font-size: 1em;
 }
 
+form.form-inline {
+  margin:0;
+}
+
 @media print {
 	.no-print, .no-print * {
 	    display: none !important;
