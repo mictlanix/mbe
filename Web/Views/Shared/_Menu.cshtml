@@ -55,7 +55,9 @@
                           Html.GetPrivilege(CurrentUser, SystemObjects.CustomerDebtReport).AllowRead ||
                           Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrderSummaryReport).AllowRead ||
                           Html.GetPrivilege(CurrentUser, SystemObjects.FiscalDocumentsReport).AllowRead ||
-                          Html.GetPrivilege(CurrentUser, SystemObjects.SalesPersonOrdersReport).AllowRead;
+                          Html.GetPrivilege(CurrentUser, SystemObjects.SalesPersonOrdersReport).AllowRead ||
+                          Html.GetPrivilege(CurrentUser, SystemObjects.CustomerSalesOrdersReport).AllowRead ||
+                          Html.GetPrivilege(CurrentUser, SystemObjects.ProductSalesByCustomerReport).AllowRead;
 }
 
 <div id="gb" class='no-print'>
@@ -492,7 +494,18 @@
                                    href='@Url.Action("SalesPersonOrders", "Reports")'>@Resources.SalesPersonOrders</a>
                             </li>
                             }
-
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.CustomerSalesOrdersReport).AllowRead) {
+                            <li class='gbmtc'>
+                                <a class='gbmt @(Html.IsMenuSelected("CustomerSalesOrders", "Reports") ? "gbm0l" : "")'
+                                   href='@Url.Action("CustomerSalesOrders", "Reports")'>@Resources.CustomerSalesOrders</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.ProductSalesByCustomerReport).AllowRead) {
+                            <li class='gbmtc'>
+                                <a class='gbmt @(Html.IsMenuSelected("ProductSalesByCustomer", "Reports") ? "gbm0l" : "")'
+                                   href='@Url.Action("ProductSalesByCustomer", "Reports")'>@Resources.ProductSalesByCustomer</a>
+                            </li>
+                            }
                         </ol>
                     </div>
                 </div>

@@ -4769,5 +4769,59 @@ namespace Mictlanix.BE {
 				return ResourceManager.GetString("SalesPersonOrders", resourceCulture);
 			}
 		}
+
+		public static string CustomerSalesOrders {
+			get {
+				return ResourceManager.GetString("CustomerSalesOrders", resourceCulture);
+			}
+		}
+
+		public static string ProductSalesByCustomer {
+			get {
+				return ResourceManager.GetString("ProductSalesByCustomer", resourceCulture);
+			}
+		}
+
+		public static string Servisim {
+			get {
+				return ResourceManager.GetString("Servisim", resourceCulture);
+			}
+		}
+
+		public static string ValidationFailed {
+			get {
+				return ResourceManager.GetString("ValidationFailed", resourceCulture);
+			}
+		}
+
+		public static string ChooseTaxpayer {
+			get {
+				return ResourceManager.GetString("ChooseTaxpayer", resourceCulture);
+			}
+		}
+
+		public static string ProductSalesByModel {
+			get {
+				return ResourceManager.GetString("ProductSalesByModel", resourceCulture);
+			}
+		}
+
+		public static string ProductSalesByBrand {
+			get {
+				return ResourceManager.GetString("ProductSalesByBrand", resourceCulture);
+			}
+		}
+
+		public static string ChooseModel {
+			get {
+				return ResourceManager.GetString("ChooseModel", resourceCulture);
+			}
+		}
+
+		public static string ChooseBrand {
+			get {
+				return ResourceManager.GetString("ChooseBrand", resourceCulture);
+			}
+		}
     }
 }

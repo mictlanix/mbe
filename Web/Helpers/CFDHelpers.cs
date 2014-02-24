@@ -36,6 +36,7 @@ using Mictlanix.BE.Model;
 using Mictlanix.CFDLib;
 using Mictlanix.Diverza.Client;
 using Mictlanix.FiscoClic.Client;
+using Mictlanix.Servisim.Client;
 
 namespace Mictlanix.BE.Web.Helpers
 {
@@ -54,6 +55,8 @@ namespace Mictlanix.BE.Web.Helpers
 				return DiverzaStamp (item);
 			case FiscalCertificationProvider.FiscoClic:
 				return FiscoClicStamp (item);
+			case FiscalCertificationProvider.Servisim:
+				return ServisimStamp (item);
 			default:
 				return null;
 			}
@@ -74,6 +77,8 @@ namespace Mictlanix.BE.Web.Helpers
 				return DiverzaCancel (item);
 			case FiscalCertificationProvider.FiscoClic:
 				return FiscoClicCancel (item);
+			case FiscalCertificationProvider.Servisim:
+				return ServisimCancel (item);
 			}
 
 			return true;
@@ -115,9 +120,9 @@ namespace Mictlanix.BE.Web.Helpers
 		static Mictlanix.CFDv32.Comprobante FiscoClicStamp (FiscalDocument item)
 		{
 			var cfd = SignCFD (item);
-			var cli = new FiscoClicClient (Configuration.FiscoClickUser,
-			                               Configuration.FiscoClickPasswd,
-			                               Configuration.FiscoClickUrl);
+			var cli = new FiscoClicClient (Configuration.FiscoClicUser,
+			                               Configuration.FiscoClicPasswd,
+			                               Configuration.FiscoClicUrl);
 			var tfd = cli.Stamp (cfd);
 
 			cfd.Complemento = new List<object> ();
@@ -129,9 +134,33 @@ namespace Mictlanix.BE.Web.Helpers
 		// TODO: credentials per taxpayer
 		static bool FiscoClicCancel (FiscalDocument item)
 		{
-			var cli = new FiscoClicClient (Configuration.FiscoClickUser,
-			                               Configuration.FiscoClickPasswd,
-			                               Configuration.FiscoClickUrl);
+			var cli = new FiscoClicClient (Configuration.FiscoClicUser,
+			                               Configuration.FiscoClicPasswd,
+			                               Configuration.FiscoClicUrl);
+
+			return cli.Cancel (item.Issuer.Id, item.StampId);
+		}
+
+		// TODO: credentials per taxpayer
+		static Mictlanix.CFDv32.Comprobante ServisimStamp (FiscalDocument item)
+		{
+			var cfd = SignCFD (item);
+			var cli = new ServisimClient (Configuration.ServisimUser,
+				Configuration.ServisimPasswd, Configuration.ServisimUrl);
+			var id = string.Format ("{0}-{1:D6}", Configuration.ServisimPartnerCode, item.Id);
+			var tfd = cli.Stamp (id, cfd);
+
+			cfd.Complemento = new List<object> ();
+			cfd.Complemento.Add (tfd);
+
+			return cfd;
+		}
+
+		// TODO: credentials per taxpayer
+		static bool ServisimCancel (FiscalDocument item)
+		{
+			var cli = new ServisimClient (Configuration.ServisimUser,
+				Configuration.ServisimPasswd, Configuration.ServisimUrl);
 
 			return cli.Cancel (item.Issuer.Id, item.StampId);
 		}
@@ -167,7 +196,7 @@ namespace Mictlanix.BE.Web.Helpers
 			var cer = item.Issuer.Certificates.SingleOrDefault (x => x.Id == item.IssuerCertificateNumber);
 			var cfd = new CFDv32.Comprobante {
 				tipoDeComprobante = (Mictlanix.CFDv32.ComprobanteTipoDeComprobante)FDT2TDC (item.Type),
-				noCertificado = item.IssuerCertificateNumber.ToString ().PadLeft (20, '0'),
+				noCertificado = item.IssuerCertificateNumber.PadLeft (20, '0'),
 				serie = item.Batch,
 				folio = item.Serial.ToString (),
 				fecha = item.Issued.GetValueOrDefault (),

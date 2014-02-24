@@ -8,36 +8,24 @@
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.LotSerialNumbers);
 }
-<div class="buttons right">
-	<label class="button left">@Model.ToString()</label>@if (Model.HasPrev) {<a class="button middle icon prev icon-only paging" title="@Resources.PrevPage" href="javascript:void(0)"></a>}@if (Model.HasNext) {<a class="button right icon next icon-only paging" title="@Resources.NextPage" href="javascript:void(0)"></a>}
-</div>
+
 <table>
     <tr>
         <th>@Html.LabelFor(x => new LotSerialRequirement().Source)</th>
         <th>@Html.LabelFor(x => new LotSerialRequirement().Reference)</th>
         <th>@Html.LabelFor(x => new LotSerialRequirement().Warehouse)</th>
-        <th>@Html.LabelFor(x => new LotSerialRequirement().Product)</th>
         <th>@Html.LabelFor(x => new LotSerialRequirement().Quantity)</th>
         <th></th>
     </tr>
-@foreach (var item in Model.Results)
-{
+@foreach (var item in Model.Results) {
     <tr id='id:@item.Id'>
         <td class="center">@item.Source.GetDisplayName()</td>
         <td class="center">@Html.DisplayFor(x => item.Reference)</td>
-        <td class="center nowrap">@Html.DisplayFor(x => item.Warehouse.Name)</td>
-        <td class="fill">
-        	@Html.DisplayFor(x => item.Product.Name)<br/>
-        	@Resources.Code: @item.Product.Code @Resources.Model: @item.Product.Model
-        </td>
+        <td class="fill">@Html.DisplayFor(x => item.Warehouse.Name)</td>
         <td class="number">@Math.Abs(item.Quantity).ToString("0.####")</td>
         <td class="actions">
     	@if(Privilege.AllowUpdate) {            
-        	@Html.ActionLink(" ", "AssignLotSerialNumbers", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
-        }
-    	@if(Privilege.AllowDelete) {
-	        <a class='button icon-only icon delete' title='@Resources.Message_DiscardConfirmation'
-		   		data-type='checklist' data-placement='left' data-pk='@item.Id' data-source='{}' data-value='@item.Id' data-url='@Url.Action("DiscardLotSerialNumbers", new { id = item.Id })' data-emptytext='' data-emptyclass=''></a>
+        	@Html.ActionLink(" ", "AssignLotSerialNumbers", new { source = (int)item.Source, reference = item.Reference }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
         }
         </td>
     </tr>
@@ -67,11 +55,5 @@
 				$('#activity-indicator').hide();
 			});
     	});
-
-		$('a.delete').editable({
-			success: function(response, newValue) {
-		        $(this).closest('tr').remove();
-		    }
-		});
     });
 </script>

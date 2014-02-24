@@ -46,10 +46,14 @@ namespace Mictlanix.BE.Web.Models
 		
 		[Display(Name = "Id", ResourceType = typeof(Resources))]
 		public string Id { get; set; }
-		
+
+		[Display(Name = "Code", ResourceType = typeof(Resources))]
+		public string Code { get; set; }
+
 		[Display(Name = "Name", ResourceType = typeof(Resources))]
 		public string Name { get; set; }
-		
+
+		[DisplayFormat(DataFormatString = "{0:0.####}")]
 		[Display(Name = "Units", ResourceType = typeof(Resources))]
 		public decimal Units { get; set; }
 		

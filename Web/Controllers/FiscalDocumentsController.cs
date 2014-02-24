@@ -1045,11 +1045,11 @@ namespace Mictlanix.BE.Web.Controllers
 
 		public ViewResult Reports ()
 		{
-			var qry = from x in FiscalDocument.Queryable
-					  where x.Issuer.Scheme == FiscalScheme.CFD && x.IsCompleted
-					  orderby x.Issued descending
-					  select new { x.Issuer.Id, x.Issuer.Name, x.Issued.Value.Month, x.Issued.Value.Year };
-			var items = from x in qry.ToList ().Distinct ()
+			var query = from x in FiscalDocument.Queryable
+						where x.Version < 3 && x.IsCompleted
+						orderby x.Issued descending
+						select new { x.Issuer.Id, x.Issuer.Name, x.Issued.Value.Month, x.Issued.Value.Year };
+			var items = from x in query.ToList ().Distinct ()
 						select new FiscalReport {
 							TaxpayerId = x.Id, TaxpayerName = x.Name, Month = x.Month, Year = x.Year
 						};
@@ -1064,7 +1064,7 @@ namespace Mictlanix.BE.Web.Controllers
 			var start = new DateTime (year, month, 1, 0, 0, 0, DateTimeKind.Unspecified);
 			var end = start.AddMonths (1);
 			var query = from x in FiscalDocument.Queryable
-						where x.Issuer.Id == taxpayer &&
+						where x.Issuer.Id == taxpayer && x.Version < 3 && 
 							x.IsCompleted && ((x.Issued >= start && x.Issued < end) ||
 							(x.IsCancelled && x.CancellationDate >= start && x.CancellationDate < end))
 						select x;

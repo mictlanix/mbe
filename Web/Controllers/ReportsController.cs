@@ -655,6 +655,163 @@ namespace Mictlanix.BE.Web.Controllers
 			return PartialView ("_SalesPersonOrders", query.ToList ());
 		}
 
+		public ViewResult CustomerSalesOrders ()
+		{
+			ViewBag.EditorField = "customer";
+			ViewBag.EditorTemplate = "CustomerSelector";
+			ViewBag.Title = Resources.CustomerSalesOrders;
+			return View ("SummaryReport", new DateRange (DateTime.Now, DateTime.Now));
+		}
+
+		[HttpPost]
+		public ActionResult CustomerSalesOrders (int customer, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var query = from x in SalesOrder.Queryable
+						where x.Customer.Id == customer &&
+							x.IsCompleted && !x.IsCancelled &&
+							x.Date >= start && x.Date <= end
+						orderby x.Date
+						select x;
+
+			return PartialView ("_CustomerSalesOrders", query.ToList ());
+		}
+
+		public ViewResult ProductSalesByCustomer ()
+		{
+			ViewBag.EditorField = "customer";
+			ViewBag.EditorTemplate = "CustomerSelector";
+			ViewBag.Title = Resources.ProductSalesByCustomer;
+			return View ("SummaryReport", new DateRange (DateTime.Now, DateTime.Now));
+		}
+
+		[HttpPost]
+		public ActionResult ProductSalesByCustomer (int customer, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var query = from x in SalesOrder.Queryable
+						from y in x.Details
+						where x.Customer.Id == customer &&
+							x.IsCompleted && !x.IsCancelled &&
+							x.Date >= start && x.Date <= end
+						select new {
+							SalesOrder = x.Id,
+							Code = y.ProductCode,
+							Name = y.ProductName,
+							Quantity = y.Quantity,
+							Price = y.Price,
+							ExchangeRate = y.ExchangeRate,
+							Discount = y.Discount,
+							TaxRate = y.TaxRate,
+							IsTaxIncluded = y.IsTaxIncluded
+						};
+			var items = from x in query.ToList()
+						select new SummaryItem {
+							Category = x.SalesOrder.ToString (),
+							Id = x.Code,
+							Name = x.Name,
+							Units = x.Quantity,
+							Total = Model.ModelHelpers.Total (x.Quantity, x.Price, x.ExchangeRate, x.Discount, x.TaxRate, x.IsTaxIncluded),
+							Subtotal = Model.ModelHelpers.Subtotal (x.Quantity, x.Price, x.ExchangeRate, x.Discount, x.TaxRate, x.IsTaxIncluded)
+						};
+
+			return PartialView ("_ProductSalesByCustomer", items);
+		}
+
+		public ViewResult ProductSalesByModel ()
+		{
+			ViewBag.EditorField = "productModel";
+			ViewBag.EditorTemplate = "ProductModelSelector";
+			ViewBag.Title = Resources.ProductSalesByModel;
+			return View ("SummaryReport", new DateRange (DateTime.Now, DateTime.Now));
+		}
+
+		[HttpPost]
+		public ActionResult ProductSalesByModel (string productModel, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var query = from x in SalesOrder.Queryable
+						from y in x.Details
+						where x.IsCompleted && !x.IsCancelled &&
+							x.Date >= start && x.Date <= end &&
+							y.Product.Model.Contains (productModel)
+						orderby y.ProductName
+						select new {
+							Model = y.Product.Model,
+							Brand = y.Product.Brand,
+							Code = y.Product.Code,
+							Name = y.Product.Name,
+							Quantity = y.Quantity,
+							Price = y.Price,
+							ExchangeRate = y.ExchangeRate,
+							Discount = y.Discount,
+							TaxRate = y.TaxRate,
+							IsTaxIncluded = y.IsTaxIncluded
+						};
+			var items = from x in query.ToList ()
+						group x by new { x.Model, x.Brand, x.Code, x.Name } into g
+						select new SummaryItem {
+							Id = g.Key.Brand,
+							Category = g.Key.Model,
+							Code = g.Key.Code,
+							Name = g.Key.Name,
+							Units = g.Sum (y => y.Quantity),
+							Total = g.Sum (y => Model.ModelHelpers.Total (y.Quantity, y.Price, y.ExchangeRate, y.Discount, y.TaxRate, y.IsTaxIncluded)),
+							Subtotal = g.Sum (y => Model.ModelHelpers.Subtotal (y.Quantity, y.Price, y.ExchangeRate, y.Discount, y.TaxRate, y.IsTaxIncluded))
+						};
+
+			return PartialView ("_ProductSalesByCategory", items);
+		}
+
+		public ViewResult ProductSalesByBrand ()
+		{
+			ViewBag.EditorField = "brand";
+			ViewBag.EditorTemplate = "ProductBrandSelector";
+			ViewBag.Title = Resources.ProductSalesByBrand;
+			return View ("SummaryReport", new DateRange (DateTime.Now, DateTime.Now));
+		}
+
+		[HttpPost]
+		public ActionResult ProductSalesByBrand (string brand, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var query = from x in SalesOrder.Queryable
+						from y in x.Details
+						where x.IsCompleted && !x.IsCancelled &&
+							x.Date >= start && x.Date <= end &&
+							y.Product.Brand.Contains (brand)
+						orderby y.ProductName
+						select new {
+							Model = y.Product.Model,
+							Brand = y.Product.Brand,
+							Code = y.Product.Code,
+							Name = y.Product.Name,
+							Quantity = y.Quantity,
+							Price = y.Price,
+							ExchangeRate = y.ExchangeRate,
+							Discount = y.Discount,
+							TaxRate = y.TaxRate,
+							IsTaxIncluded = y.IsTaxIncluded
+						};
+			var items = from x in query.ToList ()
+						group x by new { x.Model, x.Brand, x.Code, x.Name } into g
+						select new SummaryItem {
+							Id = g.Key.Brand,
+							Category = g.Key.Model,
+							Code = g.Key.Code,
+							Name = g.Key.Name,
+							Units = g.Sum (y => y.Quantity),
+							Total = g.Sum (y => Model.ModelHelpers.Total (y.Quantity, y.Price, y.ExchangeRate, y.Discount, y.TaxRate, y.IsTaxIncluded)),
+							Subtotal = g.Sum (y => Model.ModelHelpers.Subtotal (y.Quantity, y.Price, y.ExchangeRate, y.Discount, y.TaxRate, y.IsTaxIncluded))
+						};
+
+			return PartialView ("_ProductSalesByCategory", items);
+		}
+
 		#region Helpers
 		
 		void AnalyzeABC (IEnumerable<SummaryItem> items)

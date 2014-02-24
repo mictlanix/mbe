@@ -20,12 +20,17 @@
 @foreach (var item in Model) {
     <tr>
     	<td>@Html.DisplayFor(x => item.Id)</td>
-        <td class='date' colspan='6'>@item.Date.ToShortDateString()</td>
+    	<td >@item.Comment</td>
+        <td class='date' colspan='5'>@item.Date.ToShortDateString()</td>
     </tr>
 	foreach (var detail in item.Details) {
     <tr>
     	<td class='number' />
-        <td>@Html.DisplayFor(x => detail.ProductName)</td>
+        <td>
+        	@Html.DisplayFor(x => detail.ProductName)
+        	<br>
+        	@Html.DisplayFor(x => detail.Comment)
+        </td>
         <td class='currency'>@Html.DisplayFor(x => detail.Quantity)</td>
         <td class='currency'>@Html.DisplayFor(x => detail.NetPrice)</td>
         <td class='currency'>@Html.DisplayFor(x => detail.SubtotalEx)</td>

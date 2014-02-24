@@ -9,7 +9,7 @@
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.LotSerialNumbers);
 }
 
-<tr id='id:@Model.Id'>
+<tr id='serial:@Model.Id'>
     <td class="number">@Math.Abs(Model.Quantity).ToString("0.####")</td>
     <td class="center">@Html.DisplayFor(x => Model.LotNumber)</td>
     <td class="date">@Html.DisplayFor(x => Model.ExpirationDate)</td>

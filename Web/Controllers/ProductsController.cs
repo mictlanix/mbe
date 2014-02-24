@@ -344,5 +344,49 @@ namespace Mictlanix.BE.Web.Controllers
 
 			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
 		}
+
+		public JsonResult Brands (string pattern)
+		{
+			IQueryable<string> query;
+
+			if (string.IsNullOrWhiteSpace (pattern)) {
+				query = from x in Product.Queryable
+						where x.Brand != null && x.Brand != string.Empty
+						orderby x.Brand
+						select x.Brand;
+			} else {
+				query = from x in Product.Queryable
+						where x.Brand.Contains (pattern)
+						orderby x.Brand
+						select x.Brand;
+			}
+
+			var items = from x in query.Distinct ().ToList ()
+						select new { id = x, name = x };
+
+			return Json (items, JsonRequestBehavior.AllowGet);
+		}
+
+		public JsonResult Models (string pattern)
+		{
+			IQueryable<string> query;
+
+			if (string.IsNullOrWhiteSpace (pattern)) {
+				query = from x in Product.Queryable
+						where x.Model != null && x.Model != string.Empty
+			            orderby x.Model
+			            select x.Model;
+			} else {
+				query = from x in Product.Queryable
+						where x.Model.Contains (pattern)
+						orderby x.Model
+						select x.Model;
+			}
+
+			var items = from x in query.Distinct ().ToList ()
+						select new { id = x, name = x };
+
+			return Json (items, JsonRequestBehavior.AllowGet);
+		}
 	}
 }
