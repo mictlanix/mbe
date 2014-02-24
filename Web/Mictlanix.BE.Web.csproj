@@ -3,8 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>
-    </ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{D13A33DE-A12D-420E-ABB2-76A7C0F2E2E5}</ProjectGuid>
     <ProjectTypeGuids>{E53F8FEA-EAE0-44A6-8774-FFD645390401};{349C5851-65DF-11DA-9384-00065B846F21};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -148,6 +147,10 @@
     <ProjectReference Include="..\FiscoClicClient\Mictlanix.FiscoClicClient\Mictlanix.FiscoClicClient.csproj">
       <Project>{944C2166-9CF9-4740-BAA3-6E7C5AE62872}</Project>
       <Name>Mictlanix.FiscoClicClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ServisimClient\Mictlanix.ServisimClient\Mictlanix.ServisimClient.csproj">
+      <Project>{949FABA8-CD56-45EC-A15C-ED327812832F}</Project>
+      <Name>Mictlanix.ServisimClient</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -738,6 +741,11 @@
     <Content Include="Views\Reports\_FiscalDocuments.cshtml" />
     <Content Include="Views\FiscalDocuments\Pdf32.cshtml" />
     <Content Include="Views\Reports\_SalesPersonOrders.cshtml" />
+    <Content Include="Views\Reports\_CustomerSalesOrders.cshtml" />
+    <Content Include="Views\Reports\_ProductSalesByCustomer.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ProductModelSelector.cshtml" />
+    <Content Include="Views\Reports\_ProductSalesByCategory.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ProductBrandSelector.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
