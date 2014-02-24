@@ -140,6 +140,10 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "CustomerSalesOrders", ResourceType = typeof(Resources))]
 		CustomerSalesOrdersReport,
 		[Display(Name = "ProductSalesByCustomer", ResourceType = typeof(Resources))]
-		ProductSalesByCustomerReport
+		ProductSalesByCustomerReport,
+		[Display(Name = "ProductSalesByModel", ResourceType = typeof(Resources))]
+		ProductSalesByModelReport,
+		[Display(Name = "ProductSalesByBrand", ResourceType = typeof(Resources))]
+		ProductSalesByBrandReport
     }
 }

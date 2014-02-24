@@ -57,7 +57,9 @@
                           Html.GetPrivilege(CurrentUser, SystemObjects.FiscalDocumentsReport).AllowRead ||
                           Html.GetPrivilege(CurrentUser, SystemObjects.SalesPersonOrdersReport).AllowRead ||
                           Html.GetPrivilege(CurrentUser, SystemObjects.CustomerSalesOrdersReport).AllowRead ||
-                          Html.GetPrivilege(CurrentUser, SystemObjects.ProductSalesByCustomerReport).AllowRead;
+                          Html.GetPrivilege(CurrentUser, SystemObjects.ProductSalesByCustomerReport).AllowRead ||
+                          Html.GetPrivilege(CurrentUser, SystemObjects.ProductSalesByModelReport).AllowRead ||
+                          Html.GetPrivilege(CurrentUser, SystemObjects.ProductSalesByBrandReport).AllowRead;
 }
 
 <div id="gb" class='no-print'>
@@ -504,6 +506,18 @@
                             <li class='gbmtc'>
                                 <a class='gbmt @(Html.IsMenuSelected("ProductSalesByCustomer", "Reports") ? "gbm0l" : "")'
                                    href='@Url.Action("ProductSalesByCustomer", "Reports")'>@Resources.ProductSalesByCustomer</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.ProductSalesByModelReport).AllowRead) {
+                            <li class='gbmtc'>
+                                <a class='gbmt @(Html.IsMenuSelected("ProductSalesByModel", "Reports") ? "gbm0l" : "")'
+                                   href='@Url.Action("ProductSalesByModel", "Reports")'>@Resources.ProductSalesByModel</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.ProductSalesByBrandReport).AllowRead) {
+                            <li class='gbmtc'>
+                                <a class='gbmt @(Html.IsMenuSelected("ProductSalesByBrand", "Reports") ? "gbm0l" : "")'
+                                   href='@Url.Action("ProductSalesByBrand", "Reports")'>@Resources.ProductSalesByBrand</a>
                             </li>
                             }
                         </ol>

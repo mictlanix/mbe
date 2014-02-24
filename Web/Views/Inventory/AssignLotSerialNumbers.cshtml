@@ -177,7 +177,7 @@ $(function () {
 	$('a.add').click(add);
 	$('a.delete').click(remove);
 	$('a.lock').click(confirm);
-	$(".serial").focus(function(){
+	$(".serial,.lot").focus(function(){
     	this.select();
 	}).keyup(function(e){
 		if (e.keyCode == 13) {
