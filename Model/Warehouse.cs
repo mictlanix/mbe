@@ -72,12 +72,12 @@ namespace Mictlanix.BE.Model
 
         #region Override Base Methods
 
-        public override string ToString()
+		public override string ToString ()
         {
             return string.Format("{0}", Name);
         }
 
-        public override bool Equals(object obj)
+		public override bool Equals (object obj)
         {
             Warehouse other = obj as Warehouse;
 
@@ -90,12 +90,12 @@ namespace Mictlanix.BE.Model
                 return Id == other.Id;
         }
 
-        public override int GetHashCode()
+		public override int GetHashCode ()
         {
             if (Id == 0)
-                return base.GetHashCode();
+				return base.GetHashCode ();
 
-            return string.Format("{0}#{1}", GetType().FullName, Id).GetHashCode();
+			return string.Format("{0}#{1}", GetType().FullName, Id).GetHashCode ();
         }
 
         #endregion

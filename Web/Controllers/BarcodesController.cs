@@ -63,21 +63,26 @@ namespace Mictlanix.BE.Web.Controllers
 
 		internal static ActionResult QRCodeAction (string id)
 		{
-			var encoder = new QrEncoder ();
-			var ms = new MemoryStream (4 * 1024);
-			var render = new GraphicsRenderer(new FixedCodeSize(300, QuietZoneModules.Zero));
-			QrCode code;
+			try {
+				var encoder = new QrEncoder ();
+				var ms = new MemoryStream (4 * 1024);
+				var render = new GraphicsRenderer (new FixedCodeSize(300, QuietZoneModules.Zero));
+				QrCode code;
 
-			if (!encoder.TryEncode(id, out code))
+				if (!encoder.TryEncode(id, out code))
+					return null;
+
+				render.WriteToStream (code.Matrix, ImageFormat.Png, ms, new Point(300, 300));
+
+				ms.Seek (0, SeekOrigin.Begin);
+				var result = new FileStreamResult (ms, "image/png");
+				result.FileDownloadName = string.Format ("{0}.png", id);
+
+				return result;
+			} catch (Exception ex) {
+				System.Diagnostics.Debug.WriteLine (ex);
 				return null;
-
-			render.WriteToStream (code.Matrix, ImageFormat.Png, ms, new Point(300, 300));
-
-			ms.Seek (0, SeekOrigin.Begin);
-			var result = new FileStreamResult (ms, "image/png");
-			result.FileDownloadName = string.Format ("{0}.png", id);
-
-			return result;
+			}
 		}
     }
 }

@@ -235,11 +235,7 @@ namespace Mictlanix.BE.Web.Controllers
 				sn = (char)b + sn;
 			}
 
-			if (sn [0] != '0' || sn [0] != '1') {
-				sn = sn.Substring (1);
-			}
-
-			item.Id = ulong.Parse (sn);
+			item.Id = sn.PadLeft (20, '0');
 			var entity = TaxpayerCertificate.Queryable.SingleOrDefault (x => x.Id == item.Id);
 
 			if (entity == null) {

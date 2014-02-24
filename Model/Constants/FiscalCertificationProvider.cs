@@ -41,6 +41,8 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "Diverza", ResourceType = typeof(Resources))]
         Diverza,
 		[Display(Name = "FiscoClic", ResourceType = typeof(Resources))]
-		FiscoClic
+		FiscoClic,
+		[Display(Name = "Servisim", ResourceType = typeof(Resources))]
+		Servisim
     }
 }

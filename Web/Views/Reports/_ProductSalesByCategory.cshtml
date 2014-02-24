@@ -1,0 +1,37 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model IEnumerable<SummaryItem>
+
+<table>
+    <tr>
+		<th class='nowrap'>@Resources.Brand</th>
+        <th class='nowrap'>@Resources.Model</th>
+        <th class='nowrap'>@Resources.ProductCode</th>
+        <th class='nowrap'>@Resources.ProductName</th>
+        <th class='nowrap'>@Resources.Units</th>
+        <th class='nowrap'>@Resources.Subtotal</th>
+        <th class='nowrap'>@Resources.Taxes</th>
+        <th class='nowrap'>@Resources.Total</th>
+    </tr>
+@foreach (var item in Model) {
+    <tr>
+        <td class='center stretch'>@Html.DisplayFor(x => item.Id)</td>
+        <td class='center stretch'>@Html.DisplayFor(x => item.Category)</td>
+        <td class='center stretch'>@Html.DisplayFor(x => item.Code)</td>
+        <td>@Html.DisplayFor(x => item.Name)</td>
+        <td class='number'>@Html.DisplayFor(x => item.Units)</td>
+        <td class='number'>@Html.DisplayFor(x => item.Subtotal)</td>
+        <td class='number'>@Html.DisplayFor(x => item.Taxes)</td>
+        <td class='number'>@Html.DisplayFor(x => item.Total)</td>
+    </tr> 
+}
+    <tr>
+    	<td class='right' colspan='4'><b>@Resources.Total</b></td>
+        <td class='number'><b>@Model.Sum(x => x.Units).ToString("0.####")</b></td>
+        <td class='number'><b>@Model.Sum(x => x.Subtotal).ToString("c")</b></td>
+        <td class='number'><b>@Model.Sum(x => x.Taxes).ToString("c")</b></td>
+        <td class='number'><b>@Model.Sum(x => x.Total).ToString("c")</b></td>
+    </tr>
+</table>

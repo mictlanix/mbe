@@ -1761,4 +1761,31 @@ Realizada el: {0:d}</value>
   <data name="SalesPersonOrders" xml:space="preserve">
     <value>Pedidos Por Vendedor</value>
   </data>
+  <data name="CustomerSalesOrders" xml:space="preserve">
+    <value>Pedidos Por Cliente</value>
+  </data>
+  <data name="ProductSalesByCustomer" xml:space="preserve">
+    <value>Productos Vendidos Por Cliente</value>
+  </data>
+  <data name="Servisim" xml:space="preserve">
+    <value>Servisim S.A. de C.V.</value>
+  </data>
+  <data name="ValidationFailed" xml:space="preserve">
+    <value>La validación falló.</value>
+  </data>
+  <data name="ChooseTaxpayer" xml:space="preserve">
+    <value>Seleccione una razón social</value>
+  </data>
+  <data name="ProductSalesByModel" xml:space="preserve">
+    <value>Productos Vendidos Por Modelo</value>
+  </data>
+  <data name="ProductSalesByBrand" xml:space="preserve">
+    <value>Productos Vendidos Por Marca</value>
+  </data>
+  <data name="ChooseModel" xml:space="preserve">
+    <value>Seleccione un modelo</value>
+  </data>
+  <data name="ChooseBrand" xml:space="preserve">
+    <value>Seleccione una marca</value>
+  </data>
 </root>
