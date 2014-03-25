@@ -1047,9 +1047,12 @@ namespace Mictlanix.BE.Web.Controllers
 		{
 			var query = from x in FiscalDocument.Queryable
 						where x.Version < 3 && x.IsCompleted
-						orderby x.Issued descending
 						select new { x.Issuer.Id, x.Issuer.Name, x.Issued.Value.Month, x.Issued.Value.Year };
-			var items = from x in query.ToList ().Distinct ()
+			var query2 = from x in FiscalDocument.Queryable
+						where x.Version < 3 && x.IsCompleted && x.IsCancelled
+						select new { x.Issuer.Id, x.Issuer.Name, x.CancellationDate.Value.Month, x.CancellationDate.Value.Year };
+			var items = from x in query.ToList ().Union (query2.ToList ()).Distinct ()
+						orderby x.Year descending, x.Month descending, x.Id ascending
 						select new FiscalReport {
 							TaxpayerId = x.Id, TaxpayerName = x.Name, Month = x.Month, Year = x.Year
 						};
