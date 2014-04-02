@@ -47,7 +47,11 @@ namespace Mictlanix.BE.Model
 		[Property]
         [Display(Name = "Type", ResourceType = typeof(Resources))]
 		public virtual FiscalDocumentType Type { get; set; }
-		
+
+		[Property]
+		[Display(Name = "Template", ResourceType = typeof(Resources))]
+		public virtual string Template { get; set; }
+
 		#region Override Base Methods
 
 		public override string ToString ()
