@@ -110,7 +110,8 @@ namespace Mictlanix.BE.Web.Controllers
 		public ViewResult Print (int id)
 		{
 			var item = FiscalDocument.Find (id);
-			var view = string.Format ("Print{0:00}", item.Version * 10);
+			var batch = TaxpayerBatch.Queryable.First (x => x.Batch == item.Batch);
+			var view = string.Format ("Print{0:00}{1}", item.Version * 10, batch.Template);
 
 			return View (view, item);
 		}

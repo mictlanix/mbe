@@ -268,6 +268,9 @@
   <data name="UnitOfMeasurement" xml:space="preserve">
     <value>U. M.</value>
   </data>
+  <data name="UnitOfMeasurementShort" xml:space="preserve">
+    <value>UM</value>
+  </data>
   <data name="Validation_Duplicate" xml:space="preserve">
     <value>El campo {0} contiene un valor duplicado.</value>
   </data>
@@ -380,6 +383,9 @@
     <value>Crédito</value>
   </data>
   <data name="Date" xml:space="preserve">
+    <value>Fecha</value>
+  </data>
+  <data name="DateTime" xml:space="preserve">
     <value>Fecha y Hora</value>
   </data>
   <data name="Discount" xml:space="preserve">
@@ -420,6 +426,9 @@
   </data>
   <data name="Quantity" xml:space="preserve">
     <value>Cantidad</value>
+  </data>
+  <data name="QuantityShort" xml:space="preserve">
+    <value>Cant.</value>
   </data>
   <data name="SalesOrder" xml:space="preserve">
     <value>Pedido</value>
@@ -1693,7 +1702,7 @@ Realizada el: {0:d}</value>
     <value>Folio Fiscal</value>
   </data>
   <data name="FiscalDocumentLegendV3" xml:space="preserve">
-    <value>Este documento es una representación impresa de un CFDI.</value>
+    <value>Este documento es una representación impresa de un CFDI.</value>
   </data>
   <data name="SalesOrderDate" xml:space="preserve">
     <value>Fecha del Pedido</value>
@@ -1787,5 +1796,8 @@ Realizada el: {0:d}</value>
   </data>
   <data name="ChooseBrand" xml:space="preserve">
     <value>Seleccione una marca</value>
+  </data>
+  <data name="Template" xml:space="preserve">
+    <value>Plantilla</value>
   </data>
 </root>

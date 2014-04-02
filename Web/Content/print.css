@@ -1,10 +1,6 @@
-﻿@page  
-{
+﻿@page {
     size: US-Letter;
     margin: 10mm;
-}
-* {
-    font-family:"Lucida Grande", Verdana, sans-serif;
 }
 body {
     background:white;
@@ -41,6 +37,15 @@ h4 {
 }
 h4.black {
   font-weight:bold;
+}
+.uppercase {
+  text-transform:uppercase;
+}
+.lowercase {
+  text-transform:lowercase;
+}
+.capitalize {
+  text-transform:capitalize;
 }
 .date,.bool,.number,.nowrap {
   white-space:nowrap;
