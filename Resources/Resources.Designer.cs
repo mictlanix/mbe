@@ -4823,5 +4823,29 @@ namespace Mictlanix.BE {
 				return ResourceManager.GetString("ChooseBrand", resourceCulture);
 			}
 		}
+
+		public static string Template {
+			get {
+				return ResourceManager.GetString("Template", resourceCulture);
+			}
+		}
+
+		public static string DateTime {
+			get {
+				return ResourceManager.GetString("DateTime", resourceCulture);
+			}
+		}
+
+		public static string UnitOfMeasurementShort {
+			get {
+				return ResourceManager.GetString("UnitOfMeasurementShort", resourceCulture);
+			}
+		}
+
+		public static string QuantityShort {
+			get {
+				return ResourceManager.GetString("QuantityShort", resourceCulture);
+			}
+		}
     }
 }

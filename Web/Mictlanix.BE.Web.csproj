@@ -737,7 +737,6 @@
     <Content Include="Views\Products\_Item.cshtml" />
     <Content Include="Views\Reports\_CustomerDebt.cshtml" />
     <Content Include="Views\Reports\_SalesOrderSummary.cshtml" />
-    <Content Include="Views\FiscalDocuments\Print20Dataprint.cshtml" />
     <Content Include="Views\Reports\_FiscalDocuments.cshtml" />
     <Content Include="Views\FiscalDocuments\Pdf32.cshtml" />
     <Content Include="Views\Reports\_SalesPersonOrders.cshtml" />
@@ -746,6 +745,14 @@
     <Content Include="Views\Shared\EditorTemplates\ProductModelSelector.cshtml" />
     <Content Include="Views\Reports\_ProductSalesByCategory.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ProductBrandSelector.cshtml" />
+    <Content Include="Views\FiscalDocuments\Print32Dataprint.cshtml" />
+    <Content Include="Content\fonts\wasabi\stylesheet.css" />
+    <Content Include="Content\bootstrap3\css\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap3\css\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap3\css\bootstrap.css" />
+    <Content Include="Content\bootstrap3\css\bootstrap.min.css" />
+    <Content Include="Content\bootstrap3\js\bootstrap.js" />
+    <Content Include="Content\bootstrap3\js\bootstrap.min.js" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -784,4 +791,24 @@
     </MonoDevelop>
   </ProjectExtensions>
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Content\fonts\" />
+    <Folder Include="Content\bootstrap3\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Content\fonts\wasabi\wasabi-bk-webfont.eot" />
+    <None Include="Content\fonts\wasabi\wasabi-bk-webfont.svg" />
+    <None Include="Content\fonts\wasabi\wasabi-bk-webfont.ttf" />
+    <None Include="Content\fonts\wasabi\wasabi-bk-webfont.woff" />
+    <None Include="Content\fonts\wasabi\wasabi-lt-webfont.eot" />
+    <None Include="Content\fonts\wasabi\wasabi-lt-webfont.svg" />
+    <None Include="Content\fonts\wasabi\wasabi-lt-webfont.ttf" />
+    <None Include="Content\fonts\wasabi\wasabi-lt-webfont.woff" />
+    <None Include="Content\bootstrap3\css\bootstrap-theme.css.map" />
+    <None Include="Content\bootstrap3\css\bootstrap.css.map" />
+    <None Include="Content\bootstrap3\fonts\glyphicons-halflings-regular.eot" />
+    <None Include="Content\bootstrap3\fonts\glyphicons-halflings-regular.svg" />
+    <None Include="Content\bootstrap3\fonts\glyphicons-halflings-regular.ttf" />
+    <None Include="Content\bootstrap3\fonts\glyphicons-halflings-regular.woff" />
+  </ItemGroup>
 </Project>
