@@ -1,0 +1,167 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
+@using Mictlanix.BE.Web.Helpers
+@model FiscalDocument
+
+@{
+    Layout = "~/Views/Shared/_DataprintLayout.cshtml";
+    ViewBag.WindowTitle = string.Format (Resources.FiscalDocumentFilenameFormatString,
+                                         Model.Issuer.Id, Model.Batch, Model.Serial);
+    ViewBag.Title = Resources.FiscalDocument;
+    ViewBag.Store = Model.Store;
+    ViewBag.Taxpayer = Model.Issuer.Id;
+    ViewBag.TaxpayerName = Model.IssuerName;
+    ViewBag.Address = Model.IssuedAt ?? Model.Store.Address;
+}
+
+<div class="display-label right floating">
+	<h3>@Html.DisplayFor(x => x.Batch) @Html.DisplayFor(x => x.Serial)</h3>
+</div>
+
+<div class="display-label">
+    <h3>Cliente</h3>
+</div>
+
+<div class="display-label right floating">
+    <label style="background-color:Silver;">Lugar y fecha</label><br />
+    @Html.DisplayFor(x => x.IssuedLocation)<br/>
+    @Html.DisplayFor(x => x.Issued)<br />   
+    <label style="background-color:Silver;">Folio fiscal</label><br />
+    @Html.DisplayFor(x => x.StampId)<br/>
+   
+    
+@if (!string.IsNullOrEmpty (Model.Reference)) {
+    <br/>
+    @Html.LabelFor(x => x.Reference)<text>:</text>
+    @Html.DisplayFor(x => x.Reference)
+}
+</div>
+<div class="display-field">
+    <label style="background-color:Silver;">Nombre</label><br/>
+    @Html.DisplayFor(x => x.RecipientName)<br/>
+    <label style="background-color:Silver;">Dirección</label><br/>
+    @Html.DisplayFor(x => x.RecipientAddress.Street)
+    @Html.DisplayFor(x => x.RecipientAddress.ExteriorNumber)
+    @Html.DisplayFor(x => x.RecipientAddress.InteriorNumber)<br/>
+    @Html.DisplayFor(x => x.RecipientAddress.Neighborhood),
+    @Html.DisplayFor(x => x.RecipientAddress.Borough)<br/>
+    @Html.DisplayFor(x => x.RecipientAddress.State),
+    @Html.DisplayFor(x => x.RecipientAddress.Country),
+    @Html.DisplayFor(x => x.RecipientAddress.PostalCode)<br/>
+    <label style="background-color:Silver;">R.F.C.</label><br />
+    @Html.DisplayFor(x => x.Recipient)<br />
+</div>
+
+    <div class="clearfix"></div>
+    <div style="height: 5px; border-top: red solid 1px; border-bottom: red solid 3px"></div>
+    <table>
+        <thead>
+            <tr>
+                <th class="nowrap"></th>
+                <th class="nowrap">@Resources.UnitOfMeasurement</th>
+                <th class="nowrap">@Resources.ProductCode</th>
+                <th class="">@Resources.ProductName</th>
+                <th class="nowrap">@Resources.Price</th>
+                <th class="nowrap">@Resources.Discount</th>
+                <th class="nowrap">@Resources.Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="height:10px" colspan="5"></td>
+            </tr>
+            @foreach (var item in Model.Details)
+            {
+                <tr class="alt">
+                    <td class="number">@Html.DisplayFor(x => item.Quantity)</td>
+                    <td class="center">@Html.DisplayFor(x => item.UnitOfMeasurement)</td>
+                    <td class="center">@Html.DisplayFor(x => item.ProductCode)</td>
+                    <td class="">@Html.DisplayFor(x => item.ProductName)</td>
+                    <td class="number">@Html.DisplayFor(x => item.NetPrice)</td>
+                    <td class="number">@Html.DisplayFor(x => item.Discount)</td>
+                    <td class="number">@Html.DisplayFor(x => item.Subtotal)</td>
+                </tr>
+            }
+        </tbody>
+</table>
+
+
+<div style="height: 5px; border-top: red solid 3px; border-bottom: red solid 1px"></div>
+
+    <table>
+        <tr>
+            <td rowspan="2" class="center">
+                <div style="border-top: solid black 1px; border-bottom:solid black 1px; margin: 0 2cm 0 2cm;">
+                    @Html.CurrencyToString(Model.Total, Model.Currency)
+                </div>
+            </td>
+            <td class="number">@Html.LabelFor(x => x.Subtotal)</td>
+            <td class="number">@Html.DisplayFor(x => x.Subtotal)</td>
+        </tr>
+        <tr>
+            <td class="number">@Html.LabelFor(x => x.Taxes)</td>
+            <td class="number">@Html.DisplayFor(x => x.Taxes)</td>
+        </tr>
+        <tr>
+            <td class="left uppercase">@Resources.SinglePayment</td>
+            <td class="number">@Html.LabelFor(x => x.Total)</td>
+            <td class="number">@Html.DisplayFor(x => x.Total)</td>
+        </tr>
+    </table>
+
+    <label style="background-color:Silver;">Método de pago:</label><br />
+    <div class="left">
+        @if (Model.Currency != CurrencyCode.MXN)
+        {
+            <text>
+                @Html.LabelFor(x => x.Currency):
+                @Model.Currency.GetDisplayName()<br />
+                @Html.LabelFor(x => x.ExchangeRate):
+                @Html.DisplayFor(x => x.ExchangeRate)<br />
+            </text>
+        }
+
+        @Model.PaymentMethod.GetDisplayName()
+        @if (Model.PaymentMethod != PaymentMethod.Unidentified &&
+         Model.PaymentMethod != PaymentMethod.Cash)
+        {
+            <br />@Html.LabelFor(x => x.PaymentReference)<text>:</text>
+            @Html.DisplayFor(x => x.PaymentReference)
+        }
+    </div>
+   <table>
+        <tr>
+            <td class="number">
+                <img width='150' height='150' style='margin:10px 0 0 0' src='@Url.Action("QRCode", new { id = Model.Id })' />
+            </td>
+            <td id="digital-signature">
+                @Html.LabelFor(x => x.AuthorityCertificateNumber):
+                @Html.DisplayFor(x => x.AuthorityCertificateNumber)
+                @Html.LabelFor(x => x.Stamped):
+                @Html.DisplayFor(x => x.Stamped)<br />
+                @Html.LabelFor(x => x.OriginalString)<br />
+                @Html.DisplayFor(x => x.OriginalString)<br />
+                @Html.LabelFor(x => x.IssuerDigitalSeal)<br />
+                @Html.DisplayFor(x => x.IssuerDigitalSeal)<br />
+                @Html.LabelFor(x => x.AuthorityDigitalSeal)<br />
+                @Html.DisplayFor(x => x.AuthorityDigitalSeal)<br />
+                @Html.LabelFor(x => x.IssuerCertificateNumber):
+                @Html.DisplayFor(x => x.IssuerCertificateNumber)<br />
+                @Html.LabelFor(x => x.IssuerRegime):
+                @Html.DisplayFor(x => x.IssuerRegime)
+            </td>
+        </tr>
+   </table>
+  <div class="right">@Resources.FiscalDocumentLegendV3</div>
+<script type="text/javascript">
+$(function() {
+	$('body, select, input, textarea, button, submit, form').prop('disabled', true);
+	/*window.print();
+	setTimeout(function() {
+	    $('body').bind('mousemove click keypress', function () {
+	        window.close();                      
+	    });
+	}, 500);*/
+});
+</script>
