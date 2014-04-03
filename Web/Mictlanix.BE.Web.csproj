@@ -753,6 +753,8 @@
     <Content Include="Content\bootstrap3\css\bootstrap.min.css" />
     <Content Include="Content\bootstrap3\js\bootstrap.js" />
     <Content Include="Content\bootstrap3\js\bootstrap.min.js" />
+    <Content Include="Views\FiscalDocuments\Print32Tinbox.cshtml" />
+    <Content Include="Content\fonts\secrettypewriter\stylesheet.css" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -794,6 +796,7 @@
   <ItemGroup>
     <Folder Include="Content\fonts\" />
     <Folder Include="Content\bootstrap3\" />
+    <Folder Include="Content\fonts\secrettypewriter\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\fonts\wasabi\wasabi-bk-webfont.eot" />
@@ -810,5 +813,9 @@
     <None Include="Content\bootstrap3\fonts\glyphicons-halflings-regular.svg" />
     <None Include="Content\bootstrap3\fonts\glyphicons-halflings-regular.ttf" />
     <None Include="Content\bootstrap3\fonts\glyphicons-halflings-regular.woff" />
+    <None Include="Content\fonts\secrettypewriter\veteran_typewriter-webfont.eot" />
+    <None Include="Content\fonts\secrettypewriter\veteran_typewriter-webfont.svg" />
+    <None Include="Content\fonts\secrettypewriter\veteran_typewriter-webfont.ttf" />
+    <None Include="Content\fonts\secrettypewriter\veteran_typewriter-webfont.woff" />
   </ItemGroup>
 </Project>

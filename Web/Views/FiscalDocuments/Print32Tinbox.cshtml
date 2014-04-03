@@ -20,23 +20,17 @@
     <title>@ViewBag.WindowTitle</title>
     <script src='@Url.Content("~/Scripts/jquery-1.9.1.min.js")' type='text/javascript'></script>
     <link href='@Url.Content("~/Content/bootstrap3/css/bootstrap.min.css")' rel='stylesheet' type='text/css' />
-    <link href='@Url.Content("~/Content/fonts/wasabi/stylesheet.css")' rel='stylesheet' type='text/css' />
+    <link href='@Url.Content("~/Content/fonts/secrettypewriter/stylesheet.css")' rel='stylesheet' type='text/css' />
     <style type='text/css'>
     @@page {
 	    size: US-Letter;
 	    margin: 10mm;
 	}
 	body {
-	    font:normal 12pt 'wasabilight';
+	    font:normal 9pt 'veteran_typewriterregular';
 	}
-	#logo {
-		position:relative;
-	    right:auto;
-    	top:auto;
-    	margin-bottom:1mm;
-	}
-	#logo img {
-		width:85mm;
+	.logo {
+		width:48mm;
 	}
 	header {
 		margin-bottom:4mm;
@@ -46,22 +40,22 @@
 		margin:1mm 1mm 1mm 0;
 	}
 	h1, h2 {
-		font:bold 11.59pt 'wasabibook';
+		font:normal 10pt 'veteran_typewriterregular';
 	}
 	h2 {
-		font-size:13pt;
+		font-weight:bold;
 	}
 	h3, h4 {
-		font:normal 11.59pt 'wasabilight';
+		font:normal 10pt 'veteran_typewriterregular';
 	}
 	h4 {
-		font-size:8.69pt;
+		font-size:9pt;
 	}
 	p {
 	  margin: 0 0 5px;
 	}
 	strong {
-		font-family:'wasabibook';
+		font-family:'veteran_typewriterregular';
 	}
 	table {
 		width:100%;
@@ -75,15 +69,15 @@
 		padding: 4px;
 		line-height: 1.42857143;
 		vertical-align: top;
-		font:normal 10pt 'wasabibook';
+		font:normal 9pt 'veteran_typewriterregular';
 	}
 	table > thead > tr > th {
 		border-bottom: 1px solid #ddd;
-		font-size:12pt;
+		font-size:10pt;
 	}
 	table > tbody > tr:nth-child(odd) > td,
 	table > tbody > tr:nth-child(odd) > th {
-		background-color: #ECECEC !important;
+		background-color: #D9F6F6 !important;
 	}
 	.uppercase {
 		text-transform:uppercase;
@@ -97,14 +91,14 @@
 	.mylabel {
 		padding: .1em .1em .2em;
 		font-weight: bold;
-		background-color: #ECECEC !important;
-		font:normal 11pt 'wasabilight';
+		background-color: #D9F6F6 !important;
+		font:normal 9pt 'veteran_typewriterregular';
 	}
 	.mylabel-rounded {
 		display:inline-block;
 		padding:1em 2em;
-		background-color: #ECECEC !important;
-		font:normal 8pt 'wasabilight';
+		background-color: #D9F6F6 !important;
+		font:normal 9pt 'veteran_typewriterregular';
 		border-radius:2.5em;
 	}
 	.mylabel-rounded strong {
@@ -123,35 +117,38 @@
 </head>
 <body>
     <header>
-	    <div id="logo">
-        	@if(!string.IsNullOrEmpty(ViewBag.Store.Logo)) {
-            <img src="@Url.Content(ViewBag.Store.Logo)" alt="Logo" />
-            }
-	    </div>
-        <h1 class="uppercase">
-            @if (!string.IsNullOrEmpty (ViewBag.TaxpayerName)) {
-        		@ViewBag.TaxpayerName<br/>
-        	}
-        	@if (!string.IsNullOrEmpty (ViewBag.Taxpayer)) {
-        		@ViewBag.Taxpayer
-        	}
-        </h1>
-        <h3>
-        	@ViewBag.Address.StreetAndNumber<br/>
-        	@ViewBag.Address.Neighborhood,
-    	@if (!string.IsNullOrEmpty (ViewBag.Address.Locality)) {
-        	<text>@ViewBag.Address.Locality,</text>
-    	}
-        	@ViewBag.Address.PostalCode<br/>
-        	@ViewBag.Address.Borough,
-        	@ViewBag.Address.State
-    	</h3>
-    	<h4>
-    		@Resources.TaxRegime:
-    		@Html.DisplayFor(x => x.IssuerRegime)
-    	</h4>
+    	<div class="row">
+			<div class="col-xs-5 text-right">
+	        	@if(!string.IsNullOrEmpty(ViewBag.Store.Logo)) {
+	            <img class="logo" src='@Url.Content("~/Content/images/tinbox.png")' alt="Logo" />
+	            }
+	 		</div>
+			<div class="col-xs-6 text-center" style="padding-top:3mm">
+		        <h1 class="text-center uppercase">
+		            @if (!string.IsNullOrEmpty (ViewBag.TaxpayerName)) {
+		        		@ViewBag.TaxpayerName<br/>
+		        	}
+		        	@if (!string.IsNullOrEmpty (ViewBag.Taxpayer)) {
+		        		@ViewBag.Taxpayer
+		        	}
+		        </h1>
+		        <h3 class="text-center">
+		        	@ViewBag.Address.StreetAndNumber,
+		        	@ViewBag.Address.Neighborhood,
+		    	@if (!string.IsNullOrEmpty (ViewBag.Address.Locality)) {
+		        	<text>@ViewBag.Address.Locality,</text>
+		    	}
+		        	@ViewBag.Address.PostalCode<br/>
+		        	@ViewBag.Address.Borough,
+		        	@ViewBag.Address.State
+		    	</h3>
+		    	<h4 class="text-center">
+		    		@Resources.TaxRegime:
+		    		@Html.DisplayFor(x => x.IssuerRegime)
+		    	</h4>
+	 		</div>
+		</div>
     </header>
-
 	<div class="row">
 		<div class="col-xs-6 text-left">
 			<div class="row">
@@ -345,12 +342,12 @@
 	<script type="text/javascript">
 	$(function() {
 		$('body, select, input, textarea, button, submit, form').prop('disabled', true);
-		window.print();
+		/*window.print();
 		setTimeout(function() {
 		    $('body').bind('mousemove click keypress', function () {
 		        window.close();                      
 		    });
-		}, 500);
+		}, 500);*/
 	});
 	</script>
 </body>
