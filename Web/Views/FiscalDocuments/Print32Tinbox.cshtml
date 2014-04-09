@@ -340,14 +340,14 @@
 	</div>
 
 	<script type="text/javascript">
-	$(function() {
+	$(window).bind("load", function() {
 		$('body, select, input, textarea, button, submit, form').prop('disabled', true);
-		/*window.print();
+		window.print();
 		setTimeout(function() {
 		    $('body').bind('mousemove click keypress', function () {
 		        window.close();                      
 		    });
-		}, 500);*/
+		}, 500);
 	});
 	</script>
 </body>
