@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Models
 @using Mictlanix.BE.Web.Helpers
@@ -343,7 +343,7 @@
 	</div>
 
 	<script type="text/javascript">
-	$(function() {
+	$(window).bind("load", function() {
 		$('body, select, input, textarea, button, submit, form').prop('disabled', true);
 		window.print();
 		setTimeout(function() {
