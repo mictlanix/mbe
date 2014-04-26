@@ -188,7 +188,7 @@ namespace Mictlanix.BE.Web.Controllers
 		public ActionResult Taxpayers (int id)
 		{
 			var item = Customer.Find (id);
-			return PartialView ("../CustomerTaxpayers/_Index", item.Taxpayers);
+			return PartialView ("_Taxpayers", item.Taxpayers);
 		}
 
 		public JsonResult GetSuggestions (string pattern)
@@ -204,9 +204,10 @@ namespace Mictlanix.BE.Web.Controllers
 		public JsonResult ListTaxpayers (int id)
 		{
 			JsonResult result = new JsonResult();
-			var qry = from x in CustomerTaxpayer.Queryable
-					  where x.Customer.Id == id
-					  select new { id = x.Id, name = string.Format("{1} ({0})", x.Id, x.Name) };
+			var qry = from x in Customer.Queryable
+					  from y in x.Taxpayers
+					  where x.Id == id
+					  select new { id = y.Id, name = string.Format("{1} ({0})", y.Id, y.Name) };
 			
 			result = Json(qry.ToList());
 			result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;

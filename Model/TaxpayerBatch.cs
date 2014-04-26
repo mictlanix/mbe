@@ -20,7 +20,7 @@ namespace Mictlanix.BE.Model
 		
 		[BelongsTo("taxpayer")]
 		[Display(Name = "Taxpayer", ResourceType = typeof(Resources))]
-		public virtual Taxpayer Taxpayer { get; set; }
+		public virtual TaxpayerIssuer Taxpayer { get; set; }
 		
 		[Property]
 		[Display(Name = "Batch", ResourceType = typeof(Resources))]

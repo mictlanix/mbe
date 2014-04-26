@@ -4332,9 +4332,9 @@ namespace Mictlanix.BE {
 			}
 		}
 		
-		public static string CustomerTaxpayerAlreadyExists {
+		public static string TaxpayerRecipientAlreadyExists {
 			get {
-				return ResourceManager.GetString("CustomerTaxpayerAlreadyExists", resourceCulture);
+				return ResourceManager.GetString("TaxpayerRecipientAlreadyExists", resourceCulture);
 			}
 		}
 		
@@ -4845,6 +4845,12 @@ namespace Mictlanix.BE {
 		public static string QuantityShort {
 			get {
 				return ResourceManager.GetString("QuantityShort", resourceCulture);
+			}
+		}
+
+		public static string TaxpayerRecipients {
+			get {
+				return ResourceManager.GetString("TaxpayerRecipients", resourceCulture);
 			}
 		}
     }

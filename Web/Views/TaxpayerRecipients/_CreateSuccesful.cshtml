@@ -1,0 +1,14 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model TaxpayerRecipient
+@{
+    var Privilege = Html.GetPrivilege(Html.CurrentUser() ?? new User(), SystemObjects.Products);
+    ViewBag.Privilege = Privilege;
+}
+@Html.Partial("_Item", Model)
+<script type='text/javascript'>
+$('#taxpayers tr:first').after($('#id\\:@Model.Id'));
+$('#taxpayer-modal').modal('hide');
+bindModal('#id\\:@Model.Id a.open-modal');
+</script>

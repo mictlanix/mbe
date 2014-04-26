@@ -8,6 +8,7 @@
                              Html.GetPrivilege(CurrentUser, SystemObjects.Labels).AllowRead ||
                         	 Html.GetPrivilege(CurrentUser, SystemObjects.PriceLists).AllowRead ||
                              Html.GetPrivilege(CurrentUser, SystemObjects.Customers).AllowRead ||
+                             Html.GetPrivilege(CurrentUser, SystemObjects.TaxpayerRecipients).AllowRead ||
                              Html.GetPrivilege(CurrentUser, SystemObjects.Suppliers).AllowRead ||
                              Html.GetPrivilege(CurrentUser, SystemObjects.Employees).AllowRead ||
                              Html.GetPrivilege(CurrentUser, SystemObjects.Warehouses).AllowRead ||
@@ -107,6 +108,12 @@
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("Index", "Customers") ? "gbm0l" : "")"
                                    href="@Url.Action("Index", "Customers")">@Resources.Title_Customer</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.TaxpayerRecipients).AllowRead) {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "TaxpayerRecipients") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "TaxpayerRecipients")">@Resources.TaxpayerRecipients</a>
                             </li>
                             }
                             @if (Html.GetPrivilege(CurrentUser, SystemObjects.Suppliers).AllowRead) {
