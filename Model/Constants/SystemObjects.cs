@@ -144,6 +144,8 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "ProductSalesByModel", ResourceType = typeof(Resources))]
 		ProductSalesByModelReport,
 		[Display(Name = "ProductSalesByBrand", ResourceType = typeof(Resources))]
-		ProductSalesByBrandReport
+		ProductSalesByBrandReport,
+		[Display(Name = "TaxpayerRecipients", ResourceType = typeof(Resources))]
+		TaxpayerRecipients
     }
 }

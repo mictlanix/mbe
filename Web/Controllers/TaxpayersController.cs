@@ -47,7 +47,7 @@ namespace Mictlanix.BE.Web.Controllers
     {
 		public ActionResult Index ()
         {
-            var qry = from x in Taxpayer.Queryable
+            var qry = from x in TaxpayerIssuer.Queryable
                       orderby x.Name
                       select x;
 
@@ -60,7 +60,7 @@ namespace Mictlanix.BE.Web.Controllers
 
 		public ActionResult Details (string id)
 		{
-			var entity = Taxpayer.Find (id);
+			var entity = TaxpayerIssuer.Find (id);
 
 			if (Request.IsAjaxRequest ()) {
 				return PartialView ("_Details", entity);
@@ -75,13 +75,13 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 
         [HttpPost]
-        public ActionResult Create (Taxpayer item)
+        public ActionResult Create (TaxpayerIssuer item)
 		{
 			if (!string.IsNullOrEmpty (item.Id)) {
-				var entity = Taxpayer.TryFind (item.Id);
+				var entity = TaxpayerIssuer.TryFind (item.Id);
 
 				if(entity != null) {
-					ModelState.AddModelError ("", Resources.CustomerTaxpayerAlreadyExists);
+					ModelState.AddModelError ("", Resources.TaxpayerRecipientAlreadyExists);
 				}
 			}
 			
@@ -111,13 +111,13 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Edit (string id)
 		{
-			var item = Taxpayer.Find (id);
+			var item = TaxpayerIssuer.Find (id);
 			item.HasAddress = (item.Address != null);
 			return PartialView ("_Edit", item);
 		}
 
         [HttpPost]
-		public ActionResult Edit (Taxpayer item)
+		public ActionResult Edit (TaxpayerIssuer item)
 		{
 			if(!item.HasAddress) {
 				ModelState.Where(x => x.Key.StartsWith("Address.")).ToList().ForEach(x => x.Value.Errors.Clear());
@@ -128,7 +128,7 @@ namespace Mictlanix.BE.Web.Controllers
 				return PartialView ("_Edit", item);
 			}
 			
-			var entity = Taxpayer.Find (item.Id);
+			var entity = TaxpayerIssuer.Find (item.Id);
 			var address = entity.Address;
 			
 			entity.HasAddress = (address != null);
@@ -163,14 +163,14 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Delete(string id)
 		{
-			var item = Taxpayer.Find (id);
+			var item = TaxpayerIssuer.Find (id);
 			return PartialView ("_Delete", item);
         }
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(string id)
 		{
-			var item = Taxpayer.Find (id);
+			var item = TaxpayerIssuer.Find (id);
 			
 			try {
 				using (var scope = new TransactionScope ()) {
@@ -248,7 +248,7 @@ namespace Mictlanix.BE.Web.Controllers
 			entity.KeyPassword = item.KeyPassword;
 			entity.NotBefore = cert.NotBefore;
 			entity.NotAfter = cert.NotAfter;
-			entity.Taxpayer = Taxpayer.Find (item.TaxpayerId);
+			entity.Taxpayer = TaxpayerIssuer.Find (item.TaxpayerId);
 
 			using (var scope = new TransactionScope ()) {
 				foreach(var x in entity.Taxpayer.Certificates) {
@@ -265,7 +265,7 @@ namespace Mictlanix.BE.Web.Controllers
 
         public JsonResult GetSuggestions (string pattern)
         {
-			var query = from x in Taxpayer.Queryable
+			var query = from x in TaxpayerIssuer.Queryable
                       	where x.Id.Contains (pattern) ||
 							x.Name.Contains (pattern)
 			            select new { id = x.Id, name = x.ToString () };

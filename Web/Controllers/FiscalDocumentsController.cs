@@ -144,9 +144,9 @@ namespace Mictlanix.BE.Web.Controllers
 		{
 			TaxpayerBatch batch = null;
 
-			item.Issuer = Taxpayer.TryFind (item.IssuerId);
+			item.Issuer = TaxpayerIssuer.TryFind (item.IssuerId);
 			item.Customer = Customer.TryFind (item.CustomerId);
-			var recipient = CustomerTaxpayer.TryFind (item.Recipient);
+			var recipient = TaxpayerRecipient.TryFind (item.Recipient);
 
 			if (recipient != null) {
 				item.Recipient = recipient.Id;
@@ -252,7 +252,7 @@ namespace Mictlanix.BE.Web.Controllers
 		public ActionResult SetIssuer (int id, string value)
 		{
 			var entity = FiscalDocument.Find (id);
-			var item = Taxpayer.TryFind (value);
+			var item = TaxpayerIssuer.TryFind (value);
 
 			if (entity.IsCompleted || entity.IsCancelled) {
 				Response.StatusCode = 400;
@@ -332,7 +332,7 @@ namespace Mictlanix.BE.Web.Controllers
 		public ActionResult SetRecipient (int id, string value)
 		{
 			var entity = FiscalDocument.Find (id);
-			var item = CustomerTaxpayer.TryFind (value);
+			var item = TaxpayerRecipient.TryFind (value);
 
 			if (entity.IsCompleted || entity.IsCancelled) {
 				Response.StatusCode = 400;

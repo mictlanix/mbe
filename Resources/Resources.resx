@@ -1551,8 +1551,8 @@ Realizada el: {0:d}</value>
   <data name="CustomerTaxpayers" xml:space="preserve">
     <value>Datos Fiscales</value>
   </data>
-  <data name="CustomerTaxpayerAlreadyExists" xml:space="preserve">
-    <value>El RFC ya existe o está asociado a otro cliente.</value>
+  <data name="TaxpayerRecipientAlreadyExists" xml:space="preserve">
+    <value>El RFC ya existe.</value>
   </data>
   <data name="Scheme" xml:space="preserve">
     <value>Esquema</value>
@@ -1799,5 +1799,8 @@ Realizada el: {0:d}</value>
   </data>
   <data name="Template" xml:space="preserve">
     <value>Plantilla</value>
+  </data>
+  <data name="TaxpayerRecipients" xml:space="preserve">
+    <value>RFCs</value>
   </data>
 </root>
