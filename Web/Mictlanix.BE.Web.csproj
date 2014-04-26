@@ -215,12 +215,12 @@
     <Compile Include="Controllers\ExchangeRatesController.cs" />
     <Compile Include="Controllers\SalesOrdersController.cs" />
     <Compile Include="Controllers\DeliveryOrdersController.cs" />
-    <Compile Include="Controllers\CustomerTaxpayersController.cs" />
     <Compile Include="Helpers\CFDHelpers.cs" />
     <Compile Include="Controllers\POSController.cs" />
     <Compile Include="Controllers\LabelsController.cs" />
     <Compile Include="Helpers\ModelHelpers.cs" />
     <Compile Include="Controllers\CustomerRefundsController.cs" />
+    <Compile Include="Controllers\TaxpayerRecipientsController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
@@ -465,27 +465,17 @@
     <Content Include="Views\Contacts\_Edit.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Contact.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Contact.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\CustomerTaxpayer.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\CustomerTaxpayer.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Boolean.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Taxpayer.cshtml" />
     <Content Include="Views\Taxpayers\_Create.cshtml" />
     <Content Include="Views\Taxpayers\_Edit.cshtml" />
     <Content Include="Views\Taxpayers\_Delete.cshtml" />
     <Content Include="Views\Taxpayers\_Refresh.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\FiscalScheme.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\FiscalCertificationProvider.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\Taxpayer.cshtml" />
     <Content Include="Views\ExchangeRates\_Index.cshtml" />
     <Content Include="Views\ExchangeRates\Create.cshtml" />
     <Content Include="Views\ExchangeRates\Delete.cshtml" />
     <Content Include="Views\ExchangeRates\Index.cshtml" />
-    <Content Include="Views\CustomerTaxpayers\_Create.cshtml" />
-    <Content Include="Views\CustomerTaxpayers\_Delete.cshtml" />
-    <Content Include="Views\CustomerTaxpayers\_Details.cshtml" />
-    <Content Include="Views\CustomerTaxpayers\_Edit.cshtml" />
-    <Content Include="Views\CustomerTaxpayers\_Index.cshtml" />
-    <Content Include="Views\CustomerTaxpayers\_Refresh.cshtml" />
     <Content Include="Views\SalesOrders\_Index.cshtml" />
     <Content Include="Views\SalesOrders\Edit.cshtml" />
     <Content Include="Views\SalesOrders\Index.cshtml" />
@@ -755,6 +745,21 @@
     <Content Include="Content\bootstrap3\js\bootstrap.min.js" />
     <Content Include="Views\FiscalDocuments\Print32Tinbox.cshtml" />
     <Content Include="Content\fonts\secrettypewriter\stylesheet.css" />
+    <Content Include="Views\Shared\DisplayTemplates\TaxpayerRecipient.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\TaxpayerRecipient.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\TaxpayerIssuer.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\TaxpayerIssuer.cshtml" />
+    <Content Include="Views\TaxpayerRecipients\_Create.cshtml" />
+    <Content Include="Views\TaxpayerRecipients\_Delete.cshtml" />
+    <Content Include="Views\TaxpayerRecipients\_Details.cshtml" />
+    <Content Include="Views\TaxpayerRecipients\_Edit.cshtml" />
+    <Content Include="Views\TaxpayerRecipients\_Refresh.cshtml" />
+    <Content Include="Views\Customers\_Taxpayers.cshtml" />
+    <Content Include="Views\TaxpayerRecipients\_Index.cshtml" />
+    <Content Include="Views\TaxpayerRecipients\Index.cshtml" />
+    <Content Include="Views\TaxpayerRecipients\_Item.cshtml" />
+    <Content Include="Views\TaxpayerRecipients\_CreateSuccesful.cshtml" />
+    <Content Include="Views\TaxpayerRecipients\_DeleteSuccesful.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

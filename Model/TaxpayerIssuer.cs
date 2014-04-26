@@ -4,7 +4,7 @@
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.com>
 // 
-// Copyright (C) 2013 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,43 +28,49 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
-using DataAnnotationsExtensions;
+using System.ComponentModel.DataAnnotations;
 
 namespace Mictlanix.BE.Model
 {   
-	[ActiveRecord("customer_taxpayer", Lazy = true)]
-	public class CustomerTaxpayer : ActiveRecordLinqBase<CustomerTaxpayer>
+	[ActiveRecord("taxpayer_issuer", Lazy = true)]
+    public class TaxpayerIssuer : ActiveRecordLinqBase<TaxpayerIssuer>
     {
-		public CustomerTaxpayer ()
+		IList<TaxpayerBatch> batches = new List<TaxpayerBatch>();
+		IList<TaxpayerCertificate> certificates = new List<TaxpayerCertificate>();
+		
+        public TaxpayerIssuer()
 		{
 		}
 
-		[PrimaryKey("customer_taxpayer_id")]
+		[PrimaryKey("taxpayer_issuer_id")]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(13, MinimumLength = 12, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "TaxpayerId", ResourceType = typeof(Resources))]
 		public virtual string Id { get; set; }
 		
         [Property]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(250, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "TaxpayerName", ResourceType = typeof(Resources))]
 		public virtual string Name { get; set; }
-		
+
 		[Property]
-		[Email(ErrorMessageResourceName = "Validation_Email", ErrorMessageResourceType = typeof(Resources))]
-		[Display(Name = "Email", ResourceType = typeof(Resources))]
+        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+        [StringLength(250, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+        [Display(Name = "TaxRegime", ResourceType = typeof(Resources))]
+		public virtual string Regime { get; set; }
+
+		[Property]
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[StringLength(80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-		public virtual string Email { get; set; }
-		
-		[BelongsTo("customer", NotNull = true, Lazy = FetchWhen.OnInvoke)]
-		[Display(Name = "Customer", ResourceType = typeof(Resources))]
-		public virtual Customer Customer { get; set; }
+		[Display(Name = "Scheme", ResourceType = typeof(Resources))]
+		public virtual FiscalScheme Scheme { get; set; }
+
+		[Property]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[Display(Name = "Provider", ResourceType = typeof(Resources))]
+		public virtual FiscalCertificationProvider Provider { get; set; }
 
 		[Display(Name = "Address", ResourceType = typeof(Resources))]
 		public virtual bool HasAddress { get; set; }
@@ -72,17 +78,30 @@ namespace Mictlanix.BE.Model
 		[BelongsTo("address", Lazy = FetchWhen.OnInvoke)]
 		[Display(Name = "Address", ResourceType = typeof(Resources))]
 		public virtual Address Address { get; set; }
+		
+		[HasMany(typeof(TaxpayerCertificate), Table = "taxpayer_certificate", ColumnKey = "taxpayer", Lazy = true)]
+		public virtual IList<TaxpayerCertificate> Certificates {
+			get { return certificates; }
+			set { certificates = value; }
+		}
 
+		[HasMany(typeof(TaxpayerBatch), Table = "taxpayer_document", ColumnKey = "taxpayer", Lazy = true)]
+		public virtual IList<TaxpayerBatch> Batches {
+			get { return batches; }
+			set { batches = value; }
+		}
+		
         #region Override Base Methods
 
 		public override string ToString ()
 		{
-			return string.Format ("{1} ({0})", Id, Name);
+			var format = string.IsNullOrWhiteSpace (Name) ? "{0}" : "{0} ({1})";
+			return string.Format (format, Id, Name);
 		}
 
 		public override bool Equals (object obj)
 		{
-			CustomerTaxpayer other = obj as CustomerTaxpayer;
+			TaxpayerIssuer other = obj as TaxpayerIssuer;
 
 			if (other == null)
 				return false;

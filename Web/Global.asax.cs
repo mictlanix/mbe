@@ -56,12 +56,6 @@ namespace Mictlanix.BE.Web
 				"Pricing/{product}/EditPrice/{list}/{value}",
 				new { controller = "Pricing", action = "EditPrice", product = @"\d+", list = @"\d+", value = UrlParameter.Optional }
 			);
-			
-			routes.MapRoute (
-				"CustomerTaxpayers_Create",
-				"CustomerTaxpayers/Create/{customerId}",
-				new { controller = "CustomerTaxpayers", action = "Create", customerId = @"\d+" }
-			);
 
 			routes.MapRoute (
 				"Inventory_AssignLotSerialNumbers",

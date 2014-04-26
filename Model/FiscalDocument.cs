@@ -84,7 +84,7 @@ namespace Mictlanix.BE.Model
 		
         [BelongsTo("issuer")]
 		[Display(Name = "Issuer", ResourceType = typeof(Resources))]
-		public virtual Taxpayer Issuer { get; set; }
+		public virtual TaxpayerIssuer Issuer { get; set; }
 		
 		[Property("issuer_name")]
 		[Display(Name = "IssuerName", ResourceType = typeof(Resources))]

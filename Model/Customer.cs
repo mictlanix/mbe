@@ -40,7 +40,7 @@ namespace Mictlanix.BE.Model
 	{
         IList<Address> addresses = new List<Address>();
 		IList<Contact> contacts = new List<Contact>();
-		IList<CustomerTaxpayer> taxpayers = new List<CustomerTaxpayer>();
+		IList<TaxpayerRecipient> taxpayers = new List<TaxpayerRecipient>();
 
         [PrimaryKey(PrimaryKeyType.Identity, "customer_id")]
 		public virtual int Id { get; set; }
@@ -108,8 +108,8 @@ namespace Mictlanix.BE.Model
             set { contacts = value; }
         }
 		
-		[HasMany( typeof(CustomerTaxpayer), Table = "customer_taxpayer", ColumnKey = "customer", Lazy = true)]
-		public virtual IList<CustomerTaxpayer> Taxpayers
+		[HasAndBelongsToMany( typeof(TaxpayerRecipient), Table = "customer_taxpayer", ColumnKey = "customer", ColumnRef = "taxpayer", Lazy = true)]
+		public virtual IList<TaxpayerRecipient> Taxpayers
 		{
 			get { return taxpayers; }
 			set { taxpayers = value; }

@@ -52,9 +52,9 @@
     <div class='tab-content'>
 	    <div id='tab-1' class='tab-pane active'>
     	@if(AllowCreateAddresses) {
-	        <p>@Html.ActionLink(Resources.CreateNew, "Create", "CustomerTaxpayers", new { customerId = Model.Id }, new { @class = "button icon add open-modal", data_modal_id = "taxpayer-modal" })</p>
+	        <p>@Html.ActionLink(Resources.CreateNew, "Create", "TaxpayerRecipients", new { customerId = Model.Id }, new { @class = "button icon add open-modal", data_modal_id = "taxpayer-modal" })</p>
     	}
-	    	<div id='taxpayers' data-url='@Url.Action("Taxpayers", new { id = Model.Id })'>@Html.Partial("../CustomerTaxpayers/_Index", Model.Taxpayers)</div>
+	    	<div id='taxpayers' data-url='@Url.Action("Taxpayers", new { id = Model.Id })'>@Html.Partial("_Taxpayers", Model.Taxpayers)</div>
 	    </div>
 	    <div id='tab-2' class='tab-pane'>
     	@if(AllowCreateAddresses) {
