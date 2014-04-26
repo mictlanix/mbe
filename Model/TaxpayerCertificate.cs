@@ -54,7 +54,7 @@ namespace Mictlanix.BE.Model
 
 		[BelongsTo("taxpayer", NotNull = true, Lazy = FetchWhen.OnInvoke)]
 		[Display(Name = "Taxpayer", ResourceType = typeof(Resources))]
-		public virtual Taxpayer Taxpayer { get; set; }
+		public virtual TaxpayerIssuer Taxpayer { get; set; }
 
         [Property("certificate_data")]
         [Display(Name = "Certificate", ResourceType = typeof(Resources))]

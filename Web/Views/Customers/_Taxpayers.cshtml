@@ -1,7 +1,7 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
-@model IEnumerable<CustomerTaxpayer>
+@model IEnumerable<TaxpayerRecipient>
 
 @{
     var CurrentUser = Html.CurrentUser() ?? new User();
@@ -24,13 +24,13 @@
         <td>@Html.DisplayFor(x => item.Address, "String")</td>
         <td class='actions'>
         	@if(Privilege.AllowRead){
-        	    @Html.ActionLink(" ", "Details", "CustomerTaxpayers", new { id = item.Id }, new { @class = "button icon view icon-only open-modal", title = Resources.Details, data_modal_id = "taxpayer-modal" })
+        	    @Html.ActionLink(" ", "Details", "TaxpayerRecipients", new { id = item.Id }, new { @class = "button icon view icon-only open-modal", title = Resources.Details, data_modal_id = "taxpayer-modal" })
             }
         	@if(Privilege.AllowUpdate){
-            	@Html.ActionLink(" ", "Edit", "CustomerTaxpayers", new { id = item.Id }, new { @class = "button icon edit icon-only open-modal", title = Resources.Edit, data_modal_id = "taxpayer-modal" })
+            	@Html.ActionLink(" ", "Edit", "TaxpayerRecipients", new { id = item.Id }, new { @class = "button icon edit icon-only open-modal", title = Resources.Edit, data_modal_id = "taxpayer-modal" })
             }
         	@if(Privilege.AllowDelete){
-            	@Html.ActionLink(" ", "Delete", "CustomerTaxpayers", new { id = item.Id }, new { @class = "button icon delete icon-only open-modal", @title = Resources.Delete, data_modal_id = "taxpayer-modal" })
+            	@Html.ActionLink(" ", "Delete", "TaxpayerRecipients", new { id = item.Id }, new { @class = "button icon delete icon-only open-modal", @title = Resources.Delete, data_modal_id = "taxpayer-modal" })
             }
         </td>
     </tr>

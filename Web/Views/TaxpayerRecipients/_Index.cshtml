@@ -1,0 +1,27 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model Search<TaxpayerRecipient>
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.TaxpayerRecipients);
+    ViewBag.Privilege = Privilege;
+}
+
+<table id='taxpayers'>
+    <tr>
+        <th>@Resources.TaxpayerId</th>
+        <th>@Resources.TaxpayerName</th>
+        <th>@Resources.Email</th>
+        <th>@Resources.Address</th>
+        <th></th>
+    </tr>
+@foreach (var item in Model.Results) {
+    @Html.Partial("_Item", item)
+}
+</table>
+<script type='text/javascript'>
+bindModal('.open-modal');
+</script>

@@ -105,7 +105,7 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult Create (Store item)
 		{
-			item.Taxpayer = Taxpayer.TryFind (item.TaxpayerId);
+			item.Taxpayer = TaxpayerIssuer.TryFind (item.TaxpayerId);
 
 			if (!ModelState.IsValid) {
 				return PartialView ("_Create", item);
@@ -129,7 +129,7 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult Edit (Store item)
         {
-			item.Taxpayer = Taxpayer.TryFind (item.TaxpayerId);
+			item.Taxpayer = TaxpayerIssuer.TryFind (item.TaxpayerId);
 
 			if (!ModelState.IsValid || item.Taxpayer == null) {
 				return PartialView ("_Edit", item);
@@ -140,7 +140,7 @@ namespace Mictlanix.BE.Web.Controllers
 			
 			entity.Code = item.Code;
 			entity.Name = item.Name;
-			entity.Taxpayer = Taxpayer.Find (item.TaxpayerId);
+			entity.Taxpayer = TaxpayerIssuer.Find (item.TaxpayerId);
 			entity.Logo = item.Logo;
 			entity.Location = item.Location;
 			entity.ReceiptMessage = string.Format("{0}", item.ReceiptMessage).Trim ();
