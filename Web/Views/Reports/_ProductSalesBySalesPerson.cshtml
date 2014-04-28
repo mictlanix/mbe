@@ -1,0 +1,37 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model IEnumerable<dynamic>
+
+<table>
+    <tr>
+        <th class='nowrap'>@Resources.SalesOrder</th>
+        <th class='nowrap'>@Resources.Date</th>
+        <th class='nowrap'>@Resources.Model</th>
+        <th class='nowrap'>@Resources.ProductName</th>
+        <th class='nowrap'>@Resources.Units</th>
+        <th class='nowrap'>@Resources.Subtotal</th>
+        <th class='nowrap'>@Resources.Taxes</th>
+        <th class='nowrap'>@Resources.Total</th>
+    </tr>
+@foreach (var item in Model.OrderBy (x => x.Model).ThenBy (x => x.Name)) {
+    <tr>
+        <td class='center stretch'>@item.SalesOrder</td>
+        <td class='date'>@item.Date.ToString(@Resources.DateFormatString)</td>
+        <td class='center stretch'>@item.Model</td>
+        <td>@item.Name</td>
+        <td class='number'>@item.Units.ToString("#,##0.#")</td>
+        <td class='number'>@item.Subtotal.ToString("c")</td>
+        <td class='number'>@((item.Total - item.Subtotal).ToString("c"))</td>
+        <td class='number'>@item.Total.ToString("c")</td>
+    </tr> 
+}
+    <tr>
+    	<td class='right' colspan='4'><b>@Resources.Total</b></td>
+        <td class='number'><b>@Model.Sum(x => (decimal)x.Units).ToString("#,###.#")</b></td>
+        <td class='number'><b>@Model.Sum(x => (decimal)x.Subtotal).ToString("c")</b></td>
+        <td class='number'><b>@Model.Sum(x => (decimal)x.Total - (decimal)x.Subtotal).ToString("c")</b></td>
+        <td class='number'><b>@Model.Sum(x => (decimal)x.Total).ToString("c")</b></td>
+    </tr>
+</table>

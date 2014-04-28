@@ -143,6 +143,8 @@ namespace Mictlanix.BE.Web.Controllers
 			entity.PriceList = item.PriceList;
 			entity.CreditDays = item.CreditDays;
 			entity.CreditLimit = item.CreditLimit;
+			entity.Shipping = item.Shipping;
+			entity.ShippingRequiredDocument = item.ShippingRequiredDocument;
 			entity.Comment = item.Comment;
 
 			using (var scope = new TransactionScope()) {
@@ -191,6 +193,12 @@ namespace Mictlanix.BE.Web.Controllers
 			return PartialView ("_Taxpayers", item.Taxpayers);
 		}
 
+		public ActionResult Discounts (int id)
+		{
+			var item = Customer.Find (id);
+			return PartialView ("_Discounts", item.Discounts);
+		}
+
 		public JsonResult GetSuggestions (string pattern)
 		{
 			var qry = from x in Customer.Queryable
@@ -213,6 +221,125 @@ namespace Mictlanix.BE.Web.Controllers
 			result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
 			
 			return result;
+		}
+
+		[HttpPost]
+		public ActionResult AddTaxpayer (int id, string value)
+		{
+			var item = Customer.TryFind (id);
+			var taxpayer = TaxpayerRecipient.TryFind (value);
+
+			if (item == null) {
+				Response.StatusCode = 400;
+				return Content (Resources.CustomerNotFound);
+			}
+
+			if (taxpayer == null) {
+				Response.StatusCode = 400;
+				return Content (Resources.TaxpayerRecipientNotFound);
+			}
+
+			using (var scope = new TransactionScope ()) {
+				item.Taxpayers.Add (taxpayer);
+				item.Update ();
+			}
+
+			return Json (new { id = id, result = true });
+		}
+
+		[HttpPost]
+		public ActionResult RemoveTaxpayer (int id, string value)
+		{
+			var item = Customer.TryFind (id);
+
+			if (item == null) {
+				Response.StatusCode = 400;
+				return Content (Resources.CustomerNotFound);
+			}
+
+			var taxpayer = item.Taxpayers.SingleOrDefault (x => x.Id == value);
+
+			if (taxpayer == null) {
+				Response.StatusCode = 400;
+				return Content (Resources.TaxpayerRecipientNotFound);
+			}
+
+			using (var scope = new TransactionScope ()) {
+				item.Taxpayers.Remove (taxpayer);
+				item.Update ();
+			}
+
+			return Json (new { id = id, result = true });
+		}
+
+		public ActionResult NewDiscount (int id)
+		{
+			return PartialView ("_NewDiscount");
+		}
+
+		[HttpPost]
+		public ActionResult NewDiscount (int id, CustomerDiscount item)
+		{
+			if (!ModelState.IsValid) {
+				return PartialView ("_NewDiscount", item);
+			}
+
+			item.Discount /= 100m;
+
+			if (item.Discount > 1) {
+				item.Discount = 1;
+			} else if (item.Discount < 0) {
+				item.Discount = 0;
+			}
+
+			using (var scope = new TransactionScope()) {
+				item.Customer = Customer.Find (id);
+				item.Product = Product.Find (item.ProductId);
+				item.CreateAndFlush ();
+			}
+
+			return PartialView ("_Refresh");
+		}
+
+		[HttpPost]
+		public ActionResult SetDiscount (int id, string value)
+		{
+			var entity = CustomerDiscount.Find (id);
+			bool success;
+			decimal val;
+
+			success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out val);
+			val /= 100m;
+
+			if (success && val >= 0 && val <= 1) {
+				entity.Discount = val;
+
+				using (var scope = new TransactionScope()) {
+					entity.UpdateAndFlush ();
+				}
+			}
+
+			return Json (new { 
+				id = entity.Id,
+				value = entity.FormattedValueFor (x => x.Discount)
+			});
+		}
+
+		[HttpPost]
+		public ActionResult RemoveDiscount (int id)
+		{
+			var entity = CustomerDiscount.Find (id);
+
+			if (entity == null) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemNotFound);
+			}
+
+			using (var scope = new TransactionScope ()) {
+				entity.DeleteAndFlush ();
+			}
+
+			return Json (new { id = id, result = true });
 		}
     }
 }

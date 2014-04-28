@@ -813,7 +813,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
     function show_dropdown_hint () {
         if($(input).data("settings").hintText) {
-            dropdown.html("<p>" + escapeHTML($(input).data("settings").hintText) + "</p>");
+            dropdown.html("<p>" + $(input).data("settings").hintText + "</p>");
             show_dropdown();
         }
     }

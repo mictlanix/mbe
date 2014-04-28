@@ -36,17 +36,19 @@ using System.Web.Security;
 using Mictlanix.BE.Model.Validation;
 using Mictlanix.BE.Model;
 
-namespace Mictlanix.BE.Web.Models
-{
+namespace Mictlanix.BE.Web.Models {
 	public class DateRange {
 	    public DateRange()
         {
+			var now = DateTime.Now;
+			StartDate = new DateTime (now.Year, now.Month, 1);
+			EndDate = now.Date.AddDays (1).AddSeconds (-1);
 	    }
 
         public DateRange(DateTime start, DateTime end)
         {
-	        this.StartDate = start;
-	        this.EndDate = end ;
+	        StartDate = start;
+	        EndDate = end ;
 	    }
     
         [DataType(DataType.Date)]
