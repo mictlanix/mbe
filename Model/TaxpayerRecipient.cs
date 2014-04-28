@@ -78,12 +78,12 @@ namespace Mictlanix.BE.Model
 
 		public override bool Equals (object obj)
 		{
-			TaxpayerRecipient other = obj as TaxpayerRecipient;
+			var other = obj as TaxpayerRecipient;
 
 			if (other == null)
 				return false;
 
-			if (string.IsNullOrEmpty(Id) && string.IsNullOrEmpty(other.Id))
+			if (string.IsNullOrEmpty (Id) && string.IsNullOrEmpty (other.Id))
 				return (object)this == other;
 			else
 				return Id == other.Id;

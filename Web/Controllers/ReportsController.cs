@@ -34,6 +34,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
+using NHibernate;
 using NHibernate.Exceptions;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
@@ -201,138 +202,8 @@ namespace Mictlanix.BE.Web.Controllers
 		#endregion
 
 		#region Sales
+				
 
-		public ViewResult SalesByCustomer ()
-		{
-			ViewBag.EditorField = "store";
-			ViewBag.EditorTemplate = "StoreSelector";
-			ViewBag.Title = Resources.SalesByCustomer;
-			return View ("SummaryReport", new DateRange(DateTime.Now, DateTime.Now));
-		}
-
-		[HttpPost]
-		public ActionResult SalesByCustomer (int store, DateRange dates)
-		{
-			var start = dates.StartDate.Date;
-			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
-			var qry = from x in SalesOrder.Queryable
-					from y in x.Details
-					where x.Store.Id == store &&
-						x.IsCompleted &&
-						x.IsPaid &&
-						!x.IsCancelled &&
-						x.Date >= start &&
-						x.Date <= end
-					select new {
-						Id = x.Customer.Id,
-						Name = x.Customer.Name,
-						Units = y.Quantity,
-						Total = y.Quantity * y.Price,
-						Subtotal = y.Quantity * y.Price / (y.TaxRate + 1m)
-					};
-			var qry2 = from x in qry.ToList()
-						group x by new { x.Id, x.Name } into g
-						select new SummaryItem {
-							Id = g.Key.Id.ToString(),
-							Name = g.Key.Name,
-							Units = g.Sum(x => x.Units),
-							Total = g.Sum(x => x.Total),
-							Subtotal = g.Sum(x => x.Subtotal)
-						};
-			var items = qry2.OrderByDescending (x => x.Total).ToList();
-
-			AnalyzeABC (items);
-
-			return PartialView("_SummaryReport", items);
-		}
-
-		public ViewResult SalesBySalesPerson ()
-		{
-			ViewBag.EditorField = "store";
-			ViewBag.EditorTemplate = "StoreSelector";
-			ViewBag.Title =  Resources.SalesBySalesPerson;
-			return View ("SummaryReport", new DateRange(DateTime.Now, DateTime.Now));
-		}
-		
-		[HttpPost]
-		public ActionResult SalesBySalesPerson (int store, DateRange dates)
-		{
-			var start = dates.StartDate.Date;
-			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
-			var qry = from x in SalesOrder.Queryable
-					from y in x.Details
-					where x.Store.Id == store &&
-						x.IsCompleted &&
-						x.IsPaid &&
-						!x.IsCancelled &&
-						x.Date >= start &&
-						x.Date <= end
-					select new {
-						Id = x.SalesPerson.Id,
-						Name = x.SalesPerson.FirstName + " " + x.SalesPerson.LastName,
-						Units = y.Quantity,
-						Total = y.Quantity * y.Price,
-						Subtotal = y.Quantity * y.Price / (y.TaxRate + 1m)
-					};
-			var qry2 = from x in qry.ToList()
-					group x by new { x.Id, x.Name } into g
-					select new SummaryItem {
-						Id = g.Key.Id.ToString (),
-						Name = g.Key.Name,
-						Units = g.Sum(x => x.Units),
-						Total = g.Sum(x => x.Total),
-						Subtotal = g.Sum(x => x.Subtotal)
-					};
-			var items = qry2.OrderByDescending (x => x.Total).ToList();
-
-			AnalyzeABC (items);
-			
-			return PartialView("_SummaryReport", items);
-		}
-		
-		public ViewResult SalesByProduct ()
-		{
-			ViewBag.EditorField = "store";
-			ViewBag.EditorTemplate = "StoreSelector";
-			ViewBag.Title =  Resources.SalesByProduct;
-			return View ("SummaryReport", new DateRange(DateTime.Now, DateTime.Now));
-		}
-		
-		[HttpPost]
-		public ActionResult SalesByProduct (int store, DateRange dates)
-		{
-			var start = dates.StartDate.Date;
-			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
-			var qry = from x in SalesOrder.Queryable
-					  from y in x.Details
-						where x.Store.Id == store &&
-							x.IsCompleted &&
-							x.IsPaid &&
-							!x.IsCancelled &&
-							x.Date >= start &&
-							x.Date <= end
-						select new {
-							Id = y.ProductCode,
-							Name = y.ProductName,
-							Units = y.Quantity,
-							Total = y.Quantity * y.Price,
-							Subtotal = y.Quantity * y.Price / (y.TaxRate + 1m)
-						};
-			var qry2 = from x in qry.ToList()
-						group x by new { x.Id, x.Name } into g
-						select new SummaryItem {
-							Id = g.Key.Id,
-							Name = g.Key.Name,
-							Units = g.Sum(x => x.Units),
-							Total = g.Sum(x => x.Total),
-							Subtotal = g.Sum(x => x.Subtotal)
-						};
-			var items = qry2.OrderByDescending (x => x.Total).ToList();
-			
-			AnalyzeABC (items);
-			
-			return PartialView("_SummaryReport", items);
-		}
 
 		#endregion
 
@@ -587,35 +458,16 @@ namespace Mictlanix.BE.Web.Controllers
 			return PartialView ("_CustomerDebt", query.ToList ());
 		}
 
-		public ViewResult SalesOrderSummary ()
-		{
-			ViewBag.EditorField = "store";
-			ViewBag.EditorTemplate = "StoreSelector";
-			ViewBag.Title = Resources.SalesOrderSummary;
-			return View ("SummaryReport", new DateRange (DateTime.Now, DateTime.Now));
-		}
-
-		[HttpPost]
-		public ActionResult SalesOrderSummary (int store, DateRange dates)
-		{
-			var start = dates.StartDate.Date;
-			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
-			var query = from x in SalesOrder.Queryable
-						where x.Store.Id == store &&
-							x.IsCompleted && !x.IsCancelled &&
-							x.Date >= start && x.Date <= end
-						orderby x.Date
-						select x;
-
-			return PartialView ("_SalesOrderSummary", query.ToList ());
-		}
-
 		public ViewResult FiscalDocuments ()
 		{
 			ViewBag.EditorField = "taxpayer";
 			ViewBag.EditorTemplate = "TaxpayerSelector";
-			ViewBag.Title = Resources.SalesOrderSummary;
-			return View ("SummaryReport", new DateRange (DateTime.Now, DateTime.Now));
+			ViewBag.Title = Resources.FiscalDocumentsReport;
+
+			ViewBag.FieldId = Configuration.Store.Taxpayer.Id;
+			ViewBag.FieldText = Configuration.Store.Taxpayer.Name;
+
+			return View ("SummaryReport", new DateRange ());
 		}
 
 		[HttpPost]
@@ -632,35 +484,12 @@ namespace Mictlanix.BE.Web.Controllers
 			return PartialView ("_FiscalDocuments", query.ToList ());
 		}
 
-		public ViewResult SalesPersonOrders ()
-		{
-			ViewBag.EditorField = "employee";
-			ViewBag.EditorTemplate = "EmployeeSelector";
-			ViewBag.Title = Resources.SalesPersonOrders;
-			return View ("SummaryReport", new DateRange (DateTime.Now, DateTime.Now));
-		}
-
-		[HttpPost]
-		public ActionResult SalesPersonOrders (int employee, DateRange dates)
-		{
-			var start = dates.StartDate.Date;
-			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
-			var query = from x in SalesOrder.Queryable
-		            	where x.SalesPerson.Id == employee &&
-				            x.IsCompleted && !x.IsCancelled &&
-				            x.Date >= start && x.Date <= end
-			            orderby x.Date
-			            select x;
-
-			return PartialView ("_SalesPersonOrders", query.ToList ());
-		}
-
 		public ViewResult CustomerSalesOrders ()
 		{
 			ViewBag.EditorField = "customer";
 			ViewBag.EditorTemplate = "CustomerSelector";
 			ViewBag.Title = Resources.CustomerSalesOrders;
-			return View ("SummaryReport", new DateRange (DateTime.Now, DateTime.Now));
+			return View ("SummaryReport", new DateRange ());
 		}
 
 		[HttpPost]
@@ -683,7 +512,7 @@ namespace Mictlanix.BE.Web.Controllers
 			ViewBag.EditorField = "customer";
 			ViewBag.EditorTemplate = "CustomerSelector";
 			ViewBag.Title = Resources.ProductSalesByCustomer;
-			return View ("SummaryReport", new DateRange (DateTime.Now, DateTime.Now));
+			return View ("SummaryReport", new DateRange ());
 		}
 
 		[HttpPost]
@@ -725,7 +554,7 @@ namespace Mictlanix.BE.Web.Controllers
 			ViewBag.EditorField = "productModel";
 			ViewBag.EditorTemplate = "ProductModelSelector";
 			ViewBag.Title = Resources.ProductSalesByModel;
-			return View ("SummaryReport", new DateRange (DateTime.Now, DateTime.Now));
+			return View ("SummaryReport", new DateRange ());
 		}
 
 		[HttpPost]
@@ -771,7 +600,7 @@ namespace Mictlanix.BE.Web.Controllers
 			ViewBag.EditorField = "brand";
 			ViewBag.EditorTemplate = "ProductBrandSelector";
 			ViewBag.Title = Resources.ProductSalesByBrand;
-			return View ("SummaryReport", new DateRange (DateTime.Now, DateTime.Now));
+			return View ("SummaryReport", new DateRange ());
 		}
 
 		[HttpPost]
@@ -810,6 +639,270 @@ namespace Mictlanix.BE.Web.Controllers
 						};
 
 			return PartialView ("_ProductSalesByCategory", items);
+		}
+
+		public ViewResult SalesBySalesPerson ()
+		{
+			ViewBag.EditorField = "store";
+			ViewBag.EditorTemplate = "StoreSelector";
+			ViewBag.Title =  Resources.SalesBySalesPerson;
+
+			ViewBag.FieldId = Configuration.Store.Id;
+			ViewBag.FieldText = Configuration.Store.Name;
+
+			return View ("SummaryReport", new DateRange ());
+		}
+
+		[HttpPost]
+		public ActionResult SalesBySalesPerson (int store, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			string sql = @"SELECT salesperson SalesPersonId, first_name FirstName, last_name LastName,
+							SUM(quantity) Units,
+							SUM(ROUND(quantity * price * d.exchange_rate * (1 - discount) / IF(tax_included = 0, 1, 1 + tax_rate), 2)) Subtotal,
+							SUM(ROUND(quantity * price * d.exchange_rate * (1 - discount) * IF(tax_included = 0, 1 + tax_rate, 1), 2)) Total
+						FROM sales_order m
+						INNER JOIN sales_order_detail d ON m.sales_order_id = d.sales_order
+						INNER JOIN employee e ON m.salesperson = e.employee_id
+						WHERE m.store = :store AND m.completed = 1 AND m.paid = 1 AND m.cancelled = 0 AND
+							m.date >= :start AND m.date <= :end
+						GROUP BY salesperson, first_name, last_name";
+
+			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate(ISession session, object instance) {
+				return session.CreateSQLQuery (sql)
+					.SetParameter ("start", start)
+					.SetParameter ("end", end)
+					.SetParameter ("store", store)
+					.DynamicList();
+			}, null);
+
+			return PartialView("_SalesBySalesPerson", items);
+		}
+
+		public ViewResult SalesByCustomer ()
+		{
+			ViewBag.EditorField = "store";
+			ViewBag.EditorTemplate = "StoreSelector";
+			ViewBag.Title = Resources.SalesByCustomer;
+
+			ViewBag.FieldId = Configuration.Store.Id;
+			ViewBag.FieldText = Configuration.Store.Name;
+
+			return View ("SummaryReport", new DateRange());
+		}
+
+		[HttpPost]
+		public ActionResult SalesByCustomer (int store, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			string sql = @"SELECT customer CustomerId, name Customer,
+							SUM(quantity) Units,
+							SUM(ROUND(quantity * price * d.exchange_rate * (1 - discount) / IF(tax_included = 0, 1, 1 + tax_rate), 2)) Subtotal,
+							SUM(ROUND(quantity * price * d.exchange_rate * (1 - discount) * IF(tax_included = 0, 1 + tax_rate, 1), 2)) Total
+						FROM sales_order m
+						INNER JOIN sales_order_detail d ON m.sales_order_id = d.sales_order
+						INNER JOIN customer c ON m.customer = c.customer_id
+						WHERE m.store = :store AND m.completed = 1 AND m.paid = 1 AND m.cancelled = 0 AND
+							m.date >= :start AND m.date <= :end
+						GROUP BY customer";
+
+			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate(ISession session, object instance) {
+				return session.CreateSQLQuery (sql)
+					.SetParameter ("start", start)
+					.SetParameter ("end", end)
+					.SetParameter ("store", store)
+					.DynamicList();
+			}, null);
+
+			return PartialView("_SalesByCustomer", items);
+		}
+
+		public ViewResult SalesByProduct ()
+		{
+			ViewBag.EditorField = "store";
+			ViewBag.EditorTemplate = "StoreSelector";
+			ViewBag.Title =  Resources.SalesByProduct;
+
+			ViewBag.FieldId = Configuration.Store.Id;
+			ViewBag.FieldText = Configuration.Store.Name;
+
+			return View ("SummaryReport", new DateRange(DateTime.Now, DateTime.Now));
+		}
+
+		[HttpPost]
+		public ActionResult SalesByProduct (int store, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			string sql = @"SELECT product ProductId, p.model Model, p.name Product,
+							SUM(quantity) Units,
+							SUM(ROUND(quantity * price * d.exchange_rate * (1 - discount) / IF(d.tax_included = 0, 1, 1 + d.tax_rate), 2)) Subtotal,
+							SUM(ROUND(quantity * price * d.exchange_rate * (1 - discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) Total
+						FROM sales_order m
+						INNER JOIN sales_order_detail d ON m.sales_order_id = d.sales_order
+						INNER JOIN product p ON d.product = p.product_id
+						WHERE m.store = :store AND m.completed = 1 AND m.paid = 1 AND m.cancelled = 0 AND
+							m.date >= :start AND m.date <= :end
+						GROUP BY product";
+
+			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate(ISession session, object instance) {
+				return session.CreateSQLQuery (sql)
+					.SetParameter ("start", start)
+					.SetParameter ("end", end)
+					.SetParameter ("store", store)
+					.DynamicList();
+			}, null);
+
+			return PartialView("_SalesByProduct", items);
+		}
+
+		public ViewResult SalesPersonOrders ()
+		{
+			ViewBag.EditorField = "employee";
+			ViewBag.EditorTemplate = "EmployeeSelector";
+			ViewBag.Title = Resources.SalesPersonOrders;
+			return View ("SummaryReport", new DateRange ());
+		}
+
+		[HttpPost]
+		public ActionResult SalesPersonOrders (int employee, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			string sql = @"SELECT sales_order SalesOrder, date Date, name Customer,
+							GROUP_CONCAT(DISTINCT (SELECT GROUP_CONCAT(DISTINCT f.batch, f.serial SEPARATOR ' ')
+								FROM fiscal_document_detail fd LEFT JOIN fiscal_document f ON fd.document = f.fiscal_document_id
+								WHERE fd.order_detail = d.sales_order_detail_id) SEPARATOR ' ') Invoices,
+							SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) / IF(d.tax_included = 0, 1, 1 + d.tax_rate), 2)) Subtotal,
+							SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) Total
+						FROM sales_order m
+						INNER JOIN sales_order_detail d ON m.sales_order_id = d.sales_order
+						INNER JOIN customer c ON m.customer = c.customer_id
+						WHERE m.salesperson = :employee AND m.completed = 1 AND m.paid = 1 AND m.cancelled = 0 AND
+							m.date >= :start AND m.date < :end
+						GROUP BY sales_order";
+
+			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate(ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
+
+				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
+				query.AddScalar ("Date", NHibernateUtil.DateTime);
+				query.AddScalar ("Customer", NHibernateUtil.String);
+				query.AddScalar ("Invoices", NHibernateUtil.String);
+				query.AddScalar ("Subtotal", NHibernateUtil.Decimal);
+				query.AddScalar ("Total", NHibernateUtil.Decimal);
+
+				query.SetDateTime ("start", start);
+				query.SetDateTime ("end", end);
+				query.SetInt32 ("employee", employee);
+
+				return query.DynamicList();
+			}, null);
+
+			return PartialView ("_SalesPersonOrders", items);
+		}
+
+		public ViewResult SalesOrderSummary ()
+		{
+			ViewBag.EditorField = "store";
+			ViewBag.EditorTemplate = "StoreSelector";
+			ViewBag.Title = Resources.SalesOrderSummary;
+
+			ViewBag.FieldId = Configuration.Store.Id;
+			ViewBag.FieldText = Configuration.Store.Name;
+
+			return View ("SummaryReport", new DateRange ());
+		}
+
+		[HttpPost]
+		public ActionResult SalesOrderSummary (int store, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			string sql = @"SELECT date Date, CONCAT(first_name, ' ', last_name) SalesPerson, sales_order SalesOrder, m.due_date DueDate, c.name Customer,
+							GROUP_CONCAT(DISTINCT (SELECT GROUP_CONCAT(DISTINCT f.batch, f.serial SEPARATOR ' ')
+								FROM fiscal_document_detail fd LEFT JOIN fiscal_document f ON fd.document = f.fiscal_document_id
+								WHERE fd.order_detail = d.sales_order_detail_id) SEPARATOR ' ') Invoices,
+							SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) TotalEx,
+							SUM(ROUND(d.quantity * d.price * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) Total,
+							m.currency Currency
+						FROM sales_order m
+						INNER JOIN sales_order_detail d ON m.sales_order_id = d.sales_order
+						INNER JOIN employee e ON m.salesperson = e.employee_id
+						INNER JOIN customer c ON m.customer = c.customer_id
+						WHERE m.store = :store AND m.completed = 1 AND m.cancelled = 0 AND
+							m.date >= :start AND m.date <= :end
+						GROUP BY sales_order";
+
+			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate(ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
+
+				query.AddScalar ("Date", NHibernateUtil.DateTime);
+				query.AddScalar ("SalesPerson", NHibernateUtil.String);
+				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
+				query.AddScalar ("Invoices", NHibernateUtil.String);
+				query.AddScalar ("DueDate", NHibernateUtil.DateTime);
+				query.AddScalar ("Customer", NHibernateUtil.String);
+				query.AddScalar ("TotalEx", NHibernateUtil.Decimal);
+				query.AddScalar ("Total", NHibernateUtil.Decimal);
+				query.AddScalar ("Currency", NHibernateUtil.Int32);
+
+				query.SetDateTime ("start", start);
+				query.SetDateTime ("end", end);
+				query.SetInt32 ("store", store);
+
+				return query.DynamicList();
+			}, null);
+
+			return PartialView ("_SalesOrderSummary", items);
+		}
+
+
+		public ViewResult ProductSalesBySalesPerson ()
+		{
+			ViewBag.EditorField = "employee";
+			ViewBag.EditorTemplate = "EmployeeSelector";
+			ViewBag.Title = Resources.ProductSalesBySalesPerson;
+			return View ("SummaryReport", new DateRange ());
+		}
+
+		[HttpPost]
+		public ActionResult ProductSalesBySalesPerson (int employee, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			string sql = @"SELECT sales_order SalesOrder, date Date, p.model Model, p.name Name,
+							SUM(quantity) Units,
+							SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) / IF(d.tax_included = 0, 1, 1 + d.tax_rate), 2)) Subtotal,
+							SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) Total
+						FROM sales_order m
+						INNER JOIN sales_order_detail d ON m.sales_order_id = d.sales_order
+						INNER JOIN product p ON d.product = p.product_id
+						WHERE m.salesperson = :employee AND m.completed = 1 AND m.cancelled = 0 AND
+							m.date >= :start AND m.date < :end
+						GROUP BY sales_order, product";
+
+			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate(ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
+
+				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
+				query.AddScalar ("Date", NHibernateUtil.DateTime);
+				query.AddScalar ("Model", NHibernateUtil.String);
+				query.AddScalar ("Name", NHibernateUtil.String);
+				query.AddScalar ("Units", NHibernateUtil.Decimal);
+				query.AddScalar ("Subtotal", NHibernateUtil.Decimal);
+				query.AddScalar ("Total", NHibernateUtil.Decimal);
+
+				query.SetDateTime ("start", start);
+				query.SetDateTime ("end", end);
+				query.SetInt32 ("employee", employee);
+
+				return query.DynamicList();
+			}, null);
+
+			return PartialView ("_ProductSalesBySalesPerson", items);
 		}
 
 		#region Helpers

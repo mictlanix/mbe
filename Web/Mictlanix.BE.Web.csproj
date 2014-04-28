@@ -221,6 +221,7 @@
     <Compile Include="Helpers\ModelHelpers.cs" />
     <Compile Include="Controllers\CustomerRefundsController.cs" />
     <Compile Include="Controllers\TaxpayerRecipientsController.cs" />
+    <Compile Include="Helpers\NHibernateExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
@@ -760,6 +761,14 @@
     <Content Include="Views\TaxpayerRecipients\_Item.cshtml" />
     <Content Include="Views\TaxpayerRecipients\_CreateSuccesful.cshtml" />
     <Content Include="Views\TaxpayerRecipients\_DeleteSuccesful.cshtml" />
+    <Content Include="Views\Reports\_SalesBySalesPerson.cshtml" />
+    <Content Include="Views\Reports\_ProductSalesBySalesPerson.cshtml" />
+    <Content Include="Views\Reports\_SalesByCustomer.cshtml" />
+    <Content Include="Views\Reports\_SalesByProduct.cshtml" />
+    <Content Include="Views\Customers\_NewDiscount.cshtml" />
+    <Content Include="Views\Customers\_Discounts.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CustomerDiscount.cshtml" />
+    <Content Include="Views\Customers\_Refresh.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -41,6 +41,7 @@ namespace Mictlanix.BE.Model
         IList<Address> addresses = new List<Address>();
 		IList<Contact> contacts = new List<Contact>();
 		IList<TaxpayerRecipient> taxpayers = new List<TaxpayerRecipient>();
+		IList<CustomerDiscount> discounts = new List<CustomerDiscount>();
 
         [PrimaryKey(PrimaryKeyType.Identity, "customer_id")]
 		public virtual int Id { get; set; }
@@ -82,7 +83,7 @@ namespace Mictlanix.BE.Model
         [Property]
         [DataType(DataType.MultilineText)]
         [Display(Name = "Comment", ResourceType = typeof(Resources))]
-		[StringLength(500, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[StringLength(1024, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
 		public virtual string Comment { get; set; }
 
         [Display(Name = "PriceList", ResourceType = typeof(Resources))]
@@ -93,6 +94,14 @@ namespace Mictlanix.BE.Model
         [BelongsTo("price_list")]
         [Display(Name = "PriceList", ResourceType = typeof(Resources))]
         public virtual PriceList PriceList { get; set; }
+
+		[Property]
+		[Display(Name = "ShippingRequired", ResourceType = typeof(Resources))]
+		public virtual bool Shipping { get; set; }
+
+		[Property("shipping_required_document")]
+		[Display(Name = "ShippingInvoiceRequired", ResourceType = typeof(Resources))]
+		public virtual bool ShippingRequiredDocument { get; set; }
 
         [HasAndBelongsToMany(typeof(Address), Table = "customer_address", ColumnKey = "customer", ColumnRef = "address", Lazy = true)]
 		public virtual IList<Address> Addresses
@@ -113,6 +122,13 @@ namespace Mictlanix.BE.Model
 		{
 			get { return taxpayers; }
 			set { taxpayers = value; }
+		}
+
+		[HasMany(typeof(CustomerDiscount), Table = "customer_discount", ColumnKey = "customer", Lazy = true)]
+		public virtual IList<CustomerDiscount> Discounts
+		{
+			get { return discounts; }
+			set { discounts = value; }
 		}
 
         #region Override Base Methods

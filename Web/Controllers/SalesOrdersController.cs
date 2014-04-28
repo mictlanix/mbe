@@ -513,6 +513,9 @@ namespace Mictlanix.BE.Web.Controllers
 			var price = (from x in ProductPrice.Queryable
 			             where x.Product.Id == product && x.List.Id == pl
 			             select x).SingleOrDefault ();
+			var discount = (from x in CustomerDiscount.Queryable
+							where x.Product.Id == product && x.Customer.Id == entity.Customer.Id
+							select x.Discount).SingleOrDefault ();
 
 			if (entity.IsCompleted || entity.IsCancelled) {
 				Response.StatusCode = 400;
@@ -542,6 +545,7 @@ namespace Mictlanix.BE.Web.Controllers
 				Quantity = p.MinimumOrderQuantity,
 				Cost = cost.Value,
 				Price = price.Value,
+				Discount = discount,
 				Currency = entity.Currency,
 				ExchangeRate = entity.ExchangeRate
 			};

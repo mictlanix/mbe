@@ -16,7 +16,7 @@
     </tr>
 @foreach (var item in Model) {
     <tr>
-        <td class='center stretch'>@Html.DisplayFor(x => item.Id)</td>
+        <td class='center nowrap stretch'>@Html.DisplayFor(x => item.Id)</td>
         <td>@Html.DisplayFor(x => item.Name)</td>
         <td class='number'>@Html.DisplayFor(x => item.Units)</td>
         <td class='number'>@Html.DisplayFor(x => item.Subtotal)</td>
@@ -27,7 +27,7 @@
 }
     <tr>
     	<td class='right' colspan='2'><b>@Resources.Total</b></td>
-        <td class='number'><b>@Model.Sum(x => x.Units)</b></td>
+        <td class='number'><b>@Model.Sum(x => x.Units).ToString("#,###.#")</b></td>
         <td class='number'><b>@Model.Sum(x => x.Subtotal).ToString("c")</b></td>
         <td class='number'><b>@Model.Sum(x => x.Taxes).ToString("c")</b></td>
         <td class='number'><b>@Model.Sum(x => x.Total).ToString("c")</b></td>
