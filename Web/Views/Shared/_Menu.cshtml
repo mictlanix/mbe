@@ -60,7 +60,8 @@
                           Html.GetPrivilege(CurrentUser, SystemObjects.CustomerSalesOrdersReport).AllowRead ||
                           Html.GetPrivilege(CurrentUser, SystemObjects.ProductSalesByCustomerReport).AllowRead ||
                           Html.GetPrivilege(CurrentUser, SystemObjects.ProductSalesByModelReport).AllowRead ||
-                          Html.GetPrivilege(CurrentUser, SystemObjects.ProductSalesByBrandReport).AllowRead;
+                          Html.GetPrivilege(CurrentUser, SystemObjects.ProductSalesByBrandReport).AllowRead ||
+                          Html.GetPrivilege(CurrentUser, SystemObjects.ProductSalesBySalesPerson).AllowRead;
 }
 
 <div id="gb" class='no-print'>
@@ -378,8 +379,7 @@
                 </div>
             </li>
             }
-            @if (ShowReportsMenu)
-            {
+            @if (ShowReportsMenu) {
             <li class="gbt">
                 <a id="reports-menu" class="gbgt" href="javascript:void(0)">
                     <span class="gbtb2"></span>
@@ -428,20 +428,6 @@
                                    href="@Url.Action("Historic", "SupplierReturns")">@Resources.Title_SupplierReturnHistoric</a>
                             </li>
                             }
-                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesByCustomer).AllowRead)
-                            {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("SalesByCustomer", "Reports") ? "gbm0l" : "")"
-                                   href="@Url.Action("SalesByCustomer", "Reports")">@Resources.SalesByCustomer</a>
-                            </li>
-                            }
-                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesBySalesPerson).AllowRead)
-                            {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("SalesBySalesPerson", "Reports") ? "gbm0l" : "")"
-                                   href="@Url.Action("SalesBySalesPerson", "Reports")">@Resources.SalesBySalesPerson</a>
-                            </li>
-                            }
                             @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesByProduct).AllowRead)
                             {
                             <li class="gbmtc">
@@ -485,6 +471,57 @@
                                    href='@Url.Action("CustomerDebt", "Reports")'>@Resources.CustomerDebt</a>
                             </li>
                             }
+
+                            <div class="gbmh"></div>
+
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesByCustomer).AllowRead) {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("SalesByCustomer", "Reports") ? "gbm0l" : "")"
+                                   href="@Url.Action("SalesByCustomer", "Reports")">@Resources.SalesByCustomer</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesBySalesPerson).AllowRead) {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("SalesBySalesPerson", "Reports") ? "gbm0l" : "")"
+                                   href="@Url.Action("SalesBySalesPerson", "Reports")">@Resources.SalesBySalesPerson</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.CustomerSalesOrdersReport).AllowRead) {
+                            <li class='gbmtc'>
+                                <a class='gbmt @(Html.IsMenuSelected("CustomerSalesOrders", "Reports") ? "gbm0l" : "")'
+                                   href='@Url.Action("CustomerSalesOrders", "Reports")'>@Resources.CustomerSalesOrders</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesPersonOrdersReport).AllowRead) {
+                            <li class='gbmtc'>
+                                <a class='gbmt @(Html.IsMenuSelected("SalesPersonOrders", "Reports") ? "gbm0l" : "")'
+                                   href='@Url.Action("SalesPersonOrders", "Reports")'>@Resources.SalesPersonOrders</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.ProductSalesByCustomerReport).AllowRead) {
+                            <li class='gbmtc'>
+                                <a class='gbmt @(Html.IsMenuSelected("ProductSalesByCustomer", "Reports") ? "gbm0l" : "")'
+                                   href='@Url.Action("ProductSalesByCustomer", "Reports")'>@Resources.ProductSalesByCustomer</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.ProductSalesByBrandReport).AllowRead) {
+                            <li class='gbmtc'>
+                                <a class='gbmt @(Html.IsMenuSelected("ProductSalesByBrand", "Reports") ? "gbm0l" : "")'
+                                   href='@Url.Action("ProductSalesByBrand", "Reports")'>@Resources.ProductSalesByBrand</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.ProductSalesByModelReport).AllowRead) {
+                            <li class='gbmtc'>
+                                <a class='gbmt @(Html.IsMenuSelected("ProductSalesByModel", "Reports") ? "gbm0l" : "")'
+                                   href='@Url.Action("ProductSalesByModel", "Reports")'>@Resources.ProductSalesByModel</a>
+                            </li>
+                            }
+                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.ProductSalesBySalesPerson).AllowRead) {
+                            <li class='gbmtc'>
+                                <a class='gbmt @(Html.IsMenuSelected("ProductSalesBySalesPerson", "Reports") ? "gbm0l" : "")'
+                                   href='@Url.Action("ProductSalesBySalesPerson", "Reports")'>@Resources.ProductSalesBySalesPerson</a>
+                            </li>
+                            }
                             @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrderSummaryReport).AllowRead) {
                             <li class='gbmtc'>
                                 <a class='gbmt @(Html.IsMenuSelected("SalesOrderSummary", "Reports") ? "gbm0l" : "")'
@@ -495,36 +532,6 @@
                             <li class='gbmtc'>
                                 <a class='gbmt @(Html.IsMenuSelected("FiscalDocuments", "Reports") ? "gbm0l" : "")'
                                    href='@Url.Action("FiscalDocuments", "Reports")'>@Resources.FiscalDocumentsReport</a>
-                            </li>
-                            }
-                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesPersonOrdersReport).AllowRead) {
-                            <li class='gbmtc'>
-                                <a class='gbmt @(Html.IsMenuSelected("SalesPersonOrders", "Reports") ? "gbm0l" : "")'
-                                   href='@Url.Action("SalesPersonOrders", "Reports")'>@Resources.SalesPersonOrders</a>
-                            </li>
-                            }
-                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.CustomerSalesOrdersReport).AllowRead) {
-                            <li class='gbmtc'>
-                                <a class='gbmt @(Html.IsMenuSelected("CustomerSalesOrders", "Reports") ? "gbm0l" : "")'
-                                   href='@Url.Action("CustomerSalesOrders", "Reports")'>@Resources.CustomerSalesOrders</a>
-                            </li>
-                            }
-                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.ProductSalesByCustomerReport).AllowRead) {
-                            <li class='gbmtc'>
-                                <a class='gbmt @(Html.IsMenuSelected("ProductSalesByCustomer", "Reports") ? "gbm0l" : "")'
-                                   href='@Url.Action("ProductSalesByCustomer", "Reports")'>@Resources.ProductSalesByCustomer</a>
-                            </li>
-                            }
-                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.ProductSalesByModelReport).AllowRead) {
-                            <li class='gbmtc'>
-                                <a class='gbmt @(Html.IsMenuSelected("ProductSalesByModel", "Reports") ? "gbm0l" : "")'
-                                   href='@Url.Action("ProductSalesByModel", "Reports")'>@Resources.ProductSalesByModel</a>
-                            </li>
-                            }
-                            @if (Html.GetPrivilege(CurrentUser, SystemObjects.ProductSalesByBrandReport).AllowRead) {
-                            <li class='gbmtc'>
-                                <a class='gbmt @(Html.IsMenuSelected("ProductSalesByBrand", "Reports") ? "gbm0l" : "")'
-                                   href='@Url.Action("ProductSalesByBrand", "Reports")'>@Resources.ProductSalesByBrand</a>
                             </li>
                             }
                         </ol>

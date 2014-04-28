@@ -287,6 +287,37 @@ namespace Mictlanix.BE.Web.Controllers
 			return Json (new { id = id, value = detail.Discount.ToString ("p"), total = detail.Total.ToString ("c") });
         }
 
+		[HttpPost]
+		public ActionResult SetItemTaxRate (int id, string value)
+		{
+			var entity = PurchaseOrderDetail.Find (id);
+			bool success;
+			decimal val;
+
+			if (entity.Order.IsCompleted || entity.Order.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out val);
+
+			// TODO: VAT value range validation
+			if (success) {
+				entity.TaxRate = val;
+
+				using (var scope = new TransactionScope()) {
+					entity.Update ();
+				}
+			}
+
+			return Json (new { 
+				id = entity.Id,
+				value = entity.FormattedValueFor (x => x.TaxRate),
+				total = entity.FormattedValueFor (x => x.Total), 
+				total2 = entity.FormattedValueFor (x => x.TotalEx)
+			});
+		}
+
         [HttpPost]
 		public JsonResult EditDetailWarehouse (int id, int value)
         {

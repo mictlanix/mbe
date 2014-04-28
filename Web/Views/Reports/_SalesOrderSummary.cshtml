@@ -2,7 +2,7 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
-@model IEnumerable<SalesOrder>
+@model IEnumerable<dynamic>
 
 <table class='table table-condensed'>
 	<thead>
@@ -20,19 +20,26 @@
     <tbody>
 @foreach (var item in Model) {
     <tr>
-        <td class='date'>@Html.DisplayFor(x => item.Date)</td>
-        <td class='nowrap'>@Html.DisplayFor(x => item.SalesPerson.Name)</td>
-        <td class='number'>@Html.DisplayFor(x => item.Id)</td>
-        <td class='date'>@item.InvoiceSerials()</td>
-        <td class='date'>@Html.DisplayFor(x => item.DueDate)</td>
-        <td>@Html.DisplayFor(x => item.Customer.Name)</td>
-        <td class='currency'>@Html.DisplayFor(x => item.TotalEx)</td>
-    @if (item.Currency == Configuration.BaseCurrency) {
+        <td class='date'>@item.Date.ToString("yyyy-MM-dd")</td>
+        <td class='nowrap'>@item.SalesPerson</td>
+        <td class='number'>@item.SalesOrder</td>
+        <td class='center' style='word-wrap:break-word'>@item.Invoices</td>
+        <td class='date'>@item.DueDate</td>
+        <td>@item.Customer</td>
+        <td class='currency'>@item.TotalEx.ToString("c")</td>
+    @if ((CurrencyCode)item.Currency == Configuration.BaseCurrency) {
         <td class='currency'></td>
     } else {
-        <td class='currency'>@Html.DisplayFor(x => item.Total) @Html.DisplayFor(x => item.Currency)</td>
+        <td class='currency'>@item.Total.ToString("c") @((CurrencyCode)item.Currency)</td>
     }
     </tr>
 }
     </tbody>
+    <tfoot>
+	    <tr>
+	        <td class='center' colspan='6'>@Model.Count() @Resources.SalesOrders</td>
+	        <td class='number'><b>@Model.Sum(x => (decimal)x.TotalEx).ToString("c")</b></td>
+	        <td class='number'><b>@Model.Where(x => (CurrencyCode)x.Currency != Configuration.BaseCurrency).Sum(x => (decimal)x.Total).ToString("c")</b></td>
+	    </tr>
+    </tfoot>
 </table>

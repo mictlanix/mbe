@@ -59,6 +59,28 @@ FROM
 
 ALTER TABLE `taxpayer_recipient`
 	DROP COLUMN `customer`;
-	
+
+ALTER TABLE `customer` 
+	CHANGE COLUMN `comment` `comment` VARCHAR(1024) NULL,
+	ADD COLUMN `shipping` TINYINT(1) NOT NULL,
+	ADD COLUMN `shipping_required_document` TINYINT(1) NOT NULL;
+
+CREATE TABLE IF NOT EXISTS `customer_discount` (
+  `customer_discount_id` INT NOT NULL AUTO_INCREMENT,
+  `customer` INT NOT NULL,
+  `product` INT NOT NULL,
+  `discount` DECIMAL(5,4) NOT NULL,
+  PRIMARY KEY (`customer_discount_id`),
+  INDEX `customer_discount_customer_fk` (`customer` ASC),
+  INDEX `customer_discount_product_fk` (`product` ASC),
+  UNIQUE INDEX `customer_discount_unique_idx` (`customer` ASC, `product` ASC),
+  CONSTRAINT `customer_discount_customer_fk`
+    FOREIGN KEY (`customer`) REFERENCES `customer` (`customer_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `customer_discount_product_fk`
+    FOREIGN KEY (`product`) REFERENCES `product` (`product_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE = InnoDB;
+
 commit;
 

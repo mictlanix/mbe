@@ -28,3 +28,10 @@
 <style type='text/css'>
 ul.token-input-list {width:100%;}
 </style>
+<script type="text/javascript">
+$(function() {
+@if (!string.IsNullOrWhiteSpace (Convert.ToString (ViewBag.FieldId))) {
+	<text>$("#@ViewBag.EditorField").tokenInput("add", { id: "@ViewBag.FieldId", name: "@ViewBag.FieldText" });</text>
+}
+});
+</script>
