@@ -11,59 +11,64 @@
     @Html.ValidationSummary(true)
     <fieldset>
         <legend>@Resources.Title_Customer</legend>
+    
+		<div class="row-fluid">
+		  	<div class="span3">@Html.LabelFor(x => x.Code)</div>
+			<div class="span9">@Html.LabelFor(x => x.Name)</div>
+		</div>
+		<div class="row-fluid">
+		  	<div class="span3">
+		        @Html.EditorFor(model => model.Code)
+		        @Html.ValidationMessageFor(model => model.Code)
+	        </div>
+			<div class="span9">
+	            @Html.EditorFor(model => model.Name)
+	            @Html.ValidationMessageFor(model => model.Name)
+			</div>
+		</div>
+		<div class="row-fluid">
+		  	<div class="span3">@Html.LabelFor(x => x.Zone)</div>
+		  	<div class="span3">@Html.LabelFor(x => x.PriceList)</div>
+			<div class="span3">@Html.LabelFor(x => x.CreditLimit)</div>
+		  	<div class="span3">@Html.LabelFor(x => x.CreditDays)</div>
+		</div>
+		<div class="row-fluid">
+		  	<div class="span3">
+	            @Html.EditorFor(model => model.Zone)
+	            @Html.ValidationMessageFor(model => model.Zone)
+            </div>
+		  	<div class="span3">
+	            @Html.EditorFor(model => model.PriceListId)
+	            @Html.ValidationMessageFor(model => model.PriceListId)
+		  	</div>
+			<div class="span3">
+	            @Html.EditorFor(model => model.CreditLimit)
+	            @Html.ValidationMessageFor(model => model.CreditLimit)
+			</div>
+		  	<div class="span3">
+		  		@Html.EditorFor(model => model.CreditDays)   
+		  	</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span12">
+				@Html.EditorFor(x => x.Shipping)
+				@Html.EditorFor(x => x.ShippingRequiredDocument)
+			</div>
+		</div>
+		<div class="row-fluid">
+		  	<div class="span12">@Html.LabelFor(x => x.Comment)</div>
+		</div>
+		<div class="row-fluid">
+		  	<div class="span12">@Html.EditorFor(model => model.Comment)</div>
+		</div>
 
-	    <div class="editor-label">
-	        @Html.LabelFor(model => model.Code)
-	    </div>
-	    <div class="editor-field">
-	        @Html.EditorFor(model => model.Code)
-	        @Html.ValidationMessageFor(model => model.Code)
-	    </div>
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Name)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Name)
-            @Html.ValidationMessageFor(model => model.Name)
-        </div>
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Zone)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Zone)
-            @Html.ValidationMessageFor(model => model.Zone)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.PriceList)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.PriceListId)
-            @Html.ValidationMessageFor(model => model.PriceListId)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.CreditLimit)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.CreditLimit)
-            @Html.ValidationMessageFor(model => model.CreditLimit)
-        </div>
-        <div class="editor-label">
-            @Html.LabelFor(model => model.CreditDays)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.CreditDays)           
-        </div>
-         <div class="editor-label">
-            @Html.LabelFor(model => model.Comment)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Comment)
-        </div>
         <p><button type="submit" class="icon save">@Resources.Create</button></p>
     </fieldset>
 }
 <div id="back-to-list">
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
+<style type="text/css">
+ul.token-input-list { width:100%; }
+div.token-input-dropdown {width:650px;}
+</style>

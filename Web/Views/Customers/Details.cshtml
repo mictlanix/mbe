@@ -37,6 +37,12 @@
 	  	<div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.CreditDays)</div></div>
 	</div>
 	<div class="row-fluid">
+		<div class="span12">
+			@Html.DisplayFor(x => x.Shipping) @Html.DisplayNameFor(x => x.Shipping)
+			@Html.DisplayFor(x => x.ShippingRequiredDocument) @Html.DisplayNameFor(x => x.ShippingRequiredDocument)
+		</div>
+	</div>
+	<div class="row-fluid">
 	  	<div class="span12">@Html.LabelFor(x => x.Comment)</div>
 	</div>
 	<div class="row-fluid">
@@ -48,11 +54,18 @@
         <li class='active'><a href='#tab-1' data-toggle='tab'>@Resources.CustomerTaxpayers</a></li>
         <li><a href='#tab-2' data-toggle='tab'>@Resources.Addresses</a></li>
         <li><a href='#tab-3' data-toggle='tab'>@Resources.Contacts</a></li>
+        <li><a href='#tab-4' data-toggle='tab'>@Resources.Discounts</a></li>
     </ul>
     <div class='tab-content'>
 	    <div id='tab-1' class='tab-pane active'>
     	@if(AllowCreateAddresses) {
-	        <p>@Html.ActionLink(Resources.CreateNew, "Create", "TaxpayerRecipients", new { customerId = Model.Id }, new { @class = "button icon add open-modal", data_modal_id = "taxpayer-modal" })</p>
+	    	<div class='control-group text-right'>
+				<a id='add-taxpayer' class='btn' data-url='@Url.Action("AddTaxpayer", new { id = Model.Id })'
+				   data-type='text' data-placement='left' data-pk='@Model.Id' data-value=''
+				   data-display='false' data-emptytext='' data-emptyclass='' data-highlight='false'>
+					<i class='icon-plus'></i> @Resources.TaxpayerRecipient
+				</a>
+			</div>
     	}
 	    	<div id='taxpayers' data-url='@Url.Action("Taxpayers", new { id = Model.Id })'>@Html.Partial("_Taxpayers", Model.Taxpayers)</div>
 	    </div>
@@ -68,6 +81,10 @@
     	}
 	        <div id='contacts' data-url='@Url.Action("Contacts", new { id = Model.Id })'>@Html.Partial("../Contacts/_Index", Model.Contacts)</div>
 	    </div>
+	    <div id='tab-4' class='tab-pane'>
+	        <p>@Html.ActionLink(Resources.CreateNew, "NewDiscount", new { id = Model.Id }, new { @class = "button icon add open-modal", data_modal_id = "discount-modal" })</p>
+	        <div id='discounts' data-url='@Url.Action("Discounts", new { id = Model.Id })'>@Html.Partial("_Discounts", Model.Discounts)</div>
+	    </div>
     </div>
 </div>
 <div class='row-fluid vspaced'>
@@ -76,3 +93,33 @@
 	@Html.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new { @class = "button icon edit pull-right" })
 }
 </div>
+<script type='text/javascript'>
+$(function () {
+    $('#add-taxpayer').editable({
+		success: function(response, newValue) {
+        	$('#taxpayers').loadUrl();
+            setTimeout(function(){$('#add-taxpayer').editable('setValue', '');},500);
+	    }
+	}).removeClass('editable-click');
+	$('.tab-content').delegate( "a.remove", "click", function (e) {
+		e.preventDefault();
+		var self = $(this);
+
+	    $.post(this.href, function (data) {
+	        if(data.result) {
+	            self.closest('tr').remove();
+	            $('#taxpayers').loadUrl();
+	        }
+	    }, 'json');
+	});
+	$('.tab-content').editable({
+		selector: 'a.editable',
+	    display: function(value, response) {
+	        if (typeof response === 'undefined') 
+	        	return;
+	        
+	        $(this).html(response.value);
+	    }
+	});
+});
+</script>

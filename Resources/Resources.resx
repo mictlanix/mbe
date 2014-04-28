@@ -1803,4 +1803,28 @@ Realizada el: {0:d}</value>
   <data name="TaxpayerRecipients" xml:space="preserve">
     <value>RFCs</value>
   </data>
+  <data name="TaxpayerRecipient" xml:space="preserve">
+    <value>RFC</value>
+  </data>
+  <data name="TaxpayerRecipientNotFound" xml:space="preserve">
+    <value>No se encontró el RFC.</value>
+  </data>
+  <data name="CustomerNotFound" xml:space="preserve">
+    <value>No se encontró el cliente.</value>
+  </data>
+  <data name="ProductSalesBySalesPerson" xml:space="preserve">
+    <value>Productos Vendidos Por Vendedor</value>
+  </data>
+  <data name="ShippingRequired" xml:space="preserve">
+    <value>Requiere Mensajería</value>
+  </data>
+  <data name="ShippingInvoiceRequired" xml:space="preserve">
+    <value>Requiere Envío con Factura</value>
+  </data>
+  <data name="Discounts" xml:space="preserve">
+    <value>Descuentos</value>
+  </data>
+  <data name="ItemNotFound" xml:space="preserve">
+    <value>No se encontró el elemento.</value>
+  </data>
 </root>

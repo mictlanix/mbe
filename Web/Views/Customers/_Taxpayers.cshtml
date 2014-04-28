@@ -30,7 +30,7 @@
             	@Html.ActionLink(" ", "Edit", "TaxpayerRecipients", new { id = item.Id }, new { @class = "button icon edit icon-only open-modal", title = Resources.Edit, data_modal_id = "taxpayer-modal" })
             }
         	@if(Privilege.AllowDelete){
-            	@Html.ActionLink(" ", "Delete", "TaxpayerRecipients", new { id = item.Id }, new { @class = "button icon delete icon-only open-modal", @title = Resources.Delete, data_modal_id = "taxpayer-modal" })
+            	@Html.ActionLink(" ", "RemoveTaxpayer", new { id = ViewContext.RouteData.Values["id"], value = item.Id }, new { @class = "button icon delete icon-only remove", @title = Resources.Delete, data_modal_id = "taxpayer-modal" })
             }
         </td>
     </tr>

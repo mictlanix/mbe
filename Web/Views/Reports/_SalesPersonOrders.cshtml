@@ -2,7 +2,7 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
-@model IEnumerable<SalesOrder>
+@model IEnumerable<dynamic>
 
 @{
     var CurrentUser = Html.CurrentUser() ?? new User();
@@ -16,28 +16,34 @@
 	        <th class='nowrap center'>@Resources.Date</th>
 	        <th class='center'>@Resources.FiscalDocument</th>
 	        <th class='nowrap center'>@Resources.Customer</th>
+	        <th class='nowrap center'>@Resources.Subtotal</th>
+	        <th class='nowrap center'>@Resources.Taxes</th>
 	        <th class='nowrap center'>@Resources.Total</th>
 	    </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.OrderBy (x => x.Date)) {
     <tr>
     @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders).AllowRead) {
-		<td class='number'><a href='@Url.Action("View", "SalesOrders", new { id = item.Id })' target='_blank'>@Html.DisplayFor(x => item.Id)</a></td>
+		<td class='number'><a href='@Url.Action("View", "SalesOrders", new { id = item.SalesOrder })' target='_blank'>@item.SalesOrder</a></td>
 	} else {
-		<td class='number'>@Html.DisplayFor(x => item.Id)</td>
+		<td class='number'>@item.SalesOrder</td>
 	}
-        <td class='date'>@Html.DisplayFor(x => item.Date)</td>
-        <td class='date'>@item.InvoiceSerials()</td>
-        <td>@Html.DisplayFor(x => item.Customer.Name)</td>
-        <td class='currency'>@Html.DisplayFor(x => item.TotalEx)</td>
+        <td class='date'>@item.Date</td>
+        <td class='date'>@item.Invoices</td>
+        <td>@item.Customer</td>
+        <td class='number'>@item.Subtotal.ToString("c")</td>
+        <td class='number'>@((item.Total - item.Subtotal).ToString("c"))</td>
+        <td class='number'>@item.Total.ToString("c")</td>
     </tr>
 }
     </tbody>
     <tfoot>
 	    <tr>
 	        <td colspan='4'/>
-	        <td class='currency'><b>@Model.Sum(x => x.TotalEx).ToString("c")</b></td>
+	        <td class='number'><b>@Model.Sum(x => (decimal)x.Subtotal).ToString("c")</b></td>
+	        <td class='number'><b>@Model.Sum(x => (decimal)x.Total - (decimal)x.Subtotal).ToString("c")</b></td>
+	        <td class='number'><b>@Model.Sum(x => (decimal)x.Total).ToString("c")</b></td>
 	    </tr>
     </tfoot>
 </table>
