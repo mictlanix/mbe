@@ -11,7 +11,7 @@ ALTER TABLE `taxpayer`
 	DROP INDEX `taxpayer_address_fk_idx`;
 
 ALTER TABLE `taxpayer`
-	RENAME TO  `mbe_db`.`taxpayer_issuer`,
+	RENAME TO  `taxpayer_issuer`,
 	CHANGE COLUMN `taxpayer_id` `taxpayer_issuer_id` VARCHAR(13) NOT NULL;
 
 ALTER TABLE `taxpayer_issuer`
