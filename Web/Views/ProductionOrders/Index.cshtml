@@ -5,10 +5,10 @@
 @model Search<SalesOrder>
 
 @{
-    ViewBag.Title = Resources.DeliveryOrders;
+    ViewBag.Title = Resources.ProductionOrders;
 }
 
-<h2>@Resources.DeliveryOrders</h2>
+<h2>@Resources.ProductionOrders</h2>
 
 <div id='master-section'>
 @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {

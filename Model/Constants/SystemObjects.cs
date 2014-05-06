@@ -33,10 +33,8 @@ using System.ComponentModel.DataAnnotations;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 
-namespace Mictlanix.BE.Model
-{
-    public enum SystemObjects : int
-    {
+namespace Mictlanix.BE.Model {
+	public enum SystemObjects : int {
         [Display(Name = "DisplayName_Products", ResourceType = typeof(Resources))]
         Products,
 		[Display(Name = "Labels", ResourceType = typeof(Resources))]
@@ -83,7 +81,7 @@ namespace Mictlanix.BE.Model
         SupplierPayment,
 		[Display(Name = "CustomerRefunds", ResourceType = typeof(Resources))]
 		CustomerRefunds,
-        [Display(Name = "FiscalDocuments", ResourceType = typeof(Resources))]
+		[Display(Name = "FiscalDocuments", ResourceType = typeof(Resources))]
         FiscalDocuments,
         [Display(Name = "DisplayName_Taxpayers", ResourceType = typeof(Resources))]
         Taxpayers,
@@ -148,6 +146,10 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "TaxpayerRecipients", ResourceType = typeof(Resources))]
 		TaxpayerRecipients,
 		[Display(Name = "ProductSalesBySalesPerson", ResourceType = typeof(Resources))]
-		ProductSalesBySalesPerson
+		ProductSalesBySalesPerson,
+		[Display(Name = "StandaloneFiscalDocuments", ResourceType = typeof(Resources))]
+		StandaloneFiscalDocuments,
+		[Display(Name = "ProductionOrders", ResourceType = typeof(Resources))]
+		ProductionOrders
     }
 }

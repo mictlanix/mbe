@@ -1,10 +1,10 @@
 // 
-// DeliveryOrdersController.cs
+// ProductionOrdersController.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.com>
 // 
-// Copyright (C) 2013 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2014 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -42,7 +42,7 @@ using Mictlanix.BE.Web.Helpers;
 namespace Mictlanix.BE.Web.Controllers
 {
 	[Authorize]
-	public class DeliveryOrdersController : Controller
+	public class ProductionOrdersController : Controller
 	{
 		public ViewResult Index ()
 		{
@@ -78,17 +78,15 @@ namespace Mictlanix.BE.Web.Controllers
 
 			if (string.IsNullOrEmpty (search.Pattern)) {
 				query = from x in SalesOrder.Queryable
-						where x.ShipTo != null && x.Store.Id == item.Id &&
-							x.IsCompleted && !x.IsCancelled && !x.IsDelivered
+						where x.Store.Id == item.Id && x.IsCompleted && !x.IsCancelled
 						orderby x.Date descending
 				        select x;
 			} else {
 				query = from x in SalesOrder.Queryable
-						where x.ShipTo != null && x.Store.Id == item.Id &&
-							x.IsCompleted && !x.IsCancelled && !x.IsDelivered && (
-			                x.Customer.Name.Contains (search.Pattern) ||
-			                x.SalesPerson.Nickname.Contains (search.Pattern))
-						orderby x.Date descending
+						where x.Store.Id == item.Id && x.IsCompleted && !x.IsCancelled && (
+				              x.Customer.Name.Contains (search.Pattern) ||
+				              x.SalesPerson.Nickname.Contains (search.Pattern))
+				        orderby x.Date descending
 				        select x;
 			}
 
@@ -98,7 +96,7 @@ namespace Mictlanix.BE.Web.Controllers
 			return search;
 		}
 
-		public ViewResult Edit (int id)
+		public ViewResult View (int id)
 		{
 			var item = SalesOrder.Find (id);
 			return View (item);
