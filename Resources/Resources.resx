@@ -1176,6 +1176,9 @@ Realizada el: {0:d}</value>
   <data name="DeliveryOrder" xml:space="preserve">
     <value>Orden de Entrega</value>
   </data>
+  <data name="DeliveryOrders" xml:space="preserve">
+    <value>Ordenes de Entrega</value>
+  </data>
   <data name="DisplayName_InvoiceInformation" xml:space="preserve">
     <value>Información de la Factura</value>
   </data>
@@ -1826,5 +1829,17 @@ Realizada el: {0:d}</value>
   </data>
   <data name="ItemNotFound" xml:space="preserve">
     <value>No se encontró el elemento.</value>
+  </data>
+  <data name="StandaloneFiscalDocuments" xml:space="preserve">
+    <value>Comprobantes Fiscales Sin Pedido</value>
+  </data>
+  <data name="Production" xml:space="preserve">
+    <value>Producción</value>
+  </data>
+  <data name="ProductionOrder" xml:space="preserve">
+    <value>Orden de Producción</value>
+  </data>
+  <data name="ProductionOrders" xml:space="preserve">
+    <value>Ordenes de Producción</value>
   </data>
 </root>

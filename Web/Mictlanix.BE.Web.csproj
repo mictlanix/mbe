@@ -222,6 +222,7 @@
     <Compile Include="Controllers\CustomerRefundsController.cs" />
     <Compile Include="Controllers\TaxpayerRecipientsController.cs" />
     <Compile Include="Helpers\NHibernateExtensions.cs" />
+    <Compile Include="Controllers\ProductionOrdersController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
@@ -639,12 +640,7 @@
     <Content Include="Views\Stores\_Index.cshtml" />
     <Content Include="Views\SupplierPayments\_Index.cshtml" />
     <Content Include="Views\SupplierReturns\_Historic.cshtml" />
-    <Content Include="Views\DeliveryOrders\Details.cshtml" />
     <Content Include="Views\DeliveryOrders\Print.cshtml" />
-    <Content Include="Views\DeliveryOrders\Index.cshtml" />
-    <Content Include="Views\DeliveryOrders\_MasterView.cshtml" />
-    <Content Include="Views\DeliveryOrders\_DetailView.cshtml" />
-    <Content Include="Views\DeliveryOrders\_Totals.cshtml" />
     <Content Include="Scripts\bootstrap-datepicker.es.js" />
     <Content Include="Scripts\bootstrap-datepicker.js" />
     <Content Include="Content\bootstrap-datepicker.css" />
@@ -769,6 +765,20 @@
     <Content Include="Views\Customers\_Discounts.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\CustomerDiscount.cshtml" />
     <Content Include="Views\Customers\_Refresh.cshtml" />
+    <Content Include="Views\ProductionOrders\_Index.cshtml" />
+    <Content Include="Views\ProductionOrders\Index.cshtml" />
+    <Content Include="Views\ProductionOrders\View.cshtml" />
+    <Content Include="Views\ProductionOrders\_DisplayView.cshtml" />
+    <Content Include="Views\ProductionOrders\_ItemDisplayView.cshtml" />
+    <Content Include="Views\ProductionOrders\Print.cshtml" />
+    <Content Include="Scripts\FontLoader.js" />
+    <Content Include="Views\Shared\_PrintDLayout.cshtml" />
+    <Content Include="Content\printd.css" />
+    <Content Include="Views\DeliveryOrders\_Index.cshtml" />
+    <Content Include="Views\DeliveryOrders\Index.cshtml" />
+    <Content Include="Views\DeliveryOrders\Edit.cshtml" />
+    <Content Include="Views\DeliveryOrders\_DisplayView.cshtml" />
+    <Content Include="Views\DeliveryOrders\_ItemDisplayView.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -32,6 +32,7 @@
 	 			<p>@Html.DisplayFor(x => x.Contact.Name)</p>
  			</div>
 		}
+ 		@if(Model.ShipTo != null) {
 		 	<div class="col-xs-12">
 		 		<p><span class="mylabel">@Resources.ShipTo</span></p>
 	 		</div>
@@ -47,12 +48,21 @@
 				    @Html.DisplayFor(x => x.ShipTo.PostalCode)
 			    </p>
 	 		</div>
+		}
+		@if(!string.IsNullOrWhiteSpace (Model.Comment)) {
+		 	<div class="col-xs-12">
+		 		<p><span class="mylabel">@Resources.Comment</span></p>
+	 		</div>
+	 		<div class="col-xs-12">
+	 			@Html.DisplayFor(x => x.Comment)
+ 			</div>
+		}
  		</div>
 	</div>
 	<div class="col-xs-6 text-right">
 		<div class="row">
 			<div class="col-xs-12">
-				<h2 class="text-right uppercase">@Resources.DeliveryOrder @Html.DisplayFor(x => x.Id)</h2>
+				<h2 class="text-right uppercase">@Resources.ProductionOrder @Html.DisplayFor(x => x.Id)</h2>
 			</div>
 			<div class="col-xs-12">
 				<p><span class="mylabel">@Resources.SalesPerson</span></p>
@@ -93,7 +103,7 @@
                 <td class="nowrap text-right">@Html.DisplayFor(x => item.Quantity)</td>
                 <td class="nowrap text-right">@Html.DisplayFor(x => item.Product.UnitOfMeasurement)</td>
                 <td class="text-center">@Html.DisplayFor(x => item.ProductCode)</td>
-                <td class="text-center">@Html.DisplayFor(x => item.ProductName)</td>
+                <td class="text-center">@Html.DisplayFor(x => item.ProductName) @Html.DisplayFor(x => item.Comment)</td>
             </tr>
         }
     </tbody>
