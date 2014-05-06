@@ -6,8 +6,8 @@
 
 @{
     ViewBag.Title = Resources.FiscalDocuments;
-    var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.FiscalDocuments);
+    var CurrentUser = Html.CurrentUser () ?? new User ();
+    var Privilege = CurrentUser.GetPrivilege (SystemObjects.FiscalDocuments);
 }
 
 <h2>@Resources.FiscalDocuments</h2>

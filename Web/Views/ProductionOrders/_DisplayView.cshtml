@@ -1,0 +1,32 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model SalesOrder
+
+<fieldset>
+	<div class='row-fluid'>
+		<div class='span8'>
+	  		<dl class=''>
+				<dt>@Resources.Customer</dt>
+				<dd>@Html.DisplayFor(x => x.Customer.Name)</dd>
+				<dt>@Resources.SalesPerson</dt>
+				<dd>@Html.DisplayFor(x => x.SalesPerson.Name)</dd>
+				<dt>@Resources.Comment</dt>
+				<dd>@Html.DisplayFor(x => x.Comment)</dd>
+			</dl>
+		</div>
+	  	<div class='span4'>
+	  		<dl class='dl-horizontal'>
+				<dt>@Resources.Id</dt>
+				<dd>
+					<span>@Html.DisplayFor(x => x.Id)</span>
+					<i class='icon-exclamation-sign' data-toggle='tooltip' title='@Resources.Serial @Html.DisplayFor(x => x.Serial)'></i>
+				</dd>
+				<dt>@Resources.Date</dt>
+				<dd>@Html.DisplayFor(x => x.Date)</dd>
+				<dt>@Resources.PromiseDate</dt>
+				<dd>@Html.DisplayFor(x => x.PromiseDate)</dd>
+			</dl>
+  		</div>
+	</div>
+</fieldset>
