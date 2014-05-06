@@ -137,14 +137,17 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed (string id)
 		{
-			User item = Model.User.Find (id);
-			
-			foreach (var x in item.Privileges.ToList ()) {
-				x.Delete ();
+			var item = Model.User.Find (id);
+
+			using (var scope = new TransactionScope ()) {
+				foreach (var x in item.Privileges.ToList ()) {
+					x.Delete ();
+				}
+
+				scope.Flush ();
+				item.DeleteAndFlush ();
 			}
-			
-			item.DeleteAndFlush ();
-            
+
 			return RedirectToAction ("Index");
 		}
     }

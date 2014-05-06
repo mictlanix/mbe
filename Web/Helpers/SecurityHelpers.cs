@@ -66,6 +66,11 @@ namespace Mictlanix.BE.Web.Helpers
 			return user.Privileges.SingleOrDefault (x => x.Object == obj) ?? new AccessPrivilege ();
 		}
 
+		public static AccessPrivilege GetPrivilege (this User user, SystemObjects obj)
+		{
+			return user.Privileges.SingleOrDefault (x => x.Object == obj) ?? new AccessPrivilege ();
+		}
+
 		internal static string SHA1 (string text)
 		{
 			if (string.IsNullOrEmpty (text)) {

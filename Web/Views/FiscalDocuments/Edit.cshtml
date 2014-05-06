@@ -5,6 +5,8 @@
 
 @{
     ViewBag.Title = Resources.Edit;
+    var CurrentUser = Html.CurrentUser () ?? new User ();
+    var Privilege = CurrentUser.GetPrivilege (SystemObjects.StandaloneFiscalDocuments);
 }
 
 <h2>@Resources.FiscalDocument</h2> 
@@ -23,9 +25,11 @@
     <div id='items-container' data-url='@Url.Action("Items", new { id = Model.Id })'>
 		@Html.Partial("_Items", Model.Details)
     </div>
+@if (Privilege.AllowCreate) {
     <div class='search-box'>
         <input type='text' id='product-search' name='product-search' />
     </div>
+}
 </div>
 <div id='totals-section' class='pull-right' data-url='@Url.Action("Totals", new { id = Model.Id })'>
     @Html.Partial("_Totals")
@@ -42,6 +46,8 @@
 <div class='clearfix'></div>
 <script type='text/javascript'>
 $(function () {
+@if (Privilege.AllowCreate) {
+<text>
     $('#product-search').tokenInput('@Url.Action("GetSuggestions", "FiscalDocuments", new { id = Model.Id })', {
         hintText:'@Resources.HIntText',
         noResultsText:'@Resources.NoResultsText',
@@ -59,6 +65,8 @@ $(function () {
             }, 'json');
         }
     });
+</text>
+}
     $('#add-items').editable({
 		success: function(response, newValue) {
         	$('#items-container').loadUrl();
