@@ -6,6 +6,10 @@ ALTER TABLE `fiscal_document` CHANGE COLUMN `issuer_certificate_number` `issuer_
 ALTER TABLE `taxpayer_batch` 
 	ADD COLUMN `template` VARCHAR(25) NOT NULL AFTER `approval_year`;
 
+
+ALTER TABLE `fiscal_document` 
+	DROP FOREIGN KEY `fiscal_document_issuer_fk`;
+
 ALTER TABLE `taxpayer` 
 	DROP FOREIGN KEY `taxpayer_address_fk`,
 	DROP INDEX `taxpayer_address_fk_idx`;
@@ -20,6 +24,11 @@ ALTER TABLE `taxpayer_issuer`
   		FOREIGN KEY (`address`) REFERENCES `address` (`address_id`)
   		ON DELETE NO ACTION ON UPDATE NO ACTION;
 
+ALTER TABLE `fiscal_document` 
+	ADD CONSTRAINT `fiscal_document_issuer_fk`
+  		FOREIGN KEY (`issuer`)cREFERENCES `mbe_dataprint`.`taxpayer_issuer` (`taxpayer_issuer_id`)
+  		ON DELETE NO ACTIONccON UPDATE NO ACTION;
+  
 ALTER TABLE `customer_taxpayer` 
 	DROP FOREIGN KEY `customer_taxpayer_address`,
 	DROP FOREIGN KEY `customer_taxpayer_customer_fk`,
