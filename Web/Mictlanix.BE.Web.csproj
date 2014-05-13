@@ -779,6 +779,8 @@
     <Content Include="Views\DeliveryOrders\Edit.cshtml" />
     <Content Include="Views\DeliveryOrders\_DisplayView.cshtml" />
     <Content Include="Views\DeliveryOrders\_ItemDisplayView.cshtml" />
+    <Content Include="Views\FiscalDocuments\Print22Dataprint.cshtml" />
+    <Content Include="Views\FiscalDocuments\Print20Dataprint.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
