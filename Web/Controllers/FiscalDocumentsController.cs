@@ -78,8 +78,16 @@ namespace Mictlanix.BE.Web.Controllers
 		Search<FiscalDocument> SearchFiscalDocuments (Search<FiscalDocument> search)
 		{
 			IQueryable<FiscalDocument> query;
+			var pattern = (search.Pattern ?? string.Empty).Trim ();
+			int id = 0;
 
-			if (string.IsNullOrEmpty (search.Pattern)) {
+			if (int.TryParse (pattern, out id) && id > 0) {
+				query = from x in FiscalDocument.Queryable
+						where !(!x.IsCompleted && x.IsCancelled) && (
+							x.Id == id || x.Serial == id)
+				        orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Issued descending
+				        select x;
+			} else if (string.IsNullOrWhiteSpace (pattern)) {
 				query = from x in FiscalDocument.Queryable
                       	where !(!x.IsCompleted && x.IsCancelled)
 						orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Issued descending
@@ -87,10 +95,10 @@ namespace Mictlanix.BE.Web.Controllers
 			} else {
 				query = from x in FiscalDocument.Queryable
 						where !(!x.IsCompleted && x.IsCancelled) && (
-							x.Issuer.Id.Contains (search.Pattern) ||
-							x.Recipient.Contains (search.Pattern) ||
-							x.RecipientName.Contains (search.Pattern) ||
-							x.Customer.Name.Contains (search.Pattern))
+							x.Issuer.Id.Contains (pattern) ||
+							x.Recipient.Contains (pattern) ||
+							x.RecipientName.Contains (pattern) ||
+							x.Customer.Name.Contains (pattern))
 						orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Issued descending
                       	select x;
 			}
