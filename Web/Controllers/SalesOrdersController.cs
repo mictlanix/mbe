@@ -81,8 +81,16 @@ namespace Mictlanix.BE.Web.Controllers
 		{
 			IQueryable<SalesOrder> query;
 			var item = Configuration.Store;
+			var pattern = (search.Pattern ?? string.Empty).Trim ();
+			int id = 0;
 
-			if (string.IsNullOrEmpty (search.Pattern)) {
+			if (int.TryParse (pattern, out id) && id > 0) {
+				query = from x in SalesOrder.Queryable
+						where x.Store.Id == item.Id && (
+							x.Id == id || x.Serial == id)
+				        orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending
+				        select x;
+			} else if (string.IsNullOrEmpty (pattern)) {
 				query = from x in SalesOrder.Queryable
 						where x.Store.Id == item.Id
 						orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending
@@ -90,8 +98,8 @@ namespace Mictlanix.BE.Web.Controllers
 			} else {
 				query = from x in SalesOrder.Queryable
 						where x.Store.Id == item.Id && (
-							x.Customer.Name.Contains (search.Pattern) ||
-							x.SalesPerson.Nickname.Contains (search.Pattern))
+							x.Customer.Name.Contains (pattern) ||
+							x.SalesPerson.Nickname.Contains (pattern))
 						orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending
 						select x;
 			}
