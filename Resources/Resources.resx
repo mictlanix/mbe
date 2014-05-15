@@ -1842,4 +1842,7 @@ Realizada el: {0:d}</value>
   <data name="ProductionOrders" xml:space="preserve">
     <value>Ordenes de Producción</value>
   </data>
+  <data name="Status" xml:space="preserve">
+    <value>Estado</value>
+  </data>
 </root>
