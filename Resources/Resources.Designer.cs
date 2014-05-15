@@ -490,6 +490,12 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string Status {
+            get {
+                return ResourceManager.GetString("Status", resourceCulture);
+            }
+        }
+        
         public static string PayCredit {
             get {
                 return ResourceManager.GetString("PayCredit", resourceCulture);

@@ -477,7 +477,7 @@ namespace Mictlanix.BE.Web.Controllers
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var query = from x in FiscalDocument.Queryable
 			            where x.Issuer.Id == taxpayer && x.IsCompleted &&
-			            	x.Issued >= start && x.Issued <= end
+			                ((x.Issued >= start && x.Issued <= end) || (x.CancellationDate >= start && x.CancellationDate <= end))
 			            orderby x.Issued
 			            select x;
 
