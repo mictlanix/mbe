@@ -13,7 +13,7 @@
 			<th class='nowrap'>@Resources.IssueDate</th>
 			<th class='nowrap center'>@Resources.TaxpayerId</th>
 			<th class='nowrap center'>@Resources.TaxpayerName</th>
-			<th class='nowrap center'>@Resources.Cancelled</th>
+			<th class='center'>@Resources.CancellationDate</th>
 			<th class='nowrap center'>@Resources.Subtotal</th>
 			<th class='nowrap center'>@Resources.VAT</th>
 			<th class='nowrap center'>@Resources.Total</th>
@@ -28,19 +28,19 @@
         <td class='date'>@Html.DisplayFor(x => item.Issued)</td>
         <td class='date'>@Html.DisplayFor(x => item.Recipient)</td>
         <td class=''>@Html.DisplayFor(x => item.RecipientName)</td>
-        <td class='bool center'>@Html.DisplayFor(x => item.IsCancelled)</td>
+        <td class='date'><small>@Html.DisplayFor(x => item.CancellationDate)</small></td>
         <td class='currency'>@Html.DisplayFor(x => item.SubtotalEx)</td>
         <td class='currency'>@Html.DisplayFor(x => item.TaxesEx)</td>
         <td class='currency'>@Html.DisplayFor(x => item.TotalEx)</td>
     </tr>
 }
     </tbody>
-    <tfoot>
+@*    <tfoot>
 	    <tr>
-	        <td colspan='7'/>
+	        <td colspan='7'></td>
 	        <td class='number'><b>@Model.Sum(x => x.SubtotalEx).ToString("c")</b></td>
 	        <td class='number'><b>@Model.Sum(x => x.TaxesEx).ToString("c")</b></td>
 	        <td class='number'><b>@Model.Sum(x => x.TotalEx).ToString("c")</b></td>
 	    </tr>
-    </tfoot>
+    </tfoot>*@
 </table>
