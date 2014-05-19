@@ -1,0 +1,21 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model TranslationRequest
+<tr id='id:@Model.Id'>
+    <td class="date">@Html.DisplayFor(x => x.Date)</td>
+    <td>@Html.DisplayFor(x => x.Agency)</td>
+    <td>@Html.DisplayFor(x => x.DocumentName)</td>
+    <td class="date">@Html.DisplayFor(x => x.DeliveryDate)</td>
+    <td class='actions'>
+    	@if(ViewBag.Privilege.AllowRead){
+    	    @Html.ActionLink(" ", "View", "TranslationRequests", new { id = Model.Id }, new { @class = "button icon view icon-only open-modal", title = Resources.Details, data_modal_id = "translation-modal" })
+        }
+    	@if(ViewBag.Privilege.AllowUpdate){
+        	@Html.ActionLink(" ", "Edit", "TranslationRequests", new { id = Model.Id }, new { @class = "button icon edit icon-only open-modal", title = Resources.Edit, data_modal_id = "translation-modal" })
+        }
+    	@if(ViewBag.Privilege.AllowDelete){
+        	@Html.ActionLink(" ", "Delete", "TranslationRequests", new { id = Model.Id }, new { @class = "button icon delete icon-only open-modal", @title = Resources.Delete, data_modal_id = "translation-modal" })
+        }
+    </td>
+</tr>

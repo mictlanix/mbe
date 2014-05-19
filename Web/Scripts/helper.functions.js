@@ -37,6 +37,7 @@ function bindModal(selector) {
 				$modal.attr('id', $(this).attr('data-modal-id'))
 					  .addClass('modal hide fade')
 					  .attr('tabindex', -1)
+					  .data("backdrop","static")
 					  .css('width', 682);
 			}
 			
