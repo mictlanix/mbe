@@ -1,0 +1,69 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@model ServiceReport
+
+<div class="row">
+	<div class="span6 field-required">@Html.LabelFor(x => x.Type)</div>
+  	<div class="span2 field-required">@Html.LabelFor(x => x.Date)</div>
+</div>
+<div class="row">
+	<div class="span6">@Html.EditorFor(x => x.Type) @Html.ValidationMessageFor(x => x.Type)</div>
+  	<div class="span2">@Html.EditorFor(x => x.Date) @Html.ValidationMessageFor(x => x.Date)</div>
+</div>
+<div class="row">
+  	<div class="span8 field-required">@Html.LabelFor(x => x.CustomerId)</div>
+</div>
+<div class="row">
+  	<div class="span8">@Html.EditorFor(x => x.CustomerId) @Html.ValidationMessageFor(x => x.CustomerId)</div>
+</div>
+<div class="row">
+  	<div class="span8 field-required">@Html.LabelFor(x => x.SupplierId)</div>
+</div>
+<div class="row">
+  	<div class="span8">@Html.EditorFor(x => x.SupplierId) @Html.ValidationMessageFor(x => x.SupplierId)</div>
+</div>
+<div class="row">
+  	<div class="span4 field-required">@Html.LabelFor(x => x.Brand)</div>
+  	<div class="span4 field-required">@Html.LabelFor(x => x.Model)</div>
+</div>
+<div class="row">
+  	<div class="span4">@Html.EditorFor(x => x.Brand) @Html.ValidationMessageFor(x => x.Brand)</div>
+  	<div class="span4">@Html.EditorFor(x => x.Model) @Html.ValidationMessageFor(x => x.Model)</div>
+</div>
+<div class="row">
+  	<div class="span8">@Html.LabelFor(x => x.Location)</div>
+</div>
+<div class="row">
+  	<div class="span8">@Html.EditorFor(x => x.Location) @Html.ValidationMessageFor(x => x.Location)</div>
+</div>
+<div class="row">
+  	<div class="span8">@Html.LabelFor(x => x.UserReport)</div>
+</div>
+<div class="row">
+  	<div class="span8">@Html.EditorFor(x => x.UserReport)</div>
+</div>
+<div class="row">
+  	<div class="span8">@Html.LabelFor(x => x.UserDescription)</div>
+</div>
+<div class="row">
+  	<div class="span8">@Html.EditorFor(x => x.UserDescription)</div>
+</div>
+<div class="row">
+  	<div class="span8">@Html.LabelFor(x => x.Comment)</div>
+</div>
+<div class="row">
+  	<div class="span8">@Html.EditorFor(x => x.Comment)</div>
+</div>
+<style type="text/css">
+ul.token-input-list { width:100%; }
+div.token-input-dropdown {width:650px;}
+</style>
+<script type='text/javascript'>
+$('#Date').datepicker({ language: 'es', format: 'yyyy-mm-dd' });
+@if (Model != null && Model.Customer != null) {
+<text>$("#CustomerId").tokenInput("add", { id: "@Model.Customer.Id", name: "@Model.Customer.ToString()"});</text>
+}
+@if (Model != null && Model.Supplier != null) {
+<text>$("#SupplierId").tokenInput("add", { id: "@Model.Supplier.Id", name: "@Model.Supplier.ToString()"});</text>
+}
+</script>

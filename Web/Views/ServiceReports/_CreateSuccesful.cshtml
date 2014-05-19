@@ -1,0 +1,14 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model ServiceReport
+@{
+    var Privilege = Html.GetPrivilege(Html.CurrentUser() ?? new User(), SystemObjects.ServiceReports);
+    ViewBag.Privilege = Privilege;
+}
+@Html.Partial("_Item", Model)
+<script type='text/javascript'>
+$('#services tr:first').after($('#id\\:@Model.Id'));
+$('#service-modal').modal('hide');
+bindModal('#id\\:@Model.Id a.open-modal');
+</script>

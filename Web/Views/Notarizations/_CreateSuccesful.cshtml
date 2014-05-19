@@ -1,0 +1,14 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model Notarization
+@{
+    var Privilege = Html.GetPrivilege(Html.CurrentUser() ?? new User(), SystemObjects.Notarizations);
+    ViewBag.Privilege = Privilege;
+}
+@Html.Partial("_Item", Model)
+<script type='text/javascript'>
+$('#notarizations tr:first').after($('#id\\:@Model.Id'));
+$('#notarization-modal').modal('hide');
+bindModal('#id\\:@Model.Id a.open-modal');
+</script>

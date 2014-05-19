@@ -244,6 +244,18 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string TranslationRequests {
+            get {
+                return ResourceManager.GetString("TranslationRequests", resourceCulture);
+            }
+        }
+        
+        public static string TranslationAgency {
+            get {
+                return ResourceManager.GetString("TranslationAgency", resourceCulture);
+            }
+        }
+        
         public static string Consult {
             get {
                 return ResourceManager.GetString("Consult", resourceCulture);
@@ -898,6 +910,18 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string ServiceLocation {
+            get {
+                return ResourceManager.GetString("ServiceLocation", resourceCulture);
+            }
+        }
+        
+        public static string TranslationRequest {
+            get {
+                return ResourceManager.GetString("TranslationRequest", resourceCulture);
+            }
+        }
+        
         public static string Box {
             get {
                 return ResourceManager.GetString("Box", resourceCulture);
@@ -979,6 +1003,12 @@ namespace Mictlanix.BE {
         public static string RoutingNumber {
             get {
                 return ResourceManager.GetString("RoutingNumber", resourceCulture);
+            }
+        }
+        
+        public static string Notarization {
+            get {
+                return ResourceManager.GetString("Notarization", resourceCulture);
             }
         }
         
@@ -1081,6 +1111,12 @@ namespace Mictlanix.BE {
         public static string PaymentReferenceNotRequired {
             get {
                 return ResourceManager.GetString("PaymentReferenceNotRequired", resourceCulture);
+            }
+        }
+        
+        public static string ServiceType {
+            get {
+                return ResourceManager.GetString("ServiceType", resourceCulture);
             }
         }
         
@@ -1786,6 +1822,12 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string ServiceReports {
+            get {
+                return ResourceManager.GetString("ServiceReports", resourceCulture);
+            }
+        }
+        
         public static string Variable {
             get {
                 return ResourceManager.GetString("Variable", resourceCulture);
@@ -2116,6 +2158,12 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string Notarizations {
+            get {
+                return ResourceManager.GetString("Notarizations", resourceCulture);
+            }
+        }
+        
         public static string Zone {
             get {
                 return ResourceManager.GetString("Zone", resourceCulture);
@@ -2191,6 +2239,12 @@ namespace Mictlanix.BE {
         public static string DisplayName_PurchaseSearch {
             get {
                 return ResourceManager.GetString("DisplayName_PurchaseSearch", resourceCulture);
+            }
+        }
+        
+        public static string NotaryOffice {
+            get {
+                return ResourceManager.GetString("NotaryOffice", resourceCulture);
             }
         }
         
@@ -2422,6 +2476,12 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string DeliveryDate {
+            get {
+                return ResourceManager.GetString("DeliveryDate", resourceCulture);
+            }
+        }
+        
         public static string SearchingText {
             get {
                 return ResourceManager.GetString("SearchingText", resourceCulture);
@@ -2479,6 +2539,12 @@ namespace Mictlanix.BE {
         public static string PersonalId {
             get {
                 return ResourceManager.GetString("PersonalId", resourceCulture);
+            }
+        }
+        
+        public static string DocumentDescription {
+            get {
+                return ResourceManager.GetString("DocumentDescription", resourceCulture);
             }
         }
         
@@ -2908,6 +2974,12 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string PaymentDate {
+            get {
+                return ResourceManager.GetString("PaymentDate", resourceCulture);
+            }
+        }
+        
         public static string Read {
             get {
                 return ResourceManager.GetString("Read", resourceCulture);
@@ -2977,6 +3049,12 @@ namespace Mictlanix.BE {
         public static string Fixed {
             get {
                 return ResourceManager.GetString("Fixed", resourceCulture);
+            }
+        }
+        
+        public static string Requester {
+            get {
+                return ResourceManager.GetString("Requester", resourceCulture);
             }
         }
         
@@ -3340,6 +3418,12 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string UserDescription {
+            get {
+                return ResourceManager.GetString("UserDescription", resourceCulture);
+            }
+        }
+        
         public static string FiscalDocument {
             get {
                 return ResourceManager.GetString("FiscalDocument", resourceCulture);
@@ -3436,6 +3520,12 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string UserReport {
+            get {
+                return ResourceManager.GetString("UserReport", resourceCulture);
+            }
+        }
+        
         public static string Subtotal {
             get {
                 return ResourceManager.GetString("Subtotal", resourceCulture);
@@ -3502,6 +3592,12 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string ServiceReport {
+            get {
+                return ResourceManager.GetString("ServiceReport", resourceCulture);
+            }
+        }
+        
         public static string CreatedBy {
             get {
                 return ResourceManager.GetString("CreatedBy", resourceCulture);
@@ -3553,6 +3649,12 @@ namespace Mictlanix.BE {
         public static string DisplayName_PaymentInformation {
             get {
                 return ResourceManager.GetString("DisplayName_PaymentInformation", resourceCulture);
+            }
+        }
+        
+        public static string DocumentName {
+            get {
+                return ResourceManager.GetString("DocumentName", resourceCulture);
             }
         }
         
