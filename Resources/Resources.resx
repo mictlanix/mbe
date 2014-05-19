@@ -1845,4 +1845,55 @@ Realizada el: {0:d}</value>
   <data name="Status" xml:space="preserve">
     <value>Estado</value>
   </data>
+  <data name="ServiceReports" xml:space="preserve">
+    <value>Reportes de Servicio</value>
+  </data>
+  <data name="ServiceReport" xml:space="preserve">
+    <value>Reporte de Servicio</value>
+  </data>
+  <data name="ServiceType" xml:space="preserve">
+    <value>Tipo de Servicio</value>
+  </data>
+  <data name="ServiceLocation" xml:space="preserve">
+    <value>Lugar</value>
+  </data>
+  <data name="UserReport" xml:space="preserve">
+    <value>Reporte del Usuario</value>
+  </data>
+  <data name="UserDescription" xml:space="preserve">
+    <value>Descripción del Usuario</value>
+  </data>
+  <data name="TranslationRequests" xml:space="preserve">
+    <value>Solicitudes de Traducción</value>
+  </data>
+  <data name="TranslationRequest" xml:space="preserve">
+    <value>Solicitud de Traducción</value>
+  </data>
+  <data name="Notarizations" xml:space="preserve">
+    <value>Documentos Oficiales</value>
+  </data>
+  <data name="Notarization" xml:space="preserve">
+    <value>Documento Oficial</value>
+  </data>
+  <data name="Requester" xml:space="preserve">
+    <value>Solicitante</value>
+  </data>
+  <data name="TranslationAgency" xml:space="preserve">
+    <value>Compañia Traductora</value>
+  </data>
+  <data name="DocumentName" xml:space="preserve">
+    <value>Nombre del Documento</value>
+  </data>
+  <data name="DeliveryDate" xml:space="preserve">
+    <value>Fecha de Entrega</value>
+  </data>
+  <data name="PaymentDate" xml:space="preserve">
+    <value>Fecha de Pago</value>
+  </data>
+  <data name="NotaryOffice" xml:space="preserve">
+    <value>Notaría</value>
+  </data>
+  <data name="DocumentDescription" xml:space="preserve">
+    <value>Concepto del Documento</value>
+  </data>
 </root>

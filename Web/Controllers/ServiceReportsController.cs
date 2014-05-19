@@ -1,5 +1,5 @@
 ﻿// 
-// TaxpayerRecipientsController.cs
+// ServiceReportsController.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.com>
@@ -42,11 +42,11 @@ using Mictlanix.BE.Web.Helpers;
 namespace Mictlanix.BE.Web.Controllers
 {
 	[Authorize]
-	public class TaxpayerRecipientsController : Controller
+	public class ServiceReportsController : Controller
     {
 		public ActionResult Index ()
 		{
-			var search = SearchTaxpayers (new Search<TaxpayerRecipient> {
+			var search = Search (new Search<ServiceReport> {
 				Limit = Configuration.PageSize
 			});
 
@@ -58,10 +58,10 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 
 		[HttpPost]
-		public ActionResult Index (Search<TaxpayerRecipient> search)
+		public ActionResult Index (Search<ServiceReport> search)
 		{
 			if (ModelState.IsValid) {
-				search = SearchTaxpayers (search);
+				search = Search (search);
 			}
 
 			if (Request.IsAjaxRequest ()) {
@@ -71,20 +71,20 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 		}
 
-		Search<TaxpayerRecipient> SearchTaxpayers (Search<TaxpayerRecipient> search)
+		Search<ServiceReport> Search (Search<ServiceReport> search)
 		{
-			IQueryable<TaxpayerRecipient> query;
+			IQueryable<ServiceReport> query;
 			var pattern = string.Format("{0}", search.Pattern).Trim ();
 
 			if (string.IsNullOrWhiteSpace (pattern)) {
-				query = from x in TaxpayerRecipient.Queryable
-				        orderby x.Name
+				query = from x in ServiceReport.Queryable
+					orderby x.Date descending
 				        select x;
 			} else {
-				query = from x in TaxpayerRecipient.Queryable
-				        where x.Id.Contains (pattern) ||
-				            x.Name.Contains (pattern)
-				        orderby x.Name
+				query = from x in ServiceReport.Queryable
+				        where x.Customer.Name.Contains (pattern) ||
+				            x.Type.Contains (pattern)
+						orderby x.Date descending
 				        select x;
 			}
 
@@ -100,104 +100,74 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 
         [HttpPost]
-		public ActionResult Create (TaxpayerRecipient item)
+		public ActionResult Create (ServiceReport item)
 		{
-			if (!string.IsNullOrEmpty (item.Id)) {
-				var entity = TaxpayerRecipient.TryFind (item.Id);
-
-				if (entity != null) {
-					ModelState.AddModelError ("", Resources.TaxpayerRecipientAlreadyExists);
-				}
-			}
-
-			if (!item.HasAddress) {
-				ModelState.Where (x => x.Key.StartsWith ("Address.")).ToList ().ForEach (x => x.Value.Errors.Clear ());
-				item.Address = null;
-			}
+			item.Customer = Customer.TryFind (item.CustomerId);
+			item.Supplier = Supplier.TryFind (item.SupplierId);
 
 			if (!ModelState.IsValid) {
 				return PartialView ("_Create", item);
 			}
 
-			item.Id = item.Id.ToUpper ();
-
 			using (var scope = new TransactionScope ()) {
-				if (item.HasAddress) {
-					item.Address.Create ();
-				}
-
 				item.CreateAndFlush ();
 			}
 
 			return PartialView ("_CreateSuccesful", item);
 		}
 
-		public ActionResult Details (string id)
+		public ActionResult View (int id)
 		{
-			var item = TaxpayerRecipient.Find (id);
-			return PartialView ("_Details", item);
+			var item = ServiceReport.Find (id);
+			return PartialView ("_View", item);
 		}
 
-		public ActionResult Edit (string id)
+		public ActionResult Edit (int id)
         {
-        	var item = TaxpayerRecipient.Find (id);
-			item.HasAddress = (item.Address != null);
+        	var item = ServiceReport.Find (id);
 			return PartialView ("_Edit", item);
         }
 
         [HttpPost]
-        public ActionResult Edit (TaxpayerRecipient item)
+        public ActionResult Edit (ServiceReport item)
 		{
-			if(!item.HasAddress) {
-				ModelState.Where(x => x.Key.StartsWith("Address.")).ToList().ForEach(x => x.Value.Errors.Clear());
-				item.Address = null;
-			}
-			
+			item.Customer = Customer.TryFind (item.CustomerId);
+			item.Supplier = Supplier.TryFind (item.SupplierId);
+
 			if (!ModelState.IsValid) {
 				return PartialView ("_Edit", item);
 			}
 			
-			var entity = TaxpayerRecipient.Find (item.Id);
-			var address = entity.Address;
+			var entity = ServiceReport.Find (item.Id);
 
-			entity.HasAddress = (address != null);
-			entity.Name = item.Name;
-			entity.Email = item.Email;
+			entity.Date = item.Date;
+			entity.Customer = item.Customer;
+			entity.Type = item.Type;
+			entity.Location = item.Location;
+			entity.Supplier = item.Supplier;
+			entity.Model = item.Model;
+			entity.Brand = item.Brand;
+			entity.UserReport = item.UserReport;
+			entity.UserDescription = item.UserDescription;
+			entity.Comment = item.Comment;
 
 			using (var scope = new TransactionScope()) {
-				if(item.HasAddress) {
-					entity.Address = item.Address;
-					entity.Address.Create ();
-				} else {
-					entity.Address = null;
-				}
-
 				entity.UpdateAndFlush ();
-			}
-
-			if (address != null) {
-				try {
-					using (var scope = new TransactionScope ()) {
-						address.DeleteAndFlush ();
-					}
-				} catch (Exception ex) {
-					System.Diagnostics.Debug.WriteLine (ex);
-				}
 			}
 
 			return PartialView ("_Refresh");
         }
 
-		public ActionResult Delete (string id)
+		public ActionResult Delete (int id)
         {
-            var item = TaxpayerRecipient.Find (id);
+            var item = ServiceReport.Find (id);
 			return PartialView ("_Delete", item);
         }
 
         [HttpPost, ActionName ("Delete")]
-		public ActionResult DeleteConfirmed (string id)
+		public ActionResult DeleteConfirmed (int id)
 		{
-			var item = TaxpayerRecipient.Find (id);
+			var item = ServiceReport.Find (id);
 
 			try {
 				using (var scope = new TransactionScope()) {
@@ -206,16 +176,6 @@ namespace Mictlanix.BE.Web.Controllers
 			} catch (Exception ex) {
 				System.Diagnostics.Debug.WriteLine (ex);
 				return PartialView ("DeleteUnsuccessful");
-			}
-			
-			if (item.Address != null) {
-				try {
-					using (var scope = new TransactionScope()) {
-						item.Address.DeleteAndFlush ();
-					}
-				} catch (Exception ex) {
-					System.Diagnostics.Debug.WriteLine (ex);
-				}
 			}
 
 			return PartialView ("_DeleteSuccesful", item);

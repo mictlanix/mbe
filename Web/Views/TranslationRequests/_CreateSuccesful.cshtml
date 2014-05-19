@@ -1,0 +1,14 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model TranslationRequest
+@{
+    var Privilege = Html.GetPrivilege(Html.CurrentUser() ?? new User(), SystemObjects.TranslationRequests);
+    ViewBag.Privilege = Privilege;
+}
+@Html.Partial("_Item", Model)
+<script type='text/javascript'>
+$('#translations tr:first').after($('#id\\:@Model.Id'));
+$('#translation-modal').modal('hide');
+bindModal('#id\\:@Model.Id a.open-modal');
+</script>
