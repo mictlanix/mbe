@@ -1,0 +1,40 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@model Notarization
+
+<div class="row">
+	<div class="span6">@Html.LabelFor(x => x.NotaryOffice)</div>
+  	<div class="span2">@Html.LabelFor(x => x.Date)</div>
+</div>
+<div class="row">
+	<div class="span6"><div class="ro-field">@Html.DisplayFor(x => x.NotaryOffice)</div></div>
+  	<div class="span2"><div class="ro-field text-center">@Html.DisplayFor(x => x.Date)</div></div>
+</div>
+<div class="row">
+  	<div class="span8">@Html.LabelFor(x => x.RequesterId)</div>
+</div>
+<div class="row">
+  	<div class="span8"><div class="ro-field">@Html.DisplayFor(x => x.Requester, "String")</div></div>
+</div>
+<div class="row">
+  	<div class="span8">@Html.LabelFor(x => x.DocumentDescription)</div>
+</div>
+<div class="row">
+  	<div class="span8"><div class="ro-field">@Html.DisplayFor(x => x.DocumentDescription)</div></div>
+</div>
+<div class="row">
+  	<div class="span2">@Html.LabelFor(x => x.DeliveryDate)</div>
+  	<div class="span2 offset1">@Html.LabelFor(x => x.PaymentDate)</div>
+  	<div class="span2 offset1">@Html.LabelFor(x => x.Amount)</div>
+</div>
+<div class="row">
+  	<div class="span2"><div class="ro-field text-center">@Html.DisplayFor(x => x.DeliveryDate)</div></div>
+  	<div class="span2 offset1"><div class="ro-field text-center">@Html.DisplayFor(x => x.PaymentDate)</div></div>
+  	<div class="span2 offset1"><div class="ro-field text-right">@Html.DisplayFor(x => x.Amount)</div></div>
+</div>
+<div class="row">
+  	<div class="span8">@Html.LabelFor(x => x.Comment)</div>
+</div>
+<div class="row">
+  	<div class="span8"><div class="ro-field">@Html.DisplayFor(x => x.Comment)</div></div>
+</div>

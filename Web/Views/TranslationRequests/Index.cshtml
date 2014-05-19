@@ -2,18 +2,18 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
-@model Search<TaxpayerRecipient>
+@model Search<TranslationRequest>
 
 @{
-    ViewBag.Title = Resources.CustomerTaxpayers;
+    ViewBag.Title = Resources.TranslationRequests;
     var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.TaxpayerRecipients);
+    var Privilege = CurrentUser.GetPrivilege(SystemObjects.TranslationRequests);
 }
 
-<h2>@Resources.TaxpayerRecipients</h2>
+<h2>@Resources.TranslationRequests</h2>
 
 @if (Privilege.AllowCreate) {
-    @Html.ActionLink(Resources.CreateNew, "Create", new { }, new { @class = "button icon add open-modal", data_modal_id = "taxpayer-modal" })
+    @Html.ActionLink(Resources.CreateNew, "Create", new { }, new { @class = "button icon add open-modal", data_modal_id = "translation-modal" })
 }
 
 <div id='master-section'>

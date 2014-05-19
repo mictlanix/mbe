@@ -35,7 +35,10 @@
                             CurrentUser.GetPrivilege (SystemObjects.SupplierReturns).AllowRead;
                             
     var ShowAdministrationMenu = CurrentUser.GetPrivilege (SystemObjects.AccountsReceivable).AllowRead ||
-                            	 CurrentUser.GetPrivilege (SystemObjects.AccountsPayable).AllowRead;
+                            	 CurrentUser.GetPrivilege (SystemObjects.AccountsPayable).AllowRead ||
+                            	 CurrentUser.GetPrivilege (SystemObjects.ServiceReports).AllowRead ||
+                            	 CurrentUser.GetPrivilege (SystemObjects.TranslationRequests).AllowRead ||
+                            	 CurrentUser.GetPrivilege (SystemObjects.Notarizations).AllowRead;
                             	 
     var ShowFiscalDocumentsMenu = CurrentUser.GetPrivilege (SystemObjects.FiscalDocuments).AllowRead ||
                             	  CurrentUser.GetPrivilege (SystemObjects.FiscalReports).AllowRead ||
@@ -345,18 +348,34 @@
                 <div id="mgmt-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
                     <div class="gbmc">
                         <ol class="gbmcc">
-                            @if (CurrentUser.GetPrivilege (SystemObjects.AccountsReceivable).AllowRead)
-                            {
+                            @if (CurrentUser.GetPrivilege (SystemObjects.AccountsReceivable).AllowRead) {
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("Index", "AccountsReceivables") ? "gbm0l" : "")"
                                    href="@Url.Action("Index", "AccountsReceivables")">@Resources.Title_AccountsReceivable</a>
                             </li>
                             }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.AccountsPayable).AllowRead)
-                            {
+                            @if (CurrentUser.GetPrivilege (SystemObjects.AccountsPayable).AllowRead) {
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("Index", "AccountsPayables") ? "gbm0l" : "")"
                                    href="@Url.Action("Index", "AccountsPayables")">@Resources.Title_AccountsPayable</a>
+                            </li>
+                            }
+                            @if (CurrentUser.GetPrivilege (SystemObjects.ServiceReports).AllowRead) {
+                            <li class="gbmtc">
+                                <a class='gbmt @(Html.IsMenuSelected("Index", "ServiceReports") ? "gbm0l" : "")'
+                                   href='@Url.Action("Index", "ServiceReports")'>@Resources.ServiceReports</a>
+                            </li>
+                            }
+                            @if (CurrentUser.GetPrivilege (SystemObjects.TranslationRequests).AllowRead) {
+                            <li class="gbmtc">
+                                <a class='gbmt @(Html.IsMenuSelected("Index", "TranslationRequests") ? "gbm0l" : "")'
+                                   href='@Url.Action("Index", "TranslationRequests")'>@Resources.TranslationRequests</a>
+                            </li>
+                            }
+                            @if (CurrentUser.GetPrivilege (SystemObjects.Notarizations).AllowRead) {
+                            <li class="gbmtc">
+                                <a class='gbmt @(Html.IsMenuSelected("Index", "Notarizations") ? "gbm0l" : "")'
+                                   href='@Url.Action("Index", "Notarizations")'>@Resources.Notarizations</a>
                             </li>
                             }
                         </ol>
