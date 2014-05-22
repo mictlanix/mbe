@@ -358,6 +358,12 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string ProductSalesBySalesPersonAndBrand {
+            get {
+                return ResourceManager.GetString("ProductSalesBySalesPersonAndBrand", resourceCulture);
+            }
+        }
+        
         public static string DisplayName_InventoryInformation {
             get {
                 return ResourceManager.GetString("DisplayName_InventoryInformation", resourceCulture);
@@ -1318,6 +1324,12 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string ProductSalesBySalesPersonAndLabel {
+            get {
+                return ResourceManager.GetString("ProductSalesBySalesPersonAndLabel", resourceCulture);
+            }
+        }
+        
         public static string Customer {
             get {
                 return ResourceManager.GetString("Customer", resourceCulture);
@@ -1351,6 +1363,12 @@ namespace Mictlanix.BE {
         public static string Category {
             get {
                 return ResourceManager.GetString("Category", resourceCulture);
+            }
+        }
+        
+        public static string ProductSalesBySalesPersonAndModel {
+            get {
+                return ResourceManager.GetString("ProductSalesBySalesPersonAndModel", resourceCulture);
             }
         }
         
@@ -2497,6 +2515,12 @@ namespace Mictlanix.BE {
         public static string Movement {
             get {
                 return ResourceManager.GetString("Movement", resourceCulture);
+            }
+        }
+        
+        public static string ChooseLabel {
+            get {
+                return ResourceManager.GetString("ChooseLabel", resourceCulture);
             }
         }
         
