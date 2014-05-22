@@ -131,45 +131,6 @@ namespace Mictlanix.BE.Web.Controllers
 		
 		#endregion
 
-		#region Sales History
-
-		public ViewResult SalesOrdersHistoric ()
-		{
-			return View (new DateRange (DateTime.Now, DateTime.Now));
-		}
-		
-		[HttpPost]
-		public ActionResult SalesOrdersHistoric (DateRange item, Search<SalesOrder> search)
-		{
-			ViewBag.Dates = item;
-			search.Limit = Configuration.PageSize;   
-			search = GetSalesOrder(item, search);
-			
-			return PartialView ("_SalesOrdersHistoric", search);
-		}
-		
-		public ViewResult SalesOrdersHistoricDetails (int id)
-		{
-			var item = SalesOrder.Find (id);
-			return View (item);
-		}
-
-		Search<SalesOrder> GetSalesOrder (DateRange dates, Search<SalesOrder> search)
-		{
-			var query = from x in SalesOrder.Queryable
-						where (x.IsCompleted || x.IsCancelled) &&
-							(x.Date >= dates.StartDate.Date && x.Date <= dates.EndDate.Date.Add(new TimeSpan(23, 59, 59)))
-						orderby x.Id descending
-						select x;
-			
-			search.Total = query.Count();
-			search.Results = query.Skip(search.Offset).Take(search.Limit).ToList();
-			
-			return search;
-		}
-
-		#endregion
-
 		#region Payments
 
 		public ViewResult ReceivedPayments ()
@@ -859,7 +820,6 @@ namespace Mictlanix.BE.Web.Controllers
 			return PartialView ("_SalesOrderSummary", items);
 		}
 
-
 		public ViewResult ProductSalesBySalesPerson ()
 		{
 			ViewBag.EditorField = "employee";
@@ -904,6 +864,174 @@ namespace Mictlanix.BE.Web.Controllers
 
 			return PartialView ("_ProductSalesBySalesPerson", items);
 		}
+
+		public ViewResult ProductSalesBySalesPersonAndLabel ()
+		{
+			ViewBag.EditorField = "label";
+			ViewBag.EditorTemplate = "LabelSelector";
+			ViewBag.Title = Resources.ProductSalesBySalesPersonAndLabel;
+			return View ("SalesPersonSummaryReport", new DateRange ());
+		}
+
+		[HttpPost]
+		public ActionResult ProductSalesBySalesPersonAndLabel (int employee, int? label, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name,
+							SUM(quantity) Units,
+							SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) / IF(d.tax_included = 0, 1, 1 + d.tax_rate), 2)) Subtotal,
+							SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) Total
+						FROM sales_order m
+						INNER JOIN sales_order_detail d ON m.sales_order_id = d.sales_order
+						INNER JOIN product p ON d.product = p.product_id
+						JOIN_LABEL
+						WHERE m.salesperson = :employee AND m.completed = 1 AND m.cancelled = 0 AND
+							m.date >= :start AND m.date < :end WHERE_LABEL
+						GROUP BY d.product";
+
+			if (label.HasValue) {
+				sql = sql.Replace ("JOIN_LABEL", "INNER JOIN product_label l ON d.product = l.product");
+				sql = sql.Replace ("WHERE_LABEL", "AND l.label = :label");
+			} else {
+				sql = sql.Replace ("JOIN_LABEL", string.Empty).Replace ("WHERE_LABEL", string.Empty);
+			}
+
+			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate(ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
+
+				query.AddScalar ("Brand", NHibernateUtil.String);
+				query.AddScalar ("Model", NHibernateUtil.String);
+				query.AddScalar ("Code", NHibernateUtil.String);
+				query.AddScalar ("Name", NHibernateUtil.String);
+				query.AddScalar ("Units", NHibernateUtil.Decimal);
+				query.AddScalar ("Subtotal", NHibernateUtil.Decimal);
+				query.AddScalar ("Total", NHibernateUtil.Decimal);
+
+				query.SetDateTime ("start", start);
+				query.SetDateTime ("end", end);
+				query.SetInt32 ("employee", employee);
+
+				if (label.HasValue) {
+					query.SetInt32 ("label", label.Value);
+				}
+
+				return query.DynamicList();
+			}, null);
+
+			return PartialView ("_ProductSalesBySalesPerson", items);
+		}
+
+		public ViewResult ProductSalesBySalesPersonAndBrand ()
+		{
+			ViewBag.EditorField = "brand";
+			ViewBag.EditorTemplate = "ProductBrandSelector";
+			ViewBag.Title = Resources.ProductSalesBySalesPersonAndBrand;
+			return View ("SalesPersonSummaryReport", new DateRange ());
+		}
+
+		[HttpPost]
+		public ActionResult ProductSalesBySalesPersonAndBrand (int employee, string brand, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name,
+							SUM(quantity) Units,
+							SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) / IF(d.tax_included = 0, 1, 1 + d.tax_rate), 2)) Subtotal,
+							SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) Total
+						FROM sales_order m
+						INNER JOIN sales_order_detail d ON m.sales_order_id = d.sales_order
+						INNER JOIN product p ON d.product = p.product_id
+						WHERE m.salesperson = :employee AND m.completed = 1 AND m.cancelled = 0 AND
+							m.date >= :start AND m.date < :end WHERE_BRAND
+						GROUP BY d.product";
+
+			if (string.IsNullOrWhiteSpace (brand)) {
+				sql = sql.Replace ("WHERE_BRAND", string.Empty);
+			} else {
+				sql = sql.Replace ("WHERE_BRAND", "AND p.brand = :brand");
+			}
+
+			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate(ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
+
+				query.AddScalar ("Brand", NHibernateUtil.String);
+				query.AddScalar ("Model", NHibernateUtil.String);
+				query.AddScalar ("Code", NHibernateUtil.String);
+				query.AddScalar ("Name", NHibernateUtil.String);
+				query.AddScalar ("Units", NHibernateUtil.Decimal);
+				query.AddScalar ("Subtotal", NHibernateUtil.Decimal);
+				query.AddScalar ("Total", NHibernateUtil.Decimal);
+
+				query.SetDateTime ("start", start);
+				query.SetDateTime ("end", end);
+				query.SetInt32 ("employee", employee);
+
+				if (!string.IsNullOrWhiteSpace (brand)) {
+					query.SetString ("brand", brand);
+				}
+
+				return query.DynamicList();
+			}, null);
+
+			return PartialView ("_ProductSalesBySalesPerson", items);
+		}
+
+		public ViewResult ProductSalesBySalesPersonAndModel ()
+		{
+			ViewBag.EditorField = "productModel";
+			ViewBag.EditorTemplate = "ProductModelSelector";
+			ViewBag.Title = Resources.ProductSalesBySalesPersonAndModel;
+			return View ("SalesPersonSummaryReport", new DateRange ());
+		}
+
+		[HttpPost]
+		public ActionResult ProductSalesBySalesPersonAndModel (int employee, string productModel, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name,
+							SUM(quantity) Units,
+							SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) / IF(d.tax_included = 0, 1, 1 + d.tax_rate), 2)) Subtotal,
+							SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) Total
+						FROM sales_order m
+						INNER JOIN sales_order_detail d ON m.sales_order_id = d.sales_order
+						INNER JOIN product p ON d.product = p.product_id
+						WHERE m.salesperson = :employee AND m.completed = 1 AND m.cancelled = 0 AND
+							m.date >= :start AND m.date < :end WHERE_MODEL
+						GROUP BY d.product";
+
+			if (string.IsNullOrWhiteSpace (productModel)) {
+				sql = sql.Replace ("WHERE_MODEL", string.Empty);
+			} else {
+				sql = sql.Replace ("WHERE_MODEL", "AND p.model = :model");
+			}
+
+			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate(ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
+
+				query.AddScalar ("Brand", NHibernateUtil.String);
+				query.AddScalar ("Model", NHibernateUtil.String);
+				query.AddScalar ("Code", NHibernateUtil.String);
+				query.AddScalar ("Name", NHibernateUtil.String);
+				query.AddScalar ("Units", NHibernateUtil.Decimal);
+				query.AddScalar ("Subtotal", NHibernateUtil.Decimal);
+				query.AddScalar ("Total", NHibernateUtil.Decimal);
+
+				query.SetDateTime ("start", start);
+				query.SetDateTime ("end", end);
+				query.SetInt32 ("employee", employee);
+
+				if (!string.IsNullOrWhiteSpace (productModel)) {
+					query.SetString ("model", productModel);
+				}
+
+				return query.DynamicList();
+			}, null);
+
+			return PartialView ("_ProductSalesBySalesPerson", items);
+		}
+
 
 		#region Helpers
 		

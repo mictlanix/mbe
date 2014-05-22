@@ -1896,4 +1896,16 @@ Realizada el: {0:d}</value>
   <data name="DocumentDescription" xml:space="preserve">
     <value>Concepto del Documento</value>
   </data>
+  <data name="ProductSalesBySalesPersonAndLabel" xml:space="preserve">
+    <value>Productos Vendidos Por Vendedor (Etiqueta)</value>
+  </data>
+  <data name="ProductSalesBySalesPersonAndBrand" xml:space="preserve">
+    <value>Productos Vendidos Por Vendedor (Marca)</value>
+  </data>
+  <data name="ProductSalesBySalesPersonAndModel" xml:space="preserve">
+    <value>Productos Vendidos Por Vendedor (Modelo)</value>
+  </data>
+  <data name="ChooseLabel" xml:space="preserve">
+    <value>Seleccione una etiqueta</value>
+  </data>
 </root>
