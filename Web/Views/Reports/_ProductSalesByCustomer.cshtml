@@ -4,6 +4,11 @@
 @using Mictlanix.BE.Web.Models
 @model IEnumerable<SummaryItem>
 
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = CurrentUser.GetPrivilege (SystemObjects.SalesOrders);
+}
+
 <table>
     <tr>
         <th class='nowrap'>@Resources.SalesOrder</th>
@@ -16,7 +21,11 @@
     </tr>
 @foreach (var item in Model) {
     <tr>
-        <td class='center stretch'>@Html.DisplayFor(x => item.Category)</td>
+    @if (Privilege.AllowRead) {
+		<td class='number'><a href='@Url.Action("View", "SalesOrders", new { id = item.Category })' target='_blank'>@item.Category</a></td>
+	} else {
+		<td class='number'>@item.Category</td>
+	}
         <td class='center'>@Html.DisplayFor(x => item.Id)</td>
         <td>@Html.DisplayFor(x => item.Name)</td>
         <td class='number'>@Html.DisplayFor(x => item.Units)</td>

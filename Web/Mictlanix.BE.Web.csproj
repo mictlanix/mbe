@@ -413,9 +413,6 @@
     <Content Include="Views\Purchases\Print.cshtml" />
     <Content Include="Views\SupplierReturns\Print.cshtml" />
     <Content Include="Views\PointsOfSale\Index.cshtml" />
-    <Content Include="Views\Reports\_SalesOrdersHistoric.cshtml" />
-    <Content Include="Views\Reports\SalesOrdersHistoric.cshtml" />
-    <Content Include="Views\Reports\SalesOrdersHistoricDetails.cshtml" />
     <Content Include="Content\print.css" />
     <Content Include="Views\Purchases\Edit.cshtml" />
     <Content Include="Views\Purchases\New.cshtml" />
@@ -820,6 +817,8 @@
     <Content Include="Views\Notarizations\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Notarization.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Notarization.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\LabelSelector.cshtml" />
+    <Content Include="Views\Reports\SalesPersonSummaryReport.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

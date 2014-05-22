@@ -6,7 +6,7 @@
 
 @{
     var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments);
+    var Privilege = CurrentUser.GetPrivilege (SystemObjects.SalesOrders);
 }
 
 <table class='table table-condensed'>
@@ -24,7 +24,7 @@
     <tbody>
 @foreach (var item in Model.OrderBy (x => x.Date)) {
     <tr>
-    @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders).AllowRead) {
+    @if (Privilege.AllowRead) {
 		<td class='number'><a href='@Url.Action("View", "SalesOrders", new { id = item.SalesOrder })' target='_blank'>@item.SalesOrder</a></td>
 	} else {
 		<td class='number'>@item.SalesOrder</td>

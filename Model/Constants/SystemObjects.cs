@@ -156,6 +156,12 @@ namespace Mictlanix.BE.Model {
 		[Display(Name = "TranslationRequests", ResourceType = typeof(Resources))]
 		TranslationRequests,
 		[Display(Name = "Notarizations", ResourceType = typeof(Resources))]
-		Notarizations
+		Notarizations,
+		[Display(Name = "ProductSalesBySalesPersonAndLabel", ResourceType = typeof(Resources))]
+		ProductSalesBySalesPersonAndLabel,
+		[Display(Name = "ProductSalesBySalesPersonAndBrand", ResourceType = typeof(Resources))]
+		ProductSalesBySalesPersonAndBrand,
+		[Display(Name = "ProductSalesBySalesPersonAndModel", ResourceType = typeof(Resources))]
+		ProductSalesBySalesPersonAndModel
     }
 }
