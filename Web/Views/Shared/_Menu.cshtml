@@ -35,10 +35,7 @@
                             CurrentUser.GetPrivilege (SystemObjects.SupplierReturns).AllowRead;
                             
     var ShowAdministrationMenu = CurrentUser.GetPrivilege (SystemObjects.AccountsReceivable).AllowRead ||
-                            	 CurrentUser.GetPrivilege (SystemObjects.AccountsPayable).AllowRead ||
-                            	 CurrentUser.GetPrivilege (SystemObjects.ServiceReports).AllowRead ||
-                            	 CurrentUser.GetPrivilege (SystemObjects.TranslationRequests).AllowRead ||
-                            	 CurrentUser.GetPrivilege (SystemObjects.Notarizations).AllowRead;
+                            	 CurrentUser.GetPrivilege (SystemObjects.AccountsPayable).AllowRead;
                             	 
     var ShowFiscalDocumentsMenu = CurrentUser.GetPrivilege (SystemObjects.FiscalDocuments).AllowRead ||
                             	  CurrentUser.GetPrivilege (SystemObjects.FiscalReports).AllowRead ||
@@ -69,6 +66,11 @@
                           CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPersonAndLabel).AllowRead ||
                           CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPersonAndBrand).AllowRead ||
                           CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPersonAndModel).AllowRead;
+    
+    var ShowTechSupportMenu = CurrentUser.GetPrivilege (SystemObjects.ServiceReports).AllowRead;
+
+    var ShowFrontDeskMenu = CurrentUser.GetPrivilege (SystemObjects.TranslationRequests).AllowRead ||
+                            CurrentUser.GetPrivilege (SystemObjects.Notarizations).AllowRead;
 }
 
 <div id="gb" class='no-print'>
@@ -362,12 +364,48 @@
                                    href="@Url.Action("Index", "AccountsPayables")">@Resources.Title_AccountsPayable</a>
                             </li>
                             }
+                        </ol>
+                    </div>
+                </div>
+            </li>
+            }
+
+            @if (ShowTechSupportMenu) {
+            <li class="gbt">
+                <a id="frontdesk-menu" class="gbgt" href="javascript:void(0)">
+                    <span class="gbtb2"></span>
+                    <span class="gbts gbtsa">
+                        <span>@Resources.TechSupport</span>
+                        <span class="gbma"></span>
+                    </span>
+                </a>
+                <div id="frontdesk-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
+                    <div class="gbmc">
+                        <ol class="gbmcc">
                             @if (CurrentUser.GetPrivilege (SystemObjects.ServiceReports).AllowRead) {
                             <li class="gbmtc">
                                 <a class='gbmt @(Html.IsMenuSelected("Index", "ServiceReports") ? "gbm0l" : "")'
                                    href='@Url.Action("Index", "ServiceReports")'>@Resources.ServiceReports</a>
                             </li>
                             }
+                        </ol>
+                    </div>
+                </div>
+            </li>
+            }
+
+            @if (ShowFrontDeskMenu) {
+            <li class="gbt">
+                <a id="cfd-menu" class="gbgt" href="javascript:void(0)">
+                    <span class="gbtb2"></span>
+                    <span class="gbts gbtsa">
+                        <span>@Resources.FrontDesk</span>
+                        <span class="gbma"></span>
+                    </span>
+                </a>
+                <div id="frontdesk-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
+                    <div class="gbmc">
+                        <ol class="gbmcc">
                             @if (CurrentUser.GetPrivilege (SystemObjects.TranslationRequests).AllowRead) {
                             <li class="gbmtc">
                                 <a class='gbmt @(Html.IsMenuSelected("Index", "TranslationRequests") ? "gbm0l" : "")'
@@ -605,13 +643,13 @@
                 </a>
             </li>
             }
-            <li class="gbt">
+            @*<li class="gbt">
                 <a class="gbzt @(Html.IsMenuSelected("About", "Home") ? "gbz0l" : "")"
                    href="@Url.Action("About", "Home")">
                     <span class="gbtb2"></span>
                     <span class="gbts">@Resources.Title_About</span>
                 </a>
-            </li>
+            </li>*@
         </ol>
     </div>
     @Html.Partial("_LogOnPartial", CurrentUser)

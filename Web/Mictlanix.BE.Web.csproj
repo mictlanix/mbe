@@ -819,6 +819,9 @@
     <Content Include="Views\Shared\DisplayTemplates\Notarization.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\LabelSelector.cshtml" />
     <Content Include="Views\Reports\SalesPersonSummaryReport.cshtml" />
+    <Content Include="Views\ServiceReports\Print.cshtml" />
+    <Content Include="Views\Shared\_PrintELayout.cshtml" />
+    <Content Include="Content\printe.css" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
