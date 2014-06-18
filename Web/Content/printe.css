@@ -1,0 +1,120 @@
+﻿@page {
+    size: US-Letter;
+    margin: 10mm;
+}
+html, body {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+body {
+    font:normal 12pt;
+}
+#logo {
+	position:absolute;
+    right:1mm;
+	top:1mm;
+	margin-bottom:1mm;
+}
+#logo img {
+	max-width:30mm;
+	max-height:30mm;
+}
+header {
+	margin:1mm 50mm 4mm 1mm;
+	text-align:center;
+}
+header h1 {
+	text-align:center;
+}
+h1,h2,h3,h4 {
+	text-align:left;
+	margin:1mm 1mm 1mm 0;
+}
+h1, h2 {
+	font:bold 11.59pt;
+}
+h2 {
+	font-size:13pt;
+}
+h3, h4 {
+	font:normal 11.59pt;
+}
+h4 {
+	font-size:8.69pt;
+}
+p {
+  margin: 0 0 5px;
+}
+table {
+	width:100%;
+}
+table > thead > tr > th,
+table > tbody > tr > th,
+table > tfoot > tr > th,
+table > thead > tr > td,
+table > tbody > tr > td,
+table > tfoot > tr > td {
+	padding: 4px;
+	line-height: 1.42857143;
+	vertical-align: top;
+	font:normal 10pt;
+}
+table > thead > tr > th {
+	border-bottom: 1px solid #ddd;
+	font-size:12pt;
+}
+table > tbody > tr:nth-child(odd) > td,
+table > tbody > tr:nth-child(odd) > th {
+	background-color: #ECECEC !important;
+}
+.uppercase {
+	text-transform:uppercase;
+}
+.lowercase {
+	text-transform:lowercase;
+}
+.capitalize {
+	text-transform:capitalize;
+}
+.mylabel {
+	padding: .1em .1em .2em;
+	font-weight: bold;
+	background-color: #ECECEC !important;
+	font:normal 11pt;
+}
+.mylabel-rounded {
+	display:inline-block;
+	padding:1em 2em;
+	background-color: #ECECEC !important;
+	font:normal 8pt;
+	border-radius:2.5em;
+}
+.mylabel-rounded strong {
+	font-size:8pt;
+}
+.nowrap {
+	white-space:nowrap;
+}
+.monospaced {
+	font:normal 6pt "Lucida Console", Monaco, monospace;
+}
+.row-bordered div[class*="col-"] {
+	border: 1px solid #ddd;
+}
+.top-bordered div[class*="col-"] {
+	border-top: 1px solid #ddd;
+}
+.top-borderless div[class*="col-"] {
+	border-top:0;
+}
+.bottom-borderless div[class*="col-"] {
+	border-bottom:0;
+}
+.top-space {
+	margin-top:5mm;
+}
+
+@media print {
+	.media {page-break-inside : avoid}
+}

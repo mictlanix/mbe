@@ -78,12 +78,15 @@ namespace Mictlanix.BE.Web.Controllers
 
 			if (string.IsNullOrWhiteSpace (pattern)) {
 				query = from x in ServiceReport.Queryable
-					orderby x.Date descending
+						orderby x.Date descending
 				        select x;
 			} else {
 				query = from x in ServiceReport.Queryable
-				        where x.Customer.Name.Contains (pattern) ||
-				            x.Type.Contains (pattern)
+				        where x.Type.Contains (pattern) ||
+				            x.Equipment.Contains (pattern) ||
+				            x.Brand.Contains (pattern) ||
+				            x.Model.Contains (pattern) ||
+				            x.SerialNumber.Contains (pattern)
 						orderby x.Date descending
 				        select x;
 			}
@@ -102,9 +105,6 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
 		public ActionResult Create (ServiceReport item)
 		{
-			item.Customer = Customer.TryFind (item.CustomerId);
-			item.Supplier = Supplier.TryFind (item.SupplierId);
-
 			if (!ModelState.IsValid) {
 				return PartialView ("_Create", item);
 			}
@@ -131,9 +131,6 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult Edit (ServiceReport item)
 		{
-			item.Customer = Customer.TryFind (item.CustomerId);
-			item.Supplier = Supplier.TryFind (item.SupplierId);
-
 			if (!ModelState.IsValid) {
 				return PartialView ("_Edit", item);
 			}
@@ -141,14 +138,17 @@ namespace Mictlanix.BE.Web.Controllers
 			var entity = ServiceReport.Find (item.Id);
 
 			entity.Date = item.Date;
-			entity.Customer = item.Customer;
-			entity.Type = item.Type;
 			entity.Location = item.Location;
-			entity.Supplier = item.Supplier;
+			entity.Type = item.Type;
+			entity.Equipment = item.Equipment;
 			entity.Model = item.Model;
 			entity.Brand = item.Brand;
+			entity.SerialNumber = item.SerialNumber;
+			entity.User = item.User;
+			entity.Technician = item.Technician;
+			entity.Cost = item.Cost;
 			entity.UserReport = item.UserReport;
-			entity.UserDescription = item.UserDescription;
+			entity.Description = item.Description;
 			entity.Comment = item.Comment;
 
 			using (var scope = new TransactionScope()) {
@@ -179,6 +179,12 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 
 			return PartialView ("_DeleteSuccesful", item);
-        }
+		}
+
+		public ActionResult Print (int id)
+		{
+			var item = ServiceReport.Find (id);
+			return View (item);
+		}
     }
 }
