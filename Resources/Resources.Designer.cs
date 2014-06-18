@@ -616,6 +616,12 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string Equipment {
+            get {
+                return ResourceManager.GetString("Equipment", resourceCulture);
+            }
+        }
+        
         public static string StartingCash {
             get {
                 return ResourceManager.GetString("StartingCash", resourceCulture);
@@ -730,6 +736,12 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string Technician {
+            get {
+                return ResourceManager.GetString("Technician", resourceCulture);
+            }
+        }
+        
         public static string TaxpayerId {
             get {
                 return ResourceManager.GetString("TaxpayerId", resourceCulture);
@@ -745,6 +757,12 @@ namespace Mictlanix.BE {
         public static string CountedCash {
             get {
                 return ResourceManager.GetString("CountedCash", resourceCulture);
+            }
+        }
+        
+        public static string FrontDesk {
+            get {
+                return ResourceManager.GetString("FrontDesk", resourceCulture);
             }
         }
         
@@ -1357,6 +1375,12 @@ namespace Mictlanix.BE {
         public static string Message_InvalidCashDrawer {
             get {
                 return ResourceManager.GetString("Message_InvalidCashDrawer", resourceCulture);
+            }
+        }
+        
+        public static string ServiceDescription {
+            get {
+                return ResourceManager.GetString("ServiceDescription", resourceCulture);
             }
         }
         
@@ -3283,6 +3307,12 @@ namespace Mictlanix.BE {
         public static string TaxpayerRecipientNotFound {
             get {
                 return ResourceManager.GetString("TaxpayerRecipientNotFound", resourceCulture);
+            }
+        }
+        
+        public static string TechSupport {
+            get {
+                return ResourceManager.GetString("TechSupport", resourceCulture);
             }
         }
         

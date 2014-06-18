@@ -54,3 +54,21 @@ CREATE TABLE IF NOT EXISTS `notarization` (
 		FOREIGN KEY (`requester`) REFERENCES `employee` (`employee_id`)
 		ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE = InnoDB;
+
+ALTER TABLE `service_report` 
+	DROP FOREIGN KEY `service_report_supplier_fk`,
+	DROP FOREIGN KEY `service_report_customer_fk`,
+	DROP INDEX `service_report_customer_idx`,
+	DROP INDEX `service_report_supplier_idx`,
+	DROP COLUMN `supplier`,
+	DROP COLUMN `customer`;
+
+ALTER TABLE `service_report` 
+	ADD COLUMN `equipment` VARCHAR(64) NOT NULL AFTER `type`,
+	ADD COLUMN `serial_number` VARCHAR(64) NULL DEFAULT NULL AFTER `model`,
+	ADD COLUMN `user` VARCHAR(128) NULL DEFAULT NULL AFTER `serial_number`,
+	ADD COLUMN `technician` VARCHAR(128) NULL DEFAULT NULL AFTER `user`,
+	ADD COLUMN `cost` DECIMAL(18,4) NOT NULL AFTER `technician`,
+	CHANGE COLUMN `location` `location` VARCHAR(128) NOT NULL AFTER `date`,
+	CHANGE COLUMN `brand` `brand` VARCHAR(64) NOT NULL AFTER `equipment`,
+	CHANGE COLUMN `user_description` `description` VARCHAR(1024) NULL DEFAULT NULL AFTER `user_report`;

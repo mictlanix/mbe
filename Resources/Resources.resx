@@ -1908,4 +1908,19 @@ Realizada el: {0:d}</value>
   <data name="ChooseLabel" xml:space="preserve">
     <value>Seleccione una etiqueta</value>
   </data>
+  <data name="FrontDesk" xml:space="preserve">
+    <value>Recepción</value>
+  </data>
+  <data name="TechSupport" xml:space="preserve">
+    <value>Servicio Técnico</value>
+  </data>
+  <data name="Equipment" xml:space="preserve">
+    <value>Equipo</value>
+  </data>
+  <data name="Technician" xml:space="preserve">
+    <value>Técnico</value>
+  </data>
+  <data name="ServiceDescription" xml:space="preserve">
+    <value>Descripción del Servicio</value>
+  </data>
 </root>

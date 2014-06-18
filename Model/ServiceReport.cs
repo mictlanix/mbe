@@ -49,14 +49,11 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "Date", ResourceType = typeof(Resources))]
 		public virtual DateTime Date { get; set; }
 
+		[Property]
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[Display(Name = "Customer", ResourceType = typeof(Resources))]
-		[UIHint("CustomerSelector")]
-		public virtual int CustomerId { get; set; }
-
-		[BelongsTo("customer")]
-		[Display(Name = "Customer", ResourceType = typeof(Resources))]
-		public virtual Customer Customer { get; set; }
+		[Display(Name = "ServiceLocation", ResourceType = typeof(Resources))]
+		[StringLength(512, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public string Location { get; set; }
 
 		[Property]
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
@@ -65,25 +62,10 @@ namespace Mictlanix.BE.Model
 		public string Type { get; set; }
 
 		[Property]
-		[DataType(DataType.MultilineText)]
-		[Display(Name = "ServiceLocation", ResourceType = typeof(Resources))]
-		[StringLength(512, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-		public string Location { get; set; }
-
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [Display(Name = "Supplier", ResourceType = typeof(Resources))]
-        [UIHint("SupplierSelector")]
-        public int SupplierId { get; set; }
-
-        [BelongsTo("supplier")]
-        [Display(Name = "Supplier", ResourceType = typeof(Resources))]
-        public virtual Supplier Supplier { get; set; }
-
-		[Property]
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[Display(Name = "Model", ResourceType = typeof(Resources))]
+		[Display(Name = "Equipment", ResourceType = typeof(Resources))]
 		[StringLength(64, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-		public string Model { get; set; }
+		public string Equipment { get; set; }
 
 		[Property]
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
@@ -91,17 +73,45 @@ namespace Mictlanix.BE.Model
 		[StringLength(64, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
 		public string Brand { get; set; }
 
+		[Property]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[Display(Name = "Model", ResourceType = typeof(Resources))]
+		[StringLength(64, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public string Model { get; set; }
+
+		[Property("serial_number")]
+		[Display(Name = "SerialNumber", ResourceType = typeof(Resources))]
+		[StringLength(64, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public virtual string SerialNumber { get; set; }
+
+		[Property]
+		[Display(Name = "User", ResourceType = typeof(Resources))]
+		[StringLength(128, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public string User { get; set; }
+
+		[Property]
+		[Display(Name = "Technician", ResourceType = typeof(Resources))]
+		[StringLength(128, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public string Technician { get; set; }
+
+		[Property]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[DataType(DataType.Currency)]
+		[Range(0.0001, double.MaxValue, ErrorMessageResourceName = "Validation_CannotBeZeroOrNegative", ErrorMessageResourceType = typeof(Resources))]
+		[Display(Name = "Cost", ResourceType = typeof(Resources))]
+		public decimal Cost { get; set; }
+
 		[Property("user_report")]
 		[DataType(DataType.MultilineText)]
 		[Display(Name = "UserReport", ResourceType = typeof(Resources))]
 		[StringLength(1024, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
 		public string UserReport { get; set; }
 
-		[Property("user_description")]
+		[Property]
 		[DataType(DataType.MultilineText)]
-		[Display(Name = "UserDescription", ResourceType = typeof(Resources))]
+		[Display(Name = "ServiceDescription", ResourceType = typeof(Resources))]
 		[StringLength(1024, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-		public string UserDescription { get; set; }
+		public string Description { get; set; }
 
         [Property]
         [DataType(DataType.MultilineText)]
@@ -113,7 +123,7 @@ namespace Mictlanix.BE.Model
 
 		public override string ToString ()
 		{
-			return string.Format ("[ServiceReport: Id={0}, Date={1}, Customer={2}, Type={3}, Supplier={4}]", Id, Date, Customer, Type, Supplier);
+			return string.Format ("[ServiceReport: Id={0}, Date={1}, Type={2}", Id, Date, Type);
 		}
 
         public override bool Equals(object obj)
