@@ -1846,10 +1846,10 @@ Realizada el: {0:d}</value>
     <value>Estado</value>
   </data>
   <data name="TechnicalServiceReports" xml:space="preserve">
-    <value>Reportes de Servicio</value>
+    <value>Reportes de Servicio Técnico</value>
   </data>
-  <data name="ServiceReport" xml:space="preserve">
-    <value>Reporte de Servicio</value>
+  <data name="TechnicalServiceReport" xml:space="preserve">
+    <value>Reporte de Servicio Técnico</value>
   </data>
   <data name="ServiceType" xml:space="preserve">
     <value>Tipo de Servicio</value>
@@ -1911,7 +1911,7 @@ Realizada el: {0:d}</value>
   <data name="FrontDesk" xml:space="preserve">
     <value>Recepción</value>
   </data>
-  <data name="TechSupport" xml:space="preserve">
+  <data name="TechnicalService" xml:space="preserve">
     <value>Servicio Técnico</value>
   </data>
   <data name="Equipment" xml:space="preserve">
@@ -1922,5 +1922,44 @@ Realizada el: {0:d}</value>
   </data>
   <data name="ServiceDescription" xml:space="preserve">
     <value>Descripción del Servicio</value>
+  </data>
+  <data name="RequestType" xml:space="preserve">
+    <value>Tipo de Solicitud</value>
+  </data>
+  <data name="Demonstration" xml:space="preserve">
+    <value>Demostración</value>
+  </data>
+  <data name="Installation" xml:space="preserve">
+    <value>Instalación</value>
+  </data>
+  <data name="Loan" xml:space="preserve">
+    <value>Préstamo</value>
+  </data>
+  <data name="RequestLocation" xml:space="preserve">
+    <value>Lugar</value>
+  </data>
+  <data name="ResponsiblePerson" xml:space="preserve">
+    <value>Responsable</value>
+  </data>
+  <data name="Remarks" xml:space="preserve">
+    <value>Observaciones</value>
+  </data>
+  <data name="PaymentStatus" xml:space="preserve">
+    <value>Estado del Pago</value>
+  </data>
+  <data name="ShippingMethod" xml:space="preserve">
+    <value>Método de Envío</value>
+  </data>
+  <data name="ContactName" xml:space="preserve">
+    <value>Nombre del Contacto</value>
+  </data>
+  <data name="ContactPhoneNumber" xml:space="preserve">
+    <value>Teléfono de Contacto</value>
+  </data>
+  <data name="TechnicalServiceRequest" xml:space="preserve">
+    <value>Solicitud de Servicio Técnico</value>
+  </data>
+  <data name="TechnicalServiceRequests" xml:space="preserve">
+    <value>Solicitudes de Servicio Técnico</value>
   </data>
 </root>

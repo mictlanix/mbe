@@ -226,6 +226,7 @@
     <Compile Include="Controllers\TranslationRequestsController.cs" />
     <Compile Include="Controllers\NotarizationsController.cs" />
     <Compile Include="Controllers\TechnicalServiceReportsController.cs" />
+    <Compile Include="Controllers\TechnicalServiceRequestsController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
@@ -781,8 +782,6 @@
     <Content Include="Views\DeliveryOrders\_ItemDisplayView.cshtml" />
     <Content Include="Views\FiscalDocuments\Print22Dataprint.cshtml" />
     <Content Include="Views\FiscalDocuments\Print20Dataprint.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\ServiceReport.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\ServiceReport.cshtml" />
     <Content Include="Views\TranslationRequests\_Create.cshtml" />
     <Content Include="Views\TranslationRequests\_CreateSuccesful.cshtml" />
     <Content Include="Views\TranslationRequests\_Delete.cshtml" />
@@ -822,6 +821,8 @@
     <Content Include="Views\TechnicalServiceReports\Index.cshtml" />
     <Content Include="Views\TechnicalServiceReports\_View.cshtml" />
     <Content Include="Views\TechnicalServiceReports\Print.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\TechnicalServiceReport.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\TechnicalServiceReport.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
