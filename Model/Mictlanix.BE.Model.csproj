@@ -149,9 +149,11 @@
     <Compile Include="TaxpayerIssuer.cs" />
     <Compile Include="TaxpayerRecipient.cs" />
     <Compile Include="CustomerDiscount.cs" />
-    <Compile Include="ServiceReport.cs" />
     <Compile Include="TranslationRequest.cs" />
     <Compile Include="Notarization.cs" />
+    <Compile Include="TechnicalServiceReport.cs" />
+    <Compile Include="TechnicalServiceRequest.cs" />
+    <Compile Include="Constants\TechnicalServiceRequestType.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

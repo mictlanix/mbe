@@ -1,5 +1,5 @@
 ﻿// 
-// ServiceReport.cs
+// TechnicalServiceRequest.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.com>
@@ -35,43 +35,30 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Mictlanix.BE.Model
 {
-	[ActiveRecord("service_report")]
-	public class ServiceReport : ActiveRecordLinqBase<ServiceReport>
+	[ActiveRecord("tech_service_request")]
+	public class TechnicalServiceRequest : ActiveRecordLinqBase<TechnicalServiceRequest>
     {
-		[PrimaryKey(PrimaryKeyType.Identity, "service_report_id")]
+		[PrimaryKey(PrimaryKeyType.Identity, "tech_service_request_id")]
         [Display(Name = "Id", ResourceType = typeof(Resources))]
 		[DisplayFormat(DataFormatString = "{0:D8}")]
-        public int Id { get; set; }
+		public int Id { get; set; }
 
 		[Property]
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[DataType(DataType.Date)]
-		[Display(Name = "Date", ResourceType = typeof(Resources))]
-		public virtual DateTime Date { get; set; }
-
-		[Property]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[Display(Name = "ServiceLocation", ResourceType = typeof(Resources))]
-		[StringLength(512, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-		public string Location { get; set; }
-
-		[Property]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[Display(Name = "ServiceType", ResourceType = typeof(Resources))]
-		[StringLength(128, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-		public string Type { get; set; }
-
-		[Property]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[Display(Name = "Equipment", ResourceType = typeof(Resources))]
-		[StringLength(64, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-		public string Equipment { get; set; }
+		[Display(Name = "RequestType", ResourceType = typeof(Resources))]
+		public TechnicalServiceRequestType Type { get; set; }
 
 		[Property]
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
 		[Display(Name = "Brand", ResourceType = typeof(Resources))]
 		[StringLength(64, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
 		public string Brand { get; set; }
+
+		[Property]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[Display(Name = "Equipment", ResourceType = typeof(Resources))]
+		[StringLength(64, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public string Equipment { get; set; }
 
 		[Property]
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
@@ -85,33 +72,69 @@ namespace Mictlanix.BE.Model
 		public virtual string SerialNumber { get; set; }
 
 		[Property]
-		[Display(Name = "User", ResourceType = typeof(Resources))]
-		[StringLength(128, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-		public string User { get; set; }
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[DataType(DataType.Date)]
+		[Display(Name = "Date", ResourceType = typeof(Resources))]
+		public virtual DateTime Date { get; set; }
 
-		[Property]
-		[Display(Name = "Technician", ResourceType = typeof(Resources))]
+		[Property("end_date")]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[DataType(DataType.Date)]
+		[Display(Name = "EndDate", ResourceType = typeof(Resources))]
+		public virtual DateTime? EndDate { get; set; }
+
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[Display(Name = "Customer", ResourceType = typeof(Resources))]
+		[UIHint("CustomerSelector")]
+		public virtual string CustomerId { get; set; }
+
+		[BelongsTo("customer", NotNull = true, Fetch = FetchEnum.Join)]
+		[Display(Name = "Customer", ResourceType = typeof(Resources))]
+		public virtual Customer Customer { get; set; }
+
+		[Property("responsible")]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[Display(Name = "ResponsiblePerson", ResourceType = typeof(Resources))]
 		[StringLength(128, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-		public string Technician { get; set; }
+		public string ResponsiblePerson { get; set; }
 
 		[Property]
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[DataType(DataType.Currency)]
-		[Range(0.0001, double.MaxValue, ErrorMessageResourceName = "Validation_CannotBeZeroOrNegative", ErrorMessageResourceType = typeof(Resources))]
-		[Display(Name = "Cost", ResourceType = typeof(Resources))]
-		public decimal Cost { get; set; }
+		[Display(Name = "RequestLocation", ResourceType = typeof(Resources))]
+		[StringLength(512, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public string Location { get; set; }
 
-		[Property("user_report")]
+		[Property("payment_status")]
+		[Display(Name = "PaymentStatus", ResourceType = typeof(Resources))]
+		[StringLength(64, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public string PaymentStatus { get; set; }
+
+		[Property("shipping_method")]
+		[Display(Name = "ShippingMethod", ResourceType = typeof(Resources))]
+		[StringLength(64, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public string ShippingMethod { get; set; }
+
+		[Property("contact_name")]
+		[Display(Name = "ContactName", ResourceType = typeof(Resources))]
+		[StringLength(64, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public string ContactName { get; set; }
+
+		[Property("contact_phone_number")]
+		[Display(Name = "ContactPhoneNumber", ResourceType = typeof(Resources))]
+		[StringLength(64, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public string ContactPhoneNumber { get; set; }
+
+		[Property("address")]
 		[DataType(DataType.MultilineText)]
-		[Display(Name = "UserReport", ResourceType = typeof(Resources))]
-		[StringLength(1024, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-		public string UserReport { get; set; }
+		[Display(Name = "Address", ResourceType = typeof(Resources))]
+		[StringLength(256, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public string Address { get; set; }
 
 		[Property]
 		[DataType(DataType.MultilineText)]
-		[Display(Name = "ServiceDescription", ResourceType = typeof(Resources))]
+		[Display(Name = "Remarks", ResourceType = typeof(Resources))]
 		[StringLength(1024, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-		public string Description { get; set; }
+		public string Remarks { get; set; }
 
         [Property]
         [DataType(DataType.MultilineText)]
@@ -128,7 +151,7 @@ namespace Mictlanix.BE.Model
 
         public override bool Equals(object obj)
         {
-			var other = obj as ServiceReport;
+			var other = obj as TechnicalServiceRequest;
 
             if (other == null)
                 return false;

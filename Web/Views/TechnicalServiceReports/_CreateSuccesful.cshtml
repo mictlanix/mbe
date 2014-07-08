@@ -1,7 +1,7 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
-@model ServiceReport
+@model TechnicalServiceReport
 @{
     var Privilege = Html.GetPrivilege(Html.CurrentUser() ?? new User(), SystemObjects.TechnicalServiceReports);
     ViewBag.Privilege = Privilege;
