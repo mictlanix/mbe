@@ -1,5 +1,5 @@
 ﻿// 
-// ServiceReportsController.cs
+// TechnicalServiceReportsController.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.com>
@@ -42,7 +42,7 @@ using Mictlanix.BE.Web.Helpers;
 namespace Mictlanix.BE.Web.Controllers
 {
 	[Authorize]
-	public class ServiceReportsController : Controller
+	public class TechnicalServiceReportsController : Controller
     {
 		public ActionResult Index ()
 		{

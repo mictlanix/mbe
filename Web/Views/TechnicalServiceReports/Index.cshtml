@@ -5,12 +5,12 @@
 @model Search<ServiceReport>
 
 @{
-    ViewBag.Title = Resources.ServiceReports;
+    ViewBag.Title = Resources.TechnicalServiceReports;
     var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = CurrentUser.GetPrivilege(SystemObjects.ServiceReports);
+    var Privilege = CurrentUser.GetPrivilege(SystemObjects.TechnicalServiceReports);
 }
 
-<h2>@Resources.ServiceReports</h2>
+<h2>@Resources.TechnicalServiceReports</h2>
 
 @if (Privilege.AllowCreate) {
     @Html.ActionLink(Resources.CreateNew, "Create", new { }, new { @class = "button icon add open-modal", data_modal_id = "service-modal" })

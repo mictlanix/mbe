@@ -67,7 +67,7 @@
                           CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPersonAndBrand).AllowRead ||
                           CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPersonAndModel).AllowRead;
     
-    var ShowTechSupportMenu = CurrentUser.GetPrivilege (SystemObjects.ServiceReports).AllowRead;
+    var ShowTechnicalServiceMenu = CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceReports).AllowRead;
 
     var ShowFrontDeskMenu = CurrentUser.GetPrivilege (SystemObjects.TranslationRequests).AllowRead ||
                             CurrentUser.GetPrivilege (SystemObjects.Notarizations).AllowRead;
@@ -370,7 +370,7 @@
             </li>
             }
 
-            @if (ShowTechSupportMenu) {
+            @if (ShowTechnicalServiceMenu) {
             <li class="gbt">
                 <a id="frontdesk-menu" class="gbgt" href="javascript:void(0)">
                     <span class="gbtb2"></span>
@@ -382,10 +382,10 @@
                 <div id="frontdesk-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
                     <div class="gbmc">
                         <ol class="gbmcc">
-                            @if (CurrentUser.GetPrivilege (SystemObjects.ServiceReports).AllowRead) {
+                            @if (CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceReports).AllowRead) {
                             <li class="gbmtc">
-                                <a class='gbmt @(Html.IsMenuSelected("Index", "ServiceReports") ? "gbm0l" : "")'
-                                   href='@Url.Action("Index", "ServiceReports")'>@Resources.ServiceReports</a>
+                                <a class='gbmt @(Html.IsMenuSelected("Index", "TechnicalServiceReports") ? "gbm0l" : "")'
+                                   href='@Url.Action("Index", "TechnicalServiceReports")'>@Resources.TechnicalServiceReports</a>
                             </li>
                             }
                         </ol>
