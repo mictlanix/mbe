@@ -1,5 +1,5 @@
 ﻿// 
-// TechnicalServiceReportsController.cs
+// TechnicalServiceRequestsController.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.com>
@@ -42,11 +42,11 @@ using Mictlanix.BE.Web.Helpers;
 namespace Mictlanix.BE.Web.Controllers
 {
 	[Authorize]
-	public class TechnicalServiceReportsController : Controller
+	public class TechnicalServiceRequestsController : Controller
     {
 		public ActionResult Index ()
 		{
-			var search = Search (new Search<TechnicalServiceReport> {
+			var search = Search (new Search<TechnicalServiceRequest> {
 				Limit = Configuration.PageSize
 			});
 
@@ -58,7 +58,7 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 
 		[HttpPost]
-		public ActionResult Index (Search<TechnicalServiceReport> search)
+		public ActionResult Index (Search<TechnicalServiceRequest> search)
 		{
 			if (ModelState.IsValid) {
 				search = Search (search);
@@ -71,19 +71,18 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 		}
 
-		Search<TechnicalServiceReport> Search (Search<TechnicalServiceReport> search)
+		Search<TechnicalServiceRequest> Search (Search<TechnicalServiceRequest> search)
 		{
-			IQueryable<TechnicalServiceReport> query;
+			IQueryable<TechnicalServiceRequest> query;
 			var pattern = string.Format("{0}", search.Pattern).Trim ();
 
 			if (string.IsNullOrWhiteSpace (pattern)) {
-				query = from x in TechnicalServiceReport.Queryable
+				query = from x in TechnicalServiceRequest.Queryable
 						orderby x.Date descending
 				        select x;
 			} else {
-				query = from x in TechnicalServiceReport.Queryable
-				        where x.Type.Contains (pattern) ||
-				            x.Equipment.Contains (pattern) ||
+				query = from x in TechnicalServiceRequest.Queryable
+				        where x.Equipment.Contains (pattern) ||
 				            x.Brand.Contains (pattern) ||
 				            x.Model.Contains (pattern) ||
 				            x.SerialNumber.Contains (pattern)
@@ -103,7 +102,7 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 
         [HttpPost]
-		public ActionResult Create (TechnicalServiceReport item)
+		public ActionResult Create (TechnicalServiceRequest item)
 		{
 			if (!ModelState.IsValid) {
 				return PartialView ("_Create", item);
@@ -118,24 +117,24 @@ namespace Mictlanix.BE.Web.Controllers
 
 		public ActionResult View (int id)
 		{
-			var item = TechnicalServiceReport.Find (id);
+			var item = TechnicalServiceRequest.Find (id);
 			return PartialView ("_View", item);
 		}
 
 		public ActionResult Edit (int id)
         {
-        	var item = TechnicalServiceReport.Find (id);
+        	var item = TechnicalServiceRequest.Find (id);
 			return PartialView ("_Edit", item);
         }
 
         [HttpPost]
-        public ActionResult Edit (TechnicalServiceReport item)
+        public ActionResult Edit (TechnicalServiceRequest item)
 		{
 			if (!ModelState.IsValid) {
 				return PartialView ("_Edit", item);
 			}
 			
-			var entity = TechnicalServiceReport.Find (item.Id);
+			var entity = TechnicalServiceRequest.Find (item.Id);
 
 			entity.Date = item.Date;
 			entity.Location = item.Location;
@@ -144,11 +143,6 @@ namespace Mictlanix.BE.Web.Controllers
 			entity.Model = item.Model;
 			entity.Brand = item.Brand;
 			entity.SerialNumber = item.SerialNumber;
-			entity.User = item.User;
-			entity.Technician = item.Technician;
-			entity.Cost = item.Cost;
-			entity.UserReport = item.UserReport;
-			entity.Description = item.Description;
 			entity.Comment = item.Comment;
 
 			using (var scope = new TransactionScope()) {
@@ -160,14 +154,14 @@ namespace Mictlanix.BE.Web.Controllers
 
 		public ActionResult Delete (int id)
         {
-            var item = TechnicalServiceReport.Find (id);
+            var item = TechnicalServiceRequest.Find (id);
 			return PartialView ("_Delete", item);
         }
 
         [HttpPost, ActionName ("Delete")]
 		public ActionResult DeleteConfirmed (int id)
 		{
-			var item = TechnicalServiceReport.Find (id);
+			var item = TechnicalServiceRequest.Find (id);
 
 			try {
 				using (var scope = new TransactionScope()) {
@@ -183,7 +177,7 @@ namespace Mictlanix.BE.Web.Controllers
 
 		public ActionResult Print (int id)
 		{
-			var item = TechnicalServiceReport.Find (id);
+			var item = TechnicalServiceRequest.Find (id);
 			return View (item);
 		}
     }
