@@ -223,9 +223,9 @@
     <Compile Include="Controllers\TaxpayerRecipientsController.cs" />
     <Compile Include="Helpers\NHibernateExtensions.cs" />
     <Compile Include="Controllers\ProductionOrdersController.cs" />
-    <Compile Include="Controllers\ServiceReportsController.cs" />
     <Compile Include="Controllers\TranslationRequestsController.cs" />
     <Compile Include="Controllers\NotarizationsController.cs" />
+    <Compile Include="Controllers\TechnicalServiceReportsController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
@@ -781,18 +781,8 @@
     <Content Include="Views\DeliveryOrders\_ItemDisplayView.cshtml" />
     <Content Include="Views\FiscalDocuments\Print22Dataprint.cshtml" />
     <Content Include="Views\FiscalDocuments\Print20Dataprint.cshtml" />
-    <Content Include="Views\ServiceReports\_Create.cshtml" />
-    <Content Include="Views\ServiceReports\_CreateSuccesful.cshtml" />
-    <Content Include="Views\ServiceReports\_Delete.cshtml" />
-    <Content Include="Views\ServiceReports\_DeleteSuccesful.cshtml" />
-    <Content Include="Views\ServiceReports\_Edit.cshtml" />
-    <Content Include="Views\ServiceReports\_Index.cshtml" />
-    <Content Include="Views\ServiceReports\_Item.cshtml" />
-    <Content Include="Views\ServiceReports\_Refresh.cshtml" />
-    <Content Include="Views\ServiceReports\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ServiceReport.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\ServiceReport.cshtml" />
-    <Content Include="Views\ServiceReports\_View.cshtml" />
     <Content Include="Views\TranslationRequests\_Create.cshtml" />
     <Content Include="Views\TranslationRequests\_CreateSuccesful.cshtml" />
     <Content Include="Views\TranslationRequests\_Delete.cshtml" />
@@ -819,9 +809,19 @@
     <Content Include="Views\Shared\DisplayTemplates\Notarization.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\LabelSelector.cshtml" />
     <Content Include="Views\Reports\SalesPersonSummaryReport.cshtml" />
-    <Content Include="Views\ServiceReports\Print.cshtml" />
     <Content Include="Views\Shared\_PrintELayout.cshtml" />
     <Content Include="Content\printe.css" />
+    <Content Include="Views\TechnicalServiceReports\_Create.cshtml" />
+    <Content Include="Views\TechnicalServiceReports\_CreateSuccesful.cshtml" />
+    <Content Include="Views\TechnicalServiceReports\_Delete.cshtml" />
+    <Content Include="Views\TechnicalServiceReports\_DeleteSuccesful.cshtml" />
+    <Content Include="Views\TechnicalServiceReports\_Edit.cshtml" />
+    <Content Include="Views\TechnicalServiceReports\_Index.cshtml" />
+    <Content Include="Views\TechnicalServiceReports\_Item.cshtml" />
+    <Content Include="Views\TechnicalServiceReports\_Refresh.cshtml" />
+    <Content Include="Views\TechnicalServiceReports\Index.cshtml" />
+    <Content Include="Views\TechnicalServiceReports\_View.cshtml" />
+    <Content Include="Views\TechnicalServiceReports\Print.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
