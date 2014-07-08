@@ -6,7 +6,7 @@
 
 @{
     var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.ServiceReports);
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.TechnicalServiceReports);
     ViewBag.Privilege = Privilege;
 }
 

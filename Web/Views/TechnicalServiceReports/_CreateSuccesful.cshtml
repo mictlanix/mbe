@@ -3,7 +3,7 @@
 @using Mictlanix.BE.Web.Helpers
 @model ServiceReport
 @{
-    var Privilege = Html.GetPrivilege(Html.CurrentUser() ?? new User(), SystemObjects.ServiceReports);
+    var Privilege = Html.GetPrivilege(Html.CurrentUser() ?? new User(), SystemObjects.TechnicalServiceReports);
     ViewBag.Privilege = Privilege;
 }
 @Html.Partial("_Item", Model)
