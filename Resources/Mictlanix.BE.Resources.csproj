@@ -18,6 +18,11 @@
     <OutputPath>bin\Debug</OutputPath>
     <WarningLevel>4</WarningLevel>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeBuild" command="sed -i -e &quot;s/System[.]Resources[.]ResXDataNode/string/g&quot; Resources.Designer.cs" workingdir="${ProjectDir}" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>

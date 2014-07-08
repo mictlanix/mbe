@@ -151,8 +151,8 @@ namespace Mictlanix.BE.Model {
 		StandaloneFiscalDocuments,
 		[Display(Name = "ProductionOrders", ResourceType = typeof(Resources))]
 		ProductionOrders,
-		[Display(Name = "ServiceReports", ResourceType = typeof(Resources))]
-		ServiceReports,
+		[Display(Name = "TechnicalServiceReports", ResourceType = typeof(Resources))]
+		TechnicalServiceReports,
 		[Display(Name = "TranslationRequests", ResourceType = typeof(Resources))]
 		TranslationRequests,
 		[Display(Name = "Notarizations", ResourceType = typeof(Resources))]

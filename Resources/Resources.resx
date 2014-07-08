@@ -266,7 +266,7 @@
     <value>Almacenes</value>
   </data>
   <data name="UnitOfMeasurement" xml:space="preserve">
-    <value>U. M.</value>
+    <value>Unidad de Medida</value>
   </data>
   <data name="UnitOfMeasurementShort" xml:space="preserve">
     <value>UM</value>
@@ -1845,7 +1845,7 @@ Realizada el: {0:d}</value>
   <data name="Status" xml:space="preserve">
     <value>Estado</value>
   </data>
-  <data name="ServiceReports" xml:space="preserve">
+  <data name="TechnicalServiceReports" xml:space="preserve">
     <value>Reportes de Servicio</value>
   </data>
   <data name="ServiceReport" xml:space="preserve">

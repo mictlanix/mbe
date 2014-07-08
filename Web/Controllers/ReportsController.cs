@@ -626,7 +626,7 @@ namespace Mictlanix.BE.Web.Controllers
 						FROM sales_order m
 						INNER JOIN sales_order_detail d ON m.sales_order_id = d.sales_order
 						INNER JOIN employee e ON m.salesperson = e.employee_id
-						WHERE m.store = :store AND m.completed = 1 AND m.paid = 1 AND m.cancelled = 0 AND
+						WHERE m.store = :store AND m.completed = 1 AND m.cancelled = 0 AND
 							m.date >= :start AND m.date <= :end
 						GROUP BY salesperson, first_name, last_name";
 
@@ -665,7 +665,7 @@ namespace Mictlanix.BE.Web.Controllers
 						FROM sales_order m
 						INNER JOIN sales_order_detail d ON m.sales_order_id = d.sales_order
 						INNER JOIN customer c ON m.customer = c.customer_id
-						WHERE m.store = :store AND m.completed = 1 AND m.paid = 1 AND m.cancelled = 0 AND
+						WHERE m.store = :store AND m.completed = 1 AND m.cancelled = 0 AND
 							m.date >= :start AND m.date <= :end
 						GROUP BY customer";
 
@@ -704,7 +704,7 @@ namespace Mictlanix.BE.Web.Controllers
 						FROM sales_order m
 						INNER JOIN sales_order_detail d ON m.sales_order_id = d.sales_order
 						INNER JOIN product p ON d.product = p.product_id
-						WHERE m.store = :store AND m.completed = 1 AND m.paid = 1 AND m.cancelled = 0 AND
+						WHERE m.store = :store AND m.completed = 1 AND m.cancelled = 0 AND
 							m.date >= :start AND m.date <= :end
 						GROUP BY product";
 
@@ -741,7 +741,7 @@ namespace Mictlanix.BE.Web.Controllers
 						FROM sales_order m
 						INNER JOIN sales_order_detail d ON m.sales_order_id = d.sales_order
 						INNER JOIN customer c ON m.customer = c.customer_id
-						WHERE m.salesperson = :employee AND m.completed = 1 AND m.paid = 1 AND m.cancelled = 0 AND
+						WHERE m.salesperson = :employee AND m.completed = 1 AND m.cancelled = 0 AND
 							m.date >= :start AND m.date < :end
 						GROUP BY sales_order";
 
