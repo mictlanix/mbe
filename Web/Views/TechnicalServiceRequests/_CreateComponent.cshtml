@@ -1,0 +1,40 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model TechnicalServiceRequestComponent
+
+<div class='modal-header'>
+	<button type='button' class='close' data-dismiss='modal'>&times;</button>
+	<h3>@Resources.Component</h3>
+</div>
+<div class='modal-body'>
+@using (Ajax.BeginForm(null, null, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "component-modal" }, new { @class = "modal-form" })) {
+    @Html.ValidationSummary(true)
+    @Html.Hidden("RequestId", (int)ViewBag.RequestId)
+	<div style='overflow:hidden'>
+		<div class="row">
+		  	<div class="span1 field-required">@Html.LabelFor(x => x.Quantity)</div>
+		  	<div class="span5 field-required">@Html.LabelFor(x => x.Name)</div>
+		  	<div class="span2">@Html.LabelFor(x => x.SerialNumber)</div>
+		</div>
+		<div class="row">
+		  	<div class="span1">@Html.EditorFor(x => x.Quantity) @Html.ValidationMessageFor(x => x.Quantity)</div>
+		  	<div class="span5">@Html.EditorFor(x => x.Name) @Html.ValidationMessageFor(x => x.Name)</div>
+		  	<div class="span2">@Html.EditorFor(x => x.SerialNumber) @Html.ValidationMessageFor(x => x.SerialNumber)</div>
+		</div>
+		<div class="row">
+		  	<div class="span8">@Html.LabelFor(x => x.Comment)</div>
+		</div>
+		<div class="row">
+		  	<div class="span8">@Html.EditorFor(x => x.Comment)</div>
+		</div>
+	</div>
+}
+</div>
+<div class='modal-footer'>
+	<button type='button' class='btn' data-dismiss='modal'>@Resources.Discard</button>
+	<button type='submit' class='btn btn-primary' onclick='$("#component-modal form").submit();'>@Resources.Create</button>
+</div>
+<script type='text/javascript'>
+$('#Quantity').addClass("text-right");
+</script>

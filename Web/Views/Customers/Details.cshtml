@@ -58,7 +58,7 @@
     </ul>
     <div class='tab-content'>
 	    <div id='tab-1' class='tab-pane active'>
-    	@if(AllowCreateAddresses) {
+    	@if(Privilege.AllowUpdate) {
 	    	<div class='control-group text-right'>
 				<a id='add-taxpayer' class='btn' data-url='@Url.Action("AddTaxpayer", new { id = Model.Id })'
 				   data-type='text' data-placement='left' data-pk='@Model.Id' data-value=''

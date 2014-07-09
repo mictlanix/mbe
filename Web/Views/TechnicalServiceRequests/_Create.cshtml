@@ -1,0 +1,73 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model TechnicalServiceRequest
+
+<div class='modal-header'>
+	<button type='button' class='close' data-dismiss='modal'>&times;</button>
+	<h3>@Resources.TechnicalServiceRequest</h3>
+</div>
+<div class='modal-body'>
+@using (Ajax.BeginForm(null, null, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "service-modal" }, new { @class = "modal-form" })) {
+    @Html.ValidationSummary(true)
+	<div style='overflow:hidden'>
+		<div class="row">
+			<div class="span8 field-required">@Html.LabelFor(x => x.Type)</div>
+		</div>
+		<div class="row">
+			<div class="span8">@Html.EditorFor(x => x.Type) @Html.ValidationMessageFor(x => x.Type)</div>
+		</div>
+		<div class="row">
+		  	<div class="span2 field-required">@Html.LabelFor(x => x.Brand)</div>
+		  	<div class="span2 field-required">@Html.LabelFor(x => x.Equipment)</div>
+		  	<div class="span2 field-required">@Html.LabelFor(x => x.Model)</div>
+		  	<div class="span2">@Html.LabelFor(x => x.SerialNumber)</div>
+		</div>
+		<div class="row">
+		  	<div class="span2">@Html.EditorFor(x => x.Brand) @Html.ValidationMessageFor(x => x.Brand)</div>
+		  	<div class="span2">@Html.EditorFor(x => x.Equipment) @Html.ValidationMessageFor(x => x.Equipment)</div>
+		  	<div class="span2">@Html.EditorFor(x => x.Model) @Html.ValidationMessageFor(x => x.Model)</div>
+		  	<div class="span2">@Html.EditorFor(x => x.SerialNumber) @Html.ValidationMessageFor(x => x.SerialNumber)</div>
+		</div>
+		<div class="row">
+		  	<div class="span2 field-required">@Html.LabelFor(x => x.Date)</div>
+			<div class="span4 field-required">@Html.LabelFor(x => x.Location)</div>
+		  	<div class="span2">@Html.LabelFor(x => x.EndDate)</div>
+		</div>
+		<div class="row">
+		  	<div class="span2">@Html.EditorFor(x => x.Date) @Html.ValidationMessageFor(x => x.Date)</div>
+		  	<div class="span4">@Html.EditorFor(x => x.Location) @Html.ValidationMessageFor(x => x.Location)</div>
+		  	<div class="span2">@Html.EditorFor(x => x.EndDate) @Html.ValidationMessageFor(x => x.EndDate)</div>
+		</div>
+		<div class="row">
+		  	<div class="span8 field-required">@Html.LabelFor(x => x.Customer)</div>
+		</div>
+		<div class="row">
+		  	<div class="span8">@Html.EditorFor(x => x.CustomerId) @Html.ValidationMessageFor(x => x.CustomerId)</div>
+		</div>
+		<div class="row">
+		  	<div class="span8 field-required">@Html.LabelFor(x => x.ResponsiblePerson)</div>
+		</div>
+		<div class="row">
+		  	<div class="span8">@Html.EditorFor(x => x.ResponsiblePerson) @Html.ValidationMessageFor(x => x.ResponsiblePerson)</div>
+		</div>
+		<div class="row">
+		  	<div class="span8">@Html.LabelFor(x => x.Comment)</div>
+		</div>
+		<div class="row">
+		  	<div class="span8">@Html.EditorFor(x => x.Comment)</div>
+		</div>
+	</div>
+}
+</div>
+<div class='modal-footer'>
+	<button type='button' class='btn' data-dismiss='modal'>@Resources.Discard</button>
+	<button type='submit' class='btn btn-primary' onclick='$("#service-modal form").submit();'>@Resources.Create</button>
+</div>
+<style type="text/css">
+ul.token-input-list { width:100%; }
+div.token-input-dropdown {width:650px;}
+</style>
+<script type='text/javascript'>
+$('#Date,#EndDate').datepicker({ language: 'es', format: 'yyyy-mm-dd' });
+</script>

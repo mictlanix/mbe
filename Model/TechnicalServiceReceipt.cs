@@ -1,5 +1,5 @@
 ﻿// 
-// TechnicalServiceRequest.cs
+// TechnicalServiceReceipt.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.com>
@@ -35,20 +35,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Mictlanix.BE.Model
 {
-	[ActiveRecord("tech_service_request")]
-	public class TechnicalServiceRequest : ActiveRecordLinqBase<TechnicalServiceRequest>
+	[ActiveRecord("tech_service_receipt")]
+	public class TechnicalServiceReceipt : ActiveRecordLinqBase<TechnicalServiceReceipt>
     {
-		IList<TechnicalServiceRequestComponent> components = new List<TechnicalServiceRequestComponent>();
+		IList<TechnicalServiceReceiptComponent> components = new List<TechnicalServiceReceiptComponent>();
 
-		[PrimaryKey(PrimaryKeyType.Identity, "tech_service_request_id")]
+		[PrimaryKey(PrimaryKeyType.Identity, "tech_service_receipt_id")]
         [Display(Name = "Id", ResourceType = typeof(Resources))]
 		[DisplayFormat(DataFormatString = "{0:D8}")]
 		public int Id { get; set; }
-
-		[Property]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[Display(Name = "RequestType", ResourceType = typeof(Resources))]
-		public TechnicalServiceRequestType Type { get; set; }
 
 		[Property]
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
@@ -79,63 +74,21 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "Date", ResourceType = typeof(Resources))]
 		public virtual DateTime Date { get; set; }
 
-		[Property("end_date")]
-		[DataType(DataType.Date)]
-		[Display(Name = "EndDate", ResourceType = typeof(Resources))]
-		public virtual DateTime? EndDate { get; set; }
-
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[Display(Name = "Customer", ResourceType = typeof(Resources))]
-		[UIHint("CustomerSelector")]
-		public virtual int CustomerId { get; set; }
-
-		[BelongsTo("customer", NotNull = true, Fetch = FetchEnum.Join)]
-		[Display(Name = "Customer", ResourceType = typeof(Resources))]
-		public virtual Customer Customer { get; set; }
-
-		[Property("responsible")]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[Display(Name = "ResponsiblePerson", ResourceType = typeof(Resources))]
-		[StringLength(128, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-		public string ResponsiblePerson { get; set; }
+		[Property]
+		[Display(Name = "Status", ResourceType = typeof(Resources))]
+		[StringLength(64, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public string Status { get; set; }
 
 		[Property]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[Display(Name = "RequestLocation", ResourceType = typeof(Resources))]
+		[Display(Name = "ReceiptLocation", ResourceType = typeof(Resources))]
 		[StringLength(128, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
 		public string Location { get; set; }
 
-		[Property("payment_status")]
-		[Display(Name = "PaymentStatus", ResourceType = typeof(Resources))]
-		[StringLength(64, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-		public string PaymentStatus { get; set; }
-
-		[Property("shipping_method")]
-		[Display(Name = "ShippingMethod", ResourceType = typeof(Resources))]
-		[StringLength(64, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-		public string ShippingMethod { get; set; }
-
-		[Property("contact_name")]
-		[Display(Name = "ContactName", ResourceType = typeof(Resources))]
-		[StringLength(64, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-		public string ContactName { get; set; }
-
-		[Property("contact_phone_number")]
-		[Display(Name = "ContactPhoneNumber", ResourceType = typeof(Resources))]
-		[StringLength(64, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-		public string ContactPhoneNumber { get; set; }
-
-		[Property("address")]
-		[DataType(DataType.MultilineText)]
-		[Display(Name = "Address", ResourceType = typeof(Resources))]
-		[StringLength(256, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-		public string Address { get; set; }
-
 		[Property]
-		[DataType(DataType.MultilineText)]
-		[Display(Name = "Remarks", ResourceType = typeof(Resources))]
-		[StringLength(1024, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-		public string Remarks { get; set; }
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[Display(Name = "Checker", ResourceType = typeof(Resources))]
+		[StringLength(128, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		public string Checker { get; set; }
 
         [Property]
         [DataType(DataType.MultilineText)]
@@ -143,8 +96,8 @@ namespace Mictlanix.BE.Model
 		[StringLength(1024, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string Comment { get; set; }
 
-		[HasMany(typeof(TechnicalServiceRequestComponent), Table = "tech_service_request_component", ColumnKey = "request", Lazy = true)]
-		public virtual IList<TechnicalServiceRequestComponent> Components
+		[HasMany(typeof(TechnicalServiceReceiptComponent), Table = "tech_service_receipt_component", ColumnKey = "receipt", Lazy = true)]
+		public virtual IList<TechnicalServiceReceiptComponent> Components
 		{
 			get { return components; }
 			set { components = value; }
@@ -154,12 +107,12 @@ namespace Mictlanix.BE.Model
 
 		public override string ToString ()
 		{
-			return string.Format ("[TechnicalServiceRequest: Id={0}, Date={1}, Type={2}", Id, Date, Type);
+			return string.Format ("[TechnicalServiceReceipt: Id={0}, Brand={1}, Equipment={2}, Model={3}, SerialNumber={4}, Date={5}, Status={6}]", Id, Brand, Equipment, Model, SerialNumber, Date, Status);
 		}
 
         public override bool Equals(object obj)
         {
-			var other = obj as TechnicalServiceRequest;
+			var other = obj as TechnicalServiceReceipt;
 
             if (other == null)
                 return false;

@@ -1,0 +1,20 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model TechnicalServiceReceipt
+<tr id='id:@Model.Id'>
+    <td class="date">@Html.DisplayFor(x => x.Date)</td>
+    <td>@Html.DisplayFor(x => x.Equipment)</td>
+    <td>@Html.DisplayFor(x => x.Brand)</td>
+    <td>@Html.DisplayFor(x => x.Model)</td>
+    <td class="text-center">@Html.DisplayFor(x => x.SerialNumber)</td>
+    <td class='actions'>
+    	@if(ViewBag.Privilege.AllowRead){
+    	    @Html.ActionLink(" ", "Details", "TechnicalServiceReceipts", new { id = Model.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
+    	    @Html.ActionLink(" ", "Print", "TechnicalServiceReceipts", new { id = Model.Id }, new { @class = "button icon print icon-only", title = Resources.Print, target = "_blank" })
+        }
+    	@if(ViewBag.Privilege.AllowDelete){
+        	@Html.ActionLink(" ", "Delete", "TechnicalServiceReceipts", new { id = Model.Id }, new { @class = "button icon delete icon-only open-modal", @title = Resources.Delete, data_modal_id = "service-modal" })
+        }
+    </td>
+</tr>

@@ -67,7 +67,9 @@
                           CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPersonAndBrand).AllowRead ||
                           CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPersonAndModel).AllowRead;
     
-    var ShowTechnicalServiceMenu = CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceReports).AllowRead;
+    var ShowTechnicalServiceMenu = CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceReports).AllowRead ||
+                          		   CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceRequests).AllowRead ||
+                          		   CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceReceipts).AllowRead;
 
     var ShowFrontDeskMenu = CurrentUser.GetPrivilege (SystemObjects.TranslationRequests).AllowRead ||
                             CurrentUser.GetPrivilege (SystemObjects.Notarizations).AllowRead;
@@ -382,10 +384,22 @@
                 <div id="frontdesk-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
                     <div class="gbmc">
                         <ol class="gbmcc">
+                            @if (CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceReceipts).AllowRead) {
+                            <li class="gbmtc">
+                                <a class='gbmt @(Html.IsMenuSelected("Index", "TechnicalServiceReceipts") ? "gbm0l" : "")'
+                                   href='@Url.Action("Index", "TechnicalServiceReceipts")'>@Resources.TechnicalServiceReceipts</a>
+                            </li>
+                            }
                             @if (CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceReports).AllowRead) {
                             <li class="gbmtc">
                                 <a class='gbmt @(Html.IsMenuSelected("Index", "TechnicalServiceReports") ? "gbm0l" : "")'
                                    href='@Url.Action("Index", "TechnicalServiceReports")'>@Resources.TechnicalServiceReports</a>
+                            </li>
+                            }
+                            @if (CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceRequests).AllowRead) {
+                            <li class="gbmtc">
+                                <a class='gbmt @(Html.IsMenuSelected("Index", "TechnicalServiceRequests") ? "gbm0l" : "")'
+                                   href='@Url.Action("Index", "TechnicalServiceRequests")'>@Resources.TechnicalServiceRequests</a>
                             </li>
                             }
                         </ol>

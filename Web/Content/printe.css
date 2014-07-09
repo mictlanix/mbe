@@ -32,13 +32,14 @@ h1,h2,h3,h4 {
 	margin:1mm 1mm 1mm 0;
 }
 h1, h2 {
-	font:bold 11.59pt;
+	font-weight:bold;
+	font-size:14pt;
 }
 h2 {
 	font-size:13pt;
 }
-h3, h4 {
-	font:normal 11.59pt;
+h3 {
+	font-size:12pt;
 }
 h4 {
 	font-size:8.69pt;
@@ -46,7 +47,7 @@ h4 {
 p {
   margin: 0 0 5px;
 }
-table {
+/*table {
 	width:100%;
 }
 table > thead > tr > th,
@@ -67,7 +68,7 @@ table > thead > tr > th {
 table > tbody > tr:nth-child(odd) > td,
 table > tbody > tr:nth-child(odd) > th {
 	background-color: #ECECEC !important;
-}
+}*/
 .uppercase {
 	text-transform:uppercase;
 }
@@ -113,6 +114,9 @@ table > tbody > tr:nth-child(odd) > th {
 }
 .top-space {
 	margin-top:5mm;
+}
+.pre-wrapped {
+  white-space:pre-wrap;
 }
 
 @media print {

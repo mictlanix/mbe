@@ -1530,6 +1530,13 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static System.Resources.ResXDataNode Component {
+            get {
+                object obj = ResourceManager.GetObject("Component", resourceCulture);
+                return ((System.Resources.ResXDataNode)(obj));
+            }
+        }
+        
         public static System.Resources.ResXDataNode Title_CashCounted {
             get {
                 object obj = ResourceManager.GetObject("Title_CashCounted", resourceCulture);
@@ -1845,6 +1852,13 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static System.Resources.ResXDataNode TechnicalServiceReceipts {
+            get {
+                object obj = ResourceManager.GetObject("TechnicalServiceReceipts", resourceCulture);
+                return ((System.Resources.ResXDataNode)(obj));
+            }
+        }
+        
         public static System.Resources.ResXDataNode Photo {
             get {
                 object obj = ResourceManager.GetObject("Photo", resourceCulture);
@@ -1999,6 +2013,13 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static System.Resources.ResXDataNode Checker {
+            get {
+                object obj = ResourceManager.GetObject("Checker", resourceCulture);
+                return ((System.Resources.ResXDataNode)(obj));
+            }
+        }
+        
         public static System.Resources.ResXDataNode Purchasable {
             get {
                 object obj = ResourceManager.GetObject("Purchasable", resourceCulture);
@@ -2135,6 +2156,13 @@ namespace Mictlanix.BE {
         public static System.Resources.ResXDataNode Title_CustomerPayment {
             get {
                 object obj = ResourceManager.GetObject("Title_CustomerPayment", resourceCulture);
+                return ((System.Resources.ResXDataNode)(obj));
+            }
+        }
+        
+        public static System.Resources.ResXDataNode WarehouseManager {
+            get {
+                object obj = ResourceManager.GetObject("WarehouseManager", resourceCulture);
                 return ((System.Resources.ResXDataNode)(obj));
             }
         }
@@ -3371,6 +3399,13 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static System.Resources.ResXDataNode ReceiptLocation {
+            get {
+                object obj = ResourceManager.GetObject("ReceiptLocation", resourceCulture);
+                return ((System.Resources.ResXDataNode)(obj));
+            }
+        }
+        
         public static System.Resources.ResXDataNode Taxes {
             get {
                 object obj = ResourceManager.GetObject("Taxes", resourceCulture);
@@ -4190,6 +4225,13 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static System.Resources.ResXDataNode SerialNumberShort {
+            get {
+                object obj = ResourceManager.GetObject("SerialNumberShort", resourceCulture);
+                return ((System.Resources.ResXDataNode)(obj));
+            }
+        }
+        
         public static System.Resources.ResXDataNode RefundableItemsNotFound {
             get {
                 object obj = ResourceManager.GetObject("RefundableItemsNotFound", resourceCulture);
@@ -4242,6 +4284,20 @@ namespace Mictlanix.BE {
         public static System.Resources.ResXDataNode FiscalDocumentsReport {
             get {
                 object obj = ResourceManager.GetObject("FiscalDocumentsReport", resourceCulture);
+                return ((System.Resources.ResXDataNode)(obj));
+            }
+        }
+        
+        public static System.Resources.ResXDataNode Components {
+            get {
+                object obj = ResourceManager.GetObject("Components", resourceCulture);
+                return ((System.Resources.ResXDataNode)(obj));
+            }
+        }
+        
+        public static System.Resources.ResXDataNode TechnicalServiceReceipt {
+            get {
+                object obj = ResourceManager.GetObject("TechnicalServiceReceipt", resourceCulture);
                 return ((System.Resources.ResXDataNode)(obj));
             }
         }

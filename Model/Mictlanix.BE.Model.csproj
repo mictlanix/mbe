@@ -154,6 +154,9 @@
     <Compile Include="TechnicalServiceReport.cs" />
     <Compile Include="TechnicalServiceRequest.cs" />
     <Compile Include="Constants\TechnicalServiceRequestType.cs" />
+    <Compile Include="TechnicalServiceRequestComponent.cs" />
+    <Compile Include="TechnicalServiceReceipt.cs" />
+    <Compile Include="TechnicalServiceReceiptComponent.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1530,6 +1530,13 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string Component {
+            get {
+                object obj = ResourceManager.GetObject("Component", resourceCulture);
+                return ((string)(obj));
+            }
+        }
+        
         public static string Title_CashCounted {
             get {
                 object obj = ResourceManager.GetObject("Title_CashCounted", resourceCulture);
@@ -1845,6 +1852,13 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string TechnicalServiceReceipts {
+            get {
+                object obj = ResourceManager.GetObject("TechnicalServiceReceipts", resourceCulture);
+                return ((string)(obj));
+            }
+        }
+        
         public static string Photo {
             get {
                 object obj = ResourceManager.GetObject("Photo", resourceCulture);
@@ -1999,6 +2013,13 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string Checker {
+            get {
+                object obj = ResourceManager.GetObject("Checker", resourceCulture);
+                return ((string)(obj));
+            }
+        }
+        
         public static string Purchasable {
             get {
                 object obj = ResourceManager.GetObject("Purchasable", resourceCulture);
@@ -2135,6 +2156,13 @@ namespace Mictlanix.BE {
         public static string Title_CustomerPayment {
             get {
                 object obj = ResourceManager.GetObject("Title_CustomerPayment", resourceCulture);
+                return ((string)(obj));
+            }
+        }
+        
+        public static string WarehouseManager {
+            get {
+                object obj = ResourceManager.GetObject("WarehouseManager", resourceCulture);
                 return ((string)(obj));
             }
         }
@@ -3371,6 +3399,13 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string ReceiptLocation {
+            get {
+                object obj = ResourceManager.GetObject("ReceiptLocation", resourceCulture);
+                return ((string)(obj));
+            }
+        }
+        
         public static string Taxes {
             get {
                 object obj = ResourceManager.GetObject("Taxes", resourceCulture);
@@ -4190,6 +4225,13 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string SerialNumberShort {
+            get {
+                object obj = ResourceManager.GetObject("SerialNumberShort", resourceCulture);
+                return ((string)(obj));
+            }
+        }
+        
         public static string RefundableItemsNotFound {
             get {
                 object obj = ResourceManager.GetObject("RefundableItemsNotFound", resourceCulture);
@@ -4242,6 +4284,20 @@ namespace Mictlanix.BE {
         public static string FiscalDocumentsReport {
             get {
                 object obj = ResourceManager.GetObject("FiscalDocumentsReport", resourceCulture);
+                return ((string)(obj));
+            }
+        }
+        
+        public static string Components {
+            get {
+                object obj = ResourceManager.GetObject("Components", resourceCulture);
+                return ((string)(obj));
+            }
+        }
+        
+        public static string TechnicalServiceReceipt {
+            get {
+                object obj = ResourceManager.GetObject("TechnicalServiceReceipt", resourceCulture);
                 return ((string)(obj));
             }
         }
