@@ -1,0 +1,13 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model TechnicalServiceRequestType?
+
+@{
+    var values = Enum.GetValues(typeof(TechnicalServiceRequestType)).Cast<TechnicalServiceRequestType>();
+}
+<select id='@ViewData.TemplateInfo.GetFullHtmlFieldId("")' name='@ViewData.TemplateInfo.GetFullHtmlFieldName("")'>
+    @foreach (var item in values) {
+        <option value="@((int)item)" @(item == Model ? "selected" : string.Empty)>@item.GetDisplayName()</option>
+    }
+</select>

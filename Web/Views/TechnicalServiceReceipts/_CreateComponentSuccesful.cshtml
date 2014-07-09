@@ -1,0 +1,13 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model TechnicalServiceReceiptComponent
+@{
+    ViewBag.Privilege = (Html.CurrentUser() ?? new User()).GetPrivilege (SystemObjects.TechnicalServiceReceipts);
+}
+@Html.Partial("_Component", Model)
+<script type='text/javascript'>
+$('#components tr:last').after($('#id\\:@Model.Id'));
+$('#component-modal').modal('hide');
+bindModal('#id\\:@Model.Id a.open-modal');
+</script>

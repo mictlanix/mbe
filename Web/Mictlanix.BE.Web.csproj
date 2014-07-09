@@ -227,6 +227,7 @@
     <Compile Include="Controllers\NotarizationsController.cs" />
     <Compile Include="Controllers\TechnicalServiceReportsController.cs" />
     <Compile Include="Controllers\TechnicalServiceRequestsController.cs" />
+    <Compile Include="Controllers\TechnicalServiceReceiptsController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
@@ -823,6 +824,41 @@
     <Content Include="Views\TechnicalServiceReports\Print.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\TechnicalServiceReport.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\TechnicalServiceReport.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\_Create.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\_CreateSuccesful.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\_Delete.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\_DeleteSuccesful.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\_Edit.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\_Index.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\_Item.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\_Refresh.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\Index.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\Print.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\TechnicalServiceRequest.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\TechnicalServiceRequestType.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\TechnicalServiceRequest.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\Details.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\_Component.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\_Details.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\_CreateComponent.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\_CreateComponentSuccesful.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\_Component.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\_Create.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\_CreateComponent.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\_CreateComponentSuccesful.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\_CreateSuccesful.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\_Delete.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\_DeleteSuccesful.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\_Details.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\_Edit.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\_Index.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\_Item.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\_Refresh.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\Details.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\Index.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\Print.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\TechnicalServiceReceipt.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\TechnicalServiceReceipt.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

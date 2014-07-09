@@ -456,6 +456,9 @@ span.editable {
   width:auto;
   margin:0 0 10px;
 }
+.field-required label {
+	white-space:nowrap;
+}
 .field-required label:after {
 	content: ' * ';
 	color:red;
