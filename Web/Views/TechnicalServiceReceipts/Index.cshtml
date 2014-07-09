@@ -1,0 +1,34 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model Search<TechnicalServiceReceipt>
+
+@{
+    ViewBag.Title = Resources.TechnicalServiceReceipts;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = CurrentUser.GetPrivilege(SystemObjects.TechnicalServiceReceipts);
+}
+
+<h2>@Resources.TechnicalServiceReceipts</h2>
+
+@if (Privilege.AllowCreate) {
+    @Html.ActionLink(Resources.CreateNew, "Create", new { }, new { @class = "button icon add open-modal", data_modal_id = "service-modal" })
+}
+
+<div id='master-section'>
+@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
+    @Html.HiddenFor(x => x.Offset)
+    @Html.HiddenFor(x => x.Limit)
+	<div class="input-append row-fluid">
+	  <input class='span11' type="text" id='Pattern' name='Pattern'>
+	  <button type='submit' class="btn">@Resources.Search</button>
+	</div>
+}
+</div>
+<div id="activity-indicator">
+    <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
+</div>
+<div id='search-results'>
+    @Html.Partial("_Index")
+</div>

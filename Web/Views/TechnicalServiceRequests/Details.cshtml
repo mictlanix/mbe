@@ -1,0 +1,60 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model TechnicalServiceRequest
+
+@{
+    ViewBag.Title = Resources.TechnicalServiceRequest;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    ViewBag.Privilege = CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceRequests);
+}
+
+<h2>@Resources.TechnicalServiceRequest</h2>
+<div id='master-section' class='refreshable' data-url='@Url.Action("Details", new { id = Model.Id })'>
+	@Html.Partial("_Details")
+</div>
+<div id='details-section' class='tabbable'>
+    <ul class='nav nav-tabs'>
+        <li class='active'><a href='#tab-1' data-toggle='tab'>@Resources.Components</a></li>
+    </ul>
+    <div class="tab-content">
+	    <div id='tab-1' class='tab-pane active'>
+	    	<div class='control-group text-right'>
+				<a href='@Url.Action("CreateComponent", new { id = Model.Id })' class="btn open-modal" data-modal-id="component-modal">
+					<i class='icon-plus'></i> @Resources.Component
+				</a>
+			</div>
+			<table id='components'>
+			    <tr>
+			        <th class="number">@Resources.Quantity</th>
+			        <th>@Resources.Description</th>
+			        <th>@Resources.SerialNumber</th>
+			        <th>@Resources.Comment</th>
+			        <th></th>
+			    </tr>
+			@foreach (var item in Model.Components) {
+			    @Html.Partial("_Component", item)
+			}
+			</table>
+	    </div>
+	</div>
+</div>
+<div class="row-fluid vspaced">
+    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+@if(ViewBag.Privilege.AllowUpdate) {
+	@Html.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new { @class = "button icon edit open-modal pull-right", data_modal_id = "service-modal" })
+}
+</div>
+<script type='text/javascript'>
+bindModal('.open-modal');
+$('#components').delegate("a.remove", "click", function (e) {
+	e.preventDefault();
+	var self = $(this);
+
+    $.post(this.href, function (data) {
+        if(data.result) {
+            self.closest('tr').remove();
+        }
+    }, 'json');
+});
+</script>

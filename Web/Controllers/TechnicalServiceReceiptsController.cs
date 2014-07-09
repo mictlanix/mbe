@@ -1,5 +1,5 @@
 ﻿// 
-// TechnicalServiceRequestsController.cs
+// TechnicalServiceReceiptsController.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.com>
@@ -42,11 +42,11 @@ using Mictlanix.BE.Web.Helpers;
 namespace Mictlanix.BE.Web.Controllers
 {
 	[Authorize]
-	public class TechnicalServiceRequestsController : Controller
+	public class TechnicalServiceReceiptsController : Controller
     {
 		public ActionResult Index ()
 		{
-			var search = Search (new Search<TechnicalServiceRequest> {
+			var search = Search (new Search<TechnicalServiceReceipt> {
 				Limit = Configuration.PageSize
 			});
 
@@ -58,7 +58,7 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 
 		[HttpPost]
-		public ActionResult Index (Search<TechnicalServiceRequest> search)
+		public ActionResult Index (Search<TechnicalServiceReceipt> search)
 		{
 			if (ModelState.IsValid) {
 				search = Search (search);
@@ -71,17 +71,17 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 		}
 
-		Search<TechnicalServiceRequest> Search (Search<TechnicalServiceRequest> search)
+		Search<TechnicalServiceReceipt> Search (Search<TechnicalServiceReceipt> search)
 		{
-			IQueryable<TechnicalServiceRequest> query;
+			IQueryable<TechnicalServiceReceipt> query;
 			var pattern = string.Format("{0}", search.Pattern).Trim ();
 
 			if (string.IsNullOrWhiteSpace (pattern)) {
-				query = from x in TechnicalServiceRequest.Queryable
+				query = from x in TechnicalServiceReceipt.Queryable
 						orderby x.Date descending
 				        select x;
 			} else {
-				query = from x in TechnicalServiceRequest.Queryable
+				query = from x in TechnicalServiceReceipt.Queryable
 				        where x.Equipment.Contains (pattern) ||
 				            x.Brand.Contains (pattern) ||
 				            x.Model.Contains (pattern) ||
@@ -102,10 +102,8 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 
         [HttpPost]
-		public ActionResult Create (TechnicalServiceRequest item)
+		public ActionResult Create (TechnicalServiceReceipt item)
 		{
-			item.Customer = Customer.TryFind (item.CustomerId);
-
 			if (!ModelState.IsValid) {
 				return PartialView ("_Create", item);
 			}
@@ -119,44 +117,34 @@ namespace Mictlanix.BE.Web.Controllers
 
 		public ActionResult Details (int id)
 		{
-			var item = TechnicalServiceRequest.Find (id);
+			var item = TechnicalServiceReceipt.Find (id);
 			return View ("Details", item);
 		}
 
 		public ActionResult Edit (int id)
         {
-        	var item = TechnicalServiceRequest.Find (id);
+        	var item = TechnicalServiceReceipt.Find (id);
 			return PartialView ("_Edit", item);
         }
 
         [HttpPost]
-        public ActionResult Edit (TechnicalServiceRequest item)
+        public ActionResult Edit (TechnicalServiceReceipt item)
 		{
-			item.Customer = Customer.TryFind (item.CustomerId);
-
 			if (!ModelState.IsValid) {
 				return PartialView ("_Edit", item);
 			}
 			
-			var entity = TechnicalServiceRequest.Find (item.Id);
+			var entity = TechnicalServiceReceipt.Find (item.Id);
 
-			entity.Type = item.Type;
 			entity.Brand = item.Brand;
 			entity.Equipment = item.Equipment;
 			entity.Model = item.Model;
 			entity.SerialNumber = item.SerialNumber;
 			entity.Date = item.Date;
+			entity.Status = item.Status;
 			entity.Location = item.Location;
-			entity.EndDate = item.EndDate;
-			entity.Customer = item.Customer;
-			entity.ResponsiblePerson = item.ResponsiblePerson;
+			entity.Checker = item.Checker;
 			entity.Comment = item.Comment;
-			entity.ContactName = item.ContactName;
-			entity.ContactPhoneNumber = item.ContactPhoneNumber;
-			entity.PaymentStatus = item.PaymentStatus;
-			entity.ShippingMethod = item.ShippingMethod;
-			entity.Address = item.Address;
-			entity.Remarks = item.Remarks;
 
 			using (var scope = new TransactionScope()) {
 				entity.UpdateAndFlush ();
@@ -167,14 +155,14 @@ namespace Mictlanix.BE.Web.Controllers
 
 		public ActionResult Delete (int id)
         {
-            var item = TechnicalServiceRequest.Find (id);
+            var item = TechnicalServiceReceipt.Find (id);
 			return PartialView ("_Delete", item);
         }
 
         [HttpPost, ActionName ("Delete")]
 		public ActionResult DeleteConfirmed (int id)
 		{
-			var item = TechnicalServiceRequest.Find (id);
+			var item = TechnicalServiceReceipt.Find (id);
 
 			try {
 				using (var scope = new TransactionScope()) {
@@ -195,20 +183,20 @@ namespace Mictlanix.BE.Web.Controllers
 
 		public ActionResult CreateComponent (int id)
 		{
-			ViewBag.RequestId = id;
+			ViewBag.ReceiptId = id;
 			return PartialView ("_CreateComponent");
 		}
 
 		[HttpPost]
-		public ActionResult CreateComponent (TechnicalServiceRequestComponent item)
+		public ActionResult CreateComponent (TechnicalServiceReceiptComponent item)
 		{
-			ViewBag.RequestId = item.RequestId;
+			ViewBag.ReceiptId = item.ReceiptId;
 
 			if (!ModelState.IsValid) {
 				return PartialView ("_CreateComponent", item);
 			}
 
-			item.Request = TechnicalServiceRequest.TryFind (item.RequestId);
+			item.Receipt = TechnicalServiceReceipt.TryFind (item.ReceiptId);
 
 			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
@@ -220,7 +208,7 @@ namespace Mictlanix.BE.Web.Controllers
 		[HttpPost]
 		public ActionResult RemoveComponent (int id)
 		{
-			var entity = TechnicalServiceRequestComponent.Find (id);
+			var entity = TechnicalServiceReceiptComponent.Find (id);
 
 			if (entity == null) {
 				Response.StatusCode = 400;
@@ -236,7 +224,7 @@ namespace Mictlanix.BE.Web.Controllers
 
 		public ActionResult Print (int id)
 		{
-			var item = TechnicalServiceRequest.Find (id);
+			var item = TechnicalServiceReceipt.Find (id);
 			return View (item);
 		}
     }
