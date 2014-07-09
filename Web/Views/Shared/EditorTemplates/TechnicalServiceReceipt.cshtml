@@ -1,0 +1,40 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@model TechnicalServiceReceipt
+<div class="row">
+  	<div class="span2 field-required">@Html.LabelFor(x => x.Brand)</div>
+  	<div class="span2 field-required">@Html.LabelFor(x => x.Equipment)</div>
+  	<div class="span2 field-required">@Html.LabelFor(x => x.Model)</div>
+  	<div class="span2">@Html.LabelFor(x => x.SerialNumber)</div>
+</div>
+<div class="row">
+  	<div class="span2">@Html.EditorFor(x => x.Brand) @Html.ValidationMessageFor(x => x.Brand)</div>
+  	<div class="span2">@Html.EditorFor(x => x.Equipment) @Html.ValidationMessageFor(x => x.Equipment)</div>
+  	<div class="span2">@Html.EditorFor(x => x.Model) @Html.ValidationMessageFor(x => x.Model)</div>
+  	<div class="span2">@Html.EditorFor(x => x.SerialNumber) @Html.ValidationMessageFor(x => x.SerialNumber)</div>
+</div>
+<div class="row">
+  	<div class="span2 field-required">@Html.LabelFor(x => x.Date)</div>
+  	<div class="span2">@Html.LabelFor(x => x.Status)</div>
+	<div class="span4">@Html.LabelFor(x => x.Location)</div>
+</div>
+<div class="row">
+  	<div class="span2">@Html.EditorFor(x => x.Date) @Html.ValidationMessageFor(x => x.Date)</div>
+  	<div class="span2">@Html.EditorFor(x => x.Status) @Html.ValidationMessageFor(x => x.Status)</div>
+  	<div class="span4">@Html.EditorFor(x => x.Location) @Html.ValidationMessageFor(x => x.Location)</div>
+</div>
+<div class="row">
+  	<div class="span8 field-required">@Html.LabelFor(x => x.Checker)</div>
+</div>
+<div class="row">
+  	<div class="span8">@Html.EditorFor(x => x.Checker) @Html.ValidationMessageFor(x => x.Checker)</div>
+</div>
+<div class="row">
+  	<div class="span8">@Html.LabelFor(x => x.Comment)</div>
+</div>
+<div class="row">
+  	<div class="span8">@Html.EditorFor(x => x.Comment)</div>
+</div>
+<script type='text/javascript'>
+$('#Date').datepicker({ language: 'es', format: 'yyyy-mm-dd' });
+</script>

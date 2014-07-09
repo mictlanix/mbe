@@ -1962,4 +1962,28 @@ Realizada el: {0:d}</value>
   <data name="TechnicalServiceRequests" xml:space="preserve">
     <value>Solicitudes de Servicio Técnico</value>
   </data>
+  <data name="Component" xml:space="preserve">
+    <value>Componente</value>
+  </data>
+  <data name="Components" xml:space="preserve">
+    <value>Componentes</value>
+  </data>
+  <data name="WarehouseManager" xml:space="preserve">
+    <value>Jefe de Almacén</value>
+  </data>
+  <data name="TechnicalServiceReceipt" xml:space="preserve">
+    <value>Entrada de Servicio Técnico</value>
+  </data>
+  <data name="TechnicalServiceReceipts" xml:space="preserve">
+    <value>Entradas de Servicio Técnico</value>
+  </data>
+  <data name="ReceiptLocation" xml:space="preserve">
+    <value>Localización</value>
+  </data>
+  <data name="Checker" xml:space="preserve">
+    <value>Revisado Por</value>
+  </data>
+  <data name="SerialNumberShort" xml:space="preserve">
+    <value>N/S</value>
+  </data>
 </root>

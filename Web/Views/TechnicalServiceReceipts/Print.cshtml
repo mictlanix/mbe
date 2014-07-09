@@ -1,0 +1,69 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
+@using Mictlanix.BE.Web.Helpers
+@model TechnicalServiceReceipt
+
+@{
+    Layout = "~/Views/Shared/_PrintELayout.cshtml";
+    ViewBag.Title = Resources.TechnicalServiceReceipt;
+    ViewBag.Store = Configuration.Store;
+    ViewBag.Taxpayer = null;
+    ViewBag.TaxpayerName = null;
+    ViewBag.Address = Configuration.Store.Address;
+}
+
+<div class="page-header">
+  <h2 class="text-center">@Resources.TechnicalServiceReceipt</h2>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading text-center">
+	  	@Html.DisplayFor(x => x.Brand)
+	  	@Html.DisplayFor(x => x.Equipment)
+	  	@Html.DisplayFor(x => x.Model)
+	  	@if(!string.IsNullOrWhiteSpace (Model.SerialNumber)) {
+	  		<text>@Resources.SerialNumberShort: @Html.DisplayFor(x => x.SerialNumber)</text>
+	  	}
+	</div>
+	<table class="table table-bordered table-condensed">
+		<tr>
+			<th class="col-xs-2 text-right">@Resources.Date</th>
+			<td>@Html.DisplayFor(x => x.Date)</td>
+		</tr>
+		<tr>
+			<th class="col-xs-2 text-right">@Resources.Status</th>
+			<td>@Html.DisplayFor(x => x.Status)</td>
+		</tr>
+		<tr>
+			<th class="col-xs-2 text-right">@Resources.ReceiptLocation</th>
+			<td>@Html.DisplayFor(x => x.Location)</td>
+		</tr>
+		<tr>
+			<th class="col-xs-2 text-right">@Resources.Comment</th>
+			<td>@Html.DisplayFor(x => x.Comment)</td>
+		</tr>
+	</table>
+@if (Model.Components.Count > 0) {
+	<table class="table table-bordered table-condensed">
+	    <tr>
+	        <th class="col-xs-1 text-center">@Resources.Quantity</th>
+	        <th class="col-xs-8 text-center">@Resources.Description</th>
+	        <th class="col-xs-3 text-center">@Resources.SerialNumber</th>
+	    </tr>
+	@foreach (var item in Model.Components) {
+		<tr>
+		    <td class="text-right">@Html.DisplayFor(x => item.Quantity)</td>
+		    <td>@Html.DisplayFor(x => item.Name)</td>
+		    <td class="text-center">@Html.DisplayFor(x => item.SerialNumber)</td>
+		</tr>
+	}
+	</table>
+}
+</div>
+
+<div class="clearfix" style="min-height:15mm;"></div>
+
+<div class="row top-bordered">
+  	<div class="col-xs-8 col-xs-offset-2 text-center">@Resources.Checker @Html.DisplayFor(x => x.Checker)</div>
+</div>

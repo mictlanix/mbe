@@ -8,7 +8,7 @@
     <td>@Html.DisplayFor(x => x.Equipment)</td>
     <td>@Html.DisplayFor(x => x.Brand)</td>
     <td>@Html.DisplayFor(x => x.Model)</td>
-    <td>@Html.DisplayFor(x => x.SerialNumber)</td>
+    <td class="text-center">@Html.DisplayFor(x => x.SerialNumber)</td>
     <td class='actions'>
     	@if(ViewBag.Privilege.AllowRead){
     	    @Html.ActionLink(" ", "View", "TechnicalServiceReports", new { id = Model.Id }, new { @class = "button icon view icon-only open-modal", title = Resources.Details, data_modal_id = "service-modal" })

@@ -1,0 +1,38 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model TechnicalServiceReceipt
+<div class="row">
+  	<div class="span2">@Html.LabelFor(x => x.Brand)</div>
+  	<div class="span2">@Html.LabelFor(x => x.Equipment)</div>
+  	<div class="span2">@Html.LabelFor(x => x.Model)</div>
+  	<div class="span2">@Html.LabelFor(x => x.SerialNumber)</div>
+</div>
+<div class="row">
+  	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.Brand)</div></div>
+  	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.Equipment)</div></div>
+  	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.Model)</div></div>
+  	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.SerialNumber)</div></div>
+</div>
+<div class="row">
+  	<div class="span2">@Html.LabelFor(x => x.Date)</div>
+  	<div class="span2">@Html.LabelFor(x => x.Status)</div>
+	<div class="span4">@Html.LabelFor(x => x.Location)</div>
+</div>
+<div class="row">
+  	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.Date)</div></div>
+  	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.Status)</div></div>
+  	<div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.Location)</div></div>
+</div>
+<div class="row">
+  	<div class="span8">@Html.LabelFor(x => x.Checker)</div>
+</div>
+<div class="row">
+  	<div class="span8"><div class="ro-field">@Html.DisplayFor(x => x.Checker)</div></div>
+</div>
+<div class="row">
+  	<div class="span8">@Html.LabelFor(x => x.Comment)</div>
+</div>
+<div class="row">
+  	<div class="span8"><div class="ro-field">@Html.DisplayFor(x => x.Comment)</div></div>
+</div>
