@@ -833,7 +833,7 @@ namespace Mictlanix.BE.Web.Controllers
 		{
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
-			string sql = @"SELECT sales_order SalesOrder, date Date, p.model Model, p.name Name,
+			string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name,
 							SUM(quantity) Units,
 							SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) / IF(d.tax_included = 0, 1, 1 + d.tax_rate), 2)) Subtotal,
 							SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) Total
@@ -842,14 +842,14 @@ namespace Mictlanix.BE.Web.Controllers
 						INNER JOIN product p ON d.product = p.product_id
 						WHERE m.salesperson = :employee AND m.completed = 1 AND m.cancelled = 0 AND
 							m.date >= :start AND m.date < :end
-						GROUP BY sales_order, product";
+						GROUP BY d.product";
 
 			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate(ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
-				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
-				query.AddScalar ("Date", NHibernateUtil.DateTime);
+				query.AddScalar ("Brand", NHibernateUtil.String);
 				query.AddScalar ("Model", NHibernateUtil.String);
+				query.AddScalar ("Code", NHibernateUtil.String);
 				query.AddScalar ("Name", NHibernateUtil.String);
 				query.AddScalar ("Units", NHibernateUtil.Decimal);
 				query.AddScalar ("Subtotal", NHibernateUtil.Decimal);
