@@ -202,9 +202,15 @@ namespace Mictlanix.BE.Web.Controllers
 		public JsonResult GetSuggestions (string pattern)
 		{
 			var qry = from x in Customer.Queryable
-					  where x.Name.Contains(pattern) ||
-							x.Zone.Contains(pattern)
-					  select new { id = x.Id, name = x.Name, hasCredit = (x.CreditDays > 0 && x.CreditLimit > 0) };
+			          where x.Code.Contains (pattern) ||
+			              x.Name.Contains (pattern) ||
+			              x.Zone.Contains (pattern)
+			          select new {
+						id = x.Id,
+						name = x.Name,
+						code = x.Code,
+						hasCredit = (x.CreditDays > 0 && x.CreditLimit > 0)
+					  };
 
 			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
 		}

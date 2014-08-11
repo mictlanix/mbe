@@ -141,8 +141,8 @@ $('#customer').editable({
         	};
 	        callback(data);
 	    },
-	    formatResult: function(result ) {
-	        return result.name;
+	    formatResult: function(result) {
+	        return result.name + " (" + result.code + ")";
 	    },
 	    formatSelection: function(selection) {
 	        return selection.name;
