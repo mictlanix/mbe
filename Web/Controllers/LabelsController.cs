@@ -121,13 +121,22 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 		}
 
-		public JsonResult GetSuggestions(string pattern)
+		public JsonResult GetAll ()
 		{
 			var qry = from x in Label.Queryable
-				where x.Name.Contains(pattern) 
-			select new { id = x.Id, name = x.Name};
-			
-			return Json(qry.Take(15).ToList(), JsonRequestBehavior.AllowGet);
+					  orderby x.Name
+					  select new { id = x.Id, name = x.Name };
+
+			return Json(qry.ToList(), JsonRequestBehavior.AllowGet);
+		}
+
+		public JsonResult GetSuggestions (string pattern)
+		{
+			var qry = from x in Label.Queryable
+			          where x.Name.Contains (pattern)
+			          select new { id = x.Id, name = x.Name };
+
+			return Json (qry.Take (15).ToList (), JsonRequestBehavior.AllowGet);
 		}
     }
 }

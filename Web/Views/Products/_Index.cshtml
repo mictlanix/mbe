@@ -46,14 +46,22 @@ $('a.paging').click(function (e) {
 		$('#activity-indicator').hide();
 	});
 });
-$('.btn.labels').click(function() {
-	var self = $(this);
-	
-	if(self.hasClass('open'))
-		return;
-	
-	$.get('@Url.Action("EditLabels", new { id = 0 })' + self.data('key'), function (data) {
-	    self.next('.dropdown-menu').html(data);
+
+$.getJSON('@Url.Action("GetAll", "Labels")', function(data) {
+	$(".labels").editable({
+	    inputclass: "input-xxlarge",
+	    select2: {
+	        tags: true,
+	        data: { results: data, text: 'name' },
+		    formatSelection: function(item) { return item.name; },
+		    formatResult: function(item) { return item.name; },
+	        tokenSeparators: [","]
+	    },
+		success: function(response, newValue) {
+	        $.get('@Url.Action("Labels", new { id = 0 })' + response.id, function (data) {
+		        $('#labels-' + response.id).html(data);
+		    });
+	    }
 	});
 });
 </script>

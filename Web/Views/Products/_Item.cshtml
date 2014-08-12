@@ -21,10 +21,11 @@
 			@Html.Partial("_Labels", Model.Labels)
     	</div>
 		<div class='btn-group' style='position:absolute;bottom:2px;right:2px'>
-			<a class='btn btn-mini dropdown-toggle labels' data-toggle='dropdown' data-key='@Model.Id' href="#">
-				<i class="icon-tags"></i> <span class="caret"></span>
+			<a class='btn btn-mini labels' data-url='@Url.Action("SetLabels", new { id = Model.Id })'
+			   data-type='select2' data-placement='left' data-pk='@Model.Id' data-value='[@string.Join(",", Model.Labels.Select(x => x.Id))]'
+			   data-display='false' data-emptytext='' data-emptyclass='' data-highlight='false'>
+				<i class='icon-tags'></i>
 			</a>
-			<ul class='dropdown-menu'></ul>
 		</div>
     </td>
     <td class="stretch center">@Html.DisplayFor(x => x.UnitOfMeasurement)</td>
