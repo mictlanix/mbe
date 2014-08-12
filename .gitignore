@@ -10,4 +10,5 @@ CFDs
 *.resources
 *.Publish.xml
 *.pfx
+*.cs-e
 dataprint.png
