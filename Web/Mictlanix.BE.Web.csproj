@@ -497,7 +497,6 @@
     <Content Include="Views\Labels\Delete.cshtml" />
     <Content Include="Views\Labels\_Index.cshtml" />
     <Content Include="Views\Products\_Labels.cshtml" />
-    <Content Include="Views\Products\_EditLabels.cshtml" />
     <Content Include="Views\Reports\SerialNumbers.cshtml" />
     <Content Include="Views\Reports\_SerialNumbers.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ProductSelector.cshtml" />

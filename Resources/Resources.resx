@@ -1091,16 +1091,16 @@ Realizada el: {0:d}</value>
     <value>Información del Pago</value>
   </data>
   <data name="CustomerRefund" xml:space="preserve">
-    <value>Devolución a Cliente</value>
+    <value>Devolución de Clientes</value>
   </data>
   <data name="CustomerRefunds" xml:space="preserve">
-    <value>Devoluciones a Cliente</value>
+    <value>Devoluciones de Clientes</value>
   </data>
   <data name="CustomerRefundsHistoric" xml:space="preserve">
-    <value>Histórico Devoluciones a Clientes</value>
+    <value>Histórico Devoluciones de Clientes</value>
   </data>
   <data name="CustomerRefundDetails" xml:space="preserve">
-    <value>Detalles de la Devolución a Cliente</value>
+    <value>Detalles de la Devolución de Clientes</value>
   </data>
   <data name="CustomerRefundReceipt" xml:space="preserve">
     <value>Ticket de Devolución</value>
