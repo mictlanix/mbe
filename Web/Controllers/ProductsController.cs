@@ -296,42 +296,32 @@ namespace Mictlanix.BE.Web.Controllers
 			return PartialView ("_Labels", item.Labels);
 		}
 
-		public ActionResult EditLabels (int id)
-		{
-			var item = Product.Find (id);
-			var items = new Dictionary<Label, bool> ();
-
-			foreach (var label in Label.Queryable.OrderBy (x => x.Name).ToList ()) {
-				items.Add (label, item.Labels.Contains (label));
-			}
-
-			return PartialView ("_EditLabels", items);
-		}
-
 		[HttpPost]
-		public ActionResult AddLabel (int id, int value)
+		public ActionResult SetLabels (int id, int[] value)
 		{
 			var entity = Product.Find (id);
 
-			using (var scope = new TransactionScope ()) {
-				entity.Labels.Add (Label.Find (value));
+			if (value == null) {
+				var param = Request.Params ["value[]"];
+				value = param.Split (',').Select (x => Convert.ToInt32 (x)).ToArray ();
+			}
+
+			if (entity == null) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemNotFound);
+			}
+
+			using (var scope = new TransactionScope()) {
+				entity.Labels.Clear ();
+				if (value != null) {
+					foreach (int v in value) {
+						entity.Labels.Add (Label.Find (v));
+					}
+				}
 				entity.UpdateAndFlush ();
 			}
 
-			return PartialView ("_Labels", entity.Labels);
-		}
-
-		[HttpPost]
-		public ActionResult RemoveLabel (int id, int value)
-		{
-			var entity = Product.Find (id);
-
-			using (var scope = new TransactionScope ()) {
-				entity.Labels.Remove (Label.Find (value));
-				entity.UpdateAndFlush ();
-			}
-
-			return PartialView ("_Labels", entity.Labels);
+			return Json (new { id = id, value = value });
 		}
 
 		public JsonResult UnitsOfMeasurement ()
