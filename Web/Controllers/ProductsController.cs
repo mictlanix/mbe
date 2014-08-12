@@ -303,7 +303,9 @@ namespace Mictlanix.BE.Web.Controllers
 
 			if (value == null) {
 				var param = Request.Params ["value[]"];
-				value = param.Split (',').Select (x => Convert.ToInt32 (x)).ToArray ();
+				if (!string.IsNullOrWhiteSpace (param)) {
+					value = param.Split (',').Select (x => Convert.ToInt32 (x)).ToArray ();
+				}
 			}
 
 			if (entity == null) {
