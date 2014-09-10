@@ -419,6 +419,63 @@ namespace Mictlanix.BE.Web.Controllers
 			return PartialView ("_CustomerDebt", query.ToList ());
 		}
 
+        //public ActionResult CustomersReport ()
+        //{
+        //    return View ("CustomersReport", new Search<Customer> ());
+        //}
+
+        public ViewResult CustomersReport ()
+        {
+            var qry = from x in Customer.Queryable
+                      orderby x.Name
+                      select x;
+
+            var search = new Search<Customer> ();
+            search.Limit = Configuration.PageSize;
+            search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+            search.Total = qry.Count ();
+
+            return View (search);
+        }
+
+        [HttpPost]
+        public ActionResult CustomersReport (Search<Customer> search)
+        {
+            if (ModelState.IsValid) {
+                search = GetCustomers (search);
+            }
+
+            if (Request.IsAjaxRequest ()) {
+                return PartialView("_CustomersReport", search);
+            } else {
+                return View (search);
+            }
+        }
+
+        Search<Customer> GetCustomers (Search<Customer> search)
+        {
+            if (search.Pattern == null) {
+                var qry = from x in Customer.Queryable
+                          orderby x.Name
+                          select x;
+
+                search.Total = qry.Count ();
+                search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+            } else {
+                var qry = from x in Customer.Queryable
+                          where x.Name.Contains (search.Pattern) ||
+                              x.Code.Contains (search.Pattern) ||
+                              x.Zone.Contains (search.Pattern)
+                          orderby x.Name
+                          select x;
+
+                search.Total = qry.Count ();
+                search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+            }
+
+            return search;
+        }
+
 		public ViewResult FiscalDocuments ()
 		{
 			ViewBag.EditorField = "taxpayer";
