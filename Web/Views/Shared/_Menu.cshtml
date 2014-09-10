@@ -488,6 +488,12 @@
                 <div id="reports-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
                     <div class="gbmc">
                         <ol class="gbmcc">
+                            @if (CurrentUser.GetPrivilege (SystemObjects.Customers).AllowRead) {
+                                <li class="gbmtc">
+                                    <a class="gbmt @(Html.IsMenuSelected ("CustomersReport", "Reports") ? "gbm0l" : "")"
+                                       href="@Url.Action("CustomersReport", "Reports")">@Resources.Customer</a>
+                                </li>
+                            }
                             @if (CurrentUser.GetPrivilege (SystemObjects.ReceivedPayments).AllowRead) {
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("ReceivedPayments", "Reports") ? "gbm0l" : "")"

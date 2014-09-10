@@ -1,0 +1,125 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model Search<Customer>
+
+    @{
+        ViewBag.Title = Resources.Title_Customer;
+        var CurrentUser = Html.CurrentUser() ?? new User ();
+        var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Customers);
+    }
+
+    <p>@Html.ValidationMessageFor(x => x.Pattern)</p>
+
+    <table>
+        <tr>
+            <th>@Html.LabelFor(x => new Customer ().Code)</th>
+            <th colspan="3" >@Html.LabelFor(x => new Customer ().Name)</th>
+            <th style="width:25%">@Html.LabelFor(x => new Customer ().Zone)</th>
+            <th style="width:3%">@Html.LabelFor(x => new Customer ().CreditLimit)</th>
+            <th colspan="2">@Html.LabelFor(x => new Customer ().CreditDays)</th>
+            @*<th>@Html.LabelFor(x => new Customer ().Comment)</th>*@
+            @*<th></th>*@
+        </tr>
+
+        @foreach (var item in Model.Results) {
+            <tr style="background-color:#e2e2e2">
+                <td>@Html.DisplayFor(x => item.Code)</td>
+                <td colspan="3" >@Html.DisplayFor(x => item.Name)</td>
+                <td style="width:25%">@Html.DisplayFor(x => item.Zone)</td>
+                <td style="width:3%">@Html.DisplayFor(x => item.CreditLimit)</td>
+                <td colspan="2">@Html.DisplayFor(x => item.CreditDays)</td>
+            </tr>
+            
+            <tr>
+                <td></td>
+                <td colspan="6"><strong>Comentarios</strong></td>
+            </tr>
+            
+            <tr>
+                <td></td>
+                <td colspan="6"> @Html.DisplayFor(x => item.Comment)</td>
+            </tr>
+            
+            if (item.Taxpayers.Count () > 0) {
+            <tr>
+                <td></td>
+                <td colspan="6"><strong>Datos Fiscales</strong></td>
+            </tr>
+                foreach (var data in item.Taxpayers) {
+                    <tr>
+                        <td></td>
+                        <td colspan="1">@data.Id</td>
+                        <td>@data.Name</td>
+                        <td style="width:10%">@data.Email</td>
+                        <td colspan="3">@data.Address</td>
+                    </tr>
+                }
+            }
+            if(item.Addresses.Count () > 0){
+            <tr>
+                <td></td>
+                <td colspan="6"><strong>Direcciones</strong></td>
+            </tr>
+                foreach (var data in item.Addresses) {
+                    <tr>
+                        <td></td>
+                        <td colspan="6">@data.Street @data.ExteriorNumber, @data.PostalCode, @data.Neighborhood, @data.Locality @data.Borough, @data.State, @data.City @data.Country</td>
+                    </tr>
+                }
+        }
+        if(item.Contacts.Count () > 0){
+            <tr>
+                <td></td>
+                <td colspan="6"><strong>Contactos</strong></td>
+            </tr>
+            foreach (var data in item.Contacts) {
+                <tr>
+                    <td></td>
+                    <td colspan="6">@data.Name, @data.Email, @data.Phone, @data.PhoneExt @data.Mobile @data.Fax </td>
+                </tr>
+            }
+        }
+           
+        }
+
+    </table>
+
+    @*<div class="buttons right">
+        <label class="button left">@Model.ToString()</label>@if (Model.HasPrev) {<a class="button middle icon prev icon-only" title="@Resources.PrevPage" href="javascript:void(0)"></a>}@if (Model.HasNext) {<a class="button right icon next icon-only" title="@Resources.NextPage" href="javascript:void(0)"></a>}
+    </div>
+    @if (Model.HasPrev) {
+        <script type="text/javascript">
+            $(function () {
+                $('a.prev').click(function (e) {
+                    e.preventDefault();
+                    $("#activity-indicator").show();
+                    $("#search-results").hide();
+                    $.post('@Url.Action("CustomersReport")', { Pattern: "@Model.Pattern", Offset: "@(Model.Offset-Model.Limit)", Limit: "@Model.Limit" }, function (data) {
+                        $("#search-results").html(data);
+                        $("#search-results").show();
+                        $("#activity-indicator").hide();
+                    });
+                });
+            });
+        </script>
+    }
+    @if (Model.HasNext) {
+        <script type="text/javascript">
+            $(function () {
+                $('a.next').click(function (e) {
+                    e.preventDefault();
+                    $("#activity-indicator").show();
+                    $("#search-results").hide();
+                    $.post('@Url.Action("CustomersReport")', { Pattern: "@Model.Pattern", Offset: "@(Model.Offset+Model.Limit)", Limit: "@Model.Limit" }, function (data) {
+                        $("#search-results").html(data);
+                        $("#search-results").show();
+                        $("#activity-indicator").hide();
+                    });
+                });
+            });
+        </script>
+    }*@
+
+
