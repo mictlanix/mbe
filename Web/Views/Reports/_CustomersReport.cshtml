@@ -31,16 +31,14 @@
                 <td style="width:3%">@Html.DisplayFor(x => item.CreditLimit)</td>
                 <td colspan="2">@Html.DisplayFor(x => item.CreditDays)</td>
             </tr>
-            
+
+        	if (!string.IsNullOrWhiteSpace (item.Comment)) {
             <tr>
                 <td></td>
-                <td colspan="6"><strong>Comentarios</strong></td>
+                <td colspan="1"><strong>Comentarios</strong></td>
+                <td colspan="5"> @Html.DisplayFor(x => item.Comment)</td>
             </tr>
-            
-            <tr>
-                <td></td>
-                <td colspan="6"> @Html.DisplayFor(x => item.Comment)</td>
-            </tr>
+        	}
             
             if (item.Taxpayers.Count () > 0) {
             <tr>
