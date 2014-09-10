@@ -145,7 +145,8 @@ namespace Mictlanix.BE.Web.Controllers
 			entity.CreditLimit = item.CreditLimit;
 			entity.Shipping = item.Shipping;
 			entity.ShippingRequiredDocument = item.ShippingRequiredDocument;
-			entity.Comment = item.Comment;
+            entity.Comment = string.IsNullOrWhiteSpace (item.Comment) ? "" : item.Comment;
+
 
 			using (var scope = new TransactionScope()) {
             	entity.UpdateAndFlush();

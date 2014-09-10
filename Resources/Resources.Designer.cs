@@ -4476,7 +4476,16 @@ namespace Mictlanix.BE {
                 return ((string)(obj));
             }
         }
-        
+
+        public static string CustomerReports
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject ("Customer", resourceCulture);
+                return ((string) (obj));
+            }
+        }
+
         public static string NewPay {
             get {
                 object obj = ResourceManager.GetObject("NewPay", resourceCulture);
