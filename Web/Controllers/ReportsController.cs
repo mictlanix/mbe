@@ -419,23 +419,30 @@ namespace Mictlanix.BE.Web.Controllers
 			return PartialView ("_CustomerDebt", query.ToList ());
 		}
 
-        //public ActionResult CustomersReport ()
+        //public ViewResult CustomersReport ()
         //{
-        //    return View ("CustomersReport", new Search<Customer> ());
+        //    return View ();
         //}
+
+        //[HttpPost]
+        //public ActionResult CustomersReport (Customer item)
+        //{
+        //    var warehouse = Customer.Find (item.Id);
+        //    var qry = from x in Model.Customer.Queryable
+        //              where x.Warehouse.Id == item.Id
+        //              group x by x.Product into g
+        //              select new CustomersReport {
+        //                  Product = g.Key,
+        //                  Quantity = g.Sum (y => y.Quantity)
+        //              };
+
+        //    return View ();
+        //}
+
 
         public ViewResult CustomersReport ()
         {
-            var qry = from x in Customer.Queryable
-                      orderby x.Name
-                      select x;
-
-            var search = new Search<Customer> ();
-            search.Limit = Configuration.PageSize;
-            search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
-            search.Total = qry.Count ();
-
-            return View (search);
+            return View (GetCustomers (new Search<Customer> ()));
         }
 
         [HttpPost]
@@ -444,23 +451,19 @@ namespace Mictlanix.BE.Web.Controllers
             if (ModelState.IsValid) {
                 search = GetCustomers (search);
             }
-
-            if (Request.IsAjaxRequest ()) {
-                return PartialView("_CustomersReport", search);
-            } else {
-                return View (search);
-            }
+            
+            return PartialView ("_CustomersReport", search);
         }
 
         Search<Customer> GetCustomers (Search<Customer> search)
         {
-            if (search.Pattern == null) {
+            if (string.IsNullOrWhiteSpace (search.Pattern)) {
                 var qry = from x in Customer.Queryable
                           orderby x.Name
                           select x;
 
                 search.Total = qry.Count ();
-                search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+                search.Results = qry.ToList ();
             } else {
                 var qry = from x in Customer.Queryable
                           where x.Name.Contains (search.Pattern) ||
@@ -470,7 +473,7 @@ namespace Mictlanix.BE.Web.Controllers
                           select x;
 
                 search.Total = qry.Count ();
-                search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+                search.Results = qry.ToList ();
             }
 
             return search;

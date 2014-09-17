@@ -24,7 +24,7 @@
         </tr>
 
         @foreach (var item in Model.Results) {
-            <tr style="background-color:#e2e2e2">
+            <tr style="background-color:#f8f8f8">
                 <td>@Html.DisplayFor(x => item.Code)</td>
                 <td colspan="3" >@Html.DisplayFor(x => item.Name)</td>
                 <td style="width:25%">@Html.DisplayFor(x => item.Zone)</td>
@@ -85,9 +85,10 @@
     </table>
 
     @*<div class="buttons right">
-        <label class="button left">@Model.ToString()</label>@if (Model.HasPrev) {<a class="button middle icon prev icon-only" title="@Resources.PrevPage" href="javascript:void(0)"></a>}@if (Model.HasNext) {<a class="button right icon next icon-only" title="@Resources.NextPage" href="javascript:void(0)"></a>}
-    </div>
-    @if (Model.HasPrev) {
+        <label class="button left">@Model.ToString()</label>
+        @if (Model.HasPrev) {<a class="button middle icon prev icon-only" title="@Resources.PrevPage" href="javascript:void(0)"></a>}@if (Model.HasNext) {<a class="button right icon next icon-only" title="@Resources.NextPage" href="javascript:void(0)"></a>}
+    </div>*@
+    @*@if (Model.HasPrev) {
         <script type="text/javascript">
             $(function () {
                 $('a.prev').click(function (e) {

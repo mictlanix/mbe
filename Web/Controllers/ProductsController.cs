@@ -214,12 +214,11 @@ namespace Mictlanix.BE.Web.Controllers
 
 					item.DeleteAndFlush ();
 				}
+                return PartialView ("_DeleteSuccesful", item);
 			} catch (Exception ex) {
 				System.Diagnostics.Debug.WriteLine (ex);
 				return PartialView ("DeleteUnsuccessful");
 			}
-
-			return PartialView ("_DeleteSuccesful", item);
 		}
 
 		string SavePhoto (HttpPostedFileBase file)
