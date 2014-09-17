@@ -49,7 +49,7 @@ namespace Mictlanix.BE.Web.Controllers
                       orderby x.Name
                       select x;
 
-            var search = new Search<Customer>();
+            var search = new Search<Customer> ();
             search.Limit = Configuration.PageSize;
             search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
             search.Total = qry.Count ();
@@ -71,25 +71,25 @@ namespace Mictlanix.BE.Web.Controllers
             }
         }
 
-        Search<Customer> GetCustomers(Search<Customer> search)
+        Search<Customer> GetCustomers (Search<Customer> search)
         {
             if (search.Pattern == null) {
                 var qry = from x in Customer.Queryable
                           orderby x.Name
                           select x;
 
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+                search.Total = qry.Count ();
+                search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
             } else {
                 var qry = from x in Customer.Queryable
-                          where x.Name.Contains(search.Pattern) ||
-					          x.Code.Contains(search.Pattern) ||
-					          x.Zone.Contains(search.Pattern)
+                          where x.Name.Contains (search.Pattern) ||
+                              x.Code.Contains (search.Pattern) ||
+                              x.Zone.Contains (search.Pattern)
                           orderby x.Name
                           select x;
 
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+                search.Total = qry.Count ();
+                search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
             }
 
             return search;
@@ -97,13 +97,13 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ViewResult Details (int id)
         {
-			var item = Customer.Find (id);
+            var item = Customer.Find (id);
             return View (item);
         }
 
         public ActionResult Create()
         {
-            return View();
+            return PartialView("_Create", new Customer());
         }
 
         [HttpPost]
@@ -112,19 +112,19 @@ namespace Mictlanix.BE.Web.Controllers
 			item.PriceList = PriceList.TryFind (item.PriceListId);
 
             if (!ModelState.IsValid)
-            	return View (item);
+                return PartialView("_Create", item);
 			
 			using (var scope = new TransactionScope()) {
             	item.CreateAndFlush ();
 			}
-            
-			return RedirectToAction ("Details", new { id = item.Id });
+
+            return PartialView ("_CreateSuccesful", item);
         }
 
         public ActionResult Edit(int id)
         {
             var item = Customer.Find(id);
-            return View (item);
+            return PartialView ("_Edit", item);
         }
 
         [HttpPost]
@@ -133,7 +133,7 @@ namespace Mictlanix.BE.Web.Controllers
             item.PriceList = PriceList.TryFind(item.PriceListId);
 			
             if (!ModelState.IsValid)
-            	return View(item);
+                return PartialView ("_Edit", item);
 			
 			var entity = Customer.Find(item.Id);
 
@@ -145,36 +145,35 @@ namespace Mictlanix.BE.Web.Controllers
 			entity.CreditLimit = item.CreditLimit;
 			entity.Shipping = item.Shipping;
 			entity.ShippingRequiredDocument = item.ShippingRequiredDocument;
-            entity.Comment = string.IsNullOrWhiteSpace (item.Comment) ? "" : item.Comment;
-
+			entity.Comment = item.Comment;
 
 			using (var scope = new TransactionScope()) {
             	entity.UpdateAndFlush();
 			}
-			
-            return RedirectToAction("Index");
+
+            return PartialView ("_Refresh");
         }
 
         public ActionResult Delete(int id)
         {
             var item = Customer.Find (id);
-            return View (item);
+            return  PartialView ("_Delete",item);
         }
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed (int id)
 		{
-			try {
-				using (var scope = new TransactionScope()) {
-					var item = Customer.Find (id);
-					item.DeleteAndFlush ();
-				}
+            var item = Customer.Find (id);
 
-				return RedirectToAction ("Index");
-			} catch (GenericADOException) {
-				return View ("DeleteUnsuccessful");
-			}
-		}
+            try {
+                using (var scope = new TransactionScope()) {
+                    item.DeleteAndFlush ();
+                }
+                return PartialView ("DeleteUnsuccessful");
+            } catch (Exception) {
+                return PartialView ("_DeleteSuccesful", item);
+            }
+        }
 
 		public ActionResult Addresses (int id)
 		{

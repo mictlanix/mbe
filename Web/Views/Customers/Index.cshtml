@@ -1,4 +1,4 @@
-﻿    @using Mictlanix.BE
+﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
@@ -12,11 +12,9 @@
 
 <h2>@Resources.DisplayName_Customers</h2>
 
-<p>
 @if(Privilege.AllowCreate) {
-    @Html.ActionLink(Resources.CreateNew, "Create", new { }, new { @class = "button icon add" })
+    @Html.ActionLink(Resources.CreateNew, "Create", null, new { @class = "button icon add open-modal", data_modal_id = "customer-modal" })
 }
-</p>
 
 @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
     <fieldset>
