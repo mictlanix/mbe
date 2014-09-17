@@ -938,5 +938,13 @@
     <None Include="Content\fonts\secrettypewriter\veteran_typewriter-webfont.woff" />
     <Content Include="Views\Reports\CustomersReport.cshtml" />
     <Content Include="Views\Reports\_CustomersReport.cshtml" />
+    <Content Include="Views\Customers\_Create.cshtml" />
+    <Content Include="Views\Customers\_CreateSuccesful.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Customer.cshtml" />
+    <Content Include="Views\Customers\_Item.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Customer.cshtml" />
+    <Content Include="Views\Customers\_Edit.cshtml" />
+    <Content Include="Views\Customers\_Delete.cshtml" />
+    <Content Include="Views\Customers\_DeleteSuccesful.cshtml" />
   </ItemGroup>
 </Project>

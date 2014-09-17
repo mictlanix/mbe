@@ -15,39 +15,7 @@
 
 <fieldset>
     <legend>@Resources.Title_Customer</legend>
-
-	<div class="row-fluid">
-	  	<div class="span3">@Html.LabelFor(x => x.Code)</div>
-		<div class="span9">@Html.LabelFor(x => x.Name)</div>
-	</div>
-	<div class="row-fluid">
-	  	<div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.Code)</div></div>
-		<div class="span9"><div class="ro-field">@Html.DisplayFor(x => x.Name)</div></div>
-	</div>
-	<div class="row-fluid">
-	  	<div class="span3">@Html.LabelFor(x => x.Zone)</div>
-	  	<div class="span3">@Html.LabelFor(x => x.PriceList)</div>
-		<div class="span3">@Html.LabelFor(x => x.CreditLimit)</div>
-	  	<div class="span3">@Html.LabelFor(x => x.CreditDays)</div>
-	</div>
-	<div class="row-fluid">
-	  	<div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.Zone)</div></div>
-	  	<div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.PriceList.Name)</div></div>
-		<div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.CreditLimit)</div></div>
-	  	<div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.CreditDays)</div></div>
-	</div>
-	<div class="row-fluid">
-		<div class="span12">
-			@Html.DisplayFor(x => x.Shipping) @Html.DisplayNameFor(x => x.Shipping)
-			@Html.DisplayFor(x => x.ShippingRequiredDocument) @Html.DisplayNameFor(x => x.ShippingRequiredDocument)
-		</div>
-	</div>
-	<div class="row-fluid">
-	  	<div class="span12">@Html.LabelFor(x => x.Comment)</div>
-	</div>
-	<div class="row-fluid">
-	  	<div class="span12"><div class="ro-field">@Html.DisplayFor(x => x.Comment)</div></div>
-	</div>
+@Html.DisplayForModel()
 </fieldset>
 <div class='tabbable'>
     <ul class='nav nav-tabs'>
@@ -90,7 +58,7 @@
 <div class='row-fluid vspaced'>
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 @if (Privilege.AllowUpdate) {
-	@Html.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new { @class = "button icon edit pull-right" })
+	@Html.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new { @class = "button icon edit pull-right open-modal", data_modal_id = "customer-modal"})
 }
 </div>
 <script type='text/javascript'>

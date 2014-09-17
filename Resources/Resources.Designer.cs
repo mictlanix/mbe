@@ -3258,11 +3258,13 @@ namespace Mictlanix.BE {
                 return ((string)(obj));
             }
         }
-        
-        public static string NextPage {
-            get {
-                object obj = ResourceManager.GetObject("NextPage", resourceCulture);
-                return ((string)(obj));
+
+        public static string NextPage
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject ("NextPage", resourceCulture);
+                return ((string) (obj));
             }
         }
         
@@ -3384,11 +3386,13 @@ namespace Mictlanix.BE {
                 return ((string)(obj));
             }
         }
-        
-        public static string PrevPage {
-            get {
-                object obj = ResourceManager.GetObject("PrevPage", resourceCulture);
-                return ((string)(obj));
+
+        public static string PrevPage
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject ("PrevPage", resourceCulture);
+                return ((string) (obj));
             }
         }
         
