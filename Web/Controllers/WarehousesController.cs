@@ -94,22 +94,22 @@ namespace Mictlanix.BE.Web.Controllers
             return search;
         }
 
-        public ViewResult Details (int id)
+        public ActionResult View (int id)
         {
             var item = Warehouse.Find (id);
-            return View (item);
+            return PartialView ("_View", item);
         }
 
         public ActionResult Create ()
         {
-            return View ();
+            return PartialView ("_Create");
         }
 
         [HttpPost]
         public ActionResult Create (Warehouse item)
         {
             if (!ModelState.IsValid)
-            	return View (item);
+                return PartialView ("_Create", item);
             
             item.Store = Store.Find (item.StoreId);
 
@@ -117,51 +117,54 @@ namespace Mictlanix.BE.Web.Controllers
 				item.CreateAndFlush ();
 			}
 
-			return RedirectToAction ("Index");
+            return PartialView ("_CreateSuccesful", item);
         }
 
         public ActionResult Edit (int id)
         {
             var item = Warehouse.Find (id);
-            return View (item);
+            return PartialView ("_Edit", item);
         }
 
         [HttpPost]
         public ActionResult Edit (Warehouse item)
         {
             if (!ModelState.IsValid)
-            	return View (item);
+                return PartialView ("_Edit", item);
             
 			var entity = Warehouse.Find (item.Id);
 
 			entity.Code = item.Code;
-			entity.Name = item.Name;
+            entity.Name = item.Name;
+            entity.Store = Store.Find (item.StoreId);
 			entity.Comment = item.Comment;
 
 			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
 			}
 
-			return RedirectToAction ("Index");
+            return PartialView ("_Refresh");
         }
 
         public ActionResult Delete (int id)
         {
-            return View (Warehouse.Find (id));
+            var item = Warehouse.Find (id);
+            return PartialView ("_Delete", item);
         }
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            var item = Warehouse.Find (id);
+
 			try {
 				using (var scope = new TransactionScope()) {
-					var item = Warehouse.Find (id);
 					item.DeleteAndFlush ();
 				}
 
-				return RedirectToAction ("Index");
+                return PartialView ("_DeleteSuccesful", item);
 			} catch (TransactionException) {
-				return View ("DeleteUnsuccessful");
+                return PartialView ("DeleteUnsuccessful");
 			}
         }
 

@@ -167,11 +167,15 @@ namespace Mictlanix.BE.Web.Controllers
 
             try {
                 using (var scope = new TransactionScope()) {
+                    foreach (var discount in item.Discounts) {
+                        discount.Delete ();
+                    }
+                    scope.Flush ();
                     item.DeleteAndFlush ();
                 }
-                return PartialView ("DeleteUnsuccessful");
-            } catch (Exception) {
                 return PartialView ("_DeleteSuccesful", item);
+            } catch (Exception) {
+                return PartialView ("DeleteUnsuccessful" );
             }
         }
 

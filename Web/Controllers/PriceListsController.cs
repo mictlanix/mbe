@@ -37,6 +37,7 @@ using Castle.ActiveRecord;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Helpers;
+using NHibernate.Exceptions;
 
 namespace Mictlanix.BE.Web.Controllers
 {
@@ -100,10 +101,10 @@ namespace Mictlanix.BE.Web.Controllers
         //
         // GET: /PriceList/Details/5
 
-        public ViewResult Details(int id)
+        public ActionResult View(int id)
         {
             var item = PriceList.Find (id);
-            return View (item);
+            return PartialView ("_View",item);
         }
 
         //
@@ -111,7 +112,7 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Create()
         {
-            return View();
+            return PartialView("_Create");
         }
 
         //
@@ -121,7 +122,7 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult Create(PriceList item)
         {
             if (!ModelState.IsValid)
-            	return View(item);
+                return PartialView ("_Create", item);
 			
 			item.LowProfitMargin /= 100m;
 			item.HighProfitMargin /= 100m;
@@ -130,7 +131,7 @@ namespace Mictlanix.BE.Web.Controllers
             	item.CreateAndFlush ();
 			}
 
-			return RedirectToAction("Index");
+            return PartialView ("_CreateSuccesful", item);
         }
 
         //
@@ -143,7 +144,7 @@ namespace Mictlanix.BE.Web.Controllers
 			item.LowProfitMargin *= 100m;
 			item.HighProfitMargin *= 100m;
 
-            return View (item);
+            return PartialView ("_Edit", item);
         }
 
         //
@@ -153,16 +154,22 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult Edit (PriceList item)
         {
             if (!ModelState.IsValid)
-            	return View (item);
-            
-			item.LowProfitMargin /= 100m;
-			item.HighProfitMargin /= 100m;
+                return PartialView ("_Edit", item);
+
+            var entity = PriceList.Find (item.Id);
+
+            entity.Name = item.Name;
+            entity.LowProfitMargin = item.LowProfitMargin;
+            entity.HighProfitMargin = item.HighProfitMargin;
+
+            entity.LowProfitMargin /= 100m;
+            entity.HighProfitMargin /= 100m;
 
 			using (var scope = new TransactionScope ()) {
-            	item.UpdateAndFlush ();
+                entity.UpdateAndFlush ();
 			}
 
-			return RedirectToAction("Index");
+            return PartialView ("_Refresh");
         }
 
         //
@@ -171,7 +178,7 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult Delete(int id)
         {
             var item = PriceList.Find(id);
-            return View(item);
+            return PartialView ("_Delete", item);
         }
 
         //
@@ -181,12 +188,16 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
 			var item = PriceList.Find (id);
-            
-			using (var scope = new TransactionScope ()) {
-            	item.DeleteAndFlush ();
-			}
 
-            return RedirectToAction("Index");
+            try {
+                using (var scope = new TransactionScope()) {
+                    item.DeleteAndFlush ();
+                }
+
+                return PartialView ("_DeleteSuccesful", item);
+            } catch (GenericADOException) {
+                return PartialView ("DeleteUnsuccessful");
+            }
         }
 
         public JsonResult GetSuggestions (string pattern)

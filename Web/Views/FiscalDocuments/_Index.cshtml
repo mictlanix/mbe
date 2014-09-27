@@ -7,9 +7,11 @@
 @{
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.FiscalDocuments);
+
+    ViewBag.Privilege = Privilege;
 }
 
-<table>
+<table id="fiscal-documents">
     <tr>
         <th>@Resources.FiscalDocumentId</th>
         <th>@Resources.Issuer</th>
@@ -21,37 +23,29 @@
         <th>@Resources.Cancelled</th>
         <th></th>
     </tr>
-@foreach (var item in Model.Results) {
-    <tr>
-        <td class="number">@Html.DisplayFor(x => item.Id)</td>
-        <td class="number center">@Html.DisplayFor(x => item.Issuer.Id)</td>
-        <td class="number center">@Html.DisplayFor(x => item.Batch)</td>
-        <td class="number">@Html.DisplayFor(x => item.Serial)</td>
-        <td class="center"><small>@Html.DisplayFor(x => item.Issued)</small></td>
-        <td>
-        	<small>@Html.DisplayFor(x => item.Customer.Name)</small><br/>
-        	<small>@Html.DisplayFor(x => item.Recipient)</small>
-        	<small>@Html.DisplayFor(x => item.RecipientName)</small>
-        </td>
-        <td class="bool">@Html.DisplayFor(x => item.IsCompleted)</td>
-        <td class="bool">@Html.DisplayFor(x => item.IsCancelled)</td>
-
-        <td class="actions">
-        	@if (Privilege.AllowRead) {
-            	@Html.ActionLink(" ", "View", new { id = item.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
-            	@Html.ActionLink(" ", "Print", new { id = item.Id }, new { @class = "button icon print icon-only", title = Resources.Print, target = "_blank" })
-            	@*@Html.ActionLink(" ", "Pdf", new { id = item.Id }, new { @class = "button icon badge icon-only", title = Resources.Print, target = "_blank" })*@
-            }
-        	@if (Privilege.AllowUpdate && !item.IsCompleted && !item.IsCancelled) {
-            	@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", title = Resources.Edit })
-            }
-        	@if (Privilege.AllowRead && item.IsCompleted) {
-            	@Html.ActionLink(" ", "Download", new { id = item.Id }, new { @class = "button icon download icon-only", title = Resources.Download })
-            }
-        </td>
-    </tr>
-}
+    @foreach (var item in Model.Results) {
+        @Html.Partial("_Item", item)
+    }
 </table>
+
+<script type="text/javascript">
+    bindModal('.open-modal');
+    $('a.paging').click(function (e) {
+        var offset=@Model.Offset;
+
+        if($(this).hasClass('next')) {
+            offset+=@Model.Limit;
+        } else {
+            offset-=@Model.Limit;
+        }
+
+        e.preventDefault();
+        $('#activity-indicator').show();
+        $('#search-results').hide();
+
+    });
+</script>
+
 <div class="buttons right">
 	<label class='button left'>@Model.ToString()</label>@if (Model.HasPrev) {<a class='button middle icon prev icon-only paging' title='@Resources.PrevPage' href='javascript:void(0)'></a>}@if (Model.HasNext) {<a class='button right icon next icon-only paging' title='@Resources.NextPage' href='javascript:void(0)'></a>}
 </div>

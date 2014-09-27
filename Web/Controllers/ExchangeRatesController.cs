@@ -81,14 +81,14 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Create ()
         {
-			return View (new ExchangeRate { Date = DateTime.Now, Target = Configuration.BaseCurrency });
+			return PartialView ("_Create", new ExchangeRate { Date = DateTime.Now, Target = Configuration.BaseCurrency });
         } 
 
         [HttpPost]
 		public ActionResult Create (ExchangeRate item)
         {
             if (!ModelState.IsValid)
-            	return View (item);
+                return PartialView ("_Create", item);
 
 			var qry = from x in ExchangeRate.Queryable
 					  where x.Date == item.Date.Date && 
@@ -98,32 +98,35 @@ namespace Mictlanix.BE.Web.Controllers
 
 			if (qry.Count () > 0) {
 				ModelState.AddModelError ("Date", Resources.ExchangeRateAlreadyExists);
-				return View (item);
+                return PartialView ("_Create", item);
 			}
 
 			using (var scope = new TransactionScope ()) {
             	item.CreateAndFlush ();
 			}
 
-            return RedirectToAction ("Index");
+            return PartialView ("_CreateSuccesful", item);
         }
 
         public ActionResult Delete (int id)
         {
 			var item = ExchangeRate.Find (id);
-            return View (item);
+            return PartialView ("_Delete", item);
         }
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed (int id)
         {
 			var item = ExchangeRate.Find (id);
-			
-			using (var scope = new TransactionScope ()) {
-				item.DeleteAndFlush ();
-			}
 
-            return RedirectToAction ("Index");
+            try {
+                using (var scope = new TransactionScope ()) {
+                    item.DeleteAndFlush ();
+                }
+                return PartialView ("_DeleteSuccesful", item);
+            } catch (Exception) {
+                return PartialView ("DeleteUnsuccessful");
+            }
         }
 
 		public JsonResult Currencies ()

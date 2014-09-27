@@ -4,81 +4,79 @@
 @using Mictlanix.BE.Web.Models
 @model Search<Customer>
 
-@{
-    var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Customers);
-    
-    ViewBag.Title = Resources.Title_Customer;
-    ViewBag.Privilege = Privilege;
-}
+    @{
+        var CurrentUser = Html.CurrentUser() ?? new User ();
+        var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Customers);
 
-<p>@Html.ValidationMessageFor(x => x.Pattern)</p>
+        ViewBag.Title = Resources.Title_Customer;
+        ViewBag.Privilege = Privilege;
+    }
 
-<table id="customers">
-    <tr>
-        <th>@Html.LabelFor(x => new Customer().Code)</th>
-        <th>@Html.LabelFor(x => new Customer().Name)</th>
-        <th>@Html.LabelFor(x => new Customer().PriceList)</th>
-        <th>@Html.LabelFor(x => new Customer().CreditLimit)</th>
-        <th>@Html.LabelFor(x => new Customer().CreditDays)</th>
-        <th></th>
-    </tr>
+    <p>@Html.ValidationMessageFor(x => x.Pattern)</p>
 
-@foreach (var item in Model.Results) {
-     @Html.Partial("_Item", item)
-}
-</table>
-                 <script type="text/javascript">
-    bindModal('.open-modal');
-    $('a.paging').click(function (e) {
-        var offset=@Model.Offset;
+    <table id="customers">
+        <tr>
+            <th>@Html.LabelFor(x => new Customer().Code)</th>
+            <th>@Html.LabelFor(x => new Customer().Name)</th>
+            <th>@Html.LabelFor(x => new Customer().PriceList)</th>
+            <th>@Html.LabelFor(x => new Customer().CreditLimit)</th>
+            <th>@Html.LabelFor(x => new Customer().CreditDays)</th>
+            <th></th>
+        </tr>
 
-        if($(this).hasClass('next')) {
-            offset+=@Model.Limit;
-        } else {
-            offset-=@Model.Limit;
+        @foreach (var item in Model.Results) {
+            @Html.Partial("_Item", item)
         }
+    </table>
+    <script type="text/javascript">
+        bindModal('.open-modal');
+        $('a.paging').click(function (e) {
+            var offset=@Model.Offset;
 
-        e.preventDefault();
-        $('#activity-indicator').show();
-        $('#search-results').hide();
+            if($(this).hasClass('next')) {
+                offset+=@Model.Limit;
+            } else {
+                offset-=@Model.Limit;
+            }
 
-    });
-  </script>
-<div class="buttons right">
-	<label class="button left">@Model.ToString()</label>@if(Model.HasPrev) {<a class="button middle icon prev icon-only" title="@Resources.PrevPage" href="javascript:void(0)"></a>}@if(Model.HasNext) {<a class="button right icon next icon-only" title="@Resources.NextPage" href="javascript:void(0)"></a>}
-</div>
-@if(Model.HasPrev)
-{
-<script type="text/javascript">
-    $(function () {
-        $('a.prev').click(function (e) {
             e.preventDefault();
-            $("#activity-indicator").show();
-            $("#search-results").hide();
-            $.post('@Url.Action("Index")', { Pattern: "@Model.Pattern", Offset: "@(Model.Offset-Model.Limit)", Limit: "@Model.Limit" }, function (data) {
-                $("#search-results").html(data);
-                $("#search-results").show();
-                $("#activity-indicator").hide();
-            });
+            $('#activity-indicator').show();
+            $('#search-results').hide();
+
         });
-    });
-</script>
-}
-@if (Model.HasNext)
-{
-<script type="text/javascript">
-    $(function () {
-        $('a.next').click(function (e) {
-            e.preventDefault();
-            $("#activity-indicator").show();
-            $("#search-results").hide();
-            $.post('@Url.Action("Index")', { Pattern: "@Model.Pattern", Offset: "@(Model.Offset+Model.Limit)", Limit: "@Model.Limit" }, function (data) {
-                $("#search-results").html(data);
-                $("#search-results").show();
-                $("#activity-indicator").hide();
+    </script>
+    <div class="buttons right">
+        <label class="button left">@Model.ToString()</label>@if (Model.HasPrev) {<a class="button middle icon prev icon-only" title="@Resources.PrevPage" href="javascript:void(0)"></a>}@if (Model.HasNext) {<a class="button right icon next icon-only" title="@Resources.NextPage" href="javascript:void(0)"></a>}
+    </div>
+    @if (Model.HasPrev) {
+        <script type="text/javascript">
+            $(function () {
+                $('a.prev').click(function (e) {
+                    e.preventDefault();
+                    $("#activity-indicator").show();
+                    $("#search-results").hide();
+                    $.post('@Url.Action("Index")', { Pattern: "@Model.Pattern", Offset: "@(Model.Offset-Model.Limit)", Limit: "@Model.Limit" }, function (data) {
+                        $("#search-results").html(data);
+                        $("#search-results").show();
+                        $("#activity-indicator").hide();
+                    });
+                });
             });
-        });
-    });
-</script>
-}
+        </script>
+    }
+    @if (Model.HasNext) {
+        <script type="text/javascript">
+            $(function () {
+                $('a.next').click(function (e) {
+                    e.preventDefault();
+                    $("#activity-indicator").show();
+                    $("#search-results").hide();
+                    $.post('@Url.Action("Index")', { Pattern: "@Model.Pattern", Offset: "@(Model.Offset+Model.Limit)", Limit: "@Model.Limit" }, function (data) {
+                        $("#search-results").html(data);
+                        $("#search-results").show();
+                        $("#activity-indicator").hide();
+                    });
+                });
+            });
+        </script>
+    }

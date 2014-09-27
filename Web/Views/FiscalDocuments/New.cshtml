@@ -12,36 +12,7 @@
 @using (Html.BeginForm()) {
     @Html.ValidationSummary(true)
     
-    <div class='control-group'>
-		<div class='row-fluid'>
-		    <div class="span12">@Html.LabelFor(x => x.Issuer)</div>
-	    </div>
-		<div class='row-fluid'>
-		    <div class="span12">
-		        @Html.EditorFor(x => x.IssuerId)
-		        @Html.ValidationMessageFor(x => x.IssuerId)
-		    </div>
-	    </div>
-		<div class='row-fluid'>
-		    <div class="span12">@Html.LabelFor(x => x.Customer)</div>
-	    </div>
-		<div class='row-fluid'>
-		    <div class="span12">
-		        @Html.EditorFor(x => x.CustomerId)
-		        @Html.ValidationMessageFor(x => x.CustomerId)
-		    </div>
-	    </div>
-
-		<div class='row-fluid'>
-		    <div class="span12">@Html.LabelFor(x => x.Recipient)</div>
-	    </div>
-		<div class='row-fluid'>
-		    <div class="span12">
-		        @Html.EditorFor(x => x.Recipient)
-		        @Html.ValidationMessageFor(x => x.Recipient)
-		    </div>
-	    </div>
-    </div>
+   
 	<div class='row-fluid'>
 	    <div class="span2">
 		    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
@@ -51,41 +22,3 @@
 	    </div>
     </div>
 }
-<style type="text/css">
-ul.token-input-list { width:100%; }
-div.token-input-dropdown {width:650px;}
-</style>
-<script type='text/javascript'>
-function getUrl() {
-	var customer = $('#CustomerId').tokenInput('get')[0];
-	if(typeof(customer) === 'undefined') {
-		customer = {id : 0};
-	}
-	return '@Url.Action("ListTaxpayers", "Customers", new { id = 0 })' + customer.id;
-}
-$(function () {
-@if (Model.Issuer != null) {
-	<text>$("#IssuerId").tokenInput("add", { id: "@Model.Issuer.Id", name: "@Model.Issuer.ToString()"});</text>
-}
-    $('#Recipient').tokenInput(getUrl, {
-        hintText: "@Resources.HIntText",
-        noResultsText: "@Resources.NoResultsText",
-        searchingText: "@Resources.SearchingText",          
-        queryParam: "pattern",minChars: 0,tokenLimit: 1
-@if (!string.IsNullOrEmpty (Model.Recipient)) {
-	<text>,prePopulate: [{ id: "@Model.Recipient", name: "@Model.RecipientName"}]</text>
-}
-    });
-    
-    $('form').submit(function(){
-    	var count = $("#IssuerId").tokenInput("get").length +
-    				$("#CustomerId").tokenInput("get").length +
-    				$("#Recipient").tokenInput("get").length;
-    	
-    	if(count != 3) return false;
-
-        $('button.save').prop('disabled', true);
-	    $('button.save').html('@Resources.PleaseWait');
-	});
-});
-</script>

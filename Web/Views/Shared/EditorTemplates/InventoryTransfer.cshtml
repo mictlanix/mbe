@@ -1,0 +1,27 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@model InventoryTransfer
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+
+    <div class="row">
+        <div class="span8 field-required">@Html.LabelFor(x => x.From)</div>
+    </div>
+    <div class="row">
+        <div class="span8">@Html.EditorFor(x => x.FromId) @Html.ValidationMessageFor(x => x.FromId)</div>
+    </div>
+    <div class="row">
+        <div class="span8 field-required">@Html.LabelFor(x => x.To)</div>
+    </div>
+    <div class="row">
+        <div class="span8">@Html.EditorFor(x => x.ToId) @Html.ValidationMessageFor(x => x.ToId)</div>
+    </div>
+    <div class="row">
+        <div class="span8">@Html.LabelFor(x => x.Comment)</div>
+    </div>
+    <div class="row">
+        <div class="span8">@Html.EditorFor(x => x.Comment)</div>
+    </div>
+}
+

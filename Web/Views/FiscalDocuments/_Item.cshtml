@@ -1,0 +1,35 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model FiscalDocument
+
+<tr id='id:@Model.Id'>
+    <td class="number">@Html.DisplayFor(x => x.Id)</td>
+    <td class="number center">@Html.DisplayFor(x => x.Issuer.Id)</td>
+    <td class="number center">@Html.DisplayFor(x => x.Batch)</td>
+    <td class="number">@Html.DisplayFor(x => x.Serial)</td>
+    <td class="center"><small>@Html.DisplayFor(x => x.Issued)</small></td>
+    <td>
+        <small>@Html.DisplayFor(x => x.Customer.Name)</small><br />
+        <small>@Html.DisplayFor(x => x.Recipient)</small>
+        <small>@Html.DisplayFor(x => x.RecipientName)</small>
+    </td>
+    <td class="bool">@Html.DisplayFor(x => x.IsCompleted)</td>
+    <td class="bool">@Html.DisplayFor(x => x.IsCancelled)</td>
+
+    <td class="actions">
+        @if (ViewBag.Privilege.AllowRead) {
+            @Html.ActionLink(" ", "View", new { id = Model.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
+            @Html.ActionLink(" ", "Print", new { id = Model.Id }, new { @class = "button icon print icon-only", title = Resources.Print, target = "_blank" })
+        @*@Html.ActionLink(" ", "Pdf", new { id = Model.Id }, new { @class = "button icon badge icon-only", title = Resources.Print, target = "_blank" })*@
+        }
+        @if (ViewBag.Privilege.AllowUpdate && !Model.IsCompleted && !Model.IsCancelled) {
+            @Html.ActionLink(" ", "Edit", new { id = Model.Id }, new { @class = "button icon edit icon-only", title = Resources.Edit })
+        }
+        @if (ViewBag.Privilege.AllowRead && Model.IsCompleted) {
+            @Html.ActionLink(" ", "Download", new { id = Model.Id }, new { @class = "button icon download icon-only", title = Resources.Download })
+        }
+    </td>
+</tr>
+
+

@@ -101,10 +101,10 @@ namespace Mictlanix.BE.Web.Controllers
         //
         // GET: /CashDrawers/Details/5
 
-        public ViewResult Details(int id)
+        public ActionResult View (int id)
         {
-            CashDrawer CashDrawers = CashDrawer.Find(id);
-            return View(CashDrawers);
+            var item = CashDrawer.Find (id);
+            return PartialView ("_View", item);
         }
 
         //
@@ -112,7 +112,7 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Create()
         {
-            return View();
+            return PartialView ("_Create");
         }
 
         //
@@ -122,7 +122,7 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult Create(CashDrawer item)
         {
             if (!ModelState.IsValid)
-            	return View (item);
+                return PartialView ("_Create", item);
         
             item.Store = Store.Find (item.StoreId);
 			
@@ -130,7 +130,7 @@ namespace Mictlanix.BE.Web.Controllers
             	item.CreateAndFlush ();
 			}
 
-            return RedirectToAction ("Index");
+            return PartialView ("_CreateSuccesful", item);
         }
 
         //
@@ -139,7 +139,7 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult Edit(int id)
         {
             var item = CashDrawer.Find(id);
-            return View (item);
+            return PartialView ("_Edit", item);
         }
 
         //
@@ -149,7 +149,7 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult Edit(CashDrawer item)
         {
             if (!ModelState.IsValid)
-				return View(item);
+                return PartialView ("_Edit", item);
             
 			var entity = CashDrawer.Find (item.Id);
 
@@ -161,7 +161,7 @@ namespace Mictlanix.BE.Web.Controllers
 				entity.UpdateAndFlush ();
 			}
 
-            return RedirectToAction("Index");
+            return PartialView ("_Refresh");
         }
 
         //
@@ -169,8 +169,8 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Delete(int id)
         {
-            CashDrawer CashDrawers = CashDrawer.Find(id);
-            return View(CashDrawers);
+            var item = CashDrawer.Find(id);
+            return PartialView ("_Delete",item);
         }
 
         //
@@ -179,9 +179,18 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            CashDrawer CashDrawers = CashDrawer.Find(id);
-            CashDrawers.Delete();
-            return RedirectToAction("Index");
+            var item = CashDrawer.Find (id);
+            try {
+                using (var scope = new TransactionScope ()) {
+                    item.DeleteAndFlush ();
+                }
+                return PartialView ("_DeleteSuccesful", item);
+            } catch (Exception) {
+                return PartialView ("DeleteUnsuccessful");
+            }
+            //CashDrawer CashDrawers = CashDrawer.Find(id);
+            //CashDrawers.Delete();
+            //return RedirectToAction("Index");
         }
 
 		public JsonResult GetSuggestions (int store, string pattern)
