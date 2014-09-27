@@ -11,34 +11,7 @@
 <fieldset>
     <legend>@Resources.Title_SupplierAgreement</legend>
 
-    <div class="display-label">
-        @Html.LabelFor(model => model.Supplier)
-    </div>
-    <div class="display-field">
-        @Html.HiddenFor(model => model.Supplier.Id)
-        @Html.DisplayFor(model => model.Supplier.Name)
-    </div>
-
-    <div class="display-label">
-        @Html.LabelFor(model => model.Start)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Start)
-    </div>
-    
-    <div class="display-label">
-        @Html.LabelFor(model => model.End)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.End)
-    </div>
-
-    <div class="display-label">
-        @Html.LabelFor(model => model.Comment)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Comment)
-    </div>
+   
 
 </fieldset>
 @using (Html.BeginForm()) {

@@ -57,67 +57,109 @@ namespace Mictlanix.BE.Web.Controllers
             return View (search);
         }
 
-        public ViewResult Details (int id)
+        [HttpPost]
+        public ActionResult Index (Search<Label> search)
+        {
+            if (ModelState.IsValid) {
+                search = GetLabels (search);
+            }
+
+            if (Request.IsAjaxRequest ()) {
+                return PartialView ("_Index", search);
+            } else {
+                return View (search);
+            }
+        }
+
+        Search<Label> GetLabels (Search<Label> search)
+        {
+            if (search.Pattern == null) {
+                var qry = from x in Label.Queryable
+                          orderby x.Name
+                          select x;
+
+                search.Total = qry.Count ();
+                search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+            } else {
+                var qry = from x in Label.Queryable
+                          where x.Name.Contains (search.Pattern)
+                          orderby x.Name
+                          select x;
+
+                search.Total = qry.Count ();
+                search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+            }
+
+            return search;
+        }
+
+        public ActionResult View (int id)
         {
             var item = Label.Find(id);
-            return View (item);
+            return PartialView ("_View", item);
         }
 
         public ActionResult Create()
         {
-            return View ();
+            return PartialView ("_Create");
         } 
 
         [HttpPost]
         public ActionResult Create(Label item)
         {
             if (!ModelState.IsValid)
-            	return View (item);
+            	return PartialView ("_Create", item);
 
 			using (var scope = new TransactionScope()) {
             	item.CreateAndFlush ();
 			}
 
-            return RedirectToAction ("Index");
+            return PartialView ("_CreateSuccesful", item);
         }
         
         public ActionResult Edit (int id)
         {
             var item = Label.Find (id);
-            return View (item);
+            return PartialView ("_Edit",item);
         }
 
         [HttpPost]
         public ActionResult Edit (Label item)
         {
             if (!ModelState.IsValid)
-            	return View(item);
-            
+                return PartialView ("_Edit", item);
+
+            var entity = Label.Find (item.Id);
+
+            entity.Name = item.Name;
+            entity.Comment = item.Comment;
+
 			using (var scope = new TransactionScope()) {
-            	item.UpdateAndFlush ();
+            	entity.UpdateAndFlush ();
 			}
-			
-            return RedirectToAction("Index");
+
+            return PartialView ("_Refresh");
         }
 
         public ActionResult Delete (int id)
         {
             var item = Label.Find(id);
-            return View (item);
+            return PartialView ("_Delete", item);
         }
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed (int id)
 		{
+            var item = Label.Find (id);
+
 			try {
 				using (var scope = new TransactionScope()) {
-					var item = Label.Find (id);
 					item.DeleteAndFlush ();
 				}
-				
-				return RedirectToAction ("Index");
+
+                return PartialView ("_DeleteSuccesful", item);
 			} catch (GenericADOException) {
-				return View ("DeleteUnsuccessful");
+                return PartialView ("DeleteUnsuccessful");
 			}
 		}
 

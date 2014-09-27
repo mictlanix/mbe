@@ -11,6 +11,7 @@
     var AllowCreateContacts = Html.GetPrivilege(CurrentUser, SystemObjects.Contacts).AllowCreate;
     var AllowCreateBankAccounts = Html.GetPrivilege(CurrentUser, SystemObjects.BankAccounts).AllowCreate;
     var AllowCreateAgreements = Html.GetPrivilege(CurrentUser, SystemObjects.SupplierAgreements).AllowCreate;
+    ViewBag.Privilege = Privilege;
 }
 
 <h2>@Resources.Details</h2>
@@ -64,21 +65,26 @@
 	    </div>
 	    <div id='tab-3' class='tab-pane'>
 	    @if(AllowCreateBankAccounts) {
-	        <p>@Html.ActionLink(Resources.CreateNew, "CreateForSupplier", "BankAccounts", new { id = Model.Id }, new { @class = "button icon add" })</p>
+	        <p>@Html.ActionLink(Resources.CreateNew, "CreateForSupplier", "BankAccounts", new { id = Model.Id }, new { @class = "button icon add open-modal", data_modal_id = "bankAccount-modal" })</p>
 	    }
-	        @Html.Partial("../BankAccounts/_Index", Model.BanksAccounts)
+            <div id="bankAccounts" data-url="@Url.Action("BankAccounts", new { id = Model.Id })"> @Html.Partial("../BankAccounts/_Index", Model.BanksAccounts)</div>
+	        
 	    </div>
 	    <div id='tab-4' class='tab-pane'>
 	    @if(AllowCreateAgreements) {
-	        <p>@Html.ActionLink(Resources.CreateNew, "CreateForSupplier", "SupplierAgreements", new { id = Model.Id }, new { @class = "button icon add" })</p>
+	        <p>@Html.ActionLink(Resources.CreateNew, "CreateForSupplier", "SupplierAgreements", new { id = Model.Id }, new { @class = "button icon add open-modal", data_modal_id = "supplierAgreement-modal" })</p>
 	    }
-	        @Html.Partial("../SupplierAgreements/_Index", Model.Agreements)
+            <div id="supplierAgreements" data-url="@Url.Action("SupplierAgreements", new {id = Model.Id})">@Html.Partial("../SupplierAgreements/_Index", Model.Agreements)</div>
+	        
 	    </div>
 	</div>
 </div>
 <div class="row-fluid vspaced">
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
-@if (Privilege.AllowUpdate) {
-	@Html.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new { @class = "button icon edit pull-right" })
+@if (ViewBag.Privilege.AllowUpdate) {
+	@Html.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new { @class = "button icon edit pull-right open-modal",  data_modal_id = "supplier-modal" })
 }
 </div>
+<script type="text/javascript">
+    bindModal('.open-modal');
+</script>

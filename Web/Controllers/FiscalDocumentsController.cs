@@ -132,7 +132,7 @@ namespace Mictlanix.BE.Web.Controllers
 			return View (view, item);
 		}
 
-		public ViewResult New ()
+		public ActionResult New ()
 		{
 			var store = Configuration.Store;
 
@@ -144,7 +144,7 @@ namespace Mictlanix.BE.Web.Controllers
 				Issuer =  store.Taxpayer
 			};
 
-			return View (item);
+			return PartialView ("_Create", item);
 		}
 
 		[HttpPost]
@@ -170,7 +170,7 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 
 			if (!ModelState.IsValid) {
-				return View (item);
+				return PartialView ("_Create", item);
 			}
 			
 			// Store
@@ -202,7 +202,7 @@ namespace Mictlanix.BE.Web.Controllers
 				item.CreateAndFlush ();
 			}
 
-			return RedirectToAction ("Edit", new { id = item.Id });
+			return PartialView ("_CreateSuccesful", new { id = item.Id });
 		}
 
 		public ActionResult Edit (int id)

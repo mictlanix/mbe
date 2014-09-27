@@ -14,9 +14,10 @@
 
 <p>
 @if(Privilege.AllowCreate) {
-    @Html.ActionLink(Resources.CreateNew, "Create", new { }, new { @class = "button icon add" })
+    @Html.ActionLink(Resources.CreateNew, "Create", null, new { @class = "button icon add open-modal", data_modal_id = "label-modal" })
 }
 </p>
+
 <div id="search-results">
     @Html.Partial("_Index")
 </div>

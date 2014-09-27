@@ -1,0 +1,28 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@model BankAccount
+
+<div class="row">
+    <div class="span4">@Html.LabelFor(x => x.BankName)</div>
+    <div class="span4">@Html.LabelFor(x => x.AccountNumber)</div>
+</div>
+<div class="row">
+    <div class="span4">@Html.EditorFor(x => x.BankName)  @Html.ValidationMessageFor(x => x.BankName)</div>
+    <div class="span4">@Html.EditorFor(x => x.AccountNumber) @Html.ValidationMessageFor(x => x.AccountNumber)</div>
+</div>
+<div class="row">
+    <div class="span4">@Html.LabelFor(x => x.Reference)</div>
+    <div class="span4">@Html.LabelFor(x => x.RoutingNumber)</div>
+</div>
+<div class="row">
+    <div class="span4">@Html.EditorFor(x => x.Reference) @Html.ValidationMessageFor(x => x.Reference)</div>
+    <div class="span4">@Html.EditorFor(x => x.RoutingNumber)  @Html.ValidationMessageFor(x => x.RoutingNumber)</div>
+</div>
+<div class="row">
+    <div class="span8">@Html.LabelFor(x => x.Comment)</div>
+</div>
+<div class="row">
+    <div class="span8">@Html.EditorFor(x => x.Comment)</div>
+</div>
+
+

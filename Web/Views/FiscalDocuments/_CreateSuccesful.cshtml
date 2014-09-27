@@ -1,0 +1,17 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model FiscalDocument
+@{
+    var Privilege = Html.GetPrivilege (Html.CurrentUser() ?? new User (), SystemObjects.FiscalDocuments);
+    ViewBag.Privilege = Privilege;
+}
+@Html.Partial("_Item", Model)
+<script type='text/javascript'>
+$('#fiscal-documents tr:first').after($('#id\\:@Model.Id'));
+$('#fiscalDocument-modal').modal('hide');
+bindModal('#id\\:@Model.Id a.open-modal');
+</script>
+
+
+

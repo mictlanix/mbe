@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+﻿@*@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Models
 @model PurchaseOrder
@@ -12,29 +12,7 @@
 <div id="master-section">
     <fieldset>
         <legend>@Resources.DisplayName_PurchaseInformation</legend>
-            @using (Html.BeginForm())
-            {
-                @Html.ValidationSummary(true)
-                
-                <div class="editor-label">
-                    @Html.LabelFor(model => model.Supplier)
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.SupplierId)
-                    @Html.ValidationMessageFor(model => model.SupplierId)
-                </div>
-                
-     	        <div class="editor-label">
-                    @Html.LabelFor(model => model.Comment)
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.Comment)
-                </div>
-                
-                <div class="action-buttons">
-                    <button type="submit" class="icon save">@Resources.Save</button>
-                </div>
-            }
+           
     </fieldset>
 </div>
 <div id="back">
@@ -52,4 +30,4 @@ ul.token-input-list {
 		    $('button.save').html('@Resources.PleaseWait');
 		});
     });
-</script>
+</script>*@

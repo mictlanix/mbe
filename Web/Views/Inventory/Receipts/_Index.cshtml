@@ -5,12 +5,14 @@
 @model Search<InventoryReceipt>
 
 @{
-    ViewBag.Title = Resources.Title_InventoryReceipt;
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.InventoryReceipts);
+
+    ViewBag.Title = Resources.Title_InventoryReceipt;
+    ViewBag.Privilege = Privilege;
 }
 
-<table>
+<table id="inventory-receipts">
     <tr>
         <th>@Html.LabelFor(x => new InventoryReceipt().Id)</th>
         <th>@Html.LabelFor(x => new InventoryReceipt().CreationTime)</th>
@@ -21,24 +23,26 @@
         <th></th>
     </tr>
 @foreach (var item in Model.Results) {
-    <tr>
-        <td class="number">@Html.DisplayFor(x => item.Id)</td>
-        <td class="date">@Html.DisplayFor(x => item.CreationTime)</td>
-        <td>@Html.DisplayFor(x => item.Warehouse.Name)</td>
-        <td class="number">@Html.DisplayFor(x => item.Order.Id)</td>
-        <td class="bool">@Html.DisplayFor(x => item.IsCompleted)</td>
-        <td class="bool">@Html.DisplayFor(x => item.IsCancelled)</td>
-        <td class="actions">
-            @Html.ActionLink(" ", "Receipt", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
-        	@if(Privilege.AllowUpdate && !item.IsCompleted && !item.IsCancelled)
-        	{
-            	@Html.ActionLink(" ", "EditReceipt", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
-            }
-        </td>
-    </tr>
+   @Html.Partial("Receipts/_Item", item)
 }
 </table>
+<script type="text/javascript">
+    bindModal('.open-modal');
+    $('a.paging').click(function (e) {
+        var offset=@Model.Offset;
 
+        if($(this).hasClass('next')) {
+            offset+=@Model.Limit;
+        } else {
+            offset-=@Model.Limit;
+        }
+
+        e.preventDefault();
+        $('#activity-indicator').show();
+        $('#search-results').hide();
+
+    });
+</script>
 
 <div class="buttons right">
 	<label class="button left">@Model.ToString()</label>@if (Model.HasPrev) {<a class="button middle icon prev icon-only" title="@Resources.PrevPage" href="javascript:void(0)"></a>}@if (Model.HasNext) {<a class="button right icon next icon-only" title="@Resources.NextPage" href="javascript:void(0)"></a>}
