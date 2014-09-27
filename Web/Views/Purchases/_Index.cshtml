@@ -5,35 +5,42 @@
 @model Search<PurchaseOrder>
 
 @{
-    var CurrentUser = Html.CurrentUser () ?? new User ();
+    var CurrentUser = Html.CurrentUser() ?? new User ();
     var Privilege = Html.GetPrivilege (CurrentUser, SystemObjects.PurchasesOrders);
+    ViewBag.Privilege = Privilege;
 }
 
-<table>
+<table id="purchases-orders">
     <tr>
-        <th>@Html.LabelFor(x => new PurchaseOrder().Id)</th>
-        <th>@Html.LabelFor(x => new PurchaseOrder().CreationTime)</th>
-        <th>@Html.LabelFor(x => new PurchaseOrder().Supplier)</th>
-        <th>@Html.LabelFor(x => new PurchaseOrder().IsCompleted)</th>
-        <th>@Html.LabelFor(x => new PurchaseOrder().IsCancelled)</th>
+        <th>@Html.LabelFor(x => new PurchaseOrder ().Id)</th>
+        <th>@Html.LabelFor(x => new PurchaseOrder ().CreationTime)</th>
+        <th>@Html.LabelFor(x => new PurchaseOrder ().Supplier)</th>
+        <th>@Html.LabelFor(x => new PurchaseOrder ().IsCompleted)</th>
+        <th>@Html.LabelFor(x => new PurchaseOrder ().IsCancelled)</th>
         <th></th>
     </tr>
-@foreach (var item in Model.Results) {
-    <tr>
-        <td class="number">@Html.DisplayFor(x => item.Id)</td>
-        <td class="date">@Html.DisplayFor(x => item.CreationTime)</td>
-        <td>@Html.DisplayFor(x => item.Supplier.Name)</td>
-        <td class="bool">@Html.DisplayFor(x => item.IsCompleted)</td>
-        <td class="bool">@Html.DisplayFor(x => item.IsCancelled)</td>
-        <td class="actions">
-            @Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
-        	@if(Privilege.AllowUpdate && !item.IsCompleted && !item.IsCancelled) {
-            	@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
-            }
-        </td>
-    </tr>
-}
+    @foreach (var item in Model.Results) {
+        @Html.Partial("_Item", item)
+    }
 </table>
+
+<script type="text/javascript">
+    bindModal('.open-modal');
+    $('a.paging').click(function (e) {
+        var offset=@Model.Offset;
+
+        if($(this).hasClass('next')) {
+            offset+=@Model.Limit;
+        } else {
+            offset-=@Model.Limit;
+        }
+
+        e.preventDefault();
+        $('#activity-indicator').show();
+        $('#search-results').hide();
+    });
+</script>
+
 <div class="buttons right">
 	<label class="button left">@Model.ToString()</label>@if (Model.HasPrev) {<a class="button middle icon prev icon-only" title="@Resources.PrevPage" href="javascript:void(0)"></a>}@if (Model.HasNext) {<a class="button right icon next icon-only" title="@Resources.NextPage" href="javascript:void(0)"></a>}
 </div>

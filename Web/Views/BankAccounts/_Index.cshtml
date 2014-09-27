@@ -3,57 +3,41 @@
 @using Mictlanix.BE.Web.Helpers
 @model IEnumerable<BankAccount>
 
-@{
-    var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.BankAccounts);
-}
+    @{
+        var CurrentUser = Html.CurrentUser() ?? new User ();
+        var Privilege = Html.GetPrivilege (CurrentUser, SystemObjects.BankAccounts);
+    }
 
-<table>
-    <tr>
-        <th>
-            @Html.LabelFor(x => new BankAccount().BankName)
-        </th>
-        <th>
-            @Html.LabelFor(x => new BankAccount().AccountNumber)
-        </th>
-        <th>
-            @Html.LabelFor(x => new BankAccount().Reference)
-        </th>
-        <th>
-            @Html.LabelFor(x => new BankAccount().RoutingNumber)
-        </th>
-        <th></th>
-    </tr>
+    <table>
+        <tr>
+            <th>@Html.LabelFor(x => new BankAccount().BankName)</th>
+            <th>@Html.LabelFor(x => new BankAccount().AccountNumber)</th>
+            <th>@Html.LabelFor(x => new BankAccount().Reference)</th>
+            <th>@Html.LabelFor(x => new BankAccount().RoutingNumber)</th>
+            <th></th>
+        </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.BankName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.AccountNumber)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Reference)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.RoutingNumber)
-        </td>
-        <td class="actions">
-        	@if(Privilege.AllowUpdate)
-        	{
-            	@Html.ActionLink(" ", "Edit", "BankAccounts", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
-            }
-        	@if(Privilege.AllowRead)
-        	{
-            	@Html.ActionLink(" ", "Details", "BankAccounts", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
-            }
-        	@if(Privilege.AllowDelete)
-        	{
-            	@Html.ActionLink(" ", "Delete", "BankAccounts", new { id = item.Id }, new { @class = "button icon delete icon-only", @title = Resources.Delete })
-            }
-        </td>
-    </tr>
-}
+        @foreach (var item in Model) {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.BankName)</td>
+                <td>@Html.DisplayFor(modelItem => item.AccountNumber)</td>
+                <td>@Html.DisplayFor(modelItem => item.Reference)</td>
+                <td>@Html.DisplayFor(modelItem => item.RoutingNumber)</td>
+                <td class="actions">
+                    @if (Privilege.AllowUpdate) {
+                        @Html.ActionLink(" ", "Edit", "BankAccounts", new { id = item.Id }, new { @class = "button icon edit icon-only open-modal", @title = Resources.Edit, data_modal_id = "bankAccount-modal"})
+                    }
+                    @if (Privilege.AllowRead) {
+                        @Html.ActionLink(" ", "Details", "BankAccounts", new { id = item.Id }, new { @class = "button icon view icon-only open-modal", @title = Resources.Details, data_modal_id = "bankAccount-modal"})
+                    }
+                    @if (Privilege.AllowDelete) {
+                        @Html.ActionLink(" ", "Delete", "BankAccounts", new { id = item.Id }, new { @class = "button icon delete icon-only open-modal", @title = Resources.Delete, data_modal_id = "bankAccount-modal"})
+                    }
+                </td>
+            </tr>
+        }
 
-</table>
+    </table>
+<script type='text/javascript'>
+bindModal('.open-modal');
+</script>

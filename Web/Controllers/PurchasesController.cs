@@ -103,18 +103,21 @@ namespace Mictlanix.BE.Web.Controllers
             return View (item);
         }
 
-        public ActionResult New ()
+        public ActionResult Create ()
 		{
-			if (!CashHelpers.ValidateExchangeRate ()) {
-				return View ("InvalidExchangeRate");
-			}
+            //if (!CashHelpers.ValidateExchangeRate ()) {
+            //    return View ("InvalidExchangeRate");
+            //}
 
-            return View (new PurchaseOrder());
+            return PartialView ("_Create", new PurchaseOrder());
         } 
 
         [HttpPost]
-        public ActionResult New (PurchaseOrder item)
+        public ActionResult Create (PurchaseOrder item)
         {
+            if (!ModelState.IsValid)
+                return PartialView ("_Create", item);
+
             item.Supplier = Supplier.Find (item.SupplierId);
             item.Creator = SecurityHelpers.GetUser (User.Identity.Name).Employee;
             item.Updater = item.Creator;
@@ -125,7 +128,7 @@ namespace Mictlanix.BE.Web.Controllers
                 item.CreateAndFlush ();
             }
 
-            return RedirectToAction ("Edit", new { id = item.Id });
+            return PartialView ("_CreateSuccesful", new { id = item.Id });
         }
 
         public ActionResult Edit (int id)

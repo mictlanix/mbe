@@ -1,0 +1,18 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model PriceList
+
+@{
+    var Privilege = Html.GetPrivilege(Html.CurrentUser() ?? new User (), SystemObjects.PriceLists);
+    ViewBag.Privilege = Privilege;
+}
+
+@Html.Partial("_Item", Model)
+<script type='text/javascript'>
+$('#price-lists tr:first').after($('#id\\:@Model.Id'));
+$('#priceList-modal').modal('hide');
+bindModal('#id\\:@Model.Id a.open-modal');
+</script>
+
+

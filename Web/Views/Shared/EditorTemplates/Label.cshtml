@@ -1,0 +1,17 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@model Label
+
+<div class="row">
+    <div class="span8 field-required">@Html.LabelFor(x => x.Name)</div>
+</div>
+<div class="row">
+    <div class="span8">@Html.EditorFor(x => x.Name) @Html.ValidationMessageFor(model => model.Name)</div>
+</div>
+<div class="row">
+    <div class="span8">@Html.LabelFor(x => x.Comment)</div>
+</div>
+<div class="row">
+    <div class="span8">@Html.EditorFor(x => x.Comment)</div>
+</div>
+

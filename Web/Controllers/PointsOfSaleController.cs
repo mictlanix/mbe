@@ -103,10 +103,10 @@ namespace Mictlanix.BE.Web.Controllers
         //
         // GET: /PointSale/Details/5
 
-        public ViewResult Details (int id)
+        public ActionResult View (int id)
         {
             var item = PointOfSale.Find (id);
-            return View (item);
+            return PartialView ("_View", item);
         }
 
         //
@@ -114,7 +114,7 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Create ()
         {
-            return View ();
+            return PartialView ("_Create");
         }
 
         //
@@ -124,7 +124,7 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult Create (PointOfSale item)
         {
             if (!ModelState.IsValid)
-            	return View (item);
+                return PartialView("_Create", item);
             
             item.Store = Store.Find (item.StoreId);
 			item.Warehouse = Warehouse.Find (item.WarehouseId);
@@ -132,8 +132,8 @@ namespace Mictlanix.BE.Web.Controllers
 			using (var scope = new TransactionScope ()) {
             	item.CreateAndFlush ();
 			}
-			
-            return RedirectToAction ("Index");
+
+            return PartialView ("_CreateSuccesful", item);
         }
 
         //
@@ -142,7 +142,7 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult Edit (int id)
         {
             var item = PointOfSale.Find (id);
-            return View (item);
+            return PartialView ("_Edit", item);
         }
 
         //
@@ -152,7 +152,7 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult Edit (PointOfSale item)
         {
             if (!ModelState.IsValid)
-            	return View (item);
+                return PartialView ("_Edit", item);
             
 			var entity = PointOfSale.Find (item.Id);
 
@@ -164,7 +164,7 @@ namespace Mictlanix.BE.Web.Controllers
 				entity.UpdateAndFlush ();
 			}
 
-            return RedirectToAction ("Index");
+            return PartialView ("_Refresh");
         }
 
         //
@@ -172,7 +172,7 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Delete (int id)
         {
-            return View (PointOfSale.Find (id));
+            return PartialView ("_Delete", PointOfSale.Find (id));
         }
 
         //
@@ -181,13 +181,16 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed (int id)
 		{
-			PointOfSale item = PointOfSale.Find (id);
-
-			using (var scope = new TransactionScope ()) {
-            	item.DeleteAndFlush ();
+            var item = PointOfSale.Find (id);
+            //PointOfSale item = PointOfSale.Find (id);
+            try {
+				using (var scope = new TransactionScope()) {
+					item.DeleteAndFlush ();
+				}
+                return PartialView ("_DeleteSuccesful", item);
+            } catch (Exception) {
+            	return PartialView ("DeleteUnsuccessful");
 			}
-
-			return RedirectToAction ("Index");
 		}
 		
 		public JsonResult GetSuggestions (int store, string pattern)

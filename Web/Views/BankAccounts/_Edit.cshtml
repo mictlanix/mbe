@@ -1,0 +1,24 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model BankAccount
+
+<div class='modal-header'>
+    <button type='button' class='close' data-dismiss='modal'>&times;</button>
+    <h3>@Resources.BankName</h3>
+</div>
+<div class='modal-body'>
+    @using (Ajax.BeginForm (null, null, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "bankAccount-modal" }, new { @class = "modal-form" })) {
+        @Html.ValidationSummary(true)
+        <div style='overflow:hidden'>
+            @Html.Hidden("OwnerId", (object) ViewBag.OwnerId)
+            @Html.EditorForModel()
+        </div>
+    }
+</div>
+<div class='modal-footer'>
+    <button type='button' class='btn' data-dismiss='modal'>@Resources.Discard</button>
+    <button type='submit' class='btn btn-primary' onclick='$("#bankAccount-modal form").submit();'>@Resources.Save</button>
+</div>
+
+

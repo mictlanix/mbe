@@ -1,0 +1,34 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model ExchangeRate
+
+<div class="row">
+    <div class="span4">@Html.LabelFor(x => x.Date)</div>
+    <div class="span4 field-required">@Html.LabelFor(x => x.Base)</div>
+</div>
+<div class="row">
+    <div class="span4"> @Html.EditorFor(x => x.Date) @Html.ValidationMessageFor(x => x.Date)</div>
+    <div class="span4 field-required">
+        <select id="target-list" name="Base">
+            @foreach (var item in Enum.GetValues (typeof (CurrencyCode))) {
+                if(Configuration.DefaultCurrency == (CurrencyCode) item) {
+                    <option value="@((int)item)" selected>@item.ToString()</option>
+                } else {
+                    <option value="@((int)item)">@item.ToString()</option>
+                }
+            }
+        </select> @Html.ValidationMessageFor(x => x.Base)
+    </div>
+</div>
+<div class="row">
+    <div class="span4 field-required">@Html.LabelFor(x => x.Rate)</div>
+    <div class="span4">@Html.LabelFor(x => x.Target)</div>
+
+</div>
+<div class="row">
+    <div class="span4">@Html.EditorFor(x => x.Rate) @Html.ValidationMessageFor(x => x.Rate)</div>
+    <div class="span4">@Html.HiddenFor(x => x.Target)  @Html.DisplayFor(x => x.Target)</div>
+</div>
+
+

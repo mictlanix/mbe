@@ -1,0 +1,16 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model Label
+@{
+    var Privilege = Html.GetPrivilege(Html.CurrentUser() ?? new User(), SystemObjects.Labels);
+    ViewBag.Privilege = Privilege;
+}
+@Html.Partial("_Item", Model)
+<script type='text/javascript'>
+$('#labels tr:first').after($('#id\\:@Model.Id'));
+$('#label-modal').modal('hide');
+bindModal('#id\\:@Model.Id a.open-modal');
+</script>
+
+
