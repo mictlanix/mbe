@@ -44,13 +44,13 @@ namespace Mictlanix.BE.Web.Controllers
         //
         // GET: /SupplierAgreements/Details/5
 
-        public ViewResult Details (int id)
+        public ActionResult Details (int id)
         {
             var item = SupplierAgreement.Find (id);
 
             ViewBag.OwnerId = item.Supplier.Id;
-			
-            return View (item);
+
+            return PartialView ("_Details", item);
         }
 
         //
@@ -58,26 +58,25 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult CreateForSupplier (int id)
         {
-            var supplier = Supplier.Find(id);
-            return View ("Create", new SupplierAgreement { SupplierId = id, Supplier = supplier });
+            return PartialView ("_Create", new SupplierAgreement { SupplierId = id });
         }
 
         //
         // POST: /SupplierAgreements/Create
 
         [HttpPost]
-        public ActionResult Create (SupplierAgreement item)
+        public ActionResult CreateForSupplier (SupplierAgreement item)
         {
-            if (!ModelState.IsValid)
-            	return View (item);
-            
             item.Supplier = Supplier.Find (item.SupplierId);
 
+            if (!ModelState.IsValid)
+                return PartialView ("_Create", item);
+            
 			using (var scope = new TransactionScope ()) {
-				item.CreateAndFlush ();
+				item.CreateAndFlush();
 			}
 
-			return RedirectToAction ("Details", "Suppliers", new { id = item.Supplier.Id });
+            return PartialView ("_Refresh");
         }
 
         //
@@ -86,7 +85,7 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult Edit (int id)
         {
             var item = SupplierAgreement.Find (id);
-            return View (item);
+            return PartialView ("_Edit", item);
         }
 
         //
@@ -96,7 +95,7 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult Edit(SupplierAgreement item)
         {
             if (!ModelState.IsValid)
-            	return View (item);
+                return PartialView ("_Edit", item);
             
             item.Supplier = SupplierAgreement.Find (item.Id).Supplier;
 
@@ -104,7 +103,7 @@ namespace Mictlanix.BE.Web.Controllers
 				item.UpdateAndFlush ();
 			}
 
-			return RedirectToAction ("Details", "Suppliers", new { id = item.Supplier.Id });
+			return PartialView ("_Edit", new { id = item.Supplier.Id });
         }
 
         //
@@ -112,8 +111,8 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Delete (int id)
         {
-            var item = SupplierAgreement.Find (id);
-            return View (item);
+            ViewBag.OwnerId = id;
+            return PartialView ("_Delete");
         }
 
         //
@@ -124,11 +123,13 @@ namespace Mictlanix.BE.Web.Controllers
         {
             SupplierAgreement item = SupplierAgreement.Find (id);
 
+            int owner = int.Parse (Request.Params ["OwnerId"]);
+
 			using (var scope = new TransactionScope ()) {
 				item.DeleteAndFlush ();
 			}
 
-            return RedirectToAction ("Details", "Suppliers", new { id = item.Supplier.Id });
+            return PartialView ("_Delete", new { id = item.Supplier.Id });
         }
     }
 }

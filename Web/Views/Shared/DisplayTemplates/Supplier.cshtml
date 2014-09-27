@@ -1,0 +1,25 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model Supplier
+
+<div class="row">
+    <div class="span3 field-required">@Html.LabelFor(x => x.Code)</div>
+    <div class="span5 field-required">@Html.LabelFor(x => x.Name)</div>
+</div>
+<div class="row">
+    <div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.Code)</div></div>
+    <div class="span5"><div class="ro-field">@Html.DisplayFor(x => x.Name)</div></div>
+</div>
+<div class="row">
+    <div class="span3 field-required">@Html.LabelFor(x => x.Zone)</div>
+    <div class="span2">@Html.LabelFor(x => x.CreditLimit)</div>
+    <div class="span2">@Html.LabelFor(x => x.CreditDays)</div>
+</div>
+<div class="row">
+    <div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.Zone)</div></div>
+    <div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.CreditLimit)</div></div>
+    <div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.CreditDays)</div></div>
+</div>
+
+

@@ -6,7 +6,7 @@
 
 @{
     ViewBag.Title = Resources.FiscalDocuments;
-    var CurrentUser = Html.CurrentUser () ?? new User ();
+    var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = CurrentUser.GetPrivilege (SystemObjects.FiscalDocuments);
 }
 
@@ -14,12 +14,10 @@
 
 <p>
 @if(Privilege.AllowCreate) {
-    @Html.ActionLink(Resources.New, "New", new { }, new { @class = "button icon add" })
+    @Html.ActionLink(Resources.New, "New",null, new { @class = "button icon add open-modal", data_modal_id = "fiscalDocument-modal"})
 }
 </p>
 @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
-    <fieldset>
-        <legend>@Resources.Search</legend>
         @Html.HiddenFor(x => x.Offset)
         @Html.HiddenFor(x => x.Limit)
         <div class="editor-label">
@@ -31,7 +29,6 @@
                 <input type="text" id="Pattern" name="Pattern" />
             </div>
         </div>
-    </fieldset>
 }
 <div id="activity-indicator">
     <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />

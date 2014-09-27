@@ -100,14 +100,17 @@ namespace Mictlanix.BE.Web.Controllers
 			return View("Receipts/Print",item);
         }
 
-        public ViewResult NewReceipt ()
+        public ActionResult NewReceipt ()
         {
-			return View("Receipts/New", new InventoryReceipt ());
+			return PartialView("Receipts/_Create", new InventoryReceipt ());
         }
 
         [HttpPost]
 		public ActionResult NewReceipt (InventoryReceipt item)
 		{
+            if (!ModelState.IsValid)
+                return PartialView ("Receipts/_Create", item);
+
 			item.CreationTime = DateTime.Now;
 			item.ModificationTime = item.CreationTime;
 			item.Creator = SecurityHelpers.GetUser (User.Identity.Name).Employee;
@@ -118,7 +121,7 @@ namespace Mictlanix.BE.Web.Controllers
 				item.CreateAndFlush ();
 			}
 
-            return RedirectToAction ("EditReceipt", new { id = item.Id });
+            return PartialView ("Receipts/_CreateSuccesful", new InventoryReceipt { Id = item.Id });
         }
 
         public ActionResult EditReceipt (int id)
@@ -308,14 +311,17 @@ namespace Mictlanix.BE.Web.Controllers
 			return View("Issues/Print",item);
 		}
 
-		public ViewResult NewIssue ()
+		public ActionResult NewIssue ()
 		{
-			return View("Issues/New", new InventoryIssue ());
+			return PartialView("Issues/_Create", new InventoryIssue ());
 		}
 
 		[HttpPost]
 		public ActionResult NewIssue (InventoryIssue item)
 		{
+            if (!ModelState.IsValid)
+                return PartialView ("Issues/_Create", item);
+
 			item.CreationTime = DateTime.Now;
 			item.ModificationTime = item.CreationTime;
 			item.Creator = SecurityHelpers.GetUser (User.Identity.Name).Employee;
@@ -326,7 +332,7 @@ namespace Mictlanix.BE.Web.Controllers
 				item.CreateAndFlush ();
 			}
 
-			return RedirectToAction ("EditIssue", new { id = item.Id });
+            return PartialView ("Issues/_CreateSuccesful", new InventoryIssue { Id = item.Id });
 		}
 
 		public ActionResult EditIssue (int id)
@@ -516,9 +522,9 @@ namespace Mictlanix.BE.Web.Controllers
 			return View ("Transfers/Print",item);
 		}
 
-		public ViewResult NewTransfer ()
+		public ActionResult NewTransfer ()
 		{
-			return View ("Transfers/New", new InventoryTransfer ());
+			return PartialView ("Transfers/_Create", new InventoryTransfer ());
 		}
 
 		[HttpPost]
@@ -528,7 +534,7 @@ namespace Mictlanix.BE.Web.Controllers
 			item.To = Warehouse.TryFind(item.ToId);
 
 			if (!ModelState.IsValid) {
-				return View(item);
+                return PartialView ("Transfers/_Create", item);
 			}
 
 			item.CreationTime = DateTime.Now;
@@ -540,7 +546,7 @@ namespace Mictlanix.BE.Web.Controllers
 				item.CreateAndFlush ();
 			}
 
-			return RedirectToAction ("EditTransfer", new { id = item.Id });
+            return PartialView ("Transfers/_CreateSuccesful", new { id = item.Id });
 		}
 
 		public ActionResult EditTransfer (int id)

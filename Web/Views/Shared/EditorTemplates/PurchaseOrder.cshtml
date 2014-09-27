@@ -1,0 +1,21 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@model PurchaseOrder
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+
+    <div class="row">
+        <div class="span8 field-required">@Html.LabelFor(x => x.Supplier)</div>
+    </div>
+    <div class="row">
+        <div class="span8">@Html.EditorFor(x => x.SupplierId) @Html.ValidationMessageFor(x => x.SupplierId)</div>
+    </div>
+    <div class="row">
+        <div class="span8">@Html.LabelFor(x => x.Comment)</div>
+    </div>
+    <div class="row">
+        <div class="span8">@Html.EditorFor(x => x.Comment)</div>
+    </div>
+}
+

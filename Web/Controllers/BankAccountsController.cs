@@ -44,14 +44,14 @@ namespace Mictlanix.BE.Web.Controllers
         //
         // GET: /BanksAccounts/Details/5
 
-        public ViewResult Details(int id)
+        public ActionResult Details(int id)
         {
             var item = BankAccount.Find(id);
             var supplier = item.Suppliers.First();
 
             ViewBag.OwnerId = supplier.Id;
-		
-        	return View(item);
+
+            return PartialView ("_Details", item);
         }
 
         //
@@ -60,19 +60,20 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult CreateForSupplier(int id)
         {
             ViewBag.OwnerId = id;
-            return View("Create");
+            return PartialView ("_Create", new BankAccount());
         }
 
         //
         // POST: /BanksAccounts/Create
 
         [HttpPost]
-        public ActionResult Create(BankAccount item)
+        public ActionResult CreateForSupplier(BankAccount item)
         {
-            if (!ModelState.IsValid)
-				return View(item);
 
-            int owner = int.Parse(Request.Params["OwnerId"]);
+            if (!ModelState.IsValid)
+                return PartialView ("_Create", item);
+
+            int owner = int.Parse (Request.Params ["OwnerId"]);
 
             using (var scope = new TransactionScope()) {
                 item.CreateAndFlush();
@@ -81,8 +82,8 @@ namespace Mictlanix.BE.Web.Controllers
                 supplier.BanksAccounts.Add(item);
                 supplier.Update ();
             }
-			
-            return RedirectToAction("Details", "Suppliers", new { id = owner });
+
+            return PartialView ("_Refresh");
         }
 
         //
@@ -94,8 +95,8 @@ namespace Mictlanix.BE.Web.Controllers
             var supplier = item.Suppliers.First();
 
             ViewBag.OwnerId = supplier.Id;
-		
-        	return View(item);
+
+            return PartialView ("_Edit", item);
         }
 
         //
@@ -112,9 +113,10 @@ namespace Mictlanix.BE.Web.Controllers
 					item.Update ();
 				}
 
-                return RedirectToAction("Details", "Suppliers", new { id = owner });
+                return PartialView("_Edit", new { id = owner });
+
             }
-            return View(item);
+            return PartialView ("_Refresh");
         }
 
         //
@@ -126,8 +128,8 @@ namespace Mictlanix.BE.Web.Controllers
             var supplier = item.Suppliers.First();
 
             ViewBag.OwnerId = supplier.Id;
-			
-            return View(item);
+
+            return PartialView ("_Delete", item);
         }
 
         //
@@ -136,10 +138,11 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            var item = BankAccount.Find (id);
+
             int owner = int.Parse(Request.Params["OwnerId"]);
             
             using (var scope = new TransactionScope()) {
-	            var item = BankAccount.Find(id);
 	            var supplier = item.Suppliers.FirstOrDefault();
 	
 	            if (supplier != null) {
@@ -150,7 +153,7 @@ namespace Mictlanix.BE.Web.Controllers
 				item.DeleteAndFlush ();
 			}
 			
-            return RedirectToAction("Details", "Suppliers", new { id = owner });
+            return PartialView("_Delete", new { id = owner });
         }
     }
 }

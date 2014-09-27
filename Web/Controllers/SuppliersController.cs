@@ -95,7 +95,7 @@ namespace Mictlanix.BE.Web.Controllers
             return search;
         }
 
-        public ViewResult Details(int id)
+        public ActionResult Details (int id)
         {
 			var item = Supplier.Find(id);
 
@@ -105,31 +105,26 @@ namespace Mictlanix.BE.Web.Controllers
 			item.Contacts.ToList();
 
             ViewBag.OwnerId = item.Id;
-            
-            return View(item);
+
+            return View (item);
         }
 
         public ActionResult Create()
         {
-            if (Request.IsAjaxRequest())
-            {
-                return PartialView("_Create");
-            }
-
-            return View();
+            return PartialView("_Create", new Supplier());
         }
 
         [HttpPost]
 		public ActionResult Create (Supplier item)
 		{
 			if (!ModelState.IsValid)
-				return View (item);
+                return PartialView ("_Create", item);
 
 			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
 			}
 
-            return RedirectToAction("Index");
+            return PartialView ("_CreateSuccesful", item);
             
             //if (!ModelState.IsValid)
             //{
@@ -152,50 +147,50 @@ namespace Mictlanix.BE.Web.Controllers
 
         public ActionResult Edit(int id)
         {
-            Supplier supplier = Supplier.Find(id);
-            return View(supplier);
+            var item = Supplier.Find(id);
+            return PartialView ("_Edit", item);
         }
 
         [HttpPost]
         public ActionResult Edit(Supplier item)
         {
             if (!ModelState.IsValid)
-            	return View(item);
+                return PartialView ("_Edit", item);
             
-			var supplier = Supplier.Find(item.Id);
-			
-			supplier.Code = item.Code;
-			supplier.Name = item.Name;
-			supplier.Zone = item.Zone;
-			supplier.CreditDays = item.CreditDays;
-			supplier.CreditLimit = item.CreditLimit;
-			supplier.Comment = item.Comment;
+			var entity = Supplier.Find(item.Id);
+
+            entity.Code = item.Code;
+            entity.Name = item.Name;
+            entity.Zone = item.Zone;
+            entity.CreditDays = item.CreditDays;
+            entity.CreditLimit = item.CreditLimit;
+            entity.Comment = item.Comment;
 			
 			using (var scope = new TransactionScope()) {
-				supplier.UpdateAndFlush();
+                entity.UpdateAndFlush ();
 			}
-            
-			return RedirectToAction("Index");
+
+            return PartialView ("_Refresh");
         }
 
         public ActionResult Delete(int id)
         {
-            Supplier supplier = Supplier.Find(id);
-            return View(supplier);
+            var item = Supplier.Find(id);
+            return PartialView ("_Delete", item);
         }
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            var item = Supplier.Find (id);
+
 			try {
 				using (var scope = new TransactionScope()) {
-					var item = Supplier.Find (id);
 					item.DeleteAndFlush ();
 				}
-
-				return RedirectToAction ("Index");
-			} catch (GenericADOException) {
-				return View ("DeleteUnsuccessful");
+                return PartialView ("_DeleteSuccesful", item );
+			} catch (Exception) {
+                return PartialView ("DeleteUnsuccessful");
 			}
         }
 		
@@ -210,6 +205,18 @@ namespace Mictlanix.BE.Web.Controllers
 			var item = Supplier.Find (id);
 			return PartialView ("../Contacts/_Index", item.Contacts);
 		}
+
+        public ActionResult BankAccounts (int id)
+        {
+            var item = Supplier.Find (id);
+            return PartialView ("../BankAccounts/_Index", item.BanksAccounts);
+        }
+
+        public ActionResult SupplierAgreements (int id)
+        {
+            var item = Supplier.Find (id);
+            return PartialView ("../SupplierAgreements/_Index", item.Agreements);
+        }
 		
 		public JsonResult GetSuggestions(string pattern)
 		{

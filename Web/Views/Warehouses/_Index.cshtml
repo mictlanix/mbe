@@ -5,55 +5,50 @@
 @model Search<Warehouse>
 
 @{
-    ViewBag.Title = Resources.Title_Warehouse;
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Warehouses);
+
+    ViewBag.Title = Resources.Title_Warehouse;
+    ViewBag.Privilege = Privilege;
 }
 
 <p>@Html.ValidationMessageFor(x => x.Pattern)</p>
 
-
-<table>
+<table id="warehouses">
     <tr>
-        <th>
-            @Html.LabelFor(x => new Warehouse().Code)
-        </th>
-        <th>
-            @Html.LabelFor(x => new Warehouse().Name)
-        </th>
+        <th>@Html.LabelFor(x => new Warehouse().Code)</th>
+        <th>@Html.LabelFor(x => new Warehouse().Name)</th>
         <th></th>
     </tr>
 
 @foreach (var item in Model.Results) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Code)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td class="actions">
-        	@if(Privilege.AllowUpdate)
-        	{
-            	@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
-            }
-        	@if(Privilege.AllowRead)
-        	{
-            	@Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
-            }
-        	@if(Privilege.AllowDelete)
-        	{
-            	@Html.ActionLink(" ", "Delete", new { id = item.Id }, new { @class = "button icon delete icon-only", @title = Resources.Delete })
-            }
-        </td>
-    </tr>
+  @Html.Partial("_Item", item)
 }
 
 </table>
 
+<script type="text/javascript">
+    bindModal('.open-modal');
+    $('a.paging').click(function (e) {
+        var offset=@Model.Offset;
+
+        if($(this).hasClass('next')) {
+            offset+=@Model.Limit;
+        } else {
+            offset-=@Model.Limit;
+        }
+
+        e.preventDefault();
+        $('#activity-indicator').show();
+        $('#search-results').hide();
+
+    });
+</script>
+
 <div class="buttons right">
 	<label class="button left">@Model.ToString()</label>@if (Model.HasPrev) {<a class="button middle icon prev icon-only" title="@Resources.PrevPage" href="javascript:void(0)"></a>}@if (Model.HasNext) {<a class="button right icon next icon-only" title="@Resources.NextPage" href="javascript:void(0)"></a>}
 </div>
+
 @if (Model.HasPrev)
 {
 <script type="text/javascript">

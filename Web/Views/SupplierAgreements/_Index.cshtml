@@ -3,46 +3,36 @@
 @using Mictlanix.BE.Web.Helpers
 @model IEnumerable<SupplierAgreement>
 
-@{
-    var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SupplierAgreements);
-}
+    @{
+        var CurrentUser = Html.CurrentUser() ?? new User ();
+        var Privilege = Html.GetPrivilege (CurrentUser, SystemObjects.SupplierAgreements);
+    }
 
-<table>
-    <tr>
-        <th>
-            @Html.LabelFor(x => new SupplierAgreement().Start)
-        </th>
+    <table>
+        <tr>
+            <th>@Html.LabelFor(x => new SupplierAgreement ().Start)</th>
+            <th>@Html.LabelFor(x => new SupplierAgreement ().End)</th>
+            <th></th>
+        </tr>
 
-        <th>
-            @Html.LabelFor(x => new SupplierAgreement().End)
-        </th>
-        
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Start)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.End)
-        </td>
-        <td class="actions">
-        	@if(Privilege.AllowUpdate)
-        	{
-            	@Html.ActionLink(" ", "Edit", "SupplierAgreements", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
-            }
-        	@if(Privilege.AllowRead)
-        	{
-            	@Html.ActionLink(" ", "Details", "SupplierAgreements", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
-            }
-        	@if(Privilege.AllowDelete)
-        	{
-            	@Html.ActionLink(" ", "Delete", "SupplierAgreements", new { id = item.Id }, new { @class = "button icon delete icon-only", @title = Resources.Delete })
-            }
-        </td>
-    </tr>
-}
-</table>
+        @foreach (var item in Model) {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Start)</td>
+                <td>@Html.DisplayFor(modelItem => item.End)</td>
+                <td class="actions">
+                    @if (Privilege.AllowUpdate) {
+                        @Html.ActionLink(" ", "Edit", "SupplierAgreements", new { id = item.Id }, new { @class = "button icon edit icon-only open-modal", @title = Resources.Edit, data_modal_id = "supplierAgreement-modal" })
+                    }
+                    @if (Privilege.AllowRead) {
+                        @Html.ActionLink(" ", "Details", "SupplierAgreements", new { id = item.Id }, new { @class = "button icon view icon-only open-modal", @title = Resources.Details, data_modal_id = "supplierAgreement-modal" })
+                    }
+                    @if (Privilege.AllowDelete) {
+                        @Html.ActionLink(" ", "Delete", "SupplierAgreements", new { id = item.Id }, new { @class = "button icon delete icon-only open-modal", @title = Resources.Delete, data_modal_id = "supplierAgreement-modal" })
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+    <script type='text/javascript'>
+bindModal('.open-modal');
+    </script>
