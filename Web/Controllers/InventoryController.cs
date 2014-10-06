@@ -530,12 +530,12 @@ namespace Mictlanix.BE.Web.Controllers
 		[HttpPost]
 		public ActionResult NewTransfer (InventoryTransfer item)
 		{
+            if (!ModelState.IsValid) {
+                return PartialView ("Transfers/_Create", item);
+            }
+
 			item.From = Warehouse.TryFind(item.FromId);
 			item.To = Warehouse.TryFind(item.ToId);
-
-			if (!ModelState.IsValid) {
-                return PartialView ("Transfers/_Create", item);
-			}
 
 			item.CreationTime = DateTime.Now;
 			item.ModificationTime = item.CreationTime;
@@ -546,7 +546,7 @@ namespace Mictlanix.BE.Web.Controllers
 				item.CreateAndFlush ();
 			}
 
-            return PartialView ("Transfers/_CreateSuccesful", new { id = item.Id });
+            return PartialView ("Transfers/_CreateSuccesful", new InventoryTransfer { Id = item.Id });
 		}
 
 		public ActionResult EditTransfer (int id)

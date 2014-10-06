@@ -50,7 +50,6 @@ namespace Mictlanix.BE.Web.Controllers
             var supplier = item.Suppliers.First();
 
             ViewBag.OwnerId = supplier.Id;
-
             return PartialView ("_Details", item);
         }
 
@@ -69,9 +68,9 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult CreateForSupplier(BankAccount item)
         {
-
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) {
                 return PartialView ("_Create", item);
+            }
 
             int owner = int.Parse (Request.Params ["OwnerId"]);
 
@@ -103,19 +102,24 @@ namespace Mictlanix.BE.Web.Controllers
         // POST: /BanksAccounts/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(BankAccount item)
+        public ActionResult Edit (BankAccount item)
         {
-            if (ModelState.IsValid)
-            {
-                int owner = int.Parse(Request.Params["OwnerId"]);
-
-				using (var scope = new TransactionScope()) {
-					item.Update ();
-				}
-
-                return PartialView("_Edit", new { id = owner });
-
+            if (!ModelState.IsValid) {
+                return PartialView ("_Edit", item);
             }
+
+            var entity = BankAccount.Find (item.Id);
+
+            entity.BankName = item.BankName;
+            entity.AccountNumber = item.AccountNumber;
+            entity.Reference = item.Reference;
+            entity.RoutingNumber = item.RoutingNumber;
+            entity.Comment = item.Comment;
+
+            using (var scope = new TransactionScope ()) {
+                entity.UpdateAndFlush ();
+            }
+
             return PartialView ("_Refresh");
         }
 
@@ -128,7 +132,6 @@ namespace Mictlanix.BE.Web.Controllers
             var supplier = item.Suppliers.First();
 
             ViewBag.OwnerId = supplier.Id;
-
             return PartialView ("_Delete", item);
         }
 
@@ -139,7 +142,6 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             var item = BankAccount.Find (id);
-
             int owner = int.Parse(Request.Params["OwnerId"]);
             
             using (var scope = new TransactionScope()) {
@@ -152,8 +154,8 @@ namespace Mictlanix.BE.Web.Controllers
 
 				item.DeleteAndFlush ();
 			}
-			
-            return PartialView("_Delete", new { id = owner });
+
+            return PartialView ("_Refresh", new { id = owner });
         }
     }
 }

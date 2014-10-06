@@ -39,6 +39,8 @@ namespace Mictlanix.BE.Model
 	[ActiveRecord("supplier_agreement", Lazy = true)]
     public class SupplierAgreement : ActiveRecordLinqBase<SupplierAgreement>
     {
+        IList<Supplier> suppliers = new List<Supplier> ();
+
         [PrimaryKey(PrimaryKeyType.Identity, "supplier_agreement_id")]
 		public virtual int Id { get; set; }
 
