@@ -202,7 +202,7 @@ namespace Mictlanix.BE.Web.Controllers
 				item.CreateAndFlush ();
 			}
 
-			return PartialView ("_CreateSuccesful", new { id = item.Id });
+			return PartialView ("_CreateSuccesful", new FiscalDocument { Id = item.Id });
 		}
 
 		public ActionResult Edit (int id)

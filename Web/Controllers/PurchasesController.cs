@@ -128,7 +128,7 @@ namespace Mictlanix.BE.Web.Controllers
                 item.CreateAndFlush ();
             }
 
-            return PartialView ("_CreateSuccesful", new { id = item.Id });
+            return PartialView ("_CreateSuccesful", new PurchaseOrder { Id = item.Id });
         }
 
         public ActionResult Edit (int id)
