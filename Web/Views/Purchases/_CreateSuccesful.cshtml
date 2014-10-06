@@ -2,14 +2,7 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model PurchaseOrder
-@{
-    var Privilege = Html.GetPrivilege(Html.CurrentUser() ?? new User (), SystemObjects.PurchasesOrders);
-    ViewBag.Privilege = Privilege;
-}
-@Html.Partial("_Item", Model)
 <script type='text/javascript'>
-$('#purchases-orders tr:first').after($('#id\\:@Model.Id'));
-$('#purchaseOrder-modal').modal('hide');
-bindModal('#id\\:@Model.Id a.open-modal');
+    window.location = '@Url.Action("Edit", new { id = Model.Id })';
 </script>
 

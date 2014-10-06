@@ -11,6 +11,7 @@
     @using(Ajax.BeginForm (null, null, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "supplierAgreement-modal" }, new { @class = "modal-form" })) {
         @Html.ValidationSummary(true)
         <div style='overflow:hidden'>
+           
             @Html.EditorForModel()
         </div>
     }

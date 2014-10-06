@@ -2,15 +2,8 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model InventoryTransfer
-@{
-    var Privilege = Html.GetPrivilege(Html.CurrentUser() ?? new User (), SystemObjects.InventoryTransfers);
-    ViewBag.Privilege = Privilege;
-}
-@Html.Partial("Transfers/_Item", Model)
 <script type='text/javascript'>
-$('#inventory-transfers tr:first').after($('#id\\:@Model.Id'));
-$('#inventoryTransfer-modal').modal('hide');
-bindModal('#id\\:@Model.Id a.open-modal');
+    window.location = '@Url.Action("EditTransfer", new { id = Model.Id })';
 </script>
 
 
