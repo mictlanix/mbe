@@ -105,6 +105,10 @@ namespace Mictlanix.BE.Web.Controllers
 
 		#region Serial Numbers
 		
+        /// <summary>
+        /// SerialNumbers
+        /// </summary>
+        /// <returns></returns>
 		public ViewResult SerialNumbers ()
 		{
 			return View ();
@@ -128,7 +132,116 @@ namespace Mictlanix.BE.Web.Controllers
 			
 			return PartialView ("_SerialNumbers", qry.ToList());
 		}
-		
+
+        /// <summary>
+        /// SerialNumberKardex
+        /// </summary>
+        /// <returns></returns>
+        /// 
+        public ViewResult SerialNumberKardex ()
+        {
+            return View ();
+        }
+
+        [HttpPost]
+        public ActionResult SerialNumberKardex (int warehouse, int product)
+        {
+            var balance = from x in LotSerialTracking.Queryable
+                          where x.Warehouse.Id == warehouse && x.Product.Id == product
+                          select x.Quantity;
+
+            var qry = from x in LotSerialTracking.Queryable
+                      where x.Warehouse.Id == warehouse &&  x.Product.Id == product
+                      orderby x.Date
+                      select x;
+
+            ViewBag.OpeningBalance = balance.Count () > 0 ? balance.Sum () : 0m;
+
+            return PartialView ("_SerialNumberKardex", qry.ToList ());
+        }
+
+        /// <summary>
+        /// WarehouseStocksReport
+        /// </summary>
+        /// <returns></returns>
+        public ViewResult WarehouseStocksReport ()
+        {
+            return View ();
+        }
+
+        [HttpPost]
+        public ActionResult WarehouseStocksReport (int warehouse, string brand)
+        {
+            string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name, l.lot_number LotNumber, l.expiration_date ExpirationDate, SUM(quantity) Quantity
+                            FROM lot_serial_tracking l INNER JOIN product p ON l.product = p.product_id
+                            WHERE warehouse = :warehouse WHERE_BRAND
+                            GROUP BY p.code, p.name, l.lot_number, l.expiration_date";
+
+            if (string.IsNullOrWhiteSpace (brand)) {
+                sql = sql.Replace ("WHERE_BRAND", string.Empty);
+            } else {
+                sql = sql.Replace ("WHERE_BRAND", "AND p.brand = :brand");
+            }
+
+            var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+                var query = session.CreateSQLQuery (sql);
+
+                query.AddScalar ("Brand", NHibernateUtil.String);
+                query.AddScalar ("Model", NHibernateUtil.String);
+                query.AddScalar ("Code", NHibernateUtil.String);
+                query.AddScalar ("Name", NHibernateUtil.String);
+                query.AddScalar ("LotNumber", NHibernateUtil.String);
+                query.AddScalar ("ExpirationDate", NHibernateUtil.Date);
+                query.AddScalar ("Quantity", NHibernateUtil.Decimal);
+
+                query.SetInt32 ("warehouse", warehouse);
+
+                if (!string.IsNullOrWhiteSpace (brand)) {
+                    query.SetString ("brand", brand);
+                }
+
+                return query.DynamicList ();
+            }, null);
+
+            return PartialView ("_WarehouseStocksReport", items);
+        }
+
+        /// <summary>
+        /// WarehouseSerialNumbersReport
+        /// </summary>
+        /// <returns></returns>
+        /// 
+        public ViewResult WarehouseSerialNumbersReport ()
+        {
+            return View ();
+        }
+
+        [HttpPost]
+        public ActionResult WarehouseSerialNumbersReport (int warehouse)
+        {
+            string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name, l.lot_number LotNumber, l.expiration_date ExpirationDate, l.serial_number SerialNumber, SUM(quantity) Quantity
+                            FROM lot_serial_tracking l INNER JOIN product p ON l.product = p.product_id
+                            WHERE IFNULL(l.serial_number, '') <> '' AND warehouse = :warehouse
+                            GROUP BY p.code, p.name, l.lot_number, l.expiration_date, l.serial_number";
+
+            var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+                var query = session.CreateSQLQuery (sql);
+
+                query.AddScalar ("Brand", NHibernateUtil.String);
+                query.AddScalar ("Model", NHibernateUtil.String);
+                query.AddScalar ("Code", NHibernateUtil.String);
+                query.AddScalar ("Name", NHibernateUtil.String);
+                query.AddScalar ("SerialNumber", NHibernateUtil.String);
+                query.AddScalar ("ExpirationDate", NHibernateUtil.Date);
+                query.AddScalar ("Quantity", NHibernateUtil.Decimal);
+
+                query.SetInt32 ("warehouse", warehouse);
+
+                return query.DynamicList ();
+            }, null);
+
+            return PartialView ("_WarehouseSerialNumbersReport", items);
+        }
 		#endregion
 
 		#region Payments
@@ -418,27 +531,6 @@ namespace Mictlanix.BE.Web.Controllers
 
 			return PartialView ("_CustomerDebt", query.ToList ());
 		}
-
-        //public ViewResult CustomersReport ()
-        //{
-        //    return View ();
-        //}
-
-        //[HttpPost]
-        //public ActionResult CustomersReport (Customer item)
-        //{
-        //    var warehouse = Customer.Find (item.Id);
-        //    var qry = from x in Model.Customer.Queryable
-        //              where x.Warehouse.Id == item.Id
-        //              group x by x.Product into g
-        //              select new CustomersReport {
-        //                  Product = g.Key,
-        //                  Quantity = g.Sum (y => y.Quantity)
-        //              };
-
-        //    return View ();
-        //}
-
 
         public ViewResult CustomersReport ()
         {

@@ -645,8 +645,26 @@
                             }
                             @if (CurrentUser.GetPrivilege (SystemObjects.CustomersReport).AllowRead) {
                                 <li class="gbmtc">
-                                    <a class="gbmt @(Html.IsMenuSelected ("CustomersReport", "Reports") ? "gbm0l" : "")"
+                                    <a class="gbmt @(Html.IsMenuSelected("CustomersReport", "Reports") ? "gbm0l" : "")"
                                        href="@Url.Action("CustomersReport", "Reports")">@Resources.CustomersReport</a>
+                                </li>
+                            }
+                            @if (CurrentUser.GetPrivilege (SystemObjects.WarehouseStocksReport).AllowRead) {
+                                <li class="gbmtc">
+                                    <a class='gbmt @(Html.IsMenuSelected("WarehouseStocksReport", "Reports") ? "gbm0l" : "")'
+                                       href='@Url.Action("WarehouseStocksReport", "Reports")'>@Resources.WarehouseStocksReport</a>
+                                </li>
+                            }
+                            @if (CurrentUser.GetPrivilege (SystemObjects.WarehouseSerialNumbersReport).AllowRead) {
+                                <li class="gbmtc">
+                                    <a class='gbmt @(Html.IsMenuSelected("WarehouseSerialNumbersReport", "Reports") ? "gbm0l" : "")'
+                                       href='@Url.Action("WarehouseSerialNumbersReport", "Reports")'>@Resources.WarehouseSerialNumbersReport</a>
+                                </li>
+                            }
+                            @if (CurrentUser.GetPrivilege (SystemObjects.SerialNumberKardex).AllowRead) {
+                                <li class="gbmtc">
+                                    <a class='gbmt @(Html.IsMenuSelected("SerialNumberKardex", "Reports") ? "gbm0l" : "")'
+                                       href='@Url.Action("SerialNumberKardex", "Reports")'>@Resources.SerialNumberKardex</a>
                                 </li>
                             }
                         </ol>
