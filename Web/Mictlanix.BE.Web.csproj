@@ -1013,5 +1013,11 @@
     <Content Include="Views\FiscalDocuments\_CreateSuccesful.cshtml" />
     <Content Include="Views\FiscalDocuments\_Item.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\FiscalDocument.cshtml" />
+    <Content Include="Views\Reports\WarehouseStocksReport.cshtml" />
+    <Content Include="Views\Reports\WarehouseSerialNumbersReport.cshtml" />
+    <Content Include="Views\Reports\SerialNumberKardex.cshtml" />
+    <Content Include="Views\Reports\_WarehouseSerialNumbersReport.cshtml" />
+    <Content Include="Views\Reports\_WarehouseStocksReport.cshtml" />
+    <Content Include="Views\Reports\_SerialNumberKardex.cshtml" />
   </ItemGroup>
 </Project>

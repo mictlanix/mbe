@@ -63,9 +63,9 @@ namespace Mictlanix.BE {
         /// <summary>
         ///   Busca una cadena traducida similar a Acepto.
         /// </summary>
-        public static string Accept {
+        public static string _WarehouseStocksReport {
             get {
-                return ResourceManager.GetString("Accept", resourceCulture);
+                return ResourceManager.GetString("_WarehouseStocksReport", resourceCulture);
             }
         }
         
@@ -4323,6 +4323,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Kardex de Series.
+        /// </summary>
+        public static string SerialNumberKardex {
+            get {
+                return ResourceManager.GetString("SerialNumberKardex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Números de Serie.
         /// </summary>
         public static string SerialNumbers {
@@ -5750,6 +5759,24 @@ namespace Mictlanix.BE {
         public static string WarehouseName {
             get {
                 return ResourceManager.GetString("WarehouseName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Existencias de Almacén por Series.
+        /// </summary>
+        public static string WarehouseSerialNumbersReport {
+            get {
+                return ResourceManager.GetString("WarehouseSerialNumbersReport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Existencias de Almacén por Lotes.
+        /// </summary>
+        public static string WarehouseStocksReport {
+            get {
+                return ResourceManager.GetString("WarehouseStocksReport", resourceCulture);
             }
         }
         

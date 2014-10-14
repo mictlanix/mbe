@@ -1226,7 +1226,7 @@ Realizada el: {0:d}</value>
   <data name="PromissoryNote" xml:space="preserve">
     <value>Pagaré</value>
   </data>
-  <data name="Accept" xml:space="preserve">
+  <data name="_WarehouseStocksReport" xml:space="preserve">
     <value>Acepto</value>
   </data>
   <data name="ReleaseOrder" xml:space="preserve">
@@ -2047,5 +2047,14 @@ Realizada el: {0:d}</value>
   </data>
   <data name="CustomersReport" xml:space="preserve">
     <value>Reporte de Clientes</value>
+  </data>
+  <data name="SerialNumberKardex" xml:space="preserve">
+    <value>Kardex de Series</value>
+  </data>
+  <data name="WarehouseSerialNumbersReport" xml:space="preserve">
+    <value>Existencias de Almacén por Series</value>
+  </data>
+  <data name="WarehouseStocksReport" xml:space="preserve">
+    <value>Existencias de Almacén por Lotes</value>
   </data>
 </root>
