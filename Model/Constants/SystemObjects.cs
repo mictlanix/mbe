@@ -168,6 +168,12 @@ namespace Mictlanix.BE.Model {
 		[Display(Name = "TechnicalServiceReceipts", ResourceType = typeof(Resources))]
 		TechnicalServiceReceipts,
         [Display(Name = "CustomersReport", ResourceType = typeof(Resources))]
-        CustomersReport
+        CustomersReport,
+        [Display(Name = "WarehouseStocksReport", ResourceType = typeof (Resources))]
+        WarehouseStocksReport,
+        [Display(Name = "WarehouseSerialNumbersReport", ResourceType = typeof(Resources))]
+        WarehouseSerialNumbersReport,
+        [Display(Name = "SerialNumberKardex", ResourceType = typeof(Resources))]
+        SerialNumberKardex
     }
 }
