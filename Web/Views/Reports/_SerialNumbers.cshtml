@@ -22,8 +22,7 @@
         <td class='right' colspan='5'>@Resources.OpeningBalance</td>
         <td class='number' colspan='3'>@balance.ToString("0.####")</td>
     </tr>
-@foreach (var item in Model)
-{
+@foreach (var item in Model){
 	balance += item.Quantity;
     <tr>
         <td class='date'>@Html.DisplayFor(x => item.Date)</td>
