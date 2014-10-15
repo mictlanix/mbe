@@ -3,8 +3,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F9363BAC-A7BB-4A77-81E0-892C8CCCD297}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -95,7 +93,6 @@
     <Compile Include="SupplierPayment.cs" />
     <Compile Include="PurchaseOrderDetail.cs" />
     <Compile Include="PurchaseOrder.cs" />
-    <Compile Include="Kardex.cs" />
     <Compile Include="InventoryTransferDetail.cs" />
     <Compile Include="InventoryTransfer.cs" />
     <Compile Include="InventoryIssue.cs" />
