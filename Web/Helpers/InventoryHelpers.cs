@@ -50,9 +50,9 @@ namespace Mictlanix.BE.Web.Helpers
 			if (!product.IsStockable)
 				return;
 
-			KardexRegister (source, reference, dt, warehouse, product, quantity);
-
-			if (!skipSerials) {
+			if (skipSerials) {
+				KardexRegister (source, reference, dt, warehouse, product, quantity);
+			} else {
 				LotSerialRegister (source, reference, warehouse, product, quantity);
 			}
 		}
@@ -60,7 +60,7 @@ namespace Mictlanix.BE.Web.Helpers
 		static void KardexRegister (TransactionType source, int reference, DateTime dt,
 		                            Warehouse warehouse, Product product, decimal quantity)
 		{
-			var item = new Kardex {
+			var item = new LotSerialTracking {
 				Source = source,
 				Reference = reference,
 				Date = DateTime.Now,
@@ -68,7 +68,7 @@ namespace Mictlanix.BE.Web.Helpers
 				Product = product,
 				Quantity = quantity
 			};
-			
+
 			item.Create ();
 		}
 		
