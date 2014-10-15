@@ -751,9 +751,20 @@ namespace Mictlanix.BE.Web.Controllers
 					  select x;
 			
 			using (var scope = new TransactionScope ()) {
-				foreach(var item in qry) {
-					item.Delete();
+				var entity = new LotSerialTracking {
+					Source = rqmt.Source,
+					Reference = rqmt.Reference,
+					Date = DateTime.Now,
+					Warehouse = rqmt.Warehouse,
+					Product = rqmt.Product,
+					Quantity = rqmt.Quantity
+				};
+
+				foreach (var item in qry) {
+					item.Delete ();
 				}
+
+				entity.Create ();
 				rqmt.DeleteAndFlush ();
 			}
 			
