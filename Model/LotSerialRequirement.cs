@@ -73,7 +73,7 @@ namespace Mictlanix.BE.Model
 
         public override bool Equals(object obj)
         {
-            Kardex other = obj as Kardex;
+			var other = obj as LotSerialRequirement;
 
             if (other == null)
                 return false;

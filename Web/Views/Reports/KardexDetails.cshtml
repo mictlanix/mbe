@@ -16,11 +16,11 @@
         @Html.Hidden("warehouse", (object)ViewBag.Warehouse.Id)
         @Html.Hidden("product", (object)ViewBag.Product.Id)
         <div class="display-label">
-            @Html.LabelFor(x => new Kardex().Warehouse):
+        	<label>@Resources.Warehouse:</label>
             @ViewBag.Warehouse.Name
         </div>
         <div class="display-label">
-            @Html.LabelFor(x => new Kardex().Product):
+        	<label>@Resources.Product:</label>
             @ViewBag.Product.Name
         </div>
         <table class="nonborder">

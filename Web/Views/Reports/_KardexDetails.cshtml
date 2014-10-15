@@ -2,15 +2,15 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
-@model IEnumerable<Kardex>
+@model IEnumerable<LotSerialTracking>
 
 @{
 	decimal balance = ViewBag.OpeningBalance;
 }
 <table>
     <tr>
-        <th>@Html.LabelFor(x => new Kardex().Date)</th>
-        <th>@Html.LabelFor(x => new Kardex().Source)</th>
+        <th>@Resources.Date</th>
+        <th>@Resources.Source</th>
         <th>@Resources.Title_InventoryReceipt</th>
         <th>@Resources.Title_InventoryIssue</th>
         <th>@Resources.Balance</th>
