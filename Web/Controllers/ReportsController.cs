@@ -52,58 +52,65 @@ namespace Mictlanix.BE.Web.Controllers
 			return View ();
 		}
 
-		/*
+        
         [HttpPost]
-        public ActionResult Kardex (Warehouse item)
+        public ActionResult Kardex (int warehouse, int product, DateRange item)
         {
-			var warehouse = Warehouse.Find (item.Id);
-            var qry = from x in Model.Kardex.Queryable
-                      where x.Warehouse.Id == item.Id
-					  group x by x.Product into g
-					  select new Kardex {
-						Product = g.Key,
-						Quantity = g.Sum(y => y.Quantity)
-					  };
+            //var warehouse = Warehouse.Find (item.Id);
 
-			return PartialView ("_Kardex", new MasterDetails<Warehouse, Kardex> { 
-				Master = warehouse,
-				Details = qry.ToList().OrderBy(x => x.Product.Name).ToList()
-			});
-        }
-        */
+            var balance = from x in Model.LotSerialTracking.Queryable
+                          where x.Warehouse.Id == warehouse && x.Product.Id == product &&
+                                x.Date < item.StartDate.Date
+                          select x.Quantity;
 
-		public ViewResult KardexDetails (int warehouse, int product)
-        {
-            var item = new DateRange {
-				StartDate = DateTime.Now,
-				EndDate = DateTime.Now
-			};
-
-            ViewBag.Warehouse = Warehouse.Find(warehouse);
-            ViewBag.Product = Product.Find(product);
-
-            return View(item);
-        }
-
-		/*
-        [HttpPost]
-		public ActionResult KardexDetails (int warehouse, int product, DateRange item)
-        {
-			var balance = from x in Model.Kardex.Queryable
-						  where x.Warehouse.Id == warehouse && x.Product.Id == product &&
-								x.Date < item.StartDate.Date
-						  select x.Quantity;
-            var qry = from x in Model.Kardex.Queryable
+            var qry = from x in Model.LotSerialTracking.Queryable
                       where x.Warehouse.Id == warehouse && x.Product.Id == product &&
-                            x.Date >= item.StartDate.Date && x.Date <= item.EndDate.Date.Add(new TimeSpan(23, 59, 59))
-					  orderby x.Date
-                      select x;
+                            x.Date >= item.StartDate.Date && x.Date <= item.EndDate.Date.Add (new TimeSpan (23, 59, 59))
+                      group x by x.Product into g
+                      select new LotSerialTracking {
+                        Product = g.Key,
+                        Quantity = g.Sum(y => y.Quantity)
+                      };
 
 			ViewBag.OpeningBalance = balance.Count() > 0 ? balance.Sum () : 0m;
 
-			return PartialView("_KardexDetails", qry.ToList());
+
+            return PartialView ("_Kardex", qry.ToList ());
         }
-		*/
+        
+
+        //public ViewResult KardexDetails (int warehouse, int product)
+        //{
+        //    var item = new DateRange {
+        //        StartDate = DateTime.Now,
+        //        EndDate = DateTime.Now
+        //    };
+
+        //    ViewBag.Warehouse = Warehouse.Find(warehouse);
+        //    ViewBag.Product = Product.Find(product);
+
+        //    return View(item);
+        //}
+
+		
+        //[HttpPost]
+        //public ActionResult KardexDetails (int warehouse, int product, DateRange item)
+        //{
+        //    var balance = from x in Model.LotSerialTracking.Queryable
+        //                  where x.Warehouse.Id == warehouse && x.Product.Id == product &&
+        //                        x.Date < item.StartDate.Date
+        //                  select x.Quantity;
+        //    var qry = from x in Model.LotSerialTracking.Queryable
+        //              where x.Warehouse.Id == warehouse && x.Product.Id == product &&
+        //                    x.Date >= item.StartDate.Date && x.Date <= item.EndDate.Date.Add(new TimeSpan(23, 59, 59))
+        //              orderby x.Date
+        //              select x;
+
+        //    ViewBag.OpeningBalance = balance.Count() > 0 ? balance.Sum () : 0m;
+
+        //    return PartialView("_KardexDetails", qry.ToList());
+        //}
+		
 
 		#endregion
 
@@ -155,8 +162,8 @@ namespace Mictlanix.BE.Web.Controllers
                           select x.Quantity;
 
             var qry = from x in LotSerialTracking.Queryable
-                      where x.Warehouse.Id == warehouse &&  x.Product.Id == product
-                      orderby x.Date
+                      where x.Warehouse.Id == warehouse && x.Product.Id == product && x.SerialNumber != null
+                      orderby x.Date, x.SerialNumber 
                       select x;
 
             ViewBag.OpeningBalance = balance.Count () > 0 ? balance.Sum () : 0m;
@@ -236,6 +243,7 @@ namespace Mictlanix.BE.Web.Controllers
                 query.AddScalar ("Code", NHibernateUtil.String);
                 query.AddScalar ("Name", NHibernateUtil.String);
                 query.AddScalar ("SerialNumber", NHibernateUtil.String);
+                query.AddScalar ("LotNumber", NHibernateUtil.String);
                 query.AddScalar ("ExpirationDate", NHibernateUtil.Date);
                 query.AddScalar ("Quantity", NHibernateUtil.Decimal);
 
@@ -246,6 +254,42 @@ namespace Mictlanix.BE.Web.Controllers
 
             return PartialView ("_WarehouseSerialNumbersReport", items);
         }
+
+        /// <summary>
+        /// WarehouseStocks
+        /// </summary>
+        /// <returns></returns>
+        /// 
+        public ViewResult WarehouseStocks ()
+        {
+            return View ();
+        }
+
+        [HttpPost]
+        public ActionResult WarehouseStocks (int warehouse)
+        {
+            string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name, l.expiration_date ExpirationDate, SUM(quantity) Quantity
+                            FROM lot_serial_tracking l INNER JOIN product p ON l.product = p.product_id
+                            WHERE IFNULL(l.serial_number, '') <> '' AND warehouse = :warehouse
+                            GROUP BY p.code, p.name, l.expiration_date";
+
+            var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+                var query = session.CreateSQLQuery (sql);
+
+                query.AddScalar ("Brand", NHibernateUtil.String);
+                query.AddScalar ("Model", NHibernateUtil.String);
+                query.AddScalar ("Code", NHibernateUtil.String);
+                query.AddScalar ("Name", NHibernateUtil.String);
+                query.AddScalar ("ExpirationDate", NHibernateUtil.Date);
+                query.AddScalar ("Quantity", NHibernateUtil.Decimal);
+
+                query.SetInt32 ("warehouse", warehouse);
+
+                return query.DynamicList ();
+            }, null);
+            return PartialView ("_WarehouseStocks", items);
+        }
+
 		#endregion
 
 		#region Payments

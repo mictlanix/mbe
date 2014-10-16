@@ -2,33 +2,29 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
-@model MasterDetails<Warehouse, LotSerialTracking>
+@model IEnumerable<LotSerialTracking>
 
-@{
-    var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Kardex);
-}
+    @{
+        var CurrentUser = Html.CurrentUser () ?? new User ();
+        var Privilege = Html.GetPrivilege (CurrentUser, SystemObjects.Kardex);
+    }
 
-<table>
-    <tr>
-        <th>@Resources.Code</th>
-        <th>@Resources.SKU</th>
-        <th>@Resources.Product</th>
-        <th>@Resources.UnitOfMeasurement</th>
-        <th>@Resources.Quantity</th>
-        <th></th>
-    </tr>
-@foreach (var item in Model.Details)
-{
-    <tr>
-        <td class="center">@Html.DisplayFor(x => item.Product.Code)</td>
-        <td class="center">@Html.DisplayFor(x => item.Product.SKU)</td>
-        <td>@Html.DisplayFor(x => item.Product.Name)</td>
-        <td class="center">@Html.DisplayFor(x => item.Product.UnitOfMeasurement)</td>
-        <td class="number">@Html.DisplayFor(x => item.Quantity)</td>
-        <td class="actions">
-            @Html.ActionLink(" ", "KardexDetails", new { warehouse = Model.Master.Id, product = item.Product.Id }, new { @class = "button icon view icon-only", title = Resources.Details, target = "_blank" })
-        </td>
-    </tr> 
-}
-</table>
+    <table>
+        <tr>
+            <th>@Resources.Code</th>
+            <th>@Resources.SKU</th>
+            <th>@Resources.Product</th>
+            <th>@Resources.UnitOfMeasurement</th>
+            <th>@Resources.Quantity</th>
+            <th></th>
+        </tr>
+        @foreach (var item in Model) {
+            <tr>
+                <td class="center">@Html.DisplayFor(x => item.Product.Code)</td>
+                <td class="center">@Html.DisplayFor(x => item.Product.SKU)</td>
+                <td>@Html.DisplayFor(x => item.Product.Name)</td>
+                <td class="center">@Html.DisplayFor(x => item.Product.UnitOfMeasurement)</td>
+                <td class="number">@Html.DisplayFor(x => item.Quantity)</td>
+            </tr>
+        }
+    </table>

@@ -10,8 +10,9 @@
         <th class='nowrap'>@Resources.Model</th>
         <th class='nowrap'>@Resources.ProductCode</th>
         <th class='nowrap'>@Resources.ProductName</th>
-        <th class='nowrap'>@Resources.SerialNumber</th>
+        <th class='nowrap'>@Resources.LotNumber</th>
         <th class='nowrap'>@Resources.ExpirationDate</th>
+        <th class='nowrap'>@Resources.SerialNumber</th>
         <th class='nowrap'>@Resources.Quantity</th> 
 </tr>
 @foreach (var item in Model) {
@@ -20,12 +21,13 @@
     <td class='nowrap text-center'>@item.Model</td>
     <td class='nowrap text-center'>@item.Code</td>
     <td>@item.Name</td>
-    <td class='nowrap text-center'>@item.SerialNumber</td>
+    <td class='nowrap text-center'>@item.LotNumber</td>
     <td class='nowrap date'>
     @if(@item.ExpirationDate != null) {
         <text>@item.ExpirationDate.ToString("d")</text>
     }
     </td>
+    <td class='nowrap text-center'>@item.SerialNumber</td>
     <td class='nowrap text-right'>
         @item.Quantity.ToString("0.#")
     </td>

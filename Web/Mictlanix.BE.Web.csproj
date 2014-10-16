@@ -4,6 +4,8 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{D13A33DE-A12D-420E-ABB2-76A7C0F2E2E5}</ProjectGuid>
     <ProjectTypeGuids>{E53F8FEA-EAE0-44A6-8774-FFD645390401};{349C5851-65DF-11DA-9384-00065B846F21};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
@@ -67,6 +69,7 @@
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
@@ -74,6 +77,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
+    <Reference Include="MySql.Data">
+      <HintPath>..\packages\MySql.Data.6.4.4\lib\net40\mysql.data.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="WebActivator">
       <HintPath>..\packages\WebActivator.1.4.2\lib\net40\WebActivator.dll</HintPath>
@@ -135,9 +141,6 @@
     </Reference>
     <Reference Include="NHibernate.ByteCode.Castle">
       <HintPath>..\packages\NHibernate.3.0.0.4000\lib\NHibernate.ByteCode.Castle.dll</HintPath>
-    </Reference>
-    <Reference Include="MySql.Data">
-      <HintPath>..\packages\MySql.Data.6.9.3\lib\net40\MySql.Data.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -1016,5 +1019,7 @@
     <Content Include="Views\Reports\_WarehouseSerialNumbersReport.cshtml" />
     <Content Include="Views\Reports\_WarehouseStocksReport.cshtml" />
     <Content Include="Views\Reports\_SerialNumberKardex.cshtml" />
+    <Content Include="Views\Reports\WarehouseStocks.cshtml" />
+    <Content Include="Views\Reports\_WarehouseStocks.cshtml" />
   </ItemGroup>
 </Project>
