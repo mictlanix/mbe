@@ -21,8 +21,16 @@
     <td class='nowrap text-center'>@item.Code</td>
     <td>@item.Name</td>
     <td class='nowrap text-center'>@item.LotNumber</td>
-    <td class='nowrap date'>@item.ExpirationDate.ToString("d")</td>
-    <td class='nowrap text-right'>@item.Quantity.ToString("0.#")</td>
+    <td class='nowrap date'>
+    @if (item.ExpirationDate != null) {
+       <text>@item.ExpirationDate.ToString("d")</text>
+    }
+    </td>
+    <td class='nowrap text-right'>
+    @if (item.Quantity != null) {
+        <text>@item.Quantity.ToString("0.#")</text>   
+    }
+    </td>
 </tr>
 }
 </table>

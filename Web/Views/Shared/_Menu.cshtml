@@ -667,6 +667,12 @@
                                        href='@Url.Action("SerialNumberKardex", "Reports")'>@Resources.SerialNumberKardex</a>
                                 </li>
                             }
+                            @if (CurrentUser.GetPrivilege (SystemObjects.WarehouseStocks).AllowRead) {
+                                <li class="gbmtc">
+                                    <a class='gbmt @(Html.IsMenuSelected ("WarehouseStocks", "Reports") ? "gbm0l" : "")'
+                                       href='@Url.Action("WarehouseStocks", "Reports")'>@Resources.WarehouseStocks</a>
+                                </li>
+                            }
                         </ol>
                     </div>
                 </div>
