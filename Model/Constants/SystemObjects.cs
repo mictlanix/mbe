@@ -174,6 +174,8 @@ namespace Mictlanix.BE.Model {
         [Display(Name = "WarehouseSerialNumbersReport", ResourceType = typeof(Resources))]
         WarehouseSerialNumbersReport,
         [Display(Name = "SerialNumberKardex", ResourceType = typeof(Resources))]
-        SerialNumberKardex
+        SerialNumberKardex,
+        [Display(Name = "WarehouseStocks", ResourceType = typeof(Resources))]
+        WarehouseStocks
     }
 }
