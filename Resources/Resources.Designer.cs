@@ -5770,13 +5770,22 @@ namespace Mictlanix.BE {
                 return ResourceManager.GetString("WarehouseSerialNumbersReport", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Busca una cadena traducida similar a Existencias de Almacén por Lotes.
         /// </summary>
         public static string WarehouseStocksReport {
             get {
-                return ResourceManager.GetString("WarehouseStocksReport", resourceCulture);
+                return ResourceManager.GetString ("WarehouseStocksReport", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a Existencias de Almacén.
+        /// </summary>
+        public static string WarehouseStocks {
+            get {
+                return ResourceManager.GetString("WarehouseStocks", resourceCulture);
             }
         }
         

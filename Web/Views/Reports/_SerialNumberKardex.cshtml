@@ -10,17 +10,18 @@
 
 <table>
     <tr>
-        <th>@Html.LabelFor(x => new LotSerialTracking().SerialNumber)</th>
-        <th>@Html.LabelFor(x => new LotSerialTracking().LotNumber)</th>
-        <th>@Html.LabelFor(x => new LotSerialTracking().ExpirationDate)</th>
-        <th>@Html.LabelFor(x => new LotSerialTracking().Source)</th>
-        <th>@Html.LabelFor(x => new LotSerialTracking().Product.Model)</th>
+        <th>@Resources.SerialNumber</th>
+        <th>@Resources.LotNumber</th>
+        <th>@Resources.ExpirationDate</th>
+        <th>@Resources.Source</th>
+        <th>@Resources.Reference</th>
+        <th>@Resources.Date</th>
         <th>@Resources.Title_InventoryReceipt</th>
         <th>@Resources.Title_InventoryIssue</th>
         <th>@Resources.Balance</th>
     </tr>
     <tr>
-        <td class='right' colspan='5'>@Resources.OpeningBalance</td>
+        <td class='right' colspan='6'>@Resources.OpeningBalance</td>
         <td class='number' colspan='3'>@balance.ToString("0.####")</td>
     </tr>
     @foreach (var item in Model) {
@@ -29,8 +30,9 @@
             <td class='center'>@Html.DisplayFor(x => item.SerialNumber)</td>
             <td class='center'>@Html.DisplayFor(x => item.LotNumber)</td>
             <td class='date'>@Html.DisplayFor(x => item.ExpirationDate)</td>
-            <td>@item.Source.GetDisplayName() (@Html.DisplayFor(x => item.Reference))</td>
-            <td class='center'>@Html.DisplayFor(x => item.Product.Model)</td>
+            <td>@item.Source.GetDisplayName()</td>
+            <td>@Html.DisplayFor(x => item.Reference)</td>
+            <td class="date">@Html.DisplayFor(x => item.Date)</td>
             <td class='number'>
                 @if (item.Quantity > 0) {
                     @item.Quantity.ToString("0.####")
@@ -45,7 +47,7 @@
         </tr>
     }
     <tr class="total">
-        <td class='right' colspan='5'>@Resources.Total</td>
+        <td class='right' colspan='6'>@Resources.Total</td>
         <td class='number'>@Model.Where(x => x.Quantity > 0).Sum(x => x.Quantity).ToString("0.####")</td>
         <td class='number'>@Math.Abs(Model.Where(x => x.Quantity < 0).Sum(x => x.Quantity)).ToString("0.####")</td>
         <td class='number'>@balance.ToString("0.####")</td>
