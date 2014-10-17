@@ -13,9 +13,9 @@
        @if (ViewBag.Privilege.AllowRead) {
         @Html.ActionLink(" ", "Details", new { id = Model.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
        }
-        @if (ViewBag.Privilege.AllowUpdate) {
+        @*@if (ViewBag.Privilege.AllowUpdate) {
             @Html.ActionLink(" ", "Edit", new { id = Model.Id }, new { @class = "button icon edit icon-only open-modal", title = Resources.Edit, data_modal_id = "customer-modal" })
-        }
+        }*@
         @if (ViewBag.Privilege.AllowDelete) {
             @Html.ActionLink(" ", "Delete", new { id = Model.Id }, new { @class = "button icon delete icon-only open-modal", title = Resources.Delete, data_modal_id = "customer-modal" })
         }
