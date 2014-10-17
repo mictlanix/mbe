@@ -9,12 +9,12 @@
 }
 <table>
     <tr>
+        <th class="nowrap">@Resources.SerialNumber</th>
+        <th>@Resources.LotNumber</th>
+        <th>@Resources.ExpirationDate</th>
         <th>@Resources.Date</th>
         <th>@Resources.Source</th>
         <th>@Resources.Reference</th>
-        <th>@Resources.LotNumber</th>
-        <th>@Resources.ExpirationDate</th>
-        <th>@Resources.SerialNumber</th>
         <th>@Resources.Title_InventoryReceipt</th>
         <th>@Resources.Title_InventoryIssue</th>
         <th>@Resources.Balance</th>
@@ -26,16 +26,16 @@
     @foreach (var item in Model) {
         balance += item.Quantity;
         <tr>
-            <td class='date'>@item.Date.ToString("d")</td>
-            <td>@(((TransactionType) item.Source).GetDisplayName ())</td>
-            <td class='text-center'>@item.Reference</td>
+            <td class='text-center stretch'>@item.SerialNumber</td>
             <td class='text-center'>@item.LotNumber</td>
             <td class='date'>
                 @if (item.ExpirationDate != null) {
                     @item.ExpirationDate.ToString("d")
                 }
             </td>
-            <td class='text-center' >@item.SerialNumber</td>
+            <td class='date'>@item.Date.ToString("d")</td>
+            <td class='text-center'>@(((TransactionType) item.Source).GetDisplayName ())</td>
+            <td class='text-center'>@item.Reference</td>
             <td class='number'>
                 @if (item.Quantity > 0) {
                     @item.Quantity.ToString("0.####")
