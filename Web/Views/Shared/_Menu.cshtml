@@ -41,9 +41,7 @@
                             	  CurrentUser.GetPrivilege (SystemObjects.FiscalReports).AllowRead ||
                             	  CurrentUser.GetPrivilege (SystemObjects.Taxpayers).AllowRead;
                             	  
-    var ShowReportsMenu = CurrentUser.GetPrivilege (SystemObjects.Kardex).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.SerialNumbersReport).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.CustomerRefundsHistoric).AllowRead ||
+    var ShowReportsMenu = CurrentUser.GetPrivilege (SystemObjects.CustomerRefundsHistoric).AllowRead ||
                           CurrentUser.GetPrivilege (SystemObjects.SupplierReturnHistoric).AllowRead ||
                           CurrentUser.GetPrivilege (SystemObjects.ReceivedPayments).AllowRead ||
                           CurrentUser.GetPrivilege (SystemObjects.SalesByCustomer).AllowRead ||
@@ -65,7 +63,9 @@
                           CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPerson).AllowRead ||
                           CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPersonAndLabel).AllowRead ||
                           CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPersonAndBrand).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPersonAndModel).AllowRead;
+                          CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPersonAndModel).AllowRead ||
+                          CurrentUser.GetPrivilege (SystemObjects.Kardex).AllowRead ||
+                          CurrentUser.GetPrivilege (SystemObjects.SerialNumberKardex).AllowRead;
     
     var ShowTechnicalServiceMenu = CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceReports).AllowRead ||
                           		   CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceRequests).AllowRead ||
@@ -494,24 +494,6 @@
                                    href="@Url.Action("ReceivedPayments", "Reports")">@Resources.ReceivedPayments</a>
                             </li>
                             }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.Kardex).AllowRead) {
-                            <li class="gbmtc">
-                                <a class='gbmt @(Html.IsMenuSelected("Kardex", "Reports") ? "gbm0l" : "")'
-                                   href='@Url.Action("Kardex", "Reports")'>@Resources.Title_Kardex</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.SerialNumbersReport).AllowRead) {
-                            <li class="gbmtc">
-                                <a class='gbmt @(Html.IsMenuSelected("SerialNumbers", "Reports") ? "gbm0l" : "")'
-                                   href='@Url.Action("SerialNumbers", "Reports")'>@Resources.LotsAndSerialNumbers</a>
-                            </li>
-                            }
-                            @*@if (CurrentUser.GetPrivilege (SystemObjects.CustomerRefundsHistoric).AllowRead) {
-                            <li class='gbmtc'>
-                                <a class='gbmt @(Html.IsMenuSelected("Historic", "CustomerRefunds") ? "gbm0l" : "")'
-                                   href='@Url.Action("Historic", "CustomerRefunds")'>@Resources.CustomerRefundsHistoric</a>
-                            </li>
-                            }*@
                             @if (CurrentUser.GetPrivilege (SystemObjects.SupplierReturnHistoric).AllowRead)
                             {
                             <li class="gbmtc">
@@ -565,6 +547,12 @@
 
                             <div class="gbmh"></div>
 
+                            @if (CurrentUser.GetPrivilege (SystemObjects.CustomersReport).AllowRead) {
+                                <li class="gbmtc">
+                                    <a class="gbmt @(Html.IsMenuSelected("CustomersReport", "Reports") ? "gbm0l" : "")"
+                                       href="@Url.Action("CustomersReport", "Reports")">@Resources.CustomersReport</a>
+                                </li>
+                            }
                             @if (CurrentUser.GetPrivilege (SystemObjects.SalesByCustomer).AllowRead) {
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("SalesByCustomer", "Reports") ? "gbm0l" : "")"
@@ -643,34 +631,34 @@
                                    href='@Url.Action("FiscalDocuments", "Reports")'>@Resources.FiscalDocumentsReport</a>
                             </li>
                             }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.CustomersReport).AllowRead) {
+                            @if (CurrentUser.GetPrivilege (SystemObjects.WarehouseStockReport).AllowRead) {
                                 <li class="gbmtc">
-                                    <a class="gbmt @(Html.IsMenuSelected("CustomersReport", "Reports") ? "gbm0l" : "")"
-                                       href="@Url.Action("CustomersReport", "Reports")">@Resources.CustomersReport</a>
+                                    <a class='gbmt @(Html.IsMenuSelected ("WarehouseStockReport", "Reports") ? "gbm0l" : "")'
+                                       href='@Url.Action("WarehouseStockReport", "Reports")'>@Resources.WarehouseStockReport</a>
                                 </li>
                             }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.WarehouseStocksReport).AllowRead) {
+                            @if (CurrentUser.GetPrivilege (SystemObjects.WarehouseStockByLotReport).AllowRead) {
                                 <li class="gbmtc">
-                                    <a class='gbmt @(Html.IsMenuSelected("WarehouseStocksReport", "Reports") ? "gbm0l" : "")'
-                                       href='@Url.Action("WarehouseStocksReport", "Reports")'>@Resources.WarehouseStocksReport</a>
+                                    <a class='gbmt @(Html.IsMenuSelected("WarehouseStockByLotReport", "Reports") ? "gbm0l" : "")'
+                                       href='@Url.Action("WarehouseStockByLotReport", "Reports")'>@Resources.WarehouseStockByLotReport</a>
                                 </li>
                             }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.WarehouseSerialNumbersReport).AllowRead) {
+                            @if (CurrentUser.GetPrivilege (SystemObjects.WarehouseStockBySerialNumberReport).AllowRead) {
                                 <li class="gbmtc">
-                                    <a class='gbmt @(Html.IsMenuSelected("WarehouseSerialNumbersReport", "Reports") ? "gbm0l" : "")'
-                                       href='@Url.Action("WarehouseSerialNumbersReport", "Reports")'>@Resources.WarehouseSerialNumbersReport</a>
+                                    <a class='gbmt @(Html.IsMenuSelected("WarehouseStockBySerialNumberReport", "Reports") ? "gbm0l" : "")'
+                                       href='@Url.Action("WarehouseStockBySerialNumberReport", "Reports")'>@Resources.WarehouseStockBySerialNumberReport</a>
                                 </li>
+                            }
+                            @if (CurrentUser.GetPrivilege (SystemObjects.Kardex).AllowRead) {
+                            <li class="gbmtc">
+                                <a class='gbmt @(Html.IsMenuSelected("Kardex", "Reports") ? "gbm0l" : "")'
+                                   href='@Url.Action("Kardex", "Reports")'>@Resources.Title_Kardex</a>
+                            </li>
                             }
                             @if (CurrentUser.GetPrivilege (SystemObjects.SerialNumberKardex).AllowRead) {
                                 <li class="gbmtc">
                                     <a class='gbmt @(Html.IsMenuSelected("SerialNumberKardex", "Reports") ? "gbm0l" : "")'
                                        href='@Url.Action("SerialNumberKardex", "Reports")'>@Resources.SerialNumberKardex</a>
-                                </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.WarehouseStocks).AllowRead) {
-                                <li class="gbmtc">
-                                    <a class='gbmt @(Html.IsMenuSelected ("WarehouseStocks", "Reports") ? "gbm0l" : "")'
-                                       href='@Url.Action("WarehouseStocks", "Reports")'>@Resources.WarehouseStocks</a>
                                 </li>
                             }
                         </ol>
