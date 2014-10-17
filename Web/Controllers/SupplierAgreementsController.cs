@@ -41,9 +41,6 @@ namespace Mictlanix.BE.Web.Controllers
 	[Authorize]
     public class SupplierAgreementsController : Controller
     {
-        //
-        // GET: /SupplierAgreements/Details/5
-
         public ActionResult Details (int id)
         {
             var item = SupplierAgreement.Find (id);
@@ -53,16 +50,10 @@ namespace Mictlanix.BE.Web.Controllers
             return PartialView ("_Details", item);
         }
 
-        //
-        // GET: /SupplierAgreements/Create
-
         public ActionResult CreateForSupplier (int id)
         {
             return PartialView ("_Create", new SupplierAgreement { SupplierId = id });
         }
-
-        //
-        // POST: /SupplierAgreements/Create
 
         [HttpPost]
         public ActionResult CreateForSupplier (SupplierAgreement item)
@@ -79,17 +70,11 @@ namespace Mictlanix.BE.Web.Controllers
             return PartialView ("_Refresh");
         }
 
-        //
-        // GET: /SupplierAgreements/Edit/5
-
         public ActionResult Edit (int id)
         {
             var item = SupplierAgreement.Find (id);
             return PartialView ("_Edit", item);
         }
-
-        //
-        // POST: /SupplierAgreements/Edit/5
 
         [HttpPost]
         public ActionResult Edit(SupplierAgreement item)
@@ -111,9 +96,6 @@ namespace Mictlanix.BE.Web.Controllers
             return PartialView ("_Refresh");
         }
 
-        //
-        // GET: /SupplierAgreements/Delete/5
-
         public ActionResult Delete (int id)
         {
             var item = SupplierAgreement.Find (id);
@@ -122,16 +104,10 @@ namespace Mictlanix.BE.Web.Controllers
             return PartialView ("_Delete", item);
         }
 
-        //
-        // POST: /SupplierAgreements/Delete/5
-
         [HttpPost, ActionName ("Delete")]
         public ActionResult DeleteConfirmed (int id)
         {
-            //SupplierAgreement item = SupplierAgreement.Find (id);
-
             var item = SupplierAgreement.Find (id);
-            int owner = int.Parse (Request.Params ["OwnerId"]);
 
 			using (var scope = new TransactionScope ()) {
 				item.DeleteAndFlush ();

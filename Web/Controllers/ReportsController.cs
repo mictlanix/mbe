@@ -45,148 +45,50 @@ namespace Mictlanix.BE.Web.Controllers
 	[Authorize]
     public class ReportsController : Controller
     {
-		#region Kardex
-		
-		public ViewResult Kardex ()
-		{
-			return View ();
-		}
+		#region Stock & Kardex
 
-        
-        [HttpPost]
-        public ActionResult Kardex (int warehouse, int product, DateRange item)
-        {
-            //var warehouse = Warehouse.Find (item.Id);
-
-            var balance = from x in Model.LotSerialTracking.Queryable
-                          where x.Warehouse.Id == warehouse && x.Product.Id == product &&
-                                x.Date < item.StartDate.Date
-                          select x.Quantity;
-
-            var qry = from x in Model.LotSerialTracking.Queryable
-                      where x.Warehouse.Id == warehouse && x.Product.Id == product &&
-                            x.Date >= item.StartDate.Date && x.Date <= item.EndDate.Date.Add (new TimeSpan (23, 59, 59))
-                      group x by x.Product into g
-                      select new LotSerialTracking {
-                        Product = g.Key,
-                        Quantity = g.Sum(y => y.Quantity)
-                      };
-
-			ViewBag.OpeningBalance = balance.Count() > 0 ? balance.Sum () : 0m;
-
-
-            return PartialView ("_Kardex", qry.ToList ());
-        }
-        
-
-        //public ViewResult KardexDetails (int warehouse, int product)
-        //{
-        //    var item = new DateRange {
-        //        StartDate = DateTime.Now,
-        //        EndDate = DateTime.Now
-        //    };
-
-        //    ViewBag.Warehouse = Warehouse.Find(warehouse);
-        //    ViewBag.Product = Product.Find(product);
-
-        //    return View(item);
-        //}
-
-		
-        //[HttpPost]
-        //public ActionResult KardexDetails (int warehouse, int product, DateRange item)
-        //{
-        //    var balance = from x in Model.LotSerialTracking.Queryable
-        //                  where x.Warehouse.Id == warehouse && x.Product.Id == product &&
-        //                        x.Date < item.StartDate.Date
-        //                  select x.Quantity;
-        //    var qry = from x in Model.LotSerialTracking.Queryable
-        //              where x.Warehouse.Id == warehouse && x.Product.Id == product &&
-        //                    x.Date >= item.StartDate.Date && x.Date <= item.EndDate.Date.Add(new TimeSpan(23, 59, 59))
-        //              orderby x.Date
-        //              select x;
-
-        //    ViewBag.OpeningBalance = balance.Count() > 0 ? balance.Sum () : 0m;
-
-        //    return PartialView("_KardexDetails", qry.ToList());
-        //}
-		
-
-		#endregion
-
-		#region Serial Numbers
-		
-        /// <summary>
-        /// SerialNumbers
-        /// </summary>
-        /// <returns></returns>
-		public ViewResult SerialNumbers ()
+		public ViewResult WarehouseStockReport ()
 		{
 			return View ();
 		}
 
 		[HttpPost]
-		public ActionResult SerialNumbers (int warehouse, int product, DateRange item)
+		public ActionResult WarehouseStockReport (int warehouse)
 		{
-			var balance = from x in LotSerialTracking.Queryable
-						  where x.Warehouse.Id == warehouse && x.Product.Id == product &&
-								x.Date < item.StartDate.Date
-						  select x.Quantity;
+			string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name, SUM(quantity) Quantity
+                            FROM lot_serial_tracking l INNER JOIN product p ON l.product = p.product_id
+                            WHERE warehouse = :warehouse
+                            GROUP BY p.brand, p.model, p.code, p.name";
 
-			var qry = from x in LotSerialTracking.Queryable
-					  where x.Warehouse.Id == warehouse && x.Product.Id == product &&
-							x.Date >= item.StartDate.Date && x.Date <= item.EndDate.Date.Add(new TimeSpan(23, 59, 59))
-					  orderby x.Date
-					  select x;
-			
-			ViewBag.OpeningBalance = balance.Count() > 0 ? balance.Sum () : 0m;
-			
-			return PartialView ("_SerialNumbers", qry.ToList());
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
+
+				query.AddScalar ("Brand", NHibernateUtil.String);
+				query.AddScalar ("Model", NHibernateUtil.String);
+				query.AddScalar ("Code", NHibernateUtil.String);
+				query.AddScalar ("Name", NHibernateUtil.String);
+				query.AddScalar ("Quantity", NHibernateUtil.Decimal);
+
+				query.SetInt32 ("warehouse", warehouse);
+
+				return query.DynamicList ();
+			}, null);
+
+			return PartialView ("_WarehouseStockReport", items);
 		}
 
-        /// <summary>
-        /// SerialNumberKardex
-        /// </summary>
-        /// <returns></returns>
-        /// 
-        public ViewResult SerialNumberKardex ()
+		public ViewResult WarehouseStockByLotReport ()
         {
             return View ();
         }
 
         [HttpPost]
-        public ActionResult SerialNumberKardex (int warehouse, int product)
-        {
-            var balance = from x in LotSerialTracking.Queryable
-                          where x.Warehouse.Id == warehouse && x.Product.Id == product
-                          select x.Quantity;
-
-            var qry = from x in LotSerialTracking.Queryable
-                      where x.Warehouse.Id == warehouse && x.Product.Id == product && x.SerialNumber != null
-                      orderby x.Date, x.SerialNumber 
-                      select x;
-
-            ViewBag.OpeningBalance = balance.Count () > 0 ? balance.Sum () : 0m;
-
-            return PartialView ("_SerialNumberKardex", qry.ToList ());
-        }
-
-        /// <summary>
-        /// WarehouseStocksReport
-        /// </summary>
-        /// <returns></returns>
-        public ViewResult WarehouseStocksReport ()
-        {
-            return View ();
-        }
-
-        [HttpPost]
-        public ActionResult WarehouseStocksReport (int warehouse, string brand)
+		public ActionResult WarehouseStockByLotReport (int warehouse, string brand)
         {
             string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name, l.lot_number LotNumber, l.expiration_date ExpirationDate, SUM(quantity) Quantity
                             FROM lot_serial_tracking l INNER JOIN product p ON l.product = p.product_id
                             WHERE warehouse = :warehouse WHERE_BRAND
-                            GROUP BY p.code, p.name, l.lot_number, l.expiration_date";
+                            GROUP BY p.brand, p.model, p.code, p.name, l.lot_number, l.expiration_date";
 
             if (string.IsNullOrWhiteSpace (brand)) {
                 sql = sql.Replace ("WHERE_BRAND", string.Empty);
@@ -214,26 +116,22 @@ namespace Mictlanix.BE.Web.Controllers
                 return query.DynamicList ();
             }, null);
 
-            return PartialView ("_WarehouseStocksReport", items);
+			return PartialView ("_WarehouseStockByLotReport", items);
         }
 
-        /// <summary>
-        /// WarehouseSerialNumbersReport
-        /// </summary>
-        /// <returns></returns>
-        /// 
-        public ViewResult WarehouseSerialNumbersReport ()
+		public ViewResult WarehouseStockBySerialNumberReport ()
         {
             return View ();
         }
 
         [HttpPost]
-        public ActionResult WarehouseSerialNumbersReport (int warehouse)
+		public ActionResult WarehouseStockBySerialNumberReport (int warehouse)
         {
             string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name, l.lot_number LotNumber, l.expiration_date ExpirationDate, l.serial_number SerialNumber, SUM(quantity) Quantity
                             FROM lot_serial_tracking l INNER JOIN product p ON l.product = p.product_id
                             WHERE IFNULL(l.serial_number, '') <> '' AND warehouse = :warehouse
-                            GROUP BY p.code, p.name, l.lot_number, l.expiration_date, l.serial_number";
+                            GROUP BY p.brand, p.model, p.code, p.name, l.lot_number, l.expiration_date, l.serial_number
+							HAVING SUM(quantity) <> 0";
 
             var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
                 var query = session.CreateSQLQuery (sql);
@@ -252,43 +150,56 @@ namespace Mictlanix.BE.Web.Controllers
                 return query.DynamicList ();
             }, null);
 
-            return PartialView ("_WarehouseSerialNumbersReport", items);
-        }
+			return PartialView ("_WarehouseStockBySerialNumberReport", items);
+		}
 
-        /// <summary>
-        /// WarehouseStocks
-        /// </summary>
-        /// <returns></returns>
-        /// 
-        public ViewResult WarehouseStocks ()
-        {
-            return View ();
-        }
+		public ViewResult Kardex ()
+		{
+			ViewBag.Title = Resources.Kardex;
+			return View (new DateRange(DateTime.Now, DateTime.Now));
+		}
 
-        [HttpPost]
-        public ActionResult WarehouseStocks (int warehouse)
-        {
-            string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name, l.expiration_date ExpirationDate, SUM(quantity) Quantity
-                            FROM lot_serial_tracking l INNER JOIN product p ON l.product = p.product_id
-                            WHERE IFNULL(l.serial_number, '') <> '' AND warehouse = :warehouse
-                            GROUP BY p.code, p.name, l.expiration_date";
+		[HttpPost]
+		public ActionResult Kardex (int warehouse, int product, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var balance = from x in LotSerialTracking.Queryable
+						  where x.Warehouse.Id == warehouse && x.Product.Id == product && x.Date < start
+			              select x.Quantity;
 
-            var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
-                var query = session.CreateSQLQuery (sql);
+			ViewBag.OpeningBalance = balance.Count() > 0 ? balance.Sum () : 0m;
 
-                query.AddScalar ("Brand", NHibernateUtil.String);
-                query.AddScalar ("Model", NHibernateUtil.String);
-                query.AddScalar ("Code", NHibernateUtil.String);
-                query.AddScalar ("Name", NHibernateUtil.String);
-                query.AddScalar ("ExpirationDate", NHibernateUtil.Date);
-                query.AddScalar ("Quantity", NHibernateUtil.Decimal);
+			string sql = @"SELECT l.date Date, l.source Source, l.reference Reference, l.lot_number LotNumber, l.expiration_date ExpirationDate, quantity Quantity
+                            FROM lot_serial_tracking l
+                            WHERE warehouse = :warehouse AND product = :product AND date >= :start AND date <= :end";
 
-                query.SetInt32 ("warehouse", warehouse);
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
 
-                return query.DynamicList ();
-            }, null);
-            return PartialView ("_WarehouseStocks", items);
-        }
+				query.AddScalar ("Date", NHibernateUtil.Date);
+				query.AddScalar ("Source", NHibernateUtil.Int32);
+				query.AddScalar ("Reference", NHibernateUtil.Int32);
+				query.AddScalar ("LotNumber", NHibernateUtil.String);
+				query.AddScalar ("ExpirationDate", NHibernateUtil.Date);
+				query.AddScalar ("Quantity", NHibernateUtil.Decimal);
+
+				query.SetInt32 ("warehouse", warehouse);
+				query.SetInt32 ("product", product);
+				query.SetDateTime ("start", start);
+				query.SetDateTime ("end", end);
+
+				return query.DynamicList ();
+			}, null);
+
+			return PartialView ("_Kardex", items);
+		}
+
+		public ViewResult SerialNumberKardex ()
+		{
+			ViewBag.Title = Resources.SerialNumberKardex;
+			return View ("Kardex", new DateRange(DateTime.Now, DateTime.Now));
+		}
 
 		#endregion
 
@@ -942,7 +853,7 @@ namespace Mictlanix.BE.Web.Controllers
 						INNER JOIN sales_order_detail d ON m.sales_order_id = d.sales_order
 						INNER JOIN customer c ON m.customer = c.customer_id
 						WHERE m.salesperson = :employee AND m.completed = 1 AND m.cancelled = 0 AND
-							m.date >= :start AND m.date < :end
+							m.date >= :start AND m.date <= :end
 						GROUP BY sales_order";
 
 			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate(ISession session, object instance) {
@@ -1041,7 +952,7 @@ namespace Mictlanix.BE.Web.Controllers
 						INNER JOIN sales_order_detail d ON m.sales_order_id = d.sales_order
 						INNER JOIN product p ON d.product = p.product_id
 						WHERE m.salesperson = :employee AND m.completed = 1 AND m.cancelled = 0 AND
-							m.date >= :start AND m.date < :end
+							m.date >= :start AND m.date <= :end
 						GROUP BY d.product";
 
 			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate(ISession session, object instance) {
@@ -1087,7 +998,7 @@ namespace Mictlanix.BE.Web.Controllers
 						INNER JOIN product p ON d.product = p.product_id
 						JOIN_LABEL
 						WHERE m.salesperson = :employee AND m.completed = 1 AND m.cancelled = 0 AND
-							m.date >= :start AND m.date < :end WHERE_LABEL
+							m.date >= :start AND m.date <= :end WHERE_LABEL
 						GROUP BY d.product";
 
 			if (label.HasValue) {
@@ -1143,7 +1054,7 @@ namespace Mictlanix.BE.Web.Controllers
 						INNER JOIN sales_order_detail d ON m.sales_order_id = d.sales_order
 						INNER JOIN product p ON d.product = p.product_id
 						WHERE m.salesperson = :employee AND m.completed = 1 AND m.cancelled = 0 AND
-							m.date >= :start AND m.date < :end WHERE_BRAND
+							m.date >= :start AND m.date <= :end WHERE_BRAND
 						GROUP BY d.product";
 
 			if (string.IsNullOrWhiteSpace (brand)) {
@@ -1198,7 +1109,7 @@ namespace Mictlanix.BE.Web.Controllers
 						INNER JOIN sales_order_detail d ON m.sales_order_id = d.sales_order
 						INNER JOIN product p ON d.product = p.product_id
 						WHERE m.salesperson = :employee AND m.completed = 1 AND m.cancelled = 0 AND
-							m.date >= :start AND m.date < :end WHERE_MODEL
+							m.date >= :start AND m.date <= :end WHERE_MODEL
 						GROUP BY d.product";
 
 			if (string.IsNullOrWhiteSpace (productModel)) {
