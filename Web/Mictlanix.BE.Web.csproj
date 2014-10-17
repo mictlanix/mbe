@@ -1013,5 +1013,6 @@
     <Content Include="Views\FiscalDocuments\_Item.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\FiscalDocument.cshtml" />
     <Content Include="Views\Reports\_SerialNumberKardex.cshtml" />
+    <Content Include="Views\Customers\_DiscountsRefresh.cshtml" />
   </ItemGroup>
 </Project>

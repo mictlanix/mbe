@@ -290,7 +290,7 @@ namespace Mictlanix.BE.Web.Controllers
 		[HttpPost]
 		public ActionResult NewDiscount (int id, CustomerDiscount item)
 		{
-			if (!ModelState.IsValid) {
+			 if (!ModelState.IsValid) {
 				return PartialView ("_NewDiscount", item);
 			}
 
@@ -308,7 +308,7 @@ namespace Mictlanix.BE.Web.Controllers
 				item.CreateAndFlush ();
 			}
 
-			return PartialView ("_Refresh");
+            return PartialView ("_DiscountsRefresh");
 		}
 
 		[HttpPost]

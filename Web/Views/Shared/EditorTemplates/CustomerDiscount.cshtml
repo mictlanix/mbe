@@ -9,10 +9,10 @@
   	<div class="span8">@Html.EditorFor(x => x.ProductId) @Html.ValidationMessageFor(x => x.ProductId)</div>
 </div>
 <div class="row">
-  	<div class="span8">@Html.LabelFor(x => x.Discount)</div>
+  	<div class="span8 field-required">@Html.LabelFor(x => x.Discount)</div>
 </div>
 <div class="row">
-  	<div class="span8">@Html.EditorFor(x => x.Discount)</div>
+  	<div class="span8">@Html.EditorFor(x => x.Discount) @Html.ValidationMessageFor(x => x.Discount)</div>
 </div>
 <style type="text/css">
 ul.token-input-list { width:100%; }
