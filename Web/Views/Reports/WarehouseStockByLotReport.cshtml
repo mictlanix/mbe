@@ -5,10 +5,10 @@
 @model DateRange
 
 @{
-    ViewBag.Title = Resources.WarehouseStocksReport;
+    ViewBag.Title = Resources.WarehouseStockByLotReport;
 }
 
-<h2>@Resources.WarehouseStocksReport</h2>
+<h2>@Resources.WarehouseStockByLotReport</h2>
 
 <div id="master-section">
     @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {

@@ -26,11 +26,7 @@
        <text>@item.ExpirationDate.ToString("d")</text>
     }
     </td>
-    <td class='nowrap text-right'>
-    @if (item.Quantity != null) {
-        <text>@item.Quantity.ToString("0.#")</text>   
-    }
-    </td>
+    <td class='nowrap text-right'>@item.Quantity.ToString("0.#")</td>
 </tr>
 }
 </table>

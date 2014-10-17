@@ -2,29 +2,55 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
-@model IEnumerable<LotSerialTracking>
+@model IEnumerable<dynamic>
 
-    @{
-        var CurrentUser = Html.CurrentUser () ?? new User ();
-        var Privilege = Html.GetPrivilege (CurrentUser, SystemObjects.Kardex);
-    }
-
-    <table>
-        <tr>
-            <th>@Resources.Code</th>
-            <th>@Resources.SKU</th>
-            <th>@Resources.Product</th>
-            <th>@Resources.UnitOfMeasurement</th>
-            <th>@Resources.Quantity</th>
-            <th></th>
-        </tr>
-        @foreach (var item in Model) {
-            <tr>
-                <td class="center">@Html.DisplayFor(x => item.Product.Code)</td>
-                <td class="center">@Html.DisplayFor(x => item.Product.SKU)</td>
-                <td>@Html.DisplayFor(x => item.Product.Name)</td>
-                <td class="center">@Html.DisplayFor(x => item.Product.UnitOfMeasurement)</td>
-                <td class="number">@Html.DisplayFor(x => item.Quantity)</td>
-            </tr>
-        }
-    </table>
+@{
+	decimal balance = ViewBag.OpeningBalance;
+}
+<table>
+    <tr>
+        <th>@Resources.Date</th>
+        <th>@Resources.Source</th>
+        <th>@Resources.Reference</th>
+        <th>@Resources.LotNumber</th>
+        <th>@Resources.ExpirationDate</th>
+        <th>@Resources.Title_InventoryReceipt</th>
+        <th>@Resources.Title_InventoryIssue</th>
+        <th>@Resources.Balance</th>
+    </tr>
+    <tr>
+        <td class='text-right' colspan='5'>@Resources.OpeningBalance</td>
+        <td class='text-right' colspan='3'>@balance.ToString("0.####")</td>
+    </tr>
+    @foreach (var item in Model) {
+	balance += item.Quantity;
+    <tr>
+        <td class='date'>@item.Date</td>
+        <td>@((item.Source as TransactionType).GetDisplayName())</td>
+        <td>@item.Reference</td>
+        <td>@item.LotNumber</td>
+        <td>
+        	@if (item.ExpirationDate != null) {
+        		@item.ExpirationDate.ToString("d")
+        	}
+    	</td>
+        <td class='number'>
+            @if (item.Quantity > 0) {
+                @item.Quantity.ToString("0.####")
+            }
+        </td>
+        <td class='number'>
+            @if (item.Quantity < 0) {
+                @Math.Abs(item.Quantity).ToString("0.####")
+            }
+        </td>
+        <td class='number'>@balance.ToString("0.####")</td>
+    </tr> 
+	}
+    <tr class="total">
+        <td class='right' colspan='5'>@Resources.Total</td>
+        <td class='number'>@Model.Where(x => x.Quantity > 0m).Sum(x => x.Quantity).ToString("0.####")</td>
+        <td class='number'>@Math.Abs(Model.Where(x => x.Quantity < 0m).Sum(x => x.Quantity)).ToString("0.####")</td>
+        <td class='number'>@balance.ToString("0.####")</td>
+    </tr>
+</table>

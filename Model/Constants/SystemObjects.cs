@@ -125,8 +125,8 @@ namespace Mictlanix.BE.Model {
 		ExchangeRates,
 		[Display(Name = "PointOfSale", ResourceType = typeof(Resources))]
 		POS,
-		[Display(Name = "LotsAndSerialNumbers", ResourceType = typeof(Resources))]
-		SerialNumbersReport,
+		[Display(Name = "SerialNumberKardex", ResourceType = typeof(Resources))]
+		SerialNumberKardex,
 		[Display(Name = "CustomerDebt", ResourceType = typeof(Resources))]
 		CustomerDebtReport,
 		[Display(Name = "SalesOrderSummary", ResourceType = typeof(Resources))]
@@ -169,13 +169,11 @@ namespace Mictlanix.BE.Model {
 		TechnicalServiceReceipts,
         [Display(Name = "CustomersReport", ResourceType = typeof(Resources))]
         CustomersReport,
-        [Display(Name = "WarehouseStocksReport", ResourceType = typeof (Resources))]
-        WarehouseStocksReport,
-        [Display(Name = "WarehouseSerialNumbersReport", ResourceType = typeof(Resources))]
-        WarehouseSerialNumbersReport,
-        [Display(Name = "SerialNumberKardex", ResourceType = typeof(Resources))]
-        SerialNumberKardex,
-        [Display(Name = "WarehouseStocks", ResourceType = typeof(Resources))]
-        WarehouseStocks
+		[Display(Name = "WarehouseStockReport", ResourceType = typeof (Resources))]
+		WarehouseStockReport,
+		[Display(Name = "WarehouseStockByLotReport", ResourceType = typeof(Resources))]
+		WarehouseStockByLotReport,
+		[Display(Name = "WarehouseStockBySerialNumberReport", ResourceType = typeof(Resources))]
+		WarehouseStockBySerialNumberReport
     }
 }
