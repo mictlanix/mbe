@@ -2,20 +2,19 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
-@model IEnumerable<LotSerialTracking>
+@model IEnumerable<dynamic>
 
 @{
     decimal balance = ViewBag.OpeningBalance;
 }
-
 <table>
     <tr>
-        <th>@Resources.SerialNumber</th>
-        <th>@Resources.LotNumber</th>
-        <th>@Resources.ExpirationDate</th>
+        <th>@Resources.Date</th>
         <th>@Resources.Source</th>
         <th>@Resources.Reference</th>
-        <th>@Resources.Date</th>
+        <th>@Resources.LotNumber</th>
+        <th>@Resources.ExpirationDate</th>
+        <th>@Resources.SerialNumber</th>
         <th>@Resources.Title_InventoryReceipt</th>
         <th>@Resources.Title_InventoryIssue</th>
         <th>@Resources.Balance</th>
@@ -27,12 +26,16 @@
     @foreach (var item in Model) {
         balance += item.Quantity;
         <tr>
-            <td class='center'>@Html.DisplayFor(x => item.SerialNumber)</td>
-            <td class='center'>@Html.DisplayFor(x => item.LotNumber)</td>
-            <td class='date'>@Html.DisplayFor(x => item.ExpirationDate)</td>
-            <td>@item.Source.GetDisplayName()</td>
-            <td>@Html.DisplayFor(x => item.Reference)</td>
-            <td class="date">@Html.DisplayFor(x => item.Date)</td>
+            <td class='date'>@item.Date.ToString("d")</td>
+            <td>@(((TransactionType) item.Source).GetDisplayName ())</td>
+            <td class='text-center'>@item.Reference</td>
+            <td class='text-center'>@item.LotNumber</td>
+            <td class='date'>
+                @if (item.ExpirationDate != null) {
+                    @item.ExpirationDate.ToString("d")
+                }
+            </td>
+            <td class='text-center' >@item.SerialNumber</td>
             <td class='number'>
                 @if (item.Quantity > 0) {
                     @item.Quantity.ToString("0.####")
@@ -48,8 +51,8 @@
     }
     <tr class="total">
         <td class='right' colspan='6'>@Resources.Total</td>
-        <td class='number'>@Model.Where(x => x.Quantity > 0).Sum(x => x.Quantity).ToString("0.####")</td>
-        <td class='number'>@Math.Abs(Model.Where(x => x.Quantity < 0).Sum(x => x.Quantity)).ToString("0.####")</td>
+        <td class='number'>@Model.Where(x => x.Quantity > 0m).Sum(x => (decimal) x.Quantity).ToString("0.####")</td>
+        <td class='number'>@Math.Abs(Model.Where(x => x.Quantity < 0m).Sum(x => (decimal) x.Quantity)).ToString("0.####")</td>
         <td class='number'>@balance.ToString("0.####")</td>
     </tr>
 </table>

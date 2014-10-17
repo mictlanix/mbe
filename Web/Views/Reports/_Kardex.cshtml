@@ -25,15 +25,15 @@
     @foreach (var item in Model) {
 	balance += item.Quantity;
     <tr>
-        <td class='date'>@item.Date</td>
-        <td>@((item.Source as TransactionType).GetDisplayName())</td>
-        <td>@item.Reference</td>
-        <td>@item.LotNumber</td>
-        <td>
-        	@if (item.ExpirationDate != null) {
-        		@item.ExpirationDate.ToString("d")
-        	}
-    	</td>
+        <td class='date'>@item.Date.ToString("d")</td>
+        <td>@(((TransactionType)item.Source).GetDisplayName ())</td>
+        <td class='text-center'>@item.Reference</td>
+        <td class='text-center'>@item.LotNumber</td>
+        <td class='date'>
+            @if (item.ExpirationDate != null) {
+                @item.ExpirationDate.ToString("d")
+            }
+        </td>
         <td class='number'>
             @if (item.Quantity > 0) {
                 @item.Quantity.ToString("0.####")
@@ -49,8 +49,8 @@
 	}
     <tr class="total">
         <td class='right' colspan='5'>@Resources.Total</td>
-        <td class='number'>@Model.Where(x => x.Quantity > 0m).Sum(x => x.Quantity).ToString("0.####")</td>
-        <td class='number'>@Math.Abs(Model.Where(x => x.Quantity < 0m).Sum(x => x.Quantity)).ToString("0.####")</td>
+        <td class='number'>@Model.Where(x => x.Quantity > 0m).Sum(x => (decimal) x.Quantity).ToString("0.####")</td>
+        <td class='number'>@Math.Abs(Model.Where(x => x.Quantity < 0m).Sum(x => (decimal) x.Quantity)).ToString("0.####")</td>
         <td class='number'>@balance.ToString("0.####")</td>
     </tr>
 </table>
