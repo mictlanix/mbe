@@ -170,9 +170,10 @@ namespace Mictlanix.BE.Web.Controllers
 
 			ViewBag.OpeningBalance = balance.Count() > 0 ? balance.Sum () : 0m;
 
-			string sql = @"SELECT l.date Date, l.source Source, l.reference Reference, l.lot_number LotNumber, l.expiration_date ExpirationDate, quantity Quantity
+            string sql = @"SELECT DATE(l.date) Date, l.source Source, l.reference Reference, l.lot_number LotNumber, l.expiration_date ExpirationDate, SUM(quantity) Quantity
                             FROM lot_serial_tracking l
-                            WHERE warehouse = :warehouse AND product = :product AND date >= :start AND date <= :end";
+                            WHERE warehouse = :warehouse AND product = :product AND date >= :start AND date <= :end
+                            GROUP BY DATE(l.date), l.source, l.reference, l.lot_number, l.expiration_date"; 
 
 			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
@@ -200,6 +201,45 @@ namespace Mictlanix.BE.Web.Controllers
 			ViewBag.Title = Resources.SerialNumberKardex;
 			return View ("Kardex", new DateRange(DateTime.Now, DateTime.Now));
 		}
+
+        [HttpPost]
+        public ActionResult SerialNumberKardex (int warehouse, int product, DateRange dates)
+        {
+            var start = dates.StartDate.Date;
+            var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+            var balance = from x in LotSerialTracking.Queryable
+                          where x.Warehouse.Id == warehouse && x.Product.Id == product && x.Date < start
+                          select x.Quantity;
+
+            ViewBag.OpeningBalance = balance.Count () > 0 ? balance.Sum () : 0m;
+
+            string sql = @"SELECT DATE(l.date) Date, l.source Source, l.reference Reference, l.lot_number LotNumber, l.expiration_date ExpirationDate, l.serial_number SerialNumber, SUM(quantity) Quantity
+                            FROM lot_serial_tracking l
+                            WHERE warehouse = :warehouse AND product = :product AND date >= :start AND date <= :end
+                            GROUP BY DATE(l.date), l.source, l.reference, l.lot_number, l.expiration_date, l.serial_number";
+
+            var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+                var query = session.CreateSQLQuery (sql);
+
+                query.AddScalar ("Date", NHibernateUtil.Date);
+                query.AddScalar ("Source", NHibernateUtil.Int32);
+                query.AddScalar ("Reference", NHibernateUtil.Int32);
+                query.AddScalar ("LotNumber", NHibernateUtil.String);
+                query.AddScalar ("ExpirationDate", NHibernateUtil.Date);
+                query.AddScalar ("SerialNumber", NHibernateUtil.String);
+
+                query.AddScalar ("Quantity", NHibernateUtil.Decimal);
+
+                query.SetInt32 ("warehouse", warehouse);
+                query.SetInt32 ("product", product);
+                query.SetDateTime ("start", start);
+                query.SetDateTime ("end", end);
+
+                return query.DynamicList ();
+            }, null);
+
+            return PartialView ("_SerialNumberKardex", items);
+        }
 
 		#endregion
 
