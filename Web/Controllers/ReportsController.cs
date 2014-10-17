@@ -213,10 +213,10 @@ namespace Mictlanix.BE.Web.Controllers
 
             ViewBag.OpeningBalance = balance.Count () > 0 ? balance.Sum () : 0m;
 
-            string sql = @"SELECT DATE(l.date) Date, l.source Source, l.reference Reference, l.lot_number LotNumber, l.expiration_date ExpirationDate, l.serial_number SerialNumber, SUM(quantity) Quantity
+            string sql = @"SELECT l.date Date, l.source Source, l.reference Reference, l.lot_number LotNumber, l.expiration_date ExpirationDate, l.serial_number SerialNumber, quantity Quantity
                             FROM lot_serial_tracking l
                             WHERE warehouse = :warehouse AND product = :product AND date >= :start AND date <= :end
-                            GROUP BY DATE(l.date), l.source, l.reference, l.lot_number, l.expiration_date, l.serial_number";
+                            ORDER BY l.serial_number, l.date";
 
             var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
                 var query = session.CreateSQLQuery (sql);
