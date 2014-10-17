@@ -12,7 +12,7 @@
         @Html.EditorFor(x => x.Start)
         @Html.ValidationMessageFor(x => x.Start)
     </div>
-    <div class="span4">@Html.EditorFor(x => x.End) @Html.ValidationMessageFor(x => x.End)</div>
+    <div class="span4">@Html.EditorFor(x => x.End) @Html.ValidationMessageFor(model => model.End)</div>
 </div>
 <div class="row">
     <div class="span8">@Html.LabelFor(x => x.Comment)</div>
