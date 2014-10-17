@@ -3,14 +3,19 @@
 @model PriceList
 
 <div class="row">
-    <div class="span4 field-required">@Html.LabelFor(model => model.Name)</div>
-    <div class="span2">@Html.LabelFor(model => model.LowProfitMargin)</div>
-    <div class="span2">@Html.LabelFor(model => model.HighProfitMargin)</div>
+    <div class="span8 field-required">@Html.LabelFor(model => model.Name)</div>
 </div>
 <div class="row">
-    <div class="span4">@Html.EditorFor(model => model.Name) @Html.ValidationMessageFor(model => model.Name)</div>
-    <div class="span2">@Html.EditorFor(model => model.LowProfitMargin)</div>
-    <div class="span2">@Html.EditorFor(model => model.HighProfitMargin)</div>
+    <div class="span8">@Html.EditorFor(model => model.Name) @Html.ValidationMessageFor(model => model.Name)</div>
 </div>
+<div class="row">
+    <div class="span4 field-required">@Html.LabelFor(model => model.LowProfitMargin)</div>
+    <div class="span4 field-required">@Html.LabelFor(model => model.HighProfitMargin)</div>
+</div>
+<div class="row">
+    <div class="span4">@Html.EditorFor(model => model.LowProfitMargin) @Html.ValidationMessageFor(model => model.LowProfitMargin)</div>
+    <div class="span4">@Html.EditorFor(model => model.HighProfitMargin) @Html.ValidationMessageFor(model => model.HighProfitMargin)</div>
+</div>
+
 
 

@@ -9,9 +9,9 @@
     <td>@Html.DisplayFor(x => x.CreditLimit)</td>
     <td>@Html.DisplayFor(x => x.CreditDays)</td>
     <td class="actions">
-        @if (ViewBag.Privilege.AllowUpdate) {
+        @*@if (ViewBag.Privilege.AllowUpdate) {
             @Html.ActionLink(" ", "Edit", new { id = Model.Id }, new { @class = "button icon edit icon-only open-modal", @title = Resources.Edit, data_modal_id = "supplier-modal" })
-        }
+        }*@
         @if (ViewBag.Privilege.AllowRead) {
             @Html.ActionLink(" ", "Details", new { id = Model.Id }, new { @class = "button icon view icon-only", @title = Resources.Details})
         }

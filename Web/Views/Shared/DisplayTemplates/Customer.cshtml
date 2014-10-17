@@ -4,30 +4,30 @@
 @model Customer
 
 <div class="row-fluid">
-    <div class="span3 field-required">@Html.LabelFor(x => x.Code)</div>
-    <div class="span9 field-required">@Html.LabelFor(x => x.Name)</div>
+    <div class="span3">@Html.LabelFor(x => x.Code)</div>
+    <div class="span9">@Html.LabelFor(x => x.Name)</div>
 </div>
 <div class="row-fluid">
     <div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.Code)</div></div>
     <div class="span9"><div class="ro-field">@Html.DisplayFor(x => x.Name)</div></div>
 </div>
 <div class="row">
-    <div class="span3">@Html.LabelFor(x => x.Zone)</div>
-    <div class="span3 field-required">@Html.LabelFor(x => x.PriceList)</div>
+    <div class="span9">@Html.LabelFor(x => x.PriceList)</div>
 </div>
 <div class="row">
-    <div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.Zone)</div></div>
     <div class="span9"><div class="ro-field">@Html.DisplayFor(x => x.PriceList.Name)</div></div>
 </div>
 
 <div class="row">
-    <div class="span3 field-required">@Html.LabelFor(x => x.CreditLimit)</div>
+    <div class="span3">@Html.LabelFor(x => x.CreditLimit)</div>
     <div class="span3">@Html.LabelFor(x => x.CreditDays)</div>
+    <div class="span3">@Html.LabelFor(x => x.Zone)</div>
 </div>
 
 <div class="row">
     <div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.CreditLimit)</div></div>
     <div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.CreditDays)</div></div>
+    <div class="span3"><div class="ro-field">@Html.DisplayFor(x => x.Zone)</div></div>
 </div>
 <div class="row-fluid">
     <div class="span12">

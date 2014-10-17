@@ -32,3 +32,13 @@
         width: 650px;
     }
 </style>
+
+<style type="text/css">
+    ul.token-input-list {width: 102%;}
+    div.token-input-dropdown {width: 650px;}
+</style>
+@if (Model != null && Model.Store != null) {
+    <script type='text/javascript'>
+        $("#StoreId").tokenInput("add", { id: "@Model.Store.Id", name: "@Model.Store.Name" });
+    </script>
+}

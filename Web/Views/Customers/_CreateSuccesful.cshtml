@@ -2,14 +2,7 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model Customer
-@{
-    var Privilege = Html.GetPrivilege(Html.CurrentUser() ?? new User(), SystemObjects.Customers);
-    ViewBag.Privilege = Privilege;
-}
-@Html.Partial("_Item", Model)
 <script type='text/javascript'>
-$('#customers tr:first').after($('#id\\:@Model.Id'));
-$('#customer-modal').modal('hide');
-bindModal('#id\\:@Model.Id a.open-modal');
+    window.location = '@Url.Action("Details", new { id = Model.Id })';
 </script>
 
