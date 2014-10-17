@@ -4,8 +4,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{D13A33DE-A12D-420E-ABB2-76A7C0F2E2E5}</ProjectGuid>
     <ProjectTypeGuids>{E53F8FEA-EAE0-44A6-8774-FFD645390401};{349C5851-65DF-11DA-9384-00065B846F21};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
@@ -69,7 +67,6 @@
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
@@ -433,10 +430,6 @@
     <Content Include="Views\Purchases\Edit.cshtml" />
     <Content Include="Views\Purchases\New.cshtml" />
     <Content Include="Views\FiscalDocuments\InvalidBatch.cshtml" />
-    <Content Include="Views\Reports\_Kardex.cshtml" />
-    <Content Include="Views\Reports\Kardex.cshtml" />
-    <Content Include="Views\Reports\_KardexDetails.cshtml" />
-    <Content Include="Views\Reports\KardexDetails.cshtml" />
     <Content Include="Views\Reports\ReceivedPayments.cshtml" />
     <Content Include="Views\Reports\_ReceivedPayments.cshtml" />
     <Content Include="Views\Reports\_SummaryReport.cshtml" />
@@ -506,8 +499,6 @@
     <Content Include="Views\Labels\Edit.cshtml" />
     <Content Include="Views\Labels\_Index.cshtml" />
     <Content Include="Views\Products\_Labels.cshtml" />
-    <Content Include="Views\Reports\SerialNumbers.cshtml" />
-    <Content Include="Views\Reports\_SerialNumbers.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ProductSelector.cshtml" />
     <Content Include="Content\bootstrap-editable.css" />
     <Content Include="Views\Purchases\_MasterView.cshtml" />
@@ -837,6 +828,14 @@
     <Content Include="Views\TechnicalServiceReceipts\Print.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\TechnicalServiceReceipt.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\TechnicalServiceReceipt.cshtml" />
+    <Content Include="Views\Reports\WarehouseStockReport.cshtml" />
+    <Content Include="Views\Reports\_WarehouseStockReport.cshtml" />
+    <Content Include="Views\Reports\WarehouseStockByLotReport.cshtml" />
+    <Content Include="Views\Reports\_WarehouseStockByLotReport.cshtml" />
+    <Content Include="Views\Reports\_WarehouseStockBySerialNumberReport.cshtml" />
+    <Content Include="Views\Reports\WarehouseStockBySerialNumberReport.cshtml" />
+    <Content Include="Views\Reports\Kardex.cshtml" />
+    <Content Include="Views\Reports\_Kardex.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
@@ -1013,13 +1012,6 @@
     <Content Include="Views\FiscalDocuments\_CreateSuccesful.cshtml" />
     <Content Include="Views\FiscalDocuments\_Item.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\FiscalDocument.cshtml" />
-    <Content Include="Views\Reports\WarehouseStocksReport.cshtml" />
-    <Content Include="Views\Reports\WarehouseSerialNumbersReport.cshtml" />
-    <Content Include="Views\Reports\SerialNumberKardex.cshtml" />
-    <Content Include="Views\Reports\_WarehouseSerialNumbersReport.cshtml" />
-    <Content Include="Views\Reports\_WarehouseStocksReport.cshtml" />
     <Content Include="Views\Reports\_SerialNumberKardex.cshtml" />
-    <Content Include="Views\Reports\WarehouseStocks.cshtml" />
-    <Content Include="Views\Reports\_WarehouseStocks.cshtml" />
   </ItemGroup>
 </Project>
