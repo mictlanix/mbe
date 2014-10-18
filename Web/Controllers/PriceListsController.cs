@@ -44,9 +44,6 @@ namespace Mictlanix.BE.Web.Controllers
 	[Authorize]
     public class PriceListsController : Controller
     {
-        //
-        // GET: /PriceList/
-
         public ViewResult Index()
         {
             var qry = from x in PriceList.Queryable
@@ -61,8 +58,6 @@ namespace Mictlanix.BE.Web.Controllers
 
             return View(search);
         }
-
-        // POST: /PriceList/
 
         [HttpPost]
         public ActionResult Index(Search<PriceList> search)
@@ -98,25 +93,16 @@ namespace Mictlanix.BE.Web.Controllers
 			return search;
         }
 
-        //
-        // GET: /PriceList/Details/5
-
         public ActionResult View(int id)
         {
             var item = PriceList.Find (id);
             return PartialView ("_View",item);
         }
 
-        //
-        // GET: /PriceList/Create
-
         public ActionResult Create()
         {
             return PartialView("_Create");
         }
-
-        //
-        // POST: /PriceList/Create
 
         [HttpPost]
         public ActionResult Create(PriceList item)
@@ -134,9 +120,6 @@ namespace Mictlanix.BE.Web.Controllers
             return PartialView ("_CreateSuccesful", item);
         }
 
-        //
-        // GET: /PriceList/Edit/5
-
         public ActionResult Edit (int id)
         {
 			var item = PriceList.Find (id);
@@ -146,9 +129,6 @@ namespace Mictlanix.BE.Web.Controllers
 
             return PartialView ("_Edit", item);
         }
-
-        //
-        // POST: /PriceList/Edit/5
 
         [HttpPost]
         public ActionResult Edit (PriceList item)
@@ -172,17 +152,11 @@ namespace Mictlanix.BE.Web.Controllers
             return PartialView ("_Refresh");
         }
 
-        //
-        // GET: /PriceList/Delete/5
-
         public ActionResult Delete(int id)
         {
             var item = PriceList.Find(id);
             return PartialView ("_Delete", item);
         }
-
-        //
-        // POST: /PriceList/Delete/5
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
@@ -202,15 +176,11 @@ namespace Mictlanix.BE.Web.Controllers
 
         public JsonResult GetSuggestions (string pattern)
         {
-            JsonResult result = new JsonResult();
             var qry = from x in PriceList.Queryable
-                      where x.Name.Contains(pattern)
+					  where x.Id > 0 && x.Name.Contains(pattern)
                       select new { id = x.Id, name = x.Name };
 
-            result = Json(qry.Take(15).ToList());
-            result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
-
-            return result;
+			return Json(qry.Take(15).ToList(), JsonRequestBehavior.AllowGet);
         }
     }
 }
