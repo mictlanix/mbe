@@ -23,4 +23,8 @@
             </td>
         </tr>
     }
+    <tr class="total">
+        <td class='right' colspan='4'>@Resources.Total</td>
+        <td class='number'>@Model.Where(x => x.Quantity > 0m).Sum(x => (decimal) x.Quantity).ToString("0.####")</td>
+    </tr>
 </table>
