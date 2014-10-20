@@ -689,6 +689,97 @@ namespace Mictlanix.BE.Web.Controllers
 			return RedirectToAction ("Transfers");
 		}
 
+        [HttpPost]
+        public ActionResult TransferItem (int id, int product)
+        {
+            var p = Product.Find (product);
+            var entity = InventoryTransfer.Find (id);
+            int pl = entity.Id;
+            var price = (from x in Product.Queryable
+                         where x.Id == product
+                         select x).SingleOrDefault ();
+
+            if (entity.IsCompleted || entity.IsCancelled) {
+                Response.StatusCode = 400;
+                return Content (Resources.ItemAlreadyCompletedOrCancelled);
+            }
+
+            var item = new InventoryTransferDetail {
+                Transfer = InventoryTransfer.Find (id),
+                Product = p,
+                ProductCode = p.Code,
+                ProductName = p.Name,
+                Quantity = 1,
+            };
+
+            //if (p.Currency != entity.Currency) {
+            //    item.Price = price.Value * CashHelpers.GetTodayExchangeRate (p.Currency, entity.Currency);
+            //}
+
+            using (var scope = new TransactionScope ()) {
+                item.CreateAndFlush ();
+            }
+
+            return Json (new { id = item.Id });
+        }
+
+        [HttpPost]
+        public ActionResult TransferItems (int id, string value)
+        {
+            var entity = InventoryTransfer.Find (id);
+            SalesOrder sales_order = null;
+            int sales_order_id = 0;
+            int count = 0;
+
+            if (entity.IsCompleted || entity.IsCancelled) {
+                Response.StatusCode = 400;
+                return Content (Resources.ItemAlreadyCompletedOrCancelled);
+            }
+
+            if (int.TryParse (value, out sales_order_id)) {
+                sales_order = SalesOrder.TryFind (sales_order_id);
+            }
+
+            if (sales_order == null) {
+                Response.StatusCode = 400;
+                return Content (Resources.SalesOrderNotFound);
+            }
+
+            using (var scope = new TransactionScope ()) {
+                foreach (var x in sales_order.Details) {
+                    if (!x.Product.IsInvoiceable)
+                        continue;
+
+                    //decimal max_qty = GetInvoiceableQuantity (x.Id);
+
+                    //if (max_qty <= 0)
+                    //    continue;
+
+                    var item = new InventoryTransferDetail {
+                        Transfer = entity,
+                        Product = x.Product,
+                        ProductCode = x.ProductCode,
+                        ProductName = x.ProductName,
+                        //Quantity = max_qty,
+                    };
+
+                    //if (x.Currency != entity.Currency) {
+                    //    item.Price = x.Price * CashHelpers.GetTodayExchangeRate (x.Currency, entity.Currency);
+                    //}
+
+                    item.Create ();
+                    count++;
+                }
+            }
+
+            if (count == 0) {
+                Response.StatusCode = 400;
+                return Content (Resources.InvoiceableItemsNotFound);
+            }
+
+            return Json (new { id = id, value = string.Empty, itemsChanged = count });
+        }
+
 		#endregion
 
 		#region Lot & Serial Numbers
