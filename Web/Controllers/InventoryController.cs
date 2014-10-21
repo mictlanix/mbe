@@ -689,6 +689,7 @@ namespace Mictlanix.BE.Web.Controllers
 			return RedirectToAction ("Transfers");
 		}
 
+		/*
         [HttpPost]
         public ActionResult TransferItem (int id, int product)
         {
@@ -712,16 +713,13 @@ namespace Mictlanix.BE.Web.Controllers
                 Quantity = 1,
             };
 
-            //if (p.Currency != entity.Currency) {
-            //    item.Price = price.Value * CashHelpers.GetTodayExchangeRate (p.Currency, entity.Currency);
-            //}
-
             using (var scope = new TransactionScope ()) {
                 item.CreateAndFlush ();
             }
 
             return Json (new { id = item.Id });
         }
+		*/
 
         [HttpPost]
         public ActionResult TransferItems (int id, string value)
