@@ -12,13 +12,13 @@
 <div id='master-section'>
 @Html.Partial("Transfers/_MasterView")
 </div>
-<div class='control-group text-right'>
+@*<div class='control-group text-right'>
     <a id='add-items' class='btn' data-url='@Url.Action("TransferItem", new { id = Model.Id })'
        data-type='text' data-placement='left' data-pk='@Model.Id' data-value=''
        data-display='false' data-emptytext='' data-emptyclass='' data-highlight='false'>
         <i class='icon-plus'></i> @Resources.SalesOrder
     </a>
-</div>
+</div>*@
 <div id='details-section'>
     <div id='items-container'>
         <ul id='items' class='list-items'>
