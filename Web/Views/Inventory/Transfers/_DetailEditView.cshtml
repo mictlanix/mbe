@@ -24,6 +24,7 @@
         <a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("EditTransferDetailQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
     </div>
 </li>
+
 <script type='text/javascript'>
 $('#id\\:@Model.Id a.editable').editable({
     display: function(value, response) {
