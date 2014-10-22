@@ -227,7 +227,6 @@
     <Compile Include="Helpers\InventoryHelpers.cs" />
     <Compile Include="Controllers\ExchangeRatesController.cs" />
     <Compile Include="Controllers\SalesOrdersController.cs" />
-    <Compile Include="Controllers\DeliveryOrdersController.cs" />
     <Compile Include="Helpers\CFDHelpers.cs" />
     <Compile Include="Controllers\POSController.cs" />
     <Compile Include="Controllers\LabelsController.cs" />
@@ -241,6 +240,8 @@
     <Compile Include="Controllers\TechnicalServiceReportsController.cs" />
     <Compile Include="Controllers\TechnicalServiceRequestsController.cs" />
     <Compile Include="Controllers\TechnicalServiceReceiptsController.cs" />
+    <Compile Include="Controllers\SalesOrderShipmentsController.cs" />
+    <Compile Include="Controllers\DeliveryOrdersController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
@@ -611,7 +612,6 @@
     <Content Include="Views\Stores\_Index.cshtml" />
     <Content Include="Views\SupplierPayments\_Index.cshtml" />
     <Content Include="Views\SupplierReturns\_Historic.cshtml" />
-    <Content Include="Views\DeliveryOrders\Print.cshtml" />
     <Content Include="Scripts\bootstrap-datepicker.es.js" />
     <Content Include="Scripts\bootstrap-datepicker.js" />
     <Content Include="Content\bootstrap-datepicker.css" />
@@ -745,11 +745,6 @@
     <Content Include="Scripts\FontLoader.js" />
     <Content Include="Views\Shared\_PrintDLayout.cshtml" />
     <Content Include="Content\printd.css" />
-    <Content Include="Views\DeliveryOrders\_Index.cshtml" />
-    <Content Include="Views\DeliveryOrders\Index.cshtml" />
-    <Content Include="Views\DeliveryOrders\Edit.cshtml" />
-    <Content Include="Views\DeliveryOrders\_DisplayView.cshtml" />
-    <Content Include="Views\DeliveryOrders\_ItemDisplayView.cshtml" />
     <Content Include="Views\FiscalDocuments\Print22Dataprint.cshtml" />
     <Content Include="Views\FiscalDocuments\Print20Dataprint.cshtml" />
     <Content Include="Views\TranslationRequests\_Create.cshtml" />
@@ -836,6 +831,12 @@
     <Content Include="Views\Reports\WarehouseStockBySerialNumberReport.cshtml" />
     <Content Include="Views\Reports\Kardex.cshtml" />
     <Content Include="Views\Reports\_Kardex.cshtml" />
+    <Content Include="Views\SalesOrderShipments\Print.cshtml" />
+    <Content Include="Views\SalesOrderShipments\_Index.cshtml" />
+    <Content Include="Views\SalesOrderShipments\Index.cshtml" />
+    <Content Include="Views\SalesOrderShipments\Edit.cshtml" />
+    <Content Include="Views\SalesOrderShipments\_DisplayView.cshtml" />
+    <Content Include="Views\SalesOrderShipments\_ItemDisplayView.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

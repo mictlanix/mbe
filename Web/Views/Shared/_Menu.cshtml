@@ -219,8 +219,8 @@
                             }
                             @if (CurrentUser.GetPrivilege (SystemObjects.SalesOrders).AllowRead) {
                             <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "DeliveryOrders") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "DeliveryOrders")">@Resources.Deliveries</a>
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "SalesOrderShipments") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "SalesOrderShipments")">@Resources.Deliveries</a>
                             </li>
                             }
                             @if (CurrentUser.GetPrivilege (SystemObjects.CustomerRefunds).AllowRead) {
