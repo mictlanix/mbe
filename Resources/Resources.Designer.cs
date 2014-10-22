@@ -3370,6 +3370,12 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string DeliveryOrderId {
+            get {
+                return ResourceManager.GetString("DeliveryOrderId", resourceCulture);
+            }
+        }
+        
         public static string RentReceipt {
             get {
                 return ResourceManager.GetString("RentReceipt", resourceCulture);

@@ -27,29 +27,12 @@
         @Html.Partial("_Item", item)
     }
 </table>
-
-<script type="text/javascript">
-    bindModal('.open-modal');
-    $('a.paging').click(function (e) {
-        var offset=@Model.Offset;
-
-        if($(this).hasClass('next')) {
-            offset+=@Model.Limit;
-        } else {
-            offset-=@Model.Limit;
-        }
-
-        e.preventDefault();
-        $('#activity-indicator').show();
-        $('#search-results').hide();
-
-    });
-</script>
-
 <div class="buttons right">
 	<label class='button left'>@Model.ToString()</label>@if (Model.HasPrev) {<a class='button middle icon prev icon-only paging' title='@Resources.PrevPage' href='javascript:void(0)'></a>}@if (Model.HasNext) {<a class='button right icon next icon-only paging' title='@Resources.NextPage' href='javascript:void(0)'></a>}
 </div>
+
 <script type="text/javascript">
+bindModal('.open-modal');
 $('a.paging').click(function (e) {
 	var offset=@Model.Offset;
 	
