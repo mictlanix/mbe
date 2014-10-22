@@ -12,13 +12,13 @@
 <div id='master-section'>
 @Html.Partial("Transfers/_MasterView")
 </div>
-@*<div class='control-group text-right'>
-    <a id='add-items' class='btn' data-url='@Url.Action("TransferItem", new { id = Model.Id })'
+<div class='control-group text-right'>
+    <a id='add-items' class='btn' data-url='@Url.Action("AddTransferItems", new { id = Model.Id })'
        data-type='text' data-placement='left' data-pk='@Model.Id' data-value=''
        data-display='false' data-emptytext='' data-emptyclass='' data-highlight='false'>
         <i class='icon-plus'></i> @Resources.SalesOrder
     </a>
-</div>*@
+</div>
 <div id='details-section'>
     <div id='items-container'>
         <ul id='items' class='list-items'>
@@ -27,6 +27,11 @@
         }
         </ul>
     </div>
+    @*<div class="total">
+    <div class='right' colspan='4'>@Resources.Total</div>
+    <div class='number'>@Model.Where(x => x.Quantity > 0m).Sum(x =>(decimal) x.Quantity).ToString("0.####")</>
+    </div>
+    *@
     <div class='search-box'>
         <input type='text' id='product-search' name='product-search' />
     </div>
@@ -41,38 +46,39 @@
 </div>
 <div class='clearfix'></div>
 <script type="text/javascript">
-$(function () {
-    $('#product-search').tokenInput('@Url.Action("GetSuggestions", "Products")', {
-        hintText:'@Resources.HIntText',
-        noResultsText:'@Resources.NoResultsText',
-        searchingText:'@Resources.SearchingText',          
-        resultsFormatter:function(item){return ProductFormatter(item);},
-        queryParam:'pattern',minChars:3,tokenLimit:1,
-        onAdd:function (item) {
-            $.post('@Url.Action("AddTransferDetail")', { 'movement': @Model.Id, 'product': '' + item.id }, function (detail) {
-                $.get('@Url.Action("GetTransferItem")/' + detail.id, function (data) {
-                    $('#items').append(data);
-                    $('#product-search').tokenInput('clear');
-                    $('#confirm-button').show('slow');
-                });
-            }, 'json');
-        }
-    });
+    $(function () {
+        $('#product-search').tokenInput('@Url.Action("GetSuggestions", "Products")', {
+            hintText:'@Resources.HIntText',
+            noResultsText:'@Resources.NoResultsText',
+            searchingText:'@Resources.SearchingText',
+            resultsFormatter:function(item){return ProductFormatter(item);},
+            queryParam:'pattern',minChars:3,tokenLimit:1,
+            onAdd:function (item) {
+                $.post('@Url.Action("AddTransferDetail")', { 'movement': @Model.Id, 'product': '' + item.id }, function (detail) {
+                    $.get('@Url.Action("GetTransferItem")/' + detail.id, function (data) {
+                        $('#items').append(data);
+                        $('#product-search').tokenInput('clear');
+                        $('#confirm-button').show('slow');
+                    });
+                }, 'json');
+            }
+        });
 
-      $('#add-items').editable({
+           $('#add-items').editable({
 		success: function(response, newValue) {
         	$('#items-container').loadUrl();
         	$('#totals-section').loadUrl();
             $('#confirm-button').show('slow');
             setTimeout(function(){$('#add-items').editable('setValue', '');},500);
+            location.reload();
 	    }
 	}).removeClass('editable-click');
 
-    $('form').submit(function(){
-        $('button.lock').prop('disabled', true);
-	    $('button.lock').html('@Resources.PleaseWait');
-	});
-});
+        $('form').submit(function(){
+            $('button.lock').prop('disabled', true);
+            $('button.lock').html('@Resources.PleaseWait');
+        });
+    });
 </script>
 <style type='text/css'>
 ul.token-input-list {width:100%;}
