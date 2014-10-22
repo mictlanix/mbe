@@ -2057,4 +2057,7 @@ Realizada el: {0:d}</value>
   <data name="WarehouseStockBySerialNumberReport" xml:space="preserve">
     <value>Existencias de Almacén por Series</value>
   </data>
+  <data name="DeliveryOrderId" xml:space="preserve">
+    <value>ID</value>
+  </data>
 </root>
