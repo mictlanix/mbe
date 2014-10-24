@@ -58,7 +58,7 @@ namespace Mictlanix.BE.Web.Controllers
 			string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name, SUM(quantity) Quantity
                             FROM lot_serial_tracking l INNER JOIN product p ON l.product = p.product_id
                             WHERE warehouse = :warehouse
-                            GROUP BY p.brand, p.model, p.code, p.name";
+                            GROUP BY l.product";
 
 			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
@@ -88,7 +88,7 @@ namespace Mictlanix.BE.Web.Controllers
             string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name, l.lot_number LotNumber, l.expiration_date ExpirationDate, SUM(quantity) Quantity
                             FROM lot_serial_tracking l INNER JOIN product p ON l.product = p.product_id
                             WHERE warehouse = :warehouse WHERE_BRAND
-                            GROUP BY p.brand, p.model, p.code, p.name, l.lot_number, l.expiration_date";
+                            GROUP BY l.product, l.lot_number, l.expiration_date";
 
             if (string.IsNullOrWhiteSpace (brand)) {
                 sql = sql.Replace ("WHERE_BRAND", string.Empty);
@@ -129,8 +129,8 @@ namespace Mictlanix.BE.Web.Controllers
         {
             string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name, l.lot_number LotNumber, l.expiration_date ExpirationDate, l.serial_number SerialNumber, SUM(quantity) Quantity
                             FROM lot_serial_tracking l INNER JOIN product p ON l.product = p.product_id
-                            WHERE IFNULL(l.serial_number, '') <> '' AND warehouse = :warehouse
-                            GROUP BY p.brand, p.model, p.code, p.name, l.lot_number, l.expiration_date, l.serial_number
+                            WHERE l.serial_number IS NOT NULL AND warehouse = :warehouse
+                            GROUP BY l.product, l.lot_number, l.expiration_date, l.serial_number
 							HAVING SUM(quantity) <> 0";
 
             var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
