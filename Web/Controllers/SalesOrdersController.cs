@@ -140,6 +140,7 @@ namespace Mictlanix.BE.Web.Controllers
 
 			// Store and Serial
 			item.Store = item.PointOfSale.Store;
+
 			try {
 				item.Serial = (from x in SalesOrder.Queryable
 				               where x.Store.Id == item.Store.Id

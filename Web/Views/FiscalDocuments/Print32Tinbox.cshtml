@@ -129,9 +129,7 @@
 		</div>
     	<div class="row">
 			<div class="col-xs-5 text-right">
-	        	@if(!string.IsNullOrEmpty(ViewBag.Store.Logo)) {
 	            <img class="logo" src='@Url.Content("~/Content/images/tinbox.png")' alt="Logo" />
-	            }
 	 		</div>
 			<div class="col-xs-6 text-center" style="padding-top:3mm">
 		        <h1 class="text-center uppercase">
@@ -277,6 +275,13 @@
 	            <td class="col-xs-1 nowrap text-right">@Resources.Taxes</td>
 	            <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Taxes)</td>
 	        </tr>
+		@if (Model.RetentionRate > 0m) {
+	        <tr>
+	        	<td class="col-xs-10"></td>
+	            <td class="col-xs-1 nowrap text-right">@Resources.RetentionTaxes</td>
+	            <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.RetentionTaxes)</td>
+	        </tr>
+		}
 	        <tr>
 	            <td class="col-xs-10 nowrap"><h2 class="row">@Resources.SinglePayment</h2></td>
 	            <td class="col-xs-1 nowrap text-right">@Resources.Total</td>

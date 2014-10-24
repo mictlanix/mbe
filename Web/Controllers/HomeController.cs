@@ -38,8 +38,6 @@ namespace Mictlanix.BE.Web.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Message = Resources.Welcome;
-
             return View();
         }
 

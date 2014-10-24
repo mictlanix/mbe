@@ -18,6 +18,15 @@
         <span class='value muted'>(@Html.DisplayFor(x => x.TaxesEx) @Configuration.BaseCurrency)</span>
     }
     </li>
+@if (Model.RetentionRate != 0m) {
+    <li>
+    	<span class='caption'>@Resources.RetentionTaxes</span>
+        <span class='value'>@Html.DisplayFor(x => x.RetentionTaxes) @Html.DisplayFor(x => x.Currency)</span>
+    @if (Model.Currency != Configuration.BaseCurrency) {
+        <span class='value muted'>(@Html.DisplayFor(x => x.RetentionTaxesEx) @Configuration.BaseCurrency)</span>
+    }
+    </li>
+}
     <li>
     	<span class='caption'>@Resources.Total</span>
         <span class='value'>@Html.DisplayFor(x => x.Total) @Html.DisplayFor(x => x.Currency)</span>

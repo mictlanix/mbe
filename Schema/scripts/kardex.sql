@@ -1,13 +1,13 @@
-TRUNCATE TABLE kardex;
 
+TRUNCATE TABLE lot_serial_tracking;
 
-INSERT INTO kardex (warehouse,product,quantity,date,reference,source)
+INSERT INTO lot_serial_tracking (warehouse, product, quantity, date, reference, source)
 SELECT d.warehouse, d.product, -d.quantity, m.modification_time, m.sales_order_id, 1 
 FROM sales_order m INNER JOIN sales_order_detail d ON m.sales_order_id = d.sales_order
 WHERE m.completed = 1 AND m.cancelled = 0
 UNION ALL
-SELECT d2.warehouse, d.product, d.quantity, m.modification_time, m.customer_return_id, 2
-FROM customer_return m INNER JOIN customer_return_detail d ON m.customer_return_id = d.customer_return
+SELECT d2.warehouse, d.product, d.quantity, m.modification_time, m.customer_refund_id, 2
+FROM customer_refund m INNER JOIN customer_refund_detail d ON m.customer_refund_id = d.customer_refund
 					   INNER JOIN sales_order_detail d2 ON d2.sales_order_detail_id = d.sales_order_detail
 WHERE m.completed = 1 AND m.cancelled = 0
 UNION ALL

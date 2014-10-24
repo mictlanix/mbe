@@ -1,0 +1,24 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model DeliveryOrder
+
+@{
+    ViewBag.Title = Resources.Title_NewInvoice;
+}
+
+<h2>@Resources.DisplayName_NewInvoice</h2> 
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+    
+   
+	<div class='row-fluid'>
+	    <div class="span2">
+		    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+	    </div>
+	    <div class="span2 text-right pull-right">
+	        <button type="submit" class="icon save">@Resources.Save</button>
+	    </div>
+    </div>
+}

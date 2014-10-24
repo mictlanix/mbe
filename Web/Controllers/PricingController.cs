@@ -219,5 +219,15 @@ namespace Mictlanix.BE.Web.Controllers
 
 			return Json (rates, JsonRequestBehavior.AllowGet);
 		}
+
+		public JsonResult RetentionRates ()
+		{
+			var rates = new [] {
+				new { value = 0.00, text = "0 %" },
+				new { value = 0.04, text = "4 %" }
+			};
+
+			return Json (rates, JsonRequestBehavior.AllowGet);
+		}
     }
 }
