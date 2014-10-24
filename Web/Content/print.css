@@ -1,152 +1,92 @@
 ﻿@page {
-    size: US-Letter;
+    size: Letter;
     margin: 10mm;
 }
+@media print {
+	.media {page-break-inside : avoid}
+}
+html, body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
 body {
-    background:white;
-    color:#001;
-    font:normal 10pt "Lucida Grande", Verdana, sans-serif;
-    margin:0 0 0 0;
-    padding:0;
-    width:auto;
-}
-section {
-    margin:1.6em 0;
-}
-img {
-    border:none;
+    font:normal 9pt 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
 }
 #logo {
-	position:absolute;
-    right:20px;
-    top:20px;
+	position:relative;
+    right:auto;
+	top:auto;
+	margin-bottom:1mm;
 }
-h1,h2,h4
-{
-  float:inherit;
-  text-align:center;
+#logo img {
+	width:85mm;
 }
-h3 {
-  margin:4px 0;
-  font-weight:bold;
+header {
+	margin-bottom:4mm;
+}
+h1,h2,h3,h4 {
+	text-align:left;
+	margin:1mm 1mm 1mm 0;
+}
+h1, h2 {
+	font:bold 10pt 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+}
+h2 {
+	font-size:11pt;
+}
+h3, h4 {
+	font:normal 10pt 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
 }
 h4 {
-  font-weight:normal;
-  margin:1px 0;
-  font-size:smaller;
+	font-size:8pt;
 }
-h4.black {
-  font-weight:bold;
+p {
+  margin: 0 0 5px;
 }
-.uppercase {
-  text-transform:uppercase;
-}
-.lowercase {
-  text-transform:lowercase;
-}
-.capitalize {
-  text-transform:capitalize;
-}
-.date,.bool,.number,.nowrap {
-  white-space:nowrap;
-  width:1px;
-  text-align:center;
-}
-.left {
-  text-align:left;
-}
-.right {
-  text-align:right;
-}
-.center {
-  text-align:center;
-}
-.right,.number,input.number  {
-  text-align:right;
-  padding-right:5px;
-}
-.left.floating {
-  float:left;
-  clear:left;
-}
-.right.floating {
-  float:right;
-  clear:right;
-}
-.total {
-  font-weight:bold;
+strong {
+	font-family:'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
 }
 table {
-	clear:both;
-    margin:10px 0;
-    width:100%;
-    border-collapse:collapse;
+	width:100%;
 }
-table.height {
-    height:50px;
+table > thead > tr > th,
+table > tbody > tr > th,
+table > tfoot > tr > th,
+table > thead > tr > td,
+table > tbody > tr > td,
+table > tfoot > tr > td {
+	padding: 4px;
+	line-height: 1.42857143;
+	vertical-align: top;
+	font:normal 10pt 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
 }
-td.line {
-    border-bottom:1px solid black;
+table > thead > tr > th {
+	border-bottom: 1px solid #333;
+	font:bold 10pt 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
 }
-td.line-top {
-    border-top:1px solid gray;
-}
-td.border{
-    border-right: 1px solid gray;
-}
-td.title {
-    font-size:13px;
-    font-weight:bold;
-}
-th {
-    padding:0 3px;
-    font-size:13px;
-    font-weight:bold;
-}
-th.line {
-    border-bottom:1px solid gray; 
-}
-th.border{
-    border-right: 1px solid gray;
-}
-.display-label {
-    margin-top:5px;
-}
-.display-field {
-    margin-bottom:5px;
-}
-.signatures {
-    margin:5em 0;
-}
-#digital-signature {
-  margin-top:20px;
-  padding:2px;
-  font-family:"Lucida Console", Monaco, monospace;
-  font-size:8px;
-  background:silver;
-  word-wrap:break-word;
-  border:dashed 1px #3c3c3c;
-}
-.hilite {
-	font-weight:bold;
-}
-.clearfix {
-  *zoom: 1;
-}
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  line-height: 0;
-  content: "";
-}
-.clearfix:after {
-  clear: both;
+table > tbody > tr:nth-child(odd) > td,
+table > tbody > tr:nth-child(odd) > th {
+	background-color: #ECECEC !important;
 }
 .uppercase {
-  text-transform:uppercase;
+	text-transform:uppercase;
 }
-.pre-wrapped {
-  white-space:pre-wrap;
-  margin:2px;
-  font-size:smaller;
+.lowercase {
+	text-transform:lowercase;
+}
+.capitalize {
+	text-transform:capitalize;
+}
+.mylabel {
+	padding: .1em .1em .2em;
+	font-weight: bold;
+	background-color: #ECECEC !important;
+}
+.nowrap {
+	white-space:nowrap;
+}
+.monospaced {
+	font:normal 6pt 'Lucida Console', Monaco, monospace;
 }

@@ -280,8 +280,21 @@ namespace Mictlanix.BE.Web.Helpers
 				importe = item.Taxes,
 				tasa = Configuration.DefaultVAT * 100m
 			};
+
 			cfd.Impuestos.totalImpuestosTrasladados = cfd.Impuestos.Traslados.Sum (x => x.importe);
 			cfd.Impuestos.totalImpuestosTrasladadosSpecified = true;
+
+			if (item.RetentionRate > 0m) {
+				cfd.Impuestos.Retenciones = new Mictlanix.CFDv32.ComprobanteImpuestosRetencion[] {
+					new Mictlanix.CFDv32.ComprobanteImpuestosRetencion {
+						impuesto = Mictlanix.CFDv32.ComprobanteImpuestosRetencionImpuesto.IVA,
+						importe = item.RetentionTaxes
+					}
+				};
+
+				cfd.Impuestos.totalImpuestosRetenidos = cfd.Impuestos.Retenciones.Sum (x => x.importe);
+				cfd.Impuestos.totalImpuestosRetenidosSpecified = true;
+			}
 
 			return cfd;
 		}

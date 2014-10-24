@@ -45,7 +45,7 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "DeliveryOrder", ResourceType = typeof(Resources))]
 		public virtual DeliveryOrder DeliveryOrder { get; set; }
 
-		[BelongsTo("order_detail")]
+		[BelongsTo("sales_order_detail")]
 		public virtual SalesOrderDetail OrderDetail { get; set; }
 
         [BelongsTo("product")]

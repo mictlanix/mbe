@@ -1,11 +1,9 @@
 
-start transaction;
 ALTER TABLE `taxpayer_certificate` CHANGE COLUMN `taxpayer_certificate_id` `taxpayer_certificate_id` CHAR(20) NOT NULL;
 ALTER TABLE `fiscal_document` CHANGE COLUMN `issuer_certificate_number` `issuer_certificate_number` CHAR(20) NULL DEFAULT NULL;
 
 ALTER TABLE `taxpayer_batch` 
 	ADD COLUMN `template` VARCHAR(25) NOT NULL AFTER `approval_year`;
-
 
 ALTER TABLE `fiscal_document` 
 	DROP FOREIGN KEY `fiscal_document_issuer_fk`;
@@ -24,10 +22,26 @@ ALTER TABLE `taxpayer_issuer`
   		FOREIGN KEY (`address`) REFERENCES `address` (`address_id`)
   		ON DELETE NO ACTION ON UPDATE NO ACTION;
 
+ALTER TABLE `taxpayer_batch` 
+	DROP FOREIGN KEY `taxpayer_batch_taxpayer_fk`;
+	
+ALTER TABLE `taxpayer_batch` 
+	ADD CONSTRAINT `taxpayer_batch_taxpayer_fk`
+		FOREIGN KEY (`taxpayer`) REFERENCES `taxpayer_issuer` (`taxpayer_issuer_id`)
+		ON DELETE NO ACTION ON UPDATE NO ACTION;
+  
+ALTER TABLE `taxpayer_certificate` 
+	DROP FOREIGN KEY `taxpayer_certificate_taxpayer_fk`;
+		
+ALTER TABLE `taxpayer_certificate`
+	ADD CONSTRAINT `taxpayer_certificate_taxpayer_fk`
+		FOREIGN KEY (`taxpayer`) REFERENCES `taxpayer_issuer` (`taxpayer_issuer_id`)
+		ON DELETE NO ACTION ON UPDATE NO ACTION;
+
 ALTER TABLE `fiscal_document` 
 	ADD CONSTRAINT `fiscal_document_issuer_fk`
-  		FOREIGN KEY (`issuer`)cREFERENCES `mbe_dataprint`.`taxpayer_issuer` (`taxpayer_issuer_id`)
-  		ON DELETE NO ACTIONccON UPDATE NO ACTION;
+  		FOREIGN KEY (`issuer`) REFERENCES `taxpayer_issuer` (`taxpayer_issuer_id`)
+  		ON DELETE NO ACTION ON UPDATE NO ACTION;
   
 ALTER TABLE `customer_taxpayer` 
 	DROP FOREIGN KEY `customer_taxpayer_address`,
@@ -90,6 +104,3 @@ CREATE TABLE IF NOT EXISTS `customer_discount` (
     FOREIGN KEY (`product`) REFERENCES `product` (`product_id`)
     ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE = InnoDB;
-
-commit;
-

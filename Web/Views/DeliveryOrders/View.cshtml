@@ -1,13 +1,13 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
-@model SalesOrder
+@model DeliveryOrder
 
 @{
-    ViewBag.Title = Resources.SalesOrderShipment;
+    ViewBag.Title = Resources.DeliveryOrder;
 }
 
-<h2>@Resources.SalesOrderShipment</h2>
+<h2>@Resources.DeliveryOrder</h2>
 
 <div id="master-section">
 	@Html.Partial("_DisplayView")
@@ -27,9 +27,6 @@
 </div>
 <div class='pull-right'>
 	@Html.ActionLink(Resources.Print, "Print", new { id = Model.Id }, new { @class = "button icon print", target = "_blank" })
-	@using (Html.BeginForm("Confirm", "DeliveryOrders", new { id =  Model.Id }, FormMethod.Post, new { style = "display:inline" })) {
-		<button type="submit" class="icon delivery">@Resources.Delivered</button>
-    }
 </div>
 <div class='clearfix'></div>
 <script type='text/javascript'>

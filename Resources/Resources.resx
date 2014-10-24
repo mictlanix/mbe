@@ -1230,10 +1230,10 @@ Realizada el: {0:d}</value>
     <value>Orden de Despacho</value>
   </data>
   <data name="DeliveryOrder" xml:space="preserve">
-    <value>Orden de Entrega</value>
+    <value>Orden de Transporte</value>
   </data>
   <data name="DeliveryOrders" xml:space="preserve">
-    <value>Ordenes de Entrega</value>
+    <value>Ordenes de Transporte</value>
   </data>
   <data name="DisplayName_InvoiceInformation" xml:space="preserve">
     <value>Información de la Factura</value>
@@ -1426,9 +1426,6 @@ Realizada el: {0:d}</value>
   </data>
   <data name="Delivery" xml:space="preserve">
     <value>Entrega</value>
-  </data>
-  <data name="Deliveries" xml:space="preserve">
-    <value>Entregas</value>
   </data>
   <data name="Delivered" xml:space="preserve">
     <value>Entregado</value>
@@ -2059,5 +2056,20 @@ Realizada el: {0:d}</value>
   </data>
   <data name="DeliveryOrderId" xml:space="preserve">
     <value>ID</value>
+  </data>
+  <data name="SalesOrderShipment" xml:space="preserve">
+    <value>Orden de Entrega</value>
+  </data>
+  <data name="SalesOrderShipments" xml:space="preserve">
+    <value>Ordenes de Entrega</value>
+  </data>
+  <data name="Accept" xml:space="preserve">
+    <value>Acepto</value>
+  </data>
+  <data name="RetentionRate" xml:space="preserve">
+    <value>Retención de IVA</value>
+  </data>
+  <data name="RetentionTaxes" xml:space="preserve">
+    <value>IVA Retenido</value>
   </data>
 </root>

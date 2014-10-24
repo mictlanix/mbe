@@ -174,6 +174,10 @@ namespace Mictlanix.BE.Model {
 		[Display(Name = "WarehouseStockByLotReport", ResourceType = typeof(Resources))]
 		WarehouseStockByLotReport,
 		[Display(Name = "WarehouseStockBySerialNumberReport", ResourceType = typeof(Resources))]
-		WarehouseStockBySerialNumberReport
+		WarehouseStockBySerialNumberReport,
+		[Display(Name = "SalesOrderShipments", ResourceType = typeof(Resources))]
+		SalesOrderShipments,
+		[Display(Name = "DeliveryOrders", ResourceType = typeof(Resources))]
+		DeliveryOrders
     }
 }

@@ -234,6 +234,11 @@ namespace Mictlanix.BE.Model
 		[Property]
 		public virtual FiscalCertificationProvider Provider { get; set; }
 
+		[Property("retention_rate")]
+		[DisplayFormat(DataFormatString = "{0:p}")]
+		[Display(Name = "RetentionRate", ResourceType = typeof(Resources))]
+		public virtual decimal RetentionRate { get; set; }
+
         [HasMany(typeof(FiscalDocumentDetail), Table = "fiscal_document_detail", ColumnKey = "document", Lazy = true)]
 		public virtual IList<FiscalDocumentDetail> Details {
 			get { return details; }
@@ -249,13 +254,19 @@ namespace Mictlanix.BE.Model
 		[DataType(DataType.Currency)]
 		[Display(Name = "Taxes", ResourceType = typeof(Resources))]
 		public virtual decimal Taxes {
-			get { return Total - Subtotal; }
+			get { return Details.Sum (x => x.Taxes); }
+		}
+
+		[DataType(DataType.Currency)]
+		[Display(Name = "RetentionTaxes", ResourceType = typeof(Resources))]
+		public virtual decimal RetentionTaxes {
+			get { return Subtotal * RetentionRate; }
 		}
 
 		[DataType(DataType.Currency)]
 		[Display(Name = "Total", ResourceType = typeof(Resources))]
 		public virtual decimal Total {
-			get { return Details.Sum (x => x.Total); }
+			get { return Details.Sum (x => x.Total) - RetentionTaxes; }
 		}
 
 		[DataType(DataType.Currency)]
@@ -267,13 +278,19 @@ namespace Mictlanix.BE.Model
 		[DataType(DataType.Currency)]
 		[Display(Name = "Taxes", ResourceType = typeof(Resources))]
 		public virtual decimal TaxesEx {
-			get { return TotalEx - SubtotalEx; }
+			get { return Details.Sum (x => x.TaxesEx); }
+		}
+
+		[DataType(DataType.Currency)]
+		[Display(Name = "RetentionTaxes", ResourceType = typeof(Resources))]
+		public virtual decimal RetentionTaxesEx {
+			get { return SubtotalEx * RetentionRate; }
 		}
 
 		[DataType(DataType.Currency)]
 		[Display(Name = "Total", ResourceType = typeof(Resources))]
 		public virtual decimal TotalEx {
-			get { return Details.Sum (x => x.TotalEx); }
+			get { return Details.Sum (x => x.TotalEx) - RetentionTaxesEx; }
 		}
 	}
 }

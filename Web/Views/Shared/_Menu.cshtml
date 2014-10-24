@@ -217,12 +217,6 @@
                                    href="@Url.Action("Index", "Payments")">@Resources.Title_CustomerPayment</a>
                             </li>
                             }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.SalesOrders).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "SalesOrderShipments") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "SalesOrderShipments")">@Resources.Deliveries</a>
-                            </li>
-                            }
                             @if (CurrentUser.GetPrivilege (SystemObjects.CustomerRefunds).AllowRead) {
                             <li class='gbmtc'>
                                 <a class='gbmt @(Html.IsMenuSelected("Index", "CustomerRefunds") ? "gbm0l" : "")'
@@ -299,7 +293,18 @@
                                    href="@Url.Action("LotSerialNumbers", "Inventory")">@Resources.LotSerialNumbers</a>
                             </li>
                             }
-                            
+                            @if (CurrentUser.GetPrivilege (SystemObjects.SalesOrderShipments).AllowRead) {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "SalesOrderShipments") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "SalesOrderShipments")">@Resources.SalesOrderShipments</a>
+                            </li>
+                            }
+                            @if (CurrentUser.GetPrivilege (SystemObjects.DeliveryOrders).AllowRead) {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "DeliveryOrders") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "DeliveryOrders")">@Resources.DeliveryOrders</a>
+                            </li>
+                            }
                         </ol>
                     </div>
                 </div>

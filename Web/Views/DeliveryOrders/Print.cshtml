@@ -1,14 +1,14 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
-@model SalesOrder
+@model DeliveryOrder
 
 @{
     Layout = Configuration.PrintLayout;
-    ViewBag.Title = Resources.SalesOrderShipment;
+    ViewBag.Title = Resources.DeliveryOrder;
     ViewBag.Store = Model.Store;
-    ViewBag.TaxpayerName = null;
-    ViewBag.Taxpayer = null;
+    ViewBag.TaxpayerName = Model.Store.Taxpayer.Name;
+    ViewBag.Taxpayer = Model.Store.Taxpayer.Id;
     ViewBag.Address = Model.Store.Address;
 }
 
@@ -24,14 +24,6 @@
 	 		<div class="col-xs-12">
 	 			<p>@Html.DisplayFor(x => x.Customer.Name)</p>
  			</div>
-		@if(Model.Contact != null) {
-		 	<div class="col-xs-12">
-		 		<p><span class="mylabel">@Resources.Contact</span></p>
-	 		</div>
-	 		<div class="col-xs-12">
-	 			<p>@Html.DisplayFor(x => x.Contact.Name)</p>
- 			</div>
-		}
 		 	<div class="col-xs-12">
 		 		<p><span class="mylabel">@Resources.ShipTo</span></p>
 	 		</div>
@@ -52,25 +44,13 @@
 	<div class="col-xs-6 text-right">
 		<div class="row">
 			<div class="col-xs-12">
-				<h2 class="text-right uppercase">@Resources.SalesOrderShipment @Html.DisplayFor(x => x.Id)</h2>
+				<h2 class="text-right uppercase">@Resources.DeliveryOrder @Html.DisplayFor(x => x.Id)</h2>
 			</div>
-			<div class="col-xs-12">
-				<p><span class="mylabel">@Resources.SalesPerson</span></p>
-			</div>
-	 		<div class="col-xs-12">
-				<p>@Html.DisplayFor(x => x.SalesPerson.Name)</p>
-	 		</div>
 			<div class="col-xs-12">
 				<p><span class="mylabel">@Resources.DateTime</span></p>
 			</div>
 	 		<div class="col-xs-12">
 				<p>@Html.DisplayFor(x => x.Date)</p>
-	 		</div>
-			<div class="col-xs-12">
-				<p><span class="mylabel">@Resources.PromiseDate</span></p>
-			</div>
-	 		<div class="col-xs-12">
-				<p>@Html.DisplayFor(x => x.PromiseDate)</p>
 	 		</div>
 		</div>
 	</div>

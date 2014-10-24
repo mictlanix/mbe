@@ -583,6 +583,37 @@ namespace Mictlanix.BE.Web.Controllers
 		}
 
 		[HttpPost]
+		public ActionResult SetRetentionRate (int id, string value)
+		{
+			var entity = FiscalDocument.Find (id);
+			bool success;
+			decimal val;
+
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out val);
+
+			if (success) {
+				entity.RetentionRate = val;
+
+				using (var scope = new TransactionScope()) {
+					entity.UpdateAndFlush ();
+				}
+			}
+
+			return Json (new { 
+				id = entity.Id,
+				value = entity.FormattedValueFor (x => x.RetentionRate),
+				total = entity.FormattedValueFor (x => x.Total), 
+				total2 = entity.FormattedValueFor (x => x.TotalEx),
+				itemsChanged = success
+			});
+		}
+
+		[HttpPost]
 		public ActionResult AddItem (int id, int product)
 		{
 			var p = Product.Find (product);
