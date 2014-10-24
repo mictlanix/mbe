@@ -22,44 +22,10 @@
     <link href='@Url.Content("~/Content/bootstrap3/css/bootstrap.min.css")' rel='stylesheet' type='text/css' />
     <link href='@Url.Content("~/Content/print.css")' rel='stylesheet' type='text/css' />
     <style type='text/css'>
-
+    @@page { size:8.5in 11in; margin:5cm 1cm 3.5cm}
     </style>
 </head>
 <body>
-    <header>
-    	<div class="row">
-			<div class="col-xs-7 text-center" style="padding-top:3mm">
-		        <h1 class="text-center uppercase">
-		            @if (!string.IsNullOrEmpty (ViewBag.TaxpayerName)) {
-		        		@ViewBag.TaxpayerName<br/>
-		        	}
-		        	@if (!string.IsNullOrEmpty (ViewBag.Taxpayer)) {
-		        		@ViewBag.Taxpayer
-		        	}
-		        </h1>
-		        <h3 class="text-center">
-		        	@ViewBag.Address.StreetAndNumber<br/>
-		        	@ViewBag.Address.Neighborhood,
-		    	@if (!string.IsNullOrEmpty (ViewBag.Address.Locality)) {
-		        	<text>@ViewBag.Address.Locality,</text>
-		    	}
-		        	@ViewBag.Address.PostalCode<br/>
-		        	@ViewBag.Address.Borough,
-		        	@ViewBag.Address.State
-		    	</h3>
-		    	<h4 class="text-center">
-		    		@Resources.TaxRegime:
-		    		@Html.DisplayFor(x => x.IssuerRegime)
-		    	</h4>
-	 		</div>
-			<div class="col-xs-5 text-right">
-	        	@if(!string.IsNullOrEmpty(ViewBag.Store.Logo)) {
-	            <img class="logo" src='@Url.Content(ViewBag.Store.Logo)' alt="Logo" />
-	            }
-	 		</div>
-		</div>
-    </header>
-
 	<div class="row">
 		<div class="col-xs-6 text-left">
 			<div class="row">
@@ -119,6 +85,12 @@
 				</div>
 		 		<div class="col-xs-12">
 					<p>@Html.DisplayFor(x => x.IssuerCertificateNumber)</p>
+		 		</div>
+				<div class="col-xs-12">
+					<p><span class="mylabel">@Resources.TaxRegime</span></p>
+				</div>
+		 		<div class="col-xs-12">
+					<p>@Html.DisplayFor(x => x.IssuerRegime)</p>
 		 		</div>
 			</div>
 		</div>
