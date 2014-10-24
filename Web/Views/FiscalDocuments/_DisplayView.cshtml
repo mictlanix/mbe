@@ -16,7 +16,6 @@
 				<dd>@Html.DisplayFor(x => x.Issuer, "String")</dd>
 				<dt>@Resources.Customer</dt>
 				<dd>@Html.DisplayFor(x => x.Customer.Name)</dd>
-			    </dd>
 				<dt>@Resources.Recipient</dt>
 				<dd>@Html.DisplayFor(x => x.RecipientName) (@Html.DisplayFor(x => x.Recipient))</dd>
 			@if (!string.IsNullOrEmpty (Model.Reference)) {
@@ -44,6 +43,10 @@
 			@if (!string.IsNullOrEmpty (Model.PaymentReference)) {
 				<dt>@Resources.PaymentReference</dt>
 				<dd>@Html.DisplayFor(x => x.PaymentReference)</dd>
+			}
+			@if (Model.RetentionRate != 0m) {
+				<dt>@Resources.RetentionRate</dt>
+				<dd>@Html.DisplayFor(x => x.RetentionRate)</dd>
 			}
 			</dl>
   		</div>

@@ -50,7 +50,7 @@ namespace Mictlanix.BE.Web.Helpers
 			if (!product.IsStockable)
 				return;
 
-			if (skipSerials) {
+			if (skipSerials || !(product.IsPerishable || product.IsSeriable)) {
 				KardexRegister (source, reference, dt, warehouse, product, quantity);
 			} else {
 				LotSerialRegister (source, reference, warehouse, product, quantity);
@@ -75,9 +75,6 @@ namespace Mictlanix.BE.Web.Helpers
 		static void LotSerialRegister (TransactionType source, int reference, Warehouse warehouse,
 		                               Product product, decimal quantity)
 		{
-			if (!product.IsPerishable && !product.IsSeriable)
-				return;
-
 			var query = from x in LotSerialRequirement.Queryable
 						where x.Source == source &&
 							x.Reference == reference &&

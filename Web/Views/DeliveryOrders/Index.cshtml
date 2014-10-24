@@ -1,0 +1,42 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model Search<DeliveryOrder>
+
+@{
+    ViewBag.Title = Resources.DeliveryOrders;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = CurrentUser.GetPrivilege (SystemObjects.DeliveryOrders);
+}
+
+<h2>@Resources.DeliveryOrders</h2>
+
+@if(Privilege.AllowCreate) {
+    using (Html.BeginForm("New", "DeliveryOrders", null, FormMethod.Post, new { @class = "modal-form" })) {
+		<button type="submit" class="icon add">@Resources.New</button>
+    }
+}
+
+@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
+        @Html.HiddenFor(x => x.Offset)
+        @Html.HiddenFor(x => x.Limit)
+        <div class="editor-label">
+            @Html.LabelFor(x => x.Pattern)
+        </div>
+        <div class="search-box">
+            <button type="submit" class="icon search">@Resources.Search</button>
+            <div class="search-field">
+                <input type="text" id="Pattern" name="Pattern" />
+            </div>
+        </div>
+}
+<div id="activity-indicator">
+    <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
+</div>
+<div id="search-results">
+    @Html.Partial("_Index")
+</div>
+<script type="text/javascript">
+bindModal('.open-modal');
+</script>

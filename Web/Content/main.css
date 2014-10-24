@@ -490,7 +490,8 @@ span.editable {
   position: absolute;
   top: -1px;
   left: -1px;
-  width: 60px;
+  padding:0 5px;
+  min-width: 60px;
   text-align:center;
   font-size: 12px;
   font-weight: bold;

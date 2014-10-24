@@ -28,7 +28,6 @@
 			        	@Html.DisplayFor(x => x.Customer.Name)
 			        </a>
 			    </dd>
-			    </dd>
 				<dt>@Resources.Recipient</dt>
 				<dd>
 			        <a id='recipient' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id'
@@ -96,6 +95,12 @@
 			        	data-emptytext='@Resources.Empty'>
 			        	@Html.DisplayFor(x => x.PaymentReference)
 			        </a>
+				</dd>
+				<dt>@Resources.RetentionRate</dt>
+				<dd>
+					<a class='editable tax' data-type='select' data-placement='right' data-autotext='never'
+					data-source='@Url.Action("RetentionRates", "Pricing")' data-pk='@Model.Id' data-value='@Model.RetentionRate.ToString("0.####")'
+					data-url='@Url.Action("SetRetentionRate", new { id = Model.Id })'>@Html.DisplayFor(x => x.RetentionRate)</a>
 				</dd>
 			</dl>
   		</div>

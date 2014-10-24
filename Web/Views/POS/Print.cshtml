@@ -114,15 +114,3 @@
 	<img src='@Url.Action("Code128", "Barcodes", new { id = string.Format("{0}", Html.DisplayFor(x => x.Id)) })' alt='@Html.DisplayFor(x => x.Id)' title='@Html.DisplayFor(x => x.Id)'>
 	<p>@Html.LabelFor(x => x.Id): @Html.DisplayFor(x => x.Id)</p>
 }
-
-<script type='text/javascript'>
-$(function() {
-	$('body, select, input, textarea, button, submit, form').prop('disabled', true);
-	window.print();
-	setTimeout(function() {
-	    $('body').bind('mousemove click keypress', function () {
-	        window.close();                      
-	    });
-	}, 500);
-});
-</script>

@@ -742,12 +742,6 @@ namespace Mictlanix.BE {
             }
         }
         
-        public static string SalesOrderNotFound {
-            get {
-                return ResourceManager.GetString("SalesOrderNotFound", resourceCulture);
-            }
-        }
-        
         public static string TaxpayerBatches {
             get {
                 return ResourceManager.GetString("TaxpayerBatches", resourceCulture);
@@ -1198,6 +1192,12 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string SalesOrderShipments {
+            get {
+                return ResourceManager.GetString("SalesOrderShipments", resourceCulture);
+            }
+        }
+        
         public static string InventoryReceipt {
             get {
                 return ResourceManager.GetString("InventoryReceipt", resourceCulture);
@@ -1492,15 +1492,21 @@ namespace Mictlanix.BE {
             }
         }
         
-        public static string Deliveries {
+        public static string SalesOrderNotFound {
             get {
-                return ResourceManager.GetString("Deliveries", resourceCulture);
+                return ResourceManager.GetString("SalesOrderNotFound", resourceCulture);
             }
         }
         
         public static string Title_Customer {
             get {
                 return ResourceManager.GetString("Title_Customer", resourceCulture);
+            }
+        }
+        
+        public static string Accept {
+            get {
+                return ResourceManager.GetString("Accept", resourceCulture);
             }
         }
         
@@ -1567,6 +1573,12 @@ namespace Mictlanix.BE {
         public static string InventoryTransfer {
             get {
                 return ResourceManager.GetString("InventoryTransfer", resourceCulture);
+            }
+        }
+        
+        public static string SalesOrderShipment {
+            get {
+                return ResourceManager.GetString("SalesOrderShipment", resourceCulture);
             }
         }
         
@@ -3454,9 +3466,21 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string RetentionTaxes {
+            get {
+                return ResourceManager.GetString("RetentionTaxes", resourceCulture);
+            }
+        }
+        
         public static string DisplayName_SalesQuotes {
             get {
                 return ResourceManager.GetString("DisplayName_SalesQuotes", resourceCulture);
+            }
+        }
+        
+        public static string RetentionRate {
+            get {
+                return ResourceManager.GetString("RetentionRate", resourceCulture);
             }
         }
         
