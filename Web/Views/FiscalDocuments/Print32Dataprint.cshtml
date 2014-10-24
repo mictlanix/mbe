@@ -280,6 +280,13 @@
 	            <td class="col-xs-1 nowrap text-right">@Resources.Taxes</td>
 	            <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Taxes)</td>
 	        </tr>
+		@if (Model.RetentionRate > 0m) {
+	        <tr>
+	        	<td class="col-xs-10"></td>
+	            <td class="col-xs-1 nowrap text-right">@Resources.RetentionTaxes</td>
+	            <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.RetentionTaxes)</td>
+	        </tr>
+		}
 	        <tr>
 	            <td class="col-xs-10 nowrap"><h2 class="row">@Resources.SinglePayment</h2></td>
 	            <td class="col-xs-1 nowrap text-right">@Resources.Total</td>

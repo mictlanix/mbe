@@ -1,0 +1,115 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model DeliveryOrder
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.DeliveryOrders);
+}
+
+<fieldset>
+	<div class='row-fluid'>
+		<div class='span8'>
+	  		<dl class=''>
+				<dt>@Resources.Customer</dt>
+				<dd>
+			        <a id='customer' data-type='select2' data-placement='right' data-pk='@Model.Id' 
+			        	data-value='@Model.Customer.Id' data-url='@Url.Action("SetCustomer", new { id = Model.Id })'
+			        	data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+			        	@Html.DisplayFor(x => x.Customer.Name)
+			        </a>
+			    </dd>
+				<dt>@Resources.ShipTo</dt>
+				<dd>
+			        <a id='address' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id'
+			        	data-value='@(Model.ShipTo == null ? "" : Model.ShipTo.Id.ToString ())'
+			        	data-source='@Url.Action("Addresses", new { id = Model.Id })' data-source-cache='false'
+			        	data-url='@Url.Action("SetShipTo", new { id = Model.Id })'
+			        	data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+			        @if (Model.ShipTo != null) {
+			        	@Html.DisplayFor(x => x.ShipTo, "String")
+		        	}
+			        </a>
+				</dd>
+			</dl>
+		</div>
+	  	<div class='span4'>
+	  		<dl class='dl-horizontal'>
+				<dt>@Resources.Id</dt>
+				<dd>
+					<span>@Html.DisplayFor(x => x.Id)</span>
+					<i id="Id" class='icon-exclamation-sign' data-toggle='tooltip' title='@Resources.Serial @Html.DisplayFor(x => x.Serial)'></i>
+				</dd>
+				<dt>@Resources.Date</dt>
+				<dd>@Html.DisplayFor(x => x.Date)</dd>
+			</dl>
+  		</div>
+	</div>
+@if(Privilege.AllowDelete && !Model.IsCancelled) {
+	<div class='row-fluid'>
+  		<div class='span12'>
+	    @using (Html.BeginForm("Cancel", "DeliveryOrders", new { id =  Model.Id }, FormMethod.Post, new { @class = "modal-form pull-right" })) {
+			<button type="submit" class="icon cancel">@Resources.Cancel</button>
+	    }
+  		</div>
+	</div>
+}
+</fieldset>
+<script type='text/javascript'>
+$('#Id').tooltip();
+$('#customer').editable({
+    select2: {
+    	minimumInputLength: 3,
+	    ajax: {
+	        url: '@Url.Action("GetSuggestions", "Customers")',
+	        dataType: 'json',
+	        type: 'POST',
+	        data: function(term,page,context) {
+	        	return { pattern:term };
+	        },
+	        results: function(data,page) {
+	            return { results:data };
+	        }
+	    },
+	    initSelection: function(element, callback) {
+	        var data = {
+	        	id: $('#customer').data('value'),
+	        	name: $('#customer').text()
+        	};
+	        callback(data);
+	    },
+	    formatResult: function(result) {
+	        return result.name + " (" + result.code + ")";
+	    },
+	    formatSelection: function(selection) {
+	        return selection.name;
+	    }
+	},
+	success: function(response, newValue) {
+		$('#address').text('').editable('setValue', '');
+    },
+    display: function(value, response) {
+    	if (typeof response !== 'undefined') {
+			$(this).html(response.value);
+		}
+    }
+});
+$('a.editable').editable({
+    display: function(value, response) {
+		if (typeof response === 'undefined')
+        	return;
+        
+        if (Array.isArray(response)) {
+          	var arr = $.grep(response, function(o){
+  				return o.value == value;
+			});
+			if (arr.length != 0) {
+          		$(this).html(arr[0].text);
+          	}
+        } else {
+          	$(this).html(response.value);
+        }
+    }
+});
+</script>

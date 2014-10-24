@@ -12,79 +12,107 @@
     ViewBag.Address = Model.Store.Address;
 }
 
-<div class="display-label right floating">
-	<h3>@Html.DisplayFor(x => x.Serial)</h3>
+<div class="row">
+	<div class="col-xs-6 text-left">
+		<div class="row">
+			<div class="col-xs-12 uppercase">
+				<h2>@Resources.Customer</h2>
+			</div>
+		 	<div class="col-xs-12">
+		 		<p><span class="mylabel">@Resources.Name</span></p>
+	 		</div>
+	 		<div class="col-xs-12">
+	 			<p>@Html.DisplayFor(x => x.Customer.Name)</p>
+ 			</div>
+ 		</div>
+	</div>
+	<div class="col-xs-6 text-right">
+		<div class="row">
+			<div class="col-xs-12">
+				<h2 class="text-right uppercase">@Resources.SalesQuote @Html.DisplayFor(x => x.Id)</h2>
+			</div>
+			<div class="col-xs-12">
+				<p><span class="mylabel">@Resources.SalesPerson</span></p>
+			</div>
+	 		<div class="col-xs-12">
+				<p>@Html.DisplayFor(x => x.SalesPerson.Name)</p>
+	 		</div>
+			<div class="col-xs-12">
+				<p><span class="mylabel">@Resources.Date</span></p>
+			</div>
+	 		<div class="col-xs-12">
+				<p>@Html.DisplayFor(x => x.Date)</p>
+	 		</div>
+		</div>
+	</div>
 </div>
 
-<div class="display-label">
-    <h3>@Html.LabelFor(x => x.Customer)</h3>
-</div>
-<div class="display-field">
-    @Html.DisplayFor(x => x.Customer.Name)<br/>
-</div>
-
-<div class="display-label right">
-    @Html.LabelFor(x => x.Date)<br/>
-    @Html.DisplayFor(x => x.Date)
-</div>
-
-<table>
-    <tr>
-        <th class="line nowrap"></th>
-        @*<th class="line nowrap">@Resources.UnitOfMeasurement</th>*@
-        <th class="line nowrap">@Resources.ProductCode</th>
-        <th class="line">@Resources.ProductName</th>
-        <th class="line nowrap">@Resources.Price</th>
-        <th class="line nowrap">@Resources.Discount_Abbr</th>
-        <th class="line nowrap">@Resources.Amount</th>
-    </tr>
-	@foreach (var item in Model.Details) {
-    <tr>
-        <td class="number line">@Html.DisplayFor(x => item.Quantity)</td>
-        @*<td class="center line">@Html.DisplayFor(x => item.UnitOfMeasurement)</td>*@
-        <td class="center line">@Html.DisplayFor(x => item.ProductCode)</td>
-        <td class="line">@Html.DisplayFor(x => item.ProductName)</td>
-        <td class="number line">@Html.DisplayFor(x => item.NetPrice)</td>
-        <td class="number line">@Html.DisplayFor(x => item.Discount)</td>
-        <td class="number line">@Html.DisplayFor(x => item.Subtotal)</td>
-    </tr>
-	}
+<table  style="border-spacing:0 4px;border-collapse: separate;">
+    <thead>
+        <tr>
+            <th class="col-xs-1 text-center">@Resources.Quantity</th>
+            <th class="col-xs-2 text-center">@Resources.ProductCode</th>
+            <th class="col-xs-6 text-center">@Resources.ProductName</th>
+            <th class="col-xs-1 text-center">@Resources.Price</th>
+            <th class="col-xs-1 text-center">@Resources.Discount_Abbr</th>
+            <th class="col-xs-1 text-center">@Resources.Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Details) {
+            <tr class="alt">
+                <td class="nowrap text-right">@Html.DisplayFor(x => item.Quantity)</td>
+                <td class="text-center">@Html.DisplayFor(x => item.ProductCode)</td>
+                <td class="text-center">@Html.DisplayFor(x => item.ProductName)</td>
+                <td class="nowrap text-right">@Html.DisplayFor(x => item.NetPrice)</td>
+                <td class="nowrap text-right">@Html.DisplayFor(x => item.Discount)</td>
+                <td class="nowrap text-right">@Html.DisplayFor(x => item.Subtotal)</td>
+            </tr>
+        }
+    </tbody>
 </table>
 
+<div style="min-height: 2.2mm; border-top: #333 solid 3px; border-bottom: #333 solid 1px"></div>
+
 <table>
-    <tr>
-        <td rowspan="3" class="center">@Html.CurrencyToString(Model.Total, Configuration.BaseCurrency)</td>
-        <td class="number">@Html.LabelFor(x => x.Subtotal)</td>
-        <td class="number">@Html.DisplayFor(x => x.Subtotal)</td>
-    </tr>
-    <tr>
-        <td class="number">@Html.LabelFor(x => x.Taxes)</td>
-        <td class="number">@Html.DisplayFor(x => x.Taxes)</td>
-    </tr>
-    <tr>
-        <td class="number">@Html.LabelFor(x => x.Total)</td>
-        <td class="number">@Html.DisplayFor(x => x.Total)</td>
-    </tr>
+	<tfoot>
+        <tr>
+            <td rowspan="2" class="col-xs-10 text-center" style="vertical-align:middle">
+                <div style="border-top: solid black 1px; border-bottom:solid black 1px; margin: 0 2cm 0 2cm;">
+                    @Html.CurrencyToString(Model.Total, Configuration.BaseCurrency)
+                </div>
+            </td>
+            <td class="col-xs-1 nowrap text-right">@Resources.Subtotal</td>
+            <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Subtotal)</td>
+        </tr>
+        <tr>
+            <td class="col-xs-1 nowrap text-right">@Resources.Taxes</td>
+            <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Taxes)</td>
+        </tr>
+        <tr>
+            <td class="col-xs-10 nowrap"></td>
+            <td class="col-xs-1 nowrap text-right">@Resources.Total</td>
+            <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Total)</td>
+        </tr>
+	</tfoot>
 </table>
 
-<div class="display-label hilite">
-    @Html.LabelFor(x => x.DueDate):
-    @Html.DisplayFor(x => x.DueDate)
+<div class="row">
+	<div class="col-xs-6 text-left">
+		<div class="row">
+		 	<div class="col-xs-12">
+		 		<p><span class="mylabel">@Resources.DueDate</span></p>
+	 		</div>
+	 		<div class="col-xs-12">
+	 			<p>@Html.DisplayFor(x => x.DueDate)</p>
+ 			</div>
+ 		</div>
+	</div>
 </div>
 
-<div class="center signatures">
-    @Resources.CreatedBy,<br/>
-    @Html.DisplayFor(x => Model.SalesPerson.Name)
+<div class="row">
+	<div class="text-center" style="margin-top:15mm">
+		@Resources.CreatedBy,<br/>
+		@Html.DisplayFor(x => Model.SalesPerson.Name)
+	</div>
 </div>
-
-<script type="text/javascript">
-$(function() {
-	$('body, select, input, textarea, button, submit, form').prop('disabled', true);
-	window.print();
-	setTimeout(function() {
-	    $('body').bind('mousemove click keypress', function () {
-	        window.close();                      
-	    });
-	}, 500);
-});
-</script>

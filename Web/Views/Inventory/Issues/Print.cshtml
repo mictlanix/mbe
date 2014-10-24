@@ -11,78 +11,79 @@
     ViewBag.Taxpayer = null;
     ViewBag.Address = Model.Warehouse.Store.Address;
 }
-<h2>@Resources.DisplayName_InventoryInformation</h2>
-<div class="display-label">
-    <b>@Html.LabelFor(model => model.Warehouse):</b>
-    @Html.DisplayFor(model => model.Warehouse.Name)
+
+<div class="row">
+	<div class="col-xs-6 text-left">
+		<div class="row">
+		 	<div class="col-xs-12">
+		 		<p><span class="mylabel">@Resources.Warehouse</span></p>
+	 		</div>
+	 		<div class="col-xs-12">
+	 			<p>@Html.DisplayFor(x => x.Warehouse.Name)</p>
+ 			</div>
+		@if(!string.IsNullOrWhiteSpace (Model.Comment)) {
+		 	<div class="col-xs-12">
+		 		<p><span class="mylabel">@Resources.Comment</span></p>
+	 		</div>
+	 		<div class="col-xs-12">
+	 			@Html.DisplayFor(x => x.Comment)
+ 			</div>
+		}
+ 		</div>
+	</div>
+	<div class="col-xs-6 text-right">
+		<div class="row">
+			<div class="col-xs-12">
+				<h2 class="text-right">@Resources.InventoryIssue @Html.DisplayFor(x => x.Id)</h2>
+			</div>
+			<div class="col-xs-12">
+				<p><span class="mylabel">@Resources.CreatedBy</span></p>
+			</div>
+	 		<div class="col-xs-12">
+				<p>@Html.DisplayFor(x => x.Creator.Name)</p>
+	 		</div>
+			<div class="col-xs-12">
+				<p><span class="mylabel">@Resources.DateTime</span></p>
+			</div>
+	 		<div class="col-xs-12">
+				<p>@Html.DisplayFor(x => x.CreationTime)</p>
+	 		</div>
+		</div>
+	</div>
 </div>
-<div class="display-label">
-    <b>@Html.LabelFor(model => model.Id):</b>
-    @Html.DisplayFor(model => model.Id)
-</div>
-<div class="display-label">
-    <b>@Resources.CreatedBy:</b>
-    @Html.DisplayFor(model => model.Creator.Name)
-</div>
-<div class="display-label">
-    <b>@Html.LabelFor(model => model.CreationTime):</b>
-    @Html.DisplayFor(model => model.CreationTime)
-</div>
-<div class="display-label">
-    <b>@Html.LabelFor(model => model.Comment):</b>
-    @Html.DisplayFor(model => model.Comment)
-</div>
-<table>
-    <tr>
-        <th class="line border">
-            @Html.LabelFor(x => new InventoryIssueDetail().Quantity)
-        </th>
-        <th class="line border">
-            @Html.LabelFor(x => new InventoryIssueDetail().ProductCode)
-        </th>
-        <th class="line">
-            @Html.LabelFor(x => new InventoryIssueDetail().ProductName)
-        </th>
-    </tr>
-@foreach (var item in Model.Details) {
-    <tr>
-        <td class="line-top border center">
-            @Html.DisplayFor(modelItem => item.Quantity)
-        </td>
-        <td class="line-top border center">
-            @Html.DisplayFor(modelItem => item.ProductCode)
-        </td>
-        <td class="line-top">
-            @Html.DisplayFor(modelItem => item.ProductName)
-        </td>
-    </tr>
-}
-</table>
-<section class="signatures">
-    <table>
+
+<div style="min-height: 2.2mm; border-top: #333 solid 1px; border-bottom: #333 solid 3px"></div>
+
+<table  style="border-spacing:0 4px;border-collapse: separate;">
+    <thead>
         <tr>
-            <td></td>
-            <td class="line-top center nowrap" style="width:250px">
-                @Resources.DeliveryPerson<br/>
-                @Resources.NameAndSignature
-            </td>
-            <td></td>
-            <td class="line-top center nowrap" style="width:250px">
-                @Resources.PersonReceipt<br/>
-                @Resources.NameAndSignature
-            </td>
-            <td></td>
+            <th class="col-xs-1 text-center">@Resources.Quantity</th>
+            <th class="col-xs-2 text-center">@Resources.UnitOfMeasurementShort</th>
+            <th class="col-xs-3 text-center">@Resources.ProductCode</th>
+            <th class="col-xs-6 text-center">@Resources.ProductName</th>
         </tr>
-    </table>
-</section>
-<script type="text/javascript">
-$(function() {
-	$('body, select, input, textarea, button, submit, form').prop('disabled', true);
-	window.print();
-	setTimeout(function() {
-	    $('body').bind('mousemove click keypress', function () {
-	        window.close();                      
-	    });
-	}, 500);
-});
-</script>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Details) {
+            <tr class="alt">
+                <td class="nowrap text-right">@Html.DisplayFor(x => item.Quantity)</td>
+                <td class="text-center">@Html.DisplayFor(x => item.Product.UnitOfMeasurement)</td>
+                <td class="text-center">@Html.DisplayFor(x => item.ProductCode)</td>
+                <td class="text-center">@Html.DisplayFor(x => item.ProductName)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div style="min-height: 2.2mm; border-top: #333 solid 3px; border-bottom: #333 solid 1px"></div>
+
+<div class="row" style="margin-top:20mm">
+	<div class="col-xs-4 col-xs-offset-1 text-center" style="border-top: #333 solid 1px">
+        @Resources.DeliveryPerson<br/>
+        @Resources.NameAndSignature
+	</div>
+	<div class="col-xs-4 col-xs-offset-2 text-center" style="border-top: #333 solid 1px">
+	    @Resources.PersonReceipt<br/>
+	    @Resources.NameAndSignature
+	</div>
+</div>
