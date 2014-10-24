@@ -849,6 +849,7 @@
     <Content Include="Views\DeliveryOrders\View.cshtml" />
     <Content Include="Views\FiscalDocuments\Error.cshtml" />
     <Content Include="Views\DeliveryOrders\Print.cshtml" />
+    <Content Include="Views\FiscalDocuments\Print32Eyeco.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
