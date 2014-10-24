@@ -103,3 +103,6 @@ table > tbody > tr:nth-child(odd) > th {
 .monospaced {
 	font:normal 6pt "Lucida Console", Monaco, monospace;
 }
+.pre-wrapped {
+  white-space:pre-wrap;
+}
