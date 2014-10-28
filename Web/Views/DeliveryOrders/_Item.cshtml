@@ -4,7 +4,10 @@
 @model DeliveryOrder
 
 <tr id='id:@Model.Id'>
-    <td class="number">@Html.DisplayFor(x => x.Id)</td>
+    <td class="number">
+    	@Html.DisplayFor(x => x.Id)
+    	<i class='icon-exclamation-sign' data-toggle='tooltip' title='@Resources.Serial @Html.DisplayFor(x => x.Serial)'></i>
+    </td>
     <td class="date">@Html.DisplayFor(x => x.Date)</td>
     <td class="">@Html.DisplayFor(x => x.Customer.Name)</td>
     <td class="bool">@Html.DisplayFor(x => x.IsCompleted)</td>
