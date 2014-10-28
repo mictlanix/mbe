@@ -125,14 +125,7 @@ namespace Mictlanix.BE.Web.Controllers
 
 			item.Store = Configuration.Store;
 
-			try {
-				item.Serial = (from x in DeliveryOrder.Queryable
-								where x.Store.Id == item.Store.Id
-								select x.Serial).Max () + 1;
-			} catch {
-				item.Serial = 1;
-			}
-
+			item.Serial = 0;
 			item.Date = DateTime.Now;
 			item.CreationTime = DateTime.Now;
 			item.Creator = SecurityHelpers.GetUser (User.Identity.Name).Employee;
@@ -415,6 +408,14 @@ namespace Mictlanix.BE.Web.Controllers
 				if (detail.Quantity <= 0) {
 					return RedirectToAction ("Edit", new { id = entity.Id });
 				}
+			}
+
+			try {
+				entity.Serial = (from x in DeliveryOrder.Queryable
+								where x.Store.Id == entity.Store.Id
+								select x.Serial).Max () + 1;
+			} catch {
+				entity.Serial = 1;
 			}
 
 			entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;
