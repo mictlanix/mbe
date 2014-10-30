@@ -667,8 +667,8 @@ namespace Mictlanix.BE.Web.Controllers
 				foreach (var x in item.Details) {
 					InventoryHelpers.ChangeNotification (TransactionType.InventoryTransfer, item.Id,
 					                                     item.ModificationTime, item.From, x.Product, -x.Quantity);
-					InventoryHelpers.ChangeNotification (TransactionType.InventoryTransfer, item.Id,
-														 item.ModificationTime, item.To, x.Product, x.Quantity, true);
+					//InventoryHelpers.ChangeNotification (TransactionType.InventoryTransfer, item.Id,
+					//									 item.ModificationTime, item.To, x.Product, x.Quantity, true);
 				}
 			}
 
