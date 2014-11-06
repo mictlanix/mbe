@@ -430,6 +430,12 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string SalesPersonOrdersAndRefunds {
+            get {
+                return ResourceManager.GetString("SalesPersonOrdersAndRefunds", resourceCulture);
+            }
+        }
+        
         public static string FiscoClic {
             get {
                 return ResourceManager.GetString("FiscoClic", resourceCulture);
@@ -907,6 +913,12 @@ namespace Mictlanix.BE {
         public static string ApprovalYear {
             get {
                 return ResourceManager.GetString("ApprovalYear", resourceCulture);
+            }
+        }
+        
+        public static string Duplicate {
+            get {
+                return ResourceManager.GetString("Duplicate", resourceCulture);
             }
         }
         
@@ -1630,6 +1642,12 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string Merge {
+            get {
+                return ResourceManager.GetString("Merge", resourceCulture);
+            }
+        }
+        
         public static string DisplayName_Products {
             get {
                 return ResourceManager.GetString("DisplayName_Products", resourceCulture);
@@ -2047,6 +2065,12 @@ namespace Mictlanix.BE {
         public static string Message_InvalidStore {
             get {
                 return ResourceManager.GetString("Message_InvalidStore", resourceCulture);
+            }
+        }
+        
+        public static string Refund {
+            get {
+                return ResourceManager.GetString("Refund", resourceCulture);
             }
         }
         
@@ -2695,6 +2719,12 @@ namespace Mictlanix.BE {
         public static string SalesBySalesPerson {
             get {
                 return ResourceManager.GetString("SalesBySalesPerson", resourceCulture);
+            }
+        }
+        
+        public static string ProductsMerge {
+            get {
+                return ResourceManager.GetString("ProductsMerge", resourceCulture);
             }
         }
         

@@ -850,6 +850,8 @@
     <Content Include="Views\FiscalDocuments\Error.cshtml" />
     <Content Include="Views\DeliveryOrders\Print.cshtml" />
     <Content Include="Views\FiscalDocuments\Print32Eyeco.cshtml" />
+    <Content Include="Views\Reports\_SalesPersonOrdersAndRefunds.cshtml" />
+    <Content Include="Views\Products\Merge.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

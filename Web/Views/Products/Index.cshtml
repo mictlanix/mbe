@@ -8,12 +8,17 @@
     ViewBag.Title = Resources.Title_Product;
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Products);
+    var MergePrivilege = Html.GetPrivilege(CurrentUser, SystemObjects.ProductsMerge);
 }
 
 <h2>@Resources.DisplayName_Products</h2>
 
 @if(Privilege.AllowCreate) {
     @Html.ActionLink(Resources.CreateNew, "Create", null, new { @class = "button icon add open-modal", data_modal_id = "product-modal" })
+}
+
+@if(MergePrivilege.AllowRead) {
+    @Html.ActionLink(Resources.Merge, "Merge", null, new { @class = "button", data_modal_id = "product-modal" })
 }
 
 <div id='master-section'>
