@@ -2072,4 +2072,19 @@ Realizada el: {0:d}</value>
   <data name="RetentionTaxes" xml:space="preserve">
     <value>IVA Retenido</value>
   </data>
+  <data name="SalesPersonOrdersAndRefunds" xml:space="preserve">
+    <value>Pedidos y Devoluciones Por Vendedor</value>
+  </data>
+  <data name="Refund" xml:space="preserve">
+    <value>Devolución</value>
+  </data>
+  <data name="ProductsMerge" xml:space="preserve">
+    <value>Fusión de Productos</value>
+  </data>
+  <data name="Duplicate" xml:space="preserve">
+    <value>Duplicado</value>
+  </data>
+  <data name="Merge" xml:space="preserve">
+    <value>Fusionar</value>
+  </data>
 </root>

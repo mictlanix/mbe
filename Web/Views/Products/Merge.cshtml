@@ -1,0 +1,42 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model Pair<Product,Product>
+
+@{
+    ViewBag.Title = Resources.ProductsMerge;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.ProductsMerge);
+}
+
+<h2>@Resources.ProductsMerge</h2>
+
+@using (Html.BeginForm("Merge", "Products")) {
+	<label>@Resources.Product</label>
+	<div class='search-box'>
+	    <input type='text' name='product' class="product"/>
+	</div>
+	<label>@Resources.Duplicate</label>
+	<div class='search-box'>
+	    <input type='text' name='duplicate' class="product"/>
+	</div>
+	@Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+	<button type='submit' class="pull-right">@Resources.Merge</button>
+}
+<div class='clearfix'></div>
+<script type='text/javascript'>
+$(function () {
+    $('.product').tokenInput('@Url.Action("GetSuggestions", "Products")', {
+        hintText:'@Resources.HIntText',
+        noResultsText:'@Resources.NoResultsText',
+        searchingText:'@Resources.SearchingText',          
+        resultsFormatter:function(item){return ProductFormatter(item);},
+        queryParam:'pattern',minChars:3,tokenLimit:1
+    });
+});
+</script>
+<style type='text/css'>
+ul.token-input-list {width:100%;}
+div.token-input-dropdown {width:650px;}
+</style>
