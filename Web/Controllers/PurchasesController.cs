@@ -395,6 +395,9 @@ namespace Mictlanix.BE.Web.Controllers
 						};
 
 						detail.Create ();
+
+						InventoryHelpers.ChangeNotification (TransactionType.PurchaseOrder, item.Id,
+							item.ModificationTime, x.Warehouse, y.Product, y.Quantity);
                     }
                 }
 

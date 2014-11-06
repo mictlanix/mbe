@@ -1,0 +1,57 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model IEnumerable<dynamic>
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var SalesOrdersPrivilege = CurrentUser.GetPrivilege (SystemObjects.SalesOrders);
+    var CustomerRefundsPrivilege = CurrentUser.GetPrivilege (SystemObjects.CustomerRefunds);
+}
+
+<table class='table table-condensed'>
+	<thead>
+	    <tr>
+	        <th class='nowrap center' colspan="2">@Resources.SalesOrder / @Resources.Refund</th>
+	        <th class='nowrap center'>@Resources.Date</th>
+	        <th class='center'>@Resources.FiscalDocument</th>
+	        <th class='nowrap center'>@Resources.Customer</th>
+	        <th class='nowrap center'>@Resources.Subtotal</th>
+	        <th class='nowrap center'>@Resources.Taxes</th>
+	        <th class='nowrap center'>@Resources.Total</th>
+	    </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.OrderBy (x => x.Date)) {
+    <tr>
+    @if (SalesOrdersPrivilege.AllowRead) {
+		<td class='number'><a href='@Url.Action("View", "SalesOrders", new { id = item.SalesOrder })' target='_blank'>@item.SalesOrder</a></td>
+	} else {
+		<td class='number'>@item.SalesOrder</td>
+	}
+	@if (item.Refund == 0) {
+		<td class='number'></td>
+	} else if (CustomerRefundsPrivilege.AllowRead) {
+		<td class='number'><a href='@Url.Action("View", "CustomerRefunds", new { id = item.Refund })' target='_blank'>@item.Refund</a></td>
+	} else {
+		<td class='number'>@item.Refund</td>
+	}
+        <td class='date'>@item.Date</td>
+        <td class='date'>@item.Invoices</td>
+        <td>@item.Customer</td>
+        <td class='number'>@item.Subtotal.ToString("c")</td>
+        <td class='number'>@((item.Total - item.Subtotal).ToString("c"))</td>
+        <td class='number'>@item.Total.ToString("c")</td>
+    </tr>
+}
+    </tbody>
+    <tfoot>
+	    <tr>
+	        <td colspan='5'/>
+	        <td class='number'><b>@Model.Sum(x => (decimal)x.Subtotal).ToString("c")</b></td>
+	        <td class='number'><b>@Model.Sum(x => (decimal)x.Total - (decimal)x.Subtotal).ToString("c")</b></td>
+	        <td class='number'><b>@Model.Sum(x => (decimal)x.Total).ToString("c")</b></td>
+	    </tr>
+    </tfoot>
+</table>

@@ -178,6 +178,10 @@ namespace Mictlanix.BE.Model {
 		[Display(Name = "SalesOrderShipments", ResourceType = typeof(Resources))]
 		SalesOrderShipments,
 		[Display(Name = "DeliveryOrders", ResourceType = typeof(Resources))]
-		DeliveryOrders
+		DeliveryOrders,
+		[Display(Name = "SalesPersonOrdersAndRefunds", ResourceType = typeof(Resources))]
+		SalesPersonOrdersAndRefundsReport,
+		[Display(Name = "ProductsMerge", ResourceType = typeof(Resources))]
+		ProductsMerge
     }
 }
