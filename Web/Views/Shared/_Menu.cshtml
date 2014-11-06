@@ -56,6 +56,7 @@
                           CurrentUser.GetPrivilege (SystemObjects.SalesOrderSummaryReport).AllowRead ||
                           CurrentUser.GetPrivilege (SystemObjects.FiscalDocumentsReport).AllowRead ||
                           CurrentUser.GetPrivilege (SystemObjects.SalesPersonOrdersReport).AllowRead ||
+                          CurrentUser.GetPrivilege (SystemObjects.SalesPersonOrdersAndRefundsReport).AllowRead ||
                           CurrentUser.GetPrivilege (SystemObjects.CustomerSalesOrdersReport).AllowRead ||
                           CurrentUser.GetPrivilege (SystemObjects.ProductSalesByCustomerReport).AllowRead ||
                           CurrentUser.GetPrivilege (SystemObjects.ProductSalesByModelReport).AllowRead ||
@@ -580,6 +581,12 @@
                             <li class='gbmtc'>
                                 <a class='gbmt @(Html.IsMenuSelected("SalesPersonOrders", "Reports") ? "gbm0l" : "")'
                                    href='@Url.Action("SalesPersonOrders", "Reports")'>@Resources.SalesPersonOrders</a>
+                            </li>
+                            }
+                            @if (CurrentUser.GetPrivilege (SystemObjects.SalesPersonOrdersAndRefundsReport).AllowRead) {
+                            <li class='gbmtc'>
+                                <a class='gbmt @(Html.IsMenuSelected("SalesPersonOrdersAndRefunds", "Reports") ? "gbm0l" : "")'
+                                   href='@Url.Action("SalesPersonOrdersAndRefunds", "Reports")'>@Resources.SalesPersonOrdersAndRefunds</a>
                             </li>
                             }
                             @if (CurrentUser.GetPrivilege (SystemObjects.ProductSalesByCustomerReport).AllowRead) {

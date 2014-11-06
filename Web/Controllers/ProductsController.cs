@@ -37,6 +37,7 @@ using System.Security.Cryptography;
 using System.Web;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
+using NHibernate;
 using NHibernate.Exceptions;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
@@ -221,6 +222,57 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 		}
 
+		public ActionResult Merge ()
+		{
+			return View ();
+		}
+
+		[HttpPost]
+		public ActionResult Merge (int product, int duplicate)
+		{
+			var prod = Product.TryFind (product);
+			var dup = Product.TryFind (duplicate);
+			string sql = @"UPDATE customer_discount SET product = :product WHERE product = :duplicate;
+							UPDATE customer_refund_detail SET product = :product WHERE product = :duplicate;
+							UPDATE delivery_order_detail SET product = :product WHERE product = :duplicate;
+							UPDATE fiscal_document_detail SET product = :product WHERE product = :duplicate;
+							UPDATE inventory_issue_detail SET product = :product WHERE product = :duplicate;
+							UPDATE inventory_receipt_detail SET product = :product WHERE product = :duplicate;
+							UPDATE inventory_transfer_detail SET product = :product WHERE product = :duplicate;
+							UPDATE lot_serial_rqmt SET product = :product WHERE product = :duplicate;
+							UPDATE lot_serial_tracking SET product = :product WHERE product = :duplicate;
+							UPDATE purchase_order_detail SET product = :product WHERE product = :duplicate;
+							UPDATE sales_order_detail SET product = :product WHERE product = :duplicate;
+							UPDATE sales_quote_detail SET product = :product WHERE product = :duplicate;
+							UPDATE supplier_return_detail SET product = :product WHERE product = :duplicate;
+							DELETE FROM product_label WHERE product = :duplicate;
+							DELETE FROM product_price WHERE product = :duplicate;
+							DELETE FROM product WHERE product_id = :duplicate;";
+
+			ActiveRecordMediator<Product>.Execute (delegate(ISession session, object instance) {
+				int ret;
+
+				using(var tx = session.BeginTransaction()) 
+				{ 
+					var query = session.CreateSQLQuery (sql);
+
+					query.AddScalar ("product", NHibernateUtil.Int32);
+					query.AddScalar ("duplicate", NHibernateUtil.Int32);
+
+					query.SetInt32 ("product", product);
+					query.SetInt32 ("duplicate", duplicate);
+
+					ret = query.ExecuteUpdate();
+
+					tx.Commit(); 
+				}
+
+				return ret;
+			}, null);
+
+			return View (new Pair<Product,Product> { First = prod, Second = dup });
+		}
+
 		string SavePhoto (HttpPostedFileBase file)
 		{
 			if (file == null || file.ContentLength == 0)
@@ -379,5 +431,6 @@ namespace Mictlanix.BE.Web.Controllers
 
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}
+
 	}
 }

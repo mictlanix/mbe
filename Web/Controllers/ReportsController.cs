@@ -1182,7 +1182,92 @@ namespace Mictlanix.BE.Web.Controllers
 
 			return PartialView ("_ProductSalesBySalesPerson", items);
 		}
+			
+		public ViewResult SalesPersonOrdersAndRefunds ()
+		{
+			ViewBag.EditorField = "employee";
+			ViewBag.EditorTemplate = "EmployeeSelector";
+			ViewBag.Title = Resources.SalesPersonOrdersAndRefunds;
+			return View ("SummaryReport", new DateRange ());
+		}
 
+		[HttpPost]
+		public ActionResult SalesPersonOrdersAndRefunds (int employee, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			string sql = @"SELECT sales_order SalesOrder, 0 Refund, date Date, name Customer,
+							GROUP_CONCAT(DISTINCT (SELECT GROUP_CONCAT(DISTINCT f.batch, f.serial SEPARATOR ' ')
+								FROM fiscal_document_detail fd LEFT JOIN fiscal_document f ON fd.document = f.fiscal_document_id
+								WHERE fd.order_detail = d.sales_order_detail_id) SEPARATOR ' ') Invoices,
+							SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) / IF(d.tax_included = 0, 1, 1 + d.tax_rate), 2)) Subtotal,
+							SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) Total
+						FROM sales_order m
+						INNER JOIN sales_order_detail d ON m.sales_order_id = d.sales_order
+						INNER JOIN customer c ON m.customer = c.customer_id
+						WHERE m.salesperson = :employee AND m.completed = 1 AND m.cancelled = 0 AND
+							m.date >= :start AND m.date <= :end
+						GROUP BY sales_order";
+
+			var orders = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate(ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
+
+				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
+				query.AddScalar ("Refund", NHibernateUtil.Int32);
+				query.AddScalar ("Date", NHibernateUtil.DateTime);
+				query.AddScalar ("Customer", NHibernateUtil.String);
+				query.AddScalar ("Invoices", NHibernateUtil.String);
+				query.AddScalar ("Subtotal", NHibernateUtil.Decimal);
+				query.AddScalar ("Total", NHibernateUtil.Decimal);
+
+				query.SetDateTime ("start", start);
+				query.SetDateTime ("end", end);
+				query.SetInt32 ("employee", employee);
+
+				return query.DynamicList();
+			}, null);
+
+			sql = @"SELECT sales_order SalesOrder, customer_refund Refund, s.date Date, name Customer,
+						GROUP_CONCAT(DISTINCT (SELECT GROUP_CONCAT(DISTINCT f.batch, f.serial SEPARATOR ' ')
+							FROM fiscal_document_detail fd LEFT JOIN fiscal_document f ON fd.document = f.fiscal_document_id
+							WHERE fd.order_detail = d.sales_order_detail) SEPARATOR ' ') Invoices,
+						-SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) / IF(d.tax_included = 0, 1, 1 + d.tax_rate), 2)) Subtotal,
+						-SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) Total
+					FROM customer_refund m
+					INNER JOIN sales_order s ON m.sales_order = s.sales_order_id
+					INNER JOIN customer_refund_detail d ON m.customer_refund_id = d.customer_refund
+					INNER JOIN customer c ON m.customer = c.customer_id
+					WHERE m.sales_person = :employee AND m.completed = 1 AND m.cancelled = 0 AND
+						s.date >= :start AND s.date <= :end
+					GROUP BY sales_order";
+
+			var refunds = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate(ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
+
+				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
+				query.AddScalar ("Refund", NHibernateUtil.Int32);
+				query.AddScalar ("Date", NHibernateUtil.DateTime);
+				query.AddScalar ("Customer", NHibernateUtil.String);
+				query.AddScalar ("Invoices", NHibernateUtil.String);
+				query.AddScalar ("Subtotal", NHibernateUtil.Decimal);
+				query.AddScalar ("Total", NHibernateUtil.Decimal);
+
+				query.SetDateTime ("start", start);
+				query.SetDateTime ("end", end);
+				query.SetInt32 ("employee", employee);
+
+				return query.DynamicList();
+			}, null);
+
+			var items = orders.ToList ();
+
+			items.AddRange (refunds);
+//			foreach (var refund in refunds) {
+//				items.Add (refund);
+//			}
+
+			return PartialView ("_SalesPersonOrdersAndRefunds", items);
+		}
 
 		#region Helpers
 		
