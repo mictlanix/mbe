@@ -65,6 +65,10 @@
                           CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPersonAndLabel).AllowRead ||
                           CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPersonAndBrand).AllowRead ||
                           CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPersonAndModel).AllowRead ||
+                          CurrentUser.GetPrivilege (SystemObjects.CustomersReport).AllowRead ||
+                          CurrentUser.GetPrivilege (SystemObjects.WarehouseStockReport).AllowRead ||
+                          CurrentUser.GetPrivilege (SystemObjects.WarehouseStockByLotReport).AllowRead ||
+                          CurrentUser.GetPrivilege (SystemObjects.WarehouseStockBySerialNumberReport).AllowRead ||
                           CurrentUser.GetPrivilege (SystemObjects.Kardex).AllowRead ||
                           CurrentUser.GetPrivilege (SystemObjects.SerialNumberKardex).AllowRead;
     
