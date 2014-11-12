@@ -135,3 +135,6 @@ button.icon.shipping,a.button.icon.shipping {
 button.icon.badge,a.button.icon.badge {
     background:#f3f3f3 url(icons/badge.png) no-repeat;
 }
+button.icon.configuration,a.button.icon.configuration {
+    background:#f3f3f3 url(icons/configuration.png) no-repeat;
+}

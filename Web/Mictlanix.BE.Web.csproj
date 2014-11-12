@@ -1030,5 +1030,7 @@
     <Content Include="Views\Shared\EditorTemplates\FiscalDocument.cshtml" />
     <Content Include="Views\Reports\_SerialNumberKardex.cshtml" />
     <Content Include="Views\Customers\_DiscountsRefresh.cshtml" />
+    <Content Include="Views\Inventory\PhysicalCountAdjustment.cshtml" />
+    <Content Include="Views\Inventory\_PhysicalCountAdjustment.cshtml" />
   </ItemGroup>
 </Project>

@@ -33,6 +33,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
+using NHibernate;
+using NHibernate.Exceptions;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Helpers;
@@ -1015,5 +1017,70 @@ namespace Mictlanix.BE.Web.Controllers
 
 
 		#endregion
-	}
+
+        #region Inventory
+
+        public ActionResult PhysicalCountAdjustment (int id)
+        {
+            var entity = InventoryReceipt.Find (id);
+            string sql = @"SELECT d.product_code Code, d.product_name Name, s.lot_number LotNumber, s.expiration_date ExpirationDate, s.serial_number SerialNumber, SUM(s.quantity) Quantity
+                            FROM lot_serial_tracking s
+                            INNER JOIN inventory_receipt_detail d ON s.product = d.product
+                            WHERE s.source = 4 AND s.warehouse = :warehouse AND d.receipt = :id AND s.date < :date
+                            GROUP BY s.product, s.lot_number, s.expiration_date, s.serial_number";
+
+            var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+                var query = session.CreateSQLQuery (sql);
+
+                query.AddScalar ("Code", NHibernateUtil.String);
+                query.AddScalar ("Name", NHibernateUtil.String);
+                query.AddScalar ("LotNumber", NHibernateUtil.String);
+                query.AddScalar ("ExpirationDate", NHibernateUtil.Date);
+                query.AddScalar ("SerialNumber", NHibernateUtil.String);
+                query.AddScalar ("Quantity", NHibernateUtil.Decimal);
+
+                query.SetInt32 ("id", entity.Id);
+                query.SetInt32 ("warehouse", entity.Warehouse.Id);
+                query.SetDateTime ("date", entity.ModificationTime);
+
+                return query.DynamicList ();
+            }, null);
+
+            return View ("PhysicalCountAdjustment", items);
+        }
+
+        [HttpPost, ActionName ("PhysicalCountAdjustment")]
+        public ActionResult PhysicalCountAdjustmentConfirmed (int id)
+        {
+            var entity = InventoryReceipt.Find (id);
+            string sql = @"SELECT d.product_code Code, d.product_name Name, s.product ProductId, s.lot_number LotNumber, s.expiration_date ExpirationDate, s.serial_number SerialNumber, SUM(s.quantity) Quantity
+                            FROM lot_serial_tracking s
+                            INNER JOIN inventory_receipt_detail d ON s.product = d.product
+                            WHERE s.source = 4 AND s.warehouse = :warehouse AND d.receipt = :id AND s.date < :date
+                            GROUP BY s.product, s.lot_number, s.expiration_date, s.serial_number";
+
+            var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+                var query = session.CreateSQLQuery (sql);
+
+                query.AddScalar ("Code", NHibernateUtil.String);
+                query.AddScalar ("Name", NHibernateUtil.String);
+                query.AddScalar ("ProductId", NHibernateUtil.Int32);
+                query.AddScalar ("LotNumber", NHibernateUtil.String);
+                query.AddScalar ("ExpirationDate", NHibernateUtil.Date);
+                query.AddScalar ("SerialNumber", NHibernateUtil.String);
+                query.AddScalar ("Quantity", NHibernateUtil.Decimal);
+
+                query.SetInt32 ("id", entity.Id);
+                query.SetInt32 ("warehouse", entity.Warehouse.Id);
+                query.SetDateTime ("date", entity.ModificationTime);
+
+                return query.DynamicList ();
+            }, null);
+
+            return View ("_PhysicalCountAdjustment", items);
+        }
+
+        #endregion
+    }
 }
+        
