@@ -182,6 +182,8 @@ namespace Mictlanix.BE.Model {
 		[Display(Name = "SalesPersonOrdersAndRefunds", ResourceType = typeof(Resources))]
 		SalesPersonOrdersAndRefundsReport,
 		[Display(Name = "ProductsMerge", ResourceType = typeof(Resources))]
-		ProductsMerge
+		ProductsMerge,
+        [Display(Name = "PhysicalCountAdjustment", ResourceType = typeof (Resources))]
+        PhysicalCountAdjustment
     }
 }

@@ -2087,4 +2087,16 @@ Realizada el: {0:d}</value>
   <data name="Merge" xml:space="preserve">
     <value>Fusionar</value>
   </data>
+  <data name="PhysicalCountAdjustment" xml:space="preserve">
+    <value>Ajuste de Conteo Fisico</value>
+  </data>
+  <data name="Adjustment" xml:space="preserve">
+    <value>Ajustar</value>
+  </data>
+  <data name="String1" xml:space="preserve">
+    <value>Ajustar</value>
+  </data>
+  <data name="Receipts" xml:space="preserve">
+    <value>Entradas</value>
+  </data>
 </root>
