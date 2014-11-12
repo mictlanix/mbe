@@ -59,9 +59,13 @@
     </table>
     <p></p>
 </div>
+
 <div class="right floating">
 	@Html.ActionLink(Resources.Print, "PrintReceipt", new { id = Model.Id }, new { @class = "button icon print", title = Resources.Print, target = "_blank" })
+    @Html.ActionLink(Resources.Adjustment, "PhysicalCountAdjustment", new { id = Model.Id }, new { @class = "button icon configuration" })
 </div>
 <div id="back-to-list">
     @Html.ActionLink(Resources.BackToList, "Receipts", new { }, new { @class = "button icon back" })
 </div>
+
+
