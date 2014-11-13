@@ -34,12 +34,12 @@
                 @item.ExpirationDate.ToString("d")
             }
         </td>
-        <td class='number'>
+        <td class='number' style="background-color:#f1f1f1">
             @if (item.Quantity > 0) {
                 @item.Quantity.ToString("0.####")
             }
         </td>
-        <td class='number'>
+        <td class='number' style="background-color:#f8f8f8">
             @if (item.Quantity < 0) {
                 @Math.Abs(item.Quantity).ToString("0.####")
             }

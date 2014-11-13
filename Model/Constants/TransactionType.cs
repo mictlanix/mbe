@@ -50,7 +50,9 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "PurchaseOrder", ResourceType = typeof(Resources))]
 		PurchaseOrder,
 		[Display(Name = "SupplierReturn", ResourceType = typeof(Resources))]
-		SupplierReturn
+        SupplierReturn,
+        [Display (Name = "InventoryAdjustment", ResourceType = typeof (Resources))]
+        InventoryAdjustment
     }
 }
 
