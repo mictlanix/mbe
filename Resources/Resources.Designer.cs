@@ -2406,6 +2406,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Ajuste de Inventario.
+        /// </summary>
+        public static string InventoryAdjustment {
+            get {
+                return ResourceManager.GetString("InventoryAdjustment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Salida del Inventario.
         /// </summary>
         public static string InventoryIssue {
@@ -2555,6 +2564,15 @@ namespace Mictlanix.BE {
         public static string IssuerName {
             get {
                 return ResourceManager.GetString("IssuerName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Salidas.
+        /// </summary>
+        public static string Issues {
+            get {
+                return ResourceManager.GetString("Issues", resourceCulture);
             }
         }
         
