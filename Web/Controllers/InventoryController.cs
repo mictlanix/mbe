@@ -1026,8 +1026,9 @@ namespace Mictlanix.BE.Web.Controllers
             string sql = @"SELECT d.product_code Code, d.product_name Name, s.lot_number LotNumber, s.expiration_date ExpirationDate, s.serial_number SerialNumber, SUM(s.quantity) Quantity
                             FROM lot_serial_tracking s
                             INNER JOIN inventory_receipt_detail d ON s.product = d.product
-                            WHERE s.source = 4 AND s.warehouse = :warehouse AND d.receipt = :id AND s.date < :date
-                            GROUP BY s.product, s.lot_number, s.expiration_date, s.serial_number";
+                            WHERE d.receipt = :id AND s.warehouse = :warehouse AND s.date < :date
+                            GROUP BY s.product, s.lot_number, s.expiration_date, s.serial_number
+                            HAVING SUM(s.quantity) <> 0";
 
             var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
                 var query = session.CreateSQLQuery (sql);
@@ -1053,17 +1054,16 @@ namespace Mictlanix.BE.Web.Controllers
         public ActionResult PhysicalCountAdjustmentConfirmed (int id)
         {
             var entity = InventoryReceipt.Find (id);
-            string sql = @"SELECT d.product_code Code, d.product_name Name, s.product ProductId, s.lot_number LotNumber, s.expiration_date ExpirationDate, s.serial_number SerialNumber, SUM(s.quantity) Quantity
+            string sql = @"SELECT s.product ProductId, s.lot_number LotNumber, s.expiration_date ExpirationDate, s.serial_number SerialNumber, SUM(s.quantity) Quantity
                             FROM lot_serial_tracking s
                             INNER JOIN inventory_receipt_detail d ON s.product = d.product
-                            WHERE s.source = 4 AND s.warehouse = :warehouse AND d.receipt = :id AND s.date < :date
-                            GROUP BY s.product, s.lot_number, s.expiration_date, s.serial_number";
+                            WHERE d.receipt = :id AND s.warehouse = :warehouse AND s.date < :date
+                            GROUP BY s.product, s.lot_number, s.expiration_date, s.serial_number
+                            HAVING SUM(s.quantity) <> 0";
 
             var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
                 var query = session.CreateSQLQuery (sql);
 
-                query.AddScalar ("Code", NHibernateUtil.String);
-                query.AddScalar ("Name", NHibernateUtil.String);
                 query.AddScalar ("ProductId", NHibernateUtil.Int32);
                 query.AddScalar ("LotNumber", NHibernateUtil.String);
                 query.AddScalar ("ExpirationDate", NHibernateUtil.Date);
@@ -1077,7 +1077,29 @@ namespace Mictlanix.BE.Web.Controllers
                 return query.DynamicList ();
             }, null);
 
-            return View ("_PhysicalCountAdjustment", items);
+            using (var scope = new TransactionScope ()) {
+                var dt = entity.ModificationTime.AddMilliseconds (-1);
+
+                foreach (var x in items) {
+                    var item = new LotSerialTracking {
+                        Source = TransactionType.InventoryAdjustment,
+                        Reference = entity.Id,
+                        Date = dt,
+                        Warehouse = entity.Warehouse,
+                        Product = Product.Find (x.ProductId),
+                        Quantity = -x.Quantity,
+                        LotNumber = x.LotNumber,
+                        ExpirationDate = x.ExpirationDate,
+                        SerialNumber = x.SerialNumber
+                    };
+
+                    item.Create ();
+                }
+
+                scope.Flush ();
+            }
+
+            return RedirectToAction ("Receipts");
         }
 
         #endregion

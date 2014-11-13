@@ -26,7 +26,7 @@
             }
         </td>
         <td class="text-center">@item.SerialNumber</td>
-        <td class='text-center'>-@item.Quantity.ToString("0.#")</td>
+        <td class='text-center'>@((-1m * item.Quantity).ToString("0.#"))</td>
     </tr>
 }
 <tr class="total">
@@ -35,14 +35,16 @@
 </tr>
 </table>
 
-<div class="vspaced" id="id:">
+<div class="vspaced">
     <div class="pull-right">
         @using (Html.BeginForm ()) {
             <button type="submit" class="button icon configuration">@Resources.Adjustment</button>
         }
     </div>
     <div id="back-to-list">
-        @Html.ActionLink(Resources.BackToList, "Receipts", null, new { @class = "button icon back" })
+        @using (Html.BeginForm ()) {
+        @Html.ActionLink(Resources.BackToList, "Receipts" ,null, new { @class = "button icon back" })
+        }
     </div>
 </div>
     
