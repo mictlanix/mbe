@@ -32,6 +32,7 @@ using System.Linq;
 using System.IO;
 using System.Text;
 using System.Security.Cryptography.X509Certificates;
+using System.Web;
 using Mictlanix.BE.Model;
 using Mictlanix.CFDLib;
 using Mictlanix.Diverza.Client;
@@ -148,6 +149,22 @@ namespace Mictlanix.BE.Web.Helpers
 			var cli = new ServisimClient (Configuration.ServisimUser,
 				Configuration.ServisimPasswd, Configuration.ServisimUrl);
 			var id = string.Format ("{0}-{1:D6}", Configuration.ServisimPartnerCode, item.Id);
+			var timer = new System.Diagnostics.Stopwatch ();
+
+			cli.EndRequest += (object sender, RequestEventArgs e) => {
+				timer.Stop ();
+
+				try {
+					string text = "Time: " + timer.ElapsedMilliseconds + " ms\n" +
+								"Request:\n" + e.Request + "\n" +
+								"Response:\n" + e.Response + "\n";
+					string path = HttpContext.Current.Server.MapPath (string.Format (Configuration.LogFilePattern, id, DateTime.Now));
+					File.WriteAllText (path, text);
+				} catch {
+				}
+			};
+
+			timer.Start ();
 			var tfd = cli.Stamp (id, cfd);
 
 			cfd.Complemento = new List<object> ();
