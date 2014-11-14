@@ -175,6 +175,10 @@ namespace Mictlanix.BE.Web.Helpers
 			get { return Convert.ToDecimal (ConfigurationManager.AppSettings ["DefaultPrice"]); }
 		}
 
+		public static string LogFilePattern {
+			get { return ConfigurationManager.AppSettings ["LogFilePattern"]; }
+		}
+
 		#endregion
 		
 		#region Request's (Local) Settings
