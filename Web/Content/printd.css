@@ -106,3 +106,15 @@ table > tbody > tr:nth-child(odd) > th {
 .pre-wrapped {
   white-space:pre-wrap;
 }
+
+.production-order,
+.production-order h1,
+.production-order h2,
+.production-order h3,
+.production-order h4,
+.production-order th,
+.production-order td,
+.production-order strong
+.production-order span.mylabel {
+  font-family: Verdana, Geneva, sans-serif !important;
+}
