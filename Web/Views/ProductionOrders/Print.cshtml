@@ -12,101 +12,103 @@
     ViewBag.Address = Model.Store.Address;
 }
 
-<div class="row">
-	<div class="col-xs-6 text-left">
-		<div class="row">
-			<div class="col-xs-12 uppercase">
-				<h2>@Resources.Customer</h2>
-			</div>
-		 	<div class="col-xs-12">
-		 		<p><span class="mylabel">@Resources.Name</span></p>
-	 		</div>
-	 		<div class="col-xs-12">
-	 			<p>@Html.DisplayFor(x => x.Customer.Name)</p>
- 			</div>
-		@if(Model.Contact != null) {
-		 	<div class="col-xs-12">
-		 		<p><span class="mylabel">@Resources.Contact</span></p>
-	 		</div>
-	 		<div class="col-xs-12">
-	 			<p>@Html.DisplayFor(x => x.Contact.Name)</p>
- 			</div>
-		}
- 		@if(Model.ShipTo != null) {
-		 	<div class="col-xs-12">
-		 		<p><span class="mylabel">@Resources.ShipTo</span></p>
-	 		</div>
-	 		<div class="col-xs-12">
-	 			<p>
-				    @Html.DisplayFor(x => x.ShipTo.Street)
-				    @Html.DisplayFor(x => x.ShipTo.ExteriorNumber)
-				    @Html.DisplayFor(x => x.ShipTo.InteriorNumber)<br>
-				    @Html.DisplayFor(x => x.ShipTo.Neighborhood),
-				    @Html.DisplayFor(x => x.ShipTo.Borough)<br>
-				    @Html.DisplayFor(x => x.ShipTo.State),
-				    @Html.DisplayFor(x => x.ShipTo.Country),
-				    @Html.DisplayFor(x => x.ShipTo.PostalCode)
-			    </p>
-	 		</div>
-		}
-		@if(!string.IsNullOrWhiteSpace (Model.Comment)) {
-		 	<div class="col-xs-12">
-		 		<p><span class="mylabel">@Resources.Comment</span></p>
-	 		</div>
-	 		<div class="col-xs-12">
-	 			@Html.DisplayFor(x => x.Comment)
- 			</div>
-		}
- 		</div>
-	</div>
-	<div class="col-xs-6 text-right">
-		<div class="row">
-			<div class="col-xs-12">
-				<h2 class="text-right uppercase">@Resources.ProductionOrder @Html.DisplayFor(x => x.Id)</h2>
-			</div>
-			<div class="col-xs-12">
-				<p><span class="mylabel">@Resources.SalesPerson</span></p>
-			</div>
-	 		<div class="col-xs-12">
-				<p>@Html.DisplayFor(x => x.SalesPerson.Name)</p>
-	 		</div>
-			<div class="col-xs-12">
-				<p><span class="mylabel">@Resources.DateTime</span></p>
-			</div>
-	 		<div class="col-xs-12">
-				<p>@Html.DisplayFor(x => x.Date)</p>
-	 		</div>
-			<div class="col-xs-12">
-				<p><span class="mylabel">@Resources.PromiseDate</span></p>
-			</div>
-	 		<div class="col-xs-12">
-				<p>@Model.PromiseDate.ToString("dddd, MMMM dd, yyyy")</p>
+<div class="production-order">
+	<div class="row">
+		<div class="col-xs-6 text-left">
+			<div class="row">
+				<div class="col-xs-12 uppercase">
+					<h2>@Resources.Customer</h2>
+				</div>
+			 	<div class="col-xs-12">
+			 		<p><span class="mylabel">@Resources.Name</span></p>
+		 		</div>
+		 		<div class="col-xs-12">
+		 			<p>@Html.DisplayFor(x => x.Customer.Name)</p>
+	 			</div>
+			@if(Model.Contact != null) {
+			 	<div class="col-xs-12">
+			 		<p><span class="mylabel">@Resources.Contact</span></p>
+		 		</div>
+		 		<div class="col-xs-12">
+		 			<p>@Html.DisplayFor(x => x.Contact.Name)</p>
+	 			</div>
+			}
+	 		@if(Model.ShipTo != null) {
+			 	<div class="col-xs-12">
+			 		<p><span class="mylabel">@Resources.ShipTo</span></p>
+		 		</div>
+		 		<div class="col-xs-12">
+		 			<p>
+					    @Html.DisplayFor(x => x.ShipTo.Street)
+					    @Html.DisplayFor(x => x.ShipTo.ExteriorNumber)
+					    @Html.DisplayFor(x => x.ShipTo.InteriorNumber)<br>
+					    @Html.DisplayFor(x => x.ShipTo.Neighborhood),
+					    @Html.DisplayFor(x => x.ShipTo.Borough)<br>
+					    @Html.DisplayFor(x => x.ShipTo.State),
+					    @Html.DisplayFor(x => x.ShipTo.Country),
+					    @Html.DisplayFor(x => x.ShipTo.PostalCode)
+				    </p>
+		 		</div>
+			}
+			@if(!string.IsNullOrWhiteSpace (Model.Comment)) {
+			 	<div class="col-xs-12">
+			 		<p><span class="mylabel">@Resources.Comment</span></p>
+		 		</div>
+		 		<div class="col-xs-12">
+		 			@Html.DisplayFor(x => x.Comment)
+	 			</div>
+			}
 	 		</div>
 		</div>
+		<div class="col-xs-6 text-right">
+			<div class="row">
+				<div class="col-xs-12">
+					<h2 class="text-right uppercase">@Resources.ProductionOrder @Html.DisplayFor(x => x.Id)</h2>
+				</div>
+				<div class="col-xs-12">
+					<p><span class="mylabel">@Resources.SalesPerson</span></p>
+				</div>
+		 		<div class="col-xs-12">
+					<p>@Html.DisplayFor(x => x.SalesPerson.Name)</p>
+		 		</div>
+				<div class="col-xs-12">
+					<p><span class="mylabel">@Resources.DateTime</span></p>
+				</div>
+		 		<div class="col-xs-12">
+					<p>@Html.DisplayFor(x => x.Date)</p>
+		 		</div>
+				<div class="col-xs-12">
+					<p><span class="mylabel">@Resources.PromiseDate</span></p>
+				</div>
+		 		<div class="col-xs-12">
+					<p>@Model.PromiseDate.ToString("dddd, MMMM dd, yyyy")</p>
+		 		</div>
+			</div>
+		</div>
 	</div>
+
+	<div style="min-height: 2.2mm; border-top: #C73F33 solid 1px; border-bottom: #C73F33 solid 3px"></div>
+
+	<table  style="border-spacing:0 4px;border-collapse: separate;">
+	    <thead>
+	        <tr>
+	            <th class="col-xs-1 text-center">@Resources.Quantity</th>
+	            <th class="col-xs-1 text-center">@Resources.UnitOfMeasurementShort</th>
+	            <th class="col-xs-3 text-center">@Resources.ProductCode</th>
+	            <th class="col-xs-7 text-center">@Resources.ProductName</th>
+	        </tr>
+	    </thead>
+	    <tbody>
+	        @foreach (var item in Model.Details) {
+	            <tr class="alt">
+	                <td class="nowrap text-right">@Html.DisplayFor(x => item.Quantity)</td>
+	                <td class="nowrap text-right">@Html.DisplayFor(x => item.Product.UnitOfMeasurement)</td>
+	                <td class="text-center">@Html.DisplayFor(x => item.ProductCode)</td>
+	                <td class="text-center">@Html.DisplayFor(x => item.ProductName) @Html.DisplayFor(x => item.Comment)</td>
+	            </tr>
+	        }
+	    </tbody>
+	</table>
+
+	<div style="min-height: 2.2mm; border-top: #C73F33 solid 3px; border-bottom: #C73F33 solid 1px"></div>
 </div>
-
-<div style="min-height: 2.2mm; border-top: #C73F33 solid 1px; border-bottom: #C73F33 solid 3px"></div>
-
-<table  style="border-spacing:0 4px;border-collapse: separate;">
-    <thead>
-        <tr>
-            <th class="col-xs-1 text-center">@Resources.Quantity</th>
-            <th class="col-xs-1 text-center">@Resources.UnitOfMeasurementShort</th>
-            <th class="col-xs-3 text-center">@Resources.ProductCode</th>
-            <th class="col-xs-7 text-center">@Resources.ProductName</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Details) {
-            <tr class="alt">
-                <td class="nowrap text-right">@Html.DisplayFor(x => item.Quantity)</td>
-                <td class="nowrap text-right">@Html.DisplayFor(x => item.Product.UnitOfMeasurement)</td>
-                <td class="text-center">@Html.DisplayFor(x => item.ProductCode)</td>
-                <td class="text-center">@Html.DisplayFor(x => item.ProductName) @Html.DisplayFor(x => item.Comment)</td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-<div style="min-height: 2.2mm; border-top: #C73F33 solid 3px; border-bottom: #C73F33 solid 1px"></div>
