@@ -232,7 +232,7 @@ namespace Mictlanix.BE.Web.Controllers
 
 				foreach (var x in item.Details) {
 					InventoryHelpers.ChangeNotification (TransactionType.InventoryReceipt, item.Id,
-					                                     item.ModificationTime, item.Warehouse, x.Product, x.Quantity);
+					                                     item.ModificationTime, item.Warehouse, null, x.Product, x.Quantity);
 				}
 			}
 
@@ -442,7 +442,7 @@ namespace Mictlanix.BE.Web.Controllers
 
 				foreach (var x in item.Details) {
 					InventoryHelpers.ChangeNotification (TransactionType.InventoryIssue, item.Id,
-					                                     item.ModificationTime, item.Warehouse, x.Product, -x.Quantity);
+					                                     item.ModificationTime, item.Warehouse, null, x.Product, -x.Quantity);
 				}
 			}
 
@@ -668,9 +668,7 @@ namespace Mictlanix.BE.Web.Controllers
 
 				foreach (var x in item.Details) {
 					InventoryHelpers.ChangeNotification (TransactionType.InventoryTransfer, item.Id,
-					                                     item.ModificationTime, item.From, x.Product, -x.Quantity);
-					//InventoryHelpers.ChangeNotification (TransactionType.InventoryTransfer, item.Id,
-					//									 item.ModificationTime, item.To, x.Product, x.Quantity, true);
+						item.ModificationTime, item.From, item.To, x.Product, -x.Quantity);
 				}
 			}
 

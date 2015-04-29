@@ -37,6 +37,11 @@
         @if (Model.Currency != Configuration.BaseCurrency) {
 			<i class="total2 icon-exclamation-sign" data-toggle='tooltip' title='@Html.DisplayFor(x => x.TotalEx) @Configuration.BaseCurrency'></i>
         }
+    	<br/>
+    	<b style='vertical-align:top;'>@Resources.Comment:</b>
+    	<a class='editable' data-type="textarea" data-placement='right' data-pk='@Model.Id'
+			data-url='@Url.Action("SetItemComment", new { id = Model.Id })'
+			data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>@Model.Comment</a>
     </div>
 </li>
 <script type='text/javascript'>
