@@ -39,21 +39,19 @@ namespace Mictlanix.BE.Web.Helpers
 	public static class InventoryHelpers
 	{
 		public static void ChangeNotification (TransactionType source, int reference, DateTime dt,
-		                                       Warehouse warehouse, Product product, decimal quantity)
-		{
-			ChangeNotification (source, reference, dt, warehouse, product, quantity, false);
-		}
-
-		public static void ChangeNotification (TransactionType source, int reference, DateTime dt,
-			Warehouse warehouse, Product product, decimal quantity, bool skipSerials)
+			Warehouse origin, Warehouse destination, Product product, decimal quantity)
 		{
 			if (!product.IsStockable)
 				return;
 
-			if (skipSerials || !(product.IsPerishable || product.IsSeriable)) {
-				KardexRegister (source, reference, dt, warehouse, product, quantity);
+			if (!(product.IsPerishable || product.IsSeriable)) {
+				KardexRegister (source, reference, dt, origin, product, quantity);
+
+				if (destination != null) {
+					KardexRegister (source, reference, dt, destination, product, -quantity);
+				}
 			} else {
-				LotSerialRegister (source, reference, warehouse, product, quantity);
+				LotSerialRegister (source, reference, origin, product, quantity);
 			}
 		}
 

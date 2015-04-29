@@ -676,6 +676,11 @@ namespace Mictlanix.BE.Web.Controllers
 				return Content (Resources.SalesOrderNotFound);
 			}
 
+			if (!sales_order.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.SalesOrderIsNotInvoiceable);
+			}
+
 			using (var scope = new TransactionScope()) {
 				foreach (var x in sales_order.Details) {
 					if (!x.Product.IsInvoiceable)
@@ -699,7 +704,8 @@ namespace Mictlanix.BE.Web.Controllers
 						Quantity = max_qty,
 						Price = x.Price,
 						ExchangeRate = entity.ExchangeRate,
-						Currency = entity.Currency
+						Currency = entity.Currency,
+						Comment = x.Comment
 					};
 
 					if (x.Currency != entity.Currency) {
@@ -820,6 +826,25 @@ namespace Mictlanix.BE.Web.Controllers
 			}
 
 			return Json (new { id = entity.Id, value = entity.UnitOfMeasurement });
+		}
+
+		[HttpPost]
+		public ActionResult SetItemComment (int id, string value)
+		{
+			var entity = FiscalDocumentDetail.Find (id);
+
+			if (entity.Document.IsCompleted || entity.Document.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			entity.Comment = string.IsNullOrWhiteSpace (value) ? null : value.Trim ();
+
+			using (var scope = new TransactionScope()) {
+				entity.UpdateAndFlush ();
+			}
+
+			return Json (new { id = id, value = entity.Comment });
 		}
 
 		[HttpPost]

@@ -802,7 +802,7 @@ namespace Mictlanix.BE.Web.Controllers
 					x.Update ();
 
 					InventoryHelpers.ChangeNotification (TransactionType.SalesOrder, entity.Id,
-					                                    dt, warehouse, x.Product, -x.Quantity);
+						dt, warehouse, null, x.Product, -x.Quantity);
 				}
 
 				entity.UpdateAndFlush ();
