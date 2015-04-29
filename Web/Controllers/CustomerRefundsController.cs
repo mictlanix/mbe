@@ -271,7 +271,7 @@ namespace Mictlanix.BE.Web.Controllers
 
 				foreach (var x in entity.Details) {
 					InventoryHelpers.ChangeNotification (TransactionType.CustomerRefund, entity.Id, dt,
-					                                     x.SalesOrderDetail.Warehouse, x.Product, x.Quantity);
+						x.SalesOrderDetail.Warehouse, null, x.Product, x.Quantity);
 				}
 				
 				entity.Updater = SecurityHelpers.GetUser (User.Identity.Name).Employee;

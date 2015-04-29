@@ -2105,4 +2105,7 @@ Realizada el: {0:d}</value>
   <data name="InventoryAdjustment" xml:space="preserve">
     <value>Ajuste de Inventario</value>
   </data>
+  <data name="SalesOrderIsNotInvoiceable" xml:space="preserve">
+    <value>No se ha finalizado el pedido o está cancelado.</value>
+  </data>
 </root>
