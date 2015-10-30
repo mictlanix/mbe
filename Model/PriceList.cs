@@ -38,7 +38,7 @@ namespace Mictlanix.BE.Model
     [ActiveRecord("price_list")]
     public class PriceList : ActiveRecordLinqBase<PriceList>
     {
-        [PrimaryKey(PrimaryKeyType.Identity, "price_list_id")]
+		[PrimaryKey(PrimaryKeyType.Identity, "price_list_id", UnsavedValue="-1")]
         public int Id { get; set; }
 
         [Property]

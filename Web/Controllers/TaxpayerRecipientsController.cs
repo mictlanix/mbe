@@ -50,11 +50,7 @@ namespace Mictlanix.BE.Web.Controllers
 				Limit = Configuration.PageSize
 			});
 
-			if (Request.IsAjaxRequest ()) {
-				return PartialView ("_Index", search);
-			} else {
-				return View (search);
-			}
+			return View (search);
 		}
 
 		[HttpPost]
@@ -66,15 +62,15 @@ namespace Mictlanix.BE.Web.Controllers
 
 			if (Request.IsAjaxRequest ()) {
 				return PartialView ("_Index", search);
-			} else {
-				return View (search);
 			}
+
+			return View (search);
 		}
 
 		Search<TaxpayerRecipient> SearchTaxpayers (Search<TaxpayerRecipient> search)
 		{
 			IQueryable<TaxpayerRecipient> query;
-			var pattern = string.Format("{0}", search.Pattern).Trim ();
+			var pattern = (search.Pattern ?? string.Empty).Trim ();
 
 			if (string.IsNullOrWhiteSpace (pattern)) {
 				query = from x in TaxpayerRecipient.Queryable
@@ -119,7 +115,9 @@ namespace Mictlanix.BE.Web.Controllers
 				return PartialView ("_Create", item);
 			}
 
-			item.Id = item.Id.ToUpper ();
+			item.Id = item.Id.ToUpper ().Trim ();
+			item.Name = item.Name.Trim ();
+			item.Email = item.Email.Trim ();
 
 			using (var scope = new TransactionScope ()) {
 				if (item.HasAddress) {
@@ -135,13 +133,16 @@ namespace Mictlanix.BE.Web.Controllers
 		public ActionResult Details (string id)
 		{
 			var item = TaxpayerRecipient.Find (id);
+
 			return PartialView ("_Details", item);
 		}
 
 		public ActionResult Edit (string id)
         {
         	var item = TaxpayerRecipient.Find (id);
+
 			item.HasAddress = (item.Address != null);
+
 			return PartialView ("_Edit", item);
         }
 
@@ -161,8 +162,8 @@ namespace Mictlanix.BE.Web.Controllers
 			var address = entity.Address;
 
 			entity.HasAddress = (address != null);
-			entity.Name = item.Name;
-			entity.Email = item.Email;
+			entity.Name = item.Name.Trim ();
+			entity.Email = item.Email.Trim ();
 
 			using (var scope = new TransactionScope()) {
 				if(item.HasAddress) {
