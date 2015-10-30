@@ -197,6 +197,25 @@ namespace Mictlanix.BE.Web.Controllers
 			return Json (new { id = id, value = item.PriceType.GetDisplayName () });
 		}
 
+		[HttpPut]
+		public ActionResult ToogleTaxIncluded (int id)
+		{
+			var item = Product.Find (id);
+
+			if (item == null) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemNotFound);
+			}
+
+			item.IsTaxIncluded = !item.IsTaxIncluded;
+
+			using (var scope = new TransactionScope ()) {
+				item.UpdateAndFlush ();
+			}
+
+			return PartialView ("_IsTaxIncluded", item);
+		}
+
 		public JsonResult PriceTypes ()
 		{
 			var qry = from x in Enum.GetValues (typeof(PriceType)).Cast<PriceType> ()
