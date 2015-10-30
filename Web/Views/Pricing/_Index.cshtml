@@ -51,7 +51,9 @@
 			<span>@Html.DisplayFor(x => item.TaxRate)</span>
 		}
     	</td>
-        <td class='stretch center'>@Html.DisplayFor(x => item.IsTaxIncluded)</td>
+        <td class='stretch center tax-included' title="Doble click para cambiar" data-url='@Url.Action("ToogleTaxIncluded", new { id = item.Id })'>
+        	@Html.DisplayFor(x => item.IsTaxIncluded)
+        </td>
         <td class='stretch center'>
         @if (Privilege.AllowUpdate) {
             <a class='editable' data-type='select' data-placement='bottom' data-source='@Url.Action("PriceTypes")' data-pk='@item.Id' data-value='@((int)item.PriceType)' data-url='@Url.Action("SetPriceType", new { id = item.Id })'>@item.PriceType.GetDisplayName()</a>
@@ -129,6 +131,16 @@ $(function () {
 	          	$(this).html(response.value);
 	        }
 	    }
+	});
+	$('.tax-included').dblclick(function (){
+		var self = $(this);
+
+		$.ajax({
+		    type: "PUT",
+		    url: self.data('url')
+		}).done(function(data) {
+			self.html(data);
+		});
 	});
 	</text>
 	}
