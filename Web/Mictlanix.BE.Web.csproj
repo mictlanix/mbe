@@ -852,6 +852,7 @@
     <Content Include="Views\FiscalDocuments\Print32Eyeco.cshtml" />
     <Content Include="Views\Reports\_SalesPersonOrdersAndRefunds.cshtml" />
     <Content Include="Views\Products\Merge.cshtml" />
+    <Content Include="Views\Pricing\_IsTaxIncluded.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
