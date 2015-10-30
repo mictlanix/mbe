@@ -64,7 +64,7 @@ namespace Mictlanix.BE.Model
 
         public override bool Equals(object obj)
         {
-            PriceList other = obj as PriceList;
+			var other = obj as ProductPrice;
 
             if (other == null)
                 return false;
