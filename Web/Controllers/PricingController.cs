@@ -197,7 +197,7 @@ namespace Mictlanix.BE.Web.Controllers
 			return Json (new { id = id, value = item.PriceType.GetDisplayName () });
 		}
 
-		[HttpPut]
+		[HttpPost]
 		public ActionResult ToogleTaxIncluded (int id)
 		{
 			var item = Product.Find (id);
