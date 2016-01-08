@@ -136,7 +136,7 @@ $(function () {
 		var self = $(this);
 
 		$.ajax({
-		    type: "PUT",
+		    type: "POST",
 		    url: self.data('url')
 		}).done(function(data) {
 			self.html(data);
