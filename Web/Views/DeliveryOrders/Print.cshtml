@@ -4,7 +4,7 @@
 @model DeliveryOrder
 
 @{
-    Layout = Configuration.PrintLayout;
+    Layout = WebConfig.PrintLayout;
     ViewBag.Title = Resources.DeliveryOrder;
     ViewBag.Store = Model.Store;
     ViewBag.TaxpayerName = Model.Store.Taxpayer.Name;

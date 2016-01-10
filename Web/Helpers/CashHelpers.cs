@@ -80,8 +80,8 @@ namespace Mictlanix.BE.Web.Helpers
 			if (val != decimal.Zero)
 				return val;
 
-			var val1 = GetExchangeRateA (date, baseCurrency, Configuration.BaseCurrency);
-			var val2 = GetExchangeRateA (date, targetCurrency, Configuration.BaseCurrency);
+			var val1 = GetExchangeRateA (date, baseCurrency, WebConfig.BaseCurrency);
+			var val2 = GetExchangeRateA (date, targetCurrency, WebConfig.BaseCurrency);
 
 			return val2 == decimal.Zero ? decimal.Zero : (val1 / val2);
 		}
@@ -93,12 +93,12 @@ namespace Mictlanix.BE.Web.Helpers
 		
 		public static decimal GetTodayExchangeRate (CurrencyCode baseCurrency)
 		{
-			return GetExchangeRate (DateTime.Today, baseCurrency, Configuration.BaseCurrency);
+			return GetExchangeRate (DateTime.Today, baseCurrency, WebConfig.BaseCurrency);
 		}
 
 		public static decimal GetTodayDefaultExchangeRate()
 		{
-			return GetExchangeRate (DateTime.Today, Configuration.DefaultCurrency, Configuration.BaseCurrency);
+			return GetExchangeRate (DateTime.Today, WebConfig.DefaultCurrency, WebConfig.BaseCurrency);
 		}
 
 		public static bool ValidateExchangeRate ()

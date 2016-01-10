@@ -50,7 +50,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			}
 
 			var search = SearchPurchaseOrders (new Search<PurchaseOrder> {
-				Limit = Configuration.PageSize
+				Limit = WebConfig.PageSize
 			});
 
 			return View (search);
@@ -194,7 +194,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
                 Discount = 0,
 				Price = cost,
 				ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate(),
-				Currency = Configuration.DefaultCurrency
+				Currency = WebConfig.DefaultCurrency
             };
 
             using (var scope = new TransactionScope()) {

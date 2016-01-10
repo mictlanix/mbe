@@ -4,7 +4,7 @@
 @model SalesQuote
 
 @{
-    Layout = Configuration.PrintLayout;
+    Layout = WebConfig.PrintLayout;
     ViewBag.Title = Resources.SalesQuote;
     ViewBag.Store = Model.Store;
     ViewBag.TaxpayerName = null;
@@ -79,7 +79,7 @@
         <tr>
             <td rowspan="2" class="col-xs-10 text-center" style="vertical-align:middle">
                 <div style="border-top: solid black 1px; border-bottom:solid black 1px; margin: 0 2cm 0 2cm;">
-                    @Html.CurrencyToString(Model.Total, Configuration.BaseCurrency)
+                    @Html.CurrencyToString(Model.Total, WebConfig.BaseCurrency)
                 </div>
             </td>
             <td class="col-xs-1 nowrap text-right">@Resources.Subtotal</td>

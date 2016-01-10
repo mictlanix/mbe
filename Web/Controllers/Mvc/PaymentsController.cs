@@ -45,7 +45,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
     {
         public ActionResult Index ()
 		{
-			var drawer = Configuration.CashDrawer;
+			var drawer = WebConfig.CashDrawer;
             var session = GetSession ();
 
             if (drawer == null) {
@@ -66,7 +66,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
         [HttpPost]
 		public ActionResult Index (string id)
 		{
-			var drawer = Configuration.CashDrawer;
+			var drawer = WebConfig.CashDrawer;
 			var session = GetSession ();
 
 			if (drawer == null) {
@@ -92,7 +92,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		Search<SalesOrder> SearchSalesOrders (Search<SalesOrder> search)
 		{
 			IQueryable<SalesOrder> query;
-			var item = Configuration.Store;
+			var item = WebConfig.Store;
 			var pattern = (search.Pattern ?? string.Empty).Trim ();
 			int id = 0;
 
@@ -163,7 +163,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
             var model = new CashSession {
                 Start = DateTime.Now,
                 CashCounts = CashHelpers.ListDenominations (),
-                CashDrawer = Configuration.CashDrawer,
+                CashDrawer = WebConfig.CashDrawer,
                 Cashier = CurrentUser.Employee
             };
 
@@ -177,7 +177,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
         [HttpPost]
 		public ActionResult OpenSession (CashSession item)
 		{            
-			item.CashDrawer = Configuration.CashDrawer;
+			item.CashDrawer = WebConfig.CashDrawer;
 
             if (item.CashDrawer == null)
                 return View("InvalidCashDrawer");
@@ -206,7 +206,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
         public ActionResult PayOrder (int id)
 		{
-			var drawer = Configuration.CashDrawer;
+			var drawer = WebConfig.CashDrawer;
 			var session = GetSession ();
 
 			if (drawer == null) {
@@ -432,7 +432,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
         
         CashSession GetSession ()
 		{
-			var item = Configuration.CashDrawer;
+			var item = WebConfig.CashDrawer;
 			
 			if (item == null)
 				return null;

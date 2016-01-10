@@ -197,9 +197,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		public ActionResult LocalSettings ()
 		{
 			LocalSettings item = new LocalSettings {
-				Store = Configuration.Store,
-				PointOfSale = Configuration.PointOfSale,
-				CashDrawer = Configuration.CashDrawer
+				Store = WebConfig.Store,
+				PointOfSale = WebConfig.PointOfSale,
+				CashDrawer = WebConfig.CashDrawer
 			};
 			
 			return View (item);
@@ -217,19 +217,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				return View (item);
 			}
 			
-			Response.Cookies.Add (new HttpCookie (Configuration.StoreCookieKey) {
+			Response.Cookies.Add (new HttpCookie (WebConfig.StoreCookieKey) {
 				Value = item.Store.Id.ToString (),
 				Expires = DateTime.Now.AddYears (100)
 			});
 			
 			if (item.PointOfSale != null) {
-				Response.Cookies.Add(new HttpCookie(Configuration.PointOfSaleCookieKey) {
+				Response.Cookies.Add(new HttpCookie(WebConfig.PointOfSaleCookieKey) {
 					Value = item.PointOfSale.Id.ToString (),
 					Expires = DateTime.Now.AddYears (100)
 				});
 			} else {
-				if (Request.Cookies [Configuration.PointOfSaleCookieKey] != null) {
-					Response.Cookies.Add(new HttpCookie(Configuration.PointOfSaleCookieKey) {
+				if (Request.Cookies [WebConfig.PointOfSaleCookieKey] != null) {
+					Response.Cookies.Add(new HttpCookie(WebConfig.PointOfSaleCookieKey) {
 						Value = string.Empty,
 						Expires = DateTime.Now.AddDays (-1d)
 					});
@@ -237,13 +237,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			}
 			
 			if (item.CashDrawer != null) {
-				Response.Cookies.Add(new HttpCookie(Configuration.CashDrawerCookieKey) {
+				Response.Cookies.Add(new HttpCookie(WebConfig.CashDrawerCookieKey) {
 					Value = item.CashDrawer.Id.ToString (),
 					Expires = DateTime.Now.AddYears (100)
 				});
 			} else {
-				if (Request.Cookies [Configuration.CashDrawerCookieKey] != null) {
-					Response.Cookies.Add(new HttpCookie(Configuration.CashDrawerCookieKey) {
+				if (Request.Cookies [WebConfig.CashDrawerCookieKey] != null) {
+					Response.Cookies.Add(new HttpCookie(WebConfig.CashDrawerCookieKey) {
 						Value = string.Empty,
 						Expires = DateTime.Now.AddDays (-1d)
 					});

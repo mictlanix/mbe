@@ -46,7 +46,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		public ActionResult Index ()
         {
 			var search = SearchEmployees (new Search<Employee> {
-				Limit = Configuration.PageSize
+				Limit = WebConfig.PageSize
 			});
 
 			if (Request.IsAjaxRequest ()) {

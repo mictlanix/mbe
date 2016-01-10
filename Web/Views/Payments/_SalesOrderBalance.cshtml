@@ -6,18 +6,18 @@
 <ul class='labeled-frames pull-right'>
     <li>
     	<span class='caption'>@Resources.Total</span>
-        <span class='value'>@Html.DisplayFor(x => x.TotalEx) @Configuration.BaseCurrency</span>
-    @if (Model.Currency != Configuration.BaseCurrency) {
+        <span class='value'>@Html.DisplayFor(x => x.TotalEx) @WebConfig.BaseCurrency</span>
+    @if (Model.Currency != WebConfig.BaseCurrency) {
         <span class='value'>@Html.DisplayFor(x => x.Total) @Html.DisplayFor(x => x.Currency)</span>
     }
     </li>
     <li>
     	<span class='caption'>@Resources.Paid</span>
-    	<span class='value'>@Html.DisplayFor(x => x.Paid) @Configuration.BaseCurrency</span>
+    	<span class='value'>@Html.DisplayFor(x => x.Paid) @WebConfig.BaseCurrency</span>
     </li>
     <li>
     	<span class='caption'>@Resources.Change</span>
-        <span class='value'>@Html.DisplayFor(x => x.Balance) @Configuration.BaseCurrency</span>
+        <span class='value'>@Html.DisplayFor(x => x.Balance) @WebConfig.BaseCurrency</span>
     </li>
 </ul>
 

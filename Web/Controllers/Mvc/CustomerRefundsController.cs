@@ -46,14 +46,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
     {
 		public ViewResult Index ()
 		{
-			var item = Configuration.Store;
+			var item = WebConfig.Store;
 
 			if (item == null) {
 				return View ("InvalidStore");
 			}
 
 			var search = SearchRefunds (new Search<CustomerRefund> {
-				Limit = Configuration.PageSize
+				Limit = WebConfig.PageSize
 			});
 
 			return View (search);
@@ -76,7 +76,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		Search<CustomerRefund> SearchRefunds (Search<CustomerRefund> search)
 		{
 			IQueryable<CustomerRefund> query;
-			var item = Configuration.Store;
+			var item = WebConfig.Store;
 
 			if (string.IsNullOrEmpty (search.Pattern)) {
 				query = from x in CustomerRefund.Queryable
@@ -124,7 +124,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				return Content (Resources.SalesOrderNotFound);
 			}
 
-			if (entity.Store != Configuration.Store) {
+			if (entity.Store != WebConfig.Store) {
 				Response.StatusCode = 400;
 				return Content (Resources.InvalidStore);
 			}
@@ -340,7 +340,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		[HttpPost]
 		public ActionResult Historic (DateRange item, Search<CustomerRefund> search)
 		{
-			search.Limit = Configuration.PageSize;
+			search.Limit = WebConfig.PageSize;
 			search = SearchRefunds(item, search);
 
 			return PartialView ("_Historic", search);

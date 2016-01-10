@@ -47,12 +47,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 	{
 		public ViewResult Index ()
 		{
-			if (Configuration.Store == null) {
+			if (WebConfig.Store == null) {
 				return View ("InvalidStore");
 			}
 
 			var search = SearchDeliveryOrders (new Search<DeliveryOrder> {
-				Limit = Configuration.PageSize
+				Limit = WebConfig.PageSize
 			});
 
 			return View (search);
@@ -118,13 +118,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		[HttpPost]
 		public ActionResult New (DeliveryOrder item)
 		{
-			item.Customer = Customer.TryFind (Configuration.DefaultCustomer);
+			item.Customer = Customer.TryFind (WebConfig.DefaultCustomer);
 
 			if (!ModelState.IsValid) {
 				return PartialView ("_Create", item);
 			}
 
-			item.Store = Configuration.Store;
+			item.Store = WebConfig.Store;
 
 			item.Serial = 0;
 			item.Date = DateTime.Now;

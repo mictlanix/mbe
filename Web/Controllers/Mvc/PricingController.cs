@@ -48,7 +48,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 					  select x;
 
 			var search = new Search<Product>();
-			search.Limit = Configuration.PageSize;
+			search.Limit = WebConfig.PageSize;
 			search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
 			search.Total = qry.Count();
 			
@@ -166,7 +166,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			if (value >= 0) {
 				entity.TaxRate = value;
-				entity.IsTaxIncluded = Configuration.IsTaxIncluded;
+				entity.IsTaxIncluded = WebConfig.IsTaxIncluded;
 
 				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
