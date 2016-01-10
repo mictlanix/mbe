@@ -2,46 +2,46 @@
 @using Mictlanix.BE.Model
 @model Product
 
-<div class="row">
-  	<div class="span2 field-required">@Html.LabelFor(x => x.Code)</div>
-	<div class="span6 field-required">@Html.LabelFor(x => x.Name)</div>
+<div class="form-group">
+  	<div class="col-xs-2 field-required">@Html.LabelFor(x => x.Code)</div>
+	<div class="col-xs-6 field-required">@Html.LabelFor(x => x.Name)</div>
 </div>
-<div class="row">
-  	<div class="span2">@Html.EditorFor(x => x.Code) @Html.ValidationMessageFor(model => model.Code)</div>
-	<div class="span6">@Html.EditorFor(x => x.Name) @Html.ValidationMessageFor(model => model.Name)</div>
+<div class="form-group">
+  	<div class="col-xs-2">@Html.EditorFor(x => x.Code) @Html.ValidationMessageFor(model => model.Code)</div>
+	<div class="col-xs-6">@Html.EditorFor(x => x.Name) @Html.ValidationMessageFor(model => model.Name)</div>
 </div>
-<div class="row">
-  	<div class="span2 field-required">@Html.LabelFor(x => x.UnitOfMeasurement)</div>
-  	<div class="span3">@Html.LabelFor(x => x.Model)</div>
-  	<div class="span3">@Html.LabelFor(x => x.Brand)</div>
+<div class="form-group">
+  	<div class="col-xs-2 field-required">@Html.LabelFor(x => x.UnitOfMeasurement)</div>
+  	<div class="col-xs-3">@Html.LabelFor(x => x.Model)</div>
+  	<div class="col-xs-3">@Html.LabelFor(x => x.Brand)</div>
 </div>
-<div class="row">
-  	<div class="span2">@Html.EditorFor(x => x.UnitOfMeasurement, "UnitOfMeasurement") @Html.ValidationMessageFor(model => model.UnitOfMeasurement)</div>
-  	<div class="span3">@Html.EditorFor(x => x.Model) </div>
-  	<div class="span3">@Html.EditorFor(x => x.Brand) </div>
+<div class="form-group">
+  	<div class="col-xs-2">@Html.EditorFor(x => x.UnitOfMeasurement, "UnitOfMeasurement") @Html.ValidationMessageFor(model => model.UnitOfMeasurement)</div>
+  	<div class="col-xs-3">@Html.EditorFor(x => x.Model) </div>
+  	<div class="col-xs-3">@Html.EditorFor(x => x.Brand) </div>
 </div>
-<div class="row">
-	<div class="span4">@Html.LabelFor(x => x.SKU)</div>
-  	<div class="span4">@Html.LabelFor(x => x.Location)</div>
+<div class="form-group">
+	<div class="col-xs-4">@Html.LabelFor(x => x.SKU)</div>
+  	<div class="col-xs-4">@Html.LabelFor(x => x.Location)</div>
 </div>
-<div class="row">
-	<div class="span4">@Html.EditorFor(x => x.SKU) </div>
-  	<div class="span4">@Html.EditorFor(x => x.Location)</div>
+<div class="form-group">
+	<div class="col-xs-4">@Html.EditorFor(x => x.SKU) </div>
+  	<div class="col-xs-4">@Html.EditorFor(x => x.Location)</div>
 </div>
-<div class="row">
-  	<div class="span8 field-required">@Html.LabelFor(x => x.SupplierId)</div>
+<div class="form-group">
+  	<div class="col-xs-8 field-required">@Html.LabelFor(x => x.SupplierId)</div>
 </div>
-<div class="row">
-  	<div class="span8">@Html.EditorFor(x => x.SupplierId) @Html.ValidationMessageFor(model => model.SupplierId)</div>
+<div class="form-group">
+  	<div class="col-xs-8">@Html.EditorFor(x => x.SupplierId) @Html.ValidationMessageFor(model => model.SupplierId)</div>
 </div>
-<div class="row">
-  	<div class="span8">@Html.LabelFor(x => x.Comment)</div>
+<div class="form-group">
+  	<div class="col-xs-8">@Html.LabelFor(x => x.Comment)</div>
 </div>
-<div class="row">
-  	<div class="span8">@Html.EditorFor(x => x.Comment) </div>
+<div class="form-group">
+  	<div class="col-xs-8">@Html.EditorFor(x => x.Comment) </div>
 </div>
-<div class="row">
-	<div class="span8 text-center">
+<div class="form-group">
+	<div class="col-xs-8 text-center">
 		@Html.EditorFor(x => x.IsStockable)
 		@Html.EditorFor(x => x.IsPerishable)
 		@Html.EditorFor(x => x.IsSeriable)

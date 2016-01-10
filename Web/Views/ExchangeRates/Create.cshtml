@@ -14,12 +14,12 @@
     <fieldset>
         <legend>@Resources.ExchangeRate</legend>
         <div class="row">
-            <div class="span4">@Html.LabelFor (x => x.Date)</div>
-            <div class="span4 field-required">@Html.LabelFor (x => x.Base)</div>
+            <div class="col-xs-4">@Html.LabelFor (x => x.Date)</div>
+            <div class="col-xs-4 field-required">@Html.LabelFor (x => x.Base)</div>
         </div>
         <div class="row">
-            <div class="span4"> @Html.EditorFor (x => x.Date) @Html.ValidationMessageFor (x => x.Date)</div>
-            <div class="span4">
+            <div class="col-xs-4"> @Html.EditorFor (x => x.Date) @Html.ValidationMessageFor (x => x.Date)</div>
+            <div class="col-xs-4">
                 <select id="target-list" name="Base">
                     @foreach (var item in Enum.GetValues (typeof (CurrencyCode))) {
                         if (WebConfig.DefaultCurrency == (CurrencyCode) item) {
@@ -32,16 +32,16 @@
             </div>
         </div>
         <div class="row">
-            <div class="span4 field-required">@Html.LabelFor (x => x.Rate)</div>
+            <div class="col-xs-4 field-required">@Html.LabelFor (x => x.Rate)</div>
         </div>
         <div class="row">
-            <div class="span4">@Html.EditorFor (x => x.Rate) @Html.ValidationMessageFor (x => x.Rate)</div>
+            <div class="col-xs-4">@Html.EditorFor (x => x.Rate) @Html.ValidationMessageFor (x => x.Rate)</div>
         </div>
         <div class="row">
-            <div class="span4">@Html.LabelFor (x => x.Target)</div>
+            <div class="col-xs-4">@Html.LabelFor (x => x.Target)</div>
         </div>
         <div class="row">
-            <div class="span4">@Html.HiddenFor (x => x.Target)  @Html.DisplayFor (x => x.Target)</div>
+            <div class="col-xs-4">@Html.HiddenFor (x => x.Target)  @Html.DisplayFor (x => x.Target)</div>
         </div>
         
         

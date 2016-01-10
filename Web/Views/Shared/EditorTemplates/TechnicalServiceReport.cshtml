@@ -1,63 +1,63 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @model TechnicalServiceReport
-<div class="row">
-  	<div class="span2 field-required">@Html.LabelFor(x => x.Date)</div>
-	<div class="span3 field-required">@Html.LabelFor(x => x.Location)</div>
-	<div class="span3 field-required">@Html.LabelFor(x => x.Type)</div>
+<div class="form-group">
+  	<div class="col-xs-2 field-required">@Html.LabelFor(x => x.Date)</div>
+	<div class="col-xs-3 field-required">@Html.LabelFor(x => x.Location)</div>
+	<div class="col-xs-3 field-required">@Html.LabelFor(x => x.Type)</div>
 </div>
-<div class="row">
-  	<div class="span2">@Html.EditorFor(x => x.Date) @Html.ValidationMessageFor(x => x.Date)</div>
-  	<div class="span3">@Html.EditorFor(x => x.Location) @Html.ValidationMessageFor(x => x.Location)</div>
-	<div class="span3">@Html.EditorFor(x => x.Type) @Html.ValidationMessageFor(x => x.Type)</div>
+<div class="form-group">
+  	<div class="col-xs-2">@Html.EditorFor(x => x.Date) @Html.ValidationMessageFor(x => x.Date)</div>
+  	<div class="col-xs-3">@Html.EditorFor(x => x.Location) @Html.ValidationMessageFor(x => x.Location)</div>
+	<div class="col-xs-3">@Html.EditorFor(x => x.Type) @Html.ValidationMessageFor(x => x.Type)</div>
 </div>
-<div class="row">
-  	<div class="span3 field-required">@Html.LabelFor(x => x.Equipment)</div>
-  	<div class="span2 field-required">@Html.LabelFor(x => x.Brand)</div>
-  	<div class="span3 field-required">@Html.LabelFor(x => x.Model)</div>
+<div class="form-group">
+  	<div class="col-xs-3 field-required">@Html.LabelFor(x => x.Equipment)</div>
+  	<div class="col-xs-2 field-required">@Html.LabelFor(x => x.Brand)</div>
+  	<div class="col-xs-3 field-required">@Html.LabelFor(x => x.Model)</div>
 </div>
-<div class="row">
-  	<div class="span3">@Html.EditorFor(x => x.Equipment) @Html.ValidationMessageFor(x => x.Equipment)</div>
-  	<div class="span2">@Html.EditorFor(x => x.Brand) @Html.ValidationMessageFor(x => x.Brand)</div>
-  	<div class="span3">@Html.EditorFor(x => x.Model) @Html.ValidationMessageFor(x => x.Model)</div>
+<div class="form-group">
+  	<div class="col-xs-3">@Html.EditorFor(x => x.Equipment) @Html.ValidationMessageFor(x => x.Equipment)</div>
+  	<div class="col-xs-2">@Html.EditorFor(x => x.Brand) @Html.ValidationMessageFor(x => x.Brand)</div>
+  	<div class="col-xs-3">@Html.EditorFor(x => x.Model) @Html.ValidationMessageFor(x => x.Model)</div>
 </div>
-<div class="row">
-  	<div class="span3">@Html.LabelFor(x => x.SerialNumber)</div>
-  	<div class="span2 offset3 field-required">@Html.LabelFor(x => x.Cost)</div>
+<div class="form-group">
+  	<div class="col-xs-3">@Html.LabelFor(x => x.SerialNumber)</div>
+  	<div class="col-xs-2 offset3 field-required">@Html.LabelFor(x => x.Cost)</div>
 </div>
-<div class="row">
-  	<div class="span3">@Html.EditorFor(x => x.SerialNumber) @Html.ValidationMessageFor(x => x.SerialNumber)</div>
-  	<div class="span2 offset3">@Html.EditorFor(x => x.Cost) @Html.ValidationMessageFor(x => x.Cost)</div>
+<div class="form-group">
+  	<div class="col-xs-3">@Html.EditorFor(x => x.SerialNumber) @Html.ValidationMessageFor(x => x.SerialNumber)</div>
+  	<div class="col-xs-2 offset3">@Html.EditorFor(x => x.Cost) @Html.ValidationMessageFor(x => x.Cost)</div>
 </div>
-<div class="row">
-  	<div class="span8">@Html.LabelFor(x => x.User)</div>
+<div class="form-group">
+  	<div class="col-xs-8">@Html.LabelFor(x => x.User)</div>
 </div>
-<div class="row">
-  	<div class="span8">@Html.EditorFor(x => x.User) @Html.ValidationMessageFor(x => x.User)</div>
+<div class="form-group">
+  	<div class="col-xs-8">@Html.EditorFor(x => x.User) @Html.ValidationMessageFor(x => x.User)</div>
 </div>
-<div class="row">
-  	<div class="span8">@Html.LabelFor(x => x.Technician)</div>
+<div class="form-group">
+  	<div class="col-xs-8">@Html.LabelFor(x => x.Technician)</div>
 </div>
-<div class="row">
-  	<div class="span8">@Html.EditorFor(x => x.Technician) @Html.ValidationMessageFor(x => x.Technician)</div>
+<div class="form-group">
+  	<div class="col-xs-8">@Html.EditorFor(x => x.Technician) @Html.ValidationMessageFor(x => x.Technician)</div>
 </div>
-<div class="row">
-  	<div class="span8">@Html.LabelFor(x => x.UserReport)</div>
+<div class="form-group">
+  	<div class="col-xs-8">@Html.LabelFor(x => x.UserReport)</div>
 </div>
-<div class="row">
-  	<div class="span8">@Html.EditorFor(x => x.UserReport)</div>
+<div class="form-group">
+  	<div class="col-xs-8">@Html.EditorFor(x => x.UserReport)</div>
 </div>
-<div class="row">
-  	<div class="span8">@Html.LabelFor(x => x.Description)</div>
+<div class="form-group">
+  	<div class="col-xs-8">@Html.LabelFor(x => x.Description)</div>
 </div>
-<div class="row">
-  	<div class="span8">@Html.EditorFor(x => x.Description)</div>
+<div class="form-group">
+  	<div class="col-xs-8">@Html.EditorFor(x => x.Description)</div>
 </div>
-<div class="row">
-  	<div class="span8">@Html.LabelFor(x => x.Comment)</div>
+<div class="form-group">
+  	<div class="col-xs-8">@Html.LabelFor(x => x.Comment)</div>
 </div>
-<div class="row">
-  	<div class="span8">@Html.EditorFor(x => x.Comment)</div>
+<div class="form-group">
+  	<div class="col-xs-8">@Html.EditorFor(x => x.Comment)</div>
 </div>
 <script type='text/javascript'>
 $('#Cost').addClass("text-right");

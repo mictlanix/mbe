@@ -85,6 +85,7 @@ namespace Mictlanix.BE.Model
         public string Fax { get; set; }
 
         [Property]
+		[DataType(DataType.Url)]
 		[Url(ErrorMessageResourceName = "Validation_Url", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "Website", ResourceType = typeof(Resources))]
         [StringLength(80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]

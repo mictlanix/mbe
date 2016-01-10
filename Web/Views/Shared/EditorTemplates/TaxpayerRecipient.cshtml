@@ -2,22 +2,15 @@
 @using Mictlanix.BE.Model
 @model TaxpayerRecipient
 
-<div class="row">
-  	<div class="span2 field-required">@Html.LabelFor(x => x.Id)</div>
-	<div class="span6 field-required">@Html.LabelFor(x => x.Name)</div>
+<div class="form-group">
+  	<div class="col-xs-4 field-required">@Html.LabelFor(x => x.Id) @Html.EditorFor(x => x.Id) @Html.ValidationMessageFor(x => x.Id)</div>
+	<div class="col-xs-8 field-required">@Html.LabelFor(x => x.Name) @Html.EditorFor(x => x.Name) @Html.ValidationMessageFor(x => x.Name)</div>
 </div>
-<div class="row">
-  	<div class="span2">@Html.EditorFor(x => x.Id) @Html.ValidationMessageFor(x => x.Id)</div>
-	<div class="span6">@Html.EditorFor(x => x.Name) @Html.ValidationMessageFor(x => x.Name)</div>
+<div class="form-group">
+  	<div class="col-xs-12 field-required">@Html.LabelFor(x => x.Email) @Html.EditorFor(x => x.Email, new { htmlAttributes = new { @class = "form-control" } }) @Html.ValidationMessageFor(x => x.Email)</div>
 </div>
-<div class="row">
-  	<div class="span8 field-required">@Html.LabelFor(x => x.Email)</div>
-</div>
-<div class="row">
-  	<div class="span8">@Html.EditorFor(x => x.Email) @Html.ValidationMessageFor(x => x.Email)</div>
-</div>
-<div class="row">
-  	<div class="span8">@Html.EditorFor(x => x.HasAddress)</div>
+<div class="form-group">
+  	<div class="col-xs-12">@Html.EditorFor(x => x.HasAddress)</div>
 </div>
 <div id='address-container' @if(Model == null || !Model.HasAddress) {<text>style='display:none'</text>}>
 	@Html.EditorFor(x => x.Address)
