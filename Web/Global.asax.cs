@@ -7,10 +7,12 @@ using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using System.Web.Security;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Helpers;
+using Mictlanix.BE.Web.Security;
 
 namespace Mictlanix.BE.Web
 {
@@ -123,6 +125,35 @@ namespace Mictlanix.BE.Web
 			}
 			
 			HttpContext.Current.Items.Remove ("CurrentUser");
+		}
+
+		protected void Application_PostAuthenticateRequest (Object sender, EventArgs e)
+		{
+			var cookie = Request.Cookies [FormsAuthentication.FormsCookieName];
+
+			if (cookie == null)
+				return;
+
+			var ticket = FormsAuthentication.Decrypt (cookie.Value);
+
+			if (ticket == null || ticket.Expired) {
+				return;
+			}
+
+			if (Request.Path.StartsWith ("/Content") || Request.Path.StartsWith ("/Scripts")) {
+				return;
+			}
+
+			var account = Model.User.TryFind (HttpContext.Current.User.Identity.Name);
+			Principal = new CustomPrincipal (account.UserName, account.Email, account.IsAdministrator,
+				account.Employee, account.Privileges.ToList ());
+		}
+
+		private CustomPrincipal Principal {
+			set {
+				Thread.CurrentPrincipal = value;
+				HttpContext.Current.User = value;
+			}
 		}
     }
 }

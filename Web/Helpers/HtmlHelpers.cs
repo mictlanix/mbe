@@ -95,13 +95,6 @@ namespace Mictlanix.BE.Web.Helpers
             return MvcHtmlString.Create (anchorHtml);
 		}
 
-		public static MvcHtmlString DisplayNameFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression)
-		{
-			var metadata = ModelMetadata.FromLambdaExpression (expression, html.ViewData);
-
-			return MvcHtmlString.Create (metadata.DisplayName);
-		}
-
         public static bool IsMenuSelected (this HtmlHelper html, string action, string controller)
         {
             string ctl = html.ViewContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString();
