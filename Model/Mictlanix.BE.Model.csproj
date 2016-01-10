@@ -53,12 +53,6 @@
     <Reference Include="Castle.ActiveRecord.Web">
       <HintPath>..\Packages\Castle.Activerecord.3.0.0.1\lib\Net40\Castle.ActiveRecord.Web.dll</HintPath>
     </Reference>
-    <Reference Include="DataAnnotationsExtensions">
-      <HintPath>..\packages\DataAnnotationsExtensions.1.1.0.0\lib\NETFramework40\DataAnnotationsExtensions.dll</HintPath>
-    </Reference>
-    <Reference Include="DataAnnotationsExtensions.ClientValidation">
-      <HintPath>..\packages\DataAnnotationsExtensions.MVC3.1.1.0.0\lib\NETFramework40\DataAnnotationsExtensions.ClientValidation.dll</HintPath>
-    </Reference>
     <Reference Include="System.Numerics" />
     <Reference Include="Lucene.Net">
       <HintPath>..\Packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
