@@ -161,30 +161,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\AddressesController.cs" />
-    <Compile Include="Controllers\BankAccountsController.cs" />
-    <Compile Include="Controllers\BarcodesController.cs" />
-    <Compile Include="Controllers\CashDrawersController.cs" />
-    <Compile Include="Controllers\ContactsController.cs" />
-    <Compile Include="Controllers\AccountsPayablesController.cs" />
-    <Compile Include="Controllers\StoresController.cs" />
-    <Compile Include="Controllers\InventoryController.cs" />
-    <Compile Include="Controllers\PaymentsController.cs" />
-    <Compile Include="Controllers\CustomersController.cs" />
-    <Compile Include="Controllers\EmployeesController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\PointsOfSaleController.cs" />
-    <Compile Include="Controllers\PriceListsController.cs" />
-    <Compile Include="Controllers\ProductsController.cs" />
-    <Compile Include="Controllers\PurchasesController.cs" />
-    <Compile Include="Controllers\AccountsReceivablesController.cs" />
-    <Compile Include="Controllers\SupplierAgreementsController.cs" />
-    <Compile Include="Controllers\SupplierPaymentsController.cs" />
-    <Compile Include="Controllers\SupplierReturnsController.cs" />
-    <Compile Include="Controllers\SuppliersController.cs" />
-    <Compile Include="Controllers\UsersController.cs" />
-    <Compile Include="Controllers\WarehousesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -205,36 +181,63 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\Code128Content.cs" />
     <Compile Include="Utils\Code128Rendering.cs" />
-    <Compile Include="Controllers\TaxpayersController.cs" />
     <Compile Include="Helpers\Configuration.cs" />
     <Compile Include="Models\LocalSettings.cs" />
     <Compile Include="Utils\CurrencyConverter.cs" />
-    <Compile Include="Controllers\QuotationsController.cs" />
     <Compile Include="Models\FiscalReport.cs" />
     <Compile Include="Models\Pair.cs" />
-    <Compile Include="Controllers\FiscalDocumentsController.cs" />
-    <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Models\ReceivedPayment.cs" />
     <Compile Include="Models\SummaryItem.cs" />
-    <Compile Include="Controllers\PricingController.cs" />
     <Compile Include="Helpers\InventoryHelpers.cs" />
-    <Compile Include="Controllers\ExchangeRatesController.cs" />
-    <Compile Include="Controllers\SalesOrdersController.cs" />
     <Compile Include="Helpers\CFDHelpers.cs" />
-    <Compile Include="Controllers\POSController.cs" />
-    <Compile Include="Controllers\LabelsController.cs" />
     <Compile Include="Helpers\ModelHelpers.cs" />
-    <Compile Include="Controllers\CustomerRefundsController.cs" />
-    <Compile Include="Controllers\TaxpayerRecipientsController.cs" />
     <Compile Include="Helpers\NHibernateExtensions.cs" />
-    <Compile Include="Controllers\ProductionOrdersController.cs" />
-    <Compile Include="Controllers\TranslationRequestsController.cs" />
-    <Compile Include="Controllers\NotarizationsController.cs" />
-    <Compile Include="Controllers\TechnicalServiceReportsController.cs" />
-    <Compile Include="Controllers\TechnicalServiceRequestsController.cs" />
-    <Compile Include="Controllers\TechnicalServiceReceiptsController.cs" />
-    <Compile Include="Controllers\SalesOrderShipmentsController.cs" />
-    <Compile Include="Controllers\DeliveryOrdersController.cs" />
+    <Compile Include="Controllers\Mvc\AccountController.cs" />
+    <Compile Include="Controllers\Mvc\AccountsPayablesController.cs" />
+    <Compile Include="Controllers\Mvc\AccountsReceivablesController.cs" />
+    <Compile Include="Controllers\Mvc\AddressesController.cs" />
+    <Compile Include="Controllers\Mvc\BankAccountsController.cs" />
+    <Compile Include="Controllers\Mvc\BarcodesController.cs" />
+    <Compile Include="Controllers\Mvc\CashDrawersController.cs" />
+    <Compile Include="Controllers\Mvc\ContactsController.cs" />
+    <Compile Include="Controllers\Mvc\CustomerRefundsController.cs" />
+    <Compile Include="Controllers\Mvc\CustomersController.cs" />
+    <Compile Include="Controllers\Mvc\DeliveryOrdersController.cs" />
+    <Compile Include="Controllers\Mvc\EmployeesController.cs" />
+    <Compile Include="Controllers\Mvc\ExchangeRatesController.cs" />
+    <Compile Include="Controllers\Mvc\FiscalDocumentsController.cs" />
+    <Compile Include="Controllers\Mvc\HomeController.cs" />
+    <Compile Include="Controllers\Mvc\InventoryController.cs" />
+    <Compile Include="Controllers\Mvc\LabelsController.cs" />
+    <Compile Include="Controllers\Mvc\NotarizationsController.cs" />
+    <Compile Include="Controllers\Mvc\PaymentsController.cs" />
+    <Compile Include="Controllers\Mvc\PointsOfSaleController.cs" />
+    <Compile Include="Controllers\Mvc\POSController.cs" />
+    <Compile Include="Controllers\Mvc\PriceListsController.cs" />
+    <Compile Include="Controllers\Mvc\PricingController.cs" />
+    <Compile Include="Controllers\Mvc\ProductionOrdersController.cs" />
+    <Compile Include="Controllers\Mvc\ProductsController.cs" />
+    <Compile Include="Controllers\Mvc\PurchasesController.cs" />
+    <Compile Include="Controllers\Mvc\QuotationsController.cs" />
+    <Compile Include="Controllers\Mvc\ReportsController.cs" />
+    <Compile Include="Controllers\Mvc\SalesOrdersController.cs" />
+    <Compile Include="Controllers\Mvc\SalesOrderShipmentsController.cs" />
+    <Compile Include="Controllers\Mvc\StoresController.cs" />
+    <Compile Include="Controllers\Mvc\SupplierAgreementsController.cs" />
+    <Compile Include="Controllers\Mvc\SupplierPaymentsController.cs" />
+    <Compile Include="Controllers\Mvc\SupplierReturnsController.cs" />
+    <Compile Include="Controllers\Mvc\SuppliersController.cs" />
+    <Compile Include="Controllers\Mvc\TaxpayerRecipientsController.cs" />
+    <Compile Include="Controllers\Mvc\TaxpayersController.cs" />
+    <Compile Include="Controllers\Mvc\TechnicalServiceReceiptsController.cs" />
+    <Compile Include="Controllers\Mvc\TechnicalServiceReportsController.cs" />
+    <Compile Include="Controllers\Mvc\TechnicalServiceRequestsController.cs" />
+    <Compile Include="Controllers\Mvc\TranslationRequestsController.cs" />
+    <Compile Include="Controllers\Mvc\UsersController.cs" />
+    <Compile Include="Controllers\Mvc\WarehousesController.cs" />
+    <Compile Include="Mvc\CustomController.cs" />
+    <Compile Include="Mvc\CustomWebViewPage.cs" />
+    <Compile Include="Security\CustomPrincipal.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
@@ -1020,5 +1023,9 @@
     <Content Include="Views\Customers\_DiscountsRefresh.cshtml" />
     <Content Include="Views\Inventory\PhysicalCountAdjustment.cshtml" />
     <None Include="Scripts\jquery-2.2.0.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controllers\Mvc\" />
+    <Folder Include="Mvc\" />
   </ItemGroup>
 </Project>
