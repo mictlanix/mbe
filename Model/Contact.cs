@@ -32,7 +32,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
-using DataAnnotationsExtensions;
 
 namespace Mictlanix.BE.Model
 {
@@ -57,7 +56,8 @@ namespace Mictlanix.BE.Model
 		public string JobTitle { get; set; }
 		
 		[Property]
-		[Email(ErrorMessageResourceName = "Validation_Email", ErrorMessageResourceType = typeof(Resources))]
+		[DataType(DataType.EmailAddress)]
+		[EmailAddress(ErrorMessageResourceName = "Validation_Email", ErrorMessageResourceType = typeof(Resources))]
 		[Display(Name = "Email", ResourceType = typeof(Resources))]
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
 		[StringLength(80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
@@ -85,7 +85,7 @@ namespace Mictlanix.BE.Model
         public string Fax { get; set; }
 
         [Property]
-        [Url(ErrorMessageResourceName = "Validation_Url", ErrorMessageResourceType = typeof(Resources))]
+		[Url(ErrorMessageResourceName = "Validation_Url", ErrorMessageResourceType = typeof(Resources))]
         [Display(Name = "Website", ResourceType = typeof(Resources))]
         [StringLength(80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string Website { get; set; }
