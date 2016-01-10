@@ -7,10 +7,10 @@
 @{
     Layout = "~/Views/Shared/_PrintELayout.cshtml";
     ViewBag.Title = Resources.TechnicalServiceReceipt;
-    ViewBag.Store = Configuration.Store;
+    ViewBag.Store = WebConfig.Store;
     ViewBag.Taxpayer = null;
     ViewBag.TaxpayerName = null;
-    ViewBag.Address = Configuration.Store.Address;
+    ViewBag.Address = WebConfig.Store.Address;
 }
 
 <div class="page-header">

@@ -50,7 +50,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
                       select x;
 
 			var search = new Search<ExchangeRate>();
-            search.Limit = Configuration.PageSize;
+            search.Limit = WebConfig.PageSize;
             search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
             search.Total = qry.Count ();
 
@@ -82,7 +82,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
         public ActionResult Create ()
         {
-			return PartialView ("_Create", new ExchangeRate { Date = DateTime.Now, Target = Configuration.BaseCurrency });
+			return PartialView ("_Create", new ExchangeRate { Date = DateTime.Now, Target = WebConfig.BaseCurrency });
         } 
 
         [HttpPost]

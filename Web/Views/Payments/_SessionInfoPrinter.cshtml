@@ -5,7 +5,7 @@
 @model MasterDetails<CashSession, MoneyCount>
 
 @{
-    Layout = Configuration.ReceiptLayout;
+    Layout = WebConfig.ReceiptLayout;
     ViewBag.Title = Resources.Title_SessionInfo;
     ViewBag.Address = Model.Master.CashDrawer.Store.Address;
 }

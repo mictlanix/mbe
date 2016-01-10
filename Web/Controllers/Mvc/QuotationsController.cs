@@ -45,7 +45,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
     {
         public ViewResult Index ()
 		{
-			var item = Configuration.Store;
+			var item = WebConfig.Store;
 			
 			if (item == null) {
 				return View ("InvalidStore");
@@ -56,7 +56,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			}
 
 			var search = SearchQuotations (new Search<SalesQuote> {
-				Limit = Configuration.PageSize
+				Limit = WebConfig.PageSize
 			});
 
 			return View (search);
@@ -79,7 +79,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		Search<SalesQuote> SearchQuotations (Search<SalesQuote> search)
 		{
 			IQueryable<SalesQuote> qry;
-            var item = Configuration.Store;
+            var item = WebConfig.Store;
 
             if (search.Pattern == null) {
                 qry = from x in SalesQuote.Queryable
@@ -102,7 +102,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
         public ViewResult New ()
 		{
-			var item = Configuration.Store;
+			var item = WebConfig.Store;
 
 			if (item == null) {
 				return View ("InvalidStore");
@@ -113,15 +113,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			}
 
             return View (new SalesQuote {
-				CustomerId = Configuration.DefaultCustomer,
-				Customer = Customer.Find (Configuration.DefaultCustomer)
+				CustomerId = WebConfig.DefaultCustomer,
+				Customer = Customer.Find (WebConfig.DefaultCustomer)
 			});
         }
 
         [HttpPost]
 		public ActionResult New (SalesQuote item)
 		{
-			item.Store = Configuration.Store;
+			item.Store = WebConfig.Store;
 			
 			if (item.Store == null) {
 				return View ("InvalidStore");
@@ -219,7 +219,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
                 Quantity = 1,
 				Price = price,
 				ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate(),
-				Currency = Configuration.DefaultCurrency
+				Currency = WebConfig.DefaultCurrency
             };
 
             using (var scope = new TransactionScope()) {

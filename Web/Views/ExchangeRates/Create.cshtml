@@ -22,7 +22,7 @@
             <div class="span4">
                 <select id="target-list" name="Base">
                     @foreach (var item in Enum.GetValues (typeof (CurrencyCode))) {
-                        if (Configuration.DefaultCurrency == (CurrencyCode) item) {
+                        if (WebConfig.DefaultCurrency == (CurrencyCode) item) {
                             <option value="@((int)item)" selected>@item.ToString ()</option>
                         } else {
                             <option value="@((int)item)">@item.ToString ()</option>

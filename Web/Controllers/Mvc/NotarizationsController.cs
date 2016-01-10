@@ -48,7 +48,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		public ActionResult Index ()
 		{
 			var search = Search (new Search<Notarization> {
-				Limit = Configuration.PageSize
+				Limit = WebConfig.PageSize
 			});
 
 			if (Request.IsAjaxRequest ()) {

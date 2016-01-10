@@ -5,7 +5,7 @@
 @model SalesOrder
 
 @{
-    Layout = Configuration.ReceiptLayout;
+    Layout = WebConfig.ReceiptLayout;
     ViewBag.Title = Resources.SalesReceipt;
     ViewBag.Store = Model.Store;
     ViewBag.Address = Model.Store.Address;
@@ -89,7 +89,7 @@
 
 @if (Model.IsCredit) {
 <div class="legend">
-    @string.Format(Configuration.PromissoryNoteContent, Model.Customer.Name, Model.Total, Model.DueDate, Model.Store.Taxpayer.Name)
+    @string.Format(WebConfig.PromissoryNoteContent, Model.Customer.Name, Model.Total, Model.DueDate, Model.Store.Taxpayer.Name)
 </div>
 <div class="signature">
     @Model.Customer.Name<br/>

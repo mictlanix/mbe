@@ -578,8 +578,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			ViewBag.EditorTemplate = "TaxpayerSelector";
 			ViewBag.Title = Resources.FiscalDocumentsReport;
 
-			ViewBag.FieldId = Configuration.Store.Taxpayer.Id;
-			ViewBag.FieldText = Configuration.Store.Taxpayer.Name;
+			ViewBag.FieldId = WebConfig.Store.Taxpayer.Id;
+			ViewBag.FieldText = WebConfig.Store.Taxpayer.Name;
 
 			return View ("SummaryReport", new DateRange ());
 		}
@@ -761,8 +761,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			ViewBag.EditorTemplate = "StoreSelector";
 			ViewBag.Title =  Resources.SalesBySalesPerson;
 
-			ViewBag.FieldId = Configuration.Store.Id;
-			ViewBag.FieldText = Configuration.Store.Name;
+			ViewBag.FieldId = WebConfig.Store.Id;
+			ViewBag.FieldText = WebConfig.Store.Name;
 
 			return View ("SummaryReport", new DateRange ());
 		}
@@ -800,8 +800,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			ViewBag.EditorTemplate = "StoreSelector";
 			ViewBag.Title = Resources.SalesByCustomer;
 
-			ViewBag.FieldId = Configuration.Store.Id;
-			ViewBag.FieldText = Configuration.Store.Name;
+			ViewBag.FieldId = WebConfig.Store.Id;
+			ViewBag.FieldText = WebConfig.Store.Name;
 
 			return View ("SummaryReport", new DateRange());
 		}
@@ -839,8 +839,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			ViewBag.EditorTemplate = "StoreSelector";
 			ViewBag.Title =  Resources.SalesByProduct;
 
-			ViewBag.FieldId = Configuration.Store.Id;
-			ViewBag.FieldText = Configuration.Store.Name;
+			ViewBag.FieldId = WebConfig.Store.Id;
+			ViewBag.FieldText = WebConfig.Store.Name;
 
 			return View ("SummaryReport", new DateRange(DateTime.Now, DateTime.Now));
 		}
@@ -924,8 +924,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			ViewBag.EditorTemplate = "StoreSelector";
 			ViewBag.Title = Resources.SalesOrderSummary;
 
-			ViewBag.FieldId = Configuration.Store.Id;
-			ViewBag.FieldText = Configuration.Store.Name;
+			ViewBag.FieldId = WebConfig.Store.Id;
+			ViewBag.FieldText = WebConfig.Store.Name;
 
 			return View ("SummaryReport", new DateRange ());
 		}
