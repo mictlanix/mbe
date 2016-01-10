@@ -3,26 +3,26 @@
 @model BankAccount
 
 <div class="row">
-    <div class="span4">@Html.LabelFor(x => x.BankName)</div>
-    <div class="span4">@Html.LabelFor(x => x.AccountNumber)</div>
+    <div class="col-xs-4">@Html.LabelFor(x => x.BankName)</div>
+    <div class="col-xs-4">@Html.LabelFor(x => x.AccountNumber)</div>
 </div>
 <div class="row">
-    <div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.BankName)</div></div>
-    <div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.AccountNumber)</div></div>
+    <div class="col-xs-4"><div class="ro-field">@Html.DisplayFor(x => x.BankName)</div></div>
+    <div class="col-xs-4"><div class="ro-field">@Html.DisplayFor(x => x.AccountNumber)</div></div>
 </div>
 <div class="row">
-    <div class="span4">@Html.LabelFor(x => x.Reference)</div>
-    <div class="span4">@Html.LabelFor(x => x.RoutingNumber)</div>
+    <div class="col-xs-4">@Html.LabelFor(x => x.Reference)</div>
+    <div class="col-xs-4">@Html.LabelFor(x => x.RoutingNumber)</div>
 </div>
 <div class="row">
-    <div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.Reference)</div></div>
-    <div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.RoutingNumber)</div></div>
+    <div class="col-xs-4"><div class="ro-field">@Html.DisplayFor(x => x.Reference)</div></div>
+    <div class="col-xs-4"><div class="ro-field">@Html.DisplayFor(x => x.RoutingNumber)</div></div>
 </div>
 <div class="row">
-    <div class="span8">@Html.LabelFor(x => x.Comment)</div>
+    <div class="col-xs-8">@Html.LabelFor(x => x.Comment)</div>
     
 </div>
 <div class="row">
-    <div class="span8"><div class="ro-field">@Html.DisplayFor(x => x.Comment)</div></div>
+    <div class="col-xs-8"><div class="ro-field">@Html.DisplayFor(x => x.Comment)</div></div>
 </div>
 

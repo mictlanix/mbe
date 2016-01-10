@@ -11,13 +11,13 @@
 <div class='modal-body'>
     @using (Ajax.BeginForm (null, null, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "purchaseOrder-modal" }, new { @class = "modal-form" })) {
         @Html.ValidationSummary(true)
-        <div style='overflow:hidden'>
+        <div class="form-horizontal">
             @Html.EditorForModel()
         </div>
     }
 </div>
 <div class='modal-footer'>
-    <button type='button' class='btn' data-dismiss='modal'>@Resources.Discard</button>
+    <button type='button' class='btn btn-default' data-dismiss='modal'>@Resources.Discard</button>
     <button type='submit' class='btn btn-primary' onclick='$("#purchaseOrder-modal form").submit();'>@Resources.Create</button>
 </div>
 

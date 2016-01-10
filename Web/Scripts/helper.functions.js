@@ -10,7 +10,15 @@
     });
 	
 	$.fn.editableContainer.defaults.onblur = 'ignore';
-    $('input.date').datepicker({ language: 'es', format: 'yyyy-mm-dd' });
+	$.fn.datepicker.defaults.format = 'yyyy-mm-dd';
+
+	$("body").delegate(".input-group.date", "focusin", function(){
+		if($(this).data("orientation")) {
+			$(this).datepicker({ language: 'es', format: 'yyyy-mm-dd', orientation: $(this).data("orientation") });
+		} else {
+			$(this).datepicker({ language: 'es', format: 'yyyy-mm-dd' });
+		}
+	});
 });
 function onSearchBegin() {
     $("#search-results").html(null);
@@ -33,21 +41,18 @@ function bindModal(selector) {
 			var $modal = $('#' + $(this).attr('data-modal-id'));
 		
 			if($modal.length == 0) {
-				$modal = $('<div></div>');
-				$modal.attr('id', $(this).attr('data-modal-id'))
-					  .addClass('modal hide fade')
-					  .attr('tabindex', -1)
-					  .data("backdrop","static")
-					  .css('width', 682);
+				$modal = $('<div class="modal fade" tabindex="-1" data-backdrop="static"><div class="modal-dialog"><div class="modal-content"></div></div></div>');
+				$modal.attr('id', $(this).attr('data-modal-id'));
+				$modal.find(".modal-content").attr('id', $(this).attr('data-modal-id') + "-content");
 			}
-			
-			$modal.load(url, '', function(){
-				$modal.on('shown', function () {
-					$modal.find('input.date').datepicker({ language: 'es', format: 'yyyy-mm-dd' });
-      				$modal.find('input:visible:not([readonly="readonly"]):first').focus();
-      				$modal.off('shown');
-				});
-      			$modal.modal();
+
+			$modal.on('shown.bs.modal', function () {
+  				$modal.find('input:visible:not([readonly="readonly"]):first').focus();
+  				$modal.off('shown.bs.modal');
+			});
+
+			$modal.find(".modal-content").load(url, "", function(){
+      			$modal.modal('show');
     		});
 		}
 	});

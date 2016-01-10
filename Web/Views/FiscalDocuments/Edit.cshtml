@@ -15,7 +15,7 @@
 	@Html.Partial("_EditorView")
 </div>
 <div class='control-group text-right'>
-	<a id='add-items' class='btn' data-url='@Url.Action("AddItems", new { id = Model.Id })'
+	<a id='add-items' class='btn btn-default' data-url='@Url.Action("AddItems", new { id = Model.Id })'
 	   data-type='text' data-placement='left' data-pk='@Model.Id' data-value=''
 	   data-display='false' data-emptytext='' data-emptyclass='' data-highlight='false'>
 		<i class='icon-plus'></i> @Resources.SalesOrder

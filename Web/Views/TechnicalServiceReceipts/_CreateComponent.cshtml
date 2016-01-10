@@ -11,28 +11,28 @@
 @using (Ajax.BeginForm(null, null, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "component-modal" }, new { @class = "modal-form" })) {
     @Html.ValidationSummary(true)
     @Html.Hidden("ReceiptId", (int)ViewBag.ReceiptId)
-	<div style='overflow:hidden'>
+	<div class="form-horizontal">
 		<div class="row">
-		  	<div class="span1 field-required">@Html.LabelFor(x => x.Quantity)</div>
-		  	<div class="span5 field-required">@Html.LabelFor(x => x.Name)</div>
-		  	<div class="span2">@Html.LabelFor(x => x.SerialNumber)</div>
+		  	<div class="col-xs-1 field-required">@Html.LabelFor(x => x.Quantity)</div>
+		  	<div class="col-xs-5 field-required">@Html.LabelFor(x => x.Name)</div>
+		  	<div class="col-xs-2">@Html.LabelFor(x => x.SerialNumber)</div>
 		</div>
 		<div class="row">
-		  	<div class="span1">@Html.EditorFor(x => x.Quantity) @Html.ValidationMessageFor(x => x.Quantity)</div>
-		  	<div class="span5">@Html.EditorFor(x => x.Name) @Html.ValidationMessageFor(x => x.Name)</div>
-		  	<div class="span2">@Html.EditorFor(x => x.SerialNumber) @Html.ValidationMessageFor(x => x.SerialNumber)</div>
+		  	<div class="col-xs-1">@Html.EditorFor(x => x.Quantity) @Html.ValidationMessageFor(x => x.Quantity)</div>
+		  	<div class="col-xs-5">@Html.EditorFor(x => x.Name) @Html.ValidationMessageFor(x => x.Name)</div>
+		  	<div class="col-xs-2">@Html.EditorFor(x => x.SerialNumber) @Html.ValidationMessageFor(x => x.SerialNumber)</div>
 		</div>
 		<div class="row">
-		  	<div class="span8">@Html.LabelFor(x => x.Comment)</div>
+		  	<div class="col-xs-8">@Html.LabelFor(x => x.Comment)</div>
 		</div>
 		<div class="row">
-		  	<div class="span8">@Html.EditorFor(x => x.Comment)</div>
+		  	<div class="col-xs-8">@Html.EditorFor(x => x.Comment)</div>
 		</div>
 	</div>
 }
 </div>
 <div class='modal-footer'>
-	<button type='button' class='btn' data-dismiss='modal'>@Resources.Discard</button>
+	<button type='button' class='btn btn-default' data-dismiss='modal'>@Resources.Discard</button>
 	<button type='submit' class='btn btn-primary' onclick='$("#component-modal form").submit();'>@Resources.Create</button>
 </div>
 <script type='text/javascript'>

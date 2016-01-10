@@ -2,30 +2,19 @@
 @using Mictlanix.BE.Model
 @model TaxpayerIssuer
 
-<div class="row">
-  	<div class="span2 field-required">@Html.LabelFor(x => x.Id)</div>
-	<div class="span6">@Html.LabelFor(x => x.Name)</div>
+<div class="form-group">
+  	<div class="col-xs-4 field-required">@Html.LabelFor(x => x.Id) @Html.EditorFor(x => x.Id) @Html.ValidationMessageFor(x => x.Id)</div>
+	<div class="col-xs-8">@Html.LabelFor(x => x.Name) @Html.EditorFor(x => x.Name) @Html.ValidationMessageFor(x => x.Name)</div>
 </div>
-<div class="row">
-  	<div class="span2">@Html.EditorFor(x => x.Id) @Html.ValidationMessageFor(x => x.Id)</div>
-	<div class="span6">@Html.EditorFor(x => x.Name) @Html.ValidationMessageFor(x => x.Name)</div>
+<div class="form-group">
+  	<div class="col-xs-12 field-required">@Html.LabelFor(x => x.Regime) @Html.EditorFor(x => x.Regime) @Html.ValidationMessageFor(x => x.Regime)</div>
 </div>
-<div class="row">
-  	<div class="span8 field-required">@Html.LabelFor(x => x.Regime)</div>
+<div class="form-group">
+  	<div class="col-xs-6 field-required">@Html.LabelFor(x => x.Scheme) @Html.EditorFor(x => x.Scheme) @Html.ValidationMessageFor(x => x.Scheme)</div>
+  	<div class="col-xs-6 field-required">@Html.LabelFor(x => x.Provider) @Html.EditorFor(x => x.Provider) @Html.ValidationMessageFor(x => x.Provider)</div>
 </div>
-<div class="row">
-  	<div class="span8">@Html.EditorFor(x => x.Regime) @Html.ValidationMessageFor(x => x.Regime)</div>
-</div>
-<div class="row">
-  	<div class="span4 field-required">@Html.LabelFor(x => x.Scheme)</div>
-  	<div class="span4 field-required">@Html.LabelFor(x => x.Provider)</div>
-</div>
-<div class="row">
-  	<div class="span4">@Html.EditorFor(x => x.Scheme) @Html.ValidationMessageFor(x => x.Scheme)</div>
-  	<div class="span4">@Html.EditorFor(x => x.Provider) @Html.ValidationMessageFor(x => x.Provider)</div>
-</div>
-<div class="row">
-  	<div class="span8">@Html.EditorFor(x => x.HasAddress)</div>
+<div class="form-group">
+  	<div class="col-xs-12">@Html.EditorFor(x => x.HasAddress)</div>
 </div>
 <div id='address-container' @if(Model == null || !Model.HasAddress) {<text>style='display:none'</text>}>
 	@Html.EditorFor(x => x.Address)

@@ -9,12 +9,12 @@
 </div>
 <div class='modal-body'>
 @using (Ajax.BeginForm(null, null, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "translation-modal" }, new { @class = "modal-form" })) {
-	<div style='overflow:hidden'>
+	<div class="form-horizontal">
 		@Html.DisplayForModel()
 	</div>
 }
 </div>
 <div class='modal-footer'>
-	<button type='button' class='btn' data-dismiss='modal'>@Resources.Discard</button>
+	<button type='button' class='btn btn-default' data-dismiss='modal'>@Resources.Discard</button>
 	<button type='submit' class='btn btn-danger' onclick='$("#translation-modal form").submit();'>@Resources.Delete</button>
 </div>

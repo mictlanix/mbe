@@ -1,3 +1,7 @@
 ﻿@model DateTime?
-
-@Html.TextBox("", Model == null ? string.Empty : Model.Value.ToString("yyyy-MM-dd"), new { @class = "date" }) 
+<div class="input-group date" data-orientation="bottom">
+    @Html.TextBox("", Model == null ? string.Empty : Model.Value.ToString("yyyy-MM-dd"), new { @class = "form-control text-center text-box single-line" })
+    <span class="input-group-addon">
+        <span class="glyphicon glyphicon-calendar"></span>
+    </span>
+</div>

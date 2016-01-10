@@ -13,11 +13,11 @@
 <div id="master-section">
     @using (Ajax.BeginForm (new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
         <div class="row-fluid">
-            <div class="span11">
+            <div class="col-xs-11">
                 <label for="warehouse">@Resources.Warehouse</label>
                 @Html.Editor("warehouse", "WarehouseSelector")
             </div>
-            <div class="span1">
+            <div class="col-xs-1">
                 <label for="product">&nbsp;</label>
                 <button type="submit" class="icon search">@Resources.Search</button>
             </div>

@@ -20,9 +20,17 @@
 @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
     @Html.HiddenFor(x => x.Offset)
     @Html.HiddenFor(x => x.Limit)
-	<div class="input-append row-fluid">
-	  <input class='span11' type="text" id='Pattern' name='Pattern'>
-	  <button type='submit' class="btn">@Resources.Search</button>
+	<div class="row">
+  		<div class="col-sm-4 col-sm-offset-8">
+			<div class="input-group">
+				<input id='Pattern' name='Pattern' type="text" class="form-control" placeholder="@Resources.SearchFor">
+				<span class="input-group-btn">
+					<button class="btn btn-primary" type="submit">
+						<span class="glyphicon glyphicon-search"></span>
+					</button>
+				</span>
+			</div>
+		</div>
 	</div>
 }
 </div>
