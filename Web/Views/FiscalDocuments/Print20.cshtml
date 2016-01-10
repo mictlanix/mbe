@@ -5,7 +5,7 @@
 @model FiscalDocument
 
 @{
-    Layout = Configuration.PrintLayout;
+    Layout = WebConfig.PrintLayout;
     ViewBag.WindowTitle = string.Format (Resources.FiscalDocumentFilenameFormatString,
                                          Model.Issuer.Id, Model.Batch, Model.Serial);
     ViewBag.Title = Resources.FiscalDocument;

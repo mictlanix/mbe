@@ -47,12 +47,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 	{
 		public ViewResult Index ()
 		{
-			if (Configuration.Store == null) {
+			if (WebConfig.Store == null) {
 				return View ("InvalidStore");
 			}
 
 			var search = SearchSalesOrders (new Search<SalesOrder> {
-				Limit = Configuration.PageSize
+				Limit = WebConfig.PageSize
 			});
 
 			return View (search);
@@ -75,7 +75,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		Search<SalesOrder> SearchSalesOrders (Search<SalesOrder> search)
 		{
 			IQueryable<SalesOrder> query;
-			var item = Configuration.Store;
+			var item = WebConfig.Store;
 
 			if (string.IsNullOrEmpty (search.Pattern)) {
 				query = from x in SalesOrder.Queryable

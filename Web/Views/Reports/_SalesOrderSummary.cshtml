@@ -27,7 +27,7 @@
         <td class='date'>@item.DueDate</td>
         <td>@item.Customer</td>
         <td class='currency'>@item.TotalEx.ToString("c")</td>
-    @if ((CurrencyCode)item.Currency == Configuration.BaseCurrency) {
+    @if ((CurrencyCode)item.Currency == WebConfig.BaseCurrency) {
         <td class='currency'></td>
     } else {
         <td class='currency'>@item.Total.ToString("c") @((CurrencyCode)item.Currency)</td>
@@ -39,7 +39,7 @@
 	    <tr>
 	        <td class='center' colspan='6'>@Model.Count() @Resources.SalesOrders</td>
 	        <td class='number'><b>@Model.Sum(x => (decimal)x.TotalEx).ToString("c")</b></td>
-	        <td class='number'><b>@Model.Where(x => (CurrencyCode)x.Currency != Configuration.BaseCurrency).Sum(x => (decimal)x.Total).ToString("c")</b></td>
+	        <td class='number'><b>@Model.Where(x => (CurrencyCode)x.Currency != WebConfig.BaseCurrency).Sum(x => (decimal)x.Total).ToString("c")</b></td>
 	    </tr>
     </tfoot>
 </table>

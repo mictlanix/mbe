@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mictlanix.FiscoClicClient",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mictlanix.ServisimClient", "ServisimClient\Mictlanix.ServisimClient\Mictlanix.ServisimClient.csproj", "{949FABA8-CD56-45EC-A15C-ED327812832F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jsreport.Client", "jsreport.Client\jsreport.Client.csproj", "{FAE7D435-2660-4745-97B6-438FBFB22905}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{F9363BAC-A7BB-4A77-81E0-892C8CCCD297}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9363BAC-A7BB-4A77-81E0-892C8CCCD297}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9363BAC-A7BB-4A77-81E0-892C8CCCD297}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAE7D435-2660-4745-97B6-438FBFB22905}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAE7D435-2660-4745-97B6-438FBFB22905}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAE7D435-2660-4745-97B6-438FBFB22905}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAE7D435-2660-4745-97B6-438FBFB22905}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0

@@ -45,11 +45,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 	{
 		public ViewResult Index ()
 		{
-			if (Configuration.Store == null) {
+			if (WebConfig.Store == null) {
 				return View ("InvalidStore");
 			}
 
-			if (Configuration.PointOfSale == null) {
+			if (WebConfig.PointOfSale == null) {
 				return View ("InvalidPointOfSale");
 			}
 
@@ -58,7 +58,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			}
 
 			var search = SearchSalesOrders (new Search<SalesOrder> {
-				Limit = Configuration.PageSize
+				Limit = WebConfig.PageSize
 			});
 
 			return View (search);
@@ -81,7 +81,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		Search<SalesOrder> SearchSalesOrders (Search<SalesOrder> search)
 		{
 			IQueryable<SalesOrder> query;
-			var item = Configuration.Store;
+			var item = WebConfig.Store;
 
 			if (string.IsNullOrEmpty (search.Pattern)) {
 				query = from x in SalesOrder.Queryable
@@ -121,7 +121,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			var dt = DateTime.Now;
 			var item = new SalesOrder ();
 
-			item.PointOfSale = Configuration.PointOfSale;
+			item.PointOfSale = WebConfig.PointOfSale;
 
 			if (item.PointOfSale == null) {
 				return View ("InvalidPointOfSale");
@@ -141,13 +141,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				item.Serial = 1;
 			}
 
-			item.Customer = Customer.TryFind (Configuration.DefaultCustomer);
+			item.Customer = Customer.TryFind (WebConfig.DefaultCustomer);
 			item.SalesPerson = CurrentUser.Employee;
 			item.Date = dt;
 			item.PromiseDate = dt;
 			item.Terms = PaymentTerms.Immediate;
 			item.DueDate = dt;
-			item.Currency = Configuration.DefaultCurrency;
+			item.Currency = WebConfig.DefaultCurrency;
 			item.ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate ();
 			
 			item.Creator = CurrentUser.Employee;

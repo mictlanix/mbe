@@ -99,9 +99,9 @@ namespace Mictlanix.BE.Web.Helpers
 		static Mictlanix.CFDv32.Comprobante DiverzaStamp (FiscalDocument item)
 		{
 			var cfd = SignCFD (item);
-			var cert = new X509Certificate2 (Configuration.DiverzaCert, Configuration.DiverzaCertPasswd);
-			var cli = new DiverzaClient (Configuration.DiverzaUrl, cert);
-			var id = string.Format ("{0}-{1:D6}-{2}-{3:D6}", Configuration.DiverzaPartnerCode,
+			var cert = new X509Certificate2 (WebConfig.DiverzaCert, WebConfig.DiverzaCertPasswd);
+			var cli = new DiverzaClient (WebConfig.DiverzaUrl, cert);
+			var id = string.Format ("{0}-{1:D6}-{2}-{3:D6}", WebConfig.DiverzaPartnerCode,
 			                        item.Id, item.Batch, item.Serial);
 			var tfd = cli.Stamp (id, cfd);
 
@@ -121,9 +121,9 @@ namespace Mictlanix.BE.Web.Helpers
 		static Mictlanix.CFDv32.Comprobante FiscoClicStamp (FiscalDocument item)
 		{
 			var cfd = SignCFD (item);
-			var cli = new FiscoClicClient (Configuration.FiscoClicUser,
-			                               Configuration.FiscoClicPasswd,
-			                               Configuration.FiscoClicUrl);
+			var cli = new FiscoClicClient (WebConfig.FiscoClicUser,
+			                               WebConfig.FiscoClicPasswd,
+			                               WebConfig.FiscoClicUrl);
 			var tfd = cli.Stamp (cfd);
 
 			cfd.Complemento = new List<object> ();
@@ -135,9 +135,9 @@ namespace Mictlanix.BE.Web.Helpers
 		// TODO: credentials per taxpayer
 		static bool FiscoClicCancel (FiscalDocument item)
 		{
-			var cli = new FiscoClicClient (Configuration.FiscoClicUser,
-			                               Configuration.FiscoClicPasswd,
-			                               Configuration.FiscoClicUrl);
+			var cli = new FiscoClicClient (WebConfig.FiscoClicUser,
+			                               WebConfig.FiscoClicPasswd,
+			                               WebConfig.FiscoClicUrl);
 
 			return cli.Cancel (item.Issuer.Id, item.StampId);
 		}
@@ -146,9 +146,9 @@ namespace Mictlanix.BE.Web.Helpers
 		static Mictlanix.CFDv32.Comprobante ServisimStamp (FiscalDocument item)
 		{
 			var cfd = SignCFD (item);
-			var cli = new ServisimClient (Configuration.ServisimUser,
-				Configuration.ServisimPasswd, Configuration.ServisimUrl);
-			var id = string.Format ("{0}-{1:D6}", Configuration.ServisimPartnerCode, item.Id);
+			var cli = new ServisimClient (WebConfig.ServisimUser,
+				WebConfig.ServisimPasswd, WebConfig.ServisimUrl);
+			var id = string.Format ("{0}-{1:D6}", WebConfig.ServisimPartnerCode, item.Id);
 			var timer = new System.Diagnostics.Stopwatch ();
 
 			cli.EndRequest += (object sender, RequestEventArgs e) => {
@@ -158,7 +158,7 @@ namespace Mictlanix.BE.Web.Helpers
 					string text = "Time: " + timer.ElapsedMilliseconds + " ms\n" +
 								"Request:\n" + e.Request + "\n" +
 								"Response:\n" + e.Response + "\n";
-					string path = HttpContext.Current.Server.MapPath (string.Format (Configuration.LogFilePattern, id, DateTime.Now));
+					string path = HttpContext.Current.Server.MapPath (string.Format (WebConfig.LogFilePattern, id, DateTime.Now));
 					File.WriteAllText (path, text);
 				} catch {
 				}
@@ -176,8 +176,8 @@ namespace Mictlanix.BE.Web.Helpers
 		// TODO: credentials per taxpayer
 		static bool ServisimCancel (FiscalDocument item)
 		{
-			var cli = new ServisimClient (Configuration.ServisimUser,
-				Configuration.ServisimPasswd, Configuration.ServisimUrl);
+			var cli = new ServisimClient (WebConfig.ServisimUser,
+				WebConfig.ServisimPasswd, WebConfig.ServisimUrl);
 
 			return cli.Cancel (item.Issuer.Id, item.StampId);
 		}
@@ -295,7 +295,7 @@ namespace Mictlanix.BE.Web.Helpers
 			cfd.Impuestos.Traslados [0] = new Mictlanix.CFDv32.ComprobanteImpuestosTraslado {
 				impuesto = Mictlanix.CFDv32.ComprobanteImpuestosTrasladoImpuesto.IVA,
 				importe = item.Taxes,
-				tasa = Configuration.DefaultVAT * 100m
+				tasa = WebConfig.DefaultVAT * 100m
 			};
 
 			cfd.Impuestos.totalImpuestosTrasladados = cfd.Impuestos.Traslados.Sum (x => x.importe);
@@ -405,7 +405,7 @@ namespace Mictlanix.BE.Web.Helpers
 			cfd.Impuestos.Traslados [0] = new Mictlanix.CFDv22.ComprobanteImpuestosTraslado {
 				impuesto = Mictlanix.CFDv22.ComprobanteImpuestosTrasladoImpuesto.IVA,
 				importe = item.Taxes,
-				tasa = Configuration.DefaultVAT * 100m
+				tasa = WebConfig.DefaultVAT * 100m
 			};
 			cfd.Impuestos.totalImpuestosTrasladados = cfd.Impuestos.Traslados.Sum (x => x.importe);
 			cfd.Impuestos.totalImpuestosTrasladadosSpecified = true;
@@ -487,7 +487,7 @@ namespace Mictlanix.BE.Web.Helpers
 			cfd.Impuestos.Traslados [0] = new Mictlanix.CFDv20.ComprobanteImpuestosTraslado {
 				impuesto = Mictlanix.CFDv20.ComprobanteImpuestosTrasladoImpuesto.IVA,
 				importe = item.Taxes,
-				tasa = Configuration.DefaultVAT * 100m
+				tasa = WebConfig.DefaultVAT * 100m
 			};
 
 			return cfd;

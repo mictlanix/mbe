@@ -50,7 +50,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
         public ActionResult Receipts ()
 		{
 			var search = SearchReceipts (new Search<InventoryReceipt> {
-				Limit = Configuration.PageSize
+				Limit = WebConfig.PageSize
 			});
 
 			return View("Receipts/Index", search);
@@ -261,7 +261,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		public ActionResult Issues ()
 		{
 			var search = SearchIssues (new Search<InventoryIssue> {
-				Limit = Configuration.PageSize
+				Limit = WebConfig.PageSize
 			});
 
 			return View("Issues/Index", search);
@@ -471,7 +471,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		public ActionResult Transfers ()
 		{
 			var search = SearchTransfers (new Search<InventoryTransfer> {
-				Limit = Configuration.PageSize
+				Limit = WebConfig.PageSize
 			});
 
 			return View("Transfers/Index", search);
@@ -740,7 +740,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		public ActionResult LotSerialNumbers ()
 		{
 			var search = SearchLotSerialNumbers (new Search<LotSerialRequirement> {
-				Limit = Configuration.PageSize
+				Limit = WebConfig.PageSize
 			});
 
 			return View (search);

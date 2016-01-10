@@ -1,11 +1,11 @@
 ﻿// 
-// Configuration.cs
+// WebConfig.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.com>
 //   Eduardo Nieto <enieto@mictlanix.com>
 // 
-// Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2011-2016 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -39,7 +39,7 @@ using Mictlanix.BE.Model;
 
 namespace Mictlanix.BE.Web.Helpers
 {
-	public static class Configuration
+	public static class WebConfig
 	{
 		public const string StoreCookieKey = "Store";
 		public const string PointOfSaleCookieKey = "PointOfSale";
@@ -177,6 +177,10 @@ namespace Mictlanix.BE.Web.Helpers
 
 		public static string LogFilePattern {
 			get { return ConfigurationManager.AppSettings ["LogFilePattern"]; }
+		}
+
+		public static string AppServerUrl {
+			get { return ConfigurationManager.AppSettings ["AppServerUrl"]; }
 		}
 
 		#endregion

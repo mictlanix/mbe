@@ -52,7 +52,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		public ActionResult Index ()
 		{
 			var search = SearchProducts (new Search<Product> {
-				Limit = Configuration.PageSize
+				Limit = WebConfig.PageSize
 			});
 
 			return View (search);
@@ -114,10 +114,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			}
             
 			item.MinimumOrderQuantity = 1;
-			item.TaxRate = Configuration.DefaultVAT;
-			item.IsTaxIncluded = Configuration.IsTaxIncluded;
-			item.PriceType = Configuration.DefaultPriceType;
-			item.Photo = Configuration.DefaultPhotoFile;
+			item.TaxRate = WebConfig.DefaultVAT;
+			item.IsTaxIncluded = WebConfig.IsTaxIncluded;
+			item.PriceType = WebConfig.DefaultPriceType;
+			item.Photo = WebConfig.DefaultPhotoFile;
 
 			using (var scope = new TransactionScope ()) {
 				item.Create ();
@@ -126,7 +126,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 					var price = new ProductPrice {
 						Product = item,
 						List = l,
-						Value = Configuration.DefaultPrice
+						Value = WebConfig.DefaultPrice
 					};
 					price.Create ();
 				}
@@ -142,7 +142,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		{
 			var entity = Product.Find (id);
 
-			entity.Photo = SavePhoto (file) ?? Configuration.DefaultPhotoFile;
+			entity.Photo = SavePhoto (file) ?? WebConfig.DefaultPhotoFile;
 
 			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
@@ -282,11 +282,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			using (var stream = file.InputStream) {
 				using (var img = Image.FromStream (stream)) {
 					var hash = string.Format ("{0}.png", HashFromImage (img));
-					var path = Path.Combine (Server.MapPath (Configuration.PhotosPath), hash);
+					var path = Path.Combine (Server.MapPath (WebConfig.PhotosPath), hash);
 					
 					img.Save (path, ImageFormat.Png);
 					
-					return Path.Combine (Configuration.PhotosPath, hash);
+					return Path.Combine (WebConfig.PhotosPath, hash);
 				}
 			}
 		}

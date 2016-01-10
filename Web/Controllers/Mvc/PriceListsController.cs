@@ -53,7 +53,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
                       select x;
 
             var search = new Search<PriceList>();
-            search.Limit = Configuration.PageSize;
+            search.Limit = WebConfig.PageSize;
             search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
             search.Total = qry.Count();
 

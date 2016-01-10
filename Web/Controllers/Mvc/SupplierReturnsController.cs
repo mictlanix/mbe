@@ -93,7 +93,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
         public ActionResult Historic(DateRange item, Search<SupplierReturn> search)
         {
             ViewBag.SupplierReturnsDates = item;
-            search.Limit = Configuration.PageSize;
+            search.Limit = WebConfig.PageSize;
             search = GetSupplierReturns(item, search);
 
             return PartialView("_Historic", search);

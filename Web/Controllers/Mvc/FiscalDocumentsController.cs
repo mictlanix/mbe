@@ -47,7 +47,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 	{
 		public ViewResult Index ()
 		{
-			if (Configuration.Store == null) {
+			if (WebConfig.Store == null) {
 				return View ("InvalidStore");
 			}
 			
@@ -56,7 +56,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			}
 
 			var search = SearchFiscalDocuments (new Search<FiscalDocument> {
-				Limit = Configuration.PageSize
+				Limit = WebConfig.PageSize
 			});
 
 			return View (search);
@@ -135,7 +135,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 		public ActionResult New ()
 		{
-			var store = Configuration.Store;
+			var store = WebConfig.Store;
 
 			if (store == null) {
 				return View ("InvalidStore");
@@ -175,7 +175,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			}
 			
 			// Store
-			item.Store = Configuration.Store;
+			item.Store = WebConfig.Store;
 			item.IssuedAt = item.Store.Address;
 			item.IssuedLocation = item.Store.Location;
 
@@ -190,7 +190,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			// Fiscal doc's info
 			item.Batch = batch.Batch;
 			item.Type = batch.Type;
-			item.Currency = Configuration.BaseCurrency;
+			item.Currency = WebConfig.BaseCurrency;
 			item.ExchangeRate = 1;
 			item.PaymentMethod = PaymentMethod.Unidentified;
 			item.PaymentReference = null;
