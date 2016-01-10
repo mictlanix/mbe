@@ -20,7 +20,7 @@
     <title>@ViewBag.WindowTitle</title>
     <script src='@Url.Content("~/Scripts/jquery-2.2.0.min.js")' type='text/javascript'></script>
     <script src='@Url.Content("~/Scripts/FontLoader.js")' type='text/javascript'></script>
-    <link href='@Url.Content("~/Content/bootstrap3/css/bootstrap.min.css")' rel='stylesheet' type='text/css' />
+    <link href='@Url.Content("~/Content//bootstrap.min.css")' rel='stylesheet' type='text/css' />
     <link href='@Url.Content("~/Content/fonts/wasabi/stylesheet.css")' rel='stylesheet' type='text/css' />
     <style type='text/css'>
     @@page {
@@ -34,7 +34,7 @@
 		padding: 0;
 	}
 	body {
-	    font:normal 12pt 'wasabilight';
+	    font:normal 12pt 'Wasabi-Light';
 	}
 	#logo {
 		position:relative;
@@ -53,13 +53,13 @@
 		margin:1mm 1mm 1mm 0;
 	}
 	h1, h2 {
-		font:bold 11.59pt 'wasabibook';
+		font:bold 11.59pt 'Wasabi-Book';
 	}
 	h2 {
 		font-size:13pt;
 	}
 	h3, h4 {
-		font:normal 11.59pt 'wasabilight';
+		font:normal 11.59pt 'Wasabi-Light';
 	}
 	h4 {
 		font-size:8.69pt;
@@ -68,7 +68,7 @@
 	  margin: 0 0 5px;
 	}
 	strong {
-		font-family:'wasabibook';
+		font-family:'Wasabi-Book';
 	}
 	table {
 		width:100%;
@@ -82,7 +82,7 @@
 		padding: 4px;
 		line-height: 1.42857143;
 		vertical-align: top;
-		font:normal 10pt 'wasabibook';
+		font:normal 10pt 'Wasabi-Book';
 	}
 	table > thead > tr > th {
 		border-bottom: 1px solid #ddd;
@@ -105,13 +105,13 @@
 		padding: .1em .1em .2em;
 		font-weight: bold;
 		background-color: #ECECEC !important;
-		font:normal 11pt 'wasabilight';
+		font:normal 11pt 'Wasabi-Light';
 	}
 	.mylabel-rounded {
 		display:inline-block;
 		padding:1em 2em;
 		background-color: #ECECEC !important;
-		font:normal 8pt 'wasabilight';
+		font:normal 8pt 'Wasabi-Light';
 		border-radius:2.5em;
 	}
 	.mylabel-rounded strong {
@@ -145,6 +145,7 @@
         	@if (!string.IsNullOrEmpty (ViewBag.Taxpayer)) {
         		@ViewBag.Taxpayer
         	}
+        	xxx
         </h1>
         <h3>
         	@ViewBag.Address.StreetAndNumber<br/>
@@ -234,7 +235,7 @@
 	</div>
 }
 
-    <div style="min-height: 2.2mm; border-top: #C73F33 solid 1px; border-bottom: #C73F33 solid 3px"></div>
+    <div style="min-height: 2.2mm; border-top: #C73F33 solid 1px !important; border-bottom: #C73F33 solid 3px !important;"></div>
    
     <table  style="border-spacing:0 4px;border-collapse: separate;">
         <thead>

@@ -3,7 +3,7 @@
 
 
 @font-face {
-    font-family: 'wasabibook';
+    font-family: 'Wasabi-Book';
     src: url('wasabi-bk-webfont.eot');
     src: url('wasabi-bk-webfont.eot?#iefix') format('embedded-opentype'),
          url('wasabi-bk-webfont.woff') format('woff'),
@@ -18,7 +18,7 @@
 
 
 @font-face {
-    font-family: 'wasabilight';
+    font-family: 'Wasabi-Light';
     src: url('wasabi-lt-webfont.eot');
     src: url('wasabi-lt-webfont.eot?#iefix') format('embedded-opentype'),
          url('wasabi-lt-webfont.woff') format('woff'),
