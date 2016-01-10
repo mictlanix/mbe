@@ -32,7 +32,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
-using DataAnnotationsExtensions;
 
 namespace Mictlanix.BE.Model
 {   
@@ -56,7 +55,8 @@ namespace Mictlanix.BE.Model
 		public virtual string Name { get; set; }
 		
 		[Property]
-		[Email(ErrorMessageResourceName = "Validation_Email", ErrorMessageResourceType = typeof(Resources))]
+		[DataType(DataType.EmailAddress)]
+		[EmailAddress(ErrorMessageResourceName = "Validation_Email", ErrorMessageResourceType = typeof(Resources))]
 		[Display(Name = "Email", ResourceType = typeof(Resources))]
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
 		[StringLength(80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
