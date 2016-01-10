@@ -3,36 +3,36 @@
 @model TranslationRequest
 
 <div class="row">
-	<div class="span6">@Html.LabelFor(x => x.Agency)</div>
-  	<div class="span2">@Html.LabelFor(x => x.Date)</div>
+	<div class="col-xs-6">@Html.LabelFor(x => x.Agency)</div>
+  	<div class="col-xs-2">@Html.LabelFor(x => x.Date)</div>
 </div>
 <div class="row">
-	<div class="span6"><div class="ro-field">@Html.DisplayFor(x => x.Agency)</div></div>
-  	<div class="span2"><div class="ro-field text-center">@Html.DisplayFor(x => x.Date)</div></div>
+	<div class="col-xs-6"><div class="ro-field">@Html.DisplayFor(x => x.Agency)</div></div>
+  	<div class="col-xs-2"><div class="ro-field text-center">@Html.DisplayFor(x => x.Date)</div></div>
 </div>
 <div class="row">
-  	<div class="span8">@Html.LabelFor(x => x.RequesterId)</div>
+  	<div class="col-xs-8">@Html.LabelFor(x => x.RequesterId)</div>
 </div>
 <div class="row">
-  	<div class="span8"><div class="ro-field">@Html.DisplayFor(x => x.Requester, "String")</div></div>
+  	<div class="col-xs-8"><div class="ro-field">@Html.DisplayFor(x => x.Requester, "String")</div></div>
 </div>
 <div class="row">
-  	<div class="span8">@Html.LabelFor(x => x.DocumentName)</div>
+  	<div class="col-xs-8">@Html.LabelFor(x => x.DocumentName)</div>
 </div>
 <div class="row">
-  	<div class="span8"><div class="ro-field">@Html.DisplayFor(x => x.DocumentName)</div></div>
+  	<div class="col-xs-8"><div class="ro-field">@Html.DisplayFor(x => x.DocumentName)</div></div>
 </div>
 <div class="row">
-  	<div class="span2">@Html.LabelFor(x => x.DeliveryDate)</div>
-  	<div class="span2 offset4">@Html.LabelFor(x => x.Amount)</div>
+  	<div class="col-xs-2">@Html.LabelFor(x => x.DeliveryDate)</div>
+  	<div class="col-xs-2 offset4">@Html.LabelFor(x => x.Amount)</div>
 </div>
 <div class="row">
-  	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.DeliveryDate)</div></div>
-  	<div class="span2 offset4"><div class="ro-field text-right">@Html.DisplayFor(x => x.Amount)</div></div>
+  	<div class="col-xs-2"><div class="ro-field">@Html.DisplayFor(x => x.DeliveryDate)</div></div>
+  	<div class="col-xs-2 offset4"><div class="ro-field text-right">@Html.DisplayFor(x => x.Amount)</div></div>
 </div>
 <div class="row">
-  	<div class="span8">@Html.LabelFor(x => x.Comment)</div>
+  	<div class="col-xs-8">@Html.LabelFor(x => x.Comment)</div>
 </div>
 <div class="row">
-  	<div class="span8"><div class="ro-field">@Html.DisplayFor(x => x.Comment)</div></div>
+  	<div class="col-xs-8"><div class="ro-field">@Html.DisplayFor(x => x.Comment)</div></div>
 </div>

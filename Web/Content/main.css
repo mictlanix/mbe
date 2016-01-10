@@ -138,7 +138,7 @@ div#logo {
 .hidden {
   display:none;
 }
-.date,.bool,.number,.currency,input.date,td.date {
+.bool,.number,.currency,th.date,td.date {
   white-space:nowrap;
   width:1px;
   text-align:center;
@@ -194,7 +194,7 @@ label {
   line-height:1.2em;
 }
 .text-box {
-  width:30em;
+  //width:30em;
 }
 .text-box.multi-line {
   height:4em;
@@ -203,9 +203,6 @@ input[type="text"],
 input[type="password"] {
   border:1px solid #ccc;
   color:#444;
-}
-input[type="text"].date {
-  width:120px;
 }
 input[type="text"].short {
   width:80px;
@@ -531,4 +528,9 @@ form.form-inline {
 	.no-print, .no-print * {
 	    display: none !important;
 	}
+}
+
+/* x-editable fix */
+[class*="glyphicon"] {
+    pointer-events:none;
 }

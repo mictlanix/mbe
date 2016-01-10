@@ -3,48 +3,48 @@
 @using Mictlanix.BE.Web.Helpers
 @model TechnicalServiceRequest
 <div class="row">
-	<div class="span8">@Html.LabelFor(x => x.Type)</div>
+	<div class="col-xs-8">@Html.LabelFor(x => x.Type)</div>
 </div>
 <div class="row">
-	<div class="span8"><div class="ro-field">@Model.Type.GetDisplayName()</div></div>
+	<div class="col-xs-8"><div class="ro-field">@Model.Type.GetDisplayName()</div></div>
 </div>
 <div class="row">
-  	<div class="span2">@Html.LabelFor(x => x.Brand)</div>
-  	<div class="span2">@Html.LabelFor(x => x.Equipment)</div>
-  	<div class="span2">@Html.LabelFor(x => x.Model)</div>
-  	<div class="span2">@Html.LabelFor(x => x.SerialNumber)</div>
+  	<div class="col-xs-2">@Html.LabelFor(x => x.Brand)</div>
+  	<div class="col-xs-2">@Html.LabelFor(x => x.Equipment)</div>
+  	<div class="col-xs-2">@Html.LabelFor(x => x.Model)</div>
+  	<div class="col-xs-2">@Html.LabelFor(x => x.SerialNumber)</div>
 </div>
 <div class="row">
-  	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.Brand)</div></div>
-  	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.Equipment)</div></div>
-  	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.Model)</div></div>
-  	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.SerialNumber)</div></div>
+  	<div class="col-xs-2"><div class="ro-field">@Html.DisplayFor(x => x.Brand)</div></div>
+  	<div class="col-xs-2"><div class="ro-field">@Html.DisplayFor(x => x.Equipment)</div></div>
+  	<div class="col-xs-2"><div class="ro-field">@Html.DisplayFor(x => x.Model)</div></div>
+  	<div class="col-xs-2"><div class="ro-field">@Html.DisplayFor(x => x.SerialNumber)</div></div>
 </div>
 <div class="row">
-  	<div class="span2">@Html.LabelFor(x => x.Date)</div>
-	<div class="span4">@Html.LabelFor(x => x.Location)</div>
-  	<div class="span2">@Html.LabelFor(x => x.EndDate)</div>
+  	<div class="col-xs-2">@Html.LabelFor(x => x.Date)</div>
+	<div class="col-xs-4">@Html.LabelFor(x => x.Location)</div>
+  	<div class="col-xs-2">@Html.LabelFor(x => x.EndDate)</div>
 </div>
 <div class="row">
-  	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.Date)</div></div>
-  	<div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.Location)</div></div>
-  	<div class="span2"><div class="ro-field">@Html.DisplayFor(x => x.EndDate)</div></div>
+  	<div class="col-xs-2"><div class="ro-field">@Html.DisplayFor(x => x.Date)</div></div>
+  	<div class="col-xs-4"><div class="ro-field">@Html.DisplayFor(x => x.Location)</div></div>
+  	<div class="col-xs-2"><div class="ro-field">@Html.DisplayFor(x => x.EndDate)</div></div>
 </div>
 <div class="row">
-  	<div class="span8">@Html.LabelFor(x => x.Customer)</div>
+  	<div class="col-xs-8">@Html.LabelFor(x => x.Customer)</div>
 </div>
 <div class="row">
-  	<div class="span8"><div class="ro-field">@Html.DisplayFor(x => x.Customer, "String")</div></div>
+  	<div class="col-xs-8"><div class="ro-field">@Html.DisplayFor(x => x.Customer, "String")</div></div>
 </div>
 <div class="row">
-  	<div class="span8">@Html.LabelFor(x => x.ResponsiblePerson)</div>
+  	<div class="col-xs-8">@Html.LabelFor(x => x.ResponsiblePerson)</div>
 </div>
 <div class="row">
-  	<div class="span8"><div class="ro-field">@Html.DisplayFor(x => x.ResponsiblePerson)</div></div>
+  	<div class="col-xs-8"><div class="ro-field">@Html.DisplayFor(x => x.ResponsiblePerson)</div></div>
 </div>
 <div class="row">
-  	<div class="span8">@Html.LabelFor(x => x.Comment)</div>
+  	<div class="col-xs-8">@Html.LabelFor(x => x.Comment)</div>
 </div>
 <div class="row">
-  	<div class="span8"><div class="ro-field">@Html.DisplayFor(x => x.Comment)</div></div>
+  	<div class="col-xs-8"><div class="ro-field">@Html.DisplayFor(x => x.Comment)</div></div>
 </div>

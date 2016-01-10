@@ -5,17 +5,17 @@
 @using (Html.BeginForm ()) {
     @Html.ValidationSummary(true)
 
-    <div class="row">
-        <div class="span8 field-required">@Html.LabelFor(x => x.Warehouse)</div>
+    <div class="form-group">
+        <div class="col-xs-8 field-required">@Html.LabelFor(x => x.Warehouse)</div>
     </div>
-    <div class="row">
-        <div class="span8">@Html.EditorFor(x => x.WarehouseId) @Html.ValidationMessageFor(x => x.WarehouseId)</div>
+    <div class="form-group">
+        <div class="col-xs-8">@Html.EditorFor(x => x.WarehouseId) @Html.ValidationMessageFor(x => x.WarehouseId)</div>
     </div>
-    <div class="row">
-        <div class="span8">@Html.LabelFor(x => x.Comment)</div>
+    <div class="form-group">
+        <div class="col-xs-8">@Html.LabelFor(x => x.Comment)</div>
     </div>
-    <div class="row">
-        <div class="span8">@Html.EditorFor(x => x.Comment)</div>
+    <div class="form-group">
+        <div class="col-xs-8">@Html.EditorFor(x => x.Comment)</div>
     </div>
 }
 

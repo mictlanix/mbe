@@ -6,7 +6,7 @@
 @{
     var values = Enum.GetValues(typeof(UnitOfMeasurement)).Cast<UnitOfMeasurement>();
 }
-<select id='@ViewData.TemplateInfo.GetFullHtmlFieldId("")' name='@ViewData.TemplateInfo.GetFullHtmlFieldName("")'>
+<select id='@ViewData.TemplateInfo.GetFullHtmlFieldId("")' name='@ViewData.TemplateInfo.GetFullHtmlFieldName("")' class="form-control">
     @foreach (var item in values) {
     	var str = item.GetDisplayName();
         <option value="@str" @(str == Model ? "selected" : string.Empty)>@str</option>

@@ -4,14 +4,14 @@
 @model PriceList
 
 <div class="row">
-    <div class="span4">@Html.LabelFor(model => model.Name)</div>
-    <div class="span2">@Html.LabelFor(model => model.LowProfitMargin)</div>
-    <div class="span2">@Html.LabelFor(model => model.HighProfitMargin)</div>
+    <div class="col-xs-4">@Html.LabelFor(model => model.Name)</div>
+    <div class="col-xs-2">@Html.LabelFor(model => model.LowProfitMargin)</div>
+    <div class="col-xs-2">@Html.LabelFor(model => model.HighProfitMargin)</div>
 </div>
 <div class="row">
-    <div class="span4"><div class="ro-field">@Html.DisplayFor(model => model.Name)</div></div>
-    <div class="span2"><div class="ro-field">@Html.DisplayFor(model => model.LowProfitMargin)</div></div>
-    <div class="span2"><div class="ro-field">@Html.DisplayFor(model => model.HighProfitMargin)</div></div>
+    <div class="col-xs-4"><div class="ro-field">@Html.DisplayFor(model => model.Name)</div></div>
+    <div class="col-xs-2"><div class="ro-field">@Html.DisplayFor(model => model.LowProfitMargin)</div></div>
+    <div class="col-xs-2"><div class="ro-field">@Html.DisplayFor(model => model.HighProfitMargin)</div></div>
 </div>
 
 

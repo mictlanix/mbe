@@ -29,10 +29,10 @@
 	    <div id='tab-1' class='tab-pane active'>
     	@if(Privilege.AllowUpdate) {
 	    	<div class='control-group text-right'>
-				<a id='add-taxpayer' class='btn' data-url='@Url.Action("AddTaxpayer", new { id = Model.Id })'
+				<a id='add-taxpayer' class='btn btn-default' data-url='@Url.Action("AddTaxpayer", new { id = Model.Id })'
 				   data-type='text' data-placement='left' data-pk='@Model.Id' data-value=''
 				   data-display='false' data-emptytext='' data-emptyclass='' data-highlight='false'>
-					<i class='icon-plus'></i> @Resources.TaxpayerRecipient
+					<span class='glyphicon glyphicon-plus'></span> @Resources.TaxpayerRecipient
 				</a>
 			</div>
     	}
@@ -71,9 +71,10 @@ $(function () {
     $('#add-taxpayer').editable({
 		success: function(response, newValue) {
         	$('#taxpayers').loadUrl();
-            setTimeout(function(){$('#add-taxpayer').editable('setValue', '');},500);
+            setTimeout(function(){$('#add-taxpayer').editable('setValue', null);},500);
 	    }
 	}).removeClass('editable-click');
+
 	$('.tab-content').delegate( "a.remove", "click", function (e) {
 		e.preventDefault();
 		var self = $(this);
