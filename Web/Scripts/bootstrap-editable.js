@@ -647,12 +647,12 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
         */        
         setCursorPosition: function(elem, pos) {
             if (elem.setSelectionRange) {
-                elem.setSelectionRange(pos, pos);
+                elem.setSelectionRange(0, pos);
             } else if (elem.createTextRange) {
                 var range = elem.createTextRange();
                 range.collapse(true);
                 range.moveEnd('character', pos);
-                range.moveStart('character', pos);
+                range.moveStart('character', 0);
                 range.select();
             }
         },
