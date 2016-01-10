@@ -3,24 +3,24 @@
 @model SupplierAgreement
 
 <div class="row">
-    <div class="span5">@Html.LabelFor(x => x.Supplier)</div>
+    <div class="col-xs-5">@Html.LabelFor(x => x.Supplier)</div>
 </div>
 <div class="row">
-    <div class="span5"><div class="ro-field">@Html.HiddenFor(x => x.Supplier.Id) @Html.DisplayFor(x => x.Supplier.Name)</div></div>
+    <div class="col-xs-5"><div class="ro-field">@Html.HiddenFor(x => x.Supplier.Id) @Html.DisplayFor(x => x.Supplier.Name)</div></div>
 </div>
 <div class="row">
-    <div class="span4">@Html.LabelFor(x => x.Start)</div>
-    <div class="span4">@Html.LabelFor(x => x.End)</div>
+    <div class="col-xs-4">@Html.LabelFor(x => x.Start)</div>
+    <div class="col-xs-4">@Html.LabelFor(x => x.End)</div>
 </div>
 <div class="row">
-    <div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.Start)</div></div>
-    <div class="span4"><div class="ro-field">@Html.DisplayFor(x => x.End)</div></div>
+    <div class="col-xs-4"><div class="ro-field">@Html.DisplayFor(x => x.Start)</div></div>
+    <div class="col-xs-4"><div class="ro-field">@Html.DisplayFor(x => x.End)</div></div>
 </div>
 <div class="row">
-    <div class="span8">@Html.LabelFor(x => x.Comment)</div>
+    <div class="col-xs-8">@Html.LabelFor(x => x.Comment)</div>
 </div>
 <div class="row">
-    <div class="span8"><div class="ro-field">@Html.DisplayFor(x => x.Comment)</div></div>
+    <div class="col-xs-8"><div class="ro-field">@Html.DisplayFor(x => x.Comment)</div></div>
 </div>
 
 

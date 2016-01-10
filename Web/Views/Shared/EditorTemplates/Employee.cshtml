@@ -2,39 +2,39 @@
 @using Mictlanix.BE.Model
 @model Employee
 
-<div class="row">
-  	<div class="span3 field-required">@Html.LabelFor(x => x.FirstName)</div>
-	<div class="span3 field-required">@Html.LabelFor(x => x.LastName)</div>
-  	<div class="span2 field-required">@Html.LabelFor(x => x.Nickname)</div>
+<div class="form-group">
+  	<div class="col-xs-3 field-required">@Html.LabelFor(x => x.FirstName)</div>
+	<div class="col-xs-3 field-required">@Html.LabelFor(x => x.LastName)</div>
+  	<div class="col-xs-2 field-required">@Html.LabelFor(x => x.Nickname)</div>
 </div>
-<div class="row">
-  	<div class="span3">@Html.EditorFor(x => x.FirstName) @Html.ValidationMessageFor(x => x.FirstName)</div>
-	<div class="span3">@Html.EditorFor(x => x.LastName) @Html.ValidationMessageFor(x => x.LastName)</div>
-  	<div class="span2">@Html.EditorFor(x => x.Nickname) @Html.ValidationMessageFor(x => x.Nickname)</div>
+<div class="form-group">
+  	<div class="col-xs-3">@Html.EditorFor(x => x.FirstName) @Html.ValidationMessageFor(x => x.FirstName)</div>
+	<div class="col-xs-3">@Html.EditorFor(x => x.LastName) @Html.ValidationMessageFor(x => x.LastName)</div>
+  	<div class="col-xs-2">@Html.EditorFor(x => x.Nickname) @Html.ValidationMessageFor(x => x.Nickname)</div>
 </div>
-<div class="row">
-	<div class="span2 field-required">@Html.LabelFor(x => x.Gender)</div>
-  	<div class="span2 field-required">@Html.LabelFor(x => x.Birthday)</div>
-	<div class="span2 field-required">@Html.LabelFor(x => x.StartJobDate)</div>
+<div class="form-group">
+	<div class="col-xs-2 field-required">@Html.LabelFor(x => x.Gender)</div>
+  	<div class="col-xs-2 field-required">@Html.LabelFor(x => x.Birthday)</div>
+	<div class="col-xs-2 field-required">@Html.LabelFor(x => x.StartJobDate)</div>
 </div>
-<div class="row">
-	<div class="span2">@Html.EditorFor(x => x.Gender)</div>
-  	<div class="span2">@Html.EditorFor(x => x.Birthday) @Html.ValidationMessageFor(x => x.Birthday)</div>
-	<div class="span2">@Html.EditorFor(x => x.StartJobDate) @Html.ValidationMessageFor(x => x.StartJobDate)</div>
-	<div class="span2">@Html.EditorFor(x => x.IsActive)</div>
+<div class="form-group">
+	<div class="col-xs-2">@Html.EditorFor(x => x.Gender)</div>
+  	<div class="col-xs-2">@Html.EditorFor(x => x.Birthday) @Html.ValidationMessageFor(x => x.Birthday)</div>
+	<div class="col-xs-2">@Html.EditorFor(x => x.StartJobDate) @Html.ValidationMessageFor(x => x.StartJobDate)</div>
+	<div class="col-xs-2">@Html.EditorFor(x => x.IsActive)</div>
 </div>
-<div class="row">
-  	<div class="span2">@Html.LabelFor(x => x.TaxpayerId)</div>
-	<div class="span4">@Html.LabelFor(x => x.PersonalId)</div>
+<div class="form-group">
+  	<div class="col-xs-2">@Html.LabelFor(x => x.TaxpayerId)</div>
+	<div class="col-xs-4">@Html.LabelFor(x => x.PersonalId)</div>
 </div>
-<div class="row">
-  	<div class="span2">@Html.EditorFor(x => x.TaxpayerId)</div>
-	<div class="span4">@Html.EditorFor(x => x.PersonalId)</div>
-	<div class="span2">@Html.EditorFor(x => x.IsSalesPerson)</div>
+<div class="form-group">
+  	<div class="col-xs-2">@Html.EditorFor(x => x.TaxpayerId)</div>
+	<div class="col-xs-4">@Html.EditorFor(x => x.PersonalId)</div>
+	<div class="col-xs-2">@Html.EditorFor(x => x.IsSalesPerson)</div>
 </div>
-<div class="row">
-  	<div class="span8">@Html.LabelFor(x => x.Comment)</div>
+<div class="form-group">
+  	<div class="col-xs-8">@Html.LabelFor(x => x.Comment)</div>
 </div>
-<div class="row">
-  	<div class="span8">@Html.EditorFor(x => x.Comment) @Html.ValidationMessageFor(x => x.Comment)</div>
+<div class="form-group">
+  	<div class="col-xs-8">@Html.EditorFor(x => x.Comment) @Html.ValidationMessageFor(x => x.Comment)</div>
 </div>

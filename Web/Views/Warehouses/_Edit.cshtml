@@ -10,14 +10,14 @@
 <div class='modal-body'>
     @using (Ajax.BeginForm (null, null, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "warehouse-modal" }, new { @class = "modal-form" })) {
         @Html.ValidationSummary(true)
-        <div style='overflow:hidden'>
+        <div class="form-horizontal">
             @Html.EditorForModel()
         </div>
         <script type="text/javascript">$('#Id').attr('readonly', true);</script>
     }
 </div>
 <div class='modal-footer'>
-    <button type='button' class='btn' data-dismiss='modal'>@Resources.Discard</button>
+    <button type='button' class='btn btn-default' data-dismiss='modal'>@Resources.Discard</button>
     <button type='submit' class='btn btn-primary' onclick='$("#warehouse-modal form").submit();'>@Resources.Save</button>
 </div>
 

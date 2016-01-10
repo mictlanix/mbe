@@ -2,22 +2,22 @@
 @using Mictlanix.BE.Model
 @model SupplierAgreement
 
-<div class="row">
-    <div class="span4 field-required">@Html.LabelFor(x => x.Start)</div>
-    <div class="span4 field-required">@Html.LabelFor(x => x.End)</div>
+<div class="form-group">
+    <div class="col-xs-4 field-required">@Html.LabelFor(x => x.Start)</div>
+    <div class="col-xs-4 field-required">@Html.LabelFor(x => x.End)</div>
 </div>
-<div class="row">
-    <div class="span4">
+<div class="form-group">
+    <div class="col-xs-4">
         @Html.HiddenFor(x => x.SupplierId)
         @Html.EditorFor(x => x.Start)
         @Html.ValidationMessageFor(x => x.Start)
     </div>
-    <div class="span4">@Html.EditorFor(x => x.End) @Html.ValidationMessageFor(model => model.End)</div>
+    <div class="col-xs-4">@Html.EditorFor(x => x.End) @Html.ValidationMessageFor(model => model.End)</div>
 </div>
-<div class="row">
-    <div class="span8">@Html.LabelFor(x => x.Comment)</div>
+<div class="form-group">
+    <div class="col-xs-8">@Html.LabelFor(x => x.Comment)</div>
 </div>
-<div class="row">
-    <div class="span8">@Html.EditorFor(x => x.Comment)</div>
+<div class="form-group">
+    <div class="col-xs-8">@Html.EditorFor(x => x.Comment)</div>
 </div>
 

@@ -6,7 +6,7 @@
 @{
     var values = Enum.GetValues(typeof(FiscalCertificationProvider)).Cast<FiscalCertificationProvider>();
 }
-<select id='@ViewData.TemplateInfo.GetFullHtmlFieldId("")' name='@ViewData.TemplateInfo.GetFullHtmlFieldName("")'>
+<select id='@ViewData.TemplateInfo.GetFullHtmlFieldId("")' name='@ViewData.TemplateInfo.GetFullHtmlFieldName("")' class="form-control">
     @foreach (var item in values) {
         <option value="@((int)item)" @(item == Model ? "selected" : string.Empty)>@item.GetDisplayName()</option>
     }

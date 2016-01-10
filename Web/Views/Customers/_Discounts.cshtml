@@ -23,7 +23,7 @@
         }
         </td>
         <td class="number">
-            <a class='editable discount' data-type='text' data-placement='right' data-pk='@item.Id' data-url='@Url.Action("SetDiscount", new { id = item.Id })'>@Html.DisplayFor(x => item.Discount)</a>
+            <a class='editable discount' data-type='text' data-placement='left' data-pk='@item.Id' data-url='@Url.Action("SetDiscount", new { id = item.Id })'>@Html.DisplayFor(x => item.Discount)</a>
         </td>
         <td class='actions'>
             @Html.ActionLink(" ", "RemoveDiscount", new { id = item.Id }, new { @class = "button icon delete icon-only remove", @title = Resources.Delete })

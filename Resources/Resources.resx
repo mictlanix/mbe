@@ -1784,9 +1784,6 @@ Realizada el: {0:d}</value>
   <data name="ItemAlreadyCompletedOrCancelled" xml:space="preserve">
     <value>El elemento ha sido finalizado o cancelado.</value>
   </data>
-  <data name="FiscalDocumentQRCodeFormatString" xml:space="preserve">
-    <value>?re={0}&amp;rr={1}&amp;tt={2:0000000000.000000}&amp;id={3}</value>
-  </data>
   <data name="CustomerDebt" xml:space="preserve">
     <value>Adeudos del Cliente</value>
   </data>
@@ -2107,5 +2104,11 @@ Realizada el: {0:d}</value>
   </data>
   <data name="SalesOrderIsNotInvoiceable" xml:space="preserve">
     <value>No se ha finalizado el pedido o está cancelado.</value>
+  </data>
+  <data name="SearchFor" xml:space="preserve">
+    <value>buscar...</value>
+  </data>
+  <data name="FiscalDocumentQRCodeFormatString" xml:space="preserve">
+    <value>?re={0}&amp;rr={1}&amp;tt={2:0000000000.000000}&amp;id={3}</value>
   </data>
 </root>
