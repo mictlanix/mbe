@@ -44,21 +44,11 @@ namespace Mictlanix.BE.Web.Helpers
 			var user = helper.ViewContext.HttpContext.Items ["CurrentUser"] as User;
 			
 			if (user == null) {
-				user = GetUser (helper, helper.ViewContext.HttpContext.User.Identity.Name);
+				user = User.TryFind (helper.ViewContext.HttpContext.User.Identity.Name);
 				helper.ViewContext.HttpContext.Items ["CurrentUser"] = user;
 			}
 			
             return user;
-        }
-
-        internal static User GetUser (this HtmlHelper helper, string username)
-        {
-            return GetUser (username);
-        }
-
-        internal static User GetUser (string username)
-        {
-            return User.TryFind (username);
         }
 
         public static AccessPrivilege GetPrivilege (this HtmlHelper helper, User user, SystemObjects obj)

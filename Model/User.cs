@@ -65,7 +65,7 @@ namespace Mictlanix.BE.Model
 		[UIHint("EmployeeSelector")]
 		public int EmployeeId { get; set; }
 		
-        [BelongsTo("employee")]
+		[BelongsTo("employee", Fetch = FetchEnum.Join)]
         [Display(Name = "Employee", ResourceType = typeof(Resources))]
         public virtual Employee Employee { get; set; }
 
