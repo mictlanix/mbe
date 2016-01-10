@@ -32,8 +32,8 @@
         <b>@Resources.Amount: </b>
         <span class='editable total'>@Html.DisplayFor(x => x.Total)</span>
         <span class='editable currency'>@Html.DisplayFor(x => x.Currency)</span>
-        @if (Model.Currency != Configuration.BaseCurrency) {
-			<i class="total2 icon-exclamation-sign" data-toggle='tooltip' title='@Html.DisplayFor(x => x.TotalEx) @Configuration.BaseCurrency'></i>
+        @if (Model.Currency != WebConfig.BaseCurrency) {
+			<i class="total2 icon-exclamation-sign" data-toggle='tooltip' title='@Html.DisplayFor(x => x.TotalEx) @WebConfig.BaseCurrency'></i>
         }
     @if (!string.IsNullOrWhiteSpace (Model.Comment)) {
     	<br/>

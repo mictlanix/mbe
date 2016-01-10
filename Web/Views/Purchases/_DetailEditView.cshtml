@@ -38,7 +38,7 @@
         <a class='editable tax' data-type='select' data-placement='right' data-source='@Url.Action("TaxRates", "Pricing")' data-pk='@Model.Id' data-value='@Model.TaxRate.ToString("0.####")' data-url='@Url.Action("SetItemTaxRate", new { id = Model.Id })'>@Html.DisplayFor(x => x.TaxRate)</a>
         <b>@Resources.Amount:</b>
         <span class='editable total'>@Html.DisplayFor(x => x.Total)</span>
-        <span class='editable currency'>@Configuration.BaseCurrency</span>
+        <span class='editable currency'>@WebConfig.BaseCurrency</span>
         <br />
         <b>@Resources.Warehouse:</b>
         <a class='editable warehouse' data-type='select' data-inputclass='input-xlarge' data-placement='bottom' data-source='@Url.Action("List", "Warehouses")' data-pk='@Model.Id' data-value='@Model.Warehouse.Id' data-url='@Url.Action("EditDetailWarehouse", new { id = Model.Id })'>@Model.Warehouse</a>
@@ -55,7 +55,7 @@ $('#id\\:@Model.Id a.editable').editable({
 			$this.siblings('.total').html(response.total);
 		}
 		if ('total2' in response) {
-			$this.siblings('.total2').attr('data-original-title', response.total2 + ' @Configuration.BaseCurrency');
+			$this.siblings('.total2').attr('data-original-title', response.total2 + ' @WebConfig.BaseCurrency');
 		}
         updateTotals();
     },

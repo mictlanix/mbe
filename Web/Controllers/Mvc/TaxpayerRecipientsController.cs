@@ -48,7 +48,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		public ActionResult Index ()
 		{
 			var search = SearchTaxpayers (new Search<TaxpayerRecipient> {
-				Limit = Configuration.PageSize
+				Limit = WebConfig.PageSize
 			});
 
 			return View (search);
