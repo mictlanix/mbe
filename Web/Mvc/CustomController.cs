@@ -37,8 +37,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
-//using jsreport.Client;
-//using jsreport.Client.Entities;
+using jsreport.Client;
+using jsreport.Client.Entities;
 using Mictlanix.BE.Web.Helpers;
 using Mictlanix.BE.Web.Security;
 
@@ -64,68 +64,68 @@ namespace Mictlanix.BE.Web.Mvc {
 			}
 		}
 
-//		public FileStreamResult PdfView (string viewPath, object model)
-//		{
-//			var rgx = new Regex (@"(src|href)\s?=\s?('|"")");
-//			var content = RenderView (viewPath, model);
-//			string result = rgx.Replace (content, string.Format ("$1=$2{0}", WebConfig.AppServerUrl));
-//			var reportingService = new ReportingService (ReportServerUrl);
-//			var report = reportingService.RenderAsync (new RenderRequest {
-//				template = new Template {
-//					content = result,
-//					engine = "none",
-//					recipe = "phantom-pdf",
-//					phantom = new Phantom {
-//						format = "Letter",
-//						headerHeight = "0 mm",
-//						footerHeight = "0 mm",
-//						margin = "6 mm"
-//					}
-//				}
-//			}).Result;
-//
-//			return File (report.Content, "application/pdf");
-//		}
-//
-//		public Stream GetPdf (string viewPath, object model, Phantom phantom)
-//		{
-//			var rgx = new Regex (@"(src|href)\s?=\s?('|"")/");
-//			string content = rgx.Replace (RenderView (viewPath, model), string.Format ("$1=$2{0}/", WebConfig.AppServerUrl));
-//
-//			var reportingService = new ReportingService (ReportServerUrl);
-//
-//			if (!string.IsNullOrWhiteSpace (phantom.header)) {
-//				phantom.header = rgx.Replace (RenderPartialView (phantom.header, model), string.Format ("$1=$2{0}/", WebConfig.AppServerUrl));
-//			}
-//
-//			if (!string.IsNullOrWhiteSpace (phantom.footer)) {
-//				phantom.footer = rgx.Replace (RenderPartialView (phantom.footer, model), string.Format ("$1=$2{0}/", WebConfig.AppServerUrl));
-//			}
-//
-//			if (string.IsNullOrWhiteSpace (phantom.format)) {
-//				phantom.format = "Letter";
-//			}
-//
-//			if (string.IsNullOrWhiteSpace (phantom.margin)) {
-//				phantom.margin = "6 mm";
-//			}
-//
-//			var report = reportingService.RenderAsync (new RenderRequest {
-//				template = new Template {
-//					content = content,
-//					engine = "none",
-//					recipe = "phantom-pdf",
-//					phantom = phantom
-//				}
-//			}).Result;
-//
-//			return report.Content;
-//		}
-//
-//		public FileStreamResult PdfView (string viewPath, object model, Phantom phantom)
-//		{
-//			return File (GetPdf (viewPath, model, phantom), "application/pdf");
-//		}
+		public FileStreamResult PdfView (string viewPath, object model)
+		{
+			var rgx = new Regex (@"(src|href)\s?=\s?('|"")");
+			var content = RenderView (viewPath, model);
+			string result = rgx.Replace (content, string.Format ("$1=$2{0}", WebConfig.AppServerUrl));
+			var reportingService = new ReportingService (ReportServerUrl);
+			var report = reportingService.RenderAsync (new RenderRequest {
+				template = new Template {
+					content = result,
+					engine = "none",
+					recipe = "phantom-pdf",
+					phantom = new Phantom {
+						format = "Letter",
+						headerHeight = "0 mm",
+						footerHeight = "0 mm",
+						margin = "6 mm"
+					}
+				}
+			}).Result;
+
+			return File (report.Content, "application/pdf");
+		}
+
+		public Stream GetPdf (string viewPath, object model, Phantom phantom)
+		{
+			var rgx = new Regex (@"(src|href)\s?=\s?('|"")/");
+			string content = rgx.Replace (RenderView (viewPath, model), string.Format ("$1=$2{0}/", WebConfig.AppServerUrl));
+
+			var reportingService = new ReportingService (ReportServerUrl);
+
+			if (!string.IsNullOrWhiteSpace (phantom.header)) {
+				phantom.header = rgx.Replace (RenderPartialView (phantom.header, model), string.Format ("$1=$2{0}/", WebConfig.AppServerUrl));
+			}
+
+			if (!string.IsNullOrWhiteSpace (phantom.footer)) {
+				phantom.footer = rgx.Replace (RenderPartialView (phantom.footer, model), string.Format ("$1=$2{0}/", WebConfig.AppServerUrl));
+			}
+
+			if (string.IsNullOrWhiteSpace (phantom.format)) {
+				phantom.format = "Letter";
+			}
+
+			if (string.IsNullOrWhiteSpace (phantom.margin)) {
+				phantom.margin = "6 mm";
+			}
+
+			var report = reportingService.RenderAsync (new RenderRequest {
+				template = new Template {
+					content = content,
+					engine = "none",
+					recipe = "phantom-pdf",
+					phantom = phantom
+				}
+			}).Result;
+
+			return report.Content;
+		}
+
+		public FileStreamResult PdfView (string viewPath, object model, Phantom phantom)
+		{
+			return File (GetPdf (viewPath, model, phantom), "application/pdf");
+		}
 
 		public FileResult ExcelFile (Stream stream, string fileName)
 		{

@@ -13,17 +13,20 @@
 <p>@Html.ValidationMessageFor(x => x.Pattern)</p>
 
 <table class='table-hover'>
+<thead>
     <tr>
         <th class=''>@Resources.Code</th>
         <th class=''>@Resources.Name</th>
-        <th class='nowrap'>@Resources.UnitOfMeasurement</th>
+        <th class='' style="min-width:85px">@Resources.UnitOfMeasurement</th>
         <th class=''>@Resources.MinimumOrderQuantity</th>
         <th class=''>@Resources.TaxRate</th>
         <th class=''>@Resources.TaxIncluded</th>
-        <th class='input-small'>@Resources.PriceType</th>
+        <th class='' style="min-width:70px">@Resources.PriceType</th>
         <th class=''>@Resources.Cost / @Resources.Prices</th>
         <th class=''>@Resources.Currency</th>
     </tr>
+</thead>
+<tbody>
 @foreach (var item in Model.Results) {
     <tr>
         <td class='center'>@Html.DisplayFor(x => item.Code)</td>
@@ -87,6 +90,7 @@
         </td>
     </tr>
 }
+</tbody>
 </table>
 <div class='buttons right'>
 	<label class='button left'>@Model.ToString()</label>@if (Model.HasPrev) {<a class='button middle icon prev icon-only paging' title='@Resources.PrevPage' href='javascript:void(0)'></a>}@if (Model.HasNext) {<a class='button right icon next icon-only paging' title='@Resources.NextPage' href='javascript:void(0)'></a>}
