@@ -54,7 +54,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			
 			var list = PriceList.Queryable.ToList ();
 
-			if (CurrentUser.IsInRole ("PriceLists.Update")) {
+			if (!CurrentUser.IsInRole ("PriceLists.Update")) {
 				list.Remove (list.Single (x => x.Id == 0));
 			}
 

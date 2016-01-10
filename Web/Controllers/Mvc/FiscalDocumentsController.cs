@@ -125,12 +125,25 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			return View (view, item);
 		}
 
-		public ViewResult Pdf (int id)
-		{
-			var item = FiscalDocument.Find (id);
-			var view = string.Format ("Pdf{0:00}", item.Version * 10);
+//		public ViewResult Pdf (int id)
+//		{
+//			var item = FiscalDocument.Find (id);
+//			var view = string.Format ("Pdf{0:00}", item.Version * 10);
+//
+//			return View (view, item);
+//		}
 
-			return View (view, item);
+		public ActionResult Pdf (int id)
+		{
+			var model = FiscalDocument.Find (id);
+			var batch = TaxpayerBatch.Queryable.First (x => x.Batch == model.Batch);
+			var view = string.Format ("Print{0:00}{1}", model.Version * 10, batch.Template);
+			var filename = string.Format (Resources.FiscalDocumentFilenameFormatString + ".pdf",
+				           model.Issuer.Id, model.Batch, model.Serial);
+			
+			Response.AppendHeader ("Content-Disposition", string.Format ("inline; filename={0}.pdf", filename));
+
+			return PdfView (view, model);
 		}
 
 		public ActionResult New ()
@@ -1208,6 +1221,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			return quantity > 0 ? quantity : 0;
 		}
 
+		[AllowAnonymous]
 		public ActionResult QRCode (int id)
 		{
 			var item = FiscalDocument.Find (id);
