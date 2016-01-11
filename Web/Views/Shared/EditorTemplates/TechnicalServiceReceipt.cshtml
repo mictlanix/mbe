@@ -2,39 +2,19 @@
 @using Mictlanix.BE.Model
 @model TechnicalServiceReceipt
 <div class="form-group">
-  	<div class="col-xs-2 field-required">@Html.LabelFor(x => x.Brand)</div>
-  	<div class="col-xs-2 field-required">@Html.LabelFor(x => x.Equipment)</div>
-  	<div class="col-xs-2 field-required">@Html.LabelFor(x => x.Model)</div>
-  	<div class="col-xs-2">@Html.LabelFor(x => x.SerialNumber)</div>
+  	<div class="col-xs-3 field-required">@Html.LabelFor(x => x.Brand) @Html.EditorFor(x => x.Brand) @Html.ValidationMessageFor(x => x.Brand)</div>
+  	<div class="col-xs-3 field-required">@Html.LabelFor(x => x.Equipment) @Html.EditorFor(x => x.Equipment) @Html.ValidationMessageFor(x => x.Equipment)</div>
+  	<div class="col-xs-3 field-required">@Html.LabelFor(x => x.Model) @Html.EditorFor(x => x.Model) @Html.ValidationMessageFor(x => x.Model)</div>
+  	<div class="col-xs-3">@Html.LabelFor(x => x.SerialNumber) @Html.EditorFor(x => x.SerialNumber) @Html.ValidationMessageFor(x => x.SerialNumber)</div>
 </div>
 <div class="form-group">
-  	<div class="col-xs-2">@Html.EditorFor(x => x.Brand) @Html.ValidationMessageFor(x => x.Brand)</div>
-  	<div class="col-xs-2">@Html.EditorFor(x => x.Equipment) @Html.ValidationMessageFor(x => x.Equipment)</div>
-  	<div class="col-xs-2">@Html.EditorFor(x => x.Model) @Html.ValidationMessageFor(x => x.Model)</div>
-  	<div class="col-xs-2">@Html.EditorFor(x => x.SerialNumber) @Html.ValidationMessageFor(x => x.SerialNumber)</div>
+  	<div class="col-xs-4 field-required">@Html.LabelFor(x => x.Date) @Html.EditorFor(x => x.Date) @Html.ValidationMessageFor(x => x.Date)</div>
+  	<div class="col-xs-4">@Html.LabelFor(x => x.Status) @Html.EditorFor(x => x.Status) @Html.ValidationMessageFor(x => x.Status)</div>
+	<div class="col-xs-4">@Html.LabelFor(x => x.Location) @Html.EditorFor(x => x.Location) @Html.ValidationMessageFor(x => x.Location)</div>
 </div>
 <div class="form-group">
-  	<div class="col-xs-2 field-required">@Html.LabelFor(x => x.Date)</div>
-  	<div class="col-xs-2">@Html.LabelFor(x => x.Status)</div>
-	<div class="col-xs-4">@Html.LabelFor(x => x.Location)</div>
+  	<div class="col-xs-12 field-required">@Html.LabelFor(x => x.Checker) @Html.EditorFor(x => x.Checker) @Html.ValidationMessageFor(x => x.Checker)</div>
 </div>
 <div class="form-group">
-  	<div class="col-xs-2">@Html.EditorFor(x => x.Date) @Html.ValidationMessageFor(x => x.Date)</div>
-  	<div class="col-xs-2">@Html.EditorFor(x => x.Status) @Html.ValidationMessageFor(x => x.Status)</div>
-  	<div class="col-xs-4">@Html.EditorFor(x => x.Location) @Html.ValidationMessageFor(x => x.Location)</div>
+  	<div class="col-xs-12">@Html.LabelFor(x => x.Comment) @Html.EditorFor(x => x.Comment)</div>
 </div>
-<div class="form-group">
-  	<div class="col-xs-8 field-required">@Html.LabelFor(x => x.Checker)</div>
-</div>
-<div class="form-group">
-  	<div class="col-xs-8">@Html.EditorFor(x => x.Checker) @Html.ValidationMessageFor(x => x.Checker)</div>
-</div>
-<div class="form-group">
-  	<div class="col-xs-8">@Html.LabelFor(x => x.Comment)</div>
-</div>
-<div class="form-group">
-  	<div class="col-xs-8">@Html.EditorFor(x => x.Comment)</div>
-</div>
-<script type='text/javascript'>
-$('#Date').datepicker({ language: 'es', format: 'yyyy-mm-dd' });
-</script>

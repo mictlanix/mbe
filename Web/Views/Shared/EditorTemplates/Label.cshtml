@@ -3,15 +3,8 @@
 @model Label
 
 <div class="form-group">
-    <div class="col-xs-8 field-required">@Html.LabelFor(x => x.Name)</div>
+    <div class="col-xs-12 field-required">@Html.LabelFor(x => x.Name) @Html.EditorFor(x => x.Name) @Html.ValidationMessageFor(model => model.Name)</div>
 </div>
 <div class="form-group">
-    <div class="col-xs-8">@Html.EditorFor(x => x.Name) @Html.ValidationMessageFor(model => model.Name)</div>
+    <div class="col-xs-8">@Html.LabelFor(x => x.Comment) @Html.EditorFor(x => x.Comment)</div>
 </div>
-<div class="form-group">
-    <div class="col-xs-8">@Html.LabelFor(x => x.Comment)</div>
-</div>
-<div class="form-group">
-    <div class="col-xs-8">@Html.EditorFor(x => x.Comment)</div>
-</div>
-

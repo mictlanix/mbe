@@ -8,17 +8,22 @@
 
 <div id='master-section'>
 @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
-    <div class='search-box'>
-    	<table class='noborder'>
-	    	<tbody>
-		    	<tr>
-		    		<td>@Html.Editor((string)ViewBag.EditorField, (string)ViewBag.EditorTemplate)</td>
-		    		<td class='actions'>@Html.EditorFor(x => x.StartDate) - @Html.EditorFor(x => x.EndDate)</td>
-		    		<td class='actions no-print'><button type='submit' class='icon search'>@Resources.Search</button></td>
-		    	</tr>
-	    	</tbody>
-    	</table>
-    </div>
+	<div class="row">
+  		<div class="col-sm-7">
+			@Html.Editor((string)ViewBag.EditorField, (string)ViewBag.EditorTemplate)
+		</div>
+		<div class="col-sm-2">
+			@Html.EditorFor(x => x.StartDate)
+		</div>
+		<div class="col-sm-2">
+			@Html.EditorFor(x => x.EndDate)
+		</div>
+		<div class="col-sm-1">
+			<button class="btn btn-primary btn-block" type="submit">
+				<span class="glyphicon glyphicon-refresh"></span>
+			</button>
+		</div>
+	</div>
 }
 </div>
 <div id='activity-indicator'>
