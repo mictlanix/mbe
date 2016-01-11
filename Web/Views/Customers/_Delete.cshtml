@@ -8,7 +8,7 @@
     <h3>@Resources.Customer</h3>
 </div>
 <div class='modal-body'>
-    @using (Ajax.BeginForm (null, null, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "customer-modal" }, new { @class = "modal-form" })) {
+    @using (Ajax.BeginForm (null, null, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "customer-modal-content" }, new { @class = "modal-form" })) {
         <div class="form-horizontal">
             @Html.DisplayForModel()
         </div>

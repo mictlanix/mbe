@@ -3,38 +3,23 @@
 @model Employee
 
 <div class="form-group">
-  	<div class="col-xs-3 field-required">@Html.LabelFor(x => x.FirstName)</div>
-	<div class="col-xs-3 field-required">@Html.LabelFor(x => x.LastName)</div>
-  	<div class="col-xs-2 field-required">@Html.LabelFor(x => x.Nickname)</div>
+  	<div class="col-xs-4 field-required">@Html.LabelFor(x => x.FirstName) @Html.EditorFor(x => x.FirstName) @Html.ValidationMessageFor(x => x.FirstName)</div>
+	<div class="col-xs-4 field-required">@Html.LabelFor(x => x.LastName) @Html.EditorFor(x => x.LastName) @Html.ValidationMessageFor(x => x.LastName)</div>
+  	<div class="col-xs-4 field-required">@Html.LabelFor(x => x.Nickname) @Html.EditorFor(x => x.Nickname) @Html.ValidationMessageFor(x => x.Nickname)</div>
 </div>
 <div class="form-group">
-  	<div class="col-xs-3">@Html.EditorFor(x => x.FirstName) @Html.ValidationMessageFor(x => x.FirstName)</div>
-	<div class="col-xs-3">@Html.EditorFor(x => x.LastName) @Html.ValidationMessageFor(x => x.LastName)</div>
-  	<div class="col-xs-2">@Html.EditorFor(x => x.Nickname) @Html.ValidationMessageFor(x => x.Nickname)</div>
+	<div class="col-xs-4 field-required">@Html.LabelFor(x => x.Gender) @Html.EditorFor(x => x.Gender)</div>
+  	<div class="col-xs-4 field-required">@Html.LabelFor(x => x.Birthday) @Html.EditorFor(x => x.Birthday) @Html.ValidationMessageFor(x => x.Birthday)</div>
+	<div class="col-xs-4 field-required">@Html.LabelFor(x => x.StartJobDate) @Html.EditorFor(x => x.StartJobDate) @Html.ValidationMessageFor(x => x.StartJobDate)</div>
 </div>
 <div class="form-group">
-	<div class="col-xs-2 field-required">@Html.LabelFor(x => x.Gender)</div>
-  	<div class="col-xs-2 field-required">@Html.LabelFor(x => x.Birthday)</div>
-	<div class="col-xs-2 field-required">@Html.LabelFor(x => x.StartJobDate)</div>
+  	<div class="col-xs-3">@Html.LabelFor(x => x.TaxpayerId) @Html.EditorFor(x => x.TaxpayerId)</div>
+	<div class="col-xs-5">@Html.LabelFor(x => x.PersonalId) @Html.EditorFor(x => x.PersonalId)</div>
+	<div class="col-xs-4">
+		<label>&nbsp;</label>
+		<p class="form-control-static">@Html.EditorFor(x => x.IsActive) @Html.EditorFor(x => x.IsSalesPerson)</p>
+	</div>
 </div>
 <div class="form-group">
-	<div class="col-xs-2">@Html.EditorFor(x => x.Gender)</div>
-  	<div class="col-xs-2">@Html.EditorFor(x => x.Birthday) @Html.ValidationMessageFor(x => x.Birthday)</div>
-	<div class="col-xs-2">@Html.EditorFor(x => x.StartJobDate) @Html.ValidationMessageFor(x => x.StartJobDate)</div>
-	<div class="col-xs-2">@Html.EditorFor(x => x.IsActive)</div>
-</div>
-<div class="form-group">
-  	<div class="col-xs-2">@Html.LabelFor(x => x.TaxpayerId)</div>
-	<div class="col-xs-4">@Html.LabelFor(x => x.PersonalId)</div>
-</div>
-<div class="form-group">
-  	<div class="col-xs-2">@Html.EditorFor(x => x.TaxpayerId)</div>
-	<div class="col-xs-4">@Html.EditorFor(x => x.PersonalId)</div>
-	<div class="col-xs-2">@Html.EditorFor(x => x.IsSalesPerson)</div>
-</div>
-<div class="form-group">
-  	<div class="col-xs-8">@Html.LabelFor(x => x.Comment)</div>
-</div>
-<div class="form-group">
-  	<div class="col-xs-8">@Html.EditorFor(x => x.Comment) @Html.ValidationMessageFor(x => x.Comment)</div>
+  	<div class="col-xs-12">@Html.LabelFor(x => x.Comment) @Html.EditorFor(x => x.Comment) @Html.ValidationMessageFor(x => x.Comment)</div>
 </div>

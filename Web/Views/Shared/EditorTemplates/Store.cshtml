@@ -3,32 +3,18 @@
 @model Store
 
 <div class="form-group">
-  	<div class="col-xs-2 field-required">@Html.LabelFor(x => x.Code)</div>
-	<div class="col-xs-6 field-required">@Html.LabelFor(x => x.Name)</div>
+  	<div class="col-xs-4 field-required">@Html.LabelFor(x => x.Code) @Html.EditorFor(x => x.Code) @Html.ValidationMessageFor(x => x.Code)</div>
+	<div class="col-xs-8 field-required">@Html.LabelFor(x => x.Name) @Html.EditorFor(x => x.Name) @Html.ValidationMessageFor(x => x.Name)</div>
 </div>
 <div class="form-group">
-  	<div class="col-xs-2">@Html.EditorFor(x => x.Code) @Html.ValidationMessageFor(x => x.Code)</div>
-	<div class="col-xs-6">@Html.EditorFor(x => x.Name) @Html.ValidationMessageFor(x => x.Name)</div>
+  	<div class="col-xs-12 field-required">@Html.LabelFor(x => x.Taxpayer) @Html.EditorFor(x => x.TaxpayerId) @Html.ValidationMessageFor(x => x.TaxpayerId)</div>
 </div>
 <div class="form-group">
-  	<div class="col-xs-8 field-required">@Html.LabelFor(x => x.Taxpayer)</div>
+  	<div class="col-xs-6 field-required">@Html.LabelFor(x => x.Location) @Html.EditorFor(x => x.Location) @Html.ValidationMessageFor(x => x.Location)</div>
+  	<div class="col-xs-6 field-required">@Html.LabelFor(x => x.Logo) @Html.EditorFor(x => x.Logo) @Html.ValidationMessageFor(x => x.Logo)</div>
 </div>
 <div class="form-group">
-  	<div class="col-xs-8">@Html.EditorFor(x => x.TaxpayerId) @Html.ValidationMessageFor(x => x.TaxpayerId)</div>
-</div>
-<div class="form-group">
-  	<div class="col-xs-4 field-required">@Html.LabelFor(x => x.Location)</div>
-  	<div class="col-xs-4 field-required">@Html.LabelFor(x => x.Logo)</div>
-</div>
-<div class="form-group">
-  	<div class="col-xs-4">@Html.EditorFor(x => x.Location) @Html.ValidationMessageFor(x => x.Location)</div>
-  	<div class="col-xs-4">@Html.EditorFor(x => x.Logo) @Html.ValidationMessageFor(x => x.Logo)</div>
-</div>
-<div class="form-group">
-  	<div class="col-xs-8">@Html.LabelFor(x => x.ReceiptMessage)</div>
-</div>
-<div class="form-group">
-  	<div class="col-xs-8">@Html.EditorFor(x => x.ReceiptMessage)</div>
+  	<div class="col-xs-12">@Html.LabelFor(x => x.ReceiptMessage) @Html.EditorFor(x => x.ReceiptMessage)</div>
 </div>
 <div id='address-container'>
 	@Html.EditorFor(x => x.Address)
@@ -39,6 +25,6 @@ div.token-input-dropdown {width:650px;}
 </style>
 @if (Model != null && Model.Taxpayer != null) {
 <script type='text/javascript'>
-$("#TaxpayerId").tokenInput("add", { id: "@Model.Taxpayer.Id", name: "@Model.Taxpayer.ToString()"});
+	$("#TaxpayerId").tokenInput("add", { id: "@Model.Taxpayer.Id", name: "@Model.Taxpayer.ToString()"});
 </script>
 }
