@@ -67,9 +67,12 @@ body {
     background:transparent url(images/body-bg.png);
 
 }
-p, ul {
+/*p, ul {
     margin-bottom: 20px;
     line-height: 1.6em;
+}*/
+div.validation-summary-errors > ul {
+    margin-bottom: 0px;
 }
 h1, h2, h3 {
     font-size: 1.5em;
@@ -98,9 +101,6 @@ a:link,a:visited,a:active {
 }
 a:hover {
     text-decoration:underline;
-}
-textarea.text-box {
-  width:100%;
 }
 #container {
   background:transparent url(images/header-bg.png) repeat-x left -30px;
@@ -193,12 +193,6 @@ label {
   font-weight:normal;
   line-height:1.2em;
 }
-.text-box {
-  //width:30em;
-}
-.text-box.multi-line {
-  height:4em;
-}
 input[type="text"], 
 input[type="password"] {
   border:1px solid #ccc;
@@ -206,9 +200,6 @@ input[type="password"] {
 }
 input[type="text"].short {
   width:80px;
-}
-textarea {
-  min-height:4em;
 }
 select {
   border: 1px solid #ccc;

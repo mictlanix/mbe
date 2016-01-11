@@ -11,18 +11,20 @@
 <h2>@Resources.WarehouseStockBySerialNumberReport</h2>
 
 <div id="master-section">
-    @using (Ajax.BeginForm (new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
-        <div class="row-fluid">
-            <div class="col-xs-11">
-                <label for="warehouse">@Resources.Warehouse</label>
-                @Html.Editor("warehouse", "WarehouseSelector")
-            </div>
-            <div class="col-xs-1">
-                <label for="product">&nbsp;</label>
-                <button type="submit" class="icon search">@Resources.Search</button>
-            </div>
+@using (Ajax.BeginForm (new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
+    <div class="row">
+        <div class="col-xs-11">
+            <label for="warehouse">@Resources.Warehouse</label>
+            @Html.Editor("warehouse", "WarehouseSelector")
         </div>
-    }
+        <div class="col-xs-1">
+            <label for="product">&nbsp;</label>
+            <button class="btn btn-primary btn-block" type="submit">
+				<span class="glyphicon glyphicon-refresh"></span>
+			</button>
+        </div>
+    </div>
+}
 </div>
 <div id="activity-indicator">
     <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
