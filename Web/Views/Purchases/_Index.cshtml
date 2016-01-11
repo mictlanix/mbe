@@ -10,6 +10,8 @@
     ViewBag.Privilege = Privilege;
 }
 
+<p>@Html.ValidationMessageFor(x => x.Pattern)</p>
+
 <table id="purchases-orders">
     <tr>
         <th>@Html.LabelFor(x => new PurchaseOrder ().Id)</th>
