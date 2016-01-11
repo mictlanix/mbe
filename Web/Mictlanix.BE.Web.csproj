@@ -409,7 +409,6 @@
     <Content Include="Views\Shared\_PrintLayout.cshtml" />
     <Content Include="Views\FiscalDocuments\Index.cshtml" />
     <Content Include="Views\FiscalDocuments\Edit.cshtml" />
-    <Content Include="Views\FiscalDocuments\New.cshtml" />
     <Content Include="Views\FiscalDocuments\_Totals.cshtml" />
     <Content Include="Views\FiscalDocuments\Reports.cshtml" />
     <Content Include="Views\Purchases\Print.cshtml" />
@@ -626,10 +625,6 @@
     <Content Include="Views\CustomerRefunds\_Totals.cshtml" />
     <Content Include="Views\CustomerRefunds\Index.cshtml" />
     <Content Include="Views\CustomerRefunds\Print.cshtml" />
-    <Content Include="Views\Reports\CustomerRefundsHistoricDetails.cshtml" />
-    <Content Include="Views\Reports\CustomerRefundsHistoric.cshtml" />
-    <Content Include="Views\Reports\_CustomerRefundsHistoric.cshtml" />
-    <Content Include="Views\Reports\_CustomerRefundDetails.cshtml" />
     <Content Include="Views\CustomerRefunds\Edit.cshtml" />
     <Content Include="Views\CustomerRefunds\_EditorView.cshtml" />
     <Content Include="Views\CustomerRefunds\_ItemEditorView.cshtml" />

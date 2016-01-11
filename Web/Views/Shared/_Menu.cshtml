@@ -40,9 +40,8 @@
     var ShowFiscalDocumentsMenu = CurrentUser.GetPrivilege (SystemObjects.FiscalDocuments).AllowRead ||
                             	  CurrentUser.GetPrivilege (SystemObjects.FiscalReports).AllowRead ||
                             	  CurrentUser.GetPrivilege (SystemObjects.Taxpayers).AllowRead;
-                            	  
-    var ShowReportsMenu = CurrentUser.GetPrivilege (SystemObjects.CustomerRefundsHistoric).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.SupplierReturnHistoric).AllowRead ||
+
+    var ShowReportsMenu = CurrentUser.GetPrivilege (SystemObjects.SupplierReturnHistoric).AllowRead ||
                           CurrentUser.GetPrivilege (SystemObjects.ReceivedPayments).AllowRead ||
                           CurrentUser.GetPrivilege (SystemObjects.SalesByCustomer).AllowRead ||
                           CurrentUser.GetPrivilege (SystemObjects.SalesBySalesPerson).AllowRead ||

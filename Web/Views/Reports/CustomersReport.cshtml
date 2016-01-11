@@ -8,12 +8,11 @@
     ViewBag.Title = Resources.Title_Customer;
     var CurrentUser = Html.CurrentUser () ?? new User ();
     var Privilege = Html.GetPrivilege (CurrentUser, SystemObjects.Customers);
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>@Resources.CustomersReport</h2>
 
-<div id='master-section'>
+<div id='master-section' class="pull-right">
 @using (Ajax.BeginForm (new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
     @Html.HiddenFor(x => x.Offset)
     @Html.HiddenFor(x => x.Limit)

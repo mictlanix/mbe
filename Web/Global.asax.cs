@@ -19,6 +19,7 @@ namespace Mictlanix.BE.Web
     public class MvcApplication : System.Web.HttpApplication
     {
 		static CultureInfo my_culture;
+		static string[] IGNORE_PATHS = { "/Content", "/Scripts", "/favicon.ico" };
 
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
@@ -140,7 +141,7 @@ namespace Mictlanix.BE.Web
 				return;
 			}
 
-			if (Request.Path.StartsWith ("/Content") || Request.Path.StartsWith ("/Scripts")) {
+			if (IGNORE_PATHS.Any(x => Request.Path.StartsWith (x))) {
 				return;
 			}
 

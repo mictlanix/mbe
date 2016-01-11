@@ -62,17 +62,18 @@ namespace Mictlanix.BE.Model
 
         [Property]
         [Display(Name = "Zone", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(250, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
 		public virtual string Zone { get; set; }
 
         [Property("credit_limit")]
         [DataType(DataType.Currency)]
-        [Display(Name = "CreditLimit", ResourceType = typeof(Resources))]
+		[Display(Name = "CreditLimit", ResourceType = typeof(Resources))]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
 		public virtual decimal CreditLimit { get; set; }
 
         [Property("credit_days")]
-        [Display(Name = "CreditDays", ResourceType = typeof(Resources))]
+		[Display(Name = "CreditDays", ResourceType = typeof(Resources))]
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
 		public virtual int CreditDays { get; set; }
 
         [Property]

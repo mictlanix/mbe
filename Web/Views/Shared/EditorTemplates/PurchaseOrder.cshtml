@@ -2,20 +2,9 @@
 @using Mictlanix.BE.Model
 @model PurchaseOrder
 
-@using (Html.BeginForm()) {
-    @Html.ValidationSummary(true)
-
-    <div class="form-group">
-        <div class="col-xs-8 field-required">@Html.LabelFor(x => x.Supplier)</div>
-    </div>
-    <div class="form-group">
-        <div class="col-xs-8">@Html.EditorFor(x => x.SupplierId) @Html.ValidationMessageFor(x => x.SupplierId)</div>
-    </div>
-    <div class="form-group">
-        <div class="col-xs-8">@Html.LabelFor(x => x.Comment)</div>
-    </div>
-    <div class="form-group">
-        <div class="col-xs-8">@Html.EditorFor(x => x.Comment)</div>
-    </div>
-}
-
+<div class="form-group">
+    <div class="col-xs-12 field-required">@Html.LabelFor(x => x.Supplier) @Html.EditorFor(x => x.SupplierId) @Html.ValidationMessageFor(x => x.SupplierId)</div>
+</div>
+<div class="form-group">
+    <div class="col-xs-12">@Html.LabelFor(x => x.Comment) @Html.EditorFor(x => x.Comment)</div>
+</div>

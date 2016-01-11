@@ -328,30 +328,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
             return item.Quantity;
 		}
 
-		public ViewResult Historic ()
-		{
-			DateRange item = new DateRange();
-			item.StartDate = DateTime.Now;
-			item.EndDate = DateTime.Now;
-
-			return View("Historic", item);
-		}
-
-		[HttpPost]
-		public ActionResult Historic (DateRange item, Search<CustomerRefund> search)
-		{
-			search.Limit = WebConfig.PageSize;
-			search = SearchRefunds(item, search);
-
-			return PartialView ("_Historic", search);
-		}
-
-		public ViewResult HistoricDetails (int id)
-		{
-			var entity = CustomerRefund.Find (id);
-			return View (entity);
-		}
-
 		Search<CustomerRefund> SearchRefunds (DateRange dates, Search<CustomerRefund> search)
 		{
 			var qry = from x in CustomerRefund.Queryable
