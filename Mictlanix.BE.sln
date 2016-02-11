@@ -9,14 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mictlanix.BE.Model", "Model
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mictlanix.BE.Resources", "Resources\Mictlanix.BE.Resources.csproj", "{CBB1BA70-351E-4009-86FB-484810DC6364}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mictlanix.CFDLib", "CFDLib\Mictlanix.CFDLib.csproj", "{63EBACD8-7BB0-480F-81BF-5E0690B27112}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mictlanix.DiverzaClient", "DiverzaClient\Mictlanix.DiverzaClient\Mictlanix.DiverzaClient.csproj", "{342326A6-0782-4544-8664-D8D9734E1235}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mictlanix.FiscoClicClient", "FiscoClicClient\Mictlanix.FiscoClicClient\Mictlanix.FiscoClicClient.csproj", "{944C2166-9CF9-4740-BAA3-6E7C5AE62872}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mictlanix.ServisimClient", "ServisimClient\Mictlanix.ServisimClient\Mictlanix.ServisimClient.csproj", "{949FABA8-CD56-45EC-A15C-ED327812832F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jsreport.Client", "jsreport.Client\jsreport.Client.csproj", "{FAE7D435-2660-4745-97B6-438FBFB22905}"
 EndProject
 Global
@@ -25,22 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{342326A6-0782-4544-8664-D8D9734E1235}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{342326A6-0782-4544-8664-D8D9734E1235}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{342326A6-0782-4544-8664-D8D9734E1235}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{342326A6-0782-4544-8664-D8D9734E1235}.Release|Any CPU.Build.0 = Release|Any CPU
-		{63EBACD8-7BB0-480F-81BF-5E0690B27112}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{63EBACD8-7BB0-480F-81BF-5E0690B27112}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{63EBACD8-7BB0-480F-81BF-5E0690B27112}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{63EBACD8-7BB0-480F-81BF-5E0690B27112}.Release|Any CPU.Build.0 = Release|Any CPU
-		{944C2166-9CF9-4740-BAA3-6E7C5AE62872}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{944C2166-9CF9-4740-BAA3-6E7C5AE62872}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{944C2166-9CF9-4740-BAA3-6E7C5AE62872}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{944C2166-9CF9-4740-BAA3-6E7C5AE62872}.Release|Any CPU.Build.0 = Release|Any CPU
-		{949FABA8-CD56-45EC-A15C-ED327812832F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{949FABA8-CD56-45EC-A15C-ED327812832F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{949FABA8-CD56-45EC-A15C-ED327812832F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{949FABA8-CD56-45EC-A15C-ED327812832F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CBB1BA70-351E-4009-86FB-484810DC6364}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CBB1BA70-351E-4009-86FB-484810DC6364}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBB1BA70-351E-4009-86FB-484810DC6364}.Release|Any CPU.ActiveCfg = Release|Any CPU
