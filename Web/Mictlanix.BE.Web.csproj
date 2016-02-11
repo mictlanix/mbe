@@ -127,27 +127,20 @@
     </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Web.Abstractions" />
+    <Reference Include="Mictlanix.CFDLib">
+      <HintPath>..\packages\Mictlanix.CFDLib.0.1.0\lib\net45\Mictlanix.CFDLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Mictlanix.ServisimClient">
+      <HintPath>..\packages\Mictlanix.ServisimClient.0.1.0\lib\net45\Mictlanix.ServisimClient.dll</HintPath>
+    </Reference>
+    <Reference Include="Mictlanix.FiscoClicClient">
+      <HintPath>..\packages\Mictlanix.FiscoClicClient.0.1.0\lib\net45\Mictlanix.FiscoClicClient.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">
       <Project>{CBB1BA70-351E-4009-86FB-484810DC6364}</Project>
       <Name>Mictlanix.BE.Resources</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CFDLib\Mictlanix.CFDLib.csproj">
-      <Project>{63EBACD8-7BB0-480F-81BF-5E0690B27112}</Project>
-      <Name>Mictlanix.CFDLib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DiverzaClient\Mictlanix.DiverzaClient\Mictlanix.DiverzaClient.csproj">
-      <Project>{342326A6-0782-4544-8664-D8D9734E1235}</Project>
-      <Name>Mictlanix.DiverzaClient</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\FiscoClicClient\Mictlanix.FiscoClicClient\Mictlanix.FiscoClicClient.csproj">
-      <Project>{944C2166-9CF9-4740-BAA3-6E7C5AE62872}</Project>
-      <Name>Mictlanix.FiscoClicClient</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ServisimClient\Mictlanix.ServisimClient\Mictlanix.ServisimClient.csproj">
-      <Project>{949FABA8-CD56-45EC-A15C-ED327812832F}</Project>
-      <Name>Mictlanix.ServisimClient</Name>
     </ProjectReference>
     <ProjectReference Include="..\Model\Mictlanix.BE.Model.csproj">
       <Project>{F9363BAC-A7BB-4A77-81E0-892C8CCCD297}</Project>
