@@ -16,29 +16,28 @@ using Mictlanix.BE.Web.Security;
 
 namespace Mictlanix.BE.Web
 {
-    public class MvcApplication : System.Web.HttpApplication
-    {
-		static CultureInfo my_culture;
+	public class MvcApplication : System.Web.HttpApplication
+	{
 		static string[] IGNORE_PATHS = { "/Content", "/Scripts", "/favicon.ico" };
 
-        public static void RegisterGlobalFilters(GlobalFilterCollection filters)
-        {
-            filters.Add(new HandleErrorAttribute());
-        }
+		public static void RegisterGlobalFilters (GlobalFilterCollection filters)
+		{
+			filters.Add (new HandleErrorAttribute ());
+		}
 
-        public static void RegisterRoutes (RouteCollection routes)
+		public static void RegisterRoutes (RouteCollection routes)
 		{
 			routes.IgnoreRoute ("{resource}.axd/{*pathInfo}");
 
 			routes.MapRoute (
-                "Barcodes",
-                "Barcodes/{action}/{id}.png",
-                new { controller = "Barcodes", action = "Code128" }
+				"Barcodes",
+				"Barcodes/{action}/{id}.png",
+				new { controller = "Barcodes", action = "Code128" }
 			);
 			
 			routes.MapRoute (
-                "FiscalReport",
-                "FiscalDocuments/Report/{taxpayer}/{year}/{month}",
+				"FiscalReport",
+				"FiscalDocuments/Report/{taxpayer}/{year}/{month}",
 				new { controller = "FiscalDocuments", action = "Report", taxpayer = @"\w{12,13}", year = @"\d{4}", month = @"\d{2}" }
 			);
 			
@@ -73,14 +72,14 @@ namespace Mictlanix.BE.Web
 			);
 
 
-			routes.MapRoute(
+			routes.MapRoute (
 				"Default", // Route name
 				"{controller}/{action}/{id}", // URL with parameters
 				new { controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameter defaults
 			);
-        }
+		}
 
-        protected void Application_Start ()
+		protected void Application_Start ()
 		{
 			// AreaRegistration.RegisterAllAreas ();
 
@@ -88,31 +87,27 @@ namespace Mictlanix.BE.Web
 			RegisterRoutes (RouteTable.Routes);
 
 #if DEBUG
-            log4net.Config.XmlConfigurator.Configure();
+			log4net.Config.XmlConfigurator.Configure ();
 #endif
 
 			IConfigurationSource source = ConfigurationManager.GetSection ("activeRecord") as IConfigurationSource;
 			ActiveRecordStarter.Initialize (typeof(Product).Assembly, source);
 
-			my_culture = Thread.CurrentThread.CurrentCulture.Clone() as CultureInfo;
+			var culture = Thread.CurrentThread.CurrentCulture.Clone () as CultureInfo;
 
-			if (my_culture != null) {
-				my_culture.NumberFormat.CurrencyDecimalSeparator = ".";
-				my_culture.NumberFormat.CurrencyGroupSeparator = ",";
-				my_culture.NumberFormat.NumberDecimalSeparator = ".";
-				my_culture.NumberFormat.NumberGroupSeparator = ",";
-				my_culture.NumberFormat.PercentDecimalSeparator = ".";
-				my_culture.NumberFormat.PercentGroupSeparator = ",";
-				my_culture.DateTimeFormat.ShortDatePattern = Resources.DateFormatString;
+			if (culture != null) {
+				culture.DateTimeFormat.ShortDatePattern = Resources.DateFormatString;
 			}
+
+			CultureInfo.DefaultThreadCurrentCulture = culture;
+			CultureInfo.DefaultThreadCurrentUICulture = culture;
 		}
-		
-        protected void Application_BeginRequest (object sender, EventArgs e)
+
+		protected void Application_BeginRequest (object sender, EventArgs e)
 		{
-			Thread.CurrentThread.CurrentCulture = my_culture;
 			HttpContext.Current.Items.Add ("ar.sessionscope", new SessionScope (FlushAction.Never));
 		}
-		
+
 		protected void Application_EndRequest (Object sender, EventArgs e)
 		{
 			try {
@@ -141,7 +136,7 @@ namespace Mictlanix.BE.Web
 				return;
 			}
 
-			if (IGNORE_PATHS.Any(x => Request.Path.StartsWith (x))) {
+			if (IGNORE_PATHS.Any (x => Request.Path.StartsWith (x))) {
 				return;
 			}
 
@@ -156,5 +151,5 @@ namespace Mictlanix.BE.Web
 				HttpContext.Current.User = value;
 			}
 		}
-    }
+	}
 }
