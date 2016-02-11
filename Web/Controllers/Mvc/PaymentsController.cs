@@ -57,7 +57,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
             }
 
 			var search = SearchSalesOrders (new Search<SalesOrder> {
-				Limit = int.MaxValue
+				Limit = WebConfig.PageSize
 			});
 
 			return View (new MasterDetails<CashSession, SalesOrder> { Master = session, Details = search.Results });
