@@ -35,7 +35,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Web;
 using Mictlanix.BE.Model;
 using Mictlanix.CFDLib;
-using Mictlanix.Diverza.Client;
 using Mictlanix.FiscoClic.Client;
 using Mictlanix.Servisim.Client;
 
@@ -52,8 +51,6 @@ namespace Mictlanix.BE.Web.Helpers
 			}
 
 			switch (item.Provider) {
-			case FiscalCertificationProvider.Diverza:
-				return DiverzaStamp (item);
 			case FiscalCertificationProvider.FiscoClic:
 				return FiscoClicStamp (item);
 			case FiscalCertificationProvider.Servisim:
@@ -74,8 +71,6 @@ namespace Mictlanix.BE.Web.Helpers
 			}
 
 			switch (item.Provider) {
-			case FiscalCertificationProvider.Diverza:
-				return DiverzaCancel (item);
 			case FiscalCertificationProvider.FiscoClic:
 				return FiscoClicCancel (item);
 			case FiscalCertificationProvider.Servisim:
@@ -93,28 +88,6 @@ namespace Mictlanix.BE.Web.Helpers
 			cfd.Sign (cer.KeyData, cer.KeyPassword);
 
 			return cfd;
-		}
-
-		// TODO: credentials per taxpayer
-		static Mictlanix.CFDv32.Comprobante DiverzaStamp (FiscalDocument item)
-		{
-			var cfd = SignCFD (item);
-			var cert = new X509Certificate2 (WebConfig.DiverzaCert, WebConfig.DiverzaCertPasswd);
-			var cli = new DiverzaClient (WebConfig.DiverzaUrl, cert);
-			var id = string.Format ("{0}-{1:D6}-{2}-{3:D6}", WebConfig.DiverzaPartnerCode,
-			                        item.Id, item.Batch, item.Serial);
-			var tfd = cli.Stamp (id, cfd);
-
-			cfd.Complemento = new List<object> ();
-			cfd.Complemento.Add (tfd);
-
-			return cfd;
-		}
-
-		// TODO: implement it
-		static bool DiverzaCancel (FiscalDocument item)
-		{
-			return true;
 		}
 
 		// TODO: credentials per taxpayer
