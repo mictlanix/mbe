@@ -4018,6 +4018,12 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string ProFact {
+            get {
+                return ResourceManager.GetString("ProFact", resourceCulture);
+            }
+        }
+        
         public static string FiscalDocumentQRCodeFormatString {
             get {
                 return ResourceManager.GetString("FiscalDocumentQRCodeFormatString", resourceCulture);

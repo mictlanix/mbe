@@ -136,6 +136,9 @@
     <Reference Include="Mictlanix.FiscoClicClient">
       <HintPath>..\packages\Mictlanix.FiscoClicClient.0.1.0\lib\net45\Mictlanix.FiscoClicClient.dll</HintPath>
     </Reference>
+    <Reference Include="Mictlanix.ProFactClient">
+      <HintPath>..\packages\Mictlanix.ProFactClient.0.1.0.1\lib\net45\Mictlanix.ProFactClient.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">
