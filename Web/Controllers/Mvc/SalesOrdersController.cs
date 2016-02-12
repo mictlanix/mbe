@@ -119,8 +119,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 		public ViewResult Print (int id)
 		{
-			var item = SalesOrder.Find (id);
-			return View (item);
+			var model = SalesOrder.Find (id);
+			return View (model);
+		}
+
+		public ActionResult Pdf (int id)
+		{
+			var model = SalesOrder.Find (id);
+			return PdfView ("Print", model);
 		}
 
 		[HttpPost]

@@ -21,7 +21,8 @@
     margin: 10mm;
 }
 @media print {
-	.media {page-break-inside : avoid}
+	.media, tfoot {page-break-inside: avoid}
+	a[href]:after {content: none;}
 }
 html, body {
 	width: 100%;
@@ -114,5 +115,10 @@ table > tbody > tr:nth-child(odd) > th {
 	font:normal 6pt 'Roboto Mono', monospace;
 }
 .pre-wrapped {
-  white-space:pre-wrap;
+	white-space:pre-wrap;
+}
+td .pre-wrapped {
+	margin: 0 1cm;
+	text-align: left;
+	color:#777 !important;
 }
