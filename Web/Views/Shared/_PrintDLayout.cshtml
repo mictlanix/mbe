@@ -12,7 +12,6 @@
     <title>@ViewBag.Title</title>
 }
     <script src='@Url.Content("~/Scripts/jquery-2.2.0.min.js")' type='text/javascript'></script>
-    <script src='@Url.Content("~/Scripts/FontLoader.js")' type='text/javascript'></script>
     <link href='@Url.Content("~/Content//bootstrap.min.css")' rel='stylesheet' type='text/css' />
     <link href='@Url.Content("~/Content/printd.css")' rel='stylesheet' type='text/css' />
 </head>
@@ -48,17 +47,12 @@
 	<script type="text/javascript">
 	$(function() {
 		$('body, select, input, textarea, button, submit, form').prop('disabled', true);
-		var fontLoader = new FontLoader(["wasabibook", "wasabilight"], {
-            "fontsLoaded": function(error) {
-	            window.print();
-				setTimeout(function() {
-				    $('body').bind('mousemove click keypress', function () {
-				        window.close();
-				    });
-				}, 500);
-            }
-        }, 3000);
-        fontLoader.loadFonts();
+        window.print();
+		setTimeout(function() {
+		    $('body').bind('mousemove click keypress', function () {
+		        window.close();
+		    });
+		}, 500);
 	});
 	</script>
 </body>
