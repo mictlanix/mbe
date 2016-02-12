@@ -462,7 +462,6 @@
     <Content Include="Views\SalesOrders\Index.cshtml" />
     <Content Include="Views\SalesOrders\_Totals.cshtml" />
     <Content Include="Views\SalesOrders\Print.cshtml" />
-    <Content Include="Views\Shared\_LetterheadLayout.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\FiscalPaymentMethod.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\UnitOfMeasurement.cshtml" />
     <Content Include="Views\Labels\Index.cshtml" />
