@@ -908,6 +908,20 @@
     <Content Include="Scripts\bootstrap-datepicker.min.js" />
     <Content Include="Views\Shared\EditorTemplates\Decimal.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Int32.cshtml" />
+    <Content Include="Content\fonts\wasabi-book\stylesheet.css" />
+    <Content Include="Content\fonts\wasabi-book\WasabiBook.eot" />
+    <Content Include="Content\fonts\wasabi-book\WasabiBook.svg" />
+    <Content Include="Content\fonts\wasabi-book\WasabiBook.ttf" />
+    <Content Include="Content\fonts\wasabi-book\WasabiBook.woff" />
+    <Content Include="Content\fonts\dataprint\DataprintBk.eot" />
+    <Content Include="Content\fonts\dataprint\DataprintBk.svg" />
+    <Content Include="Content\fonts\dataprint\DataprintBk.ttf" />
+    <Content Include="Content\fonts\dataprint\DataprintBk.woff" />
+    <Content Include="Content\fonts\dataprint\stylesheet.css" />
+    <Content Include="Content\fonts\dataprint\DataprintLt.eot" />
+    <Content Include="Content\fonts\dataprint\DataprintLt.svg" />
+    <Content Include="Content\fonts\dataprint\DataprintLt.ttf" />
+    <Content Include="Content\fonts\dataprint\DataprintLt.woff" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
@@ -1087,6 +1101,9 @@
     <None Include="Content\bootstrap.css.map" />
     <None Include="Content\bootstrap.min.css.map" />
     <None Include="fonts\glyphicons-halflings-regular.woff2" />
+    <None Include="Content\fonts\wasabi-book\WasabiBook.woff2" />
+    <None Include="Content\fonts\dataprint\DataprintBk.woff2" />
+    <None Include="Content\fonts\dataprint\DataprintLt.woff2" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\Mvc\" />
