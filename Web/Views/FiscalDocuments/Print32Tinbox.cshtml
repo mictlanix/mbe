@@ -19,9 +19,9 @@
     <meta charset="utf-8" />
     <title>@ViewBag.WindowTitle</title>
     <script src='@Url.Content("~/Scripts/jquery-2.2.0.min.js")' type='text/javascript'></script>
-    <script src='@Url.Content("~/Scripts/FontLoader.js")' type='text/javascript'></script>
     <link href='@Url.Content("~/Content//bootstrap.min.css")' rel='stylesheet' type='text/css' />
     <link href='@Url.Content("~/Content/fonts/secrettypewriter/stylesheet.css")' rel='stylesheet' type='text/css' />
+    <link href='@Url.Content("~/Content/fonts/brother-deluxe/stylesheet.css")' rel='stylesheet' type='text/css' />
     <style type='text/css'>
     @@page {
 	    size: US-Letter;
@@ -34,7 +34,7 @@
 		padding: 0;
 	}
 	body {
-	    font:normal 9pt 'veteran_typewriterregular';
+	    font:normal 9pt 'VeteranTypewriter-Regular';
 	}
 	.logo {
 		width:48mm;
@@ -47,13 +47,13 @@
 		margin:1mm 1mm 1mm 0;
 	}
 	h1, h2 {
-		font:normal 10pt 'veteran_typewriterregular';
+		font:normal 10pt 'BrotherDeluxe1350Font';
 	}
 	h2 {
 		font-weight:bold;
 	}
 	h3, h4 {
-		font:normal 10pt 'veteran_typewriterregular';
+		font:normal 10pt 'VeteranTypewriter-Regular';
 	}
 	h4 {
 		font-size:9pt;
@@ -62,11 +62,12 @@
 	  margin: 0 0 5px;
 	}
 	strong {
-		font-family:'veteran_typewriterregular';
+		font-family:'BrotherDeluxe1350Font';
 	}
 	table {
 		width:100%;
 	}
+	thead, tfoot { display: table-row-group; }
 	table > thead > tr > th,
 	table > tbody > tr > th,
 	table > tfoot > tr > th,
@@ -76,11 +77,15 @@
 		padding: 4px;
 		line-height: 1.42857143;
 		vertical-align: top;
-		font:normal 9pt 'veteran_typewriterregular';
+		font:normal 10pt 'VeteranTypewriter-Regular';
 	}
 	table > thead > tr > th {
 		border-bottom: 1px solid #ddd;
 		font-size:10pt;
+	}
+	table > tfoot > tr > th, 
+	table > tfoot > tr > td {
+		font:normal 9pt 'BrotherDeluxe1350Font';
 	}
 	table > tbody > tr:nth-child(odd) > td,
 	table > tbody > tr:nth-child(odd) > th {
@@ -99,16 +104,17 @@
 		padding: .1em .1em .2em;
 		font-weight: bold;
 		background-color: #D9F6F6 !important;
-		font:normal 9pt 'veteran_typewriterregular';
+		font:normal 9pt 'VeteranTypewriter-Regular';
 	}
 	.mylabel-rounded {
 		display:inline-block;
 		padding:1em 2em;
 		background-color: #D9F6F6 !important;
-		font:normal 9pt 'veteran_typewriterregular';
+		font:normal 9pt 'VeteranTypewriter-Regular';
 		border-radius:2.5em;
 	}
 	.mylabel-rounded strong {
+		font-family:'BrotherDeluxe1350Font';
 		font-size:8pt;
 	}
 	.nowrap {
@@ -118,7 +124,7 @@
 		font:normal 7.5pt monospace;
 	}
 	@@media print {
-		.media {page-break-inside : avoid}
+		.media, tfoot {page-break-inside: avoid}
 		a[href]:after {content: none;}
 	}
     </style>
@@ -270,7 +276,7 @@
     	<tfoot>
 	        <tr>
 	            <td rowspan="2" class="col-xs-10 text-center" style="vertical-align:middle">
-	                <div style="border-top: solid black 1px; border-bottom:solid black 1px; margin: 0 2cm 0 2cm;">
+	                <div style="border-top: solid black 1px; border-bottom:solid black 1px; margin: 0 1cm 0 1cm;">
 	                    @Html.CurrencyToString(Model.Total, Model.Currency)
 	                </div>
 	            </td>

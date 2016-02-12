@@ -665,9 +665,7 @@
     <Content Include="Views\Reports\_ProductSalesByCategory.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ProductBrandSelector.cshtml" />
     <Content Include="Views\FiscalDocuments\Print32Dataprint.cshtml" />
-    <Content Include="Content\fonts\wasabi\stylesheet.css" />
     <Content Include="Views\FiscalDocuments\Print32Tinbox.cshtml" />
-    <Content Include="Content\fonts\secrettypewriter\stylesheet.css" />
     <Content Include="Views\Shared\DisplayTemplates\TaxpayerRecipient.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\TaxpayerRecipient.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\TaxpayerIssuer.cshtml" />
@@ -908,20 +906,6 @@
     <Content Include="Scripts\bootstrap-datepicker.min.js" />
     <Content Include="Views\Shared\EditorTemplates\Decimal.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Int32.cshtml" />
-    <Content Include="Content\fonts\wasabi-book\stylesheet.css" />
-    <Content Include="Content\fonts\wasabi-book\WasabiBook.eot" />
-    <Content Include="Content\fonts\wasabi-book\WasabiBook.svg" />
-    <Content Include="Content\fonts\wasabi-book\WasabiBook.ttf" />
-    <Content Include="Content\fonts\wasabi-book\WasabiBook.woff" />
-    <Content Include="Content\fonts\dataprint\DataprintBk.eot" />
-    <Content Include="Content\fonts\dataprint\DataprintBk.svg" />
-    <Content Include="Content\fonts\dataprint\DataprintBk.ttf" />
-    <Content Include="Content\fonts\dataprint\DataprintBk.woff" />
-    <Content Include="Content\fonts\dataprint\stylesheet.css" />
-    <Content Include="Content\fonts\dataprint\DataprintLt.eot" />
-    <Content Include="Content\fonts\dataprint\DataprintLt.svg" />
-    <Content Include="Content\fonts\dataprint\DataprintLt.ttf" />
-    <Content Include="Content\fonts\dataprint\DataprintLt.woff" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
@@ -966,18 +950,6 @@
   <ItemGroup />
   <ItemGroup />
   <ItemGroup>
-    <None Include="Content\fonts\wasabi\wasabi-bk-webfont.eot" />
-    <None Include="Content\fonts\wasabi\wasabi-bk-webfont.svg" />
-    <None Include="Content\fonts\wasabi\wasabi-bk-webfont.ttf" />
-    <None Include="Content\fonts\wasabi\wasabi-bk-webfont.woff" />
-    <None Include="Content\fonts\wasabi\wasabi-lt-webfont.eot" />
-    <None Include="Content\fonts\wasabi\wasabi-lt-webfont.svg" />
-    <None Include="Content\fonts\wasabi\wasabi-lt-webfont.ttf" />
-    <None Include="Content\fonts\wasabi\wasabi-lt-webfont.woff" />
-    <None Include="Content\fonts\secrettypewriter\veteran_typewriter-webfont.eot" />
-    <None Include="Content\fonts\secrettypewriter\veteran_typewriter-webfont.svg" />
-    <None Include="Content\fonts\secrettypewriter\veteran_typewriter-webfont.ttf" />
-    <None Include="Content\fonts\secrettypewriter\veteran_typewriter-webfont.woff" />
     <Content Include="Views\Reports\CustomersReport.cshtml" />
     <Content Include="Views\Reports\_CustomersReport.cshtml" />
     <Content Include="Views\Customers\_Create.cshtml" />
@@ -1101,9 +1073,6 @@
     <None Include="Content\bootstrap.css.map" />
     <None Include="Content\bootstrap.min.css.map" />
     <None Include="fonts\glyphicons-halflings-regular.woff2" />
-    <None Include="Content\fonts\wasabi-book\WasabiBook.woff2" />
-    <None Include="Content\fonts\dataprint\DataprintBk.woff2" />
-    <None Include="Content\fonts\dataprint\DataprintLt.woff2" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\Mvc\" />
