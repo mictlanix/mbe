@@ -2108,6 +2108,9 @@ Realizada el: {0:d}</value>
   <data name="SearchFor" xml:space="preserve">
     <value>buscar...</value>
   </data>
+  <data name="ProFact" xml:space="preserve">
+    <value>Proveedores de Facturación Electrónica y Software, S.A. de C.V.</value>
+  </data>
   <data name="FiscalDocumentQRCodeFormatString" xml:space="preserve">
     <value>?re={0}&amp;rr={1}&amp;tt={2:0000000000.000000}&amp;id={3}</value>
   </data>
