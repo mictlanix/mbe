@@ -65,9 +65,9 @@ namespace Mictlanix.BE.Web.Mvc {
 
 		public FileStreamResult PdfView (string viewPath, object model)
 		{
-			var rgx = new Regex (@"(src|href)\s?=\s?('|"")");
+			var rgx = new Regex (@"(src|href)\s?=\s?('|"")/");
 			var content = RenderView (viewPath, model);
-			string result = rgx.Replace (content, string.Format ("$1=$2{0}", WebConfig.AppServerUrl));
+			string result = rgx.Replace (content, string.Format ("$1=$2{0}/", WebConfig.AppServerUrl));
 			var reportingService = new ReportingService (ReportServerUrl);
 			var report = reportingService.RenderAsync (new RenderRequest {
 				template = new Template {

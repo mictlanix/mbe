@@ -12,6 +12,7 @@ Web/Content/fonts/*
 *.Publish.xml
 *.pfx
 *.cs-e
+MictlanixBE.config
 dataprint.png
 tinbox.png
 eyeco.png

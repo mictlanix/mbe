@@ -119,27 +119,21 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		public ViewResult Print (int id)
 		{
 			var item = FiscalDocument.Find (id);
-			var batch = TaxpayerBatch.Queryable.First (x => x.Batch == item.Batch);
+			var batch = TaxpayerBatch.Queryable.First (x => x.Batch == item.Batch && item.Serial >= x.SerialStart &&
+															item.Serial <= x.SerialEnd);
 			var view = string.Format ("Print{0:00}{1}", item.Version * 10, batch.Template);
 
 			return View (view, item);
 		}
 
-//		public ViewResult Pdf (int id)
-//		{
-//			var item = FiscalDocument.Find (id);
-//			var view = string.Format ("Pdf{0:00}", item.Version * 10);
-//
-//			return View (view, item);
-//		}
-
 		public ActionResult Pdf (int id)
 		{
 			var model = FiscalDocument.Find (id);
-			var batch = TaxpayerBatch.Queryable.First (x => x.Batch == model.Batch);
+			var batch = TaxpayerBatch.Queryable.First (x => x.Batch == model.Batch && model.Serial >= x.SerialStart &&
+															model.Serial <= x.SerialEnd);
+			var filename = string.Format (Resources.FiscalDocumentFilenameFormatString,
+										  model.Issuer.Id, model.Batch, model.Serial);
 			var view = string.Format ("Print{0:00}{1}", model.Version * 10, batch.Template);
-			var filename = string.Format (Resources.FiscalDocumentFilenameFormatString + ".pdf",
-				               model.Issuer.Id, model.Batch, model.Serial);
 			
 			Response.AppendHeader ("Content-Disposition", string.Format ("inline; filename={0}.pdf", filename));
 
