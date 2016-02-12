@@ -155,6 +155,18 @@ namespace Mictlanix.BE.Web.Helpers
 			get { return ConfigurationManager.AppSettings ["ServisimPartnerCode"]; }
 		}
 
+		public static string ProFactUser {
+			get { return ConfigurationManager.AppSettings ["ProFactUser"]; }
+		}
+
+		public static string ProFactUrl {
+			get { return ConfigurationManager.AppSettings ["ProFactUrl"]; }
+		}
+
+		public static string ProFactCode {
+			get { return ConfigurationManager.AppSettings ["ProFactCode"]; }
+		}
+
 		public static decimal DefaultPrice {
 			get { return Convert.ToDecimal (ConfigurationManager.AppSettings ["DefaultPrice"]); }
 		}

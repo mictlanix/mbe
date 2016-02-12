@@ -43,6 +43,8 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "FiscoClic", ResourceType = typeof(Resources))]
 		FiscoClic,
 		[Display(Name = "Servisim", ResourceType = typeof(Resources))]
-		Servisim
+		Servisim,
+		[Display(Name = "ProFact", ResourceType = typeof(Resources))]
+		ProFact
     }
 }

@@ -4,7 +4,7 @@
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.com>
 // 
-// Copyright (C) 2012-2013 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2012-2016 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -139,7 +139,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			var batch = TaxpayerBatch.Queryable.First (x => x.Batch == model.Batch);
 			var view = string.Format ("Print{0:00}{1}", model.Version * 10, batch.Template);
 			var filename = string.Format (Resources.FiscalDocumentFilenameFormatString + ".pdf",
-				           model.Issuer.Id, model.Batch, model.Serial);
+				               model.Issuer.Id, model.Batch, model.Serial);
 			
 			Response.AppendHeader ("Content-Disposition", string.Format ("inline; filename={0}.pdf", filename));
 
