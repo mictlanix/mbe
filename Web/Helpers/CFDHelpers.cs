@@ -37,6 +37,7 @@ using Mictlanix.BE.Model;
 using Mictlanix.CFDLib;
 using Mictlanix.FiscoClic.Client;
 using Mictlanix.Servisim.Client;
+using Mictlanix.ProFact.Client;
 
 namespace Mictlanix.BE.Web.Helpers
 {
@@ -55,6 +56,8 @@ namespace Mictlanix.BE.Web.Helpers
 				return FiscoClicStamp (item);
 			case FiscalCertificationProvider.Servisim:
 				return ServisimStamp (item);
+			case FiscalCertificationProvider.ProFact:
+				return ProFactStamp (item);
 			default:
 				return null;
 			}
@@ -75,6 +78,8 @@ namespace Mictlanix.BE.Web.Helpers
 				return FiscoClicCancel (item);
 			case FiscalCertificationProvider.Servisim:
 				return ServisimCancel (item);
+			case FiscalCertificationProvider.ProFact:
+				return ProFactCancel (item);
 			}
 
 			return true;
@@ -151,6 +156,26 @@ namespace Mictlanix.BE.Web.Helpers
 		{
 			var cli = new ServisimClient (WebConfig.ServisimUser,
 				WebConfig.ServisimPasswd, WebConfig.ServisimUrl);
+
+			return cli.Cancel (item.Issuer.Id, item.StampId);
+		}
+
+		static Mictlanix.CFDv32.Comprobante ProFactStamp (FiscalDocument item)
+		{
+			var cfd = SignCFD (item);
+			var cli = new ProFactClient (WebConfig.ProFactUser, WebConfig.ProFactUrl);
+			var id = string.Format ("{0}-{1:D6}", WebConfig.ProFactCode, item.Id);
+			var tfd = cli.Stamp (id, cfd);
+
+			cfd.Complemento = new List<object> ();
+			cfd.Complemento.Add (tfd);
+
+			return cfd;
+		}
+
+		static bool ProFactCancel (FiscalDocument item)
+		{
+			var cli = new FiscoClicClient (WebConfig.ProFactUser, WebConfig.ProFactUrl);
 
 			return cli.Cancel (item.Issuer.Id, item.StampId);
 		}
