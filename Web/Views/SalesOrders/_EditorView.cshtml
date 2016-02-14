@@ -119,115 +119,117 @@
 }
 </fieldset>
 <script type='text/javascript'>
-$('#Id').tooltip();
-$('#customer').editable({
-    select2: {
-    	minimumInputLength: 3,
-	    ajax: {
-	        url: '@Url.Action("GetSuggestions", "Customers")',
-	        dataType: 'json',
-	        type: 'POST',
-	        data: function(term,page,context) {
-	        	return { pattern:term };
-	        },
-	        results: function(data,page) {
-	            return { results:data };
-	        }
-	    },
-	    initSelection: function(element, callback) {
-	        var data = {
-	        	id: $('#customer').data('value'),
-	        	name: $('#customer').text()
-        	};
-	        callback(data);
-	    },
-	    formatResult: function(result) {
-	        return result.name + " (" + result.code + ")";
-	    },
-	    formatSelection: function(selection) {
-	        return selection.name;
-	    }
-	},
-	success: function(response, newValue) {
-		$('#contact,#address').text('').editable('setValue', '');
-		$('#terms').text(response.termsText)
-				   .editable('setValue', response.terms);
-		$('#due-date').text(response.dueDate);
-    },
-    display: function(value, response) {
-    	if (typeof response !== 'undefined') {
-			$(this).html(response.value);
-		}
-    }
-});
-$('#salesperson').editable({
-    select2: {
-	    ajax: {
-	        url: '@Url.Action("SalesPeople", "Employees")',
-	        dataType: 'json',
-	        type: 'POST',
-	        data: function(term,page,context) {
-	        	return { pattern:term };
-	        },
-	        results: function(data,page) {
-	            return { results:data };
-	        }
-	    },
-	    initSelection: function(element, callback) {
-	        var data = {
-	        	id: $('#salesperson').data('value'),
-	        	name: $('#salesperson').text()
-        	};
-	        callback(data);
-	    },
-	    formatResult: function(result ) {
-	        return result.name;
-	    },
-	    formatSelection: function(selection) {
-	        return selection.name;
-	    }
-	},
-    display: function(value, response) {
-    	if (typeof response !== 'undefined') {
-			$(this).html(response.value);
-		}
-    }
-});
-$('#promise-date').editable({
-	datepicker: {
-    	language:'@WebConfig.Language'
-	}
-});
-$('a.editable').editable({
-	success: function(response, newValue) {
-		if ('rate' in response) {
-			$('#exchange-rate').text(response.rate)
-							   .editable('setValue', response.rate);
-        }
-		if ('dueDate' in response) {
+$(function () {
+	$('#Id').tooltip();
+	$('#customer').editable({
+	    select2: {
+	    	minimumInputLength: 3,
+		    ajax: {
+		        url: '@Url.Action("GetSuggestions", "Customers")',
+		        dataType: 'json',
+		        type: 'POST',
+		        data: function(term,page,context) {
+		        	return { pattern:term };
+		        },
+		        results: function(data,page) {
+		            return { results:data };
+		        }
+		    },
+		    initSelection: function(element, callback) {
+		        var data = {
+		        	id: $('#customer').data('value'),
+		        	name: $('#customer').text()
+	        	};
+		        callback(data);
+		    },
+		    formatResult: function(result) {
+		        return result.name + " (" + result.code + ")";
+		    },
+		    formatSelection: function(selection) {
+		        return selection.name;
+		    }
+		},
+		success: function(response, newValue) {
+			$('#contact,#address').text('').editable('setValue', '');
+			$('#terms').text(response.termsText)
+					   .editable('setValue', response.terms);
 			$('#due-date').text(response.dueDate);
-        }
-		if('itemsChanged' in response) {
-			$('#items-container').loadUrl();
-			$('#totals-section').loadUrl();
-		} else if('totalsChanged' in response) {
-			$('#totals-section').loadUrl();
+	    },
+	    display: function(value, response) {
+	    	if (typeof response !== 'undefined') {
+				$(this).html(response.value);
+			}
+	    }
+	});
+	$('#salesperson').editable({
+	    select2: {
+		    ajax: {
+		        url: '@Url.Action("SalesPeople", "Employees")',
+		        dataType: 'json',
+		        type: 'POST',
+		        data: function(term,page,context) {
+		        	return { pattern:term };
+		        },
+		        results: function(data,page) {
+		            return { results:data };
+		        }
+		    },
+		    initSelection: function(element, callback) {
+		        var data = {
+		        	id: $('#salesperson').data('value'),
+		        	name: $('#salesperson').text()
+	        	};
+		        callback(data);
+		    },
+		    formatResult: function(result ) {
+		        return result.name;
+		    },
+		    formatSelection: function(selection) {
+		        return selection.name;
+		    }
+		},
+	    display: function(value, response) {
+	    	if (typeof response !== 'undefined') {
+				$(this).html(response.value);
+			}
+	    }
+	});
+	$('#promise-date').editable({
+		datepicker: {
+	    	language:'@WebConfig.Language'
 		}
-    },
-    display: function(value, response) {
-		if (typeof response === 'undefined')
-        	return;
-        
-        if (Array.isArray(response)) {
-          	var arr = $.grep(response, function(o){
-  				return o.value == value;
-			});
-			if (arr.length != 0) {
-          		$(this).html(arr[0].text);
-          	}
-        } else {
-          	$(this).html(response.value);
-        }
-    }
+	});
+	$('a.editable').editable({
+		success: function(response, newValue) {
+			if ('rate' in response) {
+				$('#exchange-rate').text(response.rate)
+								   .editable('setValue', response.rate);
+	        }
+			if ('dueDate' in response) {
+				$('#due-date').text(response.dueDate);
+	        }
+			if('itemsChanged' in response) {
+				$('#items-container').loadUrl();
+				$('#totals-section').loadUrl();
+			} else if('totalsChanged' in response) {
+				$('#totals-section').loadUrl();
+			}
+	    },
+	    display: function(value, response) {
+			if (typeof response === 'undefined')
+	        	return;
+	        
+	        if (Array.isArray(response)) {
+	          	var arr = $.grep(response, function(o){
+	  				return o.value == value;
+				});
+				if (arr.length != 0) {
+	          		$(this).html(arr[0].text);
+	          	}
+	        } else {
+	          	$(this).html(response.value);
+	        }
+	    }
+	});
 });
 </script>
