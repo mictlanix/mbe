@@ -23,6 +23,12 @@
     <link href='@Url.Content("~/Content/fonts/secrettypewriter/stylesheet.css")' rel='stylesheet' type='text/css' />
     <link href='@Url.Content("~/Content/fonts/brother-deluxe/stylesheet.css")' rel='stylesheet' type='text/css' />
     <style type='text/css'>
+	@@font-face {
+	  font-family: 'Roboto Mono';
+	  font-style: normal;
+	  font-weight: 400;
+	  src: url(http://fonts.gstatic.com/s/robotomono/v4/hMqPNLsu_dywMa4C_DEpY7rIa-7acMAeDBVuclsi6Gc.woff) format('woff');
+	}
     @@page {
 	    size: US-Letter;
 	    margin: 10mm;
@@ -121,7 +127,7 @@
 		white-space:nowrap;
 	}
 	.monospaced {
-		font:normal 7.5pt monospace;
+		font:normal 6pt 'Roboto Mono', monospace;
 	}
 	@@media print {
 		.media, tfoot {page-break-inside: avoid}
