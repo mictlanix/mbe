@@ -137,7 +137,7 @@
       <HintPath>..\packages\Mictlanix.FiscoClicClient.0.1.0\lib\net45\Mictlanix.FiscoClicClient.dll</HintPath>
     </Reference>
     <Reference Include="Mictlanix.ProFactClient">
-      <HintPath>..\packages\Mictlanix.ProFactClient.0.1.0.1\lib\net45\Mictlanix.ProFactClient.dll</HintPath>
+      <HintPath>..\packages\Mictlanix.ProFactClient.0.1.0.2\lib\net45\Mictlanix.ProFactClient.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -693,7 +693,6 @@
     <Content Include="Views\ProductionOrders\_DisplayView.cshtml" />
     <Content Include="Views\ProductionOrders\_ItemDisplayView.cshtml" />
     <Content Include="Views\ProductionOrders\Print.cshtml" />
-    <Content Include="Scripts\FontLoader.js" />
     <Content Include="Views\Shared\_PrintDLayout.cshtml" />
     <Content Include="Content\printd.css" />
     <Content Include="Views\FiscalDocuments\Print22Dataprint.cshtml" />
