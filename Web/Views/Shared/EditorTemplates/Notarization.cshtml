@@ -1,5 +1,6 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
 @model Notarization
 
 <div class="form-group">
@@ -26,7 +27,7 @@ div.token-input-dropdown {width:650px;}
 </style>
 <script type='text/javascript'>
 $('#Amount').addClass("text-right");
-$('#Date,#DeliveryDate,#PaymentDate').datepicker({ language: 'es', format: 'yyyy-mm-dd' });
+$('#Date,#DeliveryDate,#PaymentDate').datepicker({ language: '@WebConfig.Language', format: 'yyyy-mm-dd' });
 @if (Model != null && Model.Requester != null) {
 <text>$("#RequesterId").tokenInput("add", { id: "@Model.Requester.Id", name: "@Model.Requester.ToString()"});</text>
 }
