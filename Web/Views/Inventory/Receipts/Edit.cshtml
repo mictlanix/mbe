@@ -27,7 +27,7 @@
 <div id='back-to-list' class='pull-left'>
     @Html.ActionLink(Resources.BackToList, "Receipts", new { }, new { @class = "button icon back" })
 </div>
-<div id='confirm-button' class='pull-right' @if (Model.Details.Count == 0) {<text>style='display:none'</text>}>
+<div id='confirm-button' class='pull-right @(Model.Details.Count == 0 ? "hide" : "")'>
 @using (Html.BeginForm("ConfirmReceipt", "Inventory", new { id = Model.Id })) {
     <button id='complete' type='submit' class='icon lock'>@Resources.Complete</button>
 }
@@ -46,7 +46,7 @@ $(function () {
                 $.get('@Url.Action("GetReceiptItem")/' + detail.id, function (data) {
                     $('#items').append(data);
                     $('#product-search').tokenInput('clear');
-                    $('#confirm-button').show('slow');
+                    $('#confirm-button').removeClass('hide');
                 });
             }, 'json');
         }

@@ -50,7 +50,7 @@ $(function () {
                 $.get('@Url.Action("Item", new { id = 0 })' + detail.id, function (data) {
                     $('#items').append(data);
                     $('#product-search').tokenInput('clear');
-                    $('#confirm-button').show('slow');
+                    $('#confirm-button').removeClass('hide');
                 });
             }, 'json');
         }
@@ -59,7 +59,7 @@ $(function () {
     $('#add-items').editable({
 		success: function(response, newValue) {
         	$('#items-container').loadUrl();
-            $('#confirm-button').show('slow');
+            $('#confirm-button').removeClass('hide');
             setTimeout(function(){$('#add-items').editable('setValue', '');},500);
 	    }
 	}).removeClass('editable-click');
