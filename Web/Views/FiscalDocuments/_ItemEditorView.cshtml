@@ -77,7 +77,7 @@ $('#id\\:@Model.Id a.delete').editable({
         $('#id\\:@Model.Id').remove();
 		$('#totals-section').loadUrl();
 	    if ($('#items li').length === 0) {
-	        $('#confirm-button').hide('slow');
+	        $('#confirm-button').addClass('hide');
 	    }
     }
 });

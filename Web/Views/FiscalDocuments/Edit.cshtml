@@ -60,7 +60,7 @@ $(function () {
                     $('#items').append(data);
                     $('#totals-section').loadUrl();
                     $('#product-search').tokenInput('clear');
-                    $('#confirm-button').show('slow');
+                    $('#confirm-button').removeClass('hide');
                 });
             }, 'json');
         }
@@ -71,7 +71,7 @@ $(function () {
 		success: function(response, newValue) {
         	$('#items-container').loadUrl();
         	$('#totals-section').loadUrl();
-            $('#confirm-button').show('slow');
+            $('#confirm-button').removeClass('hide');
             setTimeout(function(){$('#add-items').editable('setValue', '');},500);
 	    }
 	}).removeClass('editable-click');

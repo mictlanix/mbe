@@ -26,7 +26,7 @@
 	@Html.ActionLink(Resources.Print, "Print", new { id = Model.Id }, new { @class = "button icon print", target = "_blank" })
 </div>
 @if(Model.Balance >= 0) {
-<div id='confirm-button' class='pull-right' @if (Model.Details.Count == 0) {<text>style='display:none'</text>}>
+<div id='confirm-button' class='pull-right @(Model.Details.Count == 0 ? "hide" : "")'>
 	@using (Html.BeginForm("ConfirmPayment", "Payments", new { id = Model.Id })) {
 	    <button type="submit" class='icon pay'>@Resources.CompletePayment</button>
 	}
