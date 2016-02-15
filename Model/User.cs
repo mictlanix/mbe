@@ -54,7 +54,7 @@ namespace Mictlanix.BE.Model
 
         [Property("email")]
         [DataType(DataType.EmailAddress)]
-		[EmailAddress(ErrorMessageResourceName = "Validation_Email", ErrorMessageResourceType = typeof(Resources))]
+		[EmailAddress(ErrorMessageResourceName = "Validation_Email", ErrorMessageResourceType = typeof(Resources), ErrorMessage = null)]
         [Display(Name = "Email", ResourceType = typeof(Resources))]
         [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
         [StringLength(250, MinimumLength = 6, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]

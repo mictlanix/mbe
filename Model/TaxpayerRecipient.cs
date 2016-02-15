@@ -56,10 +56,10 @@ namespace Mictlanix.BE.Model
 		
 		[Property]
 		[DataType(DataType.EmailAddress)]
-		[EmailAddress(ErrorMessageResourceName = "Validation_Email", ErrorMessageResourceType = typeof(Resources))]
-		[Display(Name = "Email", ResourceType = typeof(Resources))]
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[EmailAddress(ErrorMessageResourceName = "Validation_Email", ErrorMessageResourceType = typeof(Resources), ErrorMessage = null)]
 		[StringLength(80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Display(Name = "Email", ResourceType = typeof(Resources))]
 		public virtual string Email { get; set; }
 
 		[Display(Name = "Address", ResourceType = typeof(Resources))]
