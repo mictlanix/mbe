@@ -47,7 +47,7 @@ $(function () {
                     $('#items').append(data);
                     $('#totals-section').loadUrl();
                     $('#product-search').tokenInput('clear');
-                    $('#confirm-button').show('slow');
+                    $('#confirm-button').removeClass('hide');
                 });
             }, 'json');
         }

@@ -39,7 +39,7 @@ $('#id\\:@Model.Id a.delete').editable({
 	success: function(response, newValue) {
         $('#id\\:@Model.Id').remove();
         if ($('#items li').length === 0) {
-            $('#confirm-button').hide('slow');
+            $('#confirm-button').addClass('hide');
         }
     }
 });

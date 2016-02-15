@@ -35,7 +35,7 @@
 <div id='back-to-list' class='pull-left'>
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
-<div id='confirm-button' class='pull-right' @if (Model.Total == 0m) {<text>style='display:none'</text>}>
+<div id='confirm-button' class='pull-right @(Model.Total == 0m ? "hide" : "")'>
 @using (Html.BeginForm("Confirm", "Purchases", new { id = Model.Id })) {
     <button id='complete' type='submit'>@Resources.CompleteSale</button>
 }
@@ -47,7 +47,7 @@ function updateTotals(){
 		$('#totals-section').html(data);
         if ($('#items li').length === 0) {
             $('#edit-button').show('slow');
-            $('#confirm-button').hide('slow');
+            $('#confirm-button').addClass('hide');
         }
 	});
 }
@@ -79,7 +79,7 @@ $(function () {
                     updateTotals();
 
                     $('#edit-button').hide('slow');
-                    $('#confirm-button').show('slow');
+                    $('#confirm-button').removeClass('hide');
                 });
 
             }, 'json');
