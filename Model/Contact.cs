@@ -57,7 +57,7 @@ namespace Mictlanix.BE.Model
 		
 		[Property]
 		[DataType(DataType.EmailAddress)]
-		[EmailAddress(ErrorMessageResourceName = "Validation_Email", ErrorMessageResourceType = typeof(Resources))]
+		[EmailAddress(ErrorMessageResourceName = "Validation_Email", ErrorMessageResourceType = typeof(Resources), ErrorMessage = null)]
 		[Display(Name = "Email", ResourceType = typeof(Resources))]
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
 		[StringLength(80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
@@ -86,7 +86,7 @@ namespace Mictlanix.BE.Model
 
         [Property]
 		[DataType(DataType.Url)]
-		[Url(ErrorMessageResourceName = "Validation_Url", ErrorMessageResourceType = typeof(Resources))]
+		[Url(ErrorMessageResourceName = "Validation_Url", ErrorMessageResourceType = typeof(Resources), ErrorMessage = null)]
         [Display(Name = "Website", ResourceType = typeof(Resources))]
         [StringLength(80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
         public string Website { get; set; }
