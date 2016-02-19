@@ -118,24 +118,30 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 		public ViewResult Print (int id)
 		{
-			var item = FiscalDocument.Find (id);
-			var batch = TaxpayerBatch.Queryable.First (x => x.Batch == item.Batch && item.Serial >= x.SerialStart &&
-															item.Serial <= x.SerialEnd);
-			var view = string.Format ("Print{0:00}{1}", item.Version * 10, batch.Template);
+			var view = "Print";
+			var model = FiscalDocument.Find (id);
 
-			return View (view, item);
+			if (model.IsCompleted) {
+				var batch = TaxpayerBatch.Queryable.First (x => x.Batch == model.Batch);
+				view = string.Format ("Print{0:00}{1}", model.Version * 10, batch.Template);
+			}
+
+			return View (view, model);
 		}
 
 		public ActionResult Pdf (int id)
 		{
+			var view = "Print";
 			var model = FiscalDocument.Find (id);
-			var batch = TaxpayerBatch.Queryable.First (x => x.Batch == model.Batch && model.Serial >= x.SerialStart &&
-															model.Serial <= x.SerialEnd);
-			var filename = string.Format (Resources.FiscalDocumentFilenameFormatString,
-										  model.Issuer.Id, model.Batch, model.Serial);
-			var view = string.Format ("Print{0:00}{1}", model.Version * 10, batch.Template);
-			
-			Response.AppendHeader ("Content-Disposition", string.Format ("inline; filename={0}.pdf", filename));
+
+			if (model.IsCompleted) {
+				var batch = TaxpayerBatch.Queryable.First (x => x.Batch == model.Batch);
+				var filename = string.Format (Resources.FiscalDocumentFilenameFormatString,
+					               model.Issuer.Id, model.Batch, model.Serial);
+				view = string.Format ("Print{0:00}{1}", model.Version * 10, batch.Template);
+
+				Response.AppendHeader ("Content-Disposition", string.Format ("inline; filename={0}.pdf", filename));
+			}
 
 			return PdfView (view, model);
 		}
@@ -1013,9 +1019,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		              select x.Serial).Max ().GetValueOrDefault () + 1;
 
 			batch = (from x in entity.Issuer.Batches
-		             where x.Batch == entity.Batch && 
-						x.SerialStart <= serial && 
-						x.SerialEnd >= serial
+		             where x.Batch == entity.Batch
 		             select x).SingleOrDefault ();
 
 			if (batch == null) {
@@ -1025,8 +1029,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			entity.Type = batch.Type;
 			entity.Serial = serial;
 			entity.Provider = entity.Issuer.Provider;
-			entity.ApprovalYear = batch.ApprovalYear;
-			entity.ApprovalNumber = batch.ApprovalNumber;
 			entity.Issued = new DateTime (dt.Year, dt.Month, dt.Day,
 			                              dt.Hour, dt.Minute, dt.Second,
 			                              DateTimeKind.Unspecified);
