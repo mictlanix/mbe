@@ -122,3 +122,9 @@ td .pre-wrapped {
 	text-align: left;
 	color:#777 !important;
 }
+p.amount-words {
+	margin: 0 .6cm 0 .6cm;
+	border-top: solid black 1px;
+	border-bottom:solid black 1px;
+	font-size:8pt !important;
+}
