@@ -525,3 +525,7 @@ form.form-inline {
 [class*="glyphicon"] {
     pointer-events:none;
 }
+
+.page-header h1 {
+	color:#DD4B39;
+}
