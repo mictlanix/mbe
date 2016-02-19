@@ -11,6 +11,7 @@
     ViewBag.Taxpayer = Model.Issuer.Id;
     ViewBag.TaxpayerName = Model.IssuerName;
     ViewBag.Address = Model.IssuedAt ?? Model.Store.Address;
+    Model.Serial = 0;
 }
 <!DOCTYPE html>
 <html>
@@ -99,22 +100,10 @@
 					<h2 class="text-right uppercase">@Model.Type.GetDisplayName() @Html.DisplayFor(x => x.Batch) @Html.DisplayFor(x => x.Serial)</h2>
 				</div>
 				<div class="col-xs-12">
-					<p><span class="mylabel">@Resources.StampId</span></p>
+					<p><span class="mylabel">@Resources.IssuedLocation</span></p>
 				</div>
 		 		<div class="col-xs-12">
-					<p>@Html.DisplayFor(x => x.StampId)</p>
-		 		</div>
-				<div class="col-xs-12">
-					<p><span class="mylabel">@Resources.IssuedLocation, @Resources.DateTime</span></p>
-				</div>
-		 		<div class="col-xs-12">
-					<p>@Html.DisplayFor(x => x.IssuedLocation) @Html.DisplayFor(x => x.Issued)</p>
-		 		</div>
-				<div class="col-xs-12">
-					<p><span class="mylabel">@Resources.CertificateNumber</span></p>
-				</div>
-		 		<div class="col-xs-12">
-					<p>@Html.DisplayFor(x => x.IssuerCertificateNumber)</p>
+					<p>@Html.DisplayFor(x => x.IssuedLocation)</p>
 		 		</div>
 			</div>
 		</div>
@@ -205,30 +194,5 @@
 		</div>
     }
 	</div>
-
-	<div class="row">
-		<div class="col-xs-12">
-			<div class="media" style="border: 1px dashed silver;margin-bottom:5px;">
-				<a class="pull-left" href="#">
-					<img class="media-object" style="width: 32mm" src='@Url.Action("QRCode", new { id = Model.Id })' />
-				</a>
-				<div class="media-body">
-					<p class="monospaced">
-						@Resources.AuthorityCertificateNumber: @Html.DisplayFor(x => x.AuthorityCertificateNumber)
-						@Resources.StampDate: @Html.DisplayFor(x => x.Stamped)<br />
-						@Resources.OriginalString<br />
-						@Html.DisplayFor(x => x.OriginalString)<br />
-						@Resources.IssuerDigitalSeal<br />
-						@Html.DisplayFor(x => x.IssuerDigitalSeal)<br />
-						@Resources.AuthorityDigitalSeal<br />
-						@Html.DisplayFor(x => x.AuthorityDigitalSeal)
-					</p>
-				</div>
-			</div>
-		</div>
-	</div>
-		<div class="pull-right" style="font-size:8pt">
-			@Resources.FiscalDocumentLegendV3
-		</div>
 </body>
 </html>
