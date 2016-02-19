@@ -77,7 +77,6 @@ namespace Mictlanix.BE.Web.Helpers
 			case FiscalCertificationProvider.FiscoClic:
 				return FiscoClicCancel (item);
 			case FiscalCertificationProvider.Servisim:
-				return ServisimCancel (item);
 			case FiscalCertificationProvider.ProFact:
 				return ProFactCancel (item);
 			}
@@ -175,7 +174,7 @@ namespace Mictlanix.BE.Web.Helpers
 
 		static bool ProFactCancel (FiscalDocument item)
 		{
-			var cli = new FiscoClicClient (WebConfig.ProFactUser, WebConfig.ProFactUrl);
+			var cli = new ProFactClient (WebConfig.ProFactUser, WebConfig.ProFactUrl);
 
 			return cli.Cancel (item.Issuer.Id, item.StampId);
 		}
