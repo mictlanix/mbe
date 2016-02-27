@@ -808,9 +808,6 @@
     <Content Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery-2.2.0-vsdoc.js" />
-    <Content Include="Scripts\jquery-2.2.0.js" />
-    <Content Include="Scripts\jquery-2.2.0.min.js" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -902,6 +899,9 @@
     <Content Include="Scripts\locales\bootstrap-datepicker.zh-TW.min.js" />
     <Content Include="Scripts\bootstrap-datepicker.js" />
     <Content Include="Scripts\bootstrap-datepicker.min.js" />
+    <Content Include="Scripts\jquery-2.2.1-vsdoc.js" />
+    <Content Include="Scripts\jquery-2.2.1.js" />
+    <Content Include="Scripts\jquery-2.2.1.min.js" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
@@ -1063,7 +1063,6 @@
     <Content Include="Views\Reports\_SerialNumberKardex.cshtml" />
     <Content Include="Views\Customers\_DiscountsRefresh.cshtml" />
     <Content Include="Views\Inventory\PhysicalCountAdjustment.cshtml" />
-    <None Include="Scripts\jquery-2.2.0.min.map" />
     <None Include="Content\bootstrap-theme.css.map" />
     <None Include="Content\bootstrap-theme.min.css.map" />
     <None Include="Content\bootstrap.css.map" />
@@ -1077,9 +1076,11 @@
     <None Include="Content\bootstrap-datepicker3.min.css.map" />
     <None Include="Content\bootstrap-datepicker3.standalone.css.map" />
     <None Include="Content\bootstrap-datepicker3.standalone.min.css.map" />
+    <None Include="Scripts\jquery-2.2.1.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\Mvc\" />
     <Folder Include="Mvc\" />
+    <Folder Include="Content\fonts\" />
   </ItemGroup>
 </Project>
