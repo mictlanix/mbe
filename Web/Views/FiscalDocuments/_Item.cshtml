@@ -9,14 +9,20 @@
     <td class="number center">@Html.DisplayFor(x => x.Batch)</td>
     <td class="number">@Html.DisplayFor(x => x.Serial)</td>
     <td class="center"><small>@Html.DisplayFor(x => x.Issued)</small></td>
+    <td class="center">@Html.DisplayFor(x => x.Customer.Code)</td>
+    <td class="center">@Html.DisplayFor(x => x.Recipient)</td>
     <td>
-        <small>@Html.DisplayFor(x => x.Customer.Name)</small><br />
-        <small>@Html.DisplayFor(x => x.Recipient)</small>
         <small>@Html.DisplayFor(x => x.RecipientName)</small>
     </td>
-    <td class="bool">@Html.DisplayFor(x => x.IsCompleted)</td>
-    <td class="bool">@Html.DisplayFor(x => x.IsCancelled)</td>
-
+    <td class="bool">
+	@if (Model.IsCancelled) {
+		<span class="label label-danger" title="@Resources.Cancelled"><i class="glyphicon glyphicon-remove"></i></span>
+	} else if (Model.IsCompleted) {
+		<span class="label label-success" title="@Resources.Active"><i class="glyphicon glyphicon-ok"></i></span>
+	} else  {
+		<span class="label label-default" title="@Resources.New"><i class="glyphicon glyphicon-pencil"></i></span>
+	}
+	</td>
     <td class="actions">
         @if (ViewBag.Privilege.AllowRead) {
             @Html.ActionLink(" ", "View", new { id = Model.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
