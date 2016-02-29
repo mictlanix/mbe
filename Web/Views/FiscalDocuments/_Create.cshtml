@@ -2,7 +2,6 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model FiscalDocument
-
 <div class='modal-header'>
     <button type='button' class='close' data-dismiss='modal'>&times;</button>
     <h3>@Resources.FiscalDocument</h3>
@@ -19,15 +18,8 @@
     <button type='button' class='btn btn-default' data-dismiss='modal'>@Resources.Discard</button>
     <button type='submit' class='btn btn-primary' onclick='$("#fiscalDocument-modal form").submit();'>@Resources.Create</button>
 </div>
-
 <style type="text/css">
-    ul.token-input-list {
-        width: 100%;
-    }
-
-    div.token-input-dropdown {
-        width: 650px;
-    }
+ul.token-input-list { width: 100%; }
 </style>
 <script type='text/javascript'>
     function getUrl() {
@@ -58,8 +50,8 @@
 
             if (count != 3) return false;
 
-            $('button.save').prop('disabled', true);
-            $('button.save').html('@Resources.PleaseWait');
+            $('button.btn-primary').prop('disabled', true);
+            $('button.btn-primary').html('@Resources.PleaseWait');
         });
     });
 </script>
