@@ -309,11 +309,7 @@ ul.list-items li div.action-link {
   float:right;
   clear:none;
 }
-ul.token-input-list {
-    margin:2px 0 10px;
-    font:inherit;
-    border:1px solid #ccc;
-}
+
 .selection-options input[type="text"] {
     width:90px;
     font-size:13px;

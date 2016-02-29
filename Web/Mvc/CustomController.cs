@@ -32,8 +32,11 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using jsreport.Client;
@@ -45,6 +48,7 @@ namespace Mictlanix.BE.Web.Mvc {
 	public abstract class CustomController : Controller {
 		static string url_reports = null;
 
+		public const string MIME_TYPE_PDF = "application/pdf";
 		public const string MIME_TYPE_EXCEL_XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
 		public CustomPrincipal CurrentUser {
@@ -83,7 +87,17 @@ namespace Mictlanix.BE.Web.Mvc {
 				}
 			}).Result;
 
-			return File (report.Content, "application/pdf");
+			return File (report.Content, MIME_TYPE_PDF);
+		}
+
+		public Stream GetPdf (string viewPath, object model)
+		{
+			return GetPdf (viewPath, model, new Phantom {
+				format = "Letter",
+				headerHeight = "0 mm",
+				footerHeight = "0 mm",
+				margin = "6 mm"
+			});
 		}
 
 		public Stream GetPdf (string viewPath, object model, Phantom phantom)
@@ -123,19 +137,19 @@ namespace Mictlanix.BE.Web.Mvc {
 
 		public FileStreamResult PdfView (string viewPath, object model, Phantom phantom)
 		{
-			return File (GetPdf (viewPath, model, phantom), "application/pdf");
+			return File (GetPdf (viewPath, model, phantom), MIME_TYPE_PDF);
 		}
 
-		public FileResult ExcelFile (Stream stream, string fileName)
-		{
-			if (stream == null) {
-				throw new ArgumentNullException ("stream");
-			}
+		//public FileResult ExcelFile (Stream stream, string fileName)
+		//{
+		//	if (stream == null) {
+		//		throw new ArgumentNullException (nameof(stream));
+		//	}
 
-			stream.Seek (0, SeekOrigin.Begin);
+		//	stream.Seek (0, SeekOrigin.Begin);
 
-			return File (stream, MIME_TYPE_EXCEL_XLSX, fileName);
-		}
+		//	return File (stream, MIME_TYPE_EXCEL_XLSX, fileName);
+		//}
 
 		public FileResult ExcelView (string viewPath, object model)
 		{
@@ -178,6 +192,22 @@ namespace Mictlanix.BE.Web.Mvc {
 			}
 
 			return result;
+		}
+
+		public void SendEmailWithAttachment (string recipient, string subject, string message, string attachmentName, Stream attachmentContent)
+		{
+			var sender = CurrentUser.Email;
+
+			Task.Factory.StartNew (() => NotificationsHelpers.SendEmail (sender, new string[] { sender },
+																	     new string[] { recipient }, null, subject,
+																	     message, attachmentName, attachmentContent));
+		}
+
+		public void SendEmailWithAttachments (string sender, string recipient, string subject, string message,
+		                                      IEnumerable<Attachment> attachments)
+		{
+			Task.Factory.StartNew (() => NotificationsHelpers.SendEmail (sender, new string[] { recipient }, null, null,
+			                                                             subject, message, attachments));
 		}
     }
 }
