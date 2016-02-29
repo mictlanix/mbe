@@ -179,6 +179,30 @@ namespace Mictlanix.BE.Web.Helpers
 			get { return ConfigurationManager.AppSettings ["AppServerUrl"]; }
 		}
 
+		public static string SmtpServer {
+			get { return ConfigurationManager.AppSettings ["SmtpServer"]; }
+		}
+
+		public static int SmtpPort {
+			get { return int.Parse (ConfigurationManager.AppSettings ["SmtpPort"]); }
+		}
+
+		public static bool SmtpSsl {
+			get { return Convert.ToBoolean (ConfigurationManager.AppSettings ["SmtpSsl"]); }
+		}
+
+		public static string SmtpUser {
+			get { return ConfigurationManager.AppSettings ["SmtpUser"]; }
+		}
+
+		public static string SmtpPassword {
+			get { return ConfigurationManager.AppSettings ["SmtpPassword"]; }
+		}
+
+		public static string DefaultSender {
+			get { return ConfigurationManager.AppSettings ["DefaultSender"]; }
+		}
+
 		#endregion
 		
 		#region Request's (Local) Settings

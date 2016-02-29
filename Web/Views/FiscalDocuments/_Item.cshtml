@@ -33,8 +33,8 @@
         }
         @if (ViewBag.Privilege.AllowRead && Model.IsCompleted) {
             @Html.ActionLink(" ", "Download", new { id = Model.Id }, new { @class = "button icon download icon-only", title = Resources.Download })
+            @Html.ActionLink(" ", "SendEmail", new { id = Model.Id }, new { @class = "button icon email icon-only open-modal", title = Resources.Send, data_modal_id = "fiscalDocument-modal" })
         }
     </td>
 </tr>
-
 

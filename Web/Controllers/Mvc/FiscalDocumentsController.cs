@@ -30,6 +30,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Net.Mail;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
@@ -1100,24 +1101,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			return RedirectToAction ("Index");
 		}
 
-		public ActionResult Download (int id)
-		{
-			var item = FiscalDocumentXml.TryFind (id);
-
-			if (item == null) {
-				return View (Resources.Error, new FileNotFoundException ());
-			}
-			
-			var entity = FiscalDocument.TryFind (id);
-			var xml = new MemoryStream (Encoding.UTF8.GetBytes (item.Data));
-			var result = new FileStreamResult (xml, "text/xml");
-
-			result.FileDownloadName = string.Format (Resources.FiscalDocumentFilenameFormatString + ".xml",
-			                                         entity.Issuer.Id, entity.Batch, entity.Serial);
-
-			return result;
-		}
-
 		public ViewResult Reports ()
 		{
 			var query = from x in FiscalDocument.Queryable
@@ -1225,6 +1208,54 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			                          item.Issuer.Id, item.Recipient, item.Total, item.StampId);
 
 			return BarcodesController.QRCodeAction (data);
+		}
+
+		public ActionResult Download (int id)
+		{
+			var item = FiscalDocumentXml.TryFind (id);
+
+			if (item == null) {
+				return View (Resources.Error, new FileNotFoundException ());
+			}
+
+			var entity = FiscalDocument.TryFind (id);
+			var xml = new MemoryStream (Encoding.UTF8.GetBytes (item.Data));
+			var result = new FileStreamResult (xml, "text/xml");
+
+			result.FileDownloadName = string.Format (Resources.FiscalDocumentFilenameFormatString + ".xml",
+			                                         entity.Issuer.Id, entity.Batch, entity.Serial);
+
+			return result;
+		}
+
+		public ActionResult SendEmail (int id)
+		{
+			var model = FiscalDocument.Find (id);
+
+			return PartialView ("_SendEmail", model);
+		}
+
+		[HttpPost]
+		public ActionResult SendEmail (int id, string email)
+		{
+			var model = FiscalDocument.Find (id);
+			var xml = FiscalDocumentXml.Find (id);
+			var batch = TaxpayerBatch.Queryable.First (x => x.Batch == model.Batch);
+			var filename = string.Format (Resources.FiscalDocumentFilenameFormatString, model.Issuer.Id, model.Batch,
+			                              model.Serial);
+			var view = string.Format ("Print{0:00}{1}", model.Version * 10, batch.Template);
+			var subject = string.Format (Resources.FiscalDocumentEmailSubjectFormatString, model.Issuer.Id, model.Batch,
+			                             model.Serial);
+			var message = string.Format (Resources.FiscalDocumentEmailBodyFormatString, model.StampId,
+			                             model.Issuer.Id, model.Recipient);
+			var attachments = new List<Attachment>();
+
+			attachments.Add (new Attachment (GetPdf (view, model), filename + ".pdf"));
+			attachments.Add (new Attachment (new MemoryStream (Encoding.UTF8.GetBytes (xml.Data)), filename + ".xml"));
+
+			SendEmailWithAttachments (WebConfig.DefaultSender, email, subject, message, attachments);
+
+			return PartialView ("_SendEmailSuccesful");
 		}
 	}
 }

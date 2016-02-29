@@ -1,0 +1,46 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model FiscalDocument
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h3 class="modal-title">Enviar Correo Electrónico</h3>
+</div>
+<div class="modal-body">
+@using (Ajax.BeginForm (null, null, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "fiscalDocument-modal-content" }, new { @class = "modal-form" })) {
+    <div class="form-horizontal">
+		<div class="form-group">
+		    <div class="col-xs-12 field-required">
+				<label for="email">@Resources.EmailAddress</label>
+                <input id="email" name="email" type="text" placeholder="@Resources.ChooseEmailAddress" required>
+			</div>
+		</div>
+    </div>
+}
+</div>
+<div class="modal-footer">
+    <button type='button' class='btn btn-default' data-dismiss='modal'>@Resources.Discard</button>
+    <button type='submit' class='btn btn-primary' onclick='$("#fiscalDocument-modal form").submit();'>@Resources.Send</button>
+</div>
+<style type="text/css">
+ul.token-input-list { width: 100%; }
+</style>
+<script>
+$(function () {
+    $("#email").tokenInput("/Customers/ListEmails/@Model.Customer.Id", {
+        hintText: "@Resources.ChooseEmailAddress",
+        noResultsText: "@Resources.NoResultsText",
+        searchingText: "@Resources.SearchingText",
+        queryParam: "pattern",
+        minChars: 1,
+        tokenLimit: 1
+    });
+
+    $('form').submit(function () {
+        if ($("#email").tokenInput("get").length == 0) return false;
+
+        $('button.btn-primary').prop('disabled', true);
+        $('button.btn-primary').html('@Resources.PleaseWait');
+    });
+});
+</script>
