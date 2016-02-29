@@ -352,5 +352,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			return Json (new { id = id, result = true });
 		}
+
+		public JsonResult ListEmails (int id)
+		{
+			var qry1 = from x in Customer.Queryable
+					   from y in x.Taxpayers
+					   where x.Id == id
+					   select new { id = y.Email, name = string.Format("{1} <{0}>", y.Email, y.Name) };
+			var qry2 = from x in Customer.Queryable
+					   from y in x.Contacts
+					   where x.Id == id
+					   select new { id = y.Email, name = string.Format("{1} <{0}>", y.Email, y.Name) };
+
+			return Json (qry1.ToList ().Union (qry2.ToList ()).ToList (), JsonRequestBehavior.AllowGet);
+		}
     }
 }
