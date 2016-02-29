@@ -1302,7 +1302,7 @@ Realizada el: {0:d}</value>
     <value>Descartar</value>
   </data>
   <data name="FiscalDocumentFilenameFormatString" xml:space="preserve">
-    <value>{0}-CFD-{1}{2:D5}</value>
+    <value>{0}-CFD-{1}{2:D6}</value>
   </data>
   <data name="Download" xml:space="preserve">
     <value>Descargar</value>
@@ -2110,6 +2110,37 @@ Realizada el: {0:d}</value>
   </data>
   <data name="ProFact" xml:space="preserve">
     <value>Proveedores de Facturación Electrónica y Software, S.A. de C.V.</value>
+  </data>
+  <data name="FiscalDocumentEmailSubjectFormatString" xml:space="preserve">
+    <value>Comprobante Fiscal - {0} - {1}{2:D6}</value>
+  </data>
+  <data name="FiscalDocumentEmailBodyFormatString" xml:space="preserve">
+    <value><![CDATA[Has recibido el siguiente comprobante fiscal digital por internet (CFDI).
+
+Folio Fiscal: {0}
+RFC Emisor: {1}
+RFC Receptor: {2}
+
+Puedes hacer la validación del mismo en el sitio oficial del SAT.
+
+	https://verificacfdi.facturaelectronica.sat.gob.mx
+
+Adjunto, podrás encontrar tu comprobante en los formatos PDF y XML.
+
+Gracias por utilizar nuestros servicios.
+]]></value>
+  </data>
+  <data name="InvalidEmailAddress" xml:space="preserve">
+    <value>Dirección de correo electrónico inválida.</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Enviar</value>
+  </data>
+  <data name="EmailAddress" xml:space="preserve">
+    <value>Dirección de correo electrónico</value>
+  </data>
+  <data name="ChooseEmailAddress" xml:space="preserve">
+    <value>Seleccione una dirección de correo electrónico</value>
   </data>
   <data name="FiscalDocumentQRCodeFormatString" xml:space="preserve">
     <value>?re={0}&amp;rr={1}&amp;tt={2:0000000000.000000}&amp;id={3}</value>
