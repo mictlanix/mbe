@@ -137,3 +137,6 @@ button.icon.badge,a.button.icon.badge {
 button.icon.configuration,a.button.icon.configuration {
     background:#f3f3f3 url(icons/configuration.png) no-repeat;
 }
+button.icon.email,a.button.icon.email {
+    background:#f3f3f3 url(icons/email.png) no-repeat;
+}
