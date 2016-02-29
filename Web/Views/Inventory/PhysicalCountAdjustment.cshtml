@@ -34,7 +34,6 @@
     <td class='number'>@Model.Where(x => x.Quantity > 0m).Sum(x => (decimal) x.Quantity).ToString("0.####")</td>
 </tr>
 </table>
-
 <div class="vspaced">
     <div class="pull-right">
         @using (Html.BeginForm ()) {
@@ -43,13 +42,10 @@
     </div>
     <div id="back-to-list">
         @using (Html.BeginForm ()) {
-        @Html.ActionLink(Resources.BackToList, "Receipts" ,null, new { @class = "button icon back" })
+        	@Html.ActionLink(Resources.BackToList, "Receipts" ,null, new { @class = "button icon back" })
         }
     </div>
-</div>
-    
+</div>    
 <style type="text/css">
-    ul.token-input-list {
-        width: 100%;
-    }
+ul.token-input-list { width: 100%; }
 </style>

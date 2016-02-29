@@ -232,6 +232,7 @@
     <Compile Include="Mvc\CustomWebViewPage.cs" />
     <Compile Include="Security\CustomPrincipal.cs" />
     <Compile Include="Helpers\WebConfig.cs" />
+    <Compile Include="Helpers\NotificationsHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
@@ -412,7 +413,6 @@
     <Content Include="Views\PointsOfSale\Index.cshtml" />
     <Content Include="Content\print.css" />
     <Content Include="Views\Purchases\Edit.cshtml" />
-    <Content Include="Views\Purchases\New.cshtml" />
     <Content Include="Views\FiscalDocuments\InvalidBatch.cshtml" />
     <Content Include="Views\Reports\ReceivedPayments.cshtml" />
     <Content Include="Views\Reports\_ReceivedPayments.cshtml" />
@@ -485,7 +485,6 @@
     <Content Include="Views\Inventory\Receipts\View.cshtml" />
     <Content Include="Views\Inventory\Issues\Edit.cshtml" />
     <Content Include="Views\Inventory\Issues\Index.cshtml" />
-    <Content Include="Views\Inventory\Issues\New.cshtml" />
     <Content Include="Views\Inventory\Issues\Print.cshtml" />
     <Content Include="Views\Inventory\Issues\View.cshtml" />
     <Content Include="Views\Inventory\Issues\_DetailEditView.cshtml" />
@@ -902,6 +901,8 @@
     <Content Include="Scripts\jquery-2.2.1-vsdoc.js" />
     <Content Include="Scripts\jquery-2.2.1.js" />
     <Content Include="Scripts\jquery-2.2.1.min.js" />
+    <Content Include="Views\FiscalDocuments\_SendEmailSuccesful.cshtml" />
+    <Content Include="Views\FiscalDocuments\_SendEmail.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
