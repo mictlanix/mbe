@@ -124,6 +124,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				return Content (Resources.SalesOrderNotFound);
 			}
 
+			if (!entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.SalesOrderIsNotRefundable);
+			}
+
 			if (entity.Store != WebConfig.Store) {
 				Response.StatusCode = 400;
 				return Content (Resources.InvalidStore);

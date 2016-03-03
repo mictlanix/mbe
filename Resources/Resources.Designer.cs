@@ -4061,6 +4061,12 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string SalesOrderIsNotRefundable {
+            get {
+                return ResourceManager.GetString("SalesOrderIsNotRefundable", resourceCulture);
+            }
+        }
+        
         public static string FiscalDocumentQRCodeFormatString {
             get {
                 return ResourceManager.GetString("FiscalDocumentQRCodeFormatString", resourceCulture);
