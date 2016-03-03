@@ -3,13 +3,12 @@
 @using Mictlanix.BE.Web.Models
 @using Mictlanix.BE.Web.Helpers
 @model IEnumerable<FiscalReport>
-
 @{
     ViewBag.Title = Resources.FiscalReports;
 }
-
-<h2>@Resources.FiscalReports</h2>
-
+<div class="page-header">
+    <h1>@Resources.FiscalReports</h1>
+</div>
 <table>
     <tr>
         <th class="center">@Html.LabelFor(x => new FiscalReport().Year)</th>

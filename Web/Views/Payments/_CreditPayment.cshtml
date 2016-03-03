@@ -6,42 +6,46 @@
 
 @using (Ajax.BeginForm("CreditPayment", "Payments", new AjaxOptions { UpdateTargetId = "credit-payment" })) {
     @Html.ValidationSummary(true)
-    
-    <div class="row-fluid">
-        <div class="col-xs-12">@Html.LabelFor(x => x.Customer)</div>
-    </div>
-	<div class="row-fluid">
-		<div class="col-xs-12">
-        @Html.EditorFor(x => x.CustomerId)
-        @Html.ValidationMessageFor(x => x.CustomerId)
-        </div>
-	</div>
-    
-	<div class="row-fluid">
-	  	<div class="col-xs-3">@Html.LabelFor(x => x.Amount)</div>
-		<div class="col-xs-3">@Html.LabelFor(x => x.Reference)</div>
-	</div>
-	<div class="row-fluid">
-	  	<div class="col-xs-3">@Html.EditorFor(x => x.Amount) @Html.ValidationMessageFor(x => x.Amount)</div>
-		<div class="col-xs-3">@Html.EditorFor(x => x.Reference)</div>
-	</div>
-	
-	@Html.HiddenFor(x => x.Method)
-	
-    <div class="btn-toolbar">
-    	@Html.LabelFor(x => new CustomerPayment().Method)
-        <div class="btn-group">
-        @foreach (var item in new []{ PaymentMethod.Cash,
-        							  PaymentMethod.DebitCard,
-        							  PaymentMethod.CreditCard,
-        							  PaymentMethod.Check,
-        							  PaymentMethod.BankDeposit,
-        							  PaymentMethod.WireTransfer,
-        							  PaymentMethod.GovernmentFunding }) {
-        	<button class="pay btn" type="button" data-value='@((int)item)'>@item.GetDisplayName()</button>
-        }
+    <div class="form-horizontal">
+	    <div class="form-group">
+	        <div class="col-xs-12">@Html.LabelFor(x => x.Customer)</div>
+	    </div>
+		<div class="form-group">
+			<div class="col-xs-12">
+	        @Html.EditorFor(x => x.CustomerId)
+	        @Html.ValidationMessageFor(x => x.CustomerId)
+	        </div>
 		</div>
-    </div>
+		<div class="form-group">
+		  	<div class="col-xs-3">@Html.LabelFor(x => x.Amount)</div>
+			<div class="col-xs-3">@Html.LabelFor(x => x.Reference)</div>
+		</div>
+		<div class="form-group">
+		  	<div class="col-xs-3">@Html.EditorFor(x => x.Amount) @Html.ValidationMessageFor(x => x.Amount)</div>
+			<div class="col-xs-3">@Html.EditorFor(x => x.Reference)</div>
+		</div>
+		
+		@Html.HiddenFor(x => x.Method)
+
+		<div class="form-group">
+			<div class="col-xs-12">
+	    		@Html.LabelFor(x => new CustomerPayment().Method)
+	    	</div>
+			<div class="col-xs-12">
+		        <div class="btn-group">
+		        @foreach (var item in new []{ PaymentMethod.Cash,
+		        							  PaymentMethod.DebitCard,
+		        							  PaymentMethod.CreditCard,
+		        							  PaymentMethod.Check,
+		        							  PaymentMethod.BankDeposit,
+		        							  PaymentMethod.WireTransfer,
+		        							  PaymentMethod.GovernmentFunding }) {
+		        	<button class="pay btn btn-default" type="button" data-value='@((int)item)'>@item.GetDisplayName()</button>
+		        }
+				</div>
+			</div>
+		</div>
+	</div>
 }
 <style type="text/css">
 ul.token-input-list { width: 100%; }

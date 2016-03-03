@@ -3,34 +3,41 @@
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
 @model Search<SalesOrder>
-
 @{
     ViewBag.Title = Resources.PointOfSale;
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.POS);
 }
-
-<h2>@Resources.PointOfSale</h2>
-
-@if(Privilege.AllowCreate) {
-    using (Html.BeginForm("New", "POS", null, FormMethod.Post, new { @class = "modal-form" })) {
-		<button type="submit" class="icon add">@Resources.NewSalesOrder</button>
-    }
-}
-
-@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
-        @Html.HiddenFor(x => x.Offset)
-        @Html.HiddenFor(x => x.Limit)
-        <div class='editor-label'>
-            @Html.LabelFor(x => x.Pattern)
-        </div>
-        <div class='search-box'>
-            <button type='submit' class='icon search'>@Resources.Search</button>
-            <div class='search-field'>
-                <input type='text' id='Pattern' name='Pattern' />
-            </div>
-        </div>
-}
+<div class="page-header">
+    <div class="pull-right col-xs-6">
+		<div class="row">
+	        <div class="col-xs-4 text-right">
+	        @if(Privilege.AllowCreate) {
+	            using (Html.BeginForm("New", "POS", null, FormMethod.Post, new { @class = "modal-form" })) {
+					<button type="submit" class="btn btn-primary">
+						<span class="glyphicon glyphicon-plus"></span>
+					</button>
+			    }
+	        }
+	        </div>
+	        <div class="col-xs-8 input-group">
+			@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
+			    @Html.HiddenFor(x => x.Offset)
+			    @Html.HiddenFor(x => x.Limit)
+			    <div class="input-group">
+					<input id="Pattern" name="Pattern" type="text" class="form-control" placeholder="@Resources.SearchFor">
+					<span class="input-group-btn">
+						<button class="btn btn-default" type="submit">
+							<span class="glyphicon glyphicon-search"></span>
+						</button>
+					</span>
+				</div>
+			}
+	        </div>
+	    </div>
+	</div>
+    <h1>@Resources.PointOfSale</h1>
+</div>
 <div id='activity-indicator'>
     <img alt='@Resources.Loading' src='@Url.Content("~/Content/images/loading-bar.gif")' />
 </div>

@@ -525,3 +525,7 @@ form.form-inline {
 .page-header h1 {
 	color:#DD4B39;
 }
+
+.input-xxlarge {
+  width: 530px;
+}
