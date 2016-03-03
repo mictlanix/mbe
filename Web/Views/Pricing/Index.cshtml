@@ -3,30 +3,27 @@
 @using Mictlanix.BE.Web.Helpers;
 @using Mictlanix.BE.Web.Models;
 @model Search<Product>
-
 @{
     ViewBag.Title = Resources.Pricing;
 }
-
-<h2>@Resources.Pricing</h2>
-
-<div id="master-section" class="pull-right">
-@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
-    @Html.HiddenFor(x => x.Offset)
-    @Html.HiddenFor(x => x.Limit)
-    <div class="row">
-  		<div class="col-sm-4 col-sm-offset-8">
-			<div class="input-group">
-				<input id='Pattern' name='Pattern' type="text" class="form-control" placeholder="@Resources.SearchFor">
+<div class="page-header">
+    <div class="pull-right col-xs-6">
+    @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
+	    @Html.HiddenFor(x => x.Offset)
+	    @Html.HiddenFor(x => x.Limit)
+		<div class="row">
+	        <div class="col-xs-8 input-group col-xs-offset-4">
+				<input id="Pattern" name="Pattern" type="text" class="form-control" placeholder="@Resources.SearchFor">
 				<span class="input-group-btn">
-					<button class="btn btn-primary" type="submit">
+					<button class="btn btn-default" type="submit">
 						<span class="glyphicon glyphicon-search"></span>
 					</button>
 				</span>
-			</div>
-		</div>
+	        </div>
+	    </div>
+	}
 	</div>
-}
+    <h1>@Resources.Pricing</h1>
 </div>
 <div id="activity-indicator">
     <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />

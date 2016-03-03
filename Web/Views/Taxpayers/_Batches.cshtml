@@ -10,21 +10,13 @@
 <table>
     <tr>
         <th>@Html.LabelFor(x => new TaxpayerBatch().Batch)</th>
-        <th>@Html.LabelFor(x => new TaxpayerBatch().SerialStart)</th>
-        <th>@Html.LabelFor(x => new TaxpayerBatch().SerialEnd)</th>
         <th>@Html.LabelFor(x => new TaxpayerBatch().Type)</th>
-        <th>@Html.LabelFor(x => new TaxpayerBatch().ApprovalNumber)</th>
-        <th>@Html.LabelFor(x => new TaxpayerBatch().ApprovalYear)</th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
         <td class="center">@Html.DisplayFor(x => item.Batch)</td>
-        <td class="right">@Html.DisplayFor(x => item.SerialStart)</td>
-        <td class="right">@Html.DisplayFor(x => item.SerialEnd)</td>
         <td class="center">@item.Type.GetDisplayName()</td>
-        <td class="right">@Html.DisplayFor(x => item.ApprovalNumber)</td>
-        <td class="right">@Html.DisplayFor(x => item.ApprovalYear)</td>
     </tr>
 }
 
