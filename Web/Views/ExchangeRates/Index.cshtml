@@ -9,15 +9,24 @@
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.ExchangeRates);
 }
-
-<h2>@Resources.ExchangeRates</h2>
-
-<p>
-@if(Privilege.AllowCreate)
-{
-    @Html.ActionLink(Resources.CreateNew, "Create", null, new { @class = "button icon add open-modal", data_modal_id = "exchangeRate-modal" })
-}
-</p>
+<div class="page-header">
+    <div class="pull-right col-xs-6">
+    @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
+	    @Html.HiddenFor(x => x.Offset)
+	    @Html.HiddenFor(x => x.Limit)
+		<div class="row">
+	        <div class="col-xs-4 text-right input-group col-xs-offset-8">
+	        @if(Privilege.AllowCreate) {
+	            <a class="btn btn-primary open-modal" href="/ExchangeRates/Create" data-modal-id="exchangeRate-modal">
+	                <span class="glyphicon glyphicon-plus"></span>
+	            </a>
+	        }
+	        </div>
+	    </div>
+	}
+	</div>
+    <h1>@Resources.ExchangeRates</h1>
+</div>
 <div id="activity-indicator">
     <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
 </div>

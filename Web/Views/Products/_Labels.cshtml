@@ -4,5 +4,5 @@
 @model IEnumerable<Label>
 
 @foreach (var label in Model.OrderBy (x => x.Name)) {
-	<span class='label'>@Html.DisplayFor(x => label.Name)</span>
+	<span class='label label-default'>@Html.DisplayFor(x => label.Name)</span>
 }

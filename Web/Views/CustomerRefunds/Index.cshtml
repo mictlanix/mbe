@@ -3,36 +3,39 @@
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
 @model Search<CustomerRefund>
-
 @{
     ViewBag.Title = Resources.CustomerRefunds;
     var CurrentUser = Html.CurrentUser () ?? new User ();
     var Privilege = Html.GetPrivilege (CurrentUser, SystemObjects.CustomerRefunds);
 }
-
-<h2>@Resources.CustomerRefunds</h2>
-
-@if(Privilege.AllowCreate) {
-<div class='control-group'>
-	<a id='new' class='button icon add' data-url='@Url.Action("CreateFromSalesOrder")' title='@Resources.SalesOrderId'
-	   data-type='text' data-placement='right' data-pk='0' data-value='' data-display='false'
-	   data-emptytext='' data-emptyclass='' data-highlight='false'>@Resources.New</a>
+<div class="page-header">
+    <div class="pull-right col-xs-6">
+    @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
+	    @Html.HiddenFor(x => x.Offset)
+	    @Html.HiddenFor(x => x.Limit)
+		<div class="row">
+	        <div class="col-xs-4 text-right">
+	        @if(Privilege.AllowCreate) {
+				<a id='new' class='btn btn-primary' data-url='@Url.Action("CreateFromSalesOrder")' title='@Resources.SalesOrderId'
+				   data-type='text' data-placement='left' data-pk='0' data-value='' data-display='false'
+				   data-emptytext='' data-emptyclass='' data-highlight='false'>
+					<span class="glyphicon glyphicon-plus"></span>
+				</a>
+	        }
+	        </div>
+	        <div class="col-xs-8 input-group">
+				<input id="Pattern" name="Pattern" type="text" class="form-control" placeholder="@Resources.SearchFor">
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="submit">
+						<span class="glyphicon glyphicon-search"></span>
+					</button>
+				</span>
+	        </div>
+	    </div>
+	}
+	</div>
+    <h1>@Resources.CustomerRefunds</h1>
 </div>
-}
-
-@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
-        @Html.HiddenFor(x => x.Offset)
-        @Html.HiddenFor(x => x.Limit)
-        <div class='editor-label'>
-            @Html.LabelFor(x => x.Pattern)
-        </div>
-        <div class='search-box'>
-            <button type='submit' class='icon search'>@Resources.Search</button>
-            <div class='search-field'>
-                <input type='text' id='Pattern' name='Pattern' />
-            </div>
-        </div>
-}
 <div id='activity-indicator'>
     <img alt='@Resources.Loading' src='@Url.Content("~/Content/images/loading-bar.gif")' />
 </div>
