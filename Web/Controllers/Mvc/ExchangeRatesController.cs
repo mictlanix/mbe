@@ -67,12 +67,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 					  orderby x.Date descending
 					  select x;
 			
-			if (!string.IsNullOrEmpty(search.Pattern)) {
-				qry = from x in ExchangeRate.Queryable
-					  orderby x.Date descending
-					  select x;
+			//if (!string.IsNullOrEmpty(search.Pattern)) {
+			//	qry = from x in ExchangeRate.Queryable
+			//		  orderby x.Date descending
+			//		  select x;
 
-			}
+			//}
 			
 			search.Total = qry.Count ();
 			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
