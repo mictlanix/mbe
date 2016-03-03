@@ -691,7 +691,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				return Content (Resources.SalesOrderNotFound);
 			}
 
-			if (!sales_order.IsCompleted || entity.IsCancelled) {
+			if (!sales_order.IsCompleted || sales_order.IsCancelled) {
 				Response.StatusCode = 400;
 				return Content (Resources.SalesOrderIsNotInvoiceable);
 			}
