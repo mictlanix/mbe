@@ -21,10 +21,10 @@
 			@Html.Partial("_Labels", Model.Labels)
     	</div>
 		<div class='btn-group' style='position:absolute;bottom:2px;right:2px'>
-			<a class='btn btn-mini labels' data-url='@Url.Action("SetLabels", new { id = Model.Id })'
+			<a class='btn btn-xs labels' data-url='@Url.Action("SetLabels", new { id = Model.Id })'
 			   data-type='select2' data-placement='left' data-pk='@Model.Id' data-value='[@string.Join(",", Model.Labels.Select(x => x.Id))]'
 			   data-display='false' data-emptytext='' data-emptyclass='' data-highlight='false'>
-				<i class='icon-tags'></i>
+				<span class="glyphicon glyphicon-tags"></span>
 			</a>
 		</div>
     </td>

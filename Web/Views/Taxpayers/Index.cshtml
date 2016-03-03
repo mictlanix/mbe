@@ -2,20 +2,27 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model IEnumerable<TaxpayerIssuer>
-
 @{
     ViewBag.Title = Resources.Title_Taxpayer;
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Taxpayers);
 }
-
-<h2>@Resources.DisplayName_Taxpayers</h2>
-
-<p>
-@if(Privilege.AllowCreate) {
-    @Html.ActionLink(Resources.CreateNew, "Create", new { }, new { @class = "button icon add open-modal", data_modal_id = "taxpayer-modal" })
-}
-</p>
+<div class="page-header">
+    <div class="pull-right col-xs-6">
+    @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
+		<div class="row">
+	        <div class="col-xs-4 text-right input-group col-xs-offset-8">
+	        @if(Privilege.AllowCreate) {
+	            <a class="btn btn-primary open-modal" href="/Taxpayers/Create" data-modal-id="taxpayer-modal">
+	                <span class="glyphicon glyphicon-plus"></span>
+	            </a>
+	        }
+	        </div>
+	    </div>
+	}
+	</div>
+    <h1>@Resources.DisplayName_Taxpayers</h1>
+</div>
 <div id='taxpayers' class='refreshable' data-url='@Url.Action("Index")'>
 @Html.Partial("_Index")
 </div>

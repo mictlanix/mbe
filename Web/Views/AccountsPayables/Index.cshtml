@@ -3,15 +3,14 @@
 @using Mictlanix.BE.Web.Models
 @using Mictlanix.BE.Web.Helpers;
 @model IEnumerable<AccountsPayableSummary>
-
 @{
     ViewBag.Title = Resources.Title_AccountsPayable;
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.AccountsPayable);
 }
-
-<h2>@Resources.DisplayName_AccountsPayable</h2>
-
+<div class="page-header">
+    <h1>@Resources.DisplayName_AccountsPayable</h1>
+</div>
 <table>
     <tr>
         <th>
@@ -31,9 +30,7 @@
         </th>
         <th></th>
     </tr>
-
-@foreach (var item in Model)
-{
+@foreach (var item in Model) {
     <tr>
         <td>
             @Html.DisplayFor(x => item.Supplier.Name)

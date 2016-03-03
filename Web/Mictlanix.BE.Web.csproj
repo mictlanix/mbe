@@ -903,6 +903,7 @@
     <Content Include="Scripts\jquery-2.2.1.min.js" />
     <Content Include="Views\FiscalDocuments\_SendEmailSuccesful.cshtml" />
     <Content Include="Views\FiscalDocuments\_SendEmail.cshtml" />
+    <Content Include="Content\select2-bootstrap.css" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

@@ -2,14 +2,13 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model IEnumerable<User>
-
 @{
     ViewBag.Title = Resources.Title_Users;
     var CurrentUser = Html.CurrentUser() ?? new User();
 }
-
-<h2>@Resources.DisplayName_Users</h2>
-
+<div class="page-header">
+    <h1>@Resources.DisplayName_Users</h1>
+</div>
 <table>
     <tr>
         <th>
@@ -26,7 +25,6 @@
         </th>
         <th></th>
     </tr>
-
 @foreach (var item in Model) {
     <tr>
         <td>
@@ -51,5 +49,4 @@
         </td>
     </tr>
 }
-
 </table>
