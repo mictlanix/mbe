@@ -76,12 +76,9 @@ namespace Mictlanix.BE.Web.Helpers
 			switch (item.Provider) {
 			case FiscalCertificationProvider.FiscoClic:
 				return FiscoClicCancel (item);
-			case FiscalCertificationProvider.Servisim:
-			case FiscalCertificationProvider.ProFact:
+			default:
 				return ProFactCancel (item);
 			}
-
-			return true;
 		}
 
 		public static dynamic SignCFD (FiscalDocument item)
