@@ -535,7 +535,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
         public ViewResult CustomersReport ()
         {
-            return View (GetCustomers (new Search<Customer> ()));
+            return View (new Search<Customer> ());
         }
 
         [HttpPost]
