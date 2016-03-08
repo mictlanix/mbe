@@ -38,7 +38,9 @@
         <span class='editable subtotal'>@Html.DisplayFor(x => x.Subtotal)</span>
         <span class='editable currency'>@Html.DisplayFor(x => x.Currency)</span>
         @if (Model.Currency != WebConfig.BaseCurrency) {
-			<i class='total2 icon-exclamation-sign' data-toggle='tooltip' title='@Html.DisplayFor(x => x.TotalEx) @WebConfig.BaseCurrency'></i>
+        	<a href="javascript:void(0)" class="total2" data-toggle="tooltip" title="@Html.DisplayFor(x => x.TotalEx) @WebConfig.BaseCurrency">
+				<span class="glyphicon glyphicon-exclamation-sign"></span>
+			</a>
         }
     </div>
 </li>

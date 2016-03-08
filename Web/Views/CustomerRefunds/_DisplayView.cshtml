@@ -18,7 +18,9 @@
 				<dt>@Resources.Id</dt>
 				<dd>
 					<span>@Html.DisplayFor(x => x.Id)</span>
-					<i class='icon-exclamation-sign' data-toggle='tooltip' title='@Resources.Serial @Html.DisplayFor(x => x.Serial)'></i>
+					<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => x.Serial)">
+						<span class="glyphicon glyphicon-exclamation-sign"></span>
+					</a>
 				</dd>
 			@if (Model.Date.HasValue) {
 				<dt>@Resources.Date</dt>
