@@ -517,6 +517,11 @@ form.form-inline {
 	}
 }
 
+/* bootstrap fix */
+a[data-toggle="tooltip"] {
+	display: inline-block;
+}
+
 /* x-editable fix */
 [class*="glyphicon"] {
     pointer-events:none;

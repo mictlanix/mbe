@@ -65,7 +65,9 @@
 				<dt>@Resources.Id</dt>
 				<dd>
 					<span>@Html.DisplayFor(x => x.Id)</span>
-					<i id="Id" class='icon-exclamation-sign' data-toggle='tooltip' title='@Resources.Serial @Html.DisplayFor(x => x.Serial)'></i>
+					<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => x.Serial)">
+						<span class="glyphicon glyphicon-exclamation-sign"></span>
+					</a>
 				</dd>
 				<dt>@Resources.Date</dt>
 				<dd>@Html.DisplayFor(x => x.Date)</dd>
@@ -120,7 +122,7 @@
 </fieldset>
 <script type='text/javascript'>
 $(function () {
-	$('#Id').tooltip();
+	$('[data-toggle="tooltip"]').tooltip();
 	$('#customer').editable({
 	    select2: {
 	    	minimumInputLength: 3,
