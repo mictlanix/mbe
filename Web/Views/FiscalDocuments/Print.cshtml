@@ -18,8 +18,7 @@
 <head>
     <meta charset="utf-8" />
     <title>@ViewBag.WindowTitle</title>
-    <link href='@Url.Content("~/Content//bootstrap.min.css")' rel='stylesheet' type='text/css' />
-    <link href='@Url.Content("~/Content/print.css")' rel='stylesheet' type='text/css' />
+    @Styles.Render("~/Content/print")
 </head>
 <body>
     <header>
