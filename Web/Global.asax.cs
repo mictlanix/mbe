@@ -13,12 +13,13 @@ using Castle.ActiveRecord.Framework;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Helpers;
 using Mictlanix.BE.Web.Security;
+using System.Web.Optimization;
 
 namespace Mictlanix.BE.Web
 {
 	public class MvcApplication : System.Web.HttpApplication
 	{
-		static string[] IGNORE_PATHS = { "/Content", "/Scripts", "/favicon.ico" };
+		static string[] IGNORE_PATHS = { "/Content", "/Scripts", "/fonts", "/favicon.ico" };
 
 		public static void RegisterGlobalFilters (GlobalFilterCollection filters)
 		{
@@ -85,6 +86,7 @@ namespace Mictlanix.BE.Web
 
 			RegisterGlobalFilters (GlobalFilters.Filters);
 			RegisterRoutes (RouteTable.Routes);
+			BundleConfig.RegisterBundles (BundleTable.Bundles);
 
 #if DEBUG
 			log4net.Config.XmlConfigurator.Configure ();
@@ -136,7 +138,7 @@ namespace Mictlanix.BE.Web
 				return;
 			}
 
-			if (IGNORE_PATHS.Any (x => Request.Path.StartsWith (x))) {
+			if (IGNORE_PATHS.Any (Request.Path.StartsWith)) {
 				return;
 			}
 
