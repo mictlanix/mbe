@@ -2,15 +2,13 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model CashSession
-
 @{
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments);
 }
 <link href="@Url.Content("~/Content/selection-options.css")" rel="stylesheet" type="text/css" />
 
-@using (Html.BeginForm("CloseSession", "Payments"))
-{
+@using (Html.BeginForm("CloseSession", "Payments")) {
 <fieldset>
     <legend>@Resources.DisplayName_CashSession</legend>
 
@@ -32,18 +30,17 @@
     </div>
 
     <ul class="selection-options">
-        @for (int i = 0; i < Model.CashCounts.Count; i++)
-        {
-            <li>
-                <label>
-                    <span class="option-desc">
-                        <span class="icon">@Html.DisplayFor(x => Model.CashCounts[i].Denomination)</span>
-                        <span class="text">@Html.EditorFor(x => Model.CashCounts[i].Quantity)</span>
-                    </span>
-                </label>
-                @Html.HiddenFor(x => Model.CashCounts[i].Denomination)
-            </li>
-        }
+    @for (int i = 0; i < Model.CashCounts.Count; i++) {
+        <li>
+            <label>
+                <span class="option-desc">
+                    <span class="icon">@Html.DisplayFor(x => Model.CashCounts[i].Denomination)</span>
+                    <span class="text">@Html.EditorFor(x => Model.CashCounts[i].Quantity)</span>
+                </span>
+            </label>
+            @Html.HiddenFor(x => Model.CashCounts[i].Denomination)
+        </li>
+    }
     </ul>
     
     <p><button type="submit">@Resources.CloseSession</button></p>

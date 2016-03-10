@@ -40,15 +40,14 @@ using Gma.QrCodeNet.Encoding.Windows.Render;
 using Mictlanix.BE.Web.Utils;
 using Mictlanix.BE.Web.Mvc;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
-    public class BarcodesController : CustomController
-    {
-        public ActionResult Code128 (string id)
+namespace Mictlanix.BE.Web.Controllers.Mvc {
+	public class BarcodesController : CustomController {
+		[AllowAnonymous]
+		public ActionResult Code128 (string id)
 		{
 			var ms = new MemoryStream (4 * 1024);
 			var img = Code128Rendering.MakeBarcodeImage (id, 2, false);
-			
+
 			img.Save (ms, ImageFormat.Png);
 			ms.Seek (0, SeekOrigin.Begin);
 			var result = new FileStreamResult (ms, "image/png");
@@ -57,6 +56,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			return result;
 		}
 
+		[AllowAnonymous]
 		public ActionResult QRCode (string id)
 		{
 			return QRCodeAction (id);
@@ -67,13 +67,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			try {
 				var encoder = new QrEncoder ();
 				var ms = new MemoryStream (4 * 1024);
-				var render = new GraphicsRenderer (new FixedCodeSize(300, QuietZoneModules.Zero));
+				var render = new GraphicsRenderer (new FixedCodeSize (300, QuietZoneModules.Zero));
 				QrCode code;
 
-				if (!encoder.TryEncode(id, out code))
+				if (!encoder.TryEncode (id, out code))
 					return null;
 
-				render.WriteToStream (code.Matrix, ImageFormat.Png, ms, new Point(300, 300));
+				render.WriteToStream (code.Matrix, ImageFormat.Png, ms, new Point (300, 300));
 
 				ms.Seek (0, SeekOrigin.Begin);
 				var result = new FileStreamResult (ms, "image/png");
@@ -85,5 +85,5 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				return null;
 			}
 		}
-    }
+	}
 }
