@@ -38,11 +38,9 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
-	public class POSController : CustomController
-	{
+	public class POSController : CustomController {
 		public ViewResult Index ()
 		{
 			if (WebConfig.Store == null) {
@@ -85,16 +83,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			if (string.IsNullOrEmpty (search.Pattern)) {
 				query = from x in SalesOrder.Queryable
-						where x.Store.Id == item.Id
-						orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending
-						select x;
+					where x.Store.Id == item.Id
+					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending
+					select x;
 			} else {
 				query = from x in SalesOrder.Queryable
-						where x.Store.Id == item.Id && (
-							x.Customer.Name.Contains (search.Pattern) ||
-							(x.SalesPerson.FirstName + " " + x.SalesPerson.LastName).Contains (search.Pattern))
-						orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending
-						select x;
+					where x.Store.Id == item.Id && (
+						x.Customer.Name.Contains (search.Pattern) ||
+						(x.SalesPerson.FirstName + " " + x.SalesPerson.LastName).Contains (search.Pattern))
+					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending
+					select x;
 			}
 
 			search.Total = query.Count ();
@@ -111,8 +109,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 		public ViewResult Print (int id)
 		{
-			var item = SalesOrder.Find (id);
-			return View (item);
+			var model = SalesOrder.Find (id);
+			return View (model);
+		}
+
+		public ActionResult Pdf (int id)
+		{
+			var model = SalesOrder.Find (id);
+			return PdfTicketView ("Print", model);
 		}
 
 		[HttpPost]
@@ -135,8 +139,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			item.Store = item.PointOfSale.Store;
 			try {
 				item.Serial = (from x in SalesOrder.Queryable
-				               where x.Store.Id == item.Store.Id
-				               select x.Serial).Max () + 1;
+					       where x.Store.Id == item.Store.Id
+					       select x.Serial).Max () + 1;
 			} catch {
 				item.Serial = 1;
 			}
@@ -149,17 +153,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			item.DueDate = dt;
 			item.Currency = WebConfig.DefaultCurrency;
 			item.ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate ();
-			
+
 			item.Creator = CurrentUser.Employee;
 			item.CreationTime = dt;
 			item.Updater = item.Creator;
 			item.ModificationTime = dt;
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
 			}
 
-			return RedirectToAction ("Edit", new { id = item.Id });
+			return RedirectToAction ("Edit", new {
+				id = item.Id
+			});
 		}
 
 		public ActionResult Edit (int id)
@@ -167,7 +173,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			var item = SalesOrder.Find (id);
 
 			if (item.IsCompleted || item.IsCancelled) {
-				return RedirectToAction ("View", new { id = item.Id });
+				return RedirectToAction ("View", new {
+					id = item.Id
+				});
 			}
 
 			if (!CashHelpers.ValidateExchangeRate ()) {
@@ -181,7 +189,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		{
 			var item = SalesOrder.TryFind (id);
 			var query = from x in item.Customer.Contacts
-						select new { value = x.Id, text = x.ToString () };
+				    select new {
+					    value = x.Id,
+					    text = x.ToString ()
+				    };
 
 			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
 		}
@@ -190,18 +201,21 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		{
 			var item = SalesOrder.TryFind (id);
 			var query = from x in item.Customer.Addresses
-						select new { value = x.Id, text = x.ToString () };
+				    select new {
+					    value = x.Id,
+					    text = x.ToString ()
+				    };
 
 			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
 		}
 
 		public JsonResult Terms ()
 		{
-			var query = from x in Enum.GetValues (typeof(PaymentTerms)).Cast<PaymentTerms> ()
-						select new {
-							value = (int)x,
-							text = x.GetDisplayName ()
-						};
+			var query = from x in Enum.GetValues (typeof (PaymentTerms)).Cast<PaymentTerms> ()
+				    select new {
+					    value = (int) x,
+					    text = x.GetDisplayName ()
+				    };
 
 			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
 		}
@@ -238,7 +252,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.Update ();
 				}
 			}
@@ -268,12 +282,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.Update ();
 				}
 			}
 
-			return Json (new { id = id, value = entity.SalesPerson.ToString () });
+			return Json (new {
+				id = id,
+				value = entity.SalesPerson.ToString ()
+			});
 		}
 
 		[HttpPost]
@@ -292,12 +309,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.Update ();
 				}
 			}
 
-			return Json (new { id = id, value = entity.Contact.ToString () });
+			return Json (new {
+				id = id,
+				value = entity.Contact.ToString ()
+			});
 		}
 
 		[HttpPost]
@@ -316,12 +336,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.Update ();
 				}
 			}
 
-			return Json (new { id = id, value = entity.ShipTo.ToString () });
+			return Json (new {
+				id = id,
+				value = entity.ShipTo.ToString ()
+			});
 		}
 
 		[HttpPost]
@@ -339,11 +362,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			entity.Updater = CurrentUser.Employee;
 			entity.ModificationTime = DateTime.Now;
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
 			}
 
-			return Json (new { id = id, value = entity.Comment });
+			return Json (new {
+				id = id,
+				value = entity.Comment
+			});
 		}
 
 		[HttpPost]
@@ -361,12 +387,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.Update ();
 				}
 			}
 
-			return Json (new { id = id, value = entity.FormattedValueFor (x => x.PromiseDate) });
+			return Json (new {
+				id = id,
+				value = entity.FormattedValueFor (x => x.PromiseDate)
+			});
 		}
 
 		[HttpPost]
@@ -396,7 +425,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					foreach (var item in entity.Details) {
 						item.Currency = val;
 						item.ExchangeRate = rate;
@@ -407,7 +436,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				}
 			}
 
-			return Json (new { 
+			return Json (new {
 				id = entity.Id,
 				value = entity.FormattedValueFor (x => x.Currency),
 				rate = entity.FormattedValueFor (x => x.ExchangeRate),
@@ -439,7 +468,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					foreach (var item in entity.Details) {
 						item.ExchangeRate = val;
 						item.Update ();
@@ -449,7 +478,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				}
 			}
 
-			return Json (new { 
+			return Json (new {
 				id = entity.Id,
 				value = entity.FormattedValueFor (x => x.ExchangeRate),
 				itemsChanged = success
@@ -489,7 +518,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 					break;
 				}
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.Update ();
 				}
 			}
@@ -509,11 +538,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			var p = Product.TryFind (product);
 			int pl = entity.Customer.PriceList.Id;
 			var cost = (from x in ProductPrice.Queryable
-			            where x.Product.Id == product && x.List.Id == 0
-			            select x).SingleOrDefault ();
+				    where x.Product.Id == product && x.List.Id == 0
+				    select x).SingleOrDefault ();
 			var price = (from x in ProductPrice.Queryable
-			             where x.Product.Id == product && x.List.Id == pl
-			             select x).SingleOrDefault ();
+				     where x.Product.Id == product && x.List.Id == pl
+				     select x).SingleOrDefault ();
 
 			if (entity.IsCompleted || entity.IsCancelled) {
 				Response.StatusCode = 400;
@@ -552,11 +581,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				item.Price = price.Value * CashHelpers.GetTodayExchangeRate (p.Currency, entity.Currency);
 			}
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
 			}
 
-			return Json (new { id = item.Id });
+			return Json (new {
+				id = item.Id
+			});
 		}
 
 		[HttpPost]
@@ -573,7 +604,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.DeleteAndFlush ();
 			}
 
-			return Json (new { id = id, result = true });
+			return Json (new {
+				id = id,
+				result = true
+			});
 		}
 
 		public ActionResult Item (int id)
@@ -611,11 +645,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.ProductName = val;
 			}
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
 			}
 
-			return Json (new { id = entity.Id, value = entity.ProductName });
+			return Json (new {
+				id = entity.Id,
+				value = entity.ProductName
+			});
 		}
 
 		[HttpPost]
@@ -639,10 +676,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.UpdateAndFlush ();
 			}
 
-			return Json (new { 
+			return Json (new {
 				id = entity.Id,
 				value = entity.FormattedValueFor (x => x.Quantity),
-				total = entity.FormattedValueFor (x => x.Total), 
+				total = entity.FormattedValueFor (x => x.Total),
 				total2 = entity.FormattedValueFor (x => x.TotalEx)
 			});
 		}
@@ -660,13 +697,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			}
 
 			success = decimal.TryParse (value.Trim (),
-			                            System.Globalization.NumberStyles.Currency,
-			                            null, out val);
+						    System.Globalization.NumberStyles.Currency,
+						    null, out val);
 
 			if (success && val >= 0) {
 				entity.Price = val;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
 				}
 			}
@@ -674,7 +711,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			return Json (new {
 				id = entity.Id,
 				value = entity.FormattedValueFor (x => x.Price),
-				total = entity.FormattedValueFor (x => x.Total), 
+				total = entity.FormattedValueFor (x => x.Total),
 				total2 = entity.FormattedValueFor (x => x.TotalEx)
 			});
 		}
@@ -691,7 +728,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out val);
+			success = decimal.TryParse (value.TrimEnd (new char [] { ' ', '%' }), out val);
 			val /= 100m;
 
 			if (success && val >= 0 && val <= 1) {
@@ -702,10 +739,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				}
 			}
 
-			return Json (new { 
+			return Json (new {
 				id = entity.Id,
 				value = entity.FormattedValueFor (x => x.Discount),
-				total = entity.FormattedValueFor (x => x.Total), 
+				total = entity.FormattedValueFor (x => x.Total),
 				total2 = entity.FormattedValueFor (x => x.TotalEx)
 			});
 		}
@@ -722,21 +759,21 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out val);
+			success = decimal.TryParse (value.TrimEnd (new char [] { ' ', '%' }), out val);
 
 			// TODO: VAT value range validation
 			if (success) {
 				entity.TaxRate = val;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.Update ();
 				}
 			}
 
-			return Json (new { 
+			return Json (new {
 				id = entity.Id,
 				value = entity.FormattedValueFor (x => x.TaxRate),
-				total = entity.FormattedValueFor (x => x.Total), 
+				total = entity.FormattedValueFor (x => x.Total),
 				total2 = entity.FormattedValueFor (x => x.TotalEx)
 			});
 		}
@@ -778,10 +815,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			}
 
 			if (entity.IsCredit) {
-				return RedirectToAction ("View", new { id = entity.Id });
+				return RedirectToAction ("View", new {
+					id = entity.Id
+				});
 			}
 
-			return RedirectToAction ("PayOrder", "Payments", new { id = entity.Id });
+			return RedirectToAction ("PayOrder", "Payments", new {
+				id = entity.Id
+			});
 		}
 
 		[HttpPost]
@@ -810,22 +851,32 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			int pl = SalesOrder.Queryable.Where (x => x.Id == order)
 						.Select (x => x.Customer.PriceList.Id).Single ();
 			var query = from x in ProductPrice.Queryable
-						where x.List.Id == pl && (
-							x.Product.Name.Contains (pattern) ||
-							x.Product.Code.Contains (pattern) ||
-							x.Product.Model.Contains (pattern) ||
-							x.Product.SKU.Contains (pattern) ||
-							x.Product.Brand.Contains (pattern))
-						orderby x.Product.Name
-						select new {
-							x.Product.Id, x.Product.Name, x.Product.Code,
-							x.Product.Model, x.Product.SKU, x.Product.Photo, Price = x.Value
-						};
+				    where x.List.Id == pl && (
+					    x.Product.Name.Contains (pattern) ||
+					    x.Product.Code.Contains (pattern) ||
+					    x.Product.Model.Contains (pattern) ||
+					    x.Product.SKU.Contains (pattern) ||
+					    x.Product.Brand.Contains (pattern))
+				    orderby x.Product.Name
+				    select new {
+					    x.Product.Id,
+					    x.Product.Name,
+					    x.Product.Code,
+					    x.Product.Model,
+					    x.Product.SKU,
+					    x.Product.Photo,
+					    Price = x.Value
+				    };
 			var items = from x in query.Take (15).ToList ()
-						select new {
-							id = x.Id, name = x.Name, code = x.Code, model = x.Model,
-							sku = x.SKU, url = Url.Content (x.Photo), price = x.Price
-						};
+				    select new {
+					    id = x.Id,
+					    name = x.Name,
+					    code = x.Code,
+					    model = x.Model,
+					    sku = x.SKU,
+					    url = Url.Content (x.Photo),
+					    price = x.Price
+				    };
 
 			return Json (items.ToList (), JsonRequestBehavior.AllowGet);
 		}
