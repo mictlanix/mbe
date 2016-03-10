@@ -38,12 +38,10 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
-    public class PurchasesController : CustomController
-    {
-        public ActionResult Index()
+	public class PurchasesController : CustomController {
+		public ActionResult Index ()
 		{
 			if (!CashHelpers.ValidateExchangeRate ()) {
 				return View ("InvalidExchangeRate");
@@ -54,85 +52,85 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			});
 
 			return View (search);
-        }
+		}
 
-        [HttpPost]
-        public ActionResult Index(Search<PurchaseOrder> search)
-        {
-            if (ModelState.IsValid) {
+		[HttpPost]
+		public ActionResult Index (Search<PurchaseOrder> search)
+		{
+			if (ModelState.IsValid) {
 				search = SearchPurchaseOrders (search);
-            }
+			}
 
-            if (Request.IsAjaxRequest ()) {
-                return PartialView ("_Index", search);
-            } else {
-                return View (search);
-            }
-        }
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_Index", search);
+			} else {
+				return View (search);
+			}
+		}
 
 		Search<PurchaseOrder> SearchPurchaseOrders (Search<PurchaseOrder> search)
 		{
 			IQueryable<PurchaseOrder> qry;
 
-            if (search.Pattern == null) {
-                qry = from x in PurchaseOrder.Queryable
-                      orderby x.Id descending
-                      select x;
-            } else {
-                qry = from x in PurchaseOrder.Queryable
-                      where x.Supplier.Name.Contains (search.Pattern)
-                      orderby x.Id descending
-                      select x;
+			if (search.Pattern == null) {
+				qry = from x in PurchaseOrder.Queryable
+				      orderby x.Id descending
+				      select x;
+			} else {
+				qry = from x in PurchaseOrder.Queryable
+				      where x.Supplier.Name.Contains (search.Pattern)
+				      orderby x.Id descending
+				      select x;
 			}
 
 			search.Total = qry.Count ();
 			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
 
-            return search;
-        }
+			return search;
+		}
 
-        public ViewResult Print (int id)
-        {
-            var item = PurchaseOrder.Find (id);
-            return View (item);
-        }
-
-        public ActionResult Details(int id)
-        {
-            var item = PurchaseOrder.Find (id);
-
-            return View (item);
-        }
-
-        public ActionResult Create ()
+		public ViewResult Print (int id)
 		{
-            //if (!CashHelpers.ValidateExchangeRate ()) {
-            //    return View ("InvalidExchangeRate");
-            //}
+			var item = PurchaseOrder.Find (id);
+			return View (item);
+		}
 
-            return PartialView ("_Create", new PurchaseOrder());
-        } 
+		public ActionResult Details (int id)
+		{
+			var item = PurchaseOrder.Find (id);
 
-        [HttpPost]
-        public ActionResult Create (PurchaseOrder item)
-        {
-            if (!ModelState.IsValid)
-                return PartialView ("_Create", item);
+			return View (item);
+		}
 
-            item.Supplier = Supplier.Find (item.SupplierId);
-            item.Creator = CurrentUser.Employee;
-            item.Updater = item.Creator;
-            item.CreationTime = DateTime.Now;
-            item.ModificationTime = item.CreationTime;
+		public ActionResult Create ()
+		{
+			//if (!CashHelpers.ValidateExchangeRate ()) {
+			//    return View ("InvalidExchangeRate");
+			//}
 
-            using (var scope = new TransactionScope ()) {
-                item.CreateAndFlush ();
-            }
+			return PartialView ("_Create", new PurchaseOrder ());
+		}
 
-            return PartialView ("_CreateSuccesful", new PurchaseOrder { Id = item.Id });
-        }
+		[HttpPost]
+		public ActionResult Create (PurchaseOrder item)
+		{
+			if (!ModelState.IsValid)
+				return PartialView ("_Create", item);
 
-        public ActionResult Edit (int id)
+			item.Supplier = Supplier.Find (item.SupplierId);
+			item.Creator = CurrentUser.Employee;
+			item.Updater = item.Creator;
+			item.CreationTime = DateTime.Now;
+			item.ModificationTime = item.CreationTime;
+
+			using (var scope = new TransactionScope ()) {
+				item.CreateAndFlush ();
+			}
+
+			return PartialView ("_CreateSuccesful", new PurchaseOrder { Id = item.Id });
+		}
+
+		public ActionResult Edit (int id)
 		{
 			var item = PurchaseOrder.Find (id);
 
@@ -144,9 +142,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				return View ("InvalidExchangeRate");
 			}
 
-            if (item.IsCompleted || item.IsCancelled) {
-                return RedirectToAction ("Details", new { id = item.Id });
-            }
+			if (item.IsCompleted || item.IsCancelled) {
+				return RedirectToAction ("Details", new {
+					id = item.Id
+				});
+			}
 
 			return View (item);
 		}
@@ -156,90 +156,99 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			return PartialView ("_MasterView", PurchaseOrder.TryFind (id));
 		}
 
-        [HttpPost]
-        public ActionResult Edit (PurchaseOrder item)
-        {
-            var entity = PurchaseOrder.Find (item.Id);
+		[HttpPost]
+		public ActionResult Edit (PurchaseOrder item)
+		{
+			var entity = PurchaseOrder.Find (item.Id);
 
-            entity.Supplier = Supplier.Find (item.SupplierId);
-            entity.Updater = CurrentUser.Employee;
-            entity.ModificationTime = DateTime.Now;
-            entity.Comment = item.Comment;
+			entity.Supplier = Supplier.Find (item.SupplierId);
+			entity.Updater = CurrentUser.Employee;
+			entity.ModificationTime = DateTime.Now;
+			entity.Comment = item.Comment;
 
 			using (var scope = new TransactionScope ()) {
-            	entity.UpdateAndFlush ();
+				entity.UpdateAndFlush ();
 			}
 
 			return PartialView ("_MasterView", entity);
-        }
+		}
 
-        [HttpPost]
-        public JsonResult AddPurchaseDetail (int movement, int warehouse, int product)
-        {
+		[HttpPost]
+		public JsonResult AddPurchaseDetail (int movement, int warehouse, int product)
+		{
 			var p = Product.Find (product);
 			var cost = (from x in ProductPrice.Queryable
-			            where x.Product.Id == product && x.List.Id == 0
-			            select x.Value).SingleOrDefault();
+				    where x.Product.Id == product && x.List.Id == 0
+				    select x.Value).SingleOrDefault ();
 
-            var item = new PurchaseOrderDetail
-            {
-                Order = PurchaseOrder.Find(movement),
-                Warehouse = Warehouse.Find(warehouse),
-                Product = p,
-                ProductCode = p.Code,
-                ProductName = p.Name,
-                Quantity = 1,
-                TaxRate = p.TaxRate,
+			var item = new PurchaseOrderDetail {
+				Order = PurchaseOrder.Find (movement),
+				Warehouse = Warehouse.Find (warehouse),
+				Product = p,
+				ProductCode = p.Code,
+				ProductName = p.Name,
+				Quantity = 1,
+				TaxRate = p.TaxRate,
 				IsTaxIncluded = p.IsTaxIncluded,
-                Discount = 0,
+				Discount = 0,
 				Price = cost,
-				ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate(),
+				ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate (),
 				Currency = WebConfig.DefaultCurrency
-            };
+			};
 
-            using (var scope = new TransactionScope()) {
-                item.CreateAndFlush();
-            }
+			using (var scope = new TransactionScope ()) {
+				item.CreateAndFlush ();
+			}
 
-            return Json(new { id = item.Id });
-        }
+			return Json (new {
+				id = item.Id
+			});
+		}
 
-        [HttpPost]
+		[HttpPost]
 		public JsonResult EditDetailQuantity (int id, decimal value)
-        {
-            var detail = PurchaseOrderDetail.Find (id);
+		{
+			var detail = PurchaseOrderDetail.Find (id);
 
-            if (value > 0) {
-                detail.Quantity = value;
+			if (value > 0) {
+				detail.Quantity = value;
 
 				using (var scope = new TransactionScope ()) {
-	            	detail.UpdateAndFlush ();
+					detail.UpdateAndFlush ();
 				}
-            }
+			}
 
-			return Json (new { id = id, value = detail.Quantity, total = detail.Total.ToString ("c") });
-        }
+			return Json (new {
+				id = id,
+				value = detail.Quantity,
+				total = detail.Total.ToString ("c")
+			});
+		}
 
-        [HttpPost]
-        public JsonResult EditDetailPrice (int id, string value)
-        {
-            var detail = PurchaseOrderDetail.Find (id);
-            bool success;
-            decimal val;
+		[HttpPost]
+		public JsonResult EditDetailPrice (int id, string value)
+		{
+			var detail = PurchaseOrderDetail.Find (id);
+			bool success;
+			decimal val;
 
 			success = decimal.TryParse (value.Trim (),
-			                            System.Globalization.NumberStyles.Currency,
-			                            null, out val);
+						    System.Globalization.NumberStyles.Currency,
+						    null, out val);
 
-            if (success && val >= 0) {
-                detail.Price = val;
+			if (success && val >= 0) {
+				detail.Price = val;
 
 				using (var scope = new TransactionScope ()) {
-	            	detail.UpdateAndFlush ();
+					detail.UpdateAndFlush ();
 				}
-            }
+			}
 
-			return Json(new { id = id, value = detail.Price.ToString ("c"), total = detail.Total.ToString ("c") });
+			return Json (new {
+				id = id,
+				value = detail.Price.ToString ("c"),
+				total = detail.Total.ToString ("c")
+			});
 		}
 
 		[HttpPost]
@@ -262,34 +271,43 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				detail.Currency = val;
 				detail.ExchangeRate = CashHelpers.GetTodayExchangeRate (val);
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					detail.Update ();
 				}
 			}
 
-			return Json (new { id = id, value = detail.Currency.ToString (), rate = detail.ExchangeRate, total = detail.Total.ToString ("c") });
+			return Json (new {
+				id = id,
+				value = detail.Currency.ToString (),
+				rate = detail.ExchangeRate,
+				total = detail.Total.ToString ("c")
+			});
 		}
 
-        [HttpPost]
-        public JsonResult EditDetailDiscount (int id, string value)
-        {
-            var detail = PurchaseOrderDetail.Find (id);
-            bool success;
-            decimal discount;
+		[HttpPost]
+		public JsonResult EditDetailDiscount (int id, string value)
+		{
+			var detail = PurchaseOrderDetail.Find (id);
+			bool success;
+			decimal discount;
 
-            success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out discount);
-            discount /= 100m;
+			success = decimal.TryParse (value.TrimEnd (new char [] { ' ', '%' }), out discount);
+			discount /= 100m;
 
-            if (success && discount >= 0 && discount <= 1) {
-                detail.Discount = discount;
+			if (success && discount >= 0 && discount <= 1) {
+				detail.Discount = discount;
 
 				using (var scope = new TransactionScope ()) {
-	            	detail.UpdateAndFlush ();
+					detail.UpdateAndFlush ();
 				}
-            }
+			}
 
-			return Json (new { id = id, value = detail.Discount.ToString ("p"), total = detail.Total.ToString ("c") });
-        }
+			return Json (new {
+				id = id,
+				value = detail.Discount.ToString ("p"),
+				total = detail.Total.ToString ("c")
+			});
+		}
 
 		[HttpPost]
 		public ActionResult SetItemTaxRate (int id, string value)
@@ -303,106 +321,116 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out val);
+			success = decimal.TryParse (value.TrimEnd (new char [] { ' ', '%' }), out val);
 
 			// TODO: VAT value range validation
 			if (success) {
 				entity.TaxRate = val;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.Update ();
 				}
 			}
 
-			return Json (new { 
+			return Json (new {
 				id = entity.Id,
 				value = entity.FormattedValueFor (x => x.TaxRate),
-				total = entity.FormattedValueFor (x => x.Total), 
+				total = entity.FormattedValueFor (x => x.Total),
 				total2 = entity.FormattedValueFor (x => x.TotalEx)
 			});
 		}
 
-        [HttpPost]
+		[HttpPost]
 		public JsonResult EditDetailWarehouse (int id, int value)
-        {
-            var detail = PurchaseOrderDetail.Find (id);
+		{
+			var detail = PurchaseOrderDetail.Find (id);
 
 			detail.Warehouse = Warehouse.Find (value);
 
 			using (var scope = new TransactionScope ()) {
-            	detail.UpdateAndFlush ();
+				detail.UpdateAndFlush ();
 			}
 
-			return Json (new { id = id, value = detail.Warehouse.Name });
+			return Json (new {
+				id = id,
+				value = detail.Warehouse.Name
+			});
 		}
 
 		public ActionResult GetTotals (int id)
 		{
-			var order = PurchaseOrder.Find(id);
-			return PartialView("_Totals", order);
+			var order = PurchaseOrder.Find (id);
+			return PartialView ("_Totals", order);
 		}
-		
+
 		public ActionResult GetDetail (int id)
 		{
 			return PartialView ("_DetailEditView", PurchaseOrderDetail.Find (id));
 		}
 
-        [HttpPost]
-        public JsonResult RemoveDetail (int id)
-        {
-            var item = PurchaseOrderDetail.Find(id);
-            
-			using (var scope = new TransactionScope()) {
+		[HttpPost]
+		public JsonResult RemoveDetail (int id)
+		{
+			var item = PurchaseOrderDetail.Find (id);
+
+			using (var scope = new TransactionScope ()) {
 				item.DeleteAndFlush ();
 			}
 
-            return Json(new { id = id, result = true });
-        }
+			return Json (new {
+				id = id,
+				result = true
+			});
+		}
 
 		// TODO: Remove inventory stuff
-        [HttpPost]
-        public ActionResult Confirm (int id)
-        {
-            PurchaseOrder item = PurchaseOrder.Find (id);
+		[HttpPost]
+		public ActionResult Confirm (int id)
+		{
+			PurchaseOrder item = PurchaseOrder.Find (id);
 
-            var qry = from x in item.Details
-                      group x by x.Warehouse into g
-                      select new { Warehouse = g.Key, Details = g.ToList() };
+			var qry = from x in item.Details
+				  group x by x.Warehouse into g
+				  select new {
+					  Warehouse = g.Key,
+					  Details = g.ToList ()
+				  };
 
 			var dt = DateTime.Now;
 			var employee = CurrentUser.Employee;
 
-			using (var scope = new TransactionScope()) {
-	            foreach (var x in qry) {
-	                var master = new InventoryReceipt {
-	                    Order = item,
-	                    Warehouse = x.Warehouse,
-	                    CreationTime = dt,
-	                    ModificationTime = dt,
-	                    Creator = employee,
-	                    Updater = employee    
-	                };
+			using (var scope = new TransactionScope ()) {
+				foreach (var x in qry) {
+					var master = new InventoryReceipt {
+						Order = item,
+						Warehouse = x.Warehouse,
+						CreationTime = dt,
+						ModificationTime = dt,
+						Creator = employee,
+						Updater = employee,
+						Store = x.Warehouse.Store
+					};
 
-                    master.Create ();
+					master.Create ();
 
-	                foreach (var y in x.Details) {
-	                    var detail = new InventoryReceiptDetail {
-	                        Receipt = master,
-	                        Product = y.Product,
-	                        QuantityOrdered = y.Quantity,
-	                        Quantity = y.Quantity,
-	                        ProductCode = y.ProductCode,
-	                        ProductName = y.ProductName
+					foreach (var y in x.Details) {
+						var detail = new InventoryReceiptDetail {
+							Receipt = master,
+							Product = y.Product,
+							QuantityOrdered = y.Quantity,
+							Quantity = y.Quantity,
+							ProductCode = y.ProductCode,
+							ProductName = y.ProductName
 						};
 
 						detail.Create ();
 
 						InventoryHelpers.ChangeNotification (TransactionType.PurchaseOrder, item.Id,
 							item.ModificationTime, x.Warehouse, null, y.Product, y.Quantity);
-                    }
-                }
+					}
+				}
 
-	            foreach (var x in item.Details) {
+				foreach (var x in item.Details) {
 					var price = x.Product.Prices.SingleOrDefault (t => t.List.Id == 0);
 
 					if (price == null) {
@@ -414,29 +442,29 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 					price.Value = x.Price;
 					price.Save ();
-	            }
+				}
 
 				item.IsCompleted = true;
 				item.ModificationTime = DateTime.Now;
-	            item.UpdateAndFlush ();
-            }
-
-            return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        public ActionResult Cancel (int id)
-        {
-            var item = PurchaseOrder.Find (id);
-            
-            item.IsCancelled = true;
-
-			using (var scope = new TransactionScope ()) {
-            	item.UpdateAndFlush ();
+				item.UpdateAndFlush ();
 			}
 
-            return RedirectToAction ("Index");
-        }
-        
-    }
+			return RedirectToAction ("Index");
+		}
+
+		[HttpPost]
+		public ActionResult Cancel (int id)
+		{
+			var item = PurchaseOrder.Find (id);
+
+			item.IsCancelled = true;
+
+			using (var scope = new TransactionScope ()) {
+				item.UpdateAndFlush ();
+			}
+
+			return RedirectToAction ("Index");
+		}
+
+	}
 }
