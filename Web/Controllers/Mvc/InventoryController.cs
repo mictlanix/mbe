@@ -40,24 +40,22 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
-    public class InventoryController : CustomController
-    {
-        #region Receipts
+	public class InventoryController : CustomController {
+		#region Receipts
 
-        public ActionResult Receipts ()
+		public ActionResult Receipts ()
 		{
 			var search = SearchReceipts (new Search<InventoryReceipt> {
 				Limit = WebConfig.PageSize
 			});
 
-			return View("Receipts/Index", search);
-        }
+			return View ("Receipts/Index", search);
+		}
 
-        [HttpPost]
-        public ActionResult Receipts (Search<InventoryReceipt> search)
+		[HttpPost]
+		public ActionResult Receipts (Search<InventoryReceipt> search)
 		{
 			if (ModelState.IsValid) {
 				search = SearchReceipts (search);
@@ -68,28 +66,28 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			}
 
 			return View ("Receipts/Index", search);
-        }
+		}
 
 		Search<InventoryReceipt> SearchReceipts (Search<InventoryReceipt> search)
 		{
 			IQueryable<InventoryReceipt> qry;
 
-            if (search.Pattern == null) {
-                qry = from x in InventoryReceipt.Queryable
-                      orderby x.Id descending
-                      select x;
-            } else {
-                qry = from x in InventoryReceipt.Queryable
-                      where x.Warehouse.Name.Contains(search.Pattern)
-                      orderby x.Id descending
-                      select x;
+			if (search.Pattern == null) {
+				qry = from x in InventoryReceipt.Queryable
+				      orderby x.Id descending
+				      select x;
+			} else {
+				qry = from x in InventoryReceipt.Queryable
+				      where x.Warehouse.Name.Contains (search.Pattern)
+				      orderby x.Id descending
+				      select x;
 			}
 
 			search.Total = qry.Count ();
 			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
 
-            return search;
-        }
+			return search;
+		}
 
 		public ViewResult Receipt (int id)
 		{
@@ -97,135 +95,157 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			return View ("Receipts/View", item);
 		}
 
-        public ViewResult PrintReceipt (int id)
-        {
-            var item = InventoryReceipt.Find(id);
-			return View("Receipts/Print",item);
-        }
+		public ViewResult PrintReceipt (int id)
+		{
+			var item = InventoryReceipt.Find (id);
+			return View ("Receipts/Print", item);
+		}
 
-        public ActionResult NewReceipt ()
-        {
-			return PartialView("Receipts/_Create", new InventoryReceipt ());
-        }
+		public ActionResult NewReceipt ()
+		{
+			return PartialView ("Receipts/_Create", new InventoryReceipt ());
+		}
 
-        [HttpPost]
+		[HttpPost]
 		public ActionResult NewReceipt (InventoryReceipt item)
 		{
-            if (!ModelState.IsValid)
-                return PartialView ("Receipts/_Create", item);
+			if (!ModelState.IsValid)
+				return PartialView ("Receipts/_Create", item);
 
 			item.CreationTime = DateTime.Now;
 			item.ModificationTime = item.CreationTime;
 			item.Creator = CurrentUser.Employee;
 			item.Updater = item.Creator;
 			item.Warehouse = Warehouse.Find (item.WarehouseId);
+			item.Store = item.Warehouse.Store;
 
 			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
 			}
 
-            return PartialView ("Receipts/_CreateSuccesful", new InventoryReceipt { Id = item.Id });
-        }
+			return PartialView ("Receipts/_CreateSuccesful", new InventoryReceipt { Id = item.Id });
+		}
 
-        public ActionResult EditReceipt (int id)
-        {
-            var item = InventoryReceipt.Find (id);
+		public ActionResult EditReceipt (int id)
+		{
+			var item = InventoryReceipt.Find (id);
 
-            if (item.IsCompleted || item.IsCancelled) {
-                return RedirectToAction ("Receipt", new { id = item.Id });
-            }
+			if (item.IsCompleted || item.IsCancelled) {
+				return RedirectToAction ("Receipt", new {
+					id = item.Id
+				});
+			}
 
-            if (Request.IsAjaxRequest ())
+			if (Request.IsAjaxRequest ())
 				return PartialView ("Receipts/_MasterEditView", item);
-            else
+			else
 				return View ("Receipts/Edit", item);
-        }
+		}
 
 		public ActionResult DiscardReceiptChanges (int id)
 		{
 			return PartialView ("Receipts/_MasterView", InventoryReceipt.TryFind (id));
 		}
 
-        [HttpPost]
-        public ActionResult EditReceipt (InventoryReceipt item)
-        {
-            var movement = InventoryReceipt.Find (item.Id);
+		[HttpPost]
+		public ActionResult EditReceipt (InventoryReceipt item)
+		{
+			var movement = InventoryReceipt.Find (item.Id);
 
-            movement.Warehouse = Warehouse.Find (item.WarehouseId);
-            movement.Updater = CurrentUser.Employee;
-            movement.ModificationTime = DateTime.Now;
-            movement.Comment = item.Comment;
+			movement.Warehouse = Warehouse.Find (item.WarehouseId);
+			movement.Store = movement.Warehouse.Store;
+			movement.Updater = CurrentUser.Employee;
+			movement.ModificationTime = DateTime.Now;
+			movement.Comment = item.Comment;
 
 			using (var scope = new TransactionScope ()) {
-            	movement.UpdateAndFlush ();
+				movement.UpdateAndFlush ();
 			}
 
 			return PartialView ("Receipts/_MasterView", movement);
-        }
+		}
 
-        [HttpPost]
-        public JsonResult AddReceiptDetail (int movement, int product)
-        {
-            var p = Product.Find(product);
+		[HttpPost]
+		public JsonResult AddReceiptDetail (int movement, int product)
+		{
+			var p = Product.Find (product);
 
-            var item = new InventoryReceiptDetail {
-                Receipt = InventoryReceipt.Find (movement),
-                Product = p,
-                ProductCode = p.Code,
-                ProductName = p.Name,
-                Quantity = 1,
-                QuantityOrdered = 0
-            };
+			var item = new InventoryReceiptDetail {
+				Receipt = InventoryReceipt.Find (movement),
+				Product = p,
+				ProductCode = p.Code,
+				ProductName = p.Name,
+				Quantity = 1,
+				QuantityOrdered = 0
+			};
 
-            using (var scope = new TransactionScope ()) {
-                item.CreateAndFlush ();
-            }
+			using (var scope = new TransactionScope ()) {
+				item.CreateAndFlush ();
+			}
 
-            return Json (new { id = item.Id });
-        }
+			return Json (new {
+				id = item.Id
+			});
+		}
 
-        [HttpPost]
+		[HttpPost]
 		public JsonResult EditReceiptDetailQuantity (int id, decimal value)
-        {
-            var detail = InventoryReceiptDetail.Find (id);
+		{
+			var detail = InventoryReceiptDetail.Find (id);
 
-            if (value >= 0) {
-                detail.Quantity = value;
+			if (value >= 0) {
+				detail.Quantity = value;
 
 				using (var scope = new TransactionScope ()) {
-	            	detail.UpdateAndFlush ();
+					detail.UpdateAndFlush ();
 				}
-            }
+			}
 
-			return Json (new { id = id, value = detail.Quantity });
-        }
+			return Json (new {
+				id = id,
+				value = detail.Quantity
+			});
+		}
 
-        public ActionResult GetReceiptItem (int id)
-        {
+		public ActionResult GetReceiptItem (int id)
+		{
 			return PartialView ("Receipts/_DetailEditView", InventoryReceiptDetail.Find (id));
-        }
+		}
 
-        [HttpPost]
-        public JsonResult RemoveReceiptDetail (int id)
-        {
-            var item = InventoryReceiptDetail.Find (id);
-            
+		[HttpPost]
+		public JsonResult RemoveReceiptDetail (int id)
+		{
+			var item = InventoryReceiptDetail.Find (id);
+
 			using (var scope = new TransactionScope ()) {
 				item.DeleteAndFlush ();
 			}
 
-            return Json (new { id = id, result = true });
-        }
+			return Json (new {
+				id = id,
+				result = true
+			});
+		}
 
-        [HttpPost]
-        public ActionResult ConfirmReceipt (int id)
-        {
-            var item = InventoryReceipt.TryFind (id);
+		[HttpPost]
+		public ActionResult ConfirmReceipt (int id)
+		{
+			var item = InventoryReceipt.TryFind (id);
 
 			if (item == null || item.IsCompleted || item.IsCancelled)
 				return RedirectToAction ("Receipts");
 
-            item.IsCompleted = true;
+			item.Store = item.Warehouse.Store;
+
+			try {
+				item.Serial = (from x in InventoryReceipt.Queryable
+					       where x.Store.Id == item.Store.Id
+					       select x.Serial).Max () + 1;
+			} catch {
+				item.Serial = 1;
+			}
+
+			item.IsCompleted = true;
 			item.ModificationTime = DateTime.Now;
 
 			using (var scope = new TransactionScope ()) {
@@ -233,28 +253,28 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 				foreach (var x in item.Details) {
 					InventoryHelpers.ChangeNotification (TransactionType.InventoryReceipt, item.Id,
-					                                     item.ModificationTime, item.Warehouse, null, x.Product, x.Quantity);
+									     item.ModificationTime, item.Warehouse, null, x.Product, x.Quantity);
 				}
 			}
 
-            return RedirectToAction ("Receipts");
-        }
+			return RedirectToAction ("Receipts");
+		}
 
-        [HttpPost]
-        public ActionResult CancelReceipt (int id)
-        {
-            var item = InventoryReceipt.Find (id);
+		[HttpPost]
+		public ActionResult CancelReceipt (int id)
+		{
+			var item = InventoryReceipt.Find (id);
 
-            item.IsCancelled = true;
+			item.IsCancelled = true;
 
 			using (var scope = new TransactionScope ()) {
-            	item.UpdateAndFlush ();
+				item.UpdateAndFlush ();
 			}
 
-            return RedirectToAction ("Receipts");
-        }
-        
-        #endregion
+			return RedirectToAction ("Receipts");
+		}
+
+		#endregion
 
 		#region Issues
 
@@ -264,7 +284,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				Limit = WebConfig.PageSize
 			});
 
-			return View("Issues/Index", search);
+			return View ("Issues/Index", search);
 		}
 
 		[HttpPost]
@@ -287,13 +307,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			if (search.Pattern == null) {
 				qry = from x in InventoryIssue.Queryable
-					orderby x.Id descending
-						select x;
+				      orderby x.Id descending
+				      select x;
 			} else {
 				qry = from x in InventoryIssue.Queryable
-					where x.Warehouse.Name.Contains(search.Pattern)
-						orderby x.Id descending
-						select x;
+				      where x.Warehouse.Name.Contains (search.Pattern)
+				      orderby x.Id descending
+				      select x;
 			}
 
 			search.Total = qry.Count ();
@@ -310,32 +330,33 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 		public ViewResult PrintIssue (int id)
 		{
-			var item = InventoryIssue.Find(id);
-			return View("Issues/Print",item);
+			var item = InventoryIssue.Find (id);
+			return View ("Issues/Print", item);
 		}
 
 		public ActionResult NewIssue ()
 		{
-			return PartialView("Issues/_Create", new InventoryIssue ());
+			return PartialView ("Issues/_Create", new InventoryIssue ());
 		}
 
 		[HttpPost]
 		public ActionResult NewIssue (InventoryIssue item)
 		{
-            if (!ModelState.IsValid)
-                return PartialView ("Issues/_Create", item);
+			if (!ModelState.IsValid)
+				return PartialView ("Issues/_Create", item);
 
 			item.CreationTime = DateTime.Now;
 			item.ModificationTime = item.CreationTime;
 			item.Creator = CurrentUser.Employee;
 			item.Updater = item.Creator;
 			item.Warehouse = Warehouse.Find (item.WarehouseId);
+			item.Store = item.Warehouse.Store;
 
 			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
 			}
 
-            return PartialView ("Issues/_CreateSuccesful", new InventoryIssue { Id = item.Id });
+			return PartialView ("Issues/_CreateSuccesful", new InventoryIssue { Id = item.Id });
 		}
 
 		public ActionResult EditIssue (int id)
@@ -343,7 +364,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			var item = InventoryIssue.Find (id);
 
 			if (item.IsCompleted || item.IsCancelled) {
-				return RedirectToAction ("Issue", new { id = item.Id });
+				return RedirectToAction ("Issue", new {
+					id = item.Id
+				});
 			}
 
 			if (Request.IsAjaxRequest ())
@@ -363,6 +386,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			var movement = InventoryIssue.Find (item.Id);
 
 			movement.Warehouse = Warehouse.Find (item.WarehouseId);
+			movement.Store = movement.Warehouse.Store;
 			movement.Updater = CurrentUser.Employee;
 			movement.ModificationTime = DateTime.Now;
 			movement.Comment = item.Comment;
@@ -377,7 +401,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		[HttpPost]
 		public JsonResult AddIssueDetail (int movement, int product)
 		{
-			var p = Product.Find(product);
+			var p = Product.Find (product);
 
 			var item = new InventoryIssueDetail {
 				Issue = InventoryIssue.Find (movement),
@@ -391,7 +415,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				item.CreateAndFlush ();
 			}
 
-			return Json (new { id = item.Id });
+			return Json (new {
+				id = item.Id
+			});
 		}
 
 		[HttpPost]
@@ -407,7 +433,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				}
 			}
 
-			return Json (new { id = id, value = detail.Quantity });
+			return Json (new {
+				id = id,
+				value = detail.Quantity
+			});
 		}
 
 		public ActionResult GetIssueItem (int id)
@@ -424,7 +453,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				item.DeleteAndFlush ();
 			}
 
-			return Json (new { id = id, result = true });
+			return Json (new {
+				id = id,
+				result = true
+			});
 		}
 
 		[HttpPost]
@@ -435,6 +467,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			if (item == null || item.IsCompleted || item.IsCancelled)
 				return RedirectToAction ("Issues");
 
+			item.Store = item.Warehouse.Store;
+
+			try {
+				item.Serial = (from x in InventoryIssue.Queryable
+					       where x.Store.Id == item.Store.Id
+					       select x.Serial).Max () + 1;
+			} catch {
+				item.Serial = 1;
+			}
+
 			item.IsCompleted = true;
 			item.ModificationTime = DateTime.Now;
 
@@ -443,7 +485,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 				foreach (var x in item.Details) {
 					InventoryHelpers.ChangeNotification (TransactionType.InventoryIssue, item.Id,
-					                                     item.ModificationTime, item.Warehouse, null, x.Product, -x.Quantity);
+									     item.ModificationTime, item.Warehouse, null, x.Product, -x.Quantity);
 				}
 			}
 
@@ -474,7 +516,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				Limit = WebConfig.PageSize
 			});
 
-			return View("Transfers/Index", search);
+			return View ("Transfers/Index", search);
 		}
 
 		[HttpPost]
@@ -497,14 +539,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			if (search.Pattern == null) {
 				qry = from x in InventoryTransfer.Queryable
-					  orderby x.Id descending
-					  select x;
+				      orderby x.Id descending
+				      select x;
 			} else {
 				qry = from x in InventoryTransfer.Queryable
-					  where x.To.Name.Contains(search.Pattern) ||
-							x.From.Name.Contains(search.Pattern)
-					  orderby x.Id descending
-					  select x;
+				      where x.To.Name.Contains (search.Pattern) ||
+						    x.From.Name.Contains (search.Pattern)
+				      orderby x.Id descending
+				      select x;
 			}
 
 			search.Total = qry.Count ();
@@ -521,8 +563,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 		public ViewResult PrintTransfer (int id)
 		{
-			var item = InventoryTransfer.Find(id);
-			return View ("Transfers/Print",item);
+			var item = InventoryTransfer.Find (id);
+			return View ("Transfers/Print", item);
 		}
 
 		public ActionResult NewTransfer ()
@@ -533,13 +575,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		[HttpPost]
 		public ActionResult NewTransfer (InventoryTransfer item)
 		{
-            if (!ModelState.IsValid) {
-                return PartialView ("Transfers/_Create", item);
-            }
+			if (!ModelState.IsValid) {
+				return PartialView ("Transfers/_Create", item);
+			}
 
-			item.From = Warehouse.TryFind(item.FromId);
-			item.To = Warehouse.TryFind(item.ToId);
-
+			item.From = Warehouse.TryFind (item.FromId);
+			item.To = Warehouse.TryFind (item.ToId);
+			item.Store = item.From.Store;
 			item.CreationTime = DateTime.Now;
 			item.ModificationTime = item.CreationTime;
 			item.Creator = CurrentUser.Employee;
@@ -549,7 +591,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				item.CreateAndFlush ();
 			}
 
-            return PartialView ("Transfers/_CreateSuccesful", new InventoryTransfer { Id = item.Id });
+			return PartialView ("Transfers/_CreateSuccesful", new InventoryTransfer { Id = item.Id });
 		}
 
 		public ActionResult EditTransfer (int id)
@@ -557,7 +599,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			var item = InventoryTransfer.Find (id);
 
 			if (item.IsCompleted || item.IsCancelled) {
-				return RedirectToAction ("Transfer", new { id = item.Id });
+				return RedirectToAction ("Transfer", new {
+					id = item.Id
+				});
 			}
 
 			if (Request.IsAjaxRequest ())
@@ -574,21 +618,22 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		[HttpPost]
 		public ActionResult EditTransfer (InventoryTransfer item)
 		{
-			item.From = Warehouse.TryFind(item.FromId);
-			item.To = Warehouse.TryFind(item.ToId);
+			item.From = Warehouse.TryFind (item.FromId);
+			item.To = Warehouse.TryFind (item.ToId);
 
 			if (!ModelState.IsValid) {
-				if (Request.IsAjaxRequest()) {
-					return PartialView("Transfers/_MasterEditView", item);
+				if (Request.IsAjaxRequest ()) {
+					return PartialView ("Transfers/_MasterEditView", item);
 				}
 
-				return View(item);
+				return View (item);
 			}
 
 			var movement = InventoryTransfer.Find (item.Id);
-			
+
 			movement.From = item.From;
 			movement.To = item.To;
+			movement.Store = movement.From.Store;
 			movement.Updater = CurrentUser.Employee;
 			movement.ModificationTime = DateTime.Now;
 			movement.Comment = item.Comment;
@@ -603,7 +648,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		[HttpPost]
 		public JsonResult AddTransferDetail (int movement, int product)
 		{
-			var p = Product.Find(product);
+			var p = Product.Find (product);
 
 			var item = new InventoryTransferDetail {
 				Transfer = InventoryTransfer.Find (movement),
@@ -617,7 +662,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				item.CreateAndFlush ();
 			}
 
-			return Json (new { id = item.Id });
+			return Json (new {
+				id = item.Id
+			});
 		}
 
 		[HttpPost]
@@ -633,7 +680,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				}
 			}
 
-			return Json (new { id = id, value = detail.Quantity });
+			return Json (new {
+				id = id,
+				value = detail.Quantity
+			});
 		}
 
 		public ActionResult GetTransferItem (int id)
@@ -650,7 +700,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				item.DeleteAndFlush ();
 			}
 
-			return Json (new { id = id, result = true });
+			return Json (new {
+				id = id,
+				result = true
+			});
 		}
 
 		[HttpPost]
@@ -660,6 +713,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			if (item == null || item.IsCompleted || item.IsCancelled)
 				return RedirectToAction ("Transfers");
+
+			item.Store = item.From.Store;
+
+			try {
+				item.Serial = (from x in InventoryTransfer.Queryable
+					       where x.Store.Id == item.Store.Id
+					       select x.Serial).Max () + 1;
+			} catch {
+				item.Serial = 1;
+			}
 
 			item.IsCompleted = true;
 			item.ModificationTime = DateTime.Now;
@@ -690,48 +753,52 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			return RedirectToAction ("Transfers");
 		}
 
-        [HttpPost]
-        public ActionResult AddTransferItems (int id, string value)
-        {
-            var entity = InventoryTransfer.Find (id);
-            SalesOrder sales_order = null;
-            int sales_order_id = 0;
-            int count = 0;
+		[HttpPost]
+		public ActionResult AddTransferItems (int id, string value)
+		{
+			var entity = InventoryTransfer.Find (id);
+			SalesOrder sales_order = null;
+			int sales_order_id = 0;
+			int count = 0;
 
-            if (entity.IsCompleted || entity.IsCancelled) {
-                Response.StatusCode = 400;
-                return Content (Resources.ItemAlreadyCompletedOrCancelled);
-            }
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
 
-            if (int.TryParse (value, out sales_order_id)) {
-                sales_order = SalesOrder.TryFind (sales_order_id);
-            }
+			if (int.TryParse (value, out sales_order_id)) {
+				sales_order = SalesOrder.TryFind (sales_order_id);
+			}
 
-            if (sales_order == null) {
-                Response.StatusCode = 400;
-                return Content (Resources.SalesOrderNotFound);
-            }
+			if (sales_order == null) {
+				Response.StatusCode = 400;
+				return Content (Resources.SalesOrderNotFound);
+			}
 
-            using (var scope = new TransactionScope ()) {
-                foreach (var x in sales_order.Details) {
-                    if (!x.Product.IsStockable)
-                        continue;
+			using (var scope = new TransactionScope ()) {
+				foreach (var x in sales_order.Details) {
+					if (!x.Product.IsStockable)
+						continue;
 
-                    var item = new InventoryTransferDetail {
-                        Transfer = entity,
-                        Product = x.Product,
-                        ProductCode = x.ProductCode,
-                        ProductName = x.ProductName,
-                        Quantity = x.Quantity,
-                    };
+					var item = new InventoryTransferDetail {
+						Transfer = entity,
+						Product = x.Product,
+						ProductCode = x.ProductCode,
+						ProductName = x.ProductName,
+						Quantity = x.Quantity,
+					};
 
-                    item.Create ();
-                    count++;
-                }
-            }
+					item.Create ();
+					count++;
+				}
+			}
 
-            return Json (new { id = id, value = string.Empty, itemsChanged = count });
-        }
+			return Json (new {
+				id = id,
+				value = string.Empty,
+				itemsChanged = count
+			});
+		}
 
 		#endregion
 
@@ -745,7 +812,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			return View (search);
 		}
-		
+
 		[HttpPost]
 		public ActionResult LotSerialNumbers (Search<LotSerialRequirement> search)
 		{
@@ -763,20 +830,23 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		Search<LotSerialRequirement> SearchLotSerialNumbers (Search<LotSerialRequirement> search)
 		{
 			var query = from x in LotSerialRequirement.Queryable
-						select new {
-							Source = x.Source,
-							Reference = x.Reference,
-							Warehouse = new Warehouse { Id = x.Warehouse.Id, Name = x.Warehouse.Name },
-							Quantity = x.Quantity
-						};
+				    select new {
+					    Source = x.Source,
+					    Reference = x.Reference,
+					    Warehouse = new Warehouse { Id = x.Warehouse.Id, Name = x.Warehouse.Name },
+					    Quantity = x.Quantity
+				    };
 			var items = from x in query.ToList ()
-						group x by new { x.Source, x.Reference } into g
-						select new LotSerialRequirement {
-							Source = g.Key.Source,
-							Reference = g.Key.Reference,
-							Warehouse = g.Select (y => y.Warehouse).First (),
-							Quantity = g.Sum (y => y.Quantity)
-						};
+				    group x by new {
+					    x.Source,
+					    x.Reference
+				    } into g
+				    select new LotSerialRequirement {
+					    Source = g.Key.Source,
+					    Reference = g.Key.Reference,
+					    Warehouse = g.Select (y => y.Warehouse).First (),
+					    Quantity = g.Sum (y => y.Quantity)
+				    };
 
 			search.Total = items.Count ();
 			search.Results = items.Skip (search.Offset).Take (search.Limit).ToList ();
@@ -788,12 +858,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		{
 			var rqmt = LotSerialRequirement.Find (id);
 			var qry = from x in LotSerialTracking.Queryable
-					  where x.Source == rqmt.Source &&
-							x.Reference == rqmt.Reference &&
-							x.Warehouse.Id == rqmt.Warehouse.Id &&
-							x.Product == rqmt.Product
-					  select x;
-			
+				  where x.Source == rqmt.Source &&
+						x.Reference == rqmt.Reference &&
+						x.Warehouse.Id == rqmt.Warehouse.Id &&
+						x.Product == rqmt.Product
+				  select x;
+
 			using (var scope = new TransactionScope ()) {
 				var entity = new LotSerialTracking {
 					Source = rqmt.Source,
@@ -811,29 +881,32 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.Create ();
 				rqmt.DeleteAndFlush ();
 			}
-			
-			return Json(new { id = id, result = true }, JsonRequestBehavior.AllowGet);
+
+			return Json (new {
+				id = id,
+				result = true
+			}, JsonRequestBehavior.AllowGet);
 		}
 
 		public ActionResult AssignLotSerialNumbers (TransactionType source, int reference)
 		{
 			var rqmts = from x in LotSerialRequirement.Queryable
-					  	where x.Source == source &&
-							  x.Reference == reference
-					  	select x;
+				    where x.Source == source &&
+					    x.Reference == reference
+				    select x;
 			var items = new List<MasterDetails<LotSerialRequirement, LotSerialTracking>> ();
 
 			foreach (var rqmt in rqmts) {
 				var query = from x in LotSerialTracking.Queryable
-							where x.Source == source &&
-								x.Reference == reference &&
-								x.Warehouse.Id == rqmt.Warehouse.Id &&
-								x.Product.Id == rqmt.Product.Id
-							select x;
+					    where x.Source == source &&
+						    x.Reference == reference &&
+						    x.Warehouse.Id == rqmt.Warehouse.Id &&
+						    x.Product.Id == rqmt.Product.Id
+					    select x;
 
 				items.Add (new MasterDetails<LotSerialRequirement, LotSerialTracking> {
 					Master = rqmt,
-					Details = query.ToList()
+					Details = query.ToList ()
 				});
 			}
 
@@ -857,11 +930,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		{
 			var entity = LotSerialRequirement.Find (id);
 			var qry = from x in LotSerialTracking.Queryable
-					  where x.Source == entity.Source &&
-							x.Reference == entity.Reference &&
-							x.Warehouse.Id == entity.Warehouse.Id &&
-							x.Product.Id == entity.Product.Id
-					  select x;
+				  where x.Source == entity.Source &&
+						x.Reference == entity.Reference &&
+						x.Warehouse.Id == entity.Warehouse.Id &&
+						x.Product.Id == entity.Product.Id
+				  select x;
 			decimal sum = qry.Count () > 0 ? qry.Sum (x => x.Quantity) : 0;
 
 			if (entity.Quantity != sum) {
@@ -869,7 +942,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				return Content (Resources.ValidationFailed);
 			}
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				if (entity.Source == TransactionType.InventoryTransfer) {
 					var transfer = InventoryTransfer.Find (entity.Reference);
 
@@ -890,31 +963,38 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 					}
 				}
 
-				entity.DeleteAndFlush();
+				entity.DeleteAndFlush ();
 			}
 
-			return Json(new { id = id, result = true });
+			return Json (new {
+				id = id,
+				result = true
+			});
 		}
 
 		public ActionResult GetLotSerialNumber (int id)
 		{
 			var item = LotSerialTracking.Find (id);
 
-			return PartialView("_LotSerialNumber", item);
+			return PartialView ("_LotSerialNumber", item);
 		}
-		
+
 		public JsonResult GetLotSerialNumberCount (int id)
 		{
 			var item = LotSerialRequirement.Find (id);
 			var qry = from x in LotSerialTracking.Queryable
-					  where x.Source == item.Source &&
-							x.Reference == item.Reference &&
-							x.Warehouse.Id == item.Warehouse.Id &&
-							x.Product.Id == item.Product.Id
-					  select x.Quantity;
-			decimal sum = qry.Count() > 0 ? qry.Sum() : 0;
+				  where x.Source == item.Source &&
+						x.Reference == item.Reference &&
+						x.Warehouse.Id == item.Warehouse.Id &&
+						x.Product.Id == item.Product.Id
+				  select x.Quantity;
+			decimal sum = qry.Count () > 0 ? qry.Sum () : 0;
 
-			return Json(new { id = item.Id, count = sum, total = item.Quantity }, JsonRequestBehavior.AllowGet);
+			return Json (new {
+				id = item.Id,
+				count = sum,
+				total = item.Quantity
+			}, JsonRequestBehavior.AllowGet);
 		}
 
 		LotSerialTracking GetLastLotSerial (int product, string lot, string serial)
@@ -923,16 +1003,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			if (!string.IsNullOrWhiteSpace (serial)) {
 				query = from x in LotSerialTracking.Queryable
-				        where x.Product.Id == product &&
-				            x.SerialNumber == serial
-						orderby x.Date descending
-				        select x;
+					where x.Product.Id == product &&
+					    x.SerialNumber == serial
+					orderby x.Date descending
+					select x;
 			} else {
 				query = from x in LotSerialTracking.Queryable
-						where x.Product.Id == product &&
-							x.LotNumber == lot
-						orderby x.Date descending
-						select x;
+					where x.Product.Id == product &&
+						x.LotNumber == lot
+					orderby x.Date descending
+					select x;
 			}
 
 			return query.FirstOrDefault ();
@@ -969,33 +1049,39 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				item.CreateAndFlush ();
 			}
 
-			return Json (new { id = item.Id, result = true });
+			return Json (new {
+				id = item.Id,
+				result = true
+			});
 		}
-		
+
 		[HttpPost]
 		public JsonResult RemoveLotSerialNumber (int id)
 		{
 			var item = LotSerialTracking.Find (id);
-			
-			using (var scope = new TransactionScope()) {
-				item.DeleteAndFlush();
+
+			using (var scope = new TransactionScope ()) {
+				item.DeleteAndFlush ();
 			}
 
-			return Json(new { id = id, result = true });
+			return Json (new {
+				id = id,
+				result = true
+			});
 		}
 
 		[HttpPost]
 		public JsonResult SetWarehouse (TransactionType source, int reference, int value)
 		{
-			var warehouse = Warehouse.Find (value); 
+			var warehouse = Warehouse.Find (value);
 			var rqmts = from x in LotSerialRequirement.Queryable
-						where x.Source == source &&
-							x.Reference == reference
-						select x;
+				    where x.Source == source &&
+					    x.Reference == reference
+				    select x;
 			var serials = from x in LotSerialTracking.Queryable
-						where x.Source == source &&
-							x.Reference == reference
-						select x;
+				      where x.Source == source &&
+					      x.Reference == reference
+				      select x;
 
 			using (var scope = new TransactionScope ()) {
 				foreach (var item in rqmts) {
@@ -1017,91 +1103,90 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 		#endregion
 
-        #region Inventory
+		#region Inventory
 
-        public ActionResult PhysicalCountAdjustment (int id)
-        {
-            var entity = InventoryReceipt.Find (id);
-            string sql = @"SELECT d.product_code Code, d.product_name Name, s.lot_number LotNumber, s.expiration_date ExpirationDate, s.serial_number SerialNumber, SUM(s.quantity) Quantity
+		public ActionResult PhysicalCountAdjustment (int id)
+		{
+			var entity = InventoryReceipt.Find (id);
+			string sql = @"SELECT d.product_code Code, d.product_name Name, s.lot_number LotNumber, s.expiration_date ExpirationDate, s.serial_number SerialNumber, SUM(s.quantity) Quantity
                             FROM lot_serial_tracking s
                             INNER JOIN inventory_receipt_detail d ON s.product = d.product
                             WHERE d.receipt = :id AND s.warehouse = :warehouse AND s.date < :date
                             GROUP BY s.product, s.lot_number, s.expiration_date, s.serial_number
                             HAVING SUM(s.quantity) <> 0";
 
-            var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
-                var query = session.CreateSQLQuery (sql);
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
 
-                query.AddScalar ("Code", NHibernateUtil.String);
-                query.AddScalar ("Name", NHibernateUtil.String);
-                query.AddScalar ("LotNumber", NHibernateUtil.String);
-                query.AddScalar ("ExpirationDate", NHibernateUtil.Date);
-                query.AddScalar ("SerialNumber", NHibernateUtil.String);
-                query.AddScalar ("Quantity", NHibernateUtil.Decimal);
+				query.AddScalar ("Code", NHibernateUtil.String);
+				query.AddScalar ("Name", NHibernateUtil.String);
+				query.AddScalar ("LotNumber", NHibernateUtil.String);
+				query.AddScalar ("ExpirationDate", NHibernateUtil.Date);
+				query.AddScalar ("SerialNumber", NHibernateUtil.String);
+				query.AddScalar ("Quantity", NHibernateUtil.Decimal);
 
-                query.SetInt32 ("id", entity.Id);
-                query.SetInt32 ("warehouse", entity.Warehouse.Id);
-                query.SetDateTime ("date", entity.ModificationTime);
+				query.SetInt32 ("id", entity.Id);
+				query.SetInt32 ("warehouse", entity.Warehouse.Id);
+				query.SetDateTime ("date", entity.ModificationTime);
 
-                return query.DynamicList ();
-            }, null);
+				return query.DynamicList ();
+			}, null);
 
-            return View ("PhysicalCountAdjustment", items);
-        }
+			return View ("PhysicalCountAdjustment", items);
+		}
 
-        [HttpPost, ActionName ("PhysicalCountAdjustment")]
-        public ActionResult PhysicalCountAdjustmentConfirmed (int id)
-        {
-            var entity = InventoryReceipt.Find (id);
-            string sql = @"SELECT s.product ProductId, s.lot_number LotNumber, s.expiration_date ExpirationDate, s.serial_number SerialNumber, SUM(s.quantity) Quantity
+		[HttpPost, ActionName ("PhysicalCountAdjustment")]
+		public ActionResult PhysicalCountAdjustmentConfirmed (int id)
+		{
+			var entity = InventoryReceipt.Find (id);
+			string sql = @"SELECT s.product ProductId, s.lot_number LotNumber, s.expiration_date ExpirationDate, s.serial_number SerialNumber, SUM(s.quantity) Quantity
                             FROM lot_serial_tracking s
                             INNER JOIN inventory_receipt_detail d ON s.product = d.product
                             WHERE d.receipt = :id AND s.warehouse = :warehouse AND s.date < :date
                             GROUP BY s.product, s.lot_number, s.expiration_date, s.serial_number
                             HAVING SUM(s.quantity) <> 0";
 
-            var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
-                var query = session.CreateSQLQuery (sql);
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
 
-                query.AddScalar ("ProductId", NHibernateUtil.Int32);
-                query.AddScalar ("LotNumber", NHibernateUtil.String);
-                query.AddScalar ("ExpirationDate", NHibernateUtil.Date);
-                query.AddScalar ("SerialNumber", NHibernateUtil.String);
-                query.AddScalar ("Quantity", NHibernateUtil.Decimal);
+				query.AddScalar ("ProductId", NHibernateUtil.Int32);
+				query.AddScalar ("LotNumber", NHibernateUtil.String);
+				query.AddScalar ("ExpirationDate", NHibernateUtil.Date);
+				query.AddScalar ("SerialNumber", NHibernateUtil.String);
+				query.AddScalar ("Quantity", NHibernateUtil.Decimal);
 
-                query.SetInt32 ("id", entity.Id);
-                query.SetInt32 ("warehouse", entity.Warehouse.Id);
-                query.SetDateTime ("date", entity.ModificationTime);
+				query.SetInt32 ("id", entity.Id);
+				query.SetInt32 ("warehouse", entity.Warehouse.Id);
+				query.SetDateTime ("date", entity.ModificationTime);
 
-                return query.DynamicList ();
-            }, null);
+				return query.DynamicList ();
+			}, null);
 
-            using (var scope = new TransactionScope ()) {
-                var dt = entity.ModificationTime.AddMilliseconds (-1);
+			using (var scope = new TransactionScope ()) {
+				var dt = entity.ModificationTime.AddMilliseconds (-1);
 
-                foreach (var x in items) {
-                    var item = new LotSerialTracking {
-                        Source = TransactionType.InventoryAdjustment,
-                        Reference = entity.Id,
-                        Date = dt,
-                        Warehouse = entity.Warehouse,
-                        Product = Product.Find (x.ProductId),
-                        Quantity = -x.Quantity,
-                        LotNumber = x.LotNumber,
-                        ExpirationDate = x.ExpirationDate,
-                        SerialNumber = x.SerialNumber
-                    };
+				foreach (var x in items) {
+					var item = new LotSerialTracking {
+						Source = TransactionType.InventoryAdjustment,
+						Reference = entity.Id,
+						Date = dt,
+						Warehouse = entity.Warehouse,
+						Product = Product.Find (x.ProductId),
+						Quantity = -x.Quantity,
+						LotNumber = x.LotNumber,
+						ExpirationDate = x.ExpirationDate,
+						SerialNumber = x.SerialNumber
+					};
 
-                    item.Create ();
-                }
+					item.Create ();
+				}
 
-                scope.Flush ();
-            }
+				scope.Flush ();
+			}
 
-            return RedirectToAction ("Receipts");
-        }
+			return RedirectToAction ("Receipts");
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }
-        
