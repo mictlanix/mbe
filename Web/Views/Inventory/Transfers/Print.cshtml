@@ -40,8 +40,14 @@
 	<div class="col-xs-6 text-right">
 		<div class="row">
 			<div class="col-xs-12">
-				<h2 class="text-right">@Resources.InventoryTransfer @Html.DisplayFor(x => x.Id)</h2>
+				<h2 class="text-right">@Resources.InventoryTransfer #@Html.DisplayFor(x => x.Id)</h2>
 			</div>
+			<div class="col-xs-12">
+				<p><span class="mylabel">@Resources.Serial</span></p>
+			</div>
+	 		<div class="col-xs-12">
+				<p>@Html.DisplayFor(x => x.Serial)</p>
+	 		</div>
 			<div class="col-xs-12">
 				<p><span class="mylabel">@Resources.CreatedBy</span></p>
 			</div>
