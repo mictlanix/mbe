@@ -5,7 +5,7 @@
 //   Eddy Zavaleta <eddy@mictlanix.com>
 //   Eduardo Nieto <enieto@mictlanix.com>
 // 
-// Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2011-2016 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -44,7 +44,16 @@ namespace Mictlanix.BE.Model
         [PrimaryKey(PrimaryKeyType.Identity, "inventory_receipt_id")]
         [Display(Name = "InventoryReceiptId", ResourceType = typeof(Resources))]
 		[DisplayFormat(DataFormatString = "{0:D8}")]
-        public int Id { get; set; }
+		public int Id { get; set; }
+
+		[BelongsTo("store")]
+		[Display(Name = "Store", ResourceType = typeof(Resources))]
+		public virtual Store Store { get; set; }
+
+		[Property("serial")]
+		[Display(Name = "Serial", ResourceType = typeof(Resources))]
+		[DisplayFormat(DataFormatString="{0:D8}")]
+		public virtual int Serial { get; set; }
 
         [Property("creation_time")]
         [DataType(DataType.DateTime)]

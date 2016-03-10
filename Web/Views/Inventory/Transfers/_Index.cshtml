@@ -14,7 +14,7 @@
 
 <table id="inventory-transfers">
     <tr>
-        <th>@Html.LabelFor(x => new InventoryTransfer().Id)</th>
+        <th>@Resources.Id</th>
         <th>@Html.LabelFor(x => new InventoryTransfer().CreationTime)</th>
         <th>@Html.LabelFor(x => new InventoryTransfer().From)</th>
         <th>@Html.LabelFor(x => new InventoryTransfer().To)</th>
@@ -47,37 +47,37 @@
 <div class="buttons right">
 	<label class="button left">@Model.ToString()</label>@if (Model.HasPrev) {<a class="button middle icon prev icon-only" title="@Resources.PrevPage" href="javascript:void(0)"></a>}@if (Model.HasNext) {<a class="button right icon next icon-only" title="@Resources.NextPage" href="javascript:void(0)"></a>}
 </div>
-@if (Model.HasPrev)
-{
+
 <script type="text/javascript">
-    $(function () {
-        $('a.prev').click(function (e) {
-            e.preventDefault();
-            $("#activity-indicator").show();
-            $("#search-results").hide();
-            $.post('@Url.Action("Transfers")', { Pattern: "@Model.Pattern", Offset: "@(Model.Offset-Model.Limit)", Limit: "@Model.Limit" }, function (data) {
-                $("#search-results").html(data);
-                $("#search-results").show();
-                $("#activity-indicator").hide();
-            });
+$(function () {
+	$('[data-toggle="tooltip"]').tooltip();
+@if (Model.HasPrev) {
+	<text>
+	$('a.prev').click(function (e) {
+        e.preventDefault();
+        $("#activity-indicator").show();
+        $("#search-results").hide();
+        $.post('@Url.Action("Issues")', { Pattern: "@Model.Pattern", Offset: "@(Model.Offset-Model.Limit)", Limit: "@Model.Limit" }, function (data) {
+            $("#search-results").html(data);
+            $("#search-results").show();
+            $("#activity-indicator").hide();
         });
     });
-</script>
+	</text>
 }
-@if (Model.HasNext)
-{
-<script type="text/javascript">
-    $(function () {
-        $('a.next').click(function (e) {
-            e.preventDefault();
-            $("#activity-indicator").show();
-            $("#search-results").hide();
-            $.post('@Url.Action("Transfers")', { Pattern: "@Model.Pattern", Offset: "@(Model.Offset+Model.Limit)", Limit: "@Model.Limit" }, function (data) {
-                $("#search-results").html(data);
-                $("#search-results").show();
-                $("#activity-indicator").hide();
-            });
+@if (Model.HasNext) {
+	<text>
+    $('a.next').click(function (e) {
+        e.preventDefault();
+        $("#activity-indicator").show();
+        $("#search-results").hide();
+        $.post('@Url.Action("Issues")', { Pattern: "@Model.Pattern", Offset: "@(Model.Offset+Model.Limit)", Limit: "@Model.Limit" }, function (data) {
+            $("#search-results").html(data);
+            $("#search-results").show();
+            $("#activity-indicator").hide();
         });
     });
-</script>
+	</text>
 }
+});
+</script>

@@ -4,7 +4,12 @@
 @model InventoryReceipt
 
 <tr id='id:@Model.Id'>
-    <td class="number">@Html.DisplayFor(x => x.Id)</td>
+    <td class="number">
+		@Html.DisplayFor(x => x.Id)
+    	<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => x.Serial)">
+			<span class="glyphicon glyphicon-exclamation-sign"></span>
+		</a>
+	</td>
     <td class="date">@Html.DisplayFor(x => x.CreationTime)</td>
     <td>@Html.DisplayFor(x => x.Warehouse.Name)</td>
     <td class="number">@Html.DisplayFor(x => x.Order.Id)</td>

@@ -12,8 +12,11 @@
 <fieldset>
     <legend>@Resources.DisplayName_InventoryInformation</legend>
     <div class="display-label right floating">
-        @Html.LabelFor(model => model.Id):
-        @Html.DisplayFor(model => model.Id)
+        <label>@Resources.Id</label>
+		<span>@Html.DisplayFor(x => x.Id)</span>
+		<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => x.Serial)">
+			<span class="glyphicon glyphicon-exclamation-sign"></span>
+		</a>
     </div>
     <div class="display-label right floating">
         @Html.LabelFor(model => model.CreationTime):
@@ -65,3 +68,8 @@
 <div id="back-to-list">
     @Html.ActionLink(Resources.BackToList, "Issues", new { }, new { @class = "button icon back" })
 </div>
+<script type='text/javascript'>
+$(function () {
+	$('[data-toggle="tooltip"]').tooltip();
+});
+</script>
