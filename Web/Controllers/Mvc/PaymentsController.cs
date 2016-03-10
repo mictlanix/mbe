@@ -38,32 +38,30 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
-    public class PaymentsController : CustomController
-    {
-        public ActionResult Index ()
+	public class PaymentsController : CustomController {
+		public ActionResult Index ()
 		{
 			var drawer = WebConfig.CashDrawer;
-            var session = GetSession ();
+			var session = GetSession ();
 
-            if (drawer == null) {
-                return View ("InvalidCashDrawer");
-            }
+			if (drawer == null) {
+				return View ("InvalidCashDrawer");
+			}
 
-            if (session == null) {
-                return RedirectToAction ("OpenSession");
-            }
+			if (session == null) {
+				return RedirectToAction ("OpenSession");
+			}
 
 			var search = SearchSalesOrders (new Search<SalesOrder> {
 				Limit = WebConfig.PageSize
 			});
 
 			return View (new MasterDetails<CashSession, SalesOrder> { Master = session, Details = search.Results });
-        }
+		}
 
-        [HttpPost]
+		[HttpPost]
 		public ActionResult Index (string id)
 		{
 			var drawer = WebConfig.CashDrawer;
@@ -82,12 +80,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				Pattern = id
 			});
 
-            if (Request.IsAjaxRequest()) {
+			if (Request.IsAjaxRequest ()) {
 				return PartialView ("_Index", search.Results);
-            }
+			}
 
 			return View (new MasterDetails<CashSession, SalesOrder> { Master = session, Details = search.Results });
-        }
+		}
 
 		Search<SalesOrder> SearchSalesOrders (Search<SalesOrder> search)
 		{
@@ -98,25 +96,25 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			if (int.TryParse (pattern, out id) && id > 0) {
 				query = from x in SalesOrder.Queryable
-						where x.Store.Id == item.Id && x.IsCompleted && !x.IsCancelled &&
-							!x.IsPaid && x.Terms == PaymentTerms.Immediate &&
-							x.Id == id
-						orderby x.Date descending
-						select x;
+					where x.Store.Id == item.Id && x.IsCompleted && !x.IsCancelled &&
+						!x.IsPaid && x.Terms == PaymentTerms.Immediate &&
+						x.Id == id
+					orderby x.Date descending
+					select x;
 			} else if (string.IsNullOrEmpty (pattern)) {
 				query = from x in SalesOrder.Queryable
-						where x.Store.Id == item.Id && x.IsCompleted && !x.IsCancelled &&
-							!x.IsPaid && x.Terms == PaymentTerms.Immediate
-						orderby x.Date descending
-						select x;
+					where x.Store.Id == item.Id && x.IsCompleted && !x.IsCancelled &&
+						!x.IsPaid && x.Terms == PaymentTerms.Immediate
+					orderby x.Date descending
+					select x;
 			} else {
 				query = from x in SalesOrder.Queryable
-						where x.Store.Id == item.Id && x.IsCompleted && !x.IsCancelled &&
-							!x.IsPaid && x.Terms == PaymentTerms.Immediate &&
-							(x.Customer.Name.Contains (pattern) ||
-						 	(x.SalesPerson.FirstName + " " + x.SalesPerson.LastName).Contains (pattern))
-						orderby x.Date descending
-						select x;
+					where x.Store.Id == item.Id && x.IsCompleted && !x.IsCancelled &&
+						!x.IsPaid && x.Terms == PaymentTerms.Immediate &&
+						(x.Customer.Name.Contains (pattern) ||
+						 (x.SalesPerson.FirstName + " " + x.SalesPerson.LastName).Contains (pattern))
+					orderby x.Date descending
+					select x;
 			}
 
 			search.Total = query.Count ();
@@ -125,86 +123,89 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			return search;
 		}
 
-		public ViewResult Print (int id)
+		public ActionResult Print (int id)
 		{
-			var item = SalesOrder.Find (id);
-			return View (item);
+			var model = SalesOrder.Find (id);
+			return PdfTicketView ("Print", model);
 		}
 
-        public ViewResult PrintCashCount (int id)
-        {
-            var info = new CashCountReport();
-            var session = CashSession.Find(id);
-            var qry = from x in CustomerPayment.Queryable
-                      where x.CashSession.Id == session.Id
-                      select new { Type = x.Method, Amount = x.Amount };
-            var list = from x in qry.ToList()
-                       group x by x.Type into g
-                       select new MoneyCount { Type = g.Key, Amount = g.Sum(y => y.Amount) };
+		public ActionResult PrintCashCount (int id)
+		{
+			var model = new CashCountReport ();
+			var session = CashSession.Find (id);
+			var qry = from x in CustomerPayment.Queryable
+				  where x.CashSession.Id == session.Id
+				  select new {
+					  Type = x.Method,
+					  Amount = x.Amount
+				  };
+			var list = from x in qry.ToList ()
+				   group x by x.Type into g
+				   select new MoneyCount { Type = g.Key, Amount = g.Sum (y => y.Amount) };
 
-            info.Cashier = session.Cashier;
-            info.CashDrawer = session.CashDrawer;
-            info.Start = session.Start;
-            info.End = session.End;
-            info.MoneyCounts = list.ToList();
-            info.CashCounts = session.CashCounts.Where(x => x.Type == CashCountType.CountedCash).ToList();
-            info.StartingCash = session.StartingCash;
-            info.SessionId = session.Id;
+			model.Cashier = session.Cashier;
+			model.CashDrawer = session.CashDrawer;
+			model.Start = session.Start;
+			model.End = session.End;
+			model.MoneyCounts = list.ToList ();
+			model.CashCounts = session.CashCounts.Where (x => x.Type == CashCountType.CountedCash).ToList ();
+			model.StartingCash = session.StartingCash;
+			model.SessionId = session.Id;
 
-            return View("_CashCountTicket", info);
-        }
+			return PdfTicketView ("_CashCountTicket", model);
+		}
 
-        public ActionResult OpenSession()
-        {
-            if (GetSession() != null) {
-                return RedirectToAction ("Index");
-            }
-			
-            var model = new CashSession {
-                Start = DateTime.Now,
-                CashCounts = CashHelpers.ListDenominations (),
-                CashDrawer = WebConfig.CashDrawer,
-                Cashier = CurrentUser.Employee
-            };
+		public ActionResult OpenSession ()
+		{
+			if (GetSession () != null) {
+				return RedirectToAction ("Index");
+			}
 
-            if (model.CashDrawer == null) {
-                return View ("InvalidCashDrawer");
-            }
+			var model = new CashSession {
+				Start = DateTime.Now,
+				CashCounts = CashHelpers.ListDenominations (),
+				CashDrawer = WebConfig.CashDrawer,
+				Cashier = CurrentUser.Employee
+			};
 
-            return View (model);
-        }
+			if (model.CashDrawer == null) {
+				return View ("InvalidCashDrawer");
+			}
 
-        [HttpPost]
+			return View (model);
+		}
+
+		[HttpPost]
 		public ActionResult OpenSession (CashSession item)
-		{            
+		{
 			item.CashDrawer = WebConfig.CashDrawer;
 
-            if (item.CashDrawer == null)
-                return View("InvalidCashDrawer");
+			if (item.CashDrawer == null)
+				return View ("InvalidCashDrawer");
 
-			if (GetSession() != null)
+			if (GetSession () != null)
 				return RedirectToAction ("Index");
 
-			var cash_counts = item.CashCounts.Where(x => x.Quantity > 0).ToList();
+			var cash_counts = item.CashCounts.Where (x => x.Quantity > 0).ToList ();
 
-            item.Start = DateTime.Now;
-            item.Cashier = Model.User.Find(User.Identity.Name).Employee;
-            item.CashCounts.Clear();
+			item.Start = DateTime.Now;
+			item.Cashier = Model.User.Find (User.Identity.Name).Employee;
+			item.CashCounts.Clear ();
 
-            using (var scope = new TransactionScope()) {
-                item.Create ();
+			using (var scope = new TransactionScope ()) {
+				item.Create ();
 
-	            foreach (var x in cash_counts) {
-	                x.Session = item;
-	                x.Type = CashCountType.StartingCash;
-	                x.Create ();
-	            }
-            }
+				foreach (var x in cash_counts) {
+					x.Session = item;
+					x.Type = CashCountType.StartingCash;
+					x.Create ();
+				}
+			}
 
-            return RedirectToAction ("Index");
-        }
+			return RedirectToAction ("Index");
+		}
 
-        public ActionResult PayOrder (int id)
+		public ActionResult PayOrder (int id)
 		{
 			var drawer = WebConfig.CashDrawer;
 			var session = GetSession ();
@@ -219,9 +220,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			var item = SalesOrder.Find (id);
 			return View (item);
-        }
-		
-        public ActionResult GetSalesOrderBalance (int id)
+		}
+
+		public ActionResult GetSalesOrderBalance (int id)
 		{
 			var item = SalesOrder.Find (id);
 
@@ -229,7 +230,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			item.Payments.ToList ();
 
 			return PartialView ("_SalesOrderBalance", item);
-        }
+		}
 
 		[HttpPost]
 		public ActionResult Cancel (int id)
@@ -243,19 +244,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			entity.Updater = CurrentUser.Employee;
 			entity.ModificationTime = DateTime.Now;
 			entity.IsCancelled = true;
-			
+
 			using (var scope = new TransactionScope ()) {
-				foreach(var item in entity.Payments) {
+				foreach (var item in entity.Payments) {
 					item.Delete ();
 				}
 
 				entity.UpdateAndFlush ();
 			}
-			
+
 			return RedirectToAction ("Index");
 		}
 
-        [HttpPost]
+		[HttpPost]
 		public JsonResult AddPayment (int id, int type, decimal amount, string reference)
 		{
 			var dt = DateTime.Now;
@@ -267,21 +268,21 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				CreationTime = dt,
 				Updater = employee,
 				ModificationTime = dt,
-                CashSession = GetSession (),
-                SalesOrder = sales_order,
-                Customer = sales_order.Customer,
-                Method = (PaymentMethod)type,
-                Amount = amount,
-                Date = DateTime.Now,
-                Reference = reference
-            };
-			
+				CashSession = GetSession (),
+				SalesOrder = sales_order,
+				Customer = sales_order.Customer,
+				Method = (PaymentMethod) type,
+				Amount = amount,
+				Date = DateTime.Now,
+				Reference = reference
+			};
+
 			// Store and Serial
 			item.Store = item.CashSession.CashDrawer.Store;
 			try {
 				item.Serial = (from x in CustomerPayment.Queryable
-	            			   where x.Store.Id == item.Store.Id
-	                      	   select x.Serial).Max () + 1;
+					       where x.Store.Id == item.Store.Id
+					       select x.Serial).Max () + 1;
 			} catch {
 				item.Serial = 1;
 			}
@@ -297,24 +298,26 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				}
 			}
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
 			}
 
-			return Json (new { id = item.Id });
+			return Json (new {
+				id = item.Id
+			});
 		}
-		
-        public ActionResult CreditPayment ()
-        {
-            if (Request.IsAjaxRequest ()) {
-                return PartialView("_CreditPayment", new CustomerPayment());
-            }
-			
-            return View ("_CreditPayment", new CustomerPayment());
-        }
-		
-        [HttpPost]
-        public ActionResult CreditPayment (CustomerPayment item)
+
+		public ActionResult CreditPayment ()
+		{
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_CreditPayment", new CustomerPayment ());
+			}
+
+			return View ("_CreditPayment", new CustomerPayment ());
+		}
+
+		[HttpPost]
+		public ActionResult CreditPayment (CustomerPayment item)
 		{
 			item.Customer = Customer.TryFind (item.CustomerId);
 
@@ -328,8 +331,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			try {
 				item.Serial = (from x in CustomerPayment.Queryable
-				               where x.Store.Id == item.Store.Id
-				               select x.Serial).Max () + 1;
+					       where x.Store.Id == item.Store.Id
+					       select x.Serial).Max () + 1;
 			} catch {
 				item.Serial = 1;
 			}
@@ -348,28 +351,31 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			if (Request.IsAjaxRequest ()) {
 				return PartialView ("_CreditPaymentSuccesful", item);
 			}
-			
+
 			return View ("_CreditPaymentSuccesful", item);
 		}
 
-        public ActionResult GetPayment (int id)
-        {
-            return PartialView ("_Payment", CustomerPayment.Find (id));
-        }
+		public ActionResult GetPayment (int id)
+		{
+			return PartialView ("_Payment", CustomerPayment.Find (id));
+		}
 
-        [HttpPost]
-        public JsonResult RemovePayment (int id)
-        {
-            var item = CustomerPayment.Find (id);
-            
+		[HttpPost]
+		public JsonResult RemovePayment (int id)
+		{
+			var item = CustomerPayment.Find (id);
+
 			using (var scope = new TransactionScope ()) {
-            	item.DeleteAndFlush ();
+				item.DeleteAndFlush ();
 			}
 
-            return Json (new { id = id, result = true });
-        }
+			return Json (new {
+				id = id,
+				result = true
+			});
+		}
 
-        [HttpPost]
+		[HttpPost]
 		public ActionResult ConfirmPayment (int id)
 		{
 			var item = SalesOrder.Find (id);
@@ -379,66 +385,70 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			item.Updater = CurrentUser.Employee;
 
 			using (var scope = new TransactionScope ()) {
-            	item.UpdateAndFlush ();
+				item.UpdateAndFlush ();
 			}
 
-            return RedirectToAction ("Index");
-        }
+			return RedirectToAction ("Index");
+		}
 
-        public ActionResult CloseSession ()
-        {
-            var session = GetSession ();
-            session.CashCounts = CashHelpers.ListDenominations ();
-            return View (session);
-        }
+		public ActionResult CloseSession ()
+		{
+			var session = GetSession ();
+			session.CashCounts = CashHelpers.ListDenominations ();
+			return View (session);
+		}
 
-        [HttpPost]
-        public ActionResult CloseSession (CashSession item)
-        {
-        	var cash_counts = item.CashCounts.Where (x => x.Quantity > 0).ToList ();
-			
-            item = CashSession.Find (item.Id);
-            item.End = DateTime.Now;
+		[HttpPost]
+		public ActionResult CloseSession (CashSession item)
+		{
+			var cash_counts = item.CashCounts.Where (x => x.Quantity > 0).ToList ();
 
-            using (var scope = new TransactionScope()) {
+			item = CashSession.Find (item.Id);
+			item.End = DateTime.Now;
+
+			using (var scope = new TransactionScope ()) {
 				foreach (var x in cash_counts) {
-                    x.Session = item;
-                    x.Type = CashCountType.CountedCash;
-                    x.Create ();
-                }
+					x.Session = item;
+					x.Type = CashCountType.CountedCash;
+					x.Create ();
+				}
 
-	            item.UpdateAndFlush ();
-            }
+				item.UpdateAndFlush ();
+			}
 
-            return RedirectToAction("CloseSessionConfirmed", new { id = item.Id });
-        }
+			return RedirectToAction ("CloseSessionConfirmed", new {
+				id = item.Id
+			});
+		}
 
-        public ActionResult CloseSessionConfirmed (int id)
-        {
-            var session = CashSession.Find(id);
-            var qry = from x in CustomerPayment.Queryable
-                      where x.CashSession.Id == session.Id
-                      select new { Type = x.Method, Amount = x.Amount };
-            var list = from x in qry.ToList()
-                       group x by x.Type into g
-                       select new MoneyCount { Type = g.Key, Amount = g.Sum(y => y.Amount) };
+		public ActionResult CloseSessionConfirmed (int id)
+		{
+			var session = CashSession.Find (id);
+			var qry = from x in CustomerPayment.Queryable
+				  where x.CashSession.Id == session.Id
+				  select new {
+					  Type = x.Method,
+					  Amount = x.Amount
+				  };
+			var list = from x in qry.ToList ()
+				   group x by x.Type into g
+				   select new MoneyCount { Type = g.Key, Amount = g.Sum (y => y.Amount) };
 
-            return View(new MasterDetails<CashSession, MoneyCount>
-            {
-                Master = session,
-                Details = list.ToList()
-            });
-        }
-        
-        CashSession GetSession ()
+			return View (new MasterDetails<CashSession, MoneyCount> {
+				Master = session,
+				Details = list.ToList ()
+			});
+		}
+
+		CashSession GetSession ()
 		{
 			var item = WebConfig.CashDrawer;
-			
+
 			if (item == null)
 				return null;
-			
+
 			return CashSession.Queryable.Where (x => x.End == null)
-                              .SingleOrDefault (x => x.CashDrawer.Id == item.Id);
+			      .SingleOrDefault (x => x.CashDrawer.Id == item.Id);
 		}
-    }
+	}
 }

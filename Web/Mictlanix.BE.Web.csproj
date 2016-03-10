@@ -365,7 +365,6 @@
     <Content Include="Content\token-input.css" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\jquery.form.js" />
-    <Content Include="Scripts\jquery.print-page.js" />
     <Content Include="Scripts\jquery.tokeninput.js" />
     <Content Include="packages.config">
       <SubType>Designer</SubType>

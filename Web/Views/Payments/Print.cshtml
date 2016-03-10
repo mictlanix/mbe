@@ -11,12 +11,12 @@
     ViewBag.Address = Model.Store.Address;
 }
 
-<div class="display-label right">
+<div class="display-label text-right">
     @Html.LabelFor(model => model.Serial)<br/>
     @Html.DisplayFor(model => model.Serial)
 </div>
 
-<div class="display-label date right">
+<div class="display-label date text-right">
     @Html.LabelFor(model => model.Date)<br/>
     @Html.DisplayFor(model => model.Date)
 </div>
@@ -54,7 +54,7 @@
                 <text>- @Html.DisplayFor(x => item.Discount)</text>
             }
         </td>
-        <td class="line center">
+        <td class="line text-center">
             @Html.DisplayFor(x => item.ProductCode)
         </td>
     </tr>
@@ -62,14 +62,14 @@
     <tr>
         <td></td>
         <td></td>
-        <td class="total right">@Resources.Total</td>
+        <td class="total text-right">@Resources.Total</td>
         <td class="total number">@Html.DisplayFor(x => x.Total)</td>
     </tr>
     @foreach (var item in Model.Payments) {
         <tr>
             <td></td>
             <td></td>
-            <td class="right">@item.Method.GetDisplayName()</td>
+            <td class="text-right">@item.Method.GetDisplayName()</td>
             <td class="number">@Html.DisplayFor(modelItem => item.Cash)</td>
         </tr>
     }
@@ -77,7 +77,7 @@
         <tr>
             <td></td>
             <td></td>
-            <td class="right">@Resources.Change</td>
+            <td class="text-right">@Resources.Change</td>
             <td class="number">@Html.DisplayFor(x => Model.Balance)</td>
         </tr>
     }
@@ -88,10 +88,10 @@
     @Html.DisplayFor(model => model.Taxes)
 </div>
 
-<div class="display-label right">
+<div class="display-label text-right">
     @Html.LabelFor(model => model.SalesPerson)
 </div>
-<div class="display-field right">
+<div class="display-field text-right">
     @Html.DisplayFor(model => model.SalesPerson.Name)
 </div>
 
@@ -103,5 +103,5 @@
 
 @section Footer {
 	<img src='@Url.Action("Code128", "Barcodes", new { id = string.Format("{0}", Html.DisplayFor(x => x.Id)) })' alt='@Html.DisplayFor(x => x.Id)' title='@Html.DisplayFor(x => x.Id)'>
-	<p>@Html.LabelFor(x => x.Id): @Html.DisplayFor(x => x.Id)</p>
+	<p>@Html.DisplayFor(x => x.Id)</p>
 }

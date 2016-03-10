@@ -90,6 +90,11 @@ namespace Mictlanix.BE.Web.Mvc {
 			return File (report.Content, MIME_TYPE_PDF);
 		}
 
+		public FileStreamResult PdfTicketView (string viewPath, object model)
+		{
+			return File (GetPdfTicket (viewPath, model), MIME_TYPE_PDF);
+		}
+
 		public Stream GetPdf (string viewPath, object model)
 		{
 			return GetPdf (viewPath, model, new Phantom {
@@ -97,6 +102,17 @@ namespace Mictlanix.BE.Web.Mvc {
 				headerHeight = "0 mm",
 				footerHeight = "0 mm",
 				margin = "6 mm"
+			});
+		}
+
+		public Stream GetPdfTicket (string viewPath, object model)
+		{
+			return GetPdf (viewPath, model, new Phantom {
+				width = "72 mm",
+				height = "297 mm",
+				headerHeight = "0 mm",
+				footerHeight = "0 mm",
+				margin = "0 mm"
 			});
 		}
 
