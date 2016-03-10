@@ -3,7 +3,6 @@
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
 @model CashCountReport
-
 @{
     Layout = WebConfig.ReceiptLayout;
     ViewBag.Store = Model.CashDrawer.Store;
@@ -173,6 +172,5 @@
 
 @section Footer {
 	<img src="@Url.Action("Code128", "Barcodes", new { id = string.Format("{0}", Html.DisplayFor(x => x.SessionId)) })" alt="@Html.DisplayFor(x => x.SessionId)" title="@Html.DisplayFor(x => x.SessionId)">
-	<br />
-    @Html.DisplayFor(x => x.SessionId)
+    <p>@Html.DisplayFor(x => x.SessionId)</p>
 }
