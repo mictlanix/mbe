@@ -37,84 +37,82 @@ using Castle.ActiveRecord;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Mvc;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
-    public class SupplierAgreementsController : CustomController
-    {
-        public ActionResult Details (int id)
-        {
-            var item = SupplierAgreement.Find (id);
+	public class SupplierAgreementsController : CustomController {
+		public ActionResult Details (int id)
+		{
+			var item = SupplierAgreement.Find (id);
 
-            ViewBag.OwnerId = item.Supplier.Id;
+			ViewBag.OwnerId = item.Supplier.Id;
 
-            return PartialView ("_Details", item);
-        }
+			return PartialView ("_Details", item);
+		}
 
-        public ActionResult CreateForSupplier (int id)
-        {
-            return PartialView ("_Create", new SupplierAgreement { SupplierId = id });
-        }
+		public ActionResult CreateForSupplier (int id)
+		{
+			return PartialView ("_Create", new SupplierAgreement { SupplierId = id });
+		}
 
-        [HttpPost]
-        public ActionResult CreateForSupplier (SupplierAgreement item)
-        {
-            item.Supplier = Supplier.Find (item.SupplierId);
+		[HttpPost]
+		public ActionResult CreateForSupplier (SupplierAgreement item)
+		{
+			item.Supplier = Supplier.Find (item.SupplierId);
 
-            if (!ModelState.IsValid)
-                return PartialView ("_Create", item);
-            
-			using (var scope = new TransactionScope ()) {
-				item.CreateAndFlush();
-			}
-
-            return PartialView ("_Refresh");
-        }
-
-        public ActionResult Edit (int id)
-        {
-            var item = SupplierAgreement.Find (id);
-            return PartialView ("_Edit", item);
-        }
-
-        [HttpPost]
-        public ActionResult Edit(SupplierAgreement item)
-        {
-            if (!ModelState.IsValid) {
-                return PartialView ("_Edit", item);
-            }
-
-            var entity = SupplierAgreement.Find (item.Id);
-
-            entity.Start = item.Start;
-            entity.End = item.End;
-            entity.Comment = item.Comment;
+			if (!ModelState.IsValid)
+				return PartialView ("_Create", item);
 
 			using (var scope = new TransactionScope ()) {
-                entity.UpdateAndFlush ();
+				item.CreateAndFlush ();
 			}
 
-            return PartialView ("_Refresh");
-        }
+			return PartialView ("_Refresh");
+		}
 
-        public ActionResult Delete (int id)
-        {
-            var item = SupplierAgreement.Find (id);
+		public ActionResult Edit (int id)
+		{
+			var item = SupplierAgreement.Find (id);
+			return PartialView ("_Edit", item);
+		}
 
-            ViewBag.OwnerId = id;
-            return PartialView ("_Delete", item);
-        }
+		[HttpPost]
+		public ActionResult Edit (SupplierAgreement item)
+		{
+			if (!ModelState.IsValid) {
+				return PartialView ("_Edit", item);
+			}
 
-        [HttpPost, ActionName ("Delete")]
-        public ActionResult DeleteConfirmed (int id)
-        {
-            var item = SupplierAgreement.Find (id);
+			var entity = SupplierAgreement.Find (item.Id);
+
+			entity.Start = item.Start;
+			entity.End = item.End;
+			entity.Comment = item.Comment;
+
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
+			}
+
+			return PartialView ("_Refresh");
+		}
+
+		public ActionResult Delete (int id)
+		{
+			var item = SupplierAgreement.Find (id);
+
+			ViewBag.OwnerId = id;
+			return PartialView ("_Delete", item);
+		}
+
+		[HttpPost, ActionName ("Delete")]
+		public ActionResult DeleteConfirmed (int id)
+		{
+			var item = SupplierAgreement.Find (id);
 
 			using (var scope = new TransactionScope ()) {
 				item.DeleteAndFlush ();
 			}
 
-            return PartialView ("_Refresh", new { id = item.Supplier.Id });
-        }
-    }
+			return PartialView ("_Refresh", new { id = item.Supplier.Id });
+		}
+	}
 }

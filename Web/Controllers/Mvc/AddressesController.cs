@@ -38,48 +38,46 @@ using NHibernate.Exceptions;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Mvc;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
-    public class AddressesController : CustomController
-    {
+	public class AddressesController : CustomController {
 		public ActionResult CreateCustomerAddress (int id)
-        {
+		{
 			return PartialView ("_Create");
 		}
-		
+
 		public ActionResult CreateSupplierAddress (int id)
 		{
 			return PartialView ("_Create");
 		}
 
-        [HttpPost]
+		[HttpPost]
 		public ActionResult CreateCustomerAddress (int id, Address item)
 		{
 			if (!ModelState.IsValid) {
 				return PartialView ("_Create", item);
 			}
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				var customer = Customer.Find (id);
 
 				item.Id = 0;
-                item.CreateAndFlush ();
+				item.CreateAndFlush ();
 				customer.Addresses.Add (item);
 				customer.Update ();
-            }
+			}
 
 			return PartialView ("_Refresh");
 		}
-		
+
 		[HttpPost]
 		public ActionResult CreateSupplierAddress (int id, Address item)
 		{
 			if (!ModelState.IsValid) {
 				return PartialView ("_Create", item);
 			}
-			
-			using (var scope = new TransactionScope()) {
+
+			using (var scope = new TransactionScope ()) {
 				var supplier = Supplier.Find (id);
 
 				item.Id = 0;
@@ -87,7 +85,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				supplier.Addresses.Add (item);
 				supplier.Update ();
 			}
-			
+
 			return PartialView ("_Refresh");
 		}
 
@@ -97,33 +95,33 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			return PartialView ("_Details", item);
 		}
 
-        public ActionResult Edit (int id)
-        {
-        	var item = Address.Find (id);
+		public ActionResult Edit (int id)
+		{
+			var item = Address.Find (id);
 			return PartialView ("_Edit", item);
-        }
+		}
 
-        [HttpPost]
-        public ActionResult Edit (Address item)
-        {
-            if (!ModelState.IsValid)
+		[HttpPost]
+		public ActionResult Edit (Address item)
+		{
+			if (!ModelState.IsValid)
 				return PartialView ("_Edit", item);
-			
+
 			var entity = Address.Find (item.Id);
 
 			if (entity.Equals (item))
 				return PartialView ("_Refresh");
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
 
-				foreach(var x in entity.Customers) {
+				foreach (var x in entity.Customers) {
 					x.Addresses.Remove (entity);
 					x.Addresses.Add (item);
 					x.Update ();
 				}
-				
-				foreach(var x in entity.Suppliers) {
+
+				foreach (var x in entity.Suppliers) {
 					x.Addresses.Remove (entity);
 					x.Addresses.Add (item);
 					x.Update ();
@@ -132,9 +130,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.Customers.Clear ();
 				entity.Suppliers.Clear ();
 			}
-			
+
 			try {
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.DeleteAndFlush ();
 				}
 			} catch (Exception ex) {
@@ -142,27 +140,27 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			}
 
 			return PartialView ("_Refresh");
-        }
+		}
 
 		public ActionResult Delete (int id)
-        {
-            var item = Address.Find (id);
+		{
+			var item = Address.Find (id);
 			return PartialView ("_Delete", item);
-        }
+		}
 
-        [HttpPost, ActionName ("Delete")]
+		[HttpPost, ActionName ("Delete")]
 		public ActionResult DeleteConfirmed (int id)
 		{
 			try {
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					var item = Address.Find (id);
 
-					foreach(var x in item.Customers) {
+					foreach (var x in item.Customers) {
 						x.Addresses.Remove (item);
 						x.Update ();
 					}
 
-					foreach(var x in item.Suppliers) {
+					foreach (var x in item.Suppliers) {
 						x.Addresses.Remove (item);
 						x.Update ();
 					}
@@ -173,26 +171,26 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			}
 
 			try {
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					var item = Address.Find (id);
 					item.DeleteAndFlush ();
 				}
 			} catch (Exception ex) {
 				System.Diagnostics.Debug.WriteLine (ex);
 			}
-			
+
 			return PartialView ("_Refresh");
-        }
-		
+		}
+
 		public JsonResult GetSuggestions (int customer)
 		{
 			var qry = from x in Address.Queryable
-					  from y in x.Customers
-					  where y.Id == customer
-					  orderby x.Street
-					  select new { id = x.Id, name = x.ToString() };
-			
-			return Json(qry.ToList(), JsonRequestBehavior.AllowGet);
+				  from y in x.Customers
+				  where y.Id == customer
+				  orderby x.Street
+				  select new { id = x.Id, name = x.ToString () };
+
+			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
 		}
-    }
+	}
 }

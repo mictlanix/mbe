@@ -38,13 +38,11 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
-    public class EmployeesController : CustomController
-    {
+	public class EmployeesController : CustomController {
 		public ActionResult Index ()
-        {
+		{
 			var search = SearchEmployees (new Search<Employee> {
 				Limit = WebConfig.PageSize
 			});
@@ -54,12 +52,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			}
 
 			return View (search);
-        }
+		}
 
-        [HttpPost]
-        public ActionResult Index (Search<Employee> search)
-        {
-            if (ModelState.IsValid) {
+		[HttpPost]
+		public ActionResult Index (Search<Employee> search)
+		{
+			if (ModelState.IsValid) {
 				search = SearchEmployees (search);
 			}
 
@@ -68,89 +66,89 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			}
 
 			return View (search);
-        }
+		}
 
 		Search<Employee> SearchEmployees (Search<Employee> search)
 		{
 			IQueryable<Employee> query;
-			var pattern = string.Format("{0}", search.Pattern).Trim ();
+			var pattern = string.Format ("{0}", search.Pattern).Trim ();
 
 			if (string.IsNullOrEmpty (pattern)) {
 				query = from x in Employee.Queryable
-						orderby x.FirstName
-						select x;
+					orderby x.FirstName
+					select x;
 			} else {
 				query = from x in Employee.Queryable
-						where x.FirstName.Contains (pattern) ||
-							x.LastName.Contains (pattern)
-						orderby x.FirstName
-						select x;
-            }
-			
+					where x.FirstName.Contains (pattern) ||
+						x.LastName.Contains (pattern)
+					orderby x.FirstName
+					select x;
+			}
+
 			search.Total = query.Count ();
 			search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
 
-            return search;
-        }
+			return search;
+		}
 
 		public ActionResult Details (int id)
-        {
+		{
 			var entity = Employee.Find (id);
 			return PartialView ("_Details", entity);
-        }
+		}
 
-        public ActionResult Create()
-        {
+		public ActionResult Create ()
+		{
 			return PartialView ("_Create");
-        }
+		}
 
-        [HttpPost]
-        public ActionResult Create (Employee item)
+		[HttpPost]
+		public ActionResult Create (Employee item)
 		{
 			if (!ModelState.IsValid) {
 				return PartialView ("_Create", item);
 			}
 
 			using (var scope = new TransactionScope ()) {
-            	item.CreateAndFlush ();
+				item.CreateAndFlush ();
 			}
 
 			return PartialView ("_Refresh");
-        }
+		}
 
-        public ActionResult Edit (int id)
-        {
+		public ActionResult Edit (int id)
+		{
 			var entity = Employee.Find (id);
 			return PartialView ("_Edit", entity);
-        }
+		}
 
-        [HttpPost]
-        public ActionResult Edit (Employee item)
+		[HttpPost]
+		public ActionResult Edit (Employee item)
 		{
 			if (!ModelState.IsValid) {
 				return PartialView ("_Edit", item);
 			}
-            
+
 			using (var scope = new TransactionScope ()) {
-            	item.UpdateAndFlush ();
+				item.UpdateAndFlush ();
 			}
 
 			return PartialView ("_Refresh");
-        }
+		}
 
-        public ActionResult Delete (int id)
-        {
+		public ActionResult Delete (int id)
+		{
 			var entity = Employee.Find (id);
 			return PartialView ("_Delete", entity);
-        }
+		}
 
-        [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed (int id)
+		[HttpPost, ActionName ("Delete")]
+		public ActionResult DeleteConfirmed (int id)
 		{
 			var entity = Employee.Find (id);
 
 			try {
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.DeleteAndFlush ();
 				}
 			} catch (Exception) {
@@ -160,27 +158,27 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			return PartialView ("_Refresh");
 		}
 
-        public JsonResult GetSuggestions (string pattern)
-        {
-            var query = from x in Employee.Queryable
-						where x.IsActive && (
-							x.FirstName.Contains (pattern) ||
-							x.LastName.Contains (pattern))
-						select new { id = x.Id, name = x.FirstName + " " + x.LastName };
-
-            return Json (query.ToList (), JsonRequestBehavior.AllowGet);
-        }
-		
-		public JsonResult SalesPeople (string pattern)
+		public JsonResult GetSuggestions (string pattern)
 		{
 			var query = from x in Employee.Queryable
-						where x.IsActive && x.IsSalesPerson && (
-							x.FirstName.Contains (pattern) ||
-							x.LastName.Contains (pattern))
-						select new { id = x.Id, name = x.FirstName + " " + x.LastName };
+				    where x.IsActive && (
+					    x.FirstName.Contains (pattern) ||
+					    x.LastName.Contains (pattern))
+				    select new { id = x.Id, name = x.FirstName + " " + x.LastName };
 
 			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
 		}
-    }
+
+		public JsonResult SalesPeople (string pattern)
+		{
+			var query = from x in Employee.Queryable
+				    where x.IsActive && x.IsSalesPerson && (
+					    x.FirstName.Contains (pattern) ||
+					    x.LastName.Contains (pattern))
+				    select new { id = x.Id, name = x.FirstName + " " + x.LastName };
+
+			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
+		}
+	}
 }
 

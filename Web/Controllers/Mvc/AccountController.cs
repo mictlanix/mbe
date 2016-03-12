@@ -39,17 +39,15 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
-    public class AccountController : CustomController
-    {
-        bool ValidateUser(string username, string password)
-        {
-            var item = Model.User.Queryable.SingleOrDefault(x => x.UserName == username);
-            return item != null && item.Password ==  SecurityHelpers.SHA1 (password);
-        }
+namespace Mictlanix.BE.Web.Controllers.Mvc {
+	public class AccountController : CustomController {
+		bool ValidateUser (string username, string password)
+		{
+			var item = Model.User.Queryable.SingleOrDefault (x => x.UserName == username);
+			return item != null && item.Password == SecurityHelpers.SHA1 (password);
+		}
 
-        bool CreateUser (string username, string password, string email)
+		bool CreateUser (string username, string password, string email)
 		{
 			username = username.ToLower ();
 
@@ -58,137 +56,136 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			}
 
 			var item = new User {
-                UserName = username,
-                Password = SecurityHelpers.SHA1 (password),
-				Email = email.ToLower()
-            };
+				UserName = username,
+				Password = SecurityHelpers.SHA1 (password),
+				Email = email.ToLower ()
+			};
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
 			}
 
-            return true;
-        }
+			return true;
+		}
 
-        bool ChangePassword(string username, string oldPassword, string newPassword)
-        {
-            User item = Model.User.Find(username);
-            string pwd = SecurityHelpers.SHA1 (oldPassword);
+		bool ChangePassword (string username, string oldPassword, string newPassword)
+		{
+			User item = Model.User.Find (username);
+			string pwd = SecurityHelpers.SHA1 (oldPassword);
 
-            if (item == null || item.Password != pwd)
-                return false;
+			if (item == null || item.Password != pwd)
+				return false;
 
-            item.Password = SecurityHelpers.SHA1 (newPassword);
-			
-			using (var scope = new TransactionScope()) {
+			item.Password = SecurityHelpers.SHA1 (newPassword);
+
+			using (var scope = new TransactionScope ()) {
 				item.UpdateAndFlush ();
 			}
-        
-            return true;
-        }
 
-        public ActionResult LogOn()
-        {
-            return View();
-        }
+			return true;
+		}
 
-        [HttpPost]
-        public ActionResult LogOn(LogOnModel model, string returnUrl)
-        {
-            if (!ModelState.IsValid)
-				return View(model);
-            
+		public ActionResult LogOn ()
+		{
+			return View ();
+		}
+
+		[HttpPost]
+		public ActionResult LogOn (LogOnModel model, string returnUrl)
+		{
+			if (!ModelState.IsValid)
+				return View (model);
+
 			// force lowercase for usernames
-            model.UserName = model.UserName.ToLower();
+			model.UserName = model.UserName.ToLower ();
 
-            if (ValidateUser(model.UserName, model.Password)) {
-                FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
-                if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
-                    && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\")) {
-                    return Redirect(returnUrl);
-                } else {
-                    return RedirectToAction("Index", "Home");
-                }
-            } else {
-                ModelState.AddModelError("", Mictlanix.BE.Resources.Message_InvalidUserPassword);
-            }
-
-            // If we got this far, something failed, redisplay form
-            return View(model);
-        }
-
-        public ActionResult LogOff()
-        {
-            FormsAuthentication.SignOut();
-
-            return RedirectToAction("Index", "Home");
-        }
-
-        public ActionResult Register()
-        {
-            return View(new RegisterModel());
-        }
-
-        [HttpPost]
-        public ActionResult Register(RegisterModel model)
-        {
-            if (!ModelState.IsValid)
-				return View(model);
-            
-			// force lowercase for usernames
-            model.UserName = model.UserName.ToLower();
-
-            try {
-				// Attempt to register the user
-                if (CreateUser(model.UserName, model.Password, model.Email)) {
-                    FormsAuthentication.SetAuthCookie(model.UserName, false);
-                    return RedirectToAction("Index", "Home");
-                } else {
-                    ModelState.AddModelError("", Mictlanix.BE.Resources.Message_UnknownError);
-                }
-            } catch (Exception ex) {
-                ModelState.AddModelError("", ex.Message);                    
-            }
+			if (ValidateUser (model.UserName, model.Password)) {
+				FormsAuthentication.SetAuthCookie (model.UserName, model.RememberMe);
+				if (Url.IsLocalUrl (returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith ("/")
+				    && !returnUrl.StartsWith ("//") && !returnUrl.StartsWith ("/\\")) {
+					return Redirect (returnUrl);
+				} else {
+					return RedirectToAction ("Index", "Home");
+				}
+			} else {
+				ModelState.AddModelError ("", Mictlanix.BE.Resources.Message_InvalidUserPassword);
+			}
 
 			// If we got this far, something failed, redisplay form
-			return View(model);
-        }
+			return View (model);
+		}
 
-        [Authorize]
-        public ActionResult ChangePassword()
-        {
-            return View();
-        }
+		public ActionResult LogOff ()
+		{
+			FormsAuthentication.SignOut ();
+
+			return RedirectToAction ("Index", "Home");
+		}
+
+		public ActionResult Register ()
+		{
+			return View (new RegisterModel ());
+		}
+
+		[HttpPost]
+		public ActionResult Register (RegisterModel model)
+		{
+			if (!ModelState.IsValid)
+				return View (model);
+
+			// force lowercase for usernames
+			model.UserName = model.UserName.ToLower ();
+
+			try {
+				// Attempt to register the user
+				if (CreateUser (model.UserName, model.Password, model.Email)) {
+					FormsAuthentication.SetAuthCookie (model.UserName, false);
+					return RedirectToAction ("Index", "Home");
+				} else {
+					ModelState.AddModelError ("", Mictlanix.BE.Resources.Message_UnknownError);
+				}
+			} catch (Exception ex) {
+				ModelState.AddModelError ("", ex.Message);
+			}
+
+			// If we got this far, something failed, redisplay form
+			return View (model);
+		}
+
+		[Authorize]
+		public ActionResult ChangePassword ()
+		{
+			return View ();
+		}
 
 		[HttpPost]
 		[Authorize]
-        public ActionResult ChangePassword(ChangePasswordModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                // ChangePassword will throw an exception rather
-                // than return false in certain failure scenarios.
-                bool changePasswordSucceeded;
+		public ActionResult ChangePassword (ChangePasswordModel model)
+		{
+			if (ModelState.IsValid) {
+				// ChangePassword will throw an exception rather
+				// than return false in certain failure scenarios.
+				bool changePasswordSucceeded;
 
-                try {
-                    changePasswordSucceeded = ChangePassword (User.Identity.Name, model.OldPassword, model.NewPassword);
-                } catch (Exception) {
-                    changePasswordSucceeded = false;
-                }
+				try {
+					changePasswordSucceeded = ChangePassword (User.Identity.Name, model.OldPassword, model.NewPassword);
+				} catch (Exception) {
+					changePasswordSucceeded = false;
+				}
 
-                if (changePasswordSucceeded) {
-                    return RedirectToAction ("ChangePasswordSuccess");
-                } else {
-                    ModelState.AddModelError ("", Mictlanix.BE.Resources.Message_ChangePasswordWrong);
-                }
-            }
+				if (changePasswordSucceeded) {
+					return RedirectToAction ("ChangePasswordSuccess");
+				} else {
+					ModelState.AddModelError ("", Mictlanix.BE.Resources.Message_ChangePasswordWrong);
+				}
+			}
 
-            // If we got this far, something failed, redisplay form
-            return View(model);
-        }
+			// If we got this far, something failed, redisplay form
+			return View (model);
+		}
 
 		[Authorize]
-        public ActionResult ChangePasswordSuccess ()
+		public ActionResult ChangePasswordSuccess ()
 		{
 			return View ();
 		}
@@ -201,10 +198,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				PointOfSale = WebConfig.PointOfSale,
 				CashDrawer = WebConfig.CashDrawer
 			};
-			
+
 			return View (item);
 		}
-		
+
 		[HttpPost]
 		[Authorize]
 		public ActionResult LocalSettings (LocalSettings item)
@@ -212,45 +209,45 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			item.Store = Store.TryFind (item.StoreId);
 			item.PointOfSale = PointOfSale.TryFind (item.PointOfSaleId);
 			item.CashDrawer = CashDrawer.TryFind (item.CashDrawerId.GetValueOrDefault ());
-			
+
 			if (!ModelState.IsValid) {
 				return View (item);
 			}
-			
+
 			Response.Cookies.Add (new HttpCookie (WebConfig.StoreCookieKey) {
 				Value = item.Store.Id.ToString (),
 				Expires = DateTime.Now.AddYears (100)
 			});
-			
+
 			if (item.PointOfSale != null) {
-				Response.Cookies.Add(new HttpCookie(WebConfig.PointOfSaleCookieKey) {
+				Response.Cookies.Add (new HttpCookie (WebConfig.PointOfSaleCookieKey) {
 					Value = item.PointOfSale.Id.ToString (),
 					Expires = DateTime.Now.AddYears (100)
 				});
 			} else {
 				if (Request.Cookies [WebConfig.PointOfSaleCookieKey] != null) {
-					Response.Cookies.Add(new HttpCookie(WebConfig.PointOfSaleCookieKey) {
+					Response.Cookies.Add (new HttpCookie (WebConfig.PointOfSaleCookieKey) {
 						Value = string.Empty,
 						Expires = DateTime.Now.AddDays (-1d)
 					});
 				}
 			}
-			
+
 			if (item.CashDrawer != null) {
-				Response.Cookies.Add(new HttpCookie(WebConfig.CashDrawerCookieKey) {
+				Response.Cookies.Add (new HttpCookie (WebConfig.CashDrawerCookieKey) {
 					Value = item.CashDrawer.Id.ToString (),
 					Expires = DateTime.Now.AddYears (100)
 				});
 			} else {
 				if (Request.Cookies [WebConfig.CashDrawerCookieKey] != null) {
-					Response.Cookies.Add(new HttpCookie(WebConfig.CashDrawerCookieKey) {
+					Response.Cookies.Add (new HttpCookie (WebConfig.CashDrawerCookieKey) {
 						Value = string.Empty,
 						Expires = DateTime.Now.AddDays (-1d)
 					});
 				}
 			}
-			
+
 			return RedirectToAction ("Index", "Home");
 		}
-    }
+	}
 }

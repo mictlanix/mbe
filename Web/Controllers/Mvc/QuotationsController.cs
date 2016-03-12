@@ -38,19 +38,17 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
-    public class QuotationsController : CustomController
-    {
-        public ViewResult Index ()
+	public class QuotationsController : CustomController {
+		public ViewResult Index ()
 		{
 			var item = WebConfig.Store;
-			
+
 			if (item == null) {
 				return View ("InvalidStore");
 			}
-			
+
 			if (!CashHelpers.ValidateExchangeRate ()) {
 				return View ("InvalidExchangeRate");
 			}
@@ -62,8 +60,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			return View (search);
 		}
 
-        [HttpPost]
-        public ActionResult Index(Search<SalesQuote> search)
+		[HttpPost]
+		public ActionResult Index (Search<SalesQuote> search)
 		{
 			if (ModelState.IsValid) {
 				search = SearchQuotations (search);
@@ -74,33 +72,33 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			} else {
 				return View (search);
 			}
-        }
+		}
 
 		Search<SalesQuote> SearchQuotations (Search<SalesQuote> search)
 		{
 			IQueryable<SalesQuote> qry;
-            var item = WebConfig.Store;
+			var item = WebConfig.Store;
 
-            if (search.Pattern == null) {
-                qry = from x in SalesQuote.Queryable
-                      where x.Store.Id == item.Id
-					  orderby x.Id descending
-                      select x;
-            } else {
-                qry = from x in SalesQuote.Queryable
-                      where x.Store.Id == item.Id &&
-                            x.Customer.Name.Contains(search.Pattern)
-					  orderby x.Id descending
-                      select x;
+			if (search.Pattern == null) {
+				qry = from x in SalesQuote.Queryable
+				      where x.Store.Id == item.Id
+				      orderby x.Id descending
+				      select x;
+			} else {
+				qry = from x in SalesQuote.Queryable
+				      where x.Store.Id == item.Id &&
+					    x.Customer.Name.Contains (search.Pattern)
+				      orderby x.Id descending
+				      select x;
 			}
 
-			search.Total = qry.Count();
-			search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
+			search.Total = qry.Count ();
+			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
 
-            return search;
-        }
+			return search;
+		}
 
-        public ViewResult New ()
+		public ViewResult New ()
 		{
 			var item = WebConfig.Store;
 
@@ -112,55 +110,55 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				return View ("InvalidExchangeRate");
 			}
 
-            return View (new SalesQuote {
+			return View (new SalesQuote {
 				CustomerId = WebConfig.DefaultCustomer,
 				Customer = Customer.Find (WebConfig.DefaultCustomer)
 			});
-        }
+		}
 
-        [HttpPost]
+		[HttpPost]
 		public ActionResult New (SalesQuote item)
 		{
 			item.Store = WebConfig.Store;
-			
+
 			if (item.Store == null) {
 				return View ("InvalidStore");
 			}
-			
+
 			// Store and Serial
 			item.Store = item.Store;
 			try {
 				item.Serial = (from x in SalesQuote.Queryable
-	            			   where x.Store.Id == item.Store.Id
-	                      	   select x.Serial).Max () + 1;
+					       where x.Store.Id == item.Store.Id
+					       select x.Serial).Max () + 1;
 			} catch {
 				item.Serial = 1;
 			}
-			
+
 			item.Customer = Customer.Find (item.CustomerId);
 			item.SalesPerson = CurrentUser.Employee;
 			item.Date = DateTime.Now;
 			//FIXME: choose date from UI
 			item.DueDate = item.Date.AddDays (30);
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
 			}
 
 			return RedirectToAction ("Edit", new { id = item.Id });
 		}
 
-        public ViewResult Details(int id)
-        {
-            return View(SalesQuote.Find(id));
-        }
+		public ViewResult Details (int id)
+		{
+			return View (SalesQuote.Find (id));
+		}
 
-        public ViewResult Print (int id)
+		public ViewResult Print (int id)
 		{
 			return View (SalesQuote.TryFind (id));
-        }
+		}
 
-        public ActionResult Edit (int id)
+		public ActionResult Edit (int id)
 		{
 			if (!CashHelpers.ValidateExchangeRate ()) {
 				return View ("InvalidExchangeRate");
@@ -170,16 +168,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			if (Request.IsAjaxRequest ())
 				return PartialView ("_MasterEditView", item);
-            else
-                return View(item);
-        }
+			else
+				return View (item);
+		}
 
 		public ActionResult DiscardChanges (int id)
 		{
 			return PartialView ("_MasterView", SalesQuote.TryFind (id));
 		}
-		
-        [HttpPost]
+
+		[HttpPost]
 		public ActionResult Edit (SalesQuote item)
 		{
 			item.Customer = Customer.TryFind (item.CustomerId);
@@ -187,7 +185,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			if (!ModelState.IsValid) {
 				return PartialView ("_MasterEditView", item);
 			}
-			
+
 			var quote = SalesQuote.Find (item.Id);
 			quote.DueDate = item.DueDate;
 
@@ -196,37 +194,37 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			}
 
 			return PartialView ("_MasterView", quote);
-        }
+		}
 
-        [HttpPost]
-        public JsonResult AddDetail(int order, int product)
-        {
-            var p = Product.Find (product);
+		[HttpPost]
+		public JsonResult AddDetail (int order, int product)
+		{
+			var p = Product.Find (product);
 			var q = SalesQuote.Find (order);
 			int pl = q.Customer.PriceList.Id;
 			var price = (from x in ProductPrice.Queryable
-			             where x.Product.Id == product && x.List.Id == pl
-			             select x.Value).SingleOrDefault();
+				     where x.Product.Id == product && x.List.Id == pl
+				     select x.Value).SingleOrDefault ();
 
-            var item = new SalesQuoteDetail {
-                SalesQuote = SalesQuote.Find (order),
-                Product = p,
-                ProductCode = p.Code,
-                ProductName = p.Name,
-                Discount = 0,
-                TaxRate = p.TaxRate,
+			var item = new SalesQuoteDetail {
+				SalesQuote = SalesQuote.Find (order),
+				Product = p,
+				ProductCode = p.Code,
+				ProductName = p.Name,
+				Discount = 0,
+				TaxRate = p.TaxRate,
 				IsTaxIncluded = p.IsTaxIncluded,
-                Quantity = 1,
+				Quantity = 1,
 				Price = price,
-				ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate(),
+				ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate (),
 				Currency = WebConfig.DefaultCurrency
-            };
+			};
 
-            using (var scope = new TransactionScope()) {
-                item.CreateAndFlush ();
-            }
+			using (var scope = new TransactionScope ()) {
+				item.CreateAndFlush ();
+			}
 
-            return Json(new { id = item.Id });
+			return Json (new { id = item.Id });
 		}
 
 		[HttpPost]
@@ -237,13 +235,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			decimal val;
 
 			success = decimal.TryParse (value.Trim (),
-			                            System.Globalization.NumberStyles.Currency,
-			                            null, out val);
+						    System.Globalization.NumberStyles.Currency,
+						    null, out val);
 
 			if (success && val >= 0) {
 				detail.Price = val;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					detail.Update ();
 				}
 			}
@@ -279,10 +277,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			return Json (new { id = id, value = detail.Currency.ToString (), rate = detail.ExchangeRate, total = detail.Total.ToString ("c") });
 		}
 
-        [HttpPost]
+		[HttpPost]
 		public JsonResult EditDetailQuantity (int id, decimal value)
-        {
-            var detail = SalesQuoteDetail.Find (id);
+		{
+			var detail = SalesQuoteDetail.Find (id);
 
 			if (value > 0) {
 				detail.Quantity = value;
@@ -290,82 +288,82 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				using (var scope = new TransactionScope ()) {
 					detail.UpdateAndFlush ();
 				}
-            }
+			}
 
-			return Json(new { id = id, value = detail.Quantity, total = detail.Total.ToString("c") });
-        }
+			return Json (new { id = id, value = detail.Quantity, total = detail.Total.ToString ("c") });
+		}
 
-        [HttpPost]
-        public JsonResult EditDetailDiscount (int id, string value)
-        {
-            var detail = SalesQuoteDetail.Find (id);
-            bool success;
-            decimal discount;
+		[HttpPost]
+		public JsonResult EditDetailDiscount (int id, string value)
+		{
+			var detail = SalesQuoteDetail.Find (id);
+			bool success;
+			decimal discount;
 
-            success = decimal.TryParse (value.TrimEnd(new char[] { ' ', '%' }), out discount);
-            discount /= 100m;
+			success = decimal.TryParse (value.TrimEnd (new char [] { ' ', '%' }), out discount);
+			discount /= 100m;
 
-            if (success && discount >= 0 && discount <= 1) {
-                detail.Discount = discount;
+			if (success && discount >= 0 && discount <= 1) {
+				detail.Discount = discount;
 
 				using (var scope = new TransactionScope ()) {
 					detail.UpdateAndFlush ();
 				}
-            }
+			}
 
-			return Json(new { id = id, value = detail.Discount.ToString("p"), total = detail.Total.ToString("c") });
-        }
+			return Json (new { id = id, value = detail.Discount.ToString ("p"), total = detail.Total.ToString ("c") });
+		}
 
-        public ActionResult GetTotals(int id)
-        {
-            var order = SalesQuote.Find(id);
-            return PartialView("_Totals", order);
-        }
-
-        public ActionResult GetDetail (int id)
+		public ActionResult GetTotals (int id)
 		{
-			return PartialView ("_DetailEditView", SalesQuoteDetail.Find(id));
-        }
+			var order = SalesQuote.Find (id);
+			return PartialView ("_Totals", order);
+		}
 
-        [HttpPost]
-        public JsonResult RemoveDetail(int id)
-        {
-            var item = SalesQuoteDetail.Find(id);
+		public ActionResult GetDetail (int id)
+		{
+			return PartialView ("_DetailEditView", SalesQuoteDetail.Find (id));
+		}
 
-			using (var scope = new TransactionScope()) {
+		[HttpPost]
+		public JsonResult RemoveDetail (int id)
+		{
+			var item = SalesQuoteDetail.Find (id);
+
+			using (var scope = new TransactionScope ()) {
 				item.DeleteAndFlush ();
 			}
 
-            return Json(new { id = id, result = true });
-        }
+			return Json (new { id = id, result = true });
+		}
 
-        [HttpPost]
+		[HttpPost]
 		public ActionResult Confirm (int id)
 		{
 			SalesQuote item = SalesQuote.Find (id);
 
 			item.IsCompleted = true;
-			
+
 			using (var scope = new TransactionScope ()) {
 				item.UpdateAndFlush ();
 			}
 
 			return RedirectToAction ("Index");
-        }
+		}
 
-        [HttpPost]
+		[HttpPost]
 		public ActionResult Cancel (int id)
 		{
 			SalesQuote item = SalesQuote.Find (id);
 
 			item.IsCancelled = true;
-			
+
 			using (var scope = new TransactionScope ()) {
 				item.UpdateAndFlush ();
 			}
 
 			return RedirectToAction ("New");
-        }
+		}
 
 		// TODO: Rename param: order -> id
 		public JsonResult GetSuggestions (int order, string pattern)
@@ -373,24 +371,34 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			int pl = SalesQuote.Queryable.Where (x => x.Id == order)
 							.Select (x => x.Customer.PriceList.Id).Single ();
 			var query = from x in ProductPrice.Queryable
-						where x.List.Id == pl && (
-							x.Product.Name.Contains (pattern) ||
-							x.Product.Code.Contains (pattern) ||
-							x.Product.Model.Contains (pattern) ||
-							x.Product.SKU.Contains (pattern) ||
-							x.Product.Brand.Contains (pattern))
-						orderby x.Product.Name
-						select new {
-							x.Product.Id, x.Product.Name, x.Product.Code,
-							x.Product.Model, x.Product.SKU, x.Product.Photo, Price = x.Value
-						};
+				    where x.List.Id == pl && (
+					    x.Product.Name.Contains (pattern) ||
+					    x.Product.Code.Contains (pattern) ||
+					    x.Product.Model.Contains (pattern) ||
+					    x.Product.SKU.Contains (pattern) ||
+					    x.Product.Brand.Contains (pattern))
+				    orderby x.Product.Name
+				    select new {
+					    x.Product.Id,
+					    x.Product.Name,
+					    x.Product.Code,
+					    x.Product.Model,
+					    x.Product.SKU,
+					    x.Product.Photo,
+					    Price = x.Value
+				    };
 			var items = from x in query.Take (15).ToList ()
-						select new {
-							id = x.Id, name = x.Name, code = x.Code, model = x.Model,
-							sku = x.SKU, url = Url.Content (x.Photo), price = x.Price
-						};
+				    select new {
+					    id = x.Id,
+					    name = x.Name,
+					    code = x.Code,
+					    model = x.Model,
+					    sku = x.SKU,
+					    url = Url.Content (x.Photo),
+					    price = x.Price
+				    };
 
 			return Json (items.ToList (), JsonRequestBehavior.AllowGet);
 		}
-    }
+	}
 }
