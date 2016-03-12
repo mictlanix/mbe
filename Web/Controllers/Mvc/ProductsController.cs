@@ -44,11 +44,9 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
-	public class ProductsController : CustomController
-	{
+	public class ProductsController : CustomController {
 		public ActionResult Index ()
 		{
 			var search = SearchProducts (new Search<Product> {
@@ -79,20 +77,20 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			if (string.IsNullOrEmpty (pattern)) {
 				query = from x in Product.Queryable
-						orderby x.Name
-						select x;
+					orderby x.Name
+					select x;
 			} else {
 				query = from x in Product.Queryable
-						where x.Name.Contains (pattern) ||
-							x.Code.Contains (pattern) ||
-							x.Model.Contains (pattern) ||
-							x.SKU.Contains (pattern) ||
-							x.Brand.Contains (pattern)
-						orderby x.Name
-						select x;
+					where x.Name.Contains (pattern) ||
+						x.Code.Contains (pattern) ||
+						x.Model.Contains (pattern) ||
+						x.SKU.Contains (pattern) ||
+						x.Brand.Contains (pattern)
+					orderby x.Name
+					select x;
 
 			}
-			
+
 			search.Total = query.Count ();
 			search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
 
@@ -112,7 +110,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			if (!ModelState.IsValid) {
 				return PartialView ("_Create", item);
 			}
-            
+
 			item.MinimumOrderQuantity = 1;
 			item.TaxRate = WebConfig.DefaultVAT;
 			item.IsTaxIncluded = WebConfig.IsTaxIncluded;
@@ -170,7 +168,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			if (!ModelState.IsValid)
 				return PartialView ("_Edit", item);
-            
+
 			var entity = Product.Find (item.Id);
 
 			entity.Brand = item.Brand;
@@ -208,7 +206,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			var item = Product.Find (id);
 
 			try {
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 
 					foreach (var x in item.Prices) {
 						x.DeleteAndFlush ();
@@ -216,7 +214,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 					item.DeleteAndFlush ();
 				}
-                return PartialView ("_DeleteSuccesful", item);
+				return PartialView ("_DeleteSuccesful", item);
 			} catch (Exception ex) {
 				System.Diagnostics.Debug.WriteLine (ex);
 				return PartialView ("DeleteUnsuccessful");
@@ -250,11 +248,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 							DELETE FROM product_price WHERE product = :duplicate;
 							DELETE FROM product WHERE product_id = :duplicate;";
 
-			ActiveRecordMediator<Product>.Execute (delegate(ISession session, object instance) {
+			ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				int ret;
 
-				using(var tx = session.BeginTransaction()) 
-				{ 
+				using (var tx = session.BeginTransaction ()) {
 					var query = session.CreateSQLQuery (sql);
 
 					query.AddScalar ("product", NHibernateUtil.Int32);
@@ -263,29 +260,29 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 					query.SetInt32 ("product", product);
 					query.SetInt32 ("duplicate", duplicate);
 
-					ret = query.ExecuteUpdate();
+					ret = query.ExecuteUpdate ();
 
-					tx.Commit(); 
+					tx.Commit ();
 				}
 
 				return ret;
 			}, null);
 
-			return View (new Pair<Product,Product> { First = prod, Second = dup });
+			return View (new Pair<Product, Product> { First = prod, Second = dup });
 		}
 
 		string SavePhoto (HttpPostedFileBase file)
 		{
 			if (file == null || file.ContentLength == 0)
 				return null;
-			
+
 			using (var stream = file.InputStream) {
 				using (var img = Image.FromStream (stream)) {
 					var hash = string.Format ("{0}.png", HashFromImage (img));
 					var path = Path.Combine (Server.MapPath (WebConfig.PhotosPath), hash);
-					
+
 					img.Save (path, ImageFormat.Png);
-					
+
 					return Path.Combine (WebConfig.PhotosPath, hash);
 				}
 			}
@@ -294,9 +291,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		string HashFromStream (Stream stream)
 		{
 			string hash;
-			byte[] bytes = null;
+			byte [] bytes = null;
 
-			using (SHA1CryptoServiceProvider sha1 = new SHA1CryptoServiceProvider()) {
+			using (SHA1CryptoServiceProvider sha1 = new SHA1CryptoServiceProvider ()) {
 				bytes = sha1.ComputeHash (stream);
 				hash = BitConverter.ToString (bytes).Replace ("-", "").ToLower ();
 			}
@@ -307,14 +304,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		string HashFromImage (Image img)
 		{
 			string hash;
-			byte[] bytes = null;
+			byte [] bytes = null;
 
 			using (MemoryStream ms = new MemoryStream ()) {
 				img.Save (ms, img.RawFormat);
 				bytes = ms.ToArray ();
 			}
 
-			using (SHA1CryptoServiceProvider sha1 = new SHA1CryptoServiceProvider()) {
+			using (SHA1CryptoServiceProvider sha1 = new SHA1CryptoServiceProvider ()) {
 				bytes = sha1.ComputeHash (bytes);
 				hash = BitConverter.ToString (bytes).Replace ("-", "").ToLower ();
 			}
@@ -325,19 +322,23 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		public JsonResult GetSuggestions (string pattern)
 		{
 			var query = from x in Product.Queryable
-						where x.Name.Contains (pattern) ||
-			            x.Code.Contains (pattern) ||
-			            x.Model.Contains (pattern) ||
-			            x.SKU.Contains (pattern) ||
-			            x.Brand.Contains (pattern)
-						orderby x.Name
-						select x;
+				    where x.Name.Contains (pattern) ||
+			x.Code.Contains (pattern) ||
+			x.Model.Contains (pattern) ||
+			x.SKU.Contains (pattern) ||
+			x.Brand.Contains (pattern)
+				    orderby x.Name
+				    select x;
 
 			var items = from x in query.Take (15).ToList ()
-				select new {
-				id = x.Id, name = x.Name, code = x.Code, model = x.Model,
-				sku = x.SKU, url = Url.Content (x.Photo)
-			};
+				    select new {
+					    id = x.Id,
+					    name = x.Name,
+					    code = x.Code,
+					    model = x.Model,
+					    sku = x.SKU,
+					    url = Url.Content (x.Photo)
+				    };
 
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}
@@ -349,7 +350,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		}
 
 		[HttpPost]
-		public ActionResult SetLabels (int id, int[] value)
+		public ActionResult SetLabels (int id, int [] value)
 		{
 			var entity = Product.Find (id);
 
@@ -365,7 +366,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				return Content (Resources.ItemNotFound);
 			}
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				entity.Labels.Clear ();
 				if (value != null) {
 					foreach (int v in value) {
@@ -380,11 +381,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 		public JsonResult UnitsOfMeasurement ()
 		{
-			var qry = from x in Enum.GetValues (typeof(UnitOfMeasurement)).Cast<UnitOfMeasurement> ()
-					  select new {
-						  value = x.GetDisplayName (),
-						  text = x.GetDisplayName ()
-					  };
+			var qry = from x in Enum.GetValues (typeof (UnitOfMeasurement)).Cast<UnitOfMeasurement> ()
+				  select new {
+					  value = x.GetDisplayName (),
+					  text = x.GetDisplayName ()
+				  };
 
 			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
 		}
@@ -395,18 +396,18 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			if (string.IsNullOrWhiteSpace (pattern)) {
 				query = from x in Product.Queryable
-						where x.Brand != null && x.Brand != string.Empty
-						orderby x.Brand
-						select x.Brand;
+					where x.Brand != null && x.Brand != string.Empty
+					orderby x.Brand
+					select x.Brand;
 			} else {
 				query = from x in Product.Queryable
-						where x.Brand.Contains (pattern)
-						orderby x.Brand
-						select x.Brand;
+					where x.Brand.Contains (pattern)
+					orderby x.Brand
+					select x.Brand;
 			}
 
 			var items = from x in query.Distinct ().ToList ()
-						select new { id = x, name = x };
+				    select new { id = x, name = x };
 
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}
@@ -417,18 +418,18 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			if (string.IsNullOrWhiteSpace (pattern)) {
 				query = from x in Product.Queryable
-						where x.Model != null && x.Model != string.Empty
-			            orderby x.Model
-			            select x.Model;
+					where x.Model != null && x.Model != string.Empty
+					orderby x.Model
+					select x.Model;
 			} else {
 				query = from x in Product.Queryable
-						where x.Model.Contains (pattern)
-						orderby x.Model
-						select x.Model;
+					where x.Model.Contains (pattern)
+					orderby x.Model
+					select x.Model;
 			}
 
 			var items = from x in query.Distinct ().ToList ()
-						select new { id = x, name = x };
+				    select new { id = x, name = x };
 
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}

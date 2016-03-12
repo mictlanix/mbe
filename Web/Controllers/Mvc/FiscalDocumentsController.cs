@@ -41,17 +41,15 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
-	public class FiscalDocumentsController : CustomController
-	{
+	public class FiscalDocumentsController : CustomController {
 		public ViewResult Index ()
 		{
 			if (WebConfig.Store == null) {
 				return View ("InvalidStore");
 			}
-			
+
 			if (!CashHelpers.ValidateExchangeRate ()) {
 				return View ("InvalidExchangeRate");
 			}
@@ -85,24 +83,24 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			if (int.TryParse (pattern, out id) && id > 0) {
 				query = from x in FiscalDocument.Queryable
-						where !(!x.IsCompleted && x.IsCancelled) && (
-							x.Id == id || x.Serial == id)
-				        orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Issued descending
-				        select x;
+					where !(!x.IsCompleted && x.IsCancelled) && (
+						x.Id == id || x.Serial == id)
+					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Issued descending
+					select x;
 			} else if (string.IsNullOrWhiteSpace (pattern)) {
 				query = from x in FiscalDocument.Queryable
-                      	where !(!x.IsCompleted && x.IsCancelled)
-						orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Issued descending
-                      	select x;
+					where !(!x.IsCompleted && x.IsCancelled)
+					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Issued descending
+					select x;
 			} else {
 				query = from x in FiscalDocument.Queryable
-						where !(!x.IsCompleted && x.IsCancelled) && (
-							x.Issuer.Id.Contains (pattern) ||
-							x.Recipient.Contains (pattern) ||
-							x.RecipientName.Contains (pattern) ||
-							x.Customer.Name.Contains (pattern))
-						orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Issued descending
-                      	select x;
+					where !(!x.IsCompleted && x.IsCancelled) && (
+						x.Issuer.Id.Contains (pattern) ||
+						x.Recipient.Contains (pattern) ||
+						x.RecipientName.Contains (pattern) ||
+						x.Customer.Name.Contains (pattern))
+					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Issued descending
+					select x;
 			}
 
 			search.Total = query.Count ();
@@ -138,7 +136,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			if (model.IsCompleted) {
 				var batch = TaxpayerBatch.Queryable.First (x => x.Batch == model.Batch);
 				var filename = string.Format (Resources.FiscalDocumentFilenameFormatString,
-					               model.Issuer.Id, model.Batch, model.Serial);
+						       model.Issuer.Id, model.Batch, model.Serial);
 				view = string.Format ("Print{0:00}{1}", model.Version * 10, batch.Template);
 
 				Response.AppendHeader ("Content-Disposition", string.Format ("inline; filename={0}.pdf", filename));
@@ -156,7 +154,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			}
 
 			var item = new FiscalDocument {
-				Issuer =  store.Taxpayer
+				Issuer = store.Taxpayer
 			};
 
 			return PartialView ("_Create", item);
@@ -187,7 +185,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			if (!ModelState.IsValid) {
 				return PartialView ("_Create", item);
 			}
-			
+
 			// Store
 			item.Store = WebConfig.Store;
 			item.IssuedAt = item.Store.Address;
@@ -197,7 +195,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			item.IssuerName = item.Issuer.Name;
 			item.IssuerRegime = item.Issuer.Regime;
 			item.IssuerAddress = item.Issuer.Address;
-			
+
 			// Recipient
 			item.RecipientAddress = recipient.Address;
 
@@ -213,7 +211,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			item.ModificationTime = item.CreationTime;
 			item.Updater = item.Creator;
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
 			}
 
@@ -227,7 +225,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			if (item.IsCompleted || item.IsCancelled) {
 				return RedirectToAction ("View", new { id = item.Id });
 			}
-			
+
 			if (!CashHelpers.ValidateExchangeRate ()) {
 				return View ("InvalidExchangeRate");
 			}
@@ -239,10 +237,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		{
 			var item = FiscalDocument.TryFind (id);
 			var qry = from x in TaxpayerBatch.Queryable
-					  where x.Taxpayer.Id == item.Issuer.Id
-			          select x.Batch;
+				  where x.Taxpayer.Id == item.Issuer.Id
+				  select x.Batch;
 			var list = from x in qry.Distinct ().ToList ()
-					   select new { value = x, text = x };
+				   select new { value = x, text = x };
 
 			return Json (list.ToList (), JsonRequestBehavior.AllowGet);
 		}
@@ -251,7 +249,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		{
 			var item = FiscalDocument.TryFind (id);
 			var qry = from x in item.Customer.Taxpayers
-					  select new { value = x.Id, text = x.ToString () };
+				  select new { value = x.Id, text = x.ToString () };
 
 			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
 		}
@@ -260,13 +258,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		{
 			var items = new ArrayList ();
 
-			items.Add (new { value = (int)PaymentMethod.Unidentified, text = PaymentMethod.Unidentified.GetDisplayName ()});
-			items.Add (new { value = (int)PaymentMethod.Cash,         text = PaymentMethod.Cash.GetDisplayName ()});
-			items.Add (new { value = (int)PaymentMethod.DebitCard,    text = PaymentMethod.DebitCard.GetDisplayName ()});
-			items.Add (new { value = (int)PaymentMethod.CreditCard,   text = PaymentMethod.CreditCard.GetDisplayName ()});
-			items.Add (new { value = (int)PaymentMethod.Check,        text = PaymentMethod.Check.GetDisplayName ()});
-			items.Add (new { value = (int)PaymentMethod.BankDeposit,  text = PaymentMethod.BankDeposit.GetDisplayName ()});
-			items.Add (new { value = (int)PaymentMethod.WireTransfer, text = PaymentMethod.WireTransfer.GetDisplayName ()});
+			items.Add (new { value = (int) PaymentMethod.Unidentified, text = PaymentMethod.Unidentified.GetDisplayName () });
+			items.Add (new { value = (int) PaymentMethod.Cash, text = PaymentMethod.Cash.GetDisplayName () });
+			items.Add (new { value = (int) PaymentMethod.DebitCard, text = PaymentMethod.DebitCard.GetDisplayName () });
+			items.Add (new { value = (int) PaymentMethod.CreditCard, text = PaymentMethod.CreditCard.GetDisplayName () });
+			items.Add (new { value = (int) PaymentMethod.Check, text = PaymentMethod.Check.GetDisplayName () });
+			items.Add (new { value = (int) PaymentMethod.BankDeposit, text = PaymentMethod.BankDeposit.GetDisplayName () });
+			items.Add (new { value = (int) PaymentMethod.WireTransfer, text = PaymentMethod.WireTransfer.GetDisplayName () });
 
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}
@@ -299,7 +297,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
 				}
 			}
@@ -325,7 +323,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			if (item != null) {
 				var recipient = item.Taxpayers.FirstOrDefault ();
-				
+
 				if (recipient == null) {
 					Response.StatusCode = 400;
 					return Content (Resources.TaxpayerNotFound);
@@ -338,7 +336,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
 				}
 			}
@@ -369,7 +367,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
 				}
 			}
@@ -403,11 +401,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
 				}
 			}
-			
+
 			return Json (new {
 				id = id,
 				value = entity.FormattedValueFor (x => x.Batch),
@@ -429,7 +427,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			entity.Updater = CurrentUser.Employee;
 			entity.ModificationTime = DateTime.Now;
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
 			}
 
@@ -466,7 +464,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					foreach (var item in entity.Details) {
 						item.Currency = val;
 						item.ExchangeRate = rate;
@@ -477,7 +475,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				}
 			}
 
-			return Json (new { 
+			return Json (new {
 				id = entity.Id,
 				value = entity.FormattedValueFor (x => x.Currency),
 				rate = entity.FormattedValueFor (x => x.ExchangeRate),
@@ -509,7 +507,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					foreach (var item in entity.Details) {
 						item.ExchangeRate = val;
 						item.Update ();
@@ -519,7 +517,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				}
 			}
 
-			return Json (new { 
+			return Json (new {
 				id = entity.Id,
 				value = entity.FormattedValueFor (x => x.ExchangeRate),
 				itemsChanged = success
@@ -551,7 +549,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 					entity.PaymentReference = Resources.Unidentified;
 				}
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
 				}
 			}
@@ -587,7 +585,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.PaymentReference = Resources.Unidentified;
 			}
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
 			}
 
@@ -609,20 +607,20 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out val);
+			success = decimal.TryParse (value.TrimEnd (new char [] { ' ', '%' }), out val);
 
 			if (success) {
 				entity.RetentionRate = val;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
 				}
 			}
 
-			return Json (new { 
+			return Json (new {
 				id = entity.Id,
 				value = entity.FormattedValueFor (x => x.RetentionRate),
-				total = entity.FormattedValueFor (x => x.Total), 
+				total = entity.FormattedValueFor (x => x.Total),
 				total2 = entity.FormattedValueFor (x => x.TotalEx),
 				itemsChanged = success
 			});
@@ -635,8 +633,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			var entity = FiscalDocument.Find (id);
 			int pl = entity.Customer.PriceList.Id;
 			var price = (from x in ProductPrice.Queryable
-			             where x.Product.Id == product && x.List.Id == pl
-			             select x).SingleOrDefault ();
+				     where x.Product.Id == product && x.List.Id == pl
+				     select x).SingleOrDefault ();
 
 			if (entity.IsCompleted || entity.IsCancelled) {
 				Response.StatusCode = 400;
@@ -662,7 +660,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				item.Price = price.Value * CashHelpers.GetTodayExchangeRate (p.Currency, entity.Currency);
 			}
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
 			}
 
@@ -696,7 +694,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				return Content (Resources.SalesOrderIsNotInvoiceable);
 			}
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				foreach (var x in sales_order.Details) {
 					if (!x.Product.IsInvoiceable)
 						continue;
@@ -731,7 +729,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 					count++;
 				}
 			}
-			
+
 			if (count == 0) {
 				Response.StatusCode = 400;
 				return Content (Resources.InvoiceableItemsNotFound);
@@ -750,7 +748,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				entity.DeleteAndFlush ();
 			}
 
@@ -792,7 +790,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.ProductName = val;
 			}
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
 			}
 
@@ -813,7 +811,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			if (val.Length > 0) {
 				entity.ProductCode = val;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
 				}
 			}
@@ -835,7 +833,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			if (val.Length > 0) {
 				entity.UnitOfMeasurement = val;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
 				}
 			}
@@ -855,7 +853,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			entity.Comment = string.IsNullOrWhiteSpace (value) ? null : value.Trim ();
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
 			}
 
@@ -882,15 +880,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			if (value > 0) {
 				entity.Quantity = value;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
 				}
 			}
 
-			return Json (new { 
+			return Json (new {
 				id = entity.Id,
 				value = entity.FormattedValueFor (x => x.Quantity),
-				total = entity.FormattedValueFor (x => x.Total), 
+				total = entity.FormattedValueFor (x => x.Total),
 				total2 = entity.FormattedValueFor (x => x.TotalEx)
 			});
 		}
@@ -908,13 +906,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			}
 
 			success = decimal.TryParse (value.Trim (),
-			                            System.Globalization.NumberStyles.Currency,
-			                            null, out val);
+						    System.Globalization.NumberStyles.Currency,
+						    null, out val);
 
 			if (success && val >= 0) {
 				entity.Price = val;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
 				}
 			}
@@ -922,7 +920,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			return Json (new {
 				id = entity.Id,
 				value = entity.FormattedValueFor (x => x.Price),
-				total = entity.FormattedValueFor (x => x.Total), 
+				total = entity.FormattedValueFor (x => x.Total),
 				total2 = entity.FormattedValueFor (x => x.TotalEx)
 			});
 		}
@@ -939,21 +937,21 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out val);
+			success = decimal.TryParse (value.TrimEnd (new char [] { ' ', '%' }), out val);
 			val /= 100m;
 
 			if (success && val >= 0 && val <= 1) {
 				entity.Discount = val;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
 				}
 			}
 
-			return Json (new { 
+			return Json (new {
 				id = entity.Id,
 				value = entity.FormattedValueFor (x => x.Discount),
-				total = entity.FormattedValueFor (x => x.Total), 
+				total = entity.FormattedValueFor (x => x.Total),
 				total2 = entity.FormattedValueFor (x => x.TotalEx)
 			});
 		}
@@ -970,21 +968,21 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out val);
+			success = decimal.TryParse (value.TrimEnd (new char [] { ' ', '%' }), out val);
 
 			// TODO: VAT value range validation
 			if (success) {
 				entity.TaxRate = val;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
 				}
 			}
 
-			return Json (new { 
+			return Json (new {
 				id = entity.Id,
 				value = entity.FormattedValueFor (x => x.TaxRate),
-				total = entity.FormattedValueFor (x => x.Total), 
+				total = entity.FormattedValueFor (x => x.Total),
 				total2 = entity.FormattedValueFor (x => x.TotalEx)
 			});
 		}
@@ -1004,24 +1002,24 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			// quantity validation
 			foreach (var detail in entity.Details) {
-				if (detail.Quantity <= 0) 
+				if (detail.Quantity <= 0)
 					return RedirectToAction ("Edit", new { id = entity.Id });
 
 				if (detail.OrderDetail == null)
 					continue;
 
-				if (detail.Quantity > detail.OrderDetail.Quantity) 
+				if (detail.Quantity > detail.OrderDetail.Quantity)
 					return RedirectToAction ("Edit", new { id = entity.Id });
 			}
 
 			serial = (from x in FiscalDocument.Queryable
-		              where x.Issuer.Id == entity.Issuer.Id &&
-							x.Batch == entity.Batch
-		              select x.Serial).Max ().GetValueOrDefault () + 1;
+				  where x.Issuer.Id == entity.Issuer.Id &&
+							    x.Batch == entity.Batch
+				  select x.Serial).Max ().GetValueOrDefault () + 1;
 
 			batch = (from x in entity.Issuer.Batches
-		             where x.Batch == entity.Batch
-		             select x).SingleOrDefault ();
+				 where x.Batch == entity.Batch
+				 select x).SingleOrDefault ();
 
 			if (batch == null) {
 				return View ("InvalidBatch");
@@ -1031,8 +1029,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			entity.Serial = serial;
 			entity.Provider = entity.Issuer.Provider;
 			entity.Issued = new DateTime (dt.Year, dt.Month, dt.Day,
-			                              dt.Hour, dt.Minute, dt.Second,
-			                              DateTimeKind.Unspecified);
+						      dt.Hour, dt.Minute, dt.Second,
+						      DateTimeKind.Unspecified);
 			entity.IssuerCertificateNumber = entity.Issuer.Certificates.Single (x => x.IsActive).Id;
 
 			try {
@@ -1058,13 +1056,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			entity.Updater = CurrentUser.Employee;
 			entity.ModificationTime = DateTime.Now;
 			entity.IsCompleted = true;
-			
+
 			var doc_xml = new FiscalDocumentXml {
 				Id = entity.Id,
 				Data = doc.ToXmlString ()
 			};
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				doc_xml.Create ();
 				entity.UpdateAndFlush ();
 			}
@@ -1094,7 +1092,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			entity.ModificationTime = DateTime.Now;
 			entity.Updater = CurrentUser.Employee;
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
 			}
 
@@ -1104,16 +1102,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		public ViewResult Reports ()
 		{
 			var query = from x in FiscalDocument.Queryable
-						where x.Version < 3 && x.IsCompleted
-						select new { x.Issuer.Id, x.Issuer.Name, x.Issued.Value.Month, x.Issued.Value.Year };
+				    where x.Version < 3 && x.IsCompleted
+				    select new { x.Issuer.Id, x.Issuer.Name, x.Issued.Value.Month, x.Issued.Value.Year };
 			var query2 = from x in FiscalDocument.Queryable
-						where x.Version < 3 && x.IsCompleted && x.IsCancelled
-						select new { x.Issuer.Id, x.Issuer.Name, x.CancellationDate.Value.Month, x.CancellationDate.Value.Year };
+				     where x.Version < 3 && x.IsCompleted && x.IsCancelled
+				     select new { x.Issuer.Id, x.Issuer.Name, x.CancellationDate.Value.Month, x.CancellationDate.Value.Year };
 			var items = from x in query.ToList ().Union (query2.ToList ()).Distinct ()
-						orderby x.Year descending, x.Month descending, x.Id ascending
-						select new FiscalReport {
-							TaxpayerId = x.Id, TaxpayerName = x.Name, Month = x.Month, Year = x.Year
-						};
+				    orderby x.Year descending, x.Month descending, x.Id ascending
+				    select new FiscalReport {
+					    TaxpayerId = x.Id,
+					    TaxpayerName = x.Name,
+					    Month = x.Month,
+					    Year = x.Year
+				    };
 
 			return View (items.ToList ());
 		}
@@ -1125,21 +1126,21 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			var start = new DateTime (year, month, 1, 0, 0, 0, DateTimeKind.Unspecified);
 			var end = start.AddMonths (1);
 			var query = from x in FiscalDocument.Queryable
-						where x.Issuer.Id == taxpayer && x.Version < 3 && 
-							x.IsCompleted && ((x.Issued >= start && x.Issued < end) ||
-							(x.IsCancelled && x.CancellationDate >= start && x.CancellationDate < end))
-						select x;
+				    where x.Issuer.Id == taxpayer && x.Version < 3 &&
+					    x.IsCompleted && ((x.Issued >= start && x.Issued < end) ||
+					    (x.IsCancelled && x.CancellationDate >= start && x.CancellationDate < end))
+				    select x;
 
-			foreach (var row in CFDHelpers.MonthlyReport (query.ToList())) {
+			foreach (var row in CFDHelpers.MonthlyReport (query.ToList ())) {
 				sw.WriteLine (row);
 			}
 
 			sw.Flush ();
 			ms.Seek (0, SeekOrigin.Begin);
-			
+
 			var result = new FileStreamResult (ms, "text/plain");
 			result.FileDownloadName = string.Format (Resources.Format_FiscalReportName,
-			                                         taxpayer, year, month);
+								 taxpayer, year, month);
 
 			return result;
 		}
@@ -1149,23 +1150,33 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			int pl = FiscalDocument.Queryable.Where (x => x.Id == id)
 								.Select (x => x.Customer.PriceList.Id).Single ();
 			var query = from x in ProductPrice.Queryable
-						where x.List.Id == pl && (
-							x.Product.Name.Contains (pattern) ||
-							x.Product.Code.Contains (pattern) ||
-							x.Product.Model.Contains (pattern) ||
-							x.Product.SKU.Contains (pattern) ||
-							x.Product.Brand.Contains (pattern))
-						orderby x.Product.Name
-						select new {
-							x.Product.Id, x.Product.Name, x.Product.Code,
-							x.Product.Model, x.Product.SKU, x.Product.Photo, Price = x.Value
-						};
+				    where x.List.Id == pl && (
+					    x.Product.Name.Contains (pattern) ||
+					    x.Product.Code.Contains (pattern) ||
+					    x.Product.Model.Contains (pattern) ||
+					    x.Product.SKU.Contains (pattern) ||
+					    x.Product.Brand.Contains (pattern))
+				    orderby x.Product.Name
+				    select new {
+					    x.Product.Id,
+					    x.Product.Name,
+					    x.Product.Code,
+					    x.Product.Model,
+					    x.Product.SKU,
+					    x.Product.Photo,
+					    Price = x.Value
+				    };
 
 			var items = from x in query.Take (15).ToList ()
-						select new {
-							id = x.Id, name = x.Name, code = x.Code, model = x.Model,
-							sku = x.SKU, url = Url.Content (x.Photo), price = x.Price
-						};
+				    select new {
+					    id = x.Id,
+					    name = x.Name,
+					    code = x.Code,
+					    model = x.Model,
+					    sku = x.SKU,
+					    url = Url.Content (x.Photo),
+					    price = x.Price
+				    };
 
 			return Json (items.ToList (), JsonRequestBehavior.AllowGet);
 		}
@@ -1181,22 +1192,22 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 						   SELECT IFNULL(SUM(d.quantity),0) quantity
 						   FROM customer_refund_detail d INNER JOIN customer_refund m ON d.customer_refund = m.customer_refund_id
 						   WHERE m.cancelled = 0 AND d.sales_order_detail = :detail";
-			
-			IList<decimal> quantities = (IList<decimal>)ActiveRecordMediator<CustomerRefundDetail>.Execute (
-				delegate(ISession session, object instance) {
-				try {
-					return session.CreateSQLQuery (sql)
-							.SetParameter ("detail", id)
-							.List<decimal> ();
-				} catch (Exception) {
-					return null;
-				}
-			}, null);
-			
+
+			IList<decimal> quantities = (IList<decimal>) ActiveRecordMediator<CustomerRefundDetail>.Execute (
+				delegate (ISession session, object instance) {
+					try {
+						return session.CreateSQLQuery (sql)
+								.SetParameter ("detail", id)
+								.List<decimal> ();
+					} catch (Exception) {
+						return null;
+					}
+				}, null);
+
 			if (quantities != null && quantities.Count > 0) {
-				quantity = item.Quantity - quantities.Sum();
+				quantity = item.Quantity - quantities.Sum ();
 			}
-			
+
 			return quantity > 0 ? quantity : 0;
 		}
 
@@ -1205,7 +1216,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		{
 			var item = FiscalDocument.Find (id);
 			var data = string.Format (Resources.FiscalDocumentQRCodeFormatString,
-			                          item.Issuer.Id, item.Recipient, item.Total, item.StampId);
+						  item.Issuer.Id, item.Recipient, item.Total, item.StampId);
 
 			return BarcodesController.QRCodeAction (data);
 		}
@@ -1223,7 +1234,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			var result = new FileStreamResult (xml, "text/xml");
 
 			result.FileDownloadName = string.Format (Resources.FiscalDocumentFilenameFormatString + ".xml",
-			                                         entity.Issuer.Id, entity.Batch, entity.Serial);
+								 entity.Issuer.Id, entity.Batch, entity.Serial);
 
 			return result;
 		}
@@ -1242,13 +1253,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			var xml = FiscalDocumentXml.Find (id);
 			var batch = TaxpayerBatch.Queryable.First (x => x.Batch == model.Batch);
 			var filename = string.Format (Resources.FiscalDocumentFilenameFormatString, model.Issuer.Id, model.Batch,
-			                              model.Serial);
+						      model.Serial);
 			var view = string.Format ("Print{0:00}{1}", model.Version * 10, batch.Template);
 			var subject = string.Format (Resources.FiscalDocumentEmailSubjectFormatString, model.Issuer.Id, model.Batch,
-			                             model.Serial);
+						     model.Serial);
 			var message = string.Format (Resources.FiscalDocumentEmailBodyFormatString, model.StampId,
-			                             model.Issuer.Id, model.Recipient);
-			var attachments = new List<Attachment>();
+						     model.Issuer.Id, model.Recipient);
+			var attachments = new List<Attachment> ();
 
 			attachments.Add (new Attachment (GetPdf (view, model), filename + ".pdf"));
 			attachments.Add (new Attachment (new MemoryStream (Encoding.UTF8.GetBytes (xml.Data)), filename + ".xml"));

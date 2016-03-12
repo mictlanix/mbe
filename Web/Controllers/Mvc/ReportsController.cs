@@ -41,11 +41,9 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
-    public class ReportsController : CustomController
-    {
+	public class ReportsController : CustomController {
 		#region Stock & Kardex
 
 		public ViewResult WarehouseStockReport ()
@@ -79,77 +77,77 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		}
 
 		public ViewResult WarehouseStockByLotReport ()
-        {
-            return View ();
-        }
+		{
+			return View ();
+		}
 
-        [HttpPost]
+		[HttpPost]
 		public ActionResult WarehouseStockByLotReport (int warehouse, string brand)
-        {
-            string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name, l.lot_number LotNumber, l.expiration_date ExpirationDate, SUM(quantity) Quantity
+		{
+			string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name, l.lot_number LotNumber, l.expiration_date ExpirationDate, SUM(quantity) Quantity
                             FROM lot_serial_tracking l INNER JOIN product p ON l.product = p.product_id
                             WHERE warehouse = :warehouse WHERE_BRAND
                             GROUP BY l.product, l.lot_number, l.expiration_date";
 
-            if (string.IsNullOrWhiteSpace (brand)) {
-                sql = sql.Replace ("WHERE_BRAND", string.Empty);
-            } else {
-                sql = sql.Replace ("WHERE_BRAND", "AND p.brand = :brand");
-            }
+			if (string.IsNullOrWhiteSpace (brand)) {
+				sql = sql.Replace ("WHERE_BRAND", string.Empty);
+			} else {
+				sql = sql.Replace ("WHERE_BRAND", "AND p.brand = :brand");
+			}
 
-            var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
-                var query = session.CreateSQLQuery (sql);
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
 
-                query.AddScalar ("Brand", NHibernateUtil.String);
-                query.AddScalar ("Model", NHibernateUtil.String);
-                query.AddScalar ("Code", NHibernateUtil.String);
-                query.AddScalar ("Name", NHibernateUtil.String);
-                query.AddScalar ("LotNumber", NHibernateUtil.String);
-                query.AddScalar ("ExpirationDate", NHibernateUtil.Date);
-                query.AddScalar ("Quantity", NHibernateUtil.Decimal);
+				query.AddScalar ("Brand", NHibernateUtil.String);
+				query.AddScalar ("Model", NHibernateUtil.String);
+				query.AddScalar ("Code", NHibernateUtil.String);
+				query.AddScalar ("Name", NHibernateUtil.String);
+				query.AddScalar ("LotNumber", NHibernateUtil.String);
+				query.AddScalar ("ExpirationDate", NHibernateUtil.Date);
+				query.AddScalar ("Quantity", NHibernateUtil.Decimal);
 
-                query.SetInt32 ("warehouse", warehouse);
+				query.SetInt32 ("warehouse", warehouse);
 
-                if (!string.IsNullOrWhiteSpace (brand)) {
-                    query.SetString ("brand", brand);
-                }
+				if (!string.IsNullOrWhiteSpace (brand)) {
+					query.SetString ("brand", brand);
+				}
 
-                return query.DynamicList ();
-            }, null);
+				return query.DynamicList ();
+			}, null);
 
 			return PartialView ("_WarehouseStockByLotReport", items);
-        }
+		}
 
 		public ViewResult WarehouseStockBySerialNumberReport ()
-        {
-            return View ();
-        }
+		{
+			return View ();
+		}
 
-        [HttpPost]
+		[HttpPost]
 		public ActionResult WarehouseStockBySerialNumberReport (int warehouse)
-        {
-            string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name, l.lot_number LotNumber, l.expiration_date ExpirationDate, l.serial_number SerialNumber, SUM(quantity) Quantity
+		{
+			string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name, l.lot_number LotNumber, l.expiration_date ExpirationDate, l.serial_number SerialNumber, SUM(quantity) Quantity
                             FROM lot_serial_tracking l INNER JOIN product p ON l.product = p.product_id
                             WHERE l.serial_number IS NOT NULL AND warehouse = :warehouse
                             GROUP BY l.product, l.lot_number, l.expiration_date, l.serial_number
 							HAVING SUM(quantity) <> 0";
 
-            var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
-                var query = session.CreateSQLQuery (sql);
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
 
-                query.AddScalar ("Brand", NHibernateUtil.String);
-                query.AddScalar ("Model", NHibernateUtil.String);
-                query.AddScalar ("Code", NHibernateUtil.String);
-                query.AddScalar ("Name", NHibernateUtil.String);
-                query.AddScalar ("SerialNumber", NHibernateUtil.String);
-                query.AddScalar ("LotNumber", NHibernateUtil.String);
-                query.AddScalar ("ExpirationDate", NHibernateUtil.Date);
-                query.AddScalar ("Quantity", NHibernateUtil.Decimal);
+				query.AddScalar ("Brand", NHibernateUtil.String);
+				query.AddScalar ("Model", NHibernateUtil.String);
+				query.AddScalar ("Code", NHibernateUtil.String);
+				query.AddScalar ("Name", NHibernateUtil.String);
+				query.AddScalar ("SerialNumber", NHibernateUtil.String);
+				query.AddScalar ("LotNumber", NHibernateUtil.String);
+				query.AddScalar ("ExpirationDate", NHibernateUtil.Date);
+				query.AddScalar ("Quantity", NHibernateUtil.Decimal);
 
-                query.SetInt32 ("warehouse", warehouse);
+				query.SetInt32 ("warehouse", warehouse);
 
-                return query.DynamicList ();
-            }, null);
+				return query.DynamicList ();
+			}, null);
 
 			return PartialView ("_WarehouseStockBySerialNumberReport", items);
 		}
@@ -157,7 +155,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		public ViewResult Kardex ()
 		{
 			ViewBag.Title = Resources.Kardex;
-			return View (new DateRange(DateTime.Now, DateTime.Now));
+			return View (new DateRange (DateTime.Now, DateTime.Now));
 		}
 
 		[HttpPost]
@@ -166,16 +164,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var balance = from x in LotSerialTracking.Queryable
-						  where x.Warehouse.Id == warehouse && x.Product.Id == product && x.Date < start
-			              select x.Quantity;
+				      where x.Warehouse.Id == warehouse && x.Product.Id == product && x.Date < start
+				      select x.Quantity;
 
-			ViewBag.OpeningBalance = balance.Count() > 0 ? balance.Sum () : 0m;
+			ViewBag.OpeningBalance = balance.Count () > 0 ? balance.Sum () : 0m;
 
-            string sql = @"SELECT DATE(l.date) Date, l.source Source, l.reference Reference, l.lot_number LotNumber, l.expiration_date ExpirationDate, SUM(quantity) Quantity
+			string sql = @"SELECT DATE(l.date) Date, l.source Source, l.reference Reference, l.lot_number LotNumber, l.expiration_date ExpirationDate, SUM(quantity) Quantity
                             FROM lot_serial_tracking l
                             WHERE warehouse = :warehouse AND product = :product AND date >= :start AND date <= :end
                             GROUP BY DATE(l.date), l.source, l.reference, l.lot_number, l.expiration_date
-                            ORDER BY l.date"; 
+                            ORDER BY l.date";
 
 			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
@@ -201,47 +199,47 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		public ViewResult SerialNumberKardex ()
 		{
 			ViewBag.Title = Resources.SerialNumberKardex;
-			return View ("Kardex", new DateRange(DateTime.Now, DateTime.Now));
+			return View ("Kardex", new DateRange (DateTime.Now, DateTime.Now));
 		}
 
-        [HttpPost]
-        public ActionResult SerialNumberKardex (int warehouse, int product, DateRange dates)
-        {
-            var start = dates.StartDate.Date;
-            var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
-            var balance = from x in LotSerialTracking.Queryable
-                          where x.Warehouse.Id == warehouse && x.Product.Id == product && x.Date < start
-                          select x.Quantity;
+		[HttpPost]
+		public ActionResult SerialNumberKardex (int warehouse, int product, DateRange dates)
+		{
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var balance = from x in LotSerialTracking.Queryable
+				      where x.Warehouse.Id == warehouse && x.Product.Id == product && x.Date < start
+				      select x.Quantity;
 
-            ViewBag.OpeningBalance = balance.Count () > 0 ? balance.Sum () : 0m;
+			ViewBag.OpeningBalance = balance.Count () > 0 ? balance.Sum () : 0m;
 
-            string sql = @"SELECT l.date Date, l.source Source, l.reference Reference, l.lot_number LotNumber, l.expiration_date ExpirationDate, l.serial_number SerialNumber, quantity Quantity
+			string sql = @"SELECT l.date Date, l.source Source, l.reference Reference, l.lot_number LotNumber, l.expiration_date ExpirationDate, l.serial_number SerialNumber, quantity Quantity
                             FROM lot_serial_tracking l
                             WHERE warehouse = :warehouse AND product = :product AND date >= :start AND date <= :end
                             ORDER BY l.serial_number, l.date";
 
-            var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
-                var query = session.CreateSQLQuery (sql);
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
 
-                query.AddScalar ("Date", NHibernateUtil.Date);
-                query.AddScalar ("Source", NHibernateUtil.Int32);
-                query.AddScalar ("Reference", NHibernateUtil.Int32);
-                query.AddScalar ("LotNumber", NHibernateUtil.String);
-                query.AddScalar ("ExpirationDate", NHibernateUtil.Date);
-                query.AddScalar ("SerialNumber", NHibernateUtil.String);
+				query.AddScalar ("Date", NHibernateUtil.Date);
+				query.AddScalar ("Source", NHibernateUtil.Int32);
+				query.AddScalar ("Reference", NHibernateUtil.Int32);
+				query.AddScalar ("LotNumber", NHibernateUtil.String);
+				query.AddScalar ("ExpirationDate", NHibernateUtil.Date);
+				query.AddScalar ("SerialNumber", NHibernateUtil.String);
 
-                query.AddScalar ("Quantity", NHibernateUtil.Decimal);
+				query.AddScalar ("Quantity", NHibernateUtil.Decimal);
 
-                query.SetInt32 ("warehouse", warehouse);
-                query.SetInt32 ("product", product);
-                query.SetDateTime ("start", start);
-                query.SetDateTime ("end", end);
+				query.SetInt32 ("warehouse", warehouse);
+				query.SetInt32 ("product", product);
+				query.SetDateTime ("start", start);
+				query.SetDateTime ("end", end);
 
-                return query.DynamicList ();
-            }, null);
+				return query.DynamicList ();
+			}, null);
 
-            return PartialView ("_SerialNumberKardex", items);
-        }
+			return PartialView ("_SerialNumberKardex", items);
+		}
 
 		#endregion
 
@@ -249,7 +247,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 		public ViewResult ReceivedPayments ()
 		{
-			return View (new DateRange(DateTime.Now, DateTime.Now));
+			return View (new DateRange (DateTime.Now, DateTime.Now));
 		}
 
 		[HttpPost]
@@ -258,26 +256,27 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var qry = from x in CustomerPayment.Queryable
-					  where x.Store.Id == store &&
-							x.Date >= start && x.Date <= end &&
-							x.Amount > 0
-					  select new ReceivedPayment {
-						Date = x.Date,
-						SalesOrder = x.SalesOrder.Id,
-						Serial = x.SalesOrder.Serial,
-						Customer = x.Customer,
-						Method = x.Method,
-						Amount = x.Amount };
+				  where x.Store.Id == store &&
+						x.Date >= start && x.Date <= end &&
+						x.Amount > 0
+				  select new ReceivedPayment {
+					  Date = x.Date,
+					  SalesOrder = x.SalesOrder.Id,
+					  Serial = x.SalesOrder.Serial,
+					  Customer = x.Customer,
+					  Method = x.Method,
+					  Amount = x.Amount
+				  };
 
 
 
-			return PartialView("_ReceivedPayments", qry.ToList());
+			return PartialView ("_ReceivedPayments", qry.ToList ());
 		}
 
 		#endregion
 
 		#region Sales
-				
+
 
 
 		#endregion
@@ -289,87 +288,87 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			ViewBag.EditorField = "store";
 			ViewBag.EditorTemplate = "StoreSelector";
 			ViewBag.Title = Resources.GrossProfitsByCustomer;
-			return View ("SummaryReport", new DateRange(DateTime.Now, DateTime.Now));
+			return View ("SummaryReport", new DateRange (DateTime.Now, DateTime.Now));
 		}
-		
+
 		[HttpPost]
 		public ActionResult GrossProfitsByCustomer (int store, DateRange dates)
 		{
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var qry = from x in SalesOrder.Queryable
-					from y in x.Details
-					where x.Store.Id == store &&
-						x.IsCompleted &&
-						x.IsPaid &&
-						!x.IsCancelled &&
-						x.Date >= start &&
-						x.Date <= end
-					select new {
-						Id = x.Customer.Id,
-						Name = x.Customer.Name,
-						Units = y.Quantity,
-						Total = y.Quantity * (y.Price - y.Cost),
-						Subtotal = y.Quantity * (y.Price - y.Cost) / (y.TaxRate + 1m)
-					};
-			var qry2 = from x in qry.ToList()
-						group x by new { x.Id, x.Name } into g
-						select new SummaryItem {
-							Id = g.Key.Id.ToString (),
-							Name = g.Key.Name,
-							Units = g.Sum(x => x.Units),
-							Total = g.Sum(x => x.Total),
-							Subtotal = g.Sum(x => x.Subtotal)
-						};
-			var items = qry2.OrderByDescending (x => x.Total).ToList();
-			
+				  from y in x.Details
+				  where x.Store.Id == store &&
+					  x.IsCompleted &&
+					  x.IsPaid &&
+					  !x.IsCancelled &&
+					  x.Date >= start &&
+					  x.Date <= end
+				  select new {
+					  Id = x.Customer.Id,
+					  Name = x.Customer.Name,
+					  Units = y.Quantity,
+					  Total = y.Quantity * (y.Price - y.Cost),
+					  Subtotal = y.Quantity * (y.Price - y.Cost) / (y.TaxRate + 1m)
+				  };
+			var qry2 = from x in qry.ToList ()
+				   group x by new { x.Id, x.Name } into g
+				   select new SummaryItem {
+					   Id = g.Key.Id.ToString (),
+					   Name = g.Key.Name,
+					   Units = g.Sum (x => x.Units),
+					   Total = g.Sum (x => x.Total),
+					   Subtotal = g.Sum (x => x.Subtotal)
+				   };
+			var items = qry2.OrderByDescending (x => x.Total).ToList ();
+
 			AnalyzeABC (items);
-			
-			return PartialView("_SummaryReport", items);
+
+			return PartialView ("_SummaryReport", items);
 		}
-		
+
 		public ViewResult GrossProfitsBySalesPerson ()
 		{
 			ViewBag.EditorField = "store";
 			ViewBag.EditorTemplate = "StoreSelector";
 			ViewBag.Title = Resources.GrossProfitsBySalesPerson;
-			return View ("SummaryReport", new DateRange(DateTime.Now, DateTime.Now));
+			return View ("SummaryReport", new DateRange (DateTime.Now, DateTime.Now));
 		}
-		
+
 		[HttpPost]
 		public ActionResult GrossProfitsBySalesPerson (int store, DateRange dates)
 		{
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var qry = from x in SalesOrder.Queryable
-					from y in x.Details
-					where x.Store.Id == store &&
-						x.IsCompleted &&
-						x.IsPaid &&
-						!x.IsCancelled &&
-						x.Date >= start &&
-						x.Date <= end
-					select new {
-						Id = x.SalesPerson.Id,
-						Name = x.SalesPerson.FirstName + " " + x.SalesPerson.LastName,
-						Units = y.Quantity,
-						Total = y.Quantity * (y.Price - y.Cost),
-						Subtotal = y.Quantity * (y.Price - y.Cost) / (y.TaxRate + 1m)
-					};
-			var qry2 = from x in qry.ToList()
-						group x by new { x.Id, x.Name } into g
-						select new SummaryItem {
-							Id = g.Key.Id.ToString (),
-							Name = g.Key.Name,
-							Units = g.Sum(x => x.Units),
-							Total = g.Sum(x => x.Total),
-							Subtotal = g.Sum(x => x.Subtotal)
-						};
-			var items = qry2.OrderByDescending (x => x.Total).ToList();
-			
+				  from y in x.Details
+				  where x.Store.Id == store &&
+					  x.IsCompleted &&
+					  x.IsPaid &&
+					  !x.IsCancelled &&
+					  x.Date >= start &&
+					  x.Date <= end
+				  select new {
+					  Id = x.SalesPerson.Id,
+					  Name = x.SalesPerson.FirstName + " " + x.SalesPerson.LastName,
+					  Units = y.Quantity,
+					  Total = y.Quantity * (y.Price - y.Cost),
+					  Subtotal = y.Quantity * (y.Price - y.Cost) / (y.TaxRate + 1m)
+				  };
+			var qry2 = from x in qry.ToList ()
+				   group x by new { x.Id, x.Name } into g
+				   select new SummaryItem {
+					   Id = g.Key.Id.ToString (),
+					   Name = g.Key.Name,
+					   Units = g.Sum (x => x.Units),
+					   Total = g.Sum (x => x.Total),
+					   Subtotal = g.Sum (x => x.Subtotal)
+				   };
+			var items = qry2.OrderByDescending (x => x.Total).ToList ();
+
 			AnalyzeABC (items);
-			
-			return PartialView("_SummaryReport", items);
+
+			return PartialView ("_SummaryReport", items);
 		}
 
 		public ViewResult GrossProfitsByProduct ()
@@ -377,43 +376,43 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			ViewBag.EditorField = "store";
 			ViewBag.EditorTemplate = "StoreSelector";
 			ViewBag.Title = Resources.GrossProfitsByProduct;
-			return View ("SummaryReport", new DateRange(DateTime.Now, DateTime.Now));
+			return View ("SummaryReport", new DateRange (DateTime.Now, DateTime.Now));
 		}
-		
+
 		[HttpPost]
 		public ActionResult GrossProfitsByProduct (int store, DateRange dates)
 		{
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var qry = from x in SalesOrder.Queryable
-						from y in x.Details
-							where x.Store.Id == store &&
-							x.IsCompleted &&
-							x.IsPaid &&
-							!x.IsCancelled &&
-							x.Date >= start &&
-							x.Date <= end
-						select new {
-							Id = y.ProductCode,
-							Name = y.ProductName,
-							Units = y.Quantity,
-							Total = y.Quantity * (y.Price - y.Cost),
-							Subtotal = y.Quantity * (y.Price - y.Cost) / (y.TaxRate + 1m)
-						};
-			var qry2 = from x in qry.ToList()
-						group x by new { x.Id, x.Name } into g
-						select new SummaryItem {
-							Id = g.Key.Id,
-							Name = g.Key.Name,
-							Units = g.Sum(x => x.Units),
-							Total = g.Sum(x => x.Total),
-							Subtotal = g.Sum(x => x.Subtotal),
-						};
-			var items = qry2.OrderByDescending (x => x.Total).ToList();
-			
+				  from y in x.Details
+				  where x.Store.Id == store &&
+				  x.IsCompleted &&
+				  x.IsPaid &&
+				  !x.IsCancelled &&
+				  x.Date >= start &&
+				  x.Date <= end
+				  select new {
+					  Id = y.ProductCode,
+					  Name = y.ProductName,
+					  Units = y.Quantity,
+					  Total = y.Quantity * (y.Price - y.Cost),
+					  Subtotal = y.Quantity * (y.Price - y.Cost) / (y.TaxRate + 1m)
+				  };
+			var qry2 = from x in qry.ToList ()
+				   group x by new { x.Id, x.Name } into g
+				   select new SummaryItem {
+					   Id = g.Key.Id,
+					   Name = g.Key.Name,
+					   Units = g.Sum (x => x.Units),
+					   Total = g.Sum (x => x.Total),
+					   Subtotal = g.Sum (x => x.Subtotal),
+				   };
+			var items = qry2.OrderByDescending (x => x.Total).ToList ();
+
 			AnalyzeABC (items);
-			
-			return PartialView("_SummaryReport", items);
+
+			return PartialView ("_SummaryReport", items);
 		}
 
 		#endregion
@@ -425,87 +424,87 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			ViewBag.EditorField = "customer";
 			ViewBag.EditorTemplate = "CustomerSelector";
 			ViewBag.Title = Resources.BestSellingProductsByCustomer;
-			return View ("SummaryReport", new DateRange(DateTime.Now, DateTime.Now));
+			return View ("SummaryReport", new DateRange (DateTime.Now, DateTime.Now));
 		}
-		
+
 		[HttpPost]
 		public ActionResult BestSellingProductsByCustomer (int customer, DateRange dates)
 		{
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var qry = from x in SalesOrder.Queryable
-						from y in x.Details
-						where x.Customer.Id == customer &&
-							x.IsCompleted &&
-							x.IsPaid &&
-							!x.IsCancelled &&
-							x.Date >= start &&
-							x.Date <= end
-						select new {
-							Id = y.ProductCode,
-							Name = y.ProductName,
-							Units = y.Quantity,
-							Total = y.Quantity * y.Price,
-							Subtotal = y.Quantity * y.Price / (y.TaxRate + 1m)
-						};
-			var qry2 = from x in qry.ToList()
-						group x by new { x.Id, x.Name } into g
-						select new SummaryItem {
-							Id = g.Key.Id,
-							Name = g.Key.Name,
-							Units = g.Sum(x => x.Units),
-							Total = g.Sum(x => x.Total),
-							Subtotal = g.Sum(x => x.Subtotal),
-						};
-			var items = qry2.OrderByDescending (x => x.Total).ToList();
-			
+				  from y in x.Details
+				  where x.Customer.Id == customer &&
+					  x.IsCompleted &&
+					  x.IsPaid &&
+					  !x.IsCancelled &&
+					  x.Date >= start &&
+					  x.Date <= end
+				  select new {
+					  Id = y.ProductCode,
+					  Name = y.ProductName,
+					  Units = y.Quantity,
+					  Total = y.Quantity * y.Price,
+					  Subtotal = y.Quantity * y.Price / (y.TaxRate + 1m)
+				  };
+			var qry2 = from x in qry.ToList ()
+				   group x by new { x.Id, x.Name } into g
+				   select new SummaryItem {
+					   Id = g.Key.Id,
+					   Name = g.Key.Name,
+					   Units = g.Sum (x => x.Units),
+					   Total = g.Sum (x => x.Total),
+					   Subtotal = g.Sum (x => x.Subtotal),
+				   };
+			var items = qry2.OrderByDescending (x => x.Total).ToList ();
+
 			AnalyzeABC (items);
-			
-			return PartialView("_SummaryReport", items);
+
+			return PartialView ("_SummaryReport", items);
 		}
-		
+
 		public ViewResult BestSellingProductsBySalesPerson ()
 		{
 			ViewBag.EditorField = "employee";
 			ViewBag.EditorTemplate = "EmployeeSelector";
 			ViewBag.Title = Resources.BestSellingProductsBySalesPerson;
-			return View ("SummaryReport", new DateRange(DateTime.Now, DateTime.Now));
+			return View ("SummaryReport", new DateRange (DateTime.Now, DateTime.Now));
 		}
-		
+
 		[HttpPost]
 		public ActionResult BestSellingProductsBySalesPerson (int employee, DateRange dates)
 		{
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var qry = from x in SalesOrder.Queryable
-					from y in x.Details
-					where x.SalesPerson.Id == employee &&
-						x.IsCompleted &&
-						x.IsPaid &&
-						!x.IsCancelled &&
-						x.Date >= start &&
-						x.Date <= end
-					select new {
-						Id = y.ProductCode,
-						Name = y.ProductName,
-						Units = y.Quantity,
-						Total = y.Quantity * y.Price,
-						Subtotal = y.Quantity * y.Price / (y.TaxRate + 1m)
-					};
-			var qry2 = from x in qry.ToList()
-					group x by new { x.Id, x.Name } into g
-					select new SummaryItem {
-						Id = g.Key.Id,
-						Name = g.Key.Name,
-						Units = g.Sum(x => x.Units),
-						Total = g.Sum(x => x.Total),
-						Subtotal = g.Sum(x => x.Subtotal)
-					};
-			var items = qry2.OrderByDescending (x => x.Total).ToList();
-			
+				  from y in x.Details
+				  where x.SalesPerson.Id == employee &&
+					  x.IsCompleted &&
+					  x.IsPaid &&
+					  !x.IsCancelled &&
+					  x.Date >= start &&
+					  x.Date <= end
+				  select new {
+					  Id = y.ProductCode,
+					  Name = y.ProductName,
+					  Units = y.Quantity,
+					  Total = y.Quantity * y.Price,
+					  Subtotal = y.Quantity * y.Price / (y.TaxRate + 1m)
+				  };
+			var qry2 = from x in qry.ToList ()
+				   group x by new { x.Id, x.Name } into g
+				   select new SummaryItem {
+					   Id = g.Key.Id,
+					   Name = g.Key.Name,
+					   Units = g.Sum (x => x.Units),
+					   Total = g.Sum (x => x.Total),
+					   Subtotal = g.Sum (x => x.Subtotal)
+				   };
+			var items = qry2.OrderByDescending (x => x.Total).ToList ();
+
 			AnalyzeABC (items);
-			
-			return PartialView("_SummaryReport", items);
+
+			return PartialView ("_SummaryReport", items);
 		}
 
 		#endregion
@@ -515,7 +514,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			ViewBag.EditorField = "customer";
 			ViewBag.EditorTemplate = "CustomerSelector";
 			ViewBag.Title = Resources.CustomerDebt;
-			return View ("SummaryReport", new DateRange(DateTime.Now.AddDays(1-DateTime.Now.Day), DateTime.Now));
+			return View ("SummaryReport", new DateRange (DateTime.Now.AddDays (1 - DateTime.Now.Day), DateTime.Now));
 		}
 
 		[HttpPost]
@@ -524,53 +523,53 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var query = from x in SalesOrder.Queryable
-						where x.Customer.Id == customer &&
-							x.IsCompleted && !x.IsCancelled && !x.IsPaid &&
-							x.Date >= start && x.Date <= end
-						orderby x.Date
-						select x;
+				    where x.Customer.Id == customer &&
+					    x.IsCompleted && !x.IsCancelled && !x.IsPaid &&
+					    x.Date >= start && x.Date <= end
+				    orderby x.Date
+				    select x;
 
 			return PartialView ("_CustomerDebt", query.ToList ());
 		}
 
-        public ViewResult CustomersReport ()
-        {
-            return View (new Search<Customer> ());
-        }
+		public ViewResult CustomersReport ()
+		{
+			return View (new Search<Customer> ());
+		}
 
-        [HttpPost]
-        public ActionResult CustomersReport (Search<Customer> search)
-        {
-            if (ModelState.IsValid) {
-                search = GetCustomers (search);
-            }
-            
-            return PartialView ("_CustomersReport", search);
-        }
+		[HttpPost]
+		public ActionResult CustomersReport (Search<Customer> search)
+		{
+			if (ModelState.IsValid) {
+				search = GetCustomers (search);
+			}
 
-        Search<Customer> GetCustomers (Search<Customer> search)
-        {
-            if (string.IsNullOrWhiteSpace (search.Pattern)) {
-                var qry = from x in Customer.Queryable
-                          orderby x.Name
-                          select x;
+			return PartialView ("_CustomersReport", search);
+		}
 
-                search.Total = qry.Count ();
-                search.Results = qry.ToList ();
-            } else {
-                var qry = from x in Customer.Queryable
-                          where x.Name.Contains (search.Pattern) ||
-                              x.Code.Contains (search.Pattern) ||
-                              x.Zone.Contains (search.Pattern)
-                          orderby x.Name
-                          select x;
+		Search<Customer> GetCustomers (Search<Customer> search)
+		{
+			if (string.IsNullOrWhiteSpace (search.Pattern)) {
+				var qry = from x in Customer.Queryable
+					  orderby x.Name
+					  select x;
 
-                search.Total = qry.Count ();
-                search.Results = qry.ToList ();
-            }
+				search.Total = qry.Count ();
+				search.Results = qry.ToList ();
+			} else {
+				var qry = from x in Customer.Queryable
+					  where x.Name.Contains (search.Pattern) ||
+					      x.Code.Contains (search.Pattern) ||
+					      x.Zone.Contains (search.Pattern)
+					  orderby x.Name
+					  select x;
 
-            return search;
-        }
+				search.Total = qry.Count ();
+				search.Results = qry.ToList ();
+			}
+
+			return search;
+		}
 
 		public ViewResult FiscalDocuments ()
 		{
@@ -590,10 +589,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var query = from x in FiscalDocument.Queryable
-			            where x.Issuer.Id == taxpayer && x.IsCompleted &&
-			                ((x.Issued >= start && x.Issued <= end) || (x.CancellationDate >= start && x.CancellationDate <= end))
-			            orderby x.Issued
-			            select x;
+				    where x.Issuer.Id == taxpayer && x.IsCompleted &&
+					((x.Issued >= start && x.Issued <= end) || (x.CancellationDate >= start && x.CancellationDate <= end))
+				    orderby x.Issued
+				    select x;
 
 			return PartialView ("_FiscalDocuments", query.ToList ());
 		}
@@ -612,11 +611,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var query = from x in SalesOrder.Queryable
-						where x.Customer.Id == customer &&
-							x.IsCompleted && !x.IsCancelled &&
-							x.Date >= start && x.Date <= end
-						orderby x.Date
-						select x;
+				    where x.Customer.Id == customer &&
+					    x.IsCompleted && !x.IsCancelled &&
+					    x.Date >= start && x.Date <= end
+				    orderby x.Date
+				    select x;
 
 			return PartialView ("_CustomerSalesOrders", query.ToList ());
 		}
@@ -635,30 +634,30 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var query = from x in SalesOrder.Queryable
-						from y in x.Details
-						where x.Customer.Id == customer &&
-							x.IsCompleted && !x.IsCancelled &&
-							x.Date >= start && x.Date <= end
-						select new {
-							SalesOrder = x.Id,
-							Code = y.ProductCode,
-							Name = y.ProductName,
-							Quantity = y.Quantity,
-							Price = y.Price,
-							ExchangeRate = y.ExchangeRate,
-							Discount = y.Discount,
-							TaxRate = y.TaxRate,
-							IsTaxIncluded = y.IsTaxIncluded
-						};
-			var items = from x in query.ToList()
-						select new SummaryItem {
-							Category = x.SalesOrder.ToString (),
-							Id = x.Code,
-							Name = x.Name,
-							Units = x.Quantity,
-							Total = Model.ModelHelpers.Total (x.Quantity, x.Price, x.ExchangeRate, x.Discount, x.TaxRate, x.IsTaxIncluded),
-							Subtotal = Model.ModelHelpers.Subtotal (x.Quantity, x.Price, x.ExchangeRate, x.Discount, x.TaxRate, x.IsTaxIncluded)
-						};
+				    from y in x.Details
+				    where x.Customer.Id == customer &&
+					    x.IsCompleted && !x.IsCancelled &&
+					    x.Date >= start && x.Date <= end
+				    select new {
+					    SalesOrder = x.Id,
+					    Code = y.ProductCode,
+					    Name = y.ProductName,
+					    Quantity = y.Quantity,
+					    Price = y.Price,
+					    ExchangeRate = y.ExchangeRate,
+					    Discount = y.Discount,
+					    TaxRate = y.TaxRate,
+					    IsTaxIncluded = y.IsTaxIncluded
+				    };
+			var items = from x in query.ToList ()
+				    select new SummaryItem {
+					    Category = x.SalesOrder.ToString (),
+					    Id = x.Code,
+					    Name = x.Name,
+					    Units = x.Quantity,
+					    Total = Model.ModelHelpers.Total (x.Quantity, x.Price, x.ExchangeRate, x.Discount, x.TaxRate, x.IsTaxIncluded),
+					    Subtotal = Model.ModelHelpers.Subtotal (x.Quantity, x.Price, x.ExchangeRate, x.Discount, x.TaxRate, x.IsTaxIncluded)
+				    };
 
 			return PartialView ("_ProductSalesByCustomer", items);
 		}
@@ -677,34 +676,34 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var query = from x in SalesOrder.Queryable
-						from y in x.Details
-						where x.IsCompleted && !x.IsCancelled &&
-							x.Date >= start && x.Date <= end &&
-							y.Product.Model.Contains (productModel)
-						orderby y.ProductName
-						select new {
-							Model = y.Product.Model,
-							Brand = y.Product.Brand,
-							Code = y.Product.Code,
-							Name = y.Product.Name,
-							Quantity = y.Quantity,
-							Price = y.Price,
-							ExchangeRate = y.ExchangeRate,
-							Discount = y.Discount,
-							TaxRate = y.TaxRate,
-							IsTaxIncluded = y.IsTaxIncluded
-						};
+				    from y in x.Details
+				    where x.IsCompleted && !x.IsCancelled &&
+					    x.Date >= start && x.Date <= end &&
+					    y.Product.Model.Contains (productModel)
+				    orderby y.ProductName
+				    select new {
+					    Model = y.Product.Model,
+					    Brand = y.Product.Brand,
+					    Code = y.Product.Code,
+					    Name = y.Product.Name,
+					    Quantity = y.Quantity,
+					    Price = y.Price,
+					    ExchangeRate = y.ExchangeRate,
+					    Discount = y.Discount,
+					    TaxRate = y.TaxRate,
+					    IsTaxIncluded = y.IsTaxIncluded
+				    };
 			var items = from x in query.ToList ()
-						group x by new { x.Model, x.Brand, x.Code, x.Name } into g
-						select new SummaryItem {
-							Id = g.Key.Brand,
-							Category = g.Key.Model,
-							Code = g.Key.Code,
-							Name = g.Key.Name,
-							Units = g.Sum (y => y.Quantity),
-							Total = g.Sum (y => Model.ModelHelpers.Total (y.Quantity, y.Price, y.ExchangeRate, y.Discount, y.TaxRate, y.IsTaxIncluded)),
-							Subtotal = g.Sum (y => Model.ModelHelpers.Subtotal (y.Quantity, y.Price, y.ExchangeRate, y.Discount, y.TaxRate, y.IsTaxIncluded))
-						};
+				    group x by new { x.Model, x.Brand, x.Code, x.Name } into g
+				    select new SummaryItem {
+					    Id = g.Key.Brand,
+					    Category = g.Key.Model,
+					    Code = g.Key.Code,
+					    Name = g.Key.Name,
+					    Units = g.Sum (y => y.Quantity),
+					    Total = g.Sum (y => Model.ModelHelpers.Total (y.Quantity, y.Price, y.ExchangeRate, y.Discount, y.TaxRate, y.IsTaxIncluded)),
+					    Subtotal = g.Sum (y => Model.ModelHelpers.Subtotal (y.Quantity, y.Price, y.ExchangeRate, y.Discount, y.TaxRate, y.IsTaxIncluded))
+				    };
 
 			return PartialView ("_ProductSalesByCategory", items);
 		}
@@ -723,34 +722,34 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var query = from x in SalesOrder.Queryable
-						from y in x.Details
-						where x.IsCompleted && !x.IsCancelled &&
-							x.Date >= start && x.Date <= end &&
-							y.Product.Brand.Contains (brand)
-						orderby y.ProductName
-						select new {
-							Model = y.Product.Model,
-							Brand = y.Product.Brand,
-							Code = y.Product.Code,
-							Name = y.Product.Name,
-							Quantity = y.Quantity,
-							Price = y.Price,
-							ExchangeRate = y.ExchangeRate,
-							Discount = y.Discount,
-							TaxRate = y.TaxRate,
-							IsTaxIncluded = y.IsTaxIncluded
-						};
+				    from y in x.Details
+				    where x.IsCompleted && !x.IsCancelled &&
+					    x.Date >= start && x.Date <= end &&
+					    y.Product.Brand.Contains (brand)
+				    orderby y.ProductName
+				    select new {
+					    Model = y.Product.Model,
+					    Brand = y.Product.Brand,
+					    Code = y.Product.Code,
+					    Name = y.Product.Name,
+					    Quantity = y.Quantity,
+					    Price = y.Price,
+					    ExchangeRate = y.ExchangeRate,
+					    Discount = y.Discount,
+					    TaxRate = y.TaxRate,
+					    IsTaxIncluded = y.IsTaxIncluded
+				    };
 			var items = from x in query.ToList ()
-						group x by new { x.Model, x.Brand, x.Code, x.Name } into g
-						select new SummaryItem {
-							Id = g.Key.Brand,
-							Category = g.Key.Model,
-							Code = g.Key.Code,
-							Name = g.Key.Name,
-							Units = g.Sum (y => y.Quantity),
-							Total = g.Sum (y => Model.ModelHelpers.Total (y.Quantity, y.Price, y.ExchangeRate, y.Discount, y.TaxRate, y.IsTaxIncluded)),
-							Subtotal = g.Sum (y => Model.ModelHelpers.Subtotal (y.Quantity, y.Price, y.ExchangeRate, y.Discount, y.TaxRate, y.IsTaxIncluded))
-						};
+				    group x by new { x.Model, x.Brand, x.Code, x.Name } into g
+				    select new SummaryItem {
+					    Id = g.Key.Brand,
+					    Category = g.Key.Model,
+					    Code = g.Key.Code,
+					    Name = g.Key.Name,
+					    Units = g.Sum (y => y.Quantity),
+					    Total = g.Sum (y => Model.ModelHelpers.Total (y.Quantity, y.Price, y.ExchangeRate, y.Discount, y.TaxRate, y.IsTaxIncluded)),
+					    Subtotal = g.Sum (y => Model.ModelHelpers.Subtotal (y.Quantity, y.Price, y.ExchangeRate, y.Discount, y.TaxRate, y.IsTaxIncluded))
+				    };
 
 			return PartialView ("_ProductSalesByCategory", items);
 		}
@@ -759,7 +758,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		{
 			ViewBag.EditorField = "store";
 			ViewBag.EditorTemplate = "StoreSelector";
-			ViewBag.Title =  Resources.SalesBySalesPerson;
+			ViewBag.Title = Resources.SalesBySalesPerson;
 
 			ViewBag.FieldId = WebConfig.Store.Id;
 			ViewBag.FieldText = WebConfig.Store.Name;
@@ -783,15 +782,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 							m.date >= :start AND m.date <= :end
 						GROUP BY salesperson, first_name, last_name";
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate(ISession session, object instance) {
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				return session.CreateSQLQuery (sql)
 					.SetParameter ("start", start)
 					.SetParameter ("end", end)
 					.SetParameter ("store", store)
-					.DynamicList();
+					.DynamicList ();
 			}, null);
 
-			return PartialView("_SalesBySalesPerson", items);
+			return PartialView ("_SalesBySalesPerson", items);
 		}
 
 		public ViewResult SalesByCustomer ()
@@ -803,7 +802,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			ViewBag.FieldId = WebConfig.Store.Id;
 			ViewBag.FieldText = WebConfig.Store.Name;
 
-			return View ("SummaryReport", new DateRange());
+			return View ("SummaryReport", new DateRange ());
 		}
 
 		[HttpPost]
@@ -822,27 +821,27 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 							m.date >= :start AND m.date <= :end
 						GROUP BY customer";
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate(ISession session, object instance) {
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				return session.CreateSQLQuery (sql)
 					.SetParameter ("start", start)
 					.SetParameter ("end", end)
 					.SetParameter ("store", store)
-					.DynamicList();
+					.DynamicList ();
 			}, null);
 
-			return PartialView("_SalesByCustomer", items);
+			return PartialView ("_SalesByCustomer", items);
 		}
 
 		public ViewResult SalesByProduct ()
 		{
 			ViewBag.EditorField = "store";
 			ViewBag.EditorTemplate = "StoreSelector";
-			ViewBag.Title =  Resources.SalesByProduct;
+			ViewBag.Title = Resources.SalesByProduct;
 
 			ViewBag.FieldId = WebConfig.Store.Id;
 			ViewBag.FieldText = WebConfig.Store.Name;
 
-			return View ("SummaryReport", new DateRange(DateTime.Now, DateTime.Now));
+			return View ("SummaryReport", new DateRange (DateTime.Now, DateTime.Now));
 		}
 
 		[HttpPost]
@@ -861,15 +860,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 							m.date >= :start AND m.date <= :end
 						GROUP BY product";
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate(ISession session, object instance) {
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				return session.CreateSQLQuery (sql)
 					.SetParameter ("start", start)
 					.SetParameter ("end", end)
 					.SetParameter ("store", store)
-					.DynamicList();
+					.DynamicList ();
 			}, null);
 
-			return PartialView("_SalesByProduct", items);
+			return PartialView ("_SalesByProduct", items);
 		}
 
 		public ViewResult SalesPersonOrders ()
@@ -898,7 +897,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 							m.date >= :start AND m.date <= :end
 						GROUP BY sales_order";
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate(ISession session, object instance) {
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
@@ -912,7 +911,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				query.SetDateTime ("end", end);
 				query.SetInt32 ("employee", employee);
 
-				return query.DynamicList();
+				return query.DynamicList ();
 			}, null);
 
 			return PartialView ("_SalesPersonOrders", items);
@@ -950,7 +949,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 							m.date >= :start AND m.date <= :end
 						GROUP BY sales_order";
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate(ISession session, object instance) {
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("Date", NHibernateUtil.DateTime);
@@ -967,7 +966,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				query.SetDateTime ("end", end);
 				query.SetInt32 ("store", store);
 
-				return query.DynamicList();
+				return query.DynamicList ();
 			}, null);
 
 			return PartialView ("_SalesOrderSummary", items);
@@ -997,7 +996,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 							m.date >= :start AND m.date <= :end
 						GROUP BY d.product";
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate(ISession session, object instance) {
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("Brand", NHibernateUtil.String);
@@ -1012,7 +1011,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				query.SetDateTime ("end", end);
 				query.SetInt32 ("employee", employee);
 
-				return query.DynamicList();
+				return query.DynamicList ();
 			}, null);
 
 			return PartialView ("_ProductSalesBySalesPerson", items);
@@ -1050,7 +1049,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				sql = sql.Replace ("JOIN_LABEL", string.Empty).Replace ("WHERE_LABEL", string.Empty);
 			}
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate(ISession session, object instance) {
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("Brand", NHibernateUtil.String);
@@ -1069,7 +1068,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 					query.SetInt32 ("label", label.Value);
 				}
 
-				return query.DynamicList();
+				return query.DynamicList ();
 			}, null);
 
 			return PartialView ("_ProductSalesBySalesPerson", items);
@@ -1105,7 +1104,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				sql = sql.Replace ("WHERE_BRAND", "AND p.brand = :brand");
 			}
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate(ISession session, object instance) {
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("Brand", NHibernateUtil.String);
@@ -1124,7 +1123,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 					query.SetString ("brand", brand);
 				}
 
-				return query.DynamicList();
+				return query.DynamicList ();
 			}, null);
 
 			return PartialView ("_ProductSalesBySalesPerson", items);
@@ -1160,7 +1159,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				sql = sql.Replace ("WHERE_MODEL", "AND p.model = :model");
 			}
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate(ISession session, object instance) {
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("Brand", NHibernateUtil.String);
@@ -1179,12 +1178,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 					query.SetString ("model", productModel);
 				}
 
-				return query.DynamicList();
+				return query.DynamicList ();
 			}, null);
 
 			return PartialView ("_ProductSalesBySalesPerson", items);
 		}
-			
+
 		public ViewResult SalesPersonOrdersAndRefunds ()
 		{
 			ViewBag.EditorField = "employee";
@@ -1211,7 +1210,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 							m.date >= :start AND m.date <= :end
 						GROUP BY sales_order";
 
-			var orders = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate(ISession session, object instance) {
+			var orders = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
@@ -1226,7 +1225,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				query.SetDateTime ("end", end);
 				query.SetInt32 ("employee", employee);
 
-				return query.DynamicList();
+				return query.DynamicList ();
 			}, null);
 
 			sql = @"SELECT sales_order SalesOrder, customer_refund Refund, s.date Date, name Customer,
@@ -1243,7 +1242,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 						s.date >= :start AND s.date <= :end
 					GROUP BY sales_order";
 
-			var refunds = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate(ISession session, object instance) {
+			var refunds = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
@@ -1258,43 +1257,43 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				query.SetDateTime ("end", end);
 				query.SetInt32 ("employee", employee);
 
-				return query.DynamicList();
+				return query.DynamicList ();
 			}, null);
 
 			var items = orders.ToList ();
 
 			items.AddRange (refunds);
-//			foreach (var refund in refunds) {
-//				items.Add (refund);
-//			}
+			//			foreach (var refund in refunds) {
+			//				items.Add (refund);
+			//			}
 
 			return PartialView ("_SalesPersonOrdersAndRefunds", items);
 		}
 
 		#region Helpers
-		
+
 		void AnalyzeABC (IEnumerable<SummaryItem> items)
 		{
-			decimal total = items.Sum(x => x.Total);
+			decimal total = items.Sum (x => x.Total);
 			decimal sum = 0;
 			decimal pct;
-			
+
 			foreach (var item in items) {
 				pct = sum / total;
 				sum += item.Total;
-				
-				if(pct < 0m) {
+
+				if (pct < 0m) {
 					item.Category = "X";
-				} else if(pct < 0.7m) {
+				} else if (pct < 0.7m) {
 					item.Category = "A";
-				} else if(pct < 0.95m) {
+				} else if (pct < 0.95m) {
 					item.Category = "B";
 				} else {
 					item.Category = "C";
 				}
 			}
 		}
-		
+
 		#endregion
 	}
 }

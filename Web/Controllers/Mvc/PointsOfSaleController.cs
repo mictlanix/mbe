@@ -39,122 +39,120 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
-    public class PointsOfSaleController : CustomController
-    {
-        //
-        // GET: /PointSale/
+	public class PointsOfSaleController : CustomController {
+		//
+		// GET: /PointSale/
 
-        public ViewResult Index()
-        {
-            var qry = from x in PointOfSale.Queryable
-                      orderby x.Name
-                      select x;
+		public ViewResult Index ()
+		{
+			var qry = from x in PointOfSale.Queryable
+				  orderby x.Name
+				  select x;
 
-            Search<PointOfSale> search = new Search<PointOfSale>();
-            search.Limit = WebConfig.PageSize;
-            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            search.Total = qry.Count();
+			Search<PointOfSale> search = new Search<PointOfSale> ();
+			search.Limit = WebConfig.PageSize;
+			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+			search.Total = qry.Count ();
 
-            return View(search);
-        }
+			return View (search);
+		}
 
-        // POST: /PointsOfSale/
+		// POST: /PointsOfSale/
 
-        [HttpPost]
-        public ActionResult Index(Search<PointOfSale> search)
-        {
-            if (ModelState.IsValid) {
-                search = GetPointsOfSale(search);
-            }
-
-            if (Request.IsAjaxRequest()) {
-                return PartialView("_Index", search);
-            } else {
-                return View(search);
-            }
-        }
-
-        Search<PointOfSale> GetPointsOfSale(Search<PointOfSale> search)
-        {
-            if (search.Pattern == null) {
-                var qry = from x in PointOfSale.Queryable
-                          orderby x.Name
-                          select x;
-
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            } else {
-                var qry = from x in PointOfSale.Queryable
-                          where x.Name.Contains(search.Pattern) ||
-                          x.Code.Contains(search.Pattern) ||
-                          x.Store.Name.Contains(search.Pattern)
-                          orderby x.Name
-                          select x;
-
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            }
-
-            return search;
-        }
-
-        //
-        // GET: /PointSale/Details/5
-
-        public ActionResult View (int id)
-        {
-            var item = PointOfSale.Find (id);
-            return PartialView ("_View", item);
-        }
-
-        //
-        // GET: /PointSale/Create
-
-        public ActionResult Create ()
-        {
-            return PartialView ("_Create");
-        }
-
-        //
-        // POST: /PointSale/Create
-
-        [HttpPost]
-        public ActionResult Create (PointOfSale item)
-        {
-            if (!ModelState.IsValid)
-                return PartialView("_Create", item);
-            
-            item.Store = Store.Find (item.StoreId);
-			item.Warehouse = Warehouse.Find (item.WarehouseId);
-            
-			using (var scope = new TransactionScope ()) {
-            	item.CreateAndFlush ();
+		[HttpPost]
+		public ActionResult Index (Search<PointOfSale> search)
+		{
+			if (ModelState.IsValid) {
+				search = GetPointsOfSale (search);
 			}
 
-            return PartialView ("_CreateSuccesful", item);
-        }
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_Index", search);
+			} else {
+				return View (search);
+			}
+		}
 
-        //
-        // GET: /Warehouses/Edit/5
+		Search<PointOfSale> GetPointsOfSale (Search<PointOfSale> search)
+		{
+			if (search.Pattern == null) {
+				var qry = from x in PointOfSale.Queryable
+					  orderby x.Name
+					  select x;
 
-        public ActionResult Edit (int id)
-        {
-            var item = PointOfSale.Find (id);
-            return PartialView ("_Edit", item);
-        }
+				search.Total = qry.Count ();
+				search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+			} else {
+				var qry = from x in PointOfSale.Queryable
+					  where x.Name.Contains (search.Pattern) ||
+					  x.Code.Contains (search.Pattern) ||
+					  x.Store.Name.Contains (search.Pattern)
+					  orderby x.Name
+					  select x;
 
-        //
-        // POST: /PointSale/Edit/5
+				search.Total = qry.Count ();
+				search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+			}
 
-        [HttpPost]
-        public ActionResult Edit (PointOfSale item)
-        {
-            if (!ModelState.IsValid)
-                return PartialView ("_Edit", item);
-            
+			return search;
+		}
+
+		//
+		// GET: /PointSale/Details/5
+
+		public ActionResult View (int id)
+		{
+			var item = PointOfSale.Find (id);
+			return PartialView ("_View", item);
+		}
+
+		//
+		// GET: /PointSale/Create
+
+		public ActionResult Create ()
+		{
+			return PartialView ("_Create");
+		}
+
+		//
+		// POST: /PointSale/Create
+
+		[HttpPost]
+		public ActionResult Create (PointOfSale item)
+		{
+			if (!ModelState.IsValid)
+				return PartialView ("_Create", item);
+
+			item.Store = Store.Find (item.StoreId);
+			item.Warehouse = Warehouse.Find (item.WarehouseId);
+
+			using (var scope = new TransactionScope ()) {
+				item.CreateAndFlush ();
+			}
+
+			return PartialView ("_CreateSuccesful", item);
+		}
+
+		//
+		// GET: /Warehouses/Edit/5
+
+		public ActionResult Edit (int id)
+		{
+			var item = PointOfSale.Find (id);
+			return PartialView ("_Edit", item);
+		}
+
+		//
+		// POST: /PointSale/Edit/5
+
+		[HttpPost]
+		public ActionResult Edit (PointOfSale item)
+		{
+			if (!ModelState.IsValid)
+				return PartialView ("_Edit", item);
+
 			var entity = PointOfSale.Find (item.Id);
 
 			entity.Code = item.Code;
@@ -165,44 +163,44 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.UpdateAndFlush ();
 			}
 
-            return PartialView ("_Refresh");
-        }
+			return PartialView ("_Refresh");
+		}
 
-        //
-        // GET: /PointSale/Delete/5
+		//
+		// GET: /PointSale/Delete/5
 
-        public ActionResult Delete (int id)
-        {
-            return PartialView ("_Delete", PointOfSale.Find (id));
-        }
-
-        //
-        // POST: /Warehouses/Delete/5
-
-        [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed (int id)
+		public ActionResult Delete (int id)
 		{
-            var item = PointOfSale.Find (id);
-            //PointOfSale item = PointOfSale.Find (id);
-            try {
-				using (var scope = new TransactionScope()) {
+			return PartialView ("_Delete", PointOfSale.Find (id));
+		}
+
+		//
+		// POST: /Warehouses/Delete/5
+
+		[HttpPost, ActionName ("Delete")]
+		public ActionResult DeleteConfirmed (int id)
+		{
+			var item = PointOfSale.Find (id);
+			//PointOfSale item = PointOfSale.Find (id);
+			try {
+				using (var scope = new TransactionScope ()) {
 					item.DeleteAndFlush ();
 				}
-                return PartialView ("_DeleteSuccesful", item);
-            } catch (Exception) {
-            	return PartialView ("DeleteUnsuccessful");
+				return PartialView ("_DeleteSuccesful", item);
+			} catch (Exception) {
+				return PartialView ("DeleteUnsuccessful");
 			}
 		}
-		
+
 		public JsonResult GetSuggestions (int store, string pattern)
 		{
 			var qry = from x in PointOfSale.Queryable
-                      where x.Store.Id == store &&
-							(x.Code.Contains (pattern) ||
-					 		 x.Name.Contains (pattern))
-                      select new { id = x.Id, name = x.Name };
+				  where x.Store.Id == store &&
+								    (x.Code.Contains (pattern) ||
+								      x.Name.Contains (pattern))
+				  select new { id = x.Id, name = x.Name };
 
 			return Json (qry.Take (15).ToList (), JsonRequestBehavior.AllowGet);
 		}
-    }
+	}
 }

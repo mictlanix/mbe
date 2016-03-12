@@ -38,133 +38,121 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
-    public class SupplierPaymentsController : CustomController
-    {
-        //
-        // GET: /SupplierPayment/
+	public class SupplierPaymentsController : CustomController {
+		//
+		// GET: /SupplierPayment/
 
-        public ActionResult Index ()
-        {
-            var qry = from x in SupplierPayment.Queryable
-                      orderby x.Id descending
-                      select x;
+		public ActionResult Index ()
+		{
+			var qry = from x in SupplierPayment.Queryable
+				  orderby x.Id descending
+				  select x;
 
-            Search<SupplierPayment> search = new Search<SupplierPayment>();
-            search.Limit = WebConfig.PageSize;
-            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            search.Total = qry.Count();
+			Search<SupplierPayment> search = new Search<SupplierPayment> ();
+			search.Limit = WebConfig.PageSize;
+			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+			search.Total = qry.Count ();
 
-            return View(search);
-        }
+			return View (search);
+		}
 
-        // POST: /SupplierPayment/
+		// POST: /SupplierPayment/
 
-        [HttpPost]
-        public ActionResult Index(Search<SupplierPayment> search)
-        {
-            if (ModelState.IsValid)
-            {
-                search = GetSupplierPayments(search);
-            }
+		[HttpPost]
+		public ActionResult Index (Search<SupplierPayment> search)
+		{
+			if (ModelState.IsValid) {
+				search = GetSupplierPayments (search);
+			}
 
-            if (Request.IsAjaxRequest())
-            {
-                return PartialView("_Index", search);
-            }
-            else
-            {
-                return View(search);
-            }
-        }
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_Index", search);
+			} else {
+				return View (search);
+			}
+		}
 
-        Search<SupplierPayment> GetSupplierPayments(Search<SupplierPayment> search)
-        {
-            if (search.Pattern == null)
-            {
-                var qry = from x in SupplierPayment.Queryable
-                          orderby x.Id descending
-                          select x;
+		Search<SupplierPayment> GetSupplierPayments (Search<SupplierPayment> search)
+		{
+			if (search.Pattern == null) {
+				var qry = from x in SupplierPayment.Queryable
+					  orderby x.Id descending
+					  select x;
 
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            }
-            else
-            {
-                var qry = from x in SupplierPayment.Queryable
-                          where x.Supplier.Name.Contains(search.Pattern)
-                          orderby x.Id descending
-                          select x;
+				search.Total = qry.Count ();
+				search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+			} else {
+				var qry = from x in SupplierPayment.Queryable
+					  where x.Supplier.Name.Contains (search.Pattern)
+					  orderby x.Id descending
+					  select x;
 
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            }
+				search.Total = qry.Count ();
+				search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+			}
 
-            return search;
-        }
+			return search;
+		}
 
-        //
-        // GET: /SupplierPayment/Details/5
+		//
+		// GET: /SupplierPayment/Details/5
 
-        public ActionResult Details (int id)
-        {
-            var item = SupplierPayment.Find(id);
-            return View(item);
-        }
+		public ActionResult Details (int id)
+		{
+			var item = SupplierPayment.Find (id);
+			return View (item);
+		}
 
-        //
-        // GET: /SupplierPayment/Create
+		//
+		// GET: /SupplierPayment/Create
 
-        public ActionResult NewPay ()
-        {
-            return View (new SupplierPayment ());
-        } 
+		public ActionResult NewPay ()
+		{
+			return View (new SupplierPayment ());
+		}
 
-        //
-        // POST: /SupplierPayment/Create
+		//
+		// POST: /SupplierPayment/Create
 
-        [HttpPost]
-        public ActionResult NewPay (SupplierPayment item)
-        {
-            if (!ModelState.IsValid)
-                return View (item);
+		[HttpPost]
+		public ActionResult NewPay (SupplierPayment item)
+		{
+			if (!ModelState.IsValid)
+				return View (item);
 
-            item.Supplier = Supplier.Find (item.SupplierId);
-            item.Date = DateTime.Now;
-            item.Creator = CurrentUser.Employee;
+			item.Supplier = Supplier.Find (item.SupplierId);
+			item.Date = DateTime.Now;
+			item.Creator = CurrentUser.Employee;
 
-            using (var scope = new TransactionScope ()) {
-                item.CreateAndFlush();
-            }
+			using (var scope = new TransactionScope ()) {
+				item.CreateAndFlush ();
+			}
 
-            return RedirectToAction ("Index");
-        }
-        
-        //
-        // GET: /SupplierPayment/Delete/5
- 
-        public ActionResult Delete(int id)
-        {
-            return View ();
-        }
+			return RedirectToAction ("Index");
+		}
 
-        //
-        // POST: /SupplierPayment/Delete/5
+		//
+		// GET: /SupplierPayment/Delete/5
 
-        [HttpPost]
-        public ActionResult Delete (int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-    }
+		public ActionResult Delete (int id)
+		{
+			return View ();
+		}
+
+		//
+		// POST: /SupplierPayment/Delete/5
+
+		[HttpPost]
+		public ActionResult Delete (int id, FormCollection collection)
+		{
+			try {
+				// TODO: Add delete logic here
+				return RedirectToAction ("Index");
+			} catch {
+				return View ();
+			}
+		}
+	}
 }

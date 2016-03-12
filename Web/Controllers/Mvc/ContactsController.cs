@@ -38,29 +38,27 @@ using NHibernate.Exceptions;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Mvc;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
-    public class ContactsController : CustomController
-	{
+	public class ContactsController : CustomController {
 		public ActionResult CreateCustomerContact (int id)
 		{
 			return PartialView ("_Create");
 		}
 
 		public ActionResult CreateSupplierContact (int id)
-        {
+		{
 			return PartialView ("_Create");
 		}
-		
+
 		[HttpPost]
 		public ActionResult CreateCustomerContact (int id, Contact item)
 		{
 			if (!ModelState.IsValid) {
 				return PartialView ("_Create", item);
 			}
-			
-			using (var scope = new TransactionScope()) {
+
+			using (var scope = new TransactionScope ()) {
 				var customer = Customer.Find (id);
 
 				item.Id = 0;
@@ -68,10 +66,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				customer.Contacts.Add (item);
 				customer.Update ();
 			}
-			
+
 			return PartialView ("_Refresh");
 		}
-		
+
 		[HttpPost]
 		public ActionResult CreateSupplierContact (int id, Contact item)
 		{
@@ -79,7 +77,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				return PartialView ("_Create", item);
 			}
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				var supplier = Supplier.Find (id);
 
 				item.Id = 0;
@@ -87,32 +85,32 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				supplier.Contacts.Add (item);
 				supplier.Update ();
 			}
-			
+
 			return PartialView ("_Refresh");
 		}
-		
+
 		public ActionResult Details (int id)
 		{
 			var item = Contact.Find (id);
 			return PartialView ("_Details", item);
 		}
-		
+
 		public ActionResult Edit (int id)
 		{
 			var item = Contact.Find (id);
 			return PartialView ("_Edit", item);
 		}
-		
+
 		[HttpPost]
 		public ActionResult Edit (Contact item)
 		{
 			if (!ModelState.IsValid)
 				return PartialView ("_Edit", item);
-			
-			using (var scope = new TransactionScope()) {
+
+			using (var scope = new TransactionScope ()) {
 				item.Update ();
 			}
-			
+
 			return PartialView ("_Refresh");
 		}
 
@@ -121,20 +119,20 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			var item = Contact.Find (id);
 			return PartialView ("_Delete", item);
 		}
-		
+
 		[HttpPost, ActionName ("Delete")]
 		public ActionResult DeleteConfirmed (int id)
 		{
 			try {
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					var item = Contact.Find (id);
-					
-					foreach(var x in item.Customers) {
+
+					foreach (var x in item.Customers) {
 						x.Contacts.Remove (item);
 						x.Update ();
 					}
-					
-					foreach(var x in item.Suppliers) {
+
+					foreach (var x in item.Suppliers) {
 						x.Contacts.Remove (item);
 						x.Update ();
 					}
@@ -143,17 +141,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				System.Diagnostics.Debug.WriteLine (ex);
 				return PartialView ("DeleteUnsuccessful");
 			}
-			
+
 			try {
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					var item = Contact.Find (id);
 					item.DeleteAndFlush ();
 				}
 			} catch (Exception ex) {
 				System.Diagnostics.Debug.WriteLine (ex);
 			}
-			
+
 			return PartialView ("_Refresh");
 		}
-    }
+	}
 }

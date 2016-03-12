@@ -39,197 +39,195 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
-    public class SuppliersController : CustomController
-    {
-        public ViewResult Index()
-        {
-            var qry = from x in Supplier.Queryable
-                      orderby x.Name
-                      select x;
+	public class SuppliersController : CustomController {
+		public ViewResult Index ()
+		{
+			var qry = from x in Supplier.Queryable
+				  orderby x.Name
+				  select x;
 
-            Search<Supplier> search = new Search<Supplier>();
-            search.Limit = WebConfig.PageSize;
-            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            search.Total = qry.Count();
+			Search<Supplier> search = new Search<Supplier> ();
+			search.Limit = WebConfig.PageSize;
+			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+			search.Total = qry.Count ();
 
-            return View(search);
-        }
+			return View (search);
+		}
 
-        [HttpPost]
-        public ActionResult Index(Search<Supplier> search)
-        {
-            if (ModelState.IsValid) {
-                search = GetSuppliers(search);
-            }
+		[HttpPost]
+		public ActionResult Index (Search<Supplier> search)
+		{
+			if (ModelState.IsValid) {
+				search = GetSuppliers (search);
+			}
 
-            if (Request.IsAjaxRequest()) {
-                return PartialView("_Index", search);
-            } else {
-                return View(search);
-            }
-        }
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_Index", search);
+			} else {
+				return View (search);
+			}
+		}
 
-        Search<Supplier> GetSuppliers(Search<Supplier> search)
-        {
-            if (search.Pattern == null) {
-                var qry = from x in Supplier.Queryable
-                          orderby x.Name
-                          select x;
+		Search<Supplier> GetSuppliers (Search<Supplier> search)
+		{
+			if (search.Pattern == null) {
+				var qry = from x in Supplier.Queryable
+					  orderby x.Name
+					  select x;
 
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            } else {
-                var qry = from x in Supplier.Queryable
-                          where x.Name.Contains(search.Pattern) ||
-                          x.Zone.Contains(search.Pattern) ||
-                          x.Code.Contains(search.Pattern)
-                          orderby x.Name
-                          select x;
+				search.Total = qry.Count ();
+				search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+			} else {
+				var qry = from x in Supplier.Queryable
+					  where x.Name.Contains (search.Pattern) ||
+					  x.Zone.Contains (search.Pattern) ||
+					  x.Code.Contains (search.Pattern)
+					  orderby x.Name
+					  select x;
 
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            }
+				search.Total = qry.Count ();
+				search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+			}
 
-            return search;
-        }
+			return search;
+		}
 
-        public ActionResult Details (int id)
-        {
-			var item = Supplier.Find(id);
+		public ActionResult Details (int id)
+		{
+			var item = Supplier.Find (id);
 
-			item.Addresses.ToList();
-			item.Agreements.ToList();
-			item.BanksAccounts.ToList();
-			item.Contacts.ToList();
+			item.Addresses.ToList ();
+			item.Agreements.ToList ();
+			item.BanksAccounts.ToList ();
+			item.Contacts.ToList ();
 
-            ViewBag.OwnerId = item.Id;
+			ViewBag.OwnerId = item.Id;
 
-            return View (item);
-        }
+			return View (item);
+		}
 
-        public ActionResult Create()
-        {
-            return PartialView("_Create", new Supplier());
-        }
+		public ActionResult Create ()
+		{
+			return PartialView ("_Create", new Supplier ());
+		}
 
-        [HttpPost]
+		[HttpPost]
 		public ActionResult Create (Supplier item)
 		{
 			if (!ModelState.IsValid)
-                return PartialView ("_Create", item);
+				return PartialView ("_Create", item);
 
 			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
 			}
 
-            return PartialView ("_CreateSuccesful", item);
-            
-            //if (!ModelState.IsValid)
-            //{
-            //    if (Request.IsAjaxRequest())
-            //        return PartialView("_Create", supplier);
+			return PartialView ("_CreateSuccesful", item);
 
-            //    return View(supplier);
-            //}
+			//if (!ModelState.IsValid)
+			//{
+			//    if (Request.IsAjaxRequest())
+			//        return PartialView("_Create", supplier);
 
-            //supplier.Create ();
+			//    return View(supplier);
+			//}
 
-            //if (Request.IsAjaxRequest())
-            //{
-            //    //FIXME: localize string
-            //    return PartialView("_Success", "Operation successful!");
-            //}
+			//supplier.Create ();
 
-            //return View("Index");
-        }
+			//if (Request.IsAjaxRequest())
+			//{
+			//    //FIXME: localize string
+			//    return PartialView("_Success", "Operation successful!");
+			//}
 
-        public ActionResult Edit(int id)
-        {
-            var item = Supplier.Find(id);
-            return PartialView ("_Edit", item);
-        }
+			//return View("Index");
+		}
 
-        [HttpPost]
-        public ActionResult Edit(Supplier item)
-        {
-            if (!ModelState.IsValid)
-                return PartialView ("_Edit", item);
-            
-			var entity = Supplier.Find(item.Id);
+		public ActionResult Edit (int id)
+		{
+			var item = Supplier.Find (id);
+			return PartialView ("_Edit", item);
+		}
 
-            entity.Code = item.Code;
-            entity.Name = item.Name;
-            entity.Zone = item.Zone;
-            entity.CreditDays = item.CreditDays;
-            entity.CreditLimit = item.CreditLimit;
-            entity.Comment = item.Comment;
-			
-			using (var scope = new TransactionScope()) {
-                entity.UpdateAndFlush ();
+		[HttpPost]
+		public ActionResult Edit (Supplier item)
+		{
+			if (!ModelState.IsValid)
+				return PartialView ("_Edit", item);
+
+			var entity = Supplier.Find (item.Id);
+
+			entity.Code = item.Code;
+			entity.Name = item.Name;
+			entity.Zone = item.Zone;
+			entity.CreditDays = item.CreditDays;
+			entity.CreditLimit = item.CreditLimit;
+			entity.Comment = item.Comment;
+
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
 			}
 
-            return PartialView ("_Refresh");
-        }
+			return PartialView ("_Refresh");
+		}
 
-        public ActionResult Delete(int id)
-        {
-            var item = Supplier.Find(id);
-            return PartialView ("_Delete", item);
-        }
+		public ActionResult Delete (int id)
+		{
+			var item = Supplier.Find (id);
+			return PartialView ("_Delete", item);
+		}
 
-        [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            var item = Supplier.Find (id);
+		[HttpPost, ActionName ("Delete")]
+		public ActionResult DeleteConfirmed (int id)
+		{
+			var item = Supplier.Find (id);
 
 			try {
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					item.DeleteAndFlush ();
 				}
-                return PartialView ("_DeleteSuccesful", item );
+				return PartialView ("_DeleteSuccesful", item);
 			} catch (Exception) {
-                return PartialView ("DeleteUnsuccessful");
+				return PartialView ("DeleteUnsuccessful");
 			}
-        }
-		
+		}
+
 		public ActionResult Addresses (int id)
 		{
 			var item = Supplier.Find (id);
 			return PartialView ("../Addresses/_Index", item.Addresses);
 		}
-		
+
 		public ActionResult Contacts (int id)
 		{
 			var item = Supplier.Find (id);
 			return PartialView ("../Contacts/_Index", item.Contacts);
 		}
 
-        public ActionResult BankAccounts (int id)
-        {
-            var item = Supplier.Find (id);
-            return PartialView ("../BankAccounts/_Index", item.BanksAccounts);
-        }
-
-        public ActionResult SupplierAgreements (int id)
-        {
-            var item = Supplier.Find (id);
-            return PartialView ("../SupplierAgreements/_Index", item.Agreements);
-        }
-		
-		public JsonResult GetSuggestions(string pattern)
+		public ActionResult BankAccounts (int id)
 		{
-			JsonResult result = new JsonResult();
+			var item = Supplier.Find (id);
+			return PartialView ("../BankAccounts/_Index", item.BanksAccounts);
+		}
+
+		public ActionResult SupplierAgreements (int id)
+		{
+			var item = Supplier.Find (id);
+			return PartialView ("../SupplierAgreements/_Index", item.Agreements);
+		}
+
+		public JsonResult GetSuggestions (string pattern)
+		{
+			JsonResult result = new JsonResult ();
 			var qry = from x in Supplier.Queryable
-				where x.Name.Contains(pattern)
-			select new { id = x.Id, name = x.Name };
-			
-			result = Json(qry.Take(15).ToList());
+				  where x.Name.Contains (pattern)
+				  select new { id = x.Id, name = x.Name };
+
+			result = Json (qry.Take (15).ToList ());
 			result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
-			
+
 			return result;
 		}
-    }
+	}
 }

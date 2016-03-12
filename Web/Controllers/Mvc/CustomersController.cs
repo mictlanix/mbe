@@ -39,104 +39,102 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
-    public class CustomersController : CustomController
-    {
-        public ViewResult Index()
-        {
-            var qry = from x in Customer.Queryable
-                      orderby x.Name
-                      select x;
+	public class CustomersController : CustomController {
+		public ViewResult Index ()
+		{
+			var qry = from x in Customer.Queryable
+				  orderby x.Name
+				  select x;
 
-            var search = new Search<Customer> ();
-            search.Limit = WebConfig.PageSize;
-            search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
-            search.Total = qry.Count ();
+			var search = new Search<Customer> ();
+			search.Limit = WebConfig.PageSize;
+			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+			search.Total = qry.Count ();
 
-            return View (search);
-        }
+			return View (search);
+		}
 
-        [HttpPost]
-        public ActionResult Index(Search<Customer> search)
-        {
-            if (ModelState.IsValid) {
-                search = GetCustomers(search);
-            }
+		[HttpPost]
+		public ActionResult Index (Search<Customer> search)
+		{
+			if (ModelState.IsValid) {
+				search = GetCustomers (search);
+			}
 
-            if (Request.IsAjaxRequest()){
-                return PartialView("_Index", search);
-            } else {
-                return View(search);
-            }
-        }
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_Index", search);
+			} else {
+				return View (search);
+			}
+		}
 
-        Search<Customer> GetCustomers (Search<Customer> search)
-        {
-            if (search.Pattern == null) {
-                var qry = from x in Customer.Queryable
-                          orderby x.Name
-                          select x;
+		Search<Customer> GetCustomers (Search<Customer> search)
+		{
+			if (search.Pattern == null) {
+				var qry = from x in Customer.Queryable
+					  orderby x.Name
+					  select x;
 
-                search.Total = qry.Count ();
-                search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
-            } else {
-                var qry = from x in Customer.Queryable
-                          where x.Name.Contains (search.Pattern) ||
-                              x.Code.Contains (search.Pattern) ||
-                              x.Zone.Contains (search.Pattern)
-                          orderby x.Name
-                          select x;
+				search.Total = qry.Count ();
+				search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+			} else {
+				var qry = from x in Customer.Queryable
+					  where x.Name.Contains (search.Pattern) ||
+					      x.Code.Contains (search.Pattern) ||
+					      x.Zone.Contains (search.Pattern)
+					  orderby x.Name
+					  select x;
 
-                search.Total = qry.Count ();
-                search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
-            }
+				search.Total = qry.Count ();
+				search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+			}
 
-            return search;
-        }
+			return search;
+		}
 
-        public ViewResult Details (int id)
-        {
-            var item = Customer.Find (id);
-            return View (item);
-        }
+		public ViewResult Details (int id)
+		{
+			var item = Customer.Find (id);
+			return View (item);
+		}
 
-        public ActionResult Create()
-        {
-            return PartialView("_Create", new Customer());
-        }
+		public ActionResult Create ()
+		{
+			return PartialView ("_Create", new Customer ());
+		}
 
-        [HttpPost]
-        public ActionResult Create (Customer item)
+		[HttpPost]
+		public ActionResult Create (Customer item)
 		{
 			item.PriceList = PriceList.TryFind (item.PriceListId);
 
-            if (!ModelState.IsValid)
-                return PartialView("_Create", item);
-			
-			using (var scope = new TransactionScope()) {
-            	item.CreateAndFlush ();
+			if (!ModelState.IsValid)
+				return PartialView ("_Create", item);
+
+			using (var scope = new TransactionScope ()) {
+				item.CreateAndFlush ();
 			}
 
-            return PartialView ("_CreateSuccesful", item);
-        }
+			return PartialView ("_CreateSuccesful", item);
+		}
 
-        public ActionResult Edit(int id)
-        {
-            var item = Customer.Find(id);
-            return PartialView ("_Edit", item);
-        }
+		public ActionResult Edit (int id)
+		{
+			var item = Customer.Find (id);
+			return PartialView ("_Edit", item);
+		}
 
-        [HttpPost]
-        public ActionResult Edit(Customer item)
-        {
-            item.PriceList = PriceList.TryFind(item.PriceListId);
-			
-            if (!ModelState.IsValid)
-                return PartialView ("_Edit", item);
-			
-			var entity = Customer.Find(item.Id);
+		[HttpPost]
+		public ActionResult Edit (Customer item)
+		{
+			item.PriceList = PriceList.TryFind (item.PriceListId);
+
+			if (!ModelState.IsValid)
+				return PartialView ("_Edit", item);
+
+			var entity = Customer.Find (item.Id);
 
 			entity.Code = item.Code;
 			entity.Name = item.Name;
@@ -148,50 +146,50 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			entity.ShippingRequiredDocument = item.ShippingRequiredDocument;
 			entity.Comment = item.Comment;
 
-			using (var scope = new TransactionScope()) {
-            	entity.UpdateAndFlush();
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
 			}
 
-            return PartialView ("_Refresh");
-        }
+			return PartialView ("_Refresh");
+		}
 
-        public ActionResult Delete(int id)
-        {
-            var item = Customer.Find (id);
-            return  PartialView ("_Delete",item);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed (int id)
+		public ActionResult Delete (int id)
 		{
-            var item = Customer.Find (id);
+			var item = Customer.Find (id);
+			return PartialView ("_Delete", item);
+		}
 
-            try {
-                using (var scope = new TransactionScope()) {
-                    foreach (var discount in item.Discounts) {
-                        discount.Delete ();
-                    }
-                    scope.Flush ();
-                    item.DeleteAndFlush ();
-                }
-                return PartialView ("_DeleteSuccesful", item);
-            } catch (Exception) {
-                return PartialView ("DeleteUnsuccessful" );
-            }
-        }
+		[HttpPost, ActionName ("Delete")]
+		public ActionResult DeleteConfirmed (int id)
+		{
+			var item = Customer.Find (id);
+
+			try {
+				using (var scope = new TransactionScope ()) {
+					foreach (var discount in item.Discounts) {
+						discount.Delete ();
+					}
+					scope.Flush ();
+					item.DeleteAndFlush ();
+				}
+				return PartialView ("_DeleteSuccesful", item);
+			} catch (Exception) {
+				return PartialView ("DeleteUnsuccessful");
+			}
+		}
 
 		public ActionResult Addresses (int id)
 		{
 			var item = Customer.Find (id);
 			return PartialView ("../Addresses/_Index", item.Addresses);
 		}
-		
+
 		public ActionResult Contacts (int id)
 		{
 			var item = Customer.Find (id);
 			return PartialView ("../Contacts/_Index", item.Contacts);
 		}
-		
+
 		public ActionResult Taxpayers (int id)
 		{
 			var item = Customer.Find (id);
@@ -207,30 +205,30 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		public JsonResult GetSuggestions (string pattern)
 		{
 			var qry = from x in Customer.Queryable
-			          where x.Code.Contains (pattern) ||
-			              x.Name.Contains (pattern) ||
-			              x.Zone.Contains (pattern)
-			          select new {
-						id = x.Id,
-						name = x.Name,
-						code = x.Code,
-						hasCredit = (x.CreditDays > 0 && x.CreditLimit > 0)
-					  };
+				  where x.Code.Contains (pattern) ||
+				      x.Name.Contains (pattern) ||
+				      x.Zone.Contains (pattern)
+				  select new {
+					  id = x.Id,
+					  name = x.Name,
+					  code = x.Code,
+					  hasCredit = (x.CreditDays > 0 && x.CreditLimit > 0)
+				  };
 
 			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
 		}
-		
+
 		public JsonResult ListTaxpayers (int id)
 		{
-			JsonResult result = new JsonResult();
+			JsonResult result = new JsonResult ();
 			var qry = from x in Customer.Queryable
-					  from y in x.Taxpayers
-					  where x.Id == id
-					  select new { id = y.Id, name = string.Format("{1} ({0})", y.Id, y.Name) };
-			
-			result = Json(qry.ToList());
+				  from y in x.Taxpayers
+				  where x.Id == id
+				  select new { id = y.Id, name = string.Format ("{1} ({0})", y.Id, y.Name) };
+
+			result = Json (qry.ToList ());
 			result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
-			
+
 			return result;
 		}
 
@@ -291,7 +289,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		[HttpPost]
 		public ActionResult NewDiscount (int id, CustomerDiscount item)
 		{
-			 if (!ModelState.IsValid) {
+			if (!ModelState.IsValid) {
 				return PartialView ("_NewDiscount", item);
 			}
 
@@ -303,13 +301,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				item.Discount = 0;
 			}
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				item.Customer = Customer.Find (id);
 				item.Product = Product.Find (item.ProductId);
 				item.CreateAndFlush ();
 			}
 
-            return PartialView ("_DiscountsRefresh");
+			return PartialView ("_DiscountsRefresh");
 		}
 
 		[HttpPost]
@@ -319,18 +317,18 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			bool success;
 			decimal val;
 
-			success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out val);
+			success = decimal.TryParse (value.TrimEnd (new char [] { ' ', '%' }), out val);
 			val /= 100m;
 
 			if (success && val >= 0 && val <= 1) {
 				entity.Discount = val;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
 				}
 			}
 
-			return Json (new { 
+			return Json (new {
 				id = entity.Id,
 				value = entity.FormattedValueFor (x => x.Discount)
 			});
@@ -356,15 +354,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		public JsonResult ListEmails (int id)
 		{
 			var qry1 = from x in Customer.Queryable
-					   from y in x.Taxpayers
-					   where x.Id == id
-					   select new { id = y.Email, name = string.Format("{1} <{0}>", y.Email, y.Name) };
+				   from y in x.Taxpayers
+				   where x.Id == id
+				   select new { id = y.Email, name = string.Format ("{1} <{0}>", y.Email, y.Name) };
 			var qry2 = from x in Customer.Queryable
-					   from y in x.Contacts
-					   where x.Id == id
-					   select new { id = y.Email, name = string.Format("{1} <{0}>", y.Email, y.Name) };
+				   from y in x.Contacts
+				   where x.Id == id
+				   select new { id = y.Email, name = string.Format ("{1} <{0}>", y.Email, y.Name) };
 
 			return Json (qry1.ToList ().Union (qry2.ToList ()).ToList (), JsonRequestBehavior.AllowGet);
 		}
-    }
+	}
 }

@@ -36,22 +36,20 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
-    public class PricingController : CustomController
-    {
+	public class PricingController : CustomController {
 		public ActionResult Index ()
 		{
 			var qry = from x in Product.Queryable
-					  orderby x.Name
-					  select x;
+				  orderby x.Name
+				  select x;
 
-			var search = new Search<Product>();
+			var search = new Search<Product> ();
 			search.Limit = WebConfig.PageSize;
-			search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-			search.Total = qry.Count();
-			
+			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+			search.Total = qry.Count ();
+
 			var list = PriceList.Queryable.ToList ();
 
 			if (!CurrentUser.IsInRole ("PriceLists.Update")) {
@@ -70,28 +68,28 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				return View (search);
 
 			var qry = from x in Product.Queryable
-					  orderby x.Name
-					  select x;
-			
-			if (!string.IsNullOrEmpty(search.Pattern)) {
+				  orderby x.Name
+				  select x;
+
+			if (!string.IsNullOrEmpty (search.Pattern)) {
 				qry = from x in Product.Queryable
-					  where x.Name.Contains(search.Pattern) ||
-							x.Code.Contains(search.Pattern) ||
-							x.Model.Contains (search.Pattern) ||
-							x.SKU.Contains(search.Pattern) ||
-							x.Brand.Contains(search.Pattern)
-					  orderby x.Name
-					  select x;
+				      where x.Name.Contains (search.Pattern) ||
+						    x.Code.Contains (search.Pattern) ||
+						    x.Model.Contains (search.Pattern) ||
+						    x.SKU.Contains (search.Pattern) ||
+						    x.Brand.Contains (search.Pattern)
+				      orderby x.Name
+				      select x;
 			}
-			
-			search.Total = qry.Count();
-			search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-			
-			ViewBag.PriceLists = PriceList.Queryable.ToList();
+
+			search.Total = qry.Count ();
+			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+
+			ViewBag.PriceLists = PriceList.Queryable.ToList ();
 
 			return PartialView ("_Index", search);
 		}
-		
+
 		[HttpPost]
 		public JsonResult SetPrice (int product, int list, string value)
 		{
@@ -100,26 +98,26 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			var p = Product.TryFind (product);
 			var l = PriceList.TryFind (list);
 			var item = ProductPrice.Queryable.SingleOrDefault (x => x.Product.Id == product && x.List.Id == list);
-			
+
 			if (item == null) {
 				item = new ProductPrice {
 					Product = p,
 					List = l
 				};
 			}
-			
+
 			success = decimal.TryParse (value.Trim (),
-			                            System.Globalization.NumberStyles.Currency,
-			                            null, out val);
-			
+						    System.Globalization.NumberStyles.Currency,
+						    null, out val);
+
 			if (success && val >= 0) {
 				item.Value = val;
-				
-				using (var scope = new TransactionScope()) {
+
+				using (var scope = new TransactionScope ()) {
 					item.SaveAndFlush ();
 				}
 			}
-			
+
 			return Json (new { id = item.Id, value = item.FormattedValueFor (x => x.Value) });
 		}
 
@@ -131,18 +129,18 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			var item = Product.TryFind (id);
 
 			success = Enum.TryParse<CurrencyCode> (value.Trim (), out val);
-			
+
 			if (success && val >= 0) {
 				item.Currency = val;
-				
-				using (var scope = new TransactionScope()) {
+
+				using (var scope = new TransactionScope ()) {
 					item.SaveAndFlush ();
 				}
 			}
-			
+
 			return Json (new { id = item.Id, value = item.Currency.ToString () });
 		}
-		
+
 		[HttpPost]
 		public JsonResult SetMOQ (int id, decimal value)
 		{
@@ -217,11 +215,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 		public JsonResult PriceTypes ()
 		{
-			var qry = from x in Enum.GetValues (typeof(PriceType)).Cast<PriceType> ()
-				select new {
-				value = (int)x,
-				text = x.GetDisplayName ()
-			};
+			var qry = from x in Enum.GetValues (typeof (PriceType)).Cast<PriceType> ()
+				  select new {
+					  value = (int) x,
+					  text = x.GetDisplayName ()
+				  };
 
 			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
 		}
@@ -247,5 +245,5 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			return Json (rates, JsonRequestBehavior.AllowGet);
 		}
-    }
+	}
 }
