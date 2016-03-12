@@ -40,11 +40,9 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
-	public class TranslationRequestsController : CustomController
-    {
+	public class TranslationRequestsController : CustomController {
 		public ActionResult Index ()
 		{
 			var search = Search (new Search<TranslationRequest> {
@@ -75,18 +73,18 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		Search<TranslationRequest> Search (Search<TranslationRequest> search)
 		{
 			IQueryable<TranslationRequest> query;
-			var pattern = string.Format("{0}", search.Pattern).Trim ();
+			var pattern = string.Format ("{0}", search.Pattern).Trim ();
 
 			if (string.IsNullOrWhiteSpace (pattern)) {
 				query = from x in TranslationRequest.Queryable
-						orderby x.Date descending
-				        select x;
+					orderby x.Date descending
+					select x;
 			} else {
 				query = from x in TranslationRequest.Queryable
-				        where x.Agency.Contains (pattern) ||
-				            x.DocumentName.Contains (pattern)
-						orderby x.Date descending
-				        select x;
+					where x.Agency.Contains (pattern) ||
+					    x.DocumentName.Contains (pattern)
+					orderby x.Date descending
+					select x;
 			}
 
 			search.Total = query.Count ();
@@ -96,11 +94,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		}
 
 		public ActionResult Create ()
-        {
+		{
 			return PartialView ("_Create");
 		}
 
-        [HttpPost]
+		[HttpPost]
 		public ActionResult Create (TranslationRequest item)
 		{
 			item.Requester = Employee.TryFind (item.RequesterId);
@@ -123,20 +121,20 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		}
 
 		public ActionResult Edit (int id)
-        {
-        	var item = TranslationRequest.Find (id);
+		{
+			var item = TranslationRequest.Find (id);
 			return PartialView ("_Edit", item);
-        }
+		}
 
-        [HttpPost]
-        public ActionResult Edit (TranslationRequest item)
+		[HttpPost]
+		public ActionResult Edit (TranslationRequest item)
 		{
 			item.Requester = Employee.TryFind (item.RequesterId);
 
 			if (!ModelState.IsValid) {
 				return PartialView ("_Edit", item);
 			}
-			
+
 			var entity = TranslationRequest.Find (item.Id);
 
 			entity.Date = item.Date;
@@ -147,26 +145,26 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			entity.DeliveryDate = item.DeliveryDate;
 			entity.Comment = item.Comment;
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
 			}
 
 			return PartialView ("_Refresh");
-        }
+		}
 
 		public ActionResult Delete (int id)
-        {
-            var item = TranslationRequest.Find (id);
+		{
+			var item = TranslationRequest.Find (id);
 			return PartialView ("_Delete", item);
-        }
+		}
 
-        [HttpPost, ActionName ("Delete")]
+		[HttpPost, ActionName ("Delete")]
 		public ActionResult DeleteConfirmed (int id)
 		{
 			var item = TranslationRequest.Find (id);
 
 			try {
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					item.DeleteAndFlush ();
 				}
 			} catch (Exception ex) {
@@ -175,6 +173,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			}
 
 			return PartialView ("_DeleteSuccesful", item);
-        }
-    }
+		}
+	}
 }

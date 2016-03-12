@@ -37,126 +37,124 @@ using Castle.ActiveRecord;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Mvc;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
-    public class BankAccountsController : CustomController
-    {
-        //
-        // GET: /BanksAccounts/Details/5
+	public class BankAccountsController : CustomController {
+		//
+		// GET: /BanksAccounts/Details/5
 
-        public ActionResult Details(int id)
-        {
-            var item = BankAccount.Find(id);
-            var supplier = item.Suppliers.First();
+		public ActionResult Details (int id)
+		{
+			var item = BankAccount.Find (id);
+			var supplier = item.Suppliers.First ();
 
-            ViewBag.OwnerId = supplier.Id;
-            return PartialView ("_Details", item);
-        }
+			ViewBag.OwnerId = supplier.Id;
+			return PartialView ("_Details", item);
+		}
 
-        //
-        // GET: /BanksAccounts/Create
+		//
+		// GET: /BanksAccounts/Create
 
-        public ActionResult CreateForSupplier(int id)
-        {
-            ViewBag.OwnerId = id;
-            return PartialView ("_Create", new BankAccount());
-        }
+		public ActionResult CreateForSupplier (int id)
+		{
+			ViewBag.OwnerId = id;
+			return PartialView ("_Create", new BankAccount ());
+		}
 
-        //
-        // POST: /BanksAccounts/Create
+		//
+		// POST: /BanksAccounts/Create
 
-        [HttpPost]
-        public ActionResult CreateForSupplier(BankAccount item)
-        {
-            if (!ModelState.IsValid) {
-                return PartialView ("_Create", item);
-            }
+		[HttpPost]
+		public ActionResult CreateForSupplier (BankAccount item)
+		{
+			if (!ModelState.IsValid) {
+				return PartialView ("_Create", item);
+			}
 
-            int owner = int.Parse (Request.Params ["OwnerId"]);
+			int owner = int.Parse (Request.Params ["OwnerId"]);
 
-            using (var scope = new TransactionScope()) {
-                item.CreateAndFlush();
-							
-                var supplier = Supplier.Find(owner);
-                supplier.BanksAccounts.Add(item);
-                supplier.Update ();
-            }
+			using (var scope = new TransactionScope ()) {
+				item.CreateAndFlush ();
 
-            return PartialView ("_Refresh");
-        }
+				var supplier = Supplier.Find (owner);
+				supplier.BanksAccounts.Add (item);
+				supplier.Update ();
+			}
 
-        //
-        // GET: /BanksAccounts/Edit/5
+			return PartialView ("_Refresh");
+		}
 
-        public ActionResult Edit(int id)
-        {
-            var item = BankAccount.Find(id);
-            var supplier = item.Suppliers.First();
+		//
+		// GET: /BanksAccounts/Edit/5
 
-            ViewBag.OwnerId = supplier.Id;
+		public ActionResult Edit (int id)
+		{
+			var item = BankAccount.Find (id);
+			var supplier = item.Suppliers.First ();
 
-            return PartialView ("_Edit", item);
-        }
+			ViewBag.OwnerId = supplier.Id;
 
-        //
-        // POST: /BanksAccounts/Edit/5
+			return PartialView ("_Edit", item);
+		}
 
-        [HttpPost]
-        public ActionResult Edit (BankAccount item)
-        {
-            if (!ModelState.IsValid) {
-                return PartialView ("_Edit", item);
-            }
+		//
+		// POST: /BanksAccounts/Edit/5
 
-            var entity = BankAccount.Find (item.Id);
+		[HttpPost]
+		public ActionResult Edit (BankAccount item)
+		{
+			if (!ModelState.IsValid) {
+				return PartialView ("_Edit", item);
+			}
 
-            entity.BankName = item.BankName;
-            entity.AccountNumber = item.AccountNumber;
-            entity.Reference = item.Reference;
-            entity.RoutingNumber = item.RoutingNumber;
-            entity.Comment = item.Comment;
+			var entity = BankAccount.Find (item.Id);
 
-            using (var scope = new TransactionScope ()) {
-                entity.UpdateAndFlush ();
-            }
+			entity.BankName = item.BankName;
+			entity.AccountNumber = item.AccountNumber;
+			entity.Reference = item.Reference;
+			entity.RoutingNumber = item.RoutingNumber;
+			entity.Comment = item.Comment;
 
-            return PartialView ("_Refresh");
-        }
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
+			}
 
-        //
-        // GET: /BanksAccounts/Delete/5
+			return PartialView ("_Refresh");
+		}
 
-        public ActionResult Delete(int id)
-        {
-            var item = BankAccount.Find(id);
-            var supplier = item.Suppliers.First();
+		//
+		// GET: /BanksAccounts/Delete/5
 
-            ViewBag.OwnerId = supplier.Id;
-            return PartialView ("_Delete", item);
-        }
+		public ActionResult Delete (int id)
+		{
+			var item = BankAccount.Find (id);
+			var supplier = item.Suppliers.First ();
 
-        //
-        // POST: /BanksAccounts/Delete/5
+			ViewBag.OwnerId = supplier.Id;
+			return PartialView ("_Delete", item);
+		}
 
-        [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            var item = BankAccount.Find (id);
-            int owner = int.Parse(Request.Params["OwnerId"]);
-            
-            using (var scope = new TransactionScope()) {
-	            var supplier = item.Suppliers.FirstOrDefault();
-	
-	            if (supplier != null) {
-	                supplier.BanksAccounts.Remove(item);
+		//
+		// POST: /BanksAccounts/Delete/5
+
+		[HttpPost, ActionName ("Delete")]
+		public ActionResult DeleteConfirmed (int id)
+		{
+			var item = BankAccount.Find (id);
+			int owner = int.Parse (Request.Params ["OwnerId"]);
+
+			using (var scope = new TransactionScope ()) {
+				var supplier = item.Suppliers.FirstOrDefault ();
+
+				if (supplier != null) {
+					supplier.BanksAccounts.Remove (item);
 					supplier.Update ();
-	            }
+				}
 
 				item.DeleteAndFlush ();
 			}
 
-            return PartialView ("_Refresh", new { id = owner });
-        }
-    }
+			return PartialView ("_Refresh", new { id = owner });
+		}
+	}
 }

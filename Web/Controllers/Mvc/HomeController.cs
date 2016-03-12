@@ -33,18 +33,16 @@ using System.Web;
 using System.Web.Mvc;
 using Mictlanix.BE.Web.Mvc;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
-    public class HomeController : CustomController
-    {
-        public ActionResult Index()
-        {
-            return View();
-        }
+namespace Mictlanix.BE.Web.Controllers.Mvc {
+	public class HomeController : CustomController {
+		public ActionResult Index ()
+		{
+			return View ();
+		}
 
-        public ActionResult About()
-        {
-            return View();
-        }
-    }
+		public ActionResult About ()
+		{
+			return View ();
+		}
+	}
 }

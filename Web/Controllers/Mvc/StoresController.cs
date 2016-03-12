@@ -38,13 +38,11 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
-    public class StoresController : CustomController
-    {
+	public class StoresController : CustomController {
 		public ActionResult Index ()
-        {
+		{
 			var search = SearchStores (new Search<Store> {
 				Limit = WebConfig.PageSize
 			});
@@ -54,57 +52,57 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			}
 
 			return View (search);
-        }
+		}
 
-        [HttpPost]
-        public ActionResult Index (Search<Store> search)
+		[HttpPost]
+		public ActionResult Index (Search<Store> search)
 		{
 			if (ModelState.IsValid) {
 				search = SearchStores (search);
 			}
 
-            if (Request.IsAjaxRequest ()) {
-                return PartialView ("_Index", search);
-            }
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_Index", search);
+			}
 
 			return View (search);
-        }
+		}
 
 		Search<Store> SearchStores (Search<Store> search)
 		{
 			IQueryable<Store> query;
-			var pattern = string.Format("{0}", search.Pattern).Trim ();
+			var pattern = string.Format ("{0}", search.Pattern).Trim ();
 
 			if (string.IsNullOrEmpty (pattern)) {
-                query = from x in Store.Queryable
-                        orderby x.Name
-                        select x;
-            } else {
 				query = from x in Store.Queryable
-						where x.Name.Contains (pattern) 
-						orderby x.Name
-						select x;
+					orderby x.Name
+					select x;
+			} else {
+				query = from x in Store.Queryable
+					where x.Name.Contains (pattern)
+					orderby x.Name
+					select x;
 			}
 
 			search.Total = query.Count ();
 			search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
 
-            return search;
-        }
+			return search;
+		}
 
 		public ActionResult Details (int id)
-        {
-            var entity = Store.Find (id);
+		{
+			var entity = Store.Find (id);
 			return PartialView ("_Details", entity);
-        }
+		}
 
-        public ActionResult Create ()
-        {
+		public ActionResult Create ()
+		{
 			return PartialView ("_Create");
-        }
+		}
 
-        [HttpPost]
-        public ActionResult Create (Store item)
+		[HttpPost]
+		public ActionResult Create (Store item)
 		{
 			item.Taxpayer = TaxpayerIssuer.TryFind (item.TaxpayerId);
 
@@ -113,23 +111,23 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			}
 
 			using (var scope = new TransactionScope ()) {
-				item.ReceiptMessage = string.Format("{0}", item.ReceiptMessage).Trim ();
+				item.ReceiptMessage = string.Format ("{0}", item.ReceiptMessage).Trim ();
 				item.Address.Create ();
 				item.CreateAndFlush ();
 			}
-			
-			return PartialView ("_Refresh");
-        }
 
-        public ActionResult Edit (int id)
+			return PartialView ("_Refresh");
+		}
+
+		public ActionResult Edit (int id)
 		{
 			var entity = Store.Find (id);
 			return PartialView ("_Edit", entity);
-        }
+		}
 
-        [HttpPost]
-        public ActionResult Edit (Store item)
-        {
+		[HttpPost]
+		public ActionResult Edit (Store item)
+		{
 			item.Taxpayer = TaxpayerIssuer.TryFind (item.TaxpayerId);
 
 			if (!ModelState.IsValid || item.Taxpayer == null) {
@@ -138,15 +136,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			var entity = Store.Find (item.Id);
 			var address = entity.Address;
-			
+
 			entity.Code = item.Code;
 			entity.Name = item.Name;
 			entity.Taxpayer = TaxpayerIssuer.Find (item.TaxpayerId);
 			entity.Logo = item.Logo;
 			entity.Location = item.Location;
-			entity.ReceiptMessage = string.Format("{0}", item.ReceiptMessage).Trim ();
+			entity.ReceiptMessage = string.Format ("{0}", item.ReceiptMessage).Trim ();
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				if (!address.Equals (item.Address)) {
 					entity.Address = item.Address;
 					entity.Address.Create ();
@@ -154,33 +152,33 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 				entity.UpdateAndFlush ();
 			}
-			
+
 			if (!address.Equals (item.Address)) {
 				try {
-					using (var scope = new TransactionScope()) {
+					using (var scope = new TransactionScope ()) {
 						address.DeleteAndFlush ();
 					}
 				} catch (Exception ex) {
 					System.Diagnostics.Debug.WriteLine (ex);
 				}
 			}
-			
-			return PartialView ("_Refresh");
-        }
 
-        public ActionResult Delete (int id)
+			return PartialView ("_Refresh");
+		}
+
+		public ActionResult Delete (int id)
 		{
 			var entity = Store.Find (id);
 			return PartialView ("_Delete", entity);
-        }
+		}
 
-        [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
-        {
+		[HttpPost, ActionName ("Delete")]
+		public ActionResult DeleteConfirmed (int id)
+		{
 			var entity = Store.Find (id);
 
 			try {
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.Delete ();
 					entity.Address.Delete ();
 				}
@@ -189,16 +187,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			}
 
 			return PartialView ("_Refresh");
-        }
+		}
 
-        public JsonResult GetSuggestions (string pattern)
-        {
-            var query = from x in Store.Queryable
-						where x.Code.Contains (pattern) ||
-							x.Name.Contains (pattern)
-                      	select new { id = x.Id, name = x.Name };
+		public JsonResult GetSuggestions (string pattern)
+		{
+			var query = from x in Store.Queryable
+				    where x.Code.Contains (pattern) ||
+					    x.Name.Contains (pattern)
+				    select new { id = x.Id, name = x.Name };
 
-            return Json (query.Take (15).ToList (), JsonRequestBehavior.AllowGet);
-        }
-    }
+			return Json (query.Take (15).ToList (), JsonRequestBehavior.AllowGet);
+		}
+	}
 }

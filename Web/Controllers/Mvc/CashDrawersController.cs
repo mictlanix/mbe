@@ -39,170 +39,168 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
-    public class CashDrawersController : CustomController
-    {
-        //
-        // GET: /CashDrawers/
+	public class CashDrawersController : CustomController {
+		//
+		// GET: /CashDrawers/
 
-        public ViewResult Index()
-        {
-            var qry = from x in CashDrawer.Queryable
-                      orderby x.Name
-                      select x;
+		public ViewResult Index ()
+		{
+			var qry = from x in CashDrawer.Queryable
+				  orderby x.Name
+				  select x;
 
-            Search<CashDrawer> search = new Search<CashDrawer>();
-            search.Limit = WebConfig.PageSize;
-            search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            search.Total = qry.Count();
+			Search<CashDrawer> search = new Search<CashDrawer> ();
+			search.Limit = WebConfig.PageSize;
+			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+			search.Total = qry.Count ();
 
-            return View(search);
-        }
+			return View (search);
+		}
 
-        // POST: /Categories/
+		// POST: /Categories/
 
-        [HttpPost]
-        public ActionResult Index(Search<CashDrawer> search)
-        {
-            if (ModelState.IsValid) {
-                search = GetCashDrawers(search);
-            }
-
-            if (Request.IsAjaxRequest()) {
-                return PartialView("_Index", search);
-            } else {
-                return View(search);
-            }
-        }
-
-        Search<CashDrawer> GetCashDrawers(Search<CashDrawer> search)
-        {
-            if (search.Pattern == null) {
-                var qry = from x in CashDrawer.Queryable
-                          orderby x.Name
-                          select x;
-
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            } else {
-                var qry = from x in CashDrawer.Queryable
-                          where x.Name.Contains(search.Pattern) 
-                          orderby x.Name
-                          select x;
-
-                search.Total = qry.Count();
-                search.Results = qry.Skip(search.Offset).Take(search.Limit).ToList();
-            }
-
-            return search;
-        }
-
-        //
-        // GET: /CashDrawers/Details/5
-
-        public ActionResult View (int id)
-        {
-            var item = CashDrawer.Find (id);
-            return PartialView ("_View", item);
-        }
-
-        //
-        // GET: /CashDrawers/Create
-
-        public ActionResult Create()
-        {
-            return PartialView ("_Create");
-        }
-
-        //
-        // POST: /CashDrawers/Create
-
-        [HttpPost]
-        public ActionResult Create(CashDrawer item)
-        {
-            if (!ModelState.IsValid)
-                return PartialView ("_Create", item);
-        
-            item.Store = Store.Find (item.StoreId);
-			
-			using (var scope = new TransactionScope()) {
-            	item.CreateAndFlush ();
+		[HttpPost]
+		public ActionResult Index (Search<CashDrawer> search)
+		{
+			if (ModelState.IsValid) {
+				search = GetCashDrawers (search);
 			}
 
-            return PartialView ("_CreateSuccesful", item);
-        }
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_Index", search);
+			} else {
+				return View (search);
+			}
+		}
 
-        //
-        // GET: /CashDrawers/Edit/5
+		Search<CashDrawer> GetCashDrawers (Search<CashDrawer> search)
+		{
+			if (search.Pattern == null) {
+				var qry = from x in CashDrawer.Queryable
+					  orderby x.Name
+					  select x;
 
-        public ActionResult Edit(int id)
-        {
-            var item = CashDrawer.Find(id);
-            return PartialView ("_Edit", item);
-        }
+				search.Total = qry.Count ();
+				search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+			} else {
+				var qry = from x in CashDrawer.Queryable
+					  where x.Name.Contains (search.Pattern)
+					  orderby x.Name
+					  select x;
 
-        //
-        // POST: /CashDrawers/Edit/5
+				search.Total = qry.Count ();
+				search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+			}
 
-        [HttpPost]
-        public ActionResult Edit(CashDrawer item)
-        {
-            if (!ModelState.IsValid)
-                return PartialView ("_Edit", item);
-            
+			return search;
+		}
+
+		//
+		// GET: /CashDrawers/Details/5
+
+		public ActionResult View (int id)
+		{
+			var item = CashDrawer.Find (id);
+			return PartialView ("_View", item);
+		}
+
+		//
+		// GET: /CashDrawers/Create
+
+		public ActionResult Create ()
+		{
+			return PartialView ("_Create");
+		}
+
+		//
+		// POST: /CashDrawers/Create
+
+		[HttpPost]
+		public ActionResult Create (CashDrawer item)
+		{
+			if (!ModelState.IsValid)
+				return PartialView ("_Create", item);
+
+			item.Store = Store.Find (item.StoreId);
+
+			using (var scope = new TransactionScope ()) {
+				item.CreateAndFlush ();
+			}
+
+			return PartialView ("_CreateSuccesful", item);
+		}
+
+		//
+		// GET: /CashDrawers/Edit/5
+
+		public ActionResult Edit (int id)
+		{
+			var item = CashDrawer.Find (id);
+			return PartialView ("_Edit", item);
+		}
+
+		//
+		// POST: /CashDrawers/Edit/5
+
+		[HttpPost]
+		public ActionResult Edit (CashDrawer item)
+		{
+			if (!ModelState.IsValid)
+				return PartialView ("_Edit", item);
+
 			var entity = CashDrawer.Find (item.Id);
 
 			entity.Code = item.Code;
 			entity.Name = item.Name;
 			entity.Comment = item.Comment;
-            
-			using (var scope = new TransactionScope()) {
+
+			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
 			}
 
-            return PartialView ("_Refresh");
-        }
+			return PartialView ("_Refresh");
+		}
 
-        //
-        // GET: /CashDrawers/Delete/5
+		//
+		// GET: /CashDrawers/Delete/5
 
-        public ActionResult Delete(int id)
-        {
-            var item = CashDrawer.Find(id);
-            return PartialView ("_Delete",item);
-        }
+		public ActionResult Delete (int id)
+		{
+			var item = CashDrawer.Find (id);
+			return PartialView ("_Delete", item);
+		}
 
-        //
-        // POST: /CashDrawers/Delete/5
+		//
+		// POST: /CashDrawers/Delete/5
 
-        [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            var item = CashDrawer.Find (id);
-            try {
-                using (var scope = new TransactionScope ()) {
-                    item.DeleteAndFlush ();
-                }
-                return PartialView ("_DeleteSuccesful", item);
-            } catch (Exception) {
-                return PartialView ("DeleteUnsuccessful");
-            }
-            //CashDrawer CashDrawers = CashDrawer.Find(id);
-            //CashDrawers.Delete();
-            //return RedirectToAction("Index");
-        }
+		[HttpPost, ActionName ("Delete")]
+		public ActionResult DeleteConfirmed (int id)
+		{
+			var item = CashDrawer.Find (id);
+			try {
+				using (var scope = new TransactionScope ()) {
+					item.DeleteAndFlush ();
+				}
+				return PartialView ("_DeleteSuccesful", item);
+			} catch (Exception) {
+				return PartialView ("DeleteUnsuccessful");
+			}
+			//CashDrawer CashDrawers = CashDrawer.Find(id);
+			//CashDrawers.Delete();
+			//return RedirectToAction("Index");
+		}
 
 		public JsonResult GetSuggestions (int store, string pattern)
 		{
 			var qry = from x in CashDrawer.Queryable
-                      where x.Store.Id == store &&
-							(x.Code.Contains (pattern) ||
-					 		 x.Name.Contains (pattern))
-                      select new { id = x.Id, name = x.Name };
+				  where x.Store.Id == store &&
+								    (x.Code.Contains (pattern) ||
+								      x.Name.Contains (pattern))
+				  select new { id = x.Id, name = x.Name };
 
 			return Json (qry.Take (15).ToList (), JsonRequestBehavior.AllowGet);
 		}
-    }
+	}
 }

@@ -40,11 +40,9 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
-	public class TechnicalServiceRequestsController : CustomController
-    {
+	public class TechnicalServiceRequestsController : CustomController {
 		public ActionResult Index ()
 		{
 			var search = Search (new Search<TechnicalServiceRequest> {
@@ -75,20 +73,20 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		Search<TechnicalServiceRequest> Search (Search<TechnicalServiceRequest> search)
 		{
 			IQueryable<TechnicalServiceRequest> query;
-			var pattern = string.Format("{0}", search.Pattern).Trim ();
+			var pattern = string.Format ("{0}", search.Pattern).Trim ();
 
 			if (string.IsNullOrWhiteSpace (pattern)) {
 				query = from x in TechnicalServiceRequest.Queryable
-						orderby x.Date descending
-				        select x;
+					orderby x.Date descending
+					select x;
 			} else {
 				query = from x in TechnicalServiceRequest.Queryable
-				        where x.Equipment.Contains (pattern) ||
-				            x.Brand.Contains (pattern) ||
-				            x.Model.Contains (pattern) ||
-				            x.SerialNumber.Contains (pattern)
-						orderby x.Date descending
-				        select x;
+					where x.Equipment.Contains (pattern) ||
+					    x.Brand.Contains (pattern) ||
+					    x.Model.Contains (pattern) ||
+					    x.SerialNumber.Contains (pattern)
+					orderby x.Date descending
+					select x;
 			}
 
 			search.Total = query.Count ();
@@ -98,11 +96,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		}
 
 		public ActionResult Create ()
-        {
+		{
 			return PartialView ("_Create");
 		}
 
-        [HttpPost]
+		[HttpPost]
 		public ActionResult Create (TechnicalServiceRequest item)
 		{
 			item.Customer = Customer.TryFind (item.CustomerId);
@@ -125,20 +123,20 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		}
 
 		public ActionResult Edit (int id)
-        {
-        	var item = TechnicalServiceRequest.Find (id);
+		{
+			var item = TechnicalServiceRequest.Find (id);
 			return PartialView ("_Edit", item);
-        }
+		}
 
-        [HttpPost]
-        public ActionResult Edit (TechnicalServiceRequest item)
+		[HttpPost]
+		public ActionResult Edit (TechnicalServiceRequest item)
 		{
 			item.Customer = Customer.TryFind (item.CustomerId);
 
 			if (!ModelState.IsValid) {
 				return PartialView ("_Edit", item);
 			}
-			
+
 			var entity = TechnicalServiceRequest.Find (item.Id);
 
 			entity.Type = item.Type;
@@ -159,26 +157,26 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			entity.Address = item.Address;
 			entity.Remarks = item.Remarks;
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
 			}
 
 			return PartialView ("_Refresh");
-        }
+		}
 
 		public ActionResult Delete (int id)
-        {
-            var item = TechnicalServiceRequest.Find (id);
+		{
+			var item = TechnicalServiceRequest.Find (id);
 			return PartialView ("_Delete", item);
-        }
+		}
 
-        [HttpPost, ActionName ("Delete")]
+		[HttpPost, ActionName ("Delete")]
 		public ActionResult DeleteConfirmed (int id)
 		{
 			var item = TechnicalServiceRequest.Find (id);
 
 			try {
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 
 					foreach (var x in item.Components) {
 						x.DeleteAndFlush ();
@@ -240,5 +238,5 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			var item = TechnicalServiceRequest.Find (id);
 			return View (item);
 		}
-    }
+	}
 }

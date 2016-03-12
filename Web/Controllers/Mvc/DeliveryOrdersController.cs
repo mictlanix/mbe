@@ -40,11 +40,9 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
-	public class DeliveryOrdersController : CustomController
-	{
+	public class DeliveryOrdersController : CustomController {
 		public ViewResult Index ()
 		{
 			if (WebConfig.Store == null) {
@@ -80,20 +78,20 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			if (int.TryParse (pattern, out id) && id > 0) {
 				query = from x in DeliveryOrder.Queryable
-						where !(!x.IsCompleted && x.IsCancelled) && (
-							x.Id == id || x.Serial == id)
-				        orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Id descending
-				        select x;
+					where !(!x.IsCompleted && x.IsCancelled) && (
+						x.Id == id || x.Serial == id)
+					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Id descending
+					select x;
 			} else if (string.IsNullOrWhiteSpace (pattern)) {
 				query = from x in DeliveryOrder.Queryable
-                      	where !(!x.IsCompleted && x.IsCancelled)
-						orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Id descending
-                      	select x;
+					where !(!x.IsCompleted && x.IsCancelled)
+					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Id descending
+					select x;
 			} else {
 				query = from x in DeliveryOrder.Queryable
-						where !(!x.IsCompleted && x.IsCancelled) && x.Customer.Name.Contains (pattern)
-						orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Id descending
-                      	select x;
+					where !(!x.IsCompleted && x.IsCancelled) && x.Customer.Name.Contains (pattern)
+					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Id descending
+					select x;
 			}
 
 			search.Total = query.Count ();
@@ -133,7 +131,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			item.ModificationTime = item.CreationTime;
 			item.Updater = item.Creator;
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
 			}
 
@@ -147,7 +145,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			if (item.IsCompleted || item.IsCancelled) {
 				return RedirectToAction ("View", new { id = item.Id });
 			}
-			
+
 			if (!CashHelpers.ValidateExchangeRate ()) {
 				return View ("InvalidExchangeRate");
 			}
@@ -159,7 +157,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		{
 			var item = DeliveryOrder.TryFind (id);
 			var query = from x in item.Customer.Addresses
-			            select new { value = x.Id, text = x.ToString () };
+				    select new { value = x.Id, text = x.ToString () };
 
 			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
 		}
@@ -185,7 +183,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			entity.Updater = CurrentUser.Employee;
 			entity.ModificationTime = DateTime.Now;
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
 			}
 
@@ -211,7 +209,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
 				}
 			}
@@ -238,7 +236,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				Quantity = 1,
 			};
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
 			}
 
@@ -267,7 +265,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				return Content (Resources.SalesOrderNotFound);
 			}
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				foreach (var x in sales_order.Details) {
 					var item = new DeliveryOrderDetail {
 						DeliveryOrder = entity,
@@ -282,7 +280,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 					count++;
 				}
 			}
-			
+
 			if (count == 0) {
 				Response.StatusCode = 400;
 				return Content (Resources.InvoiceableItemsNotFound);
@@ -301,7 +299,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				entity.DeleteAndFlush ();
 			}
 
@@ -343,7 +341,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.ProductName = val;
 			}
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
 			}
 
@@ -364,7 +362,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			if (val.Length > 0) {
 				entity.ProductCode = val;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
 				}
 			}
@@ -385,12 +383,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			if (value > 0) {
 				entity.Quantity = value;
 
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
 				}
 			}
 
-			return Json (new { 
+			return Json (new {
 				id = entity.Id,
 				value = entity.FormattedValueFor (x => x.Quantity)
 			});
@@ -413,8 +411,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			try {
 				entity.Serial = (from x in DeliveryOrder.Queryable
-								where x.Store.Id == entity.Store.Id
-								select x.Serial).Max () + 1;
+						 where x.Store.Id == entity.Store.Id
+						 select x.Serial).Max () + 1;
 			} catch {
 				entity.Serial = 1;
 			}
@@ -423,7 +421,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			entity.ModificationTime = DateTime.Now;
 			entity.IsCompleted = true;
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
 			}
 
@@ -443,7 +441,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			entity.ModificationTime = DateTime.Now;
 			entity.Updater = CurrentUser.Employee;
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
 			}
 
