@@ -37,71 +37,55 @@ using Castle.ActiveRecord;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Mvc;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
-    public class UsersController : CustomController
-    {
-        //
-        // GET: /Users/
+	public class UsersController : CustomController {
+		public ActionResult Index ()
+		{
+			var qry = from x in Model.User.Queryable
+				  select x;
 
-        public ActionResult Index()
-        {
-            var qry = from x in Model.User.Queryable
-                      select x;
+			return View (qry.ToList ());
+		}
 
-            return View(qry.ToList());
-        }
+		public ViewResult Details (string id)
+		{
+			User user = Model.User.Find (id);
+			return View (user);
+		}
 
-        //
-        // GET: /Users/Details/5
+		public ActionResult Edit (string id)
+		{
+			User user = Model.User.Find (id);
+			return View (user);
+		}
 
-        public ViewResult Details(string id)
-        {
-            User user = Model.User.Find(id);
-            return View(user);
-        }
-        
-        //
-        // GET: /Users/Edit/5
- 
-        public ActionResult Edit(string id)
-        {
-            User user = Model.User.Find(id);
-            return View(user);
-        }
-
-        //
-        // POST: /Users/Edit/5
-
-        [HttpPost]
+		[HttpPost]
 		public ActionResult Edit (User item)
 		{
 			if (!ModelState.IsValid) {
 				return View (item);
 			}
 
-			
-
 			using (var scope = new TransactionScope ()) {
 				var user = Model.User.Find (item.UserName);
-				
+
 				user.Employee = Employee.Find (item.EmployeeId);
 				user.Email = item.Email;
 				user.IsAdministrator = item.IsAdministrator;
 
-				foreach (var i in Enum.GetValues(typeof(SystemObjects))) {
-					var obj = (SystemObjects)i;
-					string prefix = Enum.GetName (typeof(SystemObjects), i);
+				foreach (var i in Enum.GetValues (typeof (SystemObjects))) {
+					var obj = (SystemObjects) i;
+					string prefix = Enum.GetName (typeof (SystemObjects), i);
 					var privilege = user.Privileges.SingleOrDefault (x => x.Object == obj);
 
 					if (privilege == null) {
 						privilege = new AccessPrivilege { User = user, Object = obj };
 					}
 
-					foreach (var j in Enum.GetValues(typeof(AccessRight))) {
-						AccessRight right = (AccessRight)j;
-						string name = prefix + Enum.GetName (typeof(AccessRight), j);
+					foreach (var j in Enum.GetValues (typeof (AccessRight))) {
+						AccessRight right = (AccessRight) j;
+						string name = prefix + Enum.GetName (typeof (AccessRight), j);
 						string value = Request.Params [name];
 
 						if (value == null)
@@ -123,20 +107,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 		}
 
-        //
-        // GET: /Users/Delete/5
- 
-        public ActionResult Delete(string id)
-        {
-            User item = Model.User.Find(id);
-            return View(item);
-        }
+		public ActionResult Delete (string id)
+		{
+			User item = Model.User.Find (id);
+			return View (item);
+		}
 
-        //
-        // POST: /Users/Delete/5
-
-        [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed (string id)
+		[HttpPost, ActionName ("Delete")]
+		public ActionResult DeleteConfirmed (string id)
 		{
 			var item = Model.User.Find (id);
 
@@ -151,5 +129,5 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			return RedirectToAction ("Index");
 		}
-    }
+	}
 }

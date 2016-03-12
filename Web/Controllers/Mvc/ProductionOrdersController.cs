@@ -40,11 +40,9 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
-	public class ProductionOrdersController : CustomController
-	{
+	public class ProductionOrdersController : CustomController {
 		public ViewResult Index ()
 		{
 			if (WebConfig.Store == null) {
@@ -79,16 +77,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			if (string.IsNullOrEmpty (search.Pattern)) {
 				query = from x in SalesOrder.Queryable
-						where x.Store.Id == item.Id && x.IsCompleted && !x.IsCancelled
-						orderby x.Date descending
-				        select x;
+					where x.Store.Id == item.Id && x.IsCompleted && !x.IsCancelled
+					orderby x.Date descending
+					select x;
 			} else {
 				query = from x in SalesOrder.Queryable
-						where x.Store.Id == item.Id && x.IsCompleted && !x.IsCancelled && (
-				              x.Customer.Name.Contains (search.Pattern) ||
-				              x.SalesPerson.Nickname.Contains (search.Pattern))
-				        orderby x.Date descending
-				        select x;
+					where x.Store.Id == item.Id && x.IsCompleted && !x.IsCancelled && (
+				      x.Customer.Name.Contains (search.Pattern) ||
+				      x.SalesPerson.Nickname.Contains (search.Pattern))
+					orderby x.Date descending
+					select x;
 			}
 
 			search.Total = query.Count ();
@@ -102,18 +100,18 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			var item = SalesOrder.Find (id);
 			return View (item);
 		}
-		
+
 		public ViewResult Print (int id)
 		{
 			var item = SalesOrder.Find (id);
 			return View (item);
 		}
-		
+
 		[HttpPost]
 		public ActionResult Confirm (int id)
 		{
 			var item = SalesOrder.Find (id);
-			
+
 			item.Updater = CurrentUser.Employee;
 			item.ModificationTime = DateTime.Now;
 			item.IsDelivered = true;
@@ -121,8 +119,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			using (var scope = new TransactionScope ()) {
 				item.UpdateAndFlush ();
 			}
-			
+
 			return RedirectToAction ("Index");
 		}
-    }
+	}
 }

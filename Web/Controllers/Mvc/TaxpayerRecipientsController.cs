@@ -40,11 +40,9 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
-	public class TaxpayerRecipientsController : CustomController
-    {
+	public class TaxpayerRecipientsController : CustomController {
 		public ActionResult Index ()
 		{
 			var search = SearchTaxpayers (new Search<TaxpayerRecipient> {
@@ -75,14 +73,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			if (string.IsNullOrWhiteSpace (pattern)) {
 				query = from x in TaxpayerRecipient.Queryable
-				        orderby x.Name
-				        select x;
+					orderby x.Name
+					select x;
 			} else {
 				query = from x in TaxpayerRecipient.Queryable
-				        where x.Id.Contains (pattern) ||
-				            x.Name.Contains (pattern)
-				        orderby x.Name
-				        select x;
+					where x.Id.Contains (pattern) ||
+					    x.Name.Contains (pattern)
+					orderby x.Name
+					select x;
 			}
 
 			search.Total = query.Count ();
@@ -92,11 +90,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		}
 
 		public ActionResult Create ()
-        {
+		{
 			return PartialView ("_Create");
 		}
 
-        [HttpPost]
+		[HttpPost]
 		public ActionResult Create (TaxpayerRecipient item)
 		{
 			if (!string.IsNullOrEmpty (item.Id)) {
@@ -139,26 +137,26 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		}
 
 		public ActionResult Edit (string id)
-        {
-        	var item = TaxpayerRecipient.Find (id);
+		{
+			var item = TaxpayerRecipient.Find (id);
 
 			item.HasAddress = (item.Address != null);
 
 			return PartialView ("_Edit", item);
-        }
+		}
 
-        [HttpPost]
-        public ActionResult Edit (TaxpayerRecipient item)
+		[HttpPost]
+		public ActionResult Edit (TaxpayerRecipient item)
 		{
-			if(!item.HasAddress) {
-				ModelState.Where(x => x.Key.StartsWith("Address.")).ToList().ForEach(x => x.Value.Errors.Clear());
+			if (!item.HasAddress) {
+				ModelState.Where (x => x.Key.StartsWith ("Address.")).ToList ().ForEach (x => x.Value.Errors.Clear ());
 				item.Address = null;
 			}
-			
+
 			if (!ModelState.IsValid) {
 				return PartialView ("_Edit", item);
 			}
-			
+
 			var entity = TaxpayerRecipient.Find (item.Id);
 			var address = entity.Address;
 
@@ -166,8 +164,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			entity.Name = item.Name.Trim ();
 			entity.Email = item.Email.Trim ();
 
-			using (var scope = new TransactionScope()) {
-				if(item.HasAddress) {
+			using (var scope = new TransactionScope ()) {
+				if (item.HasAddress) {
 					entity.Address = item.Address;
 					entity.Address.Create ();
 				} else {
@@ -188,31 +186,31 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			}
 
 			return PartialView ("_Refresh");
-        }
+		}
 
 		public ActionResult Delete (string id)
-        {
-            var item = TaxpayerRecipient.Find (id);
+		{
+			var item = TaxpayerRecipient.Find (id);
 			return PartialView ("_Delete", item);
-        }
+		}
 
-        [HttpPost, ActionName ("Delete")]
+		[HttpPost, ActionName ("Delete")]
 		public ActionResult DeleteConfirmed (string id)
 		{
 			var item = TaxpayerRecipient.Find (id);
 
 			try {
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					item.DeleteAndFlush ();
 				}
 			} catch (Exception ex) {
 				System.Diagnostics.Debug.WriteLine (ex);
 				return PartialView ("DeleteUnsuccessful");
 			}
-			
+
 			if (item.Address != null) {
 				try {
-					using (var scope = new TransactionScope()) {
+					using (var scope = new TransactionScope ()) {
 						item.Address.DeleteAndFlush ();
 					}
 				} catch (Exception ex) {
@@ -221,6 +219,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			}
 
 			return PartialView ("_DeleteSuccesful", item);
-        }
-    }
+		}
+	}
 }

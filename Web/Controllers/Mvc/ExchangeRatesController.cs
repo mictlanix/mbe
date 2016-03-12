@@ -38,107 +38,105 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{ 
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
-	public class ExchangeRatesController : CustomController
-    {
-        public ViewResult Index ()
-        {
-            var qry = from x in ExchangeRate.Queryable
-					  orderby x.Date descending
-                      select x;
+	public class ExchangeRatesController : CustomController {
+		public ViewResult Index ()
+		{
+			var qry = from x in ExchangeRate.Queryable
+				  orderby x.Date descending
+				  select x;
 
-			var search = new Search<ExchangeRate>();
-            search.Limit = WebConfig.PageSize;
-            search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
-            search.Total = qry.Count ();
+			var search = new Search<ExchangeRate> ();
+			search.Limit = WebConfig.PageSize;
+			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+			search.Total = qry.Count ();
 
-            return View (search);
-        }
+			return View (search);
+		}
 
-        [HttpPost]
+		[HttpPost]
 		public ActionResult Index (Search<ExchangeRate> search)
-        {
+		{
 			if (!ModelState.IsValid)
 				return View (search);
 
 			var qry = from x in ExchangeRate.Queryable
-					  orderby x.Date descending
-					  select x;
-			
+				  orderby x.Date descending
+				  select x;
+
 			//if (!string.IsNullOrEmpty(search.Pattern)) {
 			//	qry = from x in ExchangeRate.Queryable
 			//		  orderby x.Date descending
 			//		  select x;
 
 			//}
-			
+
 			search.Total = qry.Count ();
 			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
 
 			return PartialView ("_Index", search);
-        }
+		}
 
-        public ActionResult Create ()
-        {
+		public ActionResult Create ()
+		{
 			return PartialView ("_Create", new ExchangeRate { Date = DateTime.Now, Target = WebConfig.BaseCurrency });
-        } 
+		}
 
-        [HttpPost]
+		[HttpPost]
 		public ActionResult Create (ExchangeRate item)
-        {
-            if (!ModelState.IsValid)
-                return PartialView ("_Create", item);
+		{
+			if (!ModelState.IsValid)
+				return PartialView ("_Create", item);
 
 			var qry = from x in ExchangeRate.Queryable
-					  where x.Date == item.Date.Date && 
-							x.Base == item.Base && 
-							x.Target == item.Target
-					  select x;
+				  where x.Date == item.Date.Date &&
+						x.Base == item.Base &&
+						x.Target == item.Target
+				  select x;
 
 			if (qry.Count () > 0) {
 				ModelState.AddModelError ("Date", Resources.ExchangeRateAlreadyExists);
-                return PartialView ("_Create", item);
+				return PartialView ("_Create", item);
 			}
 
 			using (var scope = new TransactionScope ()) {
-            	item.CreateAndFlush ();
+				item.CreateAndFlush ();
 			}
 
-            return PartialView ("_CreateSuccesful", item);
-        }
+			return PartialView ("_CreateSuccesful", item);
+		}
 
-        public ActionResult Delete (int id)
-        {
+		public ActionResult Delete (int id)
+		{
 			var item = ExchangeRate.Find (id);
-            return PartialView ("_Delete", item);
-        }
+			return PartialView ("_Delete", item);
+		}
 
-        [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed (int id)
-        {
+		[HttpPost, ActionName ("Delete")]
+		public ActionResult DeleteConfirmed (int id)
+		{
 			var item = ExchangeRate.Find (id);
 
-            try {
-                using (var scope = new TransactionScope ()) {
-                    item.DeleteAndFlush ();
-                }
-                return PartialView ("_DeleteSuccesful", item);
-            } catch (Exception) {
-                return PartialView ("DeleteUnsuccessful");
-            }
-        }
+			try {
+				using (var scope = new TransactionScope ()) {
+					item.DeleteAndFlush ();
+				}
+				return PartialView ("_DeleteSuccesful", item);
+			} catch (Exception) {
+				return PartialView ("DeleteUnsuccessful");
+			}
+		}
 
 		public JsonResult Currencies ()
 		{
-			var qry = from x in Enum.GetValues (typeof(CurrencyCode)).Cast<CurrencyCode> ()
-			          select new {
-						  value = (int)x,
-						  text = x.ToString ()
-					  };
+			var qry = from x in Enum.GetValues (typeof (CurrencyCode)).Cast<CurrencyCode> ()
+				  select new {
+					  value = (int) x,
+					  text = x.ToString ()
+				  };
 
 			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
 		}
-    }
+	}
 }
