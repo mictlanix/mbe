@@ -3,12 +3,10 @@
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
 @model Search<SalesOrder>
-
 @{
     var CurrentUser = Html.CurrentUser () ?? new User ();
     var Privilege = Html.GetPrivilege (CurrentUser, SystemObjects.SalesOrders);
 }
-
 <table>
     <tr>
         <th>@Resources.Id</th>
