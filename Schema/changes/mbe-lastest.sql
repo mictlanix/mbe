@@ -32,7 +32,7 @@ ALTER TABLE inventory_receipt
 
 ALTER TABLE inventory_receipt 
 	ADD COLUMN store INT(11) NOT NULL AFTER inventory_receipt_id,
-	ADD COLUMN serial INT(11) NOT NULL AFTER store,
+	ADD COLUMN serial INT(11) NULL AFTER store,
 	ADD INDEX inventory_receipt_creator_idx (creator ASC),
 	ADD INDEX inventory_receipt_updater_idx (updater ASC),
 	ADD INDEX inventory_receipt_store_idx (store ASC),
@@ -61,7 +61,7 @@ ALTER TABLE inventory_issue
 
 ALTER TABLE inventory_issue 
 	ADD COLUMN store INT(11) NOT NULL AFTER inventory_issue_id,
-	ADD COLUMN serial INT(11) NOT NULL AFTER store,
+	ADD COLUMN serial INT(11) NULL AFTER store,
 	ADD INDEX inventory_issue_supplier_return_idx (supplier_return ASC),
 	ADD INDEX inventory_issue_store_idx (store ASC),
 	ADD CONSTRAINT inventory_issue_employee_creator_fk
@@ -92,7 +92,7 @@ ALTER TABLE inventory_transfer
 
 ALTER TABLE inventory_transfer 
 	ADD COLUMN store INT(11) NOT NULL AFTER inventory_transfer_id,
-	ADD COLUMN serial INT(11) NOT NULL AFTER store,
+	ADD COLUMN serial INT(11) NULL AFTER store,
 	ADD INDEX inventory_transfer_from_idx (warehouse ASC),
 	ADD INDEX inventory_transfer_to_idx (warehouse_to ASC),
 	ADD INDEX inventory_transfer_creator_idx (creator ASC),
