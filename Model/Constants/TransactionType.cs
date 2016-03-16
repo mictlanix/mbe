@@ -33,26 +33,24 @@ using System.ComponentModel.DataAnnotations;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 
-namespace Mictlanix.BE.Model
-{
-    public enum TransactionType : int 
-    {
-		[Display(Name = "SalesOrder", ResourceType = typeof(Resources))]
-        SalesOrder = 1,
-		[Display(Name = "CustomerRefund", ResourceType = typeof(Resources))]
-        CustomerRefund, 
-		[Display(Name = "InventoryIssue", ResourceType = typeof(Resources))]
-        InventoryIssue,
-		[Display(Name = "InventoryReceipt", ResourceType = typeof(Resources))]
-        InventoryReceipt,
-		[Display(Name = "InventoryTransfer", ResourceType = typeof(Resources))]
-        InventoryTransfer,
-		[Display(Name = "PurchaseOrder", ResourceType = typeof(Resources))]
+namespace Mictlanix.BE.Model {
+	public enum TransactionType : int {
+		[Display (Name = "SalesOrder", ResourceType = typeof (Resources))]
+		SalesOrder = 1,
+		[Display (Name = "CustomerRefund", ResourceType = typeof (Resources))]
+		CustomerRefund,
+		[Display (Name = "InventoryIssue", ResourceType = typeof (Resources))]
+		InventoryIssue,
+		[Display (Name = "InventoryReceipt", ResourceType = typeof (Resources))]
+		InventoryReceipt,
+		[Display (Name = "InventoryTransfer", ResourceType = typeof (Resources))]
+		InventoryTransfer,
+		[Display (Name = "PurchaseOrder", ResourceType = typeof (Resources))]
 		PurchaseOrder,
-		[Display(Name = "SupplierReturn", ResourceType = typeof(Resources))]
-        SupplierReturn,
-        [Display (Name = "InventoryAdjustment", ResourceType = typeof (Resources))]
-        InventoryAdjustment
-    }
+		[Display (Name = "SupplierReturn", ResourceType = typeof (Resources))]
+		SupplierReturn,
+		[Display (Name = "InventoryAdjustment", ResourceType = typeof (Resources))]
+		InventoryAdjustment
+	}
 }
 

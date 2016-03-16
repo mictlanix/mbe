@@ -32,82 +32,80 @@ using System.ComponentModel.DataAnnotations;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 
-namespace Mictlanix.BE.Model
-{
-    [ActiveRecord("postal_code", Lazy = true)]
-	public class PostalCode : ActiveRecordLinqBase<PostalCode>
-    {
+namespace Mictlanix.BE.Model {
+	[ActiveRecord ("postal_code", Lazy = true)]
+	public class PostalCode : ActiveRecordLinqBase<PostalCode> {
 		public PostalCode ()
 		{
 		}
 
-		[PrimaryKey(PrimaryKeyType.Identity, "postal_code_id")]
+		[PrimaryKey (PrimaryKeyType.Identity, "postal_code_id")]
 		public virtual int Id { get; set; }
 
-		[Property("code")]
-		[DisplayFormat(DataFormatString="{0:D5}")]
-		[Display(Name = "PostalCode", ResourceType = typeof(Resources))]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[StringLength(5, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Property ("code")]
+		[DisplayFormat (DataFormatString = "{0:D5}")]
+		[Display (Name = "PostalCode", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[StringLength (5, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual int Code { get; set; }
 
 		[Property]
-		[Display(Name = "Neighborhood", ResourceType = typeof(Resources))]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[StringLength(100, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Display (Name = "Neighborhood", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[StringLength (100, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Neighborhood { get; set; }
-		
+
 		[Property]
-		[Display(Name = "Borough", ResourceType = typeof(Resources))]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[StringLength(50, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Display (Name = "Borough", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[StringLength (50, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Borough { get; set; }
-		
+
 		[Property]
-		[Display(Name = "State", ResourceType = typeof(Resources))]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[StringLength(50, MinimumLength = 2, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Display (Name = "State", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[StringLength (50, MinimumLength = 2, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string State { get; set; }
 
 		[Property]
-		[Display(Name = "City", ResourceType = typeof(Resources))]
-		[StringLength(50, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Display (Name = "City", ResourceType = typeof (Resources))]
+		[StringLength (50, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string City { get; set; }
 
 		[Property]
-		[Display(Name = "Country", ResourceType = typeof(Resources))]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[StringLength(50, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Display (Name = "Country", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[StringLength (50, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Country { get; set; }
 
 		#region Override Base Methods
 
-        public override string ToString()
-        {
-			return string.Format("{0:D5}, {1}, {2}, {3}", Code, Neighborhood, Borough, State);
-        }
+		public override string ToString ()
+		{
+			return string.Format ("{0:D5}, {1}, {2}, {3}", Code, Neighborhood, Borough, State);
+		}
 
-		public override bool Equals(object obj)
+		public override bool Equals (object obj)
 		{
 			PostalCode other = obj as PostalCode;
-			
-		    if (other == null)
+
+			if (other == null)
 				return false;
-			
-		    if (Id == 0 && other.Id == 0)
-		        return (object)this == other;
-		    else
-		        return Id == other.Id;
+
+			if (Id == 0 && other.Id == 0)
+				return (object) this == other;
+			else
+				return Id == other.Id;
 		}
-		
-		public override int GetHashCode()
+
+		public override int GetHashCode ()
 		{
-		    if (Id == 0)
-				return base.GetHashCode();
-			
-		    return string.Format("{0}#{1}", GetType().FullName, Id).GetHashCode();
+			if (Id == 0)
+				return base.GetHashCode ();
+
+			return string.Format ("{0}#{1}", GetType ().FullName, Id).GetHashCode ();
 		}
-		
-        #endregion
-    }
+
+		#endregion
+	}
 }

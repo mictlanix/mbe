@@ -26,13 +26,11 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Mictlanix.BE.Model
-{
-	public enum PriceType
-	{
-		[Display(Name = "Fixed", ResourceType = typeof(Resources))]
+namespace Mictlanix.BE.Model {
+	public enum PriceType {
+		[Display (Name = "Fixed", ResourceType = typeof (Resources))]
 		Fixed,
-		[Display(Name = "Variable", ResourceType = typeof(Resources))]
+		[Display (Name = "Variable", ResourceType = typeof (Resources))]
 		Variable
 	}
 }

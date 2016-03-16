@@ -34,69 +34,67 @@ using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using Mictlanix.BE.Model.Validation;
 
-namespace Mictlanix.BE.Model
-{
-	[ActiveRecord("supplier_agreement", Lazy = true)]
-    public class SupplierAgreement : ActiveRecordLinqBase<SupplierAgreement>
-    {
-        [PrimaryKey(PrimaryKeyType.Identity, "supplier_agreement_id")]
+namespace Mictlanix.BE.Model {
+	[ActiveRecord ("supplier_agreement", Lazy = true)]
+	public class SupplierAgreement : ActiveRecordLinqBase<SupplierAgreement> {
+		[PrimaryKey (PrimaryKeyType.Identity, "supplier_agreement_id")]
 		public virtual int Id { get; set; }
 
-        [Property]
-        [DataType(DataType.Date)]
-        [Display(Name = "Start", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[Property]
+		[DataType (DataType.Date)]
+		[Display (Name = "Start", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
 		public virtual DateTime? Start { get; set; }
 
-        [Property]
-        [DataType(DataType.Date)]
-        [Display(Name = "End", ResourceType = typeof(Resources))]
-        [DateGreaterThan("Start", ErrorMessageResourceName = "Validation_DateGreaterThan", ErrorMessageResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[Property]
+		[DataType (DataType.Date)]
+		[Display (Name = "End", ResourceType = typeof (Resources))]
+		[DateGreaterThan ("Start", ErrorMessageResourceName = "Validation_DateGreaterThan", ErrorMessageResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
 		public virtual DateTime? End { get; set; }
 
-        [Property]
-        [Display(Name = "Comment", ResourceType = typeof(Resources))]
-        [DataType(DataType.MultilineText)]
-		[StringLength(500, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Property]
+		[Display (Name = "Comment", ResourceType = typeof (Resources))]
+		[DataType (DataType.MultilineText)]
+		[StringLength (500, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Comment { get; set; }
 
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [Display(Name = "Supplier", ResourceType = typeof(Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[Display (Name = "Supplier", ResourceType = typeof (Resources))]
 		public virtual int SupplierId { get; set; }
 
-        [BelongsTo("supplier", Lazy = FetchWhen.OnInvoke)]
-        [Display(Name = "Supplier", ResourceType = typeof(Resources))]
-        public virtual Supplier Supplier { get; set; }
+		[BelongsTo ("supplier", Lazy = FetchWhen.OnInvoke)]
+		[Display (Name = "Supplier", ResourceType = typeof (Resources))]
+		public virtual Supplier Supplier { get; set; }
 
-        #region Override Base Methods
+		#region Override Base Methods
 
-        public override string ToString()
-        {
-            return string.Format("{0} [{1}, {2}]", Start, End, Supplier);
-        }
+		public override string ToString ()
+		{
+			return string.Format ("{0} [{1}, {2}]", Start, End, Supplier);
+		}
 
-        public override bool Equals(object obj)
-        {
-            SupplierAgreement other = obj as SupplierAgreement;
+		public override bool Equals (object obj)
+		{
+			SupplierAgreement other = obj as SupplierAgreement;
 
-            if (other == null)
-                return false;
+			if (other == null)
+				return false;
 
-            if (Id == 0 && other.Id == 0)
-                return (object)this == other;
-            else
-                return Id == other.Id;
-        }
+			if (Id == 0 && other.Id == 0)
+				return (object) this == other;
+			else
+				return Id == other.Id;
+		}
 
-        public override int GetHashCode()
-        {
-            if (Id == 0)
-                return base.GetHashCode();
+		public override int GetHashCode ()
+		{
+			if (Id == 0)
+				return base.GetHashCode ();
 
-            return string.Format("{0}#{1}", GetType().FullName, Id).GetHashCode();
-        }
+			return string.Format ("{0}#{1}", GetType ().FullName, Id).GetHashCode ();
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

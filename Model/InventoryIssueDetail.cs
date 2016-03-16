@@ -33,66 +33,64 @@ using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 
-namespace Mictlanix.BE.Model
-{
-    [ActiveRecord("inventory_issue_detail")]
-    public class InventoryIssueDetail : ActiveRecordLinqBase<InventoryIssueDetail>
-    {
-        [PrimaryKey(PrimaryKeyType.Identity, "issue_detail_id")]
-        public int Id { get; set; }
+namespace Mictlanix.BE.Model {
+	[ActiveRecord ("inventory_issue_detail")]
+	public class InventoryIssueDetail : ActiveRecordLinqBase<InventoryIssueDetail> {
+		[PrimaryKey (PrimaryKeyType.Identity, "issue_detail_id")]
+		public int Id { get; set; }
 
-        [BelongsTo("issue", Lazy = FetchWhen.OnInvoke)]
-        [Display(Name = "InventoryIssue", ResourceType = typeof(Resources))]
-        public virtual InventoryIssue Issue { get; set; }
+		[BelongsTo ("issue", Lazy = FetchWhen.OnInvoke)]
+		[Display (Name = "InventoryIssue", ResourceType = typeof (Resources))]
+		public virtual InventoryIssue Issue { get; set; }
 
-        [BelongsTo("product")]
-        [Display(Name = "Product", ResourceType = typeof(Resources))]
-        public virtual Product Product { get; set; }
+		[BelongsTo ("product")]
+		[Display (Name = "Product", ResourceType = typeof (Resources))]
+		public virtual Product Product { get; set; }
 
-        [Property]
-        [DisplayFormat(DataFormatString = "{0:0.####}")]
-        [Display(Name = "Quantity", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
-        public decimal Quantity { get; set; }
+		[Property]
+		[DisplayFormat (DataFormatString = "{0:0.####}")]
+		[Display (Name = "Quantity", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof (Resources))]
+		public decimal Quantity { get; set; }
 
-        [Property("product_code")]
-        [Display(Name = "ProductCode", ResourceType = typeof(Resources))]
-        [StringLength(25, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string ProductCode { get; set; }
+		[Property ("product_code")]
+		[Display (Name = "ProductCode", ResourceType = typeof (Resources))]
+		[StringLength (25, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
+		public string ProductCode { get; set; }
 
-        [Property("product_name")]
-        [Display(Name = "ProductName", ResourceType = typeof(Resources))]
-        [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string ProductName { get; set; }
+		[Property ("product_name")]
+		[Display (Name = "ProductName", ResourceType = typeof (Resources))]
+		[StringLength (250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
+		public string ProductName { get; set; }
 
-        #region Override Base Methods
+		#region Override Base Methods
 
-        public override string ToString()
-        {
-            return string.Format("{0} [{1}, {2}, {3}]", Id, Issue, Product, Quantity);
-        }
+		public override string ToString ()
+		{
+			return string.Format ("{0} [{1}, {2}, {3}]", Id, Issue, Product, Quantity);
+		}
 
-        public override bool Equals(object obj)
-        {
-            InventoryIssueDetail other = obj as InventoryIssueDetail;
+		public override bool Equals (object obj)
+		{
+			InventoryIssueDetail other = obj as InventoryIssueDetail;
 
-            if (other == null)
-                return false;
+			if (other == null)
+				return false;
 
-            if (Id == 0 && other.Id == 0)
-                return (object)this == other;
-            else
-                return Id == other.Id;
-        }
+			if (Id == 0 && other.Id == 0)
+				return (object) this == other;
+			else
+				return Id == other.Id;
+		}
 
-        public override int GetHashCode()
-        {
-            if (Id == 0)
-                return base.GetHashCode();
+		public override int GetHashCode ()
+		{
+			if (Id == 0)
+				return base.GetHashCode ();
 
-            return string.Format("{0}#{1}", GetType().FullName, Id).GetHashCode();
-        }
+			return string.Format ("{0}#{1}", GetType ().FullName, Id).GetHashCode ();
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

@@ -32,83 +32,81 @@ using System.ComponentModel.DataAnnotations;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 
-namespace Mictlanix.BE.Model
-{
-    [ActiveRecord("store", Lazy = true)]
-    public class Store : ActiveRecordLinqBase<Store>
-    {
-        [PrimaryKey(PrimaryKeyType.Identity, "store_id")]
-        public virtual int Id { get; set; }
+namespace Mictlanix.BE.Model {
+	[ActiveRecord ("store", Lazy = true)]
+	public class Store : ActiveRecordLinqBase<Store> {
+		[PrimaryKey (PrimaryKeyType.Identity, "store_id")]
+		public virtual int Id { get; set; }
 
-        [Property]
+		[Property]
 		[ValidateIsUnique]
-        [Display(Name = "Code", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[RegularExpression(@"^\S+$", ErrorMessageResourceName = "Validation_NonWhiteSpace", ErrorMessageResourceType = typeof(Resources))]
-		[StringLength(25, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public virtual string Code { get; set; }
+		[Display (Name = "Code", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[RegularExpression (@"^\S+$", ErrorMessageResourceName = "Validation_NonWhiteSpace", ErrorMessageResourceType = typeof (Resources))]
+		[StringLength (25, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
+		public virtual string Code { get; set; }
 
-        [Property]
-        [Display(Name = "Name", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Property]
+		[Display (Name = "Name", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[StringLength (250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Name { get; set; }
 
-		[Display(Name = "Taxpayer", ResourceType = typeof(Resources))]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[UIHint("TaxpayerSelector")]
+		[Display (Name = "Taxpayer", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[UIHint ("TaxpayerSelector")]
 		public virtual string TaxpayerId { get; set; }
 
-		[BelongsTo("taxpayer")]
-		[Display(Name = "Taxpayer", ResourceType = typeof(Resources))]
+		[BelongsTo ("taxpayer")]
+		[Display (Name = "Taxpayer", ResourceType = typeof (Resources))]
 		public virtual TaxpayerIssuer Taxpayer { get; set; }
 
 		[Property]
-		[UIHint("Image")]
-		[Display(Name = "Logo", ResourceType = typeof(Resources))]
+		[UIHint ("Image")]
+		[Display (Name = "Logo", ResourceType = typeof (Resources))]
 		public virtual string Logo { get; set; }
-		
+
 		[Property]
-		[Display(Name = "Location", ResourceType = typeof(Resources))]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[Display (Name = "Location", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Location { get; set; }
-		
-		[Property("receipt_message")]
-		[Display(Name = "ReceiptMessage", ResourceType = typeof(Resources))]
+
+		[Property ("receipt_message")]
+		[Display (Name = "ReceiptMessage", ResourceType = typeof (Resources))]
 		public virtual string ReceiptMessage { get; set; }
-		
-		[BelongsTo("address", Lazy = FetchWhen.OnInvoke)]
-		[Display(Name = "Address", ResourceType = typeof(Resources))]
+
+		[BelongsTo ("address", Lazy = FetchWhen.OnInvoke)]
+		[Display (Name = "Address", ResourceType = typeof (Resources))]
 		public virtual Address Address { get; set; }
 
-        #region Override Base Methods
+		#region Override Base Methods
 
-        public override string ToString()
-        {
-            return string.Format("{0} [{1}, {2}]", Id, Code, Name);
-        }
+		public override string ToString ()
+		{
+			return string.Format ("{0} [{1}, {2}]", Id, Code, Name);
+		}
 
-        public override bool Equals(object obj)
-        {
-            Store other = obj as Store;
+		public override bool Equals (object obj)
+		{
+			Store other = obj as Store;
 
-            if (other == null)
-                return false;
+			if (other == null)
+				return false;
 
-            if (Id == 0 && other.Id == 0)
-                return (object)this == other;
-            else
-                return Id == other.Id;
-        }
+			if (Id == 0 && other.Id == 0)
+				return (object) this == other;
+			else
+				return Id == other.Id;
+		}
 
-        public override int GetHashCode()
-        {
-            if (Id == 0)
-                return base.GetHashCode();
+		public override int GetHashCode ()
+		{
+			if (Id == 0)
+				return base.GetHashCode ();
 
-            return string.Format("{0}#{1}", GetType().FullName, Id).GetHashCode();
-        }
+			return string.Format ("{0}#{1}", GetType ().FullName, Id).GetHashCode ();
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

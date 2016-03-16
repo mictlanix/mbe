@@ -29,48 +29,46 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Mictlanix.BE.Model
-{
-	public enum UnitOfMeasurement : int
-    {
-		[Display(Name = "NA", ResourceType = typeof(Resources))]
+namespace Mictlanix.BE.Model {
+	public enum UnitOfMeasurement : int {
+		[Display (Name = "NA", ResourceType = typeof (Resources))]
 		NA,
-		[Display(Name = "Piece", ResourceType = typeof(Resources))]
+		[Display (Name = "Piece", ResourceType = typeof (Resources))]
 		Piece,
-		[Display(Name = "Tens", ResourceType = typeof(Resources))]
+		[Display (Name = "Tens", ResourceType = typeof (Resources))]
 		Tens,
-		[Display(Name = "Hundreds", ResourceType = typeof(Resources))]
+		[Display (Name = "Hundreds", ResourceType = typeof (Resources))]
 		Hundreds,
-		[Display(Name = "Thousands", ResourceType = typeof(Resources))]
+		[Display (Name = "Thousands", ResourceType = typeof (Resources))]
 		Thousands,
-		[Display(Name = "Box", ResourceType = typeof(Resources))]
+		[Display (Name = "Box", ResourceType = typeof (Resources))]
 		Box,
-		[Display(Name = "Set", ResourceType = typeof(Resources))]
+		[Display (Name = "Set", ResourceType = typeof (Resources))]
 		Set,
-		[Display(Name = "Gram", ResourceType = typeof(Resources))]
+		[Display (Name = "Gram", ResourceType = typeof (Resources))]
 		Gram,
-		[Display(Name = "Kilogram", ResourceType = typeof(Resources))]
+		[Display (Name = "Kilogram", ResourceType = typeof (Resources))]
 		Kilogram,
-		[Display(Name = "Tonne", ResourceType = typeof(Resources))]
+		[Display (Name = "Tonne", ResourceType = typeof (Resources))]
 		Tonne,
-		[Display(Name = "LinearMeter", ResourceType = typeof(Resources))]
+		[Display (Name = "LinearMeter", ResourceType = typeof (Resources))]
 		LinearMeter,
-		[Display(Name = "SquareMeter", ResourceType = typeof(Resources))]
+		[Display (Name = "SquareMeter", ResourceType = typeof (Resources))]
 		SquareMeter,
-		[Display(Name = "CubicMeter", ResourceType = typeof(Resources))]
+		[Display (Name = "CubicMeter", ResourceType = typeof (Resources))]
 		CubicMeter,
-		[Display(Name = "Liter", ResourceType = typeof(Resources))]
+		[Display (Name = "Liter", ResourceType = typeof (Resources))]
 		Liter,
-		[Display(Name = "Bottle", ResourceType = typeof(Resources))]
+		[Display (Name = "Bottle", ResourceType = typeof (Resources))]
 		Bottle,
-		[Display(Name = "Barrel", ResourceType = typeof(Resources))]
+		[Display (Name = "Barrel", ResourceType = typeof (Resources))]
 		Barrel,
-		[Display(Name = "Second", ResourceType = typeof(Resources))]
+		[Display (Name = "Second", ResourceType = typeof (Resources))]
 		Second,
-		[Display(Name = "Minute", ResourceType = typeof(Resources))]
+		[Display (Name = "Minute", ResourceType = typeof (Resources))]
 		Minute,
-		[Display(Name = "Hour", ResourceType = typeof(Resources))]
+		[Display (Name = "Hour", ResourceType = typeof (Resources))]
 		Hour
-    }
+	}
 }
 

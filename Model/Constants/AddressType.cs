@@ -28,19 +28,17 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Mictlanix.BE.Model
-{
-	public enum AddressType : int
-    {
-		[Display(Name = "Other", ResourceType = typeof(Resources))]
-        Other,
-		[Display(Name = "Home", ResourceType = typeof(Resources))]
-        Home,
-		[Display(Name = "Work", ResourceType = typeof(Resources))]
+namespace Mictlanix.BE.Model {
+	public enum AddressType : int {
+		[Display (Name = "Other", ResourceType = typeof (Resources))]
+		Other,
+		[Display (Name = "Home", ResourceType = typeof (Resources))]
+		Home,
+		[Display (Name = "Work", ResourceType = typeof (Resources))]
 		Work,
-		[Display(Name = "Business", ResourceType = typeof(Resources))]
+		[Display (Name = "Business", ResourceType = typeof (Resources))]
 		Business,
-		[Display(Name = "Fiscal", ResourceType = typeof(Resources))]
+		[Display (Name = "Fiscal", ResourceType = typeof (Resources))]
 		Fiscal
-    }
+	}
 }

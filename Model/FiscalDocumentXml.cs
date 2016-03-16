@@ -29,16 +29,14 @@ using System.ComponentModel.DataAnnotations;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 
-namespace Mictlanix.BE.Model
-{
-	[ActiveRecord("fiscal_document_xml", Lazy = true)]
-	public class FiscalDocumentXml : ActiveRecordLinqBase<FiscalDocumentXml>
-	{
+namespace Mictlanix.BE.Model {
+	[ActiveRecord ("fiscal_document_xml", Lazy = true)]
+	public class FiscalDocumentXml : ActiveRecordLinqBase<FiscalDocumentXml> {
 		public FiscalDocumentXml ()
 		{
 		}
-		
-		[PrimaryKey(PrimaryKeyType.Assigned, "fiscal_document_xml_id")]
+
+		[PrimaryKey (PrimaryKeyType.Assigned, "fiscal_document_xml_id")]
 		public virtual int Id { get; set; }
 
 		[Property]
