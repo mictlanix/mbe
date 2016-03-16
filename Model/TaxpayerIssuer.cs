@@ -33,65 +33,63 @@ using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 
-namespace Mictlanix.BE.Model
-{   
-	[ActiveRecord("taxpayer_issuer", Lazy = true)]
-    public class TaxpayerIssuer : ActiveRecordLinqBase<TaxpayerIssuer>
-    {
-		IList<TaxpayerBatch> batches = new List<TaxpayerBatch>();
-		IList<TaxpayerCertificate> certificates = new List<TaxpayerCertificate>();
-		
-        public TaxpayerIssuer()
+namespace Mictlanix.BE.Model {
+	[ActiveRecord ("taxpayer_issuer", Lazy = true)]
+	public class TaxpayerIssuer : ActiveRecordLinqBase<TaxpayerIssuer> {
+		IList<TaxpayerBatch> batches = new List<TaxpayerBatch> ();
+		IList<TaxpayerCertificate> certificates = new List<TaxpayerCertificate> ();
+
+		public TaxpayerIssuer ()
 		{
 		}
 
-		[PrimaryKey("taxpayer_issuer_id")]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [StringLength(13, MinimumLength = 12, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        [Display(Name = "TaxpayerId", ResourceType = typeof(Resources))]
+		[PrimaryKey ("taxpayer_issuer_id")]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[StringLength (13, MinimumLength = 12, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
+		[Display (Name = "TaxpayerId", ResourceType = typeof (Resources))]
 		public virtual string Id { get; set; }
-		
-        [Property]
-        [StringLength(250, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        [Display(Name = "TaxpayerName", ResourceType = typeof(Resources))]
+
+		[Property]
+		[StringLength (250, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
+		[Display (Name = "TaxpayerName", ResourceType = typeof (Resources))]
 		public virtual string Name { get; set; }
 
 		[Property]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [StringLength(250, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        [Display(Name = "TaxRegime", ResourceType = typeof(Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[StringLength (250, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
+		[Display (Name = "TaxRegime", ResourceType = typeof (Resources))]
 		public virtual string Regime { get; set; }
 
 		[Property]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[Display(Name = "Scheme", ResourceType = typeof(Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[Display (Name = "Scheme", ResourceType = typeof (Resources))]
 		public virtual FiscalScheme Scheme { get; set; }
 
 		[Property]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[Display(Name = "Provider", ResourceType = typeof(Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[Display (Name = "Provider", ResourceType = typeof (Resources))]
 		public virtual FiscalCertificationProvider Provider { get; set; }
 
-		[Display(Name = "Address", ResourceType = typeof(Resources))]
+		[Display (Name = "Address", ResourceType = typeof (Resources))]
 		public virtual bool HasAddress { get; set; }
 
-		[BelongsTo("address", Lazy = FetchWhen.OnInvoke)]
-		[Display(Name = "Address", ResourceType = typeof(Resources))]
+		[BelongsTo ("address", Lazy = FetchWhen.OnInvoke)]
+		[Display (Name = "Address", ResourceType = typeof (Resources))]
 		public virtual Address Address { get; set; }
-		
-		[HasMany(typeof(TaxpayerCertificate), Table = "taxpayer_certificate", ColumnKey = "taxpayer", Lazy = true)]
+
+		[HasMany (typeof (TaxpayerCertificate), Table = "taxpayer_certificate", ColumnKey = "taxpayer", Lazy = true)]
 		public virtual IList<TaxpayerCertificate> Certificates {
 			get { return certificates; }
 			set { certificates = value; }
 		}
 
-		[HasMany(typeof(TaxpayerBatch), Table = "taxpayer_document", ColumnKey = "taxpayer", Lazy = true)]
+		[HasMany (typeof (TaxpayerBatch), Table = "taxpayer_document", ColumnKey = "taxpayer", Lazy = true)]
 		public virtual IList<TaxpayerBatch> Batches {
 			get { return batches; }
 			set { batches = value; }
 		}
-		
-        #region Override Base Methods
+
+		#region Override Base Methods
 
 		public override string ToString ()
 		{
@@ -106,8 +104,8 @@ namespace Mictlanix.BE.Model
 			if (other == null)
 				return false;
 
-			if (string.IsNullOrEmpty(Id) && string.IsNullOrEmpty(other.Id))
-				return (object)this == other;
+			if (string.IsNullOrEmpty (Id) && string.IsNullOrEmpty (other.Id))
+				return (object) this == other;
 			else
 				return Id == other.Id;
 		}
@@ -120,6 +118,6 @@ namespace Mictlanix.BE.Model
 			return string.Format ("{0}#{1}", GetType ().FullName, Id).GetHashCode ();
 		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

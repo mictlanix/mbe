@@ -32,15 +32,13 @@ using System.ComponentModel.DataAnnotations;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 
-namespace Mictlanix.BE.Model
-{
-	public enum CurrencyCode : int
-    {
-        //[Display(Name = "MexicanPeso", ResourceType = typeof(Resources))]
-        MXN = 0,
+namespace Mictlanix.BE.Model {
+	public enum CurrencyCode : int {
+		//[Display(Name = "MexicanPeso", ResourceType = typeof(Resources))]
+		MXN = 0,
 		//[Display(Name = "USDollar", ResourceType = typeof(Resources))]
 		USD = 1,
 		//[Display(Name = "Euro", ResourceType = typeof(Resources))]
 		EUR = 2
-    }
+	}
 }

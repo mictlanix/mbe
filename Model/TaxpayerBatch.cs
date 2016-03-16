@@ -5,33 +5,31 @@ using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 
-namespace Mictlanix.BE.Model
-{   
-	[ActiveRecord("taxpayer_batch", Lazy = true)]
-    public class TaxpayerBatch : ActiveRecordLinqBase<TaxpayerBatch>
-    {
-		[PrimaryKey(PrimaryKeyType.Identity, "taxpayer_batch_id")]
+namespace Mictlanix.BE.Model {
+	[ActiveRecord ("taxpayer_batch", Lazy = true)]
+	public class TaxpayerBatch : ActiveRecordLinqBase<TaxpayerBatch> {
+		[PrimaryKey (PrimaryKeyType.Identity, "taxpayer_batch_id")]
 		public virtual int Id { get; set; }
-		
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[Display(Name = "Taxpayer", ResourceType = typeof(Resources))]
-		[UIHint("TaxpayerSelector")]
+
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[Display (Name = "Taxpayer", ResourceType = typeof (Resources))]
+		[UIHint ("TaxpayerSelector")]
 		public virtual string TaxpayerId { get; set; }
-		
-		[BelongsTo("taxpayer")]
-		[Display(Name = "Taxpayer", ResourceType = typeof(Resources))]
+
+		[BelongsTo ("taxpayer")]
+		[Display (Name = "Taxpayer", ResourceType = typeof (Resources))]
 		public virtual TaxpayerIssuer Taxpayer { get; set; }
-		
+
 		[Property]
-		[Display(Name = "Batch", ResourceType = typeof(Resources))]
+		[Display (Name = "Batch", ResourceType = typeof (Resources))]
 		public virtual string Batch { get; set; }
 
 		[Property]
-        [Display(Name = "Type", ResourceType = typeof(Resources))]
+		[Display (Name = "Type", ResourceType = typeof (Resources))]
 		public virtual FiscalDocumentType Type { get; set; }
 
 		[Property]
-		[Display(Name = "Template", ResourceType = typeof(Resources))]
+		[Display (Name = "Template", ResourceType = typeof (Resources))]
 		public virtual string Template { get; set; }
 
 		#region Override Base Methods
@@ -49,7 +47,7 @@ namespace Mictlanix.BE.Model
 				return false;
 
 			if (Id == 0 && other.Id == 0)
-				return (object)this == other;
+				return (object) this == other;
 			else
 				return Id == other.Id;
 		}
@@ -62,6 +60,6 @@ namespace Mictlanix.BE.Model
 			return string.Format ("{0}#{1}", GetType ().FullName, Id).GetHashCode ();
 		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

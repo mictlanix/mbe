@@ -32,13 +32,11 @@ using System.ComponentModel.DataAnnotations;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 
-namespace Mictlanix.BE.Model
-{
-	public enum FiscalScheme : int
-    {
-        [Display(Name = "CFD", ResourceType = typeof(Resources))]
-        CFD,
-		[Display(Name = "CFDI", ResourceType = typeof(Resources))]
-        CFDI
-    }
+namespace Mictlanix.BE.Model {
+	public enum FiscalScheme : int {
+		[Display (Name = "CFD", ResourceType = typeof (Resources))]
+		CFD,
+		[Display (Name = "CFDI", ResourceType = typeof (Resources))]
+		CFDI
+	}
 }

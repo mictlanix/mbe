@@ -33,110 +33,108 @@ using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 
-namespace Mictlanix.BE.Model
-{
-    [ActiveRecord("employee", Lazy = true)]
-    public class Employee : ActiveRecordLinqBase<Employee>
-    {
-        public Employee()
-        {
-        }
+namespace Mictlanix.BE.Model {
+	[ActiveRecord ("employee", Lazy = true)]
+	public class Employee : ActiveRecordLinqBase<Employee> {
+		public Employee ()
+		{
+		}
 
-		[PrimaryKey(Column = "employee_id", Generator = PrimaryKeyType.Identity, UnsavedValue="-1")]
+		[PrimaryKey (Column = "employee_id", Generator = PrimaryKeyType.Identity, UnsavedValue = "-1")]
 		public virtual int Id { get; set; }
 
-        [Property("first_name")]
-		[Display(Name = "FirstName", ResourceType = typeof(Resources))]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[StringLength(100, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Property ("first_name")]
+		[Display (Name = "FirstName", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[StringLength (100, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string FirstName { get; set; }
 
-        [Property("last_name")]
-		[Display(Name = "LastName", ResourceType = typeof(Resources))]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[StringLength(100, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Property ("last_name")]
+		[Display (Name = "LastName", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[StringLength (100, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string LastName { get; set; }
 
 		[Property]
-		[Display(Name = "Nickname", ResourceType = typeof(Resources))]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[StringLength(50, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Display (Name = "Nickname", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[StringLength (50, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Nickname { get; set; }
 
-        [Display(Name = "Name", ResourceType = typeof(Resources))]
-		public virtual string Name { get { return string.Format("{0} {1}", FirstName, LastName).Trim(); } }
+		[Display (Name = "Name", ResourceType = typeof (Resources))]
+		public virtual string Name { get { return string.Format ("{0} {1}", FirstName, LastName).Trim (); } }
 
 		[Property]
-		[Display(Name = "Gender", ResourceType = typeof(Resources))]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[Display (Name = "Gender", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
 		public virtual GenderEnum Gender { get; set; }
-		
-		[Property("sales_person")]
-		[Display(Name = "SalesPerson", ResourceType = typeof(Resources))]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+
+		[Property ("sales_person")]
+		[Display (Name = "SalesPerson", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
 		public virtual bool IsSalesPerson { get; set; }
 
-		[Property("active")]
-		[Display(Name = "Active", ResourceType = typeof(Resources))]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[Property ("active")]
+		[Display (Name = "Active", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
 		public virtual bool IsActive { get; set; }
 
-        [Property]
-		[DataType(DataType.Date)]
-		[Display(Name = "Birthday", ResourceType = typeof(Resources))]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[Property]
+		[DataType (DataType.Date)]
+		[Display (Name = "Birthday", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
 		public virtual DateTime Birthday { get; set; }
 
-		[Property("start_job_date")]
-		[DataType(DataType.Date)]
-		[Display(Name = "StartJobDate", ResourceType = typeof(Resources))]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[Property ("start_job_date")]
+		[DataType (DataType.Date)]
+		[Display (Name = "StartJobDate", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
 		public virtual DateTime StartJobDate { get; set; }
 
-        [Property("taxpayer_id")]
-		[Display(Name = "TaxpayerId", ResourceType = typeof(Resources))]
-		[StringLength(13, MinimumLength = 12, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Property ("taxpayer_id")]
+		[Display (Name = "TaxpayerId", ResourceType = typeof (Resources))]
+		[StringLength (13, MinimumLength = 12, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string TaxpayerId { get; set; }
 
-        [Property("personal_id")]
-		[Display(Name = "PersonalId", ResourceType = typeof(Resources))]
-		[StringLength(18, MinimumLength = 18, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Property ("personal_id")]
+		[Display (Name = "PersonalId", ResourceType = typeof (Resources))]
+		[StringLength (18, MinimumLength = 18, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string PersonalId { get; set; }
-		
+
 		[Property]
-		[DataType(DataType.MultilineText)]
-		[Display(Name = "Comment", ResourceType = typeof(Resources))]
-		[StringLength(500, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[DataType (DataType.MultilineText)]
+		[Display (Name = "Comment", ResourceType = typeof (Resources))]
+		[StringLength (500, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Comment { get; set; }
 
-        #region Override Base Methods
+		#region Override Base Methods
 
-        public override string ToString()
-        {
-            return string.Format("{0}", Name);
-        }
+		public override string ToString ()
+		{
+			return string.Format ("{0}", Name);
+		}
 
-        public override bool Equals(object obj)
-        {
-            Employee other = obj as Employee;
+		public override bool Equals (object obj)
+		{
+			Employee other = obj as Employee;
 
-            if (other == null)
-                return false;
+			if (other == null)
+				return false;
 
-            if (Id == 0 && other.Id == 0)
-                return (object)this == other;
-            else
-                return Id == other.Id;
-        }
+			if (Id == 0 && other.Id == 0)
+				return (object) this == other;
+			else
+				return Id == other.Id;
+		}
 
-        public override int GetHashCode()
-        {
-            if (Id == 0)
-                return base.GetHashCode();
+		public override int GetHashCode ()
+		{
+			if (Id == 0)
+				return base.GetHashCode ();
 
-            return string.Format("{0}#{1}", GetType().FullName, Id).GetHashCode();
-        }
+			return string.Format ("{0}#{1}", GetType ().FullName, Id).GetHashCode ();
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

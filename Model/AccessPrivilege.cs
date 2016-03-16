@@ -32,80 +32,74 @@ using System.ComponentModel.DataAnnotations;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 
-namespace Mictlanix.BE.Model
-{
-	[ActiveRecord("access_privilege", Lazy = true)]
-    public class AccessPrivilege : ActiveRecordLinqBase<AccessPrivilege>
-    {
-        [PrimaryKey(PrimaryKeyType.Identity, "access_privilege_id")]
+namespace Mictlanix.BE.Model {
+	[ActiveRecord ("access_privilege", Lazy = true)]
+	public class AccessPrivilege : ActiveRecordLinqBase<AccessPrivilege> {
+		[PrimaryKey (PrimaryKeyType.Identity, "access_privilege_id")]
 		public virtual int Id { get; set; }
 
-        [BelongsTo("user")]
-        [Display(Name = "User", ResourceType = typeof(Resources))]
-        public virtual User User { get; set; }
+		[BelongsTo ("user")]
+		[Display (Name = "User", ResourceType = typeof (Resources))]
+		public virtual User User { get; set; }
 
-        [Property()]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [Display(Name = "SystemObject", ResourceType = typeof(Resources))]
+		[Property ()]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[Display (Name = "SystemObject", ResourceType = typeof (Resources))]
 		public virtual SystemObjects Object { get; set; }
 
-        [Property]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [Display(Name = "Privileges", ResourceType = typeof(Resources))]
+		[Property]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[Display (Name = "Privileges", ResourceType = typeof (Resources))]
 		public virtual AccessRight Privileges { get; set; }
 
-		public virtual bool AllowCreate
-        {
-            get { return (Privileges & AccessRight.Create) == AccessRight.Create; }
-            set { Privileges = value ? Privileges | AccessRight.Create : Privileges & ~AccessRight.Create; }
-        }
+		public virtual bool AllowCreate {
+			get { return (Privileges & AccessRight.Create) == AccessRight.Create; }
+			set { Privileges = value ? Privileges | AccessRight.Create : Privileges & ~AccessRight.Create; }
+		}
 
-		public virtual bool AllowRead
-        {
-            get { return (Privileges & AccessRight.Read) == AccessRight.Read; }
-            set { Privileges = value ? Privileges | AccessRight.Read : Privileges & ~AccessRight.Read; }
-        }
+		public virtual bool AllowRead {
+			get { return (Privileges & AccessRight.Read) == AccessRight.Read; }
+			set { Privileges = value ? Privileges | AccessRight.Read : Privileges & ~AccessRight.Read; }
+		}
 
-		public virtual bool AllowUpdate
-        {
-            get { return (Privileges & AccessRight.Update) == AccessRight.Update; }
-            set { Privileges = value ? Privileges | AccessRight.Update : Privileges & ~AccessRight.Update; }
-        }
+		public virtual bool AllowUpdate {
+			get { return (Privileges & AccessRight.Update) == AccessRight.Update; }
+			set { Privileges = value ? Privileges | AccessRight.Update : Privileges & ~AccessRight.Update; }
+		}
 
-		public virtual bool AllowDelete
-        {
-            get { return (Privileges & AccessRight.Delete) == AccessRight.Delete; }
-            set { Privileges = value ? Privileges | AccessRight.Delete : Privileges & ~AccessRight.Delete; }
-        }
+		public virtual bool AllowDelete {
+			get { return (Privileges & AccessRight.Delete) == AccessRight.Delete; }
+			set { Privileges = value ? Privileges | AccessRight.Delete : Privileges & ~AccessRight.Delete; }
+		}
 
-        #region Override Base Methods
+		#region Override Base Methods
 
-        public override string ToString()
-        {
-            return string.Format("{0} [{1}, {2}]", User, Object, Privileges);
-        }
+		public override string ToString ()
+		{
+			return string.Format ("{0} [{1}, {2}]", User, Object, Privileges);
+		}
 
-        public override bool Equals(object obj)
-        {
-            AccessPrivilege other = obj as AccessPrivilege;
+		public override bool Equals (object obj)
+		{
+			AccessPrivilege other = obj as AccessPrivilege;
 
-            if (other == null)
-                return false;
+			if (other == null)
+				return false;
 
-            if (Id == 0 && other.Id == 0)
-                return (object)this == other;
-            else
-                return Id == other.Id;
-        }
+			if (Id == 0 && other.Id == 0)
+				return (object) this == other;
+			else
+				return Id == other.Id;
+		}
 
-        public override int GetHashCode()
-        {
-            if (Id == 0)
-                return base.GetHashCode();
+		public override int GetHashCode ()
+		{
+			if (Id == 0)
+				return base.GetHashCode ();
 
-            return string.Format("{0}#{1}", GetType().FullName, Id).GetHashCode();
-        }
+			return string.Format ("{0}#{1}", GetType ().FullName, Id).GetHashCode ();
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

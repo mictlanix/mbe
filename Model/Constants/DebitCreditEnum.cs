@@ -32,13 +32,11 @@ using System.ComponentModel.DataAnnotations;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 
-namespace Mictlanix.BE.Model
-{
-    public enum DebitCreditEnum : int
-    {
-        [Display(Name = "Enum_Debit", ResourceType = typeof(Resources))]
-        Debit = 0,
-        [Display(Name = "Enum_Credit", ResourceType = typeof(Resources))]
-        Credit = 1
-    }
+namespace Mictlanix.BE.Model {
+	public enum DebitCreditEnum : int {
+		[Display (Name = "Enum_Debit", ResourceType = typeof (Resources))]
+		Debit = 0,
+		[Display (Name = "Enum_Credit", ResourceType = typeof (Resources))]
+		Credit = 1
+	}
 }

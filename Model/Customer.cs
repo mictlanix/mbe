@@ -33,132 +33,126 @@ using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 
-namespace Mictlanix.BE.Model
-{
-	[ActiveRecord("customer", Lazy = true)]
-    public class Customer : ActiveRecordLinqBase<Customer>
-	{
-        IList<Address> addresses = new List<Address>();
-		IList<Contact> contacts = new List<Contact>();
-		IList<TaxpayerRecipient> taxpayers = new List<TaxpayerRecipient>();
-		IList<CustomerDiscount> discounts = new List<CustomerDiscount>();
+namespace Mictlanix.BE.Model {
+	[ActiveRecord ("customer", Lazy = true)]
+	public class Customer : ActiveRecordLinqBase<Customer> {
+		IList<Address> addresses = new List<Address> ();
+		IList<Contact> contacts = new List<Contact> ();
+		IList<TaxpayerRecipient> taxpayers = new List<TaxpayerRecipient> ();
+		IList<CustomerDiscount> discounts = new List<CustomerDiscount> ();
 
-        [PrimaryKey(PrimaryKeyType.Identity, "customer_id")]
+		[PrimaryKey (PrimaryKeyType.Identity, "customer_id")]
 		public virtual int Id { get; set; }
-		
+
 		[Property]
 		[ValidateIsUnique]
-		[Display(Name = "Code", ResourceType = typeof(Resources))]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[RegularExpression(@"^\S+$", ErrorMessageResourceName = "Validation_NonWhiteSpace", ErrorMessageResourceType = typeof(Resources))]
-		[StringLength(25, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Display (Name = "Code", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[RegularExpression (@"^\S+$", ErrorMessageResourceName = "Validation_NonWhiteSpace", ErrorMessageResourceType = typeof (Resources))]
+		[StringLength (25, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Code { get; set; }
 
-        [Property]
-        [Display(Name = "Name", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Property]
+		[Display (Name = "Name", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[StringLength (250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Name { get; set; }
 
-        [Property]
-        [Display(Name = "Zone", ResourceType = typeof(Resources))]
-        [StringLength(250, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Property]
+		[Display (Name = "Zone", ResourceType = typeof (Resources))]
+		[StringLength (250, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Zone { get; set; }
 
-        [Property("credit_limit")]
-        [DataType(DataType.Currency)]
-        [Display(Name = "CreditLimit", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[Property ("credit_limit")]
+		[DataType (DataType.Currency)]
+		[Display (Name = "CreditLimit", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
 		public virtual decimal CreditLimit { get; set; }
 
-        [Property("credit_days")]
-        [Display(Name = "CreditDays", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[Property ("credit_days")]
+		[Display (Name = "CreditDays", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
 		public virtual int CreditDays { get; set; }
 
 		public virtual bool HasCredit {
 			get { return CreditDays > 0 && CreditLimit > 0; }
 		}
 
-        [Property]
-        [DataType(DataType.MultilineText)]
-        [Display(Name = "Comment", ResourceType = typeof(Resources))]
-		[StringLength(1024, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Property]
+		[DataType (DataType.MultilineText)]
+		[Display (Name = "Comment", ResourceType = typeof (Resources))]
+		[StringLength (1024, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Comment { get; set; }
 
-        [Display(Name = "PriceList", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[UIHint("PriceListSelector")]
+		[Display (Name = "PriceList", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[UIHint ("PriceListSelector")]
 		public virtual int PriceListId { get; set; }
 
-        [BelongsTo("price_list")]
-        [Display(Name = "PriceList", ResourceType = typeof(Resources))]
-        public virtual PriceList PriceList { get; set; }
+		[BelongsTo ("price_list")]
+		[Display (Name = "PriceList", ResourceType = typeof (Resources))]
+		public virtual PriceList PriceList { get; set; }
 
 		[Property]
-		[Display(Name = "ShippingRequired", ResourceType = typeof(Resources))]
+		[Display (Name = "ShippingRequired", ResourceType = typeof (Resources))]
 		public virtual bool Shipping { get; set; }
 
-		[Property("shipping_required_document")]
-		[Display(Name = "ShippingInvoiceRequired", ResourceType = typeof(Resources))]
+		[Property ("shipping_required_document")]
+		[Display (Name = "ShippingInvoiceRequired", ResourceType = typeof (Resources))]
 		public virtual bool ShippingRequiredDocument { get; set; }
 
-        [HasAndBelongsToMany(typeof(Address), Table = "customer_address", ColumnKey = "customer", ColumnRef = "address", Lazy = true)]
-		public virtual IList<Address> Addresses
-        {
-            get { return addresses; }
-            set { addresses = value; }
-        }
+		[HasAndBelongsToMany (typeof (Address), Table = "customer_address", ColumnKey = "customer", ColumnRef = "address", Lazy = true)]
+		public virtual IList<Address> Addresses {
+			get { return addresses; }
+			set { addresses = value; }
+		}
 
-        [HasAndBelongsToMany(typeof(Contact), Table = "customer_contact", ColumnKey = "customer", ColumnRef = "contact", Lazy = true)]
-		public virtual IList<Contact> Contacts
-        {
-            get { return contacts; }
-            set { contacts = value; }
-        }
-		
-		[HasAndBelongsToMany( typeof(TaxpayerRecipient), Table = "customer_taxpayer", ColumnKey = "customer", ColumnRef = "taxpayer", Lazy = true)]
-		public virtual IList<TaxpayerRecipient> Taxpayers
-		{
+		[HasAndBelongsToMany (typeof (Contact), Table = "customer_contact", ColumnKey = "customer", ColumnRef = "contact", Lazy = true)]
+		public virtual IList<Contact> Contacts {
+			get { return contacts; }
+			set { contacts = value; }
+		}
+
+		[HasAndBelongsToMany (typeof (TaxpayerRecipient), Table = "customer_taxpayer", ColumnKey = "customer", ColumnRef = "taxpayer", Lazy = true)]
+		public virtual IList<TaxpayerRecipient> Taxpayers {
 			get { return taxpayers; }
 			set { taxpayers = value; }
 		}
 
-		[HasMany(typeof(CustomerDiscount), Table = "customer_discount", ColumnKey = "customer", Lazy = true)]
-		public virtual IList<CustomerDiscount> Discounts
-		{
+		[HasMany (typeof (CustomerDiscount), Table = "customer_discount", ColumnKey = "customer", Lazy = true)]
+		public virtual IList<CustomerDiscount> Discounts {
 			get { return discounts; }
 			set { discounts = value; }
 		}
 
-        #region Override Base Methods
+		#region Override Base Methods
 
-        public override string ToString()
-        {
-            return string.Format("{0}", Name);
-        }
+		public override string ToString ()
+		{
+			return string.Format ("{0}", Name);
+		}
 
-        public override bool Equals(object obj)
-        {
-            Customer other = obj as Customer;
+		public override bool Equals (object obj)
+		{
+			Customer other = obj as Customer;
 
-            if (other == null)
-                return false;
+			if (other == null)
+				return false;
 
-            if (Id == 0 && other.Id == 0)
-                return (object)this == other;
-            else
-                return Id == other.Id;
-        }
+			if (Id == 0 && other.Id == 0)
+				return (object) this == other;
+			else
+				return Id == other.Id;
+		}
 
-        public override int GetHashCode()
-        {
-            if (Id == 0)
-                return base.GetHashCode();
+		public override int GetHashCode ()
+		{
+			if (Id == 0)
+				return base.GetHashCode ();
 
-            return string.Format("{0}#{1}", GetType().FullName, Id).GetHashCode();
-        }
+			return string.Format ("{0}#{1}", GetType ().FullName, Id).GetHashCode ();
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

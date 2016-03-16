@@ -30,25 +30,23 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Mictlanix.BE.Model
-{
-    public enum PaymentMethod : int
-    {
-        [Display(Name = "Unidentified", ResourceType = typeof(Resources))]
-        Unidentified,
-        [Display(Name = "Cash", ResourceType = typeof(Resources))]
-        Cash,
-        [Display(Name = "CreditCard", ResourceType = typeof(Resources))]
-        CreditCard,
-        [Display(Name = "DebitCard", ResourceType = typeof(Resources))]
-        DebitCard,
-        [Display(Name = "Check", ResourceType = typeof(Resources))]
-        Check,
-        [Display(Name = "WireTransfer", ResourceType = typeof(Resources))]
-        WireTransfer,
-        [Display(Name = "GovernmentFunding", ResourceType = typeof(Resources))]
-        GovernmentFunding,
-        [Display(Name = "BankDeposit", ResourceType = typeof(Resources))]
+namespace Mictlanix.BE.Model {
+	public enum PaymentMethod : int {
+		[Display (Name = "Unidentified", ResourceType = typeof (Resources))]
+		Unidentified,
+		[Display (Name = "Cash", ResourceType = typeof (Resources))]
+		Cash,
+		[Display (Name = "CreditCard", ResourceType = typeof (Resources))]
+		CreditCard,
+		[Display (Name = "DebitCard", ResourceType = typeof (Resources))]
+		DebitCard,
+		[Display (Name = "Check", ResourceType = typeof (Resources))]
+		Check,
+		[Display (Name = "WireTransfer", ResourceType = typeof (Resources))]
+		WireTransfer,
+		[Display (Name = "GovernmentFunding", ResourceType = typeof (Resources))]
+		GovernmentFunding,
+		[Display (Name = "BankDeposit", ResourceType = typeof (Resources))]
 		BankDeposit
-    }
+	}
 }

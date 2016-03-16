@@ -26,15 +26,13 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Mictlanix.BE.Model
-{
-	public enum TechnicalServiceRequestType
-	{
-		[Display(Name = "Demonstration", ResourceType = typeof(Resources))]
+namespace Mictlanix.BE.Model {
+	public enum TechnicalServiceRequestType {
+		[Display (Name = "Demonstration", ResourceType = typeof (Resources))]
 		Demonstration,
-		[Display(Name = "Installation", ResourceType = typeof(Resources))]
+		[Display (Name = "Installation", ResourceType = typeof (Resources))]
 		Installation,
-		[Display(Name = "Loan", ResourceType = typeof(Resources))]
+		[Display (Name = "Loan", ResourceType = typeof (Resources))]
 		Loan
 	}
 }

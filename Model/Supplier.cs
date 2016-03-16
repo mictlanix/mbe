@@ -33,112 +33,106 @@ using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 
-namespace Mictlanix.BE.Model
-{
-	[ActiveRecord("supplier", Lazy = true)]
-    public class Supplier : ActiveRecordLinqBase<Supplier>
-    {
-        IList<Address> addresses = new List<Address>();
-        IList<Contact> contacts = new List<Contact>();
-        IList<BankAccount> accounts = new List<BankAccount>();
-        IList<SupplierAgreement> agrements = new List<SupplierAgreement>();
+namespace Mictlanix.BE.Model {
+	[ActiveRecord ("supplier", Lazy = true)]
+	public class Supplier : ActiveRecordLinqBase<Supplier> {
+		IList<Address> addresses = new List<Address> ();
+		IList<Contact> contacts = new List<Contact> ();
+		IList<BankAccount> accounts = new List<BankAccount> ();
+		IList<SupplierAgreement> agrements = new List<SupplierAgreement> ();
 
-        [PrimaryKey(PrimaryKeyType.Identity, "supplier_id")]
+		[PrimaryKey (PrimaryKeyType.Identity, "supplier_id")]
 		public virtual int Id { get; set; }
 
-        [Property]
+		[Property]
 		[ValidateIsUnique]
-        [Display(Name = "Code", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[RegularExpression(@"^\S+$", ErrorMessageResourceName = "Validation_NonWhiteSpace", ErrorMessageResourceType = typeof(Resources))]
-		[StringLength(25, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Display (Name = "Code", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[RegularExpression (@"^\S+$", ErrorMessageResourceName = "Validation_NonWhiteSpace", ErrorMessageResourceType = typeof (Resources))]
+		[StringLength (25, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Code { get; set; }
 
-        [Property]
-        [Display(Name = "Name", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Property]
+		[Display (Name = "Name", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[StringLength (250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Name { get; set; }
 
-        [Property]
-        [Display(Name = "Zone", ResourceType = typeof(Resources))]
-        [StringLength(250, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Property]
+		[Display (Name = "Zone", ResourceType = typeof (Resources))]
+		[StringLength (250, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Zone { get; set; }
 
-        [Property("credit_limit")]
-        [DataType(DataType.Currency)]
-		[Display(Name = "CreditLimit", ResourceType = typeof(Resources))]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[Property ("credit_limit")]
+		[DataType (DataType.Currency)]
+		[Display (Name = "CreditLimit", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
 		public virtual decimal CreditLimit { get; set; }
 
-        [Property("credit_days")]
-		[Display(Name = "CreditDays", ResourceType = typeof(Resources))]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[Property ("credit_days")]
+		[Display (Name = "CreditDays", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
 		public virtual int CreditDays { get; set; }
 
-        [Property]
-        [DataType(DataType.MultilineText)]
-        [Display(Name = "Comment", ResourceType = typeof(Resources))]
-		[StringLength(500, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Property]
+		[DataType (DataType.MultilineText)]
+		[Display (Name = "Comment", ResourceType = typeof (Resources))]
+		[StringLength (500, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Comment { get; set; }
 
-        [HasAndBelongsToMany(typeof(Address), Table = "supplier_address", ColumnKey = "supplier", ColumnRef = "address", Lazy = true)]
-		public virtual IList<Address> Addresses
-        {
-            get { return addresses; }
-            set { addresses = value; }
-        }
+		[HasAndBelongsToMany (typeof (Address), Table = "supplier_address", ColumnKey = "supplier", ColumnRef = "address", Lazy = true)]
+		public virtual IList<Address> Addresses {
+			get { return addresses; }
+			set { addresses = value; }
+		}
 
-        [HasAndBelongsToMany(typeof(Contact), Table = "supplier_contact", ColumnKey = "supplier", ColumnRef = "contact", Lazy = true)]
-		public virtual IList<Contact> Contacts
-        {
-            get { return contacts; }
-            set { contacts = value; }
-        }
+		[HasAndBelongsToMany (typeof (Contact), Table = "supplier_contact", ColumnKey = "supplier", ColumnRef = "contact", Lazy = true)]
+		public virtual IList<Contact> Contacts {
+			get { return contacts; }
+			set { contacts = value; }
+		}
 
-        [HasAndBelongsToMany(typeof(BankAccount), Table = "supplier_bank_account", ColumnKey = "supplier", ColumnRef = "bank_account", Lazy = true)]
-		public virtual IList<BankAccount> BanksAccounts
-        {
-            get { return accounts; }
-            set { accounts = value; }
-        }
+		[HasAndBelongsToMany (typeof (BankAccount), Table = "supplier_bank_account", ColumnKey = "supplier", ColumnRef = "bank_account", Lazy = true)]
+		public virtual IList<BankAccount> BanksAccounts {
+			get { return accounts; }
+			set { accounts = value; }
+		}
 
-        [HasMany( typeof(SupplierAgreement), Table = "supplier_agreement", ColumnKey = "supplier", Lazy = true)]
-		public virtual IList<SupplierAgreement> Agreements
-        {
-            get { return agrements; }
-            set { agrements = value; }
-        }
+		[HasMany (typeof (SupplierAgreement), Table = "supplier_agreement", ColumnKey = "supplier", Lazy = true)]
+		public virtual IList<SupplierAgreement> Agreements {
+			get { return agrements; }
+			set { agrements = value; }
+		}
 
-        #region Override Base Methods
+		#region Override Base Methods
 
-        public override string ToString()
-        {
-            return string.Format("{0}", Name);
-        }
+		public override string ToString ()
+		{
+			return string.Format ("{0}", Name);
+		}
 
-        public override bool Equals(object obj)
-        {
-            Supplier other = obj as Supplier;
+		public override bool Equals (object obj)
+		{
+			Supplier other = obj as Supplier;
 
-            if (other == null)
-                return false;
+			if (other == null)
+				return false;
 
-            if (Id == 0 && other.Id == 0)
-                return (object)this == other;
-            else
-                return Id == other.Id;
-        }
+			if (Id == 0 && other.Id == 0)
+				return (object) this == other;
+			else
+				return Id == other.Id;
+		}
 
-        public override int GetHashCode()
-        {
-            if (Id == 0)
-                return base.GetHashCode();
+		public override int GetHashCode ()
+		{
+			if (Id == 0)
+				return base.GetHashCode ();
 
-            return string.Format("{0}#{1}", GetType().FullName, Id).GetHashCode();
-        }
+			return string.Format ("{0}#{1}", GetType ().FullName, Id).GetHashCode ();
+		}
 
-        #endregion
-        
-    }
+		#endregion
+
+	}
 }
