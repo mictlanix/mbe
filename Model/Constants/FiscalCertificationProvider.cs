@@ -32,19 +32,17 @@ using System.ComponentModel.DataAnnotations;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 
-namespace Mictlanix.BE.Model
-{
-	public enum FiscalCertificationProvider : int
-	{
-		[Display(Name = "None", ResourceType = typeof(Resources))]
+namespace Mictlanix.BE.Model {
+	public enum FiscalCertificationProvider : int {
+		[Display (Name = "None", ResourceType = typeof (Resources))]
 		None,
-		[Display(Name = "Diverza", ResourceType = typeof(Resources))]
-        Diverza,
-		[Display(Name = "FiscoClic", ResourceType = typeof(Resources))]
+		[Display (Name = "Diverza", ResourceType = typeof (Resources))]
+		Diverza,
+		[Display (Name = "FiscoClic", ResourceType = typeof (Resources))]
 		FiscoClic,
-		[Display(Name = "Servisim", ResourceType = typeof(Resources))]
+		[Display (Name = "Servisim", ResourceType = typeof (Resources))]
 		Servisim,
-		[Display(Name = "ProFact", ResourceType = typeof(Resources))]
+		[Display (Name = "ProFact", ResourceType = typeof (Resources))]
 		ProFact
-    }
+	}
 }

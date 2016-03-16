@@ -34,108 +34,102 @@ using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 
-namespace Mictlanix.BE.Model
-{
-    [ActiveRecord("supplier_return")]
-    public class SupplierReturn : ActiveRecordLinqBase<SupplierReturn>
-    {
-        IList<SupplierReturnDetail> details = new List<SupplierReturnDetail>();
+namespace Mictlanix.BE.Model {
+	[ActiveRecord ("supplier_return")]
+	public class SupplierReturn : ActiveRecordLinqBase<SupplierReturn> {
+		IList<SupplierReturnDetail> details = new List<SupplierReturnDetail> ();
 
-        [PrimaryKey(PrimaryKeyType.Identity, "supplier_return_id")]
-        [Display(Name = "ReturnOrderId", ResourceType = typeof(Resources))]
-		[DisplayFormat(DataFormatString = "{0:D8}")]
-        public int Id { get; set; }
+		[PrimaryKey (PrimaryKeyType.Identity, "supplier_return_id")]
+		[Display (Name = "ReturnOrderId", ResourceType = typeof (Resources))]
+		[DisplayFormat (DataFormatString = "{0:D8}")]
+		public int Id { get; set; }
 
-        [BelongsTo("purchase_order")]
-        [Display(Name = "PurchaseOrder", ResourceType = typeof(Resources))]
-        public virtual PurchaseOrder PurchaseOrder { get; set; }
+		[BelongsTo ("purchase_order")]
+		[Display (Name = "PurchaseOrder", ResourceType = typeof (Resources))]
+		public virtual PurchaseOrder PurchaseOrder { get; set; }
 
-        [Property("creation_time")]
-        [DataType(DataType.DateTime)]
-        [Display(Name = "CreationTime", ResourceType = typeof(Resources))]
-        public DateTime CreationTime { get; set; }
+		[Property ("creation_time")]
+		[DataType (DataType.DateTime)]
+		[Display (Name = "CreationTime", ResourceType = typeof (Resources))]
+		public DateTime CreationTime { get; set; }
 
-        [Property("modification_time")]
-        [DataType(DataType.DateTime)]
-        [Display(Name = "ModificationTime", ResourceType = typeof(Resources))]
-        public DateTime ModificationTime { get; set; }
+		[Property ("modification_time")]
+		[DataType (DataType.DateTime)]
+		[Display (Name = "ModificationTime", ResourceType = typeof (Resources))]
+		public DateTime ModificationTime { get; set; }
 
-        [BelongsTo("creator")]
-        [Display(Name = "Creator", ResourceType = typeof(Resources))]
-        public virtual Employee Creator { get; set; }
+		[BelongsTo ("creator")]
+		[Display (Name = "Creator", ResourceType = typeof (Resources))]
+		public virtual Employee Creator { get; set; }
 
-        [BelongsTo("updater")]
-        [Display(Name = "Updater", ResourceType = typeof(Resources))]
-        public virtual Employee Updater { get; set; }
+		[BelongsTo ("updater")]
+		[Display (Name = "Updater", ResourceType = typeof (Resources))]
+		public virtual Employee Updater { get; set; }
 
-        [BelongsTo("supplier")]
-        [Display(Name = "Supplier", ResourceType = typeof(Resources))]
-        public virtual Supplier Supplier { get; set; }
+		[BelongsTo ("supplier")]
+		[Display (Name = "Supplier", ResourceType = typeof (Resources))]
+		public virtual Supplier Supplier { get; set; }
 
-        [Property("completed")]
-        [Display(Name = "Completed", ResourceType = typeof(Resources))]
-        public bool IsCompleted { get; set; }
+		[Property ("completed")]
+		[Display (Name = "Completed", ResourceType = typeof (Resources))]
+		public bool IsCompleted { get; set; }
 
-        [Property("cancelled")]
-        [Display(Name = "Cancelled", ResourceType = typeof(Resources))]
-        public bool IsCancelled { get; set; }
+		[Property ("cancelled")]
+		[Display (Name = "Cancelled", ResourceType = typeof (Resources))]
+		public bool IsCancelled { get; set; }
 
-        [HasMany(typeof(SupplierReturnDetail), Table = "supplier_return_detail", ColumnKey = "supplier_return")]
-        public IList<SupplierReturnDetail> Details
-        {
-            get { return details; }
-            set { details = value; }
-        }
+		[HasMany (typeof (SupplierReturnDetail), Table = "supplier_return_detail", ColumnKey = "supplier_return")]
+		public IList<SupplierReturnDetail> Details {
+			get { return details; }
+			set { details = value; }
+		}
 
-        [DataType(DataType.Currency)]
-        [Display(Name = "Subtotal", ResourceType = typeof(Resources))]
-        public decimal Subtotal
-        {
-            get { return Details.Sum(x => x.Subtotal); }
-        }
+		[DataType (DataType.Currency)]
+		[Display (Name = "Subtotal", ResourceType = typeof (Resources))]
+		public decimal Subtotal {
+			get { return Details.Sum (x => x.Subtotal); }
+		}
 
-        [DataType(DataType.Currency)]
-        [Display(Name = "Taxes", ResourceType = typeof(Resources))]
-        public decimal Taxes
-        {
-            get { return Total - Subtotal; }
-        }
+		[DataType (DataType.Currency)]
+		[Display (Name = "Taxes", ResourceType = typeof (Resources))]
+		public decimal Taxes {
+			get { return Total - Subtotal; }
+		}
 
-        [DataType(DataType.Currency)]
-        [Display(Name = "Total", ResourceType = typeof(Resources))]
-        public decimal Total
-        {
-            get { return Details.Sum(x => x.Total); }
-        }
+		[DataType (DataType.Currency)]
+		[Display (Name = "Total", ResourceType = typeof (Resources))]
+		public decimal Total {
+			get { return Details.Sum (x => x.Total); }
+		}
 
-        #region Override Base Methods
+		#region Override Base Methods
 
-        public override string ToString()
-        {
-            return string.Format("{0} [{1}, {2}, {3}]", Id, CreationTime, Creator, PurchaseOrder);
-        }
+		public override string ToString ()
+		{
+			return string.Format ("{0} [{1}, {2}, {3}]", Id, CreationTime, Creator, PurchaseOrder);
+		}
 
-        public override bool Equals(object obj)
-        {
-            SupplierReturn other = obj as SupplierReturn;
+		public override bool Equals (object obj)
+		{
+			SupplierReturn other = obj as SupplierReturn;
 
-            if (other == null)
-                return false;
+			if (other == null)
+				return false;
 
-            if (Id == 0 && other.Id == 0)
-                return (object)this == other;
-            else
-                return Id == other.Id;
-        }
+			if (Id == 0 && other.Id == 0)
+				return (object) this == other;
+			else
+				return Id == other.Id;
+		}
 
-        public override int GetHashCode()
-        {
-            if (Id == 0)
-                return base.GetHashCode();
+		public override int GetHashCode ()
+		{
+			if (Id == 0)
+				return base.GetHashCode ();
 
-            return string.Format("{0}#{1}", GetType().FullName, Id).GetHashCode();
-        }
+			return string.Format ("{0}#{1}", GetType ().FullName, Id).GetHashCode ();
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

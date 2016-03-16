@@ -32,13 +32,11 @@ using System.ComponentModel.DataAnnotations;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 
-namespace Mictlanix.BE.Model
-{
-    public enum CashCountType : int
-    {
-        [Display(Name = "StartingCash", ResourceType = typeof(Resources))]
-        StartingCash = 0,
-        [Display(Name = "CountedCash", ResourceType = typeof(Resources))]
-        CountedCash = 1
-    }
+namespace Mictlanix.BE.Model {
+	public enum CashCountType : int {
+		[Display (Name = "StartingCash", ResourceType = typeof (Resources))]
+		StartingCash = 0,
+		[Display (Name = "CountedCash", ResourceType = typeof (Resources))]
+		CountedCash = 1
+	}
 }

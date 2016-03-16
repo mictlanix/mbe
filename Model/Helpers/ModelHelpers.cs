@@ -30,10 +30,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Mictlanix.BE.Model
-{
-	public static class ModelHelpers
-	{
+namespace Mictlanix.BE.Model {
+	public static class ModelHelpers {
 		public static decimal PriceRounding (decimal d)
 		{
 			return Math.Round (d, 6, MidpointRounding.AwayFromZero);
@@ -45,7 +43,7 @@ namespace Mictlanix.BE.Model
 		}
 
 		public static decimal Subtotal (decimal quantity, decimal price, decimal exchangeRate,
-		                                decimal discount, decimal taxRate, bool taxIncluded)
+						decimal discount, decimal taxRate, bool taxIncluded)
 		{
 			if (taxIncluded) {
 				return TotalRounding (quantity * price * exchangeRate * (1m - discount) / (1m + taxRate));
@@ -55,7 +53,7 @@ namespace Mictlanix.BE.Model
 		}
 
 		public static decimal Total (decimal quantity, decimal price, decimal exchangeRate,
-		                             decimal discount, decimal taxRate, bool taxIncluded)
+					     decimal discount, decimal taxRate, bool taxIncluded)
 		{
 			if (taxIncluded) {
 				return TotalRounding (quantity * price * exchangeRate * (1m - discount));

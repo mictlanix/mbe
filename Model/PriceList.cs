@@ -33,61 +33,59 @@ using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 
-namespace Mictlanix.BE.Model
-{
-    [ActiveRecord("price_list")]
-    public class PriceList : ActiveRecordLinqBase<PriceList>
-    {
-		[PrimaryKey(PrimaryKeyType.Identity, "price_list_id", UnsavedValue="-1")]
-        public int Id { get; set; }
+namespace Mictlanix.BE.Model {
+	[ActiveRecord ("price_list")]
+	public class PriceList : ActiveRecordLinqBase<PriceList> {
+		[PrimaryKey (PrimaryKeyType.Identity, "price_list_id", UnsavedValue = "-1")]
+		public int Id { get; set; }
 
-        [Property]
-        [Display(Name = "Name", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Name { get; set; }
-		
-		[Property("low_profit_margin")]
-		[DisplayFormat(DataFormatString = "{0:p}")]
-		[Display(Name = "LowProfitMargin", ResourceType = typeof(Resources))]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
+		[Property]
+		[Display (Name = "Name", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[StringLength (250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
+		public string Name { get; set; }
+
+		[Property ("low_profit_margin")]
+		[DisplayFormat (DataFormatString = "{0:p}")]
+		[Display (Name = "LowProfitMargin", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
 		public decimal LowProfitMargin { get; set; }
 
-        [Property("high_profit_margin")]
-        [DisplayFormat(DataFormatString = "{0:p}")]
-        [Display(Name = "HighProfitMargin", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        public decimal HighProfitMargin { get; set; }
+		[Property ("high_profit_margin")]
+		[DisplayFormat (DataFormatString = "{0:p}")]
+		[Display (Name = "HighProfitMargin", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		public decimal HighProfitMargin { get; set; }
 
-        #region Override Base Methods
+		#region Override Base Methods
 
-        public override string ToString()
-        {
-            return string.Format("{0} [{1:p}, {2:p}]", Name, HighProfitMargin, LowProfitMargin);
-        }
+		public override string ToString ()
+		{
+			return string.Format ("{0} [{1:p}, {2:p}]", Name, HighProfitMargin, LowProfitMargin);
+		}
 
-        public override bool Equals(object obj)
-        {
-            PriceList other = obj as PriceList;
+		public override bool Equals (object obj)
+		{
+			PriceList other = obj as PriceList;
 
-            if (other == null)
-                return false;
+			if (other == null)
+				return false;
 
-            if (Id == 0 && other.Id == 0)
-                return (object)this == other;
-            else
-                return Id == other.Id;
-        }
+			if (Id == 0 && other.Id == 0)
+				return (object) this == other;
+			else
+				return Id == other.Id;
+		}
 
-        public override int GetHashCode()
-        {
-            if (Id == 0)
-                return base.GetHashCode();
+		public override int GetHashCode ()
+		{
+			if (Id == 0)
+				return base.GetHashCode ();
 
-            return string.Format("{0}#{1}", GetType().FullName, Id).GetHashCode();
-        }
+			return string.Format ("{0}#{1}", GetType ().FullName, Id).GetHashCode ();
+		}
 
-        #endregion
+		#endregion
 
-    }
+	}
 }
