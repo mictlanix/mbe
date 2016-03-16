@@ -34,63 +34,61 @@ using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 
-namespace Mictlanix.BE.Model
-{   
-	[ActiveRecord("taxpayer_certificate", Lazy = true)]
-	public class TaxpayerCertificate : ActiveRecordLinqBase<TaxpayerCertificate>
-    {
+namespace Mictlanix.BE.Model {
+	[ActiveRecord ("taxpayer_certificate", Lazy = true)]
+	public class TaxpayerCertificate : ActiveRecordLinqBase<TaxpayerCertificate> {
 		public TaxpayerCertificate ()
 		{
 		}
 
-		[PrimaryKey(PrimaryKeyType.Assigned, "taxpayer_certificate_id")]
-		[Display(Name = "CertificateNumber", ResourceType = typeof(Resources))]
+		[PrimaryKey (PrimaryKeyType.Assigned, "taxpayer_certificate_id")]
+		[Display (Name = "CertificateNumber", ResourceType = typeof (Resources))]
 		public virtual string Id { get; set; }
 
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[Display(Name = "Taxpayer", ResourceType = typeof(Resources))]
-		[UIHint("TaxpayerSelector")]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[Display (Name = "Taxpayer", ResourceType = typeof (Resources))]
+		[UIHint ("TaxpayerSelector")]
 		public virtual string TaxpayerId { get; set; }
 
-		[BelongsTo("taxpayer", NotNull = true, Lazy = FetchWhen.OnInvoke)]
-		[Display(Name = "Taxpayer", ResourceType = typeof(Resources))]
+		[BelongsTo ("taxpayer", NotNull = true, Lazy = FetchWhen.OnInvoke)]
+		[Display (Name = "Taxpayer", ResourceType = typeof (Resources))]
 		public virtual TaxpayerIssuer Taxpayer { get; set; }
 
-        [Property("certificate_data")]
-        [Display(Name = "Certificate", ResourceType = typeof(Resources))]
-        public virtual byte[] CertificateData { get; set; }
-		
-        [Property("key_data")]
-        [Display(Name = "PrivateKey", ResourceType = typeof(Resources))]
-        public virtual byte[] KeyData { get; set; }
-		
-        [Property("key_password")]
-        [Display(Name = "PrivateKeyPassword", ResourceType = typeof(Resources))]
-        public virtual byte[] KeyPassword { get; set; }
-		
-		[DataType(DataType.Password)]
-        [Display(Name = "PrivateKeyPassword", ResourceType = typeof(Resources))]
+		[Property ("certificate_data")]
+		[Display (Name = "Certificate", ResourceType = typeof (Resources))]
+		public virtual byte [] CertificateData { get; set; }
+
+		[Property ("key_data")]
+		[Display (Name = "PrivateKey", ResourceType = typeof (Resources))]
+		public virtual byte [] KeyData { get; set; }
+
+		[Property ("key_password")]
+		[Display (Name = "PrivateKeyPassword", ResourceType = typeof (Resources))]
+		public virtual byte [] KeyPassword { get; set; }
+
+		[DataType (DataType.Password)]
+		[Display (Name = "PrivateKeyPassword", ResourceType = typeof (Resources))]
 		public virtual string KeyPassword2 { get; set; }
-		
-		[Property("valid_from")]
-		[Display(Name = "NotBefore", ResourceType = typeof(Resources))]
+
+		[Property ("valid_from")]
+		[Display (Name = "NotBefore", ResourceType = typeof (Resources))]
 		public virtual DateTime NotBefore { get; set; }
-		
-		[Property("valid_to")]
-		[Display(Name = "NotAfter", ResourceType = typeof(Resources))]
+
+		[Property ("valid_to")]
+		[Display (Name = "NotAfter", ResourceType = typeof (Resources))]
 		public virtual DateTime NotAfter { get; set; }
 
-		[Property("active")]
-		[Display(Name = "Active", ResourceType = typeof(Resources))]
+		[Property ("active")]
+		[Display (Name = "Active", ResourceType = typeof (Resources))]
 		public virtual bool IsActive { get; set; }
 
-        #region Override Base Methods
+		#region Override Base Methods
 
 		public override string ToString ()
 		{
 			return string.Format ("{0}", Id);
 		}
-			
+
 		public override bool Equals (object obj)
 		{
 			TaxpayerCertificate other = obj as TaxpayerCertificate;
@@ -98,8 +96,8 @@ namespace Mictlanix.BE.Model
 			if (other == null)
 				return false;
 
-			if (string.IsNullOrEmpty(Id) && string.IsNullOrEmpty(other.Id))
-				return (object)this == other;
+			if (string.IsNullOrEmpty (Id) && string.IsNullOrEmpty (other.Id))
+				return (object) this == other;
 			else
 				return Id == other.Id;
 		}
@@ -112,6 +110,6 @@ namespace Mictlanix.BE.Model
 			return string.Format ("{0}#{1}", GetType ().FullName, Id).GetHashCode ();
 		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

@@ -32,19 +32,17 @@ using System.ComponentModel.DataAnnotations;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 
-namespace Mictlanix.BE.Model
-{
-    public enum FiscalDocumentType : int
-    {
-		[Display(Name = "Invoice", ResourceType = typeof(Resources))]
+namespace Mictlanix.BE.Model {
+	public enum FiscalDocumentType : int {
+		[Display (Name = "Invoice", ResourceType = typeof (Resources))]
 		Invoice,
-		[Display(Name = "FeeReceipt", ResourceType = typeof(Resources))]
+		[Display (Name = "FeeReceipt", ResourceType = typeof (Resources))]
 		FeeReceipt,
-		[Display(Name = "RentReceipt", ResourceType = typeof(Resources))]
+		[Display (Name = "RentReceipt", ResourceType = typeof (Resources))]
 		RentReceipt,
-		[Display(Name = "DebitNote", ResourceType = typeof(Resources))]
+		[Display (Name = "DebitNote", ResourceType = typeof (Resources))]
 		DebitNote,
-		[Display(Name = "CreditNote", ResourceType = typeof(Resources))]
+		[Display (Name = "CreditNote", ResourceType = typeof (Resources))]
 		CreditNote = 100
-    }
+	}
 }

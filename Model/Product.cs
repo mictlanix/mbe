@@ -34,13 +34,11 @@ using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 using Mictlanix.BE.Model.Validation;
 
-namespace Mictlanix.BE.Model
-{
-    [ActiveRecord("product")]
-    public class Product : ActiveRecordLinqBase<Product>
-	{
-		IList<Label> labels = new List<Label>();
-		IList<ProductPrice> prices = new List<ProductPrice>();
+namespace Mictlanix.BE.Model {
+	[ActiveRecord ("product")]
+	public class Product : ActiveRecordLinqBase<Product> {
+		IList<Label> labels = new List<Label> ();
+		IList<ProductPrice> prices = new List<ProductPrice> ();
 
 		public Product ()
 		{
@@ -50,161 +48,159 @@ namespace Mictlanix.BE.Model
 			IsInvoiceable = true;
 		}
 
-        [PrimaryKey(PrimaryKeyType.Identity, "product_id")]
-        public int Id { get; set; }
+		[PrimaryKey (PrimaryKeyType.Identity, "product_id")]
+		public int Id { get; set; }
 
-        [Property]
-        [ValidateIsUnique]
-        [Display(Name = "Code", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [UniqueProductCode(ErrorMessageResourceName = "Validation_Duplicate", ErrorMessageResourceType = typeof(Resources))]
-		[RegularExpression(@"^\S+$", ErrorMessageResourceName = "Validation_NonWhiteSpace", ErrorMessageResourceType = typeof(Resources))]
-		[StringLength(25, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Property]
+		[ValidateIsUnique]
+		[Display (Name = "Code", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[UniqueProductCode (ErrorMessageResourceName = "Validation_Duplicate", ErrorMessageResourceType = typeof (Resources))]
+		[RegularExpression (@"^\S+$", ErrorMessageResourceName = "Validation_NonWhiteSpace", ErrorMessageResourceType = typeof (Resources))]
+		[StringLength (25, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Code { get; set; }
 
-        [Property]
-        [Display(Name = "Name", ResourceType = typeof(Resources))]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [StringLength(250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Property]
+		[Display (Name = "Name", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[StringLength (250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public string Name { get; set; }
 
 		[Property]
-		[Display(Name = "Model", ResourceType = typeof(Resources))]
-		[StringLength(100, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Display (Name = "Model", ResourceType = typeof (Resources))]
+		[StringLength (100, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public string Model { get; set; }
 
-        [Property]
-        [Display(Name = "Brand", ResourceType = typeof(Resources))]
-        [StringLength(100, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Property]
+		[Display (Name = "Brand", ResourceType = typeof (Resources))]
+		[StringLength (100, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public string Brand { get; set; }
 
 		[Property]
-		[Display(Name = "SKU", ResourceType = typeof(Resources))]
-		[StringLength(25, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Display (Name = "SKU", ResourceType = typeof (Resources))]
+		[StringLength (25, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public string SKU { get; set; }
 
-        [Property]
-        [Display(Name = "Location", ResourceType = typeof(Resources))]
-        [StringLength(50, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Location { get; set; }
+		[Property]
+		[Display (Name = "Location", ResourceType = typeof (Resources))]
+		[StringLength (50, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
+		public string Location { get; set; }
 
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [Property("unit_of_measurement")]
-        [Display(Name = "UnitOfMeasurement", ResourceType = typeof(Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[Property ("unit_of_measurement")]
+		[Display (Name = "UnitOfMeasurement", ResourceType = typeof (Resources))]
 		public string UnitOfMeasurement { get; set; }
-		
-		[Property("stockable")]
-		[Display(Name = "Stockable", ResourceType = typeof(Resources))]
+
+		[Property ("stockable")]
+		[Display (Name = "Stockable", ResourceType = typeof (Resources))]
 		public bool IsStockable { get; set; }
 
-        [Property("perishable")]
-        [Display(Name = "Perishable", ResourceType = typeof(Resources))]
-        public bool IsPerishable { get; set; }
+		[Property ("perishable")]
+		[Display (Name = "Perishable", ResourceType = typeof (Resources))]
+		public bool IsPerishable { get; set; }
 
-        [Property("seriable")]
-        [Display(Name = "Seriable", ResourceType = typeof(Resources))]
+		[Property ("seriable")]
+		[Display (Name = "Seriable", ResourceType = typeof (Resources))]
 		public bool IsSeriable { get; set; }
-		
-		[Property("purchasable")]
-		[Display(Name = "Purchasable", ResourceType = typeof(Resources))]
+
+		[Property ("purchasable")]
+		[Display (Name = "Purchasable", ResourceType = typeof (Resources))]
 		public bool IsPurchasable { get; set; }
-		
-		[Property("salable")]
-		[Display(Name = "Salable", ResourceType = typeof(Resources))]
+
+		[Property ("salable")]
+		[Display (Name = "Salable", ResourceType = typeof (Resources))]
 		public bool IsSalable { get; set; }
 
-        [Property("invoiceable")]
-        [Display(Name = "Invoiceable", ResourceType = typeof(Resources))]
-        public bool IsInvoiceable { get; set; }
+		[Property ("invoiceable")]
+		[Display (Name = "Invoiceable", ResourceType = typeof (Resources))]
+		public bool IsInvoiceable { get; set; }
 
-		[Property("tax_rate")]
-		[DisplayFormat(DataFormatString = "{0:p}")]
-        [Display(Name = "TaxRate", ResourceType = typeof(Resources))]
-        public decimal TaxRate { get; set; }
-		
-        [Property("tax_included")]
-        [Display(Name = "TaxIncluded", ResourceType = typeof(Resources))]
-        public bool IsTaxIncluded { get; set; }
-		
-		[Property("price_type")]
-		[Display(Name = "PriceType", ResourceType = typeof(Resources))]
+		[Property ("tax_rate")]
+		[DisplayFormat (DataFormatString = "{0:p}")]
+		[Display (Name = "TaxRate", ResourceType = typeof (Resources))]
+		public decimal TaxRate { get; set; }
+
+		[Property ("tax_included")]
+		[Display (Name = "TaxIncluded", ResourceType = typeof (Resources))]
+		public bool IsTaxIncluded { get; set; }
+
+		[Property ("price_type")]
+		[Display (Name = "PriceType", ResourceType = typeof (Resources))]
 		public PriceType PriceType { get; set; }
 
-		[Display(Name = "VariablePricing", ResourceType = typeof(Resources))]
+		[Display (Name = "VariablePricing", ResourceType = typeof (Resources))]
 		public bool HasVariablePricing {
 			get { return PriceType != PriceType.Fixed; }
 		}
 
 		[Property]
-		[Display(Name = "Currency", ResourceType = typeof(Resources))]
+		[Display (Name = "Currency", ResourceType = typeof (Resources))]
 		public virtual CurrencyCode Currency { get; set; }
-		
-		[Property("min_order_qty")]
-		[DisplayFormat(DataFormatString = "{0:0.####}")]
-		[Display(Name = "MinimumOrderQuantity", ResourceType = typeof(Resources))]
+
+		[Property ("min_order_qty")]
+		[DisplayFormat (DataFormatString = "{0:0.####}")]
+		[Display (Name = "MinimumOrderQuantity", ResourceType = typeof (Resources))]
 		public virtual decimal MinimumOrderQuantity { get; set; }
 
 		[Property]
-        [UIHint("Image")]
-        [Display(Name = "Photo", ResourceType = typeof(Resources))]
-        public string Photo { get; set; }
+		[UIHint ("Image")]
+		[Display (Name = "Photo", ResourceType = typeof (Resources))]
+		public string Photo { get; set; }
 
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [Display(Name = "Supplier", ResourceType = typeof(Resources))]
-        [UIHint("SupplierSelector")]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[Display (Name = "Supplier", ResourceType = typeof (Resources))]
+		[UIHint ("SupplierSelector")]
 		public int SupplierId { get; set; }
 
-        [BelongsTo("supplier")]
-        [Display(Name = "Supplier", ResourceType = typeof(Resources))]
+		[BelongsTo ("supplier")]
+		[Display (Name = "Supplier", ResourceType = typeof (Resources))]
 		public virtual Supplier Supplier { get; set; }
 
 		[Property]
-		[DataType(DataType.MultilineText)]
-		[Display(Name = "Comment", ResourceType = typeof(Resources))]
+		[DataType (DataType.MultilineText)]
+		[Display (Name = "Comment", ResourceType = typeof (Resources))]
 		public string Comment { get; set; }
-		
-		[HasAndBelongsToMany(typeof(Label), Table = "product_label", ColumnKey = "product", ColumnRef = "label", Lazy = true)]
-		public virtual IList<Label> Labels
-		{
+
+		[HasAndBelongsToMany (typeof (Label), Table = "product_label", ColumnKey = "product", ColumnRef = "label", Lazy = true)]
+		public virtual IList<Label> Labels {
 			get { return labels; }
 			set { labels = value; }
 		}
 
-		[HasMany(typeof(ProductPrice), Table = "product_price", ColumnKey = "product", Lazy = true)]
-		public IList<ProductPrice> Prices
-		{
+		[HasMany (typeof (ProductPrice), Table = "product_price", ColumnKey = "product", Lazy = true)]
+		public IList<ProductPrice> Prices {
 			get { return prices; }
 			set { prices = value; }
 		}
 
-        #region Override Base Methods
+		#region Override Base Methods
 
-        public override string ToString()
-        {
-            return string.Format("{0} [{1}, {2}, {3}]", Code, Name, Brand, Model);
-        }
+		public override string ToString ()
+		{
+			return string.Format ("{0} [{1}, {2}, {3}]", Code, Name, Brand, Model);
+		}
 
-        public override bool Equals(object obj)
-        {
-            Product other = obj as Product;
+		public override bool Equals (object obj)
+		{
+			Product other = obj as Product;
 
-            if (other == null)
-                return false;
+			if (other == null)
+				return false;
 
-            if (Id == 0 && other.Id == 0)
-                return (object)this == other;
-            else
-                return Id == other.Id;
-        }
+			if (Id == 0 && other.Id == 0)
+				return (object) this == other;
+			else
+				return Id == other.Id;
+		}
 
-        public override int GetHashCode()
-        {
-            if (Id == 0)
-                return base.GetHashCode();
+		public override int GetHashCode ()
+		{
+			if (Id == 0)
+				return base.GetHashCode ();
 
-            return string.Format("{0}#{1}", GetType().FullName, Id).GetHashCode();
-        }
+			return string.Format ("{0}#{1}", GetType ().FullName, Id).GetHashCode ();
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

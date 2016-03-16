@@ -32,20 +32,18 @@ using System.ComponentModel.DataAnnotations;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 
-namespace Mictlanix.BE.Model
-{
-    [Flags]
-    public enum AccessRight : int
-    {
-        [Display(Name = "None", ResourceType = typeof(Resources))]
-        None = 0,
-        [Display(Name = "Create", ResourceType = typeof(Resources))]
-        Create = 1,
-        [Display(Name = "Read", ResourceType = typeof(Resources))]
-        Read = 2,
-        [Display(Name = "Update", ResourceType = typeof(Resources))]
-        Update = 4,
-        [Display(Name = "Delete", ResourceType = typeof(Resources))]
-        Delete = 8
-    }
+namespace Mictlanix.BE.Model {
+	[Flags]
+	public enum AccessRight : int {
+		[Display (Name = "None", ResourceType = typeof (Resources))]
+		None = 0,
+		[Display (Name = "Create", ResourceType = typeof (Resources))]
+		Create = 1,
+		[Display (Name = "Read", ResourceType = typeof (Resources))]
+		Read = 2,
+		[Display (Name = "Update", ResourceType = typeof (Resources))]
+		Update = 4,
+		[Display (Name = "Delete", ResourceType = typeof (Resources))]
+		Delete = 8
+	}
 }

@@ -26,13 +26,11 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Mictlanix.BE.Model
-{
-	public enum PaymentTerms
-	{
-		[Display(Name = "Immediate", ResourceType = typeof(Resources))]
+namespace Mictlanix.BE.Model {
+	public enum PaymentTerms {
+		[Display (Name = "Immediate", ResourceType = typeof (Resources))]
 		Immediate,
-		[Display(Name = "NetD", ResourceType = typeof(Resources))]
+		[Display (Name = "NetD", ResourceType = typeof (Resources))]
 		NetD
 	}
 }

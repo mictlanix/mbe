@@ -34,214 +34,207 @@ using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 
-namespace Mictlanix.BE.Model
-{
-    [ActiveRecord("sales_order", Lazy = true)]
-    public class SalesOrder : ActiveRecordLinqBase<SalesOrder>
-    {
-        IList<SalesOrderDetail> details = new List<SalesOrderDetail>();
-        IList<CustomerPayment> payments = new List<CustomerPayment>();
+namespace Mictlanix.BE.Model {
+	[ActiveRecord ("sales_order", Lazy = true)]
+	public class SalesOrder : ActiveRecordLinqBase<SalesOrder> {
+		IList<SalesOrderDetail> details = new List<SalesOrderDetail> ();
+		IList<CustomerPayment> payments = new List<CustomerPayment> ();
 
-        [PrimaryKey(PrimaryKeyType.Identity, "sales_order_id")]
-        [Display(Name = "Id", ResourceType = typeof(Resources))]
-		[DisplayFormat(DataFormatString="{0:D8}")]
+		[PrimaryKey (PrimaryKeyType.Identity, "sales_order_id")]
+		[Display (Name = "Id", ResourceType = typeof (Resources))]
+		[DisplayFormat (DataFormatString = "{0:D8}")]
 		public virtual int Id { get; set; }
 
-		[BelongsTo("store")]
-		[Display(Name = "Store", ResourceType = typeof(Resources))]
+		[BelongsTo ("store")]
+		[Display (Name = "Store", ResourceType = typeof (Resources))]
 		public virtual Store Store { get; set; }
-		
-		[Property("serial")]
-		[Display(Name = "Serial", ResourceType = typeof(Resources))]
-		[DisplayFormat(DataFormatString="{0:D8}")]
+
+		[Property ("serial")]
+		[Display (Name = "Serial", ResourceType = typeof (Resources))]
+		[DisplayFormat (DataFormatString = "{0:D8}")]
 		public virtual int Serial { get; set; }
 
-        [BelongsTo("customer", NotNull = true, Fetch = FetchEnum.Join)]
-        [Display(Name = "Customer", ResourceType = typeof(Resources))]
-        public virtual Customer Customer { get; set; }
+		[BelongsTo ("customer", NotNull = true, Fetch = FetchEnum.Join)]
+		[Display (Name = "Customer", ResourceType = typeof (Resources))]
+		public virtual Customer Customer { get; set; }
 
-		[BelongsTo("contact", Lazy = FetchWhen.OnInvoke)]
-		[Display(Name = "Contact", ResourceType = typeof(Resources))]
+		[BelongsTo ("contact", Lazy = FetchWhen.OnInvoke)]
+		[Display (Name = "Contact", ResourceType = typeof (Resources))]
 		public virtual Contact Contact { get; set; }
 
-		[BelongsTo("ship_to", Lazy = FetchWhen.OnInvoke)]
-		[Display(Name = "ShipTo", ResourceType = typeof(Resources))]
+		[BelongsTo ("ship_to", Lazy = FetchWhen.OnInvoke)]
+		[Display (Name = "ShipTo", ResourceType = typeof (Resources))]
 		public virtual Address ShipTo { get; set; }
 
-        [Property]
-        [DataType(DataType.DateTime)]
-        [Display(Name = "Date", ResourceType = typeof(Resources))]
-        public virtual DateTime Date { get; set; }
-		
-		[Property("promise_date")]
-		[DataType(DataType.Date)]
-		[Display(Name = "PromiseDate", ResourceType = typeof(Resources))]
+		[Property]
+		[DataType (DataType.DateTime)]
+		[Display (Name = "Date", ResourceType = typeof (Resources))]
+		public virtual DateTime Date { get; set; }
+
+		[Property ("promise_date")]
+		[DataType (DataType.Date)]
+		[Display (Name = "PromiseDate", ResourceType = typeof (Resources))]
 		public virtual DateTime PromiseDate { get; set; }
 
-        [BelongsTo("salesperson")]
-        [Display(Name = "SalesPerson", ResourceType = typeof(Resources))]
-        public virtual Employee SalesPerson { get; set; }
-		
-        [BelongsTo("point_sale")]
-        [Display(Name = "PointOfSale", ResourceType = typeof(Resources))]
-        public virtual PointOfSale PointOfSale { get; set; }
+		[BelongsTo ("salesperson")]
+		[Display (Name = "SalesPerson", ResourceType = typeof (Resources))]
+		public virtual Employee SalesPerson { get; set; }
 
-		[Property("payment_terms")]
-		[Display(Name = "PaymentTerms", ResourceType = typeof(Resources))]
+		[BelongsTo ("point_sale")]
+		[Display (Name = "PointOfSale", ResourceType = typeof (Resources))]
+		public virtual PointOfSale PointOfSale { get; set; }
+
+		[Property ("payment_terms")]
+		[Display (Name = "PaymentTerms", ResourceType = typeof (Resources))]
 		public virtual PaymentTerms Terms { get; set; }
 
-        [Display(Name = "Credit", ResourceType = typeof(Resources))]
-        public virtual bool IsCredit {
+		[Display (Name = "Credit", ResourceType = typeof (Resources))]
+		public virtual bool IsCredit {
 			get { return Terms != PaymentTerms.Immediate; }
 		}
-		
+
 		[Property]
-		[Display(Name = "Currency", ResourceType = typeof(Resources))]
+		[Display (Name = "Currency", ResourceType = typeof (Resources))]
 		public virtual CurrencyCode Currency { get; set; }
 
-		[Property("exchange_rate")]
-		[DisplayFormat(DataFormatString = "{0:0.00##}")]
-		[Display(Name = "ExchangeRate", ResourceType = typeof(Resources))]
+		[Property ("exchange_rate")]
+		[DisplayFormat (DataFormatString = "{0:0.00##}")]
+		[Display (Name = "ExchangeRate", ResourceType = typeof (Resources))]
 		public virtual decimal ExchangeRate { get; set; }
 
-        [Property("due_date")]
-        [DataType(DataType.Date)]
-        [Display(Name = "DueDate", ResourceType = typeof(Resources))]
-        public virtual DateTime DueDate { get; set; }
+		[Property ("due_date")]
+		[DataType (DataType.Date)]
+		[Display (Name = "DueDate", ResourceType = typeof (Resources))]
+		public virtual DateTime DueDate { get; set; }
 
-        [Property("completed")]
-        [Display(Name = "Completed", ResourceType = typeof(Resources))]
-        public virtual bool IsCompleted { get; set; }
+		[Property ("completed")]
+		[Display (Name = "Completed", ResourceType = typeof (Resources))]
+		public virtual bool IsCompleted { get; set; }
 
-        [Property("paid")]
-        [Display(Name = "Paid", ResourceType = typeof(Resources))]
-        public virtual bool IsPaid { get; set; }
-		
-		[Property("delivered")]
-		[Display(Name = "Delivery", ResourceType = typeof(Resources))]
+		[Property ("paid")]
+		[Display (Name = "Paid", ResourceType = typeof (Resources))]
+		public virtual bool IsPaid { get; set; }
+
+		[Property ("delivered")]
+		[Display (Name = "Delivery", ResourceType = typeof (Resources))]
 		public virtual bool IsDelivered { get; set; }
-		
-		[Property("cancelled")]
-		[Display(Name = "Cancelled", ResourceType = typeof(Resources))]
+
+		[Property ("cancelled")]
+		[Display (Name = "Cancelled", ResourceType = typeof (Resources))]
 		public virtual bool IsCancelled { get; set; }
-		
+
 		[Property]
-		[DataType(DataType.MultilineText)]
-		[Display(Name = "Comment", ResourceType = typeof(Resources))]
-		[StringLength(500, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[DataType (DataType.MultilineText)]
+		[Display (Name = "Comment", ResourceType = typeof (Resources))]
+		[StringLength (500, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Comment { get; set; }
 
-        [HasMany(typeof(SalesOrderDetail), Table = "sales_order_detail", ColumnKey = "sales_order", Lazy = true)]
-        public virtual IList<SalesOrderDetail> Details
-        {
-            get { return details; }
-            set { details = value; }
-        }
+		[HasMany (typeof (SalesOrderDetail), Table = "sales_order_detail", ColumnKey = "sales_order", Lazy = true)]
+		public virtual IList<SalesOrderDetail> Details {
+			get { return details; }
+			set { details = value; }
+		}
 
-        [HasMany(typeof(CustomerPayment), Table = "customer_payment", ColumnKey = "sales_order", Lazy = true)]
-        public virtual IList<CustomerPayment> Payments
-        {
-            get { return payments; }
-            set { payments = value; }
-        }
-        
-        [DataType(DataType.Currency)]
-        [Display(Name = "Subtotal", ResourceType = typeof(Resources))]
-        public virtual decimal Subtotal
-        {
-            get { return Details.Sum(x => x.Subtotal); }
-        }
+		[HasMany (typeof (CustomerPayment), Table = "customer_payment", ColumnKey = "sales_order", Lazy = true)]
+		public virtual IList<CustomerPayment> Payments {
+			get { return payments; }
+			set { payments = value; }
+		}
 
-        [DataType(DataType.Currency)]
-        [Display(Name = "Taxes", ResourceType = typeof(Resources))]
-        public virtual decimal Taxes
-        {
-            get { return Total - Subtotal; }
-        }
+		[DataType (DataType.Currency)]
+		[Display (Name = "Subtotal", ResourceType = typeof (Resources))]
+		public virtual decimal Subtotal {
+			get { return Details.Sum (x => x.Subtotal); }
+		}
 
-        [DataType(DataType.Currency)]
-        [Display(Name = "Total", ResourceType = typeof(Resources))]
-        public virtual decimal Total
-        {
-            get { return Details.Sum(x => x.Total); }
-        }
+		[DataType (DataType.Currency)]
+		[Display (Name = "Taxes", ResourceType = typeof (Resources))]
+		public virtual decimal Taxes {
+			get { return Total - Subtotal; }
+		}
 
-		[DataType(DataType.Currency)]
-		[Display(Name = "Subtotal", ResourceType = typeof(Resources))]
+		[DataType (DataType.Currency)]
+		[Display (Name = "Total", ResourceType = typeof (Resources))]
+		public virtual decimal Total {
+			get { return Details.Sum (x => x.Total); }
+		}
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "Subtotal", ResourceType = typeof (Resources))]
 		public virtual decimal SubtotalEx {
 			get { return Details.Sum (x => x.SubtotalEx); }
 		}
 
-		[DataType(DataType.Currency)]
-		[Display(Name = "Taxes", ResourceType = typeof(Resources))]
+		[DataType (DataType.Currency)]
+		[Display (Name = "Taxes", ResourceType = typeof (Resources))]
 		public virtual decimal TaxesEx {
 			get { return TotalEx - SubtotalEx; }
 		}
 
-		[DataType(DataType.Currency)]
-		[Display(Name = "Total", ResourceType = typeof(Resources))]
+		[DataType (DataType.Currency)]
+		[Display (Name = "Total", ResourceType = typeof (Resources))]
 		public virtual decimal TotalEx {
 			get { return Details.Sum (x => x.TotalEx); }
 		}
 
-		[DataType(DataType.Currency)]
-		[Display(Name = "Paid", ResourceType = typeof(Resources))]
+		[DataType (DataType.Currency)]
+		[Display (Name = "Paid", ResourceType = typeof (Resources))]
 		public virtual decimal Paid {
-			get { return Payments.Sum (x => x.Amount + x.Change.GetValueOrDefault()); }
+			get { return Payments.Sum (x => x.Amount + x.Change.GetValueOrDefault ()); }
 		}
 
-		[DataType(DataType.Currency)]
-		[Display(Name = "Balance", ResourceType = typeof(Resources))]
+		[DataType (DataType.Currency)]
+		[Display (Name = "Balance", ResourceType = typeof (Resources))]
 		public virtual decimal Balance {
 			get { return Paid - Total; }
 		}
 
-		[BelongsTo("creator", Lazy = FetchWhen.OnInvoke)]
-		[Display(Name = "Creator", ResourceType = typeof(Resources))]
+		[BelongsTo ("creator", Lazy = FetchWhen.OnInvoke)]
+		[Display (Name = "Creator", ResourceType = typeof (Resources))]
 		public virtual Employee Creator { get; set; }
 
-		[Property("creation_time")]
-		[DataType(DataType.DateTime)]
-		[Display(Name = "CreationTime", ResourceType = typeof(Resources))]
+		[Property ("creation_time")]
+		[DataType (DataType.DateTime)]
+		[Display (Name = "CreationTime", ResourceType = typeof (Resources))]
 		public virtual DateTime CreationTime { get; set; }
 
-		[BelongsTo("updater", Lazy = FetchWhen.OnInvoke)]
-		[Display(Name = "Updater", ResourceType = typeof(Resources))]
+		[BelongsTo ("updater", Lazy = FetchWhen.OnInvoke)]
+		[Display (Name = "Updater", ResourceType = typeof (Resources))]
 		public virtual Employee Updater { get; set; }
 
-		[Property("modification_time")]
-		[DataType(DataType.DateTime)]
-		[Display(Name = "ModificationTime", ResourceType = typeof(Resources))]
+		[Property ("modification_time")]
+		[DataType (DataType.DateTime)]
+		[Display (Name = "ModificationTime", ResourceType = typeof (Resources))]
 		public virtual DateTime ModificationTime { get; set; }
 
-        #region Override Base Methods
+		#region Override Base Methods
 
-        public override string ToString()
-        {
-			return string.Format("{0:D8} [{1}, {2}, {3}]", Id, Customer, Date, SalesPerson);
-        }
+		public override string ToString ()
+		{
+			return string.Format ("{0:D8} [{1}, {2}, {3}]", Id, Customer, Date, SalesPerson);
+		}
 
-        public override bool Equals(object obj)
-        {
-            SalesOrder other = obj as SalesOrder;
+		public override bool Equals (object obj)
+		{
+			SalesOrder other = obj as SalesOrder;
 
-            if (other == null)
-                return false;
+			if (other == null)
+				return false;
 
-            if (Id == 0 && other.Id == 0)
-                return (object)this == other;
-            else
-                return Id == other.Id;
-        }
+			if (Id == 0 && other.Id == 0)
+				return (object) this == other;
+			else
+				return Id == other.Id;
+		}
 
-        public override int GetHashCode()
-        {
-            if (Id == 0)
-                return base.GetHashCode();
+		public override int GetHashCode ()
+		{
+			if (Id == 0)
+				return base.GetHashCode ();
 
-            return string.Format("{0}#{1}", GetType().FullName, Id).GetHashCode();
-        }
+			return string.Format ("{0}#{1}", GetType ().FullName, Id).GetHashCode ();
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

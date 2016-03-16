@@ -33,72 +33,70 @@ using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using Mictlanix.BE.Model.Validation;
 
-namespace Mictlanix.BE.Model
-{
-	[ActiveRecord("tech_service_receipt_component", Lazy = true)]
-	public class TechnicalServiceReceiptComponent : ActiveRecordLinqBase<TechnicalServiceReceiptComponent>
-    {
-		[PrimaryKey(PrimaryKeyType.Identity, "tech_service_receipt_component_id")]
+namespace Mictlanix.BE.Model {
+	[ActiveRecord ("tech_service_receipt_component", Lazy = true)]
+	public class TechnicalServiceReceiptComponent : ActiveRecordLinqBase<TechnicalServiceReceiptComponent> {
+		[PrimaryKey (PrimaryKeyType.Identity, "tech_service_receipt_component_id")]
 		public virtual int Id { get; set; }
 
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[Display(Name = "TechnicalServiceRequest", ResourceType = typeof(Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[Display (Name = "TechnicalServiceRequest", ResourceType = typeof (Resources))]
 		public virtual int ReceiptId { get; set; }
 
-		[BelongsTo("receipt", Lazy = FetchWhen.OnInvoke)]
-		[Display(Name = "TechnicalServiceReceipt", ResourceType = typeof(Resources))]
+		[BelongsTo ("receipt", Lazy = FetchWhen.OnInvoke)]
+		[Display (Name = "TechnicalServiceReceipt", ResourceType = typeof (Resources))]
 		public virtual TechnicalServiceReceipt Receipt { get; set; }
 
 		[Property]
-		[Display(Name = "Name", ResourceType = typeof(Resources))]
-		[Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
-		[StringLength(128, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Display (Name = "Name", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof (Resources))]
+		[StringLength (128, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Name { get; set; }
 
 		[Property]
-		[Display(Name = "Quantity", ResourceType = typeof(Resources))]
-		[Required(ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof(Resources))]
+		[Display (Name = "Quantity", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof (Resources))]
 		public virtual int Quantity { get; set; }
 
-		[Property("serial_number")]
-		[Display(Name = "SerialNumber", ResourceType = typeof(Resources))]
-		[StringLength(64, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Property ("serial_number")]
+		[Display (Name = "SerialNumber", ResourceType = typeof (Resources))]
+		[StringLength (64, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string SerialNumber { get; set; }
 
-        [Property]
-        [Display(Name = "Comment", ResourceType = typeof(Resources))]
-        [DataType(DataType.MultilineText)]
-		[StringLength(256, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
+		[Property]
+		[Display (Name = "Comment", ResourceType = typeof (Resources))]
+		[DataType (DataType.MultilineText)]
+		[StringLength (256, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Comment { get; set; }
 
-        #region Override Base Methods
+		#region Override Base Methods
 
-        public override string ToString ()
+		public override string ToString ()
 		{
 			return string.Format ("[TechnicalServiceReceiptComponent: Id={0}, Name={1}, Quantity={2}, SerialNumber={3}, Comment={4}]", Id, Name, Quantity, SerialNumber, Comment);
 		}
 
-        public override bool Equals(object obj)
-        {
+		public override bool Equals (object obj)
+		{
 			var other = obj as TechnicalServiceReceiptComponent;
 
-            if (other == null)
-                return false;
+			if (other == null)
+				return false;
 
-            if (Id == 0 && other.Id == 0)
-                return (object)this == other;
-            else
-                return Id == other.Id;
-        }
+			if (Id == 0 && other.Id == 0)
+				return (object) this == other;
+			else
+				return Id == other.Id;
+		}
 
-        public override int GetHashCode()
-        {
-            if (Id == 0)
-                return base.GetHashCode();
+		public override int GetHashCode ()
+		{
+			if (Id == 0)
+				return base.GetHashCode ();
 
-            return string.Format("{0}#{1}", GetType().FullName, Id).GetHashCode();
-        }
+			return string.Format ("{0}#{1}", GetType ().FullName, Id).GetHashCode ();
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

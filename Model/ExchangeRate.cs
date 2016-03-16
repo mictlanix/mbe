@@ -33,61 +33,59 @@ using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using Mictlanix.BE.Model.Validation;
 
-namespace Mictlanix.BE.Model
-{
-	[ActiveRecord("exchange_rate", Lazy = true)]
-	public class ExchangeRate : ActiveRecordLinqBase<ExchangeRate>
-    {
-		[PrimaryKey(PrimaryKeyType.Identity, "exchange_rate_id")]
-        public virtual int Id { get; set; }
-		
+namespace Mictlanix.BE.Model {
+	[ActiveRecord ("exchange_rate", Lazy = true)]
+	public class ExchangeRate : ActiveRecordLinqBase<ExchangeRate> {
+		[PrimaryKey (PrimaryKeyType.Identity, "exchange_rate_id")]
+		public virtual int Id { get; set; }
+
 		[Property]
-		[DataType(DataType.Date)]
-		[Display(Name = "Date", ResourceType = typeof(Resources))]
+		[DataType (DataType.Date)]
+		[Display (Name = "Date", ResourceType = typeof (Resources))]
 		public virtual DateTime Date { get; set; }
 
-        [Property]
-		[Range(0.0001, double.MaxValue, ErrorMessageResourceName = "Validation_CannotBeZeroOrNegative", ErrorMessageResourceType = typeof(Resources))]
-		[Display(Name = "Rate", ResourceType = typeof(Resources))]
-        public virtual decimal Rate { get; set; }
-
-        [Property]
-		[Distinct("Target", ErrorMessageResourceName = "Validation_ShouldNotBeEquals", ErrorMessageResourceType = typeof(Resources))]
-		[Display(Name = "Base", ResourceType = typeof(Resources))]
-        public virtual CurrencyCode Base { get; set; }
-		
 		[Property]
-		[Display(Name = "Target", ResourceType = typeof(Resources))]
+		[Range (0.0001, double.MaxValue, ErrorMessageResourceName = "Validation_CannotBeZeroOrNegative", ErrorMessageResourceType = typeof (Resources))]
+		[Display (Name = "Rate", ResourceType = typeof (Resources))]
+		public virtual decimal Rate { get; set; }
+
+		[Property]
+		[Distinct ("Target", ErrorMessageResourceName = "Validation_ShouldNotBeEquals", ErrorMessageResourceType = typeof (Resources))]
+		[Display (Name = "Base", ResourceType = typeof (Resources))]
+		public virtual CurrencyCode Base { get; set; }
+
+		[Property]
+		[Display (Name = "Target", ResourceType = typeof (Resources))]
 		public virtual CurrencyCode Target { get; set; }
 
-        #region Override Base Methods
+		#region Override Base Methods
 
-        public override string ToString()
-        {
-			return string.Format("1 {2} = {1:0.00##} {3} ({0:d})", Date, Rate, Base, Target);
-        }
+		public override string ToString ()
+		{
+			return string.Format ("1 {2} = {1:0.00##} {3} ({0:d})", Date, Rate, Base, Target);
+		}
 
-        public override bool Equals(object obj)
-        {
-            Store other = obj as Store;
+		public override bool Equals (object obj)
+		{
+			Store other = obj as Store;
 
-            if (other == null)
-                return false;
+			if (other == null)
+				return false;
 
-            if (Id == 0 && other.Id == 0)
-                return (object)this == other;
-            else
-                return Id == other.Id;
-        }
+			if (Id == 0 && other.Id == 0)
+				return (object) this == other;
+			else
+				return Id == other.Id;
+		}
 
-        public override int GetHashCode()
-        {
-            if (Id == 0)
-                return base.GetHashCode();
+		public override int GetHashCode ()
+		{
+			if (Id == 0)
+				return base.GetHashCode ();
 
-            return string.Format("{0}#{1}", GetType().FullName, Id).GetHashCode();
-        }
+			return string.Format ("{0}#{1}", GetType ().FullName, Id).GetHashCode ();
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

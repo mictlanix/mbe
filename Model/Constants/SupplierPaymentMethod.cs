@@ -30,19 +30,17 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Mictlanix.BE.Model
-{
-    public enum SupplierPaymentMethod : int
-    {
-        [Display(Name = "Cash", ResourceType = typeof(Resources))]
-        Cash = 1,
-        [Display(Name = "CreditCard", ResourceType = typeof(Resources))]
-        CreditCard,
-        [Display(Name = "DebitCard", ResourceType = typeof(Resources))]
-        DebitCard,
-        [Display(Name = "Check", ResourceType = typeof(Resources))]
-        Check,
-        [Display(Name = "WireTransfer", ResourceType = typeof(Resources))]
-        WireTransfer
-    }
+namespace Mictlanix.BE.Model {
+	public enum SupplierPaymentMethod : int {
+		[Display (Name = "Cash", ResourceType = typeof (Resources))]
+		Cash = 1,
+		[Display (Name = "CreditCard", ResourceType = typeof (Resources))]
+		CreditCard,
+		[Display (Name = "DebitCard", ResourceType = typeof (Resources))]
+		DebitCard,
+		[Display (Name = "Check", ResourceType = typeof (Resources))]
+		Check,
+		[Display (Name = "WireTransfer", ResourceType = typeof (Resources))]
+		WireTransfer
+	}
 }

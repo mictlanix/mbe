@@ -33,107 +33,104 @@ using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 
-namespace Mictlanix.BE.Model
-{
-	[ActiveRecord("delivery_order")]
-	public class DeliveryOrder : ActiveRecordLinqBase<DeliveryOrder>
-    {
-		IList<DeliveryOrderDetail> details = new List<DeliveryOrderDetail>();
+namespace Mictlanix.BE.Model {
+	[ActiveRecord ("delivery_order")]
+	public class DeliveryOrder : ActiveRecordLinqBase<DeliveryOrder> {
+		IList<DeliveryOrderDetail> details = new List<DeliveryOrderDetail> ();
 
-		[PrimaryKey(PrimaryKeyType.Identity, "delivery_order_id")]
-		[Display(Name = "DeliveryOrderId", ResourceType = typeof(Resources))]
-		[DisplayFormat(DataFormatString = "{0:D8}")]
-        public int Id { get; set; }
+		[PrimaryKey (PrimaryKeyType.Identity, "delivery_order_id")]
+		[Display (Name = "DeliveryOrderId", ResourceType = typeof (Resources))]
+		[DisplayFormat (DataFormatString = "{0:D8}")]
+		public int Id { get; set; }
 
-        [Property("creation_time")]
-        [DataType(DataType.DateTime)]
-        [Display(Name = "CreationTime", ResourceType = typeof(Resources))]
-        public DateTime CreationTime { get; set; }
+		[Property ("creation_time")]
+		[DataType (DataType.DateTime)]
+		[Display (Name = "CreationTime", ResourceType = typeof (Resources))]
+		public DateTime CreationTime { get; set; }
 
-        [Property("modification_time")]
-        [DataType(DataType.DateTime)]
-        [Display(Name = "ModificationTime", ResourceType = typeof(Resources))]
-        public DateTime ModificationTime { get; set; }
+		[Property ("modification_time")]
+		[DataType (DataType.DateTime)]
+		[Display (Name = "ModificationTime", ResourceType = typeof (Resources))]
+		public DateTime ModificationTime { get; set; }
 
-        [BelongsTo("creator")]
-        [Display(Name = "Creator", ResourceType = typeof(Resources))]
-        public virtual Employee Creator { get; set; }
+		[BelongsTo ("creator")]
+		[Display (Name = "Creator", ResourceType = typeof (Resources))]
+		public virtual Employee Creator { get; set; }
 
-        [BelongsTo("updater")]
-        [Display(Name = "Updater", ResourceType = typeof(Resources))]
-        public virtual Employee Updater { get; set; }
+		[BelongsTo ("updater")]
+		[Display (Name = "Updater", ResourceType = typeof (Resources))]
+		public virtual Employee Updater { get; set; }
 
-		[BelongsTo("store", Fetch = FetchEnum.Join)]
-		[Display(Name = "Store", ResourceType = typeof(Resources))]
+		[BelongsTo ("store", Fetch = FetchEnum.Join)]
+		[Display (Name = "Store", ResourceType = typeof (Resources))]
 		public virtual Store Store { get; set; }
 
-		[Property("serial")]
-		[Display(Name = "Serial", ResourceType = typeof(Resources))]
-		[DisplayFormat(DataFormatString="{0:D8}")]
+		[Property ("serial")]
+		[Display (Name = "Serial", ResourceType = typeof (Resources))]
+		[DisplayFormat (DataFormatString = "{0:D8}")]
 		public virtual int Serial { get; set; }
 
-		[BelongsTo("customer", NotNull = true, Fetch = FetchEnum.Join)]
-		[Display(Name = "Customer", ResourceType = typeof(Resources))]
+		[BelongsTo ("customer", NotNull = true, Fetch = FetchEnum.Join)]
+		[Display (Name = "Customer", ResourceType = typeof (Resources))]
 		public virtual Customer Customer { get; set; }
 
-		[BelongsTo("ship_to", Lazy = FetchWhen.OnInvoke)]
-		[Display(Name = "ShipTo", ResourceType = typeof(Resources))]
+		[BelongsTo ("ship_to", Lazy = FetchWhen.OnInvoke)]
+		[Display (Name = "ShipTo", ResourceType = typeof (Resources))]
 		public virtual Address ShipTo { get; set; }
 
 		[Property]
-		[DataType(DataType.DateTime)]
-		[Display(Name = "Date", ResourceType = typeof(Resources))]
+		[DataType (DataType.DateTime)]
+		[Display (Name = "Date", ResourceType = typeof (Resources))]
 		public virtual DateTime Date { get; set; }
 
-        [Property("completed")]
-        [Display(Name = "Completed", ResourceType = typeof(Resources))]
-        public bool IsCompleted { get; set; }
+		[Property ("completed")]
+		[Display (Name = "Completed", ResourceType = typeof (Resources))]
+		public bool IsCompleted { get; set; }
 
-        [Property("cancelled")]
-        [Display(Name = "Cancelled", ResourceType = typeof(Resources))]
-        public bool IsCancelled { get; set; }
+		[Property ("cancelled")]
+		[Display (Name = "Cancelled", ResourceType = typeof (Resources))]
+		public bool IsCancelled { get; set; }
 
-        [Property]
-        [DataType(DataType.MultilineText)]
-        [Display(Name = "Comment", ResourceType = typeof(Resources))]
-		[StringLength(500, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        public string Comment { get; set; }
+		[Property]
+		[DataType (DataType.MultilineText)]
+		[Display (Name = "Comment", ResourceType = typeof (Resources))]
+		[StringLength (500, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
+		public string Comment { get; set; }
 
-		[HasMany(typeof(DeliveryOrderDetail), Table = "delivery_order_detail", ColumnKey = "delivery_order")]
-		public IList<DeliveryOrderDetail> Details
-        {
-            get { return details; }
-            set { details = value; }
-        }
+		[HasMany (typeof (DeliveryOrderDetail), Table = "delivery_order_detail", ColumnKey = "delivery_order")]
+		public IList<DeliveryOrderDetail> Details {
+			get { return details; }
+			set { details = value; }
+		}
 
-        #region Override Base Methods
+		#region Override Base Methods
 
-        public override string ToString()
-        {
-			return string.Format("{0:D8}", Id);
-        }
+		public override string ToString ()
+		{
+			return string.Format ("{0:D8}", Id);
+		}
 
-        public override bool Equals(object obj)
-        {
+		public override bool Equals (object obj)
+		{
 			var other = obj as DeliveryOrder;
 
-            if (other == null)
-                return false;
+			if (other == null)
+				return false;
 
-            if (Id == 0 && other.Id == 0)
-                return (object)this == other;
-            else
-                return Id == other.Id;
-        }
+			if (Id == 0 && other.Id == 0)
+				return (object) this == other;
+			else
+				return Id == other.Id;
+		}
 
-        public override int GetHashCode()
-        {
-            if (Id == 0)
-                return base.GetHashCode();
+		public override int GetHashCode ()
+		{
+			if (Id == 0)
+				return base.GetHashCode ();
 
-            return string.Format("{0}#{1}", GetType().FullName, Id).GetHashCode();
-        }
+			return string.Format ("{0}#{1}", GetType ().FullName, Id).GetHashCode ();
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

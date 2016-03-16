@@ -33,43 +33,41 @@ using System.Linq;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 
-namespace Mictlanix.BE.Model
-{   
-	[ActiveRecord("taxpayer_recipient", Lazy = true)]
-	public class TaxpayerRecipient : ActiveRecordLinqBase<TaxpayerRecipient>
-    {
+namespace Mictlanix.BE.Model {
+	[ActiveRecord ("taxpayer_recipient", Lazy = true)]
+	public class TaxpayerRecipient : ActiveRecordLinqBase<TaxpayerRecipient> {
 		public TaxpayerRecipient ()
 		{
 		}
 
-		[PrimaryKey("taxpayer_recipient_id")]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [StringLength(13, MinimumLength = 12, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        [Display(Name = "TaxpayerId", ResourceType = typeof(Resources))]
+		[PrimaryKey ("taxpayer_recipient_id")]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[StringLength (13, MinimumLength = 12, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
+		[Display (Name = "TaxpayerId", ResourceType = typeof (Resources))]
 		public virtual string Id { get; set; }
-		
-        [Property]
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [StringLength(250, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-        [Display(Name = "TaxpayerName", ResourceType = typeof(Resources))]
-		public virtual string Name { get; set; }
-		
+
 		[Property]
-		[DataType(DataType.EmailAddress)]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[EmailAddress(ErrorMessageResourceName = "Validation_Email", ErrorMessageResourceType = typeof(Resources), ErrorMessage = null)]
-		[StringLength(80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]
-		[Display(Name = "Email", ResourceType = typeof(Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[StringLength (250, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
+		[Display (Name = "TaxpayerName", ResourceType = typeof (Resources))]
+		public virtual string Name { get; set; }
+
+		[Property]
+		[DataType (DataType.EmailAddress)]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[EmailAddress (ErrorMessageResourceName = "Validation_Email", ErrorMessageResourceType = typeof (Resources), ErrorMessage = null)]
+		[StringLength (80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
+		[Display (Name = "Email", ResourceType = typeof (Resources))]
 		public virtual string Email { get; set; }
 
-		[Display(Name = "Address", ResourceType = typeof(Resources))]
+		[Display (Name = "Address", ResourceType = typeof (Resources))]
 		public virtual bool HasAddress { get; set; }
 
-		[BelongsTo("address", Lazy = FetchWhen.OnInvoke)]
-		[Display(Name = "Address", ResourceType = typeof(Resources))]
+		[BelongsTo ("address", Lazy = FetchWhen.OnInvoke)]
+		[Display (Name = "Address", ResourceType = typeof (Resources))]
 		public virtual Address Address { get; set; }
 
-        #region Override Base Methods
+		#region Override Base Methods
 
 		public override string ToString ()
 		{
@@ -84,7 +82,7 @@ namespace Mictlanix.BE.Model
 				return false;
 
 			if (string.IsNullOrEmpty (Id) && string.IsNullOrEmpty (other.Id))
-				return (object)this == other;
+				return (object) this == other;
 			else
 				return Id == other.Id;
 		}
@@ -97,6 +95,6 @@ namespace Mictlanix.BE.Model
 			return string.Format ("{0}#{1}", GetType ().FullName, Id).GetHashCode ();
 		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

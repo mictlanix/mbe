@@ -35,115 +35,109 @@ using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 using Mictlanix.BE.Model.Validation;
 
-namespace Mictlanix.BE.Model
-{
-    [ActiveRecord("sales_quote")]
-    public class SalesQuote : ActiveRecordLinqBase<SalesQuote>
-    {
-        IList<SalesQuoteDetail> details = new List<SalesQuoteDetail>();
+namespace Mictlanix.BE.Model {
+	[ActiveRecord ("sales_quote")]
+	public class SalesQuote : ActiveRecordLinqBase<SalesQuote> {
+		IList<SalesQuoteDetail> details = new List<SalesQuoteDetail> ();
 
-        [PrimaryKey(PrimaryKeyType.Identity, "sales_quote_id")]
-		[Display(Name = "SalesQuoteId", ResourceType = typeof(Resources))]
-		[DisplayFormat(DataFormatString="{0:D8}")]
-        public int Id { get; set; }
-		
-		[BelongsTo("store")]
-		[Display(Name = "Store", ResourceType = typeof(Resources))]
+		[PrimaryKey (PrimaryKeyType.Identity, "sales_quote_id")]
+		[Display (Name = "SalesQuoteId", ResourceType = typeof (Resources))]
+		[DisplayFormat (DataFormatString = "{0:D8}")]
+		public int Id { get; set; }
+
+		[BelongsTo ("store")]
+		[Display (Name = "Store", ResourceType = typeof (Resources))]
 		public virtual Store Store { get; set; }
-		
-		[Property("serial")]
-		[Display(Name = "Serial", ResourceType = typeof(Resources))]
-		[DisplayFormat(DataFormatString="{0:D8}")]
+
+		[Property ("serial")]
+		[Display (Name = "Serial", ResourceType = typeof (Resources))]
+		[DisplayFormat (DataFormatString = "{0:D8}")]
 		public int Serial { get; set; }
 
-        [Property]
-        [DataType(DataType.DateTime)]
-        [Display(Name = "Date", ResourceType = typeof(Resources))]
-        public DateTime Date { get; set; }
+		[Property]
+		[DataType (DataType.DateTime)]
+		[Display (Name = "Date", ResourceType = typeof (Resources))]
+		public DateTime Date { get; set; }
 
-        [BelongsTo("salesperson")]
-        [Display(Name = "SalesPerson", ResourceType = typeof(Resources))]
-        public virtual Employee SalesPerson { get; set; }
+		[BelongsTo ("salesperson")]
+		[Display (Name = "SalesPerson", ResourceType = typeof (Resources))]
+		public virtual Employee SalesPerson { get; set; }
 
-        [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-        [Display(Name = "Customer", ResourceType = typeof(Resources))]
-        [UIHint("CustomerSelector")]
-        public int CustomerId { get; set; }
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[Display (Name = "Customer", ResourceType = typeof (Resources))]
+		[UIHint ("CustomerSelector")]
+		public int CustomerId { get; set; }
 
-        [BelongsTo("customer")]
-        [Display(Name = "Customer", ResourceType = typeof(Resources))]
-        public virtual Customer Customer { get; set; }
-		
-        [Property("due_date")]
-		[DataType(DataType.Date)]
-		[Display(Name = "DueDate", ResourceType = typeof(Resources))]
-		[DateGreaterThan("Date", ErrorMessageResourceName = "Validation_DateGreaterThan", ErrorMessageResourceType = typeof(Resources))]
-        public DateTime DueDate { get; set; }
+		[BelongsTo ("customer")]
+		[Display (Name = "Customer", ResourceType = typeof (Resources))]
+		public virtual Customer Customer { get; set; }
 
-        [Property("completed")]
-        [Display(Name = "Completed", ResourceType = typeof(Resources))]
-        public bool IsCompleted { get; set; }
+		[Property ("due_date")]
+		[DataType (DataType.Date)]
+		[Display (Name = "DueDate", ResourceType = typeof (Resources))]
+		[DateGreaterThan ("Date", ErrorMessageResourceName = "Validation_DateGreaterThan", ErrorMessageResourceType = typeof (Resources))]
+		public DateTime DueDate { get; set; }
 
-        [Property("cancelled")]
-        [Display(Name = "Cancelled", ResourceType = typeof(Resources))]
-        public bool IsCancelled { get; set; }
+		[Property ("completed")]
+		[Display (Name = "Completed", ResourceType = typeof (Resources))]
+		public bool IsCompleted { get; set; }
 
-        [HasMany(typeof(SalesQuoteDetail), Table = "sales_quote_detail", ColumnKey = "sales_quote")]
-		public IList<SalesQuoteDetail> Details
-        {
-            get { return details; }
-            set { details = value; }
-        }
-        
-        [DataType(DataType.Currency)]
-        [Display(Name = "Subtotal", ResourceType = typeof(Resources))]
-        public decimal Subtotal
-        {
-            get { return Details.Sum(x => x.Subtotal); }
-        }
+		[Property ("cancelled")]
+		[Display (Name = "Cancelled", ResourceType = typeof (Resources))]
+		public bool IsCancelled { get; set; }
 
-        [DataType(DataType.Currency)]
-        [Display(Name = "Taxes", ResourceType = typeof(Resources))]
-        public decimal Taxes
-        {
-            get { return Total - Subtotal; }
-        }
+		[HasMany (typeof (SalesQuoteDetail), Table = "sales_quote_detail", ColumnKey = "sales_quote")]
+		public IList<SalesQuoteDetail> Details {
+			get { return details; }
+			set { details = value; }
+		}
 
-        [DataType(DataType.Currency)]
-        [Display(Name = "Total", ResourceType = typeof(Resources))]
-        public decimal Total
-        {
-            get { return Details.Sum(x => x.Total); }
-        }
+		[DataType (DataType.Currency)]
+		[Display (Name = "Subtotal", ResourceType = typeof (Resources))]
+		public decimal Subtotal {
+			get { return Details.Sum (x => x.Subtotal); }
+		}
 
-        #region Override Base Methods
+		[DataType (DataType.Currency)]
+		[Display (Name = "Taxes", ResourceType = typeof (Resources))]
+		public decimal Taxes {
+			get { return Total - Subtotal; }
+		}
 
-        public override string ToString()
-        {
-			return string.Format("{0:D8} [{1}, {2}, {3}]", Id, Customer, Date, SalesPerson);
-        }
+		[DataType (DataType.Currency)]
+		[Display (Name = "Total", ResourceType = typeof (Resources))]
+		public decimal Total {
+			get { return Details.Sum (x => x.Total); }
+		}
 
-        public override bool Equals (object obj)
+		#region Override Base Methods
+
+		public override string ToString ()
+		{
+			return string.Format ("{0:D8} [{1}, {2}, {3}]", Id, Customer, Date, SalesPerson);
+		}
+
+		public override bool Equals (object obj)
 		{
 			SalesQuote other = obj as SalesQuote;
 
-            if (other == null)
-                return false;
+			if (other == null)
+				return false;
 
-            if (Id == 0 && other.Id == 0)
-                return (object)this == other;
-            else
-                return Id == other.Id;
-        }
+			if (Id == 0 && other.Id == 0)
+				return (object) this == other;
+			else
+				return Id == other.Id;
+		}
 
-        public override int GetHashCode()
-        {
-            if (Id == 0)
-                return base.GetHashCode();
+		public override int GetHashCode ()
+		{
+			if (Id == 0)
+				return base.GetHashCode ();
 
-            return string.Format("{0}#{1}", GetType().FullName, Id).GetHashCode();
-        }
+			return string.Format ("{0}#{1}", GetType ().FullName, Id).GetHashCode ();
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }
