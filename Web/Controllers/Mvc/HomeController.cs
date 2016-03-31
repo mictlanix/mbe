@@ -35,6 +35,7 @@ using Mictlanix.BE.Web.Mvc;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	public class HomeController : CustomController {
+		[AllowAnonymous]
 		public ActionResult Index ()
 		{
 			return View ();
