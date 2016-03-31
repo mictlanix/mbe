@@ -18,9 +18,17 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
+	var invoices = item.InvoiceSerials();
     <tr>
-    	<td>@Html.DisplayFor(x => item.Id)</td>
-    	<td >@item.Comment</td>
+    	<td class="text-nowrap">
+			@Html.DisplayFor(x => item.Id)
+		@if (!string.IsNullOrWhiteSpace (invoices)) {
+			<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Invoice @invoices">
+				<span class="glyphicon glyphicon-exclamation-sign"></span>
+			</a>
+		}
+		</td>
+    	<td>@item.Comment</td>
         <td class='date' colspan='5'>@item.Date.ToShortDateString()</td>
     </tr>
 	foreach (var detail in item.Details) {
@@ -39,7 +47,7 @@
     </tr>
 	}
     <tr class='info'>
-        <td colspan='4' />
+        <td colspan='4'/>
         <td class='currency'>@Html.DisplayFor(x => item.SubtotalEx)</td>
         <td class='currency'>@Html.DisplayFor(x => item.TaxesEx)</td>
         <td class='currency'>@Html.DisplayFor(x => item.TotalEx)</td>
@@ -53,3 +61,6 @@
     </tr>
     </tbody>
 </table>
+<script type='text/javascript'>
+$('[data-toggle="tooltip"]').tooltip();
+</script>
