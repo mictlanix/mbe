@@ -906,12 +906,12 @@
     <Content Include="Scripts\locales\bootstrap-datepicker.zh-TW.min.js" />
     <Content Include="Scripts\bootstrap-datepicker.js" />
     <Content Include="Scripts\bootstrap-datepicker.min.js" />
-    <Content Include="Scripts\jquery-2.2.1-vsdoc.js" />
-    <Content Include="Scripts\jquery-2.2.1.js" />
-    <Content Include="Scripts\jquery-2.2.1.min.js" />
     <Content Include="Views\FiscalDocuments\_SendEmailSuccesful.cshtml" />
     <Content Include="Views\FiscalDocuments\_SendEmail.cshtml" />
     <Content Include="Content\select2-bootstrap.css" />
+    <Content Include="Scripts\jquery-2.2.2-vsdoc.js" />
+    <Content Include="Scripts\jquery-2.2.2.js" />
+    <Content Include="Scripts\jquery-2.2.2.min.js" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
@@ -1086,7 +1086,7 @@
     <None Include="Content\bootstrap-datepicker3.min.css.map" />
     <None Include="Content\bootstrap-datepicker3.standalone.css.map" />
     <None Include="Content\bootstrap-datepicker3.standalone.min.css.map" />
-    <None Include="Scripts\jquery-2.2.1.min.map" />
+    <None Include="Scripts\jquery-2.2.2.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\Mvc\" />
