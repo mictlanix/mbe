@@ -2,7 +2,9 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model SalesOrder
-
+@{
+	var invoices = Model.InvoiceSerials();
+}
 <fieldset>
 	<div class='row-fluid'>
 		<div class='col-xs-8'>
@@ -44,6 +46,10 @@
 				<dd>@Model.Terms.GetDisplayName()</dd>
 				<dt>@Resources.DueDate</dt>
 				<dd>@Html.DisplayFor(x => x.DueDate)</dd>
+			@if (!string.IsNullOrWhiteSpace (invoices)) {
+				<dt>@Resources.Invoice</dt>
+				<dd>@invoices</dd>
+			}
 			</dl>
   		</div>
 	</div>
