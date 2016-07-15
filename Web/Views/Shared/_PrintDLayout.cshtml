@@ -11,7 +11,7 @@
 } else {
 	<title>@ViewBag.Title</title>
 }
-	<script src='@Url.Content("~/Scripts/jquery-2.2.1.min.js")' type='text/javascript'></script>
+	@Scripts.Render("~/Scripts/jquery-alone")
 	@Styles.Render("~/Content/print")
 </head>
 <body>
