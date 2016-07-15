@@ -29,6 +29,10 @@ namespace Mictlanix.BE.Web {
 				"~/Scripts/helper.functions.js"
 			));
 
+			bundles.Add (new ScriptBundle ("~/Scripts/jquery-alone").Include (
+				"~/Scripts/jquery-{version}.js"
+			));
+
 			bundles.Add (new StyleBundle ("~/Content/select2").Include (
 				"~/Content/select2.css"));
 
