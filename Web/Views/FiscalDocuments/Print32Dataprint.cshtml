@@ -323,7 +323,7 @@
 	 		<p><span class="mylabel">@Resources.PaymentMethod</span></p>
 			<p>@Model.PaymentMethod.GetDisplayName()</p>
 		</div>
-    @if (Model.PaymentMethod != PaymentMethod.Unidentified && Model.PaymentMethod != PaymentMethod.Cash) {
+    @if (Model.PaymentMethod != PaymentMethod.NA && Model.PaymentMethod != PaymentMethod.Cash) {
 	 	<div class="col-xs-12">
 	 		<p><span class="mylabel">@Resources.PaymentReference</span></p>
 			<p>@Html.DisplayFor(x => x.PaymentReference)</p>

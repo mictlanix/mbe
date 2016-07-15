@@ -204,7 +204,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.Type = batch.Type;
 			item.Currency = WebConfig.BaseCurrency;
 			item.ExchangeRate = 1;
-			item.PaymentMethod = PaymentMethod.Unidentified;
+			item.PaymentMethod = PaymentMethod.Cash;
 			item.PaymentReference = null;
 			item.CreationTime = DateTime.Now;
 			item.Creator = CurrentUser.Employee;
@@ -258,13 +258,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var items = new ArrayList ();
 
-			items.Add (new { value = (int) PaymentMethod.Unidentified, text = PaymentMethod.Unidentified.GetDisplayName () });
 			items.Add (new { value = (int) PaymentMethod.Cash, text = PaymentMethod.Cash.GetDisplayName () });
-			items.Add (new { value = (int) PaymentMethod.DebitCard, text = PaymentMethod.DebitCard.GetDisplayName () });
-			items.Add (new { value = (int) PaymentMethod.CreditCard, text = PaymentMethod.CreditCard.GetDisplayName () });
 			items.Add (new { value = (int) PaymentMethod.Check, text = PaymentMethod.Check.GetDisplayName () });
-			items.Add (new { value = (int) PaymentMethod.BankDeposit, text = PaymentMethod.BankDeposit.GetDisplayName () });
-			items.Add (new { value = (int) PaymentMethod.WireTransfer, text = PaymentMethod.WireTransfer.GetDisplayName () });
+			items.Add (new { value = (int) PaymentMethod.EFT, text = PaymentMethod.EFT.GetDisplayName () });
+			items.Add (new { value = (int) PaymentMethod.CreditCard, text = PaymentMethod.CreditCard.GetDisplayName () });
+			items.Add (new { value = (int) PaymentMethod.ElectronicPurse, text = PaymentMethod.ElectronicPurse.GetDisplayName () });
+			items.Add (new { value = (int) PaymentMethod.ElectronicMoney, text = PaymentMethod.ElectronicMoney.GetDisplayName () });
+			items.Add (new { value = (int) PaymentMethod.FoodVouchers, text = PaymentMethod.FoodVouchers.GetDisplayName () });
+			items.Add (new { value = (int) PaymentMethod.DebitCard, text = PaymentMethod.DebitCard.GetDisplayName () });
+			items.Add (new { value = (int) PaymentMethod.ServiceCard, text = PaymentMethod.ServiceCard.GetDisplayName () });
+			items.Add (new { value = (int) PaymentMethod.Others, text = PaymentMethod.Others.GetDisplayName () });
+			items.Add (new { value = (int) PaymentMethod.NA, text = PaymentMethod.NA.GetDisplayName () });
 
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}
@@ -543,7 +547,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
 
-				if (val == PaymentMethod.Unidentified || val == PaymentMethod.Cash) {
+				if (val == PaymentMethod.NA || val == PaymentMethod.Cash) {
 					entity.PaymentReference = null;
 				} else if (string.IsNullOrEmpty (entity.PaymentReference)) {
 					entity.PaymentReference = Resources.Unidentified;
@@ -571,7 +575,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			if (entity.PaymentMethod == PaymentMethod.Unidentified ||
+			if (entity.PaymentMethod == PaymentMethod.NA ||
 				entity.PaymentMethod == PaymentMethod.Cash) {
 				Response.StatusCode = 400;
 				return Content (Resources.PaymentReferenceNotRequired);

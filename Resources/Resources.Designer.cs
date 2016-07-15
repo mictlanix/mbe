@@ -959,9 +959,39 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string ElectronicFundsTransfer {
+            get {
+                return ResourceManager.GetString("ElectronicFundsTransfer", resourceCulture);
+            }
+        }
+        
+        public static string ElectronicPurse {
+            get {
+                return ResourceManager.GetString("ElectronicPurse", resourceCulture);
+            }
+        }
+        
+        public static string ElectronicMoney {
+            get {
+                return ResourceManager.GetString("ElectronicMoney", resourceCulture);
+            }
+        }
+        
+        public static string FoodVouchers {
+            get {
+                return ResourceManager.GetString("FoodVouchers", resourceCulture);
+            }
+        }
+        
         public static string DebitCard {
             get {
                 return ResourceManager.GetString("DebitCard", resourceCulture);
+            }
+        }
+        
+        public static string ServiceCard {
+            get {
+                return ResourceManager.GetString("ServiceCard", resourceCulture);
             }
         }
         
@@ -974,12 +1004,6 @@ namespace Mictlanix.BE {
         public static string Payment {
             get {
                 return ResourceManager.GetString("Payment", resourceCulture);
-            }
-        }
-        
-        public static string WireTransfer {
-            get {
-                return ResourceManager.GetString("WireTransfer", resourceCulture);
             }
         }
         
@@ -2900,6 +2924,12 @@ namespace Mictlanix.BE {
         public static string Other {
             get {
                 return ResourceManager.GetString("Other", resourceCulture);
+            }
+        }
+        
+        public static string Others {
+            get {
+                return ResourceManager.GetString("Others", resourceCulture);
             }
         }
         
