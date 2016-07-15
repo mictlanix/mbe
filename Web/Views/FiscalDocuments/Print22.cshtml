@@ -90,7 +90,7 @@
 	@Resources.SinglePayment<br/>
 	@Html.LabelFor(x => x.PaymentMethod):
 	@Model.PaymentMethod.GetDisplayName()
-	@if (Model.PaymentMethod != PaymentMethod.Unidentified &&
+	@if (Model.PaymentMethod != PaymentMethod.NA &&
 	 	 Model.PaymentMethod != PaymentMethod.Cash) {
 		<br/>@Html.LabelFor(x => x.PaymentReference)<text>:</text>
 		@Html.DisplayFor(x => x.PaymentReference)

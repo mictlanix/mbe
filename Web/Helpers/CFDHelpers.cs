@@ -211,7 +211,7 @@ namespace Mictlanix.BE.Web.Helpers
 				serie = item.Batch,
 				folio = item.Serial.ToString (),
 				fecha = item.Issued.GetValueOrDefault (),
-				metodoDePago = item.PaymentMethod.GetDisplayName(),
+				metodoDePago = item.PaymentMethod == PaymentMethod.NA ? item.PaymentMethod.GetDisplayName() : string.Format("{0:D2}", (int) item.PaymentMethod),
 				NumCtaPago = item.PaymentReference,
 				LugarExpedicion = item.IssuedLocation,
 				subTotal = item.Subtotal,
@@ -546,5 +546,6 @@ namespace Mictlanix.BE.Web.Helpers
 
 			throw new ArgumentOutOfRangeException ("type");
 		}
+
 	}
 }
