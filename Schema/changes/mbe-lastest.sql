@@ -151,6 +151,9 @@ ALTER TABLE inventory_issue
 ALTER TABLE inventory_transfer
 	ADD UNIQUE INDEX inventory_transfer_store_serial_idx (store ASC, serial ASC);
 
+ALTER TABLE sales_order
+	ADD UNIQUE INDEX sales_order_store_serial_idx (store ASC, serial ASC);
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
