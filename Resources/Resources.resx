@@ -568,22 +568,34 @@
     <value>Efectivo</value>
   </data>
   <data name="Check" xml:space="preserve">
-    <value>Cheque</value>
+    <value>Cheque Nominativo</value>
   </data>
   <data name="CreditCard" xml:space="preserve">
     <value>Tarjeta de Crédito</value>
   </data>
+  <data name="ElectronicFundsTransfer" xml:space="preserve">
+    <value>Transferencia Electrónica de Fondos</value>
+  </data>
+  <data name="ElectronicPurse" xml:space="preserve">
+    <value>Monedero Electrónico</value>
+  </data>
+  <data name="ElectronicMoney" xml:space="preserve">
+    <value>Dinero Electrónico</value>
+  </data>
+  <data name="FoodVouchers" xml:space="preserve">
+    <value>Vales de Despensa</value>
+  </data>
   <data name="DebitCard" xml:space="preserve">
     <value>Tarjeta de Débito</value>
+  </data>
+  <data name="ServiceCard" xml:space="preserve">
+    <value>Tarjeta de Servicio</value>
   </data>
   <data name="GovernmentFunding" xml:space="preserve">
     <value>FONACOT</value>
   </data>
   <data name="Payment" xml:space="preserve">
     <value>Pago</value>
-  </data>
-  <data name="WireTransfer" xml:space="preserve">
-    <value>Transferencia</value>
   </data>
   <data name="Balance" xml:space="preserve">
     <value>Saldo</value>
@@ -1549,6 +1561,9 @@ Realizada el: {0:d}</value>
   </data>
   <data name="Other" xml:space="preserve">
     <value>Otro</value>
+  </data>
+  <data name="Others" xml:space="preserve">
+    <value>Otros</value>
   </data>
   <data name="Home" xml:space="preserve">
     <value>Casa</value>
