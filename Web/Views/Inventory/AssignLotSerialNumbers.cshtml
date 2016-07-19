@@ -54,7 +54,7 @@
 	    	@if(Privilege.AllowDelete) {
 	    		<small>
 		        (<a class='discard' title='@Resources.Message_DiscardConfirmation'
-			   		data-type='checklist' data-placement='left' data-pk='@item.Master.Id' data-source='{}' data-value='@item.Master.Id'
+			   		data-type='checklist' data-placement='right' data-pk='@item.Master.Id' data-source='{}' data-value='@item.Master.Id'
 			   		data-url='@Url.Action("DiscardLotSerialNumbers", new { id = item.Master.Id })' data-emptytext='' data-emptyclass=''>@Resources.Discard</a>)
 			   	</small>
 	        }
