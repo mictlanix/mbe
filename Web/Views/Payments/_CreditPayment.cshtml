@@ -37,8 +37,12 @@
 		        							  PaymentMethod.DebitCard,
 		        							  PaymentMethod.CreditCard,
 		        							  PaymentMethod.Check,
-		        							  PaymentMethod.BankDeposit,
-		        							  PaymentMethod.WireTransfer,
+		        							  PaymentMethod.EFT,
+		        							  PaymentMethod.ElectronicPurse,
+		        							  PaymentMethod.ElectronicMoney,
+		        							  PaymentMethod.FoodVouchers,
+		        							  PaymentMethod.ServiceCard,
+		        							  PaymentMethod.Others,
 		        							  PaymentMethod.GovernmentFunding }) {
 		        	<button class="pay btn btn-default" type="button" data-value='@((int)item)'>@item.GetDisplayName()</button>
 		        }
