@@ -154,6 +154,30 @@ ALTER TABLE inventory_transfer
 ALTER TABLE sales_order
 	ADD UNIQUE INDEX sales_order_store_serial_idx (store ASC, serial ASC);
 
+UPDATE fiscal_document SET payment_method = payment_method + 100 WHERE payment_method > 1;
+UPDATE fiscal_document SET payment_method = 99 WHERE payment_method = 107;
+UPDATE fiscal_document SET payment_method = 00 WHERE payment_method = 106;
+UPDATE fiscal_document SET payment_method = 03 WHERE payment_method = 105;
+UPDATE fiscal_document SET payment_method = 02 WHERE payment_method = 104;
+UPDATE fiscal_document SET payment_method = 28 WHERE payment_method = 103;
+UPDATE fiscal_document SET payment_method = 04 WHERE payment_method = 102;
+
+UPDATE customer_payment SET method = method + 100 WHERE method > 1;
+UPDATE customer_payment SET method = 1001 WHERE method = 106;
+UPDATE customer_payment SET method = 99 WHERE method = 107;
+UPDATE customer_payment SET method = 03 WHERE method = 105;
+UPDATE customer_payment SET method = 02 WHERE method = 104;
+UPDATE customer_payment SET method = 28 WHERE method = 103;
+UPDATE customer_payment SET method = 04 WHERE method = 102;
+
+UPDATE supplier_payment SET method = method + 100 WHERE method > 1;
+UPDATE supplier_payment SET method = 1001 WHERE method = 106;
+UPDATE supplier_payment SET method = 99 WHERE method = 107;
+UPDATE supplier_payment SET method = 03 WHERE method = 105;
+UPDATE supplier_payment SET method = 02 WHERE method = 104;
+UPDATE supplier_payment SET method = 28 WHERE method = 103;
+UPDATE supplier_payment SET method = 04 WHERE method = 102;
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
