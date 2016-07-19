@@ -122,12 +122,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return RedirectToAction ("Index", "Home");
 		}
 
+		[AllowAnonymous]
 		public ActionResult Register ()
 		{
 			return View (new RegisterModel ());
 		}
 
 		[HttpPost]
+		[AllowAnonymous]
 		public ActionResult Register (RegisterModel model)
 		{
 			if (!ModelState.IsValid)
