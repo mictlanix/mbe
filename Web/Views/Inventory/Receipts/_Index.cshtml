@@ -57,7 +57,7 @@ $(function () {
         e.preventDefault();
         $("#activity-indicator").show();
         $("#search-results").hide();
-        $.post('@Url.Action("Issues")', { Pattern: "@Model.Pattern", Offset: "@(Model.Offset-Model.Limit)", Limit: "@Model.Limit" }, function (data) {
+        $.post('@Url.Action("Receipts")', { Pattern: "@Model.Pattern", Offset: "@(Model.Offset-Model.Limit)", Limit: "@Model.Limit" }, function (data) {
             $("#search-results").html(data);
             $("#search-results").show();
             $("#activity-indicator").hide();
@@ -71,7 +71,7 @@ $(function () {
         e.preventDefault();
         $("#activity-indicator").show();
         $("#search-results").hide();
-        $.post('@Url.Action("Issues")', { Pattern: "@Model.Pattern", Offset: "@(Model.Offset+Model.Limit)", Limit: "@Model.Limit" }, function (data) {
+        $.post('@Url.Action("Receipts")', { Pattern: "@Model.Pattern", Offset: "@(Model.Offset+Model.Limit)", Limit: "@Model.Limit" }, function (data) {
             $("#search-results").html(data);
             $("#search-results").show();
             $("#activity-indicator").hide();
