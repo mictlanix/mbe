@@ -194,7 +194,7 @@
     }
 	 	<div class="col-xs-3">
 	 		<p><span class="mylabel">@Resources.PaymentMethod</span></p>
-			<p>@Model.PaymentMethod.GetDisplayName()</p>
+			<p>@string.Format("{0:D2}", (int) Model.PaymentMethod) : @Model.PaymentMethod.GetDisplayName()</p>
 		</div>
     @if (Model.PaymentMethod != PaymentMethod.NA && Model.PaymentMethod != PaymentMethod.Cash) {
 	 	<div class="col-xs-3">
