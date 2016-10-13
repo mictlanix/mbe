@@ -832,9 +832,6 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.zh-TW.min.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.zh-CN.min.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.vi.min.js" />
@@ -911,6 +908,9 @@
     <Content Include="Content\bootstrap-datepicker.standalone.css" />
     <Content Include="Content\bootstrap-datepicker.min.css" />
     <Content Include="Content\bootstrap-datepicker.css" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate-vsdoc.js" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
