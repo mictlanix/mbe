@@ -94,6 +94,11 @@ table > tbody > tr:nth-child(odd) > td,
 table > tbody > tr:nth-child(odd) > th {
 	background-color: #ECECEC !important;
 }
+
+tr.alt > td {
+    border-bottom: 1px solid #333;
+}
+
 .uppercase {
 	text-transform:uppercase;
 }
@@ -128,3 +133,4 @@ p.amount-words {
 	border-bottom:solid black 1px;
 	font-size:8pt !important;
 }
+
