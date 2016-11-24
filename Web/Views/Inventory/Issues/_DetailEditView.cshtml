@@ -26,7 +26,8 @@
 </li>
 <script type='text/javascript'>
 $('#id\\:@Model.Id a.editable').editable({
-    display: function(value, response) {
+    display: function (value, response) {
+        $("#total-products").load("/Inventory/GetTotalQuantityIssue/@Model.Issue.Id");
         if (typeof response === 'undefined') {
         	$(this).html(value);
         } else {
@@ -34,9 +35,10 @@ $('#id\\:@Model.Id a.editable').editable({
         }
     }
 });
-$('#id\\:@Model.Id a.delete').editable({
+    $('#id\\:@Model.Id a.delete').editable({
 	success: function(response, newValue) {
-        $('#id\\:@Model.Id').remove();
+	    $('#id\\:@Model.Id').remove();
+	    $("#total-products").load("/Inventory/GetTotalQuantityIssue/@Model.Issue.Id");
         if ($('#items li').length === 0) {
             $('#confirm-button').addClass('hide');
         }
