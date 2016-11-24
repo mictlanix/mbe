@@ -212,6 +212,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("Receipts/_DetailEditView", InventoryReceiptDetail.Find (id));
 		}
 
+        public ActionResult GetTotalQuantityReceipt(int id) {
+
+            return PartialView("Receipts/_TotalQuantity", InventoryReceipt.Find(id));
+        }
+
 		[HttpPost]
 		public JsonResult RemoveReceiptDetail (int id)
 		{
@@ -375,7 +380,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return View ("Issues/Edit", item);
 		}
 
-		public ActionResult DiscardIssueChanges (int id)
+        public ActionResult GetTotalQuantityIssue(int id)
+        {
+
+            return PartialView("Issues/_TotalQuantity", InventoryIssue.Find(id));
+        }
+
+        public ActionResult DiscardIssueChanges (int id)
 		{
 			return PartialView ("Issues/_MasterView", InventoryIssue.TryFind (id));
 		}
@@ -610,7 +621,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return View ("Transfers/Edit", item);
 		}
 
-		public ActionResult DiscardTransferChanges (int id)
+        public ActionResult GetTotalQuantityTransfer(int id)
+        {
+
+            return PartialView("Transfers/_TotalQuantity", InventoryTransfer.Find(id));
+        }
+
+        public ActionResult DiscardTransferChanges (int id)
 		{
 			return PartialView ("Transfers/_MasterView", InventoryTransfer.TryFind (id));
 		}
@@ -1187,6 +1204,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return RedirectToAction ("Receipts");
 		}
 
-		#endregion
-	}
+        #endregion
+
+
+    }
 }
