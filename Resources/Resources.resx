@@ -2130,7 +2130,7 @@ Realizada el: {0:d}</value>
     <value>Comprobante Fiscal - {0} - {1}{2:D6}</value>
   </data>
   <data name="FiscalDocumentEmailBodyFormatString" xml:space="preserve">
-    <value><![CDATA[Has recibido el siguiente comprobante fiscal digital por internet (CFDI).
+    <value>Has recibido el siguiente comprobante fiscal digital por internet (CFDI).
 
 Folio Fiscal: {0}
 RFC Emisor: {1}
@@ -2143,7 +2143,7 @@ Puedes hacer la validación del mismo en el sitio oficial del SAT.
 Adjunto, podrás encontrar tu comprobante en los formatos PDF y XML.
 
 Gracias por utilizar nuestros servicios.
-]]></value>
+</value>
   </data>
   <data name="InvalidEmailAddress" xml:space="preserve">
     <value>Dirección de correo electrónico inválida.</value>
@@ -2162,5 +2162,14 @@ Gracias por utilizar nuestros servicios.
   </data>
   <data name="FiscalDocumentQRCodeFormatString" xml:space="preserve">
     <value>?re={0}&amp;rr={1}&amp;tt={2:0000000000.000000}&amp;id={3}</value>
+  </data>
+  <data name="TotalQuantityReceipt" xml:space="preserve">
+    <value>Unidades</value>
+  </data>
+  <data name="TotalQuantityIssue" xml:space="preserve">
+    <value>Tot. Unidades</value>
+  </data>
+  <data name="TotalQuantityTransfer" xml:space="preserve">
+    <value>Tot. Unidades</value>
   </data>
 </root>

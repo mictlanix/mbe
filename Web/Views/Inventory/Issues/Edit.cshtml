@@ -23,7 +23,11 @@
     <div class='search-box'>
         <input type='text' id='product-search' name='product-search' />
     </div>
+    <div id="total-products" class="pull-right">
+        @Html.Partial("_TotalQuantityIssue", Model)
+    </div>
 </div>
+<div class="clear"></div>
 <div id='back-to-list' class='pull-left'>
     @Html.ActionLink(Resources.BackToList, "Issues", new { }, new { @class = "button icon back" })
 </div>
@@ -38,7 +42,7 @@ $(function () {
     $('#product-search').tokenInput('@Url.Action("GetSuggestions", "Products")', {
         hintText:'@Resources.HIntText',
         noResultsText:'@Resources.NoResultsText',
-        searchingText:'@Resources.SearchingText',          
+        searchingText:'@Resources.SearchingText',
         resultsFormatter:function(item){return ProductFormatter(item);},
         queryParam:'pattern',minChars:3,tokenLimit:1,
         onAdd:function (item) {
@@ -47,6 +51,7 @@ $(function () {
                     $('#items').append(data);
                     $('#product-search').tokenInput('clear');
                     $('#confirm-button').removeClass('hide');
+                    $("#total-products").load("/Inventory/GetTotalQuantityIssue/@Model.Id")
                 });
             }, 'json');
         }

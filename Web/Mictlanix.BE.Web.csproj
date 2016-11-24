@@ -1092,6 +1092,9 @@
     <None Include="Content\bootstrap-datepicker.standalone.css.map" />
     <None Include="Content\bootstrap-datepicker.min.css.map" />
     <None Include="Content\bootstrap-datepicker.css.map" />
+    <Content Include="Views\Inventory\Receipts\_TotalQuantity.cshtml" />
+    <Content Include="Views\Inventory\Issues\_TotalQuantity.cshtml" />
+    <Content Include="Views\Inventory\Transfers\_TotalQuantity.cshtml" />
   </ItemGroup>
   <ItemGroup />
 </Project>

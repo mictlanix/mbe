@@ -35,7 +35,11 @@
     <div class='search-box'>
         <input type='text' id='product-search' name='product-search' />
     </div>
+    <div id="total-products" class="pull-right">
+        @Html.Partial("Transfers/_TotalQuantity", Model)
+    </div>
 </div>
+<div class="clear"></div>
 <div id='back-to-list' class='pull-left'>
     @Html.ActionLink(Resources.BackToList, "Transfers", new { }, new { @class = "button icon back" })
 </div>
@@ -59,6 +63,7 @@
                         $('#items').append(data);
                         $('#product-search').tokenInput('clear');
                         $('#confirm-button').removeClass('hide');
+                        $("#total-products").load("/Inventory/GetTotalQuantityTransfer/@Model.Id")
                     });
                 }, 'json');
             }
