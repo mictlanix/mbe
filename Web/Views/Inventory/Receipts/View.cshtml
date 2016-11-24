@@ -13,10 +13,10 @@
     <legend>@Resources.DisplayName_InventoryInformation</legend>
     <div class="display-label right floating">
         <label>@Resources.Id</label>
-		<span>@Html.DisplayFor(x => x.Id)</span>
-		<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => x.Serial)">
-			<span class="glyphicon glyphicon-exclamation-sign"></span>
-		</a>
+        <span>@Html.DisplayFor(x => x.Id)</span>
+        <a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => x.Serial)">
+            <span class="glyphicon glyphicon-exclamation-sign"></span>
+        </a>
     </div>
     <div class="display-label right floating">
         @Html.LabelFor(model => model.CreationTime):
@@ -46,32 +46,35 @@
                 @Html.LabelFor(x => new InventoryReceiptDetail().ProductName)
             </th>
         </tr>
-    @foreach (var item in Model.Details) {
-        <tr>
-            <td class="number">
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            <td class="center">
-                @Html.DisplayFor(modelItem => item.ProductCode)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductName)
-            </td>
-        </tr>
-    }
+        @foreach (var item in Model.Details)
+        {
+            <tr>
+                <td class="number">
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td class="center">
+                    @Html.DisplayFor(modelItem => item.ProductCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+            </tr>
+        }
+        <tr><td class="number">@String.Format("{0:0}", Model.Details.Sum(q => q.Quantity))</td><td colspan="2"><b>@Resources.TotalQuantityReceipt </b></td></tr>
     </table>
     <p></p>
 </div>
 
+
 <div class="right floating">
-	@Html.ActionLink(Resources.Print, "PrintReceipt", new { id = Model.Id }, new { @class = "button icon print", title = Resources.Print, target = "_blank" })
+    @Html.ActionLink(Resources.Print, "PrintReceipt", new { id = Model.Id }, new { @class = "button icon print", title = Resources.Print, target = "_blank" })
     @Html.ActionLink(Resources.Adjustment, "PhysicalCountAdjustment", new { id = Model.Id }, new { @class = "button icon configuration" })
 </div>
 <div id="back-to-list">
     @Html.ActionLink(Resources.BackToList, "Receipts", new { }, new { @class = "button icon back" })
 </div>
 <script type='text/javascript'>
-$(function () {
-	$('[data-toggle="tooltip"]').tooltip();
-});
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
 </script>

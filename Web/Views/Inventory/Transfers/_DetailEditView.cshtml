@@ -27,7 +27,8 @@
 
 <script type='text/javascript'>
 $('#id\\:@Model.Id a.editable').editable({
-    display: function(value, response) {
+    display: function (value, response) {
+        $("#total-products").load("/Inventory/GetTotalQuantityTransfer/@Model.Transfer.Id")
         if (typeof response === 'undefined') {
         	$(this).html(value);
         } else {
@@ -36,7 +37,8 @@ $('#id\\:@Model.Id a.editable').editable({
     }
 });
 $('#id\\:@Model.Id a.delete').editable({
-	success: function(response, newValue) {
+    success: function (response, newValue) {
+        $("#total-products").load("/Inventory/GetTotalQuantityTransfer/@Model.Transfer.Id")
         $('#id\\:@Model.Id').remove();
         if ($('#items li').length === 0) {
             $('#confirm-button').addClass('hide');

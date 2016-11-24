@@ -1,0 +1,12 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model InventoryIssue
+
+
+<ul class="labeled-frames">
+    <li>
+        <span class="caption">@Resources.TotalQuantityIssue</span>
+        <span class="value">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@String.Format("{0:0}", Model.Details.Sum(q => q.Quantity))</span>
+    </li>
+</ul>
