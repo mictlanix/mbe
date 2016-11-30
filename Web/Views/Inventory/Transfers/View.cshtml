@@ -65,7 +65,7 @@
             </td>
         </tr>
     }
-        <tr><td colspan="3"><b>@Resources.TotalQuantityTransfer: @String.Format("{0:0}", Model.Details.Sum(q => q.Quantity))</b></td></tr>
+        <tr><td class="number">@String.Format("{0:0}", Model.Details.Sum(q => q.Quantity))</td><td colspan="2"><b>@Resources.TotalQuantityTransfer</b></td></tr>
     </table>
     <p></p>
 </div>
