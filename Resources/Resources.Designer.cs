@@ -5695,7 +5695,7 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tot. Unidades.
+        ///   Looks up a localized string similar to Unidades Totales.
         /// </summary>
         public static string TotalQuantityIssue {
             get {
@@ -5704,7 +5704,7 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unidades.
+        ///   Looks up a localized string similar to Unidades Totales.
         /// </summary>
         public static string TotalQuantityReceipt {
             get {
@@ -5713,7 +5713,7 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tot. Unidades.
+        ///   Looks up a localized string similar to Unidades Totales.
         /// </summary>
         public static string TotalQuantityTransfer {
             get {
