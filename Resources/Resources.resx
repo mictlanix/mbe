@@ -2164,12 +2164,12 @@ Gracias por utilizar nuestros servicios.
     <value>?re={0}&amp;rr={1}&amp;tt={2:0000000000.000000}&amp;id={3}</value>
   </data>
   <data name="TotalQuantityReceipt" xml:space="preserve">
-    <value>Unidades</value>
+    <value>Unidades Totales</value>
   </data>
   <data name="TotalQuantityIssue" xml:space="preserve">
-    <value>Tot. Unidades</value>
+    <value>Unidades Totales</value>
   </data>
   <data name="TotalQuantityTransfer" xml:space="preserve">
-    <value>Tot. Unidades</value>
+    <value>Unidades Totales</value>
   </data>
 </root>

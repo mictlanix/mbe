@@ -4,6 +4,12 @@
 @using Mictlanix.BE.Web.Models
 @model IEnumerable<dynamic>
 
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Products);
+    var MergePrivilege = Html.GetPrivilege(CurrentUser, SystemObjects.ProductsMerge);
+}
+
 <table>
     <tr>
         <th class='nowrap'>@Resources.Brand</th>
@@ -12,12 +18,20 @@
         <th class='nowrap'>@Resources.ProductName</th>
         <th class='nowrap'>@Resources.Quantity</th>
     </tr>
-    @foreach (var item in Model) {
+    @foreach (var item in Model)
+    {
         <tr>
             <td class='nowrap text-center'>@item.Brand</td>
             <td class='nowrap text-center'>@item.Model</td>
             <td class='nowrap text-center'>@item.Code</td>
-            <td>@item.Name</td>
+            @if (Privilege.AllowRead)
+            {
+                <td>@Html.ActionLink((string)item.Name, "View", "Products", new { id = item.Id }, new { @class = "open-modal" })</td>
+            }
+            else
+            {
+                <td>@item.Name</td>
+            }
             <td class='nowrap text-right'>
                 @item.Quantity.ToString("0.#")
             </td>
@@ -25,6 +39,10 @@
     }
     <tr class="total">
         <td class='right' colspan='4'>@Resources.Total</td>
-        <td class='number'>@Model.Where(x => x.Quantity > 0m).Sum(x => (decimal) x.Quantity).ToString("0.####")</td>
+        <td class='number'>@Model.Where(x => x.Quantity > 0m).Sum(x => (decimal)x.Quantity).ToString("0.####")</td>
     </tr>
 </table>
+
+<script type="text/javascript">
+    bindModal('.open-modal');
+</script>
