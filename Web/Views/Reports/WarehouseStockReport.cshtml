@@ -17,6 +17,18 @@
             <label for="warehouse">@Resources.Warehouse</label>
             @Html.Editor("warehouse", "WarehouseSelector")
         </div>
+        <div class="col-xs-3">
+            <label for="warehouse">@Resources.Brand</label>
+            @Html.Editor("brand", "ProductBrandSelector")
+        </div>
+        <div class="col-xs-5">
+            <label for="warehouse">@Resources.Model</label>
+            @Html.Editor("productModel", "ProductModelSelector")
+        </div>
+        <div class="col-xs-2">
+            <label for="warehouse">@Resources.Labels</label>
+            @Html.Editor("label", "LabelSelector")
+        </div>
         <div class="col-xs-1">
             <label for="product">&nbsp;</label>
             <button class="btn btn-primary btn-block" type="submit">
