@@ -871,6 +871,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Crear Pedido.
+        /// </summary>
+        public static string CreateSalesOrder {
+            get {
+                return ResourceManager.GetString("CreateSalesOrder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fecha de Creación.
         /// </summary>
         public static string CreationTime {
@@ -3837,6 +3846,15 @@ namespace Mictlanix.BE {
         public static string ProductSalesBySalesPersonAndModel {
             get {
                 return ResourceManager.GetString("ProductSalesBySalesPersonAndModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Productos por Proveedor.
+        /// </summary>
+        public static string ProductsBySupplier {
+            get {
+                return ResourceManager.GetString("ProductsBySupplier", resourceCulture);
             }
         }
         
