@@ -101,5 +101,28 @@ namespace Mictlanix.BE.Web.Helpers
 
 			return string.Join (",", query.ToList ().Distinct ().Select (x => string.Format("{0}{1:D6}", x.Batch, x.Serial)));
 		}
+
+        public static bool IsOverCreditLimit(this SalesQuote entity)
+        {
+            return (entity.Customer.Debt() + entity.TotalEx) > entity.Customer.CreditLimit;
+        }
+
+        public static decimal AmountOverCreditLimit(this SalesQuote entity)
+        {
+            return entity.Customer.Debt() + entity.TotalEx - entity.Customer.CreditLimit;
+        }
+
+        public static string InvoiceSerials(this SalesQuote entity)
+        {
+            var query = from x in FiscalDocument.Queryable
+                        from y in x.Details
+                        where x.IsCompleted && !x.IsCancelled &&
+                            y.OrderDetail.SalesOrder.Id == entity.Id
+                        select new { x.Batch, x.Serial };
+
+            return string.Join(",", query.ToList().Distinct().Select(x => string.Format("{0}{1:D6}", x.Batch, x.Serial)));
+        }
+
+
     }
 }

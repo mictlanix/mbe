@@ -5,7 +5,7 @@
 
 @{
     Layout = WebConfig.PrintLayout;
-    ViewBag.Title = Resources.SupplierReturn;
+    ViewBag.Title = Html.PrintFileName(Resources.SupplierReturn, Model.Id); ;
     //FIXME: no store
     ViewBag.Store = new Store { Name = WebConfig.Company, Logo = "~/Content/images/logo.png" };
     ViewBag.TaxpayerName = null;

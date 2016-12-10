@@ -5,7 +5,7 @@
 
 @{
     Layout = WebConfig.PrintLayout;
-    ViewBag.Title = Resources.SalesOrder;
+    ViewBag.Title = Html.PrintFileName(Resources.SalesOrder, Model.Id);
     ViewBag.Store = Model.Store;
     ViewBag.TaxpayerName = null;
     ViewBag.Taxpayer = null;

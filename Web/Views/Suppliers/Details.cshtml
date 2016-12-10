@@ -11,6 +11,7 @@
     var AllowCreateContacts = Html.GetPrivilege(CurrentUser, SystemObjects.Contacts).AllowCreate;
     var AllowCreateBankAccounts = Html.GetPrivilege(CurrentUser, SystemObjects.BankAccounts).AllowCreate;
     var AllowCreateAgreements = Html.GetPrivilege(CurrentUser, SystemObjects.SupplierAgreements).AllowCreate;
+    var AllowCreateSupplies = true;
     ViewBag.Privilege = Privilege;
 }
 
