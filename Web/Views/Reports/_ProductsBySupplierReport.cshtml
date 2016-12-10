@@ -1,0 +1,67 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model IEnumerable<dynamic>
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var PrivilegeProducts = CurrentUser.GetPrivilege(SystemObjects.Products);
+    var PrivilegeSuppliers = CurrentUser.GetPrivilege(SystemObjects.Suppliers);
+    var model = Model.OrderBy(x => x.SupplierId);
+    var index = -1;
+}
+
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>@Resources.Supplier</th>
+            <th>@Resources.Product</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in model)
+        {
+            if (index != item.SupplierId)
+            {
+                index = item.SupplierId;
+                <tr class="info">
+                    <td>
+                        
+                        @if (PrivilegeProducts.AllowRead)
+                        {
+                            if (!string.IsNullOrEmpty((string)item.SupplierName))
+                            {
+                                @Html.ActionLink((string)item.SupplierName, "Details", "Suppliers", new { id = item.SupplierId }, new { target = "_blank" })
+                            }
+                        }else
+                        {
+                            @item.SupplierName
+                        }
+                    </td>
+                    <td></td>
+                </tr>
+            }
+            <tr>
+                <td></td>
+                <td>
+                    @if (PrivilegeProducts.AllowRead)
+                    {
+                        if (!string.IsNullOrEmpty((string)item.ProductName))
+                        {
+                            @Html.ActionLink((string)item.ProductName, "View", "Products", new { id = item.ProductId }, new { @class = "open-modal" })
+                        }
+                    }
+                    else
+                    {
+                        @item.ProductName
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    bindModal('.open-modal');
+</script>
