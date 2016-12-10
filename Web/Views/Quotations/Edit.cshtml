@@ -1,77 +1,71 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
-@using Mictlanix.BE.Web.Models
+@using Mictlanix.BE.Web.Helpers
 @model SalesQuote
 
 @{
     ViewBag.Title = Resources.Edit;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesQuotes);
+
 }
 
 <h2>@Resources.SalesQuote</h2>
 
 <div id='master-section'>
-@Html.Partial("_MasterView")
+    @Html.Partial("_EditorView")
 </div>
 <div id='details-section'>
-    <div id='items-container'>
-        <ul id='items' class='list-items'>
-        @foreach (var item in Model.Details) {
-            @Html.Partial("_DetailEditView", item) 
-        }
-        </ul>
+    <div id='items-container' data-url='@Url.Action("Items", new { id = Model.Id })'>
+        @Html.Partial("_Items", Model.Details)
     </div>
     <div class='search-box'>
         <input type='text' id='product-search' name='product-search' />
     </div>
 </div>
-<div id='totals-section' class='pull-right' style='width:300px'>
+<div id='totals-section' class='pull-right' data-url='@Url.Action("Totals", new { id = Model.Id })'>
     @Html.Partial("_Totals")
 </div>
 <div class='clearfix'></div>
 <div id='back-to-list' class='pull-left'>
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
-<div id='confirm-button' class='pull-right @(Model.Total == 0m ? "hide" : "")'>
-	@using (Html.BeginForm("Confirm", "Quotations", new { id = Model.Id })) {
-	    <button id='complete' type='submit'>@Resources.CompleteSale</button>
-	}
-</div>
-<div class='clearfix'></div>
-<script type="text/javascript">
-function updateTotals(){
-    $.get('@Url.Action("GetTotals", new { id = Model.Id })', function(data) {
-        $('#totals-section').html(data);
-        if ($('#items li').length == 0) {
-            $('#edit-button').show('slow');
-            $('#confirm-button').addClass('hide');
-        }
-    });
+
+
+@if (Privilege.AllowUpdate && !Model.IsCompleted)
+{
+    <div id='confirm-button' class='pull-right @(Model.Total == 0m ? "hide" : "")'>
+        @using (Html.BeginForm("Confirm", "Quotations", new { id = Model.Id }))
+        {
+            <button id='complete' type='submit'>@Resources.Complete</button> }
+    </div>
 }
 
-$(function () {
-    $('#product-search').tokenInput('@Url.Action("GetSuggestions", "Quotations", new { order = Model.Id })', {
-        hintText:'@Resources.HIntText',
-        noResultsText:'@Resources.NoResultsText',
-        searchingText:'@Resources.SearchingText',          
-        resultsFormatter:function(item){return ProductFormatter(item);},
-        queryParam:'pattern',minChars:3,tokenLimit:1,
-        onAdd:function (item) {
-            $.post('@Url.Action("AddDetail")', { 'order': @Model.Id, 'product': '' + item.id }, function (detail) {
-                $.get('@Url.Action("GetDetail")/' + detail.id, function (data) {
-                    $('#items').append(data);
-                    $('#product-search').tokenInput('clear');
-                    
-                    updateTotals();
 
-                    $('#edit-button').hide('slow');
-                    $('#confirm-button').removeClass('hide');
-                });
-            }, 'json');
-        }
+<div class='clearfix'></div>
+<script type='text/javascript'>
+    $(function () {
+        $('#product-search').tokenInput('@Url.Action("GetSuggestions", "Quotations", new { order = Model.Id })', {
+            hintText:'@Resources.HIntText',
+            noResultsText:'@Resources.NoResultsText',
+            searchingText:'@Resources.SearchingText',
+            resultsFormatter:function(item){return ProductFormatter(item);},
+            queryParam:'pattern',minChars:3,tokenLimit:1,
+            onAdd:function(item) {
+                $.post('@Url.Action("AddItem")', { 'order': @Model.Id, 'product': '' + item.id }, function (detail) {
+                    $.get('@Url.Action("Item", new { id = 0 })' + detail.id, function (data) {
+                        $('#items').append(data);
+                        $('#totals-section').loadUrl();
+                        $('#product-search').tokenInput('clear');
+                        $('#confirm-button').removeClass('hide');
+                    });
+                }, 'json');
+            }
+        });
     });
-
-});
 </script>
 <style type='text/css'>
-ul.token-input-list { width: 100%; }
+    ul.token-input-list {
+        width: 100%;
+    }
 </style>

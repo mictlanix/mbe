@@ -3,54 +3,50 @@
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
 @model Search<SalesQuote>
-
 @{
     var CurrentUser = Html.CurrentUser () ?? new User ();
     var Privilege = Html.GetPrivilege (CurrentUser, SystemObjects.SalesQuotes);
 }
-
 <table>
     <tr>
-        <th>@Html.LabelFor(x => new SalesQuote().Id)</th>
-        <th>@Html.LabelFor(x => new SalesQuote().Serial)</th>
-        <th>@Html.LabelFor(x => new SalesQuote().Date)</th>
-        <th>@Html.LabelFor(x => new SalesQuote().Customer)</th>
-        <th>@Html.LabelFor(x => new SalesQuote().DueDate)</th>
-        <th>@Html.LabelFor(x => new SalesQuote().SalesPerson)</th>
-        <th>@Html.LabelFor(x => new SalesOrder().IsCompleted)</th>
-        <th>@Html.LabelFor(x => new SalesOrder().IsCancelled)</th>
+        <th>@Resources.Id</th>
+        <th>@Resources.Date</th>
+        <th>@Resources.Customer</th>
+        <th>@Resources.SalesPerson</th>
+        <th>@Resources.Completed</th>
+        <th>@Resources.Cancelled</th>
         <th></th>
     </tr>
-
 @foreach (var item in Model.Results) {
     <tr>
-        <td class="number">@Html.DisplayFor(modelItem => item.Id)</td>
-        <td class="number">@Html.DisplayFor(modelItem => item.Serial)</td>
-        <td class="center">@Html.DisplayFor(modelItem => item.Date)</td>
-        <td>@Html.DisplayFor(modelItem => item.Customer.Name)</td>
-        <td class="center">@Html.DisplayFor(modelItem => item.DueDate)</td>
-        <td>
-            @Html.DisplayFor(modelItem => item.SalesPerson.FirstName)
-            @Html.DisplayFor(modelItem => item.SalesPerson.LastName)
+        <td class='number'>
+        	@Html.DisplayFor(x => item.Id)
+        	<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => item.Serial)">
+				<span class="glyphicon glyphicon-exclamation-sign"></span>
+			</a>
         </td>
-        <td class="bool">@Html.DisplayFor(x => item.IsCompleted)</td>
-        <td class="bool">@Html.DisplayFor(x => item.IsCancelled)</td>
-        <td class="actions">
-        	@if(Privilege.AllowRead) {
-            	@Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+        <td class='date'>@Html.DisplayFor(x => item.Date)</td>
+        <td>@Html.DisplayFor(x => item.Customer.Name)</td>
+        <td class='center'>@Html.DisplayFor(x => item.SalesPerson.Nickname)</td>
+        <td class='bool'>@Html.DisplayFor(x => item.IsCompleted)</td>
+        <td class='bool'>@Html.DisplayFor(x => item.IsCancelled)</td>
+        <td class='actions'>
+        	@if (Privilege.AllowRead && (item.IsCompleted || item.IsCancelled)) {
+            	@Html.ActionLink(" ", "View", new { id = item.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
             	@Html.ActionLink(" ", "Print", new { id = item.Id }, new { @class = "button icon print icon-only", title = Resources.Print, target = "_blank" })
             }
-        	@if(Privilege.AllowUpdate && !item.IsCompleted && !item.IsCancelled) {
-            	@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
+        	@if (Privilege.AllowUpdate && !item.IsCompleted && !item.IsCancelled) {
+            	@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", title = Resources.Edit })
             }
         </td>
     </tr>
 }
 </table>
-<div class="buttons right">
-	<label class="button left">@Model.ToString()</label>@if (Model.HasPrev) {<a class="button middle icon prev icon-only paging" title="@Resources.PrevPage" href="javascript:void(0)"></a>}@if (Model.HasNext) {<a class="button right icon next icon-only paging" title="@Resources.NextPage" href="javascript:void(0)"></a>}
+<div class='buttons right'>
+	<label class='button left'>@Model.ToString()</label>@if (Model.HasPrev) {<a class='button middle icon prev icon-only paging' title='@Resources.PrevPage' href='javascript:void(0)'></a>}@if (Model.HasNext) {<a class='button right icon next icon-only paging' title='@Resources.NextPage' href='javascript:void(0)'></a>}
 </div>
-<script type="text/javascript">
+<script type='text/javascript'>
+$('[data-toggle="tooltip"]').tooltip();
 $('a.paging').click(function (e) {
 	var offset=@Model.Offset;
 	
