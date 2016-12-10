@@ -6,7 +6,7 @@
     var CurrentUser = Html.CurrentUser() ?? new User();
     var ShowMasterDataMenu = CurrentUser.GetPrivilege (SystemObjects.Products).AllowRead ||
                              CurrentUser.GetPrivilege (SystemObjects.Labels).AllowRead ||
-                        	 CurrentUser.GetPrivilege (SystemObjects.PriceLists).AllowRead ||
+                             CurrentUser.GetPrivilege (SystemObjects.PriceLists).AllowRead ||
                              CurrentUser.GetPrivilege (SystemObjects.Customers).AllowRead ||
                              CurrentUser.GetPrivilege (SystemObjects.TaxpayerRecipients).AllowRead ||
                              CurrentUser.GetPrivilege (SystemObjects.Suppliers).AllowRead ||
@@ -16,7 +16,7 @@
                              CurrentUser.GetPrivilege (SystemObjects.CashDrawers).AllowRead ||
                              CurrentUser.GetPrivilege (SystemObjects.Stores).AllowRead ||
                              CurrentUser.GetPrivilege (SystemObjects.ExchangeRates).AllowRead;
-                             
+
     var ShowSalesMenu = CurrentUser.GetPrivilege (SystemObjects.SalesOrders).AllowRead ||
                         CurrentUser.GetPrivilege (SystemObjects.POS).AllowRead ||
                         CurrentUser.GetPrivilege (SystemObjects.CustomerPayments).AllowRead ||
@@ -29,17 +29,17 @@
                             CurrentUser.GetPrivilege (SystemObjects.InventoryIssues).AllowRead ||
                             CurrentUser.GetPrivilege (SystemObjects.InventoryTransfers).AllowRead ||
                             CurrentUser.GetPrivilege (SystemObjects.LotSerialNumbers).AllowRead;
-                            
+
     var ShowPurchasesMenu = CurrentUser.GetPrivilege (SystemObjects.PurchasesOrders).AllowRead ||
                             CurrentUser.GetPrivilege (SystemObjects.SupplierPayment).AllowRead ||
                             CurrentUser.GetPrivilege (SystemObjects.SupplierReturns).AllowRead;
-                            
+
     var ShowAdministrationMenu = CurrentUser.GetPrivilege (SystemObjects.AccountsReceivable).AllowRead ||
-                            	 CurrentUser.GetPrivilege (SystemObjects.AccountsPayable).AllowRead;
-                            	 
+                                 CurrentUser.GetPrivilege (SystemObjects.AccountsPayable).AllowRead;
+
     var ShowFiscalDocumentsMenu = CurrentUser.GetPrivilege (SystemObjects.FiscalDocuments).AllowRead ||
-                            	  CurrentUser.GetPrivilege (SystemObjects.FiscalReports).AllowRead ||
-                            	  CurrentUser.GetPrivilege (SystemObjects.Taxpayers).AllowRead;
+                                  CurrentUser.GetPrivilege (SystemObjects.FiscalReports).AllowRead ||
+                                  CurrentUser.GetPrivilege (SystemObjects.Taxpayers).AllowRead;
 
     var ShowReportsMenu = CurrentUser.GetPrivilege (SystemObjects.SupplierReturnHistoric).AllowRead ||
                           CurrentUser.GetPrivilege (SystemObjects.ReceivedPayments).AllowRead ||
@@ -69,11 +69,13 @@
                           CurrentUser.GetPrivilege (SystemObjects.WarehouseStockByLotReport).AllowRead ||
                           CurrentUser.GetPrivilege (SystemObjects.WarehouseStockBySerialNumberReport).AllowRead ||
                           CurrentUser.GetPrivilege (SystemObjects.Kardex).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.SerialNumberKardex).AllowRead;
-    
-    var ShowTechnicalServiceMenu = CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceReports).AllowRead ||
-                          		   CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceRequests).AllowRead ||
-                          		   CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceReceipts).AllowRead;
+                          CurrentUser.GetPrivilege (SystemObjects.SerialNumberKardex).AllowRead ||
+                          CurrentUser.GetPrivilege (SystemObjects.ProductsBySupplierReport).AllowRead
+                          ;
+
+    var ShowTechnicalServiceMenu =  CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceReports).AllowRead ||
+                                    CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceRequests).AllowRead ||
+                                    CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceReceipts).AllowRead;
 
     var ShowFrontDeskMenu = CurrentUser.GetPrivilege (SystemObjects.TranslationRequests).AllowRead ||
                             CurrentUser.GetPrivilege (SystemObjects.Notarizations).AllowRead;
@@ -676,6 +678,13 @@
                                        href='@Url.Action("SerialNumberKardex", "Reports")'>@Resources.SerialNumberKardex</a>
                                 </li>
                             }
+                            @if (CurrentUser.GetPrivilege(SystemObjects.ProductsBySupplierReport).AllowRead) {
+                                <li class="gbmtc">
+                                    <a class='gbmt @(Html.IsMenuSelected("ProductsBySupplier", "Reports") ? "gbm0l" : "")'
+                                       href='@Url.Action("ProductsBySupplier", "Reports")'>@Resources.ProductsBySupplier</a>
+                                </li>
+                            }
+
                         </ol>
                     </div>
                 </div>

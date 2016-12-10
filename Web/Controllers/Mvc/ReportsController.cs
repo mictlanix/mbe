@@ -61,23 +61,25 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
                             INNER JOIN product p ON l.product = p.product_id
                             LEFT JOIN product_label pl ON pl.product = p.product_id
                             WHERE warehouse = :warehouse
-                            >>";
+                            ";
 
 
             if (!string.IsNullOrEmpty(label))
             {
-                sql = sql.Replace(">>", "AND pl.label = :label >>");
+                sql += "AND pl.label = :label ";
             }
 
-            if (!string.IsNullOrWhiteSpace(brand)) {
-                sql = sql.Replace(">>", "AND p.brand like :brand >>");
+            if (!string.IsNullOrWhiteSpace(brand))
+            {
+                sql += "AND p.brand like :brand ";
             }
-            if (!string.IsNullOrWhiteSpace(productModel)) {
-                sql = sql.Replace(">>", "AND p.model like :productModel >>");
+            if (!string.IsNullOrWhiteSpace(productModel))
+            {
+                sql += "AND p.model like :productModel ";
             }
 
 
-            sql = sql.Replace(">>", "GROUP BY l.product");
+            sql += "GROUP BY l.product";
 
             var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute(delegate (ISession session, object instance)
             {
@@ -97,11 +99,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
                     query.SetInt32("label", Int32.Parse(label));
                 }
 
-                if (!string.IsNullOrWhiteSpace(brand)) {
+                if (!string.IsNullOrWhiteSpace(brand))
+                {
                     query.SetString("brand", brand);
                 }
 
-                if (!string.IsNullOrWhiteSpace(productModel)) {
+                if (!string.IsNullOrWhiteSpace(productModel))
+                {
                     query.SetString("productModel", productModel);
                 }
 
@@ -1355,6 +1359,58 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
             //			}
 
             return PartialView("_SalesPersonOrdersAndRefunds", items);
+        }
+
+        public ViewResult ProductsBySupplier()
+        {
+
+
+            ViewBag.EditorField = "supplier";
+            ViewBag.EditorTemplate = "SupplierSelector";
+            ViewBag.Title = Resources.ProductsBySupplier;
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ProductsBySupplier(string supplier)
+        {
+
+            String sql = @" SELECT 	s.supplier_id SupplierId, s.code SupplierCode, 
+                            s.name SupplierName, s.comment SupplierComment, 
+		                    p.name ProductName, p.product_id ProductId, p.code ProductCode 
+                            FROM supplier s INNER JOIN product p ON s.supplier_id = p.supplier ";
+
+            if (!String.IsNullOrEmpty(supplier))
+            {
+                sql += " WHERE s.supplier_id = :id ";
+
+            }
+
+            sql += " order by s.supplier_id, p.product_id desc;";
+
+            var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute(delegate (ISession session, object instance)
+            {
+                var query = session.CreateSQLQuery(sql);
+
+                query.AddScalar("SupplierId", NHibernateUtil.Int32);
+                query.AddScalar("SupplierCode", NHibernateUtil.String);
+                query.AddScalar("SupplierName", NHibernateUtil.String);
+                query.AddScalar("SupplierComment", NHibernateUtil.String);
+
+                query.AddScalar("ProductId", NHibernateUtil.Int32);
+                query.AddScalar("ProductCode", NHibernateUtil.String);
+                query.AddScalar("ProductName", NHibernateUtil.String);
+
+                if (!String.IsNullOrEmpty(supplier))
+                {
+                    query.SetInt32("id", Int32.Parse(supplier));
+
+                }
+
+                return query.DynamicList();
+            }, null);
+
+            return PartialView("_ProductsBySupplierReport", items);
         }
 
         #region Helpers
