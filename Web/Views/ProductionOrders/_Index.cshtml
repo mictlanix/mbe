@@ -27,7 +27,6 @@
         <td class='center'>@Html.DisplayFor(x => item.SalesPerson.Nickname)</td>
         <td class='actions'>
         	@Html.ActionLink(" ", "View", new { id = item.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
-        	@Html.ActionLink(" ", "Print", new { id = item.Id }, new { @class = "button icon print icon-only", title = Resources.Print, target = "_blank" })
         </td>
     </tr>
 }
