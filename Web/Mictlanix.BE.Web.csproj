@@ -168,6 +168,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\Mvc\QuotationsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -224,7 +225,6 @@
     <Compile Include="Controllers\Mvc\ProductionOrdersController.cs" />
     <Compile Include="Controllers\Mvc\ProductsController.cs" />
     <Compile Include="Controllers\Mvc\PurchasesController.cs" />
-    <Compile Include="Controllers\Mvc\QuotationsController.cs" />
     <Compile Include="Controllers\Mvc\ReportsController.cs" />
     <Compile Include="Controllers\Mvc\SalesOrdersController.cs" />
     <Compile Include="Controllers\Mvc\SalesOrderShipmentsController.cs" />
@@ -406,16 +406,8 @@
     <Content Include="Views\Shared\InvalidStore.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Address.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Address.cshtml" />
-    <Content Include="Views\Quotations\Index.cshtml" />
-    <Content Include="Views\Quotations\_Totals.cshtml" />
-    <Content Include="Views\Quotations\_MasterEditView.cshtml" />
-    <Content Include="Views\Quotations\_MasterView.cshtml" />
-    <Content Include="Views\Quotations\_DetailEditView.cshtml" />
-    <Content Include="Views\Quotations\_DetailView.cshtml" />
     <Content Include="Views\Purchases\_Totals.cshtml" />
     <Content Include="Views\SupplierReturns\_Totals.cshtml" />
-    <Content Include="Views\Quotations\Details.cshtml" />
-    <Content Include="Views\Quotations\Print.cshtml" />
     <Content Include="Views\Shared\_PrintLayout.cshtml" />
     <Content Include="Views\FiscalDocuments\Index.cshtml" />
     <Content Include="Views\FiscalDocuments\Edit.cshtml" />
@@ -582,7 +574,6 @@
     <Content Include="Views\PriceLists\_Index.cshtml" />
     <Content Include="Views\PointsOfSale\_Index.cshtml" />
     <Content Include="Views\CashDrawers\_Index.cshtml" />
-    <Content Include="Views\Quotations\_Index.cshtml" />
     <Content Include="Views\Purchases\_Index.cshtml" />
     <Content Include="Views\FiscalDocuments\_Index.cshtml" />
     <Content Include="Views\AccountsReceivables\_Index.cshtml" />
@@ -943,7 +934,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>51103</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:8585</IISUrl>
+          <IISUrl>http://localhost:51103/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
@@ -972,8 +963,6 @@
     <Content Include="Views\Customers\_Delete.cshtml" />
     <Content Include="Views\Customers\_DeleteSuccesful.cshtml" />
     <Content Include="Views\Customers\Details.cshtml" />
-    <Content Include="Views\Quotations\Edit.cshtml" />
-    <Content Include="Views\Quotations\New.cshtml" />
     <Content Include="Views\Labels\_Item.cshtml" />
     <Content Include="Views\Labels\_Create.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Label.cshtml" />
@@ -1095,6 +1084,20 @@
     <Content Include="Views\Inventory\Receipts\_TotalQuantity.cshtml" />
     <Content Include="Views\Inventory\Issues\_TotalQuantity.cshtml" />
     <Content Include="Views\Inventory\Transfers\_TotalQuantity.cshtml" />
+    <Content Include="Views\Quotations\_DisplayView.cshtml" />
+    <Content Include="Views\Quotations\_EditorView.cshtml" />
+    <Content Include="Views\Quotations\_Index.cshtml" />
+    <Content Include="Views\Quotations\_ItemDisplayView.cshtml" />
+    <Content Include="Views\Quotations\_ItemEditorView.cshtml" />
+    <Content Include="Views\Quotations\_Items.cshtml" />
+    <Content Include="Views\Quotations\_Totals.cshtml" />
+    <Content Include="Views\Quotations\Edit.cshtml" />
+    <Content Include="Views\Quotations\Index.cshtml" />
+    <Content Include="Views\Quotations\Print.cshtml" />
+    <Content Include="Views\Quotations\View.cshtml" />
+    <Content Include="Views\Reports\ProductsBySupplier.cshtml" />
+    <Content Include="Views\Reports\_ProductsBySupplierReport.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\FilePdfName.cshtml" />
   </ItemGroup>
   <ItemGroup />
 </Project>
