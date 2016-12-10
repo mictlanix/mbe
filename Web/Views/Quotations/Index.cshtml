@@ -4,39 +4,43 @@
 @using Mictlanix.BE.Web.Models
 @model Search<SalesQuote>
 @{
-    ViewBag.Title = Resources.Title_SalesQuotes;
+    ViewBag.Title = Resources.SalesQuote;
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesQuotes);
 }
 <div class="page-header">
     <div class="pull-right col-xs-6">
-    @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
-	    @Html.HiddenFor(x => x.Offset)
-	    @Html.HiddenFor(x => x.Limit)
 		<div class="row">
 	        <div class="col-xs-4 text-right">
 	        @if(Privilege.AllowCreate) {
-	            <a class="btn btn-primary" href="/Quotations/New">
-	                <span class="glyphicon glyphicon-plus"></span>
-	            </a>
+	            using (Html.BeginForm("New", "Quotations", null, FormMethod.Post, new { @class = "modal-form" })) {
+					<button type="submit" class="btn btn-primary">
+						<span class="glyphicon glyphicon-plus"></span>
+					</button>
+			    }
 	        }
 	        </div>
 	        <div class="col-xs-8 input-group">
-				<input id="Pattern" name="Pattern" type="text" class="form-control" placeholder="@Resources.SearchFor">
-				<span class="input-group-btn">
-					<button class="btn btn-default" type="submit">
-						<span class="glyphicon glyphicon-search"></span>
-					</button>
-				</span>
+			@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
+			    @Html.HiddenFor(x => x.Offset)
+			    @Html.HiddenFor(x => x.Limit)
+			    <div class="input-group">
+					<input id="Pattern" name="Pattern" type="text" class="form-control" placeholder="@Resources.SearchFor">
+					<span class="input-group-btn">
+						<button class="btn btn-default" type="submit">
+							<span class="glyphicon glyphicon-search"></span>
+						</button>
+					</span>
+				</div>
+			}
 	        </div>
 	    </div>
-	}
 	</div>
-    <h1>@Resources.DisplayName_SalesQuotes</h1>
+    <h1>@Resources.SalesQuotes</h1>
 </div>
-<div id="activity-indicator">
-    <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
+<div id='activity-indicator'>
+    <img alt='@Resources.Loading' src='@Url.Content("~/Content/images/loading-bar.gif")' />
 </div>
-<div id="search-results">
+<div id='search-results'>
     @Html.Partial("_Index")
 </div>

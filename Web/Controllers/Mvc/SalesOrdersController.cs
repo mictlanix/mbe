@@ -178,7 +178,90 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			});
 		}
 
-		public ActionResult Edit (int id)
+        [HttpPost]
+        public ActionResult CreateFromSalesQuote(int id)
+        {
+            var dt = DateTime.Now;
+            var item = new SalesOrder();
+            var salesquote = SalesQuote.Find(id);
+            
+
+            item.PointOfSale = salesquote.PointOfSale;
+
+            if (item.PointOfSale == null)
+            {
+                return View("InvalidPointOfSale");
+            }
+
+            if (!CashHelpers.ValidateExchangeRate())
+            {
+                return View("InvalidExchangeRate");
+            }
+
+            // Store and Serial
+            item.Store = salesquote.PointOfSale.Store;
+
+            try
+            {
+                item.Serial = (from x in SalesOrder.Queryable
+                               where x.Store.Id == item.Store.Id
+                               select x.Serial).Max() + 1;
+            }
+            catch
+            {
+                item.Serial = 1;
+            }
+
+            item.Customer = salesquote.Customer;
+            item.SalesPerson = salesquote.SalesPerson;
+            item.Date = dt;
+            item.PromiseDate = dt;
+            item.Terms = PaymentTerms.Immediate;
+            item.DueDate = dt.AddDays(item.Customer.CreditDays);
+            item.Currency = salesquote.Currency;
+            item.ExchangeRate = salesquote.ExchangeRate;
+            item.ShipTo = salesquote.ShipTo;
+            item.Contact = salesquote.Contact;
+            item.Comment = salesquote.Comment;
+
+            item.Creator = CurrentUser.Employee;
+            item.CreationTime = dt;
+            item.Updater = item.Creator;
+            item.ModificationTime = dt;
+
+            var details = salesquote.Details.Select(x => new SalesOrderDetail {
+                Cost = x.Cost,
+                Currency = x.Currency,
+                ExchangeRate = x.ExchangeRate,
+                IsDelivery = x.IsDelivery,
+                IsTaxIncluded = x.IsTaxIncluded,
+                Price = x.Price,
+                Product = x.Product,
+                ProductCode = x.ProductCode,
+                ProductName = x.ProductName,
+                Quantity = x.Quantity,
+                SalesOrder = item,
+                TaxRate = x.TaxRate,
+                Warehouse = x.Warehouse,
+                Comment = x.Comment,
+                Discount = x.Discount
+            }).ToList();
+            
+
+            using (var scope = new TransactionScope())
+            {
+                item.CreateAndFlush();
+                details.ForEach(x => x.CreateAndFlush());
+            }
+
+
+            return RedirectToAction("Edit", new
+            {
+                id = item.Id
+            });
+        }
+
+        public ActionResult Edit (int id)
 		{
 			var item = SalesOrder.Find (id);
 
