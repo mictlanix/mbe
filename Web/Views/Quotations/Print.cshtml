@@ -5,7 +5,7 @@
 
 @{
     Layout = WebConfig.PrintLayout;
-    ViewBag.Title = Resources.SalesQuote;
+    ViewBag.Title = Html.PrintFileName(Resources.SalesQuote, Model.Id);
     ViewBag.Store = Model.Store;
     ViewBag.TaxpayerName = null;
     ViewBag.Taxpayer = null;
@@ -24,6 +24,33 @@
 	 		<div class="col-xs-12">
 	 			<p>@Html.DisplayFor(x => x.Customer.Name)</p>
  			</div>
+            @if (Model.Contact != null)
+            {
+                <div class="col-xs-12">
+                    <p><span class="mylabel">@Resources.Contact</span></p>
+                </div>
+                <div class="col-xs-12">
+                    <p>@Html.DisplayFor(x => x.Contact.Name)</p>
+                </div>
+            }
+            @if (Model.ShipTo != null)
+            {
+                <div class="col-xs-12">
+                    <p><span class="mylabel">@Resources.ShipTo</span></p>
+                </div>
+                <div class="col-xs-12">
+                    <p>
+                        @Html.DisplayFor(x => x.ShipTo.Street)
+                        @Html.DisplayFor(x => x.ShipTo.ExteriorNumber)
+                        @Html.DisplayFor(x => x.ShipTo.InteriorNumber)<br>
+                        @Html.DisplayFor(x => x.ShipTo.Neighborhood),
+                        @Html.DisplayFor(x => x.ShipTo.Borough)<br>
+                        @Html.DisplayFor(x => x.ShipTo.State),
+                        @Html.DisplayFor(x => x.ShipTo.Country),
+                        @Html.DisplayFor(x => x.ShipTo.PostalCode)
+                    </p>
+                </div>
+            }
  		</div>
 	</div>
 	<div class="col-xs-6 text-right">

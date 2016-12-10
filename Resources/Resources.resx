@@ -2172,4 +2172,10 @@ Gracias por utilizar nuestros servicios.
   <data name="TotalQuantityTransfer" xml:space="preserve">
     <value>Unidades Totales</value>
   </data>
+  <data name="CreateSalesOrder" xml:space="preserve">
+    <value>Crear Pedido</value>
+  </data>
+  <data name="ProductsBySupplier" xml:space="preserve">
+    <value>Productos por Proveedor</value>
+  </data>
 </root>

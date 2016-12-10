@@ -82,6 +82,8 @@
     <Compile Include="Constants\DebitCreditEnum.cs" />
     <Compile Include="Constants\SystemObjects.cs" />
     <Compile Include="Constants\AccessRight.cs" />
+    <Compile Include="SalesQuote.cs" />
+    <Compile Include="SalesQuoteDetail.cs" />
     <Compile Include="Store.cs" />
     <Compile Include="SupplierReturnDetail.cs" />
     <Compile Include="SupplierReturn.cs" />
@@ -114,8 +116,8 @@
     <Compile Include="Constants\PaymentMethod.cs" />
     <Compile Include="Constants\GenderEnum.cs" />
     <Compile Include="Constants\FiscalDocumentType.cs" />
-    <Compile Include="SalesQuote.cs" />
-    <Compile Include="SalesQuoteDetail.cs" />
+    <Compile Include="SalesQuoteBk.cs" />
+    <Compile Include="SalesQuoteDetailBk.cs" />
     <Compile Include="FiscalDocument.cs" />
     <Compile Include="FiscalDocumentDetail.cs" />
     <Compile Include="Constants\TransactionType.cs" />
@@ -160,9 +162,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <Folder Include="Helpers\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
