@@ -5,7 +5,7 @@
 
 @{
     Layout = WebConfig.PrintLayout;
-    ViewBag.Title = Resources.SalesOrderShipment;
+    ViewBag.Title = Html.PrintFileName(Resources.SalesOrderShipment, Model.Id);
     ViewBag.Store = Model.Store;
     ViewBag.TaxpayerName = null;
     ViewBag.Taxpayer = null;
@@ -32,6 +32,7 @@
 	 			<p>@Html.DisplayFor(x => x.Contact.Name)</p>
  			</div>
 		}
+
 		 	<div class="col-xs-12">
 		 		<p><span class="mylabel">@Resources.ShipTo</span></p>
 	 		</div>
@@ -45,6 +46,9 @@
 				    @Html.DisplayFor(x => x.ShipTo.State),
 				    @Html.DisplayFor(x => x.ShipTo.Country),
 				    @Html.DisplayFor(x => x.ShipTo.PostalCode)
+                    @if (!string.IsNullOrWhiteSpace(Model.ShipTo.Comment)) {
+                       <br> @Html.DisplayFor(x => x.ShipTo.Comment)
+                    }
 			    </p>
 	 		</div>
  		</div>
@@ -100,3 +104,14 @@
 </table>
 
 <div style="min-height: 2.2mm; border-top: #333 solid 3px; border-bottom: #333 solid 1px"></div>
+
+<div class="row" style="margin-top:20mm">
+    <div class="col-xs-4 col-xs-offset-1 text-center" style="border-top: #333 solid 1px">
+        @Resources.DeliveryPerson<br />
+        @Resources.NameAndSignature
+    </div>
+    <div class="col-xs-4 col-xs-offset-2 text-center" style="border-top: #333 solid 1px">
+        @Resources.PersonReceipt<br />
+        @Resources.NameAndSignature
+    </div>
+</div>

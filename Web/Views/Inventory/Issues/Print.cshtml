@@ -5,7 +5,7 @@
 
 @{
     Layout = WebConfig.PrintLayout;
-    ViewBag.Title = Resources.Title_InventoryIssue;
+    ViewBag.Title = Html.PrintFileName(Resources.Title_InventoryIssue, Model.Id);
     ViewBag.Store = Model.Warehouse.Store;
     ViewBag.TaxpayerName = null;
     ViewBag.Taxpayer = null;

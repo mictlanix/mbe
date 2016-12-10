@@ -6,7 +6,7 @@
 
 @{
     Layout = "~/Views/Shared/_PrintELayout.cshtml";
-    ViewBag.Title = Resources.TechnicalServiceReceipt;
+    ViewBag.Title = Html.PrintFileName(Resources.TechnicalServiceReceipt, Model.Id);
     ViewBag.Store = WebConfig.Store;
     ViewBag.Taxpayer = null;
     ViewBag.TaxpayerName = null;

@@ -5,7 +5,7 @@
 
 @{
     Layout = WebConfig.PrintLayout;
-    ViewBag.Title = Resources.Title_InventoryTransfer;
+    ViewBag.Title = Html.PrintFileName(Resources.Title_InventoryTransfer, Model.Id);
     ViewBag.Store = Model.From.Store;
     ViewBag.TaxpayerName = null;
     ViewBag.Taxpayer = null;
