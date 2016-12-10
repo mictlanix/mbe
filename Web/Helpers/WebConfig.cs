@@ -203,6 +203,10 @@ namespace Mictlanix.BE.Web.Helpers
 			get { return ConfigurationManager.AppSettings ["DefaultSender"]; }
 		}
 
+        public static int DefaultDueDaysAdded {
+            get { return int.Parse(ConfigurationManager.AppSettings["DefaultDueDateAddDays"]); }
+        }
+
 		#endregion
 		
 		#region Request's (Local) Settings

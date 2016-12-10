@@ -113,5 +113,10 @@ namespace Mictlanix.BE.Web.Helpers
 				return CurrencyConverter.ToMXN (val).ToUpper ();
 			}
 		}
+
+        public static string PrintFileName(this HtmlHelper helper, string documentName, int Folio) {
+
+            return documentName + " - " + Folio.ToString("D8");
+        }
     }
 }

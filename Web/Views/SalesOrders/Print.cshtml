@@ -5,7 +5,7 @@
 
 @{
     Layout = WebConfig.PrintLayout;
-    ViewBag.Title = Resources.SalesOrder;
+    ViewBag.Title = Html.PrintFileName(Resources.SalesOrder, Model.Id);
     ViewBag.Store = Model.Store;
     ViewBag.TaxpayerName = null;
     ViewBag.Taxpayer = null;
@@ -45,7 +45,8 @@
 				    @Html.DisplayFor(x => x.ShipTo.Borough)<br>
 				    @Html.DisplayFor(x => x.ShipTo.State),
 				    @Html.DisplayFor(x => x.ShipTo.Country),
-				    @Html.DisplayFor(x => x.ShipTo.PostalCode)
+				    @Html.DisplayFor(x => x.ShipTo.PostalCode)<br>
+                     @Html.DisplayFor(x => x.ShipTo.Comment)
 			    </p>
 	 		</div>
 		}

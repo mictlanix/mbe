@@ -6,7 +6,7 @@
 
 @{
     Layout = WebConfig.ReceiptLayout;
-    ViewBag.Title = Resources.CustomerRefundReceipt;
+    ViewBag.Title = Html.PrintFileName(Resources.CustomerRefundReceipt, Model.Id); ;
     ViewBag.Store = Model.Store;
     ViewBag.Address = Model.Store.Address;
 } 
