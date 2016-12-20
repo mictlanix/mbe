@@ -4,7 +4,7 @@
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.com>
 // 
-// Copyright (C) 2013 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2013-2016 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -25,15 +25,10 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
-using NHibernate;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
@@ -178,90 +173,80 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			});
 		}
 
-        [HttpPost]
-        public ActionResult CreateFromSalesQuote(int id)
-        {
-            var dt = DateTime.Now;
-            var item = new SalesOrder();
-            var salesquote = SalesQuote.Find(id);
-            
+		[HttpPost]
+		public ActionResult CreateFromSalesQuote (int id)
+		{
+			var dt = DateTime.Now;
+			var item = new SalesOrder ();
+			var salesquote = SalesQuote.Find (id);
 
-            item.PointOfSale = salesquote.PointOfSale;
+			item.PointOfSale = WebConfig.PointOfSale;
 
-            if (item.PointOfSale == null)
-            {
-                return View("InvalidPointOfSale");
-            }
+			if (item.PointOfSale == null) {
+				return View ("InvalidPointOfSale");
+			}
 
-            if (!CashHelpers.ValidateExchangeRate())
-            {
-                return View("InvalidExchangeRate");
-            }
+			if (!CashHelpers.ValidateExchangeRate ()) {
+				return View ("InvalidExchangeRate");
+			}
 
-            // Store and Serial
-            item.Store = salesquote.PointOfSale.Store;
+			// Store and Serial
+			item.Store = item.PointOfSale.Store;
 
-            try
-            {
-                item.Serial = (from x in SalesOrder.Queryable
-                               where x.Store.Id == item.Store.Id
-                               select x.Serial).Max() + 1;
-            }
-            catch
-            {
-                item.Serial = 1;
-            }
+			try {
+				item.Serial = (from x in SalesOrder.Queryable
+					       where x.Store.Id == item.Store.Id
+					       select x.Serial).Max () + 1;
+			} catch {
+				item.Serial = 1;
+			}
 
-            item.Customer = salesquote.Customer;
-            item.SalesPerson = salesquote.SalesPerson;
-            item.Date = dt;
-            item.PromiseDate = dt;
-            item.Terms = PaymentTerms.Immediate;
-            item.DueDate = dt.AddDays(item.Customer.CreditDays);
-            item.Currency = salesquote.Currency;
-            item.ExchangeRate = salesquote.ExchangeRate;
-            item.ShipTo = salesquote.ShipTo;
-            item.Contact = salesquote.Contact;
-            item.Comment = salesquote.Comment;
+			item.Customer = salesquote.Customer;
+			item.SalesPerson = salesquote.SalesPerson;
+			item.Date = dt;
+			item.PromiseDate = dt;
+			item.Terms = PaymentTerms.Immediate;
+			item.DueDate = dt.AddDays (item.Customer.CreditDays);
+			item.Currency = salesquote.Currency;
+			item.ExchangeRate = salesquote.ExchangeRate;
+			item.ShipTo = salesquote.ShipTo;
+			item.Contact = salesquote.Contact;
+			item.Comment = salesquote.Comment;
 
-            item.Creator = CurrentUser.Employee;
-            item.CreationTime = dt;
-            item.Updater = item.Creator;
-            item.ModificationTime = dt;
+			item.Creator = CurrentUser.Employee;
+			item.CreationTime = dt;
+			item.Updater = item.Creator;
+			item.ModificationTime = dt;
 
-            var details = salesquote.Details.Select(x => new SalesOrderDetail {
-                Cost = x.Cost,
-                Currency = x.Currency,
-                ExchangeRate = x.ExchangeRate,
-                IsDelivery = x.IsDelivery,
-                IsTaxIncluded = x.IsTaxIncluded,
-                Price = x.Price,
-                Product = x.Product,
-                ProductCode = x.ProductCode,
-                ProductName = x.ProductName,
-                Quantity = x.Quantity,
-                SalesOrder = item,
-                TaxRate = x.TaxRate,
-                Warehouse = x.Warehouse,
-                Comment = x.Comment,
-                Discount = x.Discount
-            }).ToList();
-            
-
-            using (var scope = new TransactionScope())
-            {
-                item.CreateAndFlush();
-                details.ForEach(x => x.CreateAndFlush());
-            }
+			var details = salesquote.Details.Select (x => new SalesOrderDetail {
+				Currency = x.Currency,
+				ExchangeRate = x.ExchangeRate,
+				IsTaxIncluded = x.IsTaxIncluded,
+				Price = x.Price,
+				Product = x.Product,
+				ProductCode = x.ProductCode,
+				ProductName = x.ProductName,
+				Quantity = x.Quantity,
+				SalesOrder = item,
+				TaxRate = x.TaxRate,
+				Warehouse = item.PointOfSale.Warehouse,
+				Comment = x.Comment,
+				Discount = x.Discount
+			}).ToList ();
 
 
-            return RedirectToAction("Edit", new
-            {
-                id = item.Id
-            });
-        }
+			using (var scope = new TransactionScope ()) {
+				item.CreateAndFlush ();
+				details.ForEach (x => x.CreateAndFlush ());
+			}
 
-        public ActionResult Edit (int id)
+
+			return RedirectToAction ("Edit", new {
+				id = item.Id
+			});
+		}
+
+		public ActionResult Edit (int id)
 		{
 			var item = SalesOrder.Find (id);
 
@@ -329,6 +314,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				entity.Contact = null;
 				entity.ShipTo = null;
 
+				if (item.SalesPerson == null) {
+					entity.SalesPerson = CurrentUser.Employee;
+				} else {
+					entity.SalesPerson = item.SalesPerson;
+				}
+
 				if (entity.Terms == PaymentTerms.NetD && !entity.Customer.HasCredit) {
 					entity.Terms = PaymentTerms.Immediate;
 				}
@@ -355,7 +346,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				value = entity.FormattedValueFor (x => x.Customer),
 				terms = entity.Terms,
 				termsText = entity.Terms.GetDisplayName (),
-				dueDate = entity.FormattedValueFor (x => x.DueDate)
+				dueDate = entity.FormattedValueFor (x => x.DueDate),
+				salesPerson = entity.SalesPerson.Id,
+				salesPersonName = entity.SalesPerson.Name
 			});
 		}
 

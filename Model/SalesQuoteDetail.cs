@@ -54,12 +54,6 @@ namespace Mictlanix.BE.Model {
 		public decimal Quantity { get; set; }
 
 		[Property]
-		[Display (Name = "Cost", ResourceType = typeof (Resources))]
-		[DataType (DataType.Currency)]
-		[Required (ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof (Resources))]
-		public decimal Cost { get; set; }
-
-		[Property]
 		[Display (Name = "Price", ResourceType = typeof (Resources))]
 		[DataType (DataType.Currency)]
 		[Required (ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof (Resources))]
@@ -109,14 +103,6 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Comment", ResourceType = typeof (Resources))]
 		[StringLength (500, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Comment { get; set; }
-
-		[Property ("delivery")]
-		[Display (Name = "Delivery", ResourceType = typeof (Resources))]
-		public bool IsDelivery { get; set; }
-
-		[BelongsTo ("warehouse")]
-		[Display (Name = "Warehouse", ResourceType = typeof (Resources))]
-		public virtual Warehouse Warehouse { get; set; }
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Subtotal", ResourceType = typeof (Resources))]
