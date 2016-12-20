@@ -1,34 +1,35 @@
-
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 CREATE TABLE time_clock (
-  time_clock_id char(36) COLLATE utf8_unicode_ci NOT NULL,
-  address varchar(16) COLLATE utf8_unicode_ci NOT NULL,
-  last_sync datetime NOT NULL,
-  sync tinyint(1) NOT NULL,
-  PRIMARY KEY (time_clock_id)
+	time_clock_id char(36) COLLATE utf8_unicode_ci NOT NULL,
+	address varchar(16) COLLATE utf8_unicode_ci NOT NULL,
+	last_sync datetime NOT NULL,
+	sync tinyint(1) NOT NULL,
+	PRIMARY KEY (time_clock_id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE time_clock_record (
-  time_clock_record_id char(36) COLLATE utf8_unicode_ci NOT NULL,
-  enroll_number int(11) NOT NULL,
-  datetime datetime NOT NULL,
-  type int(11) NOT NULL,
-  employee int(11) DEFAULT NULL,
-  PRIMARY KEY (time_clock_record_id),
-  KEY time_clock_record_employee_idx (employee),
-  CONSTRAINT time_clock_record_employee_fk FOREIGN KEY (employee) REFERENCES employee (employee_id) ON DELETE NO ACTION ON UPDATE NO ACTION
+	time_clock_record_id char(36) COLLATE utf8_unicode_ci NOT NULL,
+	enroll_number int(11) NOT NULL,
+	datetime datetime NOT NULL,
+	type int(11) NOT NULL,
+	employee int(11) DEFAULT NULL,
+	PRIMARY KEY (time_clock_record_id),
+	KEY time_clock_record_employee_idx (employee),
+	CONSTRAINT time_clock_record_employee_fk
+		FOREIGN KEY (employee) REFERENCES employee (employee_id)
+		ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB;
 
 ALTER TABLE inventory_receipt 
 	DROP FOREIGN KEY inventory_receipt_employee_creator,
 	DROP FOREIGN KEY inventory_receipt_employee_updater,
 	DROP FOREIGN KEY inventory_receipt_purchase_order,
-    DROP FOREIGN KEY inventory_receipt_warehouse,
-    DROP INDEX inventory_receipt_employee_creator_idx,
-    DROP INDEX inventory_receipt_employee_updater_idx;
+	DROP FOREIGN KEY inventory_receipt_warehouse,
+	DROP INDEX inventory_receipt_employee_creator_idx,
+	DROP INDEX inventory_receipt_employee_updater_idx;
 
 ALTER TABLE inventory_receipt 
 	ADD COLUMN store INT(11) NOT NULL AFTER inventory_receipt_id,
@@ -55,9 +56,9 @@ ALTER TABLE inventory_receipt
 ALTER TABLE inventory_issue 
 	DROP FOREIGN KEY inventory_issue_employee_creator,
 	DROP FOREIGN KEY inventory_issue_employee_updater,
-    DROP FOREIGN KEY inventory_issue_warehouse,
-    DROP FOREIGN KEY inventory_issue_supplier_return_fk,
-    DROP INDEX inventory_issue_supplier_return_fk_idx;
+	DROP FOREIGN KEY inventory_issue_warehouse,
+	DROP FOREIGN KEY inventory_issue_supplier_return_fk,
+	DROP INDEX inventory_issue_supplier_return_fk_idx;
 
 ALTER TABLE inventory_issue 
 	ADD COLUMN store INT(11) NOT NULL AFTER inventory_issue_id,
@@ -85,10 +86,10 @@ ALTER TABLE inventory_transfer
 	DROP FOREIGN KEY inventory_transfer_employee_updater_fk,
 	DROP FOREIGN KEY inventory_transfer_warehouse_from_fk,
 	DROP FOREIGN KEY inventory_transfer_warehouse_to_fk,
-    DROP INDEX inventory_transfer_warehouse_from_fk_idx,
+	DROP INDEX inventory_transfer_warehouse_from_fk_idx,
 	DROP INDEX inventory_transfer_warehouse_to_fk_idx,
-    DROP INDEX inventory_transfer_employee_creator_fk_idx,
-    DROP INDEX inventory_transfer_employee_updater_fk_idx;
+	DROP INDEX inventory_transfer_employee_creator_fk_idx,
+	DROP INDEX inventory_transfer_employee_updater_fk_idx;
 
 ALTER TABLE inventory_transfer 
 	ADD COLUMN store INT(11) NOT NULL AFTER inventory_transfer_id,
@@ -177,6 +178,47 @@ UPDATE supplier_payment SET method = 03 WHERE method = 105;
 UPDATE supplier_payment SET method = 02 WHERE method = 104;
 UPDATE supplier_payment SET method = 28 WHERE method = 103;
 UPDATE supplier_payment SET method = 04 WHERE method = 102;
+
+ALTER TABLE sales_quote
+	ADD COLUMN payment_terms TINYINT NOT NULL AFTER customer,
+	ADD COLUMN creator INT(11) NOT NULL,
+	ADD COLUMN updater INT(11) NOT NULL,
+	ADD COLUMN creation_time DATETIME NULL,
+	ADD COLUMN modification_time DATETIME NOT NULL,
+	ADD COLUMN contact INT(11) NULL,
+	ADD COLUMN ship_to INT(11) NULL,
+	ADD COLUMN comment VARCHAR(1024) NULL,
+	ADD COLUMN currency INT NOT NULL,
+	ADD COLUMN exchange_rate DECIMAL(8,4) NOT NULL DEFAULT 1,
+	ADD INDEX sales_quote_creator_idx (creator ASC),
+	ADD INDEX sales_quote_updater_idx (updater ASC),
+	ADD INDEX sales_quote_ship_to_idx (ship_to ASC),
+	ADD INDEX sales_quote_contact_idx (contact ASC),
+	ADD CONSTRAINT sales_quote_creator_fk
+		FOREIGN KEY (creator) REFERENCES employee (employee_id)
+		ON DELETE NO ACTION ON UPDATE NO ACTION,
+	ADD CONSTRAINT sales_quote_updater_fk
+		FOREIGN KEY (updater) REFERENCES employee (employee_id)
+		ON DELETE NO ACTION ON UPDATE NO ACTION,
+	ADD CONSTRAINT sales_quote_ship_to_fk
+		FOREIGN KEY (ship_to) REFERENCES address (address_id)
+		ON DELETE NO ACTION ON UPDATE NO ACTION,
+	ADD CONSTRAINT sales_quote_contact_fk
+		FOREIGN KEY (contact) REFERENCES contact (contact_id)
+		ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+UPDATE sales_quote
+SET creation_time = date, modification_time = date, creator = salesperson, updater = salesperson;
+
+ALTER TABLE sales_quote
+	CHANGE COLUMN creation_time creation_time DATETIME NOT NULL,
+	CHANGE COLUMN modification_time modification_time DATETIME NOT NULL;
+
+ALTER TABLE sales_quote_detail
+	ADD COLUMN comment VARCHAR(1024) NULL;
+
+ALTER TABLE customer
+	ADD COLUMN salesperson INT(11) NULL DEFAULT NULL;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

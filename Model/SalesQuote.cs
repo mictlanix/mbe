@@ -71,18 +71,9 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Date", ResourceType = typeof (Resources))]
 		public virtual DateTime Date { get; set; }
 
-		[Property ("promise_date")]
-		[DataType (DataType.Date)]
-		[Display (Name = "PromiseDate", ResourceType = typeof (Resources))]
-		public virtual DateTime PromiseDate { get; set; }
-
 		[BelongsTo ("salesperson")]
 		[Display (Name = "SalesPerson", ResourceType = typeof (Resources))]
 		public virtual Employee SalesPerson { get; set; }
-
-		[BelongsTo ("point_sale")]
-		[Display (Name = "PointOfSale", ResourceType = typeof (Resources))]
-		public virtual PointOfSale PointOfSale { get; set; }
 
 		[Property ("payment_terms")]
 		[Display (Name = "PaymentTerms", ResourceType = typeof (Resources))]
@@ -110,14 +101,6 @@ namespace Mictlanix.BE.Model {
 		[Property ("completed")]
 		[Display (Name = "Completed", ResourceType = typeof (Resources))]
 		public virtual bool IsCompleted { get; set; }
-
-		[Property ("paid")]
-		[Display (Name = "Paid", ResourceType = typeof (Resources))]
-		public virtual bool IsPaid { get; set; }
-
-		[Property ("delivered")]
-		[Display (Name = "Delivery", ResourceType = typeof (Resources))]
-		public virtual bool IsDelivered { get; set; }
 
 		[Property ("cancelled")]
 		[Display (Name = "Cancelled", ResourceType = typeof (Resources))]

@@ -1097,7 +1097,6 @@
     <Content Include="Views\Quotations\View.cshtml" />
     <Content Include="Views\Reports\ProductsBySupplier.cshtml" />
     <Content Include="Views\Reports\_ProductsBySupplierReport.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\FilePdfName.cshtml" />
   </ItemGroup>
   <ItemGroup />
 </Project>

@@ -236,6 +236,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				entity.Contact = null;
 				entity.ShipTo = null;
 
+				if (item.SalesPerson != null) {
+					entity.SalesPerson = item.SalesPerson;
+				}
+
 				if (entity.Terms == PaymentTerms.NetD && !entity.Customer.HasCredit) {
 					entity.Terms = PaymentTerms.Immediate;
 				}
