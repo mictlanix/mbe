@@ -9,6 +9,8 @@
     <RootNamespace>Mictlanix.BE</RootNamespace>
     <AssemblyName>Mictlanix.BE.Resources</AssemblyName>
     <FileAlignment>512</FileAlignment>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>none</DebugType>
