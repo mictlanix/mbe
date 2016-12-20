@@ -101,6 +101,14 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "ShippingInvoiceRequired", ResourceType = typeof (Resources))]
 		public virtual bool ShippingRequiredDocument { get; set; }
 
+		[Display (Name = "SalesPerson", ResourceType = typeof (Resources))]
+		[UIHint ("EmployeeSelector")]
+		public virtual int SalesPersonId { get; set; }
+
+		[BelongsTo ("salesperson")]
+		[Display (Name = "SalesPerson", ResourceType = typeof (Resources))]
+		public virtual Employee SalesPerson { get; set; }
+
 		[HasAndBelongsToMany (typeof (Address), Table = "customer_address", ColumnKey = "customer", ColumnRef = "address", Lazy = true)]
 		public virtual IList<Address> Addresses {
 			get { return addresses; }

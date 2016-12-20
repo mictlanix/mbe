@@ -109,6 +109,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Create (Customer item)
 		{
 			item.PriceList = PriceList.TryFind (item.PriceListId);
+			item.SalesPerson = Employee.TryFind (item.SalesPersonId);
 
 			if (!ModelState.IsValid)
 				return PartialView ("_Create", item);
@@ -130,7 +131,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Edit (Customer item)
 		{
 			item.PriceList = PriceList.TryFind (item.PriceListId);
-
+			item.SalesPerson = Employee.TryFind (item.SalesPersonId);
+			
 			if (!ModelState.IsValid)
 				return PartialView ("_Edit", item);
 
@@ -145,7 +147,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			entity.Shipping = item.Shipping;
 			entity.ShippingRequiredDocument = item.ShippingRequiredDocument;
 			entity.Comment = item.Comment;
-
+			entity.SalesPerson = item.SalesPerson;
+			
 			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
 			}
