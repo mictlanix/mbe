@@ -161,6 +161,8 @@ $(function () {
 			$('#terms').text(response.termsText)
 					   .editable('setValue', response.terms);
 			$('#due-date').text(response.dueDate);
+			$('#salesperson').text(response.salesPersonName)
+					   .editable('setValue', response.salesPerson);
 	    },
 	    display: function(value, response) {
 	    	if (typeof response !== 'undefined') {
