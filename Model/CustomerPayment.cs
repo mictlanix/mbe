@@ -27,6 +27,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
@@ -34,6 +36,8 @@ using System.ComponentModel.DataAnnotations;
 namespace Mictlanix.BE.Model {
 	[ActiveRecord ("customer_payment")]
 	public class CustomerPayment : ActiveRecordLinqBase<CustomerPayment> {
+		IList<SalesOrderPayment> allocations = new List<SalesOrderPayment> ();
+
 		[PrimaryKey (PrimaryKeyType.Identity, "customer_payment_id")]
 		public int Id { get; set; }
 
@@ -101,11 +105,29 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Currency", ResourceType = typeof (Resources))]
 		public virtual CurrencyCode Currency { get; set; }
 
+		[HasMany (typeof (SalesOrderPayment), Table = "sales_order_payment", ColumnKey = "customer_payment", Lazy = true)]
+		public virtual IList<SalesOrderPayment> Allocations {
+			get { return allocations; }
+			set { allocations = value; }
+		}
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "Paid", ResourceType = typeof (Resources))]
+		public virtual decimal Allocated {
+			get { return Allocations.Sum (x => x.Amount + x.Change); }
+		}
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "Balance", ResourceType = typeof (Resources))]
+		public virtual decimal Balance {
+			get { return Amount - Allocated; }
+		}
+
 		#region Override Base Methods
 
 		public override string ToString ()
 		{
-			return string.Format ("{0} : {1:c} {3} [{2:u}]", Method, Amount, Date, Currency);
+			return string.Format ("{1:c} {3} ({2:yyyy-MM-dd}, {0})", Method, Amount, Date, Currency);
 		}
 
 		public override bool Equals (object obj)

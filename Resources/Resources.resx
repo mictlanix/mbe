@@ -2178,4 +2178,16 @@ Gracias por utilizar nuestros servicios.
   <data name="ProductsBySupplier" xml:space="preserve">
     <value>Productos por Proveedor</value>
   </data>
+  <data name="Payments" xml:space="preserve">
+    <value>Pagos</value>
+  </data>
+  <data name="Refunds" xml:space="preserve">
+    <value>Devoluciones</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>Aplicar</value>
+  </data>
+  <data name="ApplyPayment" xml:space="preserve">
+    <value>Aplicar Pago</value>
+  </data>
 </root>
