@@ -3,9 +3,8 @@
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.com>
-//   Eduardo Nieto <enieto@mictlanix.com>
 // 
-// Copyright (C) 2011-2016 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2016 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -34,6 +33,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
+using NHibernate;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
@@ -42,160 +42,154 @@ using Mictlanix.BE.Web.Helpers;
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
 	public class AccountsReceivablesController : CustomController {
-		//
-		// GET: /Statements/
 
-		//TODO: Obtimise DB qry and memory
-		//FIXME: SalesOrderPayment
-		public ActionResult Index ()
+		public ViewResult Index ()
 		{
-			var results = new List<AccountsReceivableSummary> ();
-			var qry_payments = (from x in CustomerPayment.Queryable
-					    /* where x.SalesOrder == null */
-					    group x by x.Customer into c
-					    select new {
-						    Customer = c.Key,
-						    Payments = c.ToList ()
-					    }).ToList ();
-
-			var payments = (from x in qry_payments
-					select new AccountsReceivableSummary {
-						Customer = x.Customer,
-						PaymentsSummary = x.Payments.Sum (y => y.Amount)
-					}).ToList ();
-
-			qry_payments = null;
-
-			var qry_returns = (from x in CustomerRefund.Queryable
-					   where x.IsCompleted && x.SalesOrder.Terms != PaymentTerms.Immediate
-					   group x by x.Customer into c
-					   select new {
-						   Customer = c.Key,
-						   Returns = c.ToList ()
-					   }).ToList ();
-
-			var returns = (from x in qry_returns
-				       select new AccountsReceivableSummary {
-					       Customer = x.Customer,
-					       ReturnsSummary = x.Returns.Sum (y => y.Total)
-				       }).ToList ();
-
-			qry_returns = null;
-
-			var qry_sales = (from x in SalesOrder.Queryable
-			                 where x.Terms == PaymentTerms.NetD && x.IsCompleted && !x.IsPaid
-					 group x by x.Customer into c
-					 select new {
-						 Customer = c.Key,
-						 Sales = c.ToList ()
-					 }).ToList ();
-
-			var sales = from x in qry_sales
-				    select new AccountsReceivableSummary {
-					    Customer = x.Customer,
-					    SalesSummary = x.Sales.Sum (y => y.Total)
-				    };
-
-			qry_sales = null;
-
-			foreach (var item in sales) {
-				var temp = payments.SingleOrDefault (x => x.Customer.Id == item.Customer.Id);
-
-				var temp2 = returns.SingleOrDefault (x => x.Customer.Id == item.Customer.Id);
-
-				if (temp2 != null) {
-					item.ReturnsSummary = temp2.ReturnsSummary;
-					returns.Remove (temp2);
-				}
-				if (temp != null) {
-					item.PaymentsSummary = temp.PaymentsSummary;
-					payments.Remove (temp);
-				}
-
-				results.Add (item);
-			}
-
-			results.AddRange (returns);
-			results.AddRange (payments);
-			results = results.OrderBy (x => x.Customer.Name).ToList ();
-
-			return View (results);
+			return View ();
 		}
 
-		public ViewResult AccountStatement (int id)
+		[HttpPost]
+		public ActionResult Index (int? customer)
 		{
-			Customer item = Customer.Find (id);
-			var results = new List<AccountsReceivableEntry> ();
-			var qry_sales = (from x in SalesOrder.Queryable
-					 where x.IsCompleted && x.Terms != PaymentTerms.Immediate &&
-					       x.Customer.Id == item.Id
-					 select x).ToList ();
-			var sales = (from x in qry_sales
-				     select new AccountsReceivableEntry {
-					     Number = x.Id,
-					     Date = x.Date,
-					     Amount = x.Total,
-					     Type = DebitCreditEnum.Debit,
-					     Description = string.Format (Resources.Format_SaleDescription, x.DueDate)
-				     }).ToList ();
+			string sql1 = @"SELECT m.date Date, d.sales_order SalesOrder, m.due_date DueDate, c.name Customer,
+						GROUP_CONCAT(DISTINCT (SELECT GROUP_CONCAT(DISTINCT f.batch, f.serial SEPARATOR ' ')
+							FROM fiscal_document_detail fd LEFT JOIN fiscal_document f ON fd.document = f.fiscal_document_id
+							WHERE fd.order_detail = d.sales_order_detail_id) SEPARATOR ' ') Invoices,
+						SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) TotalEx,
+						SUM(ROUND(d.quantity * d.price * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) Total,
+						IFNULL(SUM(ROUND(r.quantity * d.price * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)), 0) Refunds,
+						m.currency Currency
+					FROM sales_order m
+					INNER JOIN sales_order_detail d ON m.sales_order_id = d.sales_order
+					INNER JOIN customer c ON m.customer = c.customer_id
+					LEFT JOIN customer_refund_detail r ON d.sales_order_detail_id = r.sales_order_detail
+					WHERE m.completed = 1 AND m.cancelled = 0 AND m.paid = 0 and m.payment_terms = 1 CUSTOMER_FILTER
+					GROUP BY d.sales_order
+					ORDER BY m.due_date";
+			string sql2 = @"SELECT m.sales_order_id SalesOrder, SUM(ROUND(amount, 2)) Payments
+					FROM sales_order m
+					INNER JOIN sales_order_payment p ON m.sales_order_id = p.sales_order
+					WHERE m.completed = 1 AND m.cancelled = 0 AND m.paid = 0 and m.payment_terms = 1 CUSTOMER_FILTER
+					GROUP BY m.sales_order_id";
 
-			qry_sales.Clear ();
-			qry_sales = null;
-
-			var qry_returns = (from x in CustomerRefund.Queryable
-					   where x.IsCompleted && x.Customer.Id == item.Id &&
-							    x.SalesOrder.Terms != PaymentTerms.Immediate
-					   select x).ToList ();
-
-			var returns = (from x in qry_returns
-				       select new AccountsReceivableEntry {
-					       Number = x.Id,
-					       Date = x.ModificationTime,
-					       Amount = x.Total,
-					       Type = DebitCreditEnum.Credit,
-					       Description = string.Format (Resources.Format_ReturnSaleDescription, x.ModificationTime)
-				       }).ToList ();
-
-			qry_returns.Clear ();
-			qry_returns = null;
-
-			//FIXME: SalesOrderPayment
-			var qry_payments = (from x in CustomerPayment.Queryable
-					    where /* x.SalesOrder == null && */ x.Customer.Id == item.Id
-					    select x).ToList ();
-
-			var payments = (from x in qry_payments
-					select new AccountsReceivableEntry {
-						Number = x.Id,
-						Date = x.Date,
-						Amount = x.Amount,
-						Type = DebitCreditEnum.Credit,
-						Description = string.Format (string.IsNullOrEmpty (x.Reference) ? Resources.Format_PaymentDescription : Resources.Format_PaymentWithRefDescription, x.Method.GetDisplayName (), x.Reference)
-					}).ToList ();
-
-			qry_payments.Clear ();
-			qry_payments = null;
-
-			results.AddRange (payments);
-			results.AddRange (sales);
-			results.AddRange (returns);
-			results = results.OrderBy (x => x.Date).ToList ();
-
-			var sum = 0m;
-			foreach (var x in results) {
-				sum += x.Type == DebitCreditEnum.Debit ? x.Amount : -x.Amount;
-				x.Balance = sum;
+			if (customer.HasValue) {
+				sql1 = sql1.Replace ("CUSTOMER_FILTER", "AND m.customer = :customer");
+				sql2 = sql2.Replace ("CUSTOMER_FILTER", "AND m.customer = :customer");
+			} else {
+				sql1 = sql1.Replace ("CUSTOMER_FILTER", string.Empty);
+				sql2 = sql2.Replace ("CUSTOMER_FILTER", string.Empty);
 			}
 
-			return View (new MasterDetails<AccountsReceivableSummary, AccountsReceivableEntry> {
-				Master = new AccountsReceivableSummary {
-					Customer = item,
-					SalesSummary = sales.Sum (x => x.Amount),
-					PaymentsSummary = payments.Sum (x => x.Amount),
-					ReturnsSummary = returns.Sum (x => x.Amount)
-				},
-				Details = results
-			});
+			var items = (IList<dynamic>) ActiveRecordMediator<SalesOrder>.Execute (delegate (ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql1);
+
+				query.AddScalar ("Date", NHibernateUtil.DateTime);
+				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
+				query.AddScalar ("Invoices", NHibernateUtil.String);
+				query.AddScalar ("DueDate", NHibernateUtil.DateTime);
+				query.AddScalar ("Customer", NHibernateUtil.String);
+				query.AddScalar ("TotalEx", NHibernateUtil.Decimal);
+				query.AddScalar ("Total", NHibernateUtil.Decimal);
+				query.AddScalar ("Refunds", NHibernateUtil.Decimal);
+				query.AddScalar ("Currency", NHibernateUtil.Int32);
+
+				if (customer.HasValue) {
+					query.SetInt32 ("customer", customer.Value);
+				}
+
+				return query.DynamicList ();
+			}, null);
+
+			var payments = (IList<dynamic>) ActiveRecordMediator<SalesOrder>.Execute (delegate (ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql2);
+
+				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
+				query.AddScalar ("Payments", NHibernateUtil.Decimal);
+
+				if (customer.HasValue) {
+					query.SetInt32 ("customer", customer.Value);
+				}
+
+				return query.DynamicList ();
+			}, null);
+
+			foreach (var item in items) {
+				item.Payments = 0m;
+				item.Balance = item.Total - item.Refunds;
+			}
+
+			foreach (var payment in payments) {
+				var item = items.Single (x => x.SalesOrder == payment.SalesOrder);
+				item.Payments = payment.Payments;
+				item.Balance -= payment.Payments;
+			}
+
+			return PartialView ("_Index", items);
+		}
+
+		public ActionResult ApplyPayment (int id)
+		{
+			var item = new SalesOrderPayment {
+				SalesOrder = SalesOrder.TryFind (id)
+			};
+
+			ViewBag.Balance = item.SalesOrder.Balance - GetRefunds (item.SalesOrder.Id);
+			ViewBag.Payments = GetRemainingPayments (item.SalesOrder.Customer.Id, item.SalesOrder.Currency);
+			item.Amount = ViewBag.Balance;
+
+			return PartialView ("_ApplyPayment", item);
+		}
+
+		[HttpPost]
+		public ActionResult ApplyPayment (SalesOrderPayment item)
+		{
+			var entity = new SalesOrderPayment {
+				SalesOrder = SalesOrder.TryFind (item.SalesOrder.Id),
+				Payment = CustomerPayment.TryFind (item.PaymentId),
+				Amount = item.Amount
+			};
+			var balance = entity.SalesOrder.Balance - GetRefunds (entity.SalesOrder.Id);
+
+			if (entity.Amount > entity.Payment.Balance) {
+				entity.Amount = entity.Payment.Balance;
+			}
+
+			balance -= entity.Amount;
+
+			using (var scope = new TransactionScope ()) {
+				if (balance <= 0) {
+					entity.SalesOrder.IsPaid = true;
+					entity.SalesOrder.Update ();
+				}
+
+				if (entity.Amount > 0) {
+					entity.Create ();
+				}
+
+				scope.Flush ();
+			}
+
+			return PartialView ("_ApplyPaymentSuccesful");
+		}
+
+		decimal GetRefunds (int salesOrder)
+		{
+			var query = from x in CustomerRefundDetail.Queryable
+				    where x.Refund.IsCompleted && !x.Refund.IsCancelled &&
+                                          x.SalesOrderDetail.SalesOrder.Id == salesOrder
+				    select x;
+
+			return query.ToList ().Sum (x => x.Total);
+		}
+
+		IEnumerable<CustomerPayment> GetRemainingPayments (int customer, CurrencyCode currency)
+		{
+			var query = from x in CustomerPayment.Queryable
+				    where x.Customer.Id == customer && x.Currency == currency &&
+				     	(x.Allocations.Count == 0 || x.Amount > x.Allocations.Sum (y => y.Amount + y.Change))
+				    select x;
+
+			return query.ToList ();
 		}
 	}
 }

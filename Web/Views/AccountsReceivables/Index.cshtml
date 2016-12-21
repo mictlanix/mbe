@@ -2,7 +2,6 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Models
 @using Mictlanix.BE.Web.Helpers;
-@model IEnumerable<AccountsReceivableSummary>
 @{
     ViewBag.Title = Resources.Title_AccountsReceivable;
     var CurrentUser = Html.CurrentUser() ?? new User();
@@ -11,48 +10,21 @@
 <div class="page-header">
     <h1>@Resources.DisplayName_AccountsReceivable</h1>
 </div>
-<table>
-    <tr>
-        <th>
-            @Html.LabelFor(x => new Customer().Name)            
-        </th>
-        <th class="nowrap">
-            @Html.LabelFor(x => new AccountsReceivableSummary().SalesSummary)
-        </th>
-        <th class="nowrap">
-            @Html.LabelFor(x => new AccountsReceivableSummary().PaymentsSummary)
-        </th>
-        <th class="nowrap">
-            @Html.LabelFor(x => new AccountsPayableSummary().ReturnsSummary)
-        </th>
-        <th>
-            @Html.LabelFor(x => new AccountsReceivableSummary().Balance)
-        </th>
-        <th></th>
-    </tr>
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(x => item.Customer.Name)
-        </td>
-        <td class="number">
-            @Html.DisplayFor(x => item.SalesSummary)
-        </td>
-        <td class="number">
-            @Html.DisplayFor(x => item.PaymentsSummary)
-        </td>
-        <td class="number">
-            @Html.DisplayFor(x => item.ReturnsSummary)
-        </td>
-        <td class="number">
-            @Html.DisplayFor(x => item.Balance)
-        </td>
-        <td class="actions">
-        @if (Privilege.AllowRead)
-        {
-            	@Html.ActionLink(" ", "AccountStatement", new { id = item.Customer.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
-        }
-        </td>
-    </tr>
+<div id='master-section'>
+@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
+	<div class="row">
+  		<div class="col-xs-11">
+			@Html.Editor("customer", "CustomerSelector")
+		</div>
+		<div class="col-xs-1">
+			<button class="btn btn-primary btn-block" type="submit">
+				<span class="glyphicon glyphicon-refresh"></span>
+			</button>
+		</div>
+	</div>
 }
-</table>
+</div>
+<div id='search-results'></div>
+<style type='text/css'>
+ul.token-input-list { width: 100%; }
+</style>
