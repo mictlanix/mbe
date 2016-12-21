@@ -1,41 +1,41 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model TechnicalServiceReceipt
 
 <fieldset>
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-3">@Html.LabelFor(x => x.Brand)</div>
 	  	<div class="col-xs-3">@Html.LabelFor(x => x.Equipment)</div>
 	  	<div class="col-xs-3">@Html.LabelFor(x => x.Model)</div>
 	  	<div class="col-xs-3">@Html.LabelFor(x => x.SerialNumber)</div>
 	</div>
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-3"><div class="ro-field">@Html.DisplayFor(x => x.Brand)</div></div>
 	  	<div class="col-xs-3"><div class="ro-field">@Html.DisplayFor(x => x.Equipment)</div></div>
 	  	<div class="col-xs-3"><div class="ro-field">@Html.DisplayFor(x => x.Model)</div></div>
 	  	<div class="col-xs-3"><div class="ro-field">@Html.DisplayFor(x => x.SerialNumber)</div></div>
 	</div>
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-3">@Html.LabelFor(x => x.Date)</div>
 	  	<div class="col-xs-3">@Html.LabelFor(x => x.Status)</div>
 		<div class="col-xs-6">@Html.LabelFor(x => x.Location)</div>
 	</div>
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-3"><div class="ro-field">@Html.DisplayFor(x => x.Date)</div></div>
 	  	<div class="col-xs-3"><div class="ro-field">@Html.DisplayFor(x => x.Status)</div></div>
 	  	<div class="col-xs-6"><div class="ro-field">@Html.DisplayFor(x => x.Location)</div></div>
 	</div>
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-12">@Html.LabelFor(x => x.Checker)</div>
 	</div>
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-12"><div class="ro-field">@Html.DisplayFor(x => x.Checker)</div></div>
 	</div>
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-12">@Html.LabelFor(x => x.Comment)</div>
 	</div>
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-12"><div class="ro-field">@Html.DisplayFor(x => x.Comment)</div></div>
 	</div>
 </fieldset>
