@@ -89,7 +89,7 @@ namespace Mictlanix.BE.Model {
 		public PaymentMethod Method { get; set; }
 
 		[Property]
-		[DataType (DataType.DateTime)]
+		[DataType (DataType.Date)]
 		[Display (Name = "Date", ResourceType = typeof (Resources))]
 		public DateTime Date { get; set; }
 

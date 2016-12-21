@@ -83,7 +83,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			qry_returns = null;
 
 			var qry_sales = (from x in SalesOrder.Queryable
-					 where x.Terms != PaymentTerms.Immediate && x.IsCompleted
+			                 where x.Terms == PaymentTerms.NetD && x.IsCompleted && !x.IsPaid
 					 group x by x.Customer into c
 					 select new {
 						 Customer = c.Key,
