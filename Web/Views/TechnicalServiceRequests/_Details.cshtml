@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model TechnicalServiceRequest
@@ -6,64 +6,64 @@
 <fieldset>
     <legend>@Model.Type.GetDisplayName()</legend>
 
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-3">@Html.LabelFor(x => x.Brand)</div>
 	  	<div class="col-xs-3">@Html.LabelFor(x => x.Equipment)</div>
 	  	<div class="col-xs-3">@Html.LabelFor(x => x.Model)</div>
 	  	<div class="col-xs-3">@Html.LabelFor(x => x.SerialNumber)</div>
 	</div>
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-3"><div class="ro-field">@Html.DisplayFor(x => x.Brand)</div></div>
 	  	<div class="col-xs-3"><div class="ro-field">@Html.DisplayFor(x => x.Equipment)</div></div>
 	  	<div class="col-xs-3"><div class="ro-field">@Html.DisplayFor(x => x.Model)</div></div>
 	  	<div class="col-xs-3"><div class="ro-field">@Html.DisplayFor(x => x.SerialNumber)</div></div>
 	</div>
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-3">@Html.LabelFor(x => x.Date)</div>
 		<div class="col-xs-6">@Html.LabelFor(x => x.Location)</div>
 	  	<div class="col-xs-3">@Html.LabelFor(x => x.EndDate)</div>
 	</div>
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-3"><div class="ro-field">@Html.DisplayFor(x => x.Date)</div></div>
 	  	<div class="col-xs-6"><div class="ro-field">@Html.DisplayFor(x => x.Location)</div></div>
 	  	<div class="col-xs-3"><div class="ro-field">@Html.DisplayFor(x => x.EndDate)</div></div>
 	</div>
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-6">@Html.LabelFor(x => x.Customer)</div>
 	  	<div class="col-xs-6">@Html.LabelFor(x => x.ResponsiblePerson)</div>
 	</div>
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-6"><div class="ro-field">@Html.DisplayFor(x => x.Customer, "String")</div></div>
 	  	<div class="col-xs-6"><div class="ro-field">@Html.DisplayFor(x => x.ResponsiblePerson)</div></div>
 	</div>
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-12">@Html.LabelFor(x => x.Comment)</div>
 	</div>
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-12"><div class="ro-field">@Html.DisplayFor(x => x.Comment)</div></div>
 	</div>
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-6">@Html.LabelFor(x => x.ContactName)</div>
 	  	<div class="col-xs-2">@Html.LabelFor(x => x.ContactPhoneNumber)</div>
 	  	<div class="col-xs-2">@Html.LabelFor(x => x.PaymentStatus)</div>
 	  	<div class="col-xs-2">@Html.LabelFor(x => x.ShippingMethod)</div>
 	</div>
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-6"><div class="ro-field">@Html.DisplayFor(x => x.ContactName)</div></div>
 	  	<div class="col-xs-2"><div class="ro-field">@Html.DisplayFor(x => x.ContactPhoneNumber)</div></div>
 	  	<div class="col-xs-2"><div class="ro-field">@Html.DisplayFor(x => x.PaymentStatus)</div></div>
 	  	<div class="col-xs-2"><div class="ro-field">@Html.DisplayFor(x => x.ShippingMethod)</div></div>
 	</div>
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-12">@Html.LabelFor(x => x.Address)</div>
 	</div>
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-12"><div class="ro-field">@Html.DisplayFor(x => x.Address)</div></div>
 	</div>
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-12">@Html.LabelFor(x => x.Remarks)</div>
 	</div>
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-12"><div class="ro-field">@Html.DisplayFor(x => x.Remarks)</div></div>
 	</div>
 </fieldset>
