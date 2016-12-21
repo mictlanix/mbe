@@ -184,7 +184,7 @@ ALTER TABLE sales_quote
 	ADD COLUMN creator INT(11) NOT NULL,
 	ADD COLUMN updater INT(11) NOT NULL,
 	ADD COLUMN creation_time DATETIME NULL,
-	ADD COLUMN modification_time DATETIME NOT NULL,
+	ADD COLUMN modification_time DATETIME NULL,
 	ADD COLUMN contact INT(11) NULL,
 	ADD COLUMN ship_to INT(11) NULL,
 	ADD COLUMN comment VARCHAR(1024) NULL,
@@ -219,6 +219,36 @@ ALTER TABLE sales_quote_detail
 
 ALTER TABLE customer
 	ADD COLUMN salesperson INT(11) NULL DEFAULT NULL;
+
+-- TRUNCATE TABLE customer_payment;
+
+ALTER TABLE customer_payment 
+	DROP FOREIGN KEY customer_payment_sales_order,
+	DROP INDEX customer_payment_sales_order_idx,
+	DROP COLUMN sales_order,
+	DROP COLUMN cash_change;
+
+ALTER TABLE customer_payment
+	CHANGE COLUMN cash_change cash_change DECIMAL(18,4) NOT NULL,
+	ADD COLUMN currency INT(11) NOT NULL;
+
+CREATE TABLE sales_order_payment (
+	sales_order_payment_id int(11) NOT NULL AUTO_INCREMENT,
+	sales_order INT(11) NOT NULL,
+	customer_payment INT(11) NOT NULL,
+	amount DECIMAL(18,4) NOT NULL,
+	amount_change DECIMAL(18,4) NOT NULL,
+	PRIMARY KEY (sales_order_payment_id),
+	INDEX sales_order_payment_sales_order_idx (sales_order ASC),
+	INDEX sales_order_payment_customer_payment_idx (customer_payment ASC),
+	UNIQUE INDEX sales_order_payment_sales_order_customer_payment_idx (sales_order ASC, customer_payment ASC),
+	CONSTRAINT sales_order_payment_sales_order_fk
+		FOREIGN KEY (sales_order) REFERENCES sales_order (sales_order_id)
+		ON DELETE NO ACTION ON UPDATE NO ACTION,
+	CONSTRAINT sales_order_payment_customer_payment_fk
+		FOREIGN KEY (customer_payment) REFERENCES customer_payment (customer_payment_id)
+		ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE = InnoDB;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

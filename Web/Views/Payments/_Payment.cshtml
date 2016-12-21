@@ -1,7 +1,7 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Model
-@model Mictlanix.BE.Model.CustomerPayment
+@model SalesOrderPayment
 <li id="payment@(Model.Id)">
     <div class="photo">
         <img src="@Url.Content("~/Content/icons/dollar.png")" title="@Resources.Pay" />
@@ -12,14 +12,13 @@
     </div>
     <div class="info">
         <label>@Resources.Amount:</label>
-        <span class="text">@Html.DisplayFor(x => x.Cash)</span>
+        <span class="text">@Html.DisplayFor(x => x.Payment.Amount)</span>
         <br/>
         <label>@Resources.Type:</label>
-        <span class="text">@Model.Method.GetDisplayName()</span>
-        @if (!string.IsNullOrEmpty(Model.Reference))
-        {
+        <span class="text">@Model.Payment.Method.GetDisplayName()</span>
+        @if (!string.IsNullOrEmpty (Model.Payment.Reference)) {
             <label>@Resources.Reference:</label>
-            <span class="text">@Model.Reference</span>
+            <span class="text">@Model.Payment.Reference</span>
         }
     </div>
 </li>

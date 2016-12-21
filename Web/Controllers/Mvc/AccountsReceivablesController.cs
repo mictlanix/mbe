@@ -45,12 +45,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		//
 		// GET: /Statements/
 
-		// TODO: Obtimise DB qry and memory
+		//TODO: Obtimise DB qry and memory
+		//FIXME: SalesOrderPayment
 		public ActionResult Index ()
 		{
 			var results = new List<AccountsReceivableSummary> ();
 			var qry_payments = (from x in CustomerPayment.Queryable
-					    where x.SalesOrder == null
+					    /* where x.SalesOrder == null */
 					    group x by x.Customer into c
 					    select new {
 						    Customer = c.Key,
@@ -158,8 +159,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			qry_returns.Clear ();
 			qry_returns = null;
 
+			//FIXME: SalesOrderPayment
 			var qry_payments = (from x in CustomerPayment.Queryable
-					    where x.SalesOrder == null && x.Customer.Id == item.Id
+					    where /* x.SalesOrder == null && */ x.Customer.Id == item.Id
 					    select x).ToList ();
 
 			var payments = (from x in qry_payments

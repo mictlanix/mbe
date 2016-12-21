@@ -61,13 +61,14 @@ namespace Mictlanix.BE.Web.Helpers
 			return string.Empty;
 		}
 
+		//FIXME: SalesOrderPayment
 		public static decimal Debt (this Customer entity)
 		{
 			IQueryable<decimal> query;
 
 			query = from x in CustomerPayment.Queryable
-					where x.SalesOrder == null && x.Customer.Id == entity.Id
-					select x.Amount;
+				where /* x.SalesOrder == null && */ x.Customer.Id == entity.Id
+				select x.Amount;
 			var paid = query.Count () > 0 ? query.ToList ().Sum () : 0;
 
 			query = from x in SalesOrder.Queryable

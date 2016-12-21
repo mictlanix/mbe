@@ -5,7 +5,7 @@
 //   Eddy Zavaleta <eddy@mictlanix.com>
 //   Eduardo Nieto <enieto@mictlanix.com>
 // 
-// Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2011-2016 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -26,7 +26,6 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +37,7 @@ namespace Mictlanix.BE.Model {
 	[ActiveRecord ("sales_order", Lazy = true)]
 	public class SalesOrder : ActiveRecordLinqBase<SalesOrder> {
 		IList<SalesOrderDetail> details = new List<SalesOrderDetail> ();
-		IList<CustomerPayment> payments = new List<CustomerPayment> ();
+		IList<SalesOrderPayment> payments = new List<SalesOrderPayment> ();
 
 		[PrimaryKey (PrimaryKeyType.Identity, "sales_order_id")]
 		[Display (Name = "Id", ResourceType = typeof (Resources))]
@@ -135,8 +134,8 @@ namespace Mictlanix.BE.Model {
 			set { details = value; }
 		}
 
-		[HasMany (typeof (CustomerPayment), Table = "customer_payment", ColumnKey = "sales_order", Lazy = true)]
-		public virtual IList<CustomerPayment> Payments {
+		[HasMany (typeof (SalesOrderPayment), Table = "sales_order_payment", ColumnKey = "sales_order", Lazy = true)]
+		public virtual IList<SalesOrderPayment> Payments {
 			get { return payments; }
 			set { payments = value; }
 		}
@@ -180,12 +179,18 @@ namespace Mictlanix.BE.Model {
 		[DataType (DataType.Currency)]
 		[Display (Name = "Paid", ResourceType = typeof (Resources))]
 		public virtual decimal Paid {
-			get { return Payments.Sum (x => x.Amount + x.Change.GetValueOrDefault ()); }
+			get { return Payments.Sum (x => x.Amount + x.Change); }
 		}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Balance", ResourceType = typeof (Resources))]
 		public virtual decimal Balance {
+			get { return Total - Paid; }
+		}
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "Change", ResourceType = typeof (Resources))]
+		public virtual decimal Change {
 			get { return Paid - Total; }
 		}
 
