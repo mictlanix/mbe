@@ -5,7 +5,7 @@
 //   Eddy Zavaleta <eddy@mictlanix.com>
 //   Eduardo Nieto <enieto@mictlanix.com>
 // 
-// Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2011-2016 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -26,9 +26,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-
 using System;
-using System.Collections.Generic;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
@@ -70,10 +68,6 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "CashSession", ResourceType = typeof (Resources))]
 		public virtual CashSession CashSession { get; set; }
 
-		[BelongsTo ("sales_order")]
-		[Display (Name = "SalesOrder", ResourceType = typeof (Resources))]
-		public virtual SalesOrder SalesOrder { get; set; }
-
 		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
 		[Display (Name = "Customer", ResourceType = typeof (Resources))]
 		[UIHint ("CustomerSelector")]
@@ -89,11 +83,6 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Amount", ResourceType = typeof (Resources))]
 		public decimal Amount { get; set; }
 
-		[Property ("cash_change")]
-		[DataType (DataType.Currency)]
-		[Display (Name = "Change", ResourceType = typeof (Resources))]
-		public decimal? Change { get; set; }
-
 		[Property]
 		[Display (Name = "PaymentMethod", ResourceType = typeof (Resources))]
 		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
@@ -108,17 +97,15 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "PaymentReference", ResourceType = typeof (Resources))]
 		public string Reference { get; set; }
 
-		[DataType (DataType.Currency)]
-		[Display (Name = "Cash", ResourceType = typeof (Resources))]
-		public decimal Cash {
-			get { return Amount + Change.GetValueOrDefault (); }
-		}
+		[Property]
+		[Display (Name = "Currency", ResourceType = typeof (Resources))]
+		public virtual CurrencyCode Currency { get; set; }
 
 		#region Override Base Methods
 
 		public override string ToString ()
 		{
-			return string.Format ("{0} : {1:c} [{2:u}]", Method, Amount, Date);
+			return string.Format ("{0} : {1:c} {3} [{2:u}]", Method, Amount, Date, Currency);
 		}
 
 		public override bool Equals (object obj)

@@ -23,20 +23,26 @@
 <div id="form">
 	<fieldset>
 	    <legend>@Resources.Payment</legend>
-		<div class="row">
-		  	<div class="col-xs-3">@Html.LabelFor(x => new CustomerPayment().Amount)</div>
-			<div class="col-xs-3">@Html.LabelFor(x => new CustomerPayment().Reference)</div>
-		</div>
-		<div class="row">
-		  	<div class="col-xs-3"><input id='amount' class='text-right' type='text' value='0.00'></div>
-			<div class="col-xs-3"><input id='reference' class='text-right' type='text' value=''></div>
-		</div>
-	    <div class="btn-toolbar">
-	    	@Html.LabelFor(x => new CustomerPayment().Method)
-	        <div class="btn-group">
-	        @foreach (var item in WebConfig.CashierPaymentOptions) {
-	        	<button class="pay btn" data-value='@((int)item)'>@item.GetDisplayName()</button>
-	        }
+	    <div class="form-horizontal">
+			<div class="form-group">
+			  	<div class="col-xs-3"><label for="amount">@Resources.Amount</label></div>
+				<div class="col-xs-3"><label for="reference">@Resources.Reference</label></div>
+			</div>
+			<div class="form-group">
+			  	<div class="col-xs-3"><input id='amount' class='form-control text-right' type='text' value='0.00'></div>
+				<div class="col-xs-3"><input id='reference' class='form-control' type='text' value=''></div>
+			</div>
+			<div class="form-group">
+				<div class="col-xs-12">
+		    		@Html.LabelFor(x => new CustomerPayment().Method)
+		    	</div>
+				<div class="col-xs-12">
+			        <div class="btn-group">
+			        @foreach (var item in WebConfig.CashierPaymentOptions) {
+			        	<button class="pay btn btn-default" type="button" data-value='@((int)item)'>@item.GetDisplayName()</button>
+			        }
+					</div>
+				</div>
 			</div>
 	    </div>
 	</fieldset>
