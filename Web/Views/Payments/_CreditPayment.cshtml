@@ -33,17 +33,7 @@
 	    	</div>
 			<div class="col-xs-12">
 		        <div class="btn-group">
-		        @foreach (var item in new []{ PaymentMethod.Cash,
-		        							  PaymentMethod.DebitCard,
-		        							  PaymentMethod.CreditCard,
-		        							  PaymentMethod.Check,
-		        							  PaymentMethod.EFT,
-		        							  PaymentMethod.ElectronicPurse,
-		        							  PaymentMethod.ElectronicMoney,
-		        							  PaymentMethod.FoodVouchers,
-		        							  PaymentMethod.ServiceCard,
-		        							  PaymentMethod.Others,
-		        							  PaymentMethod.GovernmentFunding }) {
+		        @foreach (var item in WebConfig.CashierPaymentOptions) {
 		        	<button class="pay btn btn-default" type="button" data-value='@((int)item)'>@item.GetDisplayName()</button>
 		        }
 				</div>
