@@ -17,11 +17,25 @@
 	        </div>
 		</div>
 		<div class="form-group">
-		  	<div class="col-xs-3">@Html.LabelFor(x => x.Amount)</div>
+		  	<div class="col-xs-2">@Html.LabelFor(x => x.Date)</div>
+		  	<div class="col-xs-2">@Html.LabelFor(x => x.Amount)</div>
+		  	<div class="col-xs-1">@Html.LabelFor(x => x.Currency)</div>
 			<div class="col-xs-3">@Html.LabelFor(x => x.Reference)</div>
 		</div>
 		<div class="form-group">
-		  	<div class="col-xs-3">@Html.EditorFor(x => x.Amount) @Html.ValidationMessageFor(x => x.Amount)</div>
+		  	<div class="col-xs-2">@Html.EditorFor(x => x.Date) @Html.ValidationMessageFor(x => x.Date)</div>
+		  	<div class="col-xs-2">@Html.EditorFor(x => x.Amount) @Html.ValidationMessageFor(x => x.Amount)</div>
+			<div class="col-xs-1">
+		    	<select id="target-list" name="Currency" class="form-control">
+		            @foreach (var item in Enum.GetValues (typeof (CurrencyCode))) {
+		                if (WebConfig.DefaultCurrency == (CurrencyCode) item) {
+		                    <option value="@((int)item)" selected>@item.ToString()</option>
+		                } else {
+		                    <option value="@((int)item)">@item.ToString()</option>
+		                }
+		            }
+		        </select>
+			</div>
 			<div class="col-xs-3">@Html.EditorFor(x => x.Reference)</div>
 		</div>
 		
