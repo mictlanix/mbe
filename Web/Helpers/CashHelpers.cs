@@ -5,7 +5,7 @@
 //   Eddy Zavaleta <eddy@mictlanix.com>
 //   Eduardo Nieto <enieto@mictlanix.com>
 // 
-// Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2011-2016 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -26,28 +26,22 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Mvc;
-using System.Web.Routing;
 using Mictlanix.BE.Model;
 
-namespace Mictlanix.BE.Web.Helpers
-{
-	public static class CashHelpers
-	{
+namespace Mictlanix.BE.Web.Helpers {
+	public static class CashHelpers {
 		public static IList<CashCount> ListDenominations ()
 		{
-			string[] denominations = Resources.Denominations.Split (',');
+			string [] denominations = Resources.Denominations.Split (',');
 			IList<CashCount> items = new List<CashCount> (denominations.Length);
 
 			foreach (var item in denominations) {
 				items.Add (new CashCount {
-                    Denomination = decimal.Parse (item)
-                });
+					Denomination = decimal.Parse (item)
+				});
 			}
 
 			return items;
@@ -57,16 +51,16 @@ namespace Mictlanix.BE.Web.Helpers
 		{
 			if (baseCurrency == targetCurrency)
 				return decimal.One;
-			
-			var item = ExchangeRate.Queryable.SingleOrDefault(x => x.Date == date && x.Base == baseCurrency &&
-			                                                  x.Target == targetCurrency);
-			
+
+			var item = ExchangeRate.Queryable.SingleOrDefault (x => x.Date == date && x.Base == baseCurrency &&
+									   x.Target == targetCurrency);
+
 			if (item != null)
 				return item.Rate;
-			
-			item = ExchangeRate.Queryable.SingleOrDefault(x => x.Date == date && x.Base == targetCurrency &&
-			                                              x.Target == baseCurrency);
-			
+
+			item = ExchangeRate.Queryable.SingleOrDefault (x => x.Date == date && x.Base == targetCurrency &&
+								       x.Target == baseCurrency);
+
 			if (item != null)
 				return decimal.One / item.Rate;
 
@@ -85,18 +79,18 @@ namespace Mictlanix.BE.Web.Helpers
 
 			return val2 == decimal.Zero ? decimal.Zero : (val1 / val2);
 		}
-		
+
 		public static decimal GetTodayExchangeRate (CurrencyCode baseCurrency, CurrencyCode targetCurrency)
 		{
 			return GetExchangeRate (DateTime.Today, baseCurrency, targetCurrency);
 		}
-		
+
 		public static decimal GetTodayExchangeRate (CurrencyCode baseCurrency)
 		{
 			return GetExchangeRate (DateTime.Today, baseCurrency, WebConfig.BaseCurrency);
 		}
 
-		public static decimal GetTodayDefaultExchangeRate()
+		public static decimal GetTodayDefaultExchangeRate ()
 		{
 			return GetExchangeRate (DateTime.Today, WebConfig.DefaultCurrency, WebConfig.BaseCurrency);
 		}
