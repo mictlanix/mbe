@@ -228,9 +228,11 @@ table.noborder, table.noborder td {
 th label {
   color:#DD4B39;
 }
-td.actions {
+td.actions,
+.table-condensed > tbody > tr > td.actions {
   white-space:nowrap;
   width:1px;
+  padding:1px;
 }
 td.fill {
   width:100%;
