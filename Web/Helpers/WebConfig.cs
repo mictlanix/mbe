@@ -37,16 +37,15 @@ using System.Web.Routing;
 using System.Configuration;
 using Mictlanix.BE.Model;
 
-namespace Mictlanix.BE.Web.Helpers
-{
-	public static class WebConfig
-	{
+namespace Mictlanix.BE.Web.Helpers {
+	public static class WebConfig {
 		public const string StoreCookieKey = "Store";
 		public const string PointOfSaleCookieKey = "PointOfSale";
 		public const string CashDrawerCookieKey = "CashDrawer";
+		public static PaymentMethod [] cashier_payment_options = null;
 
 		#region Application Global Settings
-		
+
 		public static string ApplicationTitle {
 			get { return ConfigurationManager.AppSettings ["ApplicationTitle"]; }
 		}
@@ -62,19 +61,19 @@ namespace Mictlanix.BE.Web.Helpers
 		public static string PromissoryNoteContent {
 			get { return ConfigurationManager.AppSettings ["PromissoryNoteContent"]; }
 		}
-		
+
 		public static string PhotosPath {
 			get { return ConfigurationManager.AppSettings ["PhotosPath"]; }
 		}
-		
+
 		public static string DefaultPhotoFile {
 			get { return ConfigurationManager.AppSettings ["DefaultPhotoFile"]; }
 		}
-		
+
 		public static decimal DefaultVAT {
 			get { return Convert.ToDecimal (ConfigurationManager.AppSettings ["DefaultVAT"]); }
 		}
-		
+
 		public static bool IsTaxIncluded {
 			get { return Convert.ToBoolean (ConfigurationManager.AppSettings ["IsTaxIncluded"]); }
 		}
@@ -102,7 +101,7 @@ namespace Mictlanix.BE.Web.Helpers
 		public static int DefaultCustomer {
 			get { return Convert.ToInt32 (ConfigurationManager.AppSettings ["DefaultCustomer"]); }
 		}
-		
+
 		public static PriceType DefaultPriceType {
 			get {
 				var val = PriceType.Fixed;
@@ -114,11 +113,11 @@ namespace Mictlanix.BE.Web.Helpers
 		public static string MainLayout {
 			get { return ConfigurationManager.AppSettings ["MainLayout"]; }
 		}
-		
+
 		public static string PrintLayout {
 			get { return ConfigurationManager.AppSettings ["PrintLayout"]; }
 		}
-		
+
 		public static string ReceiptLayout {
 			get { return ConfigurationManager.AppSettings ["ReceiptLayout"]; }
 		}
@@ -203,18 +202,39 @@ namespace Mictlanix.BE.Web.Helpers
 			get { return ConfigurationManager.AppSettings ["DefaultSender"]; }
 		}
 
-        public static int DefaultDueDaysAdded {
-            get { return int.Parse(ConfigurationManager.AppSettings["DefaultDueDateAddDays"]); }
-        }
+		public static int DefaultDueDaysAdded {
+			get { return int.Parse (ConfigurationManager.AppSettings ["DefaultDueDateAddDays"]); }
+		}
+
+		public static PaymentMethod [] CashierPaymentOptions {
+			get { 
+				if (cashier_payment_options == null) {
+					var list = new List<PaymentMethod> ();
+					var opts = ConfigurationManager.AppSettings ["CashierPaymentOptions"].Split (',');
+
+					foreach (var opt in opts) {
+						PaymentMethod method = PaymentMethod.NA;
+
+						if (Enum.TryParse (opt, out method)) {
+							list.Add (method);
+						}
+					}
+
+					cashier_payment_options = list.ToArray ();
+				}
+
+				return cashier_payment_options;
+			}
+		}
 
 		#endregion
-		
+
 		#region Request's (Local) Settings
-		
+
 		public static Store Store {
 			get {
 				var cookie = System.Web.HttpContext.Current.Request.Cookies [StoreCookieKey];
-				
+
 				if (cookie != null) {
 					return Store.TryFind (int.Parse (cookie.Value));
 				}
@@ -226,31 +246,31 @@ namespace Mictlanix.BE.Web.Helpers
 				return null;
 			}
 		}
-		
+
 		public static PointOfSale PointOfSale {
 			get {
 				var cookie = System.Web.HttpContext.Current.Request.Cookies [PointOfSaleCookieKey];
-				
+
 				if (cookie != null) {
 					return PointOfSale.TryFind (int.Parse (cookie.Value));
 				}
-				
+
 				if (PointOfSale.Queryable.Count () == 1) {
 					return PointOfSale.Queryable.FirstOrDefault ();
 				}
-				
+
 				return null;
 			}
 		}
-		
+
 		public static CashDrawer CashDrawer {
 			get {
 				var cookie = System.Web.HttpContext.Current.Request.Cookies [CashDrawerCookieKey];
-				
+
 				if (cookie != null) {
 					return CashDrawer.TryFind (int.Parse (cookie.Value));
 				}
-				
+
 				if (CashDrawer.Queryable.Count () == 1) {
 					return CashDrawer.Queryable.FirstOrDefault ();
 				}
@@ -258,7 +278,7 @@ namespace Mictlanix.BE.Web.Helpers
 				return null;
 			}
 		}
-		
+
 		#endregion
 	}
 }

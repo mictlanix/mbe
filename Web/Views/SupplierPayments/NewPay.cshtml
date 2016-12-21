@@ -29,8 +29,7 @@
     </div>
     <div class="editor-field">
         <ul class="selection-options">
-        @foreach (var item in Enum.GetValues(typeof(PaymentMethod)))
-        {
+        @foreach (var item in WebConfig.CashierPaymentOptions) {
             <li>
                 <label>
                     @Html.RadioButtonFor(x => x.Method, (int)item)
