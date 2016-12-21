@@ -26,11 +26,8 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
 using Mictlanix.BE.Model;
@@ -256,49 +253,57 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return RedirectToAction ("Index");
 		}
 
+		//FIXME: SalesOrderPayment
 		[HttpPost]
 		public JsonResult AddPayment (int id, int type, decimal amount, string reference)
 		{
 			var dt = DateTime.Now;
+			var session = GetSession ();
+			var store = session.CashDrawer.Store;
 			var sales_order = SalesOrder.Find (id);
 			var employee = CurrentUser.Employee;
-
-			var item = new CustomerPayment {
-				Creator = employee,
-				CreationTime = dt,
-				Updater = employee,
-				ModificationTime = dt,
-				CashSession = GetSession (),
+			var item = new SalesOrderPayment {
 				SalesOrder = sales_order,
-				Customer = sales_order.Customer,
-				Method = (PaymentMethod) type,
-				Amount = amount,
-				Date = DateTime.Now,
-				Reference = reference
+				Payment = new CustomerPayment {
+					Creator = employee,
+					CreationTime = dt,
+					Updater = employee,
+					ModificationTime = dt,
+					CashSession = session,
+					/* SalesOrder = sales_order, */
+					Customer = sales_order.Customer,
+					Method = (PaymentMethod) type,
+					Amount = amount,
+					Date = DateTime.Now,
+					Reference = reference,
+					Currency = sales_order.Currency
+				},
+				Amount = amount
 			};
 
 			// Store and Serial
-			item.Store = item.CashSession.CashDrawer.Store;
+			item.Payment.Store = store;
+
 			try {
-				item.Serial = (from x in CustomerPayment.Queryable
-					       where x.Store.Id == item.Store.Id
-					       select x.Serial).Max () + 1;
+				item.Payment.Serial = (from x in CustomerPayment.Queryable
+						       where x.Store.Id == store.Id
+						       select x.Serial).Max () + 1;
 			} catch {
-				item.Serial = 1;
+				item.Payment.Serial = 1;
 			}
 
-			if (item.Method == PaymentMethod.Cash) {
-				if (item.Amount > -item.SalesOrder.Balance) {
-					item.Change = item.Amount + item.SalesOrder.Balance;
-					item.Amount = -item.SalesOrder.Balance;
+			if (item.Amount > item.SalesOrder.Balance) {
+				if (item.Payment.Method == PaymentMethod.Cash) {
+					item.Change = item.Amount - item.SalesOrder.Balance;
+				} else {
+					item.Payment.Amount = item.SalesOrder.Balance;
 				}
-			} else {
-				if (item.Amount > -item.SalesOrder.Balance) {
-					item.Amount = -item.SalesOrder.Balance;
-				}
+
+				item.Amount = item.SalesOrder.Balance;
 			}
 
 			using (var scope = new TransactionScope ()) {
+				item.Payment.Create ();
 				item.CreateAndFlush ();
 			}
 
@@ -342,7 +347,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.Updater = item.Creator;
 			item.ModificationTime = item.CreationTime;
 			item.Date = DateTime.Now;
-			item.Change = 0m;
 
 			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
@@ -357,16 +361,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public ActionResult GetPayment (int id)
 		{
-			return PartialView ("_Payment", CustomerPayment.Find (id));
+			return PartialView ("_Payment", SalesOrderPayment.Find (id));
 		}
 
 		[HttpPost]
 		public JsonResult RemovePayment (int id)
 		{
-			var item = CustomerPayment.Find (id);
+			var item = SalesOrderPayment.Find (id);
 
 			using (var scope = new TransactionScope ()) {
-				item.DeleteAndFlush ();
+				item.Delete ();
+				item.Payment.DeleteAndFlush ();
 			}
 
 			return Json (new {

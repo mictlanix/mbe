@@ -38,7 +38,6 @@ namespace Mictlanix.BE.Model {
 	[ActiveRecord ("sales_quote", Lazy = true)]
 	public class SalesQuote : ActiveRecordLinqBase<SalesQuote> {
 		IList<SalesQuoteDetail> details = new List<SalesQuoteDetail> ();
-		IList<CustomerPayment> payments = new List<CustomerPayment> ();
 
 		[PrimaryKey (PrimaryKeyType.Identity, "sales_quote_id")]
 		[Display (Name = "Id", ResourceType = typeof (Resources))]
@@ -118,12 +117,6 @@ namespace Mictlanix.BE.Model {
 			set { details = value; }
 		}
 
-		[HasMany (typeof (CustomerPayment), Table = "customer_payment", ColumnKey = "sales_quote", Lazy = true)]
-		public virtual IList<CustomerPayment> Payments {
-			get { return payments; }
-			set { payments = value; }
-		}
-
 		[DataType (DataType.Currency)]
 		[Display (Name = "Subtotal", ResourceType = typeof (Resources))]
 		public virtual decimal Subtotal {
@@ -158,18 +151,6 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Total", ResourceType = typeof (Resources))]
 		public virtual decimal TotalEx {
 			get { return Details.Sum (x => x.TotalEx); }
-		}
-
-		[DataType (DataType.Currency)]
-		[Display (Name = "Paid", ResourceType = typeof (Resources))]
-		public virtual decimal Paid {
-			get { return Payments.Sum (x => x.Amount + x.Change.GetValueOrDefault ()); }
-		}
-
-		[DataType (DataType.Currency)]
-		[Display (Name = "Balance", ResourceType = typeof (Resources))]
-		public virtual decimal Balance {
-			get { return Paid - Total; }
 		}
 
 		[BelongsTo ("creator", Lazy = FetchWhen.OnInvoke)]
