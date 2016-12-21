@@ -68,16 +68,16 @@
         <tr>
             <td></td>
             <td></td>
-            <td class="text-right">@item.Method.GetDisplayName()</td>
-            <td class="number">@Html.DisplayFor(modelItem => item.Cash)</td>
+            <td class="text-right">@item.Payment.Method.GetDisplayName()</td>
+            <td class="number">@Html.DisplayFor(x => item.Payment.Amount)</td>
         </tr>
     }
-    @if (Model.Payments.Sum (x => x.Change.GetValueOrDefault ()) > 0) {
+    @if (Model.Payments.Sum (x => x.Change) > 0) {
         <tr>
             <td></td>
             <td></td>
             <td class="text-right">@Resources.Change</td>
-            <td class="number">@Html.DisplayFor(x => Model.Balance)</td>
+            <td class="number">@Html.DisplayFor(x => Model.Change)</td>
         </tr>
     }
 </table>
