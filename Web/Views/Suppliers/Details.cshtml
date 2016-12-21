@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model Supplier
@@ -19,28 +19,28 @@
 <fieldset>
     <legend>@Resources.Title_Supplier</legend>
 
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-3">@Html.LabelFor(x => x.Code)</div>
 		<div class="col-xs-9">@Html.LabelFor(x => x.Name)</div>
 	</div>
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-3"><div class="ro-field">@Html.DisplayFor(x => x.Code)</div></div>
 		<div class="col-xs-9"><div class="ro-field">@Html.DisplayFor(x => x.Name)</div></div>
 	</div>
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-4">@Html.LabelFor(x => x.Zone)</div>
 		<div class="col-xs-4">@Html.LabelFor(x => x.CreditLimit)</div>
 	  	<div class="col-xs-4">@Html.LabelFor(x => x.CreditDays)</div>
 	</div>
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-4"><div class="ro-field">@Html.DisplayFor(x => x.Zone)</div></div>
 		<div class="col-xs-4"><div class="ro-field">@Html.DisplayFor(x => x.CreditLimit)</div></div>
 	  	<div class="col-xs-4"><div class="ro-field">@Html.DisplayFor(x => x.CreditDays)</div></div>
 	</div>
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-12">@Html.LabelFor(x => x.Comment)</div>
 	</div>
-	<div class="row-fluid">
+	<div class="row">
 	  	<div class="col-xs-12"><div class="ro-field">@Html.DisplayFor(x => x.Comment)</div></div>
 	</div>
 </fieldset>
@@ -80,7 +80,7 @@
 	    </div>
 	</div>
 </div>
-<div class="row-fluid vspaced">
+<div class="row vspaced">
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 @if (ViewBag.Privilege.AllowUpdate) {
 	@Html.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new { @class = "button icon edit pull-right open-modal",  data_modal_id = "supplier-modal" })

@@ -9,7 +9,7 @@
 }
 
 <fieldset>
-	<div class='row-fluid'>
+	<div class='row'>
 		<div class='col-xs-8'>
 	  		<dl class=''>
 				<dt>@Resources.Customer</dt>
@@ -55,7 +55,7 @@
   		</div>
 	</div>
 @if(Privilege.AllowDelete && !Model.IsCancelled) {
-	<div class='row-fluid'>
+	<div class='row'>
   		<div class='col-xs-12'>
 	    @using (Html.BeginForm("Cancel", "Payments", new { id =  Model.Id }, FormMethod.Post, new { @class = "modal-form pull-right" })) {
 			<button type="submit" class="icon cancel">@Resources.Cancel</button>
