@@ -247,6 +247,7 @@
     <Compile Include="Helpers\WebConfig.cs" />
     <Compile Include="Helpers\NotificationsHelpers.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="Models\AccountReceivable.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\buttons.css" />
@@ -548,7 +549,6 @@
     <Content Include="Views\Shared\EditorTemplates\WarehouseSelector.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\MultilineText.cshtml" />
     <Content Include="Views\Payments\_Index.cshtml" />
-    <Content Include="Views\AccountsReceivables\AccountStatement.cshtml" />
     <Content Include="Views\AccountsReceivables\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SupplierSelector.cshtml" />
     <Content Include="Views\Purchases\Index.cshtml" />
@@ -906,6 +906,8 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Views\AccountsReceivables\_ApplyPayment.cshtml" />
+    <Content Include="Views\AccountsReceivables\_ApplyPaymentSuccesful.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\fonts\" />

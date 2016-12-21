@@ -2,97 +2,55 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Models
 @using Mictlanix.BE.Web.Helpers;
-@model Search<AccountsReceivableSummary>
-
-@{
-    ViewBag.Title = Resources.Title_AccountsReceivable;
-    var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.AccountsReceivable);
-}
-
-<table>
-    <tr>
-        <th>
-            @Html.LabelFor(x => new Customer().Name)            
-        </th>
-        <th class="nowrap">
-            @Html.LabelFor(x => new AccountsReceivableSummary().SalesSummary)
-        </th>
-        <th class="nowrap">
-            @Html.LabelFor(x => new AccountsReceivableSummary().PaymentsSummary)
-        </th>
-        <th class="nowrap">
-            @Html.LabelFor(x => new AccountsPayableSummary().ReturnsSummary)
-        </th>
-        <th>
-            @Html.LabelFor(x => new AccountsReceivableSummary().Balance)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model.Results)
-{
-    <tr>
-        <td>
-            @Html.DisplayFor(x => item.Customer.Name)
-        </td>
-        <td class="number">
-            @Html.DisplayFor(x => item.SalesSummary)
-        </td>
-        <td class="number">
-            @Html.DisplayFor(x => item.PaymentsSummary)
-        </td>
-        <td class="number">
-            @Html.DisplayFor(x => item.ReturnsSummary)
-        </td>
-        <td class="number">
-            @Html.DisplayFor(x => item.Balance)
-        </td>
-        <td class="actions">
-        @if (Privilege.AllowRead)
-        {
-            	@Html.ActionLink(" ", "AccountStatement", new { id = item.Customer.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
-        }
-        </td>
-    </tr>
-}
+@model IEnumerable<dynamic>
+@foreach (var g in Model.GroupBy (x => x.Currency)) {
+<table class='table table-condensed'>
+	<thead>
+	    <tr>
+	        <th class='center'>@Resources.DueDate</th>
+	        <th class='nowrap center'>@Resources.SalesOrder</th>
+	        <th class='nowrap center'>@Resources.Date</th>
+	        <th class='center'>@Resources.FiscalDocument</th>
+	        <th class='nowrap center'>@Resources.Customer</th>
+	        <th class='nowrap center'>@Resources.Total</th>
+	        <th class='nowrap center'>@Resources.Refunds</th>
+	        <th class='nowrap center'>@Resources.Payments</th>
+	        <th class='nowrap center'>@Resources.Balance</th>
+	        <th class='nowrap center'>@Resources.Currency</th>
+	        <th class=''></th>
+	    </tr>
+    </thead>
+    <tbody>
+	@foreach (var item in g) {
+		<tr>
+			<td class='date'>@item.DueDate.ToString("yyyy-MM-dd")</td>
+			<td class='number'>@item.SalesOrder</td>
+			<td class='date'>@item.Date.ToString("yyyy-MM-dd")</td>
+			<td class='center' style='word-wrap:break-word'>@item.Invoices</td>
+			<td>@item.Customer</td>
+			<td class='currency'>@item.Total.ToString("c")</td>
+			<td class='currency'>@item.Refunds.ToString("c")</td>
+			<td class='currency'>@item.Payments.ToString("c")</td>
+			<td class='currency'>@item.Balance.ToString("c")</td>
+			<td class='center'>@((CurrencyCode)item.Currency)</td>
+			<td class='actions'>
+				@Html.ActionLink(" ", "ApplyPayment", new { id = item.SalesOrder }, new { @class = "button icon pay icon-only open-modal", data_modal_id = "apply-payment-modal" })
+			</td>
+		</tr>
+	}
+    </tbody>
+    <tfoot>
+	    <tr>
+	        <td class='center' colspan='5'></td>
+	        <td class='currency'><b>@g.Sum(x => (decimal)x.Total).ToString("c")</b></td>
+	        <td class='currency'><b>@g.Sum(x => (decimal)x.Refunds).ToString("c")</b></td>
+	        <td class='currency'><b>@g.Sum(x => (decimal)x.Payments).ToString("c")</b></td>
+	        <td class='currency'><b>@g.Sum(x => (decimal)x.Balance).ToString("c")</b></td>
+			<td class='center'><b>@((CurrencyCode)g.Key)</b></td>
+	    </tr>
+    </tfoot>
 </table>
-
-
-<div class="buttons right">
-	<label class="button left">@Model.ToString()</label>@if (Model.HasPrev) {<a class="button middle icon prev icon-only" title="@Resources.PrevPage" href="javascript:void(0)"></a>}@if (Model.HasNext) {<a class="button right icon next icon-only" title="@Resources.NextPage" href="javascript:void(0)"></a>}
-</div>
-@if (Model.HasPrev)
-{
-<script type="text/javascript">
-    $(function () {
-        $('a.prev').click(function (e) {
-            e.preventDefault();
-            $("#activity-indicator").show();
-            $("#search-results").hide();
-            $.post('@Url.Action("Index")', { Pattern: "@Model.Pattern", Offset: "@(Model.Offset-Model.Limit)", Limit: "@Model.Limit" }, function (data) {
-                $("#search-results").html(data);
-                $("#search-results").show();
-                $("#activity-indicator").hide();
-            });
-        });
-    });
-</script>
 }
-@if (Model.HasNext)
-{
 <script type="text/javascript">
-    $(function () {
-        $('a.next').click(function (e) {
-            e.preventDefault();
-            $("#activity-indicator").show();
-            $("#search-results").hide();
-            $.post('@Url.Action("Index")', { Pattern: "@Model.Pattern", Offset: "@(Model.Offset+Model.Limit)", Limit: "@Model.Limit" }, function (data) {
-                $("#search-results").html(data);
-                $("#search-results").show();
-                $("#activity-indicator").hide();
-            });
-        });
-    });
+    bindModal('.open-modal');
 </script>
-}

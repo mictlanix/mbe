@@ -1,0 +1,69 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
+@model SalesOrderPayment
+<div class='modal-header'>
+    <button type='button' class='close' data-dismiss='modal'>&times;</button>
+    <h3>@Resources.ApplyPayment</h3>
+</div>
+<div class='modal-body'>
+@using (Ajax.BeginForm(null, null, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "apply-payment-modal-content" }, new { @class = "modal-form" })) {
+    @Html.ValidationSummary(true)
+	<div class="form-horizontal">
+		<div class="form-group">
+		  	<div class="col-xs-12">
+				<label>@Resources.Customer</label>
+				<p class="form-control-static">@Html.DisplayFor(x => x.SalesOrder.Customer.Name)</p>
+			</div>
+		</div>
+		<div class="form-group">
+		  	<div class="col-xs-4">
+				<label>@Resources.SalesOrder</label>
+				<p class="form-control-static">@Html.DisplayFor(x => x.SalesOrder.Id)</p>
+				@Html.HiddenFor(x => x.SalesOrder.Id)
+			</div>
+		  	<div class="col-xs-4">
+				<label>@Resources.Date</label>
+				<p class="form-control-static">@Html.DisplayFor(x => x.SalesOrder.Date)</p>
+			</div>
+		  	<div class="col-xs-4">
+				<label>@Resources.DueDate</label>
+				<p class="form-control-static">@Html.DisplayFor(x => x.SalesOrder.DueDate)</p>
+			</div>
+		</div>
+		<div class="form-group">
+		  	<div class="col-xs-4">
+				<label>@Resources.Total</label>
+				<p class="form-control-static">@Html.DisplayFor(x => x.SalesOrder.Total)</p>
+			</div>
+		  	<div class="col-xs-4">
+				<label>@Resources.Currency</label>
+				<p class="form-control-static">@Html.DisplayFor(x => x.SalesOrder.Currency)</p>
+			</div>
+		  	<div class="col-xs-4">
+				<label>@Resources.Balance</label>
+				<p class="form-control-static">@ViewBag.Balance.ToString("c")</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-xs-8">
+				<label for="payment">@Resources.ReceivedPayments</label>
+		    	<select id="payment" name="PaymentId" class="form-control" required>
+	            @foreach (var item in ViewBag.Payments) {
+                    <option value="@item.Id">@string.Format("{1:c} {3} ({2:yyyy-MM-dd}, {0})", ((PaymentMethod)item.Method).GetDisplayName(), item.Balance, item.Date, item.Currency)</option>
+	            }
+		        </select>
+			</div>
+		  	<div class="col-xs-4">
+				<label for="Amount">@Resources.Amount</label>
+				@Html.EditorFor(x => x.Amount)
+			</div>
+		</div>
+	</div>
+}
+</div>
+<div class='modal-footer'>
+    <button type='button' class='btn btn-default' data-dismiss='modal'>@Resources.Discard</button>
+    <button type='submit' class='btn btn-primary' onclick='$("#apply-payment-modal form").submit();'>@Resources.Apply</button>
+</div>

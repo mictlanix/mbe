@@ -39,8 +39,10 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "SalesOrder", ResourceType = typeof (Resources))]
 		public virtual SalesOrder SalesOrder { get; set; }
 
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		public virtual int PaymentId { get; set; }
+
 		[BelongsTo ("customer_payment")]
-		[Display (Name = "CustomerPayment", ResourceType = typeof (Resources))]
 		public virtual CustomerPayment Payment { get; set; }
 
 		[Property]
