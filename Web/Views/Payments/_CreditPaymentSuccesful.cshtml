@@ -13,14 +13,22 @@
 	<div class="col-xs-12">@Html.DisplayFor(x => x.Customer.Name)</div>
 </div>
 <div class="row">
-  	<div class="col-xs-3">@Html.LabelFor(x => x.Amount)</div>
-	<div class="col-xs-3">@Html.LabelFor(x => x.Method)</div>
+  	<div class="col-xs-2">@Html.LabelFor(x => x.Date)</div>
+  	<div class="col-xs-2">@Html.LabelFor(x => x.Amount)</div>
+  	<div class="col-xs-1">@Html.LabelFor(x => x.Currency)</div>
 	<div class="col-xs-3">@Html.LabelFor(x => x.Reference)</div>
 </div>
 <div class="row">
-  	<div class="col-xs-3">@Html.DisplayFor(x => x.Amount)</div>
-	<div class="col-xs-3">@Model.Method.GetDisplayName()</div>
+  	<div class="col-xs-2">@Html.DisplayFor(x => x.Date)</div>
+  	<div class="col-xs-2">@Html.DisplayFor(x => x.Amount)</div>
+  	<div class="col-xs-1">@Model.Currency.GetDisplayName()</div>
 	<div class="col-xs-3">@Html.DisplayFor(x => x.Reference)</div>
+</div>
+<div class="row">
+    <div class="col-xs-12">@Html.LabelFor(x => x.Method)</div>
+</div>
+<div class="row">
+	<div class="col-xs-12">@Model.Method.GetDisplayName()</div>
 </div>
 <div id="back-to-list" class='pull-right'>
     @Ajax.ActionLink(Resources.BackToList, "CreditPayment", "Payments", new { }, new AjaxOptions { UpdateTargetId = "credit-payment" }, new { @class = "button icon back" })

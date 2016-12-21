@@ -314,11 +314,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public ActionResult CreditPayment ()
 		{
+			var model = new CustomerPayment { Date = DateTime.Now };
+
 			if (Request.IsAjaxRequest ()) {
-				return PartialView ("_CreditPayment", new CustomerPayment ());
+				return PartialView ("_CreditPayment", model);
 			}
 
-			return View ("_CreditPayment", new CustomerPayment ());
+			return View ("_CreditPayment", model);
 		}
 
 		[HttpPost]
@@ -346,7 +348,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.CreationTime = DateTime.Now;
 			item.Updater = item.Creator;
 			item.ModificationTime = item.CreationTime;
-			item.Date = DateTime.Now;
 
 			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
