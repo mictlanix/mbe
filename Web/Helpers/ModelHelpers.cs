@@ -32,10 +32,8 @@ using System.Linq.Expressions;
 using System.Web.Mvc;
 using Mictlanix.BE.Model;
 
-namespace Mictlanix.BE.Web.Helpers
-{
-    public static class ModelHelpers
-    {
+namespace Mictlanix.BE.Web.Helpers {
+	public static class ModelHelpers {
 		public static string GetDisplayName (this Enum member)
 		{
 			string display_name = Enum.GetName (member.GetType (), member);
@@ -44,7 +42,7 @@ namespace Mictlanix.BE.Web.Helpers
 			var attrs = prop_info.GetCustomAttributes (typeof (DisplayAttribute), false);
 
 			if (attrs.Length > 0)
-				display_name = ((DisplayAttribute)attrs [0]).GetName ();
+				display_name = ((DisplayAttribute) attrs [0]).GetName ();
 
 			return display_name;
 		}
@@ -61,22 +59,24 @@ namespace Mictlanix.BE.Web.Helpers
 			return string.Empty;
 		}
 
-		//FIXME: SalesOrderPayment
 		public static decimal Debt (this Customer entity)
 		{
 			IQueryable<decimal> query;
 
-			query = from x in CustomerPayment.Queryable
-				where /* x.SalesOrder == null && */ x.Customer.Id == entity.Id
-				select x.Amount;
+			query = from x in SalesOrder.Queryable
+				from y in x.Payments
+				where x.Terms == PaymentTerms.NetD &&
+				      x.IsCompleted && !x.IsCancelled && !x.IsPaid &&
+				      x.Customer.Id == entity.Id
+				select y.Amount * x.ExchangeRate;
 			var paid = query.Count () > 0 ? query.ToList ().Sum () : 0;
 
 			query = from x in SalesOrder.Queryable
-					from y in x.Details
-					where x.Terms == PaymentTerms.NetD &&
-						x.IsCompleted && !x.IsCancelled &&
-						x.Customer.Id == entity.Id
-				  	select y.Quantity * y.Price * y.ExchangeRate * (1 - y.Discount) * (y.IsTaxIncluded ? 1m : (1m + y.TaxRate));
+				from y in x.Details
+				where x.Terms == PaymentTerms.NetD &&
+				      x.IsCompleted && !x.IsCancelled && !x.IsPaid &&
+				      x.Customer.Id == entity.Id
+				select y.Quantity * y.Price * y.ExchangeRate * (1 - y.Discount) * (y.IsTaxIncluded ? 1m : (1m + y.TaxRate));
 			var bought = query.Count () > 0 ? query.ToList ().Sum () : 0;
 
 			return bought - paid;
@@ -95,35 +95,35 @@ namespace Mictlanix.BE.Web.Helpers
 		public static string InvoiceSerials (this SalesOrder entity)
 		{
 			var query = from x in FiscalDocument.Queryable
-						from y in x.Details
-						where x.IsCompleted && !x.IsCancelled && 
-							y.OrderDetail.SalesOrder.Id == entity.Id
-						select new { x.Batch, x.Serial };
+				    from y in x.Details
+				    where x.IsCompleted && !x.IsCancelled &&
+					    y.OrderDetail.SalesOrder.Id == entity.Id
+				    select new { x.Batch, x.Serial };
 
-			return string.Join (",", query.ToList ().Distinct ().Select (x => string.Format("{0}{1:D6}", x.Batch, x.Serial)));
+			return string.Join (",", query.ToList ().Distinct ().Select (x => string.Format ("{0}{1:D6}", x.Batch, x.Serial)));
 		}
 
-        public static bool IsOverCreditLimit(this SalesQuote entity)
-        {
-            return (entity.Customer.Debt() + entity.TotalEx) > entity.Customer.CreditLimit;
-        }
+		public static bool IsOverCreditLimit (this SalesQuote entity)
+		{
+			return (entity.Customer.Debt () + entity.TotalEx) > entity.Customer.CreditLimit;
+		}
 
-        public static decimal AmountOverCreditLimit(this SalesQuote entity)
-        {
-            return entity.Customer.Debt() + entity.TotalEx - entity.Customer.CreditLimit;
-        }
+		public static decimal AmountOverCreditLimit (this SalesQuote entity)
+		{
+			return entity.Customer.Debt () + entity.TotalEx - entity.Customer.CreditLimit;
+		}
 
-        public static string InvoiceSerials(this SalesQuote entity)
-        {
-            var query = from x in FiscalDocument.Queryable
-                        from y in x.Details
-                        where x.IsCompleted && !x.IsCancelled &&
-                            y.OrderDetail.SalesOrder.Id == entity.Id
-                        select new { x.Batch, x.Serial };
+		public static string InvoiceSerials (this SalesQuote entity)
+		{
+			var query = from x in FiscalDocument.Queryable
+				    from y in x.Details
+				    where x.IsCompleted && !x.IsCancelled &&
+					y.OrderDetail.SalesOrder.Id == entity.Id
+				    select new { x.Batch, x.Serial };
 
-            return string.Join(",", query.ToList().Distinct().Select(x => string.Format("{0}{1:D6}", x.Batch, x.Serial)));
-        }
+			return string.Join (",", query.ToList ().Distinct ().Select (x => string.Format ("{0}{1:D6}", x.Batch, x.Serial)));
+		}
 
 
-    }
+	}
 }
