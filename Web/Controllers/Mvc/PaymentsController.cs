@@ -253,7 +253,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return RedirectToAction ("Index");
 		}
 
-		//FIXME: SalesOrderPayment
 		[HttpPost]
 		public JsonResult AddPayment (int id, int type, decimal amount, string reference)
 		{
@@ -371,7 +370,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var item = SalesOrderPayment.Find (id);
 
 			using (var scope = new TransactionScope ()) {
-				item.Delete ();
+				item.DeleteAndFlush ();
 				item.Payment.DeleteAndFlush ();
 			}
 
