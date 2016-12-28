@@ -903,10 +903,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			entity.ModificationTime = DateTime.Now;
 			entity.IsCompleted = true;
 
-			if (entity.IsCredit) {
-				entity.IsPaid = true;
-			}
-
 			if (entity.ShipTo == null) {
 				entity.IsDelivered = true;
 			}
