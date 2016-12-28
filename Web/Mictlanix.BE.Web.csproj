@@ -421,7 +421,6 @@
     <Content Include="Views\Purchases\Edit.cshtml" />
     <Content Include="Views\FiscalDocuments\InvalidBatch.cshtml" />
     <Content Include="Views\Reports\ReceivedPayments.cshtml" />
-    <Content Include="Views\Reports\_ReceivedPayments.cshtml" />
     <Content Include="Views\Reports\_SummaryReport.cshtml" />
     <Content Include="Views\Reports\SummaryReport.cshtml" />
     <Content Include="Views\Pricing\Index.cshtml" />
