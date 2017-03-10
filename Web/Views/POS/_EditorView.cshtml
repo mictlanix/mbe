@@ -20,8 +20,8 @@
 			        	@Html.DisplayFor(x => x.Customer.Name)
 			        </a>
 
-                    <span id="occasional_customer">
-                        @Html.Partial("_OccasionalCustomer", Model)
+                    <span id="name">
+                        @Html.Partial("_CustomerName", Model)
                     </span>
 
 			    </dd>
@@ -160,7 +160,7 @@ $('#customer').editable({
 		$('#terms').text(response.termsText)
 				   .editable('setValue', response.terms);
 		$('#due-date').text(response.dueDate);
-		$('#occasional_customer').load('@Url.Action("OccasionalCustomer","POS", new { id = Model.Id } )')
+		$('#name').load('@Url.Action("GetCustomerName","POS", new { id = Model.Id } )')
     },
     display: function(value, response) {
     	if (typeof response !== 'undefined') {
