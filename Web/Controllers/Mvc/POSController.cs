@@ -268,12 +268,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				terms = entity.Terms,
 				termsText = entity.Terms.GetDisplayName (),
 				dueDate = entity.FormattedValueFor (x => x.DueDate),
-                occasionalCustomer = value 
+                CustomerName = value 
 			});
 		}
 
         [HttpPost]
-        public ActionResult SetOccasionalCustomer(int id, string value) {
+        public ActionResult SetCustomerName(int id, string value) {
 
             var entity = SalesOrder.Find(id);
             string val = (value ?? string.Empty).Trim();
@@ -294,6 +294,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
             }
 
             return Json(new { id = id, value = value});
+        }
+
+        public ActionResult GetCustomerName(int id) {
+            return PartialView("_CustomerName", SalesOrder.Find(id));
         }
 
         [HttpPost]
