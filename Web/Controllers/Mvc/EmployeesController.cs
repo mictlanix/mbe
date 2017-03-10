@@ -37,6 +37,7 @@ using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
+using NHibernate;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
@@ -130,7 +131,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			using (var scope = new TransactionScope ()) {
-				item.UpdateAndFlush ();
+
+                item.UpdateAndFlush ();
 			}
 
 			return PartialView ("_Refresh");

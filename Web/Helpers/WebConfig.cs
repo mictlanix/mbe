@@ -227,6 +227,9 @@ namespace Mictlanix.BE.Web.Helpers {
 			}
 		}
 
+        public static CultureInfo Culture {
+            get { return System.Threading.Thread.CurrentThread.CurrentCulture; }
+        }
 		#endregion
 
 		#region Request's (Local) Settings

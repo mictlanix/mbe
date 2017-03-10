@@ -235,6 +235,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				entity.Customer = item;
 				entity.Contact = null;
 				entity.ShipTo = null;
+                entity.OccasionalCustomer = null;
 
 				if (item.SalesPerson != null) {
 					entity.SalesPerson = item.SalesPerson;
@@ -266,11 +267,36 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				value = entity.FormattedValueFor (x => x.Customer),
 				terms = entity.Terms,
 				termsText = entity.Terms.GetDisplayName (),
-				dueDate = entity.FormattedValueFor (x => x.DueDate)
+				dueDate = entity.FormattedValueFor (x => x.DueDate),
+                occasionalCustomer = value 
 			});
 		}
 
-		[HttpPost]
+        [HttpPost]
+        public ActionResult SetOccasionalCustomer(int id, string value) {
+
+            var entity = SalesOrder.Find(id);
+            string val = (value ?? string.Empty).Trim();
+
+            if (entity.IsCompleted || entity.IsCancelled)
+            {
+                Response.StatusCode = 400;
+                return Content(Resources.ItemAlreadyCompletedOrCancelled);
+            }
+
+            entity.OccasionalCustomer = (value.Length == 0) ? null : val;
+            entity.Updater = CurrentUser.Employee;
+            entity.ModificationTime = DateTime.Now;
+
+            using (var scope = new TransactionScope())
+            {
+                entity.UpdateAndFlush();
+            }
+
+            return Json(new { id = id, value = value});
+        }
+
+        [HttpPost]
 		public ActionResult SetSalesPerson (int id, int value)
 		{
 			var entity = SalesOrder.Find (id);
@@ -298,25 +324,34 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult SetContact (int id, int value)
+		public ActionResult SetContact (int id, int? value)
 		{
 			var entity = SalesOrder.Find (id);
-			var item = Contact.TryFind (value);
+
+            if (!value.HasValue) {
+                Response.StatusCode = 400;
+                return Content(Resources.Empty);
+            }
+
+			var item = Contact.TryFind (value.Value);
 
 			if (entity.IsCompleted || entity.IsCancelled) {
 				Response.StatusCode = 400;
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			if (item != null) {
-				entity.Contact = item;
-				entity.Updater = CurrentUser.Employee;
-				entity.ModificationTime = DateTime.Now;
+            if (item != null)
+            {
+                entity.Contact = item;
+                entity.Updater = CurrentUser.Employee;
+                entity.ModificationTime = DateTime.Now;
 
-				using (var scope = new TransactionScope ()) {
-					entity.Update ();
-				}
-			}
+                using (var scope = new TransactionScope())
+                {
+                    entity.Update();
+                }
+            }
+
 
 			return Json (new {
 				id = id,
@@ -325,9 +360,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult SetShipTo (int id, int value)
+		public ActionResult SetShipTo (int id, int? value)
 		{
-			var entity = SalesOrder.Find (id);
+
+            if (!value.HasValue)
+            {
+                Response.StatusCode = 400;
+                return Content(Resources.Empty);
+            }
+
+            var entity = SalesOrder.Find (id);
 			var item = Address.TryFind (value);
 
 			if (entity.IsCompleted || entity.IsCancelled) {
@@ -530,7 +572,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return Json (new {
 				id = id,
 				value = entity.Terms,
-				dueDate = entity.FormattedValueFor (x => x.DueDate),
+				dueDate = entity.FormattedValueFor (x => x.DueDate.Date),
 				totalsChanged = success
 			});
 		}
@@ -632,6 +674,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_Totals", entity);
 		}
 
+        public ActionResult OccasionalCustomer(int id) {
+
+            var entity = SalesOrder.Find(id);
+            return PartialView("_OccasionalCustomer", entity);
+        }
+
 		[HttpPost]
 		public ActionResult SetItemProductName (int id, string value)
 		{
@@ -704,9 +752,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						    System.Globalization.NumberStyles.Currency,
 						    null, out val);
 
-			if (success && val >= 0) {
-				entity.Price = val;
-
+			if (success && entity.Price > 0) {
+                //entity.Price = val;
+                entity.Discount = 1 - val / entity.Price;
 				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
 				}
@@ -714,6 +762,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return Json (new {
 				id = entity.Id,
+                discount = entity.FormattedValueFor(x => x.Discount),
 				value = entity.FormattedValueFor (x => x.Price),
 				total = entity.FormattedValueFor (x => x.Total),
 				total2 = entity.FormattedValueFor (x => x.TotalEx)
@@ -808,7 +857,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				var dt = DateTime.Now;
 
 				foreach (var x in entity.Details) {
-					x.Warehouse = warehouse;
+
+                    if (x.Discount < 0)
+                    {
+                        x.Price = Model.ModelHelpers.PriceRounding( x.Price * (1 + (-x.Discount)));
+                        x.Discount = 0.0m;
+                    }
+
+                    x.Warehouse = warehouse;
 					x.Update ();
 
 					InventoryHelpers.ChangeNotification (TransactionType.SalesOrder, entity.Id,

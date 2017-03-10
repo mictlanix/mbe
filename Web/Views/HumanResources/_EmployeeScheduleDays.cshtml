@@ -1,0 +1,57 @@
+﻿
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+
+@model Employee
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.EmployeeSchedules);
+    var Schedules = EmployeeSchedule.Queryable.Where(x => x.Employee == Model).ToList();
+}
+
+<tr class="info">
+    <th>@Resources.Name</th>
+    <th>@Model.Name</th>
+    <th>@Model.Enroll_Number</th>
+    <th></th>
+    <th></th>
+</tr>
+
+@if (Schedules.Count > 0)
+{
+    foreach (var Schedule in Schedules)
+    {
+        <tr id="@Schedule.Id">
+            <td>@WebConfig.Culture.DateTimeFormat.DayNames[Schedule.Day]</td>
+            <td class="center">
+                <a class="editable" data-url="@Url.Action("SetStart", new { id = Schedule.Id })"
+                   data-pk="@Schedule.Id">@Schedule.Start</a>
+            </td>
+            <td class="center">
+                <a class="editable" data-url="@Url.Action("SetEnd", new { id = Schedule.Id })"
+                   data-pk="@Schedule.Id">@Schedule.End</a>
+            </td>
+            <td class="center">
+                <a class="editable" data-url='@Url.Action("SetRecess", new { id = Schedule.Id })'
+                   data-pk='@Schedule.Id'>@Html.DisplayFor(x => Schedule.Recess)</a>
+            </td>
+        </tr>
+
+    }
+}
+else
+{
+    <tr id="@Model.Id">
+        <td colspan="5">
+            <a class="editable" data-pk="@Model.Id" data-url="@Url.Action("SetEnrollNumber", new { id = Model.Id })"><i class="glyphicon-edit"></i></a>
+        </td>
+    </tr>
+}
+
+<script type="text/javascript">
+    $("a.editable").editable({
+
+    })
+</script>

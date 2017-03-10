@@ -70,6 +70,9 @@ $('#id\\:@Model.Id a.editable').editable({
 		if ('total2' in response) {
 			$this.siblings('.total2').attr('data-original-title', response.total2 + ' @WebConfig.BaseCurrency');
 		}
+	    if ('discount' in response) {
+	        $this.siblings('.discount').html(response.discount);
+	    }
 		if ($this.hasClass('name')) {
 			setTimeout(function(){$this.editable('setValue', response.value);},500);
 		}

@@ -1,0 +1,30 @@
+﻿@using Mictlanix.BE.Model
+@using Mictlanix.BE
+
+@model Attendance
+
+@Html.HiddenFor(x => x.Id)
+@Html.HiddenFor(x => x.Employee)
+
+<table>
+    <tr>
+        <td>@Resources.FirstCheckIn</td>
+        <td><a class='editable' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetCheck", new { id = Model.Id })'>@Html.DisplayFor(x => x.FirstCheckin)</a></td>
+    </tr>
+    <tr>
+        <td>@Resources.FirstCheckOut</td>
+        <td>@Html.EditorFor(x => x.FirstCheckout)</td>
+    </tr>
+    <tr>
+        <td>@Resources.LastCheckIn</td>
+        <td>@Html.EditorFor(x => x.LastCheckin)</td>
+    </tr>
+    <tr>
+        <td>@Resources.LastCheckOut</td>
+        <td>@Html.EditorFor(x => x.LastCheckout)</td>
+    </tr>
+    <tr>
+        <td>@Resources.Comment</td>
+        <td>@Html.EditorFor(x => x.Comment)</td>
+    </tr>
+</table>

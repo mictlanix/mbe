@@ -43,7 +43,10 @@ namespace Mictlanix.BE.Model {
 		[PrimaryKey (Column = "employee_id", Generator = PrimaryKeyType.Identity, UnsavedValue = "-1")]
 		public virtual int Id { get; set; }
 
-		[Property ("first_name")]
+        [Property("enroll_number")]
+        public virtual int? Enroll_Number { get; set; }
+
+        [Property ("first_name")]
 		[Display (Name = "FirstName", ResourceType = typeof (Resources))]
 		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
 		[StringLength (100, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]

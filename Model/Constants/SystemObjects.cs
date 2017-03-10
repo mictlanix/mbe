@@ -186,6 +186,14 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "PhysicalCountAdjustment", ResourceType = typeof (Resources))]
 		PhysicalCountAdjustment,
         [Display(Name = "ProductsBySupplier", ResourceType = typeof(Resources))]
-        ProductsBySupplierReport
+        ProductsBySupplierReport,
+        [Display(Name = "EmployeeAttendance", ResourceType = typeof(Resources))]
+        EmployeeAttendance,
+        [Display(Name = "EmployeeSchedules", ResourceType = typeof(Resources))]
+        EmployeeSchedules,
+        [Display(Name = "SynchronizeClocks", ResourceType = typeof(Resources))]
+        SynchronizeClocks,
+        [Display(Name = "ProductsOrdersAndRefundsBySalesPerson", ResourceType = typeof(Resources))]
+        ProductsOrdersAndRefundsBySalesPerson
     }
 }

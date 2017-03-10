@@ -17,15 +17,13 @@
     </li>
     <li>
     	<span class='caption'>@Resources.Change</span>
-        <span class='value'>@Html.DisplayFor(x => x.Change) @WebConfig.BaseCurrency</span>
+        <span class='value'>@Html.DisplayFor(x => x.Balance) @WebConfig.BaseCurrency</span>
     </li>
 </ul>
 
 <div class='clearfix'></div>
-<div class='pull-left'>
-	@Html.ActionLink(Resources.Print, "Print", new { id = Model.Id }, new { @class = "button icon print", target = "_blank" })
-</div>
-@if (Model.Balance <= 0.01m) {
+
+@if(Model.Balance >= 0) {
 <div id='confirm-button' class='pull-right @(Model.Details.Count == 0 ? "hide" : "")'>
 	@using (Html.BeginForm("ConfirmPayment", "Payments", new { id = Model.Id })) {
 	    <button type="submit" class='icon pay'>@Resources.CompletePayment</button>
@@ -34,12 +32,15 @@
 }
 <div class='clearfix'></div>
 <script type="text/javascript">
-@if (Model.Balance <= 0.01m) {
+@if (Model.Balance >= 0) {
     <text>$("#form").hide("slow");</text>
+    <div class='pull-left'>
+	@Html.ActionLink(Resources.Print, "Print", new { id = Model.Id }, new { @class = "button icon print", target = "_blank" })
+</div>
 } else {
 	<text>
-		$("#amount").val("@((Model.Balance).ToString("0.00"))");
-		$("#form").show("slow");
-	</text>
+    $("#amount").val("@((-Model.Balance).ToString("0.00"))");
+    $("#form").show("slow");
+    </text>
 }
 </script>

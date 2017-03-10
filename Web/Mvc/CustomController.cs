@@ -25,27 +25,22 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Net.Mail;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using jsreport.Client;
 using jsreport.Client.Entities;
 using Mictlanix.BE.Web.Helpers;
 using Mictlanix.BE.Web.Security;
 
-namespace Mictlanix.BE.Web.Mvc {
-	public abstract class CustomController : Controller {
+namespace Mictlanix.BE.Web.Mvc
+{
+    public abstract class CustomController : Controller {
 		static string url_reports = null;
 
 		public const string MIME_TYPE_PDF = "application/pdf";
