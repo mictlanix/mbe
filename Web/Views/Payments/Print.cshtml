@@ -24,6 +24,12 @@
 <div class="display-label">
     @Html.LabelFor(model => model.Customer)<br/>
     @Html.DisplayFor(model => model.Customer.Name)
+    @if (Model.Customer.Id == int.Parse(Resources.GeneralPublicId) && !string.IsNullOrWhiteSpace(Model.OccasionalCustomer))
+    {
+        <span>(</span>
+                    @Html.DisplayFor(x => x.OccasionalCustomer)
+                    <span>)</span>
+    }
 </div>
 
 @if (Model.IsCredit) {
@@ -80,6 +86,15 @@
             <td class="text-right">@Resources.Change</td>
             <td class="number">@Html.DisplayFor(x => Model.Change)</td>
         </tr>
+    }
+
+    @{ 
+        var Saving = Model.Saving;
+        if (Saving > 0) {
+            <tr>
+                <td colspan="4" class="text-center">@string.Format(Resources.SavingOnSalesOrder, Saving.ToString("c"))</td>
+            </tr>
+        }
     }
 </table>
 

@@ -1,0 +1,57 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@using Mictlanix.BE.Model
+@model IEnumerable<ReceivedPayment>
+
+<table>
+    <tr>
+        <th class="nowrap">@Html.LabelFor(x => new ReceivedPayment().SalesOrder)</th>
+        <th class="nowrap">@Html.LabelFor(x => new ReceivedPayment().Date)</th>
+        <th class="nowrap">@Html.LabelFor(x => new ReceivedPayment().Serial)</th>
+        <th class="nowrap">@Html.LabelFor(x => new ReceivedPayment().Customer)</th>
+        <th class="nowrap">@Html.LabelFor(x => new ReceivedPayment().Amount)</th>
+        <th class="nowrap">@Html.LabelFor(x => new ReceivedPayment().Method)</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td class="number">@Html.DisplayFor(x => item.SalesOrder)</td>
+            <td class="date">@Html.DisplayFor(x => item.Date)</td>
+            <td class="number">@Html.DisplayFor(x => item.Serial)</td>
+            <td class="text">@Html.DisplayFor(x => item.Customer.Name)</td>
+            <td class="number">@Html.DisplayFor(x => item.Amount)</td>
+            <td class="center nowrap stretch">@item.Method.GetDisplayName()</td>
+        </tr>
+    }
+    <tr>
+        <td class="right" colspan="4"><b>@Resources.Total</b></td>
+        <td class="number"><b>@Model.Sum(x => x.Amount).ToString("c")</b></td>
+        <td></td>
+    </tr>
+
+    @foreach (var item in Model.GroupBy(x => x.Method))
+    {
+        <tr>
+            <td class="right" colspan="4"><i>@item.Key.GetDisplayName()</i></td>
+            <td class="number"><i>@item.Sum(x => x.Amount).ToString("c")</i></td>
+            <td></td>
+        </tr>
+    }
+
+
+</table>
+
+@if (Model.Count() > 0)
+{
+    <div class='pull-right'>
+        @Html.ActionLink(Resources.Print, "PrintReceivedPayments", new
+   {
+       start = Model.Min(x => x.Date),
+       end = Model.Max(x => x.Date),
+       store = SalesOrder.Find(Model.First().SalesOrder).Store.Id
+   }, new { @class = "button icon print", target = "_blank" })
+    </div>
+}
+<div class="clearfix"></div>
+

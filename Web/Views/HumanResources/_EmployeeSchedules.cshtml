@@ -1,0 +1,42 @@
+﻿@using Mictlanix.BE.Model
+@using Mictlanix.BE;
+@using Mictlanix.BE.Web.Helpers
+
+@model List<Employee>
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.EmployeeSchedules);
+}
+
+<table class="table table-condensed">
+
+    <tr>
+        <th>Día</th>
+        <th>Horario Entrada</th>
+        <th>Horario Salida</th>
+        <th>Minutos de Receso</th>
+        <th></th>
+    </tr>
+
+    @foreach (var Emp in Model)
+    {
+        @Html.Partial("_EmployeeScheduleDays", Emp);
+    }
+
+</table>
+
+<script>
+
+    bindModal('.open-modal');
+
+    $("a.editable").editable({
+        error: function (response) {
+        },
+        success: function (response, newValue) {
+
+        }
+
+    });
+
+</script>

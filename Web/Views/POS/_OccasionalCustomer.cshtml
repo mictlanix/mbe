@@ -1,0 +1,28 @@
+﻿@using Mictlanix.BE.Model
+@using Mictlanix.BE
+@using Mictlanix.BE.Web.Helpers
+
+@model SalesOrder
+
+@if (Model.Customer.Id == WebConfig.DefaultCustomer)
+{
+    @:(
+    <a id="ocassional_customer" class="editable alert-link" data-type="text" data-placement="right" data-pk="@Model.Id"
+       data-url='@Url.Action("SetOccasionalCustomer", new { id = Model.Id })'
+       data-inputclass="input-xlarge" data-emptytext="@Resources.Empty">
+        @if (string.IsNullOrWhiteSpace(Model.OccasionalCustomer))
+        {
+            <i class="glyphicon-pencil"></i>
+        }
+        else {
+            @Html.DisplayFor(x => x.OccasionalCustomer)
+        }
+    </a>
+    @:)
+}
+
+<script type="text/javascript">
+    $('a#occasional_customer').editable({
+
+    });
+</script>

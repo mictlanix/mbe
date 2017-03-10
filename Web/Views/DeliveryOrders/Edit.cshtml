@@ -23,9 +23,9 @@
     <div id='items-container' data-url='@Url.Action("Items", new { id = Model.Id })'>
 		@Html.Partial("_Items", Model.Details)
     </div>
-    <div class='search-box'>
+    @*<div class='search-box'>
         <input type='text' id='product-search' name='product-search' />
-    </div>
+    </div>*@
 </div>
 <div class='clearfix'></div>
 <div id='back-to-list' class='pull-left'>
@@ -39,7 +39,7 @@
 <div class='clearfix'></div>
 <script type='text/javascript'>
 $(function () {
-    $('#product-search').tokenInput('@Url.Action("GetSuggestions", "Products")', {
+    @*$('#product-search').tokenInput('@Url.Action("GetSuggestions", "Products")', {
         hintText:'@Resources.HIntText',
         noResultsText:'@Resources.NoResultsText',
         searchingText:'@Resources.SearchingText',          
@@ -54,7 +54,7 @@ $(function () {
                 });
             }, 'json');
         }
-    });
+    });*@
 
     $('#add-items').editable({
 		success: function(response, newValue) {

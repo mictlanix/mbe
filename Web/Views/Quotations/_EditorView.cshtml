@@ -32,7 +32,7 @@
 		        	}
 			        </a>
 			    </dd>
-				<dt>@Resources.ShipTo</dt>
+				@*<dt>@Resources.ShipTo</dt>
 				<dd>
 			        <a id='address' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id'
 			        	data-value='@(Model.ShipTo == null ? "" : Model.ShipTo.Id.ToString ())'
@@ -43,7 +43,7 @@
 			        	@Html.DisplayFor(x => x.ShipTo, "String")
 		        	}
 			        </a>
-				</dd>
+				</dd>*@
 				<dt>@Resources.SalesPerson</dt>
 				<dd>
 			        <a id='salesperson' data-type='select2' data-placement='right' data-pk='@Model.Id'

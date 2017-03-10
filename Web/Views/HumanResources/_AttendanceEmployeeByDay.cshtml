@@ -1,0 +1,183 @@
+﻿
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE;
+@using Mictlanix.BE.Web.Models
+@model Attendance
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.EmployeeAttendance);
+
+}
+
+
+<tr id="attendance-@Model.Id" @(Model.IsMissingAnyCheck ? "class=alert-warning" : "")>
+
+    <td>
+        <span>
+            @WebConfig.Culture.DateTimeFormat.GetAbbreviatedDayName(Model.Date.DayOfWeek)
+            @Model.Date.Day
+            @WebConfig.Culture.DateTimeFormat.GetAbbreviatedMonthName(Model.Date.Month)
+        </span>
+
+        @if (Model.ShiftIn != Model.ShiftOut)
+        {
+            <span> - </span>
+            @Html.DisplayFor(x => x.ShiftInTS)
+            @Html.DisplayFor(x => x.ShiftOutTS)
+
+        }
+ 
+
+    </td>
+
+    @if (Privilege.AllowUpdate && Model.hasSchedule)
+    {
+        <td class="col-sm-2">
+            <div class="input-group clockpicker fci-@Model.Id" data-align="left" data-donetext="Guardar">
+                <input type="text" class="form-control" id="fci-@Model.Id" value="@(Model.FirstCheckin.HasValue ? Model.FirstCheckin.Value.TimeOfDay.ToString() : "")">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-time"></span>
+                </span>
+            </div>
+
+        </td>
+
+        if (Model.IsCompleteWorkDay)
+        {
+            <td class="col-sm-2">
+                <div class="input-group clockpicker fco-@Model.Id" data-align="left" data-donetext="Guardar">
+                    <input type="text" class="form-control" id="fco-@Model.Id" value="@(Model.FirstCheckout.HasValue ? Model.FirstCheckout.Value.TimeOfDay.ToString() : "")">
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-time"></span>
+                    </span>
+                </div>
+            </td>
+            <td class="col-sm-2">
+                <div class="input-group clockpicker lci-@Model.Id" data-align="left" data-donetext="Guardar">
+                    <input type="text" class="form-control" id="lci-@Model.Id" value="@(Model.LastCheckin.HasValue ? Model.LastCheckin.Value.TimeOfDay.ToString() : "")">
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-time"></span>
+                    </span>
+                </div>
+            </td>
+        }
+        else
+        {
+            <td></td>
+            <td></td>
+        }
+        <td class="col-sm-2">
+            <div class="input-group clockpicker lco-@Model.Id" data-align="left" data-donetext="Guardar">
+                <input type="text" class="form-control" id="lco-@Model.Id" value="@(Model.LastCheckout.HasValue ? Model.LastCheckout.Value.TimeOfDay.ToString() : "")">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-time"></span>
+                </span>
+            </div>
+        </td>
+
+        <script type="text/javascript">
+
+    $('div.fci-@Model.Id').clockpicker({
+        donetext: '@Resources.Save',
+        afterDone: function () {
+
+            $.post("/HumanResources/SetFirstCheckIn/", {
+                id : @Model.Id,
+                value : $("#fci-@Model.Id").val()
+            }, function(data){
+
+                $('tr#attendance-@Model.Id').replaceWith(data)
+            }
+            );
+        }
+    });
+
+    $('div.fco-@Model.Id').clockpicker({
+        donetext: '@Resources.Save',
+        afterDone: function () {
+
+            $.post("/HumanResources/SetFirstCheckOut/", {
+                id : @Model.Id,
+                value : $("#fco-@Model.Id").val()
+            }, function(data){
+
+                $('tr#attendance-@Model.Id').replaceWith(data)
+            }
+            );
+        }
+    });
+
+    $('div.lci-@Model.Id').clockpicker({
+        donetext: '@Resources.Save',
+        afterDone: function () {
+
+            $.post("/HumanResources/SetLastCheckIn/", {
+                id : @Model.Id,
+                value : $("#lci-@Model.Id").val()
+            }, function(data){
+
+                $('tr#attendance-@Model.Id').replaceWith(data)
+            }
+            );
+        }
+    });
+
+    $('div.lco-@Model.Id').clockpicker({
+        donetext: '@Resources.Save',
+        afterDone: function () {
+
+            $.post("/HumanResources/SetLastCheckOut/", {
+                id : @Model.Id,
+                value : $("#lco-@Model.Id").val()
+            }, function(data){
+
+                $('tr#attendance-@Model.Id').replaceWith(data)
+            }
+            );
+        }
+    });
+
+        </script>
+
+    }
+    else
+    {
+        <td>
+            @(Model.FirstCheckin.HasValue ? Model.FirstCheckin.Value.TimeOfDay.ToString() : "")
+        </td>
+
+        if (Model.IsCompleteWorkDay)
+        {
+            <td>
+                @(Model.FirstCheckout.HasValue ? Model.FirstCheckout.Value.TimeOfDay.ToString() : "")
+
+            </td>
+            <td>
+                @(Model.LastCheckin.HasValue ? Model.LastCheckin.Value.TimeOfDay.ToString() : "")
+            </td>
+        }
+        else
+        {
+            <td></td>
+            <td></td>
+        }
+        <td>
+            @(Model.LastCheckout.HasValue ? Model.LastCheckout.Value.TimeOfDay.ToString() : "")
+        </td>
+    }
+    <td>
+        @Math.Floor(Model.DelayedTime.TotalMinutes)
+    </td>
+    <td>
+        @Math.Ceiling(Model.OverTime.TotalMinutes)
+    </td>
+    <td>
+        @Html.DisplayFor(x => x.IsDelayed)
+    </td>
+    <td>
+        @Html.DisplayFor(x => x.IsPresent)
+    </td>
+
+</tr>

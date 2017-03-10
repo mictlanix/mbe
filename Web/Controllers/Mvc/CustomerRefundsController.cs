@@ -151,6 +151,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.ExchangeRate = entity.ExchangeRate;
 
 			item.CreationTime = DateTime.Now;
+            item.Date = DateTime.Now;
 			item.Creator = CurrentUser.Employee;
 			item.Updater = item.Creator;
 			item.ModificationTime = item.CreationTime;
@@ -170,7 +171,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					Discount = x.Discount,
 					TaxRate = x.TaxRate,
 					IsTaxIncluded = x.IsTaxIncluded,
-					Quantity = qty,
+					Quantity = 0,
 					Price = x.Price,
 					ExchangeRate = x.ExchangeRate,
 					Currency = x.Currency
@@ -213,7 +214,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var entity = CustomerRefundDetail.Find (id);
 			decimal sum = GetRefundableQuantity (entity.SalesOrderDetail.Id);
 
-			entity.Quantity = (value > 0 && value <= sum) ? value : sum;
+			entity.Quantity = (value >= 0 && value <= sum) ? value : sum;
 
 			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
@@ -309,7 +310,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var item = SalesOrderDetail.Find (id);
 			string sql = @"SELECT SUM(d.quantity) quantity
-                           FROM customer_refund_detail d INNER JOIN customer_refund m ON d.customer_refund = m.customer_refund_id
+                           FROM customer_refund_detail d INNER JOIN customer_refund m 
+                           ON d.customer_refund = m.customer_refund_id
                            WHERE m.completed <> 0 AND m.cancelled = 0 AND d.sales_order_detail = :detail ";
 
 			IList<decimal> quantities = (IList<decimal>) ActiveRecordMediator<CustomerRefundDetail>.Execute (
