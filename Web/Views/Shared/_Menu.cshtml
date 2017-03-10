@@ -554,6 +554,13 @@
                                    href="@Url.Action("Historic", "SupplierReturns")">@Resources.Title_SupplierReturnHistoric</a>
                             </li>
                             }
+                            @if (CurrentUser.GetPrivilege(SystemObjects.ReceivedPayments).AllowRead)
+                            {
+                                <li class="gbmtc">
+                                    <a class="gbmt @(Html.IsMenuSelected("ReceivedPayments", "Reports") ? "gbm0l" : "")"
+                                       href="@Url.Action("ReceivedPayments", "Reports")">@Resources.ReceivedPayments</a>
+                                </li>
+                            }
                             @if (CurrentUser.GetPrivilege (SystemObjects.SalesByProduct).AllowRead)
                             {
                             <li class="gbmtc">
