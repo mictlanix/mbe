@@ -23,5 +23,11 @@ fabrica.png
 ferreteria.png
 fortaleza.png
 tienda.png
+.gitignore
 .vs/
 jsreport.Client/
+Web/Controllers/Mvc/QuotationsControllerBK.cs
+Model/SalesQuoteBk.cs
+Model/SalesQuoteDetailBk.cs
+Web/Views/QuotationsBk/
+[Dd]esktop.ini

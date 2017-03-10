@@ -32,6 +32,12 @@
 		        	}
 			        </a>
 				</dd>
+                <dt>@Resources.Comment</dt>
+                <dd>
+                    <a class='editable' data-type="textarea" data-placement='right' data-pk='@Model.Id'
+                       data-url='@Url.Action("SetComment", new { id = Model.Id })'
+                       data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>@Model.Comment</a>
+                </dd>
 			</dl>
 		</div>
 	  	<div class='col-xs-4'>
@@ -89,7 +95,8 @@ $('#customer').editable({
 	    }
 	},
 	success: function(response, newValue) {
-		$('#address').text('').editable('setValue', '');
+	    $('#address').text('').editable('setValue', '');
+        $('#items-container').text()
     },
     display: function(value, response) {
     	if (typeof response !== 'undefined') {

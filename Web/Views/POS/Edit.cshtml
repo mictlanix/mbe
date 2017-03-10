@@ -35,7 +35,7 @@
 <div class='clearfix'></div>
 <script type='text/javascript'>
 $(function () {
-    $('#product-search').tokenInput('@Url.Action("GetSuggestions", "POS", new { order = Model.Id })', {
+    $('#product-search').tokenInput('@Url.Action("GetSuggestions", "SalesOrders", new { order = Model.Id })', {
         hintText:'@Resources.HIntText',
         noResultsText:'@Resources.NoResultsText',
         searchingText:'@Resources.SearchingText',          

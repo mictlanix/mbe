@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Configuration;
-using System.Collections.Generic;
 using System.Linq;
 using System.Globalization;
 using System.Threading;
@@ -11,13 +10,12 @@ using System.Web.Security;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using Mictlanix.BE.Model;
-using Mictlanix.BE.Web.Helpers;
 using Mictlanix.BE.Web.Security;
 using System.Web.Optimization;
 
 namespace Mictlanix.BE.Web
 {
-	public class MvcApplication : System.Web.HttpApplication
+    public class MvcApplication : System.Web.HttpApplication
 	{
 		static string[] IGNORE_PATHS = { "/Content", "/Scripts", "/fonts", "/favicon.ico" };
 

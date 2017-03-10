@@ -1,0 +1,32 @@
+﻿@using Mictlanix.BE.Model
+@using Mictlanix.BE;
+@using Mictlanix.BE.Web.Models
+@model AttendanceSheetByEmployee
+
+
+    <tr class="info" id="header-@Model.Employee.Id">
+        <td>@Resources.Employee: @Model.Employee.Name </td>
+        <td>N° de Empleado: @Model.Employee.Id</td>
+        <td>No de enrolamiento: @Model.Employee.Enroll_Number</td>
+        <td>Total retardos: @Model.AttendanceDays.Count(x => x.IsDelayed)</td>
+        <td>Total inasistencias: @Model.AttendanceDays.Count(x => !x.IsPresent && x.hasSchedule)</td>
+        <td>Total salidas temprano: @Model.AttendanceDays.Count(x => x.IsLeavingBeforeEndWorkTime)</td>
+        <td colspan="4"></td>
+    </tr>
+
+    <tr>
+        <td>@Resources.Date</td>
+        <td>@Resources.FirstCheckIn</td>
+        <td>@Resources.FirstCheckOut</td>
+        <td>@Resources.LastCheckIn</td>
+        <td>@Resources.LastCheckOut</td>
+        <td>@Resources.TagDelayMinutes</td>
+        <td>@Resources.TagOverTimeMinutes</td>
+        <td>@Resources.IsDelayed</td>
+        <td>@Resources.IsAbsent</td>
+    </tr>
+
+    @foreach (var AttendanceDay in Model.AttendanceDays){
+
+             @Html.Partial("_AttendanceEmployeeByDay", AttendanceDay)
+    }

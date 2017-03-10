@@ -1,0 +1,86 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Web.Models
+@using Mictlanix.BE.Model
+
+@model Search<DeliveryOrder>
+
+<table class="table-condensed">
+    <thead>
+        <tr>
+            <th>@Resources.SalesOrderId</th>
+            <th>@Resources.SalesOrderDate</th>
+            <th>@Resources.DeliveryOrderId</th>
+            <th>@Resources.DeliveryDate</th>
+            <th>@Resources.ProductName</th>
+            <th>Cantidad en Pedido</th>
+            <th>Cantidad Pendiente por entregar</th>
+            <th>Cantidad Entregada</th>
+            <th>Cantidad Restante por entregar</th>
+            <th>@Resources.Delivered</th>
+            <th>@Resources.Cancelled</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var delivery in Model.Results)
+        {
+            foreach (var item in delivery.Details)
+            {
+                var DeliveredItemQuantity = DeliveryOrderDetail.Queryable.Where(y => y.OrderDetail == item.OrderDetail
+                                                && y.DeliveryOrder.Date < item.DeliveryOrder.Date
+                                                && y.DeliveryOrder.IsCompleted
+                                                && !y.DeliveryOrder.IsCancelled).Sum(z => (decimal?)z.Quantity) ?? 0.0m;
+
+                decimal AvailableQuantity = item.OrderDetail.Quantity - DeliveredItemQuantity;
+
+                decimal RemainingToDeliver = item.OrderDetail.Quantity - DeliveredItemQuantity - item.Quantity;
+
+                if (true) { 
+
+                <tr>
+                    <td class="nowrap center">@Html.DisplayFor(x => item.OrderDetail.SalesOrder.Id)</td>
+                    <td class="nowrap center">@Html.DisplayFor(x => item.OrderDetail.SalesOrder.Date)</td>
+                    <td class="nowrap center">@Html.DisplayFor(x => item.DeliveryOrder.Id)</td>
+                    <td class="nowrap center">@Html.DisplayFor(x => item.DeliveryOrder.Date)</td>
+                    <td class="nowrap center">@Html.DisplayFor(x => item.OrderDetail.ProductName)</td>
+                    <td class="nowrap center">@Html.DisplayFor(x => item.OrderDetail.Quantity)</td>
+                    <td class="nowrap center">@Html.DisplayFor(x => AvailableQuantity)</td>
+                    <td class="nowrap center">@Html.DisplayFor(x => item.Quantity)</td>
+                    <td class="nowrap center">@Html.DisplayFor(x => RemainingToDeliver)</td>
+                    <td class="nowrap center">@Html.DisplayFor(x => item.DeliveryOrder.IsCompleted)</td>
+                    <td class="nowrap center">@Html.DisplayFor(x => item.DeliveryOrder.IsCancelled)</td>
+                </tr>
+
+                }
+            }
+        }
+    </tbody>
+</table>
+
+<div class="buttons right">
+    <label class='button left'>@Model.ToString()</label>@if (Model.HasPrev)
+    {<a class='button middle icon prev icon-only paging' title='@Resources.PrevPage' href='javascript:void(0)'></a>}@if (Model.HasNext)
+    {<a class='button right icon next icon-only paging' title='@Resources.NextPage' href='javascript:void(0)'></a>}
+</div>
+<script type="text/javascript">
+bindModal('.open-modal');
+$('a.paging').click(function (e) {
+	var offset=@Model.Offset;
+
+	if($(this).hasClass('next')) {
+		offset+=@Model.Limit;
+	} else {
+		offset-=@Model.Limit;
+	}
+
+	e.preventDefault();
+	$('#activity-indicator').show();
+	$('#search-results').hide();
+
+	$.post('@Url.Action("PendantDeliveries")', { Pattern: '@Model.Pattern', Offset: offset, Limit: @Model.Limit }, function(data) {
+		$('#search-results').html(data);
+		$('#search-results').show();
+		$('#activity-indicator').hide();
+	});
+});
+
+</script>

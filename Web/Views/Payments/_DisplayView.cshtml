@@ -13,7 +13,15 @@
 		<div class='col-xs-8'>
 	  		<dl class=''>
 				<dt>@Resources.Customer</dt>
-				<dd>@Html.DisplayFor(x => x.Customer.Name)</dd>
+				<dd>@Html.DisplayFor(x => x.Customer.Name)
+
+                  @if (Model.Customer.Id == int.Parse(Resources.GeneralPublicId) && !string.IsNullOrWhiteSpace(Model.OccasionalCustomer)) {
+                      <span>(</span>
+                      @Html.DisplayFor(x => x.OccasionalCustomer)
+                      <span>)</span>
+                  }
+
+                  </dd>
 				@if (Model.Contact != null) {
 				<dt>@Resources.Contact</dt>
 				<dd>@Html.DisplayFor(x => x.Contact, "String")</dd>

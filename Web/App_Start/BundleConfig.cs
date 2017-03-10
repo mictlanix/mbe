@@ -21,8 +21,9 @@ namespace Mictlanix.BE.Web {
 				"~/Scripts/bootstrap.js",
 				"~/Scripts/bootstrap-datepicker.js",
 				"~/Scripts/locales/bootstrap-datepicker.es.min.js",
-				"~/Scripts/bootstrap-editable.js"
-			));
+				"~/Scripts/bootstrap-editable.js",
+                "~/Scripts/bootstrap-clockpicker.min.js"
+            ));
 
 			bundles.Add (new ScriptBundle ("~/Scripts/app").Include (
 				"~/Scripts/helper.formatters.js",
@@ -40,8 +41,9 @@ namespace Mictlanix.BE.Web {
 				"~/Content/bootstrap.css",
 				"~/Content/bootstrap-datepicker3.css",
 				"~/Content/bootstrap-editable.css",
-				"~/Content/select2-bootstrap.css"
-			));
+				"~/Content/select2-bootstrap.css",
+                "~/Content/bootstrap-clockpicker.min.css"
+            ));
 			
 			bundles.Add (new StyleBundle ("~/Content/main").Include (
 				"~/Content/token-input.css",
