@@ -235,7 +235,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				entity.Customer = item;
 				entity.Contact = null;
 				entity.ShipTo = null;
-                entity.OccasionalCustomer = null;
+                entity.CustomerName = null;
 
 				if (item.SalesPerson != null) {
 					entity.SalesPerson = item.SalesPerson;
@@ -284,7 +284,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
                 return Content(Resources.ItemAlreadyCompletedOrCancelled);
             }
 
-            entity.OccasionalCustomer = (value.Length == 0) ? null : val;
+            entity.CustomerName = (value.Length == 0) ? null : val;
             entity.Updater = CurrentUser.Employee;
             entity.ModificationTime = DateTime.Now;
 
