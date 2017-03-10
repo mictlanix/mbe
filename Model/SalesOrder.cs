@@ -57,8 +57,8 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Customer", ResourceType = typeof (Resources))]
 		public virtual Customer Customer { get; set; }
 
-        [Property("occasional_customer")]
-        public virtual string OccasionalCustomer { get; set; }
+        [Property("customer_name")]
+        public virtual string CustomerName { get; set; }
 
 		[BelongsTo ("contact", Lazy = FetchWhen.OnInvoke)]
 		[Display (Name = "Contact", ResourceType = typeof (Resources))]

@@ -10,12 +10,12 @@
     <a id="ocassional_customer" class="editable alert-link" data-type="text" data-placement="right" data-pk="@Model.Id"
        data-url='@Url.Action("SetOccasionalCustomer", new { id = Model.Id })'
        data-inputclass="input-xlarge" data-emptytext="@Resources.Empty">
-        @if (string.IsNullOrWhiteSpace(Model.OccasionalCustomer))
+        @if (string.IsNullOrWhiteSpace(Model.CustomerName))
         {
             <i class="glyphicon-pencil"></i>
         }
         else {
-            @Html.DisplayFor(x => x.OccasionalCustomer)
+            @Html.DisplayFor(x => x.CustomerName)
         }
     </a>
     @:)

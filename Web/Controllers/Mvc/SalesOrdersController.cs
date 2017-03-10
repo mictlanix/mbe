@@ -313,7 +313,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.Customer = item;
 				entity.Contact = null;
 				entity.ShipTo = null;
-                entity.OccasionalCustomer = null;
+                entity.CustomerName = null;
 
 				if (item.SalesPerson == null) {
 					entity.SalesPerson = CurrentUser.Employee;
