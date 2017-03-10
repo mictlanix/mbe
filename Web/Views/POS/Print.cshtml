@@ -24,6 +24,11 @@
 <div class="display-label">
     @Html.LabelFor(model => model.Customer)<br/>
     @Html.DisplayFor(model => model.Customer.Name)
+
+    @if (Model.Customer.Id == WebConfig.DefaultCustomer && !string.IsNullOrWhiteSpace(Model.OccasionalCustomer)) {
+        <br />
+        @Html.DisplayFor(model => model.OccasionalCustomer)
+    }
 </div>
 
 @if (Model.IsCredit) {
@@ -85,6 +90,13 @@
 <div class="display-label display-field">
     @Html.LabelFor(model => model.Taxes)
     @Html.DisplayFor(model => model.Taxes)
+</div>
+
+<div class="display-field">
+    @if (Model.Saving > 0)
+    {
+        <text>@string.Format(Resources.SavingOnSalesOrder, Model.Saving)</text>
+    }
 </div>
 
 @if (Model.IsCredit) {

@@ -10,7 +10,8 @@
 		<div class='col-xs-8'>
 	  		<dl class=''>
 				<dt>@Resources.Customer</dt>
-				<dd>@Html.DisplayFor(x => x.Customer.Name)</dd>
+                <dd>@Html.DisplayFor(x => x.Customer.Name)</dd>
+
 				@if (Model.Contact != null) {
 				<dt>@Resources.Contact</dt>
 				<dd>@Html.DisplayFor(x => x.Contact, "String")</dd>
@@ -45,7 +46,7 @@
 				<dt>@Resources.PaymentTerms</dt>
 				<dd>@Model.Terms.GetDisplayName()</dd>
 				<dt>@Resources.DueDate</dt>
-				<dd>@Html.DisplayFor(x => x.DueDate)</dd>
+				<dd>@Html.DisplayFor(x => x.DueDate.Date)</dd>
 			@if (!string.IsNullOrWhiteSpace (invoices)) {
 				<dt>@Resources.Invoice</dt>
 				<dd>@invoices</dd>

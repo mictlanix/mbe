@@ -34,8 +34,9 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc {
-	[Authorize]
+namespace Mictlanix.BE.Web.Controllers.Mvc
+{
+    [Authorize]
 	public class SalesOrdersController : CustomController {
 		public ViewResult Index ()
 		{
@@ -209,7 +210,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.DueDate = dt.AddDays (item.Customer.CreditDays);
 			item.Currency = salesquote.Currency;
 			item.ExchangeRate = salesquote.ExchangeRate;
-			item.ShipTo = salesquote.ShipTo;
 			item.Contact = salesquote.Contact;
 			item.Comment = salesquote.Comment;
 
@@ -313,6 +313,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				entity.Customer = item;
 				entity.Contact = null;
 				entity.ShipTo = null;
+                entity.OccasionalCustomer = null;
 
 				if (item.SalesPerson == null) {
 					entity.SalesPerson = CurrentUser.Employee;
@@ -812,8 +813,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						    System.Globalization.NumberStyles.Currency,
 						    null, out val);
 
-			if (success && val >= 0) {
-				entity.Price = val;
+			if (success && entity.Price > 0) {
+                //entity.Price = val;
+
+                entity.Discount = 1 - val / entity.Price;
 
 				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
@@ -822,6 +825,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return Json (new {
 				id = entity.Id,
+                discount = entity.FormattedValueFor(x => x.Discount),
 				value = entity.FormattedValueFor (x => x.Price),
 				total = entity.FormattedValueFor (x => x.Total),
 				total2 = entity.FormattedValueFor (x => x.TotalEx)
@@ -843,8 +847,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			success = decimal.TryParse (value.TrimEnd (new char [] { ' ', '%' }), out val);
 			val /= 100m;
 
-			if (success && val >= 0 && val <= 1) {
-				entity.Discount = val;
+            //if (success && val >= 0 && val <= 1) {
+            if (success)
+            {
+                entity.Discount = val;
 
 				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
@@ -913,6 +919,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 				foreach (var x in entity.Details) {
 					x.Warehouse = warehouse;
+
+                    if (x.Discount < 0) {
+                        x.Price = Model.ModelHelpers.PriceRounding( x.Price * (1 + (-x.Discount) ));
+                        x.Discount = 0.0m;
+                    }
+
 					x.Update ();
 
 					InventoryHelpers.ChangeNotification (TransactionType.SalesOrder, entity.Id,
@@ -972,11 +984,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					    id = x.Id,
 					    name = x.Name,
 					    code = x.Code,
-					    model = x.Model,
-					    sku = x.SKU,
+					    model = x.Model??Resources.None,
+					    sku = x.SKU ?? Resources.None,
 					    url = Url.Content (x.Photo),
-					    price = x.Price
-				    };
+					    price = x.Price,
+                        quantity = LotSerialTracking.Queryable.Where(y => y.Product.Code == x.Code 
+                                                                    && y.Warehouse == WebConfig.PointOfSale.Warehouse)
+                                                                    .Sum(y => (decimal?)y.Quantity) ?? 0
+                    };
 
 			return Json (items.ToList (), JsonRequestBehavior.AllowGet);
 		}

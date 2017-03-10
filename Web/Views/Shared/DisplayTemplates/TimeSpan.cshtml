@@ -1,0 +1,5 @@
+﻿@using Mictlanix.BE
+@model TimeSpan?
+
+
+@Html.Encode(Model == null? TimeSpan.Zero.ToString(): Model.Value.ToString("hh\\:mm"))

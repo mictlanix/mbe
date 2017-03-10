@@ -70,7 +70,8 @@
                           CurrentUser.GetPrivilege (SystemObjects.WarehouseStockBySerialNumberReport).AllowRead ||
                           CurrentUser.GetPrivilege (SystemObjects.Kardex).AllowRead ||
                           CurrentUser.GetPrivilege (SystemObjects.SerialNumberKardex).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.ProductsBySupplierReport).AllowRead
+                          CurrentUser.GetPrivilege (SystemObjects.ProductsBySupplierReport).AllowRead ||
+                          CurrentUser.GetPrivilege (SystemObjects.ProductsOrdersAndRefundsBySalesPerson).AllowRead
                           ;
 
     var ShowTechnicalServiceMenu =  CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceReports).AllowRead ||
@@ -79,6 +80,11 @@
 
     var ShowFrontDeskMenu = CurrentUser.GetPrivilege (SystemObjects.TranslationRequests).AllowRead ||
                             CurrentUser.GetPrivilege (SystemObjects.Notarizations).AllowRead;
+
+    var ShowHumanResources = CurrentUser.GetPrivilege(SystemObjects.EmployeeAttendance).AllowRead ||
+                            CurrentUser.GetPrivilege(SystemObjects.EmployeeSchedules).AllowRead ||
+                            CurrentUser.GetPrivilege(SystemObjects.SynchronizeClocks).AllowRead
+                        ;
 }
 
 <div id="gb" class='no-print'>
@@ -258,6 +264,48 @@
                 </div>
             </li>
             }
+
+            @*@if (ShowHumanResources)
+            {
+            <li class="gbt">
+                <a id="humanresources-menu" class="gbgt" href="javascript:void(0)">
+                    <span class="gbtb2"></span>
+                    <span class="gbts gbtsa">
+                        <span>@Resources.HumanResources</span>
+                        <span class="gbma"></span>
+                    </span>
+                </a>
+                <div id="production-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
+                    <div class="gbmc">
+                        <ol class="gbmcc">
+                            @if (CurrentUser.GetPrivilege(SystemObjects.EmployeeAttendance).AllowRead)
+                            {
+                                <li class="gbmtc">
+                                    <a class="gbmt @(Html.IsMenuSelected("AttendanceEmployees", "HumanResources") ? "gbm0l" : "")"
+                                        href="@Url.Action("AttendanceEmployees", "HumanResources")">@Resources.EmployeeAttendance</a>
+                                </li>
+                            }
+
+                            @if (CurrentUser.GetPrivilege(SystemObjects.EmployeeSchedules).AllowRead)
+                            {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("EmployeeSchedules", "HumanResources") ? "gbm0l" : "")"
+                                   href="@Url.Action("EmployeeSchedules", "HumanResources")">@Resources.EmployeeSchedules</a>
+                            </li>
+                            }
+
+                            @if (CurrentUser.GetPrivilege(SystemObjects.SynchronizeClocks).AllowRead)
+                            {
+                                <li class="gbmtc">
+                                    <a class="gbmt @(Html.IsMenuSelected("SynchronizeClocks", "HumanResources") ? "gbm0l" : "")"
+                                       href="@Url.Action("SynchronizeClocks", "HumanResources")">@Resources.SynchronizeClocks</a>
+                                </li>
+                            }
+                        </ol>
+                    </div>
+                </div>
+            </li>
+            }*@
 
             @if (ShowInventoryMenu) {
             <li class="gbt">
@@ -678,7 +726,13 @@
                                        href='@Url.Action("ProductsBySupplier", "Reports")'>@Resources.ProductsBySupplier</a>
                                 </li>
                             }
-
+                            @if (CurrentUser.GetPrivilege(SystemObjects.ProductsOrdersAndRefundsBySalesPerson).AllowRead)
+                            {
+                                <li class="gbmtc">
+                                    <a class='gbmt @(Html.IsMenuSelected("ProductsOrderAndRefundsBySalesPerson", "Reports") ? "gbm0l" : "")'
+                                       href='@Url.Action("ProductsOrderAndRefundsBySalesPerson", "Reports")'>@Resources.ProductsOrdersAndRefundsBySalesPerson</a>
+                                </li>
+                            }
                         </ol>
                     </div>
                 </div>

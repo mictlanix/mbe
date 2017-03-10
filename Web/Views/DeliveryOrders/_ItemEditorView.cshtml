@@ -38,7 +38,6 @@
 $('#id\\:@Model.Id [data-toggle="tooltip"]').tooltip();
 $('#id\\:@Model.Id a.editable').editable({
 	success: function(response, newValue) {
-        //$('#totals-section').loadUrl();
     },
     display: function(value, response) {
         if (typeof response === 'undefined') 
@@ -50,7 +49,6 @@ $('#id\\:@Model.Id a.editable').editable({
 $('#id\\:@Model.Id a.delete').editable({
 	success: function(response, newValue) {
         $('#id\\:@Model.Id').remove();
-		//$('#totals-section').loadUrl();
 	    if ($('#items li').length === 0) {
 	        $('#confirm-button').addClass('hide');
 	    }

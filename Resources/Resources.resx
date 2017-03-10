@@ -2190,4 +2190,79 @@ Gracias por utilizar nuestros servicios.
   <data name="ApplyPayment" xml:space="preserve">
     <value>Aplicar Pago</value>
   </data>
+  <data name="SinchronizeTimeClocks" xml:space="preserve">
+    <value>Sincronizar Relojes Checadores</value>
+  </data>
+  <data name="DelayToleranceMinutes" xml:space="preserve">
+    <value>15</value>
+  </data>
+  <data name="FirstCheckIn" xml:space="preserve">
+    <value>Hora de Entrada</value>
+  </data>
+  <data name="FirstCheckOut" xml:space="preserve">
+    <value>Salida a Comer</value>
+  </data>
+  <data name="IsAbsent" xml:space="preserve">
+    <value>Asistencia</value>
+  </data>
+  <data name="LastCheckIn" xml:space="preserve">
+    <value>Llegada de Comer</value>
+  </data>
+  <data name="LastCheckOut" xml:space="preserve">
+    <value>Hora de Salida</value>
+  </data>
+  <data name="IsDelayed" xml:space="preserve">
+    <value>Retardo</value>
+  </data>
+  <data name="EmployeeAttendance" xml:space="preserve">
+    <value>Asistencia</value>
+  </data>
+  <data name="HumanResources" xml:space="preserve">
+    <value>Recursos Humanos</value>
+  </data>
+  <data name="Unavailable" xml:space="preserve">
+    <value>No disponible</value>
+  </data>
+  <data name="EmployeeSchedules" xml:space="preserve">
+    <value>Horarios de Trabajo de Empleados</value>
+  </data>
+  <data name="TagDelayMinutes" xml:space="preserve">
+    <value>Minutos de Retardo</value>
+  </data>
+  <data name="TagOverTimeMinutes" xml:space="preserve">
+    <value>Tiempo Extra</value>
+  </data>
+  <data name="TagTotalDelayedDays" xml:space="preserve">
+    <value>Días con retardo</value>
+  </data>
+  <data name="TagTotalOverTimeMinutes" xml:space="preserve">
+    <value>Tiempo Extra Total</value>
+  </data>
+  <data name="SynchronizeClocks" xml:space="preserve">
+    <value>Sincronizar Relojes Checadores</value>
+  </data>
+  <data name="QuantityRefund" xml:space="preserve">
+    <value>Cantidad a Devolver</value>
+  </data>
+  <data name="QuantitySold" xml:space="preserve">
+    <value>Cantidad Vendida</value>
+  </data>
+  <data name="GeneralPublicId" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="ProductsOrdersAndRefundsBySalesPerson" xml:space="preserve">
+    <value>Productos Vendidos y Devoluciones por Vendedor</value>
+  </data>
+  <data name="SavingOnSalesOrder" xml:space="preserve">
+    <value>¡***Usted ahorró {0:c} en esta compra***!</value>
+  </data>
+  <data name="SalesOrderNotPaidYet" xml:space="preserve">
+    <value>Orden de Compra con pago pendiente.</value>
+  </data>
+  <data name="ShipToRequired" xml:space="preserve">
+    <value>Se requiere domicilio para completar la entrega del pedido.</value>
+  </data>
+  <data name="MismatchCustomers" xml:space="preserve">
+    <value>Los clientes de la {0} y la {1} no coindicen</value>
+  </data>
 </root>

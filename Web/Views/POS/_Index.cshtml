@@ -26,7 +26,12 @@
 			</a>
         </td>
         <td class="date">@Html.DisplayFor(x => item.Date)</td>
-        <td>@Html.DisplayFor(x => item.Customer.Name)</td>
+        <td>@Html.DisplayFor(x => item.Customer.Name)
+            @if (!string.IsNullOrWhiteSpace(item.OccasionalCustomer))
+            {
+                <text> - (@item.OccasionalCustomer)</text>
+            }
+        </td>
         <td class='center'>@Html.DisplayFor(x => item.SalesPerson.Nickname)</td>
         <td class="bool">@Html.DisplayFor(x => item.IsCompleted)</td>
         <td class="bool">@Html.DisplayFor(x => item.IsCancelled)</td>

@@ -27,21 +27,17 @@
 //
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
-using Castle.ActiveRecord.Queries;
-using NHibernate;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc {
-	[Authorize]
+namespace Mictlanix.BE.Web.Controllers.Mvc
+{
+    [Authorize]
 	public class SalesOrderShipmentsController : CustomController {
 		public ViewResult Index ()
 		{
@@ -78,15 +74,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			if (string.IsNullOrEmpty (search.Pattern)) {
 				query = from x in SalesOrder.Queryable
 					where x.ShipTo != null && x.Store.Id == item.Id &&
-						x.IsCompleted && !x.IsCancelled && !x.IsDelivered
+						x.IsCompleted && !x.IsCancelled && !x.IsDelivered &&
+                        !DeliveryOrderDetail.Queryable.Any(y => y.OrderDetail.SalesOrder == x && !y.DeliveryOrder.IsCancelled)
 					orderby x.Date descending
 					select x;
 			} else {
 				query = from x in SalesOrder.Queryable
 					where x.ShipTo != null && x.Store.Id == item.Id &&
-						x.IsCompleted && !x.IsCancelled && !x.IsDelivered && (
-				x.Customer.Name.Contains (search.Pattern) ||
-				x.SalesPerson.Nickname.Contains (search.Pattern))
+						x.IsCompleted && !x.IsCancelled && !x.IsDelivered &&
+                        !DeliveryOrderDetail.Queryable.Any(y => y.OrderDetail.SalesOrder == x && !y.DeliveryOrder.IsCancelled) && 
+                        (   x.Customer.Name.Contains (search.Pattern) ||
+				            x.SalesPerson.Nickname.Contains (search.Pattern))
 					orderby x.Date descending
 					select x;
 			}
@@ -117,6 +115,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.Updater = CurrentUser.Employee;
 			item.ModificationTime = DateTime.Now;
 			item.IsDelivered = true;
+
+            if (DeliveryOrderDetail.Queryable.Any(x => x.OrderDetail.SalesOrder == item && !x.DeliveryOrder.IsCancelled)) {
+                return RedirectToAction("Index","DeliveryOrders");
+            }
 
 			using (var scope = new TransactionScope ()) {
 				item.UpdateAndFlush ();

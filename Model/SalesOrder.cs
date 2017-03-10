@@ -57,6 +57,9 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Customer", ResourceType = typeof (Resources))]
 		public virtual Customer Customer { get; set; }
 
+        [Property("occasional_customer")]
+        public virtual string OccasionalCustomer { get; set; }
+
 		[BelongsTo ("contact", Lazy = FetchWhen.OnInvoke)]
 		[Display (Name = "Contact", ResourceType = typeof (Resources))]
 		public virtual Contact Contact { get; set; }
@@ -104,6 +107,7 @@ namespace Mictlanix.BE.Model {
 		[Property ("due_date")]
 		[DataType (DataType.Date)]
 		[Display (Name = "DueDate", ResourceType = typeof (Resources))]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}" )]
 		public virtual DateTime DueDate { get; set; }
 
 		[Property ("completed")]
@@ -194,7 +198,17 @@ namespace Mictlanix.BE.Model {
 			get { return Paid - Total; }
 		}
 
-		[BelongsTo ("creator", Lazy = FetchWhen.OnInvoke)]
+        [DataType(DataType.Currency)]
+        [Display(Name = "Saving", ResourceType = typeof(Resources))]
+        public virtual decimal Saving
+        {
+            get
+            {
+                return Details.Where(x => x.Discount > 0).Select(y => y.Discount * y.Price * y.Quantity).Sum();
+            }
+        }
+
+        [BelongsTo ("creator", Lazy = FetchWhen.OnInvoke)]
 		[Display (Name = "Creator", ResourceType = typeof (Resources))]
 		public virtual Employee Creator { get; set; }
 
