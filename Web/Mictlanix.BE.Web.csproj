@@ -1121,7 +1121,7 @@
     <Content Include="Views\HumanResources\_EmployeeSchedules.cshtml" />
     <Content Include="Views\HumanResources\_EmployeeScheduleDays.cshtml" />
     <Content Include="Views\Reports\_PdfReceivedPayments.cshtml" />
-    <Content Include="Views\POS\_OccasionalCustomer.cshtml" />
+    <Content Include="Views\POS\_CustomerName.cshtml" />
     <Content Include="Views\Reports\_ProductsOrderAndRefundsBySalesPerson.cshtml" />
     <Content Include="Views\DeliveryOrders\PendantDeliveries.cshtml" />
     <Content Include="Views\DeliveryOrders\_PendantDeliveries.cshtml" />
