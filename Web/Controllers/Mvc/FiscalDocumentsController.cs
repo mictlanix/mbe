@@ -131,6 +131,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Pdf (int id)
 		{
 			var view = "Print";
+			var header = "_PageHead";
+			var footer = "_PageFoot";
 			var model = FiscalDocument.Find (id);
 
 			if (model.IsCompleted) {
@@ -142,7 +144,25 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				Response.AppendHeader ("Content-Disposition", string.Format ("inline; filename={0}.pdf", filename));
 			}
 
-			return PdfView (view, model);
+			header = view + header;
+			footer = view + footer;
+
+			if (ViewEngines.Engines.FindPartialView (ControllerContext, header).View == null) {
+				header = null;
+			}
+
+			if (ViewEngines.Engines.FindPartialView (ControllerContext, footer).View == null) {
+				footer = null;
+			}
+
+			ViewBag.BankInformation = Newtonsoft.Json.JsonConvert.DeserializeObject (WebConfig.BankInformation);
+
+			return PdfView (view, model, new jsreport.Client.Entities.Phantom {
+				header = header,
+				headerHeight = (header == null ? 0 : 15) + " mm",
+				footer = footer,
+				footerHeight = (footer == null ? 0 : 15) + " mm"
+			});
 		}
 
 		public ActionResult New ()
