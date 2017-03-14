@@ -229,7 +229,6 @@ ALTER TABLE customer_payment
 	DROP COLUMN cash_change;
 
 ALTER TABLE customer_payment
-	CHANGE COLUMN cash_change cash_change DECIMAL(18,4) NOT NULL,
 	ADD COLUMN currency INT(11) NOT NULL;
 
 CREATE TABLE sales_order_payment (
@@ -251,8 +250,7 @@ CREATE TABLE sales_order_payment (
 ) ENGINE = InnoDB;
 
 ALTER TABLE employee
-	ADD COLUMN 	'enroll_number' INT(11) NULL DEFAULT NULL;
-
+	ADD COLUMN enroll_number INT(11) NULL DEFAULT NULL;
 
 ALTER TABLE sales_order
 	ADD COLUMN occasional_customer VARCHAR(50) NULL DEFAULT NULL;
