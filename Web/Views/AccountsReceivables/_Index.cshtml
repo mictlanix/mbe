@@ -3,53 +3,56 @@
 @using Mictlanix.BE.Web.Models
 @using Mictlanix.BE.Web.Helpers;
 @model IEnumerable<dynamic>
-@foreach (var g in Model.GroupBy (x => x.Currency)) {
-<table class='table table-condensed'>
-	<thead>
-	    <tr>
-	        <th class='center'>@Resources.DueDate</th>
-	        <th class='nowrap center'>@Resources.SalesOrder</th>
-	        <th class='nowrap center'>@Resources.Date</th>
-	        <th class='center'>@Resources.FiscalDocument</th>
-	        <th class='nowrap center'>@Resources.Customer</th>
-	        <th class='nowrap center'>@Resources.Total</th>
-	        <th class='nowrap center'>@Resources.Refunds</th>
-	        <th class='nowrap center'>@Resources.Payments</th>
-	        <th class='nowrap center'>@Resources.Balance</th>
-	        <th class='nowrap center'>@Resources.Currency</th>
-	        <th class=''></th>
-	    </tr>
-    </thead>
-    <tbody>
-	@foreach (var item in g) {
-		<tr>
-			<td class='date'>@item.DueDate.ToString("yyyy-MM-dd")</td>
-			<td class='number'>@item.SalesOrder</td>
-			<td class='date'>@item.Date.ToString("yyyy-MM-dd")</td>
-			<td class='center' style='word-wrap:break-word'>@item.Invoices</td>
-			<td>@item.Customer</td>
-			<td class='currency'>@item.Total.ToString("c")</td>
-			<td class='currency'>@item.Refunds.ToString("c")</td>
-			<td class='currency'>@item.Payments.ToString("c")</td>
-			<td class='currency'>@item.Balance.ToString("c")</td>
-			<td class='center'>@((CurrencyCode)item.Currency)</td>
-			<td class='actions'>
-				@Html.ActionLink(" ", "ApplyPayment", new { id = item.SalesOrder }, new { @class = "button icon pay icon-only open-modal", data_modal_id = "apply-payment-modal" })
-			</td>
-		</tr>
+@foreach (var currency in new []{ CurrencyCode.MXN, CurrencyCode.USD, CurrencyCode.EUR }) {
+	var g = Model.Where (x => x.Currency == (int)currency);
+	if (g.Any ()) {
+		<table class='table table-condensed'>
+			<thead>
+			    <tr>
+			        <th class='center'>@Resources.DueDate</th>
+			        <th class='nowrap center'>@Resources.SalesOrder</th>
+			        <th class='nowrap center'>@Resources.Date</th>
+			        <th class='center'>@Resources.FiscalDocument</th>
+			        <th class='nowrap center'>@Resources.Customer</th>
+			        <th class='nowrap center'>@Resources.Total</th>
+			        <th class='nowrap center'>@Resources.Refunds</th>
+			        <th class='nowrap center'>@Resources.Payments</th>
+			        <th class='nowrap center'>@Resources.Balance</th>
+			        <th class='nowrap center'>@Resources.Currency</th>
+			        <th class=''></th>
+			    </tr>
+		    </thead>
+		    <tbody>
+			@foreach (var item in g) {
+				<tr>
+					<td class='date'>@item.DueDate.ToString("yyyy-MM-dd")</td>
+					<td class='number'>@item.SalesOrder</td>
+					<td class='date'>@item.Date.ToString("yyyy-MM-dd")</td>
+					<td class='center' style='word-wrap:break-word'>@item.Invoices</td>
+					<td>@item.Customer</td>
+					<td class='currency'>@item.Total.ToString("c")</td>
+					<td class='currency'>@item.Refunds.ToString("c")</td>
+					<td class='currency'>@item.Payments.ToString("c")</td>
+					<td class='currency'>@item.Balance.ToString("c")</td>
+					<td class='center'>@((CurrencyCode)item.Currency)</td>
+					<td class='actions'>
+						@Html.ActionLink(" ", "ApplyPayment", new { id = item.SalesOrder }, new { @class = "button icon pay icon-only open-modal", data_modal_id = "apply-payment-modal" })
+					</td>
+				</tr>
+			}
+		    </tbody>
+		    <tfoot>
+			    <tr>
+			        <td class='center' colspan='5'></td>
+			        <td class='currency'><b>@g.Sum(x => (decimal)x.Total).ToString("c")</b></td>
+			        <td class='currency'><b>@g.Sum(x => (decimal)x.Refunds).ToString("c")</b></td>
+			        <td class='currency'><b>@g.Sum(x => (decimal)x.Payments).ToString("c")</b></td>
+			        <td class='currency'><b>@g.Sum(x => (decimal)x.Balance).ToString("c")</b></td>
+					<td class='center'><b>@currency</b></td>
+			    </tr>
+		    </tfoot>
+		</table>
 	}
-    </tbody>
-    <tfoot>
-	    <tr>
-	        <td class='center' colspan='5'></td>
-	        <td class='currency'><b>@g.Sum(x => (decimal)x.Total).ToString("c")</b></td>
-	        <td class='currency'><b>@g.Sum(x => (decimal)x.Refunds).ToString("c")</b></td>
-	        <td class='currency'><b>@g.Sum(x => (decimal)x.Payments).ToString("c")</b></td>
-	        <td class='currency'><b>@g.Sum(x => (decimal)x.Balance).ToString("c")</b></td>
-			<td class='center'><b>@((CurrencyCode)g.Key)</b></td>
-	    </tr>
-    </tfoot>
-</table>
 }
 <script type="text/javascript">
     bindModal('.open-modal');
