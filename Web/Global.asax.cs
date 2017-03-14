@@ -17,7 +17,7 @@ namespace Mictlanix.BE.Web
 {
     public class MvcApplication : System.Web.HttpApplication
 	{
-		static string[] IGNORE_PATHS = { "/Content", "/Scripts", "/fonts", "/favicon.ico" };
+		static string [] IGNORE_PATHS = { "/Content", "/Scripts", "/fonts", "/favicon.ico", "/Account/LogOff" };
 
 		public static void RegisterGlobalFilters (GlobalFilterCollection filters)
 		{
@@ -141,8 +141,13 @@ namespace Mictlanix.BE.Web
 			}
 
 			var account = Model.User.TryFind (HttpContext.Current.User.Identity.Name);
-			Principal = new CustomPrincipal (account.UserName, account.Email, account.IsAdministrator,
-				account.Employee, account.Privileges.ToList ());
+
+			if (account == null) {
+				Response.RedirectToRoute ("Default", new { controller = "Account", action = "LogOff" });
+			} else {
+				Principal = new CustomPrincipal (account.UserName, account.Email, account.IsAdministrator,
+					account.Employee, account.Privileges.ToList ());
+			}
 		}
 
 		private CustomPrincipal Principal {
