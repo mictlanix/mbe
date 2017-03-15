@@ -7,22 +7,24 @@
 @if (Model.Customer.Id == WebConfig.DefaultCustomer)
 {
     @:(
-    <a id="ocassional_customer" class="editable alert-link" data-type="text" data-placement="right" data-pk="@Model.Id"
-       data-url='@Url.Action("SetOccasionalCustomer", new { id = Model.Id })'
+    <a id="customer_name" class="editable alert-link" data-type="text" data-placement="right" data-pk="@Model.Id"
+       data-url='@Url.Action("SetCustomerName", new { id = Model.Id })'
        data-inputclass="input-xlarge" data-emptytext="@Resources.Empty">
         @if (string.IsNullOrWhiteSpace(Model.CustomerName))
         {
             <i class="glyphicon-pencil"></i>
         }
-        else {
+        else
+        {
             @Html.DisplayFor(x => x.CustomerName)
         }
     </a>
     @:)
 }
+else {
+    <text></text>
+}
 
 <script type="text/javascript">
-    $('a#occasional_customer').editable({
-
-    });
+    $("#customer_name").editable();
 </script>
