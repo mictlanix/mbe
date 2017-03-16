@@ -4,7 +4,7 @@
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.com>
 // 
-// Copyright (C) 2012-2013 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2012-2017 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -39,10 +39,8 @@ using Mictlanix.FiscoClic.Client;
 using Mictlanix.Servisim.Client;
 using Mictlanix.ProFact.Client;
 
-namespace Mictlanix.BE.Web.Helpers
-{
-	internal static class CFDHelpers
-	{
+namespace Mictlanix.BE.Web.Helpers {
+	internal static class CFDHelpers {
 		static readonly decimal CFDI_MIN_VERSION = 3.0m;
 
 		public static dynamic IssueCFD (FiscalDocument item)
@@ -281,8 +279,15 @@ namespace Mictlanix.BE.Web.Helpers
 					noIdentificacion = detail.ProductCode,
 					descripcion = detail.ProductName,
 					valorUnitario = detail.NetPrice,
-					importe = detail.Subtotal
+					importe = detail.Subtotal,
+
 				};
+			}
+
+			if (item.Discount > 0) {
+				cfd.descuento = item.Discount;
+				cfd.descuentoSpecified = true;
+				cfd.motivoDescuento = Resources.NA;
 			}
 
 			// TODO: VAT Summaries

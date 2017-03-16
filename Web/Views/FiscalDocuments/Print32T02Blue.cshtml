@@ -63,14 +63,6 @@
 	dl {
 		margin-bottom: 5px;
 	}
-	header dt {
-	    font-size: 11px;
-		font-weight: 400;
-	}
-	header dd {
-	    font-size: 11px;
-		font-weight: 200;
-	}
 	h2 {
 	    margin: 0 0 1px 0;
 	    font-size: 10px;
@@ -153,9 +145,18 @@
 	header .dl-horizontal dt {
 		margin-left: -15px;
 		width: 90px;
+	    font-size: 11px;
+		font-weight: 400;
 	}
 	header .dl-horizontal dd {
 		margin-left: 90px;
+	    font-size: 11px;
+		font-weight: 200;
+	}
+	header dd.issuance,
+	header dd.issuance span {
+	    font-size: 10.2px;
+		color: #757575 !important;
 	}
 	table > tfoot > tr > td > .dl-horizontal dt {
 		width: 70px;
@@ -214,12 +215,12 @@
 		  		<dl class='dl-horizontal'>
 					<dt>@Model.Type.GetDisplayName()</dt>
 					<dd>@Html.DisplayFor(x => x.Batch) @Html.DisplayFor(x => x.Serial)</dd>
+					<dt>@Resources.Certificate</dt>
+					<dd>@Html.DisplayFor(x => x.IssuerCertificateNumber)</dd>
 					<dt>@Resources.StampId</dt>
 					<dd>@Html.DisplayFor(x => x.StampId)</dd>
 					<dt>@Resources.Issuance</dt>
-					<dd>@Html.DisplayFor(x => x.IssuedLocation) / @Html.DisplayFor(x => x.Issued)</dd>
-					<dt>@Resources.Certificate</dt>
-					<dd>@Html.DisplayFor(x => x.IssuerCertificateNumber)</dd>
+					<dd class="issuance">@Html.DisplayFor(x => x.IssuedLocation) / <span class="nowrap">@Html.DisplayFor(x => x.Issued)</span></dd>
 				</dl>
 	 		</div>
 		</div>
@@ -233,18 +234,16 @@
 		<div class="col-xs-5">
 			<div class="row">
 				<div class="col-xs-12">
-					<h2 class="uppercase">@Resources.Recipient</h2>
+					<h2 class="text-uppercase">@Resources.Recipient</h2>
 		 			<p style="font-size:13px">@Html.DisplayFor(x => x.RecipientName)</p>
-		 			<p class="text-s12 uppercase">@Html.DisplayFor(x => x.Recipient)</p>
+		 			<p class="text-s12 text-uppercase">@Html.DisplayFor(x => x.Recipient)</p>
 					<p>&nbsp;</p>
 		 			<p class="text-s12">
-					    @Html.DisplayFor(x => x.RecipientAddress.Street)
-					    @Html.DisplayFor(x => x.RecipientAddress.ExteriorNumber)
-					@if (!string.IsNullOrEmpty (Model.RecipientAddress.InteriorNumber)) {
-					    <text>- @Html.DisplayFor(x => x.RecipientAddress.InteriorNumber)</text>
-					}
-						<br>
+					    @Html.DisplayFor(x => x.RecipientAddress.StreetAndNumber)<br>
 					    @Html.DisplayFor(x => x.RecipientAddress.Neighborhood),
+			    	@if (!string.IsNullOrWhiteSpace (Model.RecipientAddress.Locality)) {
+			        	<text>@Model.RecipientAddress.Locality,</text>
+			    	}
 					    @Html.DisplayFor(x => x.RecipientAddress.PostalCode)<br>
 					    @Html.DisplayFor(x => x.RecipientAddress.Borough),
 					    @Html.DisplayFor(x => x.RecipientAddress.State),
@@ -257,10 +256,24 @@
 			<div class="col-xs-8" style="padding-right:1mm;">
 				<div class="row">
 					<div class="col-xs-12 text-right">
-						<h2 class="uppercase text-right">@Resources.Issuer</h2>
+						<h2 class="text-right text-uppercase">@Resources.Issuer</h2>
 			 			<p style="font-size:13px">@Html.DisplayFor(x => x.IssuerName)</p>
-			 			<p class="text-s12 uppercase">@Html.DisplayFor(x => x.Issuer.Id)</p>
+			 			<p class="text-s12 text-uppercase">@Html.DisplayFor(x => x.Issuer.Id)</p>
 			 			<p class="text-s08" style="margin-bottom:4px">@Html.DisplayFor(x => x.IssuerRegime)</p>
+					@if (Model.IssuerAddress != null) {
+			 			<p class="text-s12">
+				        	@Model.IssuerAddress.StreetAndNumber<br/>
+				        	@Model.IssuerAddress.Neighborhood,
+				    	@if (!string.IsNullOrWhiteSpace (Model.IssuerAddress.Locality)) {
+				        	<text>@Model.IssuerAddress.Locality,</text>
+				    	}
+				        	@Model.IssuerAddress.PostalCode<br/>
+				        	@Model.IssuerAddress.Borough,
+				        	@Model.IssuerAddress.State,
+							@Model.IssuerAddress.Country
+					    </p>
+							
+					}
 					</div>
 				</div>
  			</div>
@@ -346,10 +359,10 @@
 	            <th class="nowrap">@Resources.Subtotal</th>
 	            <td class="nowrap">@Html.DisplayFor(x => x.Subtotal)</td>
 	        </tr>
-		@if (Model.RetentionRate > 0m) {
+		@if (Model.Discount > 0m) {
 	        <tr>
 	            <th class="tax">@Resources.Discount</th>
-	            <td class="tax">@Html.DisplayFor(x => x.RetentionTaxes)</td>
+	            <td class="tax">@Html.DisplayFor(x => x.Discount)</td>
 	        </tr>
 		}
 	        <tr>
