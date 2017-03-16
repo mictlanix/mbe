@@ -11,7 +11,7 @@ namespace Mictlanix.BE.Web.Models
         public static void Recorder(Employee Employee, DateTime date, EmployeeSchedule Schedule, List<Check> ChecksByEmployee, Attendance Attendance)
         {
             DateTime DateAttendance = date.Date;
-            List<Check> Checks = new List<Check>();
+            //List<Check> Checks = new List<Check>();
   
             TimeSpan? ShiftIn = null;
             TimeSpan? ShiftOut = null;
