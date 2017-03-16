@@ -1,7 +1,7 @@
 # Change Log
 Todos los cambios relevantes en este proyecto serán documentados en este archivo
 
-## [Desarrollo]
+## Desarrollo
 ### Nuevo
 - Visualizar en pdf el reporte de pagos recibidos.
 - Dar de alta a un cliente en la venta con solo escribir el nombre.
