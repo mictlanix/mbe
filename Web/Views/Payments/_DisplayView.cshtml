@@ -15,9 +15,9 @@
 				<dt>@Resources.Customer</dt>
 				<dd>@Html.DisplayFor(x => x.Customer.Name)
 
-                  @if (Model.Customer.Id == int.Parse(Resources.GeneralPublicId) && !string.IsNullOrWhiteSpace(Model.OccasionalCustomer)) {
+                  @if (Model.Customer.Id == int.Parse(Resources.GeneralPublicId) && !string.IsNullOrWhiteSpace(Model.CustomerName)) {
                       <span>(</span>
-                      @Html.DisplayFor(x => x.OccasionalCustomer)
+                      @Html.DisplayFor(x => x.CustomerName)
                       <span>)</span>
                   }
 
