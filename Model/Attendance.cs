@@ -131,9 +131,9 @@ namespace Mictlanix.BE.Model
 
                     if (FirstCheckout.HasValue && LastCheckin.HasValue)
                     {
-                        var Schedule = EmployeeSchedule.Queryable.Where(x => x.Employee == Employee && x.Day == (int)Date.DayOfWeek).FirstOrDefault();
+                        //var Schedule = EmployeeSchedule.Queryable.Where(x => x.Employee == Employee && x.Day == (int)Date.DayOfWeek).FirstOrDefault();
 
-                        var RecessTime = TimeSpan.FromMinutes(Schedule.Recess.Value);
+                        //var RecessTime = TimeSpan.FromMinutes(Schedule.Recess.Value);
                         //Obtener los minutos de comida del empleado para el día actual
                         var TimeDelayedInFirstCheckOut = LastCheckin.Value.TimeOfDay.Add(-FirstCheckout.Value.TimeOfDay);
                         if (TimeDelayedInFirstCheckOut > TimeSpan.Zero)
