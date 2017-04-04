@@ -1,0 +1,28 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model ExpenseVoucher
+
+
+<fieldset>
+	<div class='row'>
+		<div class='col-xs-8'>
+	  		<dl class=''>
+				<dt>@Resources.Cashier</dt>
+				<dd>@Html.DisplayFor(x => x.Creator.Name)</dd>
+				<dt>@Resources.Comment</dt>
+				<dd>@Html.DisplayFor(x => x.Comment)</dd>
+			</dl>
+		</div>
+	  	<div class='col-xs-4'>
+	  		<dl class='dl-horizontal'>
+				<dt>@Resources.Id</dt>
+				<dd>
+					<span>@Html.DisplayFor(x => x.Id)</span>
+				</dd>
+				<dt>@Resources.Date</dt>
+				<dd>@Html.DisplayFor(x => x.Date)</dd>
+			</dl>
+  		</div>
+	</div>
+</fieldset>

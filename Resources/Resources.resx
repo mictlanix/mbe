@@ -2283,4 +2283,19 @@ Gracias por utilizar nuestros servicios.
   <data name="CLABE" xml:space="preserve">
     <value>CLABE</value>
   </data>
+  <data name="DisplayName_Expenses" xml:space="preserve">
+    <value>Catálogo de Gastos</value>
+  </data>
+  <data name="ExpenseVoucher" xml:space="preserve">
+    <value>Vale de Gastos</value>
+  </data>
+  <data name="ExpenseVouchers" xml:space="preserve">
+    <value>Vales de Gastos</value>
+  </data>
+  <data name="PendantDeliveries" xml:space="preserve">
+    <value>Entregas Pendientes</value>
+  </data>
+  <data name="Expenses" xml:space="preserve">
+    <value>Gastos</value>
+  </data>
 </root>

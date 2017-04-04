@@ -1,0 +1,130 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model ExpenseVoucher
+
+@{
+	var CurrentUser = Html.CurrentUser() ?? new User();
+	var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders);
+}
+
+<fieldset>
+	<div class='row'>
+		<div class='col-xs-8'>
+			<dl class=''>
+				<dt>@Resources.Cashier</dt>
+				<dd>
+					<a id='cashier' data-type='select2' data-placement='right' data-pk='@Model.Id'
+						data-value='@Model.Creator' data-url='@Url.Action("SetCashier", new { id = Model.Id })'
+						data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+						@Html.DisplayFor(x => x.Creator.Name)
+					</a>
+				</dd>
+				
+				<dt>@Resources.Comment</dt>
+				<dd>
+					<a class='editable' data-type="textarea" data-placement='right' data-pk='@Model.Id'
+						data-url='@Url.Action("SetComment", new { id = Model.Id })'
+						data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>@Model.Comment</a>
+					</dd>
+				</dl>
+			</div>
+			<div class='col-xs-4'>
+				<dl class='dl-horizontal'>
+					<dt>@Resources.Date</dt>
+					<dd>@Html.DisplayFor(x => x.Date)</dd>
+				</dl>
+			</div>
+		</div>
+		@if (Privilege.AllowDelete && !Model.IsCancelled)
+		{
+			<div class='row'>
+				<div class='col-xs-12'>
+					@using (Html.BeginForm("Cancel", "ExpenseVoucher", new { id = Model.Id }, FormMethod.Post, new { @class = "modal-form pull-right" }))
+					{
+						<button type="submit" class="icon cancel">@Resources.Cancel</button>
+					}
+				</div>
+			</div>
+		}
+	</fieldset>
+	<script type='text/javascript'>
+$(function () {
+	$('[data-toggle="tooltip"]').tooltip();
+	$('#cashier').editable({
+	    select2: {
+	    	minimumInputLength: 3,
+		    ajax: {
+		        url: '@Url.Action("GetSuggestions", "Employees")',
+		        dataType: 'json',
+		        type: 'POST',
+		        data: function(term,page,context) {
+		        	return { pattern:term };
+		        },
+		        results: function(data,page) {
+		            return { results:data };
+		        }
+		    },
+		    initSelection: function(element, callback) {
+		        var data = {
+		        	id: $('#cashier').data('value'),
+		        	name: $('#cashier').text()
+	        	};
+		        callback(data);
+		    },
+		    formatResult: function(result) {
+		        return result.name + " (" + result.code + ")";
+		    },
+		    formatSelection: function(selection) {
+		        return selection.name;
+		    }
+		},
+		success: function(response, newValue) {
+			$('#contact,#address').text('').editable('setValue', '');
+			$('#terms').text(response.termsText)
+					   .editable('setValue', response.terms);
+			$('#due-date').text(response.dueDate);
+			$('#salesperson').text(response.salesPersonName)
+					   .editable('setValue', response.salesPerson);
+	    },
+	    display: function(value, response) {
+	    	if (typeof response !== 'undefined') {
+				$(this).html(response.value);
+			}
+	    }
+	});
+
+	$('a.editable').editable({
+		success: function(response, newValue) {
+			if ('rate' in response) {
+				$('#exchange-rate').text(response.rate)
+								   .editable('setValue', response.rate);
+	        }
+			if ('dueDate' in response) {
+				$('#due-date').text(response.dueDate);
+	        }
+			if('itemsChanged' in response) {
+				$('#items-container').loadUrl();
+				$('#totals-section').loadUrl();
+			} else if('totalsChanged' in response) {
+				$('#totals-section').loadUrl();
+			}
+	    },
+	    display: function(value, response) {
+			if (typeof response === 'undefined')
+	        	return;
+
+	        if (Array.isArray(response)) {
+	          	var arr = $.grep(response, function(o){
+	  				return o.value == value;
+				});
+				if (arr.length != 0) {
+	          		$(this).html(arr[0].text);
+	          	}
+	        } else {
+	          	$(this).html(response.value);
+	        }
+	    }
+	});
+});
+	</script>
