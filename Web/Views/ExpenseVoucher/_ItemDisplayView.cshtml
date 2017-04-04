@@ -1,0 +1,18 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model ExpenseVoucherDetail
+
+<li id='id:@Model.Id'>
+    <div class='info'>
+        <span class='thick'>@Html.DisplayFor(x => x.Expense.Name)</span>
+        <br/>
+        <b>@Resources.Amount:</b>
+        <span class='editable subtotal'>@Html.DisplayFor(x => x.Amount)</span>
+    @if (!string.IsNullOrWhiteSpace (Model.Comment)) {
+    	<br/>
+        <b style='vertical-align:top;'>@Resources.Comment:</b>
+        <span style='display: inline-block;'>@Html.DisplayFor(x => x.Comment)</span>
+    }
+    </div>
+</li>
