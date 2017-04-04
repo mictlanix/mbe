@@ -2,9 +2,9 @@
 @using Mictlanix.BE.Web.Models
 @using Mictlanix.BE.Model
 
-@model Search<DeliveryOrder>
+@model Search<DeliveryOrderDetail>
 
-<table class="table-condensed">
+<table >
     <thead>
         <tr>
             <th>@Resources.SalesOrderId</th>
@@ -13,6 +13,7 @@
             <th>@Resources.DeliveryDate</th>
             <th>@Resources.ProductName</th>
             <th>Cantidad en Pedido</th>
+			   <th>@Resources.UnitOfMeasurement</th>
             <th>Cantidad Pendiente por entregar</th>
             <th>Cantidad Entregada</th>
             <th>Cantidad Restante por entregar</th>
@@ -21,9 +22,8 @@
         </tr>
     </thead>
     <tbody>
-        @foreach(var delivery in Model.Results)
-        {
-            foreach (var item in delivery.Details)
+
+            @foreach (var item in Model.Results)
             {
                 var DeliveredItemQuantity = DeliveryOrderDetail.Queryable.Where(y => y.OrderDetail == item.OrderDetail
                                                 && y.DeliveryOrder.Date < item.DeliveryOrder.Date
@@ -32,9 +32,9 @@
 
                 decimal AvailableQuantity = item.OrderDetail.Quantity - DeliveredItemQuantity;
 
-                decimal RemainingToDeliver = item.OrderDetail.Quantity - DeliveredItemQuantity - item.Quantity;
+                decimal RemainingToDeliver = item.OrderDetail.Quantity - DeliveredItemQuantity - ((item.DeliveryOrder.IsCompleted && !item.DeliveryOrder.IsCancelled)? item.Quantity: 0);
 
-                if (true) { 
+                if (AvailableQuantity > 0 ) {
 
                 <tr>
                     <td class="nowrap center">@Html.DisplayFor(x => item.OrderDetail.SalesOrder.Id)</td>
@@ -43,6 +43,7 @@
                     <td class="nowrap center">@Html.DisplayFor(x => item.DeliveryOrder.Date)</td>
                     <td class="nowrap center">@Html.DisplayFor(x => item.OrderDetail.ProductName)</td>
                     <td class="nowrap center">@Html.DisplayFor(x => item.OrderDetail.Quantity)</td>
+						  <td class="nowrap center">@Html.DisplayFor(x => item.Product.UnitOfMeasurement)</td>
                     <td class="nowrap center">@Html.DisplayFor(x => AvailableQuantity)</td>
                     <td class="nowrap center">@Html.DisplayFor(x => item.Quantity)</td>
                     <td class="nowrap center">@Html.DisplayFor(x => RemainingToDeliver)</td>
@@ -52,7 +53,7 @@
 
                 }
             }
-        }
+        
     </tbody>
 </table>
 

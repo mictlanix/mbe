@@ -27,173 +27,176 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Castle.ActiveRecord;
-using Castle.ActiveRecord.Framework;
 
-namespace Mictlanix.BE.Model {
+namespace Mictlanix.BE.Model
+{
 	public enum SystemObjects : int {
 		[Display (Name = "DisplayName_Products", ResourceType = typeof (Resources))]
-		Products,
+		Products = 0,
 		[Display (Name = "Labels", ResourceType = typeof (Resources))]
-		Labels,
+		Labels = 1,
 		[Display (Name = "DisplayName_Customers", ResourceType = typeof (Resources))]
-		Customers,
+		Customers = 2,
 		[Display (Name = "DisplayName_Suppliers", ResourceType = typeof (Resources))]
-		Suppliers,
+		Suppliers = 3,
 		[Display (Name = "DisplayName_Warehouses", ResourceType = typeof (Resources))]
-		Warehouses,
+		Warehouses = 4,
 		[Display (Name = "DisplayName_PriceLists", ResourceType = typeof (Resources))]
-		PriceLists,
+		PriceLists = 5,
 		[Display (Name = "DisplayName_Employees", ResourceType = typeof (Resources))]
-		Employees,
+		Employees = 6,
 		[Display (Name = "SalesOrders", ResourceType = typeof (Resources))]
-		SalesOrders,
+		SalesOrders = 7,
 		[Display (Name = "DisplayName_CustomerPayments", ResourceType = typeof (Resources))]
-		CustomerPayments,
+		CustomerPayments = 8,
 		[Display (Name = "DisplayName_PointsOfSale", ResourceType = typeof (Resources))]
-		PointsOfSale,
+		PointsOfSale = 9,
 		[Display (Name = "DisplayName_CashDrawers", ResourceType = typeof (Resources))]
-		CashDrawers,
+		CashDrawers = 10,
 		[Display (Name = "Addresses", ResourceType = typeof (Resources))]
-		Addresses,
+		Addresses = 11,
 		[Display (Name = "Contacts", ResourceType = typeof (Resources))]
-		Contacts,
+		Contacts = 12,
 		[Display (Name = "DisplayName_BankAccounts", ResourceType = typeof (Resources))]
-		BankAccounts,
+		BankAccounts = 13,
 		[Display (Name = "DisplayName_SupplierAgreements", ResourceType = typeof (Resources))]
-		SupplierAgreements,
+		SupplierAgreements = 14,
 		[Display (Name = "DisplayName_InventoryReceipts", ResourceType = typeof (Resources))]
-		InventoryReceipts,
+		InventoryReceipts = 15,
 		[Display (Name = "DisplayName_InventoryIssues", ResourceType = typeof (Resources))]
-		InventoryIssues,
+		InventoryIssues = 16,
 		[Display (Name = "DisplayName_InventoryTransfers", ResourceType = typeof (Resources))]
-		InventoryTransfers,
+		InventoryTransfers = 17,
 		[Display (Name = "DisplayName_AccountsReceivable", ResourceType = typeof (Resources))]
-		AccountsReceivable,
+		AccountsReceivable = 18,
 		[Display (Name = "DisplayName_AccountsPayable", ResourceType = typeof (Resources))]
-		AccountsPayable,
+		AccountsPayable = 19,
 		[Display (Name = "DisplayName_PurchasesOrders", ResourceType = typeof (Resources))]
-		PurchasesOrders,
+		PurchasesOrders = 20,
 		[Display (Name = "DisplayName_SupplierPayment", ResourceType = typeof (Resources))]
-		SupplierPayment,
+		SupplierPayment = 21,
 		[Display (Name = "CustomerRefunds", ResourceType = typeof (Resources))]
-		CustomerRefunds,
+		CustomerRefunds = 22,
 		[Display (Name = "FiscalDocuments", ResourceType = typeof (Resources))]
-		FiscalDocuments,
+		FiscalDocuments = 23,
 		[Display (Name = "DisplayName_Taxpayers", ResourceType = typeof (Resources))]
-		Taxpayers,
+		Taxpayers = 24,
 		[Display (Name = "DisplayName_SupplierReturns", ResourceType = typeof (Resources))]
-		SupplierReturns,
+		SupplierReturns = 25,
 		[Display (Name = "SalesOrdersHistoric", ResourceType = typeof (Resources))]
-		SalesOrdersHistoric,
+		SalesOrdersHistoric = 26,
 		[Display (Name = "CustomerRefundsHistoric", ResourceType = typeof (Resources))]
-		CustomerRefundsHistoric,
+		CustomerRefundsHistoric = 27,
 		[Display (Name = "DisplayName_SupplierReturnHistoric", ResourceType = typeof (Resources))]
-		SupplierReturnHistoric,
+		SupplierReturnHistoric = 28,
 		[Display (Name = "DisplayName_Stores", ResourceType = typeof (Resources))]
-		Stores,
+		Stores = 29,
 		[Display (Name = "SalesQuotes", ResourceType = typeof (Resources))]
-		SalesQuotes,
+		SalesQuotes = 30,
 		[Display (Name = "FiscalReports", ResourceType = typeof (Resources))]
-		FiscalReports,
+		FiscalReports = 31,
 		[Display (Name = "Kardex", ResourceType = typeof (Resources))]
-		Kardex,
+		Kardex = 32,
 		[Display (Name = "ReceivedPayments", ResourceType = typeof (Resources))]
-		ReceivedPayments,
+		ReceivedPayments = 33,
 		[Display (Name = "SalesByCustomer", ResourceType = typeof (Resources))]
-		SalesByCustomer,
+		SalesByCustomer = 34,
 		[Display (Name = "SalesBySalesPerson", ResourceType = typeof (Resources))]
-		SalesBySalesPerson,
+		SalesBySalesPerson = 35,
 		[Display (Name = "SalesByProduct", ResourceType = typeof (Resources))]
-		SalesByProduct,
+		SalesByProduct = 36,
 		[Display (Name = "GrossProfitsByCustomer", ResourceType = typeof (Resources))]
-		GrossProfitsByCustomer,
+		GrossProfitsByCustomer = 37,
 		[Display (Name = "GrossProfitsBySalesPerson", ResourceType = typeof (Resources))]
-		GrossProfitsBySalesPerson,
+		GrossProfitsBySalesPerson = 38,
 		[Display (Name = "GrossProfitsByProduct", ResourceType = typeof (Resources))]
-		GrossProfitsByProduct,
+		GrossProfitsByProduct = 39,
 		[Display (Name = "BestSellingProductsByCustomer", ResourceType = typeof (Resources))]
-		BestSellingProductsByCustomer,
+		BestSellingProductsByCustomer = 40,
 		[Display (Name = "BestSellingProductsBySalesPerson", ResourceType = typeof (Resources))]
-		BestSellingProductsBySalesPerson,
+		BestSellingProductsBySalesPerson = 41,
 		[Display (Name = "LotSerialNumbers", ResourceType = typeof (Resources))]
-		LotSerialNumbers,
+		LotSerialNumbers = 42,
 		[Display (Name = "ExchangeRates", ResourceType = typeof (Resources))]
-		ExchangeRates,
+		ExchangeRates = 43,
 		[Display (Name = "PointOfSale", ResourceType = typeof (Resources))]
-		POS,
+		POS = 44,
 		[Display (Name = "SerialNumberKardex", ResourceType = typeof (Resources))]
-		SerialNumberKardex,
+		SerialNumberKardex = 45,
 		[Display (Name = "CustomerDebt", ResourceType = typeof (Resources))]
-		CustomerDebtReport,
+		CustomerDebtReport = 46,
 		[Display (Name = "SalesOrderSummary", ResourceType = typeof (Resources))]
-		SalesOrderSummaryReport,
+		SalesOrderSummaryReport = 47,
 		[Display (Name = "FiscalDocumentsReport", ResourceType = typeof (Resources))]
-		FiscalDocumentsReport,
+		FiscalDocumentsReport = 48,
 		[Display (Name = "SalesPersonOrders", ResourceType = typeof (Resources))]
-		SalesPersonOrdersReport,
+		SalesPersonOrdersReport = 49,
 		[Display (Name = "CustomerSalesOrders", ResourceType = typeof (Resources))]
-		CustomerSalesOrdersReport,
+		CustomerSalesOrdersReport = 50,
 		[Display (Name = "ProductSalesByCustomer", ResourceType = typeof (Resources))]
-		ProductSalesByCustomerReport,
+		ProductSalesByCustomerReport = 51,
 		[Display (Name = "ProductSalesByModel", ResourceType = typeof (Resources))]
-		ProductSalesByModelReport,
+		ProductSalesByModelReport = 52,
 		[Display (Name = "ProductSalesByBrand", ResourceType = typeof (Resources))]
-		ProductSalesByBrandReport,
+		ProductSalesByBrandReport = 53,
 		[Display (Name = "TaxpayerRecipients", ResourceType = typeof (Resources))]
-		TaxpayerRecipients,
+		TaxpayerRecipients = 54,
 		[Display (Name = "ProductSalesBySalesPerson", ResourceType = typeof (Resources))]
-		ProductSalesBySalesPerson,
+		ProductSalesBySalesPerson = 55,
 		[Display (Name = "StandaloneFiscalDocuments", ResourceType = typeof (Resources))]
-		StandaloneFiscalDocuments,
+		StandaloneFiscalDocuments = 56,
 		[Display (Name = "ProductionOrders", ResourceType = typeof (Resources))]
-		ProductionOrders,
+		ProductionOrders = 57,
 		[Display (Name = "TechnicalServiceReports", ResourceType = typeof (Resources))]
-		TechnicalServiceReports,
+		TechnicalServiceReports = 58,
 		[Display (Name = "TranslationRequests", ResourceType = typeof (Resources))]
-		TranslationRequests,
+		TranslationRequests = 59,
 		[Display (Name = "Notarizations", ResourceType = typeof (Resources))]
-		Notarizations,
+		Notarizations = 60,
 		[Display (Name = "ProductSalesBySalesPersonAndLabel", ResourceType = typeof (Resources))]
-		ProductSalesBySalesPersonAndLabel,
+		ProductSalesBySalesPersonAndLabel = 61,
 		[Display (Name = "ProductSalesBySalesPersonAndBrand", ResourceType = typeof (Resources))]
-		ProductSalesBySalesPersonAndBrand,
+		ProductSalesBySalesPersonAndBrand = 62,
 		[Display (Name = "ProductSalesBySalesPersonAndModel", ResourceType = typeof (Resources))]
-		ProductSalesBySalesPersonAndModel,
+		ProductSalesBySalesPersonAndModel = 63,
 		[Display (Name = "TechnicalServiceRequests", ResourceType = typeof (Resources))]
-		TechnicalServiceRequests,
+		TechnicalServiceRequests = 64,
 		[Display (Name = "TechnicalServiceReceipts", ResourceType = typeof (Resources))]
-		TechnicalServiceReceipts,
+		TechnicalServiceReceipts = 65,
 		[Display (Name = "CustomersReport", ResourceType = typeof (Resources))]
-		CustomersReport,
+		CustomersReport = 66,
 		[Display (Name = "WarehouseStockReport", ResourceType = typeof (Resources))]
-		WarehouseStockReport,
+		WarehouseStockReport = 67,
 		[Display (Name = "WarehouseStockByLotReport", ResourceType = typeof (Resources))]
-		WarehouseStockByLotReport,
+		WarehouseStockByLotReport = 68,
 		[Display (Name = "WarehouseStockBySerialNumberReport", ResourceType = typeof (Resources))]
-		WarehouseStockBySerialNumberReport,
-		[Display (Name = "SalesOrderShipments", ResourceType = typeof (Resources))]
-		SalesOrderShipments,
+		WarehouseStockBySerialNumberReport = 69,
+		//[Display (Name = "SalesOrderShipments", ResourceType = typeof (Resources))]
+		//SalesOrderShipments = 70,
 		[Display (Name = "DeliveryOrders", ResourceType = typeof (Resources))]
-		DeliveryOrders,
+		DeliveryOrders = 71,
 		[Display (Name = "SalesPersonOrdersAndRefunds", ResourceType = typeof (Resources))]
-		SalesPersonOrdersAndRefundsReport,
+		SalesPersonOrdersAndRefundsReport = 72,
 		[Display (Name = "ProductsMerge", ResourceType = typeof (Resources))]
-		ProductsMerge,
+		ProductsMerge = 73,
 		[Display (Name = "PhysicalCountAdjustment", ResourceType = typeof (Resources))]
-		PhysicalCountAdjustment,
-        [Display(Name = "ProductsBySupplier", ResourceType = typeof(Resources))]
-        ProductsBySupplierReport,
-        [Display(Name = "EmployeeAttendance", ResourceType = typeof(Resources))]
-        EmployeeAttendance,
-        [Display(Name = "EmployeeSchedules", ResourceType = typeof(Resources))]
-        EmployeeSchedules,
-        [Display(Name = "SynchronizeClocks", ResourceType = typeof(Resources))]
-        SynchronizeClocks,
-        [Display(Name = "ProductsOrdersAndRefundsBySalesPerson", ResourceType = typeof(Resources))]
-        ProductsOrdersAndRefundsBySalesPerson
-    }
+		PhysicalCountAdjustment = 74,
+      [Display(Name = "ProductsBySupplier", ResourceType = typeof(Resources))]
+      ProductsBySupplierReport = 75,
+      //[Display(Name = "EmployeeAttendance", ResourceType = typeof(Resources))]
+      //EmployeeAttendance = 76,
+      //[Display(Name = "EmployeeSchedules", ResourceType = typeof(Resources))]
+      //EmployeeSchedules = 77,
+      //[Display(Name = "SynchronizeClocks", ResourceType = typeof(Resources))]
+      //SynchronizeClocks = 78,
+      [Display(Name = "ProductsOrdersAndRefundsBySalesPerson", ResourceType = typeof(Resources))]
+      ProductsOrdersAndRefundsBySalesPerson = 79,
+		[Display(Name = "PendantDeliveries", ResourceType = typeof(Resources))]
+		PendantDeliveries = 80,
+		[Display(Name = "DisplayName_Expenses", ResourceType = typeof(Resources))]
+		Expenses = 81,
+		[Display(Name = "ExpenseVoucher", ResourceType = typeof(Resources))]
+		ExpenseVoucher = 82
+	}
 }
