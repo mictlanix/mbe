@@ -31,9 +31,12 @@
 <div id='back-to-list' class='pull-left'>
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
-<div id='confirm-button' class='pull-right @(Model.Details.Count == 0 ? "hide" : "")'>
-@using (Html.BeginForm("Confirm", "DeliveryOrders", new { id = Model.Id })) {
-    <button id='complete' type='submit'>@Resources.Complete</button>
+<div class='pull-right @(Model.Details.Count == 0 ? "hide" : "")'>
+@using (Html.BeginForm("Confirm", "DeliveryOrders", new { id = Model.Id }, FormMethod.Post, new { style = "display:inline" })) {
+    <button id='complete' type='submit' class="icon save">@Resources.Complete</button>
+}
+@using (Html.BeginForm("Cancel", "DeliveryOrders", new { id = Model.Id }, FormMethod.Post, new { style = "display:inline" })){
+    <button type="submit" class="icon cancel">@Resources.Cancel</button>
 }
 </div>
 <div class='clearfix'></div>
