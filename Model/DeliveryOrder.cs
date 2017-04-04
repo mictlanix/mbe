@@ -38,7 +38,7 @@ namespace Mictlanix.BE.Model {
 	public class DeliveryOrder : ActiveRecordLinqBase<DeliveryOrder> {
 		IList<DeliveryOrderDetail> details = new List<DeliveryOrderDetail> ();
 
-		[PrimaryKey (PrimaryKeyType.Identity, "delivery_order_id")]
+        [PrimaryKey (PrimaryKeyType.Identity, "delivery_order_id")]
 		[Display (Name = "DeliveryOrderId", ResourceType = typeof (Resources))]
 		[DisplayFormat (DataFormatString = "{0:D8}")]
 		public int Id { get; set; }
@@ -91,7 +91,11 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Cancelled", ResourceType = typeof (Resources))]
 		public bool IsCancelled { get; set; }
 
-		[Property]
+        [Property("delivered")]
+        [Display(Name = "Delivered", ResourceType = typeof(Resources))]
+        public bool IsDelivered { get; set; }
+
+        [Property]
 		[DataType (DataType.MultilineText)]
 		[Display (Name = "Comment", ResourceType = typeof (Resources))]
 		[StringLength (500, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
