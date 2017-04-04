@@ -1,6 +1,5 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
-@using Mictlanix.BE.Web.Helpers
 @model Employee
 
 <div class='modal-header'>
@@ -15,6 +14,7 @@
 	</div>
 }
 </div>
+<div class="clear"></div>
 <div class='modal-footer'>
 	<button type='button' class='btn btn-default' data-dismiss='modal'>@Resources.Discard</button>
 	<button type='submit' class='btn btn-primary' onclick='$("#employee-modal form").submit();'>@Resources.Create</button>

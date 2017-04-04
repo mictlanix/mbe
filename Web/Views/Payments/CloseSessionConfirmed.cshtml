@@ -69,13 +69,30 @@
         </td>
     </tr>
 }
+
+	@{
+
+		var Expenses = ExpenseVoucher.Queryable.Where(x => x.CashSession == Model.Master && x.IsCompleted && !x.IsCancelled && x.Details.Count > 0).ToList();
+		var TotalExpenses = Expenses.Sum(x => x.Total);
+	}
+	@if (TotalExpenses > 0){
+	<tr>
+		<td class="number">
+			@Resources.Expenses
+		</td>
+		<td class="number">
+
+			@((-TotalExpenses).ToString("c"))
+		</td>
+	</tr>
+	}
     <tr>
         <td class="number">
             @Resources.Total
         </td>
 
         <td class="number">
-            @Model.Details.Sum(x => x.Amount).ToString("c")
+            @((Model.Details.Sum(x => x.Amount) - TotalExpenses).ToString("c"))
         </td>
     </tr>
 </table>

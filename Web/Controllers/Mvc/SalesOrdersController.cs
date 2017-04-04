@@ -825,7 +825,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			return Json (new {
 				id = entity.Id,
-                discount = entity.FormattedValueFor(x => x.Discount),
+            discount = entity.FormattedValueFor(x => x.Discount),
 				value = entity.FormattedValueFor (x => x.Price),
 				total = entity.FormattedValueFor (x => x.Total),
 				total2 = entity.FormattedValueFor (x => x.TotalEx)
@@ -934,6 +934,40 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.UpdateAndFlush ();
 			}
 
+            if (entity.ShipTo != null) {
+
+                DeliveryOrder deliver = new DeliveryOrder();
+
+                deliver.Date = DateTime.Now;
+                deliver.CreationTime = DateTime.Now;
+                deliver.Creator = CurrentUser.Employee;
+                deliver.Updater = entity.Creator;
+
+                deliver.Customer = entity.Customer;
+                deliver.ShipTo = entity.ShipTo;
+                deliver.Store = entity.Store;
+
+                using (var scope = new TransactionScope())
+                {
+                    deliver.CreateAndFlush();
+                }
+
+                foreach (var detail in entity.Details) {
+                    var detaild = (new DeliveryOrderDetail {
+                        DeliveryOrder = deliver,
+                        OrderDetail = detail,
+                        Quantity = detail.Quantity,
+                        ProductName = detail.ProductName,
+                        Product = detail.Product,
+                        ProductCode = detail.ProductCode
+                    });
+                    using (var scope = new TransactionScope())
+                    {
+                        detaild.CreateAndFlush();
+                    }
+                }                
+            }
+
 			return RedirectToAction ("Index");
 		}
 
@@ -988,9 +1022,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 					    sku = x.SKU ?? Resources.None,
 					    url = Url.Content (x.Photo),
 					    price = x.Price,
-                        quantity = LotSerialTracking.Queryable.Where(y => y.Product.Code == x.Code 
-                                                                    && y.Warehouse == WebConfig.PointOfSale.Warehouse)
-                                                                    .Sum(y => (decimal?)y.Quantity) ?? 0
+                   quantity = LotSerialTracking.Queryable.Where(y => y.Product.Code == x.Code 
+                                                               && y.Warehouse == WebConfig.PointOfSale.Warehouse)
+                                                               .Sum(y => (decimal?)y.Quantity) ?? 0
                     };
 
 			return Json (items.ToList (), JsonRequestBehavior.AllowGet);

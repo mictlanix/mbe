@@ -1,0 +1,19 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model ExpenseVoucher
+
+@if (Model.IsCompleted || Model.IsCancelled) {
+<script type='text/javascript'>$(function(){$('#confirm-button').hide()});</script>
+} else if (Model.Details.Count > 0) {
+<script type='text/javascript'>$(function(){$('#confirm-button').show()});</script>
+}
+
+@if (Model.Total > 0) {
+<ul class='labeled-frames'>
+    <li>
+    	<span class='caption'>@Resources.Total</span>
+        <span class='value'>@Html.DisplayFor(x => Model.Total)</span>
+    </li>
+</ul>
+	} else{}
