@@ -253,9 +253,54 @@ CREATE TABLE sales_order_payment (
 ALTER TABLE employee
 	ADD COLUMN 	'enroll_number' INT(11) NULL DEFAULT NULL;
 
+-- Cambios de Andrés
 
 ALTER TABLE sales_order
-	ADD COLUMN occasional_customer VARCHAR(50) NULL DEFAULT NULL;
+	ADD COLUMN customer_name VARCHAR(50) NULL DEFAULT NULL;
+	
+ALTER TABLE delivery_order
+	ADD COLUMN delivered TINYINT(1) NULL DEFAULT 0;
+	
+CREATE TABLE `expenses` (
+	`expense_id` INT(11) NOT NULL AUTO_INCREMENT,
+	`expense` VARCHAR(50) NOT NULL DEFAULT '0' COLLATE 'utf8_unicode_ci',
+	`comment` VARCHAR(50) NULL DEFAULT '0' COLLATE 'utf8_unicode_ci',
+	PRIMARY KEY (`expense_id`)
+);
+
+CREATE TABLE `expense_voucher` (
+	`expense_voucher_id` INT(11) NOT NULL AUTO_INCREMENT,
+	`creator` INT(11) NOT NULL DEFAULT '0',
+	`updater` INT(11) NOT NULL DEFAULT '0',
+	`store` INT(11) NOT NULL DEFAULT '0',
+	`comment` VARCHAR(500) NULL DEFAULT NULL COLLATE 'utf8_unicode_ci',
+	`date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`creation_time` DATETIME NOT NULL,
+	`modification_time` DATETIME NOT NULL,
+	`completed` TINYINT(1) NULL DEFAULT '0',
+	`cancelled` TINYINT(1) NULL DEFAULT '0',
+	PRIMARY KEY (`expense_voucher_id`),
+	INDEX `FK_expense_voucher_store` (`store`),
+	INDEX `FK_expense_voucher_employee` (`creator`),
+	INDEX `FK_expense_voucher_employee_2` (`updater`),
+	CONSTRAINT `FK_expense_voucher_employee` FOREIGN KEY (`creator`) REFERENCES `employee` (`employee_id`),
+	CONSTRAINT `FK_expense_voucher_employee_2` FOREIGN KEY (`updater`) REFERENCES `employee` (`employee_id`),
+	CONSTRAINT `FK_expense_voucher_store` FOREIGN KEY (`store`) REFERENCES `store` (`store_id`)
+);
+
+CREATE TABLE `expense_voucher_detail` (
+	`expense_voucher_detail_id` INT(11) NOT NULL AUTO_INCREMENT,
+	`expense_voucher` INT(11) NOT NULL DEFAULT '0',
+	`expense` INT(11) NOT NULL DEFAULT '0',
+	`amount` DECIMAL(10,0) NOT NULL DEFAULT '0',
+	`comment` VARCHAR(500) NULL DEFAULT NULL COLLATE 'utf8_unicode_ci',
+	PRIMARY KEY (`expense_voucher_detail_id`),
+	INDEX `FK_expense_voucher_detail_expense_voucher` (`expense_voucher`),
+	INDEX `FK_expense_voucher_detail_expenses` (`expense`),
+	CONSTRAINT `FK_expense_voucher_detail_expense_voucher` FOREIGN KEY (`expense_voucher`) REFERENCES `expense_voucher` (`expense_voucher_id`),
+	CONSTRAINT `FK_expense_voucher_detail_expenses` FOREIGN KEY (`expense`) REFERENCES `expenses` (`expense_id`)
+);
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
