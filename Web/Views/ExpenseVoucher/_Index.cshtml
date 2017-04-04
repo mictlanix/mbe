@@ -1,0 +1,71 @@
+﻿@using Mictlanix.BE.Model
+@using Mictlanix.BE
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+
+@model Search<ExpenseVoucher>
+
+<table class="table-condensed">
+	<thead>
+		<tr>
+			<th>@Resources.Id</th>
+			<th>@Resources.Date</th>
+			<th>@Resources.Creator</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model.Results)
+		{
+			<tr>
+				<td>@Html.DisplayFor(x => item.Id)</td>
+				<td>@Html.DisplayFor(x => item.Date)</td>
+				<td>@Html.DisplayFor(x => item.Creator.Name)</td>
+				<td class='actions'>
+					@if ((item.IsCompleted || item.IsCancelled))
+					{
+						@Html.ActionLink(" ", "View", new { id = item.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
+						@Html.ActionLink(" ", "Print", new { id = item.Id }, new { @class = "button icon print icon-only", title = Resources.Print, target = "_blank" })
+					}
+					@if (!item.IsCompleted && !item.IsCancelled)
+					{
+						@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", title = Resources.Edit })
+					}
+				</td>
+			</tr>
+		}
+	</tbody>
+	<tfoot></tfoot>
+</table>
+
+<div class="buttons right">
+	<label class='button left'>@Model.ToString()</label>@if (Model.HasPrev)
+	{<a class='button middle icon prev icon-only paging' title='@Resources.PrevPage' href='javascript:void(0)'></a>}@if (Model.HasNext)
+	{<a class='button right icon next icon-only paging' title='@Resources.NextPage' href='javascript:void(0)'></a>}
+</div>
+
+
+<script type="text/javascript">
+    bindModal('.open-modal');
+
+    $('a.paging').click(function (e) {
+        var offset=@Model.Offset;
+
+        if($(this).hasClass('next')) {
+            offset+=@Model.Limit;
+        } else {
+            offset-=@Model.Limit;
+        }
+
+        e.preventDefault();
+        $('#activity-indicator').show();
+        $('#search-results').hide();
+
+        $.post('@Url.Action("Index")', { Pattern: '@Model.Pattern', Offset: offset, Limit: @Model.Limit }, function(data) {
+            $('#search-results').html(data);
+            $('#search-results').show();
+            $('#activity-indicator').hide();
+        });
+    });
+
+</script>
