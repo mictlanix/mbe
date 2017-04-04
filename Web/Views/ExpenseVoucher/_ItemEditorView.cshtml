@@ -1,0 +1,70 @@
+﻿
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model ExpenseVoucherDetail
+
+<li id='id:@Model.Id'>
+
+	<div class='action-link'>
+		<a class='button icon-only icon delete' title='@Resources.Message_DeleteConfirmation'
+			data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id' data-url='@Url.Action("RemoveItem", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
+	</div>
+	<div class='info'>
+		
+			<span class='thick'>@Html.DisplayFor(x => x.Expense.Name)</span>
+		
+		<br />
+		<b>@Resources.Amount:</b>
+		
+			<a class='editable price' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemAmount", new { id = Model.Id })'>@Html.DisplayFor(x => x.Amount)</a>
+		
+		
+		<b style='vertical-align:top;'>@Resources.Comment:</b>
+		<a class='editable' data-type="textarea" data-placement='right' data-pk='@Model.Id'
+			data-url='@Url.Action("SetItemComment", new { id = Model.Id })'
+			data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>@Model.Comment</a>
+		</div>
+	</li>
+	<script type='text/javascript'>
+$('#id\\:@Model.Id [data-toggle="tooltip"]').tooltip();
+$('#id\\:@Model.Id a.editable').editable({
+	success: function(response, newValue) {
+		var $this = $(this);
+		if ('total' in response) {
+			$this.siblings('.total').html(response.total);
+		}
+		if ('total2' in response) {
+			$this.siblings('.total2').attr('data-original-title', response.total2 + ' @WebConfig.BaseCurrency');
+		}
+	    if ('discount' in response) {
+	        $this.siblings('.discount').html(response.discount);
+	    }
+		if ($this.hasClass('name')) {
+			setTimeout(function(){$this.editable('setValue', response.value);},500);
+		}
+        $('#totals-section').loadUrl();
+    },
+    display: function(value, response) {
+        if (typeof response === 'undefined') {
+        	$(this).html(value);
+        } else if (Array.isArray(response)) {
+          	arr = $.grep(response, function(o){
+  				return o.value == value;
+			});
+          	$(this).html(arr[0].text);
+        } else {
+          	$(this).html(response.value);
+        }
+    }
+});
+$('#id\\:@Model.Id a.delete').editable({
+	success: function(response, newValue) {
+        $('#id\\:@Model.Id').remove();
+        $('#totals-section').loadUrl();
+        if ($('#items li').length === 0) {
+	        $('#confirm-button').addClass('hide');
+	    }
+    }
+});
+	</script>

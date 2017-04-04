@@ -4342,5 +4342,35 @@ namespace Mictlanix.BE {
                 return ResourceManager.GetString("CLABE", resourceCulture);
             }
         }
+        
+        public static string DisplayName_Expenses {
+            get {
+                return ResourceManager.GetString("DisplayName_Expenses", resourceCulture);
+            }
+        }
+        
+        public static string ExpenseVoucher {
+            get {
+                return ResourceManager.GetString("ExpenseVoucher", resourceCulture);
+            }
+        }
+        
+        public static string ExpenseVouchers {
+            get {
+                return ResourceManager.GetString("ExpenseVouchers", resourceCulture);
+            }
+        }
+        
+        public static string PendantDeliveries {
+            get {
+                return ResourceManager.GetString("PendantDeliveries", resourceCulture);
+            }
+        }
+        
+        public static string Expenses {
+            get {
+                return ResourceManager.GetString("Expenses", resourceCulture);
+            }
+        }
     }
 }

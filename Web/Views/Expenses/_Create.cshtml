@@ -1,0 +1,36 @@
+﻿@using Mictlanix.BE.Model
+@using Mictlanix.BE
+@model Expense
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h3>@Resources.DisplayName_Expenses</h3>
+</div>
+
+<div class="modal-body">
+    @using (Ajax.BeginForm("Create", "Expenses", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "expense-modal-content" }, new { @class = "modal-form"}))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        <div class="form-horizontal">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-xs-4">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+		<div class="form-horizontal">
+			@Html.LabelFor(model => model.Comment, htmlAttributes: new { @class = "control-label col-md-2" })
+			<div class="col-xs-4">
+				@Html.EditorFor(model => model.Comment, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.ValidationMessageFor(model => model.Comment, "", new { @class = "text-danger" })
+			</div>
+		</div>
+	 }
+</div>
+<div class="clear"></div>
+<div class='modal-footer'>
+    <button type='button' class='btn btn-default' data-dismiss='modal'>@Resources.Discard</button>
+    <button type='submit' class='btn btn-primary' onclick='$("#expense-modal form").submit();'>@Resources.Create</button>
+</div>

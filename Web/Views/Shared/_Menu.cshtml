@@ -3,88 +3,90 @@
 @using Mictlanix.BE.Web.Helpers
 
 @{
-    var CurrentUser = Html.CurrentUser() ?? new User();
-    var ShowMasterDataMenu = CurrentUser.GetPrivilege (SystemObjects.Products).AllowRead ||
-                             CurrentUser.GetPrivilege (SystemObjects.Labels).AllowRead ||
-                             CurrentUser.GetPrivilege (SystemObjects.PriceLists).AllowRead ||
-                             CurrentUser.GetPrivilege (SystemObjects.Customers).AllowRead ||
-                             CurrentUser.GetPrivilege (SystemObjects.TaxpayerRecipients).AllowRead ||
-                             CurrentUser.GetPrivilege (SystemObjects.Suppliers).AllowRead ||
-                             CurrentUser.GetPrivilege (SystemObjects.Employees).AllowRead ||
-                             CurrentUser.GetPrivilege (SystemObjects.Warehouses).AllowRead ||
-                             CurrentUser.GetPrivilege (SystemObjects.PointsOfSale).AllowRead ||
-                             CurrentUser.GetPrivilege (SystemObjects.CashDrawers).AllowRead ||
-                             CurrentUser.GetPrivilege (SystemObjects.Stores).AllowRead ||
-                             CurrentUser.GetPrivilege (SystemObjects.ExchangeRates).AllowRead;
+	var CurrentUser = Html.CurrentUser() ?? new User();
+	var ShowMasterDataMenu = CurrentUser.GetPrivilege (SystemObjects.Products).AllowRead ||
+									 CurrentUser.GetPrivilege (SystemObjects.Labels).AllowRead ||
+									 CurrentUser.GetPrivilege (SystemObjects.PriceLists).AllowRead ||
+									 CurrentUser.GetPrivilege (SystemObjects.Customers).AllowRead ||
+									 CurrentUser.GetPrivilege (SystemObjects.TaxpayerRecipients).AllowRead ||
+									 CurrentUser.GetPrivilege (SystemObjects.Suppliers).AllowRead ||
+									 CurrentUser.GetPrivilege (SystemObjects.Employees).AllowRead ||
+									 CurrentUser.GetPrivilege (SystemObjects.Warehouses).AllowRead ||
+									 CurrentUser.GetPrivilege (SystemObjects.PointsOfSale).AllowRead ||
+									 CurrentUser.GetPrivilege (SystemObjects.CashDrawers).AllowRead ||
+									 CurrentUser.GetPrivilege (SystemObjects.Stores).AllowRead ||
+									 CurrentUser.GetPrivilege (SystemObjects.ExchangeRates).AllowRead ||
+									 CurrentUser.GetPrivilege (SystemObjects.Expenses).AllowRead;
 
-    var ShowSalesMenu = CurrentUser.GetPrivilege (SystemObjects.SalesOrders).AllowRead ||
-                        CurrentUser.GetPrivilege (SystemObjects.POS).AllowRead ||
-                        CurrentUser.GetPrivilege (SystemObjects.CustomerPayments).AllowRead ||
-                        CurrentUser.GetPrivilege (SystemObjects.CustomerRefunds).AllowRead ||
-                        CurrentUser.GetPrivilege (SystemObjects.SalesQuotes).AllowRead;
+	var ShowSalesMenu = CurrentUser.GetPrivilege (SystemObjects.SalesOrders).AllowRead ||
+							  CurrentUser.GetPrivilege (SystemObjects.POS).AllowRead ||
+							  CurrentUser.GetPrivilege (SystemObjects.CustomerPayments).AllowRead ||
+							  CurrentUser.GetPrivilege (SystemObjects.CustomerRefunds).AllowRead ||
+							  CurrentUser.GetPrivilege (SystemObjects.SalesQuotes).AllowRead;
 
-    var ShowProductionMenu = CurrentUser.GetPrivilege (SystemObjects.ProductionOrders).AllowRead;
+	var ShowProductionMenu = CurrentUser.GetPrivilege (SystemObjects.ProductionOrders).AllowRead;
 
-    var ShowInventoryMenu = CurrentUser.GetPrivilege (SystemObjects.InventoryReceipts).AllowRead ||
-                            CurrentUser.GetPrivilege (SystemObjects.InventoryIssues).AllowRead ||
-                            CurrentUser.GetPrivilege (SystemObjects.InventoryTransfers).AllowRead ||
-                            CurrentUser.GetPrivilege (SystemObjects.LotSerialNumbers).AllowRead;
+	var ShowInventoryMenu = CurrentUser.GetPrivilege (SystemObjects.InventoryReceipts).AllowRead ||
+									CurrentUser.GetPrivilege (SystemObjects.InventoryIssues).AllowRead ||
+									CurrentUser.GetPrivilege (SystemObjects.InventoryTransfers).AllowRead ||
+									CurrentUser.GetPrivilege (SystemObjects.LotSerialNumbers).AllowRead||
+									CurrentUser.GetPrivilege (SystemObjects.PendantDeliveries).AllowRead;
 
-    var ShowPurchasesMenu = CurrentUser.GetPrivilege (SystemObjects.PurchasesOrders).AllowRead ||
-                            CurrentUser.GetPrivilege (SystemObjects.SupplierPayment).AllowRead ||
-                            CurrentUser.GetPrivilege (SystemObjects.SupplierReturns).AllowRead;
+	var ShowPurchasesMenu = CurrentUser.GetPrivilege (SystemObjects.PurchasesOrders).AllowRead ||
+									CurrentUser.GetPrivilege (SystemObjects.SupplierPayment).AllowRead ||
+									CurrentUser.GetPrivilege (SystemObjects.SupplierReturns).AllowRead;
 
-    var ShowAdministrationMenu = CurrentUser.GetPrivilege (SystemObjects.AccountsReceivable).AllowRead ||
-                                 CurrentUser.GetPrivilege (SystemObjects.AccountsPayable).AllowRead;
+	var ShowAdministrationMenu = CurrentUser.GetPrivilege (SystemObjects.AccountsReceivable).AllowRead ||
+										  CurrentUser.GetPrivilege (SystemObjects.AccountsPayable).AllowRead;
 
-    var ShowFiscalDocumentsMenu = CurrentUser.GetPrivilege (SystemObjects.FiscalDocuments).AllowRead ||
-                                  CurrentUser.GetPrivilege (SystemObjects.FiscalReports).AllowRead ||
-                                  CurrentUser.GetPrivilege (SystemObjects.Taxpayers).AllowRead;
+	var ShowFiscalDocumentsMenu = CurrentUser.GetPrivilege (SystemObjects.FiscalDocuments).AllowRead ||
+											CurrentUser.GetPrivilege (SystemObjects.FiscalReports).AllowRead ||
+											CurrentUser.GetPrivilege (SystemObjects.Taxpayers).AllowRead;
 
-    var ShowReportsMenu = CurrentUser.GetPrivilege (SystemObjects.SupplierReturnHistoric).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.ReceivedPayments).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.SalesByCustomer).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.SalesBySalesPerson).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.SalesByProduct).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.GrossProfitsByCustomer).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.GrossProfitsBySalesPerson).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.GrossProfitsByProduct).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.BestSellingProductsByCustomer).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.BestSellingProductsBySalesPerson).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.CustomerDebtReport).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.SalesOrderSummaryReport).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.FiscalDocumentsReport).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.SalesPersonOrdersReport).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.SalesPersonOrdersAndRefundsReport).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.CustomerSalesOrdersReport).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.ProductSalesByCustomerReport).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.ProductSalesByModelReport).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.ProductSalesByBrandReport).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPerson).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPersonAndLabel).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPersonAndBrand).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPersonAndModel).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.CustomersReport).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.WarehouseStockReport).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.WarehouseStockByLotReport).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.WarehouseStockBySerialNumberReport).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.Kardex).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.SerialNumberKardex).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.ProductsBySupplierReport).AllowRead ||
-                          CurrentUser.GetPrivilege (SystemObjects.ProductsOrdersAndRefundsBySalesPerson).AllowRead
-                          ;
+	var ShowReportsMenu = CurrentUser.GetPrivilege (SystemObjects.SupplierReturnHistoric).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.ReceivedPayments).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.SalesByCustomer).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.SalesBySalesPerson).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.SalesByProduct).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.GrossProfitsByCustomer).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.GrossProfitsBySalesPerson).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.GrossProfitsByProduct).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.BestSellingProductsByCustomer).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.BestSellingProductsBySalesPerson).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.CustomerDebtReport).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.SalesOrderSummaryReport).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.FiscalDocumentsReport).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.SalesPersonOrdersReport).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.SalesPersonOrdersAndRefundsReport).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.CustomerSalesOrdersReport).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.ProductSalesByCustomerReport).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.ProductSalesByModelReport).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.ProductSalesByBrandReport).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPerson).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPersonAndLabel).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPersonAndBrand).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPersonAndModel).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.CustomersReport).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.WarehouseStockReport).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.WarehouseStockByLotReport).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.WarehouseStockBySerialNumberReport).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.Kardex).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.SerialNumberKardex).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.ProductsBySupplierReport).AllowRead ||
+								 CurrentUser.GetPrivilege (SystemObjects.ProductsOrdersAndRefundsBySalesPerson).AllowRead
+								 ;
 
-    var ShowTechnicalServiceMenu =  CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceReports).AllowRead ||
-                                    CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceRequests).AllowRead ||
-                                    CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceReceipts).AllowRead;
+	var ShowTechnicalServiceMenu =  CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceReports).AllowRead ||
+											  CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceRequests).AllowRead ||
+											  CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceReceipts).AllowRead;
 
-    var ShowFrontDeskMenu = CurrentUser.GetPrivilege (SystemObjects.TranslationRequests).AllowRead ||
-                            CurrentUser.GetPrivilege (SystemObjects.Notarizations).AllowRead;
+	var ShowFrontDeskMenu = CurrentUser.GetPrivilege (SystemObjects.TranslationRequests).AllowRead ||
+									CurrentUser.GetPrivilege (SystemObjects.Notarizations).AllowRead;
 
-    var ShowHumanResources = CurrentUser.GetPrivilege(SystemObjects.EmployeeAttendance).AllowRead ||
-                            CurrentUser.GetPrivilege(SystemObjects.EmployeeSchedules).AllowRead ||
-                            CurrentUser.GetPrivilege(SystemObjects.SynchronizeClocks).AllowRead
-                        ;
+	//var ShowHumanResources = CurrentUser.GetPrivilege(SystemObjects.EmployeeAttendance).AllowRead ||
+	//                        CurrentUser.GetPrivilege(SystemObjects.EmployeeSchedules).AllowRead ||
+	//                        CurrentUser.GetPrivilege(SystemObjects.SynchronizeClocks).AllowRead
+	//                    ;
 }
 
 <div id="gb" class='no-print'>
@@ -181,6 +183,12 @@
                                    href="@Url.Action("Index", "ExchangeRates")">@Resources.ExchangeRates</a>
                             </li>
                             }
+									@if (CurrentUser.GetPrivilege(SystemObjects.Expenses).AllowRead) {
+										<li class="gbmtc">
+											<a class="gbmt @(Html.IsMenuSelected("Index", "Expenses") ? "gbm0l" : "")"
+												href="@Url.Action("Index", "Expenses")">@Resources.DisplayName_Expenses</a>
+											</li>
+									}
                         </ol>
                     </div>
                 </div>
@@ -235,6 +243,12 @@
                                    href='@Url.Action("Index", "CustomerRefunds")'>@Resources.CustomerRefunds</a>
                             </li>
                             }
+									@if (CurrentUser.GetPrivilege(SystemObjects.ExpenseVoucher).AllowRead)	{
+										<li class='gbmtc'>
+											<a class='gbmt @(Html.IsMenuSelected("Index", "ExpenseVoucher") ? "gbm0l" : "")'
+												href='@Url.Action("Index", "ExpenseVoucher")'>@Resources.ExpenseVouchers</a>
+											</li>
+									}
                         </ol>
                     </div>
                 </div>
@@ -347,10 +361,10 @@
                                    href="@Url.Action("LotSerialNumbers", "Inventory")">@Resources.LotSerialNumbers</a>
                             </li>
                             }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.SalesOrderShipments).AllowRead) {
+                            @if (CurrentUser.GetPrivilege (SystemObjects.PendantDeliveries).AllowRead) {
                             <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "SalesOrderShipments") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "SalesOrderShipments")">@Resources.SalesOrderShipments</a>
+                                <a class="gbmt @(Html.IsMenuSelected("PendantDeliveries", "DeliveryOrders") ? "gbm0l" : "")"
+                                   href="@Url.Action("PendantDeliveries", "DeliveryOrders")">@Resources.PendantDeliveries</a>
                             </li>
                             }
                             @if (CurrentUser.GetPrivilege (SystemObjects.DeliveryOrders).AllowRead) {
