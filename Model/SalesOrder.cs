@@ -1,11 +1,11 @@
-﻿// 
+// 
 // SalesOrder.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.com>
 //   Eduardo Nieto <enieto@mictlanix.com>
 // 
-// Copyright (C) 2011-2016 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2011-2017 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -57,8 +57,8 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Customer", ResourceType = typeof (Resources))]
 		public virtual Customer Customer { get; set; }
 
-        [Property("customer_name")]
-        public virtual string CustomerName { get; set; }
+		[Property ("customer_name")]
+		public virtual string CustomerName { get; set; }
 
 		[BelongsTo ("contact", Lazy = FetchWhen.OnInvoke)]
 		[Display (Name = "Contact", ResourceType = typeof (Resources))]
@@ -107,7 +107,7 @@ namespace Mictlanix.BE.Model {
 		[Property ("due_date")]
 		[DataType (DataType.Date)]
 		[Display (Name = "DueDate", ResourceType = typeof (Resources))]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}" )]
+		[DisplayFormat (DataFormatString = "{0:yyyy-MM-dd}")]
 		public virtual DateTime DueDate { get; set; }
 
 		[Property ("completed")]
@@ -151,9 +151,15 @@ namespace Mictlanix.BE.Model {
 		}
 
 		[DataType (DataType.Currency)]
+		[Display (Name = "Discount", ResourceType = typeof (Resources))]
+		public virtual decimal Discount {
+			get { return Details.Sum (x => x.Discount); }
+		}
+
+		[DataType (DataType.Currency)]
 		[Display (Name = "Taxes", ResourceType = typeof (Resources))]
 		public virtual decimal Taxes {
-			get { return Total - Subtotal; }
+			get { return Details.Sum (x => x.Taxes); }
 		}
 
 		[DataType (DataType.Currency)]
@@ -163,15 +169,27 @@ namespace Mictlanix.BE.Model {
 		}
 
 		[DataType (DataType.Currency)]
+		[Display (Name = "Savings", ResourceType = typeof (Resources))]
+		public virtual decimal Savings {
+			get { return Details.Sum (x => x.Savings); }
+		}
+
+		[DataType (DataType.Currency)]
 		[Display (Name = "Subtotal", ResourceType = typeof (Resources))]
 		public virtual decimal SubtotalEx {
 			get { return Details.Sum (x => x.SubtotalEx); }
 		}
 
 		[DataType (DataType.Currency)]
+		[Display (Name = "Discount", ResourceType = typeof (Resources))]
+		public virtual decimal DiscountEx {
+			get { return Details.Sum (x => x.DiscountEx); }
+		}
+
+		[DataType (DataType.Currency)]
 		[Display (Name = "Taxes", ResourceType = typeof (Resources))]
 		public virtual decimal TaxesEx {
-			get { return TotalEx - SubtotalEx; }
+			get { return Details.Sum (x => x.TaxesEx); }
 		}
 
 		[DataType (DataType.Currency)]
@@ -195,20 +213,10 @@ namespace Mictlanix.BE.Model {
 		[DataType (DataType.Currency)]
 		[Display (Name = "Change", ResourceType = typeof (Resources))]
 		public virtual decimal Change {
-			get { return Paid - Total; }
+			get { return Payments.Sum (x => x.Change); }
 		}
 
-        [DataType(DataType.Currency)]
-        [Display(Name = "Saving", ResourceType = typeof(Resources))]
-        public virtual decimal Saving
-        {
-            get
-            {
-                return Details.Where(x => x.Discount > 0).Select(y => y.Discount * y.Price * y.Quantity).Sum();
-            }
-        }
-
-        [BelongsTo ("creator", Lazy = FetchWhen.OnInvoke)]
+		[BelongsTo ("creator", Lazy = FetchWhen.OnInvoke)]
 		[Display (Name = "Creator", ResourceType = typeof (Resources))]
 		public virtual Employee Creator { get; set; }
 

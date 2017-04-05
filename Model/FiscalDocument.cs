@@ -1,4 +1,4 @@
-﻿// 
+// 
 // FiscalDocument.cs
 // 
 // Author:
@@ -105,13 +105,6 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Customer", ResourceType = typeof (Resources))]
 		public virtual Customer Customer { get; set; }
 
-		/*
-		[UIHint("AddressSelector")]
-		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-		[Display(Name = "Recipient", ResourceType = typeof(Resources))]
-		public virtual string RecipientId { get; set; }
-		*/
-
 		//[BelongsTo("recipient")]
 		[Property ("recipient")]
 		[Display (Name = "Recipient", ResourceType = typeof (Resources))]
@@ -169,7 +162,6 @@ namespace Mictlanix.BE.Model {
 
 		[Property ("issuer_certificate_number")]
 		[Display (Name = "CertificateNumber", ResourceType = typeof (Resources))]
-		//[DisplayFormat(DataFormatString="{0:00000000000000000000}")]
 		public virtual string IssuerCertificateNumber { get; set; }
 
 		[Property ("original_string")]
@@ -249,6 +241,12 @@ namespace Mictlanix.BE.Model {
 		}
 
 		[DataType (DataType.Currency)]
+		[Display (Name = "Discount", ResourceType = typeof (Resources))]
+		public virtual decimal Discount {
+			get { return Details.Sum (x => x.Discount); }
+		}
+
+		[DataType (DataType.Currency)]
 		[Display (Name = "Taxes", ResourceType = typeof (Resources))]
 		public virtual decimal Taxes {
 			get { return Details.Sum (x => x.Taxes); }
@@ -257,7 +255,7 @@ namespace Mictlanix.BE.Model {
 		[DataType (DataType.Currency)]
 		[Display (Name = "RetentionTaxes", ResourceType = typeof (Resources))]
 		public virtual decimal RetentionTaxes {
-			get { return Subtotal * RetentionRate; }
+			get { return ModelHelpers.TotalRounding ((Subtotal - Discount) * RetentionRate); }
 		}
 
 		[DataType (DataType.Currency)]
@@ -273,6 +271,12 @@ namespace Mictlanix.BE.Model {
 		}
 
 		[DataType (DataType.Currency)]
+		[Display (Name = "Discount", ResourceType = typeof (Resources))]
+		public virtual decimal DiscountEx {
+			get { return Details.Sum (x => x.DiscountEx); }
+		}
+
+		[DataType (DataType.Currency)]
 		[Display (Name = "Taxes", ResourceType = typeof (Resources))]
 		public virtual decimal TaxesEx {
 			get { return Details.Sum (x => x.TaxesEx); }
@@ -281,7 +285,7 @@ namespace Mictlanix.BE.Model {
 		[DataType (DataType.Currency)]
 		[Display (Name = "RetentionTaxes", ResourceType = typeof (Resources))]
 		public virtual decimal RetentionTaxesEx {
-			get { return SubtotalEx * RetentionRate; }
+			get { return ModelHelpers.TotalRounding ((SubtotalEx - DiscountEx) * RetentionRate); }
 		}
 
 		[DataType (DataType.Currency)]

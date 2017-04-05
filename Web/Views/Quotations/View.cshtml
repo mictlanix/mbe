@@ -4,7 +4,7 @@
 @model SalesQuote
 
 @{
-    ViewBag.Title = Resources.SalesOrder;
+    ViewBag.Title = Resources.SalesQuote;
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders);
 }
