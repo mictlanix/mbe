@@ -24,7 +24,7 @@ namespace Mictlanix.BE.Web.Controllers
 
             var watch = System.Diagnostics.Stopwatch.StartNew();
 
-            List<EmployeeAttendanceDBRecorder> sheets = new List<EmployeeAttendanceDBRecorder>();
+            //List<EmployeeAttendanceDBRecorder> sheets = new List<EmployeeAttendanceDBRecorder>();
 
             DateTime StartDate = new DateTime(2015, 12, 01);
             DateTime EndDate = new DateTime(2016, 12, 15);
@@ -107,11 +107,11 @@ namespace Mictlanix.BE.Web.Controllers
         {
 
             var Item = Attendance.Find(id);
-            if (value != null) {
+            //if (value != null) {
                 Item.FirstCheckin = Item.Date.Date.Add(value);
                 Item.Modified = DateTime.Now;
                 Item.UpdateAndFlush();
-            }
+            //}
 
             return PartialView("_AttendanceEmployeeByDay", Item);
         }
@@ -121,8 +121,8 @@ namespace Mictlanix.BE.Web.Controllers
         {
 
             var Item = Attendance.Find(id);
-            if (value!=null)
-            {
+            //if (value!=null)
+            //{
                 Item.FirstCheckout = Item.Date.Date.Add(value);
                 if (value < TimeSpan.Parse(Item.ShiftIn))
                 {
@@ -130,7 +130,7 @@ namespace Mictlanix.BE.Web.Controllers
                 }
                 Item.Modified = DateTime.Now;
                 Item.UpdateAndFlush();
-            }
+            //}
 
             return PartialView("_AttendanceEmployeeByDay", Item);
 
@@ -141,8 +141,8 @@ namespace Mictlanix.BE.Web.Controllers
         {
 
             var Item = Attendance.Find(id);
-            if (value != null)
-            {
+            //if (value != null)
+            //{
                 Item.LastCheckin = Item.Date.Add(value);
 
                 if (value < TimeSpan.Parse(Item.ShiftIn))
@@ -152,7 +152,7 @@ namespace Mictlanix.BE.Web.Controllers
 
                 Item.Modified = DateTime.Now;
                 Item.UpdateAndFlush();
-            }
+            //}
 
             return PartialView("_AttendanceEmployeeByDay", Item);
 
@@ -163,8 +163,8 @@ namespace Mictlanix.BE.Web.Controllers
         {
 
             var Item = Attendance.Find(id);
-            if (value != null)
-            {
+            //if (value != null)
+            //{
                 Item.LastCheckout = Item.Date.Date.Add(value);
 
                 if (value < TimeSpan.Parse(Item.ShiftIn)) {
@@ -173,7 +173,7 @@ namespace Mictlanix.BE.Web.Controllers
 
                 Item.Modified = DateTime.Now;
                 Item.UpdateAndFlush();
-            }
+            //}
 
             return PartialView("_AttendanceEmployeeByDay", Item);
 
@@ -364,7 +364,7 @@ namespace Mictlanix.BE.Web.Controllers
         [HttpPost]
         public ActionResult SetEnrollNumber(int id, int value) {
 
-            var emp = Employee.Find(id);
+            //var emp = Employee.Find(id);
             bool AlreadyExistEnrollNumber = Employee.Queryable.Where(x => x.Enroll_Number == value).Count() > 0;
 
             if (AlreadyExistEnrollNumber) {

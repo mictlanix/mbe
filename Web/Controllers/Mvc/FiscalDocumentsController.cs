@@ -4,7 +4,7 @@
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.com>
 // 
-// Copyright (C) 2012-2016 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2012-2017 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -131,6 +131,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Pdf (int id)
 		{
 			var view = "Print";
+			var header = "_PageHead";
+			var footer = "_PageFoot";
 			var model = FiscalDocument.Find (id);
 
 			if (model.IsCompleted) {
@@ -142,7 +144,27 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				Response.AppendHeader ("Content-Disposition", string.Format ("inline; filename={0}.pdf", filename));
 			}
 
-			return PdfView (view, model);
+			header = view + header;
+			footer = view + footer;
+
+			if (ViewEngines.Engines.FindPartialView (ControllerContext, header).View == null) {
+				header = null;
+			}
+
+			if (ViewEngines.Engines.FindPartialView (ControllerContext, footer).View == null) {
+				footer = null;
+			}
+
+			if (!string.IsNullOrWhiteSpace (WebConfig.BankInformation)) {
+				ViewBag.BankInformation = Newtonsoft.Json.JsonConvert.DeserializeObject (WebConfig.BankInformation);
+			}
+
+			return PdfView (view, model, new jsreport.Client.Entities.Phantom {
+				header = header,
+				headerHeight = (header == null ? 0 : 15) + " mm",
+				footer = footer,
+				footerHeight = (footer == null ? 0 : 15) + " mm"
+			});
 		}
 
 		public ActionResult New ()
@@ -651,7 +673,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				ProductCode = p.Code,
 				ProductName = p.Name,
 				UnitOfMeasurement = p.UnitOfMeasurement,
-				Discount = 0,
+				DiscountRate = 0,
 				TaxRate = p.TaxRate,
 				IsTaxIncluded = p.IsTaxIncluded,
 				Quantity = 1,
@@ -715,7 +737,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						ProductCode = x.ProductCode,
 						ProductName = x.ProductName,
 						UnitOfMeasurement = x.Product.UnitOfMeasurement,
-						Discount = x.Discount,
+						DiscountRate = x.DiscountRate,
 						TaxRate = x.TaxRate,
 						IsTaxIncluded = x.IsTaxIncluded,
 						Quantity = max_qty,
@@ -945,7 +967,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			val /= 100m;
 
 			if (success && val >= 0 && val <= 1) {
-				entity.Discount = val;
+				entity.DiscountRate = val;
 
 				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
@@ -954,7 +976,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return Json (new {
 				id = entity.Id,
-				value = entity.FormattedValueFor (x => x.Discount),
+				value = entity.FormattedValueFor (x => x.DiscountRate),
 				total = entity.FormattedValueFor (x => x.Total),
 				total2 = entity.FormattedValueFor (x => x.TotalEx)
 			});

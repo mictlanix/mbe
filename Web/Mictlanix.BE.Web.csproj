@@ -239,7 +239,6 @@
     <Compile Include="Controllers\Mvc\StoresController.cs" />
     <Compile Include="Controllers\Mvc\SupplierAgreementsController.cs" />
     <Compile Include="Controllers\Mvc\SupplierPaymentsController.cs" />
-    <Compile Include="Controllers\Mvc\SupplierReturnsController.cs" />
     <Compile Include="Controllers\Mvc\SuppliersController.cs" />
     <Compile Include="Controllers\Mvc\TaxpayerRecipientsController.cs" />
     <Compile Include="Controllers\Mvc\TaxpayersController.cs" />
@@ -418,14 +417,11 @@
     <Content Include="Views\Shared\EditorTemplates\Address.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Address.cshtml" />
     <Content Include="Views\Purchases\_Totals.cshtml" />
-    <Content Include="Views\SupplierReturns\_Totals.cshtml" />
     <Content Include="Views\Shared\_PrintLayout.cshtml" />
     <Content Include="Views\FiscalDocuments\Index.cshtml" />
     <Content Include="Views\FiscalDocuments\Edit.cshtml" />
     <Content Include="Views\FiscalDocuments\_Totals.cshtml" />
     <Content Include="Views\FiscalDocuments\Reports.cshtml" />
-    <Content Include="Views\Purchases\Print.cshtml" />
-    <Content Include="Views\SupplierReturns\Print.cshtml" />
     <Content Include="Views\PointsOfSale\Index.cshtml" />
     <Content Include="Content\print.css" />
     <Content Include="Views\Purchases\Edit.cshtml" />
@@ -567,14 +563,6 @@
     <Content Include="Views\AccountsPayables\AccountStatement.cshtml" />
     <Content Include="Views\AccountsPayables\Index.cshtml" />
     <Content Include="Views\SupplierPayments\Details.cshtml" />
-    <Content Include="Views\SupplierReturns\Index.cshtml" />
-    <Content Include="Views\SupplierReturns\_Index.cshtml" />
-    <Content Include="Views\SupplierReturns\EditSupplierReturn.cshtml" />
-    <Content Include="Views\SupplierReturns\_PurchaseInfoReturn.cshtml" />
-    <Content Include="Views\SupplierReturns\_ReturnItem.cshtml" />
-    <Content Include="Views\SupplierReturns\Historic.cshtml" />
-    <Content Include="Views\SupplierReturns\HistoricDetails.cshtml" />
-    <Content Include="Views\SupplierReturns\_SupplierReturnDetails.cshtml" />
     <Content Include="Views\AccountsPayables\Dates.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\StoreSelector.cshtml" />
     <Content Include="Views\Stores\Index.cshtml" />
@@ -590,7 +578,6 @@
     <Content Include="Views\Warehouses\_Index.cshtml" />
     <Content Include="Views\Stores\_Index.cshtml" />
     <Content Include="Views\SupplierPayments\_Index.cshtml" />
-    <Content Include="Views\SupplierReturns\_Historic.cshtml" />
     <Content Include="Scripts\helper.functions.js" />
     <Content Include="Scripts\helper.formatters.js" />
     <Content Include="Views\Payments\Print.cshtml" />
@@ -917,6 +904,8 @@
     <Content Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Views\AccountsReceivables\_ApplyPayment.cshtml" />
     <Content Include="Views\AccountsReceivables\_ApplyPaymentSuccesful.cshtml" />
+    <Content Include="Views\FiscalDocuments\Print32T02Blue.cshtml" />
+    <Content Include="Views\FiscalDocuments\Print32T02Blue_PageFoot.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\fonts\" />
