@@ -2253,8 +2253,11 @@ Gracias por utilizar nuestros servicios.
   <data name="ProductsOrdersAndRefundsBySalesPerson" xml:space="preserve">
     <value>Productos Vendidos y Devoluciones por Vendedor</value>
   </data>
-  <data name="SavingOnSalesOrder" xml:space="preserve">
-    <value>¡***Usted ahorró {0:c} en esta compra***!</value>
+  <data name="Savings" xml:space="preserve">
+    <value>Ahorros</value>
+  </data>
+  <data name="SavingsOnSalesOrder" xml:space="preserve">
+    <value>¡Usted ahorró {0:c} en esta compra!</value>
   </data>
   <data name="SalesOrderNotPaidYet" xml:space="preserve">
     <value>Orden de Compra con pago pendiente.</value>

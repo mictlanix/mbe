@@ -31,16 +31,13 @@
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
 
-
-@if (Privilege.AllowUpdate && !Model.IsCompleted)
-{
+@if (Privilege.AllowUpdate && !Model.IsCompleted) {
     <div id='confirm-button' class='pull-right @(Model.Total == 0m ? "hide" : "")'>
-        @using (Html.BeginForm("Confirm", "Quotations", new { id = Model.Id }))
-        {
-            <button id='complete' type='submit'>@Resources.Complete</button> }
+    @using (Html.BeginForm("Confirm", "Quotations", new { id = Model.Id })) {
+        <button id='complete' type='submit'>@Resources.Complete</button>
+	}
     </div>
 }
-
 
 <div class='clearfix'></div>
 <script type='text/javascript'>
