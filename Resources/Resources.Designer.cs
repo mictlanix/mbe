@@ -4283,9 +4283,15 @@ namespace Mictlanix.BE {
             }
         }
         
-        public static string SavingOnSalesOrder {
+        public static string Savings {
             get {
-                return ResourceManager.GetString("SavingOnSalesOrder", resourceCulture);
+                return ResourceManager.GetString("Savings", resourceCulture);
+            }
+        }
+        
+        public static string SavingsOnSalesOrder {
+            get {
+                return ResourceManager.GetString("SavingsOnSalesOrder", resourceCulture);
             }
         }
         

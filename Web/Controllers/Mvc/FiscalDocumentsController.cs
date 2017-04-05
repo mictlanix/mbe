@@ -737,7 +737,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						ProductCode = x.ProductCode,
 						ProductName = x.ProductName,
 						UnitOfMeasurement = x.Product.UnitOfMeasurement,
-						DiscountRate = x.Discount,
+						DiscountRate = x.DiscountRate,
 						TaxRate = x.TaxRate,
 						IsTaxIncluded = x.IsTaxIncluded,
 						Quantity = max_qty,
