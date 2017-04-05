@@ -1,70 +1,68 @@
 using System;
 
-namespace Mictlanix.BE.Web.Utils
-{
-	public class CurrencyConverter
-	{
-		private static string[] MajorNames = {
-            "",
-            " mil",
-            " mill",
-            " mil mill",
-            " bill",
-            " mil bill",
-            " trill" };
-		private static string[] HundredsNames = {
-            "",
-            " cien",
-            " doscientos",
-            " trescientos",
-            " cuatrocientos",
-            " quinientos",
-            " seiscientos",
-            " setecientos",
-            " ochocientos",
-            " novecientos" };
-		private static string[] TensNames = {
-            "",
-            " diez",
-            " veinte",
-            " treinta",
-            " cuarenta",
-            " cincuenta",
-            " sesenta",
-            " setenta",
-            " ochenta",
-            " noventa" };
-		private static string[] NumberNames = {
-            "",
-            " uno",
-            " dos",
-            " tres",
-            " cuatro",
-            " cinco",
-            " seis",
-            " siete",
-            " ocho",
-            " nueve",
-            " diez",
-            " once",
-            " doce",
-            " trece",
-            " catorce",
-            " quince",
-            " dieciséis",
-            " diecisiete",
-            " dieciocho",
-            " diecinueve",
-            " veinte",
-            " veintiuno",
-            " veintidós",
-            " veintitrés",
-            " veinticuatro",
-            " veinticinco",
-            " veintiséis",
-            " veintisiete",
-            " veintiocho",
-            " veintinueve" };
+namespace Mictlanix.BE.Web.Utils {
+	public class CurrencyConverter {
+		private static string [] MajorNames = {
+	    "",
+	    " mil",
+	    " mill",
+	    " mil mill",
+	    " bill",
+	    " mil bill",
+	    " trill" };
+		private static string [] HundredsNames = {
+	    "",
+	    " cien",
+	    " doscientos",
+	    " trescientos",
+	    " cuatrocientos",
+	    " quinientos",
+	    " seiscientos",
+	    " setecientos",
+	    " ochocientos",
+	    " novecientos" };
+		private static string [] TensNames = {
+	    "",
+	    " diez",
+	    " veinte",
+	    " treinta",
+	    " cuarenta",
+	    " cincuenta",
+	    " sesenta",
+	    " setenta",
+	    " ochenta",
+	    " noventa" };
+		private static string [] NumberNames = {
+	    "",
+	    " uno",
+	    " dos",
+	    " tres",
+	    " cuatro",
+	    " cinco",
+	    " seis",
+	    " siete",
+	    " ocho",
+	    " nueve",
+	    " diez",
+	    " once",
+	    " doce",
+	    " trece",
+	    " catorce",
+	    " quince",
+	    " dieciséis",
+	    " diecisiete",
+	    " dieciocho",
+	    " diecinueve",
+	    " veinte",
+	    " veintiuno",
+	    " veintidós",
+	    " veintitrés",
+	    " veinticuatro",
+	    " veinticinco",
+	    " veintiséis",
+	    " veintisiete",
+	    " veintiocho",
+	    " veintinueve" };
 
 		private static string ConvertLessThanOneThousand (int number)
 		{
@@ -78,7 +76,7 @@ namespace Mictlanix.BE.Web.Utils
 				number /= 10;
 
 				soFar = TensNames [number % 10] + ("".Equals (soFar) ? "" : " y")
-                        + soFar;
+			+ soFar;
 				number /= 10;
 			}
 
@@ -112,9 +110,8 @@ namespace Mictlanix.BE.Web.Utils
 				if (n != 0) {
 					string s = ConvertLessThanOneThousand (n);
 					if (place > 0) {
-						soFar = (" uno".Equals (s) ? " un" : s) +
-                                MajorNames [place] +
-                                (place > 1 ? (n > 1 ? "ones" : "ón") : "") + soFar;
+						soFar = (" uno".Equals (s) ? " un" : s) + MajorNames [place] +
+							(place > 1 ? (n > 1 ? "ones" : "ón") : " ") + soFar;
 					} else {
 						soFar = s + soFar;
 					}
@@ -125,50 +122,50 @@ namespace Mictlanix.BE.Web.Utils
 
 			return (prefix + soFar).Trim ();
 		}
-		
-		public static string ToMXN(decimal d)
+
+		public static string ToMXN (decimal d)
 		{
 			int units;
 			int cents;
 			string text;
-			
-			d = Math.Round(d, 2, MidpointRounding.AwayFromZero);
-			units = (int)Math.Floor(d);
-			cents = (int)Math.Round((d - units) * 100);
-			text = Convert(units);
-			
+
+			d = Math.Round (d, 2, MidpointRounding.AwayFromZero);
+			units = (int) Math.Floor (d);
+			cents = (int) Math.Round ((d - units) * 100);
+			text = Convert (units);
+
 			return ((units == 1 && cents == 0) ? "un peso " : text + " pesos ") +
-				cents.ToString("00") + "/100 m. n.";
+				cents.ToString ("00") + "/100 m. n.";
 		}
-		
-		public static string ToUSD(decimal d)
+
+		public static string ToUSD (decimal d)
 		{
 			int units;
 			int cents;
 			string text;
-			
-			d = Math.Round(d, 2, MidpointRounding.AwayFromZero);
-			units = (int)Math.Floor(d);
-			cents = (int)Math.Round((d - units) * 100);
-			text = Convert(units);
-			
+
+			d = Math.Round (d, 2, MidpointRounding.AwayFromZero);
+			units = (int) Math.Floor (d);
+			cents = (int) Math.Round ((d - units) * 100);
+			text = Convert (units);
+
 			return ((units == 1 && cents == 0) ? "un dólar americano " : text + " doláres americanos ") +
-				cents.ToString("00") + "/100 USD";
+				cents.ToString ("00") + "/100 USD";
 		}
-		
-		public static string ToEUR(decimal d)
+
+		public static string ToEUR (decimal d)
 		{
 			int units;
 			int cents;
 			string text;
-			
-			d = Math.Round(d, 2, MidpointRounding.AwayFromZero);
-			units = (int)Math.Floor(d);
-			cents = (int)Math.Round((d - units) * 100);
-			text = Convert(units);
-			
+
+			d = Math.Round (d, 2, MidpointRounding.AwayFromZero);
+			units = (int) Math.Floor (d);
+			cents = (int) Math.Round ((d - units) * 100);
+			text = Convert (units);
+
 			return ((units == 1 && cents == 0) ? "un euro " : text + " euros ") +
-				cents.ToString("00") + "/100 EUR";
+				cents.ToString ("00") + "/100 EUR";
 		}
 	}
 }
