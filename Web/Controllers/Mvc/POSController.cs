@@ -756,7 +756,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			if (success && entity.Price > 0) {
 				//entity.Price = val;
-				entity.Discount = 1 - val / entity.Price;
+				entity.DiscountRate = 1 - val / entity.Price;
 				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
 				}
@@ -764,7 +764,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return Json (new {
 				id = entity.Id,
-				discount = entity.FormattedValueFor (x => x.Discount),
+				discount = entity.FormattedValueFor (x => x.DiscountRate),
 				value = entity.FormattedValueFor (x => x.Price),
 				total = entity.FormattedValueFor (x => x.Total),
 				total2 = entity.FormattedValueFor (x => x.TotalEx)
@@ -787,7 +787,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			val /= 100m;
 
 			if (success && val >= 0 && val <= 1) {
-				entity.Discount = val;
+				entity.DiscountRate = val;
 
 				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
@@ -796,7 +796,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return Json (new {
 				id = entity.Id,
-				value = entity.FormattedValueFor (x => x.Discount),
+				value = entity.FormattedValueFor (x => x.DiscountRate),
 				total = entity.FormattedValueFor (x => x.Total),
 				total2 = entity.FormattedValueFor (x => x.TotalEx)
 			});
@@ -859,10 +859,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				var dt = DateTime.Now;
 
 				foreach (var x in entity.Details) {
-
-					if (x.Discount < 0) {
-						x.Price = Model.ModelHelpers.PriceRounding (x.Price * (1 + (-x.Discount)));
-						x.Discount = 0.0m;
+					if (x.DiscountRate < 0) {
+						x.Price = Model.ModelHelpers.PriceRounding (x.Price * (1 + (-x.DiscountRate)));
+						x.DiscountRate = 0.0m;
 					}
 
 					x.Warehouse = warehouse;

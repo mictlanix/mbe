@@ -591,7 +591,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				IsTaxIncluded = p.IsTaxIncluded,
 				Quantity = p.MinimumOrderQuantity,
 				Price = price.Value,
-				Discount = discount,
+				DiscountRate = discount,
 				Currency = entity.Currency,
 				ExchangeRate = entity.ExchangeRate
 			};
@@ -773,7 +773,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			val /= 100m;
 
 			if (success && val >= 0 && val <= 1) {
-				entity.Discount = val;
+				entity.DiscountRate = val;
 
 				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
@@ -782,7 +782,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return Json (new {
 				id = entity.Id,
-				value = entity.FormattedValueFor (x => x.Discount),
+				value = entity.FormattedValueFor (x => x.DiscountRate),
 				total = entity.FormattedValueFor (x => x.Total),
 				total2 = entity.FormattedValueFor (x => x.TotalEx)
 			});
