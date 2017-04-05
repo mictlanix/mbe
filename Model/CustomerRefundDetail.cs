@@ -4,7 +4,7 @@
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.com>
 // 
-// Copyright (C) 2013 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2013-2017 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -69,10 +69,10 @@ namespace Mictlanix.BE.Model {
 		[Required (ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof (Resources))]
 		public virtual decimal Price { get; set; }
 
-		[Property]
+		[Property ("discount")]
 		[DisplayFormat (DataFormatString = "{0:p}")]
 		[Display (Name = "Discount", ResourceType = typeof (Resources))]
-		public virtual decimal Discount { get; set; }
+		public virtual decimal DiscountRate { get; set; }
 
 		[Property ("tax_rate")]
 		[Display (Name = "TaxRate", ResourceType = typeof (Resources))]
@@ -94,37 +94,49 @@ namespace Mictlanix.BE.Model {
 		[DataType (DataType.Currency)]
 		[Display (Name = "Subtotal", ResourceType = typeof (Resources))]
 		public virtual decimal Subtotal {
-			get { return ModelHelpers.Subtotal (Quantity, Price, 1, Discount, TaxRate, IsTaxIncluded); }
+			get { return ModelHelpers.Subtotal (Quantity, Price, 1, TaxRate, IsTaxIncluded); }
+		}
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "Discount", ResourceType = typeof (Resources))]
+		public decimal Discount {
+			get { return ModelHelpers.Discount (Quantity, Price, 1, DiscountRate, TaxRate, IsTaxIncluded); }
 		}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Taxes", ResourceType = typeof (Resources))]
 		public virtual decimal Taxes {
-			get { return Total - Subtotal; }
+			get { return Total - Subtotal + Discount; }
 		}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Total", ResourceType = typeof (Resources))]
 		public virtual decimal Total {
-			get { return ModelHelpers.Total (Quantity, Price, 1, Discount, TaxRate, IsTaxIncluded); }
+			get { return ModelHelpers.Total (Quantity, Price, 1, DiscountRate, TaxRate, IsTaxIncluded); }
 		}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Subtotal", ResourceType = typeof (Resources))]
 		public virtual decimal SubtotalEx {
-			get { return ModelHelpers.Subtotal (Quantity, Price, ExchangeRate, Discount, TaxRate, IsTaxIncluded); }
+			get { return ModelHelpers.Subtotal (Quantity, Price, ExchangeRate, TaxRate, IsTaxIncluded); }
+		}
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "Discount", ResourceType = typeof (Resources))]
+		public decimal DiscountEx {
+			get { return ModelHelpers.Discount (Quantity, Price, ExchangeRate, DiscountRate, TaxRate, IsTaxIncluded); }
 		}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Taxes", ResourceType = typeof (Resources))]
 		public virtual decimal TaxesEx {
-			get { return TotalEx - SubtotalEx; }
+			get { return TotalEx - SubtotalEx - DiscountEx; }
 		}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Total", ResourceType = typeof (Resources))]
 		public virtual decimal TotalEx {
-			get { return ModelHelpers.Total (Quantity, Price, ExchangeRate, Discount, TaxRate, IsTaxIncluded); }
+			get { return ModelHelpers.Total (Quantity, Price, ExchangeRate, DiscountRate, TaxRate, IsTaxIncluded); }
 		}
 
 		#region Override Base Methods

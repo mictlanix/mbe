@@ -28,7 +28,7 @@
         <a class='editable price' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemPrice", new { id = Model.Id })'>@Html.DisplayFor(x => x.Price)</a>        
         <span class='editable currency'>@Html.DisplayFor(x => x.Currency)</span>
         <b>@Resources.Discount: </b>
-        <a class='editable discount' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemDiscount", new { id = Model.Id })'>@Html.DisplayFor(x => x.Discount)</a>
+        <a class='editable discount' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemDiscount", new { id = Model.Id })'>@Html.DisplayFor(x => x.DiscountRate)</a>
         <b>@Resources.TaxRate: </b>
         <a class='editable tax' data-type='select' data-placement='right' data-autotext='never' data-source='@Url.Action("TaxRates", "Pricing")' data-pk='@Model.Id' data-value='@Model.TaxRate.ToString("0.####")' data-url='@Url.Action("SetItemTaxRate", new { id = Model.Id })'>@Html.DisplayFor(x => x.TaxRate)</a>
         <b>@Resources.Amount: </b>

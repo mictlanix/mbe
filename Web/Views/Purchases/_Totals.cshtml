@@ -2,27 +2,23 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model PurchaseOrder
-<fieldset>
-    <legend>@Resources.Totals</legend>
-
-    <div class="display-label left floating">
-        @Html.LabelFor(x => x.Subtotal)
-    </div>
-    <div class="display-field right floating">
-        @Html.DisplayFor(x => x.Subtotal)
-    </div>
-
-    <div class="display-label left floating">
-        @Html.LabelFor(x => x.Taxes)
-    </div>
-    <div class="display-field right floating">
-        @Html.DisplayFor(x => x.Taxes)
-    </div>
-    
-    <div class="display-label left floating">
-        @Html.LabelFor(x => x.Total)
-    </div>
-    <div class="display-field right floating">
-        @Html.DisplayFor(x => x.Total)
-    </div>
-</fieldset>
+<ul class='labeled-frames'>
+    <li>
+    	<span class='caption'>@Resources.Subtotal</span>
+    	<span class='value'>@Html.DisplayFor(x => x.Subtotal)</span>
+    </li>
+@if (Model.Discount > 0m) {
+    <li>
+    	<span class='caption'>@Resources.Discount</span>
+        <span class='value'>@Html.DisplayFor(x => x.Discount)</span>
+    </li>
+}
+    <li>
+    	<span class='caption'>@Resources.Taxes</span>
+        <span class='value'>@Html.DisplayFor(x => x.Taxes)</span>
+    </li>
+    <li>
+    	<span class='caption'>@Resources.Total</span>
+        <span class='value'>@Html.DisplayFor(x => x.Total)</span>
+    </li>
+</ul>

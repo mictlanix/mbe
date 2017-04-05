@@ -5,7 +5,7 @@
 //   Eddy Zavaleta <eddy@mictlanix.com>
 //   Eduardo Nieto <enieto@mictlanix.com>
 // 
-// Copyright (C) 2011-2016 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2011-2017 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -89,11 +89,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return search;
 		}
 
-		public ViewResult Print (int id)
-		{
-			var item = PurchaseOrder.Find (id);
-			return View (item);
-		}
+		//public ViewResult Print (int id)
+		//{
+		//	var item = PurchaseOrder.Find (id);
+		//	return View (item);
+		//}
 
 		public ActionResult Details (int id)
 		{
@@ -190,7 +190,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				Quantity = 1,
 				TaxRate = p.TaxRate,
 				IsTaxIncluded = p.IsTaxIncluded,
-				Discount = 0,
+				DiscountRate = 0,
 				Price = cost,
 				ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate (),
 				Currency = WebConfig.DefaultCurrency
@@ -295,7 +295,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			discount /= 100m;
 
 			if (success && discount >= 0 && discount <= 1) {
-				detail.Discount = discount;
+				detail.DiscountRate = discount;
 
 				using (var scope = new TransactionScope ()) {
 					detail.UpdateAndFlush ();
@@ -304,7 +304,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return Json (new {
 				id = id,
-				value = detail.Discount.ToString ("p"),
+				value = detail.DiscountRate.ToString ("p"),
 				total = detail.Total.ToString ("c")
 			});
 		}

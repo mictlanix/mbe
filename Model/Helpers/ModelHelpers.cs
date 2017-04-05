@@ -43,12 +43,32 @@ namespace Mictlanix.BE.Model {
 		}
 
 		public static decimal Subtotal (decimal quantity, decimal price, decimal exchangeRate,
+						decimal taxRate, bool taxIncluded)
+		{
+			if (taxIncluded) {
+				return TotalRounding (quantity * price * exchangeRate / (1m + taxRate));
+			} else {
+				return TotalRounding (quantity * price * exchangeRate);
+			}
+		}
+
+		public static decimal Discount (decimal quantity, decimal price, decimal exchangeRate,
 						decimal discount, decimal taxRate, bool taxIncluded)
 		{
 			if (taxIncluded) {
-				return TotalRounding (quantity * price * exchangeRate * (1m - discount) / (1m + taxRate));
+				return TotalRounding (quantity * price * exchangeRate * discount / (1m + taxRate));
 			} else {
-				return TotalRounding (quantity * price * exchangeRate * (1m - discount));
+				return TotalRounding (quantity * price * exchangeRate * discount);
+			}
+		}
+
+		public static decimal Savings (decimal quantity, decimal price, decimal exchangeRate,
+					       decimal discount, decimal taxRate, bool taxIncluded)
+		{
+			if (taxIncluded) {
+				return TotalRounding (quantity * price * exchangeRate * discount);
+			} else {
+				return TotalRounding (quantity * price * exchangeRate * discount * (1m + taxRate));
 			}
 		}
 

@@ -207,7 +207,7 @@ namespace Mictlanix.BE.Web.Helpers {
 		}
 
 		public static PaymentMethod [] CashierPaymentOptions {
-			get { 
+			get {
 				if (cashier_payment_options == null) {
 					var list = new List<PaymentMethod> ();
 					var opts = ConfigurationManager.AppSettings ["CashierPaymentOptions"].Split (',');
@@ -227,9 +227,14 @@ namespace Mictlanix.BE.Web.Helpers {
 			}
 		}
 
-        public static CultureInfo Culture {
-            get { return System.Threading.Thread.CurrentThread.CurrentCulture; }
-        }
+		public static string BankInformation {
+			get { return ConfigurationManager.AppSettings ["BankInformation"]; }
+		}
+
+		public static CultureInfo Culture {
+			get { return System.Threading.Thread.CurrentThread.CurrentCulture; }
+		}
+
 		#endregion
 
 		#region Request's (Local) Settings

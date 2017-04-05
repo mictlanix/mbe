@@ -107,10 +107,9 @@
     <thead>
         <tr>
             <th class="col-xs-1 text-center">@Resources.Quantity</th>
-            <th class="col-xs-2 text-center">@Resources.ProductCode</th>
+            <th class="col-xs-3 text-center">@Resources.ProductCode</th>
             <th class="col-xs-6 text-center">@Resources.ProductName</th>
             <th class="col-xs-1 text-center">@Resources.Price</th>
-            <th class="col-xs-1 text-center">@Resources.Discount</th>
             <th class="col-xs-1 text-center">@Resources.Amount</th>
         </tr>
     </thead>
@@ -121,7 +120,6 @@
                 <td class="text-center">@Html.DisplayFor(x => item.ProductCode)</td>
                 <td class="text-center">@Html.DisplayFor(x => item.ProductName) @Html.DisplayFor(x => item.Comment)</td>
                 <td class="nowrap text-right">@Html.DisplayFor(x => item.NetPrice)</td>
-                <td class="nowrap text-right">@Html.DisplayFor(x => item.Discount)</td>
                 <td class="nowrap text-right">@Html.DisplayFor(x => item.Subtotal)</td>
             </tr>
         }
@@ -133,29 +131,34 @@
 <table>
 	<tfoot>
         <tr>
-            <td rowspan="2" class="col-xs-10 text-center" style="vertical-align:middle">
-                <div style="border-top: solid black 1px; border-bottom:solid black 1px; margin: 0 2cm 0 2cm;">
+            <td rowspan="@(Model.Discount > 0m ? 4 : 3)" class="col-xs-10 text-center" style="vertical-align:middle">
+                <p style="border-top: solid black 1px; border-bottom:solid black 1px; margin: 0 2cm 0 2cm;">
                     @Html.CurrencyToString(Model.Total, Model.Currency)
-                </div>
+                </p>
             </td>
             <td class="col-xs-1 nowrap text-right">@Resources.Subtotal</td>
             <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Subtotal)</td>
         </tr>
+	@if (Model.Discount > 0m) {
+        <tr>
+            <th class="col-xs-1 nowrap text-right">@Resources.Discount</th>
+            <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Discount)</td>
+        </tr>
+	}
         <tr>
             <td class="col-xs-1 nowrap text-right">@Resources.Taxes</td>
             <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Taxes)</td>
         </tr>
         <tr>
-            <td class="col-xs-10 nowrap"><h2 class="row">@Resources.SinglePayment</h2></td>
             <td class="col-xs-1 nowrap text-right">@Resources.Total</td>
             <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Total)</td>
         </tr>
+    @if (Model.Discount > 0) {
         <tr>
             <td class="text-center">
-                @if (Model.Saving > 0) {
-                    <text>@string.Format(Resources.SavingOnSalesOrder, Model.Saving)</text>
-                }
+                    <text>@string.Format(Resources.SavingsOnSalesOrder, Model.Savings)</text>
             </td>
         </tr>
+    }
 	</tfoot>
 </table>

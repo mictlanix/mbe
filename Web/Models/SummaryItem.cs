@@ -5,7 +5,7 @@
 //   Eddy Zavaleta <eddy@mictlanix.com>
 //   Eduardo Nieto <enieto@mictlanix.com>
 //
-// Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2011-2017 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -36,14 +36,9 @@ using System.Web.Security;
 using Mictlanix.BE.Model.Validation;
 using Mictlanix.BE.Model;
 
-namespace Mictlanix.BE.Web.Models
-{
-	public class SummaryItem
-	{
-		public SummaryItem()
-		{
-		}
-		
+namespace Mictlanix.BE.Web.Models {
+	//FIXME: Discount
+	public class SummaryItem {
 		[Display(Name = "Id", ResourceType = typeof(Resources))]
 		public string Id { get; set; }
 
@@ -64,12 +59,15 @@ namespace Mictlanix.BE.Web.Models
 		[DataType(DataType.Currency)]
 		[Display(Name = "Subtotal", ResourceType = typeof(Resources))]
 		public decimal Subtotal { get; set; }
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "Discount", ResourceType = typeof (Resources))]
+		public decimal Discount { get; set; }
 		
 		[DataType(DataType.Currency)]
 		[Display(Name = "Taxes", ResourceType = typeof(Resources))]
-		public decimal Taxes 
-		{
-			get { return Total - Subtotal; }
+		public decimal Taxes {
+			get { return Total - Subtotal + Discount; }
 		}
 
 		[Display(Name = "Category", ResourceType = typeof(Resources))]

@@ -127,7 +127,11 @@ namespace Mictlanix.BE.Model {
 
 		[Display (Name = "Street", ResourceType = typeof (Resources))]
 		public virtual string StreetAndNumber {
-			get { return string.Format ("{0} {1} {2}", Street, ExteriorNumber, InteriorNumber).Trim (); }
+			get {
+				var fmt = string.IsNullOrWhiteSpace (InteriorNumber) ? "{0} {1}" : "{0} {1} - {2}";
+
+				return string.Format (fmt, Street, ExteriorNumber, InteriorNumber).Trim ();
+			}
 		}
 
 		#region Override Base Methods
