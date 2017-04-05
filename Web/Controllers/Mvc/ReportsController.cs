@@ -38,6 +38,7 @@ using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
+	//FIXME: queries with discount column
 	[Authorize]
 	public class ReportsController : CustomController {
 		#region Stock & Kardex
@@ -616,6 +617,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View ("SummaryReport", new DateRange ());
 		}
 
+
+		//FIXME: Discount
 		[HttpPost]
 		public ActionResult ProductSalesByCustomer (int customer, DateRange dates)
 		{
@@ -633,7 +636,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					    Quantity = y.Quantity,
 					    Price = y.Price,
 					    ExchangeRate = y.ExchangeRate,
-					    Discount = y.Discount,
+					    Discount = y.DiscountRate,
 					    TaxRate = y.TaxRate,
 					    IsTaxIncluded = y.IsTaxIncluded
 				    };
@@ -644,7 +647,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					    Name = x.Name,
 					    Units = x.Quantity,
 					    Total = Model.ModelHelpers.Total (x.Quantity, x.Price, x.ExchangeRate, x.Discount, x.TaxRate, x.IsTaxIncluded),
-					    Subtotal = Model.ModelHelpers.Subtotal (x.Quantity, x.Price, x.ExchangeRate, x.Discount, x.TaxRate, x.IsTaxIncluded)
+					    Subtotal = Model.ModelHelpers.Subtotal (x.Quantity, x.Price, x.ExchangeRate, x.TaxRate, x.IsTaxIncluded)
 				    };
 
 			return PartialView ("_ProductSalesByCustomer", items);
@@ -658,6 +661,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View ("SummaryReport", new DateRange ());
 		}
 
+		//FIXME: Discount
 		[HttpPost]
 		public ActionResult ProductSalesByModel (string productModel, DateRange dates)
 		{
@@ -677,7 +681,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					    Quantity = y.Quantity,
 					    Price = y.Price,
 					    ExchangeRate = y.ExchangeRate,
-					    Discount = y.Discount,
+					    Discount = y.DiscountRate,
 					    TaxRate = y.TaxRate,
 					    IsTaxIncluded = y.IsTaxIncluded
 				    };
@@ -690,7 +694,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					    Name = g.Key.Name,
 					    Units = g.Sum (y => y.Quantity),
 					    Total = g.Sum (y => Model.ModelHelpers.Total (y.Quantity, y.Price, y.ExchangeRate, y.Discount, y.TaxRate, y.IsTaxIncluded)),
-					    Subtotal = g.Sum (y => Model.ModelHelpers.Subtotal (y.Quantity, y.Price, y.ExchangeRate, y.Discount, y.TaxRate, y.IsTaxIncluded))
+					    Subtotal = g.Sum (y => Model.ModelHelpers.Subtotal (y.Quantity, y.Price, y.ExchangeRate, y.TaxRate, y.IsTaxIncluded))
 				    };
 
 			return PartialView ("_ProductSalesByCategory", items);
@@ -704,6 +708,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View ("SummaryReport", new DateRange ());
 		}
 
+		//FIXME: Discount
 		[HttpPost]
 		public ActionResult ProductSalesByBrand (string brand, DateRange dates)
 		{
@@ -723,7 +728,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					    Quantity = y.Quantity,
 					    Price = y.Price,
 					    ExchangeRate = y.ExchangeRate,
-					    Discount = y.Discount,
+					    Discount = y.DiscountRate,
 					    TaxRate = y.TaxRate,
 					    IsTaxIncluded = y.IsTaxIncluded
 				    };
@@ -736,7 +741,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					    Name = g.Key.Name,
 					    Units = g.Sum (y => y.Quantity),
 					    Total = g.Sum (y => Model.ModelHelpers.Total (y.Quantity, y.Price, y.ExchangeRate, y.Discount, y.TaxRate, y.IsTaxIncluded)),
-					    Subtotal = g.Sum (y => Model.ModelHelpers.Subtotal (y.Quantity, y.Price, y.ExchangeRate, y.Discount, y.TaxRate, y.IsTaxIncluded))
+					    Subtotal = g.Sum (y => Model.ModelHelpers.Subtotal (y.Quantity, y.Price, y.ExchangeRate, y.TaxRate, y.IsTaxIncluded))
 				    };
 
 			return PartialView ("_ProductSalesByCategory", items);

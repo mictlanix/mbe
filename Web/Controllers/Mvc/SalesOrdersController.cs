@@ -4,7 +4,7 @@
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.com>
 // 
-// Copyright (C) 2013-2016 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2013-2017 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -34,9 +34,8 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
-    [Authorize]
+namespace Mictlanix.BE.Web.Controllers.Mvc {
+	[Authorize]
 	public class SalesOrdersController : CustomController {
 		public ViewResult Index ()
 		{
@@ -231,7 +230,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				TaxRate = x.TaxRate,
 				Warehouse = item.PointOfSale.Warehouse,
 				Comment = x.Comment,
-				Discount = x.Discount
+				DiscountRate = x.DiscountRate
 			}).ToList ();
 
 
@@ -313,7 +312,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.Customer = item;
 				entity.Contact = null;
 				entity.ShipTo = null;
-                entity.CustomerName = null;
+				entity.CustomerName = null;
 
 				if (item.SalesPerson == null) {
 					entity.SalesPerson = CurrentUser.Employee;
@@ -662,7 +661,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				Quantity = p.MinimumOrderQuantity,
 				Cost = cost.Value,
 				Price = price.Value,
-				Discount = discount,
+				DiscountRate = discount,
 				Currency = entity.Currency,
 				ExchangeRate = entity.ExchangeRate
 			};
@@ -814,9 +813,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 						    null, out val);
 
 			if (success && entity.Price > 0) {
-                //entity.Price = val;
+				//entity.Price = val;
 
-                entity.Discount = 1 - val / entity.Price;
+				entity.DiscountRate = 1 - val / entity.Price;
 
 				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
@@ -825,7 +824,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			return Json (new {
 				id = entity.Id,
-            discount = entity.FormattedValueFor(x => x.Discount),
+				discount = entity.FormattedValueFor (x => x.DiscountRate),
 				value = entity.FormattedValueFor (x => x.Price),
 				total = entity.FormattedValueFor (x => x.Total),
 				total2 = entity.FormattedValueFor (x => x.TotalEx)
@@ -847,10 +846,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			success = decimal.TryParse (value.TrimEnd (new char [] { ' ', '%' }), out val);
 			val /= 100m;
 
-            //if (success && val >= 0 && val <= 1) {
-            if (success)
-            {
-                entity.Discount = val;
+			//if (success && val >= 0 && val <= 1) {
+			if (success) {
+				entity.DiscountRate = val;
 
 				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
@@ -859,7 +857,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			return Json (new {
 				id = entity.Id,
-				value = entity.FormattedValueFor (x => x.Discount),
+				value = entity.FormattedValueFor (x => x.DiscountRate),
 				total = entity.FormattedValueFor (x => x.Total),
 				total2 = entity.FormattedValueFor (x => x.TotalEx)
 			});
@@ -920,10 +918,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				foreach (var x in entity.Details) {
 					x.Warehouse = warehouse;
 
-                    if (x.Discount < 0) {
-                        x.Price = Model.ModelHelpers.PriceRounding( x.Price * (1 + (-x.Discount) ));
-                        x.Discount = 0.0m;
-                    }
+					if (x.DiscountRate < 0) {
+						x.Price = Model.ModelHelpers.PriceRounding (x.Price * (1 + (-x.DiscountRate)));
+						x.DiscountRate = 0.0m;
+					}
 
 					x.Update ();
 
@@ -934,39 +932,37 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.UpdateAndFlush ();
 			}
 
-            if (entity.ShipTo != null) {
+			if (entity.ShipTo != null) {
 
-                DeliveryOrder deliver = new DeliveryOrder();
+				DeliveryOrder deliver = new DeliveryOrder ();
 
-                deliver.Date = DateTime.Now;
-                deliver.CreationTime = DateTime.Now;
-                deliver.Creator = CurrentUser.Employee;
-                deliver.Updater = entity.Creator;
+				deliver.Date = DateTime.Now;
+				deliver.CreationTime = DateTime.Now;
+				deliver.Creator = CurrentUser.Employee;
+				deliver.Updater = entity.Creator;
 
-                deliver.Customer = entity.Customer;
-                deliver.ShipTo = entity.ShipTo;
-                deliver.Store = entity.Store;
+				deliver.Customer = entity.Customer;
+				deliver.ShipTo = entity.ShipTo;
+				deliver.Store = entity.Store;
 
-                using (var scope = new TransactionScope())
-                {
-                    deliver.CreateAndFlush();
-                }
+				using (var scope = new TransactionScope ()) {
+					deliver.CreateAndFlush ();
+				}
 
-                foreach (var detail in entity.Details) {
-                    var detaild = (new DeliveryOrderDetail {
-                        DeliveryOrder = deliver,
-                        OrderDetail = detail,
-                        Quantity = detail.Quantity,
-                        ProductName = detail.ProductName,
-                        Product = detail.Product,
-                        ProductCode = detail.ProductCode
-                    });
-                    using (var scope = new TransactionScope())
-                    {
-                        detaild.CreateAndFlush();
-                    }
-                }                
-            }
+				foreach (var detail in entity.Details) {
+					var detaild = (new DeliveryOrderDetail {
+						DeliveryOrder = deliver,
+						OrderDetail = detail,
+						Quantity = detail.Quantity,
+						ProductName = detail.ProductName,
+						Product = detail.Product,
+						ProductCode = detail.ProductCode
+					});
+					using (var scope = new TransactionScope ()) {
+						detaild.CreateAndFlush ();
+					}
+				}
+			}
 
 			return RedirectToAction ("Index");
 		}
@@ -1018,14 +1014,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 					    id = x.Id,
 					    name = x.Name,
 					    code = x.Code,
-					    model = x.Model??Resources.None,
+					    model = x.Model ?? Resources.None,
 					    sku = x.SKU ?? Resources.None,
 					    url = Url.Content (x.Photo),
 					    price = x.Price,
-                   quantity = LotSerialTracking.Queryable.Where(y => y.Product.Code == x.Code 
-                                                               && y.Warehouse == WebConfig.PointOfSale.Warehouse)
-                                                               .Sum(y => (decimal?)y.Quantity) ?? 0
-                    };
+					    quantity = LotSerialTracking.Queryable.Where (y => y.Product.Code == x.Code
+											 && y.Warehouse == WebConfig.PointOfSale.Warehouse)
+								    .Sum (y => (decimal?) y.Quantity) ?? 0
+				    };
 
 			return Json (items.ToList (), JsonRequestBehavior.AllowGet);
 		}
