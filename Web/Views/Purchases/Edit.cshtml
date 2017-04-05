@@ -28,8 +28,8 @@
         <input type='text' id='product-search' name='product-search' />
     </div>
 </div>
-<div id='totals-section' class='pull-right' style='width:300px'>
-	@Html.Partial("_Totals")
+<div id='totals-section' class='pull-right' data-url='@Url.Action("Totals", new { id = Model.Id })'>
+    @Html.Partial("_Totals")
 </div>
 <div class='clearfix'></div>
 <div id='back-to-list' class='pull-left'>
@@ -37,7 +37,7 @@
 </div>
 <div id='confirm-button' class='pull-right @(Model.Total == 0m ? "hide" : "")'>
 @using (Html.BeginForm("Confirm", "Purchases", new { id = Model.Id })) {
-    <button id='complete' type='submit'>@Resources.CompleteSale</button>
+    <button id='complete' type='submit'>@Resources.Complete</button>
 }
 </div>
 <div class='clearfix'></div>

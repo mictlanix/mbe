@@ -54,9 +54,8 @@
     <tr>
         <td class="line">
         	@Html.Encode("✕") @Html.DisplayFor(x => item.Price)
-            @if (item.Discount > 0)
-            {
-                @:- @Html.DisplayFor(x => item.Discount)
+            @if (item.DiscountRate > 0) {
+                @:- @Html.DisplayFor(x => item.DiscountRate)
             }
         </td>
         <td class="line center">

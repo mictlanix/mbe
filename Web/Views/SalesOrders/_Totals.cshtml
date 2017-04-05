@@ -22,6 +22,15 @@
         <span class='value muted'>(@Html.DisplayFor(x => x.SubtotalEx) @WebConfig.BaseCurrency)</span>
     }
     </li>
+@if (Model.Discount > 0m) {
+    <li>
+    	<span class='caption'>@Resources.Discount</span>
+        <span class='value'>@Html.DisplayFor(x => x.Discount) @Html.DisplayFor(x => x.Currency)</span>
+    @if (Model.Currency != WebConfig.BaseCurrency) {
+        <span class='value muted'>(@Html.DisplayFor(x => x.DiscountEx) @WebConfig.BaseCurrency)</span>
+    }
+    </li>
+}
     <li>
     	<span class='caption'>@Resources.Taxes</span>
         <span class='value'>@Html.DisplayFor(x => x.Taxes) @Html.DisplayFor(x => x.Currency)</span>

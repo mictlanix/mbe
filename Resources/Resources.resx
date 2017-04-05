@@ -1314,7 +1314,7 @@ Realizada el: {0:d}</value>
     <value>Descartar</value>
   </data>
   <data name="FiscalDocumentFilenameFormatString" xml:space="preserve">
-    <value>{0}-CFD-{1}{2:D6}</value>
+    <value>{0}-{1}{2:D6}</value>
   </data>
   <data name="Download" xml:space="preserve">
     <value>Descargar</value>
@@ -1719,7 +1719,7 @@ Realizada el: {0:d}</value>
     <value>Variable</value>
   </data>
   <data name="PaymentTerms" xml:space="preserve">
-    <value>Condiciones de Pago</value>
+    <value>Forma de Pago</value>
   </data>
   <data name="Immediate" xml:space="preserve">
     <value>Contado</value>
@@ -2253,8 +2253,11 @@ Gracias por utilizar nuestros servicios.
   <data name="ProductsOrdersAndRefundsBySalesPerson" xml:space="preserve">
     <value>Productos Vendidos y Devoluciones por Vendedor</value>
   </data>
-  <data name="SavingOnSalesOrder" xml:space="preserve">
-    <value>¡***Usted ahorró {0:c} en esta compra***!</value>
+  <data name="Savings" xml:space="preserve">
+    <value>Ahorros</value>
+  </data>
+  <data name="SavingsOnSalesOrder" xml:space="preserve">
+    <value>¡Usted ahorró {0:c} en esta compra!</value>
   </data>
   <data name="SalesOrderNotPaidYet" xml:space="preserve">
     <value>Orden de Compra con pago pendiente.</value>
@@ -2264,6 +2267,24 @@ Gracias por utilizar nuestros servicios.
   </data>
   <data name="MismatchCustomers" xml:space="preserve">
     <value>Los clientes de la {0} y la {1} no coindicen</value>
+  </data>
+  <data name="Issuance" xml:space="preserve">
+    <value>Expedición</value>
+  </data>
+  <data name="RowNumber" xml:space="preserve">
+    <value>No.</value>
+  </data>
+  <data name="FooterPageNumber" xml:space="preserve">
+    <value>Página {#pageNum} de {#numPages}</value>
+  </data>
+  <data name="Bank" xml:space="preserve">
+    <value>Banco</value>
+  </data>
+  <data name="BankAccount" xml:space="preserve">
+    <value>Cuenta</value>
+  </data>
+  <data name="CLABE" xml:space="preserve">
+    <value>CLABE</value>
   </data>
   <data name="DisplayName_Expenses" xml:space="preserve">
     <value>Catálogo de Gastos</value>

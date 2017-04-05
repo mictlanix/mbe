@@ -6,7 +6,7 @@
 
 @{
     Layout = WebConfig.ReceiptLayout;
-    ViewBag.Title = Html.PrintFileName(Resources.SalesReceipt, Model.Id);
+    ViewBag.Title = Resources.SalesReceipt;
     ViewBag.Store = Model.Store;
     ViewBag.Address = Model.Store.Address;
 }
@@ -54,8 +54,8 @@
     <tr>
         <td class="line">
 			@Html.Encode("✕") @Html.DisplayFor(x => item.Price)
-            @if (item.Discount > 0) {
-                <text>- @Html.DisplayFor(x => item.Discount)</text>
+            @if (item.DiscountRate > 0) {
+                <text>- @Html.DisplayFor(x => item.DiscountRate)</text>
             }
         </td>
         <td class="line text-center">
@@ -71,20 +71,14 @@
     </tr>
     @foreach (var item in Model.Payments) {
         <tr>
-            <td></td>
-            <td></td>
-            <td class="text-right">@item.Payment.Method.GetDisplayName()</td>
+            <td colspan="3" class="text-right">@item.Payment.Method.GetDisplayName()</td>
             <td class="number">@Html.DisplayFor(x => item.Payment.Amount)</td>
         </tr>
     }
-    @if (Model.Payments.Sum (x => x.Change) > 0) {
         <tr>
-            <td></td>
-            <td></td>
-            <td class="text-right">@Resources.Change</td>
+            <td colspan="3" class="text-right">@Resources.Change</td>
             <td class="number">@Html.DisplayFor(x => Model.Change)</td>
         </tr>
-    }
 </table>
 
 <div class="display-label display-field">
@@ -92,12 +86,11 @@
     @Html.DisplayFor(model => model.Taxes)
 </div>
 
-<div class="display-field">
-    @if (Model.Saving > 0)
-    {
-        <text>@string.Format(Resources.SavingOnSalesOrder, Model.Saving)</text>
-    }
+@if (Model.Savings > 0) {
+<div class="display-field text-center">
+        <text>@string.Format(Resources.SavingsOnSalesOrder, Model.Savings)</text>
 </div>
+}
 
 @if (Model.IsCredit) {
 <div class="legend">

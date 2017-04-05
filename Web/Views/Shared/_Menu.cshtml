@@ -33,8 +33,7 @@
 									CurrentUser.GetPrivilege (SystemObjects.PendantDeliveries).AllowRead;
 
 	var ShowPurchasesMenu = CurrentUser.GetPrivilege (SystemObjects.PurchasesOrders).AllowRead ||
-									CurrentUser.GetPrivilege (SystemObjects.SupplierPayment).AllowRead ||
-									CurrentUser.GetPrivilege (SystemObjects.SupplierReturns).AllowRead;
+									CurrentUser.GetPrivilege (SystemObjects.SupplierPayment).AllowRead;
 
 	var ShowAdministrationMenu = CurrentUser.GetPrivilege (SystemObjects.AccountsReceivable).AllowRead ||
 										  CurrentUser.GetPrivilege (SystemObjects.AccountsPayable).AllowRead;
@@ -403,12 +402,6 @@
                                    href="@Url.Action("Index", "SupplierPayments")">@Resources.Title_SuppliersPayments</a>
                             </li>
                             }
-                            @*@if (CurrentUser.GetPrivilege (SystemObjects.SupplierReturns).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "SupplierReturns") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "SupplierReturns")">@Resources.Title_SupplierReturn</a>
-                            </li>
-                            }*@
                         </ol>
                     </div>
                 </div>
@@ -561,13 +554,6 @@
                 <div id="reports-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
                     <div class="gbmc">
                         <ol class="gbmcc">
-                            @if (CurrentUser.GetPrivilege (SystemObjects.SupplierReturnHistoric).AllowRead)
-                            {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Historic", "SupplierReturns") ? "gbm0l" : "")"
-                                   href="@Url.Action("Historic", "SupplierReturns")">@Resources.Title_SupplierReturnHistoric</a>
-                            </li>
-                            }
                             @if (CurrentUser.GetPrivilege(SystemObjects.ReceivedPayments).AllowRead)
                             {
                                 <li class="gbmtc">

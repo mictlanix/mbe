@@ -4,7 +4,7 @@
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.com>
 // 
-// Copyright (C) 2011-2016 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2011-2017 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -168,7 +168,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					Product = x.Product,
 					ProductCode = x.ProductCode,
 					ProductName = x.ProductName,
-					Discount = x.Discount,
+					DiscountRate = x.DiscountRate,
 					TaxRate = x.TaxRate,
 					IsTaxIncluded = x.IsTaxIncluded,
 					Quantity = 0,
