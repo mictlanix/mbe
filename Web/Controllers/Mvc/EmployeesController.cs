@@ -124,8 +124,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult Edit (Employee item)
-		{
+		public ActionResult Edit (Employee item){
 			if (!ModelState.IsValid) {
 				return PartialView ("_Edit", item);
 			}

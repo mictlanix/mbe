@@ -194,7 +194,7 @@ namespace Mictlanix.BE.Model
       ProductsOrdersAndRefundsBySalesPerson = 79,
 		[Display(Name = "PendantDeliveries", ResourceType = typeof(Resources))]
 		PendantDeliveries = 80,
-		[Display(Name = "DisplayName_Expenses", ResourceType = typeof(Resources))]
+		[Display(Name = "Expenses", ResourceType = typeof(Resources))]
 		Expenses = 81,
 		[Display(Name = "ExpenseVoucher", ResourceType = typeof(Resources))]
 		ExpenseVoucher = 82
