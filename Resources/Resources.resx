@@ -2301,4 +2301,13 @@ Gracias por utilizar nuestros servicios.
   <data name="Expenses" xml:space="preserve">
     <value>Gastos</value>
   </data>
+  <data name="QuantityPendanAfterDelivering" xml:space="preserve">
+    <value>Pendiente después de envío</value>
+  </data>
+  <data name="QuantityPendantBeforeDelivering" xml:space="preserve">
+    <value>Pendiente antes de envío</value>
+  </data>
+  <data name="QuantityToDeliver" xml:space="preserve">
+    <value>Cantidad a enviar</value>
+  </data>
 </root>

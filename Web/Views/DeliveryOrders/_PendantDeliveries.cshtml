@@ -2,65 +2,44 @@
 @using Mictlanix.BE.Web.Models
 @using Mictlanix.BE.Model
 
-@model Search<DeliveryOrderDetail>
+@model Search<DeliveryItemDescription>
 
-<table >
-    <thead>
-        <tr>
-            <th>@Resources.SalesOrderId</th>
-            <th>@Resources.SalesOrderDate</th>
-            <th>@Resources.DeliveryOrderId</th>
-            <th>@Resources.DeliveryDate</th>
-            <th>@Resources.ProductName</th>
-            <th>Cantidad en Pedido</th>
-			   <th>@Resources.UnitOfMeasurement</th>
-            <th>Cantidad Pendiente por entregar</th>
-            <th>Cantidad Entregada</th>
-            <th>Cantidad Restante por entregar</th>
-            <th>@Resources.Delivered</th>
-            <th>@Resources.Cancelled</th>
-        </tr>
-    </thead>
-    <tbody>
+<table class="table-hover">
+	<thead>
+		<tr>
+			<th>@Resources.SalesOrderId</th>
+			<th>@Resources.SalesOrderDate</th>
+			<th>@Resources.DeliveryOrderId</th>
+			<th>@Resources.ProductName</th>
+			<th>@Resources.UnitOfMeasurement</th>
+			<th>@Resources.QuantitySold</th>
+			<th>@Resources.QuantityDelivered</th>
+			<th>@Resources.QuantityPendanAfterDelivering</th>
+		</tr>
+	</thead>
+	<tbody>
 
-            @foreach (var item in Model.Results)
-            {
-                var DeliveredItemQuantity = DeliveryOrderDetail.Queryable.Where(y => y.OrderDetail == item.OrderDetail
-                                                && y.DeliveryOrder.Date < item.DeliveryOrder.Date
-                                                && y.DeliveryOrder.IsCompleted
-                                                && !y.DeliveryOrder.IsCancelled).Sum(z => (decimal?)z.Quantity) ?? 0.0m;
+		@foreach (var item in Model.Results) {
+				<tr>
 
-                decimal AvailableQuantity = item.OrderDetail.Quantity - DeliveredItemQuantity;
+					<td class="nowrap center">@Html.DisplayFor(x => item.SalesOrderId)</td>
+					<td class="nowrap center">@Html.DisplayFor(x => item.Date)</td>
+					<td class="nowrap center">@Html.DisplayFor(x => item.Id)</td>
+					<td class="nowrap center">@Html.DisplayFor(x => item.ProductName)</td>
+					<td class="nowrap center">@Html.DisplayFor(x => item.UnitOfMeasure)</td>
+					<td class="nowrap center">@Html.DisplayFor(x => item.Quantity)</td>
+					<td class="nowrap center">@Html.DisplayFor(x => item.DeliveredQuantity)</td>
+					<td class="nowrap center">@Html.DisplayFor(x => item.PendantQuantityToDeliver)</td>
+				</tr>
 
-                decimal RemainingToDeliver = item.OrderDetail.Quantity - DeliveredItemQuantity - ((item.DeliveryOrder.IsCompleted && !item.DeliveryOrder.IsCancelled)? item.Quantity: 0);
 
-                if (AvailableQuantity > 0 ) {
+		}
 
-                <tr>
-                    <td class="nowrap center">@Html.DisplayFor(x => item.OrderDetail.SalesOrder.Id)</td>
-                    <td class="nowrap center">@Html.DisplayFor(x => item.OrderDetail.SalesOrder.Date)</td>
-                    <td class="nowrap center">@Html.DisplayFor(x => item.DeliveryOrder.Id)</td>
-                    <td class="nowrap center">@Html.DisplayFor(x => item.DeliveryOrder.Date)</td>
-                    <td class="nowrap center">@Html.DisplayFor(x => item.OrderDetail.ProductName)</td>
-                    <td class="nowrap center">@Html.DisplayFor(x => item.OrderDetail.Quantity)</td>
-						  <td class="nowrap center">@Html.DisplayFor(x => item.Product.UnitOfMeasurement)</td>
-                    <td class="nowrap center">@Html.DisplayFor(x => AvailableQuantity)</td>
-                    <td class="nowrap center">@Html.DisplayFor(x => item.Quantity)</td>
-                    <td class="nowrap center">@Html.DisplayFor(x => RemainingToDeliver)</td>
-                    <td class="nowrap center">@Html.DisplayFor(x => item.DeliveryOrder.IsCompleted)</td>
-                    <td class="nowrap center">@Html.DisplayFor(x => item.DeliveryOrder.IsCancelled)</td>
-                </tr>
-
-                }
-            }
-        
-    </tbody>
+	</tbody>
 </table>
 
 <div class="buttons right">
-    <label class='button left'>@Model.ToString()</label>@if (Model.HasPrev)
-    {<a class='button middle icon prev icon-only paging' title='@Resources.PrevPage' href='javascript:void(0)'></a>}@if (Model.HasNext)
-    {<a class='button right icon next icon-only paging' title='@Resources.NextPage' href='javascript:void(0)'></a>}
+	<label class='button left'>@Model.ToString()</label>@if (Model.HasPrev) {<a class='button middle icon prev icon-only paging' title='@Resources.PrevPage' href='javascript:void(0)'></a>}@if (Model.HasNext) {<a class='button right icon next icon-only paging' title='@Resources.NextPage' href='javascript:void(0)'></a>}
 </div>
 <script type="text/javascript">
 bindModal('.open-modal');

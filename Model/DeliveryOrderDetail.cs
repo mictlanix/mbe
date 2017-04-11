@@ -54,7 +54,7 @@ namespace Mictlanix.BE.Model {
 		[DisplayFormat (DataFormatString = "{0:0.####}")]
 		[Display (Name = "Quantity", ResourceType = typeof (Resources))]
 		[Required (ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof (Resources))]
-		public virtual decimal Quantity { get; set; }
+		public decimal Quantity { get; set; }
 
 		[Property ("product_code")]
 		[Display (Name = "ProductCode", ResourceType = typeof (Resources))]
