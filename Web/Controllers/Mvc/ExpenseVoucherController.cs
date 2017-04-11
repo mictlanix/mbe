@@ -53,8 +53,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			var cashsession = GetSession();
 
 			if (cashsession == null) {
-				Response.StatusCode = 400;
-				return Content(Resources.InvalidCashDrawer);
+				return RedirectToAction("OpenSession","Payments");
 			}
 
 			ExpenseVoucher item = new ExpenseVoucher();
@@ -199,7 +198,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				return Content(Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			ExpenseVoucherDetail detail = new ExpenseVoucherDetail { ExpenseVoucher = entity, Expense = item };
+			ExpenseVoucherDetail detail = new ExpenseVoucherDetail { ExpenseVoucher = entity, Expense = item, Comment = item.Comment };
 
 			using (var scope = new TransactionScope()) {
 				detail.CreateAndFlush();

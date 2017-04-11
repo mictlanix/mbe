@@ -5,7 +5,7 @@
 
 @model Search<Expense>
 @{ 
-    ViewBag.Title = Resources.DisplayName_Expenses;
+    ViewBag.Title = Resources.Expenses;
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Customers);
 }
@@ -34,7 +34,7 @@
                 </div>
             </div>}
     </div>
-    <h1>@Resources.DisplayName_Expenses</h1>
+    <h1>@Resources.Expenses</h1>
 </div>
 
 <div id="activity-indicator">

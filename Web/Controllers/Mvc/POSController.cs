@@ -246,10 +246,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				}
 
 				switch (entity.Terms) {
-				case PaymentTerms.Immediate:
+					case PaymentTerms.Immediate:
 					entity.DueDate = entity.Date;
 					break;
-				case PaymentTerms.NetD:
+					case PaymentTerms.NetD:
 					entity.DueDate = entity.Date.AddDays (entity.Customer.CreditDays);
 					break;
 				}
@@ -557,10 +557,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				entity.ModificationTime = DateTime.Now;
 
 				switch (entity.Terms) {
-				case PaymentTerms.Immediate:
+					case PaymentTerms.Immediate:
 					entity.DueDate = entity.Date;
 					break;
-				case PaymentTerms.NetD:
+					case PaymentTerms.NetD:
 					entity.DueDate = entity.Date.AddDays (entity.Customer.CreditDays);
 					break;
 				}
