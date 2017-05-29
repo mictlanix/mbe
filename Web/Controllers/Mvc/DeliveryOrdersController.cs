@@ -35,9 +35,8 @@ using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 using System.Collections.Generic;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
-    [Authorize]
+namespace Mictlanix.BE.Web.Controllers.Mvc {
+	[Authorize]
 	public class DeliveryOrdersController : CustomController {
 		public ViewResult Index ()
 		{
@@ -72,21 +71,21 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			var pattern = (search.Pattern ?? string.Empty).Trim ();
 			int id = 0;
 
-            query = DeliveryOrder.Queryable.Where(x => x.ShipTo != null && !(!x.IsCompleted && x.IsCancelled) 
-                                                        && !x.Details.Any(y => y.OrderDetail.SalesOrder.IsCancelled))
-                                    .OrderBy(x => x.IsCompleted || x.IsCancelled ? 1 : 0)
-                                    .OrderByDescending(x => x.Id);
+			query = DeliveryOrder.Queryable.Where (x => x.ShipTo != null && !(!x.IsCompleted && x.IsCancelled)
+								     && !x.Details.Any (y => y.OrderDetail.SalesOrder.IsCancelled))
+						.OrderBy (x => x.IsCompleted || x.IsCancelled ? 1 : 0)
+						.OrderByDescending (x => x.Id);
 
 			if (int.TryParse (pattern, out id) && id > 0) {
-				query = query.Where( y => y.Id == id || y.Serial == id);
+				query = query.Where (y => y.Id == id || y.Serial == id);
 			} else {
-                query = query.Where(x => x.Customer.Name.Contains(pattern));
+				query = query.Where (x => x.Customer.Name.Contains (pattern));
 			}
 
 			search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
-            search.Total = search.Results.Count();
+			search.Total = search.Results.Count ();
 
-            return search;
+			return search;
 		}
 
 		public ViewResult View (int id)
@@ -99,42 +98,42 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		{
 			var item = DeliveryOrder.Find (id);
 
-            if(item.IsCompleted && !item.IsCancelled){
-                return View(item);
-            }
-            return View("Error");
+			if (item.IsCompleted && !item.IsCancelled) {
+				return View (item);
+			}
+			return View ("Error");
 		}
 
 		[HttpPost]
 		public ActionResult New (string value)
 		{
-            int id = 0;
-            SalesOrder entity = null;
-            if (int.TryParse(value, out id)) {
-                entity = SalesOrder.TryFind(id);
-            }
+			int id = 0;
+			SalesOrder entity = null;
+			if (int.TryParse (value, out id)) {
+				entity = SalesOrder.TryFind (id);
+			}
 
-            if (entity == null) {
-                Response.StatusCode = 400;
-                return Content(Resources.SalesOrderNotFound);
-            }
+			if (entity == null) {
+				Response.StatusCode = 400;
+				return Content (Resources.SalesOrderNotFound);
+			}
 
-            if (!entity.IsCompleted || entity.IsCancelled || entity.IsDelivered) {
-                Response.StatusCode = 400;
-                return Content(Resources.ItemAlreadyCompletedOrCancelled);
-            }
+			if (!entity.IsCompleted || entity.IsCancelled || entity.IsDelivered) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
 
-            if (entity.ShipTo == null) {
-                Response.StatusCode = 400;
-                return Content(Resources.ShipToRequired);
-            }
+			if (entity.ShipTo == null) {
+				Response.StatusCode = 400;
+				return Content (Resources.ShipToRequired);
+			}
 
-            if (entity.Store != WebConfig.Store) {
-                Response.StatusCode = 400;
-                return Content(Resources.InvalidStore);
-            }
+			if (entity.Store != WebConfig.Store) {
+				Response.StatusCode = 400;
+				return Content (Resources.InvalidStore);
+			}
 
-            DeliveryOrder item = new DeliveryOrder();
+			DeliveryOrder item = new DeliveryOrder ();
 			item.Customer = Customer.TryFind (WebConfig.DefaultCustomer);
 
 			if (!ModelState.IsValid) {
@@ -149,26 +148,26 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			item.Creator = CurrentUser.Employee;
 			item.ModificationTime = item.CreationTime;
 			item.Updater = item.Creator;
-            item.Customer = entity.Customer;
-            item.ShipTo = entity.ShipTo;
+			item.Customer = entity.Customer;
+			item.ShipTo = entity.ShipTo;
 
 			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
 
-                foreach (var detail in entity.Details) {
-                    var deliverydetail = new DeliveryOrderDetail {
-                        DeliveryOrder = item,
-                        OrderDetail = detail,
-                        Product = detail.Product,
-                        ProductCode = detail.ProductCode,
-                        ProductName = detail.ProductName,
-                        Quantity = detail.Quantity
-                    };
-                    deliverydetail.CreateAndFlush();
-                }
+				foreach (var detail in entity.Details) {
+					var deliverydetail = new DeliveryOrderDetail {
+						DeliveryOrder = item,
+						OrderDetail = detail,
+						Product = detail.Product,
+						ProductCode = detail.ProductCode,
+						ProductName = detail.ProductName,
+						Quantity = detail.Quantity
+					};
+					deliverydetail.CreateAndFlush ();
+				}
 			}
 
-            return Json(new { url = Url.Action("Edit", new { id = item.Id }) });
+			return Json (new { url = Url.Action ("Edit", new { id = item.Id }) });
 
 			//return RedirectToAction ("Edit", new { id = item.Id });
 		}
@@ -181,22 +180,22 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				return RedirectToAction ("View", new { id = item.Id });
 			}
 
-            if (!CashHelpers.ValidateExchangeRate ()) {
+			if (!CashHelpers.ValidateExchangeRate ()) {
 				return View ("InvalidExchangeRate");
 			}
 
-            foreach (var detail in item.Details){
-                var DeliveredItemQuantity = GetQuantityDeliveredBySalesOrderDetail(detail.OrderDetail);
-                if (detail.Quantity > detail.OrderDetail.Quantity - DeliveredItemQuantity){
-                    detail.Quantity = detail.OrderDetail.Quantity - DeliveredItemQuantity;
-                }
-            }
+			foreach (var detail in item.Details) {
+				var DeliveredItemQuantity = GetQuantityDeliveredBySalesOrderDetail (detail.OrderDetail);
+				if (detail.Quantity > detail.OrderDetail.Quantity - DeliveredItemQuantity) {
+					detail.Quantity = detail.OrderDetail.Quantity - DeliveredItemQuantity;
+				}
+			}
 
-            using (var scope = new TransactionScope()){
-                item.UpdateAndFlush();
-            }
+			using (var scope = new TransactionScope ()) {
+				item.UpdateAndFlush ();
+			}
 
-            return View (item);
+			return View (item);
 		}
 
 		public JsonResult Addresses (int id)
@@ -229,9 +228,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			entity.Updater = CurrentUser.Employee;
 			entity.ModificationTime = DateTime.Now;
 
-            foreach (var detail in entity.Details) {
-                detail.Delete();
-            }
+			foreach (var detail in entity.Details) {
+				detail.Delete ();
+			}
 
 			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
@@ -276,18 +275,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			int sales_order_id = 0;
 			int count = 0;
 
-            if (entity.Customer.Id == WebConfig.DefaultCustomer)
-            {
+			if (entity.Customer.Id == WebConfig.DefaultCustomer) {
 
-            }
+			}
 
-            if (entity.ShipTo == null)
-            {
-                Response.StatusCode = 400;
-                return Content(Resources.ShipToRequired);
-            }
+			if (entity.ShipTo == null) {
+				Response.StatusCode = 400;
+				return Content (Resources.ShipToRequired);
+			}
 
-            if (entity.IsCompleted || entity.IsCancelled) {
+			if (entity.IsCompleted || entity.IsCancelled) {
 				Response.StatusCode = 400;
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
@@ -296,48 +293,48 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				sales_order = SalesOrder.TryFind (sales_order_id);
 			}
 
-            if (sales_order.IsDelivered) {
-                Response.StatusCode = 400;
-                return Content(Resources.Delivered);
-            }
+			if (sales_order.IsDelivered) {
+				Response.StatusCode = 400;
+				return Content (Resources.Delivered);
+			}
 
-            if (sales_order.Customer != entity.Customer) {
-                Response.StatusCode = 400;
-                return Content(string.Format(Resources.MismatchCustomers,Resources.SalesOrder,Resources.DeliveryOrder));
-            }
+			if (sales_order.Customer != entity.Customer) {
+				Response.StatusCode = 400;
+				return Content (string.Format (Resources.MismatchCustomers, Resources.SalesOrder, Resources.DeliveryOrder));
+			}
 
-            //if (!sales_order.IsPaid) {
-            //    Response.StatusCode = 400;
-            //    return Content(Resources.SalesOrderNotPaidYet);
-            //}
+			//if (!sales_order.IsPaid) {
+			//    Response.StatusCode = 400;
+			//    return Content(Resources.SalesOrderNotPaidYet);
+			//}
 
 			if (sales_order == null) {
 				Response.StatusCode = 400;
 				return Content (Resources.SalesOrderNotFound);
 			}
 
-            var Details = sales_order.Details.Where(x => !entity.Details.Any(y => y.OrderDetail == x)).ToList();
+			var Details = sales_order.Details.Where (x => !entity.Details.Any (y => y.OrderDetail == x)).ToList ();
 
-            if (Details.Count() == 0) {
-                Response.StatusCode = 400;
-                return Content("Items ya agregados a la Orden de entrega");
-            }
+			if (Details.Count () == 0) {
+				Response.StatusCode = 400;
+				return Content ("Items ya agregados a la Orden de entrega");
+			}
 
 
 			using (var scope = new TransactionScope ()) {
 				foreach (var x in Details) {
 
-                    if (!(x.Quantity > GetQuantityDeliveredBySalesOrderDetail(x))) {
-                        continue;
-                    }
+					if (!(x.Quantity > GetQuantityDeliveredBySalesOrderDetail (x))) {
+						continue;
+					}
 
-                    var item = new DeliveryOrderDetail {
+					var item = new DeliveryOrderDetail {
 						DeliveryOrder = entity,
 						Product = x.Product,
 						OrderDetail = x,
 						ProductCode = x.ProductCode,
 						ProductName = x.ProductName,
-						Quantity = x.Quantity - GetQuantityDeliveredBySalesOrderDetail(x)
+						Quantity = x.Quantity - GetQuantityDeliveredBySalesOrderDetail (x)
 					};
 
 					item.Create ();
@@ -349,35 +346,32 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			return Json (new { id = id, value = string.Empty, itemsChanged = count });
 		}
 
-        [HttpPost]
-        public ActionResult SetComment(int id, string value)
-        {
-            var entity = DeliveryOrder.Find(id);
-            string val = (value ?? string.Empty).Trim();
+		[HttpPost]
+		public ActionResult SetComment (int id, string value)
+		{
+			var entity = DeliveryOrder.Find (id);
+			string val = (value ?? string.Empty).Trim ();
 
-            if (entity.IsCompleted || entity.IsCancelled)
-            {
-                Response.StatusCode = 400;
-                return Content(Resources.ItemAlreadyCompletedOrCancelled);
-            }
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
 
-            entity.Comment = (value.Length == 0) ? null : val;
-            entity.Updater = CurrentUser.Employee;
-            entity.ModificationTime = DateTime.Now;
+			entity.Comment = (value.Length == 0) ? null : val;
+			entity.Updater = CurrentUser.Employee;
+			entity.ModificationTime = DateTime.Now;
 
-            using (var scope = new TransactionScope())
-            {
-                entity.UpdateAndFlush();
-            }
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
+			}
 
-            return Json(new
-            {
-                id = id,
-                value = entity.Comment
-            });
-        }
+			return Json (new {
+				id = id,
+				value = entity.Comment
+			});
+		}
 
-        [HttpPost]
+		[HttpPost]
 		public ActionResult RemoveItem (int id)
 		{
 			var entity = DeliveryOrderDetail.Find (id);
@@ -416,20 +410,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-            var AlreadyDeliveredItemQuantity = GetQuantityDeliveredBySalesOrderDetail(entity.OrderDetail);
+			var AlreadyDeliveredItemQuantity = GetQuantityDeliveredBySalesOrderDetail (entity.OrderDetail);
 
-            if (value >= 0 && value <= entity.OrderDetail.Quantity - AlreadyDeliveredItemQuantity){
-                entity.Quantity = value;
-            }
-            else if(value > entity.OrderDetail.Quantity - AlreadyDeliveredItemQuantity ) {
-                entity.Quantity = entity.OrderDetail.Quantity - AlreadyDeliveredItemQuantity;
-            }
+			if (value >= 0 && value <= entity.OrderDetail.Quantity - AlreadyDeliveredItemQuantity) {
+				entity.Quantity = value;
+			} else if (value > entity.OrderDetail.Quantity - AlreadyDeliveredItemQuantity) {
+				entity.Quantity = entity.OrderDetail.Quantity - AlreadyDeliveredItemQuantity;
+			}
 
-            using (var scope = new TransactionScope()){
-                entity.UpdateAndFlush();
-            }
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
+			}
 
-            return Json (new {
+			return Json (new {
 				id = entity.Id,
 				value = entity.FormattedValueFor (x => x.Quantity)
 			});
@@ -439,30 +432,29 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		public ActionResult Confirm (int id)
 		{
 			var entity = DeliveryOrder.TryFind (id);
-            bool inconsistencies = false;
+			bool inconsistencies = false;
 
-			if (	entity == null || entity.IsCompleted || entity.IsCancelled || 
-					entity.Details.Any(x => x.OrderDetail.SalesOrder.IsCancelled) || 
-					entity.Details.Any(x => x.OrderDetail.SalesOrder.IsDelivered)) {
+			if (entity == null || entity.IsCompleted || entity.IsCancelled ||
+					entity.Details.Any (x => x.OrderDetail.SalesOrder.IsCancelled) ||
+					entity.Details.Any (x => x.OrderDetail.SalesOrder.IsDelivered)) {
 				return RedirectToAction ("Index");
 			}
 
-            foreach (var detail in entity.Details) {
-                var DeliveredItemQuantity = GetQuantityDeliveredBySalesOrderDetail(detail.OrderDetail);
-                if (detail.Quantity > detail.OrderDetail.Quantity - DeliveredItemQuantity) {
-                    detail.Quantity = detail.OrderDetail.Quantity - DeliveredItemQuantity;
-                    inconsistencies = true;
-                }
-            }
+			foreach (var detail in entity.Details) {
+				var DeliveredItemQuantity = GetQuantityDeliveredBySalesOrderDetail (detail.OrderDetail);
+				if (detail.Quantity > detail.OrderDetail.Quantity - DeliveredItemQuantity) {
+					detail.Quantity = detail.OrderDetail.Quantity - DeliveredItemQuantity;
+					inconsistencies = true;
+				}
+			}
 
-            if (inconsistencies) {
-                using (var scope = new TransactionScope())
-                {
-                    entity.UpdateAndFlush();
-                }
+			if (inconsistencies) {
+				using (var scope = new TransactionScope ()) {
+					entity.UpdateAndFlush ();
+				}
 
-                return RedirectToAction("Index");
-            }
+				return RedirectToAction ("Index");
+			}
 
 			try {
 				entity.Serial = (from x in DeliveryOrder.Queryable
@@ -470,6 +462,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 						 select x.Serial).Max () + 1;
 			} catch {
 				entity.Serial = 1;
+			}
+
+			using (var scope = new TransactionScope ()) {
+				foreach (var item in entity.Details) {
+					if (item.Quantity == 0)
+						item.DeleteAndFlush ();
+				}
 			}
 
 			entity.Updater = CurrentUser.Employee;
@@ -480,20 +479,20 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.UpdateAndFlush ();
 			}
 
-            var Orders = entity.Details.Select(x => x.OrderDetail.SalesOrder).Distinct();
+			var Orders = entity.Details.Select (x => x.OrderDetail.SalesOrder).Distinct ();
 
-            foreach (var Order in Orders) {
+			foreach (var Order in Orders) {
 
-                bool DeliveryCompleted = !Order.Details.Any(x => x.Quantity > (DeliveryOrderDetail.Queryable.Where(y => y.OrderDetail == x 
-                                            && y.DeliveryOrder.IsCompleted && !y.DeliveryOrder.IsCancelled).Sum(y => (decimal?)y.Quantity) ?? 0.0m));
+				bool isSalesOrderDeliveredCompletly = !Order.Details.Any (x => x.Quantity > (DeliveryOrderDetail.Queryable.Where (y => y.OrderDetail == x
+							      && y.DeliveryOrder.IsCompleted && !y.DeliveryOrder.IsCancelled).Select(y => y.Quantity).ToList().Sum()));
 
-                if (DeliveryCompleted) {
-                    Order.IsDelivered = true;
-                    using (var scope = new TransactionScope()) {
-                        Order.UpdateAndFlush();
-                    }
-                }
-            }
+				if (isSalesOrderDeliveredCompletly) {
+					Order.IsDelivered = true;
+					using (var scope = new TransactionScope ()) {
+						Order.UpdateAndFlush ();
+					}
+				}
+			}
 
 			return RedirectToAction ("Index");
 		}
@@ -515,86 +514,134 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				entity.UpdateAndFlush ();
 			}
 
-            var Orders = entity.Details.Select(x => x.OrderDetail.SalesOrder).Distinct();
+			var Orders = entity.Details.Select (x => x.OrderDetail.SalesOrder).Distinct ();
 
-            foreach (var Order in Orders){
+			foreach (var Order in Orders) {
 
-                bool NotYetCompleted = Order.Details.Any(x => x.Quantity > (DeliveryOrderDetail.Queryable.Where(y => y.OrderDetail == x
-                                            && y.DeliveryOrder.IsCompleted && !y.DeliveryOrder.IsCancelled).Sum(y => (decimal?)y.Quantity) ?? 0.0m));
+				bool NotYetCompleted = Order.Details.Any (x => x.Quantity > (DeliveryOrderDetail.Queryable.Where (y => y.OrderDetail == x
+							      && y.DeliveryOrder.IsCompleted && !y.DeliveryOrder.IsCancelled).Sum (y => (decimal?) y.Quantity) ?? 0.0m));
 
-                if (NotYetCompleted){
+				if (NotYetCompleted) {
 
-                    Order.IsDelivered = false;
-                    using (var scope = new TransactionScope()){
+					Order.IsDelivered = false;
+					using (var scope = new TransactionScope ()) {
 
-                        Order.UpdateAndFlush();
-                    }
-                }
-            }
+						Order.UpdateAndFlush ();
+					}
+				}
+			}
 
-            return RedirectToAction ("Index");
+			return RedirectToAction ("Index");
 		}
 
-        public ViewResult Delivery(int id){
+		public ViewResult Delivery (int id)
+		{
 
-            var entity = DeliveryOrder.TryFind(id);
+			var entity = DeliveryOrder.TryFind (id);
 
-            return View(entity);
-        }
+			return View (entity);
+		}
 
-        [HttpPost]
-        public ActionResult Delivered(int id) {
+		[HttpPost]
+		public ActionResult Delivered (int id)
+		{
 
-            DeliveryOrder order = DeliveryOrder.Find(id);
+			DeliveryOrder order = DeliveryOrder.Find (id);
 
-            if (!(order.IsCancelled || order.IsDelivered || order.Details.Any(x => x.OrderDetail.SalesOrder.IsCancelled))) {
-                using (var scope = new TransactionScope()) {
-                    order.IsDelivered = true;
-                    order.Updater = CurrentUser.Employee;
-                    order.ModificationTime = DateTime.Now;
-                    order.UpdateAndFlush();
-                }
-            }
+			if (!(order.IsCancelled || order.IsDelivered || order.Details.Any (x => x.OrderDetail.SalesOrder.IsCancelled))) {
+				using (var scope = new TransactionScope ()) {
+					order.IsDelivered = true;
+					order.Updater = CurrentUser.Employee;
+					order.ModificationTime = DateTime.Now;
+					order.UpdateAndFlush ();
+				}
+			}
 
-            return RedirectToAction("Index");
-        }
+			return RedirectToAction ("Index");
+		}
 
-        public ViewResult PendantDeliveries() {
+		public ViewResult PendantDeliveries ()
+		{
 
-            Search<DeliveryOrderDetail> search = new Search<DeliveryOrderDetail>();
-            search.Limit = WebConfig.PageSize;
-            search.Results = DeliveryOrderDetail.Queryable.Where(x => x.OrderDetail != null && x.DeliveryOrder.IsCompleted
-                                                                        && x.DeliveryOrder.IsDelivered && !x.DeliveryOrder.IsCancelled)
-                                                                        .OrderByDescending(x => x.DeliveryOrder.Date)
-                                                                        .Skip(search.Offset).Take(search.Limit).ToList();
-            search.Total = search.Results.Count();
-            return View(search);
-        }
+			Search<DeliveryItemDescription> search = new Search<DeliveryItemDescription> ();
+			search.Limit = WebConfig.PageSize;
+			List<SalesOrderDetail> items = new List<SalesOrderDetail> ();
+			var query = (from x in DeliveryOrderDetail.Queryable
+				    where !x.DeliveryOrder.IsCancelled && x.OrderDetail != null
+				    select x.OrderDetail.SalesOrder).Distinct().ToList();
 
-        [HttpPost]
-        public ActionResult PendantDeliveries(Search<DeliveryOrderDetail> search) {
+			foreach (var list in query) {
+				items.AddRange (list.Details);
+			}
 
-            int salesorderid;
+			search.Results = (from x in items.OrderByDescending (x => x.SalesOrder.Id).Skip (search.Offset).Take (search.Limit).ToList()
+					  select new DeliveryItemDescription {
+						  Id = x.Id,
+						  SalesOrderId = x.SalesOrder.Id,
+						  Date = x.SalesOrder.Date,
+						  ProductName = x.ProductName,
+						  Quantity = x.Quantity,
+						  DeliveredQuantity = GetQuantityDelivered (x.Id),
+						  UnitOfMeasure = x.Product.UnitOfMeasurement
+					  }).ToList ();
+			search.Total = search.Results.Count ();
+			return View (search);
+		}
 
-            var Pendants = DeliveryOrderDetail.Queryable.Where(x => x.OrderDetail != null && x.DeliveryOrder.IsCompleted 
-                                                                    && x.DeliveryOrder.IsDelivered && !x.DeliveryOrder.IsCancelled);
+		[HttpPost]
+		public ActionResult PendantDeliveries (Search<DeliveryItemDescription> search)
+		{
+			search.Limit = WebConfig.PageSize;
+			int salesorder_id;
+			List<SalesOrderDetail> items = new List<SalesOrderDetail> ();
 
-            if (int.TryParse(search.Pattern, out salesorderid)){
-                Pendants = Pendants.Where(x => x.OrderDetail.SalesOrder.Id == salesorderid);
-            }
+			var query = (from x in DeliveryOrderDetail.Queryable
+				     where !x.DeliveryOrder.IsCancelled && x.OrderDetail != null
+				     select x.OrderDetail.SalesOrder).Distinct().ToList();
 
-            search.Results = Pendants.OrderByDescending(x => x.DeliveryOrder.Date)
-                                                .Skip(search.Offset).Take(search.Limit).ToList();
-            search.Total = search.Results.Count();
+			if (int.TryParse (search.Pattern, out salesorder_id)) {
+				query = query.Where (x => x.Id == salesorder_id).ToList();
+			}
 
-            return PartialView("_PendantDeliveries", search);
-        }
+			foreach (var list in query.ToList()) {
+				items.AddRange (list.Details);
+			}
 
-        private decimal GetQuantityDeliveredBySalesOrderDetail(SalesOrderDetail detail) {
-            return DeliveryOrderDetail.Queryable.Where(x => x.OrderDetail == detail && x.DeliveryOrder.IsCompleted
-                                                            && x.DeliveryOrder.IsDelivered && !x.DeliveryOrder.IsCancelled)
-                                                                    .Sum(y => (decimal?)y.Quantity) ?? 0.0m;
-        }
+			search.Results = (from x in items.OrderByDescending (x => x.Id).Skip (search.Offset).Take (search.Limit).ToList()
+					  select new DeliveryItemDescription {
+						  Id = x.Id,
+						  SalesOrderId = x.SalesOrder.Id,
+						  Date = x.SalesOrder.Date,
+						  ProductName = x.ProductName,
+						  Quantity = x.Quantity,
+						  DeliveredQuantity = GetQuantityDelivered (x.Id),
+						  UnitOfMeasure = x.Product.UnitOfMeasurement
+					  }).ToList ();
 
-    }
+			search.Total = search.Results.Count ();
+
+			return PartialView ("_PendantDeliveries", search);
+		}
+
+		decimal GetQuantityDeliveredBySalesOrderDetail (SalesOrderDetail detail)
+		{
+
+			var query = DeliveryOrderDetail.Queryable.Where (x => x.OrderDetail == detail && x.DeliveryOrder.IsCompleted
+						&& x.DeliveryOrder.IsDelivered && !x.DeliveryOrder.IsCancelled).ToList ();
+
+			return query.Sum (x => x.Quantity);
+
+		}
+
+		decimal GetQuantityDelivered (int salesOrderDetailId)
+		{
+
+			var query = from x in DeliveryOrderDetail.Queryable
+				    where x.OrderDetail.Id == salesOrderDetailId && !x.DeliveryOrder.IsCancelled
+					&& x.DeliveryOrder.IsDelivered
+				    select x.Quantity;
+
+			return query.Count () > 0 ? query.ToList ().Sum () : 0m;
+		}
+	}
 }
