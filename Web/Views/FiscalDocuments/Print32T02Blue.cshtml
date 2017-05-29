@@ -235,8 +235,8 @@
 			<div class="row">
 				<div class="col-xs-12">
 					<h2 class="text-uppercase">@Resources.Recipient</h2>
-		 			<p style="font-size:13px">@Html.DisplayFor(x => x.RecipientName)</p>
-		 			<p class="text-s12 text-uppercase">@Html.DisplayFor(x => x.Recipient)</p>
+		 			<p style="font-size:13px">@Html.DisplayFor(x => x.Recipient)</p>
+		 			<p class="text-s12 text-uppercase">@Html.DisplayFor(x => x.RecipientName)</p>
 					<p>&nbsp;</p>
 		 			<p class="text-s12">
 					    @Html.DisplayFor(x => x.RecipientAddress.StreetAndNumber)<br>
@@ -257,8 +257,8 @@
 				<div class="row">
 					<div class="col-xs-12 text-right">
 						<h2 class="text-right text-uppercase">@Resources.Issuer</h2>
-			 			<p style="font-size:13px">@Html.DisplayFor(x => x.IssuerName)</p>
-			 			<p class="text-s12 text-uppercase">@Html.DisplayFor(x => x.Issuer.Id)</p>
+			 			<p style="font-size:13px">@Html.DisplayFor(x => x.Issuer.Id)</p>
+			 			<p class="text-s12 text-uppercase">@Html.DisplayFor(x => x.IssuerName)</p>
 			 			<p class="text-s08" style="margin-bottom:4px">@Html.DisplayFor(x => x.IssuerRegime)</p>
 					@if (Model.IssuerAddress != null) {
 			 			<p class="text-s12">
