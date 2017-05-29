@@ -265,10 +265,7 @@ namespace Mictlanix.BE.Web.Helpers {
 						pais = item.RecipientAddress.Country
 					}
 				},
-				Conceptos = new Mictlanix.CFDv32.ComprobanteConcepto [item.Details.Count],
-				Impuestos = new Mictlanix.CFDv32.ComprobanteImpuestos {
-					Traslados = new Mictlanix.CFDv32.ComprobanteImpuestosTraslado [1]
-				}
+				Conceptos = new Mictlanix.CFDv32.ComprobanteConcepto [item.Details.Count]
 			};
 
 			int i = 0;
@@ -291,11 +288,25 @@ namespace Mictlanix.BE.Web.Helpers {
 			}
 
 			// TODO: VAT Summaries
-			cfd.Impuestos.Traslados [0] = new Mictlanix.CFDv32.ComprobanteImpuestosTraslado {
-				impuesto = Mictlanix.CFDv32.ComprobanteImpuestosTrasladoImpuesto.IVA,
-				importe = item.Taxes,
-				tasa = WebConfig.DefaultVAT * 100m
-			};
+			if (item.Taxes > 0) {
+				cfd.Impuestos = new Mictlanix.CFDv32.ComprobanteImpuestos {
+					Traslados = new Mictlanix.CFDv32.ComprobanteImpuestosTraslado [1]
+				};
+				cfd.Impuestos.Traslados [0] = new Mictlanix.CFDv32.ComprobanteImpuestosTraslado {
+					impuesto = Mictlanix.CFDv32.ComprobanteImpuestosTrasladoImpuesto.IVA,
+					importe = item.Taxes,
+					tasa = WebConfig.DefaultVAT * 100m
+				};
+			} else if (item.Details.Any (x => x.TaxRate == decimal.Zero)) {
+				cfd.Impuestos = new Mictlanix.CFDv32.ComprobanteImpuestos {
+					Traslados = new Mictlanix.CFDv32.ComprobanteImpuestosTraslado [1]
+				};
+				cfd.Impuestos.Traslados [0] = new Mictlanix.CFDv32.ComprobanteImpuestosTraslado {
+					impuesto = Mictlanix.CFDv32.ComprobanteImpuestosTrasladoImpuesto.IVA,
+					importe = 0,
+					tasa = 0
+				};
+			}
 
 			cfd.Impuestos.totalImpuestosTrasladados = cfd.Impuestos.Traslados.Sum (x => x.importe);
 			cfd.Impuestos.totalImpuestosTrasladadosSpecified = true;
