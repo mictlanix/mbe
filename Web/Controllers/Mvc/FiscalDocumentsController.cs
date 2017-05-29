@@ -1,4 +1,4 @@
-// 
+﻿// 
 // FiscalDocumentsController.cs
 // 
 // Author:
@@ -161,9 +161,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return PdfView (view, model, new jsreport.Client.Entities.Phantom {
 				header = header,
-				headerHeight = (header == null ? 0 : 15) + " mm",
+				headerHeight = (header == null ? 0 : 18) + " mm",
 				footer = footer,
-				footerHeight = (footer == null ? 0 : 15) + " mm"
+				footerHeight = (footer == null ? 0 : 18) + " mm"
 			});
 		}
 
