@@ -1428,7 +1428,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
         public ViewResult ReceivedPayments() {
 
-            return View();
+            return View(new DateRange { StartDate = DateTime.Now, EndDate = DateTime.Now});
         }
 
         [HttpPost]
