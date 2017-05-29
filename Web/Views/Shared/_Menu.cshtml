@@ -185,7 +185,7 @@
 									@if (CurrentUser.GetPrivilege(SystemObjects.Expenses).AllowRead) {
 										<li class="gbmtc">
 											<a class="gbmt @(Html.IsMenuSelected("Index", "Expenses") ? "gbm0l" : "")"
-												href="@Url.Action("Index", "Expenses")">@Resources.DisplayName_Expenses</a>
+												href="@Url.Action("Index", "Expenses")">@Resources.Expenses</a>
 											</li>
 									}
                         </ol>
@@ -242,12 +242,6 @@
                                    href='@Url.Action("Index", "CustomerRefunds")'>@Resources.CustomerRefunds</a>
                             </li>
                             }
-									@if (CurrentUser.GetPrivilege(SystemObjects.ExpenseVoucher).AllowRead)	{
-										<li class='gbmtc'>
-											<a class='gbmt @(Html.IsMenuSelected("Index", "ExpenseVoucher") ? "gbm0l" : "")'
-												href='@Url.Action("Index", "ExpenseVoucher")'>@Resources.ExpenseVouchers</a>
-											</li>
-									}
                         </ol>
                     </div>
                 </div>
@@ -396,6 +390,13 @@
                                    href="@Url.Action("Index", "Purchases")">@Resources.Title_PurchaseOrder</a>
                             </li>
                             }
+									@if (CurrentUser.GetPrivilege(SystemObjects.ExpenseVoucher).AllowRead)
+									{
+										<li class='gbmtc'>
+											<a class='gbmt @(Html.IsMenuSelected("Index", "ExpenseVoucher") ? "gbm0l" : "")'
+												href='@Url.Action("Index", "ExpenseVoucher")'>@Resources.ExpenseVouchers</a>
+											</li>
+									}
                             @if (CurrentUser.GetPrivilege (SystemObjects.SupplierPayment).AllowRead) {
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("Index", "SupplierPayments") ? "gbm0l" : "")"
