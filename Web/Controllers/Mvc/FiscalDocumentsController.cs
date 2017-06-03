@@ -30,12 +30,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
-using System.Net.Mail;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
 using NHibernate;
+using MimeKit;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
@@ -1285,10 +1285,20 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						     model.Serial);
 			var message = string.Format (Resources.FiscalDocumentEmailBodyFormatString, model.StampId,
 						     model.Issuer.Id, model.Recipient);
-			var attachments = new List<Attachment> ();
+			var attachments = new List<MimePart> ();
 
-			attachments.Add (new Attachment (GetPdf (view, model), filename + ".pdf"));
-			attachments.Add (new Attachment (new MemoryStream (Encoding.UTF8.GetBytes (xml.Data)), filename + ".xml"));
+			attachments.Add (new MimePart {
+				ContentObject = new ContentObject (GetPdf (view, model), ContentEncoding.Default),
+				ContentDisposition = new ContentDisposition (ContentDisposition.Attachment),
+				ContentTransferEncoding = ContentEncoding.Base64,
+				FileName = filename + ".pdf"
+			});
+			attachments.Add (new MimePart {
+				ContentObject = new ContentObject (new MemoryStream (Encoding.UTF8.GetBytes (xml.Data)), ContentEncoding.Default),
+				ContentDisposition = new ContentDisposition (ContentDisposition.Attachment),
+				ContentTransferEncoding = ContentEncoding.Base64,
+				FileName = filename + ".xml"
+			});
 
 			SendEmailWithAttachments (WebConfig.DefaultSender, email, subject, message, attachments);
 

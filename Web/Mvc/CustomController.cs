@@ -33,6 +33,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using MimeKit;
 using jsreport.Client;
 using jsreport.Client.Entities;
 using Mictlanix.BE.Web.Helpers;
@@ -209,16 +210,16 @@ namespace Mictlanix.BE.Web.Mvc
 		{
 			var sender = CurrentUser.Email;
 
-			Task.Factory.StartNew (() => NotificationsHelpers.SendEmail (sender, new string[] { sender },
-																	     new string[] { recipient }, null, subject,
-																	     message, attachmentName, attachmentContent));
+			Task.Factory.StartNew (() => NotificationsHelpers.SendEmail (sender, new string [] { sender },
+										     new string [] { recipient }, null, subject,
+										     message, attachmentName, attachmentContent));
 		}
 
 		public void SendEmailWithAttachments (string sender, string recipient, string subject, string message,
-		                                      IEnumerable<Attachment> attachments)
+		                                      IEnumerable<MimePart> attachments)
 		{
-			Task.Factory.StartNew (() => NotificationsHelpers.SendEmail (sender, new string[] { recipient }, null, null,
-			                                                             subject, message, attachments));
+			Task.Factory.StartNew (() => NotificationsHelpers.SendEmail (sender, new string [] { recipient }, null, null,
+										     subject, message, attachments));
 		}
     }
 }
