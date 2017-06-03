@@ -29,8 +29,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
-using System.Net.Mail;
+using MailKit.Net.Smtp;
+using MailKit;
+using MimeKit;
 
 namespace Mictlanix.BE.Web.Helpers {
 	public static class NotificationsHelpers {
@@ -44,10 +45,17 @@ namespace Mictlanix.BE.Web.Helpers {
 		                              IEnumerable<string> addrBcc, string subject, string textBody,
 		                              string attachmentName, Stream attachmentContent)
 		{
-			var attachments = new List<Attachment>();
+			var attachments = new List<MimePart>();
 
 			if (attachmentContent != null) {
-				attachments.Add (new Attachment (attachmentContent, attachmentName));
+				var attachment = new MimePart {
+					ContentObject = new ContentObject (attachmentContent, ContentEncoding.Default),
+					ContentDisposition = new ContentDisposition (ContentDisposition.Attachment),
+					ContentTransferEncoding = ContentEncoding.Base64,
+					FileName = attachmentName
+				};
+
+				attachments.Add (attachment);
 			}
 
 			return SendEmail (addrFrom, addrTo, addrCc, addrBcc, subject, textBody, attachments);
@@ -55,52 +63,67 @@ namespace Mictlanix.BE.Web.Helpers {
 
 		public static bool SendEmail (string addrFrom, IEnumerable<string> addrTo, IEnumerable<string> addrCc,
 		                              IEnumerable<string> addrBcc, string subject, string textBody,
-		                              IEnumerable<Attachment> attachments)
+		                              IEnumerable<MimePart> attachments)
 		{
 			try {
-				var smtp = new SmtpClient {
-					Host = WebConfig.SmtpServer,
-					Port = WebConfig.SmtpPort,
-					EnableSsl = WebConfig.SmtpSsl,
-					DeliveryMethod = SmtpDeliveryMethod.Network,
-					UseDefaultCredentials = false,
-					Credentials = new NetworkCredential(WebConfig.SmtpUser, WebConfig.SmtpPassword)
-				};
+				var builder = new BodyBuilder ();
+				var message = new MimeMessage ();
 
-				using (var message = new MailMessage()) {
-					message.From = new MailAddress (addrFrom);
+				message.From.Add (new MailboxAddress (addrFrom));
 
-					if (addrTo != null) {
-						foreach (var addr in addrTo) {
-							message.To.Add (new MailAddress (addr));
-						}
+				if (addrTo != null) {
+					foreach (var addr in addrTo) {
+						message.To.Add (new MailboxAddress (addr));
+					}
+				}
+
+				if (addrCc != null) {
+					foreach (var addr in addrCc) {
+						message.Cc.Add (new MailboxAddress (addr));
+					}
+				}
+
+				if (addrBcc != null) {
+					foreach (var addr in addrBcc) {
+						message.Bcc.Add (new MailboxAddress (addr));
+					}
+				}
+
+				message.Subject = subject;
+
+				if (attachments == null) {
+					message.Body = new TextPart ("plain") {
+						Text = textBody
+					};
+				} else {
+					var multipart = new Multipart ("mixed");
+
+					multipart.Add (new TextPart ("plain") {
+						Text = textBody
+					});
+
+					foreach (var attachment in attachments) {
+						multipart.Add (attachment);
 					}
 
-					if (addrCc != null) {
-						foreach (var addr in addrCc) {
-							message.CC.Add (new MailAddress (addr));
-						}
+					message.Body = multipart;
+				}
+
+				using (var client = new SmtpClient ()) {
+					client.ServerCertificateValidationCallback = (s, c, h, e) => true;
+
+					client.Connect (WebConfig.SmtpServer, WebConfig.SmtpPort, WebConfig.SmtpSsl);
+
+					// Note: since we don't have an OAuth2 token, disable
+					// the XOAUTH2 authentication mechanism.
+					client.AuthenticationMechanisms.Remove ("XOAUTH2");
+
+					if (!string.IsNullOrWhiteSpace (WebConfig.SmtpUser)) {
+						client.Authenticate (WebConfig.SmtpUser, WebConfig.SmtpPassword);
 					}
 
-					if (addrBcc != null) {
-						foreach (var addr in addrBcc) {
-							message.Bcc.Add (new MailAddress (addr));
-						}
-					}
-
-					message.Subject = subject;
-					message.BodyEncoding =  System.Text.Encoding.UTF8;
-					message.SubjectEncoding =  System.Text.Encoding.UTF8;
-					message.IsBodyHtml = false;
-					message.Body = textBody;
-
-					if (attachments != null) {
-						foreach (var attachment in attachments) {
-							message.Attachments.Add (attachment);
-						}
-					}
-
-					smtp.Send (message);
+					client.Send (message);
+					client.Disconnect (true);
 				}
 			} catch(Exception e) {
 				Console.Error.WriteLine (e);
