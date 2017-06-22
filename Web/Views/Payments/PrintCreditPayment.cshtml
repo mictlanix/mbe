@@ -1,0 +1,68 @@
+﻿
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
+@using Mictlanix.BE.Web.Helpers
+@model CustomerPayment
+
+@{
+		  Layout = WebConfig.ReceiptLayout;
+		  ViewBag.Title = Resources.CreditPayment;
+		  ViewBag.Store = Model.Store;
+		  ViewBag.Address = Model.Store.Address;
+}
+
+<div class="display-label text-right">
+	@Html.LabelFor(model => model.Serial)<br />
+	@Html.DisplayFor(model => model.Serial)
+</div>
+
+<div class="display-label date text-right">
+	@Html.LabelFor(model => model.Date)<br />
+	@Html.DisplayFor(model => model.Date)
+</div>
+
+<div class="display-label">
+	@Html.LabelFor(model => model.Customer.Name)<br />
+	@Html.DisplayFor(model => model.Customer.Name)
+</div>
+
+<table>
+	<tr>
+		<td class="line number">
+			@Html.LabelFor(x => x.Method)
+		</td>
+		<td></td>
+		<td></td>
+		<td class="text-right">
+			@Model.Method.GetDisplayName()
+		</td>
+	</tr>
+	<tr>
+		<td class="line number">
+			@Html.LabelFor(x => x.Amount)
+		</td>
+		<td></td>
+		<td></td>
+		<td class="line text-center">
+			@Html.DisplayFor(x => x.Balance)
+		</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td class="total text-right">@Resources.Total</td>
+		<td class="total number">@Html.DisplayFor(x => x.Amount)</td>
+	</tr>
+</table>
+
+@if (!string.IsNullOrEmpty (Model.Store.ReceiptMessage)) {
+		<div class="legend">
+			<p class="center">@Model.Store.ReceiptMessage</p>
+		</div>
+}
+
+@section Footer {
+	<img src='@Url.Action("Code128", "Barcodes", new { id = string.Format("{0}", Html.DisplayFor(x => x.Id)) })' alt='@Html.DisplayFor(x => x.Id)' title='@Html.DisplayFor(x => x.Id)'>
+	<p>@Html.DisplayFor(x => x.Id)</p>
+}

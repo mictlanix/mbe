@@ -1,0 +1,29 @@
+﻿@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Model
+@model PaymentMethodCharge
+
+<div class="form-group">
+    <div class="col-xs-4 field-required">@Html.LabelFor(x => x.Warehouse) @Html.EditorFor(x=> x.WarehouseId) @Html.ValidationMessageFor(x => x.WarehouseId)</div>
+</div>
+<div class="form-group">
+	<div class="col-xs-8 field-required">@Html.LabelFor(x => x.Name) @Html.EditorFor(x => x.Name) @Html.ValidationMessageFor(x => x.Name)</div>
+</div>
+<div class="form-group">
+    <div class="col-xs-12 field-required">@Html.LabelFor(x => x.PaymentMethod) @Html.DropDownListFor(x => x.PaymentMethod, Enum.GetValues(typeof(PaymentMethod)).Cast<PaymentMethod>().Select(x => new SelectListItem { Value = ((int)x).ToString(), Text = x.GetDisplayName()})) @Html.ValidationMessageFor(x => x.PaymentMethod)</div>
+</div>
+<div class="form-group">
+    <div class="col-xs-4 field-required">@Html.LabelFor(x => x.BankPaymentsCharge) @Html.EditorFor(x => x.BankPaymentsCharge) @Html.ValidationMessageFor(x => x.BankPaymentsCharge)</div>
+    <div class="col-xs-4 field-required">@Html.LabelFor(x => x.NumberOfPayments) @Html.EditorFor(x => x.NumberOfPayments) @Html.ValidationMessageFor(x => x.NumberOfPayments)</div>
+    <div class="col-xs-4">@Html.LabelFor(x => x.CommissionByManage) @Html.EditorFor(x => x.CommissionByManage)</div>
+</div>
+<div class="form-group">
+    <div class="col-xs-12">@Html.LabelFor(x => x.IsActive) @Html.EditorFor(x => x.IsActive)</div>
+</div>
+
+
+@if (Model != null && Model.Warehouse != null)
+{
+		<script type='text/javascript'>
+    $("#WarehouseId").tokenInput("add", { id: "@Model.Warehouse.Id", name: "@Model.Warehouse.Name" });
+		</script>
+}
