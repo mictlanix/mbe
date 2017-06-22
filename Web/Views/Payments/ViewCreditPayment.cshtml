@@ -1,0 +1,37 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
+@model CustomerPayment
+
+<h2>@Resources.CreditPayment</h2>
+
+<div class="row">
+	<div class="col-xs-12">@Html.LabelFor(x => x.Customer)</div>
+</div>
+<div class="row">
+	<div class="col-xs-12">@Html.DisplayFor(x => x.Customer.Name)</div>
+</div>
+<div class="row">
+	<div class="col-xs-2">@Html.LabelFor(x => x.Date)</div>
+	<div class="col-xs-2">@Html.LabelFor(x => x.Amount)</div>
+	<div class="col-xs-1">@Html.LabelFor(x => x.Currency)</div>
+	<div class="col-xs-3">@Html.LabelFor(x => x.Reference)</div>
+</div>
+<div class="row">
+	<div class="col-xs-2">@Html.DisplayFor(x => x.Date)</div>
+	<div class="col-xs-2">@Html.DisplayFor(x => x.Amount)</div>
+	<div class="col-xs-1">@Model.Currency.GetDisplayName()</div>
+	<div class="col-xs-3">@Html.DisplayFor(x => x.Reference)</div>
+</div>
+<div class="row">
+	<div class="col-xs-12">@Html.LabelFor(x => x.Method)</div>
+</div>
+<div class="row">
+	<div class="col-xs-12">@Model.Method.GetDisplayName()</div>
+</div>
+<div id="back-to-list" class='pull-right'>
+	@Html.ActionLink(Resources.Print, "PrintCreditPayment", new { id = Model.Id }, new { @class = "button icon print", title = Resources.Print, target = "_blank" })
+	@Html.ActionLink(Resources.BackToList, "CreditPayments", "Payments", new { }, new { @class = "button icon back" })
+</div>
+<div class='clearfix'></div>
