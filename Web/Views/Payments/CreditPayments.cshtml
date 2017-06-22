@@ -1,0 +1,40 @@
+﻿@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE
+
+@model Search<CustomerPayment>
+
+@{
+		  ViewBag.Title = Resources.CreditPayments;
+		  var CurrentUser = Html.CurrentUser () ?? new User ();
+		  var Privilege = Html.GetPrivilege (CurrentUser, SystemObjects.CustomerPayments);
+}
+
+<div class="page-header">
+	<div class="pull-right col-xs-6">
+		<div class="row">
+			<div class="col-xs-12 input-group">
+				@using (Ajax.BeginForm (new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
+						@Html.HiddenFor(x => x.Offset)
+						@Html.HiddenFor(x => x.Limit)
+						<div class="input-group">
+							<input id="Pattern" name="Pattern" type="text" class="form-control" placeholder="@Resources.SearchFor">
+							<span class="input-group-btn">
+								<button class="btn btn-default" type="submit">
+									<span class="glyphicon glyphicon-search"></span>
+								</button>
+							</span>
+						</div>
+			}
+			</div>
+		</div>
+	</div>
+	<h1>@Resources.CreditPayments</h1>
+</div>
+<div id='activity-indicator'>
+	<img alt='@Resources.Loading' src='@Url.Content("~/Content/images/loading-bar.gif")' />
+</div>
+<div id='search-results'>
+	@Html.Partial("_CreditPayments", Model)
+</div>

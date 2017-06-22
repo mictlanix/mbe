@@ -316,7 +316,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 				if (item.SalesPerson == null) {
 					entity.SalesPerson = CurrentUser.Employee;
-				} else {
+				}
+				else {
 					entity.SalesPerson = item.SalesPerson;
 				}
 
@@ -663,7 +664,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				Price = price.Value,
 				DiscountRate = discount,
 				Currency = entity.Currency,
-				ExchangeRate = entity.ExchangeRate
+				ExchangeRate = entity.ExchangeRate,
+				Comment = p.Comment
 			};
 
 			if (p.Currency != entity.Currency) {
