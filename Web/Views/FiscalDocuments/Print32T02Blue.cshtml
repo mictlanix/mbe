@@ -238,6 +238,7 @@
 		 			<p style="font-size:13px">@Html.DisplayFor(x => x.Recipient)</p>
 		 			<p class="text-s12 text-uppercase">@Html.DisplayFor(x => x.RecipientName)</p>
 					<p>&nbsp;</p>
+				@if (Model.RecipientAddress != null) {
 		 			<p class="text-s12">
 					    @Html.DisplayFor(x => x.RecipientAddress.StreetAndNumber)<br>
 					    @Html.DisplayFor(x => x.RecipientAddress.Neighborhood),
@@ -249,6 +250,7 @@
 					    @Html.DisplayFor(x => x.RecipientAddress.State),
 					    @Html.DisplayFor(x => x.RecipientAddress.Country)
 				    </p>
+				}
 				</div>
 			</div>
  		</div>
