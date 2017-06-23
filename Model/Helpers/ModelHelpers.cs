@@ -55,11 +55,8 @@ namespace Mictlanix.BE.Model {
 		public static decimal Discount (decimal quantity, decimal price, decimal exchangeRate,
 						decimal discount, decimal taxRate, bool taxIncluded)
 		{
-			if (taxIncluded) {
-				return TotalRounding (quantity * price * exchangeRate * discount / (1m + taxRate));
-			} else {
-				return TotalRounding (quantity * price * exchangeRate * discount);
-			}
+			return discount > 0 ? TotalRounding (quantity * price * exchangeRate * discount):0.0m;
+
 		}
 
 		public static decimal Savings (decimal quantity, decimal price, decimal exchangeRate,
