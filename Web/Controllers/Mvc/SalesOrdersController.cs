@@ -815,9 +815,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						    null, out val);
 
 			if (success && entity.Price > 0) {
-				//entity.Price = val;
 
-				entity.DiscountRate = 1 - val / entity.Price;
+				entity.Price = val;
 
 				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
@@ -826,7 +825,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return Json (new {
 				id = entity.Id,
-				discount = entity.FormattedValueFor (x => x.DiscountRate),
+				discount_percentage = entity.FormattedValueFor (x => x.DiscountRate),
+				discount_price = string.Format ("{0:C}", entity.Price * entity.DiscountRate),
 				value = entity.FormattedValueFor (x => x.Price),
 				total = entity.FormattedValueFor (x => x.Total),
 				total2 = entity.FormattedValueFor (x => x.TotalEx)
@@ -834,7 +834,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult SetItemDiscount (int id, string value)
+		public ActionResult SetItemDiscountPercentage (int id, string value)
 		{
 			var entity = SalesOrderDetail.Find (id);
 			bool success;
@@ -848,8 +848,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			success = decimal.TryParse (value.TrimEnd (new char [] { ' ', '%' }), out val);
 			val /= 100m;
 
-			//if (success && val >= 0 && val <= 1) {
 			if (success) {
+
 				entity.DiscountRate = val;
 
 				using (var scope = new TransactionScope ()) {
@@ -860,6 +860,38 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return Json (new {
 				id = entity.Id,
 				value = entity.FormattedValueFor (x => x.DiscountRate),
+				discount_price = string.Format ("{0:C}", entity.Price * entity.DiscountRate),
+				total = entity.FormattedValueFor (x => x.Total),
+				total2 = entity.FormattedValueFor (x => x.TotalEx)
+			});
+		}
+
+		[HttpPost]
+		public ActionResult SetItemDiscountPrice (int id, string value)
+		{
+			var entity = SalesOrderDetail.Find (id);
+			bool success;
+			decimal val;
+
+			if (entity.SalesOrder.IsCompleted || entity.SalesOrder.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			success = decimal.TryParse (value.TrimEnd (new char [] { ' ', '%' }), out val);
+
+			if (success && val <= entity.Price && entity.Price > 0) {
+				entity.DiscountRate = val / entity.Price;
+
+				using (var scope = new TransactionScope ()) {
+					entity.UpdateAndFlush ();
+				}
+			}
+
+			return Json (new {
+				id = entity.Id,
+				discount_percentage = entity.FormattedValueFor (x => x.DiscountRate),
+				value = string.Format("{0:C}", entity.Price * entity.DiscountRate),
 				total = entity.FormattedValueFor (x => x.Total),
 				total2 = entity.FormattedValueFor (x => x.TotalEx)
 			});
