@@ -39,6 +39,7 @@ namespace Mictlanix.BE.Model {
 		IList<SalesOrderPayment> allocations = new List<SalesOrderPayment> ();
 
 		[PrimaryKey (PrimaryKeyType.Identity, "customer_payment_id")]
+		[DisplayFormat (DataFormatString = "{0:D8}")]
 		public int Id { get; set; }
 
 		[Property ("creation_time")]
@@ -58,6 +59,13 @@ namespace Mictlanix.BE.Model {
 		[BelongsTo ("updater", Lazy = FetchWhen.OnInvoke)]
 		[Display (Name = "Updater", ResourceType = typeof (Resources))]
 		public virtual Employee Updater { get; set; }
+
+		[BelongsTo ("payment_charge", Lazy = FetchWhen.OnInvoke)]
+		public virtual PaymentMethodCharge ExtraCharge { get; set; }
+
+		[Property("commission")]
+		[DisplayFormat(DataFormatString = "{0:+#;-#;+p}")]
+		public virtual decimal Commission { get; set; }
 
 		[BelongsTo ("store")]
 		[Display (Name = "Store", ResourceType = typeof (Resources))]

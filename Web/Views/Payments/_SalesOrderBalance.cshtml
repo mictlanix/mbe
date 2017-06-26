@@ -15,6 +15,12 @@
     	<span class='caption'>@Resources.Paid</span>
     	<span class='value'>@Html.DisplayFor(x => x.Paid) @WebConfig.BaseCurrency</span>
     </li>
+    @if (Model.Payments.Any(x => x.Payment.ExtraCharge != null)) {
+		<li>
+			<span class="caption">Cargos Extras</span>
+			<span class="value">@Html.DisplayFor(x => x.ExtraCharge)</span>
+		</li>
+	 }
     <li>
     	<span class='caption'>@Resources.Change</span>
         <span class='value'>@Html.DisplayFor(x => x.Change) @WebConfig.BaseCurrency</span>

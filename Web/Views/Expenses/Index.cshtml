@@ -7,7 +7,7 @@
 @{ 
     ViewBag.Title = Resources.Expenses;
     var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Customers);
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Expenses);
 }
 
 <div class="page-header">
