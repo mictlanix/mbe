@@ -191,5 +191,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return query.ToList ();
 		}
+
+        public ActionResult Print(int id){
+            //AccountReceivable account = AccountReceivable
+            return PartialView();
+        }
 	}
 }

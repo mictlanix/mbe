@@ -179,7 +179,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\Mvc\ExpensesController.cs" />
+    <Compile Include="Controllers\Mvc\ExpenseVoucherController.cs" />
     <Compile Include="Controllers\Mvc\HumanResourcesController.cs" />
+    <Compile Include="Controllers\Mvc\MethodPaymentsOptionsController.cs" />
     <Compile Include="Controllers\Mvc\QuotationsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -1122,6 +1125,36 @@
     <Content Include="Views\DeliveryOrders\PendantDeliveries.cshtml" />
     <Content Include="Views\DeliveryOrders\_PendantDeliveries.cshtml" />
     <Content Include="Views\Reports\_ReceivedPayments.cshtml" />
+    <Content Include="Views\AccountsReceivables\Print.cshtml" />
+    <Content Include="Views\Expenses\Index.cshtml" />
+    <Content Include="Views\Expenses\_Create.cshtml" />
+    <Content Include="Views\Expenses\_Delete.cshtml" />
+    <Content Include="Views\Expenses\_Index.cshtml" />
+    <Content Include="Views\DeliveryOrders\Delivery.cshtml" />
+    <Content Include="Views\Expenses\_Refresh.cshtml" />
+    <Content Include="Views\Expenses\_Edit.cshtml" />
+    <Content Include="Views\ExpenseVoucher\Index.cshtml" />
+    <Content Include="Views\ExpenseVoucher\_Index.cshtml" />
+    <Content Include="Views\ExpenseVoucher\Edit.cshtml" />
+    <Content Include="Views\ExpenseVoucher\_Items.cshtml" />
+    <Content Include="Views\ExpenseVoucher\_ItemEditorView.cshtml" />
+    <Content Include="Views\ExpenseVoucher\_EditorView.cshtml" />
+    <Content Include="Views\ExpenseVoucher\_Totals.cshtml" />
+    <Content Include="Views\ExpenseVoucher\Print.cshtml" />
+    <Content Include="Views\ExpenseVoucher\View.cshtml" />
+    <Content Include="Views\ExpenseVoucher\_DisplayView.cshtml" />
+    <Content Include="Views\ExpenseVoucher\_ItemDisplayView.cshtml" />
+    <Content Include="Views\Payments\PrintCreditPayment.cshtml" />
+    <Content Include="Views\Payments\CreditPayments.cshtml" />
+    <Content Include="Views\Payments\_CreditPayments.cshtml" />
+    <Content Include="Views\Payments\ViewCreditPayment.cshtml" />
+    <Content Include="Views\MethodPaymentsOptions\Index.cshtml" />
+    <Content Include="Views\MethodPaymentsOptions\_Index.cshtml" />
+    <Content Include="Views\MethodPaymentsOptions\_Create.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\PaymentMethodCharge.cshtml" />
+    <Content Include="Views\MethodPaymentsOptions\_Refresh.cshtml" />
+    <Content Include="Views\MethodPaymentsOptions\_Edit.cshtml" />
+    <Content Include="Views\MethodPaymentsOptions\_Delete.cshtml" />
   </ItemGroup>
   <ItemGroup />
 </Project>
