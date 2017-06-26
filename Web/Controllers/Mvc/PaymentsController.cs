@@ -86,32 +86,24 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		Search<SalesOrder> SearchSalesOrders (Search<SalesOrder> search)
 		{
-			IQueryable<SalesOrder> query;
+
 			var item = WebConfig.Store;
 			var pattern = (search.Pattern ?? string.Empty).Trim ();
 			int id = 0;
 
+			IQueryable<SalesOrder> query = from x in SalesOrder.Queryable
+						       where x.Store.Id == item.Id && x.IsCompleted && !x.IsCancelled
+								&& !x.IsPaid && x.Terms == PaymentTerms.Immediate
+						       orderby x.Date descending
+						       select x;
+
 			if (int.TryParse (pattern, out id) && id > 0) {
-				query = from x in SalesOrder.Queryable
-					where x.Store.Id == item.Id && x.IsCompleted && !x.IsCancelled &&
-						!x.IsPaid && x.Terms == PaymentTerms.Immediate &&
-						x.Id == id
-					orderby x.Date descending
-					select x;
-			} else if (string.IsNullOrEmpty (pattern)) {
-				query = from x in SalesOrder.Queryable
-					where x.Store.Id == item.Id && x.IsCompleted && !x.IsCancelled &&
-						!x.IsPaid && x.Terms == PaymentTerms.Immediate
-					orderby x.Date descending
-					select x;
-			} else {
-				query = from x in SalesOrder.Queryable
-					where x.Store.Id == item.Id && x.IsCompleted && !x.IsCancelled &&
-						!x.IsPaid && x.Terms == PaymentTerms.Immediate &&
-						(x.Customer.Name.Contains (pattern) ||
-						 (x.SalesPerson.FirstName + " " + x.SalesPerson.LastName).Contains (pattern))
-					orderby x.Date descending
-					select x;
+
+				query = query.Where (x => x.Id == id);
+
+			} else if (!string.IsNullOrEmpty (pattern)) {
+				
+				query = query.Where (x => x.Customer.Name.Contains (pattern) || (x.SalesPerson.FirstName + " " + x.SalesPerson.LastName).Contains (pattern));
 			}
 
 			search.Total = query.Count ();
@@ -120,10 +112,99 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return search;
 		}
 
+		public ActionResult CreditPayments ()
+		{
+
+			Search<CustomerPayment> search = new Search<CustomerPayment> ();
+
+			IQueryable<CustomerPayment> query = from x in CustomerPayment.Queryable
+							    where x.Allocations.Count == 0 || x.Amount > x.Allocations.Sum(y => y.Amount + y.Change)
+							    || x.Allocations.Any(y => y.SalesOrder.Terms != PaymentTerms.Immediate)
+							    orderby x.Date descending
+							    select x;
+
+
+
+			var drawer = WebConfig.CashDrawer;
+			var session = GetSession ();
+
+			if (drawer == null) {
+				return View ("InvalidCashDrawer");
+			}
+
+			if (session == null) {
+				return RedirectToAction ("OpenSession");
+			}
+
+			search.Limit = WebConfig.PageSize;
+			search.Results = query.Take (search.Limit).Skip (search.Offset).ToList ();
+			search.Total = query.Count ();
+
+			return View (search);
+
+		}
+
+		[HttpPost]
+		public ActionResult CreditPayments (Search<CustomerPayment> search)
+		{
+
+			var drawer = WebConfig.CashDrawer;
+			var session = GetSession ();
+			var pattern = (search.Pattern ?? string.Empty).Trim ();
+			int id = 0;
+
+			search.Limit = WebConfig.PageSize;
+
+			IQueryable<CustomerPayment> query = from x in CustomerPayment.Queryable
+							    where x.Allocations.Count == 0 || x.Amount > x.Allocations.Sum (y => y.Amount + y.Change)
+							    || x.Allocations.Any (y => y.SalesOrder.Terms != PaymentTerms.Immediate)
+							    orderby x.Date descending
+							    select x;
+
+			if (int.TryParse (pattern, out id) && id > 0) {
+				search.Limit = int.MaxValue;
+				query = query.Where (x => x.Id == id);
+
+			} else if (!string.IsNullOrEmpty (pattern)) {
+				search.Limit = int.MaxValue;
+				query = query.Where (x => x.Customer.Name.Contains (pattern));
+			}
+
+			if (drawer == null) {
+				return View ("InvalidCashDrawer");
+			}
+
+			if (session == null) {
+				return RedirectToAction ("OpenSession");
+			}
+
+			search.Results = query.Take (search.Limit).Skip (search.Offset).ToList ();
+			search.Total = query.Count ();
+
+
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_CreditPayments", search);
+			}
+
+			return View (search);
+		}
+
 		public ActionResult Print (int id)
 		{
 			var model = SalesOrder.Find (id);
 			return PdfTicketView ("Print", model);
+		}
+
+		public ActionResult PrintCreditPayment (int id){
+
+			var model = CustomerPayment.Find (id);
+			return PdfTicketView ("PrintCreditPayment", model);
+		}
+
+		public ActionResult ViewCreditPayment (int id) {
+
+			var item = CustomerPayment.Find (id);
+			return View ("ViewCreditPayment", item);
 		}
 
 		public ActionResult PrintCashCount (int id)
@@ -254,8 +335,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public JsonResult AddPayment (int id, int type, decimal amount, string reference)
+		public JsonResult AddPayment (int id, int type, decimal amount, string reference, int? charge )
 		{
+
 			var dt = DateTime.Now;
 			var session = GetSession ();
 			var store = session.CashDrawer.Store;
@@ -279,6 +361,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				},
 				Amount = amount
 			};
+
+			if (charge.HasValue) {
+				item.Payment.ExtraCharge = PaymentMethodCharge.Find(charge.Value);
+				item.Payment.Commission = item.Payment.ExtraCharge.CommissionByManage;
+			}
 
 			// Store and Serial
 			item.Payment.Store = store;

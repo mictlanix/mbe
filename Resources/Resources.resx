@@ -2310,4 +2310,13 @@ Gracias por utilizar nuestros servicios.
   <data name="QuantityToDeliver" xml:space="preserve">
     <value>Cantidad a enviar</value>
   </data>
+  <data name="CreditPayments" xml:space="preserve">
+    <value>Pagos de Créditos</value>
+  </data>
+  <data name="CreditPayment" xml:space="preserve">
+    <value>Pago de Crédito</value>
+  </data>
+  <data name="MethodPaymentOptions" xml:space="preserve">
+    <value>Opciones en Métodos de Pago</value>
+  </data>
 </root>

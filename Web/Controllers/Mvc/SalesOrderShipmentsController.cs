@@ -71,22 +71,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			IQueryable<SalesOrder> query;
 			var item = WebConfig.Store;
 
-			if (string.IsNullOrEmpty (search.Pattern)) {
-				query = from x in SalesOrder.Queryable
-					where x.ShipTo != null && x.Store.Id == item.Id &&
-						x.IsCompleted && !x.IsCancelled && !x.IsDelivered &&
-                        !DeliveryOrderDetail.Queryable.Any(y => y.OrderDetail.SalesOrder == x && !y.DeliveryOrder.IsCancelled)
-					orderby x.Date descending
-					select x;
-			} else {
-				query = from x in SalesOrder.Queryable
-					where x.ShipTo != null && x.Store.Id == item.Id &&
-						x.IsCompleted && !x.IsCancelled && !x.IsDelivered &&
-                        !DeliveryOrderDetail.Queryable.Any(y => y.OrderDetail.SalesOrder == x && !y.DeliveryOrder.IsCancelled) && 
-                        (   x.Customer.Name.Contains (search.Pattern) ||
-				            x.SalesPerson.Nickname.Contains (search.Pattern))
-					orderby x.Date descending
-					select x;
+			
+			query = from x in SalesOrder.Queryable
+				where x.Store == item &&
+					x.IsCompleted && !x.IsCancelled && !x.IsDelivered &&
+                    !DeliveryOrderDetail.Queryable.Any(y => y.OrderDetail.SalesOrder == x && !y.DeliveryOrder.IsCancelled)
+				orderby x.Date descending
+				select x;
+
+            if (!string.IsNullOrEmpty(search.Pattern)){
+                query = query.Where(x => x.Customer.Name.Contains(search.Pattern) || x.SalesPerson.Nickname.Contains(search.Pattern));
 			}
 
 			search.Total = query.Count ();
@@ -116,7 +110,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			item.ModificationTime = DateTime.Now;
 			item.IsDelivered = true;
 
-            if (DeliveryOrderDetail.Queryable.Any(x => x.OrderDetail.SalesOrder == item && !x.DeliveryOrder.IsCancelled)) {
+            if (DeliveryOrderDetail.Queryable.Any(x => x.OrderDetail.SalesOrder == item && !x.DeliveryOrder.IsCancelled) || item.IsDelivered) {
                 return RedirectToAction("Index","DeliveryOrders");
             }
 

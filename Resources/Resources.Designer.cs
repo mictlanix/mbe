@@ -1006,6 +1006,24 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Pago de Crédito.
+        /// </summary>
+        public static string CreditPayment {
+            get {
+                return ResourceManager.GetString("CreditPayment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Pagos de Créditos.
+        /// </summary>
+        public static string CreditPayments {
+            get {
+                return ResourceManager.GetString("CreditPayments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a m³.
         /// </summary>
         public static string CubicMeter {
@@ -3288,6 +3306,15 @@ namespace Mictlanix.BE {
         public static string Message_UserNameAlreadyExists {
             get {
                 return ResourceManager.GetString("Message_UserNameAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Opciones en Métodos de Pago.
+        /// </summary>
+        public static string MethodPaymentOptions {
+            get {
+                return ResourceManager.GetString("MethodPaymentOptions", resourceCulture);
             }
         }
         

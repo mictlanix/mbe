@@ -31,6 +31,7 @@
 	<div class="col-xs-12">@Model.Method.GetDisplayName()</div>
 </div>
 <div id="back-to-list" class='pull-right'>
-    @Ajax.ActionLink(Resources.BackToList, "CreditPayment", "Payments", new { }, new AjaxOptions { UpdateTargetId = "credit-payment" }, new { @class = "button icon back" })
+	@Html.ActionLink(Resources.Print, "PrintCreditPayment", new { id = Model.Id }, new { @class = "button icon print", title = Resources.Print, target = "_blank" })
+	@Ajax.ActionLink(Resources.BackToList, "CreditPayment", "Payments", new { }, new AjaxOptions { UpdateTargetId = "credit-payment" }, new { @class = "button icon back" })
 </div>
 <div class='clearfix'></div>
