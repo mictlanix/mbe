@@ -43,14 +43,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 	public class ReportsController : CustomController {
 		#region Stock & Kardex
 
-		public ViewResult WarehouseStockReport ()
-		{
+		public ViewResult WarehouseStockReport () {
+
 			return View ();
 		}
 
 		[HttpPost]
-		public ActionResult WarehouseStockReport (int warehouse, string label, string brand, string productModel)
-		{
+		public ActionResult WarehouseStockReport (int warehouse, string label, string brand, string productModel) {
+
 			string sql = @"SELECT p.product_id id, p.brand Brand, p.model Model, p.code Code, p.name Name, SUM(quantity) Quantity
                             FROM lot_serial_tracking l 
                             INNER JOIN product p ON l.product = p.product_id
@@ -103,14 +103,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_WarehouseStockReport", items);
 		}
 
-		public ViewResult WarehouseStockByLotReport ()
-		{
+		public ViewResult WarehouseStockByLotReport () {
+
 			return View ();
 		}
 
 		[HttpPost]
-		public ActionResult WarehouseStockByLotReport (int warehouse, string brand)
-		{
+		public ActionResult WarehouseStockByLotReport (int warehouse, string brand) {
+
 			string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name, l.lot_number LotNumber, l.expiration_date ExpirationDate, SUM(quantity) Quantity
                             FROM lot_serial_tracking l INNER JOIN product p ON l.product = p.product_id
                             WHERE warehouse = :warehouse WHERE_BRAND
@@ -145,15 +145,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_WarehouseStockByLotReport", items);
 		}
 
-		public ViewResult WarehouseStockBySerialNumberReport ()
-		{
+		public ViewResult WarehouseStockBySerialNumberReport () {
+
 			return View ();
 		}
 
 		[HttpPost]
-		public ActionResult WarehouseStockBySerialNumberReport (int warehouse)
-		{
-			string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name, l.lot_number LotNumber, l.expiration_date ExpirationDate, l.serial_number SerialNumber, SUM(quantity) Quantity
+		public ActionResult WarehouseStockBySerialNumberReport (int warehouse) {
+
+			string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name, l.lot_number LotNumber, 
+					l.expiration_date ExpirationDate, l.serial_number SerialNumber, SUM(quantity) Quantity
                             FROM lot_serial_tracking l INNER JOIN product p ON l.product = p.product_id
                             WHERE l.serial_number IS NOT NULL AND warehouse = :warehouse
                             GROUP BY l.product, l.lot_number, l.expiration_date, l.serial_number
@@ -179,15 +180,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_WarehouseStockBySerialNumberReport", items);
 		}
 
-		public ViewResult Kardex ()
-		{
+		public ViewResult Kardex () {
+
 			ViewBag.Title = Resources.Kardex;
 			return View (new DateRange (DateTime.Now, DateTime.Now));
 		}
 
 		[HttpPost]
-		public ActionResult Kardex (int warehouse, int product, DateRange dates)
-		{
+		public ActionResult Kardex (int warehouse, int product, DateRange dates) {
+
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var balance = from x in LotSerialTracking.Queryable
@@ -223,15 +224,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_Kardex", items);
 		}
 
-		public ViewResult SerialNumberKardex ()
-		{
+		public ViewResult SerialNumberKardex () {
+
 			ViewBag.Title = Resources.SerialNumberKardex;
 			return View ("Kardex", new DateRange (DateTime.Now, DateTime.Now));
 		}
 
 		[HttpPost]
-		public ActionResult SerialNumberKardex (int warehouse, int product, DateRange dates)
-		{
+		public ActionResult SerialNumberKardex (int warehouse, int product, DateRange dates) {
+
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var balance = from x in LotSerialTracking.Queryable
@@ -498,8 +499,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		#endregion
 
-		public ViewResult CustomerDebt ()
-		{
+		public ViewResult CustomerDebt () {
+
 			ViewBag.EditorField = "customer";
 			ViewBag.EditorTemplate = "CustomerSelector";
 			ViewBag.Title = Resources.CustomerDebt;
@@ -507,8 +508,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult CustomerDebt (int customer, DateRange dates)
-		{
+		public ActionResult CustomerDebt (int customer, DateRange dates) {
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var query = from x in SalesOrder.Queryable
@@ -521,14 +521,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_CustomerDebt", query.ToList ());
 		}
 
-		public ViewResult CustomersReport ()
-		{
+		public ViewResult CustomersReport () {
+
 			return View (new Search<Customer> ());
 		}
 
 		[HttpPost]
-		public ActionResult CustomersReport (Search<Customer> search)
-		{
+		public ActionResult CustomersReport (Search<Customer> search) {
+
 			if (ModelState.IsValid) {
 				search = GetCustomers (search);
 			}
@@ -536,8 +536,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_CustomersReport", search);
 		}
 
-		Search<Customer> GetCustomers (Search<Customer> search)
-		{
+		Search<Customer> GetCustomers (Search<Customer> search) {
+
 			if (string.IsNullOrWhiteSpace (search.Pattern)) {
 				var qry = from x in Customer.Queryable
 					  orderby x.Name
@@ -560,8 +560,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return search;
 		}
 
-		public ViewResult FiscalDocuments ()
-		{
+		public ViewResult FiscalDocuments () {
+
 			ViewBag.EditorField = "taxpayer";
 			ViewBag.EditorTemplate = "TaxpayerSelector";
 			ViewBag.Title = Resources.FiscalDocumentsReport;
@@ -573,8 +573,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult FiscalDocuments (string taxpayer, DateRange dates)
-		{
+		public ActionResult FiscalDocuments (string taxpayer, DateRange dates) {
+
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var query = from x in FiscalDocument.Queryable
@@ -586,8 +586,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_FiscalDocuments", query.ToList ());
 		}
 
-		public ViewResult CustomerSalesOrders ()
-		{
+		public ViewResult CustomerSalesOrders () {
+
 			ViewBag.EditorField = "customer";
 			ViewBag.EditorTemplate = "CustomerSelector";
 			ViewBag.Title = Resources.CustomerSalesOrders;
@@ -595,8 +595,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult CustomerSalesOrders (int customer, DateRange dates)
-		{
+		public ActionResult CustomerSalesOrders (int customer, DateRange dates) {
+
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var query = from x in SalesOrder.Queryable
@@ -609,8 +609,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_CustomerSalesOrders", query.ToList ());
 		}
 
-		public ViewResult ProductSalesByCustomer ()
-		{
+		public ViewResult ProductSalesByCustomer () {
+
 			ViewBag.EditorField = "customer";
 			ViewBag.EditorTemplate = "CustomerSelector";
 			ViewBag.Title = Resources.ProductSalesByCustomer;
@@ -620,8 +620,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		//FIXME: Discount
 		[HttpPost]
-		public ActionResult ProductSalesByCustomer (int customer, DateRange dates)
-		{
+		public ActionResult ProductSalesByCustomer (int customer, DateRange dates) {
+
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var query = from x in SalesOrder.Queryable
@@ -653,8 +653,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_ProductSalesByCustomer", items);
 		}
 
-		public ViewResult ProductSalesByModel ()
-		{
+		public ViewResult ProductSalesByModel () {
+
 			ViewBag.EditorField = "productModel";
 			ViewBag.EditorTemplate = "ProductModelSelector";
 			ViewBag.Title = Resources.ProductSalesByModel;
@@ -663,8 +663,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		//FIXME: Discount
 		[HttpPost]
-		public ActionResult ProductSalesByModel (string productModel, DateRange dates)
-		{
+		public ActionResult ProductSalesByModel (string productModel, DateRange dates) {
+
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var query = from x in SalesOrder.Queryable
@@ -700,8 +700,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_ProductSalesByCategory", items);
 		}
 
-		public ViewResult ProductSalesByBrand ()
-		{
+		public ViewResult ProductSalesByBrand () {
+
 			ViewBag.EditorField = "brand";
 			ViewBag.EditorTemplate = "ProductBrandSelector";
 			ViewBag.Title = Resources.ProductSalesByBrand;
@@ -710,8 +710,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		//FIXME: Discount
 		[HttpPost]
-		public ActionResult ProductSalesByBrand (string brand, DateRange dates)
-		{
+		public ActionResult ProductSalesByBrand (string brand, DateRange dates) {
+
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var query = from x in SalesOrder.Queryable
@@ -747,8 +747,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_ProductSalesByCategory", items);
 		}
 
-		public ViewResult SalesBySalesPerson ()
-		{
+		public ViewResult SalesBySalesPerson () {
+
 			ViewBag.EditorField = "store";
 			ViewBag.EditorTemplate = "StoreSelector";
 			ViewBag.Title = Resources.SalesBySalesPerson;
@@ -760,8 +760,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult SalesBySalesPerson (int store, DateRange dates)
-		{
+		public ActionResult SalesBySalesPerson (int store, DateRange dates) {
+
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			string sql = @"SELECT salesperson SalesPersonId, first_name FirstName, last_name LastName,
@@ -786,8 +786,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_SalesBySalesPerson", items);
 		}
 
-		public ViewResult SalesByCustomer ()
-		{
+		public ViewResult SalesByCustomer () {
+
 			ViewBag.EditorField = "store";
 			ViewBag.EditorTemplate = "StoreSelector";
 			ViewBag.Title = Resources.SalesByCustomer;
@@ -799,8 +799,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult SalesByCustomer (int store, DateRange dates)
-		{
+		public ActionResult SalesByCustomer (int store, DateRange dates) {
+
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			string sql = @"SELECT customer CustomerId, name Customer,
@@ -825,8 +825,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_SalesByCustomer", items);
 		}
 
-		public ViewResult SalesByProduct ()
-		{
+		public ViewResult SalesByProduct () {
+
 			ViewBag.EditorField = "store";
 			ViewBag.EditorTemplate = "StoreSelector";
 			ViewBag.Title = Resources.SalesByProduct;
@@ -838,8 +838,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult SalesByProduct (int store, DateRange dates)
-		{
+		public ActionResult SalesByProduct (int store, DateRange dates) {
+
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			string sql = @"SELECT product ProductId, p.model Model, p.name Product,
@@ -864,8 +864,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_SalesByProduct", items);
 		}
 
-		public ViewResult SalesPersonOrders ()
-		{
+		public ViewResult SalesPersonOrders () {
+
 			ViewBag.EditorField = "employee";
 			ViewBag.EditorTemplate = "EmployeeSelector";
 			ViewBag.Title = Resources.SalesPersonOrders;
@@ -873,8 +873,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult SalesPersonOrders (int employee, DateRange dates)
-		{
+		public ActionResult SalesPersonOrders (int employee, DateRange dates) {
+
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			string sql = @"SELECT sales_order SalesOrder, date Date, name Customer,
@@ -910,8 +910,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_SalesPersonOrders", items);
 		}
 
-		public ViewResult SalesOrderSummary ()
-		{
+		public ViewResult SalesOrderSummary () {
+
 			ViewBag.EditorField = "store";
 			ViewBag.EditorTemplate = "StoreSelector";
 			ViewBag.Title = Resources.SalesOrderSummary;
@@ -923,8 +923,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult SalesOrderSummary (int store, DateRange dates)
-		{
+		public ActionResult SalesOrderSummary (int store, DateRange dates) {
+
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			string sql = @"SELECT date Date, CONCAT(first_name, ' ', last_name) SalesPerson, sales_order SalesOrder, m.due_date DueDate, c.name Customer,
@@ -965,8 +965,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_SalesOrderSummary", items);
 		}
 
-		public ViewResult ProductSalesBySalesPerson ()
-		{
+		public ViewResult ProductSalesBySalesPerson () {
+
 			ViewBag.EditorField = "employee";
 			ViewBag.EditorTemplate = "EmployeeSelector";
 			ViewBag.Title = Resources.ProductSalesBySalesPerson;
@@ -974,8 +974,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult ProductSalesBySalesPerson (int employee, DateRange dates)
-		{
+		public ActionResult ProductSalesBySalesPerson (int employee, DateRange dates) {
+
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name,
@@ -1010,8 +1010,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_ProductSalesBySalesPerson", items);
 		}
 
-		public ViewResult ProductSalesBySalesPersonAndLabel ()
-		{
+		public ViewResult ProductSalesBySalesPersonAndLabel () {
+
 			ViewBag.EditorField = "label";
 			ViewBag.EditorTemplate = "LabelSelector";
 			ViewBag.Title = Resources.ProductSalesBySalesPersonAndLabel;
@@ -1019,8 +1019,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult ProductSalesBySalesPersonAndLabel (int employee, int? label, DateRange dates)
-		{
+		public ActionResult ProductSalesBySalesPersonAndLabel (int employee, int? label, DateRange dates) {
+
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name,
@@ -1067,8 +1067,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_ProductSalesBySalesPerson", items);
 		}
 
-		public ViewResult ProductSalesBySalesPersonAndBrand ()
-		{
+		public ViewResult ProductSalesBySalesPersonAndBrand () {
+
 			ViewBag.EditorField = "brand";
 			ViewBag.EditorTemplate = "ProductBrandSelector";
 			ViewBag.Title = Resources.ProductSalesBySalesPersonAndBrand;
@@ -1076,8 +1076,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult ProductSalesBySalesPersonAndBrand (int employee, string brand, DateRange dates)
-		{
+		public ActionResult ProductSalesBySalesPersonAndBrand (int employee, string brand, DateRange dates) {
+
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name,
@@ -1122,8 +1122,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_ProductSalesBySalesPerson", items);
 		}
 
-		public ViewResult ProductSalesBySalesPersonAndModel ()
-		{
+		public ViewResult ProductSalesBySalesPersonAndModel () {
+
 			ViewBag.EditorField = "productModel";
 			ViewBag.EditorTemplate = "ProductModelSelector";
 			ViewBag.Title = Resources.ProductSalesBySalesPersonAndModel;
@@ -1131,8 +1131,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult ProductSalesBySalesPersonAndModel (int employee, string productModel, DateRange dates)
-		{
+		public ActionResult ProductSalesBySalesPersonAndModel (int employee, string productModel, DateRange dates) {
+
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name,
@@ -1177,8 +1177,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_ProductSalesBySalesPerson", items);
 		}
 
-		public ViewResult SalesPersonOrdersAndRefunds ()
-		{
+		public ViewResult SalesPersonOrdersAndRefunds () {
+
 			ViewBag.EditorField = "employee";
 			ViewBag.EditorTemplate = "EmployeeSelector";
 			ViewBag.Title = Resources.SalesPersonOrdersAndRefunds;
@@ -1186,8 +1186,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult SalesPersonOrdersAndRefunds (int employee, DateRange dates)
-		{
+		public ActionResult SalesPersonOrdersAndRefunds (int employee, DateRange dates) {
+
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			string sql = @"SELECT sales_order SalesOrder, 0 Refund, date Date, name Customer,
@@ -1260,9 +1260,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_SalesPersonOrdersAndRefunds", items);
 		}
 
-		public ViewResult ProductsBySupplier ()
-		{
-
+		public ViewResult ProductsBySupplier () {
 
 			ViewBag.EditorField = "supplier";
 			ViewBag.EditorTemplate = "SupplierSelector";
@@ -1271,8 +1269,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult ProductsBySupplier (string supplier)
-		{
+		public ActionResult ProductsBySupplier (string supplier) {
 
 			String sql = @" SELECT 	s.supplier_id SupplierId, s.code SupplierCode, 
                             s.name SupplierName, s.comment SupplierComment, 
@@ -1309,20 +1306,20 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_ProductsBySupplierReport", items);
 		}
 
-        public ViewResult ProductsOrderAndRefundsBySalesPerson()
-        {
-            ViewBag.EditorField = "employee";
-            ViewBag.EditorTemplate = "EmployeeSelector";
-            ViewBag.Title = Resources.ProductsOrdersAndRefundsBySalesPerson;
-            return View("SummaryReport", new DateRange());
-        }
+		public ViewResult ProductsOrderAndRefundsBySalesPerson () {
 
-        [HttpPost]
-        public ActionResult ProductsOrderAndRefundsBySalesPerson(int employee, DateRange dates)
-        {
-            var start = dates.StartDate.Date;
-            var end = dates.EndDate.Date.AddDays(1).AddSeconds(-1);
-            string sql = @"SELECT sales_order SalesOrder, 0 Refund, date Date, c.name Customer, product_name Product, 
+			ViewBag.EditorField = "employee";
+			ViewBag.EditorTemplate = "EmployeeSelector";
+			ViewBag.Title = Resources.ProductsOrdersAndRefundsBySalesPerson;
+			return View ("SummaryReport", new DateRange ());
+		}
+
+		[HttpPost]
+		public ActionResult ProductsOrderAndRefundsBySalesPerson (int employee, DateRange dates) {
+
+			var start = dates.StartDate.Date;
+			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			string sql = @"SELECT sales_order SalesOrder, 0 Refund, date Date, c.name Customer, product_name Product, 
                             d.quantity Quantity, product_code Code, model Model,
 							GROUP_CONCAT(DISTINCT (SELECT GROUP_CONCAT(DISTINCT f.batch, f.serial SEPARATOR ' ')
 								FROM fiscal_document_detail fd LEFT JOIN fiscal_document f ON fd.document = f.fiscal_document_id
@@ -1338,121 +1335,116 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
                             GROUP BY sales_order_detail_id";
 
 
-            var orders = (IList<dynamic>)ActiveRecordMediator<Product>.Execute(delegate (ISession session, object instance)
-            {
-                var query = session.CreateSQLQuery(sql);
+			var orders = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
 
-                query.AddScalar("SalesOrder", NHibernateUtil.Int32);
-                query.AddScalar("Product", NHibernateUtil.String);
-                query.AddScalar("Quantity", NHibernateUtil.Int32);
-                query.AddScalar("Refund", NHibernateUtil.Int32);
-                query.AddScalar("Code", NHibernateUtil.String);
-                query.AddScalar("Model", NHibernateUtil.String);
-                query.AddScalar("Date", NHibernateUtil.DateTime);
-                query.AddScalar("Customer", NHibernateUtil.String);
-                query.AddScalar("Invoices", NHibernateUtil.String);
-                query.AddScalar("Subtotal", NHibernateUtil.Decimal);
-                query.AddScalar("Total", NHibernateUtil.Decimal);
+				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
+				query.AddScalar ("Product", NHibernateUtil.String);
+				query.AddScalar ("Quantity", NHibernateUtil.Int32);
+				query.AddScalar ("Refund", NHibernateUtil.Int32);
+				query.AddScalar ("Code", NHibernateUtil.String);
+				query.AddScalar ("Model", NHibernateUtil.String);
+				query.AddScalar ("Date", NHibernateUtil.DateTime);
+				query.AddScalar ("Customer", NHibernateUtil.String);
+				query.AddScalar ("Invoices", NHibernateUtil.String);
+				query.AddScalar ("Subtotal", NHibernateUtil.Decimal);
+				query.AddScalar ("Total", NHibernateUtil.Decimal);
 
-                query.SetDateTime("start", start);
-                query.SetDateTime("end", end);
-                query.SetInt32("employee", employee);
+				query.SetDateTime ("start", start);
+				query.SetDateTime ("end", end);
+				query.SetInt32 ("employee", employee);
 
-                return query.DynamicList();
-            }, null);
+				return query.DynamicList ();
+			}, null);
 
-            sql = @"SELECT sales_order SalesOrder, customer_refund Refund, s.date Date, c.name Customer, product_name Product, 
-                        d.quantity Quantity, product_code Code, model Model,
+			sql =  @"SELECT sales_order SalesOrder, customer_refund Refund, s.date Date, c.name Customer, product_name Product, 
+				d.quantity Quantity, product_code Code, model Model,
 						GROUP_CONCAT(DISTINCT (SELECT GROUP_CONCAT(DISTINCT f.batch, f.serial SEPARATOR ' ')
-							FROM fiscal_document_detail fd LEFT JOIN fiscal_document f ON fd.document = f.fiscal_document_id
-							WHERE fd.order_detail = d.sales_order_detail) SEPARATOR ' ') Invoices,
-						-SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) / IF(d.tax_included = 0, 1, 1 + d.tax_rate), 2)) Subtotal,
-						-SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) Total
+						FROM fiscal_document_detail fd LEFT JOIN fiscal_document f ON fd.document = f.fiscal_document_id
+						WHERE fd.order_detail = d.sales_order_detail) SEPARATOR ' ') Invoices,
+					-SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) / IF(d.tax_included = 0, 1, 1 + d.tax_rate), 2)) Subtotal,
+					-SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) Total
 					FROM customer_refund m
 					INNER JOIN sales_order s ON m.sales_order = s.sales_order_id
 					INNER JOIN customer_refund_detail d ON m.customer_refund_id = d.customer_refund
 					INNER JOIN customer c ON m.customer = c.customer_id
-                    INNER JOIN product p ON p.product_id = d.product
+					INNER JOIN product p ON p.product_id = d.product
 					WHERE m.sales_person = :employee AND m.completed = 1 AND m.cancelled = 0 AND
 						s.date >= :start AND s.date <= :end
                             GROUP BY customer_refund_detail_id";
 
-            var refunds = (IList<dynamic>)ActiveRecordMediator<Product>.Execute(delegate (ISession session, object instance)
-            {
-                var query = session.CreateSQLQuery(sql);
+			var refunds = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
 
-                query.AddScalar("SalesOrder", NHibernateUtil.Int32);
-                query.AddScalar("Quantity", NHibernateUtil.Int32);
-                query.AddScalar("Product", NHibernateUtil.String);
-                query.AddScalar("Refund", NHibernateUtil.Int32);
-                query.AddScalar("Code", NHibernateUtil.String);
-                query.AddScalar("Model", NHibernateUtil.String);
-                query.AddScalar("Date", NHibernateUtil.DateTime);
-                query.AddScalar("Customer", NHibernateUtil.String);
-                query.AddScalar("Invoices", NHibernateUtil.String);
-                query.AddScalar("Subtotal", NHibernateUtil.Decimal);
-                query.AddScalar("Total", NHibernateUtil.Decimal);
+				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
+				query.AddScalar ("Quantity", NHibernateUtil.Int32);
+				query.AddScalar ("Product", NHibernateUtil.String);
+				query.AddScalar ("Refund", NHibernateUtil.Int32);
+				query.AddScalar ("Code", NHibernateUtil.String);
+				query.AddScalar ("Model", NHibernateUtil.String);
+				query.AddScalar ("Date", NHibernateUtil.DateTime);
+				query.AddScalar ("Customer", NHibernateUtil.String);
+				query.AddScalar ("Invoices", NHibernateUtil.String);
+				query.AddScalar ("Subtotal", NHibernateUtil.Decimal);
+				query.AddScalar ("Total", NHibernateUtil.Decimal);
 
-                query.SetDateTime("start", start);
-                query.SetDateTime("end", end);
-                query.SetInt32("employee", employee);
+				query.SetDateTime ("start", start);
+				query.SetDateTime ("end", end);
+				query.SetInt32 ("employee", employee);
 
-                return query.DynamicList();
-            }, null);
+				return query.DynamicList ();
+			}, null);
 
-            var items = orders.ToList();
+			var items = orders.ToList ();
 
-            items.AddRange(refunds.ToList());
+			items.AddRange (refunds.ToList ());
 
-            return PartialView("_ProductsOrderAndRefundsBySalesPerson", items);
-        }
+			return PartialView ("_ProductsOrderAndRefundsBySalesPerson", items);
+		}
 
-        public ViewResult PrintReceivedPayments(int store, DateTime start, DateTime end)
-        {
+		public ViewResult PrintReceivedPayments (int store, DateTime start, DateTime end) {
 
-            var qry = SalesOrderPayment.Queryable.Where(x => x.SalesOrder.IsPaid && x.Payment.Date > start.Date
-                                                                && x.Payment.Date < end.Date.AddDays(1).AddMilliseconds(-1) 
-                                                                && x.Amount > 0 && x.SalesOrder.Store.Id == store)
-                                            .Select(y => new ReceivedPayment
-                                            {
-                                                Date = y.Payment.Date,
-                                                Customer = y.Payment.Customer,
-                                                Amount = y.Amount,
-                                                Method = y.Payment.Method,
-                                                Serial = y.Payment.Serial,
-                                                SalesOrder = y.SalesOrder.Id
-                                            }).ToList();
+			var qry = SalesOrderPayment.Queryable.Where (x => x.SalesOrder.IsPaid && x.Payment.Date > start.Date
+									     && x.Payment.Date < end.Date.AddDays (1).AddMilliseconds (-1)
+									     && x.Amount > 0 && x.SalesOrder.Store.Id == store)
+							.Select (y => new ReceivedPayment {
+								Date = y.Payment.Date,
+								Customer = y.Payment.Customer,
+								Amount = y.Amount,
+								Method = y.Payment.Method,
+								Serial = y.Payment.Serial,
+								SalesOrder = y.SalesOrder.Id
+							}).ToList ();
 
-            return View("_PdfReceivedPayments", qry);
-        }
+			return View ("_PdfReceivedPayments", qry);
+		}
 
-        public ViewResult ReceivedPayments() {
+		public ViewResult ReceivedPayments () {
 
-            return View(new DateRange { StartDate = DateTime.Now, EndDate = DateTime.Now});
-        }
+			return View (new DateRange { StartDate = DateTime.Now, EndDate = DateTime.Now });
+		}
 
-        [HttpPost]
-        public ActionResult ReceivedPayments(int store, DateRange dates) {
+		[HttpPost]
+		public ActionResult ReceivedPayments (int store, DateRange dates) {
 
-            var query = SalesOrderPayment.Queryable.Where(x => x.SalesOrder.IsPaid && x.Payment.Date > dates.StartDate
-                                                                && x.Payment.Date < dates.EndDate.Date.AddDays(1).AddMilliseconds(-1) 
-                                                                && x.Amount > 0 && x.SalesOrder.Store.Id == store)
-                                            .Select(y => new ReceivedPayment
-                                            {
-                                                Date = y.Payment.Date,
-                                                Customer = y.Payment.Customer,
-                                                Amount = y.Amount,
-                                                Method = y.Payment.Method,
-                                                Serial = y.Payment.Serial,
-                                                SalesOrder = y.SalesOrder.Id
-                                            }).ToList();
+			var query = SalesOrderPayment.Queryable.Where (x => x.SalesOrder.IsPaid && x.Payment.Date > dates.StartDate
+									     && x.Payment.Date < dates.EndDate.Date.AddDays (1).AddMilliseconds (-1)
+									     && x.Amount > 0 && x.SalesOrder.Store.Id == store)
+							.Select (y => new ReceivedPayment {
+								Date = y.Payment.Date,
+								Customer = y.Payment.Customer,
+								Amount = y.Amount,
+								Method = y.Payment.Method,
+								Serial = y.Payment.Serial,
+								SalesOrder = y.SalesOrder.Id
+							}).ToList ();
 
-            return PartialView("_ReceivedPayments", query);
-        }
+			return PartialView ("_ReceivedPayments", query);
+		}
 
-        #region Helpers
+		#region Helpers
 
-        void AnalyzeABC (IEnumerable<SummaryItem> items)
+		void AnalyzeABC (IEnumerable<SummaryItem> items)
 		{
 			decimal total = items.Sum (x => x.Total);
 			decimal sum = 0;

@@ -28,16 +28,10 @@
 //
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
-using System.Web.Mvc;
-using System.Web.Security;
-using Mictlanix.BE.Model.Validation;
 using Mictlanix.BE.Model;
 
-namespace Mictlanix.BE.Web.Models
-{
+namespace Mictlanix.BE.Web.Models {
 	public class ReceivedPayment
 	{
 		public ReceivedPayment()
