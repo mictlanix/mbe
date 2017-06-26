@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mictlanix.BE.Model
 {
-    [ActiveRecord("checks", Lazy = true)]
+	[ActiveRecord("checks", Lazy = true)]
     public class Check: ActiveRecordLinqBase<Check>
     {
         [PrimaryKey(PrimaryKeyType.Identity, "check_id")]
@@ -24,7 +20,7 @@ namespace Mictlanix.BE.Model
         public virtual int Enroll_Number { get; set; }
         
         [Property("status")]
-        public virtual String Status { get; set; }
+        public virtual string Status { get; set; }
 
         #region Override Base Methods
 
