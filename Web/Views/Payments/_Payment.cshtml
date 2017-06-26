@@ -16,10 +16,23 @@
         <br/>
         <label>@Resources.Type:</label>
         <span class="text">@Model.Payment.Method.GetDisplayName()</span>
+		  <br />
         @if (!string.IsNullOrEmpty (Model.Payment.Reference)) {
             <label>@Resources.Reference:</label>
             <span class="text">@Model.Payment.Reference</span>
+				<br />
         }
+
+		 @if (Model.Payment.ExtraCharge != null) {
+					<label>@Resources.Bank</label>
+					<span class="text">@Model.Payment.ExtraCharge.Name</span><br />
+					<label>Cargo en Tarjeta:</label>
+					<span class="text"><b>@string.Format("{0:c}", Model.Payment.Amount * (Model.Payment.Commission + 1))</b></span><br />
+					<label>Pagos mensuales:</label>
+					<span class="text">@Model.Payment.ExtraCharge.NumberOfPayments pagos mensuales de @string.Format("{0:c}",(Model.Payment.Amount/Model.Payment.ExtraCharge.NumberOfPayments)*(Model.Payment.ExtraCharge.BankPaymentsCharge + 1)) c/u.</span>
+		 }
+
+
     </div>
 </li>
 <script type='text/javascript'>

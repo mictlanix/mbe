@@ -105,8 +105,8 @@ namespace Mictlanix.BE.Model {
 		[UIHint ("EmployeeSelector")]
 		public virtual int SalesPersonId { get; set; }
 
-		[BelongsTo ("salesperson")]
-		[Display (Name = "SalesPerson", ResourceType = typeof (Resources))]
+		[BelongsTo("salesperson")]
+		[Display(Name = "SalesPerson", ResourceType = typeof(Resources))]
 		public virtual Employee SalesPerson { get; set; }
 
 		[HasAndBelongsToMany (typeof (Address), Table = "customer_address", ColumnKey = "customer", ColumnRef = "address", Lazy = true)]

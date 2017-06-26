@@ -29,8 +29,7 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Mictlanix.BE.Model
-{
+namespace Mictlanix.BE.Model {
 	public enum SystemObjects : int {
 		[Display (Name = "DisplayName_Products", ResourceType = typeof (Resources))]
 		Products = 0,
@@ -182,21 +181,23 @@ namespace Mictlanix.BE.Model
 		ProductsMerge = 73,
 		[Display (Name = "PhysicalCountAdjustment", ResourceType = typeof (Resources))]
 		PhysicalCountAdjustment = 74,
-      [Display(Name = "ProductsBySupplier", ResourceType = typeof(Resources))]
-      ProductsBySupplierReport = 75,
-      //[Display(Name = "EmployeeAttendance", ResourceType = typeof(Resources))]
-      //EmployeeAttendance = 76,
-      //[Display(Name = "EmployeeSchedules", ResourceType = typeof(Resources))]
-      //EmployeeSchedules = 77,
-      //[Display(Name = "SynchronizeClocks", ResourceType = typeof(Resources))]
-      //SynchronizeClocks = 78,
-      [Display(Name = "ProductsOrdersAndRefundsBySalesPerson", ResourceType = typeof(Resources))]
-      ProductsOrdersAndRefundsBySalesPerson = 79,
-		[Display(Name = "PendantDeliveries", ResourceType = typeof(Resources))]
+		[Display (Name = "ProductsBySupplier", ResourceType = typeof (Resources))]
+		ProductsBySupplierReport = 75,
+		//[Display(Name = "EmployeeAttendance", ResourceType = typeof(Resources))]
+		//EmployeeAttendance = 76,
+		//[Display(Name = "EmployeeSchedules", ResourceType = typeof(Resources))]
+		//EmployeeSchedules = 77,
+		//[Display(Name = "SynchronizeClocks", ResourceType = typeof(Resources))]
+		//SynchronizeClocks = 78,
+		[Display (Name = "ProductsOrdersAndRefundsBySalesPerson", ResourceType = typeof (Resources))]
+		ProductsOrdersAndRefundsBySalesPerson = 79,
+		[Display (Name = "PendantDeliveries", ResourceType = typeof (Resources))]
 		PendantDeliveries = 80,
-		[Display(Name = "Expenses", ResourceType = typeof(Resources))]
+		[Display (Name = "Expenses", ResourceType = typeof (Resources))]
 		Expenses = 81,
-		[Display(Name = "ExpenseVoucher", ResourceType = typeof(Resources))]
-		ExpenseVoucher = 82
+		[Display (Name = "ExpenseVoucher", ResourceType = typeof (Resources))]
+		ExpenseVoucher = 82,
+		[Display (Name = "CreditPayments", ResourceType = typeof (Resources))]
+		CreditPayments = 83,
 	}
 }
