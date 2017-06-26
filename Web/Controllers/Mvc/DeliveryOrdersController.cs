@@ -154,7 +154,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
 
-				foreach (var detail in entity.Details) {
+				foreach (var detail in entity.Details.Where(x => GetQuantityDeliveredBySalesOrderDetail(x) < x.Quantity)) {
 					var deliverydetail = new DeliveryOrderDetail {
 						DeliveryOrder = item,
 						OrderDetail = detail,
@@ -405,6 +405,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var entity = DeliveryOrderDetail.Find (id);
 
+			var product = entity.Product;
+
+			if (product.UnitOfMeasurement.Contains ("PIEZA")) {
+				value = (int) value;
+			}
+
 			if (entity.DeliveryOrder.IsCompleted || entity.DeliveryOrder.IsCancelled) {
 				Response.StatusCode = 400;
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
@@ -627,21 +633,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 
 			var query = DeliveryOrderDetail.Queryable.Where (x => x.OrderDetail == detail && x.DeliveryOrder.IsCompleted
-						&& x.DeliveryOrder.IsDelivered && !x.DeliveryOrder.IsCancelled).ToList ();
+						&& !x.DeliveryOrder.IsCancelled).Select(x=> x.Quantity).ToList ();
 
-			return query.Sum (x => x.Quantity);
+			return query.Count() > 0 ? query.Sum () : 0m;
 
 		}
 
 		decimal GetQuantityDelivered (int salesOrderDetailId)
 		{
-
-			var query = from x in DeliveryOrderDetail.Queryable
-				    where x.OrderDetail.Id == salesOrderDetailId && !x.DeliveryOrder.IsCancelled
-					&& x.DeliveryOrder.IsDelivered
-				    select x.Quantity;
-
-			return query.Count () > 0 ? query.ToList ().Sum () : 0m;
+			var query = SalesOrderDetail.Find(salesOrderDetailId);
+			return GetQuantityDeliveredBySalesOrderDetail (query);
 		}
 	}
 }

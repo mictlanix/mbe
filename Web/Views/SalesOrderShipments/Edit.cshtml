@@ -27,7 +27,7 @@
 </div>
 <div class='pull-right'>
 	@Html.ActionLink(Resources.Print, "Print", new { id = Model.Id }, new { @class = "button icon print", target = "_blank" })
-	@using (Html.BeginForm("Confirm", "DeliveryOrders", new { id =  Model.Id }, FormMethod.Post, new { style = "display:inline" })) {
+	@using (Html.BeginForm("Confirm", "SalesOrderShipments", new { id =  Model.Id }, FormMethod.Post, new { style = "display:inline" })) {
 		<button type="submit" class="icon delivery">@Resources.Delivered</button>
     }
 </div>
