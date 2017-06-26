@@ -87,6 +87,10 @@
     <Compile Include="Constants\SystemObjects.cs" />
     <Compile Include="Constants\AccessRight.cs" />
     <Compile Include="EmployeeSchedule.cs" />
+    <Compile Include="Expense.cs" />
+    <Compile Include="ExpenseVoucher.cs" />
+    <Compile Include="ExpenseVoucherDetail.cs" />
+    <Compile Include="PaymentMethodCharge.cs" />
     <Compile Include="SalesQuote.cs" />
     <Compile Include="SalesQuoteDetail.cs" />
     <Compile Include="Store.cs" />

@@ -38,9 +38,18 @@
 		    	</div>
 				<div class="col-xs-12">
 			        <div class="btn-group">
-			        @foreach (var item in WebConfig.CashierPaymentOptions) {
+			        @foreach (var item in WebConfig.CashierPaymentOptions.Where( x => !PaymentMethodCharge.Queryable.Any(y => y.PaymentMethod == x))) {
 			        	<button class="pay btn btn-default" type="button" data-value='@((int)item)'>@item.GetDisplayName()</button>
 			        }
+					</div>
+				</div>
+				</div>
+			 <div class="form-group">
+				<div class="col-xs-12">
+					<div class="btn-group">
+						@foreach (var item in PaymentMethodCharge.Queryable.Where(x => x.Warehouse == WebConfig.PointOfSale.Warehouse).ToList()) {
+								  <button class="pay btn btn-default" type="button" data-value="@((int)item.PaymentMethod)" data-charge="@item.Id">@item.Name (@Html.DisplayFor(x => item.CommissionByManage))</button>
+						}
 					</div>
 				</div>
 			</div>
@@ -61,9 +70,10 @@ $(function () {
     $(".pay").click(function () {
         var type = $(this).data('value');
         var amount = $("#amount").val();
-        var reference = $("#reference").val();
+		  var reference = $("#reference").val();
+		  var charge = $(this).data('charge');
 
-        $.post('@Url.Action("AddPayment", new { id = Model.Id })', { 'type': type, 'amount': amount, 'reference': reference }, function (detail) {
+		  $.post('@Url.Action("AddPayment", new { id = Model.Id })', { 'type': type, 'amount': amount, 'reference': reference, 'charge': charge }, function (detail) {
             $.get('@Url.Action("GetPayment")/' + detail.id, function (data) {
                 $('#items').append(data);
                 $("#amount,#reference").val('');
