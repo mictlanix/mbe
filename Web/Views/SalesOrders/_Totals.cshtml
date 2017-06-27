@@ -17,7 +17,7 @@
 <ul class='labeled-frames'>
     <li>
     	<span class='caption'>@Resources.Subtotal</span>
-    	<span class='value'>@string.Format("{0:C}", Model.Details.Count()>0?Model.Details.Sum(x => (x.Price * (1 - x.DiscountRate)) / (1 + x.TaxRate) * x.Quantity):0.0m) @Html.DisplayFor(x => x.Currency)</span>
+    	<span class='value'>@Html.DisplayFor(x => x.Subtotal) @Html.DisplayFor(x => x.Currency)</span>
     @if (Model.Currency != WebConfig.BaseCurrency) {
         <span class='value muted'>(@Html.DisplayFor(x => x.SubtotalEx) @WebConfig.BaseCurrency)</span>
     }
@@ -33,7 +33,7 @@
 }
     <li>
     	<span class='caption'>@Resources.Taxes</span>
-        <span class='value'>@string.Format("{0:C}", Model.Details.Count () > 0 ? Model.Details.Sum (x => (x.Price * (1 - x.DiscountRate)) * x.TaxRate / (1 + x.TaxRate) * x.Quantity) : 0.0m)  @Html.DisplayFor(x => x.Currency)</span>
+        <span class='value'>@Html.DisplayFor(x => x.Taxes)  @Html.DisplayFor(x => x.Currency)</span>
     @if (Model.Currency != WebConfig.BaseCurrency) {
         <span class='value muted'>(@Html.DisplayFor(x => x.TaxesEx) (@WebConfig.BaseCurrency)</span>
     }
