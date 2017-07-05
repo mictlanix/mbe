@@ -38,6 +38,7 @@ using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
+using NHibernate;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
@@ -366,6 +367,52 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				   select new { id = y.Email, name = string.Format ("{1} <{0}>", y.Email, y.Name) };
 
 			return Json (qry1.ToList ().Union (qry2.ToList ()).ToList (), JsonRequestBehavior.AllowGet);
+		}
+
+		public ActionResult Merge ()
+		{
+			return View ();
+		}
+
+		[HttpPost]
+		public ActionResult Merge (int customer, int duplicate)
+		{
+			var prod = Customer.TryFind (customer);
+			var dup = Customer.TryFind (duplicate);
+			string sql = @"	UPDATE customer_address SET customer = :customer WHERE customer = :duplicate;
+					UPDATE customer_contact SET customer = :customer WHERE customer = :duplicate;
+					UPDATE customer_discount SET customer = :customer WHERE customer = :duplicate;
+					UPDATE customer_payment SET customer = :customer WHERE customer = :duplicate;
+					UPDATE customer_refund SET customer = :customer WHERE customer = :duplicate;
+					UPDATE customer_taxpayer SET customer = :customer WHERE customer = :duplicate;
+					UPDATE delivery_order SET customer = :customer WHERE customer = :duplicate;
+					UPDATE fiscal_document SET customer = :customer WHERE customer = :duplicate;
+					UPDATE sales_order SET customer = :customer WHERE customer = :duplicate;
+					UPDATE sales_quote SET customer = :customer WHERE customer = :duplicate;
+					UPDATE tech_service_request SET customer = :customer WHERE customer = :duplicate;
+					DELETE FROM customer WHERE customer_id = :duplicate;";
+
+			ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+				int ret;
+
+				using (var tx = session.BeginTransaction ()) {
+					var query = session.CreateSQLQuery (sql);
+
+					query.AddScalar ("customer", NHibernateUtil.Int32);
+					query.AddScalar ("duplicate", NHibernateUtil.Int32);
+
+					query.SetInt32 ("customer", customer);
+					query.SetInt32 ("duplicate", duplicate);
+
+					ret = query.ExecuteUpdate ();
+
+					tx.Commit ();
+				}
+
+				return ret;
+			}, null);
+
+			return View (new Pair<Customer, Customer> { First = prod, Second = dup });
 		}
 	}
 }
