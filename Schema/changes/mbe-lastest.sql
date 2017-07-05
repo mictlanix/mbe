@@ -323,25 +323,24 @@ ALTER TABLE supplier_return_detail
 	CHANGE COLUMN discount discount DECIMAL(9,8) NOT NULL;	
 	
 
-CREATE TABLE `payment_method_extra_charge` (
-	`id` INT(11) NOT NULL AUTO_INCREMENT,
-	`warehouse_id` INT(11) NOT NULL,
-	`name` VARCHAR(50) NOT NULL,
-	`months` TINYINT(4) NOT NULL DEFAULT '1',
+CREATE TABLE `payment_method_charge` (
+	`payment_method_charge_id` INT(11) NOT NULL AUTO_INCREMENT,
+	`warehouse` INT(11) NOT NULL,
+	`name` VARCHAR(50) NOT NULL COLLATE 'utf8_unicode_ci',
+	`number_of_payments` TINYINT(4) NOT NULL DEFAULT '1',
 	`bank_payments_charge` DECIMAL(10,3) NOT NULL,
 	`payment_method` INT(11) NOT NULL,
 	`commission` DECIMAL(10,3) NOT NULL,
-	`description` VARCHAR(200) NOT NULL,
 	`enabled` TINYINT(1) NOT NULL DEFAULT '1',
-	PRIMARY KEY (`id`),
-	INDEX `FK__warehouse` (`warehouse_id`),
-	CONSTRAINT `FK__warehouse` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouse` (`warehouse_id`)
+	PRIMARY KEY (`payment_method_charge_id`),
+	INDEX `FK__warehouse` (`warehouse`),
+	CONSTRAINT `FK__warehouse` FOREIGN KEY (`warehouse`) REFERENCES `warehouse` (`warehouse_id`)
 );
 
 ALTER TABLE `customer_payment`
 	ADD COLUMN `commission` DECIMAL(10,4) NULL AFTER `method`,
 	ADD COLUMN `payment_charge` INT(11) NULL AFTER `commission`,
-	ADD CONSTRAINT `customer_payment_charge_fk` FOREIGN KEY (`payment_charge`) REFERENCES `payment_method_extra_charge` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION;
+	ADD CONSTRAINT `customer_payment_charge_fk` FOREIGN KEY (`payment_charge`) REFERENCES `payment_method_charge` (`payment_method_charge_id`) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
