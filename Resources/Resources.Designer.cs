@@ -1132,6 +1132,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Fusión de Clientes.
+        /// </summary>
+        public static string CustomersMerge {
+            get {
+                return ResourceManager.GetString("CustomersMerge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Reporte de Clientes.
         /// </summary>
         public static string CustomersReport {
