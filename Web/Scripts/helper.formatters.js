@@ -41,3 +41,15 @@ function ExpenseFormatter(item) {
 
 	return fmt;
 }
+
+function CustomerFormatter(item) {
+	 
+	var fmt = "<li title='" + item.name + "'>" +
+		"<div style='margin:6px 0 0 52px;height:45px;'>" +
+		"<div style='font-weight:bold;overflow:hidden;text-overflow:ellipsis;white-space:nowrap'>" + item.name + "</div>" +
+		"<span>Código: " + item.code + "</span>" +
+		"</div>" +
+		"</li>";
+
+	return fmt;
+}
