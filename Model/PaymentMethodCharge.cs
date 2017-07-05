@@ -7,7 +7,7 @@ namespace Mictlanix.BE.Model
 	[ActiveRecord("payment_method_charge")]
 	public class PaymentMethodCharge : ActiveRecordLinqBase<PaymentMethodCharge>
 	{
-		[PrimaryKey(PrimaryKeyType.Identity, "id_payment_method_charge")]
+		[PrimaryKey(PrimaryKeyType.Identity, "payment_method_charge_id")]
 		public virtual int Id { get; set; }
 
 		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
@@ -22,7 +22,7 @@ namespace Mictlanix.BE.Model
 		[Property("name")]
 		public virtual string Name { get; set; }
 
-		[Property("months")]
+		[Property("number_of_payments")]
 		public virtual int NumberOfPayments { get; set; }
 
 		[Property("bank_payments_charge")]

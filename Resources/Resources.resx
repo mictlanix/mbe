@@ -2319,4 +2319,7 @@ Gracias por utilizar nuestros servicios.
   <data name="MethodPaymentOptions" xml:space="preserve">
     <value>Opciones en Métodos de Pago</value>
   </data>
+  <data name="CustomersMerge" xml:space="preserve">
+    <value>Fusión de Clientes</value>
+  </data>
 </root>
