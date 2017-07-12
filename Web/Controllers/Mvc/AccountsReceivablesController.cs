@@ -52,7 +52,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Index (int? customer)
 		{
 			string sql1 = @"SELECT m.date Date, d.sales_order SalesOrder, m.due_date DueDate, c.name Customer,
-						GROUP_CONCAT(DISTINCT (SELECT GROUP_CONCAT(DISTINCT f.batch, f.serial SEPARATOR ' ')
+						GROUP_CONCAT(DISTINCT (SELECT GROUP_CONCAT(DISTINCT f.batch, LPAD(f.serial, 6, '0') SEPARATOR ' ')
 							FROM fiscal_document_detail fd LEFT JOIN fiscal_document f ON fd.document = f.fiscal_document_id
 							WHERE fd.order_detail = d.sales_order_detail_id) SEPARATOR ' ') Invoices,
 						SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) TotalEx,
