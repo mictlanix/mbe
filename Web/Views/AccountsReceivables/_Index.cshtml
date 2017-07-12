@@ -26,10 +26,12 @@
 			@foreach (var item in g) {
 				<tr>
 					<td class='date'>@item.DueDate.ToString("yyyy-MM-dd")</td>
-					<td class='number'>@item.SalesOrder</td>
+					<td class='number'>
+				        <a href='@Url.Action("View", "SalesOrders", new { id = item.SalesOrder })' target='_blank'>@item.SalesOrder.ToString("D8")</a>
+			        </td>
 					<td class='date'>@item.Date.ToString("yyyy-MM-dd")</td>
 					<td class='center' style='word-wrap:break-word'>@item.Invoices</td>
-					<td>@item.Customer</td>
+					<td class='fill'>@item.Customer</td>
 					<td class='currency'>@item.Total.ToString("c")</td>
 					<td class='currency'>@item.Refunds.ToString("c")</td>
 					<td class='currency'>@item.Payments.ToString("c")</td>
