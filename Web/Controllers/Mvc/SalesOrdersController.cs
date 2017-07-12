@@ -316,8 +316,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 				if (item.SalesPerson == null) {
 					entity.SalesPerson = CurrentUser.Employee;
-				}
-				else {
+				} else {
 					entity.SalesPerson = item.SalesPerson;
 				}
 
@@ -848,7 +847,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			success = decimal.TryParse (value.TrimEnd (new char [] { ' ', '%' }), out val);
 			val /= 100m;
 
-			if (success) {
+			if (success && val < 1.0m && val >= 0.0m) {
 
 				entity.DiscountRate = val;
 
@@ -880,7 +879,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			success = decimal.TryParse (value.TrimEnd (new char [] { ' ', '%' }), out val);
 
-			if (success && val <= entity.Price && entity.Price > 0) {
+			if (success && val <= entity.Price && val > 0) {
 				entity.DiscountRate = val / entity.Price;
 
 				using (var scope = new TransactionScope ()) {
@@ -891,7 +890,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return Json (new {
 				id = entity.Id,
 				discount_percentage = entity.FormattedValueFor (x => x.DiscountRate),
-				value = string.Format("{0:C}", entity.Price * entity.DiscountRate),
+				value = string.Format ("{0:C}", entity.Price * entity.DiscountRate),
 				total = entity.FormattedValueFor (x => x.Total),
 				total2 = entity.FormattedValueFor (x => x.TotalEx)
 			});
@@ -943,31 +942,21 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			if (entity.ShipTo == null) {
 				entity.IsDelivered = true;
-			}
+				using (var scope = new TransactionScope ()) {
+					var warehouse = entity.PointOfSale.Warehouse;
+					var dt = DateTime.Now;
 
-			using (var scope = new TransactionScope ()) {
-				var warehouse = entity.PointOfSale.Warehouse;
-				var dt = DateTime.Now;
+					foreach (var x in entity.Details) {
+						x.Warehouse = warehouse;
+						x.Update ();
 
-				foreach (var x in entity.Details) {
-					x.Warehouse = warehouse;
-
-					if (x.DiscountRate < 0) {
-						x.Price = Model.ModelHelpers.PriceRounding (x.Price * (1 + (-x.DiscountRate)));
-						x.DiscountRate = 0.0m;
+						InventoryHelpers.ChangeNotification (TransactionType.SalesOrder, entity.Id,
+							dt, warehouse, null, x.Product, -x.Quantity);
 					}
 
-					x.Update ();
-
-					InventoryHelpers.ChangeNotification (TransactionType.SalesOrder, entity.Id,
-						dt, warehouse, null, x.Product, -x.Quantity);
+					entity.UpdateAndFlush ();
 				}
-
-				entity.UpdateAndFlush ();
-			}
-
-			if (entity.ShipTo != null) {
-
+			} else {
 				DeliveryOrder deliver = new DeliveryOrder ();
 
 				deliver.Date = DateTime.Now;
@@ -996,6 +985,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						detaild.CreateAndFlush ();
 					}
 				}
+
 			}
 
 			return RedirectToAction ("Index");
