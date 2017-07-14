@@ -226,7 +226,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.Type = batch.Type;
 			item.Currency = WebConfig.BaseCurrency;
 			item.ExchangeRate = 1;
-			item.PaymentMethod = PaymentMethod.Cash;
+			item.PaymentMethod = PaymentMethod.NA;
 			item.PaymentReference = null;
 			item.CreationTime = DateTime.Now;
 			item.Creator = CurrentUser.Employee;
@@ -280,6 +280,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var items = new ArrayList ();
 
+			items.Add (new { value = (int) PaymentMethod.NA, text = PaymentMethod.NA.GetDisplayName () });
 			items.Add (new { value = (int) PaymentMethod.Cash, text = PaymentMethod.Cash.GetDisplayName () });
 			items.Add (new { value = (int) PaymentMethod.Check, text = PaymentMethod.Check.GetDisplayName () });
 			items.Add (new { value = (int) PaymentMethod.EFT, text = PaymentMethod.EFT.GetDisplayName () });
@@ -290,7 +291,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			items.Add (new { value = (int) PaymentMethod.DebitCard, text = PaymentMethod.DebitCard.GetDisplayName () });
 			items.Add (new { value = (int) PaymentMethod.ServiceCard, text = PaymentMethod.ServiceCard.GetDisplayName () });
 			items.Add (new { value = (int) PaymentMethod.Others, text = PaymentMethod.Others.GetDisplayName () });
-			items.Add (new { value = (int) PaymentMethod.NA, text = PaymentMethod.NA.GetDisplayName () });
 
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}
