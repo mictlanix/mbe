@@ -1280,15 +1280,34 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var batch = TaxpayerBatch.Queryable.First (x => x.Batch == model.Batch);
 			var filename = string.Format (Resources.FiscalDocumentFilenameFormatString, model.Issuer.Id, model.Batch,
 						      model.Serial);
-			var view = string.Format ("Print{0:00}{1}", model.Version * 10, batch.Template);
 			var subject = string.Format (Resources.FiscalDocumentEmailSubjectFormatString, model.Issuer.Id, model.Batch,
 						     model.Serial);
 			var message = string.Format (Resources.FiscalDocumentEmailBodyFormatString, model.StampId,
 						     model.Issuer.Id, model.Recipient);
 			var attachments = new List<MimePart> ();
+			var view = string.Format ("Print{0:00}{1}", model.Version * 10, batch.Template);
+			var header = view + "_PageHead";
+			var footer = view + "_PageFoot";
+
+			if (ViewEngines.Engines.FindPartialView (ControllerContext, header).View == null) {
+				header = null;
+			}
+
+			if (ViewEngines.Engines.FindPartialView (ControllerContext, footer).View == null) {
+				footer = null;
+			}
+
+			if (!string.IsNullOrWhiteSpace (WebConfig.BankInformation)) {
+				ViewBag.BankInformation = Newtonsoft.Json.JsonConvert.DeserializeObject (WebConfig.BankInformation);
+			}
 
 			attachments.Add (new MimePart {
-				ContentObject = new ContentObject (GetPdf (view, model), ContentEncoding.Default),
+				ContentObject = new ContentObject (GetPdf (view, model, new jsreport.Client.Entities.Phantom {
+					header = header,
+					headerHeight = (header == null ? 0 : 18) + " mm",
+					footer = footer,
+					footerHeight = (footer == null ? 0 : 18) + " mm"
+				}), ContentEncoding.Default),
 				ContentDisposition = new ContentDisposition (ContentDisposition.Attachment),
 				ContentTransferEncoding = ContentEncoding.Base64,
 				FileName = filename + ".pdf"
