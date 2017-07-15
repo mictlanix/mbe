@@ -2322,4 +2322,7 @@ Gracias por utilizar nuestros servicios.
   <data name="CustomersMerge" xml:space="preserve">
     <value>Fusión de Clientes</value>
   </data>
+  <data name="ExtraCharges" xml:space="preserve">
+    <value>Cargos Extra</value>
+  </data>
 </root>
