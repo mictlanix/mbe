@@ -176,7 +176,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var query = from x in CustomerRefundDetail.Queryable
 				    where x.Refund.IsCompleted && !x.Refund.IsCancelled &&
-                                          x.SalesOrderDetail.SalesOrder.Id == salesOrder
+					  x.SalesOrderDetail.SalesOrder.Id == salesOrder
 				    select x;
 
 			return query.ToList ().Sum (x => x.Total);
@@ -186,15 +186,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var query = from x in CustomerPayment.Queryable
 				    where x.Customer.Id == customer && x.Currency == currency &&
-				     	(x.Allocations.Count == 0 || x.Amount > x.Allocations.Sum (y => y.Amount + y.Change))
+				    	(x.Allocations.Count == 0 || x.Amount > x.Allocations.Sum (y => y.Amount + y.Change))
 				    select x;
+			var results = query.ToList ().Where (x => x.Balance >= 0.01m);
 
-			return query.ToList ();
+			return results;
 		}
 
-        public ActionResult Print(int id){
-            //AccountReceivable account = AccountReceivable
-            return PartialView();
-        }
+		public ActionResult Print (int id)
+		{
+			//AccountReceivable account = AccountReceivable
+			return PartialView ();
+		}
 	}
 }
