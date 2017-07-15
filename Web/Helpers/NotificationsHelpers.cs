@@ -112,7 +112,11 @@ namespace Mictlanix.BE.Web.Helpers {
 				using (var client = new SmtpClient ()) {
 					client.ServerCertificateValidationCallback = (s, c, h, e) => true;
 
-					client.Connect (WebConfig.SmtpServer, WebConfig.SmtpPort, WebConfig.SmtpSsl);
+					if (WebConfig.SmtpSsl) {
+						client.Connect (WebConfig.SmtpServer, WebConfig.SmtpPort);
+					} else {
+						client.Connect (WebConfig.SmtpServer, WebConfig.SmtpPort, MailKit.Security.SecureSocketOptions.None);
+					}
 
 					// Note: since we don't have an OAuth2 token, disable
 					// the XOAUTH2 authentication mechanism.
@@ -125,7 +129,7 @@ namespace Mictlanix.BE.Web.Helpers {
 					client.Send (message);
 					client.Disconnect (true);
 				}
-			} catch(Exception e) {
+			} catch (Exception e) {
 				Console.Error.WriteLine (e);
 				return false;
 			}
