@@ -72,14 +72,6 @@
 <div style="min-height: 2.2mm; border-top: #333 solid 1px; border-bottom: #333 solid 3px"></div>
 
 <table  style="border-spacing:0 4px;border-collapse: separate;">
-    <thead>
-        <tr>
-            <th class="">@Resources.QuantityShort</th>
-            <th class="">@Resources.UnitOfMeasurementShort</th>
-            <th class="">@Resources.ProductName</th>
-            <th class="">@Resources.SalesOrderId</th>
-        </tr>
-    </thead>
     <tbody>
         @foreach (var item in Model.Details.Where (x => x.Quantity > 0)) {
             <tr class="alt">
@@ -88,6 +80,9 @@
                 <td class="">@Html.DisplayFor(x => item.ProductName)</td>
                 <td class="">@Html.DisplayFor(x => item.OrderDetail.SalesOrder.Id)</td>
             </tr>
+				<tr>
+					<td class="line" colspan="5"></td>
+				</tr>
 		  }
     </tbody>
 </table>
@@ -121,7 +116,7 @@
 
 <div style="min-height: 2.2mm; border-top: #333 solid 3px; border-bottom: #333 solid 1px"></div>
 <div class="row" style="margin-top:20mm">
-	<div class="col-xs-4 col-xs-offset-2 text-center" style="border-top: #333 solid 1px">
+	<div class="col-xs-8 col-xs-offset-2 text-center" style="border-top: #333 solid 1px">
 		@Resources.PersonReceipt<br />
 		@Resources.NameAndSignature
 	</div>
