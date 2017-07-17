@@ -360,6 +360,10 @@ ALTER TABLE `payment_method_charge` ADD COLUMN `display_on_ticket` TINYINT(1) NO
 
 ALTER TABLE `payment_on_delivery` DROP COLUMN `warehouse_destiny`;
 ALTER TABLE `payment_method_charge` ADD COLUMN `cash_session` INT(11) NOT NULL;
+
+/*
+
+*/
 	
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
