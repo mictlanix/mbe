@@ -578,7 +578,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						  QuantityRemain = GetRemainQuantityBySalesOrderDetail(x),
 						  QuantityDelivered = x.Quantity - GetRemainQuantityBySalesOrderDetail(x),
 						  UnitOfMeasure = x.Product.UnitOfMeasurement,
-						  Details = DeliveryOrderDetail.Queryable.Where (y => y.OrderDetail == x && y.DeliveryOrder.IsDelivered).ToList ()
+						  Details = DeliveryOrderDetail.Queryable.Where (y => y.OrderDetail == x && !y.DeliveryOrder.IsCancelled).ToList ()
 					  }).ToList ();
 			search.Total = search.Results.Count ();
 			return View (search);
