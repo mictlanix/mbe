@@ -342,7 +342,25 @@ ALTER TABLE `customer_payment`
 	ADD COLUMN `payment_charge` INT(11) NULL AFTER `commission`,
 	ADD CONSTRAINT `customer_payment_charge_fk` FOREIGN KEY (`payment_charge`) REFERENCES `payment_method_charge` (`payment_method_charge_id`) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
+CREATE TABLE `payment_on_delivery` (
+	`payment_on_delivery_id` INT(11) NOT NULL AUTO_INCREMENT,
+	`customer_payment` INT(11) NOT NULL,
+	`warehouse_destiny` INT(11) NULL DEFAULT NULL,
+	`paid` TINYINT(1) NOT NULL DEFAULT '0',
+	`date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (`payment_on_delivery_id`),
+	INDEX `payment_on_delivery_customer_payment` (`customer_payment`),
+	INDEX `payment_on_delivery_warehouse` (`warehouse_destiny`),
+	CONSTRAINT `payments_on_deliveries_customer_payment_fk` FOREIGN KEY (`customer_payment`) REFERENCES `customer_payment` (`customer_payment_id`),
+	CONSTRAINT `payments_on_deliveries_warehouse_fk` FOREIGN KEY (`warehouse_destiny`) REFERENCES `warehouse` (`warehouse_id`)
+);
 
+ALTER TABLE `payment_method_charge` DROP COLUMN `bank_payments_charge`;
+ALTER TABLE `payment_method_charge` ADD COLUMN `display_on_ticket` TINYINT(1) NOT NULL DEFAULT 1;
+
+ALTER TABLE `payment_on_delivery` DROP COLUMN `warehouse_destiny`;
+ALTER TABLE `payment_method_charge` ADD COLUMN `cash_session` INT(11) NOT NULL;
+	
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

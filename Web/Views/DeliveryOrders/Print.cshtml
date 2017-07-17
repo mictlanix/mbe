@@ -4,12 +4,12 @@
 @model DeliveryOrder
 
 @{
-    Layout = WebConfig.PrintLayout;
-    ViewBag.Title = Html.PrintFileName(Resources.DeliveryOrder, Model.Id);
-    ViewBag.Store = Model.Store;
-    ViewBag.TaxpayerName = Model.Store.Taxpayer.Name;
-    ViewBag.Taxpayer = Model.Store.Taxpayer.Id;
-    ViewBag.Address = Model.Store.Address;
+		  Layout = WebConfig.ReceiptLayout;
+		  ViewBag.Title = Html.PrintFileName (Resources.DeliveryOrder, Model.Id);
+		  ViewBag.Store = Model.Store;
+		  ViewBag.TaxpayerName = Model.Store.Taxpayer.Name;
+		  ViewBag.Taxpayer = Model.Store.Taxpayer.Id;
+		  ViewBag.Address = Model.Store.Address;
 }
 
 <div class="row">
@@ -74,28 +74,52 @@
 <table  style="border-spacing:0 4px;border-collapse: separate;">
     <thead>
         <tr>
-            <th class="col-xs-1 text-center">@Resources.QuantityShort</th>
-            <th class="col-xs-1 text-center">@Resources.UnitOfMeasurementShort</th>
-            <th class="col-xs-2 text-center">@Resources.ProductCode</th>
-            <th class="col-xs-2 text-center">@Resources.ProductName</th>
-            <th class="col-xs-6 text-center">@Resources.SalesOrderId</th>
+            <th class="">@Resources.QuantityShort</th>
+            <th class="">@Resources.UnitOfMeasurementShort</th>
+            <th class="">@Resources.ProductName</th>
+            <th class="">@Resources.SalesOrderId</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Details.Where(x => x.Quantity > 0)) {
+        @foreach (var item in Model.Details.Where (x => x.Quantity > 0)) {
             <tr class="alt">
-                <td class="nowrap text-right">@Html.DisplayFor(x => item.Quantity)</td>
-                <td class="nowrap text-center">@Html.DisplayFor(x => item.Product.UnitOfMeasurement)</td>
-                <td class="text-center">@Html.DisplayFor(x => item.ProductCode)</td>
-                <td class="text-center">@Html.DisplayFor(x => item.ProductName)</td>
-                <td class="text-center">@Html.DisplayFor(x => item.OrderDetail.SalesOrder.Id)</td>
+                <td class="">@Html.DisplayFor(x => item.Quantity)</td>
+                <td class="">@Html.DisplayFor(x => item.Product.UnitOfMeasurement)</td>
+                <td class="">@Html.DisplayFor(x => item.ProductName)</td>
+                <td class="">@Html.DisplayFor(x => item.OrderDetail.SalesOrder.Id)</td>
             </tr>
-        }
+		  }
     </tbody>
 </table>
 
 <div style="min-height: 2.2mm; border-top: #333 solid 3px; border-bottom: #333 solid 1px"></div>
 
+@{
+		  var payments = Model.Details.Select (x => x.OrderDetail.SalesOrder).Distinct ().SelectMany (x => x.Payments).ToList();
+		  List<PaymentOnDelivery> payments_on_delivery = new List<PaymentOnDelivery> ();
+		  foreach (var payment in payments) {
+			  var ondelivery = PaymentOnDelivery.Queryable.SingleOrDefault(x => x.CustomerPayment == payment.Payment && !x.IsPaid);
+			  if (ondelivery != null) {
+				  payments_on_delivery.Add (ondelivery);
+			  }
+		  }
+} 
+
+@if (payments_on_delivery.Count () > 0) {
+		<span>Pagos Pendientes</span>
+	foreach (var item in payments_on_delivery) {
+					<div>
+						<ul>
+							<li>
+								<span>@Resources.SalesOrderId: @Html.DisplayFor(x => SalesOrderPayment.Queryable.Where(y => y.Payment == item.CustomerPayment).Single().SalesOrder.Id)</span><br />
+								<span>@Resources.Amount: <b>@string.Format("{0:c}", item.CustomerPayment.Amount * (item.CustomerPayment.Commission + 1))</b></span><br />
+								<span>@Resources.PaymentMethod: @item.CustomerPayment.Method.GetDisplayName()</span></li>
+						</ul>
+					</div>
+	}
+}
+
+<div style="min-height: 2.2mm; border-top: #333 solid 3px; border-bottom: #333 solid 1px"></div>
 <div class="row" style="margin-top:20mm">
 	<div class="col-xs-4 col-xs-offset-2 text-center" style="border-top: #333 solid 1px">
 		@Resources.PersonReceipt<br />

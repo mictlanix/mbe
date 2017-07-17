@@ -24,7 +24,8 @@
 <div class="display-label">
     @Html.LabelFor(model => model.Customer)<br/>
     @Html.DisplayFor(model => model.Customer.Name)
-    @if (Model.Customer.Id == int.Parse(Resources.GeneralPublicId) && !string.IsNullOrWhiteSpace(Model.CustomerName)) {
+    @if (Model.Customer.Id == int.Parse(Resources.GeneralPublicId) 
+				&& !string.IsNullOrWhiteSpace(Model.CustomerName)) {
         <span>(</span>@Html.DisplayFor(x => x.CustomerName)<span>)</span>
     }
 </div>
@@ -69,10 +70,22 @@
     </tr>
     @foreach (var item in Model.Payments) {
         <tr>
-            <td colspan="3" class="text-right">@item.Payment.Method.GetDisplayName()</td>
-            <td class="number">@Html.DisplayFor(x => item.Payment.Amount)</td>
-        </tr>
-    }
+		  	<td colspan="2" class="text-right">@item.Payment.Method.GetDisplayName()</td>
+			  @if (item.Payment.ExtraFee != null) {
+						<td class="text-right">@item.Payment.ExtraFee.Name</td>
+				  if (item.Payment.ExtraFee.isDisplayedOnTicket) {
+					  item.Payment.Amount = item.Payment.Amount * (item.Payment.Commission + 1);
+							<td class="number">@Html.DisplayFor(x => item.Payment.Amount)</td>
+				  } else {
+									<td class="number">@Html.DisplayFor(x => item.Payment.Amount)</td>
+				  }
+			  } else {
+						<td class="text-right"></td>
+						<td class="number">@Html.DisplayFor(x => item.Payment.Amount)</td>
+			  }
+		  </tr>
+
+	 }
         <tr>
             <td colspan="3" class="text-right">@Resources.Change</td>
             <td class="number">@Html.DisplayFor(x => Model.Change)</td>
