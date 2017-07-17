@@ -190,6 +190,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return View ("InvalidExchangeRate");
 			}
 
+			if (salesquote.IsCancelled || !salesquote.IsCompleted) {
+				return RedirectToAction ("Index", "Quotations");
+			}
+
 			// Store and Serial
 			item.Store = item.PointOfSale.Store;
 
@@ -216,6 +220,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.CreationTime = dt;
 			item.Updater = item.Creator;
 			item.ModificationTime = dt;
+			item.IsCompleted = true;
 
 			var details = salesquote.Details.Select (x => new SalesOrderDetail {
 				Currency = x.Currency,

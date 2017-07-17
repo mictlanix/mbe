@@ -296,8 +296,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			return PartialView("_Totals", entity);
 		}
 
-		public ViewResult Print(int id) {
-			return View(ExpenseVoucher.Find(id));
+		public ActionResult Print(int id) {
+			var model = ExpenseVoucher.Find (id);
+			if (!model.IsCancelled && model.IsCompleted) {
+				return PdfTicketView ("Print", model);
+			}
+			return RedirectToAction ("Index");
 		}
 
 		public ViewResult View(int id) {
