@@ -192,7 +192,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Print (int id)
 		{
 			var model = SalesOrder.Find (id);
-			return PdfTicketView ("Print", model);
+			if (model.IsPaid) { return PdfTicketView ("Print", model); }
+			return RedirectToAction ("Index");
+			
+		}
+
+		public ActionResult PrintDeliveryTicket (int id) {
+			var model = SalesOrder.Find (id);
+			if (model.IsPaid && model.ShipTo == null) { return PdfTicketView ("DeliveryTicket", model); }
+			return RedirectToAction ("Index");
 		}
 
 		public ActionResult PrintCreditPayment (int id){
@@ -325,6 +333,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			using (var scope = new TransactionScope ()) {
 				foreach (var item in entity.Payments) {
+					var payment = PaymentOnDelivery.Find (item.Id);
+					if (payment != null) {
+						payment.DeleteAndFlush ();
+					}
 					item.Delete ();
 				}
 
@@ -335,7 +347,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public JsonResult AddPayment (int id, int type, decimal amount, string reference, int? charge )
+		public JsonResult AddPayment (int id, int type, decimal amount, string reference, int? fee, bool ondelivery )
 		{
 
 			var dt = DateTime.Now;
@@ -362,12 +374,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				Amount = amount
 			};
 
-			if (charge.HasValue) {
-				item.Payment.ExtraCharge = PaymentMethodCharge.Find(charge.Value);
-				item.Payment.Commission = item.Payment.ExtraCharge.CommissionByManage;
+			if (fee.HasValue) {
+				item.Payment.ExtraFee = PaymentMethodOption.Find(fee.Value);
+				item.Payment.Commission = item.Payment.ExtraFee.CommissionByManage;
 			}
 
 			// Store and Serial
+
 			item.Payment.Store = store;
 
 			try {
@@ -391,6 +404,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			using (var scope = new TransactionScope ()) {
 				item.Payment.Create ();
 				item.CreateAndFlush ();
+			}
+
+			if (ondelivery && sales_order.ShipTo != null) {
+				using (var scope = new TransactionScope ()) {
+					PaymentOnDelivery payment_on_delivery = new PaymentOnDelivery {
+						CustomerPayment = item.Payment,
+						IsPaid = false,
+						CashSession = null,
+						Date = DateTime.Now
+					};
+
+					payment_on_delivery.CreateAndFlush ();
+				}
 			}
 
 			return Json (new {
@@ -457,6 +483,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var item = SalesOrderPayment.Find (id);
 
 			using (var scope = new TransactionScope ()) {
+
+				PaymentOnDelivery payment = PaymentOnDelivery.Queryable.FirstOrDefault (x => x.CustomerPayment == item.Payment);
+				if (payment != null) {
+					payment.DeleteAndFlush ();
+				}
+
 				item.DeleteAndFlush ();
 				item.Payment.DeleteAndFlush ();
 			}
@@ -480,7 +512,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				item.UpdateAndFlush ();
 			}
 
-			return RedirectToAction ("Index");
+			return PartialView ("_DetailsView", item);
 		}
 
 		public ActionResult CloseSession ()

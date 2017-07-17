@@ -3,7 +3,7 @@
 @using Mictlanix.BE
 @using Mictlanix.BE.Web.Helpers
 
-@model Search<PaymentMethodCharge>
+@model Search<PaymentMethodOption>
 @{
 		  ViewBag.Title = Resources.MethodPaymentOptions;
 		  var CurrentUser = Html.CurrentUser() ?? new User();
@@ -20,7 +20,7 @@
 					<div class="col-xs-4 text-right">
 						@if (Privilege.AllowCreate)
 						{
-								<a class="btn btn-primary open-modal" href="/MethodPaymentsOptions/Create" data-modal-id="charge-modal">
+								<a class="btn btn-primary open-modal" href="/PaymentMethodOptions/Create" data-modal-id="charge-modal">
 									<span class="glyphicon glyphicon-plus"></span>
 								</a>
 						}

@@ -6,10 +6,12 @@
     <div class="photo">
         <img src="@Url.Content("~/Content/icons/dollar.png")" title="@Resources.Pay" />
     </div>
+	@if (!Model.SalesOrder.IsPaid) {
     <div class='action-link'>
         <a class='button icon-only icon delete' title='@Resources.Message_DeleteConfirmation'
 		   data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id' data-url='@Url.Action("RemovePayment", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
     </div>
+	}
     <div class="info">
         <label>@Resources.Amount:</label>
         <span class="text">@Html.DisplayFor(x => x.Payment.Amount)</span>
@@ -23,15 +25,19 @@
 				<br />
         }
 
-		 @if (Model.Payment.ExtraCharge != null) {
-					<label>@Resources.Bank</label>
-					<span class="text">@Model.Payment.ExtraCharge.Name</span><br />
-					<label>Cargo en Tarjeta:</label>
-					<span class="text"><b>@string.Format("{0:c}", Model.Payment.Amount * (Model.Payment.Commission + 1))</b></span><br />
-					<label>Pagos mensuales:</label>
-					<span class="text">@Model.Payment.ExtraCharge.NumberOfPayments pagos mensuales de @string.Format("{0:c}",(Model.Payment.Amount/Model.Payment.ExtraCharge.NumberOfPayments)*(Model.Payment.ExtraCharge.BankPaymentsCharge + 1)) c/u.</span>
+		 @if (Model.Payment.ExtraFee != null) {
+					<label>@Resources.Bank:</label>
+					<span class="text">@Model.Payment.ExtraFee.Name</span><br />
+					<label>@Resources.PaymentsBankCharge:</label>
+					<span class="text">@string.Format("{0:c}", Model.Payment.Amount * (Model.Payment.Commission))</span><br />
+					<label>@Resources.NumberOfPayments:</label>
+					<span class="text">@Model.Payment.ExtraFee.NumberOfPayments pagos mensuales de @string.Format("{0:c}",((Model.Payment.Amount*(Model.Payment.Commission + 1))/Model.Payment.ExtraFee.NumberOfPayments)) c/u.</span><br />
+					<label>@Resources.TotalPayment:</label>
+					<span class="text"><b>@string.Format("{0:c}", Model.Payment.Amount * (Model.Payment.Commission + 1)) </b></span>
 		 }
-
+		 @if (PaymentOnDelivery.Queryable.Any(x => x.CustomerPayment == Model.Payment)) {
+					<label>@Resources.PaymentUponDelivery</label>
+		 }
 
     </div>
 </li>

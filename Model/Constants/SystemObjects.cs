@@ -199,5 +199,7 @@ namespace Mictlanix.BE.Model {
 		ExpenseVoucher = 82,
 		[Display (Name = "CreditPayments", ResourceType = typeof (Resources))]
 		CreditPayments = 83,
+		[Display (Name = "PaymentMethodOptions", ResourceType = typeof (Resources))]
+		PaymentMethodOptions = 84
 	}
 }

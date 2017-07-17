@@ -721,7 +721,7 @@
     <value>Cancelar Orden</value>
   </data>
   <data name="CompletePayment" xml:space="preserve">
-    <value>Pagado</value>
+    <value>Confirmar Pagos</value>
   </data>
   <data name="CompleteSale" xml:space="preserve">
     <value>Finalizar Venta</value>
@@ -1113,7 +1113,7 @@ Vencimiento: {0:d}</value>
     <value>Nueva Compra</value>
   </data>
   <data name="QuantityDelivered" xml:space="preserve">
-    <value>Cantidad Recibida</value>
+    <value>Cantidad Entregada</value>
   </data>
   <data name="QuantityOrdered" xml:space="preserve">
     <value>Cantidad Ordenada</value>
@@ -2301,8 +2301,8 @@ Gracias por utilizar nuestros servicios.
   <data name="Expenses" xml:space="preserve">
     <value>Gastos</value>
   </data>
-  <data name="QuantityPendanAfterDelivering" xml:space="preserve">
-    <value>Pendiente después de envío</value>
+  <data name="QuantityRemaining" xml:space="preserve">
+    <value>Pendiente a entregar</value>
   </data>
   <data name="QuantityPendantBeforeDelivering" xml:space="preserve">
     <value>Pendiente antes de envío</value>
@@ -2324,5 +2324,35 @@ Gracias por utilizar nuestros servicios.
   </data>
   <data name="ExtraCharges" xml:space="preserve">
     <value>Cargos Extra</value>
+  </data>
+  <data name="DeliveryTicket" xml:space="preserve">
+    <value>Ticket de Carga</value>
+  </data>
+  <data name="ExtraFees" xml:space="preserve">
+    <value>Cargos Extras</value>
+  </data>
+  <data name="CommissionByManage" xml:space="preserve">
+    <value>Comisión por Manejo</value>
+  </data>
+  <data name="NumberOfPayments" xml:space="preserve">
+    <value>Número de Pagos</value>
+  </data>
+  <data name="PaymentMethodOptions" xml:space="preserve">
+    <value>Opciones de Pago</value>
+  </data>
+  <data name="PaymentsBankCharge" xml:space="preserve">
+    <value>Comisión por Pagos Fijos</value>
+  </data>
+  <data name="Validation_InvalidRange" xml:space="preserve">
+    <value>El campo {0} debe tener valores entre 0 y 100</value>
+  </data>
+  <data name="PaymentUponDelivery" xml:space="preserve">
+    <value>Pago a contra-entrega</value>
+  </data>
+  <data name="DisplayOnTicket" xml:space="preserve">
+    <value>Mostrar en Ticket</value>
+  </data>
+  <data name="TotalPayment" xml:space="preserve">
+    <value>Cobro Total</value>
   </data>
 </root>
