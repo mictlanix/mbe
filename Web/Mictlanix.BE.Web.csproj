@@ -182,7 +182,7 @@
     <Compile Include="Controllers\Mvc\ExpensesController.cs" />
     <Compile Include="Controllers\Mvc\ExpenseVoucherController.cs" />
     <Compile Include="Controllers\Mvc\HumanResourcesController.cs" />
-    <Compile Include="Controllers\Mvc\MethodPaymentsOptionsController.cs" />
+    <Compile Include="Controllers\Mvc\PaymentMethodOptionsController.cs" />
     <Compile Include="Controllers\Mvc\QuotationsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -265,7 +265,7 @@
     <Compile Include="Helpers\NotificationsHelpers.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="Models\AccountReceivable.cs" />
-    <Compile Include="Models\DeliveryItemDescription.cs" />
+    <Compile Include="Models\OrderDetailDeliveries.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-clockpicker.min.css" />
@@ -944,7 +944,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>51103</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:51103/</IISUrl>
+          <IISUrl>http://localhost:8080/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
@@ -1148,13 +1148,16 @@
     <Content Include="Views\Payments\CreditPayments.cshtml" />
     <Content Include="Views\Payments\_CreditPayments.cshtml" />
     <Content Include="Views\Payments\ViewCreditPayment.cshtml" />
-    <Content Include="Views\MethodPaymentsOptions\Index.cshtml" />
-    <Content Include="Views\MethodPaymentsOptions\_Index.cshtml" />
-    <Content Include="Views\MethodPaymentsOptions\_Create.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\PaymentMethodCharge.cshtml" />
-    <Content Include="Views\MethodPaymentsOptions\_Refresh.cshtml" />
-    <Content Include="Views\MethodPaymentsOptions\_Edit.cshtml" />
-    <Content Include="Views\MethodPaymentsOptions\_Delete.cshtml" />
+    <Content Include="Views\PaymentMethodOptions\Index.cshtml" />
+    <Content Include="Views\PaymentMethodOptions\_Index.cshtml" />
+    <Content Include="Views\PaymentMethodOptions\_Create.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\PaymentMethodOption.cshtml" />
+    <Content Include="Views\PaymentMethodOptions\_Refresh.cshtml" />
+    <Content Include="Views\PaymentMethodOptions\_Edit.cshtml" />
+    <Content Include="Views\PaymentMethodOptions\_Delete.cshtml" />
+    <Content Include="Views\Customers\Merge.cshtml" />
+    <Content Include="Views\Payments\_DetailsView.cshtml" />
+    <Content Include="Views\Payments\DeliveryTicket.cshtml" />
   </ItemGroup>
   <ItemGroup />
 </Project>

@@ -2,19 +2,18 @@
 @using Mictlanix.BE.Web.Models
 @using Mictlanix.BE.Model
 
-@model Search<DeliveryItemDescription>
+@model Search<OrderDetailDeliveries>
 
 <table class="table-hover">
 	<thead>
 		<tr>
 			<th>@Resources.SalesOrderId</th>
 			<th>@Resources.SalesOrderDate</th>
-			<th>@Resources.DeliveryOrderId</th>
 			<th>@Resources.ProductName</th>
 			<th>@Resources.UnitOfMeasurement</th>
 			<th>@Resources.QuantitySold</th>
-			<th>@Resources.QuantityDelivered</th>
-			<th>@Resources.QuantityPendanAfterDelivering</th>
+			<th>@Resources.QuantityRemaining</th>
+			<th>@Resources.Details</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -24,12 +23,34 @@
 
 					<td class="nowrap center">@Html.DisplayFor(x => item.SalesOrderId)</td>
 					<td class="nowrap center">@Html.DisplayFor(x => item.Date)</td>
-					<td class="nowrap center">@Html.DisplayFor(x => item.Id)</td>
 					<td class="nowrap center">@Html.DisplayFor(x => item.ProductName)</td>
 					<td class="nowrap center">@Html.DisplayFor(x => item.UnitOfMeasure)</td>
 					<td class="nowrap center">@Html.DisplayFor(x => item.Quantity)</td>
-					<td class="nowrap center">@Html.DisplayFor(x => item.DeliveredQuantity)</td>
-					<td class="nowrap center">@Html.DisplayFor(x => item.PendantQuantityToDeliver)</td>
+					<td class="nowrap center">@Html.DisplayFor(x => item.QuantityRemain)</td>
+					<td class="nowrap center">
+						@if (item.Details!= null && item.Details.Count > 0) {
+						<table>
+							<thead>
+								<tr>
+									<th class="small">@Resources.DeliveryOrderId</th>
+									<th>@Resources.Date</th>
+									<th>@Resources.QuantityDelivered</th>
+									<th>@Resources.Delivered</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var detail in item.Details) {
+										  <tr>
+											  <td>@Html.DisplayFor(x => detail.DeliveryOrder.Id)</td>
+											  <td>@Html.DisplayFor(x => detail.DeliveryOrder.Date)</td>
+											  <td>@Html.DisplayFor(x => detail.Quantity)</td>
+											  <td>@Html.DisplayFor(x => detail.DeliveryOrder.IsDelivered)</td>
+										  </tr>
+								}
+							</tbody>
+						</table>
+					}
+					</td>
 				</tr>
 
 

@@ -1,0 +1,97 @@
+﻿
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model SalesOrder
+
+@{
+		  var CurrentUser = Html.CurrentUser () ?? new User ();
+		  var Privilege = Html.GetPrivilege (CurrentUser, SystemObjects.CustomerPayments);
+}
+
+	<div id="items-container">
+		<ul id="items" class="list-items">
+			@foreach (var item in Model.Payments) {
+					@Html.Partial("_Payment", item)
+			}
+		</ul>
+	</div>
+	<div id="form">
+		<fieldset>
+			<legend>@Resources.Payment</legend>
+			<div class="form-horizontal">
+				<div class="form-group">
+					<div class="col-xs-3"><label for="amount">@Resources.Amount</label></div>
+					<div class="col-xs-3"><label for="reference">@Resources.Reference</label></div>
+					@if (Model.ShipTo != null) {
+							<div class="pull-right col-xs-1"><label for="payment_upon_delivery">@Resources.PaymentUponDelivery</label></div>
+					}
+					
+				</div>
+				<div class="form-group">
+					<div class="col-xs-3"><input id='amount' class='form-control text-right' type='text' value='0.00'></div>
+					<div class="col-xs-3"><input id='reference' class='form-control' type='text' value=''></div>
+					@if (Model.ShipTo != null) {
+							<div class="pull-right col-xs-1"><input id='ondelivery' class='form-control' type='checkbox'></div>
+					}
+				</div>
+				<div class="form-group">
+					<div class="col-xs-12">
+						@Html.LabelFor(x => new CustomerPayment ().Method)
+					</div>
+					<div class="col-xs-12">
+						<div class="btn-group">
+							@foreach (var item in WebConfig.CashierPaymentOptions.Where (x => !PaymentMethodOption.Queryable.Any (y => y.PaymentMethod == x))) {
+									<button class="pay btn btn-default" type="button" data-value='@((int)item)'>@item.GetDisplayName()</button>
+							}
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-xs-12">
+						<div class="btn-group">
+							@foreach (var item in PaymentMethodOption.Queryable.Where (x => x.Warehouse == WebConfig.PointOfSale.Warehouse && x.IsActive).ToList ()) {
+									<button class="pay btn btn-default" type="button" data-value="@((int)item.PaymentMethod)" data-fee="@item.Id">@item.Name (@Html.DisplayFor(x => item.CommissionByManage))</button>
+							}
+						</div>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+	</div>
+	<div id="sales-order-balance">
+		@Html.Partial("_SalesOrderBalance")
+	</div>
+
+<script type="text/javascript">
+function updateTotals() {
+    $.get('@Url.Action("GetSalesOrderBalance", new { id = Model.Id })', function (data) {
+        $("#sales-order-balance").html(data);
+    });
+}
+$(function () {
+	$('[data-toggle="tooltip"]').tooltip();
+	$(".pay").click(function () {
+        var type = $(this).data('value');
+        var amount = $("#amount").val();
+		  var reference = $("#reference").val();
+		  var fee = $(this).data('fee');
+		  var ship_to =  '@Model.ShipTo';
+		  var ondelivery = false;
+
+		  if (ship_to != '') {
+			  ondelivery = $("#ondelivery")[0].checked;
+			  $("#ondelivery").prop('checked', false);
+		  }
+
+		  $.post('@Url.Action("AddPayment", new { id = Model.Id })', { 'type': type, 'amount': amount, 'reference': reference, 'fee': fee, 'ondelivery': ondelivery }, function (detail) {
+            $.get('@Url.Action("GetPayment")/' + detail.id, function (data) {
+                $('#items').append(data);
+                $("#amount,#reference").val('');
+                updateTotals();
+            });
+
+        }, "json");
+    });
+});
+</script>

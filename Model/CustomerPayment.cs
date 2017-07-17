@@ -61,7 +61,7 @@ namespace Mictlanix.BE.Model {
 		public virtual Employee Updater { get; set; }
 
 		[BelongsTo ("payment_charge", Lazy = FetchWhen.OnInvoke)]
-		public virtual PaymentMethodCharge ExtraCharge { get; set; }
+		public virtual PaymentMethodOption ExtraFee { get; set; }
 
 		[Property("commission")]
 		[DisplayFormat(DataFormatString = "{0:+#;-#;+p}")]
