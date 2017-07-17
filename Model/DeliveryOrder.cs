@@ -91,11 +91,11 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Cancelled", ResourceType = typeof (Resources))]
 		public bool IsCancelled { get; set; }
 
-        [Property("delivered")]
-        [Display(Name = "Delivered", ResourceType = typeof(Resources))]
-        public bool IsDelivered { get; set; }
+		[Property("delivered")]
+		[Display(Name = "Delivered", ResourceType = typeof(Resources))]
+		public bool IsDelivered { get; set; }
 
-        [Property]
+		[Property]
 		[DataType (DataType.MultilineText)]
 		[Display (Name = "Comment", ResourceType = typeof (Resources))]
 		[StringLength (500, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]

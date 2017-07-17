@@ -4,39 +4,50 @@
 @model SalesOrder
 
 <ul class='labeled-frames pull-right'>
-    <li>
-    	<span class='caption'>@Resources.Total</span>
-        <span class='value'>@Html.DisplayFor(x => x.TotalEx) @WebConfig.BaseCurrency</span>
-    @if (Model.Currency != WebConfig.BaseCurrency) {
-        <span class='value'>@Html.DisplayFor(x => x.Total) @Html.DisplayFor(x => x.Currency)</span>
-    }
-    </li>
-    <li>
-    	<span class='caption'>@Resources.Paid</span>
-    	<span class='value'>@Html.DisplayFor(x => x.Paid) @WebConfig.BaseCurrency</span>
-    </li>
-    @if (Model.Payments.Any(x => x.Payment.ExtraCharge != null)) {
-		<li>
-			<span class="caption">Cargos Extras</span>
-			<span class="value">@Html.DisplayFor(x => x.ExtraCharge)</span>
-		</li>
-	 }
-    <li>
-    	<span class='caption'>@Resources.Change</span>
-        <span class='value'>@Html.DisplayFor(x => x.Change) @WebConfig.BaseCurrency</span>
-    </li>
+	<li>
+		<span class='caption'>@Resources.Total</span>
+		<span class='value'>@Html.DisplayFor(x => x.TotalEx) @WebConfig.BaseCurrency</span>
+		@if (Model.Currency != WebConfig.BaseCurrency) {
+				<span class='value'>@Html.DisplayFor(x => x.Total) @Html.DisplayFor(x => x.Currency)</span>
+		}
+	</li>
+	<li>
+		<span class='caption'>@Resources.Paid</span>
+		<span class='value'>@Html.DisplayFor(x => x.Paid) @WebConfig.BaseCurrency</span>
+	</li>
+	@if (Model.ExtraFee > 0.0m) {
+			<li>
+				<span class="caption">@Resources.ExtraFees</span>
+				<span class="value">@Html.DisplayFor(x => x.ExtraFee)</span>
+			</li>
+	}
+	<li>
+		<span class='caption'>@Resources.Change</span>
+		<span class='value'>@Html.DisplayFor(x => x.Change) @WebConfig.BaseCurrency</span>
+	</li>
 </ul>
 
 <div class='clearfix'></div>
-@if (Model.Balance <= 0.01m) {
-<div class='pull-left'>
-	@Html.ActionLink(Resources.Print, "Print", new { id = Model.Id }, new { @class = "button icon print", target = "_blank" })
+<div id='back-to-list' class='pull-left'>
+	@Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
-<div id='confirm-button' class='pull-right'>
-	@using (Html.BeginForm("ConfirmPayment", "Payments", new { id = Model.Id })) {
-	    <button type="submit" class='icon pay'>@Resources.CompletePayment</button>
+
+@if (Model.IsPaid) {
+		<div class='pull-right'>
+			@Html.ActionLink(Resources.SalesReceipt, "Print", new { id = Model.Id }, new { @class = "button icon print", target = "_blank" })
+		</div>
+	if (Model.ShipTo == null) {
+		<div class='pull-right'>
+			@Html.ActionLink(Resources.DeliveryTicket, "PrintDeliveryTicket", new { id = Model.Id }, new { @class = "button icon print", target = "_blank" })
+		</div>
 	}
-</div>
+} else if (Model.Balance <= 0.01m) {
+		<div id='confirm-button' class='pull-right'>
+			@using (Ajax.BeginForm("ConfirmPayment", "Payments", new { id = Model.Id },
+										  new AjaxOptions{ HttpMethod = "POST", UpdateTargetId = "detais-order" })) {
+					<button type="submit" class='icon pay'>@Resources.CompletePayment</button>
+			}
+		</div>
 }
 <div class='clearfix'></div>
 <script type="text/javascript">

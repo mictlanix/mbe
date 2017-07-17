@@ -151,7 +151,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.ExchangeRate = entity.ExchangeRate;
 
 			item.CreationTime = DateTime.Now;
-            item.Date = DateTime.Now;
+			item.Date = DateTime.Now;
 			item.Creator = CurrentUser.Employee;
 			item.Updater = item.Creator;
 			item.ModificationTime = item.CreationTime;
@@ -254,7 +254,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					if (qty < item.Quantity) {
 						changed = true;
 
-						if (qty > 0) {
+						if (qty > 0.0m) {
 							item.Quantity = qty;
 							item.Update ();
 						} else {
@@ -273,7 +273,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			using (var scope = new TransactionScope ()) {
+				
 
+				foreach (var detail in entity.Details.Where (x => !(x.Quantity > 0.0m)).ToList ()) {
+					detail.DeleteAndFlush ();
+				}
+				
 				foreach (var x in entity.Details) {
 					InventoryHelpers.ChangeNotification (TransactionType.CustomerRefund, entity.Id, dt,
 						x.SalesOrderDetail.Warehouse, null, x.Product, x.Quantity);

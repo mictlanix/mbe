@@ -8,12 +8,12 @@ using Castle.ActiveRecord;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc
 {
-	public class MethodPaymentsOptionsController : CustomController {
+	public class PaymentMethodOptionsController : CustomController {
 
 		public ActionResult Index ()
 		{
-			var query = PaymentMethodCharge.Queryable;
-			var search = new Search<PaymentMethodCharge> ();
+			var query = PaymentMethodOption.Queryable;
+			var search = new Search<PaymentMethodOption> ();
 			search.Limit = WebConfig.PageSize;
 			search.Results = query.ToList ();
 			search.Total = query.Count ();
@@ -24,9 +24,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		}
 
 		[HttpPost]
-		public ActionResult Index (Search<PaymentMethodCharge> search) {
+		public ActionResult Index (Search<PaymentMethodOption> search) {
 
-			IQueryable<PaymentMethodCharge> query = PaymentMethodCharge.Queryable;
+			IQueryable<PaymentMethodOption> query = PaymentMethodOption.Queryable;
 			var pattern = string.Format ("{0}", search.Pattern).Trim ();
 			int id = 0;
 
@@ -47,18 +47,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 		public ActionResult Create ()
 		{
-			return PartialView ("_Create", new PaymentMethodCharge ());
+			return PartialView ("_Create", new PaymentMethodOption ());
 		}
 
 		[HttpPost]
-		public ActionResult Create (PaymentMethodCharge item) {
+		public ActionResult Create (PaymentMethodOption item) {
 
 			if (!ModelState.IsValid)
 				return PartialView ("_Create", item);
 
 			item.Warehouse = Warehouse.Find (item.WarehouseId);
 			item.CommissionByManage /= 100m;
-			item.BankPaymentsCharge /= 100m;
 
 			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
@@ -68,27 +67,35 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		}
 
 		public ActionResult Edit (int id) {
-			return PartialView ("_Edit", PaymentMethodCharge.Find (id));
+			var item = PaymentMethodOption.Find (id);
+			item.WarehouseId = item.Warehouse.Id;
+			item.CommissionByManage *= 100m;
+			return PartialView ("_Edit", item);
 		}
 
 		[HttpPost]
-		public ActionResult Edit (PaymentMethodCharge item) {
+		public ActionResult Edit (PaymentMethodOption item) {
 			if (ModelState.IsValid) {
 				using (var scope = new TransactionScope ()) {
-					item.Warehouse = Warehouse.Find (item.WarehouseId);
+					item.Warehouse = Warehouse.Find(item.WarehouseId);
+					item.CommissionByManage /= 100m;
 					item.UpdateAndFlush ();
 				}
+				return PartialView ("_Refresh");
+			} else {
+				item.Warehouse = Warehouse.Find (item.WarehouseId);
+				return PartialView ("_Edit", item);
 			}
-			return PartialView ("_Refresh");
+
 		}
 
 		public ActionResult Delete (int id) {
-			return PartialView ("_Delete", PaymentMethodCharge.Find (id));
+			return PartialView ("_Delete", PaymentMethodOption.Find (id));
 		}
 
 		[HttpPost, ActionName ("Delete")]
 		public ActionResult DeleteConfirmed (int id) {
-			var item = PaymentMethodCharge.Find (id);
+			var item = PaymentMethodOption.Find (id);
 			using (var scope = new TransactionScope ()) {
 				item.DeleteAndFlush ();
 			}

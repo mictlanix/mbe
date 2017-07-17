@@ -206,7 +206,7 @@ namespace Mictlanix.BE.Model {
 
 		[DataType(DataType.Currency)]
 		[Display(Name = "ExtraCharges", ResourceType = typeof(Resources))]
-		public virtual decimal ExtraCharge { get { return Payments.Where(x => x.Payment.ExtraCharge != null).Count() > 0 ? Payments.Where (x => x.Payment.ExtraCharge != null).Sum(x => x.Payment.Commission * x.Payment.Amount): 0.0m; } }
+		public virtual decimal ExtraFee { get { return Payments.Where(x => x.Payment.ExtraFee != null).Count() > 0 ? Payments.Where (x => x.Payment.ExtraFee != null).Sum(x => x.Payment.Commission * x.Payment.Amount): 0.0m; } }
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Balance", ResourceType = typeof (Resources))]

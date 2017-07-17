@@ -90,6 +90,7 @@
     <Compile Include="Expense.cs" />
     <Compile Include="ExpenseVoucher.cs" />
     <Compile Include="ExpenseVoucherDetail.cs" />
+    <Compile Include="PaymentOnDelivery.cs" />
     <Compile Include="PaymentMethodCharge.cs" />
     <Compile Include="SalesQuote.cs" />
     <Compile Include="SalesQuoteDetail.cs" />

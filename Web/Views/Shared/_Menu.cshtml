@@ -16,7 +16,8 @@
 									 CurrentUser.GetPrivilege (SystemObjects.CashDrawers).AllowRead ||
 									 CurrentUser.GetPrivilege (SystemObjects.Stores).AllowRead ||
 									 CurrentUser.GetPrivilege (SystemObjects.ExchangeRates).AllowRead ||
-									 CurrentUser.GetPrivilege (SystemObjects.Expenses).AllowRead;
+									 CurrentUser.GetPrivilege (SystemObjects.Expenses).AllowRead ||
+									 CurrentUser.GetPrivilege (SystemObjects.PaymentMethodOptions).AllowRead;
 
 	var ShowSalesMenu = CurrentUser.GetPrivilege (SystemObjects.SalesOrders).AllowRead ||
 							  CurrentUser.GetPrivilege (SystemObjects.POS).AllowRead ||
@@ -184,10 +185,16 @@
                             </li>
                             }
 									@if (CurrentUser.GetPrivilege(SystemObjects.Expenses).AllowRead) {
-										<li class="gbmtc">
-											<a class="gbmt @(Html.IsMenuSelected("Index", "Expenses") ? "gbm0l" : "")"
-												href="@Url.Action("Index", "Expenses")">@Resources.Expenses</a>
-											</li>
+									<li class="gbmtc">
+										<a class="gbmt @(Html.IsMenuSelected("Index", "Expenses") ? "gbm0l" : "")"
+											href="@Url.Action("Index", "Expenses")">@Resources.Expenses</a>
+									</li>
+									}
+									@if (CurrentUser.GetPrivilege (SystemObjects.PaymentMethodOptions).AllowRead) {
+											<li class="gbmtc">
+												<a class="gbmt @(Html.IsMenuSelected("Index", "PaymentMethodOptions") ? "gbm0l" : "")"
+													href="@Url.Action("Index", "PaymentMethodOptions")">@Resources.PaymentMethodOptions</a>
+												</li>
 									}
                         </ol>
                     </div>
