@@ -278,14 +278,14 @@ CREATE TABLE `expense_voucher` (
 	`completed` TINYINT(1) NULL DEFAULT '0',
 	`cancelled` TINYINT(1) NULL DEFAULT '0',
 	PRIMARY KEY (`expense_voucher_id`),
-	INDEX `FK_expense_voucher_store` (`store`),
-	INDEX `FK_expense_voucher_employee` (`creator`),
-	INDEX `FK_expense_voucher_employee_2` (`updater`),
-	INDEX `FK_expense_voucher_cash_session` (`cash_session`),
-	CONSTRAINT `FK_expense_voucher_employee` FOREIGN KEY (`creator`) REFERENCES `employee` (`employee_id`),
-	CONSTRAINT `FK_expense_voucher_employee_2` FOREIGN KEY (`updater`) REFERENCES `employee` (`employee_id`),
-	CONSTRAINT `FK_expense_voucher_store` FOREIGN KEY (`store`) REFERENCES `store` (`store_id`),
-	CONSTRAINT `FK_expense_voucher_cash_session` FOREIGN KEY (`cash_session`) REFERENCES `cash_session` (`cash_session_id`)
+	INDEX `expense_voucher_store_idx` (`store`),
+	INDEX `expense_voucher_creator_idx` (`creator`),
+	INDEX `expense_voucher_updater_idx` (`updater`),
+	INDEX `expense_voucher_cash_session_idx` (`cash_session`),
+	CONSTRAINT `expense_voucher_creator_fk` FOREIGN KEY (`creator`) REFERENCES `employee` (`employee_id`),
+	CONSTRAINT `expense_voucher_updater_fk` FOREIGN KEY (`updater`) REFERENCES `employee` (`employee_id`),
+	CONSTRAINT `expense_voucher_store_fk` FOREIGN KEY (`store`) REFERENCES `store` (`store_id`),
+	CONSTRAINT `expense_voucher_cash_session_fk` FOREIGN KEY (`cash_session`) REFERENCES `cash_session` (`cash_session_id`)
 );
 
 CREATE TABLE `expense_voucher_detail` (
@@ -295,10 +295,14 @@ CREATE TABLE `expense_voucher_detail` (
 	`amount` DECIMAL(10,0) NOT NULL DEFAULT '0',
 	`comment` VARCHAR(500) NULL DEFAULT NULL COLLATE 'utf8_unicode_ci',
 	PRIMARY KEY (`expense_voucher_detail_id`),
-	INDEX `FK_expense_voucher_detail_expense_voucher` (`expense_voucher`),
-	INDEX `FK_expense_voucher_detail_expenses` (`expense`),
-	CONSTRAINT `FK_expense_voucher_detail_expense_voucher` FOREIGN KEY (`expense_voucher`) REFERENCES `expense_voucher` (`expense_voucher_id`),
-	CONSTRAINT `FK_expense_voucher_detail_expenses` FOREIGN KEY (`expense`) REFERENCES `expenses` (`expense_id`)
+	INDEX `expense_voucher_detail_expense_voucher_idx` (`expense_voucher`),
+	INDEX `expense_voucher_detail_expenses_idx` (`expense`),
+	CONSTRAINT `expense_voucher_detail_expense_voucher_fk`
+		FOREIGN KEY (`expense_voucher`) REFERENCES `expense_voucher` (`expense_voucher_id`)
+		ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT `expense_voucher_detail_expenses_fk`
+		FOREIGN KEY (`expense`) REFERENCES `expenses` (`expense_id`)
+		ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 ALTER TABLE customer_discount
@@ -321,26 +325,29 @@ ALTER TABLE sales_quote_detail
 
 ALTER TABLE supplier_return_detail
 	CHANGE COLUMN discount discount DECIMAL(9,8) NOT NULL;	
-	
 
-CREATE TABLE `payment_method_charge` (
-	`payment_method_charge_id` INT(11) NOT NULL AUTO_INCREMENT,
-	`warehouse` INT(11) NOT NULL,
+CREATE TABLE `payment_method_option` (
+	`payment_method_option_id` INT(11) NOT NULL AUTO_INCREMENT,
+	`store` INT(11) NOT NULL,
 	`name` VARCHAR(50) NOT NULL COLLATE 'utf8_unicode_ci',
 	`number_of_payments` TINYINT(4) NOT NULL DEFAULT '1',
 	`display_on_ticket` TINYINT(1) NOT NULL,
 	`payment_method` INT(11) NOT NULL,
 	`commission` DECIMAL(10,3) NOT NULL,
 	`enabled` TINYINT(1) NOT NULL DEFAULT '1',
-	PRIMARY KEY (`payment_method_charge_id`),
-	INDEX `FK__warehouse` (`warehouse`),
-	CONSTRAINT `FK__warehouse` FOREIGN KEY (`warehouse`) REFERENCES `warehouse` (`warehouse_id`)
+	PRIMARY KEY (`payment_method_option_id`),
+	INDEX `payment_method_option_store_idx` (`store`),
+	CONSTRAINT `payment_method_option_store_fk`
+		FOREIGN KEY (`store`) REFERENCES `store` (`store_id`)
+		ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 ALTER TABLE `customer_payment`
 	ADD COLUMN `commission` DECIMAL(10,4) NULL AFTER `method`,
 	ADD COLUMN `payment_charge` INT(11) NULL AFTER `commission`,
-	ADD CONSTRAINT `customer_payment_charge_fk` FOREIGN KEY (`payment_charge`) REFERENCES `payment_method_charge` (`payment_method_charge_id`) ON UPDATE NO ACTION ON DELETE NO ACTION;
+	ADD CONSTRAINT `customer_payment_charge_fk` FOREIGN KEY (`payment_charge`)
+		REFERENCES `payment_method_option` (`payment_method_option_id`)
+		ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 CREATE TABLE `payment_on_delivery` (
 	`payment_on_delivery_id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -349,10 +356,14 @@ CREATE TABLE `payment_on_delivery` (
 	`paid` TINYINT(1) NOT NULL DEFAULT '0',
 	`date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`payment_on_delivery_id`),
-	INDEX `payment_on_delivery_customer_payment` (`customer_payment`),
-	INDEX `payment_on_delivery_cash_session` (`cash_session`),
-	CONSTRAINT `payments_on_deliveries_cash_session_fk` FOREIGN KEY (`cash_session`) REFERENCES `cash_session` (`cash_session_id`),
-	CONSTRAINT `payments_on_deliveries_customer_payment_fk` FOREIGN KEY (`customer_payment`) REFERENCES `customer_payment` (`customer_payment_id`)
+	INDEX `payment_on_delivery_customer_payment_idx` (`customer_payment`),
+	INDEX `payment_on_delivery_cash_session_idx` (`cash_session`),
+	CONSTRAINT `payments_on_deliveries_cash_session_fk`
+		FOREIGN KEY (`cash_session`) REFERENCES `cash_session` (`cash_session_id`)
+		ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT `payments_on_deliveries_customer_payment_fk`
+		FOREIGN KEY (`customer_payment`) REFERENCES `customer_payment` (`customer_payment_id`)
+		ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 	
 SET SQL_MODE=@OLD_SQL_MODE;
