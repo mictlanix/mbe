@@ -5,7 +5,7 @@
 //   Eddy Zavaleta <eddy@mictlanix.com>
 //   Eduardo Nieto <enieto@mictlanix.com>
 // 
-// Copyright (C) 2011-2016 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2011-2017 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -49,6 +49,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			if (session == null) {
 				return RedirectToAction ("OpenSession");
+			}
+
+			if (session.Start.Date < DateTime.Now.Date) {
+				return RedirectToAction ("CloseSession");
 			}
 
 			var search = SearchSalesOrders (new Search<SalesOrder> {
@@ -102,7 +106,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				query = query.Where (x => x.Id == id);
 
 			} else if (!string.IsNullOrEmpty (pattern)) {
-				
+
 				query = query.Where (x => x.Customer.Name.Contains (pattern) || (x.SalesPerson.FirstName + " " + x.SalesPerson.LastName).Contains (pattern));
 			}
 
@@ -118,8 +122,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			Search<CustomerPayment> search = new Search<CustomerPayment> ();
 
 			IQueryable<CustomerPayment> query = from x in CustomerPayment.Queryable
-							    where x.Allocations.Count == 0 || x.Amount > x.Allocations.Sum(y => y.Amount + y.Change)
-							    || x.Allocations.Any(y => y.SalesOrder.Terms != PaymentTerms.Immediate)
+							    where x.Allocations.Count == 0 || x.Amount > x.Allocations.Sum (y => y.Amount + y.Change)
+							    || x.Allocations.Any (y => y.SalesOrder.Terms != PaymentTerms.Immediate)
 							    orderby x.Date descending
 							    select x;
 
@@ -194,22 +198,25 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var model = SalesOrder.Find (id);
 			if (model.IsPaid) { return PdfTicketView ("Print", model); }
 			return RedirectToAction ("Index");
-			
+
 		}
 
-		public ActionResult PrintDeliveryTicket (int id) {
+		public ActionResult PrintDeliveryTicket (int id)
+		{
 			var model = SalesOrder.Find (id);
 			if (model.IsPaid && model.ShipTo == null) { return PdfTicketView ("DeliveryTicket", model); }
 			return RedirectToAction ("Index");
 		}
 
-		public ActionResult PrintCreditPayment (int id){
+		public ActionResult PrintCreditPayment (int id)
+		{
 
 			var model = CustomerPayment.Find (id);
 			return PdfTicketView ("PrintCreditPayment", model);
 		}
 
-		public ActionResult ViewCreditPayment (int id) {
+		public ActionResult ViewCreditPayment (int id)
+		{
 
 			var item = CustomerPayment.Find (id);
 			return View ("ViewCreditPayment", item);
@@ -347,7 +354,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public JsonResult AddPayment (int id, int type, decimal amount, string reference, int? fee, bool ondelivery )
+		public JsonResult AddPayment (int id, int type, decimal amount, string reference, int? fee, bool ondelivery)
 		{
 
 			var dt = DateTime.Now;
@@ -375,7 +382,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			};
 
 			if (fee.HasValue) {
-				item.Payment.ExtraFee = PaymentMethodOption.Find(fee.Value);
+				item.Payment.ExtraFee = PaymentMethodOption.Find (fee.Value);
 				item.Payment.Commission = item.Payment.ExtraFee.CommissionByManage;
 			}
 
@@ -518,7 +525,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult CloseSession ()
 		{
 			var session = GetSession ();
+
 			session.CashCounts = CashHelpers.ListDenominations ();
+
 			return View (session);
 		}
 
