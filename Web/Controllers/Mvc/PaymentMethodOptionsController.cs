@@ -56,7 +56,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			if (!ModelState.IsValid)
 				return PartialView ("_Create", item);
 
-			item.Warehouse = Warehouse.Find (item.WarehouseId);
+			item.Store = Store.Find (item.StoreId);
 			item.CommissionByManage /= 100m;
 
 			using (var scope = new TransactionScope ()) {
@@ -68,25 +68,28 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 		public ActionResult Edit (int id) {
 			var item = PaymentMethodOption.Find (id);
-			item.WarehouseId = item.Warehouse.Id;
+
+			item.StoreId = item.Store.Id;
 			item.CommissionByManage *= 100m;
+
 			return PartialView ("_Edit", item);
 		}
 
 		[HttpPost]
 		public ActionResult Edit (PaymentMethodOption item) {
-			if (ModelState.IsValid) {
-				using (var scope = new TransactionScope ()) {
-					item.Warehouse = Warehouse.Find(item.WarehouseId);
-					item.CommissionByManage /= 100m;
-					item.UpdateAndFlush ();
-				}
-				return PartialView ("_Refresh");
-			} else {
-				item.Warehouse = Warehouse.Find (item.WarehouseId);
+			if (!ModelState.IsValid) {
+				item.Store = Store.TryFind (item.StoreId);
+
 				return PartialView ("_Edit", item);
 			}
 
+			using (var scope = new TransactionScope ()) {
+				item.Store = Store.Find (item.StoreId);
+				item.CommissionByManage /= 100m;
+				item.UpdateAndFlush ();
+			}
+
+			return PartialView ("_Refresh");
 		}
 
 		public ActionResult Delete (int id) {
