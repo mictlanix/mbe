@@ -154,7 +154,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.SalesPerson = CurrentUser.Employee;
 			item.Date = dt;
 			item.PromiseDate = dt;
-			item.Terms = PaymentTerms.Immediate;
+			item.Terms = item.Customer.HasCredit ? PaymentTerms.NetD : PaymentTerms.Immediate;
 			item.DueDate = dt;
 			item.Currency = WebConfig.DefaultCurrency;
 			item.ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate ();
