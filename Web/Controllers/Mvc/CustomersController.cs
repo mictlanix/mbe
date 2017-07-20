@@ -132,7 +132,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Edit (Customer item)
 		{
 			item.PriceList = PriceList.TryFind (item.PriceListId);
-			item.SalesPerson = Employee.TryFind (item.SalesPersonId);
+			if (item.SalesPersonId.HasValue) {
+				item.SalesPerson = Employee.TryFind (item.SalesPersonId.Value);
+			}
 			
 			if (!ModelState.IsValid)
 				return PartialView ("_Edit", item);

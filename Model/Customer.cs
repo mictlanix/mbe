@@ -103,7 +103,7 @@ namespace Mictlanix.BE.Model {
 
 		[Display (Name = "SalesPerson", ResourceType = typeof (Resources))]
 		[UIHint ("EmployeeSelector")]
-		public virtual int SalesPersonId { get; set; }
+		public virtual int? SalesPersonId { get; set; }
 
 		[BelongsTo("salesperson")]
 		[Display(Name = "SalesPerson", ResourceType = typeof(Resources))]
