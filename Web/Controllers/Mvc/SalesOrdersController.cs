@@ -818,7 +818,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						    System.Globalization.NumberStyles.Currency,
 						    null, out val);
 
-			if (success && entity.Price > 0) {
+			if (success && entity.Price >= 0) {
 
 				entity.Price = val;
 
@@ -852,7 +852,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			success = decimal.TryParse (value.TrimEnd (new char [] { ' ', '%' }), out val);
 			val /= 100m;
 
-			if (success && val < 1.0m && val >= 0.0m) {
+			if (success && val <= 1.0m && val >= 0.0m) {
 
 				entity.DiscountRate = val;
 
@@ -884,7 +884,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			success = decimal.TryParse (value.TrimEnd (new char [] { ' ', '%' }), out val);
 
-			if (success && val <= entity.Price && val > 0) {
+			if (success && val <= entity.Price && val >= 0) {
 				entity.DiscountRate = val / entity.Price;
 
 				using (var scope = new TransactionScope ()) {

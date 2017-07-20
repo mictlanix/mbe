@@ -3,7 +3,7 @@
 @model PaymentMethodOption
 
 <div class="form-group">
-    <div class="col-xs-4 field-required">@Html.LabelFor(x => x.Warehouse) @Html.EditorFor(x=> x.WarehouseId) @Html.ValidationMessageFor(x => x.WarehouseId)</div>
+    <div class="col-xs-4 field-required">@Html.LabelFor(x => x.Store.Name) @Html.EditorFor(x=> x.StoreId) @Html.ValidationMessageFor(x => x.StoreId)</div>
 </div>
 <div class="form-group">
 	<div class="col-xs-8 field-required">@Html.LabelFor(x => x.Name) @Html.EditorFor(x => x.Name) @Html.ValidationMessageFor(x => x.Name)</div>
@@ -22,9 +22,9 @@
 	<div class="col-xs-12">@Html.EditorFor(x => x.isDisplayedOnTicket)</div>
 </div>
 
-@if (Model != null && Model.Warehouse != null)
+@if (Model != null && Model.Store != null)
 {
 		<script type='text/javascript'>
-    $("#WarehouseId").tokenInput("add", { id: "@Model.Warehouse.Id", name: "@Model.Warehouse.Name" });
+			$("#StoreId").tokenInput("add", { id: "@Model.Store.Id", name: "@Model.Store.Name" });
 		</script>
 }
