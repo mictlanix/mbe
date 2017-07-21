@@ -1303,7 +1303,7 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Ticket de Carga.
+        ///   Busca una cadena traducida similar a Ticket Entrega de Pedido.
         /// </summary>
         public static string DeliveryTicket {
             get {

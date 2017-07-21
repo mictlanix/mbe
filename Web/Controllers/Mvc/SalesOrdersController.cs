@@ -884,7 +884,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			success = decimal.TryParse (value.TrimEnd (new char [] { ' ', '%' }), out val);
 
-			if (success && val <= entity.Price && val >= 0) {
+			if (success && val <= entity.Price && val >= 0 && entity.Price > 0) {
 				entity.DiscountRate = val / entity.Price;
 
 				using (var scope = new TransactionScope ()) {
