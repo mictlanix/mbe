@@ -110,8 +110,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Create (Customer item)
 		{
 			item.PriceList = PriceList.TryFind (item.PriceListId);
-			item.SalesPerson = Employee.TryFind (item.SalesPersonId);
-
+			if (item.SalesPersonId.HasValue) {
+				item.SalesPerson = Employee.TryFind (item.SalesPersonId.Value);
+			}
+			
 			if (!ModelState.IsValid)
 				return PartialView ("_Create", item);
 
