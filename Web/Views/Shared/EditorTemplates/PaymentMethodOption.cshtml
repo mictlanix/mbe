@@ -3,7 +3,7 @@
 @model PaymentMethodOption
 
 <div class="form-group">
-    <div class="col-xs-4 field-required">@Html.LabelFor(x => x.Store.Name) @Html.EditorFor(x=> x.StoreId) @Html.ValidationMessageFor(x => x.StoreId)</div>
+    <div class="col-xs-4 field-required">@Html.LabelFor(x => x.Store) @Html.EditorFor(x=> x.StoreId) @Html.ValidationMessageFor(x => x.StoreId)</div>
 </div>
 <div class="form-group">
 	<div class="col-xs-8 field-required">@Html.LabelFor(x => x.Name) @Html.EditorFor(x => x.Name) @Html.ValidationMessageFor(x => x.Name)</div>

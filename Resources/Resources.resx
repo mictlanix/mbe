@@ -2326,7 +2326,7 @@ Gracias por utilizar nuestros servicios.
     <value>Cargos Extra</value>
   </data>
   <data name="DeliveryTicket" xml:space="preserve">
-    <value>Ticket de Carga</value>
+    <value>Ticket Entrega de Pedido</value>
   </data>
   <data name="ExtraFees" xml:space="preserve">
     <value>Cargos Extras</value>
