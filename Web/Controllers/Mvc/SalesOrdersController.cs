@@ -117,6 +117,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View (model);
 		}
 
+		public ViewResult PrintPromissoryNote (int id) {
+			var model = SalesOrder.Find (id);
+			if (model.IsCompleted && !model.IsCancelled) {
+				return View ("PromissoryNote",model);
+			}
+			return null;
+		}
+
 		public ActionResult Pdf (int id)
 		{
 			var model = SalesOrder.Find (id);

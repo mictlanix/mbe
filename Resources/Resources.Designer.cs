@@ -4246,6 +4246,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a DEBO(EMOS) Y PAGARE(MOS) INCONDICIONALMENTE A LA VISTA, A LA ORDEN DE {0} EN LA CIUDAD DE MÉXICO LA CANTIDAD QUE AMPARA ESTE DOCUMENTO, VALOR DE RECIBIDO EN MERCANCÍA A MI(NUESTRA ENTERA SATISFACCIÓN), DE NO PAGAR SU IMPORTE CUBRIRE(MOS) EL DIEZ POR CIENTO MENSUAL DE INTERÉS MORATORIO..
+        /// </summary>
+        public static string PromissoryNoteLegend {
+            get {
+                return ResourceManager.GetString("PromissoryNoteLegend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Proveedor.
         /// </summary>
         public static string Provider {
@@ -6303,6 +6312,15 @@ namespace Mictlanix.BE {
         public static string Type {
             get {
                 return ResourceManager.GetString("Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a LA REPRODUCCIÓN NO AUTORIZADA DE ESTE DOCUMENTO, CONSTITUYE UN DELITO EN LOS TÉRMINOS DE LAS DISPOSICIONES FISCALES.
+        /// </summary>
+        public static string UnauthorizedReproductionLegend {
+            get {
+                return ResourceManager.GetString("UnauthorizedReproductionLegend", resourceCulture);
             }
         }
         

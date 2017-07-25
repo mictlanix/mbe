@@ -1158,6 +1158,7 @@
     <Content Include="Views\Customers\Merge.cshtml" />
     <Content Include="Views\Payments\_DetailsView.cshtml" />
     <Content Include="Views\Payments\DeliveryTicket.cshtml" />
+    <Content Include="Views\SalesOrders\PromissoryNote.cshtml" />
   </ItemGroup>
   <ItemGroup />
 </Project>

@@ -2355,4 +2355,10 @@ Gracias por utilizar nuestros servicios.
   <data name="TotalPayment" xml:space="preserve">
     <value>Cobro Total</value>
   </data>
+  <data name="PromissoryNoteLegend" xml:space="preserve">
+    <value>DEBO(EMOS) Y PAGARE(MOS) INCONDICIONALMENTE A LA VISTA, A LA ORDEN DE {0} EN LA CIUDAD DE MÉXICO LA CANTIDAD QUE AMPARA ESTE DOCUMENTO, VALOR DE RECIBIDO EN MERCANCÍA A MI(NUESTRA ENTERA SATISFACCIÓN), DE NO PAGAR SU IMPORTE CUBRIRE(MOS) EL DIEZ POR CIENTO MENSUAL DE INTERÉS MORATORIO.</value>
+  </data>
+  <data name="UnauthorizedReproductionLegend" xml:space="preserve">
+    <value>LA REPRODUCCIÓN NO AUTORIZADA DE ESTE DOCUMENTO, CONSTITUYE UN DELITO EN LOS TÉRMINOS DE LAS DISPOSICIONES FISCALES</value>
+  </data>
 </root>
