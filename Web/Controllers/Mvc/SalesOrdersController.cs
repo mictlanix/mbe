@@ -94,7 +94,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				query = from x in SalesOrder.Queryable
 					where x.Store.Id == item.Id && (
 						x.Customer.Name.Contains (pattern) ||
-						x.SalesPerson.Nickname.Contains (pattern))
+						x.SalesPerson.Nickname.Contains (pattern)) ||
+		                            	(x.SalesPerson.FirstName + " " + x.SalesPerson.LastName).Contains (pattern)
 					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending
 					select x;
 			}
@@ -117,15 +118,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View (model);
 		}
 
-		public ViewResult PrintPromissoryNote (int id) {
+		public ViewResult PrintPromissoryNote (int id)
+		{
 			var model = SalesOrder.Find (id);
 			if (model.IsCompleted && !model.IsCancelled) {
-				return View ("PromissoryNote",model);
+				return View ("PromissoryNote", model);
 			}
 			return null;
 		}
 
-		public ActionResult Pdf (int id)
+		public virtual ActionResult Pdf (int id)
 		{
 			var model = SalesOrder.Find (id);
 			return PdfView ("Print", model);
@@ -363,6 +365,33 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				salesPerson = entity.SalesPerson.Id,
 				salesPersonName = entity.SalesPerson.Name
 			});
+		}
+
+		[HttpPost]
+		public ActionResult SetCustomerName (int id, string value)
+		{
+			var entity = SalesOrder.Find (id);
+			string val = (value ?? string.Empty).Trim ();
+
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			entity.CustomerName = (value.Length == 0) ? null : val;
+			entity.Updater = CurrentUser.Employee;
+			entity.ModificationTime = DateTime.Now;
+
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
+			}
+
+			return Json (new { id = id, value = value });
+		}
+
+		public ActionResult GetCustomerName (int id)
+		{
+			return PartialView ("_CustomerName", SalesOrder.Find (id));
 		}
 
 		[HttpPost]
@@ -857,7 +886,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			success = decimal.TryParse (value.TrimEnd (new char [] { ' ', '%' }), out val);
+			success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out val);
 			val /= 100m;
 
 			if (success && val <= 1.0m && val >= 0.0m) {
@@ -890,7 +919,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			success = decimal.TryParse (value.TrimEnd (new char [] { ' ', '%' }), out val);
+			success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out val);
 
 			if (success && val <= entity.Price && val >= 0 && entity.Price > 0) {
 				entity.DiscountRate = val / entity.Price;
@@ -921,7 +950,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			success = decimal.TryParse (value.TrimEnd (new char [] { ' ', '%' }), out val);
+			success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out val);
 
 			// TODO: VAT value range validation
 			if (success) {
@@ -941,7 +970,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult Confirm (int id)
+		public virtual ActionResult Confirm (int id)
 		{
 			var entity = SalesOrder.TryFind (id);
 
