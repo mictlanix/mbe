@@ -17,7 +17,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			Search<ExpenseVoucher> search = new Search<ExpenseVoucher>(){
 				Limit = WebConfig.PageSize,
-				Results = ExpenseVoucher.Queryable.Where(x => !x.IsCancelled).OrderByDescending(x => x.Date).ToList()
+				Results = ExpenseVoucher.Queryable.Where(x => !x.IsCancelled && x.CashSession.CashDrawer.Store == WebConfig.Store).OrderByDescending(x => x.Date).ToList()
 			};
 			search.Total = search.Results.Count();
             return View(search);
@@ -27,7 +27,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		public ActionResult Index(Search<ExpenseVoucher> search) {
 
 			var pattern = (search.Pattern ?? string.Empty).Trim();
-			var query = ExpenseVoucher.Queryable.Where(x => !x.IsCancelled);
+			var query = ExpenseVoucher.Queryable.Where(x => !x.IsCancelled && x.CashSession.CashDrawer.Store == WebConfig.Store);
 			int id = 0;
 
 			if (int.TryParse(pattern, out id)){

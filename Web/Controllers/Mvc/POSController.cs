@@ -750,9 +750,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						    System.Globalization.NumberStyles.Currency,
 						    null, out val);
 
-			if (success && entity.Price > 0) {
-				//entity.Price = val;
-				entity.DiscountRate = 1 - val / entity.Price;
+			if (success && entity.Price >= 0) {
+				entity.Price = val;
+				//entity.DiscountRate = 1 - val / entity.Price;
 				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
 				}
@@ -855,11 +855,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				var dt = DateTime.Now;
 
 				foreach (var x in entity.Details) {
-					if (x.DiscountRate < 0) {
-						x.Price = Model.ModelHelpers.PriceRounding (x.Price * (1 + (-x.DiscountRate)));
-						x.DiscountRate = 0.0m;
-					}
-
 					x.Warehouse = warehouse;
 					x.Update ();
 
