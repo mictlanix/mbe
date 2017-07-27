@@ -38,15 +38,17 @@
         <span class='editable price'>@Html.DisplayFor(x => x.Price)</span>
     }
         <span class='editable currency'>@Html.DisplayFor(x => x.Currency)</span>
-        <b>@Resources.Quantity:</b>
-        <a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
-        <b>@Resources.Discount:</b>
-        <a class='editable discount' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemDiscount", new { id = Model.Id })'>@Html.DisplayFor(x => x.DiscountRate)</a>
-        <b>@Resources.TaxRate:</b>
-        <a class='editable tax' data-type='select' data-placement='right' data-source='@Url.Action("TaxRates", "Pricing")' data-pk='@Model.Id' data-value='@Model.TaxRate.ToString("0.####")' data-url='@Url.Action("SetItemTaxRate", new { id = Model.Id })'>@Html.DisplayFor(x => x.TaxRate)</a>
-        <b>@Resources.Amount:</b>
-        <span class='editable total'>@Html.DisplayFor(x => x.Total)</span>
-        <span class='editable currency'>@Html.DisplayFor(x => x.Currency)</span>
+			<b>@Resources.Quantity:</b>
+			<a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
+			<b>@Resources.Discount:</b>
+			<a class='editable discount-percentage' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemDiscountPercentage", new { id = Model.Id })'>@Html.DisplayFor(x => x.DiscountRate)</a>
+			<b>:</b>
+			<a class='editable discount-price' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemDiscountPrice", new { id = Model.Id })'>@string.Format("{0:C}",(Model.Price * Model.DiscountRate)) </a>
+			<b>@Resources.TaxRate:</b>
+			<a class='editable tax' data-type='select' data-placement='right' data-source='@Url.Action("TaxRates", "Pricing")' data-pk='@Model.Id' data-value='@Model.TaxRate.ToString("0.####")' data-url='@Url.Action("SetItemTaxRate", new { id = Model.Id })'>@Html.DisplayFor(x => x.TaxRate)</a>
+			<b>@Resources.Amount:</b>
+			<span class='editable total'>@Html.DisplayFor(x => x.Total)</span>
+<span class='editable currency'>@Html.DisplayFor(x => x.Currency)</span>
     @if (Model.Currency != WebConfig.BaseCurrency) {
     	<a href="javascript:void(0)" class="total2" data-toggle="tooltip" title="@Html.DisplayFor(x => x.TotalEx) @WebConfig.BaseCurrency">
 			<span class="glyphicon glyphicon-exclamation-sign"></span>
@@ -70,9 +72,12 @@ $('#id\\:@Model.Id a.editable').editable({
 		if ('total2' in response) {
 			$this.siblings('.total2').attr('data-original-title', response.total2 + ' @WebConfig.BaseCurrency');
 		}
-	    if ('discount' in response) {
-	        $this.siblings('.discount').html(response.discount);
-	    }
+	    if ('discount_percentage' in response) {
+	        $this.siblings('.discount-percentage').html(response.discount_percentage);
+		}
+		 if ('discount_price' in response) {
+			 $this.siblings('.discount-price').html(response.discount_price);
+		 }
 		if ($this.hasClass('name')) {
 			setTimeout(function(){$this.editable('setValue', response.value);},500);
 		}

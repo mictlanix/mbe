@@ -29,7 +29,7 @@
         <b>@Resources.Quantity:</b>
         <span class='editable quantity'>@Html.DisplayFor(x => x.Quantity)</span>
         <b>@Resources.Discount:</b>
-        <span class='editable discount'>@Html.DisplayFor(x => x.DiscountRate)</span>
+        <span class='editable discount'>@Html.DisplayFor(x => x.DiscountRate) : @string.Format("{0:c}", Model.DiscountRate * Model.Price)</span>
         <b>@Resources.TaxRate:</b>
         <span class='editable tax'>@Html.DisplayFor(x => x.TaxRate)</span>
         <b>@Resources.Amount:</b>
