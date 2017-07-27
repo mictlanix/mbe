@@ -394,6 +394,8 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Views\POS\_ItemDisplayView.cshtml" />
+    <Content Include="Views\POS\_ItemEditorView.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -620,8 +622,6 @@
     <Content Include="Views\POS\_DisplayView.cshtml" />
     <Content Include="Views\POS\_EditorView.cshtml" />
     <Content Include="Views\POS\_Index.cshtml" />
-    <Content Include="Views\POS\_ItemDisplayView.cshtml" />
-    <Content Include="Views\POS\_ItemEditorView.cshtml" />
     <Content Include="Views\POS\_Items.cshtml" />
     <Content Include="Views\POS\_Totals.cshtml" />
     <Content Include="Views\CustomerRefunds\_Index.cshtml" />
@@ -1159,6 +1159,7 @@
     <Content Include="Views\Payments\_DetailsView.cshtml" />
     <Content Include="Views\Payments\DeliveryTicket.cshtml" />
     <Content Include="Views\SalesOrders\PromissoryNote.cshtml" />
+    <Content Include="Views\SalesOrders\_CustomerName.cshtml" />
   </ItemGroup>
   <ItemGroup />
 </Project>

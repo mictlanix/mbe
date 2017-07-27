@@ -19,6 +19,9 @@
 			        	data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
 			        	@Html.DisplayFor(x => x.Customer.Name)
 			        </a>
+					<span id="name">
+						@Html.Partial("_CustomerName", Model)
+					</span>
 			    </dd>
 				<dt>@Resources.Contact</dt>
 				<dd>
@@ -157,7 +160,8 @@ $(function () {
 					   .editable('setValue', response.terms);
 			$('#due-date').text(response.dueDate);
 			$('#salesperson').text(response.salesPersonName)
-					   .editable('setValue', response.salesPerson);
+				.editable('setValue', response.salesPerson);
+			$('#name').load('@Url.Action("GetCustomerName","POS", new { id = Model.Id } )');
 	    },
 	    display: function(value, response) {
 	    	if (typeof response !== 'undefined') {
@@ -222,7 +226,7 @@ $(function () {
 	    display: function(value, response) {
 			if (typeof response === 'undefined')
 	        	return;
-	        
+
 	        if (Array.isArray(response)) {
 	          	var arr = $.grep(response, function(o){
 	  				return o.value == value;

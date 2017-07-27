@@ -40,10 +40,10 @@
         <span class='editable currency'>@Html.DisplayFor(x => x.Currency)</span>
 			<b>@Resources.Quantity:</b>
 			<a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
-			<b>[@Resources.Discount:</b>
+			<b>@Resources.Discount:</b>
 			<a class='editable discount-percentage' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemDiscountPercentage", new { id = Model.Id })'>@Html.DisplayFor(x => x.DiscountRate)</a>
 			<b>:</b>
-			<a class='editable discount-price' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemDiscountPrice", new { id = Model.Id })'>@string.Format("{0:C}",(Model.Price * Model.DiscountRate)) </a>]
+			<a class='editable discount-price' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemDiscountPrice", new { id = Model.Id })'>@string.Format("{0:C}",(Model.Price * Model.DiscountRate)) </a>
 			<b>@Resources.TaxRate:</b>
 			<a class='editable tax' data-type='select' data-placement='right' data-source='@Url.Action("TaxRates", "Pricing")' data-pk='@Model.Id' data-value='@Model.TaxRate.ToString("0.####")' data-url='@Url.Action("SetItemTaxRate", new { id = Model.Id })'>@Html.DisplayFor(x => x.TaxRate)</a>
 			<b>@Resources.Amount:</b>
@@ -66,22 +66,27 @@ $('#id\\:@Model.Id [data-toggle="tooltip"]').tooltip();
 $('#id\\:@Model.Id a.editable').editable({
 	success: function(response, newValue) {
 		var $this = $(this);
+		console.log(response)
 		if ('total' in response) {
 			$this.siblings('.total').html(response.total);
 		}
 		if ('total2' in response) {
 			$this.siblings('.total2').attr('data-original-title', response.total2 + ' @WebConfig.BaseCurrency');
 		}
-	    if ('discount_percentage' in response) {
-	        $this.siblings('.discount-percentage').html(response.discount_percentage);
+		if ('discountRate' in response) {
+			var discountElement = $this.siblings('.discount-percentage');
+			discountElement.html(response.discountRate);
+			discountElement.editable('setValue', response.discountRate);
 		}
-		 if ('discount_price' in response) {
-			 $this.siblings('.discount-price').html(response.discount_price);
-		 }
+		if ('discountPrice' in response) {
+			var discountElement = $this.siblings('.discount-price');
+			discountElement.html(response.discountPrice);
+			discountElement.editable('setValue', response.discountPrice);
+		}
 		if ($this.hasClass('name')) {
 			setTimeout(function(){$this.editable('setValue', response.value);},500);
 		}
-        $('#totals-section').loadUrl();
+      $('#totals-section').loadUrl();
     },
     display: function(value, response) {
         if (typeof response === 'undefined') {
