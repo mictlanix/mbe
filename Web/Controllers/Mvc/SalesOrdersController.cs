@@ -901,7 +901,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return Json (new {
 				id = entity.Id,
 				value = entity.FormattedValueFor (x => x.DiscountRate),
-				discount_price = string.Format ("{0:C}", entity.Price * entity.DiscountRate),
+				discountPrice = string.Format ("{0:C}", entity.Price * entity.DiscountRate),
 				total = entity.FormattedValueFor (x => x.Total),
 				total2 = entity.FormattedValueFor (x => x.TotalEx)
 			});
@@ -931,7 +931,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return Json (new {
 				id = entity.Id,
-				discount_percentage = entity.FormattedValueFor (x => x.DiscountRate),
+				discountRate = entity.FormattedValueFor (x => x.DiscountRate),
 				value = string.Format ("{0:C}", entity.Price * entity.DiscountRate),
 				total = entity.FormattedValueFor (x => x.Total),
 				total2 = entity.FormattedValueFor (x => x.TotalEx)
