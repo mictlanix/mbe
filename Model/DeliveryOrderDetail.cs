@@ -66,6 +66,30 @@ namespace Mictlanix.BE.Model {
 		[StringLength (250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string ProductName { get; set; }
 
+		[DataType (DataType.Currency)]
+		[Display (Name = "Subtotal", ResourceType = typeof (Resources))]
+		public decimal Subtotal {
+			get { return ModelHelpers.Subtotal (Quantity, OrderDetail.Price, 1, OrderDetail.TaxRate, OrderDetail.IsTaxIncluded); }
+		}
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "Discount", ResourceType = typeof (Resources))]
+		public decimal Discount {
+			get { return ModelHelpers.Discount (Quantity, OrderDetail.Price, 1, OrderDetail.DiscountRate, OrderDetail.TaxRate, OrderDetail.IsTaxIncluded); }
+		}
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "Taxes", ResourceType = typeof (Resources))]
+		public decimal Taxes {
+			get { return Total - Subtotal + Discount; }
+		}
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "Total", ResourceType = typeof (Resources))]
+		public decimal Total {
+			get { return ModelHelpers.Total (Quantity, OrderDetail.Price, 1, OrderDetail.DiscountRate, OrderDetail.TaxRate, OrderDetail.IsTaxIncluded); }
+		}
+
 		#region Override Base Methods
 
 		public override string ToString ()
