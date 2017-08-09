@@ -2356,9 +2356,12 @@ Gracias por utilizar nuestros servicios.
     <value>Cobro Total</value>
   </data>
   <data name="PromissoryNoteLegend" xml:space="preserve">
-    <value>DEBO(EMOS) Y PAGARE(MOS) INCONDICIONALMENTE A LA VISTA, A LA ORDEN DE {0} EN LA CIUDAD DE MÉXICO LA CANTIDAD QUE AMPARA ESTE DOCUMENTO, VALOR DE RECIBIDO EN MERCANCÍA A MI(NUESTRA) ENTERA SATISFACCIÓN, DE NO PAGAR SU IMPORTE CUBRIRE(MOS) EL DIEZ POR CIENTO MENSUAL DE INTERÉS MORATORIO.</value>
+    <value>Debo(emos) y pagaré(mos) incondicionalmente a la vista, a la orden de {0} en la Ciudad de México la cantidad que ampara este documento, valor de recibido en mercancía a mi(nuestra) entera satisfacción, de no pagar su importe cubriré(mos) el diez por ciento mensual de interés moratorio.</value>
   </data>
   <data name="UnauthorizedReproductionLegend" xml:space="preserve">
     <value>LA REPRODUCCIÓN NO AUTORIZADA DE ESTE DOCUMENTO, CONSTITUYE UN DELITO EN LOS TÉRMINOS DE LAS DISPOSICIONES FISCALES</value>
+  </data>
+  <data name="AgreementSignature" xml:space="preserve">
+    <value>Firma de Aceptación</value>
   </data>
 </root>
