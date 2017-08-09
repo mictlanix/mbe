@@ -95,6 +95,18 @@ namespace Mictlanix.BE.Model {
 			get { return Terms != PaymentTerms.Immediate; }
 		}
 
+		[Property("recipient")]
+		[Display(Name = "Recipient", ResourceType = typeof(Resources))]
+		public virtual string Recipient { get; set; }
+
+		[Property ("recipient_name")]
+		[Display (Name = "RecipientName", ResourceType = typeof (Resources))]
+		public virtual string RecipientName { get; set; }
+
+		[BelongsTo ("recipient_address", Lazy = FetchWhen.OnInvoke)]
+		[Display (Name = "Address", ResourceType = typeof (Resources))]
+		public virtual Address RecipientAddress { get; set; }
+
 		[Property]
 		[Display (Name = "Currency", ResourceType = typeof (Resources))]
 		public virtual CurrencyCode Currency { get; set; }

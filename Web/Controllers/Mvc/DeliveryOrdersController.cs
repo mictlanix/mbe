@@ -98,10 +98,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var item = DeliveryOrder.Find (id);
 
-			if (item.IsCompleted && !item.IsCancelled) {
-				return PdfTicketView("Print", item);
+			if (WebConfig.DeliveryOrdersUseMiniPrinter) {
+				return PdfTicketView (WebConfig.DeliveryOrderTemplate, item);
+			} else {
+				return PdfView (WebConfig.DeliveryOrderTemplate, item);
 			}
-			return RedirectToAction("Index");
+
 		}
 
 		[HttpPost]

@@ -245,6 +245,14 @@ namespace Mictlanix.BE.Web.Helpers {
 			get { return System.Threading.Thread.CurrentThread.CurrentCulture; }
 		}
 
+		public static string DeliveryOrderTemplate {
+			get { return ConfigurationManager.AppSettings ["DeliveryOrderTemplate"]; }
+		}
+
+		public static bool DeliveryOrdersUseMiniPrinter {
+			get { return Convert.ToBoolean (ConfigurationManager.AppSettings ["DeliveryOrdersUseMiniPrinter"]); }
+		}
+
 		#endregion
 
 		#region Request's (Local) Settings

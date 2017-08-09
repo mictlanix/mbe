@@ -118,15 +118,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View (model);
 		}
 
-		public ViewResult PrintPromissoryNote (int id)
-		{
-			var model = SalesOrder.Find (id);
-			if (model.IsCompleted && !model.IsCancelled) {
-				return View ("PromissoryNote", model);
-			}
-			return null;
-		}
-
 		public virtual ActionResult Pdf (int id)
 		{
 			var model = SalesOrder.Find (id);
@@ -289,6 +280,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
 		}
 
+		public JsonResult Recipients (int id) {
+			var item = SalesOrder.TryFind (id);
+			var query = from x in item.Customer.Taxpayers
+				    select new {
+					    value = x.Id,
+					    text = x.ToString()
+				    };
+			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
+		}
+
 		public JsonResult Addresses (int id)
 		{
 			var item = SalesOrder.TryFind (id);
@@ -350,6 +351,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
+				entity.Recipient = string.Empty;
+				entity.RecipientName = string.Empty;
+				entity.RecipientAddress = null;
 
 				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
@@ -498,6 +502,30 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				id = id,
 				value = entity.Comment
 			});
+		}
+
+		[HttpPost]
+		public ActionResult SetRecipient (int id, string value) {
+			var entity = SalesOrder.Find (id);
+			string val = (value ?? string.Empty).Trim ();
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			var item = entity.Customer.Taxpayers.Single (x => x.Id == val);
+			entity.Recipient = item.Id.ToString();
+			entity.RecipientName = item.Name;
+			entity.RecipientAddress = item.Address;
+
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
+			}
+
+				return Json (new {
+					id = id,
+					value = item.Name
+				});
 		}
 
 		[HttpPost]
