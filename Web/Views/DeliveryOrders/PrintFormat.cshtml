@@ -1,0 +1,136 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
+@using Mictlanix.BE.Web.Helpers
+@model DeliveryOrder
+
+@{
+		  Layout = WebConfig.PrintLayout;
+		  ViewBag.WindowTitle = string.Format (Resources.PromissoryNote);
+		  ViewBag.Title = Resources.PromissoryNote;
+		  ViewBag.Store = Model.Store;
+		  ViewBag.Taxpayer = WebConfig.Store.TaxpayerId;
+		  ViewBag.TaxpayerName = WebConfig.Store.Taxpayer.Name;
+		  ViewBag.Address = WebConfig.Store.Address;
+}
+<style>
+	* {
+		font-size: 8px !important;
+	}
+	.promissory td {
+		border-right-style: solid;
+		border-right-width: 1px;
+		border-right-color: white;
+	}
+	.legend {
+		font-size:6px !important;
+		padding:8px;
+		text-align:center;
+	}
+	.promissory .detail td {
+		background-color: lightgray !important;
+	}
+	.promissory td.currency {
+		padding: 5px !important;
+	}
+</style>
+<div style="float:right; color:red;">
+	<p>REMISIÓN NO.: @Html.DisplayFor(x => Model.Id)</p>
+</div>
+
+<div style="float:left; clear:none">
+	<table class="promissory">
+		<tr>
+			<td colspan="3">@Resources.SalesPerson: @Html.DisplayFor(x => Model.Creator.Name)</td>
+			<td>@Resources.SalesOrder: @string.Join(",", Model.Details.Select (x => x.OrderDetail.SalesOrder.Id).Distinct().ToArray()) </td>
+			<td colspan="3">@Resources.Date: @Html.DisplayFor(x => Model.Date)</td>
+		</tr>
+		<tr>
+			<td colspan="3">@Resources.Customer: @Html.DisplayFor(x => Model.Customer.Name)</td>
+			<td colspan="2">@Resources.TaxpayerId: @Html.DisplayFor(x => Model.Details.First().OrderDetail.SalesOrder.Recipient)</td>
+		</tr>
+		<tr>
+			<td colspan="4">@Resources.Address: @Model.ShipTo.ToString()</td>
+			<td colspan="2">@Resources.Customer @Resources.Id: @Html.DisplayFor(x => Model.Customer.Id)</td>
+		</tr>
+		<tr>
+			<th class="line nowrap" width="20px">@Resources.Quantity</th>
+			<th class="line nowrap" width="70px">@Resources.ProductCode</th>
+			<th class="line center">@Resources.ProductName</th>
+			<th class="line nowrap" width="70px">@Resources.Price</th>
+			<th class="line nowrap" width="70px">@Resources.VAT</th>
+			<th class="line nowrap" width="70px">@Resources.Amount</th>
+		</tr>
+		@foreach (var item in Model.Details) {
+				<tr class="detail">
+					<td class="number line">@Html.DisplayFor(x => item.Quantity)</td>
+					<td class="center line">@Html.DisplayFor(x => item.ProductCode)</td>
+					<td class="line">@Html.DisplayFor(x => item.ProductName)</td>
+					<td class="number line">@Html.DisplayFor(x => item.OrderDetail.Price)</td>
+					<td class="number line">@Html.DisplayFor(x => item.OrderDetail.TaxRate)</td>
+					<td class="number line">@Html.DisplayFor(x => item.Subtotal)</td>
+				</tr>
+		}
+		@for(int i = Model.Details.Count(); i < 5; i++) {
+				  <tr class="detail">
+			<td class="number line">&nbsp;</td>
+			<td class="center line">&nbsp;</td>
+			<td class="center line">&nbsp;</td>
+			<td class="line">&nbsp;</td>
+			<td class="number line">&nbsp;</td>
+			<td class="number line">&nbsp;</td>
+				  </tr>
+		}
+		<tr>
+			<td colspan="5" class="right">@Resources.DueDate: @Html.DisplayFor(x => Model.Details.First().OrderDetail.SalesOrder.DueDate)</td>
+		</tr>
+	</table>
+
+	<table>
+		<tr>
+			<td class="center currency" colspan="2">@Html.CurrencyToString(Model.Total, Model.Details.First().OrderDetail.SalesOrder.Currency)</td>
+			<td class="number">@Html.LabelFor(x => x.Subtotal)</td>
+			<td class="number">@Html.DisplayFor(x => x.Subtotal)</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+			<td class="number">@Html.LabelFor(x => x.Taxes)</td>
+			<td class="number">@Html.DisplayFor(x => x.Taxes)</td>
+		</tr>
+		@if (Model.Discount > 0.0m) {
+				  <tr>
+						<td></td>
+						<td></td>
+					  <td class="number">@Html.LabelFor(x => x.Discount)</td>
+					  <td class="number">-@Html.DisplayFor(x => x.Discount)</td>
+				  </tr>
+		}
+		<tr>
+			<td></td>
+			<td colspan="1" class="legend">
+				Pagaré<br />
+				@string.Format(Resources.PromissoryNoteLegend, WebConfig.Store.Taxpayer.Name.ToUpper ())</td>
+			<td class="number">@Html.LabelFor(x => x.Total)</td>
+			<td class="number">@Html.DisplayFor(x => x.Total)</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td class="legend">"Efectos fiscales al pago" <br />"Pago en una sola exhibición"</td>
+			<td></td>
+			<td></td>
+		</tr>
+	</table>
+
+	<div style="min-height: 2.2mm; border-top: #333 solid 3px; border-bottom: #333 solid 1px"></div>
+	<div class="row" style="margin-top:15mm">
+		<div class="col-xs-3 col-xs-offset-2 text-center" style="border-top: #333 solid 1px">
+			@Resources.Name<br />
+		</div>
+		<div class="col-xs-3 col-xs-offset-2 text-center" style="border-top: #333 solid 1px">
+			@Resources.AgreementSignature
+		</div>
+	</div>
+
+
+</div>

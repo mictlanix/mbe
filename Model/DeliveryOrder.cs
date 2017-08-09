@@ -79,8 +79,9 @@ namespace Mictlanix.BE.Model {
 		public virtual Address ShipTo { get; set; }
 
 		[Property]
-		[DataType (DataType.DateTime)]
+		[DataType (DataType.Date)]
 		[Display (Name = "Date", ResourceType = typeof (Resources))]
+		[DisplayFormat (DataFormatString = "{0:yyyy-MM-dd}")]
 		public virtual DateTime Date { get; set; }
 
 		[Property ("completed")]
@@ -105,6 +106,30 @@ namespace Mictlanix.BE.Model {
 		public IList<DeliveryOrderDetail> Details {
 			get { return details; }
 			set { details = value; }
+		}
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "Subtotal", ResourceType = typeof (Resources))]
+		public virtual decimal Subtotal {
+			get { return Details.Sum (x => x.Subtotal); }
+		}
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "Discount", ResourceType = typeof (Resources))]
+		public virtual decimal Discount {
+			get { return Details.Sum (x => x.Discount); }
+		}
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "Taxes", ResourceType = typeof (Resources))]
+		public virtual decimal Taxes {
+			get { return Details.Sum (x => x.Taxes); }
+		}
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "Total", ResourceType = typeof (Resources))]
+		public virtual decimal Total {
+			get { return Details.Sum (x => x.Total); }
 		}
 
 		#region Override Base Methods

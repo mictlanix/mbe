@@ -151,6 +151,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Firma de Aceptación.
+        /// </summary>
+        public static string AgreementSignature {
+            get {
+                return ResourceManager.GetString("AgreementSignature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Importe.
         /// </summary>
         public static string Amount {
@@ -4246,7 +4255,7 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a DEBO(EMOS) Y PAGARE(MOS) INCONDICIONALMENTE A LA VISTA, A LA ORDEN DE {0} EN LA CIUDAD DE MÉXICO LA CANTIDAD QUE AMPARA ESTE DOCUMENTO, VALOR DE RECIBIDO EN MERCANCÍA A MI(NUESTRA) ENTERA SATISFACCIÓN, DE NO PAGAR SU IMPORTE CUBRIRE(MOS) EL DIEZ POR CIENTO MENSUAL DE INTERÉS MORATORIO..
+        ///   Busca una cadena traducida similar a Debo(emos) y pagaré(mos) incondicionalmente a la vista, a la orden de {0} en la Ciudad de México la cantidad que ampara este documento, valor de recibido en mercancía a mi(nuestra) entera satisfacción, de no pagar su importe cubriré(mos) el diez por ciento mensual de interés moratorio..
         /// </summary>
         public static string PromissoryNoteLegend {
             get {

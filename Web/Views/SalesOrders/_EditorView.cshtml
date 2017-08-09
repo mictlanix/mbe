@@ -35,6 +35,19 @@
 		        	}
 			        </a>
 			    </dd>
+				<dt>@Resources.TaxpayerRecipient</dt>
+				<dd>
+					<a id='recipient' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id'
+						data-value='@(Model.Recipient == null ? "" : Model.RecipientName)'
+						data-source='@Url.Action("Recipients", new { id = Model.Id })' data-source-cache='false'
+						data-url='@Url.Action("SetRecipient", new { id = Model.Id })'
+						data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
+						@if (Model.Recipient != null) {
+								@Html.DisplayFor(x => x.RecipientName)
+						}
+					</a>
+				</dd>
+
 				<dt>@Resources.ShipTo</dt>
 				<dd>
 			        <a id='address' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id'
@@ -162,6 +175,7 @@ $(function () {
 			$('#salesperson').text(response.salesPersonName)
 				.editable('setValue', response.salesPerson);
 			$('#name').load('@Url.Action("GetCustomerName","POS", new { id = Model.Id } )');
+			$('#taxpayer').text('').editable('setValue', '');
 	    },
 	    display: function(value, response) {
 	    	if (typeof response !== 'undefined') {
@@ -202,6 +216,41 @@ $(function () {
 			}
 	    }
 	});
+
+	$('#taxpayer').editable({
+	    select2: {
+		    ajax: {
+		        url: '@Url.Action("Recipients", "SalesOrders")',
+		        dataType: 'json',
+		        type: 'POST',
+		        data: function(term,page,context) {
+		        	return { pattern:term };
+		        },
+		        results: function(data,page) {
+		            return { results:data };
+		        }
+		    },
+		    initSelection: function(element, callback) {
+		        var data = {
+					  id: $('#recipient').data('value'),
+					  name: $('#recipient').text()
+				 };
+		        callback(data);
+		    },
+		    formatResult: function(result ) {
+		        return result.name;
+		    },
+		    formatSelection: function(selection) {
+		        return selection.name;
+		    }
+		},
+	    display: function(value, response) {
+	    	if (typeof response !== 'undefined') {
+				$(this).html(response.value);
+			}
+	    }
+	});
+
 	$('#promise-date').editable({
 		datepicker: {
 	    	language:'@WebConfig.Language'
