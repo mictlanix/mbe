@@ -221,7 +221,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.CreationTime = dt;
 			item.Updater = item.Creator;
 			item.ModificationTime = dt;
-			item.IsCompleted = true;
 
 			var details = salesquote.Details.Select (x => new SalesOrderDetail {
 				Currency = x.Currency,
