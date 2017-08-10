@@ -9,9 +9,9 @@
 		  ViewBag.WindowTitle = string.Format (Resources.PromissoryNote);
 		  ViewBag.Title = Resources.PromissoryNote;
 		  ViewBag.Store = Model.Store;
-		  ViewBag.Taxpayer = WebConfig.Store.TaxpayerId;
-		  ViewBag.TaxpayerName = WebConfig.Store.Taxpayer.Name;
-		  ViewBag.Address = WebConfig.Store.Address;
+		  ViewBag.Taxpayer = Model.Details.FirstOrDefault().OrderDetail.SalesOrder.Store.Taxpayer.Id;
+		  ViewBag.TaxpayerName = Model.Details.FirstOrDefault ().OrderDetail.SalesOrder.Store.Taxpayer.Name;
+		  ViewBag.Address = Model.Details.FirstOrDefault ().OrderDetail.SalesOrder.Store.Address;
 }
 <style>
 	* {
@@ -41,7 +41,7 @@
 <div style="float:left; clear:none">
 	<table class="promissory">
 		<tr>
-			<td colspan="3">@Resources.SalesPerson: @Html.DisplayFor(x => Model.Creator.Name)</td>
+			<td colspan="3">@Resources.SalesPerson: @Html.DisplayFor(x => Model.Customer.SalesPerson.Name)</td>
 			<td>@Resources.SalesOrder: @string.Join(",", Model.Details.Select (x => x.OrderDetail.SalesOrder.Id).Distinct().ToArray()) </td>
 			<td colspan="3">@Resources.Date: @Html.DisplayFor(x => Model.Date)</td>
 		</tr>
@@ -94,7 +94,7 @@
 		</tr>
 		<tr>
 			<td></td>
-			<td></td>
+			<td>@Html.DisplayFor(x => Model.Comment)</td>
 			<td class="number">@Html.LabelFor(x => x.Taxes)</td>
 			<td class="number">@Html.DisplayFor(x => x.Taxes)</td>
 		</tr>
