@@ -389,6 +389,33 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
+		public ActionResult SetItemProductName (int id, string value)
+		{
+			var entity = DeliveryOrderDetail.Find (id);
+			string val = (value ?? string.Empty).Trim ();
+
+			if (entity.DeliveryOrder.IsCompleted || entity.DeliveryOrder.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			if (val.Length == 0) {
+				entity.ProductName = entity.Product.Name;
+			} else {
+				entity.ProductName = val;
+			}
+
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
+			}
+
+			return Json (new {
+				id = entity.Id,
+				value = entity.ProductName
+			});
+		}
+
+		[HttpPost]
 		public ActionResult SetItemQuantity (int id, decimal value)
 		{
 			var entity = DeliveryOrderDetail.Find (id);
