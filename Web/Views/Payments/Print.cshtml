@@ -69,20 +69,26 @@
         <td class="total number">@Html.DisplayFor(x => x.Total)</td>
     </tr>
     @foreach (var item in Model.Payments) {
+
+		 string desc = "";
+
+		 if (item.Payment.ExtraFee != null) {
+			 desc += item.Payment.ExtraFee.Name + "\n";
+			 if (item.Payment.ExtraFee.isDisplayedOnTicket) {
+				 item.Payment.Amount *= (item.Payment.Commission + 1.0m);
+			 }
+		 }
+
+		 if (item.Payment.CashSession == null) {
+			 desc += Resources.PaymentUponDelivery;
+		 }
+
         <tr>
-		  	<td colspan="2" class="text-right">@item.Payment.Method.GetDisplayName()</td>
-			  @if (item.Payment.ExtraFee != null) {
-						<td class="text-right">@item.Payment.ExtraFee.Name</td>
-				  if (item.Payment.ExtraFee.isDisplayedOnTicket) {
-					  item.Payment.Amount = item.Payment.Amount * (item.Payment.Commission + 1);
-							<td class="number">@Html.DisplayFor(x => item.Payment.Amount)</td>
-				  } else {
-									<td class="number">@Html.DisplayFor(x => item.Payment.Amount)</td>
-				  }
-			  } else {
-						<td class="text-right"></td>
-						<td class="number">@Html.DisplayFor(x => item.Payment.Amount)</td>
-			  }
+		  		<td colspan="2" class="text-right" style="padding-right:14px">@item.Payment.Method.GetDisplayName()</td>
+				<td>@desc</td>
+		  		<td class="number">
+					  @Html.DisplayFor(x => item.Payment.Amount)
+			  </td>
 		  </tr>
 
 	 }
@@ -99,7 +105,7 @@
 
 @if (Model.Savings > 0) {
 <div class="display-field text-center">
-        <text>@string.Format(Resources.SavingsOnSalesOrder, Model.Savings)</text>
+        <text>@string.Format(Resources.SavingsOnSalesOrder, Model.Discount)</text>
 </div>
 }
 
