@@ -11,6 +11,11 @@
         <a class='button icon-only icon delete' title='@Resources.Message_DeleteConfirmation'
 		   data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id' data-url='@Url.Action("RemovePayment", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
     </div>
+	} else if (Model.SalesOrder.IsPaid && Model.Payment.CashSession == null) {
+			<div class='action-link'>
+				<a class='button icon-only icon save receive' title='@Resources.Apply'
+					data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id' data-url='@Url.Action("ReceiveDeliveryPayment", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
+			</div>
 	}
     <div class="info">
         <label>@Resources.Amount:</label>
@@ -33,11 +38,12 @@
 					<label>@Resources.NumberOfPayments:</label>
 					<span class="text">@Model.Payment.ExtraFee.NumberOfPayments pagos mensuales de @string.Format("{0:c}",((Model.Payment.Amount*(Model.Payment.Commission + 1))/Model.Payment.ExtraFee.NumberOfPayments)) c/u.</span><br />
 					<label>@Resources.TotalPayment:</label>
-					<span class="text"><b>@string.Format("{0:c}", Model.Payment.Amount * (Model.Payment.Commission + 1)) </b></span>
+					<span class="text"><b>@string.Format("{0:c}", Model.Payment.Amount * (Model.Payment.Commission + 1.0m)) </b></span>
 		 }
-		 @if (PaymentOnDelivery.Queryable.Any(x => x.CustomerPayment == Model.Payment)) {
+		 @if (Model.Payment.CashSession == null) {
 					<label>@Resources.PaymentUponDelivery</label>
 		 }
+		 
 
     </div>
 </li>
@@ -47,5 +53,14 @@ $('#payment@(Model.Id) a.delete').editable({
         $('#payment@(Model.Id)').remove();
         updateTotals();
     }
-});
+	});
+$('#payment@(Model.Id) a.receive').editable({
+	success: function (response, newValue) {
+		console.log(response)
+		$('#payment@(Model.Id)').replaceWith(function () {
+			return $(response).hide(3000).fadeIn(3000);
+		});
+    }
+	});
+
 </script>

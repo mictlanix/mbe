@@ -103,7 +103,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			if (int.TryParse (pattern, out id) && id > 0) {
 
-				query = query.Where (x => x.Id == id);
+				query = SalesOrder.Queryable.Where (x => x.Id == id && x.Payments.Any(y => y.Payment.CashSession == null));
 
 			} else if (!string.IsNullOrEmpty (pattern)) {
 
@@ -408,22 +408,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				item.Amount = item.SalesOrder.Balance;
 			}
 
+			if (ondelivery && sales_order.ShipTo != null) {
+
+				item.Payment.CashSession = null;
+			}
+
 			using (var scope = new TransactionScope ()) {
 				item.Payment.Create ();
 				item.CreateAndFlush ();
-			}
-
-			if (ondelivery && sales_order.ShipTo != null) {
-				using (var scope = new TransactionScope ()) {
-					PaymentOnDelivery payment_on_delivery = new PaymentOnDelivery {
-						CustomerPayment = item.Payment,
-						IsPaid = false,
-						CashSession = null,
-						Date = DateTime.Now
-					};
-
-					payment_on_delivery.CreateAndFlush ();
-				}
 			}
 
 			return Json (new {
@@ -520,6 +512,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			return PartialView ("_DetailsView", item);
+		}
+
+		public ActionResult ReceiveDeliveryPayment (int id)
+		{
+			var item = SalesOrderPayment.Find (id);
+			if (item.Payment.CashSession == null) {
+				item.Payment.CashSession = GetSession ();
+				item.Payment.ModificationTime = DateTime.Now;
+				using (var scope = new TransactionScope ()) {
+					item.Payment.UpdateAndFlush ();
+				}
+			}
+			return PartialView ("_Payment", item);
 		}
 
 		public ActionResult CloseSession ()
