@@ -42,8 +42,10 @@
 		 }
 		 @if (Model.Payment.CashSession == null) {
 					<label>@Resources.PaymentUponDelivery</label>
+		 }else if(Model.Payment.CashSession.CashDrawer.Store != Model.SalesOrder.Store) {
+					<label>@Resources.Store: @Model.Payment.Store.Name</label>
 		 }
-		 
+
 
     </div>
 </li>

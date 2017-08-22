@@ -377,6 +377,11 @@ ALTER TABLE `sales_order`
 ALTER TABLE `delivery_order`
 	AUTO_INCREMENT=3005;
 --
+
+ALTER TABLE `customer_payment`
+	ALTER `cash_session` DROP DEFAULT;
+ALTER TABLE `customer_payment`
+	CHANGE COLUMN `cash_session` `cash_session` INT(11) NULL AFTER `date`;
 	
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
