@@ -5,10 +5,15 @@
 @model MasterDetails<CashSession, SalesOrder>
 
 @{
-    ViewBag.Title = Resources.Title_CustomerPayment;
-    ViewBag.ShowCloseSession = true;
-    var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments);
+		  ViewBag.Title = Resources.Title_CustomerPayment;
+		  ViewBag.ShowCloseSession = true;
+		  var CurrentUser = Html.CurrentUser () ?? new User ();
+		  var Privilege = Html.GetPrivilege (CurrentUser, SystemObjects.CustomerPayments);
+}
+
+@{
+		  var delivery_payments = Model.Details.Where (x => x.IsPaid && x.Payments.Any (y => y.Payment.CashSession == null)).ToList ();
+		  var cash_payments = Model.Details.Where (x => !x.IsPaid).ToList ();
 }
 
 <h2>@Resources.DisplayName_CustomerPayments</h2>
@@ -20,16 +25,26 @@
     <ul class='nav nav-tabs'>
         <li class='active'><a href='#tab-1' data-toggle='tab'>@Resources.DisplayName_CashPayment</a></li>
         <li><a href='#tab-2' data-toggle='tab'>@Resources.DisplayName_CreditPayment</a></li>
+		  @if (delivery_payments.Count () > 0) {
+					<li><a href='#tab-3' data-toggle='tab'>@Resources.PaymentUponDelivery</a></li>
+		  }
     </ul>
     <div class="tab-content">
 	    <div id='tab-1' class='tab-pane active'>
-	        @Html.Partial("_CashPayment", Model.Details)
+	        @Html.Partial("_CashPayment", cash_payments)
 	    </div>
 	    <div id='tab-2' class='tab-pane'>
 	    	<div id='credit-payment'>
 	        	@Html.Partial("_CreditPayment", new CustomerPayment { Date = DateTime.Now })
 	        </div>
 	    </div>
+		 @if (delivery_payments.Count() > 0) {
+	 		<div id='tab-3' class='tab-pane'>
+	 			<div id='delivery-payment'>
+	 				@Html.Partial("_DeliveryPayment", delivery_payments)
+	 			</div>
+			</div>
+		 }
 	</div>
 </div>
 }
