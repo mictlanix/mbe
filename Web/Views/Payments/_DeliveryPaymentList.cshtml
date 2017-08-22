@@ -1,0 +1,52 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model IEnumerable<SalesOrder>
+
+@{
+    ViewBag.Title = Resources.Title_CustomerPayment;
+    ViewBag.ShowCloseSession = true;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments);
+}
+
+<table>
+    <tr>
+        <th>@Html.LabelFor(x => new SalesOrder().Id)</th>
+        <th>@Html.LabelFor(x => new SalesOrder().Date)</th>
+        <th>@Html.LabelFor(x => new SalesOrder().Customer)</th>
+        <th>@Html.LabelFor(x => new SalesOrder().SalesPerson)</th>
+        <th>@Html.LabelFor(x => new SalesOrder().PointOfSale)</th>
+        <th></th>
+    </tr>
+@foreach (var item in Model) {
+    <tr>
+        <td class="number">
+        	@Html.DisplayFor(x => item.Id)
+        	<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => item.Serial)">
+				<span class="glyphicon glyphicon-exclamation-sign"></span>
+			</a>
+        </td>
+        <td class="date">@Html.DisplayFor(x => item.Date)</td>
+        <td>@Html.DisplayFor(x => item.Customer.Name)
+            @if (!string.IsNullOrWhiteSpace(item.CustomerName))
+            {
+                <text> - (@item.CustomerName)</text>
+            }
+        </td>
+        <td>
+            @Html.DisplayFor(x => item.SalesPerson.Name)
+        </td>
+        <td class="center">
+            @Html.DisplayFor(x => item.PointOfSale.Code)
+        </td>
+        <td class="actions">
+        	@Html.ActionLink(" ", "PayOrder", new { id = item.Id }, new { @class = "button icon pay icon-only" })
+        </td>
+    </tr>
+}
+</table>
+<script type="text/javascript">
+$('[data-toggle="tooltip"]').tooltip();
+</script>
