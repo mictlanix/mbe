@@ -41,7 +41,7 @@
 					<span class="text"><b>@string.Format("{0:c}", Model.Payment.Amount * (Model.Payment.Commission + 1.0m)) </b></span>
 		 }
 		 @if (Model.Payment.CashSession == null) {
-					<label>@Resources.PaymentUponDelivery</label>
+					<label>@Resources.PaymentOnDelivery</label>
 		 }else if(Model.Payment.CashSession.CashDrawer.Store != Model.SalesOrder.Store) {
 					<label>@Resources.Store: @Model.Payment.Store.Name</label>
 		 }
