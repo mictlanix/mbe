@@ -366,22 +366,23 @@ CREATE TABLE `payment_on_delivery` (
 		ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
--- Se contemplan estos cambios para Dataprint respecto a las remisiones
-
 ALTER TABLE `sales_order`
 	ADD COLUMN `recipient` VARCHAR(13) NULL DEFAULT NULL AFTER `promise_date`,
 	ADD COLUMN `recipient_name` VARCHAR(250) NULL DEFAULT NULL AFTER `recipient`,
 	ADD COLUMN `recipient_address` INT NULL DEFAULT NULL AFTER `recipient_name`,
 	ADD CONSTRAINT `FK_sales_order_address` FOREIGN KEY (`recipient_address`) REFERENCES `address` (`address_id`) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
-ALTER TABLE `delivery_order`
-	AUTO_INCREMENT=3005;
---
 
 ALTER TABLE `customer_payment`
 	ALTER `cash_session` DROP DEFAULT;
 ALTER TABLE `customer_payment`
 	CHANGE COLUMN `cash_session` `cash_session` INT(11) NULL AFTER `date`;
+	
+ALTER TABLE `delivery_order`
+	ALTER `date` DROP DEFAULT;
+ALTER TABLE `delivery_order`
+	CHANGE COLUMN `date` `date` DATETIME NULL AFTER `ship_to`;
+
 	
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
