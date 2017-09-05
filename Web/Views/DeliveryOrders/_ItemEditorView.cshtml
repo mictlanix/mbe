@@ -30,6 +30,9 @@
         <span>@Html.DisplayFor(x => x.Product.SKU)</span>
     }
         <br/>
+		 @if (!string.IsNullOrEmpty (Model.OrderDetail.Comment)) {
+					<b>@Resources.Comment: </b><span>@Model.OrderDetail.Comment</span><br/>
+		 }
         <b>@Resources.Quantity: </b>
         <a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
     </div>
