@@ -1007,10 +1007,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			entity.Updater = CurrentUser.Employee;
 			entity.ModificationTime = DateTime.Now;
+			entity.IsDelivered = false;
 			entity.IsCompleted = true;
 
 			if (entity.ShipTo == null) {
-				entity.IsDelivered = true;
+				//entity.IsDelivered = true;
 				using (var scope = new TransactionScope ()) {
 					var warehouse = entity.PointOfSale.Warehouse;
 					var dt = DateTime.Now;

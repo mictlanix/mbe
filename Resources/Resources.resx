@@ -2346,8 +2346,8 @@ Gracias por utilizar nuestros servicios.
   <data name="Validation_InvalidRange" xml:space="preserve">
     <value>El campo {0} debe tener valores entre 0 y 100</value>
   </data>
-  <data name="PaymentUponDelivery" xml:space="preserve">
-    <value>Pago a contra-entrega</value>
+  <data name="PaymentOnDelivery" xml:space="preserve">
+    <value>Contraentrega</value>
   </data>
   <data name="DisplayOnTicket" xml:space="preserve">
     <value>Mostrar en Ticket</value>
@@ -2363,5 +2363,8 @@ Gracias por utilizar nuestros servicios.
   </data>
   <data name="AgreementSignature" xml:space="preserve">
     <value>Firma de Aceptación</value>
+  </data>
+  <data name="CreditAndCollection" xml:space="preserve">
+    <value>Crédito y Cobranza</value>
   </data>
 </root>

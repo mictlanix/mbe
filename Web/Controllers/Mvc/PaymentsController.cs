@@ -96,8 +96,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			int id = 0;
 
 			IQueryable<SalesOrder> query = from x in SalesOrder.Queryable
-						       where x.Store.Id == item.Id && x.IsCompleted && !x.IsCancelled
-								&& (!x.IsPaid || (x.IsPaid && x.Payments.Any(y => y.Payment.CashSession == null))) 
+						       where ((x.Store.Id == item.Id && x.IsCompleted && !x.IsCancelled && !x.IsPaid)
+								|| (x.IsPaid && x.Payments.Any(y => y.Payment.CashSession == null)))
 								&& x.Terms == PaymentTerms.Immediate
 						       orderby x.Date descending
 						       select x;
