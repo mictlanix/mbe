@@ -50,7 +50,13 @@
 					</a>
 				</dd>
 				<dt>@Resources.Date</dt>
-				<dd>@Html.DisplayFor(x => x.Date)</dd>
+				<dd>
+					<a id='date' data-type='date' data-placement='left' data-pk='@Model.Id'
+						data-value='@Html.DisplayFor(x => x.Date)' data-url='@Url.Action("SetDate", new { id = Model.Id })'
+						data-emptytext='@Resources.Empty'>
+						@Html.DisplayFor(x => x.Date)
+					</a>
+				</dd>
 			</dl>
   		</div>
 	</div>
@@ -65,12 +71,12 @@
 }
 </fieldset>
 <script type='text/javascript'>
-$('[data-toggle="tooltip"]').tooltip();
-$('#customer').editable({
-    select2: {
-    	minimumInputLength: 3,
-	    ajax: {
-	        url: '@Url.Action("GetSuggestions", "Customers")',
+	$('[data-toggle="tooltip"]').tooltip();
+	$('#customer').editable({
+		select2: {
+			minimumInputLength: 3,
+			ajax: {
+				url: '@Url.Action("GetSuggestions", "Customers")',
 	        dataType: 'json',
 	        type: 'POST',
 	        data: function(term,page,context) {
@@ -103,12 +109,20 @@ $('#customer').editable({
 			$(this).html(response.value);
 		}
     }
-});
+	});
+
+	$('#date').editable({
+		datepicker: {
+			language: '@WebConfig.Language'
+		}
+	});
+
+
 $('a.editable').editable({
     display: function(value, response) {
 		if (typeof response === 'undefined')
         	return;
-        
+
         if (Array.isArray(response)) {
           	var arr = $.grep(response, function(o){
   				return o.value == value;

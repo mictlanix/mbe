@@ -42,10 +42,11 @@
             <div class="col-xs-12">
                 <p><span class="mylabel">@Resources.Comment</span></p>
             </div>
+			@if (!string.IsNullOrEmpty (Model.Comment)) {
             <div class="col-xs-12">
                 <p>@Html.DisplayFor(x => x.Comment)</p>
             </div>
-
+			}
  		</div>
 	</div>
 	<div class="col-xs-6 text-right">
@@ -90,25 +91,20 @@
 <div style="min-height: 2.2mm; border-top: #333 solid 3px; border-bottom: #333 solid 1px"></div>
 
 @{
-		  var payments = Model.Details.Select (x => x.OrderDetail.SalesOrder).Distinct ().SelectMany (x => x.Payments).ToList();
-		  List<PaymentOnDelivery> payments_on_delivery = new List<PaymentOnDelivery> ();
-		  foreach (var payment in payments) {
-			  var ondelivery = PaymentOnDelivery.Queryable.SingleOrDefault(x => x.CustomerPayment == payment.Payment && !x.IsPaid);
-			  if (ondelivery != null) {
-				  payments_on_delivery.Add (ondelivery);
-			  }
-		  }
+		  var payments_on_delivery = Model.Details.Select (x => x.OrderDetail.SalesOrder).Distinct ().SelectMany (x => x.Payments.Where(y => y.Payment.CashSession == null)).ToList();
+		 
 } 
 
 @if (payments_on_delivery.Count () > 0) {
 		<span>Pagos Pendientes</span>
 	foreach (var item in payments_on_delivery) {
+		item.Payment.Amount *= (item.Payment.Commission + 1.0m);
 					<div>
 						<ul>
 							<li>
-								<span>@Resources.SalesOrderId: @Html.DisplayFor(x => SalesOrderPayment.Queryable.Where(y => y.Payment == item.CustomerPayment).Single().SalesOrder.Id)</span><br />
-								<span>@Resources.Amount: <b>@string.Format("{0:c}", item.CustomerPayment.Amount * (item.CustomerPayment.Commission + 1))</b></span><br />
-								<span>@Resources.PaymentMethod: @item.CustomerPayment.Method.GetDisplayName()</span></li>
+								<span>@Resources.SalesOrderId: @Html.DisplayFor(x => item.SalesOrder.Id)</span><br />
+								<span>@Resources.Amount: <b>@Html.DisplayFor(x => item.Payment.Amount)</b></span><br />
+								<span>@Resources.PaymentMethod: @item.Payment.Method.GetDisplayName()</span></li>
 						</ul>
 					</div>
 	}
