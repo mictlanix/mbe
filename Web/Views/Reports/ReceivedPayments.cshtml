@@ -13,9 +13,6 @@
 <div id="master-section">
 @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
 	<div class="row">
-  		@*<div class="col-sm-7">
-			@Html.Editor("store", "StoreSelector")
-		</div>*@
 		<div class="col-sm-2">
 			@Html.EditorFor(x => x.StartDate)
 		</div>
