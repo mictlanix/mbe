@@ -181,12 +181,6 @@ namespace Mictlanix.BE.Model {
 		}
 
 		[DataType (DataType.Currency)]
-		[Display (Name = "Savings", ResourceType = typeof (Resources))]
-		public virtual decimal Savings {
-			get { return Details.Sum (x => x.Savings); }
-		}
-
-		[DataType (DataType.Currency)]
 		[Display (Name = "Subtotal", ResourceType = typeof (Resources))]
 		public virtual decimal SubtotalEx {
 			get { return Details.Sum (x => x.SubtotalEx); }
