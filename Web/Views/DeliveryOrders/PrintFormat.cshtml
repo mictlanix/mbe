@@ -16,6 +16,7 @@
 <style>
 	* {
 		font-size: 8px !important;
+		font-family: Verdana, Geneva, Tahoma, sans-serif;
 	}
 	.promissory td {
 		border-right-style: solid;
@@ -33,39 +34,50 @@
 	.promissory td.currency {
 		padding: 5px !important;
 	}
+
+	.serial {
+		font-size:12px !important;
+		font-weight: bold !important;
+	}
+
+	.head-text {
+		font-weight: bold !important;
+	}
+
 </style>
-<div style="float:right; color:red;">
-	<p>REMISIÓN NO.: @Html.DisplayFor(x => Model.Id)</p>
+<div style="float:right !important;">
+	<p class="serial">REMISIÓN NO.: @Html.DisplayFor(x => Model.Id)</p>
 </div>
 
 <div style="float:left; clear:none">
 	<table class="promissory">
 		<tr>
-			<td colspan="3">@Resources.SalesPerson: @Html.DisplayFor(x => Model.Customer.SalesPerson.Name)</td>
-			<td>@Resources.SalesOrder: @string.Join(",", Model.Details.Select (x => x.OrderDetail.SalesOrder.Id).Distinct().ToArray()) </td>
-			<td colspan="3">@Resources.Date: @Html.DisplayFor(x => Model.Date)</td>
+			<td colspan="3"><span class="head-text">@Resources.SalesPerson</span>: @Html.DisplayFor(x => Model.Customer.SalesPerson.Name)</td>
+			<td><span class="head-text">@Resources.SalesOrder</span>: @string.Join(",", Model.Details.Select (x => x.OrderDetail.SalesOrder.Id).Distinct ().ToArray ()) </td>
+			<td colspan="3"><span class="head-text">@Resources.Date</span>: @Html.DisplayFor(x => Model.Date)</td>
 		</tr>
 		<tr>
-			<td colspan="3">@Resources.Customer: @Html.DisplayFor(x => Model.Customer.Name)</td>
-			<td colspan="2">@Resources.TaxpayerId: @Html.DisplayFor(x => Model.Details.First().OrderDetail.SalesOrder.Recipient)</td>
+			<td colspan="3"><span class="head-text">@Resources.Customer</span>: @Html.DisplayFor(x => Model.Customer.Name)</td>
+			<td colspan="2"><span class="head-text">@Resources.TaxpayerId</span>: @Html.DisplayFor(x => Model.Details.First().OrderDetail.SalesOrder.Recipient)</td>
 		</tr>
 		<tr>
-			<td colspan="4">@Resources.Address: @Model.ShipTo.ToString()</td>
-			<td colspan="2">@Resources.Customer @Resources.Id: @Html.DisplayFor(x => Model.Customer.Id)</td>
+			<td colspan="4"><span class="head-text">@Resources.Address</span>: @Model.ShipTo.ToString()</td>
+			<td colspan="2"><span class="head-text">@Resources.Customer @Resources.Id</span>: @Html.DisplayFor(x => Model.Customer.Id)</td>
 		</tr>
 		<tr>
-			<th class="line nowrap" width="20px">@Resources.Quantity</th>
-			<th class="line nowrap" width="70px">@Resources.ProductCode</th>
-			<th class="line center">@Resources.ProductName</th>
-			<th class="line nowrap" width="70px">@Resources.Price</th>
-			<th class="line nowrap" width="70px">@Resources.VAT</th>
-			<th class="line nowrap" width="70px">@Resources.Amount</th>
+			<th class="line nowrap" width="20px"><span class="head-text">@Resources.Quantity</span></th>
+			<th class="line nowrap" width="70px"><span class="head-text">@Resources.ProductCode</span></th>
+			<th class="line center"><span class="head-text">@Resources.ProductName</span></th>
+			<th class="line nowrap" width="70px"><span class="head-text">@Resources.Price</span></th>
+			<th class="line nowrap" width="70px"><span class="head-text">@Resources.VAT</span></th>
+			<th class="line nowrap" width="70px"><span class="head-text">@Resources.Amount</span></th>
 		</tr>
 		@foreach (var item in Model.Details) {
 				<tr class="detail">
 					<td class="number line">@Html.DisplayFor(x => item.Quantity)</td>
 					<td class="center line">@Html.DisplayFor(x => item.ProductCode)</td>
-					<td class="line">@Html.DisplayFor(x => item.ProductName)</td>
+					<td class="line">@Html.DisplayFor(x => item.ProductName) 
+						@if (!string.IsNullOrEmpty (item.OrderDetail.Comment)) {  <br /> <span> - @item.OrderDetail.Comment</span>}</td>
 					<td class="number line">@Html.DisplayFor(x => item.OrderDetail.Price)</td>
 					<td class="number line">@Html.DisplayFor(x => item.OrderDetail.TaxRate)</td>
 					<td class="number line">@Html.DisplayFor(x => item.Subtotal)</td>
@@ -94,7 +106,7 @@
 		</tr>
 		<tr>
 			<td></td>
-			<td>@Html.DisplayFor(x => Model.Comment)</td>
+			<td>@Model.Comment</td>
 			<td class="number">@Html.LabelFor(x => x.Taxes)</td>
 			<td class="number">@Html.DisplayFor(x => x.Taxes)</td>
 		</tr>
@@ -109,8 +121,8 @@
 		<tr>
 			<td></td>
 			<td colspan="1" class="legend">
-				Pagaré<br />
-				@string.Format(Resources.PromissoryNoteLegend, WebConfig.Store.Taxpayer.Name.ToUpper ())</td>
+				<span class="head-text">Pagaré</span><br />
+				@string.Format(Resources.PromissoryNoteLegend, Model.Store.Taxpayer.Name.ToUpper ())</td>
 			<td class="number">@Html.LabelFor(x => x.Total)</td>
 			<td class="number">@Html.DisplayFor(x => x.Total)</td>
 		</tr>
