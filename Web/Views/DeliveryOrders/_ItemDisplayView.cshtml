@@ -27,6 +27,9 @@
         <b>@Resources.SKU: </b>
         <span>@Html.DisplayFor(x => x.Product.SKU)</span>
     }
+	 @if (!string.IsNullOrEmpty (Model.OrderDetail.Comment)) {
+	 		<b>@Resources.Comment: </b><span>@Model.OrderDetail.Comment</span><br />
+	 }
         <br/>
         <b>@Resources.Quantity: </b>
         <span class='editable quantity'>@Html.DisplayFor(x => x.Quantity)</span>

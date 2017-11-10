@@ -970,6 +970,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Crédito y Cobranza.
+        /// </summary>
+        public static string CreditAndCollection {
+            get {
+                return ResourceManager.GetString("CreditAndCollection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Tarjeta de Crédito.
         /// </summary>
         public static string CreditCard {
@@ -3823,6 +3832,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Contraentrega.
+        /// </summary>
+        public static string PaymentOnDelivery {
+            get {
+                return ResourceManager.GetString("PaymentOnDelivery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Referencia de Pago.
         /// </summary>
         public static string PaymentReference {
@@ -3882,15 +3900,6 @@ namespace Mictlanix.BE {
         public static string PaymentTerms {
             get {
                 return ResourceManager.GetString("PaymentTerms", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a Pago a contra-entrega.
-        /// </summary>
-        public static string PaymentUponDelivery {
-            get {
-                return ResourceManager.GetString("PaymentUponDelivery", resourceCulture);
             }
         }
         

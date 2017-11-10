@@ -82,7 +82,7 @@ namespace Mictlanix.BE.Model {
 		[DataType (DataType.Date)]
 		[Display (Name = "Date", ResourceType = typeof (Resources))]
 		[DisplayFormat (DataFormatString = "{0:yyyy-MM-dd}")]
-		public virtual DateTime Date { get; set; }
+		public virtual DateTime? Date { get; set; }
 
 		[Property ("completed")]
 		[Display (Name = "Completed", ResourceType = typeof (Resources))]

@@ -71,7 +71,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var pattern = (search.Pattern ?? string.Empty).Trim ();
 			int id = 0;
 
-			query = DeliveryOrder.Queryable.Where (x => x.ShipTo != null && !x.IsCancelled
+			query = DeliveryOrder.Queryable.Where (x => !x.IsCancelled && !x.Details.Any(y => y.OrderDetail == null)
 								     && !x.Details.Any (y => y.OrderDetail.SalesOrder.IsCancelled))
 						.OrderBy (x => x.IsCompleted || x.IsCancelled ? 1 : 0)
 						.OrderByDescending (x => x.Id);
@@ -125,10 +125,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			if (entity.ShipTo == null) {
-				Response.StatusCode = 400;
-				return Content (Resources.ShipToRequired);
-			}
+			//if (entity.ShipTo == null) {
+			//	Response.StatusCode = 400;
+			//	return Content (Resources.ShipToRequired);
+			//}
 
 			if (entity.Store != WebConfig.Store) {
 				Response.StatusCode = 400;
@@ -206,6 +206,35 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				    select new { value = x.Id, text = x.ToString () };
 
 			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
+		}
+
+		[HttpPost]
+		public ActionResult SetDate (int id, DateTime? value)
+		{
+			var entity = DeliveryOrder.Find (id);
+
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			entity.Updater = CurrentUser.Employee;
+			entity.ModificationTime = DateTime.Now;
+
+			if (value != null) {
+				entity.Date = value.Value;
+			} else {
+				entity.Date = null;
+			}
+				using (var scope = new TransactionScope ()) {
+					entity.UpdateAndFlush ();
+				}
+			
+
+			return Json (new {
+				id = id,
+				value = entity.FormattedValueFor (x => x.Date)
+			});
 		}
 
 		[HttpPost]
@@ -386,6 +415,33 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var item = DeliveryOrder.Find (id);
 			return PartialView ("_Items", item.Details);
+		}
+
+		[HttpPost]
+		public ActionResult SetItemProductName (int id, string value)
+		{
+			var entity = DeliveryOrderDetail.Find (id);
+			string val = (value ?? string.Empty).Trim ();
+
+			if (entity.DeliveryOrder.IsCompleted || entity.DeliveryOrder.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			if (val.Length == 0) {
+				entity.ProductName = entity.Product.Name;
+			} else {
+				entity.ProductName = val;
+			}
+
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
+			}
+
+			return Json (new {
+				id = entity.Id,
+				value = entity.ProductName
+			});
 		}
 
 		[HttpPost]

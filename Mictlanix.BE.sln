@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mictlanix.BE.Web", "Web\Mictlanix.BE.Web.csproj", "{D13A33DE-A12D-420E-ABB2-76A7C0F2E2E5}"
 EndProject
@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mictlanix.BE.Resources", "R
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jsreport.Client", "jsreport.Client\jsreport.Client.csproj", "{FAE7D435-2660-4745-97B6-438FBFB22905}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SynchronizeClocks", "SynchronizeClocks\SynchronizeClocks.csproj", "{D6EFFFF4-BB56-4B34-8EA4-507B718EF2B0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mictlanix.BE.Clocks", "SynchronizeClocks\Mictlanix.BE.Clocks.csproj", "{D6EFFFF4-BB56-4B34-8EA4-507B718EF2B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
