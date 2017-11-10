@@ -292,7 +292,7 @@
     <table>
     	<tfoot>
 	        <tr>
-	            <td rowspan="2" class="col-xs-10 text-center" style="vertical-align:middle">
+	            <td rowspan="@(Model.Discount > 0m ? 3 : 2)" class="col-xs-10 text-center" style="vertical-align:middle">
 	                <div style="border-top: solid black 1px; border-bottom:solid black 1px; margin: 0 1cm 0 1cm;">
 	                    @Html.CurrencyToString(Model.Total, Model.Currency)
 	                </div>
@@ -300,6 +300,12 @@
 	            <td class="col-xs-1 nowrap text-right">@Resources.Subtotal</td>
 	            <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Subtotal)</td>
 	        </tr>
+        @if (Model.Discount > 0m) {
+            <tr>
+                <td class="col-xs-1 nowrap text-right">@Resources.Discount</td>
+                <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Discount)</td>
+            </tr>
+        }
 	        <tr>
 	            <td class="col-xs-1 nowrap text-right">@Resources.Taxes</td>
 	            <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Taxes)</td>

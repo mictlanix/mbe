@@ -112,6 +112,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ViewResult View (int id)
 		{
 			var item = FiscalDocument.Find (id);
+
+			Console.WriteLine (item.Subtotal);
+			Console.WriteLine (item.Discount);
+			Console.WriteLine (item.Taxes);
+			Console.WriteLine (item.Total);
+
 			return View (item);
 		}
 
