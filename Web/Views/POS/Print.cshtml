@@ -86,9 +86,9 @@
     @Html.DisplayFor(model => model.Taxes)
 </div>
 
-@if (Model.Savings > 0) {
+@if (Model.Discount > 0) {
 <div class="display-field text-center">
-        <text>@string.Format(Resources.SavingsOnSalesOrder, Model.Savings)</text>
+        <text>@string.Format(Resources.SavingsOnSalesOrder, Model.Discount)</text>
 </div>
 }
 
