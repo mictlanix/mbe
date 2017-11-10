@@ -142,11 +142,11 @@ namespace Mictlanix.BE.Model {
 			get { return ModelHelpers.Total (Quantity, Price, 1, DiscountRate, TaxRate, IsTaxIncluded); }
 		}
 
-		[DataType (DataType.Currency)]
-		[Display (Name = "Savings", ResourceType = typeof (Resources))]
-		public decimal Savings {
-			get { return ModelHelpers.Savings (Quantity, Price, 1, DiscountRate, TaxRate, IsTaxIncluded); }
-		}
+		//[DataType (DataType.Currency)]
+		//[Display (Name = "Savings", ResourceType = typeof (Resources))]
+		//public decimal Savings {
+		//	get { return ModelHelpers.Savings (Quantity, Price, 1, DiscountRate, TaxRate, IsTaxIncluded); }
+		//}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Subtotal", ResourceType = typeof (Resources))]

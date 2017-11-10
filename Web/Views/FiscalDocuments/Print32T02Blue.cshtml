@@ -299,7 +299,8 @@
                 <th class="text-capitalize" style="padding: 4px 10px;">@Resources.RowNumber</th>
                 <th class="">@Resources.Quantity</th>
                 <th class="col-xs-1">@Resources.UnitOfMeasurementShort</th>
-                <th class="col-xs-8">@Resources.ProductName</th>
+                <th class="col-xs-1">@Resources.Code</th>
+                <th class="col-xs-7">@Resources.ProductName</th>
                 <th class="col-xs-1">@Resources.Price</th>
                 <th class="col-xs-1">@Resources.Amount</th>
             </tr>
@@ -311,6 +312,7 @@
 					<th class="nowrap">@(i + 1)</th>
                     <td class="nowrap text-right">@Html.DisplayFor(x => item.Quantity)</td>
                     <td class="nowrap text-center">@Html.DisplayFor(x => item.UnitOfMeasurement)</td>
+                    <td class="nowrap text-center">@Html.DisplayFor(x => item.ProductCode)</td>
                     <td class="text-center">
 						@Html.DisplayFor(x => item.ProductName)
 					@if (!string.IsNullOrEmpty (item.Comment)) {
@@ -325,7 +327,7 @@
     	<tfoot>
 	        <tr>
 				<td rowspan="5" class="no-bg"></td>
-	            <td rowspan="5" colspan="3" class="no-bg">
+	            <td rowspan="5" colspan="4" class="no-bg">
 					<div class="row">
 						<div class="col-xs-4">
 							<p class="payment-info">
