@@ -82,7 +82,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			});
 
 			if (Request.IsAjaxRequest ()) {
-				return PartialView ("_Index", search.Results);
+				return PartialView ("_CashPaymentList", search.Results);
 			}
 
 			return View (new MasterDetails<CashSession, SalesOrder> { Master = session, Details = search.Results });
@@ -90,24 +90,18 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		Search<SalesOrder> SearchSalesOrders (Search<SalesOrder> search)
 		{
-
+			int id = 0;
 			var item = WebConfig.Store;
 			var pattern = (search.Pattern ?? string.Empty).Trim ();
-			int id = 0;
-
 			IQueryable<SalesOrder> query = from x in SalesOrder.Queryable
-						       where ((x.Store.Id == item.Id && x.IsCompleted && !x.IsCancelled && !x.IsPaid)
-								|| (x.IsPaid && x.Payments.Any(y => y.Payment.CashSession == null)))
-								&& x.Terms == PaymentTerms.Immediate
+						       where x.Store.Id == item.Id && x.IsCompleted && !x.IsCancelled &&
+                                                   		!x.IsPaid && x.Terms == PaymentTerms.Immediate
 						       orderby x.Date descending
 						       select x;
 
 			if (int.TryParse (pattern, out id) && id > 0) {
-
-				query = SalesOrder.Queryable.Where (x => x.Id == id && x.Payments.Any(y => y.Payment.CashSession == null));
-
+				query = query.Where (x => x.Id == id);
 			} else if (!string.IsNullOrEmpty (pattern)) {
-
 				query = query.Where (x => x.Customer.Name.Contains (pattern) || (x.SalesPerson.FirstName + " " + x.SalesPerson.LastName).Contains (pattern));
 			}
 
