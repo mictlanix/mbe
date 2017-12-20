@@ -142,7 +142,6 @@
     <Compile Include="PostalCode.cs" />
     <Compile Include="Constants\FiscalScheme.cs" />
     <Compile Include="Constants\FiscalCertificationProvider.cs" />
-    <Compile Include="Constants\UnitOfMeasurement.cs" />
     <Compile Include="Label.cs" />
     <Compile Include="Constants\PriceType.cs" />
     <Compile Include="Constants\PaymentTerms.cs" />
@@ -163,6 +162,13 @@
     <Compile Include="DeliveryOrder.cs" />
     <Compile Include="DeliveryOrderDetail.cs" />
     <Compile Include="SalesOrderPayment.cs" />
+    <Compile Include="SatUnitOfMeasurement.cs" />
+    <Compile Include="SatProductService.cs" />
+    <Compile Include="SatPostalCode.cs" />
+    <Compile Include="SatCurrency.cs" />
+    <Compile Include="SatCountry.cs" />
+    <Compile Include="SatTaxRegime.cs" />
+    <Compile Include="SatCfdiUsage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

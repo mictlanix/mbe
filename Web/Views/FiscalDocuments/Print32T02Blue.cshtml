@@ -261,7 +261,7 @@
 						<h2 class="text-right text-uppercase">@Resources.Issuer</h2>
 			 			<p style="font-size:13px">@Html.DisplayFor(x => x.Issuer.Id)</p>
 			 			<p class="text-s12 text-uppercase">@Html.DisplayFor(x => x.IssuerName)</p>
-			 			<p class="text-s08" style="margin-bottom:4px">@Html.DisplayFor(x => x.IssuerRegime)</p>
+			 			<p class="text-s08" style="margin-bottom:4px">@Html.DisplayFor(x => x.IssuerRegimeName)</p>
 					@if (Model.IssuerAddress != null) {
 			 			<p class="text-s12">
 				        	@Model.IssuerAddress.StreetAndNumber<br/>
@@ -311,7 +311,7 @@
                 <tr>
 					<th class="nowrap">@(i + 1)</th>
                     <td class="nowrap text-right">@Html.DisplayFor(x => item.Quantity)</td>
-                    <td class="nowrap text-center">@Html.DisplayFor(x => item.UnitOfMeasurement)</td>
+                    <td class="nowrap text-center">@Html.DisplayFor(x => item.UnitOfMeasurementName)</td>
                     <td class="nowrap text-center">@Html.DisplayFor(x => item.ProductCode)</td>
                     <td class="text-center">
 						@Html.DisplayFor(x => item.ProductName)

@@ -17,7 +17,12 @@
 				<dt>@Resources.Customer</dt>
 				<dd>@Html.DisplayFor(x => x.Customer.Name)</dd>
 				<dt>@Resources.Recipient</dt>
-				<dd>@Html.DisplayFor(x => x.RecipientName) (@Html.DisplayFor(x => x.Recipient))</dd>
+				<dd>
+                    @Model.Recipient
+                    @if(!string.IsNullOrWhiteSpace (@Model.RecipientName)) {
+                        <text>(@Model.RecipientName)</text>
+                    }
+                </dd>
 			@if (!string.IsNullOrEmpty (Model.Reference)) {
 				<dt>@Resources.Reference</dt>
 				<dd>@Html.DisplayFor(x => x.Reference)</dd>
@@ -38,12 +43,16 @@
 				<dd>@Html.DisplayFor(x => x.Currency)</dd>
 				<dt>@Resources.ExchangeRate</dt>
 				<dd>@Html.DisplayFor(x => x.ExchangeRate)</dd>
+                <dt>@Resources.PaymentTerms</dt>
+                <dd>
+                @if(Model.Terms == PaymentTerms.Immediate){
+                    <text>@Resources.SinglePayment</text>
+                } else if(Model.Terms == PaymentTerms.NetD){
+                    <text>@Resources.InstallmentPayments</text>
+                }
+                </dd>
 				<dt>@Resources.PaymentMethod</dt>
 				<dd>@Model.PaymentMethod.GetDisplayName()</dd>
-			@if (!string.IsNullOrEmpty (Model.PaymentReference)) {
-				<dt>@Resources.PaymentReference</dt>
-				<dd>@Html.DisplayFor(x => x.PaymentReference)</dd>
-			}
 			@if (Model.RetentionRate != 0m) {
 				<dt>@Resources.RetentionRate</dt>
 				<dd>@Html.DisplayFor(x => x.RetentionRate)</dd>

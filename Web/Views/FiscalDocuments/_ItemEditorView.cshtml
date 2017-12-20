@@ -20,7 +20,9 @@
         <b>@Resources.Code: </b>
         <a class='editable code' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemProductCode", new { id = Model.Id })'>@Html.DisplayFor(x => x.ProductCode)</a>
         <b>@Resources.UnitOfMeasurement: </b>
-        <a class='editable um' data-type='select' data-placement='right' data-source='@Url.Action("UnitsOfMeasurement", "Products")' data-pk='@Model.Id' data-value='@Model.UnitOfMeasurement' data-url='@Url.Action("SetItemUM", new { id = Model.Id })'>@Html.DisplayFor(x => x.UnitOfMeasurement)</a>
+        <span>@Html.DisplayFor(x => x.UnitOfMeasurementName)</span>
+        <b>@Resources.ProductServiceKey: </b>
+        <span>@Html.DisplayFor(x => x.ProductService.Id)</span>
         <br/>
         <b>@Resources.Quantity: </b>
         <a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
@@ -83,4 +85,5 @@ $('#id\\:@Model.Id a.delete').editable({
 	    }
     }
 });
+
 </script>

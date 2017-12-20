@@ -52,8 +52,8 @@ namespace Mictlanix.BE.Model {
 		DebitCard = 28,
 		[Display (Name = "ServiceCard", ResourceType = typeof (Resources))]
 		ServiceCard = 29,
-		[Display (Name = "Others", ResourceType = typeof (Resources))]
-		Others = 99,
+		[Display (Name = "ToBeDefined", ResourceType = typeof (Resources))]
+		ToBeDefined = 99,
 		[Display (Name = "GovernmentFunding", ResourceType = typeof (Resources))]
 		GovernmentFunding = 1001
 	}

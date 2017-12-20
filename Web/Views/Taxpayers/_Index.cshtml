@@ -12,14 +12,14 @@
     <tr>
         <th class='stretch'>@Resources.TaxpayerId</th>
         <th>@Resources.Name</th>
-        <th>@Resources.Address</th>
+        <th>@Resources.TaxRegime</th>
         <th></th>
     </tr>
 @foreach (var item in Model) {
     <tr>
         <td class="center">@Html.DisplayFor(x => item.Id)</td>
         <td>@Html.DisplayFor(x => item.Name)</td>
-        <td>@Html.DisplayFor(x => item.Address, "String")</td>
+        <td>@Html.DisplayFor(x => item.Regime.Description)</td>
         <td class="actions">
     	@if (Privilege.AllowRead) {
         	@Html.ActionLink(" ", "Details", "Taxpayers", new { id = item.Id }, new { @class = "button icon view icon-only", title = Resources.Details })

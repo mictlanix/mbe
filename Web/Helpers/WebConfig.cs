@@ -202,8 +202,12 @@ namespace Mictlanix.BE.Web.Helpers {
 			get { return ConfigurationManager.AppSettings["DefaultSender"]; }
 		}
 
-		public static int DefaultDueDaysAdded {
-			get { return int.Parse (ConfigurationManager.AppSettings["DefaultDueDateAddDays"]); }
+		public static int DefaultQuotationDueDays {
+			get { return int.Parse (ConfigurationManager.AppSettings["DefaultQuotationDueDays"]); }
+		}
+
+		public static string DefaultCfdiUsage {
+			get { return ConfigurationManager.AppSettings["DefaultCfdiUsage"]; }
 		}
 
 		public static PaymentMethod[] CashierPaymentOptions {
@@ -213,7 +217,7 @@ namespace Mictlanix.BE.Web.Helpers {
 					var opts = ConfigurationManager.AppSettings["CashierPaymentOptions"].Split (',');
 
 					foreach (var opt in opts) {
-						PaymentMethod method = PaymentMethod.NA;
+						PaymentMethod method = PaymentMethod.ToBeDefined;
 
 						if (Enum.TryParse (opt, out method)) {
 							list.Add (method);

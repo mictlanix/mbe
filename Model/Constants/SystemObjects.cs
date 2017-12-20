@@ -93,8 +93,8 @@ namespace Mictlanix.BE.Model {
 		Stores = 29,
 		[Display (Name = "SalesQuotes", ResourceType = typeof (Resources))]
 		SalesQuotes = 30,
-		[Display (Name = "FiscalReports", ResourceType = typeof (Resources))]
-		FiscalReports = 31,
+		//[Display (Name = "FiscalReports", ResourceType = typeof (Resources))]
+		//FiscalReports = 31,
 		[Display (Name = "Kardex", ResourceType = typeof (Resources))]
 		Kardex = 32,
 		[Display (Name = "ReceivedPayments", ResourceType = typeof (Resources))]

@@ -36,71 +36,67 @@ using System.Web.Routing;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Utils;
 
-namespace Mictlanix.BE.Web.Helpers
-{
-    public static class HtmlHelpers
-    {
-        public static MvcHtmlString ActionImage(this HtmlHelper html,
-                                                string imagePath,
-                                                string action,
-                                                object routeValues)
-        {
-            return ActionImage(html, imagePath, action, null, routeValues, null);
-        }
-
-        public static MvcHtmlString ActionImage(this HtmlHelper html,
-                                                string imagePath,
-                                                string action,
-                                                object routeValues,
-                                                object htmlAttributes)
-        {
-            return ActionImage(html, imagePath, action, null, routeValues, htmlAttributes);
-        }
-
-        public static MvcHtmlString ActionImage(this HtmlHelper html,
-                                                string imagePath,
-                                                string action,
-                                                string controller,
-                                                object routeValues,
-                                                object htmlAttributes)
-        {
-            var url = new UrlHelper(html.ViewContext.RequestContext);
-            var attrs = new RouteValueDictionary(htmlAttributes);
-
-            // build the <img> tag
-            var imgBuilder = new TagBuilder("img");
-
-            imgBuilder.MergeAttribute("src", url.Content(imagePath));
-
-            if (attrs.ContainsKey("alt"))
-            {
-                imgBuilder.MergeAttribute("alt", attrs["alt"].ToString());
-                attrs.Remove("alt");
-            }
-
-            string imgHtml = imgBuilder.ToString(TagRenderMode.SelfClosing);
-
-            // build the <a> tag
-            var anchorBuilder = new TagBuilder("a");
-            anchorBuilder.MergeAttribute("href", url.Action(action, controller, routeValues));
-            anchorBuilder.InnerHtml = imgHtml; // include the <img> tag inside
-
-            if (attrs.Count > 0)
-            {
-                anchorBuilder.MergeAttributes(attrs);
-            }
-
-            string anchorHtml = anchorBuilder.ToString(TagRenderMode.Normal);
-
-            return MvcHtmlString.Create (anchorHtml);
+namespace Mictlanix.BE.Web.Helpers {
+	public static class HtmlHelpers {
+		public static MvcHtmlString ActionImage (this HtmlHelper html,
+							string imagePath,
+							string action,
+							object routeValues)
+		{
+			return ActionImage (html, imagePath, action, null, routeValues, null);
 		}
 
-        public static bool IsMenuSelected (this HtmlHelper html, string action, string controller)
-        {
-            string ctl = html.ViewContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString();
-            string atn = html.ViewContext.Controller.ValueProvider.GetValue("action").RawValue.ToString();
-            return ctl == controller && atn == action;
-        }
+		public static MvcHtmlString ActionImage (this HtmlHelper html,
+							string imagePath,
+							string action,
+							object routeValues,
+							object htmlAttributes)
+		{
+			return ActionImage (html, imagePath, action, null, routeValues, htmlAttributes);
+		}
+
+		public static MvcHtmlString ActionImage (this HtmlHelper html,
+							string imagePath,
+							string action,
+							string controller,
+							object routeValues,
+							object htmlAttributes)
+		{
+			var url = new UrlHelper (html.ViewContext.RequestContext);
+			var attrs = new RouteValueDictionary (htmlAttributes);
+
+			// build the <img> tag
+			var imgBuilder = new TagBuilder ("img");
+
+			imgBuilder.MergeAttribute ("src", url.Content (imagePath));
+
+			if (attrs.ContainsKey ("alt")) {
+				imgBuilder.MergeAttribute ("alt", attrs["alt"].ToString ());
+				attrs.Remove ("alt");
+			}
+
+			string imgHtml = imgBuilder.ToString (TagRenderMode.SelfClosing);
+
+			// build the <a> tag
+			var anchorBuilder = new TagBuilder ("a");
+			anchorBuilder.MergeAttribute ("href", url.Action (action, controller, routeValues));
+			anchorBuilder.InnerHtml = imgHtml; // include the <img> tag inside
+
+			if (attrs.Count > 0) {
+				anchorBuilder.MergeAttributes (attrs);
+			}
+
+			string anchorHtml = anchorBuilder.ToString (TagRenderMode.Normal);
+
+			return MvcHtmlString.Create (anchorHtml);
+		}
+
+		public static bool IsMenuSelected (this HtmlHelper html, string action, string controller)
+		{
+			string ctl = html.ViewContext.Controller.ValueProvider.GetValue ("controller").RawValue.ToString ();
+			string atn = html.ViewContext.Controller.ValueProvider.GetValue ("action").RawValue.ToString ();
+			return ctl == controller && atn == action;
+		}
 
 		public static string CurrencyToString (this HtmlHelper helper, decimal val, CurrencyCode currency)
 		{
@@ -114,9 +110,9 @@ namespace Mictlanix.BE.Web.Helpers
 			}
 		}
 
-        public static string PrintFileName(this HtmlHelper helper, string documentName, int Folio) {
-
-            return documentName + " - " + Folio.ToString("D8");
-        }
-    }
+		public static string PrintFileName (this HtmlHelper helper, string documentName, int Folio)
+		{
+			return documentName + " - " + Folio.ToString ("D8");
+		}
+	}
 }

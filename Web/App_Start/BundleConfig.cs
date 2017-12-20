@@ -35,7 +35,8 @@ namespace Mictlanix.BE.Web {
 			));
 
 			bundles.Add (new StyleBundle ("~/Content/select2").Include (
-				"~/Content/select2.css"));
+				"~/Content/select2.css",
+				"~/Content/select2-bootstrap.css"));
 
 			bundles.Add (new StyleBundle ("~/Content/bootstrap").Include (
 				"~/Content/bootstrap.css",

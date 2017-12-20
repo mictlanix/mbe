@@ -54,6 +54,10 @@ namespace Mictlanix.BE.Model {
 		[BelongsTo ("order_detail")]
 		public virtual SalesOrderDetail OrderDetail { get; set; }
 
+		[BelongsTo ("product_service")]
+		[Display (Name = "ProductServiceKey", ResourceType = typeof (Resources))]
+		public SatProductService ProductService { get; set; }
+
 		[Property ("product_code")]
 		[Display (Name = "ProductCode", ResourceType = typeof (Resources))]
 		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
@@ -72,10 +76,14 @@ namespace Mictlanix.BE.Model {
 		[StringLength (500, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Comment { get; set; }
 
-		[Property ("unit_of_measurement")]
+		[BelongsTo ("unit_of_measurement")]
+		[Display (Name = "UnitOfMeasurement", ResourceType = typeof (Resources))]
+		public virtual SatUnitOfMeasurement UnitOfMeasurement { get; set; }
+
+		[Property ("unit_of_measurement_name")]
 		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
 		[Display (Name = "UnitOfMeasurement", ResourceType = typeof (Resources))]
-		public string UnitOfMeasurement { get; set; }
+		public string UnitOfMeasurementName { get; set; }
 
 		[Property]
 		[DisplayFormat (DataFormatString = "{0:0.####}")]

@@ -88,9 +88,13 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "IssuerName", ResourceType = typeof (Resources))]
 		public virtual string IssuerName { get; set; }
 
-		[Property ("issuer_regime")]
+		[BelongsTo ("issuer_regime")]
 		[Display (Name = "TaxRegime", ResourceType = typeof (Resources))]
-		public virtual string IssuerRegime { get; set; }
+		public virtual SatTaxRegime IssuerRegime { get; set; }
+
+		[Property ("issuer_regime_name")]
+		[Display (Name = "TaxRegime", ResourceType = typeof (Resources))]
+		public virtual string IssuerRegimeName { get; set; }
 
 		[BelongsTo ("issuer_address", Lazy = FetchWhen.OnInvoke)]
 		[Display (Name = "Address", ResourceType = typeof (Resources))]
@@ -105,7 +109,6 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Customer", ResourceType = typeof (Resources))]
 		public virtual Customer Customer { get; set; }
 
-		//[BelongsTo("recipient")]
 		[Property ("recipient")]
 		[Display (Name = "Recipient", ResourceType = typeof (Resources))]
 		public virtual string Recipient { get; set; }
@@ -113,6 +116,10 @@ namespace Mictlanix.BE.Model {
 		[Property ("recipient_name")]
 		[Display (Name = "RecipientName", ResourceType = typeof (Resources))]
 		public virtual string RecipientName { get; set; }
+
+		[BelongsTo ("`usage`")]
+		[Display (Name = "CfdiUsage", ResourceType = typeof (Resources))]
+		public virtual SatCfdiUsage Usage { get; set; }
 
 		[BelongsTo ("recipient_address", Lazy = FetchWhen.OnInvoke)]
 		[Display (Name = "Address", ResourceType = typeof (Resources))]
@@ -142,6 +149,10 @@ namespace Mictlanix.BE.Model {
 		[DisplayFormat (DataFormatString = "{0:0.00##}")]
 		[Display (Name = "ExchangeRate", ResourceType = typeof (Resources))]
 		public virtual decimal ExchangeRate { get; set; }
+
+		[Property ("payment_terms")]
+		[Display (Name = "PaymentTerms", ResourceType = typeof (Resources))]
+		public virtual PaymentTerms Terms { get; set; }
 
 		[Property]
 		[Display (Name = "Batch", ResourceType = typeof (Resources))]
