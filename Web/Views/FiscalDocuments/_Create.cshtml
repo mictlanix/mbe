@@ -31,16 +31,19 @@ ul.token-input-list { width: 100%; }
     }
     $(function () {
         @if (Model.Issuer != null) {
-	<text>$("#IssuerId").tokenInput("add", { id: "@Model.Issuer.Id", name: "@Model.Issuer.ToString()" });</text>
-}
+        	<text>$("#IssuerId").tokenInput("add", { id: "@Model.Issuer.Id", name: "@Model.Issuer.ToString()" });</text>
+        }
+        @if (Model.Customer != null) {
+            <text>$("#CustomerId").tokenInput("add", { id: "@Model.Customer.Id", name: "@Model.Customer.ToString()" });</text>
+        }
         $('#Recipient').tokenInput(getUrl, {
             hintText: "@Resources.HIntText",
             noResultsText: "@Resources.NoResultsText",
             searchingText: "@Resources.SearchingText",
             queryParam: "pattern", minChars: 0, tokenLimit: 1
             @if (!string.IsNullOrEmpty (Model.Recipient)) {
-	<text>, prePopulate: [{ id: "@Model.Recipient", name: "@Model.RecipientName" }]</text>
-}
+            	<text>, prePopulate: [{ id: "@Model.Recipient", name: "@Model.RecipientName" }]</text>
+            }
         });
 
         $('form').submit(function () {

@@ -105,24 +105,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				}
 			}
 
-			if (!item.HasAddress) {
-				ModelState.Where (x => x.Key.StartsWith ("Address.")).ToList ().ForEach (x => x.Value.Errors.Clear ());
-				item.Address = null;
-			}
-
 			if (!ModelState.IsValid) {
 				return PartialView ("_Create", item);
 			}
 
 			item.Id = item.Id.ToUpper ().Trim ();
-			item.Name = item.Name.Trim ();
+			item.Name = item.Name?.Trim ();
 			item.Email = item.Email.Trim ();
 
-			using (var scope = new TransactionScope ()) {
-				if (item.HasAddress) {
-					item.Address.Create ();
-				}
+			if (string.IsNullOrWhiteSpace (item.Name)) {
+				item.Name = null;
+			}
 
+			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
 			}
 
@@ -140,49 +135,27 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var item = TaxpayerRecipient.Find (id);
 
-			item.HasAddress = (item.Address != null);
-
 			return PartialView ("_Edit", item);
 		}
 
 		[HttpPost]
 		public ActionResult Edit (TaxpayerRecipient item)
 		{
-			if (!item.HasAddress) {
-				ModelState.Where (x => x.Key.StartsWith ("Address.")).ToList ().ForEach (x => x.Value.Errors.Clear ());
-				item.Address = null;
-			}
-
 			if (!ModelState.IsValid) {
 				return PartialView ("_Edit", item);
 			}
 
 			var entity = TaxpayerRecipient.Find (item.Id);
-			var address = entity.Address;
 
-			entity.HasAddress = (address != null);
-			entity.Name = item.Name.Trim ();
+			entity.Name = item.Name?.Trim ();
 			entity.Email = item.Email.Trim ();
 
-			using (var scope = new TransactionScope ()) {
-				if (item.HasAddress) {
-					entity.Address = item.Address;
-					entity.Address.Create ();
-				} else {
-					entity.Address = null;
-				}
-
-				entity.UpdateAndFlush ();
+			if (string.IsNullOrWhiteSpace (item.Name)) {
+				item.Name = null;
 			}
 
-			if (address != null) {
-				try {
-					using (var scope = new TransactionScope ()) {
-						address.DeleteAndFlush ();
-					}
-				} catch (Exception ex) {
-					System.Diagnostics.Debug.WriteLine (ex);
-				}
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
 			}
 
 			return PartialView ("_Refresh");
@@ -206,16 +179,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			} catch (Exception ex) {
 				System.Diagnostics.Debug.WriteLine (ex);
 				return PartialView ("DeleteUnsuccessful");
-			}
-
-			if (item.Address != null) {
-				try {
-					using (var scope = new TransactionScope ()) {
-						item.Address.DeleteAndFlush ();
-					}
-				} catch (Exception ex) {
-					System.Diagnostics.Debug.WriteLine (ex);
-				}
 			}
 
 			return PartialView ("_DeleteSuccesful", item);

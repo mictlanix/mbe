@@ -2,12 +2,10 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model FiscalDocument
-
 @{
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.FiscalDocuments);
 }
-
 <fieldset>
 	<div class='row'>
 		<div class='col-xs-8'>
@@ -34,9 +32,21 @@
 			        	data-value='@Model.Recipient' data-source='@Url.Action("Recipients", new { id = Model.Id })'
 			        	data-source-cache='false' data-url='@Url.Action("SetRecipient", new { id = Model.Id })'
 			        	data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
-			        	@Html.DisplayFor(x => x.RecipientName) (@Html.DisplayFor(x => x.Recipient))
+			        	@Html.DisplayFor(x => x.Recipient)
+                    @if(!string.IsNullOrWhiteSpace (@Model.RecipientName)) {
+                        <text>(@Model.RecipientName)</text>
+                    }
 			        </a>
 				</dd>
+                <dt>@Resources.CfdiUsage</dt>
+                <dd>
+                    <a id='usage' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id' 
+                        data-value='@Model.Usage.Id' data-source='@Url.Action("Usages")'
+                        data-url='@Url.Action("SetUsage", new { id = Model.Id })'
+                        data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+                        @Html.DisplayFor(x => x.Usage.Description)
+                    </a>
+                </dd>
 				<dt>@Resources.Reference</dt>
 				<dd>
 			        <a class='editable' data-type='text' data-placement='right' data-pk='@Model.Id' 
@@ -79,28 +89,27 @@
 			        	@Html.DisplayFor(x => x.ExchangeRate)
 			        </a>
 				</dd>
+                <dt>@Resources.PaymentTerms</dt>
+                <dd>
+                    <a id='terms' class='editable' data-type='select' data-placement='left' data-pk='@Model.Id' 
+                        data-value='@((int)Model.Terms)' data-source='@Url.Action("Terms")'
+                        data-url='@Url.Action("SetTerms", new { id = Model.Id })'
+                        data-emptytext='@Resources.Empty'>
+                        @if(Model.Terms == PaymentTerms.Immediate){
+                            <text>@Resources.SinglePayment</text>
+                        } else if(Model.Terms == PaymentTerms.NetD){
+                            <text>@Resources.InstallmentPayments</text>
+                        }
+                    </a>
+                </dd>
 				<dt>@Resources.PaymentMethod</dt>
 				<dd>
-			        <a class='editable' data-type='select' data-placement='left' data-pk='@Model.Id'
+			        <a id='payment-method' class='editable' data-type='select' data-placement='left' data-pk='@Model.Id'
 			        	data-value='@((int)Model.PaymentMethod)' data-source='@Url.Action("PaymentMethods")'
 			        	data-url='@Url.Action("SetPaymentMethod", new { id = Model.Id })'
 			        	data-inputclass='input-large' data-emptytext='@Resources.Empty'>
 			        	@Model.PaymentMethod.GetDisplayName()
 			        </a>
-				</dd>
-				<dt>@Resources.PaymentReference</dt>
-				<dd>
-			        <a id='payment-ref' class='editable' data-type='text' data-placement='left' data-pk='@Model.Id' 
-			        	data-value='@Model.PaymentReference' data-url='@Url.Action("SetPaymentReference", new { id = Model.Id })'
-			        	data-emptytext='@Resources.Empty'>
-			        	@Html.DisplayFor(x => x.PaymentReference)
-			        </a>
-				</dd>
-				<dt>@Resources.RetentionRate</dt>
-				<dd>
-					<a class='editable tax' data-type='select' data-placement='right' data-autotext='never'
-					data-source='@Url.Action("RetentionRates", "Pricing")' data-pk='@Model.Id' data-value='@Model.RetentionRate.ToString("0.####")'
-					data-url='@Url.Action("SetRetentionRate", new { id = Model.Id })'>@Html.DisplayFor(x => x.RetentionRate)</a>
 				</dd>
 			</dl>
   		</div>
@@ -202,9 +211,9 @@ $('a.editable').editable({
         if('type' in response) {
 			$('#type').text(response.type);
         }
-        if('paymentReference' in response) {
-			$('#payment-ref').text(response.paymentReference)
-							 .editable('setValue', response.paymentReference);
+        if('paymentMethod' in response) {
+            $('#payment-method').text(response.paymentMethodText)
+                                .editable('setValue', response.paymentMethod);
         }
 		if('itemsChanged' in response) {
 			$('#items-container').loadUrl();

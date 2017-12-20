@@ -1,0 +1,26 @@
+﻿@using Mictlanix.BE
+<table style="width:100%;border-spacing:0;border-collapse: collapse;font:300 9px 'Oswald';">
+    <tr>
+        <td colspan="3" style="text-align:center;vertical-align:top;padding-bottom:1px;">
+		@if (ViewBag.BankInformation == null) {
+			<span>&nbsp;</span>
+		} else {
+			foreach(var account in ViewBag.BankInformation) {
+				<span>@Resources.Bank:</span>
+				<span style="color:#757575;">@account.Bank</span>
+				<span>@Resources.BankAccount:</span>
+				<span style="color:#757575;">@account.Account</span>
+				<span>@Resources.CLABE:</span>
+				<span style="color:#757575;">@account.CLABE</span>
+				<span style="color:#4c9fdc;">@account.Currency</span>
+				<br>
+			}
+		}
+		</td>
+    </tr>
+    <tr style="height:10px">
+        <td style="width:30%;text-align:left;vertical-align:top;color: #4c9fdc;">FacturaElectronicaSimple.mx</td>
+        <td style="width:40%;text-align:center;vertical-align:top;color:#757575;">@Resources.FiscalDocumentLegendV3</td>
+        <td style="width:30%;text-align:right;vertical-align:top;">@Resources.FooterPageNumber</td>
+    </tr>
+</table>

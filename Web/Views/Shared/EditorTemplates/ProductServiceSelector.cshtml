@@ -1,0 +1,14 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@model string
+@Html.TextBox("", Model)
+<script type="text/javascript">
+$(function () {
+    $("#@ViewData.TemplateInfo.GetFullHtmlFieldId("")").tokenInput('@Url.Action("ProductServiceKeys", "Products")', {
+        hintText: '@Resources.HIntText',
+        noResultsText: '@Resources.NoResultsText',
+        searchingText: '@Resources.SearchingText',
+        queryParam: 'pattern', minChars: 1, tokenLimit: 1
+    });
+});
+</script>

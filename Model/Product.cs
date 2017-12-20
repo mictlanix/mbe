@@ -5,7 +5,7 @@
 //   Eddy Zavaleta <eddy@mictlanix.com>
 //   Eduardo Nieto <enieto@mictlanix.com>
 // 
-// Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2017 Mictlanix SAS de CV and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -26,7 +26,6 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-
 using System;
 using System.Collections.Generic;
 using Castle.ActiveRecord;
@@ -87,9 +86,14 @@ namespace Mictlanix.BE.Model {
 		public string Location { get; set; }
 
 		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
-		[Property ("unit_of_measurement")]
+		[Property ("unit_of_measurement", Update = false, Insert = false)]
 		[Display (Name = "UnitOfMeasurement", ResourceType = typeof (Resources))]
-		public string UnitOfMeasurement { get; set; }
+		[UIHint ("UnitOfMeasurement")]
+		public string UnitOfMeasurementId { get; set; }
+
+		[BelongsTo ("unit_of_measurement")]
+		[Display (Name = "UnitOfMeasurement", ResourceType = typeof (Resources))]
+		public SatUnitOfMeasurement UnitOfMeasurement { get; set; }
 
 		[Property ("stockable")]
 		[Display (Name = "Stockable", ResourceType = typeof (Resources))]
@@ -155,6 +159,16 @@ namespace Mictlanix.BE.Model {
 		[BelongsTo ("supplier")]
 		[Display (Name = "Supplier", ResourceType = typeof (Resources))]
 		public virtual Supplier Supplier { get; set; }
+
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[Property ("`key`", Update = false, Insert = false)]
+		[Display (Name = "ProductServiceKey", ResourceType = typeof (Resources))]
+		[UIHint ("ProductServiceSelector")]
+		public string ProductServiceId { get; set; }
+
+		[BelongsTo ("`key`")]
+		[Display (Name = "ProductServiceKey", ResourceType = typeof (Resources))]
+		public SatProductService ProductService { get; set; }
 
 		[Property]
 		[DataType (DataType.MultilineText)]

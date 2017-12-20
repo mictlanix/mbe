@@ -3,19 +3,16 @@
 @model TaxpayerRecipient
 
 <div class="row">
-  	<div class="col-xs-3">@Html.LabelFor(x => x.Id)</div>
-	<div class="col-xs-5">@Html.LabelFor(x => x.Name)</div>
+  	<div class="col-xs-4">@Html.LabelFor(x => x.Id)</div>
+	<div class="col-xs-8">@Html.LabelFor(x => x.Name)</div>
 </div>
 <div class="row">
-  	<div class="col-xs-3"><div class="ro-field">@Html.DisplayFor(x => x.Id)</div></div>
-	<div class="col-xs-5"><div class="ro-field">@Html.DisplayFor(x => x.Name)</div></div>
+  	<div class="col-xs-4"><p class="form-control-static">@Html.DisplayFor(x => x.Id)</p></div>
+	<div class="col-xs-8"><p class="form-control-static">@Html.DisplayFor(x => x.Name)</p></div>
 </div>
 <div class="row">
-  	<div class="col-xs-8">@Html.LabelFor(x => x.Email)</div>
+  	<div class="col-xs-12">@Html.LabelFor(x => x.Email)</div>
 </div>
 <div class="row">
-  	<div class="col-xs-8"><div class="ro-field">@Html.DisplayFor(x => x.Email)</div></div>
+  	<div class="col-xs-12"><p class="form-control-static">@Html.DisplayFor(x => x.Email)</p></div>
 </div>
-@if(Model.Address != null) {
-	@Html.DisplayFor(x => x.Address)
-}
