@@ -105,6 +105,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Create (Store item)
 		{
 			item.Taxpayer = TaxpayerIssuer.TryFind (item.TaxpayerId);
+			item.Location = SatPostalCode.TryFind (item.LocationId);
 
 			if (!ModelState.IsValid) {
 				return PartialView ("_Create", item);
@@ -129,6 +130,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Edit (Store item)
 		{
 			item.Taxpayer = TaxpayerIssuer.TryFind (item.TaxpayerId);
+			item.Location = SatPostalCode.TryFind (item.LocationId);
 
 			if (!ModelState.IsValid || item.Taxpayer == null) {
 				return PartialView ("_Edit", item);
@@ -139,10 +141,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			entity.Code = item.Code;
 			entity.Name = item.Name;
-			entity.Taxpayer = TaxpayerIssuer.Find (item.TaxpayerId);
+			entity.Taxpayer = item.Taxpayer;
 			entity.Logo = item.Logo;
 			entity.Location = item.Location;
-			entity.ReceiptMessage = string.Format ("{0}", item.ReceiptMessage).Trim ();
+			entity.ReceiptMessage = item.ReceiptMessage?.Trim ();
 
 			using (var scope = new TransactionScope ()) {
 				if (!address.Equals (item.Address)) {

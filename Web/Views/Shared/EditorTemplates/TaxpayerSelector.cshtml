@@ -1,15 +1,10 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
-@model int?
-
-@{
-    var field = ViewData.TemplateInfo.HtmlFieldPrefix;
-}
-
+@model string
 @Html.TextBox("", Model)
 <script type="text/javascript">
     $(function () {
-        $("#@field").tokenInput("@Url.Action("GetSuggestions", "Taxpayers")", {
+        $("#@ViewData.TemplateInfo.HtmlFieldPrefix").tokenInput("@Url.Action("GetSuggestions", "Taxpayers")", {
             hintText: "@Resources.ChooseTaxpayer",
             noResultsText: "@Resources.NoResultsText",
             searchingText: "@Resources.SearchingText",

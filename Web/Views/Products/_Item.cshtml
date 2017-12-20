@@ -28,7 +28,7 @@
 			</a>
 		</div>
     </td>
-    <td class="stretch center">@Html.DisplayFor(x => x.UnitOfMeasurement)</td>
+    <td class="stretch center">@Html.DisplayFor(x => x.UnitOfMeasurement.Name)</td>
     <td class="actions">
     	@if(ViewBag.Privilege.AllowRead) {
         	@Html.ActionLink(" ", "View", new { id = Model.Id }, new { @class = "button icon view icon-only open-modal", title = Resources.Details, data_modal_id = "product-modal" })

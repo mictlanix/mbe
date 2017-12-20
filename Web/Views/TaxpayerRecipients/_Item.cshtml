@@ -6,7 +6,6 @@
     <td class="center stretch">@Html.DisplayFor(x => x.Id)</td>
     <td>@Html.DisplayFor(x => x.Name)</td>
     <td class="center">@Html.DisplayFor(x => x.Email)</td>
-    <td>@Html.DisplayFor(x => x.Address, "String")</td>
     <td class='actions'>
     	@if(ViewBag.Privilege.AllowRead){
     	    @Html.ActionLink(" ", "Details", "TaxpayerRecipients", new { id = Model.Id }, new { @class = "button icon view icon-only open-modal", title = Resources.Details, data_modal_id = "taxpayer-modal" })

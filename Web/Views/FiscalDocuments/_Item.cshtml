@@ -25,7 +25,6 @@
 	</td>
     <td class="actions">
         @if (ViewBag.Privilege.AllowRead) {
-            @Html.ActionLink(" ", "View", new { id = Model.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
             @Html.ActionLink(" ", "Pdf", new { id = Model.Id }, new { @class = "button icon print icon-only", title = Resources.Print, target = "_blank" })
         }
         @if (ViewBag.Privilege.AllowUpdate && !Model.IsCompleted && !Model.IsCancelled) {

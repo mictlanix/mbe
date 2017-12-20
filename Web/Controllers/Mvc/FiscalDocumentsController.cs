@@ -40,6 +40,7 @@ using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
+using System.Diagnostics.Contracts;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
@@ -217,23 +218,21 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			// Store
 			item.Store = WebConfig.Store;
 			item.IssuedAt = item.Store.Address;
-			item.IssuedLocation = item.Store.Location;
+			item.IssuedLocation = item.Store.LocationId;
 
 			// Issuer
 			item.IssuerName = item.Issuer.Name;
 			item.IssuerRegime = item.Issuer.Regime;
-			item.IssuerAddress = item.Issuer.Address;
-
-			// Recipient
-			item.RecipientAddress = recipient.Address;
+			item.IssuerRegimeName = item.Issuer.Regime.Description;
 
 			// Fiscal doc's info
 			item.Batch = batch.Batch;
 			item.Type = batch.Type;
 			item.Currency = WebConfig.BaseCurrency;
-			item.ExchangeRate = 1;
-			item.PaymentMethod = PaymentMethod.NA;
-			item.PaymentReference = null;
+			item.ExchangeRate = 1m;
+			item.Terms = item.Customer.HasCredit ? PaymentTerms.NetD : PaymentTerms.Immediate;
+			item.PaymentMethod = PaymentMethod.ToBeDefined;
+			item.Usage = SatCfdiUsage.TryFind (WebConfig.DefaultCfdiUsage);
 			item.CreationTime = DateTime.Now;
 			item.Creator = CurrentUser.Employee;
 			item.ModificationTime = item.CreationTime;
@@ -282,25 +281,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
 		}
 
-		public JsonResult PaymentMethods ()
-		{
-			var items = new ArrayList ();
-
-			items.Add (new { value = (int) PaymentMethod.NA, text = PaymentMethod.NA.GetDisplayName () });
-			items.Add (new { value = (int) PaymentMethod.Cash, text = PaymentMethod.Cash.GetDisplayName () });
-			items.Add (new { value = (int) PaymentMethod.Check, text = PaymentMethod.Check.GetDisplayName () });
-			items.Add (new { value = (int) PaymentMethod.EFT, text = PaymentMethod.EFT.GetDisplayName () });
-			items.Add (new { value = (int) PaymentMethod.CreditCard, text = PaymentMethod.CreditCard.GetDisplayName () });
-			items.Add (new { value = (int) PaymentMethod.ElectronicPurse, text = PaymentMethod.ElectronicPurse.GetDisplayName () });
-			items.Add (new { value = (int) PaymentMethod.ElectronicMoney, text = PaymentMethod.ElectronicMoney.GetDisplayName () });
-			items.Add (new { value = (int) PaymentMethod.FoodVouchers, text = PaymentMethod.FoodVouchers.GetDisplayName () });
-			items.Add (new { value = (int) PaymentMethod.DebitCard, text = PaymentMethod.DebitCard.GetDisplayName () });
-			items.Add (new { value = (int) PaymentMethod.ServiceCard, text = PaymentMethod.ServiceCard.GetDisplayName () });
-			items.Add (new { value = (int) PaymentMethod.Others, text = PaymentMethod.Others.GetDisplayName () });
-
-			return Json (items, JsonRequestBehavior.AllowGet);
-		}
-
 		[HttpPost]
 		public ActionResult SetIssuer (int id, string value)
 		{
@@ -323,7 +303,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				entity.Issuer = item;
 				entity.IssuerName = item.Name;
 				entity.IssuerRegime = item.Regime;
-				entity.IssuerAddress = item.Address;
+				entity.IssuerRegimeName = item.Regime.Description;
 				entity.Batch = batch.Batch;
 				entity.Type = batch.Type;
 				entity.Updater = CurrentUser.Employee;
@@ -364,7 +344,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				entity.Customer = item;
 				entity.Recipient = recipient.Id;
 				entity.RecipientName = recipient.Name;
-				entity.RecipientAddress = recipient.Address;
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
 
@@ -395,7 +374,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			if (item != null) {
 				entity.Recipient = item.Id;
 				entity.RecipientName = item.Name;
-				entity.RecipientAddress = item.Address;
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
 
@@ -557,6 +535,42 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
+		public ActionResult SetTerms (int id, string value)
+		{
+			bool success;
+			PaymentTerms val;
+			var entity = FiscalDocument.Find (id);
+
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			success = Enum.TryParse (value.Trim (), out val);
+
+			if (success) {
+				entity.Terms = val;
+				entity.Updater = CurrentUser.Employee;
+				entity.ModificationTime = DateTime.Now;
+
+				if(entity.Terms == PaymentTerms.NetD) {
+					entity.PaymentMethod = PaymentMethod.ToBeDefined;
+				}
+
+				using (var scope = new TransactionScope ()) {
+					entity.UpdateAndFlush ();
+				}
+			}
+
+			return Json (new {
+				id,
+				value = entity.Terms,
+				paymentMethod = entity.PaymentMethod,
+				paymentMethodText = entity.PaymentMethod.GetDisplayName (),
+			});
+		}
+
+		[HttpPost]
 		public ActionResult SetPaymentMethod (int id, string value)
 		{
 			var entity = FiscalDocument.Find (id);
@@ -568,18 +582,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			success = Enum.TryParse<PaymentMethod> (value.Trim (), out val);
+			success = Enum.TryParse (value.Trim (), out val);
 
 			if (success) {
-				entity.PaymentMethod = val;
+				if (entity.Terms == PaymentTerms.NetD) {
+					entity.PaymentMethod = PaymentMethod.ToBeDefined;
+				} else {
+					entity.PaymentMethod = val;
+				}
+
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
-
-				if (val == PaymentMethod.NA || val == PaymentMethod.Cash) {
-					entity.PaymentReference = null;
-				} else if (string.IsNullOrEmpty (entity.PaymentReference)) {
-					entity.PaymentReference = Resources.Unidentified;
-				}
 
 				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
@@ -588,42 +601,34 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return Json (new {
 				id = id,
-				value = entity.PaymentMethod,
-				paymentReference = entity.FormattedValueFor (x => x.PaymentReference)
+				value = entity.PaymentMethod
 			});
 		}
 
 		[HttpPost]
-		public ActionResult SetPaymentReference (int id, string value)
+		public ActionResult SetUsage (int id, string value)
 		{
 			var entity = FiscalDocument.Find (id);
+			var item = SatCfdiUsage.TryFind (value);
 
 			if (entity.IsCompleted || entity.IsCancelled) {
 				Response.StatusCode = 400;
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			if (entity.PaymentMethod == PaymentMethod.NA ||
-				entity.PaymentMethod == PaymentMethod.Cash) {
-				Response.StatusCode = 400;
-				return Content (Resources.PaymentReferenceNotRequired);
-			}
+			if (item != null) {
+				entity.Usage = item;
+				entity.Updater = CurrentUser.Employee;
+				entity.ModificationTime = DateTime.Now;
 
-			entity.PaymentReference = string.Format ("{0}", value).Trim ();
-			entity.Updater = CurrentUser.Employee;
-			entity.ModificationTime = DateTime.Now;
-
-			if (string.IsNullOrEmpty (entity.PaymentReference)) {
-				entity.PaymentReference = Resources.Unidentified;
-			}
-
-			using (var scope = new TransactionScope ()) {
-				entity.UpdateAndFlush ();
+				using (var scope = new TransactionScope ()) {
+					entity.UpdateAndFlush ();
+				}
 			}
 
 			return Json (new {
 				id = id,
-				value = entity.FormattedValueFor (x => x.PaymentReference)
+				value = entity.FormattedValueFor (x => x.Id)
 			});
 		}
 
@@ -678,7 +683,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				Product = p,
 				ProductCode = p.Code,
 				ProductName = p.Name,
+				ProductService = p.ProductService,
 				UnitOfMeasurement = p.UnitOfMeasurement,
+				UnitOfMeasurementName = p.UnitOfMeasurement.Name,
 				DiscountRate = 0,
 				TaxRate = p.TaxRate,
 				IsTaxIncluded = p.IsTaxIncluded,
@@ -742,7 +749,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						OrderDetail = x,
 						ProductCode = x.ProductCode,
 						ProductName = x.ProductName,
+						ProductService = x.Product.ProductService,
 						UnitOfMeasurement = x.Product.UnitOfMeasurement,
+						UnitOfMeasurementName = x.Product.UnitOfMeasurement.Name,
 						DiscountRate = x.DiscountRate,
 						TaxRate = x.TaxRate,
 						IsTaxIncluded = x.IsTaxIncluded,
@@ -849,28 +858,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			return Json (new { id = entity.Id, value = entity.ProductCode });
-		}
-
-		[HttpPost]
-		public ActionResult SetItemUM (int id, string value)
-		{
-			var entity = FiscalDocumentDetail.Find (id);
-			string val = string.Format ("{0}", value).Trim ();
-
-			if (entity.Document.IsCompleted || entity.Document.IsCancelled) {
-				Response.StatusCode = 400;
-				return Content (Resources.ItemAlreadyCompletedOrCancelled);
-			}
-
-			if (val.Length > 0) {
-				entity.UnitOfMeasurement = val;
-
-				using (var scope = new TransactionScope ()) {
-					entity.UpdateAndFlush ();
-				}
-			}
-
-			return Json (new { id = entity.Id, value = entity.UnitOfMeasurement });
 		}
 
 		[HttpPost]
@@ -1022,7 +1009,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		[HttpPost]
 		public ActionResult Confirm (int id)
 		{
-			dynamic doc;
 			int serial;
 			TaxpayerBatch batch;
 			var dt = DateTime.Now;
@@ -1065,26 +1051,25 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						      DateTimeKind.Unspecified);
 			entity.IssuerCertificateNumber = entity.Issuer.Certificates.Single (x => x.IsActive).Id;
 
+			CFDv33.Comprobante doc;
+
 			try {
 				doc = CFDHelpers.IssueCFD (entity);
 			} catch (Exception ex) {
 				return View ("Error", ex);
 			}
 
-			if (entity.Issuer.Scheme == FiscalScheme.CFDI) {
-				var tfd = doc.Complemento [0] as CFDv32.TimbreFiscalDigital;
+			var tfd = doc.Complemento[0] as CFDv33.TimbreFiscalDigital;
 
-				entity.StampId = tfd.UUID;
-				entity.Stamped = tfd.FechaTimbrado;
-				entity.AuthorityDigitalSeal = tfd.selloSAT;
-				entity.AuthorityCertificateNumber = tfd.noCertificadoSAT;
-				entity.OriginalString = tfd.ToString ();
-			} else {
-				entity.OriginalString = doc.ToString ();
-			}
+			entity.StampId = tfd.UUID;
+			entity.Stamped = tfd.FechaTimbrado;
+			entity.AuthorityDigitalSeal = tfd.SelloSAT;
+			entity.AuthorityCertificateNumber = tfd.NoCertificadoSAT;
+			entity.OriginalString = tfd.ToString ();
 
-			entity.IssuerDigitalSeal = doc.sello;
-			entity.Version = Convert.ToDecimal (doc.version);
+			entity.IssuerDigitalSeal = doc.Sello;
+			entity.Version = Convert.ToDecimal (doc.Version);
+
 			entity.Updater = CurrentUser.Employee;
 			entity.ModificationTime = DateTime.Now;
 			entity.IsCompleted = true;
@@ -1111,12 +1096,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return RedirectToAction ("Index");
 			}
 
-			try {
-				if (!CFDHelpers.CancelCFD (entity)) {
-					return View (Resources.Error, new InvalidOperationException (Resources.WebServiceReturnedFalse));
+			if(entity.IsCompleted) {
+				try {
+					if (!CFDHelpers.CancelCFD (entity)) {
+						return View (Resources.Error, new InvalidOperationException (Resources.WebServiceReturnedFalse));
+					}
+				} catch (Exception ex) {
+					return View (Resources.Error, ex);
 				}
-			} catch (Exception ex) {
-				return View (Resources.Error, ex);
 			}
 
 			entity.CancellationDate = DateTime.Now;
@@ -1149,32 +1136,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				    };
 
 			return View (items.ToList ());
-		}
-
-		public ActionResult Report (string taxpayer, int year, int month)
-		{
-			var ms = new MemoryStream ();
-			var sw = new StreamWriter (ms, Encoding.UTF8);
-			var start = new DateTime (year, month, 1, 0, 0, 0, DateTimeKind.Unspecified);
-			var end = start.AddMonths (1);
-			var query = from x in FiscalDocument.Queryable
-				    where x.Issuer.Id == taxpayer && x.Version < 3 &&
-					    x.IsCompleted && ((x.Issued >= start && x.Issued < end) ||
-					    (x.IsCancelled && x.CancellationDate >= start && x.CancellationDate < end))
-				    select x;
-
-			foreach (var row in CFDHelpers.MonthlyReport (query.ToList ())) {
-				sw.WriteLine (row);
-			}
-
-			sw.Flush ();
-			ms.Seek (0, SeekOrigin.Begin);
-
-			var result = new FileStreamResult (ms, "text/plain");
-			result.FileDownloadName = string.Format (Resources.Format_FiscalReportName,
-								 taxpayer, year, month);
-
-			return result;
 		}
 
 		public JsonResult GetSuggestions (int id, string pattern)
@@ -1328,6 +1289,42 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			SendEmailWithAttachments (WebConfig.DefaultSender, email, subject, message, attachments);
 
 			return PartialView ("_SendEmailSuccesful");
+		}
+
+		public JsonResult Terms ()
+		{
+			var items = new ArrayList {
+				new { value = (int) PaymentTerms.Immediate, text = Resources.SinglePayment },
+				new { value = (int) PaymentTerms.NetD, text = Resources.InstallmentPayments }
+			};
+
+			return Json (items, JsonRequestBehavior.AllowGet);
+		}
+
+		public JsonResult PaymentMethods ()
+		{
+			var items = new ArrayList {
+				new { value = (int) PaymentMethod.ToBeDefined, text = PaymentMethod.ToBeDefined.GetDisplayName () },
+				new { value = (int) PaymentMethod.Cash, text = PaymentMethod.Cash.GetDisplayName () },
+				new { value = (int) PaymentMethod.Check, text = PaymentMethod.Check.GetDisplayName () },
+				new { value = (int) PaymentMethod.EFT, text = PaymentMethod.EFT.GetDisplayName () },
+				new { value = (int) PaymentMethod.CreditCard, text = PaymentMethod.CreditCard.GetDisplayName () },
+				new { value = (int) PaymentMethod.ElectronicPurse, text = PaymentMethod.ElectronicPurse.GetDisplayName () },
+				new { value = (int) PaymentMethod.ElectronicMoney, text = PaymentMethod.ElectronicMoney.GetDisplayName () },
+				new { value = (int) PaymentMethod.FoodVouchers, text = PaymentMethod.FoodVouchers.GetDisplayName () },
+				new { value = (int) PaymentMethod.DebitCard, text = PaymentMethod.DebitCard.GetDisplayName () },
+				new { value = (int) PaymentMethod.ServiceCard, text = PaymentMethod.ServiceCard.GetDisplayName () }
+			};
+
+			return Json (items, JsonRequestBehavior.AllowGet);
+		}
+
+		public JsonResult Usages ()
+		{
+			var query = from x in SatCfdiUsage.Queryable
+				    select new { value = x.Id, text = x.Description };
+
+			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
 		}
 	}
 }

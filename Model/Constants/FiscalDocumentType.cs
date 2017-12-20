@@ -43,6 +43,8 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "DebitNote", ResourceType = typeof (Resources))]
 		DebitNote,
 		[Display (Name = "CreditNote", ResourceType = typeof (Resources))]
-		CreditNote = 100
+		CreditNote = 100,
+		[Display (Name = "PaymentReceipt", ResourceType = typeof (Resources))]
+		PaymentReceipt = 200
 	}
 }

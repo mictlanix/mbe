@@ -99,13 +99,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public ActionResult Create ()
 		{
-			return PartialView ("_Create", new Product ());
+			return PartialView ("_Create", new Product { UnitOfMeasurementId = "N/A" });
 		}
 
 		[HttpPost]
 		public ActionResult Create (Product item)
 		{
 			item.Supplier = Supplier.TryFind (item.SupplierId);
+			item.ProductService = SatProductService.TryFind (item.ProductServiceId);
+			item.UnitOfMeasurement = SatUnitOfMeasurement.TryFind (item.UnitOfMeasurementId);
 
 			if (!ModelState.IsValid) {
 				return PartialView ("_Create", item);
@@ -165,6 +167,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Edit (Product item)
 		{
 			item.Supplier = Supplier.TryFind (item.SupplierId);
+			item.ProductService = SatProductService.TryFind (item.ProductServiceId);
+			item.UnitOfMeasurement = SatUnitOfMeasurement.TryFind (item.UnitOfMeasurementId);
 
 			if (!ModelState.IsValid)
 				return PartialView ("_Edit", item);
@@ -186,6 +190,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			entity.SKU = item.SKU;
 			entity.UnitOfMeasurement = item.UnitOfMeasurement;
 			entity.Supplier = item.Supplier;
+			entity.ProductService = item.ProductService;
 
 			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
@@ -379,17 +384,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return Json (new { id = id, value = value });
 		}
 
-		public JsonResult UnitsOfMeasurement ()
-		{
-			var qry = from x in Enum.GetValues (typeof (UnitOfMeasurement)).Cast<UnitOfMeasurement> ()
-				  select new {
-					  value = x.GetDisplayName (),
-					  text = x.GetDisplayName ()
-				  };
-
-			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
-		}
-
 		public JsonResult Brands (string pattern)
 		{
 			IQueryable<string> query;
@@ -434,5 +428,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}
 
+		public JsonResult ProductServiceKeys (string pattern)
+		{
+			var query = from x in SatProductService.Queryable
+				    where x.Id.Contains (pattern) || x.Description.Contains (pattern) || x.Keywords.Contains (pattern)
+				    select x;
+
+			var items = from x in query.Take (15).ToList ()
+				    select new {
+					    id = x.Id,
+					    name = x.ToString ()
+				    };
+
+			return Json (items, JsonRequestBehavior.AllowGet);
+		}
 	}
 }

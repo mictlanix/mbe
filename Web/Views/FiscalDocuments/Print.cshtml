@@ -44,7 +44,7 @@
 		    	</h3>
 		    	<h4 class="text-center">
 		    		@Resources.TaxRegime:
-		    		@Html.DisplayFor(x => x.IssuerRegime)
+		    		@Html.DisplayFor(x => x.IssuerRegimeName)
 		    	</h4>
 	 		</div>
 			<div class="col-xs-5 text-right">
@@ -67,12 +67,14 @@
 		 		<div class="col-xs-12">
 		 			<p>@Html.DisplayFor(x => x.Recipient)</p>
 		 		</div>
+            @if(!string.IsNullOrWhiteSpace (@Model.RecipientName)) {
 			 	<div class="col-xs-12">
 			 		<p><span class="mylabel">@Resources.Name</span></p>
 		 		</div>
 		 		<div class="col-xs-12">
 		 			<p>@Html.DisplayFor(x => x.RecipientName)</p>
 	 			</div>
+            }
 	 		@if(Model.RecipientAddress != null) {
 			 	<div class="col-xs-12">
 			 		<p><span class="mylabel">@Resources.Address</span></p>
@@ -185,7 +187,7 @@
 	 		<p><span class="mylabel">@Resources.PaymentMethod</span></p>
 			<p>@Model.PaymentMethod.GetDisplayName()</p>
 		</div>
-    @if (Model.PaymentMethod != PaymentMethod.NA && Model.PaymentMethod != PaymentMethod.Cash) {
+    @if (Model.PaymentMethod != PaymentMethod.ToBeDefined && Model.PaymentMethod != PaymentMethod.Cash) {
 	 	<div class="col-xs-3">
 	 		<p><span class="mylabel">@Resources.PaymentReference</span></p>
 			<p>@Html.DisplayFor(x => x.PaymentReference)</p>

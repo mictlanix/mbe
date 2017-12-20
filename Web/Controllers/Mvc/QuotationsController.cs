@@ -160,7 +160,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.SalesPerson = CurrentUser.Employee;
 			item.Date = dt;
 			item.Terms = PaymentTerms.Immediate;
-			item.DueDate = DateTime.Now.AddDays ((WebConfig.DefaultDueDaysAdded));
+			item.DueDate = DateTime.Now.AddDays (WebConfig.DefaultQuotationDueDays);
 			item.Currency = WebConfig.DefaultCurrency;
 			item.ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate ();
 

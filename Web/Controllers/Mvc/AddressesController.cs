@@ -192,5 +192,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
 		}
+
+		public JsonResult PostalCodes (string pattern)
+		{
+			var query = from x in SatPostalCode.Queryable
+				    where x.Id.Contains (pattern)
+                                    select x;
+			var items = from x in query.Take (15).ToList ()
+				    select new { id = x.Id, name = x.ToString () };
+
+			return Json (items, JsonRequestBehavior.AllowGet);
+		}
 	}
 }
