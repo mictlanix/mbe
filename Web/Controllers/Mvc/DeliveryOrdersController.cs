@@ -451,10 +451,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			var product = entity.Product;
 
-			if (product.UnitOfMeasurement.Contains ("PIEZA")) {
-				value = (int) value;
-			}
-
 			if (entity.DeliveryOrder.IsCompleted || entity.DeliveryOrder.IsCancelled) {
 				Response.StatusCode = 400;
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
@@ -626,16 +622,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				items.AddRange (list.Details);
 			}
 
-			search.Results = (from x in items.OrderByDescending (x => x.SalesOrder.Id).Skip (search.Offset).Take (search.Limit).ToList()
+			search.Results = (from x in items.OrderByDescending (x => x.SalesOrder.Id).Skip (search.Offset).Take (search.Limit).ToList ()
 					  select new OrderDetailDeliveries {
 						  Id = x.Id,
 						  SalesOrderId = x.SalesOrder.Id,
 						  Date = x.SalesOrder.Date,
 						  ProductName = x.ProductName,
 						  Quantity = x.Quantity,
-						  QuantityRemain = GetRemainQuantityBySalesOrderDetail(x),
-						  QuantityDelivered = x.Quantity - GetRemainQuantityBySalesOrderDetail(x),
-						  UnitOfMeasure = x.Product.UnitOfMeasurement,
+						  QuantityRemain = GetRemainQuantityBySalesOrderDetail (x),
+						  QuantityDelivered = x.Quantity - GetRemainQuantityBySalesOrderDetail (x),
+						  UnitOfMeasure = x.Product.UnitOfMeasurement.Id,
 						  Details = DeliveryOrderDetail.Queryable.Where (y => y.OrderDetail == x && !y.DeliveryOrder.IsCancelled).ToList ()
 					  }).ToList ();
 			search.Total = search.Results.Count ();
@@ -663,17 +659,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				items.AddRange (list.Details);
 			}
 
-			search.Results = (from x in items.OrderByDescending (x => x.Id).Skip (search.Offset).Take (search.Limit).ToList()
+			search.Results = (from x in items.OrderByDescending (x => x.Id).Skip (search.Offset).Take (search.Limit).ToList ()
 					  select new OrderDetailDeliveries {
 						  Id = x.Id,
 						  SalesOrderId = x.SalesOrder.Id,
 						  Date = x.SalesOrder.Date,
 						  ProductName = x.ProductName,
 						  Quantity = x.Quantity,
-						  QuantityDelivered = x.Quantity - GetRemainQuantityBySalesOrderDetail(x),
-						  QuantityRemain = GetRemainQuantityBySalesOrderDetail(x),
-						  UnitOfMeasure = x.Product.UnitOfMeasurement,
-						  Details = DeliveryOrderDetail.Queryable.Where(y => y.OrderDetail == x && !y.DeliveryOrder.IsCancelled).ToList()
+						  QuantityDelivered = x.Quantity - GetRemainQuantityBySalesOrderDetail (x),
+						  QuantityRemain = GetRemainQuantityBySalesOrderDetail (x),
+						  UnitOfMeasure = x.Product.UnitOfMeasurement.Id,
+						  Details = DeliveryOrderDetail.Queryable.Where (y => y.OrderDetail == x && !y.DeliveryOrder.IsCancelled).ToList ()
 					  }).ToList ();
 
 			search.Total = search.Results.Count ();

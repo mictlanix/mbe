@@ -155,10 +155,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.SalesPerson = CurrentUser.Employee;
 			item.Date = dt;
 			item.PromiseDate = dt;
-			item.Terms = item.Customer.HasCredit ? PaymentTerms.NetD : PaymentTerms.Immediate;
 			item.DueDate = dt;
 			item.Currency = WebConfig.DefaultCurrency;
 			item.ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate ();
+			item.Terms = item.Customer.HasCredit ? PaymentTerms.NetD : PaymentTerms.Immediate;
 
 			item.Creator = CurrentUser.Employee;
 			item.CreationTime = dt;
@@ -210,7 +210,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.SalesPerson = salesquote.SalesPerson;
 			item.Date = dt;
 			item.PromiseDate = dt;
-			item.Terms = PaymentTerms.Immediate;
+			item.Terms = salesquote.Terms;
 			item.DueDate = dt.AddDays (item.Customer.CreditDays);
 			item.Currency = salesquote.Currency;
 			item.ExchangeRate = salesquote.ExchangeRate;
@@ -513,9 +513,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			var item = entity.Customer.Taxpayers.Single (x => x.Id == val);
-			entity.Recipient = item.Id.ToString();
+			entity.Recipient = item.Id;
 			entity.RecipientName = item.Name;
-			entity.RecipientAddress = item.Address;
 
 			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
@@ -643,16 +642,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		[HttpPost]
 		public ActionResult SetTerms (int id, string value)
 		{
-			var entity = SalesOrder.Find (id);
-			PaymentTerms val;
 			bool success;
+			PaymentTerms val;
+			var entity = SalesOrder.Find (id);
 
 			if (entity.IsCompleted || entity.IsCancelled) {
 				Response.StatusCode = 400;
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			success = Enum.TryParse<PaymentTerms> (value.Trim (), out val);
+			success = Enum.TryParse (value.Trim (), out val);
 
 			if (success) {
 				if (val == PaymentTerms.NetD && !entity.Customer.HasCredit) {

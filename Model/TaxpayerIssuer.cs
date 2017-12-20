@@ -4,7 +4,7 @@
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.com>
 // 
-// Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2017 Mictlanix SAS de CV and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -25,7 +25,6 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,26 +55,18 @@ namespace Mictlanix.BE.Model {
 
 		[Property]
 		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
-		[StringLength (250, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
-		[Display (Name = "TaxRegime", ResourceType = typeof (Resources))]
-		public virtual string Regime { get; set; }
-
-		[Property]
-		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
-		[Display (Name = "Scheme", ResourceType = typeof (Resources))]
-		public virtual FiscalScheme Scheme { get; set; }
-
-		[Property]
-		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
 		[Display (Name = "Provider", ResourceType = typeof (Resources))]
 		public virtual FiscalCertificationProvider Provider { get; set; }
 
-		[Display (Name = "Address", ResourceType = typeof (Resources))]
-		public virtual bool HasAddress { get; set; }
+		[Property ("regime", Update = false, Insert = false)]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[Display (Name = "TaxRegime", ResourceType = typeof (Resources))]
+		[UIHint ("TaxRegimeSelector")]
+		public virtual string RegimeId { get; set; }
 
-		[BelongsTo ("address", Lazy = FetchWhen.OnInvoke)]
-		[Display (Name = "Address", ResourceType = typeof (Resources))]
-		public virtual Address Address { get; set; }
+		[BelongsTo ("regime")]
+		[Display (Name = "TaxRegime", ResourceType = typeof (Resources))]
+		public virtual SatTaxRegime Regime { get; set; }
 
 		[HasMany (typeof (TaxpayerCertificate), Table = "taxpayer_certificate", ColumnKey = "taxpayer", Lazy = true)]
 		public virtual IList<TaxpayerCertificate> Certificates {

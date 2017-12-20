@@ -66,10 +66,15 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Logo", ResourceType = typeof (Resources))]
 		public virtual string Logo { get; set; }
 
-		[Property]
+		[Property ("location", Update = false, Insert = false)]
 		[Display (Name = "Location", ResourceType = typeof (Resources))]
 		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
-		public virtual string Location { get; set; }
+		[UIHint ("PostalCodeSelector")]
+		public virtual string LocationId { get; set; }
+
+		[BelongsTo ("location")]
+		[Display (Name = "Location", ResourceType = typeof (Resources))]
+		public virtual SatPostalCode Location { get; set; }
 
 		[Property ("receipt_message")]
 		[Display (Name = "ReceiptMessage", ResourceType = typeof (Resources))]

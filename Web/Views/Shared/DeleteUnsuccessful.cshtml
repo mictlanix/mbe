@@ -1,8 +1,12 @@
 ﻿@using Mictlanix.BE
 
-@{
-    ViewBag.Title = Resources.Delete;
-}
-
-<h2>@Resources.Delete</h2>
-<p>@Resources.Message_DeleteUnsuccessful</p>
+<div class='modal-header'>
+    <button type='button' class='close' data-dismiss='modal'>&times;</button>
+    <h3>@Resources.Delete</h3>
+</div>
+<div class='modal-body'>
+    <p>@Resources.Message_DeleteUnsuccessful</p>
+</div>
+<div class='modal-footer'>
+    <button type='button' class='btn btn-default' data-dismiss='modal'>@Resources.Close</button>
+</div>

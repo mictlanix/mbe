@@ -277,7 +277,7 @@
     <value>Videoconferencia</value>
   </data>
   <data name="SKU" xml:space="preserve">
-    <value>Clave</value>
+    <value>SKU</value>
   </data>
   <data name="State" xml:space="preserve">
     <value>Estado</value>
@@ -1282,9 +1282,6 @@ Realizada el: {0:d}</value>
   </data>
   <data name="Logo" xml:space="preserve">
     <value>Logo</value>
-  </data>
-  <data name="SinglePayment" xml:space="preserve">
-    <value>Pago en una sola exhibición</value>
   </data>
   <data name="PrivateKey" xml:space="preserve">
     <value>Clave Privada</value>
@@ -2366,5 +2363,26 @@ Gracias por utilizar nuestros servicios.
   </data>
   <data name="CreditAndCollection" xml:space="preserve">
     <value>Crédito y Cobranza</value>
+  </data>
+  <data name="ToBeDefined" xml:space="preserve">
+    <value>Por definir</value>
+  </data>
+  <data name="PayrollReceipt" xml:space="preserve">
+    <value>Recibo de Nómina</value>
+  </data>
+  <data name="PaymentReceipt" xml:space="preserve">
+    <value>Recibo Electrónico de Pago</value>
+  </data>
+  <data name="ProductServiceKey" xml:space="preserve">
+    <value>Clave de Producto o Servicio</value>
+  </data>
+  <data name="CfdiUsage" xml:space="preserve">
+    <value>Uso CFDI</value>
+  </data>
+  <data name="SinglePayment" xml:space="preserve">
+    <value>Pago en una sola exhibición</value>
+  </data>
+  <data name="InstallmentPayments" xml:space="preserve">
+    <value>Pago en parcialidades o diferido</value>
   </data>
 </root>

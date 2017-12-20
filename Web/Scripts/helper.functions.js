@@ -60,7 +60,10 @@ function bindModal(selector) {
 /* jQuery Plugins */
 (function( $ ) {
     $.fn.loadUrl = function() {
-    	this.load(this.data('url'));
+        var url = this.data('url');
+        if(url) {
+            this.load(url);
+        }
         return this;
     };
 }(jQuery));

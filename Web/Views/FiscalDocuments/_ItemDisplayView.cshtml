@@ -18,7 +18,9 @@
         <b>@Resources.Code: </b>
         <span class='editable code'>@Html.DisplayFor(x => x.ProductCode)</span>
         <b>@Resources.UnitOfMeasurement: </b>
-        <span class='editable um'>@Html.DisplayFor(x => x.UnitOfMeasurement)</span>
+        <span>@Html.DisplayFor(x => x.UnitOfMeasurementName)</span>
+        <b>@Resources.ProductServiceKey: </b>
+        <span>@Html.DisplayFor(x => x.ProductService.Id)</span>
         <br/>
         <b>@Resources.Quantity: </b>
         <span class='editable quantity'>@Html.DisplayFor(x => x.Quantity)</span>

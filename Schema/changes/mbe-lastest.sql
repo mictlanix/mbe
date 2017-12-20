@@ -2,8 +2,150 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
+CREATE TABLE `sat_unit_of_measurement` (
+  `sat_unit_of_measurement_id` varchar(3) NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `description` varchar(1024) NULL,
+  `symbol` varchar(32) NULL,
+  PRIMARY KEY (`sat_unit_of_measurement_id`)
+);
 
-	
+CREATE TABLE `sat_product_service` (
+  `sat_product_service_id` varchar(8) NOT NULL,
+  `description` varchar(256) NOT NULL,
+  `keywords` varchar(1024) NULL,
+  PRIMARY KEY (`sat_product_service_id`)
+);
+
+CREATE TABLE `sat_postal_code` (
+  `sat_postal_code_id` varchar(5) NOT NULL,
+  `state` varchar(4) NOT NULL,
+  `borough` varchar(3) NULL,
+  `locality` varchar(2) NULL,
+  PRIMARY KEY (`sat_postal_code_id`)
+);
+
+CREATE TABLE `sat_currency` (
+  `sat_currency_id` varchar(3) NOT NULL,
+  `description` varchar(256) NOT NULL,
+  PRIMARY KEY (`sat_currency_id`)
+);
+
+CREATE TABLE `sat_country` (
+  `sat_country_id` varchar(3) NOT NULL,
+  `description` varchar(256) NOT NULL,
+  PRIMARY KEY (`sat_country_id`)
+);
+
+CREATE TABLE `sat_tax_regime` (
+  `sat_tax_regime_id` varchar(3) NOT NULL,
+  `description` varchar(256) NOT NULL,
+  PRIMARY KEY (`sat_tax_regime_id`)
+);
+
+CREATE TABLE `sat_cfdi_usage` (
+  `sat_cfdi_usage_id` varchar(3) NOT NULL,
+  `description` varchar(256) NOT NULL,
+  PRIMARY KEY (`sat_cfdi_usage_id`)
+);
+
+UPDATE `sat_unit_of_measurement`  SET description = NULL  WHERE TRIM(description) = '';
+UPDATE `sat_unit_of_measurement`  SET symbol = NULL 		  WHERE TRIM(symbol) = '';
+UPDATE `sat_product_service` 	    SET keywords = NULL 	  WHERE TRIM(keywords) = '';
+UPDATE `sat_postal_code`		      SET `state` = 'CDMX'    WHERE `state` = 'DIF';
+UPDATE `sat_postal_code`		      SET borough = NULL 	    WHERE TRIM(borough) = '';
+UPDATE `sat_postal_code` 	 	      SET locality = NULL 	  WHERE TRIM(locality) = '';
+
+-- FiscalReports
+DELETE FROM `access_privilege` WHERE `object` = 31;
+
+INSERT INTO `sat_unit_of_measurement` VALUES ('N/A','*Requerida*',NULL,NULL);
+
+UPDATE product SET name = TRIM(name);
+UPDATE product SET unit_of_measurement = 'H87' WHERE unit_of_measurement = 'Pieza';
+UPDATE product SET unit_of_measurement = 'XBX' WHERE unit_of_measurement = 'Caja';
+UPDATE product SET unit_of_measurement = 'HUR' WHERE unit_of_measurement = 'h';
+UPDATE product SET unit_of_measurement = 'SET' WHERE unit_of_measurement = 'Juego';
+UPDATE product SET unit_of_measurement = 'TP'  WHERE unit_of_measurement = 'Decena';
+UPDATE product SET unit_of_measurement = 'MIL' WHERE unit_of_measurement = 'Millar';
+
+ALTER TABLE `product` 
+  ADD COLUMN `key` VARCHAR(8) NULL,
+  CHANGE COLUMN `unit_of_measurement` `unit_of_measurement` VARCHAR(3) NOT NULL,
+  CHANGE COLUMN `tax_rate` `tax_rate` DECIMAL(7,6) NOT NULL,
+  ADD INDEX `product_uom_idx` (`unit_of_measurement` ASC),
+  ADD INDEX `product_key_idx` (`key` ASC),
+  ADD CONSTRAINT `product_uom_fk`
+    FOREIGN KEY (`unit_of_measurement`) REFERENCES `sat_unit_of_measurement` (`sat_unit_of_measurement_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `product_key_fk`
+    FOREIGN KEY (`key`) REFERENCES `sat_product_service` (`sat_product_service_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- UPDATE taxpayer_issuer SET regime = '601';
+
+ALTER TABLE `taxpayer_issuer`
+  DROP FOREIGN KEY `taxpayer_issuer_address_fk`,
+  DROP INDEX `taxpayer_issuer_address_idx`,
+  DROP COLUMN `address`,
+  DROP COLUMN `scheme`;
+
+ALTER TABLE `taxpayer_issuer`
+  CHANGE COLUMN `regime` `regime` VARCHAR(3) NOT NULL,
+  ADD INDEX `taxpayer_issuer_regime_idx` (`regime` ASC),
+  ADD CONSTRAINT `taxpayer_issuer_regime_fk`
+    FOREIGN KEY (`regime`) REFERENCES `sat_tax_regime` (`sat_tax_regime_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE `taxpayer_recipient`
+  DROP FOREIGN KEY `taxpayer_recipient_address`,
+  DROP INDEX `taxpayer_recipient_address_idx`,
+  DROP COLUMN `address`;
+
+ALTER TABLE `taxpayer_recipient` 
+  CHANGE COLUMN `name` `name` VARCHAR(250) NULL;
+
+-- UPDATE store SET location = '03810';
+
+ALTER TABLE `store` 
+  CHANGE COLUMN `location` `location` VARCHAR(5) NOT NULL,
+  ADD INDEX `store_location_idx` (`location` ASC),
+  ADD CONSTRAINT `store_location_fk`
+    FOREIGN KEY (`location`) REFERENCES `sat_postal_code` (`sat_postal_code_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE `fiscal_document` 
+  CHANGE COLUMN `issuer_regime` `issuer_regime_name` VARCHAR(250) NULL;
+
+ALTER TABLE `fiscal_document`
+  ADD COLUMN `issuer_regime` VARCHAR(3) NULL AFTER `issuer_name`,
+  ADD COLUMN `payment_terms` TINYINT NOT NULL AFTER `currency`,
+  ADD COLUMN `usage` VARCHAR(3) NULL AFTER `payment_terms`,
+  ADD INDEX `fiscal_document_issuer_regime_idx` (`issuer_regime` ASC),
+  ADD INDEX `fiscal_document_usage_idx` (`usage` ASC),
+  ADD CONSTRAINT `fiscal_document_issuer_regime_fk`
+    FOREIGN KEY (`issuer_regime`) REFERENCES `sat_tax_regime` (`sat_tax_regime_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fiscal_document_usage_fk`
+    FOREIGN KEY (`usage`) REFERENCES `sat_cfdi_usage` (`sat_cfdi_usage_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE `fiscal_document_detail` 
+  CHANGE COLUMN `unit_of_measurement` `unit_of_measurement_name` VARCHAR(25) NOT NULL;
+
+ALTER TABLE `fiscal_document_detail`
+  CHANGE COLUMN `tax_rate` `tax_rate` DECIMAL(7,6) NOT NULL,
+  ADD COLUMN `product_service` VARCHAR(8) NULL AFTER `order_detail`,
+  ADD COLUMN `unit_of_measurement` VARCHAR(3) NULL AFTER `product_name`,
+  ADD INDEX `fiscal_document_product_service_idx` (`product_service` ASC),
+  ADD INDEX `fiscal_document_uom_idx` (`unit_of_measurement` ASC),
+  ADD CONSTRAINT `fiscal_document_uom_fk`
+    FOREIGN KEY (`unit_of_measurement`) REFERENCES `sat_unit_of_measurement` (`sat_unit_of_measurement_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fiscal_document_product_service_fk`
+    FOREIGN KEY (`product_service`) REFERENCES `sat_product_service` (`sat_product_service_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

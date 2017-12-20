@@ -4,7 +4,7 @@
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.com>
 // 
-// Copyright (C) 2013 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2017 Mictlanix SAS de CV and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -25,7 +25,6 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -47,8 +46,7 @@ namespace Mictlanix.BE.Model {
 		public virtual string Id { get; set; }
 
 		[Property]
-		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
-		[StringLength (250, MinimumLength = 3, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
+		[StringLength (250, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		[Display (Name = "TaxpayerName", ResourceType = typeof (Resources))]
 		public virtual string Name { get; set; }
 
@@ -60,18 +58,15 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Email", ResourceType = typeof (Resources))]
 		public virtual string Email { get; set; }
 
-		[Display (Name = "Address", ResourceType = typeof (Resources))]
-		public virtual bool HasAddress { get; set; }
-
-		[BelongsTo ("address", Lazy = FetchWhen.OnInvoke)]
-		[Display (Name = "Address", ResourceType = typeof (Resources))]
-		public virtual Address Address { get; set; }
-
 		#region Override Base Methods
 
 		public override string ToString ()
 		{
-			return string.Format ("{1} ({0})", Id, Name);
+			if (string.IsNullOrWhiteSpace (Name)) {
+				return Id;
+			}
+
+			return string.Format ("{0} ({1})", Id, Name);
 		}
 
 		public override bool Equals (object obj)

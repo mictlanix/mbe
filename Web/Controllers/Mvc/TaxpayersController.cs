@@ -70,12 +70,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public ActionResult Create ()
 		{
-			return PartialView ("_Create");
+			return PartialView ("_Create", new TaxpayerIssuer ());
 		}
 
 		[HttpPost]
 		public ActionResult Create (TaxpayerIssuer item)
 		{
+			item.Regime = SatTaxRegime.TryFind (item.RegimeId);
+
 			if (!string.IsNullOrEmpty (item.Id)) {
 				var entity = TaxpayerIssuer.TryFind (item.Id);
 
@@ -84,24 +86,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				}
 			}
 
-			if (!item.HasAddress) {
-				ModelState.Where (x => x.Key.StartsWith ("Address.")).ToList ().ForEach (x => x.Value.Errors.Clear ());
-				item.Address = null;
-			}
-
 			if (!ModelState.IsValid) {
 				return PartialView ("_Create", item);
 			}
 
 			item.Id = item.Id.ToUpper ();
 			item.Name = string.IsNullOrWhiteSpace (item.Name) ? null : item.Name.Trim ();
-			item.Regime = item.Regime.Trim ();
+			item.Provider = FiscalCertificationProvider.ProFact;
 
 			using (var scope = new TransactionScope ()) {
-				if (item.HasAddress) {
-					item.Address.Create ();
-				}
-
 				item.CreateAndFlush ();
 			}
 
@@ -111,50 +104,26 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Edit (string id)
 		{
 			var item = TaxpayerIssuer.Find (id);
-			item.HasAddress = (item.Address != null);
 			return PartialView ("_Edit", item);
 		}
 
 		[HttpPost]
 		public ActionResult Edit (TaxpayerIssuer item)
 		{
-			if (!item.HasAddress) {
-				ModelState.Where (x => x.Key.StartsWith ("Address.")).ToList ().ForEach (x => x.Value.Errors.Clear ());
-				item.Address = null;
-			}
+			item.Regime = SatTaxRegime.TryFind (item.RegimeId);
 
 			if (!ModelState.IsValid) {
 				return PartialView ("_Edit", item);
 			}
 
 			var entity = TaxpayerIssuer.Find (item.Id);
-			var address = entity.Address;
 
-			entity.HasAddress = (address != null);
 			entity.Name = string.IsNullOrWhiteSpace (item.Name) ? null : item.Name.Trim ();
-			entity.Regime = item.Regime.Trim ();
-			entity.Scheme = item.Scheme;
+			entity.Regime = item.Regime;
 			entity.Provider = item.Provider;
 
 			using (var scope = new TransactionScope ()) {
-				if (item.HasAddress) {
-					entity.Address = item.Address;
-					entity.Address.Create ();
-				} else {
-					entity.Address = null;
-				}
-
 				entity.UpdateAndFlush ();
-			}
-
-			if (address != null) {
-				try {
-					using (var scope = new TransactionScope ()) {
-						address.DeleteAndFlush ();
-					}
-				} catch (Exception ex) {
-					System.Diagnostics.Debug.WriteLine (ex);
-				}
 			}
 
 			return PartialView ("_Refresh");
@@ -178,16 +147,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			} catch (GenericADOException ex) {
 				System.Diagnostics.Debug.WriteLine (ex);
 				return PartialView ("DeleteUnsuccessful");
-			}
-
-			if (item.Address != null) {
-				try {
-					using (var scope = new TransactionScope ()) {
-						item.Address.DeleteAndFlush ();
-					}
-				} catch (Exception ex) {
-					System.Diagnostics.Debug.WriteLine (ex);
-				}
 			}
 
 			return PartialView ("_Refresh");
@@ -270,6 +229,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				    select new { id = x.Id, name = x.ToString () };
 
 			return Json (query.Take (15).ToList (), JsonRequestBehavior.AllowGet);
+		}
+
+		public JsonResult Regimes (string pattern)
+		{
+			var query = from x in SatTaxRegime.Queryable
+				    where x.Id.Contains (pattern) || x.Description.Contains (pattern)
+				    select new { id = x.Id, name = x.Description };
+
+			return Json (query.Take (15), JsonRequestBehavior.AllowGet);
 		}
 
 		byte [] FileToBytes (HttpPostedFileBase file)
