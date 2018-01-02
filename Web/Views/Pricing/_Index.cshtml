@@ -39,7 +39,7 @@
 	        <span class='small muted'>@Resources.SKU: @item.SKU</span>
         }
         </td>
-        <td class='stretch center'>@Html.DisplayFor(x => item.UnitOfMeasurement)</td>
+        <td class='stretch center'>@Html.DisplayFor(x => item.UnitOfMeasurement.Name)</td>
         <td class='stretch center'>
         @if (Privilege.AllowUpdate) {
         	<a class='editable' data-inputclass='input-small' data-type='text' data-placement='bottom' data-autotext='never' data-pk='@item.Id' data-value='@Html.DisplayFor(x => item.MinimumOrderQuantity)' data-url='@Url.Action("SetMOQ", new { id = item.Id })'>@Html.DisplayFor(x => item.MinimumOrderQuantity)</a>

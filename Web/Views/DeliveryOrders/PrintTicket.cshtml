@@ -77,7 +77,7 @@
         @foreach (var item in Model.Details.Where (x => x.Quantity > 0)) {
             <tr class="alt">
                 <td class="">@Html.DisplayFor(x => item.Quantity)</td>
-                <td class="">@Html.DisplayFor(x => item.Product.UnitOfMeasurement)</td>
+                <td class="">@Html.DisplayFor(x => item.Product.UnitOfMeasurement.Name)</td>
                 <td class="">@Html.DisplayFor(x => item.ProductName)</td>
                 <td class="">@Html.DisplayFor(x => item.OrderDetail.SalesOrder.Id)</td>
             </tr>
