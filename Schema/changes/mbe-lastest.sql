@@ -62,12 +62,23 @@ DELETE FROM `access_privilege` WHERE `object` = 31;
 INSERT INTO `sat_unit_of_measurement` VALUES ('N/A','*Requerida*',NULL,NULL);
 
 UPDATE product SET name = TRIM(name);
-UPDATE product SET unit_of_measurement = 'H87' WHERE unit_of_measurement = 'Pieza';
-UPDATE product SET unit_of_measurement = 'XBX' WHERE unit_of_measurement = 'Caja';
-UPDATE product SET unit_of_measurement = 'HUR' WHERE unit_of_measurement = 'h';
-UPDATE product SET unit_of_measurement = 'SET' WHERE unit_of_measurement = 'Juego';
-UPDATE product SET unit_of_measurement = 'TP'  WHERE unit_of_measurement = 'Decena';
-UPDATE product SET unit_of_measurement = 'MIL' WHERE unit_of_measurement = 'Millar';
+UPDATE product SET unit_of_measurement = 'H87' WHERE TRIM(unit_of_measurement) IN ('Pieza', 'PZA', 'P');
+UPDATE product SET unit_of_measurement = 'XBX' WHERE TRIM(unit_of_measurement) = 'Caja';
+UPDATE product SET unit_of_measurement = 'HUR' WHERE TRIM(unit_of_measurement) IN ('h', 'HORA');
+UPDATE product SET unit_of_measurement = 'SET' WHERE TRIM(unit_of_measurement) = 'Juego';
+UPDATE product SET unit_of_measurement = 'TP'  WHERE TRIM(unit_of_measurement) = 'Decena';
+UPDATE product SET unit_of_measurement = 'MIL' WHERE TRIM(unit_of_measurement) = 'Millar';
+UPDATE product SET unit_of_measurement = 'MTR' WHERE TRIM(unit_of_measurement) IN ('m', 'METRO');
+UPDATE product SET unit_of_measurement = 'MTK' WHERE TRIM(unit_of_measurement) IN ('m²', 'METRO CUADRADO', '2M');
+UPDATE product SET unit_of_measurement = 'MTQ' WHERE TRIM(unit_of_measurement) IN ('m³', 'METRO CUBICO');
+UPDATE product SET unit_of_measurement = 'LTR' WHERE TRIM(unit_of_measurement) IN ('l', 'LITRO');
+UPDATE product SET unit_of_measurement = 'GRM' WHERE TRIM(unit_of_measurement) IN ('g', 'GRAMO');
+UPDATE product SET unit_of_measurement = 'KGM' WHERE TRIM(unit_of_measurement) IN ('kg', 'KILOGRAMO');
+UPDATE product SET unit_of_measurement = 'TNE' WHERE TRIM(unit_of_measurement) IN ('t', 'Tonelada');
+UPDATE product SET unit_of_measurement = 'SEC' WHERE TRIM(unit_of_measurement) IN ('s', 'Segundo');
+UPDATE product SET unit_of_measurement = 'HC'  WHERE TRIM(unit_of_measurement) = 'Ciento';
+UPDATE product SET unit_of_measurement = 'PR'  WHERE TRIM(unit_of_measurement) = 'PAR';
+UPDATE product SET unit_of_measurement = 'XRO' WHERE TRIM(unit_of_measurement) = 'ROLLO';
 
 ALTER TABLE `product` 
   ADD COLUMN `key` VARCHAR(8) NULL,
