@@ -18,7 +18,7 @@
         <b>@Resources.Code: </b>
         <span class='editable code'>@Html.DisplayFor(x => x.ProductCode)</span>
         <b>@Resources.UnitOfMeasurement: </b>
-        <span class='editable um'>@Html.DisplayFor(x => x.Product.UnitOfMeasurement)</span>
+        <span class='editable um'>@Html.DisplayFor(x => x.Product.UnitOfMeasurement.Name)</span>
     @if (!string.IsNullOrEmpty (Model.Product.Model)) {
         <b>@Resources.Model: </b>
         <span>@Html.DisplayFor(x => x.Product.Model)</span>
