@@ -15,7 +15,7 @@
         <th></th>
         <th>@Html.LabelFor(x => new Product().Code)</th>
         <th>@Html.LabelFor(x => new Product().Name)</th>
-        <th class='nowrap'>@Html.LabelFor(x => new Product().UnitOfMeasurement)</th>
+        <th class='nowrap'>@Html.LabelFor(x => new Product().UnitOfMeasurement.Name)</th>
         <th></th>
     </tr>
 @foreach (var item in Model.Results) {

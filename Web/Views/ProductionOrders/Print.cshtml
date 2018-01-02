@@ -102,7 +102,7 @@
 	        @foreach (var item in Model.Details) {
 	            <tr class="alt">
 	                <td class="nowrap text-right">@Html.DisplayFor(x => item.Quantity)</td>
-	                <td class="nowrap text-right">@Html.DisplayFor(x => item.Product.UnitOfMeasurement)</td>
+	                <td class="nowrap text-right">@Html.DisplayFor(x => item.Product.UnitOfMeasurement.Name)</td>
 	                <td class="text-center">@Html.DisplayFor(x => item.ProductCode)</td>
 	                <td class="text-center">@Html.DisplayFor(x => item.ProductName) @Html.DisplayFor(x => item.Comment)</td>
 	            </tr>
