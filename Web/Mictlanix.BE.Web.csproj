@@ -238,7 +238,6 @@
     <Compile Include="Controllers\Mvc\PurchasesController.cs" />
     <Compile Include="Controllers\Mvc\ReportsController.cs" />
     <Compile Include="Controllers\Mvc\SalesOrdersController.cs" />
-    <Compile Include="Controllers\Mvc\SalesOrderShipmentsController.cs" />
     <Compile Include="Controllers\Mvc\StoresController.cs" />
     <Compile Include="Controllers\Mvc\SupplierAgreementsController.cs" />
     <Compile Include="Controllers\Mvc\SupplierPaymentsController.cs" />
@@ -779,12 +778,6 @@
     <Content Include="Views\Reports\WarehouseStockBySerialNumberReport.cshtml" />
     <Content Include="Views\Reports\Kardex.cshtml" />
     <Content Include="Views\Reports\_Kardex.cshtml" />
-    <Content Include="Views\SalesOrderShipments\Print.cshtml" />
-    <Content Include="Views\SalesOrderShipments\_Index.cshtml" />
-    <Content Include="Views\SalesOrderShipments\Index.cshtml" />
-    <Content Include="Views\SalesOrderShipments\Edit.cshtml" />
-    <Content Include="Views\SalesOrderShipments\_DisplayView.cshtml" />
-    <Content Include="Views\SalesOrderShipments\_ItemDisplayView.cshtml" />
     <Content Include="Views\DeliveryOrders\_DisplayView.cshtml" />
     <Content Include="Views\DeliveryOrders\_EditorView.cshtml" />
     <Content Include="Views\DeliveryOrders\_Index.cshtml" />
@@ -1157,17 +1150,6 @@
     <Content Include="Views\SalesOrders\_CustomerName.cshtml" />
     <Content Include="Views\Payments\_DeliveryPayment.cshtml" />
     <Content Include="Views\Payments\_DeliveryPaymentList.cshtml" />
-    <None Include="docs\MySqlTransaction.xml" />
-    <None Include="docs\MySqlParameterCollection.xml" />
-    <None Include="docs\MySqlParameter.xml" />
-    <None Include="docs\MySqlHelper.xml" />
-    <None Include="docs\MySqlException.xml" />
-    <None Include="docs\MySqlDataReader.xml" />
-    <None Include="docs\MySqlDataAdapter.xml" />
-    <None Include="docs\MySqlConnectionStringBuilder.xml" />
-    <None Include="docs\MySqlConnection.xml" />
-    <None Include="docs\MySqlCommandBuilder.xml" />
-    <None Include="docs\MySqlCommand.xml" />
     <None Include="Scripts\jquery-2.2.4.min.map" />
   </ItemGroup>
   <ItemGroup />
