@@ -1269,7 +1269,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			attachments.Add (new MimePart {
-				ContentObject = new ContentObject (GetPdf (view, model, new jsreport.Client.Entities.Phantom {
+				Content = new MimeContent (GetPdf (view, model, new jsreport.Client.Entities.Phantom {
 					header = header,
 					headerHeight = (header == null ? 0 : 18) + " mm",
 					footer = footer,
@@ -1280,7 +1280,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				FileName = filename + ".pdf"
 			});
 			attachments.Add (new MimePart {
-				ContentObject = new ContentObject (new MemoryStream (Encoding.UTF8.GetBytes (xml.Data)), ContentEncoding.Default),
+				Content = new MimeContent (new MemoryStream (Encoding.UTF8.GetBytes (xml.Data)), ContentEncoding.Default),
 				ContentDisposition = new ContentDisposition (ContentDisposition.Attachment),
 				ContentTransferEncoding = ContentEncoding.Base64,
 				FileName = filename + ".xml"
