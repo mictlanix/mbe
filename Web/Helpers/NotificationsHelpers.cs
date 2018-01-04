@@ -49,7 +49,7 @@ namespace Mictlanix.BE.Web.Helpers {
 
 			if (attachmentContent != null) {
 				var attachment = new MimePart {
-					Content = new MimeContent (attachmentContent, ContentEncoding.Default),
+					ContentObject = new ContentObject (attachmentContent, ContentEncoding.Default),
 					ContentDisposition = new ContentDisposition (ContentDisposition.Attachment),
 					ContentTransferEncoding = ContentEncoding.Base64,
 					FileName = attachmentName
