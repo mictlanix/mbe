@@ -880,7 +880,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			string sql = @"SELECT sales_order SalesOrder, date Date, name Customer,
 							GROUP_CONCAT(DISTINCT (SELECT GROUP_CONCAT(DISTINCT f.batch, f.serial SEPARATOR ' ')
 								FROM fiscal_document_detail fd LEFT JOIN fiscal_document f ON fd.document = f.fiscal_document_id
-								WHERE fd.order_detail = d.sales_order_detail_id) SEPARATOR ' ') Invoices,
+								WHERE f.cancelled = 0 AND fd.order_detail = d.sales_order_detail_id) SEPARATOR ' ') Invoices,
 							SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) / IF(d.tax_included = 0, 1, 1 + d.tax_rate), 2)) Subtotal,
 							SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) Total
 						FROM sales_order m
@@ -930,7 +930,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			string sql = @"SELECT date Date, CONCAT(first_name, ' ', last_name) SalesPerson, sales_order SalesOrder, m.due_date DueDate, c.name Customer,
 							GROUP_CONCAT(DISTINCT (SELECT GROUP_CONCAT(DISTINCT f.batch, f.serial SEPARATOR ' ')
 								FROM fiscal_document_detail fd LEFT JOIN fiscal_document f ON fd.document = f.fiscal_document_id
-								WHERE fd.order_detail = d.sales_order_detail_id) SEPARATOR ' ') Invoices,
+								WHERE f.cancelled = 0 AND fd.order_detail = d.sales_order_detail_id) SEPARATOR ' ') Invoices,
 							SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) TotalEx,
 							SUM(ROUND(d.quantity * d.price * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) Total,
 							m.currency Currency
@@ -1193,7 +1193,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			string sql = @"SELECT sales_order SalesOrder, 0 Refund, date Date, name Customer,
 							GROUP_CONCAT(DISTINCT (SELECT GROUP_CONCAT(DISTINCT f.batch, f.serial SEPARATOR ' ')
 								FROM fiscal_document_detail fd LEFT JOIN fiscal_document f ON fd.document = f.fiscal_document_id
-								WHERE fd.order_detail = d.sales_order_detail_id) SEPARATOR ' ') Invoices,
+								WHERE f.cancelled = 0 AND fd.order_detail = d.sales_order_detail_id) SEPARATOR ' ') Invoices,
 							SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) / IF(d.tax_included = 0, 1, 1 + d.tax_rate), 2)) Subtotal,
 							SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) Total
 						FROM sales_order m
@@ -1224,7 +1224,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			sql = @"SELECT sales_order SalesOrder, customer_refund Refund, s.date Date, name Customer,
 						GROUP_CONCAT(DISTINCT (SELECT GROUP_CONCAT(DISTINCT f.batch, f.serial SEPARATOR ' ')
 							FROM fiscal_document_detail fd LEFT JOIN fiscal_document f ON fd.document = f.fiscal_document_id
-							WHERE fd.order_detail = d.sales_order_detail) SEPARATOR ' ') Invoices,
+							WHERE f.cancelled = 0 AND fd.order_detail = d.sales_order_detail) SEPARATOR ' ') Invoices,
 						-SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) / IF(d.tax_included = 0, 1, 1 + d.tax_rate), 2)) Subtotal,
 						-SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) Total
 					FROM customer_refund m
@@ -1323,7 +1323,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
                             d.quantity Quantity, product_code Code, model Model,
 							GROUP_CONCAT(DISTINCT (SELECT GROUP_CONCAT(DISTINCT f.batch, f.serial SEPARATOR ' ')
 								FROM fiscal_document_detail fd LEFT JOIN fiscal_document f ON fd.document = f.fiscal_document_id
-								WHERE fd.order_detail = d.sales_order_detail_id) SEPARATOR ' ') Invoices,
+								WHERE f.cancelled = 0 AND fd.order_detail = d.sales_order_detail_id) SEPARATOR ' ') Invoices,
 							SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) / IF(d.tax_included = 0, 1, 1 + d.tax_rate), 2)) Subtotal,
 							SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) Total
 						FROM sales_order m
@@ -1361,7 +1361,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				d.quantity Quantity, product_code Code, model Model,
 						GROUP_CONCAT(DISTINCT (SELECT GROUP_CONCAT(DISTINCT f.batch, f.serial SEPARATOR ' ')
 						FROM fiscal_document_detail fd LEFT JOIN fiscal_document f ON fd.document = f.fiscal_document_id
-						WHERE fd.order_detail = d.sales_order_detail) SEPARATOR ' ') Invoices,
+						WHERE f.cancelled = 0 AND fd.order_detail = d.sales_order_detail) SEPARATOR ' ') Invoices,
 					-SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) / IF(d.tax_included = 0, 1, 1 + d.tax_rate), 2)) Subtotal,
 					-SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) Total
 					FROM customer_refund m
