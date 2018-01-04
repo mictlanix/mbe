@@ -94,6 +94,7 @@ namespace Mictlanix.BE.Web.Helpers {
 				Folio = item.Serial.ToString (),
 				Fecha = item.Issued.GetValueOrDefault (),
 				MetodoPago = item.Terms == PaymentTerms.Immediate ? c_MetodoPago.PagoEnUnaSolaExhibicion : c_MetodoPago.PagoEnParcialidadesODiferido,
+				MetodoPagoSpecified = true,
 				FormaPago =  (c_FormaPago) (int) item.PaymentMethod,
 				FormaPagoSpecified = true,
 				LugarExpedicion = item.IssuedLocation,
@@ -101,6 +102,7 @@ namespace Mictlanix.BE.Web.Helpers {
 				Total = item.Total,
 				Moneda = item.Currency.GetDisplayName (),
 				TipoCambio = item.ExchangeRate,
+				TipoCambioSpecified = item.Currency != CurrencyCode.MXN,
 				Sello = item.IssuerDigitalSeal,
 				Certificado = (cer == null ? null : SecurityHelpers.EncodeBase64 (cer.CertificateData)),
 				Emisor = new ComprobanteEmisor {
@@ -127,32 +129,38 @@ namespace Mictlanix.BE.Web.Helpers {
 					Descripcion = detail.ProductName,
 					ValorUnitario = detail.NetPrice,
 					Importe = detail.Subtotal,
-
+					Descuento = detail.Discount,
+					DescuentoSpecified = detail.Discount > 0m
 				};
 
-				if (detail.Taxes > 0) {
-					cfd.Conceptos[i].Impuestos = new ComprobanteConceptoImpuestos {
-						Traslados = new ComprobanteConceptoImpuestosTraslado[] {
-							new ComprobanteConceptoImpuestosTraslado {
-								Impuesto = c_Impuesto.IVA,
-								TipoFactor = c_TipoFactor.Tasa,
-								Base = detail.Subtotal,
-								Importe = detail.Taxes,
-								ImporteSpecified = true,
-								TasaOCuota = detail.TaxRate,
-								TasaOCuotaSpecified = true
-							}
+				if (detail.Subtotal == detail.Discount) {
+					i++;
+					continue;
+				}
+
+				if (detail.TaxRate > 0m) {
+					cfd.Conceptos [i].Impuestos = new ComprobanteConceptoImpuestos {
+						Traslados = new ComprobanteConceptoImpuestosTraslado [] {
+						new ComprobanteConceptoImpuestosTraslado {
+							Impuesto = c_Impuesto.IVA,
+							TipoFactor = c_TipoFactor.Tasa,
+							Base = detail.Subtotal - detail.Discount,
+							Importe = detail.Taxes,
+							ImporteSpecified = true,
+							TasaOCuota = detail.TaxRate,
+							TasaOCuotaSpecified = true
 						}
+					}
 					};
 				} else {
-					cfd.Conceptos[i].Impuestos = new ComprobanteConceptoImpuestos {
-						Traslados = new ComprobanteConceptoImpuestosTraslado[] {
-							new ComprobanteConceptoImpuestosTraslado {
-								Impuesto = c_Impuesto.IVA,
-								TipoFactor = c_TipoFactor.Exento,
-								Base = detail.Subtotal
-							}
+					cfd.Conceptos [i].Impuestos = new ComprobanteConceptoImpuestos {
+						Traslados = new ComprobanteConceptoImpuestosTraslado [] {
+						new ComprobanteConceptoImpuestosTraslado {
+							Impuesto = c_Impuesto.IVA,
+							TipoFactor = c_TipoFactor.Exento,
+							Base = detail.Subtotal
 						}
+					}
 					};
 				}
 
@@ -175,19 +183,19 @@ namespace Mictlanix.BE.Web.Helpers {
 
 			i = 0;
 
-			if (cfd.Conceptos.Any (c => c.Impuestos.Traslados.Any (x => x.TipoFactor == c_TipoFactor.Exento))) {
+			if (cfd.Conceptos.Any (c => c.Impuestos != null && c.Impuestos.Traslados.Any (x => x.TipoFactor == c_TipoFactor.Exento))) {
 				cfd.Impuestos.Traslados[i++] = new ComprobanteImpuestosTraslado {
 					Impuesto = c_Impuesto.IVA,
 					TipoFactor = c_TipoFactor.Exento
 				};
 			}
 
-			if (cfd.Conceptos.Any (c => c.Impuestos.Traslados.Any (x => x.TasaOCuota == WebConfig.DefaultVAT))) {
+			if (cfd.Conceptos.Any (c => c.Impuestos != null && c.Impuestos.Traslados.Any (x => x.TasaOCuota == WebConfig.DefaultVAT))) {
 				cfd.Impuestos.Traslados[i++] = new ComprobanteImpuestosTraslado {
 					Impuesto = c_Impuesto.IVA,
 					TipoFactor = c_TipoFactor.Tasa,
 					TasaOCuota = WebConfig.DefaultVAT,
-					Importe = cfd.Conceptos.Sum (c => c.Impuestos.Traslados.Where (x => x.TasaOCuota == WebConfig.DefaultVAT).Sum (x => x.Importe))
+					Importe = cfd.Conceptos.Where (x => x.Impuestos != null).Sum (c => c.Impuestos.Traslados.Where (x => x.TasaOCuota == WebConfig.DefaultVAT).Sum (x => x.Importe))
 				};
 			}
 
