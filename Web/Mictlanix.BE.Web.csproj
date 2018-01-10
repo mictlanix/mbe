@@ -147,15 +147,15 @@
     <Reference Include="MySql.Data">
       <HintPath>..\packages\MySql.Data.6.10.5\lib\net452\MySql.Data.dll</HintPath>
     </Reference>
-    <Reference Include="Mictlanix.ProFactClient">
-      <HintPath>..\packages\Mictlanix.ProFactClient.3.3.0-beta\lib\net45\Mictlanix.ProFactClient.dll</HintPath>
-    </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="MimeKit">
       <HintPath>..\packages\MimeKit.1.22.0\lib\net45\MimeKit.dll</HintPath>
     </Reference>
     <Reference Include="MailKit">
       <HintPath>..\packages\MailKit.1.22.0\lib\net45\MailKit.dll</HintPath>
+    </Reference>
+    <Reference Include="Mictlanix.ProFactClient">
+      <HintPath>..\packages\Mictlanix.ProFactClient.3.3.0-beta3\lib\net45\Mictlanix.ProFactClient.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -259,6 +259,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="Models\AccountReceivable.cs" />
     <Compile Include="Models\OrderDetailDeliveries.cs" />
+    <Compile Include="Models\Template.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-clockpicker.min.css" />

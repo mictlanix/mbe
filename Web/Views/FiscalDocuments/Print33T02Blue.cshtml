@@ -207,8 +207,8 @@
     <header>
     	<div class="row">
 			<div class="col-xs-5">
-	        	@if(!string.IsNullOrEmpty(Model.Store.Logo)) {
-	            <img class="logo" src='@Url.Content(Model.Store.Logo)' alt="Logo" />
+	        	@if(!string.IsNullOrEmpty(ViewBag.Logo)) {
+	            <img class="logo" src='@Url.Content(ViewBag.Logo)' alt="Logo" />
 	            }
 	 		</div>
 			<div class="col-xs-6 col-xs-offset-1">
