@@ -157,6 +157,9 @@ ALTER TABLE `fiscal_document_detail`
     FOREIGN KEY (`product_service`) REFERENCES `sat_product_service` (`sat_product_service_id`)
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 
+ALTER TABLE `taxpayer_batch` 
+	CHANGE COLUMN `template` `template` TEXT NOT NULL;
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
