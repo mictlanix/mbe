@@ -74,9 +74,15 @@ namespace Mictlanix.BE.Web.Helpers {
 
 		static bool ProFactCancel (FiscalDocument item)
 		{
-			var cli = new ProFactClient (WebConfig.ProFactUser, WebConfig.ProFactUrl);
+			if(item.Version > 3.2m) {
+				var cli = new ProFactClient(WebConfig.ProFactUser, WebConfig.ProFactUrl);
 
-			return cli.Cancel (item.Issuer.Id, item.StampId);
+				return cli.Cancel (item.Issuer.Id, item.StampId);
+			} else {
+				var cli = new ProFactClient(WebConfig.ProFactUser, WebConfig.ProFactUrlV32);
+
+				return cli.CancelV32 (item.Issuer.Id, item.StampId);
+			}
 		}
 
 		public static bool PrivateKeyTest (byte [] data, byte [] password)
@@ -202,18 +208,17 @@ namespace Mictlanix.BE.Web.Helpers {
 			cfd.Impuestos.TotalImpuestosTrasladados = cfd.Impuestos.Traslados.Sum (x => x.Importe);
 			cfd.Impuestos.TotalImpuestosTrasladadosSpecified = true;
 
-			// FIXME: Retention Taxes
-			//if (item.RetentionRate > 0m) {
-			//	cfd.Impuestos.Retenciones = new ComprobanteImpuestosRetencion [] {
-			//		new ComprobanteImpuestosRetencion {
-			//			Impuesto = c_Impuesto.IVA,
-			//			Importe = item.RetentionTaxes
-			//		}
-			//	};
+			if (item.RetentionRate > 0m) {
+				cfd.Impuestos.Retenciones = new ComprobanteImpuestosRetencion [] {
+					new ComprobanteImpuestosRetencion {
+						Impuesto = c_Impuesto.IVA,
+						Importe = item.RetentionTaxes,
+					}
+				};
 
-			//	cfd.Impuestos.TotalImpuestosRetenidos = cfd.Impuestos.Retenciones.Sum (x => x.Importe);
-			//	cfd.Impuestos.TotalImpuestosRetenidosSpecified = true;
-			//}
+				cfd.Impuestos.TotalImpuestosRetenidos = cfd.Impuestos.Retenciones.Sum (x => x.Importe);
+				cfd.Impuestos.TotalImpuestosRetenidosSpecified = true;
+			}
 
 			return cfd;
 		}
