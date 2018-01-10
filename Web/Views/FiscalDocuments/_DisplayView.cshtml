@@ -53,6 +53,10 @@
                 </dd>
 				<dt>@Resources.PaymentMethod</dt>
 				<dd>@Model.PaymentMethod.GetDisplayName()</dd>
+			@if (!string.IsNullOrEmpty (Model.PaymentReference)) {
+			<dt>@Resources.PaymentReference</dt>
+			<dd>@Html.DisplayFor(x => x.PaymentReference)</dd>
+			}
 			@if (Model.RetentionRate != 0m) {
 				<dt>@Resources.RetentionRate</dt>
 				<dd>@Html.DisplayFor(x => x.RetentionRate)</dd>
