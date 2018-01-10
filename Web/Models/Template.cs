@@ -1,10 +1,10 @@
 ﻿// 
-// Pair.cs
+// Template.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.com>
 // 
-// Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2017 Mictlanix SAS de CV and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -34,18 +34,12 @@ using System.Web.Mvc;
 using System.Web.Security;
 using Mictlanix.BE.Model;
 
-namespace Mictlanix.BE.Web.Models
-{
-	public class Pair<T, U> {
-	    public Pair() {
-	    }
-	
-	    public Pair(T first, U second) {
-	        this.First = first;
-	        this.Second = second;
-	    }
-
-	    public T First { get; set; }
-	    public U Second { get; set; }
+namespace Mictlanix.BE.Web.Models {
+	public class Template {
+		public string Name { get; set; }
+		public string Logo { get; set; }
+		public decimal HeaderHeight { get; set; }
+		public decimal FooterHeight { get; set; }
+		public object ExtraInfo { get; set; }
 	}
 }
