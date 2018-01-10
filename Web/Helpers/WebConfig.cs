@@ -162,6 +162,10 @@ namespace Mictlanix.BE.Web.Helpers {
 			get { return ConfigurationManager.AppSettings["ProFactUrl"]; }
 		}
 
+		public static string ProFactUrlV32 {
+			get { return ConfigurationManager.AppSettings ["ProFactUrlV32"]; }
+		}
+
 		public static string ProFactCode {
 			get { return ConfigurationManager.AppSettings["ProFactCode"]; }
 		}
@@ -239,10 +243,6 @@ namespace Mictlanix.BE.Web.Helpers {
 
 				return options.ToList ();
 			}
-		}
-
-		public static string BankInformation {
-			get { return ConfigurationManager.AppSettings["BankInformation"]; }
 		}
 
 		public static CultureInfo Culture {

@@ -111,6 +111,12 @@
 			        	@Model.PaymentMethod.GetDisplayName()
 			        </a>
 				</dd>
+                <dt>@Resources.RetentionRate</dt>
+                <dd>
+                    <a class='editable tax' data-type='select' data-placement='right' data-autotext='never'
+                    data-source='@Url.Action("RetentionRates", "Pricing")' data-pk='@Model.Id' data-value='@Model.RetentionRate.ToString("0.####")'
+                    data-url='@Url.Action("SetRetentionRate", new { id = Model.Id })'>@Html.DisplayFor(x => x.RetentionRate)</a>
+                </dd>
 			</dl>
   		</div>
 	</div>
