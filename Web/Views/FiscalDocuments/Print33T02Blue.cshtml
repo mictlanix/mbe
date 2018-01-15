@@ -308,7 +308,7 @@
 					<div class="row">
 						<div class="col-xs-4">
 							<p class="payment-info">
-								<strong>@Resources.PaymentTerms</strong><br>
+								<strong>@Resources.PaymentMethod</strong><br>
                             @if(Model.Terms == PaymentTerms.Immediate){
                                 <text>@Resources.SinglePayment</text>
                             } else if(Model.Terms == PaymentTerms.NetD){
@@ -318,7 +318,7 @@
 						</div>
 						<div class="col-xs-5">
 							<p class="payment-info">
-								<strong>@Resources.PaymentMethod</strong><br>
+								<strong>@Resources.PaymentTerms</strong><br>
 								<text>@string.Format("{0:D2}", (int) Model.PaymentMethod) :</text>
 								@Model.PaymentMethod.GetDisplayName()<br>
 							</p>
