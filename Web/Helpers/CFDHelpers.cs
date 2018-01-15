@@ -4,7 +4,7 @@
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.com>
 // 
-// Copyright (C) 2012-2017 Mictlanix SAS de CV and contributors.
+// Copyright (C) 2012-2018 Mictlanix SAS de CV and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -74,13 +74,11 @@ namespace Mictlanix.BE.Web.Helpers {
 
 		static bool ProFactCancel (FiscalDocument item)
 		{
-			if(item.Version > 3.2m) {
-				var cli = new ProFactClient(WebConfig.ProFactUser, WebConfig.ProFactUrl);
-
+			if (item.Version > 3.2m) {
+				var cli = new ProFactClient (WebConfig.ProFactUser, WebConfig.ProFactUrl);
 				return cli.Cancel (item.Issuer.Id, item.StampId);
 			} else {
-				var cli = new ProFactClient(WebConfig.ProFactUser, WebConfig.ProFactUrlV32);
-
+				var cli = new ProFactClient (WebConfig.ProFactUser, WebConfig.ProFactUrlV32);
 				return cli.CancelV32 (item.Issuer.Id, item.StampId);
 			}
 		}
@@ -94,14 +92,14 @@ namespace Mictlanix.BE.Web.Helpers {
 		{
 			var cer = item.Issuer.Certificates.SingleOrDefault (x => x.Id == item.IssuerCertificateNumber);
 			var cfd = new Comprobante {
-				TipoDeComprobante = (c_TipoDeComprobante) FDT2TDC (item.Type),
+				TipoDeComprobante = (c_TipoDeComprobante)FDT2TDC (item.Type),
 				NoCertificado = item.IssuerCertificateNumber.PadLeft (20, '0'),
 				Serie = item.Batch,
 				Folio = item.Serial.ToString (),
 				Fecha = item.Issued.GetValueOrDefault (),
 				MetodoPago = item.Terms == PaymentTerms.Immediate ? c_MetodoPago.PagoEnUnaSolaExhibicion : c_MetodoPago.PagoEnParcialidadesODiferido,
 				MetodoPagoSpecified = true,
-				FormaPago =  (c_FormaPago) (int) item.PaymentMethod,
+				FormaPago = (c_FormaPago)(int)item.PaymentMethod,
 				FormaPagoSpecified = true,
 				LugarExpedicion = item.IssuedLocation,
 				SubTotal = item.Subtotal,
@@ -114,7 +112,7 @@ namespace Mictlanix.BE.Web.Helpers {
 				Emisor = new ComprobanteEmisor {
 					Rfc = item.Issuer.Id,
 					Nombre = item.IssuerName,
-					RegimenFiscal = (c_RegimenFiscal) int.Parse (item.IssuerRegime.Id),
+					RegimenFiscal = (c_RegimenFiscal)int.Parse (item.IssuerRegime.Id),
 				},
 				Receptor = new ComprobanteReceptor {
 					Rfc = item.Recipient,
@@ -182,22 +180,22 @@ namespace Mictlanix.BE.Web.Helpers {
 
 			// TODO: VAT Summaries
 			if (item.Taxes > 0 && item.Details.Any (x => x.TaxRate == decimal.Zero)) {
-				cfd.Impuestos.Traslados = new ComprobanteImpuestosTraslado[2];
+				cfd.Impuestos.Traslados = new ComprobanteImpuestosTraslado [2];
 			} else {
-				cfd.Impuestos.Traslados = new ComprobanteImpuestosTraslado[1];
+				cfd.Impuestos.Traslados = new ComprobanteImpuestosTraslado [1];
 			}
 
 			i = 0;
 
 			if (cfd.Conceptos.Any (c => c.Impuestos != null && c.Impuestos.Traslados.Any (x => x.TipoFactor == c_TipoFactor.Exento))) {
-				cfd.Impuestos.Traslados[i++] = new ComprobanteImpuestosTraslado {
+				cfd.Impuestos.Traslados [i++] = new ComprobanteImpuestosTraslado {
 					Impuesto = c_Impuesto.IVA,
 					TipoFactor = c_TipoFactor.Exento
 				};
 			}
 
 			if (cfd.Conceptos.Any (c => c.Impuestos != null && c.Impuestos.Traslados.Any (x => x.TasaOCuota == WebConfig.DefaultVAT))) {
-				cfd.Impuestos.Traslados[i++] = new ComprobanteImpuestosTraslado {
+				cfd.Impuestos.Traslados [i++] = new ComprobanteImpuestosTraslado {
 					Impuesto = c_Impuesto.IVA,
 					TipoFactor = c_TipoFactor.Tasa,
 					TasaOCuota = WebConfig.DefaultVAT,
@@ -231,11 +229,11 @@ namespace Mictlanix.BE.Web.Helpers {
 			case FiscalDocumentType.FeeReceipt:
 			case FiscalDocumentType.RentReceipt:
 			case FiscalDocumentType.DebitNote:
-				return (int) c_TipoDeComprobante.Ingreso;
+				return (int)c_TipoDeComprobante.Ingreso;
 			case FiscalDocumentType.CreditNote:
-				return (int) c_TipoDeComprobante.Egreso;
+				return (int)c_TipoDeComprobante.Egreso;
 			case FiscalDocumentType.PaymentReceipt:
-				return (int) c_TipoDeComprobante.Pago;
+				return (int)c_TipoDeComprobante.Pago;
 			}
 
 			throw new ArgumentOutOfRangeException (nameof (type));
