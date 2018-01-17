@@ -2385,4 +2385,10 @@ Gracias por utilizar nuestros servicios.
   <data name="InstallmentPayments" xml:space="preserve">
     <value>Pago en parcialidades o diferido</value>
   </data>
+  <data name="CFDI_SinglePayment" xml:space="preserve">
+    <value>PUE : Pago en una sola exhibición</value>
+  </data>
+  <data name="CFDI_InstallmentPayments" xml:space="preserve">
+    <value>PPD : Pago en parcialidades o diferido</value>
+  </data>
 </root>
