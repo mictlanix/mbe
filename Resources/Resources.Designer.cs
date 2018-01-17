@@ -4546,5 +4546,17 @@ namespace Mictlanix.BE {
                 return ResourceManager.GetString("InstallmentPayments", resourceCulture);
             }
         }
+        
+        public static string CFDI_SinglePayment {
+            get {
+                return ResourceManager.GetString("CFDI_SinglePayment", resourceCulture);
+            }
+        }
+        
+        public static string CFDI_InstallmentPayments {
+            get {
+                return ResourceManager.GetString("CFDI_InstallmentPayments", resourceCulture);
+            }
+        }
     }
 }
