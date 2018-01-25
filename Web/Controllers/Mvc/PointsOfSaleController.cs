@@ -150,6 +150,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		[HttpPost]
 		public ActionResult Edit (PointOfSale item)
 		{
+			item.Store = Store.TryFind (item.StoreId);
+			item.Warehouse = Warehouse.TryFind (item.WarehouseId);
+
 			if (!ModelState.IsValid)
 				return PartialView ("_Edit", item);
 
@@ -158,6 +161,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			entity.Code = item.Code;
 			entity.Name = item.Name;
 			entity.Comment = item.Comment;
+			entity.Store = item.Store;
+			entity.Warehouse = item.Warehouse;
 
 			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
