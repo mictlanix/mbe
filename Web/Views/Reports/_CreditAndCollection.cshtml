@@ -1,0 +1,103 @@
+﻿
+@using Mictlanix.BE
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@using Mictlanix.BE.Model
+@model CreditAndCollectionSummary
+
+<table>
+	<tr>
+		<th class="nowrap" style="width:5em;">@Resources.Id</th>
+		<th class="nowrap" style="width:5em;">@Resources.Serial</th>
+		<th class="nowrap" style="width:15em;">@Resources.Customer</th>
+		<th class="nowrap">@Resources.TotalPayment</th>
+		<th class="nowrap">@Resources.Payment</th>
+		<th class="nowrap">@Resources.Balance</th>
+		<th class="nowrap">@Resources.PaymentTerms</th>
+		<th class="nowrap">@Resources.PaymentMethod</th>
+	</tr>
+	@foreach (var item in Model.Immediates) {
+			<tr>
+				<td class="number">@Html.DisplayFor(x => item.Id)</td>
+				<td class="number">@Html.DisplayFor(x => item.Serial)</td>
+				<td class="text">@Html.DisplayFor(x => item.Customer.Name)</td>
+				<td class="number">@Html.DisplayFor(x => item.Total)</td>
+				<td class="number">@Html.DisplayFor(x => item.Paid)</td>
+				<td class="number">@Html.DisplayFor(x => item.Balance)</td>
+				<td class="number">@item.Terms.GetDisplayName()</td>
+			</tr>
+		foreach (var payment in item.Payments.Where (x => x.Payment.Date > Model.Start && x.Payment.Date < Model.End)) {
+						 <tr>
+							 <td colspan="4"></td>
+				 			 <td class="number">@Html.DisplayFor(x => payment.Payment.Amount)</td>
+							 <td colspan="2"></td>
+				 			 <td class="text">@payment.Payment.Method.GetDisplayName()</td>
+						 </tr>
+		}
+	}
+
+	<tr><td colspan="8">&nbsp;</td></tr>
+
+	@foreach (var item in Model.Credits) {
+			<tr>
+				<td class="number">@Html.DisplayFor(x => item.Id)</td>
+				<td class="number">@Html.DisplayFor(x => item.Serial)</td>
+				<td class="text">@Html.DisplayFor(x => item.Customer.Name)</td>
+				<td class="number">@Html.DisplayFor(x => item.Total)</td>
+				<td class="number">@Html.DisplayFor(x => item.Paid)</td>
+				<td class="number">@Html.DisplayFor(x => item.Balance)</td>
+				<td class="number">@item.Terms.GetDisplayName()</td>
+			</tr>
+		foreach (var payment in item.Payments.SelectMany (x => x.Payment.Allocations).Select (y => y.Payment)) {
+						<tr>
+							<td colspan="4"></td>
+							<td class="number">@Html.DisplayFor(x => payment.Amount)</td>
+							<td colspan="2"></td>
+							<td class="text">@payment.Method.GetDisplayName()</td>
+						</tr>
+		}
+	}
+
+	<tr><td colspan="8">&nbsp;</td></tr>
+
+	@foreach (var item in Model.Expenses) {
+			<tr>
+				<td class="number">@Html.DisplayFor(x => item.Id)</td>
+				<td></td>
+				<td class="date">@Html.DisplayFor(x => item.CashSession.Cashier.Name)</td>
+				<td class="number">@Html.DisplayFor(x => item.Total)</td>
+			</tr>
+				foreach (var detail in item.Details) {
+						<tr>
+							<td></td>
+							<td></td>
+							<td class="number">@Html.DisplayFor(x => detail.Amount)</td>
+							<td class="text">@Html.DisplayFor(x => detail.Expense.Name)</td>
+							<td class="center nowrap stretch">@Html.DisplayFor(x => detail.Comment)</td>
+						</tr>
+				}
+
+	}
+
+	@foreach(PaymentMethod item in Model.Orders.SelectMany(x => x.Payments.Select(y => y.Payment.Method)).Distinct()) {
+			<tr>
+				<td class="right" colspan="4"><i>@item.GetDisplayName()</i></td>
+				<td class="number"><i>@Model.GetSubTotal(item).ToString("c")</i></td>
+				<td></td>
+			</tr>
+	}
+
+
+</table>
+
+@*@if (Model.Count() > 0) {
+		<div class='pull-right'>
+			@Html.ActionLink(Resources.Print, "PrintReceivedPayments", new {
+		start = Model.Min (x => x.Date),
+		end = Model.Max (x => x.Date),
+		store = SalesOrder.Find (Model.First ().SalesOrder).Store.Id
+	}, new { @class = "button icon print", target = "_blank" })
+		</div>
+}*@
+<div class="clearfix"></div>
+
