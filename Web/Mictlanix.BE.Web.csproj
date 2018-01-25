@@ -192,6 +192,7 @@
     <Compile Include="Models\AccountsReceivableEntry.cs" />
     <Compile Include="Models\AccountsPayableEntry.cs" />
     <Compile Include="Models\AccountsPayableSummary.cs" />
+    <Compile Include="Models\CreditAndCollectionSummary.cs" />
     <Compile Include="Models\EmployeeAttendanceDBRecorder.cs" />
     <Compile Include="Models\ItemDateRange.cs" />
     <Compile Include="Models\DateRange.cs" />
@@ -1153,6 +1154,8 @@
     <Content Include="Views\Payments\_DeliveryPayment.cshtml" />
     <Content Include="Views\Payments\_DeliveryPaymentList.cshtml" />
     <None Include="Scripts\jquery-2.2.4.min.map" />
+    <Content Include="Views\Reports\CreditAndCollection.cshtml" />
+    <Content Include="Views\Reports\_CreditAndCollection.cshtml" />
   </ItemGroup>
   <ItemGroup />
 </Project>

@@ -1425,11 +1425,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult ReceivedPayments (int store, DateRange dates) {
+		public ActionResult ReceivedPayments (DateRange dates) {
 
-			var query = SalesOrderPayment.Queryable.Where (x => x.SalesOrder.IsPaid && x.Payment.Date > dates.StartDate
+			var received_payments = SalesOrderPayment.Queryable.Where (x => x.SalesOrder.IsPaid && x.Payment.Date > dates.StartDate
 									     && x.Payment.Date < dates.EndDate.Date.AddDays (1).AddMilliseconds (-1)
-									     && x.Amount > 0 && x.SalesOrder.Store.Id == store)
+									     && x.Amount > 0 && x.SalesOrder.Store == WebConfig.Store)
 							.Select (y => new ReceivedPayment {
 								Date = y.Payment.Date,
 								Customer = y.Payment.Customer,
@@ -1439,7 +1439,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 								SalesOrder = y.SalesOrder.Id
 							}).ToList ();
 
-			return PartialView ("_ReceivedPayments", query);
+			return PartialView ("_ReceivedPayments", received_payments);
+		}
+
+		public ViewResult CreditAndCollection () {
+			return View (new DateRange { StartDate = DateTime.Now, EndDate = DateTime.Now });
+		}
+
+		[HttpPost]
+		public ActionResult CreditAndCollection (DateRange dates) {
+			var summary = new CreditAndCollectionSummary (WebConfig.Store, dates.StartDate, dates.EndDate );
+			return PartialView ("_CreditAndCollection", summary);
 		}
 
 		#region Helpers
