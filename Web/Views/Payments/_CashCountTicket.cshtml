@@ -76,6 +76,30 @@
             @Model.MoneyCounts.Sum(x => x.Amount).ToString("c")
         </td>
     </tr>
+	<tr>
+		<td colspan="2" class="line title center">
+			@Resources.Expenses
+		</td>
+	</tr>
+	@foreach (var item in Model.MoneyCounts) {
+			<tr>
+				<td class="right">
+					@item.Type.GetDisplayName() :
+				</td>
+
+				<td class="number">
+					@Html.DisplayFor(modelItem => item.Amount)
+				</td>
+			</tr>
+	}
+	<tr>
+		<td class="line right">
+			@Resources.Total :
+		</td>
+		<td class="line number">
+			@Model.MoneyCounts.Sum(x => x.Amount).ToString("c")
+		</td>
+	</tr>
     <tr>
         <td colspan="2" class="line title center">
             @Resources.Title_CashMovements
