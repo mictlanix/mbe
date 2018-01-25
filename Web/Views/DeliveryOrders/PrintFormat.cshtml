@@ -61,7 +61,7 @@
 			<td colspan="2"><span class="head-text">@Resources.TaxpayerId</span>: @Html.DisplayFor(x => Model.Details.First().OrderDetail.SalesOrder.Recipient)</td>
 		</tr>
 		<tr>
-			<td colspan="4"><span class="head-text">@Resources.Address</span>: @Model.ShipTo.ToString()</td>
+			<td colspan="4"><span class="head-text">@Resources.Address</span>: @(Model.ShipTo == null ? "":Model.ShipTo.ToString())</td>
 			<td colspan="2"><span class="head-text">@Resources.Customer @Resources.Id</span>: @Html.DisplayFor(x => Model.Customer.Id)</td>
 		</tr>
 		<tr>
