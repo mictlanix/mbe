@@ -162,13 +162,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var entity = Product.Find (id);
 
-			if (value >= 0) {
-				entity.TaxRate = value;
-				entity.IsTaxIncluded = WebConfig.IsTaxIncluded;
+			entity.TaxRate = value;
+			entity.IsTaxIncluded = WebConfig.IsTaxIncluded;
 
-				using (var scope = new TransactionScope ()) {
-					entity.UpdateAndFlush ();
-				}
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
 			}
 
 			return Json (new { id = id, value = entity.FormattedValueFor (x => x.TaxRate) });
@@ -224,12 +222,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
 		}
 
-		// TODO: db catalog
+		// TODO: json config
 		public JsonResult TaxRates ()
 		{
 			var rates = new [] {
+				new { value = -1.0, text = "Exento" },
 				new { value = 0.00, text = "0 %" },
-				new { value = 0.11, text = "11 %" },
 				new { value = 0.16, text = "16 %" }
 			};
 

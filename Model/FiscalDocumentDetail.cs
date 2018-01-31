@@ -100,7 +100,7 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Price", ResourceType = typeof (Resources))]
 		[DisplayFormat (DataFormatString = "{0:C4}")]
 		public decimal NetPrice {
-			get { return ModelHelpers.PriceRounding (IsTaxIncluded ? Price / (1 + TaxRate) : Price); }
+			get { return ModelHelpers.NetPrice (Price, TaxRate, IsTaxIncluded); }
 		}
 
 		[Property ("discount")]
