@@ -142,19 +142,19 @@ namespace Mictlanix.BE.Web.Helpers {
 					continue;
 				}
 
-				if (detail.TaxRate > 0m) {
+				if (detail.TaxRate >= 0m) {
 					cfd.Conceptos [i].Impuestos = new ComprobanteConceptoImpuestos {
 						Traslados = new ComprobanteConceptoImpuestosTraslado [] {
-						new ComprobanteConceptoImpuestosTraslado {
-							Impuesto = c_Impuesto.IVA,
-							TipoFactor = c_TipoFactor.Tasa,
-							Base = detail.Subtotal - detail.Discount,
-							Importe = detail.Taxes,
-							ImporteSpecified = true,
-							TasaOCuota = detail.TaxRate,
-							TasaOCuotaSpecified = true
+							new ComprobanteConceptoImpuestosTraslado {
+								Impuesto = c_Impuesto.IVA,
+								TipoFactor = c_TipoFactor.Tasa,
+								Base = detail.Subtotal - detail.Discount,
+								Importe = detail.Taxes,
+								ImporteSpecified = true,
+								TasaOCuota = detail.TaxRate,
+								TasaOCuotaSpecified = true
+							}
 						}
-					}
 					};
 				} else {
 					cfd.Conceptos [i].Impuestos = new ComprobanteConceptoImpuestos {
@@ -178,31 +178,34 @@ namespace Mictlanix.BE.Web.Helpers {
 
 			cfd.Impuestos = new ComprobanteImpuestos ();
 
-			// TODO: VAT Summaries
-			if (item.Taxes > 0 && item.Details.Any (x => x.TaxRate == decimal.Zero)) {
-				cfd.Impuestos.Traslados = new ComprobanteImpuestosTraslado [2];
-			} else {
-				cfd.Impuestos.Traslados = new ComprobanteImpuestosTraslado [1];
-			}
-
-			i = 0;
+			var taxes = new List<ComprobanteImpuestosTraslado> ();
 
 			if (cfd.Conceptos.Any (c => c.Impuestos != null && c.Impuestos.Traslados.Any (x => x.TipoFactor == c_TipoFactor.Exento))) {
-				cfd.Impuestos.Traslados [i++] = new ComprobanteImpuestosTraslado {
+				taxes.Add (new ComprobanteImpuestosTraslado {
 					Impuesto = c_Impuesto.IVA,
 					TipoFactor = c_TipoFactor.Exento
-				};
+				});
+			}
+
+			if (cfd.Conceptos.Any (c => c.Impuestos != null && c.Impuestos.Traslados.Any (x => x.TasaOCuota == decimal.Zero))) {
+				taxes.Add (new ComprobanteImpuestosTraslado {
+					Impuesto = c_Impuesto.IVA,
+					TipoFactor = c_TipoFactor.Tasa,
+					TasaOCuota = 0.000000m,
+					Importe = 0.00m
+				});
 			}
 
 			if (cfd.Conceptos.Any (c => c.Impuestos != null && c.Impuestos.Traslados.Any (x => x.TasaOCuota == WebConfig.DefaultVAT))) {
-				cfd.Impuestos.Traslados [i++] = new ComprobanteImpuestosTraslado {
+				taxes.Add (new ComprobanteImpuestosTraslado {
 					Impuesto = c_Impuesto.IVA,
 					TipoFactor = c_TipoFactor.Tasa,
 					TasaOCuota = WebConfig.DefaultVAT,
 					Importe = cfd.Conceptos.Where (x => x.Impuestos != null).Sum (c => c.Impuestos.Traslados.Where (x => x.TasaOCuota == WebConfig.DefaultVAT).Sum (x => x.Importe))
-				};
+				});
 			}
 
+			cfd.Impuestos.Traslados = taxes.ToArray ();
 			cfd.Impuestos.TotalImpuestosTrasladados = cfd.Impuestos.Traslados.Sum (x => x.Importe);
 			cfd.Impuestos.TotalImpuestosTrasladadosSpecified = true;
 
