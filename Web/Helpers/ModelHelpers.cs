@@ -76,7 +76,7 @@ namespace Mictlanix.BE.Web.Helpers {
 				where x.Terms == PaymentTerms.NetD &&
 				      x.IsCompleted && !x.IsCancelled && !x.IsPaid &&
 				      x.Customer.Id == entity.Id
-				select y.Quantity * y.Price * y.ExchangeRate * (1 - y.DiscountRate) * (y.IsTaxIncluded ? 1m : (1m + y.TaxRate));
+				select y.Quantity * y.Price * y.ExchangeRate * (1 - y.DiscountRate) * (y.IsTaxIncluded || y.TaxRate <= 0m ? 1m : (1m + y.TaxRate));
 			var bought = query.Count () > 0 ? query.ToList ().Sum () : 0;
 
 			return bought - paid;
