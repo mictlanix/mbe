@@ -4097,6 +4097,12 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string FiscalDocumentQRCode33FormatString {
+            get {
+                return ResourceManager.GetString("FiscalDocumentQRCode33FormatString", resourceCulture);
+            }
+        }
+        
         public static string TotalQuantityReceipt {
             get {
                 return ResourceManager.GetString("TotalQuantityReceipt", resourceCulture);
@@ -4556,6 +4562,12 @@ namespace Mictlanix.BE {
         public static string CFDI_InstallmentPayments {
             get {
                 return ResourceManager.GetString("CFDI_InstallmentPayments", resourceCulture);
+            }
+        }
+        
+        public static string Customers {
+            get {
+                return ResourceManager.GetString("Customers", resourceCulture);
             }
         }
     }

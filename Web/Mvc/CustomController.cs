@@ -4,7 +4,7 @@
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.com>
 // 
-// Copyright (C) 2016 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2016-2018 Mictlanix SAS de CV and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -25,23 +25,23 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
-using System.Net.Mail;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using MimeKit;
 using jsreport.Client;
 using jsreport.Client.Entities;
 using Mictlanix.BE.Web.Helpers;
 using Mictlanix.BE.Web.Security;
+using MimeKit;
 
 namespace Mictlanix.BE.Web.Mvc
 {
-    public abstract class CustomController : Controller {
+	public abstract class CustomController : Controller {
 		static string url_reports = null;
 
 		public const string MIME_TYPE_PDF = "application/pdf";
@@ -152,16 +152,16 @@ namespace Mictlanix.BE.Web.Mvc
 			return File (GetPdf (viewPath, model, phantom), MIME_TYPE_PDF);
 		}
 
-		//public FileResult ExcelFile (Stream stream, string fileName)
-		//{
-		//	if (stream == null) {
-		//		throw new ArgumentNullException (nameof(stream));
-		//	}
+		public FileResult ExcelFile (Stream stream, string fileName)
+		{
+			if (stream == null) {
+				throw new ArgumentNullException (nameof (stream));
+			}
 
-		//	stream.Seek (0, SeekOrigin.Begin);
+			stream.Seek (0, SeekOrigin.Begin);
 
-		//	return File (stream, MIME_TYPE_EXCEL_XLSX, fileName);
-		//}
+			return File (stream, MIME_TYPE_EXCEL_XLSX, fileName);
+		}
 
 		public FileResult ExcelView (string viewPath, object model)
 		{
@@ -219,6 +219,13 @@ namespace Mictlanix.BE.Web.Mvc
 		                                      IEnumerable<MimePart> attachments)
 		{
 			Task.Factory.StartNew (() => NotificationsHelpers.SendEmail (sender, new string [] { recipient }, null, null,
+										     subject, message, attachments));
+		}
+
+		public void SendEmailWithAttachments (string sender, string recipient, string copyTo, string subject, string message,
+						      IEnumerable<MimePart> attachments)
+		{
+			Task.Factory.StartNew (() => NotificationsHelpers.SendEmail (sender, new string [] { recipient }, new string [] { copyTo }, null,
 										     subject, message, attachments));
 		}
     }
