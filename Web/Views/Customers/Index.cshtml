@@ -20,11 +20,16 @@
 	                <span class="glyphicon glyphicon-plus"></span>
 	            </a>
 	        }
-				@if (Privilege.AllowUpdate) {
-						<a class="btn btn-primary" href="/Customers/Merge" data-modal-id="customer-modal">
-							<span class="glyphicon glyphicon-transfer"></span>
-						</a>
-				}
+			@if (Privilege.AllowUpdate) {
+				<a class="btn btn-primary" href="/Customers/Merge" data-modal-id="customer-modal">
+					<span class="glyphicon glyphicon-transfer"></span>
+				</a>
+			}
+			@if (CurrentUser.IsAdministrator) {
+				<a class="btn btn-primary" href="/Customers/Download">
+					<span class="glyphicon glyphicon-download-alt"></span>
+				</a>
+			}
 	        </div>
 	        <div class="col-xs-8 input-group">
 				<input id="Pattern" name="Pattern" type="text" class="form-control" placeholder="@Resources.SearchFor">

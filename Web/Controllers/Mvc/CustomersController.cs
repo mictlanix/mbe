@@ -5,7 +5,7 @@
 //   Eddy Zavaleta <eddy@mictlanix.com>
 //   Eduardo Nieto <enieto@mictlanix.com>
 // 
-// Copyright (C) 2011-2016 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2011-2018 Mictlanix SAS de CV and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,17 +28,18 @@
 //
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
-using NHibernate.Exceptions;
+using NHibernate;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using Mictlanix.BE.Model;
+using Mictlanix.BE.Web.Helpers;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
-using Mictlanix.BE.Web.Helpers;
-using NHibernate;
+using System.IO;
+using System.Collections.Generic;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
@@ -417,6 +418,190 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}, null);
 
 			return View (new Pair<Customer, Customer> { First = prod, Second = dup });
+		}
+
+		public ActionResult Download ()
+		{
+			var ms = new MemoryStream ();
+			var customers = (from x in Customer.Queryable
+					 orderby x.Name
+					 select x).ToList ();
+			var taxpayers = (from x in Customer.Queryable
+					 from y in x.Taxpayers
+					 orderby x.Name
+			                 select new { Id = x.Id, Value = y }).ToList ();
+			var addresses = (from x in Customer.Queryable
+					 from y in x.Addresses
+					 orderby x.Name
+			                 select new { Id = x.Id, Value = y }).ToList ();
+			var contacts = (from x in Customer.Queryable
+					from y in x.Contacts
+					orderby x.Name
+			                select new { Id = x.Id, Value = y }).ToList ();
+
+			using (var package = new ExcelPackage ()) {
+				int row = 2;
+				var ws = package.Workbook.Worksheets.Add (Resources.Customers);
+				var headers = new List<string> () { Resources.Id, Resources.Code, Resources.Name, Resources.Zone, Resources.CreditLimit, Resources.CreditDays,
+					Resources.Comment };
+				var widths = new List<double> () { 10.0, 25.0, 75.0, 35.0, 18.0, 18.0, 100.0 };
+
+				for (int i = 0; i < headers.Count; i++) {
+					ws.Cells [1, i + 1].Value = headers [i];
+				}
+
+				for (int i = 0; i < widths.Count; i++) {
+					ws.Column (i + 1).Width = widths [i];
+				}
+
+				using (var range = ws.Cells [1, 1, 1, headers.Count]) {
+					range.Style.Font.Bold = true;
+					range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+				}
+
+				foreach (var item in customers) {
+					ws.Cells [row, 1].Value = item.Id;
+					ws.Cells [row, 2].Value = item.Code;
+					ws.Cells [row, 3].Value = item.Name;
+					ws.Cells [row, 4].Value = item.Zone;
+					ws.Cells [row, 5].Value = item.CreditLimit;
+					ws.Cells [row, 6].Value = item.CreditDays;
+					ws.Cells [row, 7].Value = item.Comment;
+
+					row++;
+				}
+
+				using (var range = ws.Cells [2, 1, customers.Count + 1, 1]) {
+					range.Style.Numberformat.Format = "000000";
+				}
+
+				using (var range = ws.Cells [2, 2, customers.Count + 1, 2]) {
+					range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+				}
+
+				using (var range = ws.Cells [2, 5, customers.Count + 1, 5]) {
+					range.Style.Numberformat.Format = "$###,###,##0.00";
+				}
+
+				row = 2;
+				ws = package.Workbook.Worksheets.Add (Resources.CustomerTaxpayers);
+				headers = new List<string> () { Resources.Customer, Resources.TaxpayerId, Resources.TaxpayerName, Resources.Email };
+				widths = new List<double> () { 10.0, 20.0, 75.0, 40.0 };
+
+				for (int i = 0; i < headers.Count; i++) {
+					ws.Cells [1, i + 1].Value = headers [i];
+				}
+
+				for (int i = 0; i < widths.Count; i++) {
+					ws.Column (i + 1).Width = widths [i];
+				}
+
+				using (var range = ws.Cells [1, 1, 1, headers.Count]) {
+					range.Style.Font.Bold = true;
+					range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+				}
+
+				foreach (var item in taxpayers) {
+					ws.Cells [row, 1].Value = item.Id;
+					ws.Cells [row, 2].Value = item.Value.Id;
+					ws.Cells [row, 3].Value = item.Value.Name;
+					ws.Cells [row, 4].Value = item.Value.Email;
+
+					row++;
+				}
+
+				using (var range = ws.Cells [2, 1, customers.Count + 1, 1]) {
+					range.Style.Numberformat.Format = "000000";
+				}
+
+				using (var range = ws.Cells [2, 2, customers.Count + 1, 2]) {
+					range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+				}
+
+				row = 2;
+				ws = package.Workbook.Worksheets.Add (Resources.Addresses);
+				headers = new List<string> () { Resources.Customer, Resources.Street, Resources.ExteriorNumber, Resources.InteriorNumber, Resources.PostalCode,
+					Resources.Neighborhood, Resources.Locality, Resources.Borough, Resources.State, Resources.City, Resources.Country, Resources.Comment };
+				widths = new List<double> () { 10.0, 75.0, 8.0, 8.0, 6.0, 30.0, 30.0, 30.0, 25.0, 25.0, 20.0, 100.0 };
+
+				for (int i = 0; i < headers.Count; i++) {
+					ws.Cells [1, i + 1].Value = headers [i];
+				}
+
+				for (int i = 0; i < widths.Count; i++) {
+					ws.Column (i + 1).Width = widths [i];
+				}
+
+				using (var range = ws.Cells [1, 1, 1, headers.Count]) {
+					range.Style.Font.Bold = true;
+					range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+				}
+
+				foreach (var item in addresses) {
+					ws.Cells [row, 1].Value = item.Id;
+					ws.Cells [row, 2].Value = item.Value.Street;
+					ws.Cells [row, 3].Value = item.Value.ExteriorNumber;
+					ws.Cells [row, 4].Value = item.Value.InteriorNumber;
+					ws.Cells [row, 5].Value = item.Value.PostalCode;
+					ws.Cells [row, 6].Value = item.Value.Neighborhood;
+					ws.Cells [row, 7].Value = item.Value.Locality;
+					ws.Cells [row, 8].Value = item.Value.Borough;
+					ws.Cells [row, 9].Value = item.Value.State;
+					ws.Cells [row,10].Value = item.Value.City;
+					ws.Cells [row,11].Value = item.Value.Country;
+					ws.Cells [row,12].Value = item.Value.Comment;
+
+					row++;
+				}
+
+				using (var range = ws.Cells [2, 1, customers.Count + 1, 1]) {
+					range.Style.Numberformat.Format = "000000";
+				}
+
+				row = 2;
+				ws = package.Workbook.Worksheets.Add (Resources.Contacts);
+				headers = new List<string> () { Resources.Customer, Resources.Name, Resources.JobTitle, Resources.Email, Resources.Phone,
+					Resources.PhoneExt, Resources.Mobile, Resources.Fax, Resources.Im, Resources.Sip, Resources.Website, Resources.Comment };
+				widths = new List<double> () { 10.0, 50.0, 25.0, 40.0, 20.0, 8.0, 25.0, 25.0, 25.0, 25.0, 25.0, 100.0 };
+
+				for (int i = 0; i < headers.Count; i++) {
+					ws.Cells [1, i + 1].Value = headers [i];
+				}
+
+				for (int i = 0; i < widths.Count; i++) {
+					ws.Column (i + 1).Width = widths [i];
+				}
+
+				using (var range = ws.Cells [1, 1, 1, headers.Count]) {
+					range.Style.Font.Bold = true;
+					range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+				}
+
+				foreach (var item in contacts) {
+					ws.Cells [row, 1].Value = item.Id;
+					ws.Cells [row, 2].Value = item.Value.Name;
+					ws.Cells [row, 3].Value = item.Value.JobTitle;
+					ws.Cells [row, 4].Value = item.Value.Email;
+					ws.Cells [row, 5].Value = item.Value.Phone;
+					ws.Cells [row, 6].Value = item.Value.PhoneExt;
+					ws.Cells [row, 7].Value = item.Value.Mobile;
+					ws.Cells [row, 8].Value = item.Value.Fax;
+					ws.Cells [row, 9].Value = item.Value.Im;
+					ws.Cells [row, 10].Value = item.Value.Sip;
+					ws.Cells [row, 11].Value = item.Value.Website;
+					ws.Cells [row, 12].Value = item.Value.Comment;
+
+					row++;
+				}
+
+				using (var range = ws.Cells [2, 1, customers.Count + 1, 1]) {
+					range.Style.Numberformat.Format = "000000";
+				}
+
+				package.SaveAs (ms);
+			}
+
+			return ExcelFile (ms, Resources.CustomersReport + string.Format (" {0:yyyyMMdd-HHmmss}.xlsx", DateTime.Now));
 		}
 	}
 }
