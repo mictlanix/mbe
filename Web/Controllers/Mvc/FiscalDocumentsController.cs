@@ -1215,6 +1215,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return BarcodesController.QRCodeAction (data);
 		}
 
+		[AllowAnonymous]
+		public ActionResult QRCode33 (int id)
+		{
+			var item = FiscalDocument.Find (id);
+			var data = string.Format (Resources.FiscalDocumentQRCode33FormatString,
+						  item.Issuer.Id, item.Recipient, item.Total, item.StampId,
+						  item.IssuerDigitalSeal.Substring (item.IssuerDigitalSeal.Length - 8));
+
+			return BarcodesController.QRCodeAction (data);
+		}
+
 		public ActionResult Download (int id)
 		{
 			var item = FiscalDocumentXml.TryFind (id);
@@ -1250,8 +1261,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						      model.Serial);
 			var subject = string.Format (Resources.FiscalDocumentEmailSubjectFormatString, model.Issuer.Id, model.Batch,
 						     model.Serial);
-			var message = string.Format (Resources.FiscalDocumentEmailBodyFormatString, model.StampId,
-						     model.Issuer.Id, model.Recipient);
+			var message = string.Format (Resources.FiscalDocumentEmailBodyFormatString, model.Issuer.Id, model.Recipient,
+						     model.Total, model.StampId, model.IssuerDigitalSeal.Substring (model.IssuerDigitalSeal.Length - 8));
 			var attachments = new List<MimePart> ();
 			var template = Newtonsoft.Json.JsonConvert.DeserializeObject<Template> (batch.Template);
 			var view = string.Format ("Print{0:00}{1}", model.Version * 10, template.Name);
@@ -1287,7 +1298,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				FileName = filename + ".xml"
 			});
 
-			SendEmailWithAttachments (WebConfig.DefaultSender, email, subject, message, attachments);
+			if (string.IsNullOrWhiteSpace (WebConfig.DefaultEmailCC)) {
+				SendEmailWithAttachments (WebConfig.DefaultSender, email, subject, message, attachments);
+			} else {
+				SendEmailWithAttachments (WebConfig.DefaultSender, email, WebConfig.DefaultEmailCC, subject, message, attachments);
+			}
 
 			return PartialView ("_SendEmailSuccesful");
 		}
