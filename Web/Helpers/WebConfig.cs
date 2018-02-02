@@ -206,6 +206,10 @@ namespace Mictlanix.BE.Web.Helpers {
 			get { return ConfigurationManager.AppSettings["DefaultSender"]; }
 		}
 
+		public static string DefaultEmailCC {
+			get { return ConfigurationManager.AppSettings ["DefaultEmailCC"]; }
+		}
+
 		public static int DefaultQuotationDueDays {
 			get { return int.Parse (ConfigurationManager.AppSettings["DefaultQuotationDueDays"]); }
 		}

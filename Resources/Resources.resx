@@ -2129,14 +2129,15 @@ Realizada el: {0:d}</value>
   <data name="FiscalDocumentEmailBodyFormatString" xml:space="preserve">
     <value>Has recibido el siguiente comprobante fiscal digital por internet (CFDI).
 
-Folio Fiscal: {0}
-RFC Emisor: {1}
-RFC Receptor: {2}
-
+Folio Fiscal: {3}
+RFC Emisor: {0}
+RFC Receptor: {1}
+Total: {2:c}
+			
 Puedes hacer la validación del mismo en el sitio oficial del SAT.
 
-	https://verificacfdi.facturaelectronica.sat.gob.mx
-
+	https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx?id={3}&amp;re={0}&amp;rr={1}&amp;tt={2}&amp;fe={4}
+			
 Adjunto, podrás encontrar tu comprobante en los formatos PDF y XML.
 
 Gracias por utilizar nuestros servicios.
@@ -2159,6 +2160,9 @@ Gracias por utilizar nuestros servicios.
   </data>
   <data name="FiscalDocumentQRCodeFormatString" xml:space="preserve">
     <value>?re={0}&amp;rr={1}&amp;tt={2:0000000000.000000}&amp;id={3}</value>
+  </data>
+  <data name="FiscalDocumentQRCode33FormatString" xml:space="preserve">
+    <value>https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx?id={3}&amp;re={0}&amp;rr={1}&amp;tt={2}&amp;fe={4}</value>
   </data>
   <data name="TotalQuantityReceipt" xml:space="preserve">
     <value>Unidades Totales</value>
@@ -2390,5 +2394,11 @@ Gracias por utilizar nuestros servicios.
   </data>
   <data name="CFDI_InstallmentPayments" xml:space="preserve">
     <value>PPD : Pago en parcialidades o diferido</value>
+  </data>
+  <data name="Customers" xml:space="preserve">
+    <value>Clientes</value>
+  </data>
+  <data name="Customers" xml:space="preserve">
+    <value>Clientes</value>
   </data>
 </root>
