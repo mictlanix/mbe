@@ -64,6 +64,7 @@ namespace Mictlanix.BE.Web.Helpers {
 			var cfd = SignCFD (item);
 			var cli = new ProFactClient (WebConfig.ProFactUser, WebConfig.ProFactUrl);
 			var id = string.Format ("{0}-{1:D6}", WebConfig.ProFactCode, item.Id);
+			System.IO.File.WriteAllText ("cfd.xml", cfd.ToXmlString ());
 			var tfd = cli.Stamp (id, cfd);
 
 			cfd.Complemento = new List<object> ();
@@ -148,7 +149,7 @@ namespace Mictlanix.BE.Web.Helpers {
 							new ComprobanteConceptoImpuestosTraslado {
 								Impuesto = c_Impuesto.IVA,
 								TipoFactor = c_TipoFactor.Tasa,
-								Base = detail.Subtotal - detail.Discount,
+								Base = detail.TaxBase,
 								Importe = detail.Taxes,
 								ImporteSpecified = true,
 								TasaOCuota = detail.TaxRate,
@@ -159,12 +160,12 @@ namespace Mictlanix.BE.Web.Helpers {
 				} else {
 					cfd.Conceptos [i].Impuestos = new ComprobanteConceptoImpuestos {
 						Traslados = new ComprobanteConceptoImpuestosTraslado [] {
-						new ComprobanteConceptoImpuestosTraslado {
-							Impuesto = c_Impuesto.IVA,
-							TipoFactor = c_TipoFactor.Exento,
-							Base = detail.Subtotal
+							new ComprobanteConceptoImpuestosTraslado {
+								Impuesto = c_Impuesto.IVA,
+								TipoFactor = c_TipoFactor.Exento,
+								Base = detail.TaxBase
+							}
 						}
-					}
 					};
 				}
 

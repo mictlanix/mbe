@@ -549,6 +549,9 @@
   <data name="Subtotal" xml:space="preserve">
     <value>Subtotal</value>
   </data>
+  <data name="TaxBase" xml:space="preserve">
+    <value>Base</value>
+  </data>
   <data name="Taxes" xml:space="preserve">
     <value>IVA</value>
   </data>
