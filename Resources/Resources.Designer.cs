@@ -911,6 +911,12 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string TaxBase {
+            get {
+                return ResourceManager.GetString("TaxBase", resourceCulture);
+            }
+        }
+        
         public static string Taxes {
             get {
                 return ResourceManager.GetString("Taxes", resourceCulture);
