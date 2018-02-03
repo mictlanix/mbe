@@ -45,7 +45,7 @@ namespace Mictlanix.BE.Model {
 		public static decimal NetPrice (decimal price, decimal taxRate, bool taxIncluded)
 		{
 			if (taxIncluded && taxRate > 0m) {
-				return price / (1 + taxRate);
+				return PriceRounding (price / (1 + taxRate));
 			} else {
 				return PriceRounding (price);
 			}
@@ -62,22 +62,28 @@ namespace Mictlanix.BE.Model {
 		}
 
 		public static decimal Discount (decimal quantity, decimal price, decimal exchangeRate,
-						decimal discount, decimal taxRate, bool taxIncluded)
+		                                decimal discountRate, decimal taxRate, bool taxIncluded)
 		{
 			if (taxIncluded && taxRate > 0m) {
-				return TotalRounding (quantity * price * exchangeRate * discount / (1m + taxRate));
+				return TotalRounding (quantity * price * exchangeRate * discountRate / (1m + taxRate));
 			} else {
-				return TotalRounding (quantity * price * exchangeRate * discount);
+				return TotalRounding (quantity * price * exchangeRate * discountRate);
 			}
 		}
 
 		public static decimal Total (decimal quantity, decimal price, decimal exchangeRate,
-					     decimal discount, decimal taxRate, bool taxIncluded)
+		                             decimal discountRate, decimal taxRate, bool taxIncluded)
 		{
+			var discount = 0m;
+
+			if (discountRate > 0) {
+				discount = TotalRounding (quantity * price * exchangeRate * discountRate);
+			}
+
 			if (taxIncluded || taxRate <= 0m) {
-				return TotalRounding (quantity * price * exchangeRate * (1m - discount));
+				return TotalRounding (quantity * price * exchangeRate - discount);
 			} else {
-				return TotalRounding (quantity * price * exchangeRate * (1m - discount) * (1m + taxRate));
+				return TotalRounding ((quantity * price * exchangeRate - discount) * (1m + taxRate));
 			}
 		}
 	}
