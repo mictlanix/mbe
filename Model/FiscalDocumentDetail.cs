@@ -139,6 +139,12 @@ namespace Mictlanix.BE.Model {
 		}
 
 		[DataType (DataType.Currency)]
+		[Display (Name = "TaxBase", ResourceType = typeof (Resources))]
+		public decimal TaxBase {
+			get { return TaxRate > 0 ? Taxes / TaxRate : Subtotal - Discount; }
+		}
+
+		[DataType (DataType.Currency)]
 		[Display (Name = "Taxes", ResourceType = typeof (Resources))]
 		public decimal Taxes {
 			get { return Total - Subtotal + Discount; }
