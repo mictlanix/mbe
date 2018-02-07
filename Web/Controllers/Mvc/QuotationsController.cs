@@ -1,10 +1,10 @@
 // 
-// SalesOrdersController.cs
+// QuotationsController.cs
 // 
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.com>
 // 
-// Copyright (C) 2013-2016 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2013-2018 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -125,9 +125,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public ActionResult Pdf (int id)
 		{
-			var model = SalesOrder.Find (id);
+			var model = SalesQuote.Find (id);
+
 			if (model.IsCompleted == true || model.IsCancelled == true)
 				return PdfView ("Print", model);
+			
 			return RedirectToAction ("Edit", new { id = id });
 		}
 
@@ -197,7 +199,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public JsonResult Contacts (int id)
 		{
-			var item = SalesOrder.TryFind (id);
+			var item = SalesQuote.TryFind (id);
 			var query = from x in item.Customer.Contacts
 				    select new {
 					    value = x.Id,
@@ -209,7 +211,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public JsonResult Addresses (int id)
 		{
-			var item = SalesOrder.TryFind (id);
+			var item = SalesQuote.TryFind (id);
 			var query = from x in item.Customer.Addresses
 				    select new {
 					    value = x.Id,
