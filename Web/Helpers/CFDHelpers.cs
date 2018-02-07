@@ -64,7 +64,7 @@ namespace Mictlanix.BE.Web.Helpers {
 			var cfd = SignCFD (item);
 			var cli = new ProFactClient (WebConfig.ProFactUser, WebConfig.ProFactUrl);
 			var id = string.Format ("{0}-{1:D6}", WebConfig.ProFactCode, item.Id);
-			System.IO.File.WriteAllText ("cfd.xml", cfd.ToXmlString ());
+			//System.IO.File.WriteAllText ("cfd.xml", cfd.ToXmlString ());
 			var tfd = cli.Stamp (id, cfd);
 
 			cfd.Complemento = new List<object> ();
