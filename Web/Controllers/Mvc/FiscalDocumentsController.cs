@@ -1021,6 +1021,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			// quantity validation
 			foreach (var detail in entity.Details) {
+				detail.Document = entity;
+
 				if (detail.Quantity <= 0)
 					return RedirectToAction ("Edit", new { id = entity.Id });
 
