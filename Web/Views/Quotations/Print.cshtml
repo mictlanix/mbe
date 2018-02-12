@@ -87,7 +87,13 @@
             <tr class="alt">
                 <td class="nowrap text-right">@Html.DisplayFor(x => item.Quantity)</td>
                 <td class="text-center">@Html.DisplayFor(x => item.ProductCode)</td>
-                <td class="text-center">@Html.DisplayFor(x => item.ProductName)</td>
+                <td class="text-center">
+					@Html.DisplayFor(x => item.ProductName)
+				@if (!string.IsNullOrEmpty (item.Comment)) {
+					<br>
+					@Html.DisplayFor(x => item.Comment)
+				}
+				</td>
                 <td class="nowrap text-right">@Html.DisplayFor(x => item.NetPrice)</td>
                 <td class="nowrap text-right">@Html.DisplayFor(x => item.Subtotal)</td>
             </tr>
