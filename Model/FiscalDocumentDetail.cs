@@ -151,6 +151,12 @@ namespace Mictlanix.BE.Model {
 		}
 
 		[DataType (DataType.Currency)]
+		[Display (Name = "RetentionTaxes", ResourceType = typeof (Resources))]
+		public virtual decimal RetentionTaxes {
+			get { return ModelHelpers.TotalRounding (TaxBase * Document.RetentionRate); }
+		}
+
+		[DataType (DataType.Currency)]
 		[Display (Name = "Total", ResourceType = typeof (Resources))]
 		public decimal Total {
 			get { return ModelHelpers.Total (Quantity, Price, 1, DiscountRate, TaxRate, IsTaxIncluded); }

@@ -266,7 +266,7 @@ namespace Mictlanix.BE.Model {
 		[DataType (DataType.Currency)]
 		[Display (Name = "RetentionTaxes", ResourceType = typeof (Resources))]
 		public virtual decimal RetentionTaxes {
-			get { return ModelHelpers.TotalRounding ((Subtotal - Discount) * RetentionRate); }
+			get { return Details.Sum (x => x.RetentionTaxes); }
 		}
 
 		[DataType (DataType.Currency)]

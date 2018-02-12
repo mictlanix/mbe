@@ -155,6 +155,15 @@ namespace Mictlanix.BE.Web.Helpers {
 								TasaOCuota = detail.TaxRate,
 								TasaOCuotaSpecified = true
 							}
+						},
+						Retenciones = item.RetentionRate <= 0m ? null : new ComprobanteConceptoImpuestosRetencion [] {
+							new ComprobanteConceptoImpuestosRetencion {
+								Impuesto = c_Impuesto.IVA,
+								TipoFactor = c_TipoFactor.Tasa,
+								Base = detail.TaxBase,
+								Importe = detail.RetentionTaxes,
+								TasaOCuota = item.RetentionRate
+							}
 						}
 					};
 				} else {
