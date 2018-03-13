@@ -1156,6 +1156,8 @@
     <None Include="Scripts\jquery-2.2.4.min.map" />
     <Content Include="Views\Reports\CreditAndCollection.cshtml" />
     <Content Include="Views\Reports\_CreditAndCollection.cshtml" />
+    <Content Include="Views\Quotations\_SendEmail.cshtml" />
+    <Content Include="Views\Quotations\_SendEmailSuccesful.cshtml" />
   </ItemGroup>
   <ItemGroup />
 </Project>
