@@ -38,6 +38,9 @@
         	@if (Privilege.AllowUpdate && !item.IsCompleted && !item.IsCancelled) {
             	@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", title = Resources.Edit })
             }
+		  	@if (Privilege.AllowRead && !item.IsCancelled) {
+		  			@Html.ActionLink(" ", "SendEmail", new { id = item.Id }, new { @class = "button icon email icon-only open-modal", title = Resources.Send, data_modal_id = "quotation-modal" })
+			}
         </td>
     </tr>
 }
@@ -46,6 +49,7 @@
 	<label class='button left'>@Model.ToString()</label>@if (Model.HasPrev) {<a class='button middle icon prev icon-only paging' title='@Resources.PrevPage' href='javascript:void(0)'></a>}@if (Model.HasNext) {<a class='button right icon next icon-only paging' title='@Resources.NextPage' href='javascript:void(0)'></a>}
 </div>
 <script type='text/javascript'>
+	bindModal('.open-modal');
 $('[data-toggle="tooltip"]').tooltip();
 $('a.paging').click(function (e) {
 	var offset=@Model.Offset;

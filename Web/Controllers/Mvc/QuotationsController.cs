@@ -33,6 +33,8 @@ using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
+using MimeKit;
+using System.Collections.Generic;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
@@ -854,6 +856,34 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			return RedirectToAction ("Index");
+		}
+
+		public ActionResult SendEmail (int id)
+		{
+			var model = SalesQuote.Find (id);
+
+			return PartialView ("_SendEmail", model);
+		}
+
+		[HttpPost]
+		public ActionResult SendEmail (int id, string email)
+		{
+			var model = SalesQuote.Find (id);
+			var filename = string.Format (Resources.SalesQuoteFilenameFormatString, model.Id, model.Serial);
+			var subject = string.Format (Resources.SalesQuoteEmailSubjectFormatString, WebConfig.Company, model.Serial);
+			var message = string.Format (Resources.SalesQuoteEmailBodyFormatString, model.Id, model.SalesPerson.Name);
+			var attachments = new List<MimePart> ();
+
+			attachments.Add (new MimePart {
+				ContentObject = new ContentObject (GetPdf ("Print", model), ContentEncoding.Default),
+				ContentDisposition = new ContentDisposition (ContentDisposition.Attachment),
+				ContentTransferEncoding = ContentEncoding.Base64,
+				FileName = filename + ".pdf"
+			});
+
+			SendEmailWithAttachments (WebConfig.DefaultSender, email, subject, message, attachments);
+
+			return PartialView ("_SendEmailSuccesful");
 		}
 
 		// TODO: Rename param: order -> id
