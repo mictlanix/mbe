@@ -2401,7 +2401,15 @@ Gracias por utilizar nuestros servicios.
   <data name="Customers" xml:space="preserve">
     <value>Clientes</value>
   </data>
-  <data name="Customers" xml:space="preserve">
-    <value>Clientes</value>
+  <data name="SalesQuoteEmailBodyFormatString" xml:space="preserve">
+    <value>Le enviamos la cotización {0}. 
+Agradecemos su atención y esperamos servirle muy pronto.
+Atte: {1}.</value>
+  </data>
+  <data name="SalesQuoteEmailSubjectFormatString" xml:space="preserve">
+    <value>{0} Cotización {1}</value>
+  </data>
+  <data name="SalesQuoteFilenameFormatString" xml:space="preserve">
+    <value>{0}-{1:D6}</value>
   </data>
 </root>
