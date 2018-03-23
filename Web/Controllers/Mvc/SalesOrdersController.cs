@@ -883,6 +883,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			if (success && entity.Price >= 0) {
 
+				var price_in_list = ProductPrice.Queryable.Where (x => x.List == entity.SalesOrder.Customer.PriceList && x.Product == entity.Product).SingleOrDefault ();
+				if (price_in_list.Value > val) {
+					Response.StatusCode = 400;
+					return Content (Resources.Validation_WrongDiscount);
+				}
+
 				entity.Price = val;
 
 				using (var scope = new TransactionScope ()) {
