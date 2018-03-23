@@ -28,7 +28,7 @@
 				<div class="col-xs-3"><input id='amount' class='form-control text-right' type='text' value='0.00'></div>
 				<div class="col-xs-3"><input id='reference' class='form-control' type='text' value=''></div>
 				@if (Model.ShipTo != null) {
-						<div class="pull-right col-xs-1"><input id='ondelivery' class='form-control' type='checkbox'></div>
+						<div class="pull-right col-xs-1 paymentondelivery"><input id='ondelivery' class='form-control' type='checkbox'></div>
 				}
 			</div>
 			<div class="form-group">
@@ -87,6 +87,72 @@ $(function () {
             });
 
         }, "json");
-    });
+	});
+	$('#customer').editable({
+	    select2: {
+	    	minimumInputLength: 3,
+		    ajax: {
+		        url: '@Url.Action("GetSuggestions", "Customers")',
+		        dataType: 'json',
+		        type: 'POST',
+		        data: function(term,page,context) {
+		        	return { pattern:term };
+		        },
+		        results: function(data,page) {
+		            return { results:data };
+		        }
+		    },
+		    initSelection: function(element, callback) {
+		        var data = {
+		        	id: $('#customer').data('value'),
+		        	name: $('#customer').text()
+	        	};
+		        callback(data);
+		    },
+		    formatResult: function(result) {
+		        return result.name + " (" + result.code + ")";
+		    },
+		    formatSelection: function(selection) {
+		        return selection.name;
+		    }
+		},
+		success: function(response, newValue) {
+			$('#contact,#address').text('').editable('setValue', '');
+			$('#name').load('@Url.Action("GetCustomerName","POS", new { id = Model.Id } )');
+			$('#items-container').load('@Url.Action("GetPayments", new { id = Model.Id } )');
+			$('.paymentondelivery').hide();
+			updateTotals();
+			console.log("Done!")
+	    },
+	    display: function(value, response) {
+	    	if (typeof response !== 'undefined') {
+				$(this).html(response.value);
+			}
+	    }
+	});
+	$('a.editable').editable({
+		success: function (response, newValue) {
+			console.log(response)
+			if ('type' in response) {
+				$('.paymentondelivery').show();
+			}
+		},
+		display: function (value, response) {
+			if (typeof response === 'undefined')
+				return;
+
+			if (Array.isArray(response)) {
+				var arr = $.grep(response, function (o) {
+					return o.value == value;
+				});
+				if (arr.length != 0) {
+					$(this).html(arr[0].text);
+				}
+			} else {
+				$(this).html(response.value);
+			}
+		}
+
+	});
 });
 </script>

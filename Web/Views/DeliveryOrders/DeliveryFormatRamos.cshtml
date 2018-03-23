@@ -1,0 +1,145 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model DeliveryOrder
+
+@{
+    Layout = WebConfig.PrintLayout;
+    ViewBag.Title = Html.PrintFileName(Resources.DeliveryOrder, Model.Id);
+    ViewBag.Store = Model.Store;
+    ViewBag.TaxpayerName = null;
+    ViewBag.Taxpayer = null;
+    ViewBag.Address = Model.Store.Address;
+}
+
+<div class="row">
+	<div class="col-xs-6 text-left">
+		<div class="row">
+			<div class="col-xs-12 uppercase">
+				<h2>@Resources.Customer</h2>
+			</div>
+		 	<div class="col-xs-12">
+		 		<p><span class="mylabel">@Resources.Name</span></p>
+	 		</div>
+	 		<div class="col-xs-12">
+	 			<p>@Html.DisplayFor(x => x.Customer.Name)</p>
+ 			</div>
+ 		@if(Model.ShipTo != null) {
+		 	<div class="col-xs-12">
+		 		<p><span class="mylabel">@Resources.ShipTo</span></p>
+	 		</div>
+	 		<div class="col-xs-12">
+	 			<p>
+				    @Html.DisplayFor(x => x.ShipTo.Street)
+				    @Html.DisplayFor(x => x.ShipTo.ExteriorNumber)
+				    @Html.DisplayFor(x => x.ShipTo.InteriorNumber)<br>
+				    @Html.DisplayFor(x => x.ShipTo.Neighborhood),
+				    @Html.DisplayFor(x => x.ShipTo.Borough)<br>
+				    @Html.DisplayFor(x => x.ShipTo.State),
+				    @Html.DisplayFor(x => x.ShipTo.Country),
+				    @Html.DisplayFor(x => x.ShipTo.PostalCode)<br>
+                @Html.DisplayFor(x => x.ShipTo.Comment)
+			    </p>
+	 		</div>
+		}
+
+			<div class="col-xs-12">
+				<p><span class="mylabel">@Resources.Comment</span></p>
+				<div class="col-xs-12">
+					@if (!string.IsNullOrWhiteSpace (Model.Comment)) {
+							@Html.DisplayFor(x => x.Comment)
+					} else {
+							  <span>Ninguno</span>
+					}
+				</div>
+
+			</div>
+		
+ 		</div>
+	</div>
+	<div class="col-xs-6 text-right">
+		<div class="row">
+			<div class="col-xs-12">
+				<h2 class="text-right uppercase">@Resources.DeliveryOrder @Html.DisplayFor(x => x.Id)</h2>
+			</div>
+			<div class="col-xs-12">
+				<p><span class="mylabel">@Resources.DateTime</span></p>
+			</div>
+	 		<div class="col-xs-12">
+				<p>@Html.DisplayFor(x => x.Date)</p>
+	 		</div>
+			<div class="col-xs-12">
+				<p><span class="mylabel">@Resources.DeliveryDate</span></p>
+			</div>
+	 		<div class="col-xs-12">
+				<p>@Html.DisplayFor(x => Model.Date)</p>
+	 		</div>
+			<div class="col-xs-12">
+				<p><span class="mylabel">@Resources.PaymentTerms</span></p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div style="margin-top:5mm; min-height: 2.2mm; border-top: #333 solid 1px; border-bottom: #333 solid 3px"></div>
+
+<table  style="border-spacing:0 4px;border-collapse: separate;">
+    <thead>
+        <tr>
+            <th class="col-xs-1 text-center">@Resources.Quantity</th>
+            <th class="col-xs-3 text-center">@Resources.ProductCode</th>
+            <th class="col-xs-6 text-center">@Resources.ProductName</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Details) {
+            <tr class="alt">
+                <td class="nowrap text-right">@Html.DisplayFor(x => item.Quantity)</td>
+                <td class="text-center">@Html.DisplayFor(x => item.ProductCode)</td>
+                <td class="text-center">@Html.DisplayFor(x => item.ProductName) @Html.DisplayFor(x => item.ProductName)
+						@(!string.IsNullOrWhiteSpace(item.OrderDetail.Comment)?item.OrderDetail.Comment:string.Empty)
+					</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div style="min-height: 2.2mm; border-top: #333 solid 3px; border-bottom: #333 solid 1px"></div>
+
+@{
+		  var payments_on_delivery = Model.Details.Select (x => x.OrderDetail.SalesOrder).Distinct ().SelectMany (x => x.Payments.Where (y => y.Payment.CashSession == null)).ToList ();
+
+}
+
+@if (payments_on_delivery.Count () > 0) {
+		<span>@Resources.PaymentOnDelivery</span>
+	foreach (var item in payments_on_delivery) {
+		item.Payment.Amount *= (item.Payment.Commission + 1.0m);
+					<div>
+						<ul>
+							<li>
+								<span>@Resources.SalesOrderId: @Html.DisplayFor(x => item.SalesOrder.Id)</span><br />
+								<span>@Resources.Amount: <b>@Html.DisplayFor(x => item.Payment.Amount)</b></span><br />
+								<span>@Resources.PaymentMethod: @item.Payment.Method.GetDisplayName()</span>
+							</li>
+						</ul>
+					</div>
+	}
+}
+
+<div style="min-height: 2.2mm; border-top: #333 solid 3px; border-bottom: #333 solid 1px"></div>
+
+<div class="row" style="margin-top:15mm">
+	<div class="col-xs-12 text-center">
+		Recibí de conformidad. Antes de descargar, verifiqué las características del concreto solicitadas
+	</div>
+</div>
+
+<div class="row" style="margin-top:15mm">
+	<div class="col-xs-3 col-xs-offset-2 text-center" style="border-top: #333 solid 1px">
+		@Resources.Name<br />
+	</div>
+	<div class="col-xs-3 col-xs-offset-2 text-center" style="border-top: #333 solid 1px">
+		@Resources.AgreementSignature
+	</div>
+</div>
