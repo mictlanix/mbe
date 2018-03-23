@@ -13,23 +13,34 @@
 		<div class='col-xs-8'>
 	  		<dl class=''>
 				<dt>@Resources.Customer</dt>
-				<dd>@Html.DisplayFor(x => x.Customer.Name)
-
-                  @if (Model.Customer.Id == int.Parse(Resources.GeneralPublicId) && !string.IsNullOrWhiteSpace(Model.CustomerName)) {
-                      <span>(</span>
-                      @Html.DisplayFor(x => x.CustomerName)
-                      <span>)</span>
-                  }
-
-                  </dd>
+				<dd>
+					<a id='customer' data-type='select2' data-placement='right' data-pk='@Model.Id'
+						data-value='@Model.Customer.Id' data-url='@Url.Action("SetCustomer", new { id = Model.Id })'
+						data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+						@Html.DisplayFor(x => x.Customer.Name)
+					</a>
+					<span id="name">
+						@Html.Partial("_CustomerName", Model)
+					</span>
+				</dd>
 				@if (Model.Contact != null) {
 				<dt>@Resources.Contact</dt>
 				<dd>@Html.DisplayFor(x => x.Contact, "String")</dd>
 			    }
-		        @if (Model.ShipTo != null) {
 				<dt>@Resources.ShipTo</dt>
-				<dd>@Html.DisplayFor(x => x.ShipTo, "String")</dd>
-	        	}
+				<dd>
+					<a id='address' class="editable" data-type='select' data-placement='right' data-pk='@Model.Id'
+						data-value='@(Model.ShipTo == null ? "" : Model.ShipTo.Id.ToString ())'
+						data-source='@Url.Action("Addresses", new { id = Model.Id })' data-source-cache='false'
+						data-url='@Url.Action("SetShipTo", new { id = Model.Id })'
+						data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+						@if (Model.ShipTo != null) {
+								@Html.DisplayFor(x => x.ShipTo, "String")
+						} else {
+								@Resources.Empty
+						}
+					</a>
+				</dd>
 				<dt>@Resources.SalesPerson</dt>
 				<dd>@Html.DisplayFor(x => x.SalesPerson.Name)</dd>
 			</dl>
