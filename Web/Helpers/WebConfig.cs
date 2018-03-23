@@ -253,8 +253,12 @@ namespace Mictlanix.BE.Web.Helpers {
 			get { return System.Threading.Thread.CurrentThread.CurrentCulture; }
 		}
 
-		public static string DeliveryOrderTemplate {
-			get { return ConfigurationManager.AppSettings ["DeliveryOrderTemplate"]; }
+		public static string DeliveryOrderFormat {
+			get { return ConfigurationManager.AppSettings ["DeliveryOrderFormat"]; }
+		}
+
+		public static string DeliveryOrderTicket {
+			get { return ConfigurationManager.AppSettings ["DeliveryOrderTicket"]; }
 		}
 
 		public static bool DeliveryOrdersUseMiniPrinter {

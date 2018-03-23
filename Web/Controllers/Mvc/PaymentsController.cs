@@ -310,6 +310,108 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View (item);
 		}
 
+		[HttpPost]
+		public ActionResult SetCustomer (int id, int value)
+		{
+			var entity = SalesOrder.Find (id);
+			var customer = Customer.TryFind (value);
+
+			if (entity.IsCancelled || entity.IsPaid) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			if (customer == null) {
+				Response.StatusCode = 400;
+				return Content (Resources.CustomerNotFound);
+			}
+
+			foreach (var payment in entity.Payments) {
+				payment.Delete ();
+			}
+
+			if (entity.Customer.Id != WebConfig.DefaultCustomer) {
+				entity.CustomerName = string.Empty;
+			}
+
+			entity.ShipTo = null;
+			entity.Customer = customer;
+			entity.Updater = CurrentUser.Employee;
+			entity.ModificationTime = DateTime.Now;
+
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
+			}
+
+			return Json (new {
+				id = id,
+				value = entity.FormattedValueFor (x => x.Customer)
+			});
+		}
+
+		[HttpPost]
+		public ActionResult SetCustomerName (int id, string value)
+		{
+			var entity = SalesOrder.Find (id);
+			string val = (value ?? string.Empty).Trim ();
+
+			if (entity.IsPaid || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			entity.CustomerName = (value.Length == 0) ? null : val;
+			entity.Updater = CurrentUser.Employee;
+			entity.ModificationTime = DateTime.Now;
+
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
+			}
+
+			return Json (new { id = id, value = value });
+		}
+
+		[HttpPost]
+		public ActionResult SetShipTo (int id, int value)
+		{
+			var entity = SalesOrder.Find (id);
+			var item = entity.Customer.Addresses.Where (x => x.Id == value).SingleOrDefault ();
+
+			if (entity.IsCancelled || entity.IsPaid) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			if (item != null) {
+				entity.ShipTo = item;
+				entity.Updater = CurrentUser.Employee;
+				entity.ModificationTime = DateTime.Now;
+
+				using (var scope = new TransactionScope ()) {
+					entity.UpdateAndFlush ();
+				}
+			}
+
+			return Json (new { id = id, value = entity.ShipTo.ToString (), type = "shipto" });
+		}
+
+		public JsonResult Addresses (int id)
+		{
+			var item = SalesOrder.TryFind (id);
+
+			if (item.Customer.Id == WebConfig.DefaultCustomer) {
+				return Json (null, JsonRequestBehavior.AllowGet);
+			}
+
+			var query = from x in item.Customer.Addresses
+				    select new {
+					    value = x.Id,
+					    text = x.ToString ()
+				    };
+
+			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
+		}
+
 		public ActionResult GetSalesOrderBalance (int id)
 		{
 			var item = SalesOrder.Find (id);
@@ -466,9 +568,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View ("_CreditPaymentSuccesful", item);
 		}
 
-		public ActionResult GetPayment (int id)
-		{
+		public ActionResult GetPayment (int id){
+
 			return PartialView ("_Payment", SalesOrderPayment.Find (id));
+		}
+
+		public ActionResult GetPayments (int id)
+		{
+			var item = SalesOrder.Find (id);
+
+			return PartialView ("_Payments", item);
 		}
 
 		[HttpPost]

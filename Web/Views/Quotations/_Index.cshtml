@@ -38,7 +38,7 @@
         	@if (Privilege.AllowUpdate && !item.IsCompleted && !item.IsCancelled) {
             	@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", title = Resources.Edit })
             }
-		  	@if (Privilege.AllowRead && !item.IsCancelled) {
+		  	@if (Privilege.AllowRead && item.IsCompleted && !item.IsCancelled) {
 		  			@Html.ActionLink(" ", "SendEmail", new { id = item.Id }, new { @class = "button icon email icon-only open-modal", title = Resources.Send, data_modal_id = "quotation-modal" })
 			}
         </td>

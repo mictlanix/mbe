@@ -3275,6 +3275,17 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Recibí de conformidad.
+        ///Antes de descargar, verifiqué las 
+        ///características del concreto solicitada.
+        /// </summary>
+        public static string Message_AcceptedProductDeliveryMessage {
+            get {
+                return ResourceManager.GetString("Message_AcceptedProductDeliveryMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a El cambio de contraseña no fue exitoso. Por favor, corrija los errores y vuelva a intentarlo..
         /// </summary>
         public static string Message_ChangePasswordFail {
@@ -4144,6 +4155,24 @@ namespace Mictlanix.BE {
         public static string Print {
             get {
                 return ResourceManager.GetString("Print", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Imprimir Formato.
+        /// </summary>
+        public static string PrintFormat {
+            get {
+                return ResourceManager.GetString("PrintFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Imprimir Ticket.
+        /// </summary>
+        public static string PrintTicket {
+            get {
+                return ResourceManager.GetString("PrintTicket", resourceCulture);
             }
         }
         
@@ -6720,6 +6749,15 @@ namespace Mictlanix.BE {
         public static string Validation_UserName {
             get {
                 return ResourceManager.GetString("Validation_UserName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a El descuento se agrega en el campo &quot;Descuento&quot;.
+        /// </summary>
+        public static string Validation_WrongDiscount {
+            get {
+                return ResourceManager.GetString("Validation_WrongDiscount", resourceCulture);
             }
         }
         
