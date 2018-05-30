@@ -95,14 +95,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var pattern = (search.Pattern ?? string.Empty).Trim ();
 			IQueryable<SalesOrder> query = from x in SalesOrder.Queryable
 						       where x.Store.Id == item.Id && x.IsCompleted && !x.IsCancelled &&
-                                                   		!x.IsPaid && x.Terms == PaymentTerms.Immediate
+                                                   		!x.IsPaid
 						       orderby x.Date descending
 						       select x;
 
 			if (int.TryParse (pattern, out id) && id > 0) {
 				query = query.Where (x => x.Id == id);
 			} else if (!string.IsNullOrEmpty (pattern)) {
-				query = query.Where (x => x.Customer.Name.Contains (pattern) || (x.SalesPerson.FirstName + " " + x.SalesPerson.LastName).Contains (pattern));
+				query = query.Where (x => x.Terms == PaymentTerms.Immediate && x.Customer.Name.Contains (pattern) || 
+				                     (x.SalesPerson.FirstName + " " + x.SalesPerson.LastName).Contains (pattern));
 			}
 
 			search.Total = query.Count ();
