@@ -190,13 +190,6 @@ namespace Mictlanix.BE.Web.Helpers {
 
 			var taxes = new List<ComprobanteImpuestosTraslado> ();
 
-			if (cfd.Conceptos.Any (c => c.Impuestos != null && c.Impuestos.Traslados.Any (x => x.TipoFactor == c_TipoFactor.Exento))) {
-				taxes.Add (new ComprobanteImpuestosTraslado {
-					Impuesto = c_Impuesto.IVA,
-					TipoFactor = c_TipoFactor.Exento
-				});
-			}
-
 			if (cfd.Conceptos.Any (c => c.Impuestos != null && c.Impuestos.Traslados.Any (x => x.TasaOCuota == decimal.Zero))) {
 				taxes.Add (new ComprobanteImpuestosTraslado {
 					Impuesto = c_Impuesto.IVA,
