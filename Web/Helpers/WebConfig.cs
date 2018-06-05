@@ -36,13 +36,15 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using System.Configuration;
 using Mictlanix.BE.Model;
+using System.Net.Mail;
 
 namespace Mictlanix.BE.Web.Helpers {
 	public static class WebConfig {
 		public const string StoreCookieKey = "Store";
 		public const string PointOfSaleCookieKey = "PointOfSale";
 		public const string CashDrawerCookieKey = "CashDrawer";
-		public static PaymentMethod[] cashier_payment_options = null;
+		public static PaymentMethod [] cashier_payment_options = null;
+		public static string [] default_email_cc = null;
 
 		#region Application Global Settings
 
@@ -206,8 +208,25 @@ namespace Mictlanix.BE.Web.Helpers {
 			get { return ConfigurationManager.AppSettings["DefaultSender"]; }
 		}
 
-		public static string DefaultEmailCC {
-			get { return ConfigurationManager.AppSettings ["DefaultEmailCC"]; }
+		public static string [] DefaultEmailCC {
+			get {
+				if (default_email_cc == null) {
+					var list = new List<string> ();
+					var tokens = ConfigurationManager.AppSettings ["DefaultEmailCC"].Split (',');
+
+					foreach (var token in tokens) {
+						try {
+							var addr = new MailAddress (token.Trim ());
+							list.Add (addr.Address);
+						} catch {
+						}
+					}
+
+					default_email_cc = list.ToArray ();
+				}
+
+				return default_email_cc;
+			}
 		}
 
 		public static int DefaultQuotationDueDays {
@@ -218,11 +237,11 @@ namespace Mictlanix.BE.Web.Helpers {
 			get { return ConfigurationManager.AppSettings["DefaultCfdiUsage"]; }
 		}
 
-		public static PaymentMethod[] CashierPaymentOptions {
+		public static PaymentMethod [] CashierPaymentOptions {
 			get {
 				if (cashier_payment_options == null) {
 					var list = new List<PaymentMethod> ();
-					var opts = ConfigurationManager.AppSettings["CashierPaymentOptions"].Split (',');
+					var opts = ConfigurationManager.AppSettings ["CashierPaymentOptions"].Split (',');
 
 					foreach (var opt in opts) {
 						PaymentMethod method = PaymentMethod.ToBeDefined;
@@ -253,8 +272,8 @@ namespace Mictlanix.BE.Web.Helpers {
 			get { return System.Threading.Thread.CurrentThread.CurrentCulture; }
 		}
 
-		public static string DeliveryOrderFormat {
-			get { return ConfigurationManager.AppSettings ["DeliveryOrderFormat"]; }
+		public static string DeliveryOrderTemplate {
+			get { return ConfigurationManager.AppSettings ["DeliveryOrderTemplate"]; }
 		}
 
 		public static string DeliveryOrderTicket {

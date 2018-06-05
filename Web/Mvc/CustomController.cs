@@ -222,10 +222,10 @@ namespace Mictlanix.BE.Web.Mvc
 										     subject, message, attachments));
 		}
 
-		public void SendEmailWithAttachments (string sender, string recipient, string copyTo, string subject, string message,
+		public void SendEmailWithAttachments (string sender, string recipient, IEnumerable<string> copyTo, string subject, string message,
 						      IEnumerable<MimePart> attachments)
 		{
-			Task.Factory.StartNew (() => NotificationsHelpers.SendEmail (sender, new string [] { recipient }, new string [] { copyTo }, null,
+			Task.Factory.StartNew (() => NotificationsHelpers.SendEmail (sender, new string [] { recipient }, copyTo, null,
 										     subject, message, attachments));
 		}
     }
