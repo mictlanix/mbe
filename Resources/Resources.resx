@@ -2426,4 +2426,7 @@ Atte: {1}.</value>
   <data name="Validation_WrongDiscount" xml:space="preserve">
     <value>El descuento se agrega en el campo "Descuento"</value>
   </data>
+  <data name="SalesOrderWithZeroPrices" xml:space="preserve">
+    <value>El pedido contiene productos con precio cero. Si desea que no haya cargo para estos productos debe usar un descuento del 100%.</value>
+  </data>
 </root>
