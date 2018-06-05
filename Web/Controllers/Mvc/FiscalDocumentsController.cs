@@ -1300,11 +1300,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				FileName = filename + ".xml"
 			});
 
-			if (string.IsNullOrWhiteSpace (WebConfig.DefaultEmailCC)) {
-				SendEmailWithAttachments (WebConfig.DefaultSender, email, subject, message, attachments);
-			} else {
-				SendEmailWithAttachments (WebConfig.DefaultSender, email, WebConfig.DefaultEmailCC, subject, message, attachments);
-			}
+			SendEmailWithAttachments (WebConfig.DefaultSender, email, WebConfig.DefaultEmailCC, subject, message, attachments);
 
 			return PartialView ("_SendEmailSuccesful");
 		}
