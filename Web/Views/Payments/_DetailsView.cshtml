@@ -20,16 +20,16 @@
 			<div class="form-group">
 				<div class="col-xs-3"><label for="amount">@Resources.Amount</label></div>
 				<div class="col-xs-3"><label for="reference">@Resources.Reference</label></div>
-				@if (Model.ShipTo != null) {
-						<div class="pull-right col-xs-1"><label for="payment_upon_delivery">@Resources.PaymentOnDelivery</label></div>
-				}
+				<div class="pull-right col-xs-1 paymentondelivery @(Model.ShipTo == null ? "hidden" : "")">
+					<label for="payment_upon_delivery">@Resources.PaymentOnDelivery</label>
+				</div>
 			</div>
 			<div class="form-group">
 				<div class="col-xs-3"><input id='amount' class='form-control text-right' type='text' value='0.00'></div>
 				<div class="col-xs-3"><input id='reference' class='form-control' type='text' value=''></div>
-				@if (Model.ShipTo != null) {
-						<div class="pull-right col-xs-1 paymentondelivery"><input id='ondelivery' class='form-control' type='checkbox'></div>
-				}
+				<div class="pull-right col-xs-1 paymentondelivery @(Model.ShipTo == null ? "hidden" : "")">
+					<input id='ondelivery' class='form-control' type='checkbox'>
+				</div>
 			</div>
 			<div class="form-group">
 				<div class="col-xs-12">
@@ -120,7 +120,7 @@ $(function () {
 			$('#contact,#address').text('').editable('setValue', '');
 			$('#name').load('@Url.Action("GetCustomerName","POS", new { id = Model.Id } )');
 			$('#items-container').load('@Url.Action("GetPayments", new { id = Model.Id } )');
-			$('.paymentondelivery').hide();
+			$('.paymentondelivery').addClass('hidden');
 			updateTotals();
 			console.log("Done!")
 	    },
@@ -134,7 +134,7 @@ $(function () {
 		success: function (response, newValue) {
 			console.log(response)
 			if ('type' in response) {
-				$('.paymentondelivery').show();
+				$('.paymentondelivery').removeClass('hidden');
 			}
 		},
 		display: function (value, response) {
