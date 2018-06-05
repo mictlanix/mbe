@@ -96,7 +96,7 @@
             <tr class="alt">
                 <td class="nowrap text-right">@Html.DisplayFor(x => item.Quantity)</td>
                 <td class="text-center">@Html.DisplayFor(x => item.ProductCode)</td>
-                <td class="text-center">@Html.DisplayFor(x => item.ProductName) @Html.DisplayFor(x => item.ProductName)
+                <td class="text-center">@Html.DisplayFor(x => item.ProductName)
 						@(!string.IsNullOrWhiteSpace(item.OrderDetail.Comment)?item.OrderDetail.Comment:string.Empty)
 					</td>
             </tr>
