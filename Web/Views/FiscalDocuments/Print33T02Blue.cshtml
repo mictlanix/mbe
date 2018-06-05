@@ -201,6 +201,9 @@
 		text-transform: uppercase;
 		color: #1C1C1B !important;
 	}
+	.small {
+		font-size: 75%
+	}
 	</style>
 </head>
 <body>
@@ -293,7 +296,7 @@
                     <td class="text-center">
 						@Html.DisplayFor(x => item.ProductName) (@Html.DisplayFor(x => item.ProductCode))
 					@if (!string.IsNullOrEmpty (item.Comment)) {
-						<br><small>@item.Comment</small>
+						<p class="pre-wrapped small text-center">@item.Comment</p>
 					}
 					</td>
                     <td class="nowrap text-right">@item.NetPrice.ToString("#,###.00##")</td>
