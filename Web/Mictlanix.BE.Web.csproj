@@ -910,6 +910,7 @@
     <Content Include="Views\Shared\EditorTemplates\PostalCodeSelector.cshtml" />
     <Content Include="Views\FiscalDocuments\Print33T02Blue.cshtml" />
     <Content Include="Views\FiscalDocuments\Print33T02Blue_PageFoot.cshtml" />
+    <Content Include="Views\Shared\ZeroPriceError.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\fonts\" />
