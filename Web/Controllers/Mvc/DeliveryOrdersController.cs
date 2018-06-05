@@ -101,7 +101,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			if (WebConfig.DeliveryOrdersUseMiniPrinter) {
 				return PdfTicketView (WebConfig.DeliveryOrderTicket, item);
 			} else {
-				return PdfView (WebConfig.DeliveryOrderFormat, item);
+				return PdfView (WebConfig.DeliveryOrderTemplate, item);
 			}
 
 		}
@@ -109,7 +109,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult PrintFormat (int id)
 		{
 			var item = DeliveryOrder.Find (id);
-			return PdfView (WebConfig.DeliveryOrderFormat, item);
+			return PdfView (WebConfig.DeliveryOrderTemplate, item);
 		}
 
 		[HttpPost]
