@@ -160,6 +160,27 @@ ALTER TABLE `fiscal_document_detail`
 ALTER TABLE `taxpayer_batch` 
 	CHANGE COLUMN `template` `template` TEXT NOT NULL;
 
+-- complemento de pago
+
+ALTER TABLE `fiscal_document`
+  ADD COLUMN `payment_date` DATE NULL,
+  ADD COLUMN `payment_amount` DECIMAL NULL;
+
+CREATE TABLE `fiscal_document_relation` (
+  `fiscal_document_relation_id` int(11) NOT NULL AUTO_INCREMENT,
+  `document` int(11) NOT NULL,
+  `relation` int(11) NOT NULL,
+  `exchange_rate` decimal(8,4) NOT NULL DEFAULT 1.0000,
+  `installment` int(11) NOT NULL,
+  `previous_balance` decimal(18,2) NOT NULL,
+  `amount` decimal(18,2) NOT NULL,
+  PRIMARY KEY (`fiscal_document_relation_id`),
+  UNIQUE KEY `document_relation_idx` (`document`, `relation`),
+  KEY `fiscal_document_relation_document_idx` (`document`),
+  CONSTRAINT `fiscal_document_relation_document_fk` FOREIGN KEY (`document`) REFERENCES `fiscal_document` (`fiscal_document_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fiscal_document_relation_relation_fk` FOREIGN KEY (`relation`) REFERENCES `fiscal_document` (`fiscal_document_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB;
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

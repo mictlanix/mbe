@@ -7,10 +7,11 @@
     <h3>@Resources.FiscalDocument</h3>
 </div>
 <div class='modal-body'>
-    @using (Ajax.BeginForm (null, null, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "fiscalDocument-modal-content" }, new { @class = "modal-form" })) {
+    @using (Ajax.BeginForm ("New", "FiscalDocuments", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "fiscalDocument-modal-content" }, new { @class = "modal-form" })) {
         @Html.ValidationSummary(true)
         <div class="form-horizontal">
             @Html.EditorForModel()
+            <input type="hidden" value="@Model.Type" name="Type" />
         </div>
     }
 </div>

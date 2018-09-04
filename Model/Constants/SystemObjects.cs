@@ -200,6 +200,8 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "CreditPayments", ResourceType = typeof (Resources))]
 		CreditPayments = 83,
 		[Display (Name = "PaymentMethodOptions", ResourceType = typeof (Resources))]
-		PaymentMethodOptions = 84
+		PaymentMethodOptions = 84,
+		[Display (Name = "PaymentReceipt", ResourceType = typeof (Resources))]
+		PaymentReceipt = 85
 	}
 }

@@ -4624,5 +4624,53 @@ namespace Mictlanix.BE {
                 return ResourceManager.GetString("SalesOrderWithZeroPrices", resourceCulture);
             }
         }
+        
+        public static string FiscalDocumentRelation {
+            get {
+                return ResourceManager.GetString("FiscalDocumentRelation", resourceCulture);
+            }
+        }
+        
+        public static string PaymentAmount {
+            get {
+                return ResourceManager.GetString("PaymentAmount", resourceCulture);
+            }
+        }
+        
+        public static string InstallmentPayment {
+            get {
+                return ResourceManager.GetString("InstallmentPayment", resourceCulture);
+            }
+        }
+        
+        public static string PreviousBalance {
+            get {
+                return ResourceManager.GetString("PreviousBalance", resourceCulture);
+            }
+        }
+        
+        public static string OutstandingBalance {
+            get {
+                return ResourceManager.GetString("OutstandingBalance", resourceCulture);
+            }
+        }
+        
+        public static string ForeignBankName {
+            get {
+                return ResourceManager.GetString("ForeignBankName", resourceCulture);
+            }
+        }
+        
+        public static string InvalidPreviousBalance {
+            get {
+                return ResourceManager.GetString("InvalidPreviousBalance", resourceCulture);
+            }
+        }
+        
+        public static string InvalidPaymentAmount {
+            get {
+                return ResourceManager.GetString("InvalidPaymentAmount", resourceCulture);
+            }
+        }
     }
 }
