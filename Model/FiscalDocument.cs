@@ -37,6 +37,7 @@ namespace Mictlanix.BE.Model {
 	[ActiveRecord ("fiscal_document", Lazy = true)]
 	public class FiscalDocument : ActiveRecordLinqBase<FiscalDocument> {
 		IList<FiscalDocumentDetail> details = new List<FiscalDocumentDetail> ();
+		IList<FiscalDocumentRelation> relations = new List<FiscalDocumentRelation> ();
 
 		public FiscalDocument ()
 		{
@@ -239,10 +240,26 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "RetentionRate", ResourceType = typeof (Resources))]
 		public virtual decimal RetentionRate { get; set; }
 
+		[Property ("payment_date")]
+		[DataType (DataType.Date)]
+		[Display (Name = "PaymentDate", ResourceType = typeof (Resources))]
+		public virtual DateTime? PaymentDate { get; set; }
+
+		[Property ("payment_amount")]
+		[DataType (DataType.Currency)]
+		[Display (Name = "PaymentAmount", ResourceType = typeof (Resources))]
+		public virtual decimal PaymentAmount { get; set; }
+
 		[HasMany (typeof (FiscalDocumentDetail), Table = "fiscal_document_detail", ColumnKey = "document", Lazy = true)]
 		public virtual IList<FiscalDocumentDetail> Details {
 			get { return details; }
 			set { details = value; }
+		}
+
+		[HasMany (typeof (FiscalDocumentRelation), Table = "fiscal_document_relation", ColumnKey = "document", Lazy = true)]
+		public virtual IList<FiscalDocumentRelation> Relations {
+			get { return relations; }
+			set { relations = value; }
 		}
 
 		[DataType (DataType.Currency)]
