@@ -51,7 +51,7 @@ namespace Mictlanix.BE.Web.Helpers {
 
 		public static Comprobante SignCFD (FiscalDocument item)
 		{
-			var cfd = InvoiceToCFDv33 (item);
+			var cfd = FiscalDocumentToCFDv33 (item);
 			var cer = item.Issuer.Certificates.Single (x => x.Id == item.IssuerCertificateNumber);
 
 			cfd.Sign (cer.KeyData, cer.KeyPassword);
@@ -67,7 +67,10 @@ namespace Mictlanix.BE.Web.Helpers {
 			//System.IO.File.WriteAllText ("cfd.xml", cfd.ToXmlString ());
 			var tfd = cli.Stamp (id, cfd);
 
-			cfd.Complemento = new List<object> ();
+			if (cfd.Complemento == null) {
+				cfd.Complemento = new List<object> ();
+			}
+
 			cfd.Complemento.Add (tfd);
 
 			return cfd;
@@ -87,6 +90,92 @@ namespace Mictlanix.BE.Web.Helpers {
 		public static bool PrivateKeyTest (byte [] data, byte [] password)
 		{
 			return CFDLib.Utils.PrivateKeyTest (data, password);
+		}
+
+		static Comprobante FiscalDocumentToCFDv33 (FiscalDocument item)
+		{
+			if (item.Type == FiscalDocumentType.PaymentReceipt) {
+				return PaymentReceiptToCFDv33 (item);
+			}
+
+			return InvoiceToCFDv33 (item);
+		}
+
+		static Comprobante PaymentReceiptToCFDv33 (FiscalDocument item)
+		{
+			var cer = item.Issuer.Certificates.SingleOrDefault (x => x.Id == item.IssuerCertificateNumber);
+			var cfd = new Comprobante {
+				Serie = item.Batch,
+				Folio = item.Serial.ToString (),
+				Fecha = item.Issued.GetValueOrDefault (),
+				NoCertificado = item.IssuerCertificateNumber.PadLeft (20, '0'),
+				Certificado = (cer == null ? null : SecurityHelpers.EncodeBase64 (cer.CertificateData)),
+				SubTotal = 0,
+				Moneda = "XXX",
+				Total = 0,
+				TipoDeComprobante = c_TipoDeComprobante.Pago,
+				LugarExpedicion = item.IssuedLocation,
+				Emisor = new ComprobanteEmisor {
+					Rfc = item.Issuer.Id,
+					Nombre = item.IssuerName,
+					RegimenFiscal = (c_RegimenFiscal)int.Parse (item.IssuerRegime.Id),
+				},
+				Receptor = new ComprobanteReceptor {
+					Rfc = item.Recipient,
+					Nombre = item.RecipientName,
+					UsoCFDI = c_UsoCFDI.PorDefinir
+				},
+				Conceptos = new ComprobanteConcepto [] {
+					new ComprobanteConcepto {
+						ClaveProdServ = "84111506",
+						Cantidad = 1,
+						ClaveUnidad = "ACT",
+						Descripcion = "Pago",
+						ValorUnitario = 0,
+						Importe = 0
+					}
+				},
+				Complemento = new List<object> ()
+			};
+			var pagos = new Pagos {
+				Pago = new PagosPago [] {
+					new PagosPago {
+						FechaPago = item.PaymentDate.GetValueOrDefault (),
+						FormaDePagoP = (c_FormaPago)(int)item.PaymentMethod,
+						MonedaP = item.Currency.GetDisplayName (),
+						TipoCambioP = item.ExchangeRate,
+						TipoCambioPSpecified = item.Currency != CurrencyCode.MXN,
+						Monto = item.PaymentAmount,
+						NumOperacion = string.IsNullOrWhiteSpace (item.PaymentReference) ? null : item.PaymentReference,
+						NomBancoOrdExt = string.IsNullOrWhiteSpace (item.Reference) ? null : item.Reference,
+						DoctoRelacionado = new PagosPagoDoctoRelacionado [item.Relations.Count]
+					}
+				}
+			};
+
+			int i = 0;
+			foreach (var relation in item.Relations) {
+				pagos.Pago [0].DoctoRelacionado [i] = new PagosPagoDoctoRelacionado {
+					IdDocumento = relation.Relation.StampId,
+					Serie = relation.Relation.Batch,
+					Folio = relation.Relation.Serial.ToString (),
+					MonedaDR = relation.Relation.Currency.GetDisplayName (),
+					TipoCambioDR = relation.ExchangeRate,
+					TipoCambioDRSpecified = relation.Relation.Currency != item.Currency,
+					MetodoDePagoDR = c_MetodoPago.PagoEnParcialidadesODiferido,
+					NumParcialidad = relation.Installment.ToString (),
+					ImpSaldoAnt = relation.PreviousBalance,
+					ImpSaldoAntSpecified = true,
+					ImpPagado = relation.Amount,
+					ImpPagadoSpecified = true,
+					ImpSaldoInsoluto = relation.OutstandingBalance,
+					ImpSaldoInsolutoSpecified = true
+				};
+			}
+
+			cfd.Complemento.Add (pagos);
+
+			return cfd;
 		}
 
 		static Comprobante InvoiceToCFDv33 (FiscalDocument item)

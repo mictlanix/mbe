@@ -528,6 +528,12 @@ a[data-toggle="tooltip"] {
 [class*="glyphicon"] {
     pointer-events:none;
 }
+i.icon-arrow-left:before {
+    content: "\e091";
+}
+i.icon-arrow-right:before {
+    content: "\e092";
+}
 
 .page-header h1 {
 	color:#DD4B39;

@@ -1953,7 +1953,7 @@ Realizada el: {0:d}</value>
     <value>Fecha de Entrega</value>
   </data>
   <data name="PaymentDate" xml:space="preserve">
-    <value>Fecha de Pago</value>
+    <value>Fecha del Pago</value>
   </data>
   <data name="NotaryOffice" xml:space="preserve">
     <value>Notaría</value>
@@ -2428,5 +2428,29 @@ Atte: {1}.</value>
   </data>
   <data name="SalesOrderWithZeroPrices" xml:space="preserve">
     <value>El pedido contiene productos con precio cero. Si desea que no haya cargo para estos productos debe usar un descuento del 100%.</value>
+  </data>
+  <data name="FiscalDocumentRelation" xml:space="preserve">
+    <value>Documento Relacionado</value>
+  </data>
+  <data name="PaymentAmount" xml:space="preserve">
+    <value>Importe Pagado</value>
+  </data>
+  <data name="InstallmentPayment" xml:space="preserve">
+    <value>Parcialidad</value>
+  </data>
+  <data name="PreviousBalance" xml:space="preserve">
+    <value>Saldo Anterior</value>
+  </data>
+  <data name="OutstandingBalance" xml:space="preserve">
+    <value>Saldo Insoluto</value>
+  </data>
+  <data name="ForeignBankName" xml:space="preserve">
+    <value>Nombre del Banco Ordenante (Extranjero)</value>
+  </data>
+  <data name="InvalidPreviousBalance" xml:space="preserve">
+    <value>Saldo Anterior Inválido</value>
+  </data>
+  <data name="InvalidPaymentAmount" xml:space="preserve">
+    <value>Importe Pagado Inválido</value>
   </data>
 </root>

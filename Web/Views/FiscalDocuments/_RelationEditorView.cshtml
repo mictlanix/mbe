@@ -1,0 +1,57 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model FiscalDocumentRelation
+
+<li id='id:@Model.Id'>
+    <div class='action-link'>
+        <a class='button icon-only icon delete' title='@Resources.Message_DeleteConfirmation'
+		   data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id' data-url='@Url.Action("RemoveRelation", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
+    </div>
+    <div class='info'>
+        <b>@Resources.StampId: </b>
+        <span>@Html.DisplayFor(x => x.Relation.StampId)</span>
+        <br />
+        <b>@Resources.Batch: </b>
+        <span>@Html.DisplayFor(x => x.Relation.Batch)</span>
+        <b>@Resources.Serial: </b>
+        <span>@Html.DisplayFor(x => x.Relation.Serial)</span>
+        <b>@Resources.InstallmentPayment: </b>
+        <a class='editable installment' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetRelationInstallment", new { id = Model.Id })'>@Html.DisplayFor(x => x.Installment)</a>
+        <b>@Resources.PreviousBalance: </b>
+        <a class='editable previous-balance' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetRelationPreviousBalance", new { id = Model.Id })'>@Html.DisplayFor(x => x.PreviousBalance)</a>
+        <b>@Resources.PaymentAmount: </b>
+        <a class='editable amount' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetRelationAmount", new { id = Model.Id })'>@Html.DisplayFor(x => x.Amount)</a>
+        <span class='editable currency'>@Html.DisplayFor(x => x.Relation.Currency)</span>
+        <b>@Resources.ExchangeRate: </b>
+        <a class='editable exchange-rate' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetRelationExchangeRate", new { id = Model.Id })'>@Html.DisplayFor(x => x.ExchangeRate)</a>
+    </div>
+</li>
+<script type='text/javascript'>
+$('#id\\:@Model.Id [data-toggle="tooltip"]').tooltip();
+$('#id\\:@Model.Id a.editable').editable({
+    display: function(value, response) {
+        if (typeof response === 'undefined') 
+        	return;
+
+        if (Array.isArray(response)) {
+          	arr = $.grep(response, function(o){
+  				return o.value == value;
+			});
+      		if(arr.length > 0) {
+      			$(this).html(arr[0].text);
+  			}
+        } else {
+          	$(this).html(response.value);
+        }
+    }
+});
+$('#id\\:@Model.Id a.delete').editable({
+	success: function(response, newValue) {
+        $('#id\\:@Model.Id').remove();
+	    if ($('#items li').length === 0) {
+	        $('#confirm-button').addClass('hide');
+	    }
+    }
+});
+</script>
