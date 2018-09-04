@@ -105,7 +105,7 @@
 				<dt>@Resources.PaymentMethod</dt>
 				<dd>
 			        <a id='payment-method' class='editable' data-type='select' data-placement='left' data-pk='@Model.Id'
-			        	data-value='@((int)Model.PaymentMethod)' data-source='@Url.Action("PaymentMethods")'
+			        	data-value='@((int)Model.PaymentMethod)' data-source='@Url.Action("AllPaymentMethods")'
 			        	data-url='@Url.Action("SetPaymentMethod", new { id = Model.Id })'
 			        	data-inputclass='input-large' data-emptytext='@Resources.Empty'>
 			        	@Model.PaymentMethod.GetDisplayName()

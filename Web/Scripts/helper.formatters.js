@@ -53,3 +53,16 @@ function CustomerFormatter(item) {
 
 	return fmt;
 }
+
+function DocumentFormatter(item) {
+    var fmt = "<li title='" + item.stamp + "'>" +
+                "<div style='margin:5px 0;height:38px;'>" +
+                    "<div style='overflow:hidden;text-overflow:ellipsis;white-space:nowrap'>" +
+                        "Folio Fiscal: " + item.stamp +
+                    "</div>" +
+                    "<span>Serie: " + item.batch + " Folio: " + item.serial + "</span>" +
+                "</div>" +
+              "</li>";
+    
+    return fmt;
+}
