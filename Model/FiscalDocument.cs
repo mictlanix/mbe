@@ -321,5 +321,35 @@ namespace Mictlanix.BE.Model {
 		public virtual decimal TotalEx {
 			get { return Details.Sum (x => x.TotalEx) - RetentionTaxesEx; }
 		}
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "PaymentAmount", ResourceType = typeof (Resources))]
+		public virtual decimal PaymentAmountEx {
+			get { return ModelHelpers.TotalRounding (PaymentAmount * ExchangeRate); }
+		}
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "Paid", ResourceType = typeof (Resources))]
+		public virtual decimal Paid {
+			get { return ModelHelpers.TotalRounding (Relations.Sum (x => x.AmountEx)); }
+		}
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "Paid", ResourceType = typeof (Resources))]
+		public virtual decimal PaidEx {
+			get { return ModelHelpers.TotalRounding (Relations.Sum (x => x.AmountEx) * ExchangeRate); }
+		}
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "Balance", ResourceType = typeof (Resources))]
+		public virtual decimal Balance {
+			get { return PaymentAmount - Paid; }
+		}
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "Balance", ResourceType = typeof (Resources))]
+		public virtual decimal BalanceEx {
+			get { return PaymentAmountEx - PaidEx; }
+		}
 	}
 }

@@ -513,6 +513,16 @@ form.form-inline {
   text-transform:capitalize;
 }
 
+.w30px {
+    min-width: 30px;
+}
+.w40px {
+    min-width: 40px;
+}
+.w70px {
+    min-width: 70px;
+}
+
 @media print {
 	.no-print, .no-print * {
 	    display: none !important;
