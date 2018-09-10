@@ -17,21 +17,25 @@
         <b>@Resources.Serial: </b>
         <span>@Html.DisplayFor(x => x.Relation.Serial)</span>
         <b>@Resources.InstallmentPayment: </b>
-        <a class='editable installment' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetRelationInstallment", new { id = Model.Id })'>@Html.DisplayFor(x => x.Installment)</a>
-        <b>@Resources.PreviousBalance: </b>
-        <a class='editable previous-balance' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetRelationPreviousBalance", new { id = Model.Id })'>@Html.DisplayFor(x => x.PreviousBalance)</a>
-        <b>@Resources.PaymentAmount: </b>
-        <a class='editable amount' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetRelationAmount", new { id = Model.Id })'>@Html.DisplayFor(x => x.Amount)</a>
-        <span class='editable currency'>@Html.DisplayFor(x => x.Relation.Currency)</span>
+        <a class='editable w30px text-right installment' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetRelationInstallment", new { id = Model.Id })'>@Html.DisplayFor(x => x.Installment)</a>
+        <b>@Resources.Currency: </b>
+        <span>@Html.DisplayFor(x => x.Relation.Currency)</span>
         <b>@Resources.ExchangeRate: </b>
-        <a class='editable exchange-rate' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetRelationExchangeRate", new { id = Model.Id })'>@Html.DisplayFor(x => x.ExchangeRate)</a>
+        <a class='editable w40px text-right exchange-rate' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetRelationExchangeRate", new { id = Model.Id })'>@Html.DisplayFor(x => x.ExchangeRate)</a>
+        <b>@Resources.PreviousBalance: </b>
+        <a class='editable w70px text-right previous-balance' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetRelationPreviousBalance", new { id = Model.Id })'>@Html.DisplayFor(x => x.PreviousBalance)</a>
+        <b>@Resources.PaymentAmount: </b>
+        <a class='editable w70px text-right amount' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetRelationAmount", new { id = Model.Id })'>@Html.DisplayFor(x => x.Amount)</a>
     </div>
 </li>
 <script type='text/javascript'>
 $('#id\\:@Model.Id [data-toggle="tooltip"]').tooltip();
 $('#id\\:@Model.Id a.editable').editable({
+    success: function(response, newValue) {
+        $('#totals-section').loadUrl();
+    },
     display: function(value, response) {
-        if (typeof response === 'undefined') 
+        if (typeof response === 'undefined')
         	return;
 
         if (Array.isArray(response)) {

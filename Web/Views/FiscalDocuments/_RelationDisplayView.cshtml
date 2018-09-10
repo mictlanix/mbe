@@ -1,0 +1,27 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model FiscalDocumentRelation
+<li id='id:@Model.Id'>
+    <div class='info'>
+        <b>@Resources.StampId: </b>
+        <span>@Html.DisplayFor(x => x.Relation.StampId)</span>
+        <br />
+        <b>@Resources.Batch: </b>
+        <span>@Html.DisplayFor(x => x.Relation.Batch)</span>
+        <b>@Resources.Serial: </b>
+        <span>@Html.DisplayFor(x => x.Relation.Serial)</span>
+        <b>@Resources.InstallmentPayment: </b>
+        <span class='w30px text-right installment'>@Html.DisplayFor(x => x.Installment)</span>
+        <b>@Resources.Currency: </b>
+        <span>@Html.DisplayFor(x => x.Relation.Currency)</span>
+        <b>@Resources.ExchangeRate: </b>
+        <span class='w40px text-right exchange-rate'>@Html.DisplayFor(x => x.ExchangeRate)</span>
+        <b>@Resources.PreviousBalance: </b>
+        <span class='w70px text-right previous-balance'>@Html.DisplayFor(x => x.PreviousBalance)</span>
+        <b>@Resources.PaymentAmount: </b>
+        <span class='w70px text-right amount'>@Html.DisplayFor(x => x.Amount)</span>
+        <b>@Resources.OutstandingBalance: </b>
+        <span class='w70px text-right amount'>@Html.DisplayFor(x => x.OutstandingBalance)</span>
+    </div>
+</li>

@@ -2453,4 +2453,10 @@ Atte: {1}.</value>
   <data name="InvalidPaymentAmount" xml:space="preserve">
     <value>Importe Pagado Inválido</value>
   </data>
+  <data name="TotalAmount" xml:space="preserve">
+    <value>Importe Total</value>
+  </data>
+  <data name="InvalidPaymentAmountSum" xml:space="preserve">
+    <value>El Importe Total debe ser mayor o igual a la suma de los Importes Pagados.</value>
+  </data>
 </root>
