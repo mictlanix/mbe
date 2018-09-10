@@ -39,8 +39,8 @@ $(function () {
     $('form').submit(function () {
         if ($("#email").tokenInput("get").length == 0) return false;
 
-        $('button.btn-primary').prop('disabled', true);
-        $('button.btn-primary').html('@Resources.PleaseWait');
+        $('.modal-footer button.btn-primary').prop('disabled', true)
+                                             .html('@Resources.PleaseWait');
     });
 });
 </script>
