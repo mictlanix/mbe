@@ -4977,7 +4977,7 @@ Editableform based on Twitter Bootstrap 3
 		if (this.o.rtl){
 			this.picker.addClass('datepicker-rtl');
 			this.picker.find('.prev i, .next i')
-						.toggleClass('icon-arrow-left icon-arrow-right');
+						.toggleClass('glyphicon-arrow-left glyphicon-arrow-right');
 		}
 
 
