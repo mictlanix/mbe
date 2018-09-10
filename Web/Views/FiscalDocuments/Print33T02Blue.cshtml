@@ -143,8 +143,8 @@
 		color: #757575 !important;
 	}
 	header .dl-horizontal dt {
-		margin-left: -15px;
-		width: 90px;
+		margin-left: -25px;
+		width: 110px;
 	    font-size: 11px;
 		font-weight: 400;
 	}
@@ -273,6 +273,86 @@
 	</div>
 }
 
+@if (Model.Type == FiscalDocumentType.PaymentReceipt) {
+    <table>
+        <thead>
+            <tr>
+                <th class="text-capitalize" style="padding: 4px 10px;">@Resources.RowNumber</th>
+                <th class="col-xs-1">@Resources.StampId</th>
+                <th class="col-xs-1">@Resources.Batch @Resources.Serial</th>
+                <th class="">@Resources.InstallmentPaymentShort</th>
+                <th class="">@Resources.Currency / @Resources.ExchangeRate</th>
+                <th class="">@Resources.PreviousBalance</th>
+                <th class="">@Resources.PaymentAmount</th>
+                <th class="">@Resources.OutstandingBalance</th>
+            </tr>
+        </thead>
+        <tbody>
+        @for (int i = 0; i < Model.Relations.Count; i++) {
+            var item = Model.Relations [i];
+            <tr>
+                <th class="nowrap">@(i + 1)</th>
+                <td class="nowrap text-center">@Html.DisplayFor(x => item.Relation.StampId)</td>
+                <td class="nowrap text-center">@Html.DisplayFor(x => item.Relation.Batch) @Html.DisplayFor(x => item.Relation.Serial)</td>
+                <td class="nowrap text-center">@Html.DisplayFor(x => item.Installment)</td>
+                <td class="nowrap text-center">
+                @Html.DisplayFor(x => item.Relation.Currency)
+                @if (item.Relation.Currency != Model.Currency) {
+                    <text>/ @Html.DisplayFor(x => item.ExchangeRate)</text>
+                }
+                </td>
+                <td class="nowrap text-right">@Html.DisplayFor(x => item.PreviousBalance)</td>
+                <td class="nowrap text-right">@Html.DisplayFor(x => item.Amount)</td>
+                <td class="nowrap text-right">@Html.DisplayFor(x => item.OutstandingBalance)</td>
+            </tr>
+        }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td rowspan="2" class="no-bg"></td>
+                <td rowspan="2" colspan="4" class="no-bg">
+                    <div class="row">
+                        <div class="col-xs-5">
+                            <p class="payment-info">
+                                <strong>@Resources.PaymentDate</strong><br>
+                                @Html.DisplayFor(x => x.PaymentDate)<br>
+                            @if (!string.IsNullOrWhiteSpace(Model.Reference)) {
+                                <strong>@Resources.ForeignBankName</strong><br>
+                                @Html.DisplayFor(x => x.Reference)
+                            }
+                            </p>
+                        </div>
+                        <div class="col-xs-5">
+                            <p class="payment-info">
+                                <strong>@Resources.PaymentTerms</strong><br>
+                                @string.Format("{0:D2}", (int) Model.PaymentMethod) :
+                                @Model.PaymentMethod.GetDisplayName()<br>
+                            @if (!string.IsNullOrWhiteSpace(Model.PaymentReference)) {
+                                <strong>@Resources.PaymentReference</strong><br>
+                                @Html.DisplayFor(x => x.PaymentReference)
+                            }
+                            </p>
+                        </div>
+                        <div class="col-xs-2">
+                            <p class="payment-info">
+                                <strong>@Resources.Currency</strong><br>
+                                @Model.Currency.GetDisplayName()<br>
+                            @if (Model.Currency != CurrencyCode.MXN) {
+                                <strong>@Resources.ExchangeRate</strong><br>
+                                @Html.DisplayFor(x => x.ExchangeRate)
+                            }
+                            </p>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr class="total">
+                <th colspan="2">@Resources.TotalAmount</th>
+                <td colspan="1">@Html.DisplayFor(x => x.PaymentAmount)</td>
+            </tr>
+        </tfoot>
+    </table>
+} else {
     <table>
         <thead>
             <tr>
@@ -363,12 +443,17 @@
 	        </tr>
 		</tfoot>
     </table>
+}
 
-	<div class="row">
-		<div class="col-xs-12 text-right">
-			<p class="amount-words">@Html.CurrencyToString(Model.Total, Model.Currency)</p>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col-xs-12 text-right">
+        @if (Model.Type == FiscalDocumentType.PaymentReceipt) {
+            <p class="amount-words">@Html.CurrencyToString(Model.PaymentAmount, Model.Currency)</p>
+        } else {
+            <p class="amount-words">@Html.CurrencyToString(Model.Total, Model.Currency)</p>
+        }
+        </div>
+    </div>
 
 	<div class="row" style="margin-top:3mm">
 		<div class="col-xs-6">

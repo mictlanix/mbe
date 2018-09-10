@@ -16,7 +16,7 @@
     <div id='items-container' data-url='@Url.Action("Relations", new { id = Model.Id })'>
         @Html.Partial("_Relations", Model.Relations)
     </div>
-@if (Privilege.AllowCreate) {
+@if (Privilege.AllowUpdate) {
     <div class='search-box'>
         <input type='text' id='search' name='product-search' />
     </div>

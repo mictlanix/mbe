@@ -5,7 +5,7 @@
 
 @{
     var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.FiscalDocuments);
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.PaymentReceipt);
 }
 
 <fieldset>
