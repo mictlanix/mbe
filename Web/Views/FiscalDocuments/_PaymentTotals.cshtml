@@ -1,0 +1,28 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model FiscalDocument
+
+<ul class='labeled-frames'>
+    <li>
+    	<span class='caption'>@Resources.Amount</span>
+        <span class='value'>@Html.DisplayFor(x => x.PaymentAmount) @Html.DisplayFor(x => x.Currency)</span>
+    @if (Model.Currency != WebConfig.BaseCurrency) {
+        <span class='value muted'>(@Html.DisplayFor(x => x.PaymentAmountEx) @WebConfig.BaseCurrency)</span>
+    }
+    </li>
+    <li>
+        <span class='caption'>@Resources.Paid</span>
+        <span class='value'>@Html.DisplayFor(x => x.Paid) @Html.DisplayFor(x => x.Currency)</span>
+    @if (Model.Currency != WebConfig.BaseCurrency) {
+        <span class='value muted'>(@Html.DisplayFor(x => x.PaidEx) @WebConfig.BaseCurrency)</span>
+    }
+    </li>
+    <li>
+        <span class='caption'>@Resources.Balance</span>
+        <span class='value'>@Html.DisplayFor(x => x.Balance) @Html.DisplayFor(x => x.Currency)</span>
+    @if (Model.Currency != WebConfig.BaseCurrency) {
+        <span class='value muted'>(@Html.DisplayFor(x => x.BalanceEx) @WebConfig.BaseCurrency)</span>
+    }
+    </li>
+</ul>

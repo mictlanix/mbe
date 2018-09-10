@@ -52,8 +52,6 @@
             <dl class='dl-horizontal'>
                 <dt>@Resources.Id</dt>
                 <dd>@Html.DisplayFor(x => x.Id)</dd>
-                <dt>@Resources.Type</dt>
-                <dd id='type'>@Model.Type.GetDisplayName()</dd>
                 <dt>@Resources.Batch</dt>
                 <dd>
                     <a id='batch' class='editable' data-type='select' data-placement='left' data-pk='@Model.Id'
@@ -71,7 +69,7 @@
                         @Html.DisplayFor(x => x.PaymentDate)
                     </a>
                 </dd>
-                <dt>@Resources.Amount</dt>
+                <dt>@Resources.TotalAmount</dt>
                 <dd>
                     <a id='payment-amount' class='editable' data-type='text' data-placement='left' data-pk='@Model.Id'
                        data-value='@Html.DisplayFor(x => x.PaymentAmount)' data-url='@Url.Action("SetPaymentAmount", new { id = Model.Id })'

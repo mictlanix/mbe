@@ -22,6 +22,9 @@
     </div>
 }
 </div>
+<div id='totals-section' class='pull-right' data-url='@Url.Action("PaymentTotals", new { id = Model.Id })'>
+    @Html.Partial("_PaymentTotals")
+</div>
 <div class='clearfix'></div>
 <div id='back-to-list' class='pull-left'>
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
@@ -45,6 +48,7 @@ $(function () {
             $.post('@Url.Action("AddRelation", new { id = Model.Id })', { 'relation': item.id }, function (relation) {
                 $.get('@Url.Action("Relation", new { id = 0 })' + relation.id, function (data) {
                     $('#items').append(data);
+                    $('#totals-section').loadUrl();
                     $('#search').tokenInput('clear');
                     $('#confirm-button').removeClass('hide');
                 });
