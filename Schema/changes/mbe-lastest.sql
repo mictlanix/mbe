@@ -164,7 +164,7 @@ ALTER TABLE `taxpayer_batch`
 
 ALTER TABLE `fiscal_document`
   ADD COLUMN `payment_date` DATE NULL,
-  ADD COLUMN `payment_amount` DECIMAL NULL;
+  ADD COLUMN `payment_amount` decimal(18,2) NULL;
 
 CREATE TABLE `fiscal_document_relation` (
   `fiscal_document_relation_id` int(11) NOT NULL AUTO_INCREMENT,
