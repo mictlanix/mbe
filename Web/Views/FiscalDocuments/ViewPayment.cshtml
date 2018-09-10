@@ -1,0 +1,39 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model FiscalDocument
+
+@{
+    ViewBag.Title = Resources.FiscalDocument;
+}
+
+<h2>@Resources.PaymentReceipt</h2>
+
+<div id="master-section">
+    @Html.Partial("_PaymentDisplayView")
+</div>
+<div id="details-section">
+    <div id="items-container">
+        <ul id="items" class="list-items">
+        @foreach (var item in Model.Relations) {
+            @Html.Partial("_RelationDisplayView", item) 
+        }
+        </ul>
+    </div>
+</div>
+<div id='totals-section' class='pull-right' data-url='@Url.Action("Totals", new { id = Model.Id })'>
+    @Html.Partial("_PaymentTotals")
+</div>
+<div class='clearfix'></div>
+<div id='back-to-list' class='pull-left'>
+    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+</div>
+<div class='pull-right'>
+	@Html.ActionLink(Resources.Print, "Pdf", new { id = Model.Id }, new { @class = "button icon print", target = "_blank" })
+</div>
+<div class='clearfix'></div>
+<script type='text/javascript'>
+$(function () {
+	$('[data-toggle="tooltip"]').tooltip();
+});
+</script>

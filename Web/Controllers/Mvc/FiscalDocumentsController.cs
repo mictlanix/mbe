@@ -41,6 +41,7 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 using System.Diagnostics.Contracts;
+using System.Globalization;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
@@ -689,20 +690,27 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult SetPaymentAmount (int id, string value)
 		{
 			var entity = FiscalDocument.Find (id);
-			bool success;
-			decimal val;
 
 			if (entity.IsCompleted || entity.IsCancelled) {
 				Response.StatusCode = 400;
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			success = decimal.TryParse (value.Trim (),
-						    System.Globalization.NumberStyles.Currency,
-						    null, out val);
+			if (decimal.TryParse (value.Trim (), NumberStyles.Currency, null, out decimal val)) {
+				if (val <= 0m) {
+					Response.StatusCode = 400;
+					return Content (Resources.InvalidPaymentAmount);
+				}
 
-			if (success && val >= 0) {
 				entity.PaymentAmount = val;
+
+				if (entity.PaymentAmount < entity.Paid) {
+					Response.StatusCode = 400;
+					return Content (Resources.InvalidPaymentAmountSum);
+				}
+
+				entity.Updater = CurrentUser.Employee;
+				entity.ModificationTime = DateTime.Now;
 
 				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
@@ -711,7 +719,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return Json (new {
 				id = entity.Id,
-				value = entity.FormattedValueFor (x => x.PaymentAmount)
+				value = entity.FormattedValueFor (x => x.PaymentAmount),
+				itemsChanged = true
 			});
 		}
 
@@ -868,6 +877,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_Relations", item.Relations);
 		}
 
+		public ActionResult PaymentTotals (int id)
+		{
+			var order = FiscalDocument.Find (id);
+			return PartialView ("_PaymentTotals", order);
+		}
+
 		[HttpPost]
 		public ActionResult SetRelationInstallment (int id, int value)
 		{
@@ -936,20 +951,23 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult SetRelationAmount (int id, string value)
 		{
 			var entity = FiscalDocumentRelation.Find (id);
-			bool success;
-			decimal val;
 
 			if (entity.Document.IsCompleted || entity.Document.IsCancelled) {
 				Response.StatusCode = 400;
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			success = decimal.TryParse (value.Trim (), out val);
-
-			if (success) {
+			if (decimal.TryParse (value.Trim (), NumberStyles.Currency, null, out decimal val)) {
 				if (val <= 0m) {
 					Response.StatusCode = 400;
 					return Content (Resources.InvalidPaymentAmount);
+				}
+
+				entity.Document.Relations.Single (x => x.Id == entity.Id).Amount = val;
+
+				if (entity.Document.PaymentAmount < entity.Document.Paid) {
+					Response.StatusCode = 400;
+					return Content (Resources.InvalidPaymentAmountSum);
 				}
 
 				entity.Amount = val;
@@ -963,7 +981,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return Json (new {
 				id = entity.Id,
-				value = entity.FormattedValueFor (x => x.Amount)
+				value = entity.FormattedValueFor (x => x.Amount),
+				itemsChanged = true
 			});
 		}
 

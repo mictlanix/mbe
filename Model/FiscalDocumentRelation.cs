@@ -74,6 +74,12 @@ namespace Mictlanix.BE.Model {
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "OutstandingBalance", ResourceType = typeof (Resources))]
+		public decimal AmountEx {
+			get { return Amount / ExchangeRate; }
+		}
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "OutstandingBalance", ResourceType = typeof (Resources))]
 		public decimal OutstandingBalance {
 			get { return PreviousBalance - Amount; }
 		}

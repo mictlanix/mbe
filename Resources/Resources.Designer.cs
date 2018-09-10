@@ -4672,5 +4672,17 @@ namespace Mictlanix.BE {
                 return ResourceManager.GetString("InvalidPaymentAmount", resourceCulture);
             }
         }
+        
+        public static string TotalAmount {
+            get {
+                return ResourceManager.GetString("TotalAmount", resourceCulture);
+            }
+        }
+        
+        public static string InvalidPaymentAmountSum {
+            get {
+                return ResourceManager.GetString("InvalidPaymentAmountSum", resourceCulture);
+            }
+        }
     }
 }

@@ -919,14 +919,6 @@
     <Content Include="Scripts\locales\bootstrap-datepicker-en-CA.min.js" />
     <Content Include="Scripts\bootstrap-datepicker.min.js" />
     <Content Include="Scripts\bootstrap-datepicker.js" />
-    <Content Include="Contents\bootstrap-datepicker3.standalone.min.css" />
-    <Content Include="Contents\bootstrap-datepicker3.standalone.css" />
-    <Content Include="Contents\bootstrap-datepicker3.min.css" />
-    <Content Include="Contents\bootstrap-datepicker3.css" />
-    <Content Include="Contents\bootstrap-datepicker.standalone.min.css" />
-    <Content Include="Contents\bootstrap-datepicker.standalone.css" />
-    <Content Include="Contents\bootstrap-datepicker.min.css" />
-    <Content Include="Contents\bootstrap-datepicker.css" />
     <Content Include="Views\FiscalDocuments\EditPayment.cshtml" />
     <Content Include="Views\FiscalDocuments\_PaymentEditorView.cshtml" />
     <Content Include="Content\bootstrap-datepicker.css" />
@@ -939,6 +931,10 @@
     <Content Include="Content\bootstrap-datepicker3.standalone.min.css" />
     <Content Include="Views\FiscalDocuments\_RelationEditorView.cshtml" />
     <Content Include="Views\FiscalDocuments\_Relations.cshtml" />
+    <Content Include="Views\FiscalDocuments\_PaymentTotals.cshtml" />
+    <Content Include="Views\FiscalDocuments\ViewPayment.cshtml" />
+    <Content Include="Views\FiscalDocuments\_PaymentDisplayView.cshtml" />
+    <Content Include="Views\FiscalDocuments\_RelationDisplayView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\fonts\" />
@@ -1193,10 +1189,6 @@
     <None Include="docs\MySqlConnection.xml" />
     <None Include="docs\MySqlCommandBuilder.xml" />
     <None Include="docs\MySqlCommand.xml" />
-    <None Include="Contents\bootstrap-datepicker3.standalone.css.map" />
-    <None Include="Contents\bootstrap-datepicker3.css.map" />
-    <None Include="Contents\bootstrap-datepicker.standalone.css.map" />
-    <None Include="Contents\bootstrap-datepicker.css.map" />
     <None Include="Content\bootstrap-datepicker.css.map" />
     <None Include="Content\bootstrap-datepicker.standalone.css.map" />
     <None Include="Content\bootstrap-datepicker3.css.map" />
