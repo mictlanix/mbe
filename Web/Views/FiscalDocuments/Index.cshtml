@@ -8,6 +8,7 @@
     ViewBag.Title = Resources.FiscalDocuments;
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = CurrentUser.GetPrivilege (SystemObjects.FiscalDocuments);
+    var PrivilegePR = CurrentUser.GetPrivilege (SystemObjects.PaymentReceipt);
 }
 
 <div class="page-header">
@@ -17,12 +18,12 @@
 	    @Html.HiddenFor(x => x.Limit)
 		<div class="row">
 	        <div class="col-xs-4 text-right">
-	        @if(Privilege.AllowCreate) {
-
+            @if (Privilege.AllowCreate) {
                 <div class="btn-group">
                     <a class="btn btn-primary open-modal" href="/FiscalDocuments/New" data-modal-id="fiscalDocument-modal">
                         <span class="glyphicon glyphicon-plus"></span>
                     </a>
+                @if (PrivilegePR.AllowCreate) {
                     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="caret"></span>
                         <span class="sr-only">Toggle Dropdown</span>
@@ -30,6 +31,7 @@
                     <ul class="dropdown-menu">
                         <li><a class="open-modal" href="/FiscalDocuments/NewPayment" data-modal-id="fiscalDocument-modal">@Resources.PaymentReceipt</a></li>
                     </ul>
+                }
                 </div>
 	        }
 	        </div>
