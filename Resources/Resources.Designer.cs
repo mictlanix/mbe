@@ -4684,5 +4684,11 @@ namespace Mictlanix.BE {
                 return ResourceManager.GetString("InvalidPaymentAmountSum", resourceCulture);
             }
         }
+        
+        public static string InstallmentPaymentShort {
+            get {
+                return ResourceManager.GetString("InstallmentPaymentShort", resourceCulture);
+            }
+        }
     }
 }

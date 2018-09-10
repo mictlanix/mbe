@@ -129,7 +129,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			if (model.IsCompleted) {
 				var batch = TaxpayerBatch.Queryable.First (x => x.Batch == model.Batch);
-				view = string.Format ("Print{0:00}{1}", model.Version * 10, batch.Template);
+				var template = Newtonsoft.Json.JsonConvert.DeserializeObject<Template> (batch.Template);
+				view = string.Format ("Print{0:00}{1}", model.Version * 10, template.Name);
 			}
 
 			return View (view, model);
@@ -259,6 +260,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			if (item.Type == FiscalDocumentType.PaymentReceipt) {
 				item.Terms = PaymentTerms.Immediate;
 				item.PaymentMethod = PaymentMethod.Cash;
+				item.Usage = SatCfdiUsage.TryFind ("P01");
 			}
 
 			using (var scope = new TransactionScope ()) {
@@ -1504,15 +1506,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			if (int.TryParse (pattern, out serial) && serial > 0) {
 				query = from x in FiscalDocument.Queryable
-					where x.IsCompleted && !x.IsCancelled &&
+					where x.Type != FiscalDocumentType.PaymentReceipt && x.Type != FiscalDocumentType.CreditNote &&
+						x.IsCompleted && !x.IsCancelled &&
 						x.Recipient == entity.Recipient &&
-		                                x.Issuer.Id == entity.Issuer.Id &&
+						x.Issuer.Id == entity.Issuer.Id &&
 						(x.Id == serial || x.Serial == serial)
 					orderby x.Issued descending
 					select x;
 			} else {
 				query = from x in FiscalDocument.Queryable
-					where x.IsCompleted && !x.IsCancelled &&
+					where x.Type != FiscalDocumentType.PaymentReceipt && x.Type != FiscalDocumentType.CreditNote &&
+						x.IsCompleted && !x.IsCancelled &&
 						x.Recipient == entity.Recipient &&
 						x.Issuer.Id == entity.Issuer.Id &&
 						x.StampId.Contains (pattern)
