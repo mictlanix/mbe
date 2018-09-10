@@ -2459,4 +2459,7 @@ Atte: {1}.</value>
   <data name="InvalidPaymentAmountSum" xml:space="preserve">
     <value>El Importe Total debe ser mayor o igual a la suma de los Importes Pagados.</value>
   </data>
+  <data name="InstallmentPaymentShort" xml:space="preserve">
+    <value>Núm. Parc.</value>
+  </data>
 </root>
