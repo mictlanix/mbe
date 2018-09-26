@@ -172,10 +172,6 @@ namespace Mictlanix.BE.Web.Helpers {
 			get { return ConfigurationManager.AppSettings["ProFactCode"]; }
 		}
 
-		public static decimal DefaultPrice {
-			get { return Convert.ToDecimal (ConfigurationManager.AppSettings["DefaultPrice"]); }
-		}
-
 		public static string LogFilePattern {
 			get { return ConfigurationManager.AppSettings["LogFilePattern"]; }
 		}
