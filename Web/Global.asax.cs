@@ -28,18 +28,14 @@ namespace Mictlanix.BE.Web
 		{
 			routes.IgnoreRoute ("{resource}.axd/{*pathInfo}");
 
+			routes.MapMvcAttributeRoutes ();
+
 			routes.MapRoute (
 				"Barcodes",
 				"Barcodes/{action}/{id}.png",
 				new { controller = "Barcodes", action = "Code128" }
 			);
-			
-			routes.MapRoute (
-				"FiscalReport",
-				"FiscalDocuments/Report/{taxpayer}/{year}/{month}",
-				new { controller = "FiscalDocuments", action = "Report", taxpayer = @"\w{12,13}", year = @"\d{4}", month = @"\d{2}" }
-			);
-			
+
 			routes.MapRoute (
 				"Products_AddLabel",
 				"Products/{id}/AddLabel/{value}",
@@ -69,7 +65,6 @@ namespace Mictlanix.BE.Web
 				"Inventory/SetWarehouse/{source}/{reference}",
 				new { controller = "Inventory", action = "SetWarehouse", source = @"\d+", reference = @"\d+" }
 			);
-
 
 			routes.MapRoute (
 				"Default", // Route name
