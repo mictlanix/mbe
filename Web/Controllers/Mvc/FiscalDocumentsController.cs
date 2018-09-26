@@ -45,6 +45,7 @@ using System.Globalization;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
+	[RoutePrefix ("FiscalDocuments")]
 	public class FiscalDocumentsController : CustomController {
 		public ViewResult Index ()
 		{
@@ -176,7 +177,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			});
 		}
 
-		public ActionResult New ()
+		[HttpGet]
+		[Route (@"New/{type}")]
+		public ActionResult New (FiscalDocumentType type)
 		{
 			var store = WebConfig.Store;
 
@@ -185,23 +188,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			var item = new FiscalDocument {
-				Type = FiscalDocumentType.Invoice,
-				Issuer = store.Taxpayer
-			};
-
-			return PartialView ("_Create", item);
-		}
-
-		public ActionResult NewPayment ()
-		{
-			var store = WebConfig.Store;
-
-			if (store == null) {
-				return View ("InvalidStore");
-			}
-
-			var item = new FiscalDocument {
-				Type = FiscalDocumentType.PaymentReceipt,
+				Type = type,
 				Issuer = store.Taxpayer
 			};
 
@@ -209,6 +196,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
+		[Route (@"New")]
 		public ActionResult New (FiscalDocument item)
 		{
 			TaxpayerBatch batch = null;
@@ -293,8 +281,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var item = FiscalDocument.TryFind (id);
 			var qry = from x in TaxpayerBatch.Queryable
-                                  where x.Taxpayer.Id == item.Issuer.Id && x.Type == item.Type
-				  select x.Batch;
+					  where x.Taxpayer.Id == item.Issuer.Id && x.Type == item.Type
+					  select x.Batch;
 			var list = from x in qry.Distinct ().ToList ()
 				   select new { value = x, text = x };
 
@@ -1438,26 +1426,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			return RedirectToAction ("Index");
-		}
-
-		public ViewResult Reports ()
-		{
-			var query = from x in FiscalDocument.Queryable
-				    where x.Version < 3 && x.IsCompleted
-				    select new { x.Issuer.Id, x.Issuer.Name, x.Issued.Value.Month, x.Issued.Value.Year };
-			var query2 = from x in FiscalDocument.Queryable
-				     where x.Version < 3 && x.IsCompleted && x.IsCancelled
-				     select new { x.Issuer.Id, x.Issuer.Name, x.CancellationDate.Value.Month, x.CancellationDate.Value.Year };
-			var items = from x in query.ToList ().Union (query2.ToList ()).Distinct ()
-				    orderby x.Year descending, x.Month descending, x.Id ascending
-				    select new FiscalReport {
-					    TaxpayerId = x.Id,
-					    TaxpayerName = x.Name,
-					    Month = x.Month,
-					    Year = x.Year
-				    };
-
-			return View (items.ToList ());
 		}
 
 		public JsonResult GetSuggestions (int id, string pattern)
