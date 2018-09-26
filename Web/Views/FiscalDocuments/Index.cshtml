@@ -20,18 +20,19 @@
 	        <div class="col-xs-4 text-right">
             @if (Privilege.AllowCreate) {
                 <div class="btn-group">
-                    <a class="btn btn-primary open-modal" href="/FiscalDocuments/New" data-modal-id="fiscalDocument-modal">
+                    <a class="btn btn-primary open-modal" href="/FiscalDocuments/New/Invoice" data-modal-id="fiscalDocument-modal">
                         <span class="glyphicon glyphicon-plus"></span>
                     </a>
-                @if (PrivilegePR.AllowCreate) {
                     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="caret"></span>
                         <span class="sr-only">Toggle Dropdown</span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="open-modal" href="/FiscalDocuments/NewPayment" data-modal-id="fiscalDocument-modal">@Resources.PaymentReceipt</a></li>
+                        <li><a class="open-modal" href="/FiscalDocuments/New/CreditNote" data-modal-id="fiscalDocument-modal">@Resources.CreditNote</a></li>
+                    @if (PrivilegePR.AllowCreate) {
+                        <li><a class="open-modal" href="/FiscalDocuments/New/PaymentReceipt" data-modal-id="fiscalDocument-modal">@Resources.PaymentReceipt</a></li>
+                    }
                     </ul>
-                }
                 </div>
 	        }
 	        </div>
