@@ -125,8 +125,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				foreach (var l in PriceList.Queryable.ToList ()) {
 					var price = new ProductPrice {
 						Product = item,
-						List = l,
-						Value = WebConfig.DefaultPrice
+						List = l
 					};
 					price.Create ();
 				}
