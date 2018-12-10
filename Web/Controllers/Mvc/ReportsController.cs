@@ -43,13 +43,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 	public class ReportsController : CustomController {
 		#region Stock & Kardex
 
-		public ViewResult WarehouseStockReport () {
+		public ViewResult WarehouseStockReport ()
+		{
 
 			return View ();
 		}
 
 		[HttpPost]
-		public ActionResult WarehouseStockReport (int warehouse, string label, string brand, string productModel) {
+		public ActionResult WarehouseStockReport (int warehouse, string label, string brand, string productModel)
+		{
 
 			string sql = @"SELECT p.product_id id, p.brand Brand, p.model Model, p.code Code, p.name Name, SUM(quantity) Quantity
                             FROM lot_serial_tracking l 
@@ -73,7 +75,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			sql += "GROUP BY l.product";
 
-			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("Id", NHibernateUtil.Int32);
@@ -103,13 +105,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_WarehouseStockReport", items);
 		}
 
-		public ViewResult WarehouseStockByLotReport () {
+		public ViewResult WarehouseStockByLotReport ()
+		{
 
 			return View ();
 		}
 
 		[HttpPost]
-		public ActionResult WarehouseStockByLotReport (int warehouse, string brand) {
+		public ActionResult WarehouseStockByLotReport (int warehouse, string brand)
+		{
 
 			string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name, l.lot_number LotNumber, l.expiration_date ExpirationDate, SUM(quantity) Quantity
                             FROM lot_serial_tracking l INNER JOIN product p ON l.product = p.product_id
@@ -122,7 +126,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				sql = sql.Replace ("WHERE_BRAND", "AND p.brand = :brand");
 			}
 
-			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("Brand", NHibernateUtil.String);
@@ -145,13 +149,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_WarehouseStockByLotReport", items);
 		}
 
-		public ViewResult WarehouseStockBySerialNumberReport () {
+		public ViewResult WarehouseStockBySerialNumberReport ()
+		{
 
 			return View ();
 		}
 
 		[HttpPost]
-		public ActionResult WarehouseStockBySerialNumberReport (int warehouse) {
+		public ActionResult WarehouseStockBySerialNumberReport (int warehouse)
+		{
 
 			string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name, l.lot_number LotNumber, 
 					l.expiration_date ExpirationDate, l.serial_number SerialNumber, SUM(quantity) Quantity
@@ -160,7 +166,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
                             GROUP BY l.product, l.lot_number, l.expiration_date, l.serial_number
 							HAVING SUM(quantity) <> 0";
 
-			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("Brand", NHibernateUtil.String);
@@ -180,14 +186,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_WarehouseStockBySerialNumberReport", items);
 		}
 
-		public ViewResult Kardex () {
+		public ViewResult Kardex ()
+		{
 
 			ViewBag.Title = Resources.Kardex;
 			return View (new DateRange (DateTime.Now, DateTime.Now));
 		}
 
 		[HttpPost]
-		public ActionResult Kardex (int warehouse, int product, DateRange dates) {
+		public ActionResult Kardex (int warehouse, int product, DateRange dates)
+		{
 
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
@@ -203,7 +211,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
                             GROUP BY DATE(l.date), l.source, l.reference, l.lot_number, l.expiration_date
                             ORDER BY l.date";
 
-			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("Date", NHibernateUtil.Date);
@@ -224,14 +232,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_Kardex", items);
 		}
 
-		public ViewResult SerialNumberKardex () {
+		public ViewResult SerialNumberKardex ()
+		{
 
 			ViewBag.Title = Resources.SerialNumberKardex;
 			return View ("Kardex", new DateRange (DateTime.Now, DateTime.Now));
 		}
 
 		[HttpPost]
-		public ActionResult SerialNumberKardex (int warehouse, int product, DateRange dates) {
+		public ActionResult SerialNumberKardex (int warehouse, int product, DateRange dates)
+		{
 
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
@@ -246,7 +256,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
                             WHERE warehouse = :warehouse AND product = :product AND date >= :start AND date <= :end
                             ORDER BY l.serial_number, l.date";
 
-			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("Date", NHibernateUtil.Date);
@@ -499,7 +509,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		#endregion
 
-		public ViewResult CustomerDebt () {
+		public ViewResult CustomerDebt ()
+		{
 
 			ViewBag.EditorField = "customer";
 			ViewBag.EditorTemplate = "CustomerSelector";
@@ -508,7 +519,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult CustomerDebt (int customer, DateRange dates) {
+		public ActionResult CustomerDebt (int customer, DateRange dates)
+		{
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var query = from x in SalesOrder.Queryable
@@ -521,13 +533,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_CustomerDebt", query.ToList ());
 		}
 
-		public ViewResult CustomersReport () {
+		public ViewResult CustomersReport ()
+		{
 
 			return View (new Search<Customer> ());
 		}
 
 		[HttpPost]
-		public ActionResult CustomersReport (Search<Customer> search) {
+		public ActionResult CustomersReport (Search<Customer> search)
+		{
 
 			if (ModelState.IsValid) {
 				search = GetCustomers (search);
@@ -536,7 +550,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_CustomersReport", search);
 		}
 
-		Search<Customer> GetCustomers (Search<Customer> search) {
+		Search<Customer> GetCustomers (Search<Customer> search)
+		{
 
 			if (string.IsNullOrWhiteSpace (search.Pattern)) {
 				var qry = from x in Customer.Queryable
@@ -560,7 +575,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return search;
 		}
 
-		public ViewResult FiscalDocuments () {
+		public ViewResult FiscalDocuments ()
+		{
+			if (WebConfig.Store == null) {
+				return View ("InvalidStore");
+			}
 
 			ViewBag.EditorField = "taxpayer";
 			ViewBag.EditorTemplate = "TaxpayerSelector";
@@ -573,7 +592,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult FiscalDocuments (string taxpayer, DateRange dates) {
+		public ActionResult FiscalDocuments (string taxpayer, DateRange dates)
+		{
 
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
@@ -586,7 +606,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_FiscalDocuments", query.ToList ());
 		}
 
-		public ViewResult CustomerSalesOrders () {
+		public ViewResult CustomerSalesOrders ()
+		{
 
 			ViewBag.EditorField = "customer";
 			ViewBag.EditorTemplate = "CustomerSelector";
@@ -595,7 +616,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult CustomerSalesOrders (int customer, DateRange dates) {
+		public ActionResult CustomerSalesOrders (int customer, DateRange dates)
+		{
 
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
@@ -609,7 +631,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_CustomerSalesOrders", query.ToList ());
 		}
 
-		public ViewResult ProductSalesByCustomer () {
+		public ViewResult ProductSalesByCustomer ()
+		{
 
 			ViewBag.EditorField = "customer";
 			ViewBag.EditorTemplate = "CustomerSelector";
@@ -620,7 +643,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		//FIXME: Discount
 		[HttpPost]
-		public ActionResult ProductSalesByCustomer (int customer, DateRange dates) {
+		public ActionResult ProductSalesByCustomer (int customer, DateRange dates)
+		{
 
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
@@ -653,7 +677,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_ProductSalesByCustomer", items);
 		}
 
-		public ViewResult ProductSalesByModel () {
+		public ViewResult ProductSalesByModel ()
+		{
 
 			ViewBag.EditorField = "productModel";
 			ViewBag.EditorTemplate = "ProductModelSelector";
@@ -663,7 +688,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		//FIXME: Discount
 		[HttpPost]
-		public ActionResult ProductSalesByModel (string productModel, DateRange dates) {
+		public ActionResult ProductSalesByModel (string productModel, DateRange dates)
+		{
 
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
@@ -700,7 +726,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_ProductSalesByCategory", items);
 		}
 
-		public ViewResult ProductSalesByBrand () {
+		public ViewResult ProductSalesByBrand ()
+		{
 
 			ViewBag.EditorField = "brand";
 			ViewBag.EditorTemplate = "ProductBrandSelector";
@@ -710,7 +737,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		//FIXME: Discount
 		[HttpPost]
-		public ActionResult ProductSalesByBrand (string brand, DateRange dates) {
+		public ActionResult ProductSalesByBrand (string brand, DateRange dates)
+		{
 
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
@@ -747,7 +775,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_ProductSalesByCategory", items);
 		}
 
-		public ViewResult SalesBySalesPerson () {
+		public ViewResult SalesBySalesPerson ()
+		{
+			if (WebConfig.Store == null) {
+				return View ("InvalidStore");
+			}
 
 			ViewBag.EditorField = "store";
 			ViewBag.EditorTemplate = "StoreSelector";
@@ -760,7 +792,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult SalesBySalesPerson (int store, DateRange dates) {
+		public ActionResult SalesBySalesPerson (int store, DateRange dates)
+		{
 
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
@@ -775,7 +808,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 							m.date >= :start AND m.date <= :end
 						GROUP BY salesperson, first_name, last_name";
 
-			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				return session.CreateSQLQuery (sql)
 				    .SetParameter ("start", start)
 				    .SetParameter ("end", end)
@@ -786,7 +819,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_SalesBySalesPerson", items);
 		}
 
-		public ViewResult SalesByCustomer () {
+		public ViewResult SalesByCustomer ()
+		{
+			if (WebConfig.Store == null) {
+				return View ("InvalidStore");
+			}
 
 			ViewBag.EditorField = "store";
 			ViewBag.EditorTemplate = "StoreSelector";
@@ -799,7 +836,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult SalesByCustomer (int store, DateRange dates) {
+		public ActionResult SalesByCustomer (int store, DateRange dates)
+		{
 
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
@@ -814,7 +852,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 							m.date >= :start AND m.date <= :end
 						GROUP BY customer";
 
-			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				return session.CreateSQLQuery (sql)
 				    .SetParameter ("start", start)
 				    .SetParameter ("end", end)
@@ -825,7 +863,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_SalesByCustomer", items);
 		}
 
-		public ViewResult SalesByProduct () {
+		public ViewResult SalesByProduct ()
+		{
+			if (WebConfig.Store == null) {
+				return View ("InvalidStore");
+			}
 
 			ViewBag.EditorField = "store";
 			ViewBag.EditorTemplate = "StoreSelector";
@@ -838,7 +880,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult SalesByProduct (int store, DateRange dates) {
+		public ActionResult SalesByProduct (int store, DateRange dates)
+		{
 
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
@@ -853,7 +896,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 							m.date >= :start AND m.date <= :end
 						GROUP BY product";
 
-			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				return session.CreateSQLQuery (sql)
 				    .SetParameter ("start", start)
 				    .SetParameter ("end", end)
@@ -864,7 +907,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_SalesByProduct", items);
 		}
 
-		public ViewResult SalesPersonOrders () {
+		public ViewResult SalesPersonOrders ()
+		{
 
 			ViewBag.EditorField = "employee";
 			ViewBag.EditorTemplate = "EmployeeSelector";
@@ -873,7 +917,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult SalesPersonOrders (int employee, DateRange dates) {
+		public ActionResult SalesPersonOrders (int employee, DateRange dates)
+		{
 
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
@@ -890,7 +935,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 							m.date >= :start AND m.date <= :end
 						GROUP BY sales_order";
 
-			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
@@ -910,7 +955,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_SalesPersonOrders", items);
 		}
 
-		public ViewResult SalesOrderSummary () {
+		public ViewResult SalesOrderSummary ()
+		{
+			if (WebConfig.Store == null) {
+				return View ("InvalidStore");
+			}
 
 			ViewBag.EditorField = "store";
 			ViewBag.EditorTemplate = "StoreSelector";
@@ -923,7 +972,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult SalesOrderSummary (int store, DateRange dates) {
+		public ActionResult SalesOrderSummary (int store, DateRange dates)
+		{
 
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
@@ -942,7 +992,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 							m.date >= :start AND m.date <= :end
 						GROUP BY sales_order";
 
-			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("Date", NHibernateUtil.DateTime);
@@ -965,7 +1015,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_SalesOrderSummary", items);
 		}
 
-		public ViewResult ProductSalesBySalesPerson () {
+		public ViewResult ProductSalesBySalesPerson ()
+		{
 
 			ViewBag.EditorField = "employee";
 			ViewBag.EditorTemplate = "EmployeeSelector";
@@ -974,7 +1025,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult ProductSalesBySalesPerson (int employee, DateRange dates) {
+		public ActionResult ProductSalesBySalesPerson (int employee, DateRange dates)
+		{
 
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
@@ -989,7 +1041,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 							m.date >= :start AND m.date <= :end
 						GROUP BY d.product";
 
-			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("Brand", NHibernateUtil.String);
@@ -1010,7 +1062,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_ProductSalesBySalesPerson", items);
 		}
 
-		public ViewResult ProductSalesBySalesPersonAndLabel () {
+		public ViewResult ProductSalesBySalesPersonAndLabel ()
+		{
 
 			ViewBag.EditorField = "label";
 			ViewBag.EditorTemplate = "LabelSelector";
@@ -1019,7 +1072,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult ProductSalesBySalesPersonAndLabel (int employee, int? label, DateRange dates) {
+		public ActionResult ProductSalesBySalesPersonAndLabel (int employee, int? label, DateRange dates)
+		{
 
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
@@ -1042,7 +1096,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				sql = sql.Replace ("JOIN_LABEL", string.Empty).Replace ("WHERE_LABEL", string.Empty);
 			}
 
-			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("Brand", NHibernateUtil.String);
@@ -1067,7 +1121,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_ProductSalesBySalesPerson", items);
 		}
 
-		public ViewResult ProductSalesBySalesPersonAndBrand () {
+		public ViewResult ProductSalesBySalesPersonAndBrand ()
+		{
 
 			ViewBag.EditorField = "brand";
 			ViewBag.EditorTemplate = "ProductBrandSelector";
@@ -1076,7 +1131,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult ProductSalesBySalesPersonAndBrand (int employee, string brand, DateRange dates) {
+		public ActionResult ProductSalesBySalesPersonAndBrand (int employee, string brand, DateRange dates)
+		{
 
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
@@ -1097,7 +1153,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				sql = sql.Replace ("WHERE_BRAND", "AND p.brand = :brand");
 			}
 
-			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("Brand", NHibernateUtil.String);
@@ -1122,7 +1178,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_ProductSalesBySalesPerson", items);
 		}
 
-		public ViewResult ProductSalesBySalesPersonAndModel () {
+		public ViewResult ProductSalesBySalesPersonAndModel ()
+		{
 
 			ViewBag.EditorField = "productModel";
 			ViewBag.EditorTemplate = "ProductModelSelector";
@@ -1131,7 +1188,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult ProductSalesBySalesPersonAndModel (int employee, string productModel, DateRange dates) {
+		public ActionResult ProductSalesBySalesPersonAndModel (int employee, string productModel, DateRange dates)
+		{
 
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
@@ -1152,7 +1210,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				sql = sql.Replace ("WHERE_MODEL", "AND p.model = :model");
 			}
 
-			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("Brand", NHibernateUtil.String);
@@ -1177,7 +1235,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_ProductSalesBySalesPerson", items);
 		}
 
-		public ViewResult SalesPersonOrdersAndRefunds () {
+		public ViewResult SalesPersonOrdersAndRefunds ()
+		{
 
 			ViewBag.EditorField = "employee";
 			ViewBag.EditorTemplate = "EmployeeSelector";
@@ -1186,7 +1245,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult SalesPersonOrdersAndRefunds (int employee, DateRange dates) {
+		public ActionResult SalesPersonOrdersAndRefunds (int employee, DateRange dates)
+		{
 
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
@@ -1203,7 +1263,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 							m.date >= :start AND m.date <= :end
 						GROUP BY sales_order";
 
-			var orders = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var orders = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
@@ -1235,7 +1295,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						s.date >= :start AND s.date <= :end
 					GROUP BY sales_order";
 
-			var refunds = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var refunds = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
@@ -1260,7 +1320,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_SalesPersonOrdersAndRefunds", items);
 		}
 
-		public ViewResult ProductsBySupplier () {
+		public ViewResult ProductsBySupplier ()
+		{
 
 			ViewBag.EditorField = "supplier";
 			ViewBag.EditorTemplate = "SupplierSelector";
@@ -1269,7 +1330,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult ProductsBySupplier (string supplier) {
+		public ActionResult ProductsBySupplier (string supplier)
+		{
 
 			String sql = @" SELECT 	s.supplier_id SupplierId, s.code SupplierCode, 
                             s.name SupplierName, s.comment SupplierComment, 
@@ -1283,7 +1345,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			sql += " order by s.supplier_id, p.product_id desc;";
 
-			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("SupplierId", NHibernateUtil.Int32);
@@ -1306,7 +1368,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_ProductsBySupplierReport", items);
 		}
 
-		public ViewResult ProductsOrderAndRefundsBySalesPerson () {
+		public ViewResult ProductsOrderAndRefundsBySalesPerson ()
+		{
 
 			ViewBag.EditorField = "employee";
 			ViewBag.EditorTemplate = "EmployeeSelector";
@@ -1315,7 +1378,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult ProductsOrderAndRefundsBySalesPerson (int employee, DateRange dates) {
+		public ActionResult ProductsOrderAndRefundsBySalesPerson (int employee, DateRange dates)
+		{
 
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
@@ -1335,7 +1399,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
                             GROUP BY sales_order_detail_id";
 
 
-			var orders = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var orders = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
@@ -1357,7 +1421,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return query.DynamicList ();
 			}, null);
 
-			sql =  @"SELECT sales_order SalesOrder, customer_refund Refund, s.date Date, c.name Customer, product_name Product, 
+			sql = @"SELECT sales_order SalesOrder, customer_refund Refund, s.date Date, c.name Customer, product_name Product, 
 				d.quantity Quantity, product_code Code, model Model,
 						GROUP_CONCAT(DISTINCT (SELECT GROUP_CONCAT(DISTINCT f.batch, f.serial SEPARATOR ' ')
 						FROM fiscal_document_detail fd LEFT JOIN fiscal_document f ON fd.document = f.fiscal_document_id
@@ -1373,7 +1437,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						s.date >= :start AND s.date <= :end
                             GROUP BY customer_refund_detail_id";
 
-			var refunds = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var refunds = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
@@ -1402,7 +1466,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_ProductsOrderAndRefundsBySalesPerson", items);
 		}
 
-		public ViewResult PrintReceivedPayments (int store, DateTime start, DateTime end) {
+		public ViewResult PrintReceivedPayments (int store, DateTime start, DateTime end)
+		{
 
 			var qry = SalesOrderPayment.Queryable.Where (x => x.SalesOrder.IsPaid && x.Payment.Date > start.Date
 									     && x.Payment.Date < end.Date.AddDays (1).AddMilliseconds (-1)
@@ -1419,13 +1484,18 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View ("_PdfReceivedPayments", qry);
 		}
 
-		public ViewResult ReceivedPayments () {
+		public ViewResult ReceivedPayments ()
+		{
+			if (WebConfig.Store == null) {
+				return View ("InvalidStore");
+			}
 
 			return View (new DateRange { StartDate = DateTime.Now, EndDate = DateTime.Now });
 		}
 
 		[HttpPost]
-		public ActionResult ReceivedPayments (DateRange dates) {
+		public ActionResult ReceivedPayments (DateRange dates)
+		{
 
 			var received_payments = SalesOrderPayment.Queryable.Where (x => x.SalesOrder.IsPaid && x.Payment.Date > dates.StartDate
 									     && x.Payment.Date < dates.EndDate.Date.AddDays (1).AddMilliseconds (-1)
@@ -1442,13 +1512,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_ReceivedPayments", received_payments);
 		}
 
-		public ViewResult CreditAndCollection () {
+		public ViewResult CreditAndCollection ()
+		{
+			if (WebConfig.Store == null) {
+				return View ("InvalidStore");
+			}
+
 			return View (new DateRange { StartDate = DateTime.Now, EndDate = DateTime.Now });
 		}
 
 		[HttpPost]
-		public ActionResult CreditAndCollection (DateRange dates) {
-			var summary = new CreditAndCollectionSummary (WebConfig.Store, dates.StartDate, dates.EndDate );
+		public ActionResult CreditAndCollection (DateRange dates)
+		{
+			var summary = new CreditAndCollectionSummary (WebConfig.Store, dates.StartDate, dates.EndDate);
 			return PartialView ("_CreditAndCollection", summary);
 		}
 
