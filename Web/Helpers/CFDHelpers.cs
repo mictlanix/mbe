@@ -155,7 +155,7 @@ namespace Mictlanix.BE.Web.Helpers {
 
 			int i = 0;
 			foreach (var relation in item.Relations) {
-				pagos.Pago [0].DoctoRelacionado [i] = new PagosPagoDoctoRelacionado {
+				pagos.Pago [0].DoctoRelacionado [i++] = new PagosPagoDoctoRelacionado {
 					IdDocumento = relation.Relation.StampId,
 					Serie = relation.Relation.Batch,
 					Folio = relation.Relation.Serial.ToString (),
