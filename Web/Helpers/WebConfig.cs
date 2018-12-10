@@ -284,12 +284,24 @@ namespace Mictlanix.BE.Web.Helpers {
 
 		#region Request's (Local) Settings
 
+		static string DefaultStore {
+			get { return ConfigurationManager.AppSettings ["DefaultStore"]; }
+		}
+
+		static string DefaultPointOfSale {
+			get { return ConfigurationManager.AppSettings ["DefaultPointOfSale"]; }
+		}
+
 		public static Store Store {
 			get {
-				var cookie = System.Web.HttpContext.Current.Request.Cookies[StoreCookieKey];
+				var cookie = System.Web.HttpContext.Current.Request.Cookies [StoreCookieKey];
 
 				if (cookie != null) {
 					return Store.TryFind (int.Parse (cookie.Value));
+				}
+
+				if (int.TryParse (DefaultStore, out int id)) {
+					return Store.TryFind (id);
 				}
 
 				if (Store.Queryable.Count () == 1) {
@@ -302,10 +314,14 @@ namespace Mictlanix.BE.Web.Helpers {
 
 		public static PointOfSale PointOfSale {
 			get {
-				var cookie = System.Web.HttpContext.Current.Request.Cookies[PointOfSaleCookieKey];
+				var cookie = System.Web.HttpContext.Current.Request.Cookies [PointOfSaleCookieKey];
 
 				if (cookie != null) {
 					return PointOfSale.TryFind (int.Parse (cookie.Value));
+				}
+
+				if (int.TryParse (DefaultPointOfSale, out int id)) {
+					return PointOfSale.TryFind (id);
 				}
 
 				if (PointOfSale.Queryable.Count () == 1) {

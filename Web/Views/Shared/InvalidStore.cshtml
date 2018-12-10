@@ -1,9 +1,10 @@
 ﻿@using Mictlanix.BE
-
 @{
     ViewBag.Title = Resources.InvalidStore;
 }
-
 <h2>@Resources.InvalidStore</h2>
 <p>@Resources.Message_InvalidStore</p>
-<p>@Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })</p>
+<div class="pull-right">
+    @Html.ActionLink(Resources.LocalSettings, "LocalSettings", "Account", new { }, new { @class = "button icon configuration" })
+</div>
+<div class='clearfix'></div>
