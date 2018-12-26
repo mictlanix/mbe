@@ -18,7 +18,7 @@
 @foreach (var item in Model) {
     <tr>
         <td class='text-center'>@item.Code</td>
-        <td class='text-center'>@item.Name</td>
+        <td class='text-left'>@item.Name</td>
         <td class="text-center">@item.LotNumber</td>
         <td class='date'>
             @if (item.ExpirationDate != null) {
@@ -26,7 +26,7 @@
             }
         </td>
         <td class="text-center">@item.SerialNumber</td>
-        <td class='text-center'>@((-1m * item.Quantity).ToString("0.#"))</td>
+        <td class='text-right'>@((-1m * item.Quantity).ToString("0.#"))</td>
     </tr>
 }
 <tr class="total">
