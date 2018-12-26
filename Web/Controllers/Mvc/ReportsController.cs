@@ -50,16 +50,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult WarehouseStockReport (int warehouse, string label, string brand, string productModel)
+		public ActionResult WarehouseStockReport (int warehouse, string label, string brand, string productModel, bool showZeroInventory)
 		{
-
 			string sql = @"SELECT p.product_id id, p.brand Brand, p.model Model, p.code Code, p.name Name, SUM(quantity) Quantity
                             FROM lot_serial_tracking l 
                             INNER JOIN product p ON l.product = p.product_id
                             LEFT JOIN product_label pl ON pl.product = p.product_id
-                            WHERE warehouse = :warehouse
-                            ";
-
+                            WHERE warehouse = :warehouse ";
 
 			if (!string.IsNullOrEmpty (label)) {
 				sql += "AND pl.label = :label ";
@@ -68,12 +65,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			if (!string.IsNullOrWhiteSpace (brand)) {
 				sql += "AND p.brand like :brand ";
 			}
+
 			if (!string.IsNullOrWhiteSpace (productModel)) {
 				sql += "AND p.model like :productModel ";
 			}
 
-
 			sql += "GROUP BY l.product";
+
+			if (!showZeroInventory) {
+				sql += " HAVING SUM(quantity) <> 0 ";
+			}
 
 			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);

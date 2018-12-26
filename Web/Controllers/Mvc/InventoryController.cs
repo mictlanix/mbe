@@ -1204,8 +1204,87 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return RedirectToAction ("Receipts");
 		}
 
-        #endregion
+		public ActionResult ZeroOut (int id)
+		{
+			var entity = InventoryReceipt.Find (id);
+			string sql = @"SELECT p.code Code, p.name Name, s.lot_number LotNumber, s.expiration_date ExpirationDate, s.serial_number SerialNumber, SUM(s.quantity) Quantity
+                            FROM lot_serial_tracking s
+                            INNER JOIN product p ON s.product = p.product_id
+                            WHERE s.warehouse = :warehouse AND s.date < :date
+                            GROUP BY s.product, s.lot_number, s.expiration_date, s.serial_number
+                            HAVING SUM(s.quantity) <> 0";
+
+			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
+
+				query.AddScalar ("Code", NHibernateUtil.String);
+				query.AddScalar ("Name", NHibernateUtil.String);
+				query.AddScalar ("LotNumber", NHibernateUtil.String);
+				query.AddScalar ("ExpirationDate", NHibernateUtil.Date);
+				query.AddScalar ("SerialNumber", NHibernateUtil.String);
+				query.AddScalar ("Quantity", NHibernateUtil.Decimal);
+
+				query.SetInt32 ("warehouse", entity.Warehouse.Id);
+				query.SetDateTime ("date", entity.ModificationTime);
+
+				return query.DynamicList ();
+			}, null);
+
+			return View ("PhysicalCountAdjustment", items);
+		}
+
+		[HttpPost, ActionName ("ZeroOut")]
+		public ActionResult ZeroOutConfirmed (int id)
+		{
+			var entity = InventoryReceipt.Find (id);
+			string sql = @"SELECT s.product ProductId, s.lot_number LotNumber, s.expiration_date ExpirationDate, s.serial_number SerialNumber, SUM(s.quantity) Quantity
+                            FROM lot_serial_tracking s
+                            WHERE s.warehouse = :warehouse AND s.date < :date
+                            GROUP BY s.product, s.lot_number, s.expiration_date, s.serial_number
+                            HAVING SUM(s.quantity) <> 0";
+
+			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
+
+				query.AddScalar ("ProductId", NHibernateUtil.Int32);
+				query.AddScalar ("LotNumber", NHibernateUtil.String);
+				query.AddScalar ("ExpirationDate", NHibernateUtil.Date);
+				query.AddScalar ("SerialNumber", NHibernateUtil.String);
+				query.AddScalar ("Quantity", NHibernateUtil.Decimal);
+
+				query.SetInt32 ("warehouse", entity.Warehouse.Id);
+				query.SetDateTime ("date", entity.ModificationTime);
+
+				return query.DynamicList ();
+			}, null);
+
+			using (var scope = new TransactionScope ()) {
+				var dt = entity.ModificationTime.AddMilliseconds (-1);
+
+				foreach (var x in items) {
+					var item = new LotSerialTracking {
+						Source = TransactionType.InventoryAdjustment,
+						Reference = entity.Id,
+						Date = dt,
+						Warehouse = entity.Warehouse,
+						Product = Product.Find (x.ProductId),
+						Quantity = -x.Quantity,
+						LotNumber = x.LotNumber,
+						ExpirationDate = x.ExpirationDate,
+						SerialNumber = x.SerialNumber
+					};
+
+					item.Create ();
+				}
+
+				scope.Flush ();
+			}
+
+			return RedirectToAction ("Receipts");
+		}
+
+		#endregion
 
 
-    }
+	}
 }
