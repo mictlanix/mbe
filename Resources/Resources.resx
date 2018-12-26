@@ -2462,4 +2462,10 @@ Atte: {1}.</value>
   <data name="InstallmentPaymentShort" xml:space="preserve">
     <value>Núm. Parc.</value>
   </data>
+  <data name="ZeroOutInventory" xml:space="preserve">
+    <value>Cero Inventario</value>
+  </data>
+  <data name="ZeroInventory" xml:space="preserve">
+    <value>Sin Existencia</value>
+  </data>
 </root>

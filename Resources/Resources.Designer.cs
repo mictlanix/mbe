@@ -4690,5 +4690,17 @@ namespace Mictlanix.BE {
                 return ResourceManager.GetString("InstallmentPaymentShort", resourceCulture);
             }
         }
+        
+        public static string ZeroOutInventory {
+            get {
+                return ResourceManager.GetString("ZeroOutInventory", resourceCulture);
+            }
+        }
+        
+        public static string ZeroInventory {
+            get {
+                return ResourceManager.GetString("ZeroInventory", resourceCulture);
+            }
+        }
     }
 }
