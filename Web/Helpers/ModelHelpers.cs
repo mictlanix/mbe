@@ -124,6 +124,15 @@ namespace Mictlanix.BE.Web.Helpers {
 			return string.Join (",", query.ToList ().Distinct ().Select (x => string.Format ("{0}{1:D6}", x.Batch, x.Serial)));
 		}
 
+		public static string ValidataionUrl (this FiscalDocument item)
+		{
+			var data = string.Format (Resources.FiscalDocumentQRCode33FormatString,
+						  item.Issuer.Id, item.Recipient, item.Total, item.StampId,
+						  item.IssuerDigitalSeal.Substring (item.IssuerDigitalSeal.Length - 8));
+
+			return data;
+		}
+
 
 	}
 }
