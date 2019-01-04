@@ -16,9 +16,13 @@
     </td>
     <td class="bool">
 	@if (Model.IsCancelled) {
-		<span class="label label-danger" title="@Resources.Cancelled"><i class="glyphicon glyphicon-remove"></i></span>
+        <a href="@Model.ValidataionUrl()" target="_blank">
+		    <span class="label label-danger" title="@Resources.Cancelled"><i class="glyphicon glyphicon-remove"></i></span>
+        </a>
 	} else if (Model.IsCompleted) {
-		<span class="label label-success" title="@Resources.Active"><i class="glyphicon glyphicon-ok"></i></span>
+        <a href="@Model.ValidataionUrl()" target="_blank">
+		    <span class="label label-success" title="@Resources.Active"><i class="glyphicon glyphicon-ok"></i></span>
+        </a>
 	} else  {
 		<span class="label label-default" title="@Resources.New"><i class="glyphicon glyphicon-pencil"></i></span>
 	}
