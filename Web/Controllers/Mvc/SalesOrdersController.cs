@@ -882,11 +882,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						    null, out val);
 
 			if (success && entity.Price >= 0) {
-
 				var price_in_list = ProductPrice.Queryable.Where (x => x.List == entity.SalesOrder.Customer.PriceList && x.Product == entity.Product).SingleOrDefault ();
-				if (price_in_list.Value > val) {
-					Response.StatusCode = 400;
-					return Content (Resources.Validation_WrongDiscount);
+
+				if (price_in_list != null) {
+					var current_price = price_in_list.Value;
+
+					if (price_in_list.Product.Currency != entity.Currency) {
+						current_price = current_price * CashHelpers.GetTodayExchangeRate (price_in_list.Product.Currency, entity.Currency);
+					}
+
+					if (current_price > val) {
+						Response.StatusCode = 400;
+						return Content (Resources.Validation_WrongDiscount);
+					}
 				}
 
 				entity.Price = val;
