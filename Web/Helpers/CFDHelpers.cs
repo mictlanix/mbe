@@ -78,12 +78,20 @@ namespace Mictlanix.BE.Web.Helpers {
 
 		static bool ProFactCancel (FiscalDocument item)
 		{
-			if (item.Version > 3.2m) {
-				var cli = new ProFactClient (WebConfig.ProFactUser, WebConfig.ProFactUrl);
-				return cli.Cancel (item.Issuer.Id, item.StampId);
-			} else {
-				var cli = new ProFactClient (WebConfig.ProFactUser, WebConfig.ProFactUrlV32);
-				return cli.CancelV32 (item.Issuer.Id, item.StampId);
+			try {
+				if (item.Version > 3.2m) {
+					var cli = new ProFactClient (WebConfig.ProFactUser, WebConfig.ProFactUrl);
+					return cli.Cancel (item.Issuer.Id, item.StampId);
+				} else {
+					var cli = new ProFactClient (WebConfig.ProFactUser, WebConfig.ProFactUrlV32);
+					return cli.CancelV32 (item.Issuer.Id, item.StampId);
+				}
+			} catch (ProFactClientException ex) {
+				if (ex.Code == "202") { // UUID Previamente cancelado
+					return true;
+				}
+
+				throw ex;
 			}
 		}
 
