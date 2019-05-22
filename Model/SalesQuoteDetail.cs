@@ -55,12 +55,12 @@ namespace Mictlanix.BE.Model {
 
 		[Property]
 		[Display (Name = "Price", ResourceType = typeof (Resources))]
-		[DataType (DataType.Currency)]
+		[DisplayFormat (DataFormatString = "{0:C4}")]
 		[Required (ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof (Resources))]
 		public decimal Price { get; set; }
 
 		[Display (Name = "Price", ResourceType = typeof (Resources))]
-		[DataType (DataType.Currency)]
+		[DisplayFormat (DataFormatString = "{0:C4}")]
 		public decimal NetPrice {
 			get { return ModelHelpers.NetPrice (Price, TaxRate, IsTaxIncluded); }
 		}
