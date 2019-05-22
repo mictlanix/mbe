@@ -31,13 +31,15 @@ using System.Linq;
 using Mictlanix.BE.Model;
 using Mictlanix.CFDv33;
 using Mictlanix.ProFact.Client;
+using Mictlanix.DFacture.Client;
+using System.Text;
 
 namespace Mictlanix.BE.Web.Helpers {
 	internal static class CFDHelpers {
 
 		public static Comprobante IssueCFD (FiscalDocument item)
 		{
-			return ProFactStamp (item);
+			return DFactureStamp (item);
 		}
 
 		public static bool CancelCFD (FiscalDocument item)
@@ -46,7 +48,7 @@ namespace Mictlanix.BE.Web.Helpers {
 				return false;
 			}
 
-			return ProFactCancel (item);
+			return DFactureCancel (item);
 		}
 
 		public static Comprobante SignCFD (FiscalDocument item)
@@ -59,13 +61,47 @@ namespace Mictlanix.BE.Web.Helpers {
 			return cfd;
 		}
 
-		static Comprobante ProFactStamp (FiscalDocument item)
+		//static Comprobante ProFactStamp (FiscalDocument item)
+		//{
+		//	var cfd = SignCFD (item);
+		//	var cli = new ProFactClient (WebConfig.ProFactUser, WebConfig.ProFactUrl);
+		//	var id = string.Format ("{0}-{1:D6}", WebConfig.ProFactCode, item.Id);
+		//	//System.IO.File.WriteAllText ("cfd.xml", cfd.ToXmlString ());
+		//	var tfd = cli.Stamp (id, cfd);
+
+		//	if (cfd.Complemento == null) {
+		//		cfd.Complemento = new List<object> ();
+		//	}
+
+		//	cfd.Complemento.Add (tfd);
+
+		//	return cfd;
+		//}
+
+		//static bool ProFactCancel (FiscalDocument item)
+		//{
+		//	try {
+		//		if (item.Version > 3.2m) {
+		//			var cli = new ProFactClient (WebConfig.ProFactUser, WebConfig.ProFactUrl);
+		//			return cli.Cancel (item.Issuer.Id, item.StampId);
+		//		} else {
+		//			var cli = new ProFactClient (WebConfig.ProFactUser, WebConfig.ProFactUrlV32);
+		//			return cli.CancelV32 (item.Issuer.Id, item.StampId);
+		//		}
+		//	} catch (ProFactClientException ex) {
+		//		if (ex.Code == "202") { // UUID Previamente cancelado
+		//			return true;
+		//		}
+
+		//		throw ex;
+		//	}
+		//}
+
+		static Comprobante DFactureStamp (FiscalDocument item)
 		{
 			var cfd = SignCFD (item);
-			var cli = new ProFactClient (WebConfig.ProFactUser, WebConfig.ProFactUrl);
-			var id = string.Format ("{0}-{1:D6}", WebConfig.ProFactCode, item.Id);
-			//System.IO.File.WriteAllText ("cfd.xml", cfd.ToXmlString ());
-			var tfd = cli.Stamp (id, cfd);
+			var cli = new DFactureClient (WebConfig.DFactureUser, WebConfig.DFacturePassword, WebConfig.DFactureUrl);
+			var tfd = cli.Stamp (cfd);
 
 			if (cfd.Complemento == null) {
 				cfd.Complemento = new List<object> ();
@@ -76,23 +112,14 @@ namespace Mictlanix.BE.Web.Helpers {
 			return cfd;
 		}
 
-		static bool ProFactCancel (FiscalDocument item)
+		static bool DFactureCancel (FiscalDocument item)
 		{
-			try {
-				if (item.Version > 3.2m) {
-					var cli = new ProFactClient (WebConfig.ProFactUser, WebConfig.ProFactUrl);
-					return cli.Cancel (item.Issuer.Id, item.StampId);
-				} else {
-					var cli = new ProFactClient (WebConfig.ProFactUser, WebConfig.ProFactUrlV32);
-					return cli.CancelV32 (item.Issuer.Id, item.StampId);
-				}
-			} catch (ProFactClientException ex) {
-				if (ex.Code == "202") { // UUID Previamente cancelado
-					return true;
-				}
-
-				throw ex;
-			}
+			var cer = item.Issuer.Certificates.First (x => x.IsActive);
+			var cli = new DFactureClient (WebConfig.DFactureUser, WebConfig.DFacturePassword, WebConfig.DFactureUrl);
+			return cli.Cancel (item.Issuer.Id, item.Recipient, item.StampId, item.Total.ToString (),
+				      	Convert.ToBase64String (cer.CertificateData),
+				      	Convert.ToBase64String (cer.KeyData),
+					Encoding.UTF8.GetString (cer.KeyPassword));
 		}
 
 		public static bool PrivateKeyTest (byte [] data, byte [] password)

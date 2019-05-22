@@ -157,6 +157,9 @@
     <Reference Include="Gma.QrCodeNet.Encoding">
       <HintPath>..\packages\QrCode.Net.0.4.0.0\lib\net45\Gma.QrCodeNet.Encoding.dll</HintPath>
     </Reference>
+    <Reference Include="Mictlanix.DFactureClient">
+      <HintPath>..\packages\Mictlanix.DFactureClient.3.3.0-beta\lib\net45\Mictlanix.DFactureClient.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">

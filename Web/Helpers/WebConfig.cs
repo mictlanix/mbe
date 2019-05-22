@@ -43,8 +43,8 @@ namespace Mictlanix.BE.Web.Helpers {
 		public const string StoreCookieKey = "Store";
 		public const string PointOfSaleCookieKey = "PointOfSale";
 		public const string CashDrawerCookieKey = "CashDrawer";
-		public static PaymentMethod [] cashier_payment_options = null;
-		public static string [] default_email_cc = null;
+		static PaymentMethod [] cashier_payment_options;
+		static string [] default_email_cc;
 
 		#region Application Global Settings
 
@@ -170,6 +170,18 @@ namespace Mictlanix.BE.Web.Helpers {
 
 		public static string ProFactCode {
 			get { return ConfigurationManager.AppSettings["ProFactCode"]; }
+		}
+
+		public static string DFactureUrl {
+			get { return ConfigurationManager.AppSettings ["DFactureUrl"]; }
+		}
+
+		public static string DFactureUser {
+			get { return ConfigurationManager.AppSettings ["DFactureUser"]; }
+		}
+
+		public static string DFacturePassword {
+			get { return ConfigurationManager.AppSettings ["DFacturePassword"]; }
 		}
 
 		public static string LogFilePattern {
