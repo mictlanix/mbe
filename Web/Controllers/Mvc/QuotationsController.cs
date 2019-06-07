@@ -420,6 +420,32 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			});
 		}
 
+        [HttpPost]
+		public ActionResult SetDate (int id, DateTime? value)
+		{
+			var entity = SalesQuote.Find (id);
+
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			if (value != null) {
+				entity.Date = value.Value;
+				entity.Updater = CurrentUser.Employee;
+				entity.ModificationTime = DateTime.Now;
+
+				using (var scope = new TransactionScope ()) {
+					entity.UpdateAndFlush ();
+				}
+			}
+
+			return Json (new {
+				id = id,
+				value = entity.FormattedValueFor (x => x.Date)
+			});
+		}
+
 		[HttpPost]
 		public ActionResult SetCurrency (int id, string value)
 		{

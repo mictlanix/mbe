@@ -61,44 +61,51 @@
 			</dl>
 		</div>
 	  	<div class='col-xs-4'>
-	  		<dl class='dl-horizontal'>
-				<dt>@Resources.Id</dt>
-				<dd>
-					<span>@Html.DisplayFor(x => x.Id)</span>
-					<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => x.Serial)">
-						<span class="glyphicon glyphicon-exclamation-sign"></span>
-					</a>
-				</dd>
+            <dl class='dl-horizontal'>
+                <dt>@Resources.Id</dt>
+                <dd>
+                    <span>@Html.DisplayFor(x => x.Id)</span>
+                    <a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => x.Serial)">
+                        <span class="glyphicon glyphicon-exclamation-sign"></span>
+                    </a>
+                </dd>
 
-				<dt>@Resources.Date</dt>
-				<dd>@Html.DisplayFor(x => x.Date)</dd>
+                <dt>@Resources.Date</dt>
+                <dd>
+                    <a id='date' data-type='date' data-placement='left' data-pk='@Model.Id'
+                       data-value='@Html.DisplayFor(x => x.Date)' data-url='@Url.Action("SetDate", new { id = Model.Id })'
+                       data-emptytext='@Resources.Empty' data-clear='false'>
+                        @Html.DisplayFor(x => x.Date)
+                    </a>
+                </dd>
+                <!--<dd>@Html.DisplayFor(x => x.Date)</dd>-->
 
-				<dt>@Resources.Currency</dt>
-				<dd>
-			        <a class='editable currency' data-type='select' data-placement='left' data-pk='@Model.Id'
-			        	data-value='@((int)Model.Currency)' data-source='@Url.Action("Currencies", "ExchangeRates")'
-			        	data-url='@Url.Action("SetCurrency", new { id = Model.Id })'
-			        	data-emptytext='@Resources.Empty'>
-			        	@Html.DisplayFor(x => x.Currency)
-			        </a>
-				</dd>
-				<dt>@Resources.ExchangeRate</dt>
-				<dd>
-			        <a id='exchange-rate' class='editable' data-type='text' data-placement='left' data-pk='@Model.Id' 
-			        	data-value='@Html.DisplayFor(x => x.ExchangeRate)' data-url='@Url.Action("SetExchangeRate", new { id = Model.Id })'
-			        	data-inputclass='input-mini' data-emptytext='@Resources.Empty'>
-			        	@Html.DisplayFor(x => x.ExchangeRate)
-			        </a>
-				</dd>
-				<dt>@Resources.PaymentTerms</dt>
-				<dd>
-			        <a id='terms' class='editable' data-type='select' data-placement='left' data-pk='@Model.Id' 
-			        	data-value='@((int)Model.Terms)' data-source='@Url.Action("Terms")'
-			        	data-url='@Url.Action("SetTerms", new { id = Model.Id })'
-			        	data-emptytext='@Resources.Empty'>
-			        	@Model.Terms.GetDisplayName()
-			        </a>
-				</dd>
+                <dt>@Resources.Currency</dt>
+                <dd>
+                    <a class='editable currency' data-type='select' data-placement='left' data-pk='@Model.Id'
+                       data-value='@((int)Model.Currency)' data-source='@Url.Action("Currencies", "ExchangeRates")'
+                       data-url='@Url.Action("SetCurrency", new { id = Model.Id })'
+                       data-emptytext='@Resources.Empty'>
+                        @Html.DisplayFor(x => x.Currency)
+                    </a>
+                </dd>
+                <dt>@Resources.ExchangeRate</dt>
+                <dd>
+                    <a id='exchange-rate' class='editable' data-type='text' data-placement='left' data-pk='@Model.Id'
+                       data-value='@Html.DisplayFor(x => x.ExchangeRate)' data-url='@Url.Action("SetExchangeRate", new { id = Model.Id })'
+                       data-inputclass='input-mini' data-emptytext='@Resources.Empty'>
+                        @Html.DisplayFor(x => x.ExchangeRate)
+                    </a>
+                </dd>
+                <dt>@Resources.PaymentTerms</dt>
+                <dd>
+                    <a id='terms' class='editable' data-type='select' data-placement='left' data-pk='@Model.Id'
+                       data-value='@((int)Model.Terms)' data-source='@Url.Action("Terms")'
+                       data-url='@Url.Action("SetTerms", new { id = Model.Id })'
+                       data-emptytext='@Resources.Empty'>
+                        @Model.Terms.GetDisplayName()
+                    </a>
+                </dd>
 
                 <dt>@Resources.DueDate</dt>
                 <dd>
@@ -108,7 +115,7 @@
                         @Html.DisplayFor(x => x.DueDate)
                     </a>
                 </dd>
-			</dl>
+            </dl>
   		</div>
 	</div>
 @if(Privilege.AllowDelete && !Model.IsCancelled) {
@@ -207,7 +214,14 @@ $(function () {
 		datepicker: {
 	    	language:'@WebConfig.Language'
 		}
+    });
+
+    $('#date').editable({
+		datepicker: {
+	    	language:'@WebConfig.Language'
+		}
 	});
+
 	$('a.editable').editable({
 		success: function(response, newValue) {
 			if ('rate' in response) {
