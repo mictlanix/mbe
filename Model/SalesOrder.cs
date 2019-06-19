@@ -34,39 +34,43 @@ using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 
 namespace Mictlanix.BE.Model {
-	[ActiveRecord ("sales_order", Lazy = true)]
-	public class SalesOrder : ActiveRecordLinqBase<SalesOrder> {
-		IList<SalesOrderDetail> details = new List<SalesOrderDetail> ();
-		IList<SalesOrderPayment> payments = new List<SalesOrderPayment> ();
+    [ActiveRecord("sales_order", Lazy = true)]
+    public class SalesOrder : ActiveRecordLinqBase<SalesOrder> {
+        IList<SalesOrderDetail> details = new List<SalesOrderDetail>();
+        IList<SalesOrderPayment> payments = new List<SalesOrderPayment>();
 
-		[PrimaryKey (PrimaryKeyType.Identity, "sales_order_id")]
-		[Display (Name = "Id", ResourceType = typeof (Resources))]
-		[DisplayFormat (DataFormatString = "{0:D8}")]
-		public virtual int Id { get; set; }
+        [PrimaryKey(PrimaryKeyType.Identity, "sales_order_id")]
+        [Display(Name = "Id", ResourceType = typeof(Resources))]
+        [DisplayFormat(DataFormatString = "{0:D8}")]
+        public virtual int Id { get; set; }
 
-		[BelongsTo ("store")]
-		[Display (Name = "Store", ResourceType = typeof (Resources))]
-		public virtual Store Store { get; set; }
+        [BelongsTo("store")]
+        [Display(Name = "Store", ResourceType = typeof(Resources))]
+        public virtual Store Store { get; set; }
 
-		[Property ("serial")]
-		[Display (Name = "Serial", ResourceType = typeof (Resources))]
-		[DisplayFormat (DataFormatString = "{0:D8}")]
-		public virtual int Serial { get; set; }
+        [Property("serial")]
+        [Display(Name = "Serial", ResourceType = typeof(Resources))]
+        [DisplayFormat(DataFormatString = "{0:D8}")]
+        public virtual int Serial { get; set; }
 
-		[BelongsTo ("customer", NotNull = true, Fetch = FetchEnum.Join)]
-		[Display (Name = "Customer", ResourceType = typeof (Resources))]
-		public virtual Customer Customer { get; set; }
+        [BelongsTo("customer", NotNull = true, Fetch = FetchEnum.Join)]
+        [Display(Name = "Customer", ResourceType = typeof(Resources))]
+        public virtual Customer Customer { get; set; }
 
-		[Property ("customer_name")]
-		public virtual string CustomerName { get; set; }
+        [Property("customer_name")]
+        public virtual string CustomerName { get; set; }
 
-		[BelongsTo ("contact", Lazy = FetchWhen.OnInvoke)]
-		[Display (Name = "Contact", ResourceType = typeof (Resources))]
-		public virtual Contact Contact { get; set; }
+        [BelongsTo("contact", Lazy = FetchWhen.OnInvoke)]
+        [Display(Name = "Contact", ResourceType = typeof(Resources))]
+        public virtual Contact Contact { get; set; }
 
-		[BelongsTo ("ship_to", Lazy = FetchWhen.OnInvoke)]
-		[Display (Name = "ShipTo", ResourceType = typeof (Resources))]
-		public virtual Address ShipTo { get; set; }
+        [BelongsTo("ship_to", Lazy = FetchWhen.OnInvoke)]
+        [Display(Name = "ShipTo", ResourceType = typeof(Resources))]
+        public virtual Address ShipTo { get; set; }
+
+        [Property("customer_shipto")]
+        [Display(Name = "ShipTo", ResourceType = typeof(Resources))]
+        public virtual string CustomerShipTo { get; set; }
 
 		[Property]
 		[DataType (DataType.DateTime)]
