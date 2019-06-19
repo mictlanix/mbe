@@ -26,7 +26,7 @@
 			</a>
         </td>
         <td class='date'>@Html.DisplayFor(x => item.Date)</td>
-        <td>@Html.DisplayFor(x => item.Customer.Name)</td>
+        <td>@Html.DisplayFor(x => item.Customer.Name) @Html.DisplayFor(x => item.CustomerName) </td>
         <td class='center'>@Html.DisplayFor(x => item.SalesPerson.Nickname)</td>
         <td class='bool'>@Html.DisplayFor(x => item.IsCompleted)</td>
         <td class='bool'>@Html.DisplayFor(x => item.IsCancelled)</td>

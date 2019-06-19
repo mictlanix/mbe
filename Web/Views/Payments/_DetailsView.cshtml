@@ -20,14 +20,14 @@
 			<div class="form-group">
 				<div class="col-xs-3"><label for="amount">@Resources.Amount</label></div>
 				<div class="col-xs-3"><label for="reference">@Resources.Reference</label></div>
-				<div class="pull-right col-xs-1 paymentondelivery @(Model.ShipTo == null ? "hidden" : "")">
+				<div class="col-xs-1 paymentondelivery @(String.IsNullOrEmpty(Model.CustomerShipTo) ? "hidden" : "")">
 					<label for="payment_upon_delivery">@Resources.PaymentOnDelivery</label>
 				</div>
 			</div>
 			<div class="form-group">
 				<div class="col-xs-3"><input id='amount' class='form-control text-right' type='text' value='0.00'></div>
 				<div class="col-xs-3"><input id='reference' class='form-control' type='text' value=''></div>
-				<div class="pull-right col-xs-1 paymentondelivery @(Model.ShipTo == null ? "hidden" : "")">
+				<div class="col-xs-1 paymentondelivery @(String.IsNullOrEmpty(Model.CustomerShipTo) ? "hidden" : "")">
 					<input id='ondelivery' class='form-control' type='checkbox'>
 				</div>
 			</div>
@@ -71,7 +71,7 @@ $(function () {
         var amount = $("#amount").val();
 		  var reference = $("#reference").val();
 		  var fee = $(this).data('fee');
-		  var ship_to =  '@Model.ShipTo';
+		  var ship_to =  '@Model.CustomerShipTo';
 		  var ondelivery = false;
 
 		  if (ship_to != '') {
@@ -117,8 +117,8 @@ $(function () {
 		    }
 		},
 		success: function(response, newValue) {
-			$('#contact,#address').text('').editable('setValue', '');
-			$('#name').load('@Url.Action("GetCustomerName","POS", new { id = Model.Id } )');
+			$('#contact,#address,#customer_shipto').text('').editable('setValue', '');
+			$('#name').load('@Url.Action("GetCustomerName","Payments", new { id = Model.Id } )');
 			$('#items-container').load('@Url.Action("GetPayments", new { id = Model.Id } )');
 			$('.paymentondelivery').addClass('hidden');
 			updateTotals();
@@ -131,11 +131,23 @@ $(function () {
 	    }
 	});
 	$('a.editable').editable({
-		success: function (response, newValue) {
-			console.log(response)
+        success: function (response, newValue) {
+
 			if ('type' in response) {
 				$('.paymentondelivery').removeClass('hidden');
-			}
+            }
+
+            if (response["value"]!="") {
+                $('.paymentondelivery').removeClass('hidden');
+            }
+            else {
+
+			    $("#ondelivery").prop('checked', false);
+                $('.paymentondelivery').addClass('hidden');
+                $('#items-container').load('@Url.Action("GetPayments", new { id = Model.Id } )');
+			    $('.paymentondelivery').addClass('hidden');
+			    updateTotals();
+            }
 		},
 		display: function (value, response) {
 			if (typeof response === 'undefined')
@@ -153,6 +165,6 @@ $(function () {
 			}
 		}
 
-	});
+    });
 });
 </script>

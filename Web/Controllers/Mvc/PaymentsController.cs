@@ -336,6 +336,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			entity.ShipTo = null;
+            entity.CustomerShipTo = null;
 			entity.Customer = customer;
 			entity.Updater = CurrentUser.Employee;
 			entity.ModificationTime = DateTime.Now;
@@ -371,6 +372,38 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return Json (new { id = id, value = value });
 		}
+
+        public ActionResult GetCustomerName (int id)
+		{
+			return PartialView ("_CustomerName", SalesOrder.Find (id));
+		}
+
+        [HttpPost]
+        public ActionResult SetCustomerShipTo(int id, string value) {
+            var entity = SalesOrder.Find(id);
+            string val = (value ?? string.Empty).Trim ();
+
+            if (entity.IsPaid || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			entity.CustomerShipTo = string.IsNullOrEmpty(val) ? null : val;
+			entity.Updater = CurrentUser.Employee;
+			entity.ModificationTime = DateTime.Now;
+
+            if (string.IsNullOrEmpty(entity.CustomerShipTo)) {
+                foreach (var payment in entity.Payments) {
+				    payment.Delete ();
+			    }
+            }
+
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
+			}
+
+			return Json (new { id = id, value = value });
+        }
 
 		[HttpPost]
 		public ActionResult SetShipTo (int id, int value)
@@ -506,7 +539,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				item.Amount = item.SalesOrder.Balance;
 			}
 
-			if (ondelivery && sales_order.ShipTo != null) {
+			if (ondelivery && !string.IsNullOrEmpty(sales_order.CustomerShipTo)) {
 
 				item.Payment.CashSession = null;
 			}

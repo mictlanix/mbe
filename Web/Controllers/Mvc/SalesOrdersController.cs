@@ -216,6 +216,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.ExchangeRate = salesquote.ExchangeRate;
 			item.Contact = salesquote.Contact;
 			item.Comment = salesquote.Comment;
+            item.ShipTo = salesquote.ShipTo;
+            item.CustomerShipTo = salesquote.ShipTo.ToString();
 
 			item.Creator = CurrentUser.Employee;
 			item.CreationTime = dt;
@@ -327,6 +329,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				entity.Customer = item;
 				entity.Contact = null;
 				entity.ShipTo = null;
+                entity.CustomerShipTo = null;
 				entity.CustomerName = null;
 
 				if (item.SalesPerson == null) {
@@ -464,6 +467,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			if (item != null) {
 				entity.ShipTo = item;
+                entity.CustomerShipTo = item.ToString();
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
 
