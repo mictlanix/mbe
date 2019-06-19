@@ -12,40 +12,50 @@
 }
 
 <div class="display-label text-right">
-    @Html.LabelFor(model => model.Serial)<br/>
+    @Html.LabelFor(model => model.Serial)<br />
     @Html.DisplayFor(model => model.Serial)
 </div>
 
 <div class="display-label date text-right">
-    @Html.LabelFor(model => model.Date)<br/>
+    @Html.LabelFor(model => model.Date)<br />
     @Html.DisplayFor(model => model.Date)
 </div>
 
 <div class="display-label">
-    @Html.LabelFor(model => model.Customer)<br/>
+    @Html.LabelFor(model => model.Customer)<br />
     @Html.DisplayFor(model => model.Customer.Name)
-    @if (Model.Customer.Id == int.Parse(Resources.GeneralPublicId) && !string.IsNullOrWhiteSpace(Model.CustomerName)) {
+    @if (Model.Customer.Id == int.Parse(Resources.GeneralPublicId) && !string.IsNullOrWhiteSpace(Model.CustomerName))
+    {
         <span>(</span>@Html.DisplayFor(x => x.CustomerName)<span>)</span>
     }
 </div>
- 
-<table>
-@foreach (var item in Model.Details) {
-    <tr>
-        <td>
-            @Html.DisplayFor(x => item.Quantity)
-        </td>
- 		<td>
- 			@Html.DisplayFor(x => item.Product.UnitOfMeasurement.Name)
-		</td>
-        <td>
-            @Html.DisplayFor(x => item.ProductName)
-        </td>
-    </tr>
-	 <tr>
-		 <td class="line" colspan="3"></td>
-	 </tr>
+
+@if (!string.IsNullOrEmpty(Model.CustomerShipTo))
+{
+    <div class="display-label">
+        @Html.LabelFor(model => model.CustomerShipTo)<br />
+        @Html.DisplayFor(model => model.CustomerShipTo)
+    </div>
 }
+
+<table>
+    @foreach (var item in Model.Details)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(x => item.Quantity)
+            </td>
+            <td>
+                @Html.DisplayFor(x => item.Product.UnitOfMeasurement.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(x => item.ProductName)
+            </td>
+        </tr>
+        <tr>
+            <td class="line" colspan="3"></td>
+        </tr>
+    }
 </table>
 
 <div class="display-label text-right">
@@ -55,13 +65,14 @@
     @Html.DisplayFor(model => model.SalesPerson.Name)
 </div>
 
-@if (!string.IsNullOrEmpty(Model.Store.ReceiptMessage)) {
-<div class="legend">
-    <p class="center">@Model.Store.ReceiptMessage</p>
-</div>
+@if (!string.IsNullOrEmpty(Model.Store.ReceiptMessage))
+{
+    <div class="legend">
+        <p class="center">@Model.Store.ReceiptMessage</p>
+    </div>
 }
 
 @section Footer {
-	<img src='@Url.Action("Code128", "Barcodes", new { id = string.Format("{0}", Html.DisplayFor(x => x.Id)) })' alt='@Html.DisplayFor(x => x.Id)' title='@Html.DisplayFor(x => x.Id)'>
-	<p>@Html.DisplayFor(x => x.Id)</p>
+    <img src='@Url.Action("Code128", "Barcodes", new { id = string.Format("{0}", Html.DisplayFor(x => x.Id)) })' alt='@Html.DisplayFor(x => x.Id)' title='@Html.DisplayFor(x => x.Id)'>
+    <p>@Html.DisplayFor(x => x.Id)</p>
 }

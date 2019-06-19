@@ -18,7 +18,7 @@
 	@if (Model.ExtraFee > 0.0m) {
 			<li>
 				<span class="caption">@Resources.ExtraFees</span>
-				<span class="value">@Html.DisplayFor(x => x.ExtraFee)</span>
+				<span class="value">@Html.DisplayFor(x => x.ExtraFee) @WebConfig.BaseCurrency</span>
 			</li>
 	}
 	<li>

@@ -181,6 +181,9 @@ CREATE TABLE `fiscal_document_relation` (
   CONSTRAINT `fiscal_document_relation_relation_fk` FOREIGN KEY (`relation`) REFERENCES `fiscal_document` (`fiscal_document_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB;
 
+ALTER TABLE `sales_order`
+	ADD COLUMN `customer_shipto` VARCHAR(200) NULL AFTER `customer_name`;
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
