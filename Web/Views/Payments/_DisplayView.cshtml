@@ -15,7 +15,7 @@
 				<dt>@Resources.Customer</dt>
 				<dd>
 					<a id='customer' data-type='select2' data-placement='right' data-pk='@Model.Id'
-						data-value='@Model.Customer.Id' data-url='@Url.Action("SetCustomer", new { id = Model.Id })'
+						data-value='@Model.Customer.Id' data-url='@Url.Action("SetCustomer", "Payments",new { id = Model.Id })'
 						data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
 						@Html.DisplayFor(x => x.Customer.Name)
 					</a>
@@ -28,19 +28,25 @@
 				<dd>@Html.DisplayFor(x => x.Contact, "String")</dd>
 			    }
 				<dt>@Resources.ShipTo</dt>
-				<dd>
-					<a id='address' class="editable" data-type='select' data-placement='right' data-pk='@Model.Id'
-						data-value='@(Model.ShipTo == null ? "" : Model.ShipTo.Id.ToString ())'
-						data-source='@Url.Action("Addresses", new { id = Model.Id })' data-source-cache='false'
-						data-url='@Url.Action("SetShipTo", new { id = Model.Id })'
-						data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
-						@if (Model.ShipTo != null) {
-								@Html.DisplayFor(x => x.ShipTo, "String")
-						} else {
-								@Resources.Empty
-						}
-					</a>
-				</dd>
+                <dd>
+                    <a id="customer_shipto" class="editable alert-link" data-type="text" data-placement="right" data-pk="@Model.Id"
+                       data-url='@Url.Action("SetCustomerShipTo", new { id = Model.Id })'
+                       data-inputclass="input-xlarge" data-emptytext="@Resources.Empty">
+                        @Html.DisplayFor(x => x.CustomerShipTo)
+                    </a>
+                    @*<a id='address' class="editable" data-type='select' data-placement='right' data-pk='@Model.Id'
+            data-value='@(Model.ShipTo == null ? "" : Model.ShipTo.Id.ToString ())'
+            data-source='@Url.Action("Addresses", new { id = Model.Id })' data-source-cache='false'
+            data-url='@Url.Action("SetShipTo", new { id = Model.Id })'
+            data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+            @if (Model.ShipTo != null) {
+                    @Html.DisplayFor(x => x.ShipTo, "String")
+            } else {
+                    @Resources.Empty
+            }
+        </a>*@
+
+                </dd>
 				<dt>@Resources.SalesPerson</dt>
 				<dd>@Html.DisplayFor(x => x.SalesPerson.Name)</dd>
 			</dl>
