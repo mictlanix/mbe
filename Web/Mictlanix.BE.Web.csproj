@@ -24,6 +24,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -189,6 +190,7 @@
     <Compile Include="Controllers\Mvc\HumanResourcesController.cs" />
     <Compile Include="Controllers\Mvc\PaymentMethodOptionsController.cs" />
     <Compile Include="Controllers\Mvc\QuotationsController.cs" />
+    <Compile Include="Controllers\Mvc\SpecialReceiptsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -1193,6 +1195,11 @@
     <None Include="Content\bootstrap-datepicker.standalone.css.map" />
     <None Include="Content\bootstrap-datepicker3.css.map" />
     <None Include="Content\bootstrap-datepicker3.standalone.css.map" />
+    <Content Include="Views\SpecialReceipts\Index.cshtml" />
+    <Content Include="Views\SpecialReceipts\_Index.cshtml" />
+    <Content Include="Views\SpecialReceipts\Edit.cshtml" />
+    <Content Include="Views\SpecialReceipts\_EditorView.cshtml" />
+    <Content Include="Views\SpecialReceipts\_CustomerName.cshtml" />
   </ItemGroup>
   <ItemGroup />
 </Project>

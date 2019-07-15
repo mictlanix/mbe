@@ -95,6 +95,7 @@
     <Compile Include="PaymentMethodOption.cs" />
     <Compile Include="SalesQuote.cs" />
     <Compile Include="SalesQuoteDetail.cs" />
+    <Compile Include="SpecialReceipt.cs" />
     <Compile Include="Store.cs" />
     <Compile Include="SupplierReturnDetail.cs" />
     <Compile Include="SupplierReturn.cs" />
