@@ -183,6 +183,37 @@ CREATE TABLE `fiscal_document_relation` (
 
 ALTER TABLE `sales_order`
 	ADD COLUMN `customer_shipto` VARCHAR(200) NULL AFTER `customer_name`;
+	
+CREATE TABLE `special_receipt` (
+	`special_receipt_id` INT(11) NOT NULL AUTO_INCREMENT,
+	`creation_time` DATETIME NOT NULL,
+	`modification_time` DATETIME NOT NULL,
+	`creator` INT(11) NOT NULL DEFAULT '0',
+	`updater` INT(11) NOT NULL DEFAULT '0',
+	`salesperson` INT(11) NOT NULL DEFAULT '0',
+	`store` INT(11) NOT NULL DEFAULT '0',
+	`serial` INT(11) NOT NULL DEFAULT '0',
+	`customer` VARCHAR(100) NULL DEFAULT '' COLLATE 'utf8_spanish_ci',
+	`ship_to` VARCHAR(100) NULL DEFAULT '' COLLATE 'utf8_spanish_ci',
+	`date` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+	`completed` TINYINT(1) NOT NULL DEFAULT '0',
+	`cancelled` TINYINT(1) NOT NULL DEFAULT '0',
+	`delivered` TINYINT(1) NOT NULL DEFAULT '0',
+	`comment` VARCHAR(500) NULL DEFAULT '' COLLATE 'utf8_spanish_ci',
+	`JSON` VARCHAR(1500) NULL DEFAULT '' COLLATE 'utf8_spanish_ci',
+	PRIMARY KEY (`special_receipt_id`),
+	INDEX `FK__employee` (`creator`),
+	INDEX `FK__employee_2` (`updater`),
+	INDEX `FK__store` (`store`),
+	INDEX `FK_special_receipt_employee` (`salesperson`),
+	CONSTRAINT `FK__employee` FOREIGN KEY (`creator`) REFERENCES `employee` (`employee_id`),
+	CONSTRAINT `FK__employee_2` FOREIGN KEY (`updater`) REFERENCES `employee` (`employee_id`),
+	CONSTRAINT `FK__store` FOREIGN KEY (`store`) REFERENCES `store` (`store_id`),
+	CONSTRAINT `FK_special_receipt_employee` FOREIGN KEY (`salesperson`) REFERENCES `employee` (`employee_id`)
+)
+COLLATE='utf8_spanish_ci'
+ENGINE=InnoDB
+;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
