@@ -1,0 +1,160 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Newtonsoft.Json.Linq;
+@model SpecialReceipt
+
+@{
+    ViewBag.Title = Resources.Edit;
+    dynamic json = JValue.Parse(Model.JSON);
+
+}
+
+<h2>@Resources.SalesOrder</h2>
+
+<div id='master-section'>
+    @Html.Partial("_EditorView")
+</div>
+<div id='details-section'>
+    <div id="items-container">
+        <div class="row">
+            <div class="col-xs-12">
+                <span class="thick center">Características del Concreto</span>
+            </div>
+
+            <div class="col-xs-3">
+                <span class="thick center">Elemento a colar</span>
+
+                <a id='elementoAColar' class='editable alert-link' data-type='text' data-placement='right' data-pk='@Model.Id'
+                   data-value='@(string.IsNullOrEmpty(json.elementoAColar.ToString()) ? "Indicar volumen" : json.tipo)' data-source-cache='false'
+                   data-url='@Url.Action("UpdateJSON", new { id = Model.Id, attribute = "elementoAColar" })'
+                   data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
+                    @json.elementoAColar
+                </a>
+            </div>
+            <div class="col-xs-3">
+                <span class="thick center">Unidad</span>
+
+                <a id='unidadDeTransporte' class='editable alert-link' data-type='text' data-placement='right' data-pk='@Model.Id'
+                   data-value='@(string.IsNullOrEmpty(json.unidadDeTransporte.ToString()) ? "Agregar Placas" : json.unidadDeTransporte)' data-source-cache='false'
+                   data-url='@Url.Action("UpdateJSON", new { id = Model.Id, attribute = "unidadDeTransporte" })'
+                   data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
+                    @json.unidadDeTransporte
+                </a>
+            </div>
+            <div class="col-xs-3">
+                <span class="thick center">Volumen m³</span>
+
+                <a id='volumenM3' class='editable alert-link' data-type='text' data-placement='right' data-pk='@Model.Id'
+                   data-value='@(string.IsNullOrEmpty(json.volumenM3.ToString()) ? "Indicar volumen" : json.volumenM3)' data-source-cache='false'
+                   data-url='@Url.Action("UpdateJSON", new { id = Model.Id, attribute = "volumenM3" })'
+                   data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
+                    @json.volumenM3
+                </a>
+            </div>
+            <div class="col-xs-3">
+                <span class="thick center">Tipo</span>
+
+                <a id='tipo' class='editable alert-link' data-type='text' data-placement='right' data-pk='@Model.Id'
+                   data-value='@(string.IsNullOrEmpty(json.tipo.ToString()) ? "Indicar volumen" : json.tipo)' data-source-cache='false'
+                   data-url='@Url.Action("UpdateJSON", new { id = Model.Id, attribute = "tipo" })'
+                   data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
+                    @json.tipo
+                </a>
+            </div>
+            <div class="col-xs-3">
+                <span class="thick center">Resistencia Concreto</span>
+
+                <a id='resistenciaConcreto' class='editable alert-link' data-type='text' data-placement='right' data-pk='@Model.Id'
+                   data-value='@(string.IsNullOrEmpty(json.resistenciaConcreto.ToString()) ? "Agregar Placas" : json.resistenciaConcreto)' data-source-cache='false'
+                   data-url='@Url.Action("UpdateJSON", new { id = Model.Id, attribute = "resistenciaConcreto" })'
+                   data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
+                    @json.resistenciaConcreto
+                </a>
+            </div>
+            <div class="col-xs-3">
+                <span class="thick center">Edad Garantía</span>
+
+                <a id='edadGarantia' class='editable alert-link' data-type='text' data-placement='right' data-pk='@Model.Id'
+                   data-value='@(string.IsNullOrEmpty(json.edadGarantia.ToString()) ? "Indicar volumen" : json.edadGarantia)' data-source-cache='false'
+                   data-url='@Url.Action("UpdateJSON", new { id = Model.Id, attribute = "edadGarantia" })'
+                   data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
+                    @json.edadGarantia
+                </a>
+            </div>
+            <div class="col-xs-3">
+                <span class="thick center">TMA</span>
+
+                <a id='tipo' class='editable alert-link' data-type='text' data-placement='right' data-pk='@Model.Id'
+                   data-value='@(string.IsNullOrEmpty(json.TMA.ToString()) ? "Indicar volumen" : json.TMA)' data-source-cache='false'
+                   data-url='@Url.Action("UpdateJSON", new { id = Model.Id, attribute = "TMA" })'
+                   data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
+                    @json.TMA
+                </a>
+            </div>
+            <div class="col-xs-3">
+                <span class="thick center">Revenimiento (CM)</span>
+
+                <a id='revenimientoCM' class='editable alert-link' data-type='text' data-placement='right' data-pk='@Model.Id'
+                   data-value='@(string.IsNullOrEmpty(json.revenimientoCM.ToString()) ? "Agregar Placas" : json.revenimientoCM)' data-source-cache='false'
+                   data-url='@Url.Action("UpdateJSON", new { id = Model.Id, attribute = "revenimientoCM" })'
+                   data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
+                    @json.revenimientoCM
+                </a>
+            </div>
+            <div class="col-xs-3">
+                <span class="thick center">Tiro</span>
+
+                <a id='tiro' class='editable alert-link' data-type='text' data-placement='right' data-pk='@Model.Id'
+                   data-value='@(string.IsNullOrEmpty(json.tiro.ToString()) ? "Indicar volumen" : json.tiro)' data-source-cache='false'
+                   data-url='@Url.Action("UpdateJSON", new { id = Model.Id, attribute = "tiro" })'
+                   data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
+                    @json.tiro
+                </a>
+            </div>
+            <div class="col-xs-3">
+                <span class="thick center">Pedido m³</span>
+
+                <a id='pedidoM3' class='editable alert-link' data-type='text' data-placement='right' data-pk='@Model.Id'
+                   data-value='@(string.IsNullOrEmpty(json.pedidoM3.ToString()) ? "Indicar volumen" : json.pedidoM3)' data-source-cache='false'
+                   data-url='@Url.Action("UpdateJSON", new { id = Model.Id, attribute = "pedidoM3" })'
+                   data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
+                    @json.pedidoM3
+                </a>
+            </div>
+            <div class="col-xs-3">
+                <span class="thick center">Por Surtir</span>
+
+                <a id='porSurtirM3' class='editable alert-link' data-type='text' data-placement='right' data-pk='@Model.Id'
+                   data-value='@(string.IsNullOrEmpty(json.porSurtirM3.ToString()) ? "Indicar volumen" : json.porSurtirM3)' data-source-cache='false'
+                   data-url='@Url.Action("UpdateJSON", new { id = Model.Id, attribute = "porSurtirM3" })'
+                   data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
+                    @json.porSurtirM3
+                </a>
+            </div>        
+        </div>
+        <div class="row">
+            <div class="col-xs-3">
+                <span class="thick center">Impermeabilizante</span>
+
+                <a id='impermeabilizante' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id' data-source-cache='false' 
+                   data-value='@(((bool)json.impermeabilizante) ? "checked" : "")' data-url='@Url.Action("UpdateJSON", new { id = Model.Id, attribute = "impermeabilizante" })'
+               data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
+                    @json.impermeabilizante
+            </a>
+        </div>
+    </div>
+</div>
+<div class='clearfix'></div>
+<div id='back-to-list' class='pull-left'>
+    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+</div>
+
+<div class='clearfix'></div>
+<script type='text/javascript'>
+</script>
+<style type='text/css'>
+    ul.token-input-list {
+        width: 100%;
+    }
+</style>
