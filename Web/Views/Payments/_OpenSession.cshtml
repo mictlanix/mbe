@@ -53,10 +53,18 @@
 }
 </div>
 <script type="text/javascript">
-    $(function () {        
+    $(function () { 
+        document.onkeydown = function (e) {
+                if (e.code == 'Enter' || e.code == 'NumpadEnter')
+                    if(e.target.type != "submit") {
+                    e.preventDefault();
+                    }
+        }
+     
         $('form').submit(function(){
             $('button.save').prop('disabled', true);
 		    $('button.save').html('@Resources.PleaseWait');
-		});
+        });
+
     });
 </script>
