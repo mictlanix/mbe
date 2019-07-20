@@ -55,8 +55,10 @@
     <text>$("#form").hide("slow");</text>
 } else {
 	<text>
-		$("#amount").val("@((Model.Balance).ToString("0.00"))");
-		$("#form").show("slow");
+		@*$("#amount").val("@((Model.Balance).ToString("0.00"))");*@
+        $("#amount").val("Ingresa importe");
+        $("#form").show("slow");
+        document.getElementById("amount").select();
 	</text>
 }
 </script>
