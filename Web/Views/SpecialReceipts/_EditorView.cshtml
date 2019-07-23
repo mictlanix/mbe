@@ -63,7 +63,7 @@
 @if(Privilege.AllowDelete && !Model.IsCancelled) {
 	<div class='row'>
   		<div class='col-xs-12'>
-	    @using (Html.BeginForm("Cancel", "SalesOrders", new { id =  Model.Id }, FormMethod.Post, new { @class = "modal-form pull-right" })) {
+	    @using (Html.BeginForm("Cancel", "SpecialReceipts", new { id =  Model.Id }, FormMethod.Post, new { @class = "modal-form pull-right" })) {
 			<button type="submit" class="icon cancel">@Resources.Cancel</button>
 	    }
   		</div>
@@ -73,49 +73,6 @@
 <script type='text/javascript'>
 $(function () {
 	$('[data-toggle="tooltip"]').tooltip();
-	$('#customer').editable({
-	    select2: {
-	    	minimumInputLength: 3,
-		    ajax: {
-		        url: '@Url.Action("GetSuggestions", "Customers")',
-		        dataType: 'json',
-		        type: 'POST',
-		        data: function(term,page,context) {
-		        	return { pattern:term };
-		        },
-		        results: function(data,page) {
-		            return { results:data };
-		        }
-		    },
-		    initSelection: function(element, callback) {
-		        var data = {
-		        	id: $('#customer').data('value'),
-		        	name: $('#customer').text()
-	        	};
-		        callback(data);
-		    },
-		    formatResult: function(result) {
-		        return result.name + " (" + result.code + ")";
-		    },
-		    formatSelection: function(selection) {
-		        return selection.name;
-		    }
-		},
-		success: function(response, newValue) {
-			$('#contact,#address').text('').editable('setValue', '');
-			$('#terms').text(response.termsText)
-					   .editable('setValue', response.terms);
-			$('#due-date').text(response.dueDate);
-			$('#salesperson').text(response.salesPersonName)
-				.editable('setValue', response.salesPerson);
-			$('#name').load('@Url.Action("GetCustomerName","POS", new { id = Model.Id } )');
-	    },
-	    display: function(value, response) {
-	    	if (typeof response !== 'undefined') {
-				$(this).html(response.value);
-			}
-	    }
-	});
 	$('#salesperson').editable({
 	    select2: {
 		    ajax: {
@@ -157,10 +114,6 @@ $(function () {
 	});
 	$('a.editable').editable({
 		success: function(response, newValue) {
-			if ('rate' in response) {
-				$('#exchange-rate').text(response.rate)
-								   .editable('setValue', response.rate);
-	        }
 			if ('dueDate' in response) {
 				$('#due-date').text(response.dueDate);
 	        }
