@@ -21,6 +21,12 @@
 				<span class="value">@Html.DisplayFor(x => x.ExtraFee) @WebConfig.BaseCurrency</span>
 			</li>
 	}
+    @if (Model.Balance > 0.0m) { 
+            <li>
+                <span class="caption">Restante</span>
+                <span class="value">@Html.DisplayFor(x => x.Balance) @WebConfig.BaseCurrency</span>
+            </li>
+    }
 	<li>
 		<span class='caption'>@Resources.Change</span>
 		<span class='value'>@Html.DisplayFor(x => x.Change) @WebConfig.BaseCurrency</span>
@@ -56,9 +62,8 @@
 } else {
 	<text>
 		@*$("#amount").val("@((Model.Balance).ToString("0.00"))");*@
-        $("#amount").val("Ingresa importe");
+        $("#amount").val("Ingresa importe").select();
         $("#form").show("slow");
-        document.getElementById("amount").select();
 	</text>
 }
 </script>
