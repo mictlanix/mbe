@@ -7,7 +7,6 @@
 @{
     ViewBag.Title = Resources.Edit;
     dynamic json = JValue.Parse(Model.JSON);
-
 }
 
 <h2>@Resources.SalesOrder</h2>
@@ -145,7 +144,7 @@
                         <span class="thick center">Impermeabilizante</span>
 
                         <a id='impermeabilizante' class='editable' data-type='select' data-placement='right'
-                           data-pk='@Model.Id' data-source="{true:'Si', false: 'No'}" data-source-cache='false'
+                           data-pk='@Model.Id' data-source="{'Si':'Si', 'No': 'No'}" data-source-cache='false'
                            data-url='@Url.Action("UpdateJSON", new { id = Model.Id, attribute = "impermeabilizante" })'
                            data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
                            @json.impermeabilizante
@@ -155,7 +154,7 @@
                         <span class="thick center">Retardante De Fraguado</span>
 
                         <a id='retardanteDeFraguado' class='editable' data-type='select' data-placement='right' 
-                           data-pk='@Model.Id' data-source="{true:'Si', false: 'No'}" data-source-cache='false'
+                           data-pk='@Model.Id' data-source="{'Si':'Si', 'No': 'No'}" data-source-cache='false'
                            data-url='@Url.Action("UpdateJSON", new { id = Model.Id, attribute = "retardanteDeFraguado" })'
                            data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
                            @json.retardanteDeFraguado
@@ -165,7 +164,7 @@
                         <span class="thick center">Aceletente</span>
 
                         <a id='aceletente' class='editable' data-type='select' data-placement='right' 
-                           data-pk='@Model.Id' data-source="{true:'Si', false: 'No'}" data-source-cache='false'
+                           data-pk='@Model.Id' data-source="{'Si':'Si', 'No': 'No'}" data-source-cache='false'
                            data-url='@Url.Action("UpdateJSON", new { id = Model.Id, attribute = "aceletente" })'
                            data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
                             @json.aceletente
@@ -174,17 +173,19 @@
                     <div class="col-xs-3">
                         <span class="thick center">Fibras</span>
 
-                        <a id='fibras' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id' data-source-cache='false'
-                           data-value='@(string.IsNullOrEmpty(json.fibras.ToString()) ? "Indicar volumen" : json.fibras)' data-url='@Url.Action("UpdateJSON", new { id = Model.Id, attribute = "fibras" })'
+                        <a id='fibras' class='editable' data-type='select' data-placement='right' 
+                           data-pk='@Model.Id' data-source="{'Si':'Si', 'No': 'No'}" data-source-cache='false'
+                           data-url='@Url.Action("UpdateJSON", new { id = Model.Id, attribute = "fibras" })'
                            data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
                             @json.fibras
                         </a>
                     </div>
                     <div class="col-xs-3">
-                        <span class="thick center">aditivosEspeciales</span>
+                        <span class="thick center">Aditivos Especiales</span>
 
-                        <a id='aditivosEspeciales' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id' data-source-cache='false'
-                           data-value='@(string.IsNullOrEmpty(json.aditivosEspeciales.ToString()) ? "Indicar volumen" : json.aditivosEspeciales)' data-url='@Url.Action("UpdateJSON", new { id = Model.Id, attribute = "aditivosEspeciales" })'
+                        <a id='aditivosEspeciales' class='editable' data-type='select' data-placement='right' 
+                           data-pk='@Model.Id' data-source="{'Si':'Si', 'No': 'No'}" data-source-cache='false'
+                           data-url='@Url.Action("UpdateJSON", new { id = Model.Id, attribute = "aditivosEspeciales" })'
                            data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
                             @json.aditivosEspeciales
                         </a>
