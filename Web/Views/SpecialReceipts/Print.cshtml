@@ -1,0 +1,134 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Newtonsoft.Json.Linq;
+
+@model SpecialReceipt
+
+@{
+    Layout = WebConfig.PrintLayout;
+    ViewBag.Title = Html.PrintFileName(Resources.SalesOrder, Model.Id);
+    ViewBag.Store = Model.Store;
+    ViewBag.TaxpayerName = null;
+    ViewBag.Taxpayer = null;
+    ViewBag.Address = Model.Store.Address;
+    dynamic json = JValue.Parse(Model.JSON);
+}
+
+<div class="row">
+    <div class="col-xs-6 text-left">
+        <div class="row">
+            <div class="col-xs-12 uppercase">
+                <h2>@Resources.Customer</h2>
+            </div>
+            <div class="col-xs-12">
+                <p><span class="mylabel">@Resources.Name</span></p>
+            </div>
+            <div class="col-xs-12">
+                <p>@Html.DisplayFor(x => x.CustomerName)</p>
+            </div>
+            @if (Model.CustomerShipTo != null)
+            {
+                <div class="col-xs-12">
+                    <p><span class="mylabel">@Resources.ShipTo</span></p>
+                </div>
+                <div class="col-xs-12">
+                    <p>
+                        @Html.DisplayFor(x => x.CustomerShipTo)
+                    </p>
+                </div>
+            }
+            @if (!string.IsNullOrWhiteSpace(Model.Comment))
+            {
+                <div class="col-xs-12">
+                    <p><span class="mylabel">@Resources.Comment</span></p>
+                </div>
+                <div class="col-xs-12">
+                    @Html.DisplayFor(x => x.Comment)
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-xs-6 text-right">
+        <div class="row">
+            <div class="col-xs-12">
+                <h2 class="text-right uppercase">@Resources.SalesOrder @Html.DisplayFor(x => x.Id)</h2>
+            </div>
+            <div class="col-xs-12">
+                <p><span class="mylabel">Operador</span></p>
+            </div>
+            <div class="col-xs-12">
+                <p>@Html.DisplayFor(x => x.SalesPerson.Name)</p>
+            </div>
+            <div class="col-xs-12">
+                <p><span class="mylabel">@Resources.DateTime</span></p>
+            </div>
+            <div class="col-xs-12">
+                <p>@Html.DisplayFor(x => x.Date)</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="margin-top:5mm; min-height: 2.2mm; border-top: #333 solid 1px; border-bottom: #333 solid 3px"></div>
+
+<table style="border-spacing:0 4px;border-collapse: separate;">
+    <thead>
+        <tr>
+            <th colspan="12" class="col-xs-12 text-center">Características del Concreto</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="">
+            <td class="text-right mylabel">Volumen m³: </td>
+            <td class="text-left">@(string.IsNullOrEmpty(json.volumenM3.ToString()) ? "---" : json.volumenM3)</td>
+            <td class="text-right mylabel">Tipo: </td>
+            <td class="text-left">@(string.IsNullOrEmpty(json.tipo.ToString()) ? "---" : json.tipo)</td>
+            <td class="text-right mylabel">Resistencia Concreto: </td>
+            <td class="text-left">@(string.IsNullOrEmpty(json.tipo.ToString()) ? "---" : json.tipo)</td>
+            <td class="text-right mylabel">Edad Garantía: </td>
+            <td class="text-left">@(string.IsNullOrEmpty(json.volumenM3.ToString()) ? "---" : json.volumenM3)</td>
+            <td class="text-right mylabel">TMA: </td>
+            <td class="text-left">@(string.IsNullOrEmpty(json.tipo.ToString()) ? "---" : json.tipo)</td>
+            <td class="text-right mylabel">Revenimiento CM: </td>
+            <td class="text-left">@(string.IsNullOrEmpty(json.tipo.ToString()) ? "---" : json.tipo)</td>
+        </tr>
+    </tbody>
+</table>
+
+<div style="min-height: 2.2mm; border-top: #333 solid 3px; border-bottom: #333 solid 1px"></div>
+
+<table>
+    @*<tfoot>
+            <tr>
+                <td rowspan="@(Model.Discount > 0m ? 4 : 3)" class="col-xs-10 text-center" style="vertical-align:middle">
+                    <p style="border-top: solid black 1px; border-bottom:solid black 1px; margin: 0 2cm 0 2cm;">
+                        @Html.CurrencyToString(Model.Total, Model.Currency)
+                    </p>
+                </td>
+                <td class="col-xs-1 nowrap text-right">@Resources.Subtotal</td>
+                <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Subtotal)</td>
+            </tr>
+        @if (Model.Discount > 0m) {
+            <tr>
+                <th class="col-xs-1 nowrap text-right">@Resources.Discount</th>
+                <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Discount)</td>
+            </tr>
+        }
+            <tr>
+                <td class="col-xs-1 nowrap text-right">@Resources.Taxes</td>
+                <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Taxes)</td>
+            </tr>
+            <tr>
+                <td class="col-xs-1 nowrap text-right">@Resources.Total</td>
+                <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Total)</td>
+            </tr>
+        @if (Model.Discount > 0) {
+            <tr>
+                <td class="text-center">
+                        <text>@string.Format(Resources.SavingsOnSalesOrder, Model.Discount)</text>
+                </td>
+            </tr>
+        }
+        </tfoot>*@
+</table>
