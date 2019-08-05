@@ -1200,6 +1200,7 @@
     <Content Include="Views\SpecialReceipts\Edit.cshtml" />
     <Content Include="Views\SpecialReceipts\_EditorView.cshtml" />
     <Content Include="Views\SpecialReceipts\_CustomerName.cshtml" />
+    <Content Include="Views\SpecialReceipts\Print.cshtml" />
   </ItemGroup>
   <ItemGroup />
 </Project>
