@@ -71,7 +71,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		{
 			var item = SpecialReceipt.Find (id);
 
-			return PdfView (WebConfig.DeliveryOrderTemplate, item);
+			return View ("Print", item);
 		}
 
 		public ActionResult PrintFormat (int id)
