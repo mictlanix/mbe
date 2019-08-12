@@ -99,8 +99,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 			item.Store = WebConfig.Store;
 
-            string json = @"{'elementoAColar': '','unidadDeTransporte': '','volumenM3': '','tipo': '','resistenciaConcreto': '','edadGarantia':'',
-                'TMA':'','revenimientoCM':'','tiro':'','pedidoM3':'','porSurtirM3':'','impermeabilizante':'','retardanteDeFraguado':'','aceletente':'',
+            string json = @"{'elementoAColar': '','unidadDeTransporte': '','volumenM3': '','tipo': '','resistenciaConcreto': '','edadGarantia':'', 'servicioBomba':'',
+                'TMA':'','revenimientoCM':'','tiro':'','pedidoM3':'','porSurtirM3':'','impermeabilizante':'','retardanteDeFraguado':'','aceletente':'', 'rentaVibrador':'',
                   'fibras':'','aditivosEspeciales':'','observaciones':'','salidaPlanta': '','llegadaObra':'','inicioDescarga':'','finDescarga':'','salidaObra':''}";
             
 
