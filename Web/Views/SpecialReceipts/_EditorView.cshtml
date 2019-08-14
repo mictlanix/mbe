@@ -1,74 +1,91 @@
 @using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
+@using Newtonsoft.Json.Linq;
+
 @model SpecialReceipt
 
 @{
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders);
+    dynamic json = JValue.Parse(Model.JSON);
+
 }
 
 <fieldset>
-	<div class='row'>
-		<div class='col-xs-8'>
-	  		<dl class=''>
-				<dt>@Resources.Customer</dt>
-				<dd>
-					<span id="name">
-						@Html.Partial("_CustomerName", Model)
-					</span>
-			    </dd>
-				
-				<dt>@Resources.ShipTo</dt>
-				<dd>
-			        <a id='address' class='editable' data-type='text' data-placement='right' data-pk='@Model.Id'
-			        	data-value='@(Model.CustomerShipTo == null ? "" : Model.CustomerShipTo.ToString ())'
-			        	data-source-cache='false' data-url='@Url.Action("SetShipTo", new { id = Model.Id })'
-			        	data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
-			        @if (Model.CustomerShipTo != null) {
-			        	@Html.DisplayFor(x => x.CustomerShipTo, "String")
-		        	}
-			        </a>
-				</dd>
-				<dt>Operador</dt>
-				<dd>
-			        <a id='salesperson' data-type='select2' data-placement='right' data-pk='@Model.Id'
-			        	data-value='@Model.SalesPerson' data-url='@Url.Action("SetSalesPerson", new { id = Model.Id })'
-			        	data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
-			        	@Html.DisplayFor(x => x.SalesPerson.Name)
-			        </a>
-		        </dd>
-			</dl>
-		</div>
-	  	<div class='col-xs-4'>
-	  		<dl class='dl-horizontal'>
-				<dt>@Resources.Id</dt>
-				<dd>
-					<span>@Html.DisplayFor(x => x.Id)</span>
-					<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => x.Serial)">
-						<span class="glyphicon glyphicon-exclamation-sign"></span>
-					</a>
-				</dd>
-				<dt>@Resources.PromiseDate</dt>
-				<dd>
-			        <a id='promise-date' data-type='date' data-placement='left' data-pk='@Model.Id'
-			        	data-value='@Html.DisplayFor(x => x.Date)' data-url='@Url.Action("SetDate", new { id = Model.Id })'
-			        	data-emptytext='@Resources.Empty' data-clear='false'>
-			        	@Html.DisplayFor(x => x.Date)
-			        </a>
-				</dd>
-			</dl>
-  		</div>
-	</div>
-@if(Privilege.AllowDelete && !Model.IsCancelled) {
-	<div class='row'>
-  		<div class='col-xs-12'>
-	    @using (Html.BeginForm("Cancel", "SpecialReceipts", new { id =  Model.Id }, FormMethod.Post, new { @class = "modal-form pull-right" })) {
-			<button type="submit" class="icon cancel">@Resources.Cancel</button>
-	    }
-  		</div>
-	</div>
-}
+    <div class='row'>
+        <div class='col-xs-7'>
+            <dl class=''>
+                <dt>@Resources.Customer</dt>
+                <dd>
+                    <span id="name">
+                        @Html.Partial("_CustomerName", Model)
+                    </span>
+                </dd>
+
+                <dt>@Resources.ShipTo</dt>
+                <dd>
+                    <a id='address' class='editable' data-type='textarea' data-placement='right' data-pk='@Model.Id'
+                       data-value='@(Model.CustomerShipTo == null ? "" : Model.CustomerShipTo.ToString ())'
+                       data-source-cache='false' data-url='@Url.Action("SetShipTo", new { id = Model.Id })'
+                       data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+                        @if (Model.CustomerShipTo != null)
+                        {
+                            @Html.DisplayFor(x => x.CustomerShipTo, "String")
+                        }
+                    </a>
+                </dd>
+            </dl>
+        </div>
+        <div class='col-xs-5'>
+            <dl class='dl-horizontal'>
+                <dt>@Resources.Id</dt>
+                <dd>
+                    <span>@Html.DisplayFor(x => x.Id)</span>
+                    <a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => x.Serial)">
+                        <span class="glyphicon glyphicon-exclamation-sign"></span>
+                    </a>
+                </dd>
+                <dt>Operador</dt>
+                <dd>
+                    <a id='salesperson' data-type='select2' data-placement='left' data-pk='@Model.Id'
+                       data-value='@Model.SalesPerson' data-url='@Url.Action("SetSalesPerson", new { id = Model.Id })'
+                       data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
+                        @Html.DisplayFor(x => x.SalesPerson.Name)
+                    </a>
+                </dd>
+                <dt class="thick center">Unidad</dt>
+                <dd>
+                    <a id='unidadDeTransporte' class='editable alert-link' data-type='text' data-placement='left' data-pk='@Model.Id'
+                       data-value='@(string.IsNullOrEmpty(json.unidadDeTransporte.ToString()) ? "Agregar Placas" : json.unidadDeTransporte)' data-source-cache='false'
+                       data-url='@Url.Action("UpdateJSON", new { id = Model.Id, attribute = "unidadDeTransporte" })'
+                       data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
+                        @json.unidadDeTransporte
+                    </a>
+                </dd>
+
+                <dt>@Resources.PromiseDate</dt>
+                <dd>
+                    <a id='promise-date' data-type='date' data-placement='left' data-pk='@Model.Id'
+                       data-value='@Html.DisplayFor(x => x.Date)' data-url='@Url.Action("SetDate", new { id = Model.Id })'
+                       data-emptytext='@Resources.Empty' data-clear='false'>
+                        @Html.DisplayFor(x => x.Date)
+                    </a>
+                </dd>
+            </dl>
+        </div>
+    </div>
+    @if (Privilege.AllowDelete && !Model.IsCancelled)
+    {
+        <div class='row'>
+            <div class='col-xs-12'>
+                @using (Html.BeginForm("Cancel", "SpecialReceipts", new { id = Model.Id }, FormMethod.Post, new { @class = "modal-form pull-right" }))
+                {
+                    <button type="submit" class="icon cancel">@Resources.Cancel</button>
+                }
+            </div>
+        </div>
+    }
 </fieldset>
 <script type='text/javascript'>
 $(function () {
