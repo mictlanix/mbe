@@ -80,8 +80,13 @@
     </thead>
     <tbody>
         <tr class="">
+            <td colspan="12">
+                <div class="col-xs-3">
+
+                </div>
+            </td>
             <td class="text-right mylabel">Volumen m³: </td>
-            <td class="text-left">@(string.IsNullOrEmpty(json.volumenM3.ToString()) ? "---" : json.volumenM3)</td>
+            <td class="text-left data">@(string.IsNullOrEmpty(json.volumenM3.ToString()) ? Resources.Empty : json.volumenM3)</td>
             <td class="text-right mylabel">Tipo: </td>
             <td class="text-left">@(string.IsNullOrEmpty(json.tipo.ToString()) ? "---" : json.tipo)</td>
             <td class="text-right mylabel">Resistencia Concreto: </td>
@@ -99,36 +104,12 @@
 <div style="min-height: 2.2mm; border-top: #333 solid 3px; border-bottom: #333 solid 1px"></div>
 
 <table>
-    @*<tfoot>
-            <tr>
-                <td rowspan="@(Model.Discount > 0m ? 4 : 3)" class="col-xs-10 text-center" style="vertical-align:middle">
-                    <p style="border-top: solid black 1px; border-bottom:solid black 1px; margin: 0 2cm 0 2cm;">
-                        @Html.CurrencyToString(Model.Total, Model.Currency)
-                    </p>
-                </td>
-                <td class="col-xs-1 nowrap text-right">@Resources.Subtotal</td>
-                <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Subtotal)</td>
-            </tr>
-        @if (Model.Discount > 0m) {
-            <tr>
-                <th class="col-xs-1 nowrap text-right">@Resources.Discount</th>
-                <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Discount)</td>
-            </tr>
-        }
-            <tr>
-                <td class="col-xs-1 nowrap text-right">@Resources.Taxes</td>
-                <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Taxes)</td>
-            </tr>
-            <tr>
-                <td class="col-xs-1 nowrap text-right">@Resources.Total</td>
-                <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Total)</td>
-            </tr>
-        @if (Model.Discount > 0) {
-            <tr>
-                <td class="text-center">
-                        <text>@string.Format(Resources.SavingsOnSalesOrder, Model.Discount)</text>
-                </td>
-            </tr>
-        }
-        </tfoot>*@
+
 </table>
+
+<style>
+    td.data {
+        border-width: 3px;
+        border-color: gray;
+    }
+</style>
