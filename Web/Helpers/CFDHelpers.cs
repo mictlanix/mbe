@@ -116,10 +116,19 @@ namespace Mictlanix.BE.Web.Helpers {
 		{
 			var cer = item.Issuer.Certificates.First (x => x.IsActive);
 			var cli = new DFactureClient (WebConfig.DFactureUser, WebConfig.DFacturePassword, WebConfig.DFactureUrl);
-			return cli.Cancel (item.Issuer.Id, item.Recipient, item.StampId, item.Total.ToString (),
-				      	Convert.ToBase64String (cer.CertificateData),
-				      	Convert.ToBase64String (cer.KeyData),
-					Encoding.UTF8.GetString (cer.KeyPassword));
+
+			try {
+				return cli.Cancel (item.Issuer.Id, item.Recipient, item.StampId, item.Total.ToString (),
+							Convert.ToBase64String (cer.CertificateData),
+						      	Convert.ToBase64String (cer.KeyData),
+							Encoding.UTF8.GetString (cer.KeyPassword));
+			} catch (DFactureClientException ex) {
+				if (ex.Code == "202") { // UUID Previamente cancelado
+					return true;
+				}
+
+				throw ex;
+			}
 		}
 
 		public static bool PrivateKeyTest (byte [] data, byte [] password)
