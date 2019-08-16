@@ -52,7 +52,7 @@
     <div class="col-xs-6 text-right">
         <div class="row">
             <div class="col-xs-12">
-                <h2 class="text-right uppercase">@Resources.SalesOrder @Html.DisplayFor(x => x.Id)</h2>
+                <h2 class="text-right uppercase">Orden de Transporte de Concreto @Html.DisplayFor(x => x.Id)</h2>
             </div>
             <div class="col-xs-12">
                 <p><span class="mylabel">Operador</span></p>
@@ -81,35 +81,125 @@
     <tbody>
         <tr class="">
             <td colspan="12">
-                <div class="col-xs-3">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <p><span class="mylabel">Volumen m³:</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="left">@(string.IsNullOrEmpty(json.volumenM3.ToString()) ? "---" : json.volumenM3)</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="mylabel">Tipo:</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="left">@(string.IsNullOrEmpty(json.tipo.ToString()) ? "---" : json.tipo)</span></p>
+                    </div>
 
+                    <div class="col-xs-3">
+                        <p><span class="mylabel">Resistencia Concreto:</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="left">@(string.IsNullOrEmpty(json.resistenciaConcreto.ToString()) ? "---" : json.resistenciaConcreto)</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="mylabel">Edad Garantía:</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="left">@(string.IsNullOrEmpty(json.edadGarantia.ToString()) ? "---" : json.edadGarantia)</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="mylabel">TMA:</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="left">@(string.IsNullOrEmpty(json.TMA.ToString()) ? "---" : json.TMA)</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="mylabel">Revenimiento CM:</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="left">@(string.IsNullOrEmpty(json.revenimientoCM.ToString()) ? "---" : json.revenimientoCM)</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="mylabel">Tiro:</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="left">@(string.IsNullOrEmpty(json.tiro.ToString()) ? "---" : json.tiro)</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="mylabel">Pedido m³:</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="left">@(string.IsNullOrEmpty(json.pedidoM3.ToString()) ? "---" : json.pedidoM3)</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="mylabel">Por Surtir:</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="left">@(string.IsNullOrEmpty(json.porSurtirM3.ToString()) ? "---" : json.porSurtirM3)</span></p>
+                    </div>
+                    <div class="col-xs-12 text-center"><span class="mylabel">Aditivos</span></div>
+                    <div class="col-xs-3">
+                        <p><span class="mylabel">Impermeabilizante:</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="left">@(string.IsNullOrEmpty(json.impermeabilizante.ToString()) ? "---" : json.impermeabilizante)</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="mylabel">Retardante De Fraguado:</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="left">@(string.IsNullOrEmpty(json.retardanteDeFraguado.ToString()) ? "---" : json.retardanteDeFraguado)</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="mylabel">Aceletente:</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="left">@(string.IsNullOrEmpty(json.aceletente.ToString()) ? "---" : json.aceletente)</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="mylabel">Fibras:</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="left">@(string.IsNullOrEmpty(json.fibras.ToString()) ? "---" : json.fibras)</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="mylabel">Aditivos Especiales:</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="left">@(string.IsNullOrEmpty(json.aditivosEspeciales.ToString()) ? "---" : json.aditivosEspeciales)</span></p>
+                    </div>
+                    <div class="col-xs-12 text-center"><span class="mylabel">Servicios Complementarios</span></div>
+                    <div class="col-xs-3">
+                        <p><span class="mylabel">Renta Vibrador:</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="left">@(string.IsNullOrEmpty(json.rentaVibrador.ToString()) ? "---" : json.rentaVibrador)</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="mylabel">Servicio de Bomba:</span></p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p><span class="left">@(string.IsNullOrEmpty(json.servicioBomba.ToString()) ? "---" : json.servicioBomba)</span></p>
+                    </div>
+                    <div class="col-xs-12">
+                        <p><span class="mylabel">Observaciones:</span></p>
+                    </div>
+                    <div class="col-xs-12">
+                        <p><span class="left">@(string.IsNullOrEmpty(json.observaciones.ToString()) ? "" : json.observaciones)</span></p>
+                    </div>
                 </div>
             </td>
-            <td class="text-right mylabel">Volumen m³: </td>
-            <td class="text-left data">@(string.IsNullOrEmpty(json.volumenM3.ToString()) ? Resources.Empty : json.volumenM3)</td>
-            <td class="text-right mylabel">Tipo: </td>
-            <td class="text-left">@(string.IsNullOrEmpty(json.tipo.ToString()) ? "---" : json.tipo)</td>
-            <td class="text-right mylabel">Resistencia Concreto: </td>
-            <td class="text-left">@(string.IsNullOrEmpty(json.tipo.ToString()) ? "---" : json.tipo)</td>
-            <td class="text-right mylabel">Edad Garantía: </td>
-            <td class="text-left">@(string.IsNullOrEmpty(json.volumenM3.ToString()) ? "---" : json.volumenM3)</td>
-            <td class="text-right mylabel">TMA: </td>
-            <td class="text-left">@(string.IsNullOrEmpty(json.tipo.ToString()) ? "---" : json.tipo)</td>
-            <td class="text-right mylabel">Revenimiento CM: </td>
-            <td class="text-left">@(string.IsNullOrEmpty(json.tipo.ToString()) ? "---" : json.tipo)</td>
         </tr>
     </tbody>
 </table>
 
 <div style="min-height: 2.2mm; border-top: #333 solid 3px; border-bottom: #333 solid 1px"></div>
 
-<table>
-
-</table>
-
-<style>
-    td.data {
-        border-width: 3px;
-        border-color: gray;
-    }
-</style>
+<div class="row" style="margin-top:15mm">
+    <div class="col-xs-3 col-xs-offset-2 text-center" style="border-top: #333 solid 1px">
+        @Resources.Name<br />
+    </div>
+    <div class="col-xs-3 col-xs-offset-2 text-center" style="border-top: #333 solid 1px">
+        @Resources.AgreementSignature
+    </div>
+</div>
