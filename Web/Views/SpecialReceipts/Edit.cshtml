@@ -180,15 +180,6 @@
                             @json.aditivosEspeciales
                         </a>
                     </div>
-                    <div class="col-xs-12 center">
-                        <span class="thick center">Observaciones</span>
-
-                        <a id='observaciones' class='editable' data-type='text' data-placement='right' data-pk='@Model.Id' data-source-cache='false'
-                           data-value='@(string.IsNullOrEmpty(json.observaciones.ToString()) ? "Indicar observaciones" : json.observaciones)' data-url='@Url.Action("UpdateJSON", new { id = Model.Id, attribute = "observaciones" })'
-                           data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
-                            @json.observaciones
-                        </a>
-                    </div>
                 </div>
             </fieldset>
             <fieldset>
