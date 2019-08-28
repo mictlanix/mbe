@@ -1204,6 +1204,8 @@
     <None Include="Content\bootstrap-theme.min.css.map" />
     <None Include="Content\bootstrap-theme.css.map" />
     <None Include="Scripts\jquery-2.2.4.min.map" />
+    <Content Include="Views\SpecialReceipts\View.cshtml" />
+    <Content Include="Views\SpecialReceipts\_DisplayView.cshtml" />
   </ItemGroup>
   <ItemGroup />
 </Project>
