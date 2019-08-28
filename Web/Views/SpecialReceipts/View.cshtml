@@ -1,31 +1,170 @@
 ﻿@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
-@model SalesOrder
+@using Newtonsoft.Json.Linq;
+
+@model SpecialReceipt
 
 @{
     ViewBag.Title = Resources.SalesOrder;
+    dynamic json = JValue.Parse(Model.JSON);
 }
 
 <h2>@Resources.SalesOrder</h2>
 
 <div id="master-section">
-	@Html.Partial("_DisplayView")
+    @Html.Partial("_DisplayView")
 </div>
+<div id="details-section">
+    <fieldset>
+        <div id='details-section'>
+            <div id="items-container">
+                <fieldset>
+                    <div class="row">
+                        <div class="col-xs-12 center">
+                            <span class="thick">Características del Concreto</span>
+                        </div>
 
-<div id='totals-section' class='pull-right' data-url='@Url.Action("Totals", new { id = Model.Id })'>
-    @Html.Partial("_Totals")
+                        <div class="col-xs-3">
+                            <span class="thick center">Elemento a colar</span>
+                                @json.elementoAColar
+                        </div>
+                        <div class="col-xs-3">
+                            <span class="thick center">Unidad</span>
+                                @json.unidadDeTransporte
+                        </div>
+                        <div class="col-xs-3">
+                            <span class="thick center">Volumen m³</span>
+
+                                @json.volumenM3
+                        </div>
+                        <div class="col-xs-3">
+                            <span class="thick center">Tipo</span>
+                                @json.tipo
+                        </div>
+                        <div class="col-xs-3">
+                            <span class="thick center">Resistencia Concreto</span>
+
+                                @json.resistenciaConcreto
+                        </div>
+                        <div class="col-xs-3">
+                            <span class="thick center">Edad Garantía</span>
+
+                                @json.edadGarantia
+                        </div>
+                        <div class="col-xs-3">
+                            <span class="thick center">TMA</span>
+                                @json.TMA
+                        </div>
+                        <div class="col-xs-3">
+                            <span class="thick center">Revenimiento (CM)</span>
+                                @json.revenimientoCM
+                        </div>
+                        <div class="col-xs-3">
+                            <span class="thick center">Tiro</span>
+
+                                @json.tiro
+                        </div>
+                        <div class="col-xs-3">
+                            <span class="thick center">Pedido m³</span>
+                                @json.pedidoM3
+                        </div>
+                        <div class="col-xs-3">
+                            <span class="thick center">Por Surtir</span>
+                                @json.porSurtirM3
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="row">
+                        <div class="col-xs-12 center">
+                            <span class="thick">Aditivos</span>
+                        </div>
+                        <div class="col-xs-3">
+                            <span class="thick center">Impermeabilizante</span>
+                                @json.impermeabilizante
+                        </div>
+                        <div class="col-xs-3">
+                            <span class="thick center">Retardante De Fraguado</span>
+                                @json.retardanteDeFraguado
+                        </div>
+                        <div class="col-xs-3">
+                            <span class="thick center">Aceletente</span>
+                                @json.aceletente
+                        </div>
+                        <div class="col-xs-3">
+                            <span class="thick center">Fibras</span>
+                                @json.fibras
+                        </div>
+                        <div class="col-xs-3">
+                            <span class="thick center">Aditivos Especiales</span>
+                                @json.aditivosEspeciales
+                        </div>
+                        <div class="col-xs-3">
+                            <span class="thick center">Observaciones</span>
+                                @json.observaciones
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="row">
+                        <div class="col-xs-12 center">
+                            <span class="thick">Servicios Complementarios</span>
+                        </div>
+                        <div class="col-xs-3">
+                            <span class="thick center">Renta Vibrador</span>
+                                @json.rentaVibrador
+                        </div>
+                        <div class="col-xs-3">
+                            <span class="thick center">Servicio de Bomba</span>
+                                @json.servicioBomba
+                        </div>
+                        <div class="col-xs-3">
+                            <span class="thick center">Observaciones</span>
+                                @json.observaciones
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="row">
+                        <div class="col-xs-12 center">
+                            <span class="thick">Horarios</span>
+                        </div>
+                        <div class="col-xs-2">
+                            <span class="thick center">Salida Planta</span>
+                                @json.salidaPlanta
+                        </div>
+                        <div class="col-xs-2">
+                            <span class="thick center">Llegada Obra</span>
+                                @json.llegadaObra
+                        </div>
+                        <div class="col-xs-2">
+                            <span class="thick center">Inicio Descarga</span>
+                                @json.inicioDescarga
+                        </div>
+                        <div class="col-xs-2">
+                            <span class="thick center">Fin Descarga</span>
+                                @json.finDescarga
+                        </div>
+                        <div class="col-xs-2">
+                            <span class="thick center">Salida Obra</span>
+                                @json.salidaObra
+                        </div>
+                    </div>
+                </fieldset>
+    </fieldset>
+
 </div>
 <div class='clearfix'></div>
 <div id='back-to-list' class='pull-left'>
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
 <div class='pull-right'>
-	@Html.ActionLink(Resources.Print, "Print", new { id = Model.Id }, new { @class = "button icon print", target = "_blank" })
+    @Html.ActionLink(Resources.Print, "Print", new { id = Model.Id }, new { @class = "button icon print", target = "_blank" })
 </div>
 <div class='clearfix'></div>
 <script type='text/javascript'>
-$(function () {
-	$('[data-toggle="tooltip"]').tooltip();
-});
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
 </script>

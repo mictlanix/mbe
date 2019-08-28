@@ -1,53 +1,47 @@
 @using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
+@using Newtonsoft.Json.Linq;
+
+
 @model SpecialReceipt
 @{
-	//var invoices = Model.InvoiceSerials();
+    dynamic json = JValue.Parse(Model.JSON);
 }
 <fieldset>
-	<div class='row'>
-		<div class='col-xs-8'>
-	  		<dl class=''>
-				<dt>@Resources.Customer</dt>
+    <div class='row'>
+        <div class='col-xs-8'>
+            <dl class=''>
+                <dt>@Resources.Customer</dt>
                 <dd>@Html.DisplayFor(x => x.CustomerName)</dd>
 
-				@if (Model.Contact != null) {
-				<dt>@Resources.Contact</dt>
-				<dd>@Html.DisplayFor(x => x.Contact, "String")</dd>
-			    }
-		        @if (Model.ShipTo != null) {
-				<dt>@Resources.ShipTo</dt>
-				<dd>@Html.DisplayFor(x => x.ShipTo, "String")</dd>
-	        	}
-				<dt>@Resources.SalesPerson</dt>
-				<dd>@Html.DisplayFor(x => x.SalesPerson.Name)</dd>
-				<dt>@Resources.Comment</dt>
-				<dd>@Html.DisplayFor(x => x.Comment)</dd>
-			</dl>
-		</div>
-	  	<div class='col-xs-4'>
-	  		<dl class='dl-horizontal'>
-				<dt>@Resources.Id</dt>
-				<dd>
-					<span>@Html.DisplayFor(x => x.Id)</span>
-					<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => x.Serial)">
-						<span class="glyphicon glyphicon-exclamation-sign"></span>
-					</a>
-				</dd>
-				<dt>@Resources.Date</dt>
-				<dd>@Html.DisplayFor(x => x.Date)</dd>
-				<dt>@Resources.PromiseDate</dt>
-				<dd>@Html.DisplayFor(x => x.PromiseDate)</dd>
-				<dt>@Resources.Currency</dt>
-				<dd>@Html.DisplayFor(x => x.Currency)</dd>
-				<dt>@Resources.ExchangeRate</dt>
-				<dd>@Html.DisplayFor(x => x.ExchangeRate)</dd>
-				<dt>@Resources.PaymentTerms</dt>
-				<dd>@Model.Terms.GetDisplayName()</dd>
-				<dt>@Resources.DueDate</dt>
-				<dd>@Html.DisplayFor(x => x.DueDate.Date)</dd>
-			</dl>
-  		</div>
-	</div>
+                <dt>@Resources.ShipTo</dt>
+                <dd>@Html.DisplayFor(x => x.CustomerShipTo, "String")</dd>
+
+                <dt>@Resources.Comment</dt>
+                <dd>@Html.DisplayFor(x => x.Comment)</dd>
+            </dl>
+        </div>
+        <div class='col-xs-4'>
+            <dl class='dl-horizontal'>
+                <dt>@Resources.Id</dt>
+                <dd>
+                    <span>@Html.DisplayFor(x => x.Id)</span>
+                    <a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => x.Serial)">
+                        <span class="glyphicon glyphicon-exclamation-sign"></span>
+                    </a>
+                </dd>
+                <dt>@Resources.SalesPerson</dt>
+                <dd>@Html.DisplayFor(x => x.SalesPerson.Name)</dd>
+
+                <dt>Unidad de Transporte</dt>
+                <dd>
+                    @json.unidadDeTransporte
+                </dd>
+
+                <dt>@Resources.Date</dt>
+                <dd>@Html.DisplayFor(x => x.Date)</dd>
+            </dl>
+        </div>
+    </div>
 </fieldset>
