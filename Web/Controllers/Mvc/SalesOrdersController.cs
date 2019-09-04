@@ -217,7 +217,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.Contact = salesquote.Contact;
 			item.Comment = salesquote.Comment;
             item.ShipTo = salesquote.ShipTo;
-            item.CustomerShipTo = salesquote.ShipTo.ToString();
+            item.CustomerShipTo = salesquote.ShipTo == null ? "" : salesquote.ShipTo.ToString();
 
 			item.Creator = CurrentUser.Employee;
 			item.CreationTime = dt;
