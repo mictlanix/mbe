@@ -32,6 +32,14 @@
                     <p>@Html.DisplayFor(x => x.Contact.Name)</p>
                 </div>
             }
+             @if (Model.Comment != null) {
+                <div class="col-xs-12">
+                    <p><span class="mylabel">@Resources.Comment</span></p>
+                </div>
+                <div class="col-xs-12">
+                    <p>@Html.DisplayFor(x => x.Comment)</p>
+                </div>
+            }
             @if (Model.ShipTo != null) {
                 <div class="col-xs-12">
                     <p><span class="mylabel">@Resources.ShipTo</span></p>
