@@ -110,6 +110,13 @@ namespace Mictlanix.BE.Model {
 			get { return ModelHelpers.Subtotal (Quantity, Price, 1, TaxRate, IsTaxIncluded); }
 		}
 
+        [DataType (DataType.Currency)]
+		[Display (Name = "Subtotal", ResourceType = typeof (Resources))]
+        [DisplayFormat (DataFormatString = "{0:C4}")]
+		public decimal SubtotalC4 {
+			get { return ModelHelpers.SubtotalC4 (Quantity, Price, 1, TaxRate, IsTaxIncluded); }
+		}
+
 		[DataType (DataType.Currency)]
 		[Display (Name = "Discount", ResourceType = typeof (Resources))]
 		public decimal Discount {
