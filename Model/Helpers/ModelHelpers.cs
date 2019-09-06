@@ -86,5 +86,19 @@ namespace Mictlanix.BE.Model {
 				return TotalRounding ((quantity * price * exchangeRate - discount) * (1m + taxRate));
 			}
 		}
-	}
+
+        public static decimal TotalRoundingC4 (decimal d)
+		{
+			return Math.Round (d, 4, MidpointRounding.AwayFromZero);
+		}
+
+        public static decimal SubtotalC4(decimal quantity, decimal price, int v, decimal taxRate, bool isTaxIncluded)
+        {
+            if (isTaxIncluded && taxRate > 0m) {
+				return TotalRoundingC4 (quantity * price * v / (1m + taxRate));
+			} else {
+				return TotalRoundingC4 (quantity * price * v);
+			}
+        }
+    }
 }
