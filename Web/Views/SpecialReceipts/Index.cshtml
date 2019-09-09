@@ -4,7 +4,8 @@
 @using Mictlanix.BE.Web.Models
 @model Search<SpecialReceipt>
 @{
-    ViewBag.Title = Resources.SalesOrders;
+    var Title = "Orden de Transporte de Concreto"
+    ViewBag.Title = Title;
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders);
 }
@@ -36,7 +37,7 @@
 	        </div>
 	    </div>
 	</div>
-    <h1>@Resources.SalesOrders</h1>
+    <h1>@Title</h1>
 </div>
 <div id='activity-indicator'>
     <img alt='@Resources.Loading' src='@Url.Content("~/Content/images/loading-bar.gif")' />

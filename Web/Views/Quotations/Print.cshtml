@@ -32,7 +32,7 @@
                     <p>@Html.DisplayFor(x => x.Contact.Name)</p>
                 </div>
             }
-             @if (Model.Comment != null) {
+             @if (!string.IsNullOrEmpty(Model.Comment)) {
                 <div class="col-xs-12">
                     <p><span class="mylabel">@Resources.Comment</span></p>
                 </div>
