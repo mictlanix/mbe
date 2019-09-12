@@ -102,8 +102,8 @@
 					@Html.DisplayFor(x => item.Comment)
 				}
 				</td>
-                <td class="nowrap text-right">@Html.DisplayFor(x => item.NetPrice)</td>
-                <td class="nowrap text-right">@Html.DisplayFor(x => item.SubtotalC4)</td>
+                <td class="nowrap text-right">@Html.DisplayFor(x => item.PriceTaxIncluded)</td>
+                <td class="nowrap text-right">@Html.DisplayFor(x => item.Total)</td>
             </tr>
         }
     </tbody>
@@ -114,13 +114,13 @@
 <table>
 	<tfoot>
         <tr>
-            <td rowspan="@(Model.Discount > 0m ? 4 : 3)" class="col-xs-10 text-center" style="vertical-align:middle">
+            <td rowspan="@(Model.Discount > 0m ? 2 : 1)" class="col-xs-10 text-center" style="vertical-align:middle">
                 <div style="border-top: solid black 1px; border-bottom:solid black 1px; margin: 0 2cm 0 2cm;">
                     @Html.CurrencyToString(Model.Total, WebConfig.BaseCurrency)
                 </div>
             </td>
-            <td class="col-xs-1 nowrap text-right">@Resources.Subtotal</td>
-            <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Subtotal)</td>
+            <td class="col-xs-1 nowrap text-right">@Resources.Total</td>
+            <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Total)</td>
         </tr>
 	@if (Model.Discount > 0m) {
         <tr>
@@ -129,12 +129,7 @@
         </tr>
 	}
         <tr>
-            <td class="col-xs-1 nowrap text-right">@Resources.Taxes</td>
-            <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Taxes)</td>
-        </tr>
-        <tr>
-            <td class="col-xs-1 nowrap text-right">@Resources.Total</td>
-            <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Total)</td>
+            <td colspan="3" class="col-xs-3 nowrap text-right">Incluye un IVA de @Html.DisplayFor(x => x.Taxes)</td>
         </tr>
 	</tfoot>
 </table>
