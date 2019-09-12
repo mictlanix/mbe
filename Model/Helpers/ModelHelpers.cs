@@ -46,9 +46,9 @@ namespace Mictlanix.BE.Model {
 		{
 			if (taxIncluded && taxRate > 0m) {
 				return PriceRounding (price / (1 + taxRate));
-			} else {
-				return PriceRounding (price);
 			}
+
+			return PriceRounding (price);
 		}
 
 		public static decimal Subtotal (decimal quantity, decimal price, decimal exchangeRate,
@@ -56,23 +56,23 @@ namespace Mictlanix.BE.Model {
 		{
 			if (taxIncluded && taxRate > 0m) {
 				return TotalRounding (quantity * price * exchangeRate / (1m + taxRate));
-			} else {
-				return TotalRounding (quantity * price * exchangeRate);
 			}
+
+			return TotalRounding (quantity * price * exchangeRate);
 		}
 
 		public static decimal Discount (decimal quantity, decimal price, decimal exchangeRate,
-		                                decimal discountRate, decimal taxRate, bool taxIncluded)
+						decimal discountRate, decimal taxRate, bool taxIncluded)
 		{
 			if (taxIncluded && taxRate > 0m) {
 				return TotalRounding (quantity * price * exchangeRate * discountRate / (1m + taxRate));
-			} else {
-				return TotalRounding (quantity * price * exchangeRate * discountRate);
 			}
+
+			return TotalRounding (quantity * price * exchangeRate * discountRate);
 		}
 
 		public static decimal Total (decimal quantity, decimal price, decimal exchangeRate,
-		                             decimal discountRate, decimal taxRate, bool taxIncluded)
+					     decimal discountRate, decimal taxRate, bool taxIncluded)
 		{
 			var discount = 0m;
 
@@ -82,23 +82,59 @@ namespace Mictlanix.BE.Model {
 
 			if (taxIncluded || taxRate <= 0m) {
 				return TotalRounding (quantity * price * exchangeRate - discount);
-			} else {
-				return TotalRounding ((quantity * price * exchangeRate - discount) * (1m + taxRate));
 			}
+
+			return TotalRounding ((quantity * price * exchangeRate - discount) * (1m + taxRate));
 		}
 
-        public static decimal TotalRoundingC4 (decimal d)
+		public static decimal TotalRounding (decimal d, int scale)
 		{
-			return Math.Round (d, 4, MidpointRounding.AwayFromZero);
+			return Math.Round (d, scale, MidpointRounding.AwayFromZero);
 		}
 
-        public static decimal SubtotalC4(decimal quantity, decimal price, int v, decimal taxRate, bool isTaxIncluded)
-        {
-            if (isTaxIncluded && taxRate > 0m) {
-				return TotalRoundingC4 (quantity * price * v / (1m + taxRate));
-			} else {
-				return TotalRoundingC4 (quantity * price * v);
+		public static decimal Subtotal (decimal quantity, decimal price, decimal exchangeRate,
+						decimal taxRate, bool isTaxIncluded, int scale)
+		{
+			if (isTaxIncluded && taxRate > 0m) {
+				return TotalRounding (quantity * price * exchangeRate / (1m + taxRate), scale);
 			}
-        }
-    }
+
+			return TotalRounding (quantity * price * exchangeRate, scale);
+		}
+
+		public static decimal Discount (decimal quantity, decimal price, decimal exchangeRate,
+						decimal discountRate, decimal taxRate, bool taxIncluded, int scale)
+		{
+			if (taxIncluded && taxRate > 0m) {
+				return TotalRounding (quantity * price * exchangeRate * discountRate / (1m + taxRate), scale);
+			}
+
+			return TotalRounding (quantity * price * exchangeRate * discountRate, scale);
+		}
+
+		public static decimal Total (decimal quantity, decimal price, decimal exchangeRate,
+					     decimal discountRate, decimal taxRate, bool taxIncluded, int scale)
+		{
+			var discount = 0m;
+
+			if (discountRate > 0) {
+				discount = TotalRounding (quantity * price * exchangeRate * discountRate, scale);
+			}
+
+			if (taxIncluded || taxRate <= 0m) {
+				return TotalRounding (quantity * price * exchangeRate - discount, scale);
+			}
+
+			return TotalRounding ((quantity * price * exchangeRate - discount) * (1m + taxRate), scale);
+		}
+
+		public static decimal PriceTaxIncluded (decimal price, decimal taxRate, bool taxIncluded)
+		{
+			if (!taxIncluded && taxRate > 0m) {
+				return PriceRounding (price * (1 + taxRate));
+			}
+
+			return PriceRounding (price);
+		}
+	}
 }
