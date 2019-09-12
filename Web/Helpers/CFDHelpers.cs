@@ -101,6 +101,7 @@ namespace Mictlanix.BE.Web.Helpers {
 		{
 			var cfd = SignCFD (item);
 			var cli = new DFactureClient (WebConfig.DFactureUser, WebConfig.DFacturePassword, WebConfig.DFactureUrl);
+			//System.IO.File.WriteAllText ("cfd.xml", cfd.ToXmlString ());
 			var tfd = cli.Stamp (cfd);
 
 			if (cfd.Complemento == null) {

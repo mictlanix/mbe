@@ -120,49 +120,49 @@ namespace Mictlanix.BE.Model {
 		[DataType (DataType.Currency)]
 		[Display (Name = "Subtotal", ResourceType = typeof (Resources))]
 		public virtual decimal Subtotal {
-			get { return Details.Sum (x => x.Subtotal); }
+			get { return ModelHelpers.TotalRounding (Details.Sum (x => x.Subtotal)); }
 		}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Discount", ResourceType = typeof (Resources))]
 		public virtual decimal Discount {
-			get { return Details.Sum (x => x.Discount); }
+			get { return ModelHelpers.TotalRounding (Details.Sum (x => x.Discount)); }
 		}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Taxes", ResourceType = typeof (Resources))]
 		public virtual decimal Taxes {
-			get { return Details.Sum (x => x.Taxes); }
+			get { return ModelHelpers.TotalRounding (Details.Sum (x => x.Taxes)); }
 		}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Total", ResourceType = typeof (Resources))]
 		public virtual decimal Total {
-			get { return Details.Sum (x => x.Total); }
+			get { return ModelHelpers.TotalRounding (Details.Sum (x => x.Total)); }
 		}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Subtotal", ResourceType = typeof (Resources))]
 		public virtual decimal SubtotalEx {
-			get { return Details.Sum (x => x.SubtotalEx); }
+			get { return ModelHelpers.TotalRounding (Details.Sum (x => x.SubtotalEx)); }
 		}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Discount", ResourceType = typeof (Resources))]
 		public virtual decimal DiscountEx {
-			get { return Details.Sum (x => x.DiscountEx); }
+			get { return ModelHelpers.TotalRounding (Details.Sum (x => x.DiscountEx)); }
 		}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Taxes", ResourceType = typeof (Resources))]
 		public virtual decimal TaxesEx {
-			get { return Details.Sum (x => x.TaxesEx); }
+			get { return ModelHelpers.TotalRounding (Details.Sum (x => x.TaxesEx)); }
 		}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Total", ResourceType = typeof (Resources))]
 		public virtual decimal TotalEx {
-			get { return Details.Sum (x => x.TotalEx); }
+			get { return ModelHelpers.TotalRounding (Details.Sum (x => x.TotalEx)); }
 		}
 
 		[BelongsTo ("creator", Lazy = FetchWhen.OnInvoke)]
