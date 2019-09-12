@@ -211,9 +211,22 @@ CREATE TABLE `special_receipt` (
 	CONSTRAINT `FK__store` FOREIGN KEY (`store`) REFERENCES `store` (`store_id`),
 	CONSTRAINT `FK_special_receipt_employee` FOREIGN KEY (`salesperson`) REFERENCES `employee` (`employee_id`)
 )
-COLLATE='utf8_spanish_ci'
-ENGINE=InnoDB
-;
+COLLATE='utf8_spanish_ci' ENGINE=InnoDB;
+
+ALTER TABLE `expense_voucher_detail` 
+	CHANGE COLUMN `amount` `amount` DECIMAL(18,2) NOT NULL;
+    
+ALTER TABLE `fiscal_document_detail` 
+	CHANGE COLUMN `price` `price` DECIMAL(18,7) NOT NULL;
+    
+ALTER TABLE `purchase_order_detail` 
+	CHANGE COLUMN `price` `price` DECIMAL(18,7) NOT NULL;
+    
+ALTER TABLE `sales_order_detail` 
+	CHANGE COLUMN `price` `price` DECIMAL(18,7) NOT NULL;
+    
+ALTER TABLE `sales_quote_detail` 
+	CHANGE COLUMN `price` `price` DECIMAL(18,7) NOT NULL;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
