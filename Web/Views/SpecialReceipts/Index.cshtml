@@ -4,7 +4,7 @@
 @using Mictlanix.BE.Web.Models
 @model Search<SpecialReceipt>
 @{
-    var Title = "Orden de Transporte de Concreto"
+    var Title = "Orden de Transporte de Concreto";
     ViewBag.Title = Title;
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders);
