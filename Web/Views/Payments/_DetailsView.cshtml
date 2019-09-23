@@ -72,14 +72,15 @@ $(function () {
 		  var reference = $("#reference").val();
 		  var fee = $(this).data('fee');
 		  var ship_to =  '@Model.CustomerShipTo';
-		  var ondelivery = false;
+        var ondelivery = $("#ondelivery").is(":checked");
 
-		  if (ship_to != '') {
-			  ondelivery = $("#ondelivery")[0].checked;
+        if (ship_to != '') {
+            //console.log(ship_to);
 			  $("#ondelivery").prop('checked', false);
 		  }
 
-		  $.post('@Url.Action("AddPayment", new { id = Model.Id })', { 'type': type, 'amount': amount, 'reference': reference, 'fee': fee, 'ondelivery': ondelivery }, function (detail) {
+        $.post('@Url.Action("AddPayment", new { id = Model.Id })', { 'type': type, 'amount': amount, 'reference': reference, 'fee': fee, 'ondelivery': ondelivery }, function (detail) {
+            //console.log(ondelivery);
             $.get('@Url.Action("GetPayment")/' + detail.id, function (data) {
                 $('#items').append(data);
                 $("#amount,#reference").val('');
