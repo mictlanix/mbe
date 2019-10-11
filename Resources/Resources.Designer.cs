@@ -4702,5 +4702,41 @@ namespace Mictlanix.BE {
                 return ResourceManager.GetString("ZeroInventory", resourceCulture);
             }
         }
+        
+        public static string AdvancePaymentsApplied {
+            get {
+                return ResourceManager.GetString("AdvancePaymentsApplied", resourceCulture);
+            }
+        }
+        
+        public static string RelatedCdfi {
+            get {
+                return ResourceManager.GetString("RelatedCdfi", resourceCulture);
+            }
+        }
+        
+        public static string Concepts {
+            get {
+                return ResourceManager.GetString("Concepts", resourceCulture);
+            }
+        }
+        
+        public static string RelationType {
+            get {
+                return ResourceManager.GetString("RelationType", resourceCulture);
+            }
+        }
+        
+        public static string CFDI_RelationType_CreditNote {
+            get {
+                return ResourceManager.GetString("CFDI_RelationType_CreditNote", resourceCulture);
+            }
+        }
+        
+        public static string CFDI_RelationType_AdvancePayment {
+            get {
+                return ResourceManager.GetString("CFDI_RelationType_AdvancePayment", resourceCulture);
+            }
+        }
     }
 }
