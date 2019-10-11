@@ -111,12 +111,20 @@
 			        	@Model.PaymentMethod.GetDisplayName()
 			        </a>
 				</dd>
-                <dt>@Resources.RetentionRate</dt>
-                <dd>
-                    <a class='editable tax' data-type='select' data-placement='right' data-autotext='never'
-                    data-source='@Url.Action("RetentionRates", "Pricing")' data-pk='@Model.Id' data-value='@Model.RetentionRate.ToString("0.####")'
-                    data-url='@Url.Action("SetRetentionRate", new { id = Model.Id })'>@Html.DisplayFor(x => x.RetentionRate)</a>
-                </dd>
+                @if(Model.Type == FiscalDocumentType.AdvancePaymentsApplied) {
+                    <dt>@Resources.RelationType</dt>
+                    <dd>@Resources.CFDI_RelationType_AdvancePayment</dd>
+                } else if (Model.Type == FiscalDocumentType.CreditNote) {
+                    <dt>@Resources.RelationType</dt>
+                    <dd>@Resources.CFDI_RelationType_CreditNote</dd>
+                } else {
+                    <dt>@Resources.RetentionRate</dt>
+                    <dd>
+                        <a class='editable tax' data-type='select' data-placement='right' data-autotext='never'
+                        data-source='@Url.Action("RetentionRates", "Pricing")' data-pk='@Model.Id' data-value='@Model.RetentionRate.ToString("0.####")'
+                        data-url='@Url.Action("SetRetentionRate", new { id = Model.Id })'>@Html.DisplayFor(x => x.RetentionRate)</a>
+                    </dd>
+                }
 			</dl>
   		</div>
 	</div>

@@ -106,7 +106,8 @@
 	table > tbody > tr:nth-child(odd) > td {
 		background: #edeef0 !important;
 	}
-	table > tfoot > tr > td.no-bg {
+	table > tbody > tr > td.no-bg,
+    table > tfoot > tr > td.no-bg {
 		background: none !important;
 	}
 	table > tfoot > tr > th.tax,
@@ -456,6 +457,34 @@
         }
         </div>
     </div>
+    
+    
+@if (Model.Relations.Any ()) {
+    <table>
+        <thead>
+            <tr>
+                <th class="text-capitalize" style="padding: 4px 10px"></th>
+                <th>@Resources.RelatedCdfi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                @if (Model.Type == FiscalDocumentType.AdvancePaymentsApplied) {
+                    <td colspan="2" class="no-bg"><strong>@Resources.RelationType</strong> @Resources.CFDI_RelationType_AdvancePayment</td>
+                } else if (Model.Type == FiscalDocumentType.CreditNote) {
+                    <td colspan="2" class="no-bg"><strong>@Resources.RelationType</strong> @Resources.CFDI_RelationType_CreditNote</td>
+                }
+            </tr>
+        @for (int i = 0; i < Model.Relations.Count; i++) {
+            var item = Model.Relations [i];
+            <tr>
+                <th class="nowrap">@(i + 1)</th>
+                <td>@item.Relation.StampId</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
 
 	<div class="row" style="margin-top:3mm">
 		<div class="col-xs-6">
