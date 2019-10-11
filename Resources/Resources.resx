@@ -2468,4 +2468,22 @@ Atte: {1}.</value>
   <data name="ZeroInventory" xml:space="preserve">
     <value>Sin Existencia</value>
   </data>
+  <data name="AdvancePaymentsApplied" xml:space="preserve">
+    <value>Aplicación de Anticipos</value>
+  </data>
+  <data name="RelatedCdfi" xml:space="preserve">
+    <value>CFDI Relacionados</value>
+  </data>
+  <data name="Concepts" xml:space="preserve">
+    <value>Conceptos</value>
+  </data>
+  <data name="RelationType" xml:space="preserve">
+    <value>Tipo de Relación</value>
+  </data>
+  <data name="CFDI_RelationType_CreditNote" xml:space="preserve">
+    <value>01 : Nota de Crédito de los Documentos Relacionados</value>
+  </data>
+  <data name="CFDI_RelationType_AdvancePayment" xml:space="preserve">
+    <value>07 : CFDI por Aplicación de Anticipo</value>
+  </data>
 </root>

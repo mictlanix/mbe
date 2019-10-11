@@ -1,0 +1,27 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model FiscalDocumentRelation
+
+<li id='rel:@Model.Id'>
+    <div class='action-link'>
+        <a class='button icon-only icon delete' title='@Resources.Message_DeleteConfirmation'
+		   data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id' data-url='@Url.Action("RemoveRelation", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
+    </div>
+    <div class='info'>
+        <b>@Resources.Batch: </b>
+        <span>@Html.DisplayFor(x => x.Relation.Batch)</span>
+        <b>@Resources.Serial: </b>
+        <span>@Html.DisplayFor(x => x.Relation.Serial)</span>
+        <br />
+        <b>@Resources.StampId: </b>
+        <span>@Html.DisplayFor(x => x.Relation.StampId)</span>
+    </div>
+</li>
+<script type='text/javascript'>
+$('#rel\\:@Model.Id a.delete').editable({
+	success: function(response, newValue) {
+        $('#rel\\:@Model.Id').remove();
+    }
+});
+</script>
