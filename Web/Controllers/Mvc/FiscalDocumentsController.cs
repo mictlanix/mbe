@@ -120,7 +120,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return View ("ViewPayment", item);
 			}
 
-			return View (item);
+            if (item.Type == FiscalDocumentType.CreditNote || item.Type == FiscalDocumentType.AdvancePaymentsApplied)
+            {
+                return View("ViewOutcome", item);
+            }
+
+            return View (item);
 		}
 
 		public ViewResult Print (int id)
@@ -274,7 +279,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return View ("EditPayment", item);
 			}
 
-			return View (item);
+            if (item.Type == FiscalDocumentType.CreditNote || item.Type == FiscalDocumentType.AdvancePaymentsApplied) {
+                return View("EditOutcome", item);
+            }
+
+            return View (item);
 		}
 
 		public JsonResult Batches (int id)
@@ -858,12 +867,22 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Relation (int id)
 		{
 			var item = FiscalDocumentRelation.Find (id);
+
+            if (item.Document.Type == FiscalDocumentType.CreditNote || item.Document.Type == FiscalDocumentType.AdvancePaymentsApplied) {
+                return PartialView ("_SimpleRelationEditorView", item);
+            }
+
 			return PartialView ("_RelationEditorView", item);
 		}
 
 		public ActionResult Relations (int id)
 		{
 			var item = FiscalDocument.Find (id);
+            
+            if (item.Type == FiscalDocumentType.CreditNote || item.Type == FiscalDocumentType.AdvancePaymentsApplied) {
+                return PartialView ("_SimpleRelations", item);
+            }
+
 			return PartialView ("_Relations", item.Relations);
 		}
 
@@ -1654,8 +1673,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				new { value = (int) PaymentMethod.ElectronicMoney, text = PaymentMethod.ElectronicMoney.GetDisplayName () },
 				new { value = (int) PaymentMethod.FoodVouchers, text = PaymentMethod.FoodVouchers.GetDisplayName () },
 				new { value = (int) PaymentMethod.DebitCard, text = PaymentMethod.DebitCard.GetDisplayName () },
-				new { value = (int) PaymentMethod.ServiceCard, text = PaymentMethod.ServiceCard.GetDisplayName () }
-			};
+				new { value = (int) PaymentMethod.ServiceCard, text = PaymentMethod.ServiceCard.GetDisplayName () },
+                new { value = (int) PaymentMethod.AdvancePayments, text = PaymentMethod.AdvancePayments.GetDisplayName () }
+            };
 
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}

@@ -950,6 +950,11 @@
     <Content Include="Scripts\jquery-2.2.4.min.js" />
     <Content Include="Scripts\jquery-2.2.4.js" />
     <Content Include="Scripts\jquery-2.2.4-vsdoc.js" />
+    <Content Include="Views\FiscalDocuments\EditOutcome.cshtml" />
+    <Content Include="Views\FiscalDocuments\_SimpleRelations.cshtml" />
+    <Content Include="Views\FiscalDocuments\_SimpleRelationEditorView.cshtml" />
+    <Content Include="Views\FiscalDocuments\_SimpleRelationDisplayView.cshtml" />
+    <Content Include="Views\FiscalDocuments\ViewOutcome.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\fonts\" />

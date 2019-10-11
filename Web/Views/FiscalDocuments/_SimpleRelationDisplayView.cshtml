@@ -1,0 +1,15 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model FiscalDocumentRelation
+<li id='id:@Model.Id'>
+    <div class='info'>
+        <b>@Resources.Batch: </b>
+        <span>@Html.DisplayFor(x => x.Relation.Batch)</span>
+        <b>@Resources.Serial: </b>
+        <span>@Html.DisplayFor(x => x.Relation.Serial)</span>
+        <br />
+        <b>@Resources.StampId: </b>
+        <span>@Html.DisplayFor(x => x.Relation.StampId)</span>
+    </div>
+</li>
