@@ -58,9 +58,9 @@ namespace Mictlanix.BE.Web.Helpers {
 
 			cfd.Sign (cer.KeyData, cer.KeyPassword);
 
-            System.IO.File.WriteAllText (System.Web.HttpContext.Current.Server.MapPath("~/cfd.xml"), cfd.ToXmlString());
+			//System.IO.File.WriteAllText (System.Web.HttpContext.Current.Server.MapPath ("~/cfd.xml"), cfd.ToXmlString ());
 
-            return cfd;
+			return cfd;
 		}
 
 		//static Comprobante ProFactStamp (FiscalDocument item)
@@ -360,21 +360,21 @@ namespace Mictlanix.BE.Web.Helpers {
 				cfd.Impuestos.TotalImpuestosRetenidosSpecified = true;
 			}
 
-            if (item.Relations.Any ()) {
-                cfd.CfdiRelacionados = new ComprobanteCfdiRelacionados {
-                    TipoRelacion = item.Type == FiscalDocumentType.AdvancePaymentsApplied ? c_TipoRelacion.AplicacionDeAnticipo : c_TipoRelacion.NotaDeCredito,
-                    CfdiRelacionado = new ComprobanteCfdiRelacionadosCfdiRelacionado [item.Relations.Count]
-                };
+			if (item.Relations.Any ()) {
+				cfd.CfdiRelacionados = new ComprobanteCfdiRelacionados {
+					TipoRelacion = item.Type == FiscalDocumentType.AdvancePaymentsApplied ? c_TipoRelacion.AplicacionDeAnticipo : c_TipoRelacion.NotaDeCredito,
+					CfdiRelacionado = new ComprobanteCfdiRelacionadosCfdiRelacionado [item.Relations.Count]
+				};
 
-                i = 0;
-                foreach (var relation in item.Relations) {
-                    cfd.CfdiRelacionados.CfdiRelacionado[i++] = new ComprobanteCfdiRelacionadosCfdiRelacionado {
-                        UUID = relation.Relation.StampId
-                    };
-                }
-            }
+				i = 0;
+				foreach (var relation in item.Relations) {
+					cfd.CfdiRelacionados.CfdiRelacionado [i++] = new ComprobanteCfdiRelacionadosCfdiRelacionado {
+						UUID = relation.Relation.StampId
+					};
+				}
+			}
 
-            return cfd;
+			return cfd;
 		}
 
 		// FiscalDocumentType -> TipoDeComprobante
@@ -387,8 +387,8 @@ namespace Mictlanix.BE.Web.Helpers {
 			case FiscalDocumentType.DebitNote:
 				return (int)c_TipoDeComprobante.Ingreso;
 			case FiscalDocumentType.CreditNote:
-            case FiscalDocumentType.AdvancePaymentsApplied:
-                    return (int)c_TipoDeComprobante.Egreso;
+			case FiscalDocumentType.AdvancePaymentsApplied:
+				return (int)c_TipoDeComprobante.Egreso;
 			case FiscalDocumentType.PaymentReceipt:
 				return (int)c_TipoDeComprobante.Pago;
 			}
