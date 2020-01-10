@@ -128,11 +128,9 @@ namespace Mictlanix.BE.Web.Helpers {
 		{
 			var data = string.Format (Resources.FiscalDocumentQRCode33FormatString,
 						  item.Issuer.Id, item.Recipient, item.Total, item.StampId,
-						  item.IssuerDigitalSeal.Substring (item.IssuerDigitalSeal.Length - 8));
+						  item.IssuerDigitalSeal?.Substring (item.IssuerDigitalSeal.Length - 8));
 
 			return data;
 		}
-
-
 	}
 }
