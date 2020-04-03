@@ -9,9 +9,10 @@
 	<thead>
         <tr>
             <th class='nowrap center'>@Resources.FiscalDocumentId</th>
+            <th class='nowrap'>@Resources.IssueDate</th>
             <th class='nowrap center'>@Resources.Batch</th>
             <th class='nowrap center'>@Resources.Serial</th>
-            <th class='nowrap'>@Resources.IssueDate</th>
+            <th class='nowrap center'>@Resources.StampId</th>
             <th class='nowrap center'>@Resources.TaxpayerId</th>
             <th class='nowrap center'>@Resources.TaxpayerName</th>
             <th class='nowrap center'>@Resources.Subtotal</th>
@@ -24,9 +25,10 @@
     @foreach (var item in Model.Where(x => !x.IsCancelled)) {
         <tr>
             <td class='number'>@Html.DisplayFor(x => item.Id)</td>
+            <td class='date'>@Html.DisplayFor(x => item.Issued)</td>
             <td class='number center'>@Html.DisplayFor(x => item.Batch)</td>
             <td class='number'>@Html.DisplayFor(x => item.Serial)</td>
-            <td class='date'>@Html.DisplayFor(x => item.Issued)</td>
+            <td class='nowrap'>@item.StampId.ToUpper()</td>
             <td class='date'>@Html.DisplayFor(x => item.Recipient)</td>
             <td class=''>@Html.DisplayFor(x => item.RecipientName)</td>
             <td class='currency'>@Html.DisplayFor(x => item.SubtotalEx)</td>
@@ -38,7 +40,7 @@
     </tbody>
     <tfoot>
         <tr>
-            <td colspan='6'></td>
+            <td colspan='7'></td>
             <td class='number'><b>@Model.Sum(x => x.IsCancelled ? 0m : x.SubtotalEx).ToString("c")</b></td>
             <td class='number'><b>@Model.Sum(x => x.IsCancelled ? 0m : x.DiscountEx).ToString("c")</b></td>
             <td class='number'><b>@Model.Sum(x => x.IsCancelled ? 0m : x.TaxesEx).ToString("c")</b></td>
@@ -52,9 +54,10 @@
     <thead>
         <tr>
             <th class='nowrap center'>@Resources.FiscalDocumentId</th>
+            <th class='nowrap'>@Resources.IssueDate</th>
             <th class='nowrap center'>@Resources.Batch</th>
             <th class='nowrap center'>@Resources.Serial</th>
-            <th class='nowrap'>@Resources.IssueDate</th>
+            <th class='nowrap center'>@Resources.StampId</th>
             <th class='nowrap center'>@Resources.TaxpayerId</th>
             <th class='nowrap center'>@Resources.TaxpayerName</th>
             <th class='center'>@Resources.CancellationDate</th>
@@ -68,9 +71,10 @@
     @foreach (var item in Model.Where(x => x.IsCancelled)) {
         <tr>
             <td class='number'>@Html.DisplayFor(x => item.Id)</td>
+            <td class='date'>@Html.DisplayFor(x => item.Issued)</td>
             <td class='number center'>@Html.DisplayFor(x => item.Batch)</td>
             <td class='number'>@Html.DisplayFor(x => item.Serial)</td>
-            <td class='date'>@Html.DisplayFor(x => item.Issued)</td>
+            <td class='nowrap'>@item.StampId.ToUpper()</td>
             <td class='date'>@Html.DisplayFor(x => item.Recipient)</td>
             <td class=''>@Html.DisplayFor(x => item.RecipientName)</td>
             <td class='date'><small>@Html.DisplayFor(x => item.CancellationDate)</small></td>
@@ -83,7 +87,7 @@
     </tbody>
     <tfoot>
         <tr>
-            <td colspan='7'></td>
+            <td colspan='8'></td>
             <td class='number'><b>@Model.Sum(x => x.IsCancelled ? x.SubtotalEx : 0m).ToString("c")</b></td>
             <td class='number'><b>@Model.Sum(x => x.IsCancelled ? x.DiscountEx : 0m).ToString("c")</b></td>
             <td class='number'><b>@Model.Sum(x => x.IsCancelled ? x.TaxesEx : 0m).ToString("c")</b></td>
