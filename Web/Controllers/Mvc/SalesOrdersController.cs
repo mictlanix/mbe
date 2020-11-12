@@ -4,7 +4,7 @@
 // Author:
 //   Eddy Zavaleta <eddy@mictlanix.com>
 // 
-// Copyright (C) 2013-2018 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2013-2020 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -74,28 +74,29 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		Search<SalesOrder> SearchSalesOrders (Search<SalesOrder> search)
 		{
-			IQueryable<SalesOrder> query;
 			var item = WebConfig.Store;
 			var pattern = (search.Pattern ?? string.Empty).Trim ();
-			int id = 0;
+			IQueryable<SalesOrder> query = from x in SalesOrder.Queryable
+						       select x;
 
-			if (int.TryParse (pattern, out id) && id > 0) {
+			if (!WebConfig.ShowSalesOrdersFromAllStores) {
+				query = query.Where (x => x.Store.Id == item.Id);
+			}
+
+			if (int.TryParse (pattern, out int id) && id > 0) {
 				query = from x in SalesOrder.Queryable
-					where x.Store.Id == item.Id && (
-						x.Id == id || x.Serial == id)
+					where x.Id == id || x.Serial == id
 					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending
 					select x;
 			} else if (string.IsNullOrEmpty (pattern)) {
 				query = from x in SalesOrder.Queryable
-					where x.Store.Id == item.Id
 					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending
 					select x;
 			} else {
 				query = from x in SalesOrder.Queryable
-					where x.Store.Id == item.Id && (
-						x.Customer.Name.Contains (pattern) ||
-						x.SalesPerson.Nickname.Contains (pattern)) ||
-		                            	(x.SalesPerson.FirstName + " " + x.SalesPerson.LastName).Contains (pattern)
+					where x.Customer.Name.Contains (pattern) ||
+						x.SalesPerson.Nickname.Contains (pattern) ||
+						(x.SalesPerson.FirstName + " " + x.SalesPerson.LastName).Contains (pattern)
 					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending
 					select x;
 			}
@@ -216,8 +217,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.ExchangeRate = salesquote.ExchangeRate;
 			item.Contact = salesquote.Contact;
 			item.Comment = salesquote.Comment;
-            item.ShipTo = salesquote.ShipTo;
-            item.CustomerShipTo = salesquote.ShipTo == null ? "" : salesquote.ShipTo.ToString();
+			item.ShipTo = salesquote.ShipTo;
+			item.CustomerShipTo = salesquote.ShipTo == null ? "" : salesquote.ShipTo.ToString ();
 
 			item.Creator = CurrentUser.Employee;
 			item.CreationTime = dt;
@@ -281,12 +282,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
 		}
 
-		public JsonResult Recipients (int id) {
+		public JsonResult Recipients (int id)
+		{
 			var item = SalesOrder.TryFind (id);
 			var query = from x in item.Customer.Taxpayers
 				    select new {
 					    value = x.Id,
-					    text = x.ToString()
+					    text = x.ToString ()
 				    };
 			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
 		}
@@ -329,7 +331,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				entity.Customer = item;
 				entity.Contact = null;
 				entity.ShipTo = null;
-                entity.CustomerShipTo = null;
+				entity.CustomerShipTo = null;
 				entity.CustomerName = null;
 
 				if (item.SalesPerson == null) {
@@ -467,7 +469,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			if (item != null) {
 				entity.ShipTo = item;
-                entity.CustomerShipTo = item.ToString();
+				entity.CustomerShipTo = item.ToString ();
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
 
@@ -508,7 +510,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult SetRecipient (int id, string value) {
+		public ActionResult SetRecipient (int id, string value)
+		{
 			var entity = SalesOrder.Find (id);
 			string val = (value ?? string.Empty).Trim ();
 			if (entity.IsCompleted || entity.IsCancelled) {
@@ -524,10 +527,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				entity.UpdateAndFlush ();
 			}
 
-				return Json (new {
-					id = id,
-					value = item.Name
-				});
+			return Json (new {
+				id = id,
+				value = item.Name
+			});
 		}
 
 		[HttpPost]
@@ -930,7 +933,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out val);
+			success = decimal.TryParse (value.TrimEnd (new char [] { ' ', '%' }), out val);
 			val /= 100m;
 
 			if (success && val <= 1.0m && val >= 0.0m) {
@@ -963,7 +966,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out val);
+			success = decimal.TryParse (value.TrimEnd (new char [] { ' ', '%' }), out val);
 
 			if (success && val <= entity.Price && val >= 0 && entity.Price > 0) {
 				entity.DiscountRate = val / entity.Price;
@@ -994,7 +997,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			success = decimal.TryParse (value.TrimEnd (new char[] { ' ', '%' }), out val);
+			success = decimal.TryParse (value.TrimEnd (new char [] { ' ', '%' }), out val);
 
 			// TODO: VAT value range validation
 			if (success) {

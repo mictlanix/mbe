@@ -292,6 +292,10 @@ namespace Mictlanix.BE.Web.Helpers {
 			get { return Convert.ToBoolean (ConfigurationManager.AppSettings ["DeliveryOrdersUseMiniPrinter"]); }
 		}
 
+		public static bool ShowSalesOrdersFromAllStores {
+			get { return Convert.ToBoolean(ConfigurationManager.AppSettings ["ShowSalesOrdersFromAllStores"]); }
+		}
+
 		#endregion
 
 		#region Request's (Local) Settings
