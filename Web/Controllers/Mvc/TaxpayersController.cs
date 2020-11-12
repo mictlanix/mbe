@@ -5,7 +5,7 @@
 //   Eddy Zavaleta <eddy@mictlanix.com>
 //   Eduardo Nieto <enieto@mictlanix.com>
 // 
-// Copyright (C) 2011-2016 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2011-2020 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -186,8 +186,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			string sn = string.Empty;
-			var cert = new X509Certificate2 ();
-			cert.Import (item.CertificateData);
+			var cert = new X509Certificate2 (item.CertificateData);
 
 			foreach (var b in cert.GetSerialNumber ()) {
 				sn = (char) b + sn;
