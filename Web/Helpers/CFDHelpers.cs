@@ -33,6 +33,7 @@ using Mictlanix.CFDv33;
 using Mictlanix.ProFact.Client;
 using Mictlanix.DFacture.Client;
 using System.Text;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Mictlanix.BE.Web.Helpers {
 	internal static class CFDHelpers {
@@ -165,7 +166,7 @@ namespace Mictlanix.BE.Web.Helpers {
 				Emisor = new ComprobanteEmisor {
 					Rfc = item.Issuer.Id,
 					Nombre = item.IssuerName,
-					RegimenFiscal = (c_RegimenFiscal)int.Parse (item.IssuerRegime.Id),
+					RegimenFiscal = (c_RegimenFiscal) int.Parse (item.IssuerRegime.Id),
 				},
 				Receptor = new ComprobanteReceptor {
 					Rfc = item.Recipient,
@@ -229,14 +230,14 @@ namespace Mictlanix.BE.Web.Helpers {
 		{
 			var cer = item.Issuer.Certificates.SingleOrDefault (x => x.Id == item.IssuerCertificateNumber);
 			var cfd = new Comprobante {
-				TipoDeComprobante = (c_TipoDeComprobante)FDT2TDC (item.Type),
+				TipoDeComprobante = (c_TipoDeComprobante) FDT2TDC (item.Type),
 				NoCertificado = item.IssuerCertificateNumber.PadLeft (20, '0'),
 				Serie = item.Batch,
 				Folio = item.Serial.ToString (),
 				Fecha = item.Issued.GetValueOrDefault (),
 				MetodoPago = item.Terms == PaymentTerms.Immediate ? c_MetodoPago.PagoEnUnaSolaExhibicion : c_MetodoPago.PagoEnParcialidadesODiferido,
 				MetodoPagoSpecified = true,
-				FormaPago = (c_FormaPago)(int)item.PaymentMethod,
+				FormaPago = (c_FormaPago) (int) item.PaymentMethod,
 				FormaPagoSpecified = true,
 				LugarExpedicion = item.IssuedLocation,
 				SubTotal = item.Subtotal,
@@ -249,7 +250,7 @@ namespace Mictlanix.BE.Web.Helpers {
 				Emisor = new ComprobanteEmisor {
 					Rfc = item.Issuer.Id,
 					Nombre = item.IssuerName,
-					RegimenFiscal = (c_RegimenFiscal)int.Parse (item.IssuerRegime.Id),
+					RegimenFiscal = (c_RegimenFiscal) int.Parse (item.IssuerRegime.Id),
 				},
 				Receptor = new ComprobanteReceptor {
 					Rfc = item.Recipient,
@@ -385,12 +386,12 @@ namespace Mictlanix.BE.Web.Helpers {
 			case FiscalDocumentType.FeeReceipt:
 			case FiscalDocumentType.RentReceipt:
 			case FiscalDocumentType.DebitNote:
-				return (int)c_TipoDeComprobante.Ingreso;
+				return (int) c_TipoDeComprobante.Ingreso;
 			case FiscalDocumentType.CreditNote:
 			case FiscalDocumentType.AdvancePaymentsApplied:
-				return (int)c_TipoDeComprobante.Egreso;
+				return (int) c_TipoDeComprobante.Egreso;
 			case FiscalDocumentType.PaymentReceipt:
-				return (int)c_TipoDeComprobante.Pago;
+				return (int) c_TipoDeComprobante.Pago;
 			}
 
 			throw new ArgumentOutOfRangeException (nameof (type));
