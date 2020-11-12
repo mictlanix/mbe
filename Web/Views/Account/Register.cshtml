@@ -6,10 +6,10 @@
 }
 
 <h2>@Resources.DisplayName_Register</h2>
+<div>
+    @using (Html.BeginForm()) {
+        @Html.ValidationSummary(true, @Resources.Message_RegisterUnsuccessful)
 
-@using (Html.BeginForm()) {
-    @Html.ValidationSummary(true, @Resources.Message_RegisterUnsuccessful)
-    <div>
         <fieldset>
             <legend>@Resources.AccountInformation</legend>
 
@@ -44,9 +44,10 @@
                 @Html.EditorFor(m => m.ConfirmPassword)
                 @Html.ValidationMessageFor(m => m.ConfirmPassword)
             </div>
-
-            <p><button type="submit">@Resources.Register</button></p>
-
         </fieldset>
-    </div>
-}
+
+        <div class="action-buttons">
+            <button type="submit">@Resources.Register</button>
+        </div>
+    }
+</div>
