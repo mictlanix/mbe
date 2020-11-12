@@ -228,6 +228,15 @@ ALTER TABLE `sales_order_detail`
 ALTER TABLE `sales_quote_detail` 
 	CHANGE COLUMN `price` `price` DECIMAL(18,7) NOT NULL;
 
+
+-- NOV 2020
+
+UPDATE `contact` SET `mobile` = '' WHERE `mobile` IS NULL;
+
+ALTER TABLE `contact` 
+	CHANGE COLUMN `phone` `phone` VARCHAR(25) NULL,
+	CHANGE COLUMN `mobile` `mobile` VARCHAR(25) NOT NULL DEFAULT '';
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

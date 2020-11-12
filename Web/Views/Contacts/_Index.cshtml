@@ -12,20 +12,18 @@
     <tr>
         <th>@Html.LabelFor(x => new Contact().Name)</th>
         <th>@Html.LabelFor(x => new Contact().Email)</th>
+        <th>@Html.LabelFor(x => new Contact().Mobile)</th>
         <th>@Html.LabelFor(x => new Contact().Phone)</th>
         <th>@Html.LabelFor(x => new Contact().PhoneExt)</th>
-        <th>@Html.LabelFor(x => new Contact().Mobile)</th>
-        <th>@Html.LabelFor(x => new Contact().Fax)</th>
         <th></th>
     </tr>
 @foreach (var item in Model) {
     <tr>
         <td>@Html.DisplayFor(modelItem => item.Name)</td>
-        <td class='stretch'>@Html.DisplayFor(modelItem => item.Email)</td>
-        <td class='right'>@Html.DisplayFor(modelItem => item.Phone)</td>
-        <td class='right'>@Html.DisplayFor(modelItem => item.PhoneExt)</td>
+        <td class='text-center'>@Html.DisplayFor(modelItem => item.Email)</td>
         <td class='right'>@Html.DisplayFor(modelItem => item.Mobile)</td>
-        <td class='right'>@Html.DisplayFor(modelItem => item.Fax)</td>
+        <td class='right'>@Html.DisplayFor(modelItem => item.Phone)</td>
+        <td class='stretch'>@Html.DisplayFor(modelItem => item.PhoneExt)</td>
         <td class='actions'>
         	@if(Privilege.AllowRead) {
             	@Html.ActionLink(" ", "Details", "Contacts", new { id = item.Id }, new { @class = "button icon view icon-only open-modal", @title = Resources.Details, data_modal_id = "contact-modal" })
