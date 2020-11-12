@@ -14,33 +14,34 @@
 @Html.ValidationSummary(true, Resources.Message_LoginUnsuccessful)
 
 @using (Html.BeginForm()) {
-    <div>
-        <fieldset>
-            <legend>@Resources.AccountInformation</legend>
+<div>
+    <fieldset>
+        <legend>@Resources.AccountInformation</legend>
 
-            <div class="editor-label">
-                @Html.LabelFor(m => m.UserName)
-            </div>
-            <div class="editor-field">
-                @Html.TextBoxFor(m => m.UserName)
-                @Html.ValidationMessageFor(m => m.UserName)
-            </div>
+        <div class="editor-label">
+            @Html.LabelFor(m => m.UserName)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(m => m.UserName)
+            @Html.ValidationMessageFor(m => m.UserName)
+        </div>
 
-            <div class="editor-label">
-                @Html.LabelFor(m => m.Password)
-            </div>
-            <div class="editor-field">
-                @Html.PasswordFor(m => m.Password)
-                @Html.ValidationMessageFor(m => m.Password)
-            </div>
+        <div class="editor-label">
+            @Html.LabelFor(m => m.Password)
+        </div>
+        <div class="editor-field">
+            @Html.PasswordFor(m => m.Password)
+            @Html.ValidationMessageFor(m => m.Password)
+        </div>
 
-            <div class="editor-label">
-                @Html.CheckBoxFor(m => m.RememberMe)
-                @Html.LabelFor(m => m.RememberMe)
-            </div>
+        <div class="editor-label">
+            @Html.CheckBoxFor(m => m.RememberMe)
+            @Html.LabelFor(m => m.RememberMe)
+        </div>
+    </fieldset>
 
-            <p><button type="submit">@Resources.LogOn</button></p>
-
-        </fieldset>
+    <div class="action-buttons">
+        <button type="submit">@Resources.LogOn</button>
     </div>
+</div>
 }
