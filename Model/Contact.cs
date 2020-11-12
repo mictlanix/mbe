@@ -5,7 +5,7 @@
 //   Eddy Zavaleta <eddy@mictlanix.com>
 //   Eduardo Nieto <enieto@mictlanix.com>
 // 
-// Copyright (C) 2011-2013 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2011-2020 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -63,7 +63,6 @@ namespace Mictlanix.BE.Model {
 
 		[Property]
 		[Display (Name = "Phone", ResourceType = typeof (Resources))]
-		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
 		[StringLength (25, MinimumLength = 8, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public string Phone { get; set; }
 
@@ -74,6 +73,7 @@ namespace Mictlanix.BE.Model {
 
 		[Property]
 		[Display (Name = "Mobile", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
 		[StringLength (25, MinimumLength = 8, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public string Mobile { get; set; }
 
