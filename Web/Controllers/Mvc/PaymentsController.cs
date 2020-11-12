@@ -5,7 +5,7 @@
 //   Eddy Zavaleta <eddy@mictlanix.com>
 //   Eduardo Nieto <enieto@mictlanix.com>
 // 
-// Copyright (C) 2011-2017 Eddy Zavaleta, Mictlanix, and contributors.
+// Copyright (C) 2011-2020 Eddy Zavaleta, Mictlanix, and contributors.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -94,16 +94,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var item = WebConfig.Store;
 			var pattern = (search.Pattern ?? string.Empty).Trim ();
 			IQueryable<SalesOrder> query = from x in SalesOrder.Queryable
-						       where x.Store.Id == item.Id && x.IsCompleted && !x.IsCancelled &&
-                                                   		!x.IsPaid
+						       where x.IsCompleted && !x.IsCancelled && !x.IsPaid
 						       orderby x.Date descending
 						       select x;
+
+			if (!WebConfig.ShowSalesOrdersFromAllStores) {
+				query = query.Where (x => x.Store.Id == item.Id);
+			}
 
 			if (int.TryParse (pattern, out id) && id > 0) {
 				query = query.Where (x => x.Id == id);
 			} else if (!string.IsNullOrEmpty (pattern)) {
-				query = query.Where (x => x.Terms == PaymentTerms.Immediate && x.Customer.Name.Contains (pattern) || 
-				                     (x.SalesPerson.FirstName + " " + x.SalesPerson.LastName).Contains (pattern));
+				query = query.Where (x => x.Terms == PaymentTerms.Immediate && x.Customer.Name.Contains (pattern) ||
+						     (x.SalesPerson.FirstName + " " + x.SalesPerson.LastName).Contains (pattern));
 			}
 
 			search.Total = query.Count ();
@@ -336,7 +339,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			entity.ShipTo = null;
-            entity.CustomerShipTo = null;
+			entity.CustomerShipTo = null;
 			entity.Customer = customer;
 			entity.Updater = CurrentUser.Employee;
 			entity.ModificationTime = DateTime.Now;
@@ -373,37 +376,38 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return Json (new { id = id, value = value });
 		}
 
-        public ActionResult GetCustomerName (int id)
+		public ActionResult GetCustomerName (int id)
 		{
 			return PartialView ("_CustomerName", SalesOrder.Find (id));
 		}
 
-        [HttpPost]
-        public ActionResult SetCustomerShipTo(int id, string value) {
-            var entity = SalesOrder.Find(id);
-            string val = (value ?? string.Empty).Trim ();
+		[HttpPost]
+		public ActionResult SetCustomerShipTo (int id, string value)
+		{
+			var entity = SalesOrder.Find (id);
+			string val = (value ?? string.Empty).Trim ();
 
-            if (entity.IsPaid || entity.IsCancelled) {
+			if (entity.IsPaid || entity.IsCancelled) {
 				Response.StatusCode = 400;
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			entity.CustomerShipTo = string.IsNullOrEmpty(val) ? null : val;
+			entity.CustomerShipTo = string.IsNullOrEmpty (val) ? null : val;
 			entity.Updater = CurrentUser.Employee;
 			entity.ModificationTime = DateTime.Now;
 
-            if (string.IsNullOrEmpty(entity.CustomerShipTo)) {
-                foreach (var payment in entity.Payments) {
-				    payment.Delete ();
-			    }
-            }
+			if (string.IsNullOrEmpty (entity.CustomerShipTo)) {
+				foreach (var payment in entity.Payments) {
+					payment.Delete ();
+				}
+			}
 
 			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
 			}
 
 			return Json (new { id = id, value = value });
-        }
+		}
 
 		[HttpPost]
 		public ActionResult SetShipTo (int id, int value)
@@ -539,7 +543,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				item.Amount = item.SalesOrder.Balance;
 			}
 
-			if (ondelivery && !string.IsNullOrEmpty(sales_order.CustomerShipTo)) {
+			if (ondelivery && !string.IsNullOrEmpty (sales_order.CustomerShipTo)) {
 
 				item.Payment.CashSession = null;
 			}
@@ -602,7 +606,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View ("_CreditPaymentSuccesful", item);
 		}
 
-		public ActionResult GetPayment (int id){
+		public ActionResult GetPayment (int id)
+		{
 
 			return PartialView ("_Payment", SalesOrderPayment.Find (id));
 		}

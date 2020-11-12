@@ -40,7 +40,8 @@ body {
 	margin-bottom:1mm;
 }
 #logo img {
-	width:85mm;
+    max-width: 85mm;
+    max-height: 15mm;
 }
 header {
 	margin-bottom:4mm;
