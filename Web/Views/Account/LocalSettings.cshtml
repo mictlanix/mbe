@@ -8,36 +8,36 @@
 }
 
 <h2>@Resources.DisplayName_LocalSettings</h2> 
+<div>
+    @using (Html.BeginForm()) {
+        <fieldset>
+            <legend>@Resources.DisplayName_Settings</legend>
+            @Html.ValidationSummary(true)
 
-<fieldset>
-    <legend>@Resources.DisplayName_Settings</legend>
-    @using (Html.BeginForm())
-    {
-        @Html.ValidationSummary(true)
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Store)
-            @Html.TextBoxFor(model => model.StoreId)
-            @Html.ValidationMessageFor(model => model.StoreId)
-        </div>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Store)
+                @Html.TextBoxFor(model => model.StoreId)
+                @Html.ValidationMessageFor(model => model.StoreId)
+            </div>
         
-        <div class="editor-label">
-            @Html.LabelFor(model => model.PointOfSale)
-            @Html.EditorFor(model => model.PointOfSaleId)
-            @Html.ValidationMessageFor(model => model.PointOfSaleId)
-        </div>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.PointOfSale)
+                @Html.EditorFor(model => model.PointOfSaleId)
+                @Html.ValidationMessageFor(model => model.PointOfSaleId)
+            </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.CashDrawer)
-            @Html.EditorFor(model => model.CashDrawerId)
-            @Html.ValidationMessageFor(model => model.CashDrawerId)
-        </div>
-        
-        <p class="right">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.CashDrawer)
+                @Html.EditorFor(model => model.CashDrawerId)
+                @Html.ValidationMessageFor(model => model.CashDrawerId)
+            </div>
+        </fieldset>
+
+        <div class="action-buttons">
             <button type="submit" class="icon save">@Resources.Save</button>
-        </p>
+        </div>
     }
-</fieldset>
+</div>
 <style type="text/css">
 ul.token-input-list { width: 100%; }
 </style>
