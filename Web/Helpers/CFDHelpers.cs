@@ -275,6 +275,12 @@ namespace Mictlanix.BE.Web.Helpers {
 					DescuentoSpecified = detail.Discount > 0m
 				};
 
+				//cfd.Conceptos [i].InformacionAduanera = new ComprobanteConceptoInformacionAduanera [] {
+				//	new ComprobanteConceptoInformacionAduanera {
+				//		NumeroPedimento = ""
+				//	}
+				//};
+
 				if (detail.Subtotal == detail.Discount) {
 					i++;
 					continue;
@@ -362,17 +368,26 @@ namespace Mictlanix.BE.Web.Helpers {
 			}
 
 			if (item.Relations.Any ()) {
-				cfd.CfdiRelacionados = new ComprobanteCfdiRelacionados {
-					TipoRelacion = item.Type == FiscalDocumentType.AdvancePaymentsApplied ? c_TipoRelacion.AplicacionDeAnticipo : c_TipoRelacion.NotaDeCredito,
+				var rels = new ComprobanteCfdiRelacionados {
 					CfdiRelacionado = new ComprobanteCfdiRelacionadosCfdiRelacionado [item.Relations.Count]
 				};
 
+				if (item.Type == FiscalDocumentType.AdvancePaymentsApplied) {
+					rels.TipoRelacion = c_TipoRelacion.AplicacionDeAnticipo;
+				} else if (item.Type == FiscalDocumentType.CreditNote) {
+					rels.TipoRelacion = c_TipoRelacion.NotaDeCredito;
+				} else {
+					rels.TipoRelacion = c_TipoRelacion.Sustitucion;
+				}
+
 				i = 0;
 				foreach (var relation in item.Relations) {
-					cfd.CfdiRelacionados.CfdiRelacionado [i++] = new ComprobanteCfdiRelacionadosCfdiRelacionado {
+					rels.CfdiRelacionado [i++] = new ComprobanteCfdiRelacionadosCfdiRelacionado {
 						UUID = relation.Relation.StampId
 					};
 				}
+
+				cfd.CfdiRelacionados = rels;
 			}
 
 			return cfd;

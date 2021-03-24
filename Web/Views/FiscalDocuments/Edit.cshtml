@@ -14,23 +14,44 @@
 <div id='master-section'>
 	@Html.Partial("_EditorView")
 </div>
-<div class='control-group text-right'>
-	<a id='add-items' class='btn btn-default' data-url='@Url.Action("AddItems", new { id = Model.Id })'
-	   data-type='text' data-placement='left' data-pk='@Model.Id' data-value=''
-	   data-display='false' data-emptytext='' data-emptyclass='' data-highlight='false'>
-		<i class='icon-plus'></i> @Resources.SalesOrder
-	</a>
-</div>
-<div id='details-section'>
-    <div id='items-container' data-url='@Url.Action("Items", new { id = Model.Id })'>
-		@Html.Partial("_Items", Model.Details)
+
+<div class='tabbable'>
+    <ul class='nav nav-tabs'>
+        <li class='active'><a href='#tab-1' data-toggle='tab'>@Resources.Concepts</a></li>
+        <li><a href='#tab-2' data-toggle='tab'>@Resources.ReplacementCdfi</a></li>
+    </ul>
+    <div class='tab-content'>
+        <div id='tab-1' class='tab-pane active'>
+            <div class='control-group text-right'>
+                <a id='add-items' class='btn btn-default' data-url='@Url.Action("AddItems", new { id = Model.Id })'
+                   data-type='text' data-placement='left' data-pk='@Model.Id' data-value=''
+                   data-display='false' data-emptytext='' data-emptyclass='' data-highlight='false'>
+                    <i class='icon-plus'></i> @Resources.SalesOrder
+                </a>
+            </div>
+            <div id='details-section'>
+                <div id='items-container' data-url='@Url.Action("Items", new { id = Model.Id })'>
+                    @Html.Partial("_Items", Model.Details)
+                </div>
+                @if (Privilege.AllowCreate)
+                {
+                    <div class='search-box'>
+                        <input type='text' id='product-search' name='product-search' />
+                    </div>
+                }
+            </div>
+        </div>
+        <div id='tab-2' class='tab-pane'>
+            <div id='relations-container'>
+                @Html.Partial("_SimpleRelations", Model.Relations)
+            </div>
+            <div class='search-box'>
+                <input type='text' id='relation-search' name='relation-search' />
+            </div>
+        </div>
     </div>
-@if (Privilege.AllowCreate) {
-    <div class='search-box'>
-        <input type='text' id='product-search' name='product-search' />
-    </div>
-}
 </div>
+
 <div id='totals-section' class='pull-right' data-url='@Url.Action("Totals", new { id = Model.Id })'>
     @Html.Partial("_Totals")
 </div>
@@ -74,7 +95,24 @@ $(function () {
             $('#confirm-button').removeClass('hide');
             setTimeout(function(){$('#add-items').editable('setValue', '');},500);
 	    }
-	}).removeClass('editable-click');
+    }).removeClass('editable-click');
+
+    $('#relation-search').tokenInput('@Url.Action("GetReplacementRelations", "FiscalDocuments", new { id = Model.Id })', {
+        hintText:'@Resources.HIntText',
+        noResultsText:'@Resources.NoResultsText',
+        searchingText:'@Resources.SearchingText',
+        propertyToSearch: 'stamp',
+        resultsFormatter:function(item){return DocumentFormatter(item);},
+        queryParam:'pattern',minChars:3,tokenLimit:1,
+        onAdd:function(item) {
+            $.post('@Url.Action("AddRelation", new { id = Model.Id })', { 'relation': item.id }, function (relation) {
+                $.get('@Url.Action("Relation", new { id = 0 })' + relation.id, function (data) {
+                    $('#relations').append(data);
+                    $('#relation-search').tokenInput('clear');
+                });
+            }, 'json');
+        }
+    });
 });
 </script>
 <style type='text/css'>

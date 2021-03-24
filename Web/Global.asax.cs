@@ -105,6 +105,9 @@ namespace Mictlanix.BE.Web
 
 		protected void Application_EndRequest (Object sender, EventArgs e)
 		{
+			if (HttpContext.Current == null)
+				return;
+
 			try {
 				SessionScope scope = HttpContext.Current.Items ["ar.sessionscope"] as SessionScope;
 

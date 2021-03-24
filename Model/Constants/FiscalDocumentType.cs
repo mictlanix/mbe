@@ -44,9 +44,9 @@ namespace Mictlanix.BE.Model {
 		DebitNote,
 		[Display (Name = "CreditNote", ResourceType = typeof (Resources))]
 		CreditNote = 100,
-        [Display(Name = "AdvancePaymentsApplied", ResourceType = typeof(Resources))]
-        AdvancePaymentsApplied = 101,
-        [Display (Name = "PaymentReceipt", ResourceType = typeof (Resources))]
+		[Display (Name = "AdvancePaymentsApplied", ResourceType = typeof (Resources))]
+		AdvancePaymentsApplied = 101,
+		[Display (Name = "PaymentReceipt", ResourceType = typeof (Resources))]
 		PaymentReceipt = 200
 	}
 }
