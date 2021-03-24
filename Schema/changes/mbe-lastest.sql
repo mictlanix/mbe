@@ -195,7 +195,7 @@ CREATE TABLE `special_receipt` (
 	`serial` INT(11) NOT NULL DEFAULT '0',
 	`customer` VARCHAR(100) NULL DEFAULT '' COLLATE 'utf8_spanish_ci',
 	`ship_to` VARCHAR(100) NULL DEFAULT '' COLLATE 'utf8_spanish_ci',
-	`date` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+	`date` DATETIME NOT NULL,
 	`completed` TINYINT(1) NOT NULL DEFAULT '0',
 	`cancelled` TINYINT(1) NOT NULL DEFAULT '0',
 	`delivered` TINYINT(1) NOT NULL DEFAULT '0',

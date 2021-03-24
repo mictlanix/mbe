@@ -67,7 +67,7 @@ namespace Mictlanix.BE.Model {
 		[Property ("product_name")]
 		[Display (Name = "ProductName", ResourceType = typeof (Resources))]
 		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
-		[StringLength (250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
+		[StringLength (1000, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public string ProductName { get; set; }
 
 		[Property]

@@ -901,7 +901,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var attachments = new List<MimePart> ();
 
 			attachments.Add (new MimePart {
-				ContentObject = new ContentObject (GetPdf ("Print", model), ContentEncoding.Default),
+				Content = new MimeContent (GetPdf ("Print", model), ContentEncoding.Default),
 				ContentDisposition = new ContentDisposition (ContentDisposition.Attachment),
 				ContentTransferEncoding = ContentEncoding.Base64,
 				FileName = filename + ".pdf"
