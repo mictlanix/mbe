@@ -42,6 +42,7 @@ using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 using System.Diagnostics.Contracts;
 using System.Globalization;
+using System.Threading.Tasks;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
@@ -120,12 +121,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return View ("ViewPayment", item);
 			}
 
-            if (item.Type == FiscalDocumentType.CreditNote || item.Type == FiscalDocumentType.AdvancePaymentsApplied)
-            {
-                return View("ViewOutcome", item);
-            }
+			if (item.Type == FiscalDocumentType.CreditNote || item.Type == FiscalDocumentType.AdvancePaymentsApplied) {
+				return View ("ViewOutcome", item);
+			}
 
-            return View (item);
+			return View (item);
 		}
 
 		public ViewResult Print (int id)
@@ -174,11 +174,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			ViewBag.Logo = template.Logo;
 			ViewBag.ExtraInfo = template.ExtraInfo;
 
-			return PdfView (view, model, new jsreport.Client.Entities.Phantom {
-				header = header,
-				headerHeight = template.HeaderHeight + " mm",
-				footer = footer,
-				footerHeight = template.FooterHeight + " mm"
+			return PdfView (view, model, new jsreport.Types.Phantom {
+				Header = header,
+				HeaderHeight = template.HeaderHeight + " mm",
+				Footer = footer,
+				FooterHeight = template.FooterHeight + " mm"
 			});
 		}
 
@@ -868,22 +868,22 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var item = FiscalDocumentRelation.Find (id);
 
-            if (item.Document.Type == FiscalDocumentType.CreditNote || item.Document.Type == FiscalDocumentType.AdvancePaymentsApplied) {
-                return PartialView ("_SimpleRelationEditorView", item);
-            }
+			if (item.Document.Type == FiscalDocumentType.PaymentReceipt) {
+				return PartialView ("_RelationEditorView", item);
+			}
 
-			return PartialView ("_RelationEditorView", item);
+			return PartialView ("_SimpleRelationEditorView", item);
 		}
 
 		public ActionResult Relations (int id)
 		{
 			var item = FiscalDocument.Find (id);
-            
-            if (item.Type == FiscalDocumentType.CreditNote || item.Type == FiscalDocumentType.AdvancePaymentsApplied) {
-                return PartialView ("_SimpleRelations", item);
-            }
 
-			return PartialView ("_Relations", item.Relations);
+			if (item.Type == FiscalDocumentType.PaymentReceipt) {
+				return PartialView ("_Relations", item.Relations);
+			}
+
+			return PartialView ("_SimpleRelations", item.Relations);
 		}
 
 		public ActionResult PaymentTotals (int id)
@@ -1523,6 +1523,46 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return Json (items.ToList (), JsonRequestBehavior.AllowGet);
 		}
 
+		public JsonResult GetReplacementRelations (int id, string pattern)
+		{
+			var entity = FiscalDocument.Find (id);
+			IQueryable<FiscalDocument> query;
+			int serial = 0;
+
+			pattern = (pattern ?? string.Empty).Trim ();
+
+			if (int.TryParse (pattern, out serial) && serial > 0) {
+				query = from x in FiscalDocument.Queryable
+					where x.Type < FiscalDocumentType.CreditNote &&
+						x.IsCompleted && x.IsCancelled &&
+						x.Recipient == entity.Recipient &&
+						x.Issuer.Id == entity.Issuer.Id &&
+						(x.Id == serial || x.Serial == serial)
+					orderby x.Issued descending
+					select x;
+			} else {
+				query = from x in FiscalDocument.Queryable
+					where x.Type < FiscalDocumentType.CreditNote &&
+						x.IsCompleted && x.IsCancelled &&
+						x.Recipient == entity.Recipient &&
+						x.Issuer.Id == entity.Issuer.Id &&
+						x.StampId.Contains (pattern)
+					orderby x.Issued descending
+					select x;
+			}
+
+			var items = from x in query.Take (15).ToList ()
+				    select new {
+					    id = x.Id,
+					    stamp = x.StampId,
+					    batch = x.Batch,
+					    serial = x.FormattedValueFor (o => o.Serial),
+					    currency = x.Currency.GetDisplayName ()
+				    };
+
+			return Json (items.ToList (), JsonRequestBehavior.AllowGet);
+		}
+
 		decimal GetInvoiceableQuantity (int id)
 		{
 			var item = SalesOrderDetail.Find (id);
@@ -1629,18 +1669,18 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			ViewBag.ExtraInfo = template.ExtraInfo;
 
 			attachments.Add (new MimePart {
-				ContentObject = new ContentObject (GetPdf (view, model, new jsreport.Client.Entities.Phantom {
-					header = header,
-					headerHeight = template.HeaderHeight + " mm",
-					footer = footer,
-					footerHeight = template.FooterHeight + " mm"
+				Content = new MimeContent (GetPdf (view, model, new jsreport.Types.Phantom {
+					Header = header,
+					HeaderHeight = template.HeaderHeight + " mm",
+					Footer = footer,
+					FooterHeight = template.FooterHeight + " mm"
 				}), ContentEncoding.Default),
 				ContentDisposition = new ContentDisposition (ContentDisposition.Attachment),
 				ContentTransferEncoding = ContentEncoding.Base64,
 				FileName = filename + ".pdf"
 			});
 			attachments.Add (new MimePart {
-				ContentObject = new ContentObject (new MemoryStream (Encoding.UTF8.GetBytes (xml.Data)), ContentEncoding.Default),
+				Content = new MimeContent (new MemoryStream (Encoding.UTF8.GetBytes (xml.Data)), ContentEncoding.Default),
 				ContentDisposition = new ContentDisposition (ContentDisposition.Attachment),
 				ContentTransferEncoding = ContentEncoding.Base64,
 				FileName = filename + ".xml"

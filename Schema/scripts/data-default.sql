@@ -8,5 +8,5 @@ UPDATE price_list SET price_list_id = 0 WHERE price_list_id = 999999;
 
 ALTER TABLE price_list AUTO_INCREMENT=2;
 
-INSERT INTO customer (customer_id, code, name, credit_limit, credit_days, price_list)
-VALUES (1,'PG','Público en General',0,0,1);
+INSERT INTO customer (customer_id, code, name, credit_limit, credit_days, price_list, shipping, shipping_required_document)
+VALUES (1,'PG','Público en General',0,0,1,0,0);
