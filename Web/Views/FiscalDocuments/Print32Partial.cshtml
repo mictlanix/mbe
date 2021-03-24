@@ -106,8 +106,7 @@
 	table > tbody > tr:nth-child(odd) > td {
 		background: #edeef0 !important;
 	}
-	table > tbody > tr > td.no-bg,
-    table > tfoot > tr > td.no-bg {
+	table > tfoot > tr > td.no-bg {
 		background: none !important;
 	}
 	table > tfoot > tr > th.tax,
@@ -144,8 +143,8 @@
 		color: #757575 !important;
 	}
 	header .dl-horizontal dt {
-		margin-left: -25px;
-		width: 110px;
+		margin-left: -15px;
+		width: 90px;
 	    font-size: 11px;
 		font-weight: 400;
 	}
@@ -202,17 +201,14 @@
 		text-transform: uppercase;
 		color: #1C1C1B !important;
 	}
-	.small {
-		font-size: 75%
-	}
 	</style>
 </head>
 <body>
     <header>
     	<div class="row">
 			<div class="col-xs-5">
-	        	@if(!string.IsNullOrEmpty(ViewBag.Logo)) {
-	            <img class="logo" src='@Url.Content(ViewBag.Logo)' alt="Logo" />
+	        	@if(!string.IsNullOrEmpty(Model.Store.Logo)) {
+	            <img class="logo" src='@Url.Content(Model.Store.Logo)' alt="Logo" />
 	            }
 	 		</div>
 			<div class="col-xs-6 col-xs-offset-1">
@@ -224,7 +220,7 @@
 					<dt>@Resources.StampId</dt>
 					<dd>@Html.DisplayFor(x => x.StampId)</dd>
 					<dt>@Resources.Issuance</dt>
-					<dd class="issuance">@Resources.PostalCode @Html.DisplayFor(x => x.IssuedLocation) / <span class="nowrap">@Html.DisplayFor(x => x.Issued)</span></dd>
+					<dd class="issuance">@Html.DisplayFor(x => x.IssuedLocation) / <span class="nowrap">@Html.DisplayFor(x => x.Issued)</span></dd>
 				</dl>
 	 		</div>
 		</div>
@@ -241,9 +237,20 @@
 					<h2 class="text-uppercase">@Resources.Recipient</h2>
 		 			<p style="font-size:13px">@Html.DisplayFor(x => x.Recipient)</p>
 		 			<p class="text-s12 text-uppercase">@Html.DisplayFor(x => x.RecipientName)</p>
-                    <p class="text-s08" style="margin-bottom:4px">
-                        @Resources.CfdiUsage: @Html.DisplayFor(x => x.Usage.Id) @Html.DisplayFor(x => x.Usage.Description)
-                    </p>
+					<p>&nbsp;</p>
+				@if (Model.RecipientAddress != null) {
+		 			<p class="text-s12">
+					    @Html.DisplayFor(x => x.RecipientAddress.StreetAndNumber)<br>
+					    @Html.DisplayFor(x => x.RecipientAddress.Neighborhood),
+			    	@if (!string.IsNullOrWhiteSpace (Model.RecipientAddress.Locality)) {
+			        	<text>@Model.RecipientAddress.Locality,</text>
+			    	}
+					    @Html.DisplayFor(x => x.RecipientAddress.PostalCode)<br>
+					    @Html.DisplayFor(x => x.RecipientAddress.Borough),
+					    @Html.DisplayFor(x => x.RecipientAddress.State),
+					    @Html.DisplayFor(x => x.RecipientAddress.Country)
+				    </p>
+				}
 				</div>
 			</div>
  		</div>
@@ -254,17 +261,27 @@
 						<h2 class="text-right text-uppercase">@Resources.Issuer</h2>
 			 			<p style="font-size:13px">@Html.DisplayFor(x => x.Issuer.Id)</p>
 			 			<p class="text-s12 text-uppercase">@Html.DisplayFor(x => x.IssuerName)</p>
-			 			<p class="text-s08" style="margin-bottom:4px">
-                            @Resources.TaxRegime: @Html.DisplayFor(x => x.IssuerRegime.Id) @Html.DisplayFor(x => x.IssuerRegimeName)
-                        </p>
+			 			<p class="text-s08" style="margin-bottom:4px">@Html.DisplayFor(x => x.IssuerRegimeName)</p>
+					@if (Model.IssuerAddress != null) {
+			 			<p class="text-s12">
+				        	@Model.IssuerAddress.StreetAndNumber<br/>
+				        	@Model.IssuerAddress.Neighborhood,
+				    	@if (!string.IsNullOrWhiteSpace (Model.IssuerAddress.Locality)) {
+				        	<text>@Model.IssuerAddress.Locality,</text>
+				    	}
+				        	@Model.IssuerAddress.PostalCode<br/>
+				        	@Model.IssuerAddress.Borough,
+				        	@Model.IssuerAddress.State,
+							@Model.IssuerAddress.Country
+					    </p>
+							
+					}
 					</div>
 				</div>
  			</div>
-            <div class="col-xs-4" style="padding:0;">
-                <a href="@Model.ValidataionUrl()" target="_blank">
-                    <img class="" style="width: 29mm" src='@Url.Action("QRCode33", new { id = Model.Id })' />
-                </a>
-            </div>
+			<div class="col-xs-4" style="padding:0;">
+				<img class="" style="width: 29mm" src='@Url.Action("QRCode", new { id = Model.Id })' />
+ 			</div>
  		</div>
 	</div>
 
@@ -276,86 +293,6 @@
 	</div>
 }
 
-@if (Model.Type == FiscalDocumentType.PaymentReceipt) {
-    <table>
-        <thead>
-            <tr>
-                <th class="text-capitalize" style="padding: 4px 10px;">@Resources.RowNumber</th>
-                <th class="col-xs-1">@Resources.StampId</th>
-                <th class="col-xs-1">@Resources.Batch @Resources.Serial</th>
-                <th class="">@Resources.InstallmentPaymentShort</th>
-                <th class="">@Resources.Currency / @Resources.ExchangeRate</th>
-                <th class="">@Resources.PreviousBalance</th>
-                <th class="">@Resources.PaymentAmount</th>
-                <th class="">@Resources.OutstandingBalance</th>
-            </tr>
-        </thead>
-        <tbody>
-        @for (int i = 0; i < Model.Relations.Count; i++) {
-            var item = Model.Relations [i];
-            <tr>
-                <th class="nowrap">@(i + 1)</th>
-                <td class="nowrap text-center">@Html.DisplayFor(x => item.Relation.StampId)</td>
-                <td class="nowrap text-center">@Html.DisplayFor(x => item.Relation.Batch) @Html.DisplayFor(x => item.Relation.Serial)</td>
-                <td class="nowrap text-center">@Html.DisplayFor(x => item.Installment)</td>
-                <td class="nowrap text-center">
-                @Html.DisplayFor(x => item.Relation.Currency)
-                @if (item.Relation.Currency != Model.Currency) {
-                    <text>/ @Html.DisplayFor(x => item.ExchangeRate)</text>
-                }
-                </td>
-                <td class="nowrap text-right">@Html.DisplayFor(x => item.PreviousBalance)</td>
-                <td class="nowrap text-right">@Html.DisplayFor(x => item.Amount)</td>
-                <td class="nowrap text-right">@Html.DisplayFor(x => item.OutstandingBalance)</td>
-            </tr>
-        }
-        </tbody>
-        <tfoot>
-            <tr>
-                <td rowspan="2" class="no-bg"></td>
-                <td rowspan="2" colspan="4" class="no-bg">
-                    <div class="row">
-                        <div class="col-xs-5">
-                            <p class="payment-info">
-                                <strong>@Resources.PaymentDate</strong><br>
-                                @Html.DisplayFor(x => x.PaymentDate)<br>
-                            @if (!string.IsNullOrWhiteSpace(Model.Reference)) {
-                                <strong>@Resources.ForeignBankName</strong><br>
-                                @Html.DisplayFor(x => x.Reference)
-                            }
-                            </p>
-                        </div>
-                        <div class="col-xs-5">
-                            <p class="payment-info">
-                                <strong>@Resources.PaymentTerms</strong><br>
-                                @string.Format("{0:D2}", (int) Model.PaymentMethod) :
-                                @Model.PaymentMethod.GetDisplayName()<br>
-                            @if (!string.IsNullOrWhiteSpace(Model.PaymentReference)) {
-                                <strong>@Resources.PaymentReference</strong><br>
-                                @Html.DisplayFor(x => x.PaymentReference)
-                            }
-                            </p>
-                        </div>
-                        <div class="col-xs-2">
-                            <p class="payment-info">
-                                <strong>@Resources.Currency</strong><br>
-                                @Model.Currency.GetDisplayName()<br>
-                            @if (Model.Currency != CurrencyCode.MXN) {
-                                <strong>@Resources.ExchangeRate</strong><br>
-                                @Html.DisplayFor(x => x.ExchangeRate)
-                            }
-                            </p>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            <tr class="total">
-                <th colspan="2">@Resources.TotalAmount</th>
-                <td colspan="1">@Html.DisplayFor(x => x.PaymentAmount)</td>
-            </tr>
-        </tfoot>
-    </table>
-} else {
     <table>
         <thead>
             <tr>
@@ -374,12 +311,12 @@
                 <tr>
 					<th class="nowrap">@(i + 1)</th>
                     <td class="nowrap text-right">@Html.DisplayFor(x => item.Quantity)</td>
-                    <td class="nowrap text-center">@Html.DisplayFor(x => item.UnitOfMeasurement.Id) / @Html.DisplayFor(x => item.UnitOfMeasurementName)</td>
-                    <td class="nowrap text-center">@Html.DisplayFor(x => item.ProductService.Id)</td>
+                    <td class="nowrap text-center">@Html.DisplayFor(x => item.UnitOfMeasurementName)</td>
+                    <td class="nowrap text-center">@Html.DisplayFor(x => item.ProductCode)</td>
                     <td class="text-center">
-						@Html.DisplayFor(x => item.ProductName) (@Html.DisplayFor(x => item.ProductCode))
+						@Html.DisplayFor(x => item.ProductName)
 					@if (!string.IsNullOrEmpty (item.Comment)) {
-						<p class="pre-wrapped small text-center">@item.Comment</p>
+						<br><small>@item.Comment</small>
 					}
 					</td>
                     <td class="nowrap text-right">@item.NetPrice.ToString("#,###.00##")</td>
@@ -394,19 +331,21 @@
 					<div class="row">
 						<div class="col-xs-4">
 							<p class="payment-info">
-								<strong>@Resources.PaymentMethod</strong><br>
-                            @if(Model.Terms == PaymentTerms.Immediate){
-                                <text>@Resources.CFDI_SinglePayment</text>
-                            } else if(Model.Terms == PaymentTerms.NetD){
-                                <text>@Resources.CFDI_InstallmentPayments</text>
-                            }
+								<strong>@Resources.PaymentTerms</strong><br>
+								@Resources.SinglePayment
 							</p>
 						</div>
 						<div class="col-xs-5">
 							<p class="payment-info">
-								<strong>@Resources.PaymentTerms</strong><br>
+								<strong>@Resources.PaymentMethod</strong><br>
+							@if (Model.PaymentMethod != PaymentMethod.NA) {
 								<text>@string.Format("{0:D2}", (int) Model.PaymentMethod) :</text>
+							}
 								@Model.PaymentMethod.GetDisplayName()<br>
+							@if (Model.PaymentMethod != PaymentMethod.NA && Model.PaymentMethod != PaymentMethod.Cash) {
+								<strong>@Resources.PaymentReference</strong><br>
+								@Html.DisplayFor(x => x.PaymentReference)
+							}
 							</p>
 						</div>
 						<div class="col-xs-3">
@@ -446,47 +385,12 @@
 	        </tr>
 		</tfoot>
     </table>
-}
 
-    <div class="row">
-        <div class="col-xs-12 text-right">
-        @if (Model.Type == FiscalDocumentType.PaymentReceipt) {
-            <p class="amount-words">@Html.CurrencyToString(Model.PaymentAmount, Model.Currency)</p>
-        } else {
-            <p class="amount-words">@Html.CurrencyToString(Model.Total, Model.Currency)</p>
-        }
-        </div>
-    </div>
-    
-    
-@if (Model.Type != FiscalDocumentType.PaymentReceipt && Model.Relations.Any ()) {
-    <table>
-        <thead>
-            <tr>
-                <th class="text-capitalize" style="padding: 4px 10px"></th>
-                <th>@Resources.RelatedCdfi</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                @if (Model.Type == FiscalDocumentType.AdvancePaymentsApplied) {
-                    <td colspan="2" class="no-bg"><strong>@Resources.RelationType</strong> @Resources.CFDI_RelationType_AdvancePayment</td>
-                } else if (Model.Type == FiscalDocumentType.CreditNote) {
-                    <td colspan="2" class="no-bg"><strong>@Resources.RelationType</strong> @Resources.CFDI_RelationType_CreditNote</td>
-                } else {
-                    <td colspan="2" class="no-bg"><strong>@Resources.RelationType</strong> @Resources.CFDI_RelationType_Replacement</td>
-                }
-            </tr>
-        @for (int i = 0; i < Model.Relations.Count; i++) {
-            var item = Model.Relations [i];
-            <tr>
-                <th class="nowrap">@(i + 1)</th>
-                <td>@item.Relation.StampId</td>
-            </tr>
-        }
-        </tbody>
-    </table>
-}
+	<div class="row">
+		<div class="col-xs-12 text-right">
+			<p class="amount-words">@Html.CurrencyToString(Model.Total, Model.Currency)</p>
+		</div>
+	</div>
 
 	<div class="row" style="margin-top:3mm">
 		<div class="col-xs-6">

@@ -2474,6 +2474,9 @@ Atte: {1}.</value>
   <data name="RelatedCdfi" xml:space="preserve">
     <value>CFDI Relacionados</value>
   </data>
+  <data name="ReplacementCdfi" xml:space="preserve">
+    <value>CFDI Sustitución</value>
+  </data>
   <data name="Concepts" xml:space="preserve">
     <value>Conceptos</value>
   </data>
@@ -2482,6 +2485,9 @@ Atte: {1}.</value>
   </data>
   <data name="CFDI_RelationType_CreditNote" xml:space="preserve">
     <value>01 : Nota de Crédito de los Documentos Relacionados</value>
+  </data>
+  <data name="CFDI_RelationType_Replacement" xml:space="preserve">
+    <value>04 : Sustitución de los CFDI Previos</value>
   </data>
   <data name="CFDI_RelationType_AdvancePayment" xml:space="preserve">
     <value>07 : CFDI por Aplicación de Anticipo</value>

@@ -4715,6 +4715,12 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string ReplacementCdfi {
+            get {
+                return ResourceManager.GetString("ReplacementCdfi", resourceCulture);
+            }
+        }
+        
         public static string Concepts {
             get {
                 return ResourceManager.GetString("Concepts", resourceCulture);
@@ -4730,6 +4736,12 @@ namespace Mictlanix.BE {
         public static string CFDI_RelationType_CreditNote {
             get {
                 return ResourceManager.GetString("CFDI_RelationType_CreditNote", resourceCulture);
+            }
+        }
+        
+        public static string CFDI_RelationType_Replacement {
+            get {
+                return ResourceManager.GetString("CFDI_RelationType_Replacement", resourceCulture);
             }
         }
         

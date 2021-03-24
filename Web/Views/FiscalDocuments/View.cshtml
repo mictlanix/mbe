@@ -12,15 +12,34 @@
 <div id="master-section">
 	@Html.Partial("_DisplayView")
 </div>
-<div id="details-section">
-    <div id="items-container">
-        <ul id="items" class="list-items">
-        @foreach (var item in Model.Details) {
-            @Html.Partial("_ItemDisplayView", item) 
-        }
-        </ul>
+
+<div class='tabbable'>
+    <ul class='nav nav-tabs'>
+        <li class='active'><a href='#tab-1' data-toggle='tab'>@Resources.Concepts</a></li>
+        <li><a href='#tab-2' data-toggle='tab'>@Resources.ReplacementCdfi</a></li>
+    </ul>
+    <div class='tab-content'>
+        <div id='tab-1' class='tab-pane active'>
+            <div id="items-container">
+                <ul id="items" class="list-items">
+                @foreach (var item in Model.Details) {
+                    @Html.Partial("_ItemDisplayView", item) 
+                }
+                </ul>
+            </div>
+        </div>
+        <div id='tab-2' class='tab-pane'>
+            <div id='relations-container'>
+                <ul id="relations" class="list-items">
+                @foreach (var item in Model.Relations) {
+                    @Html.Partial("_SimpleRelationDisplayView", item)
+                }
+                </ul>
+            </div>
+        </div>
     </div>
 </div>
+
 <div id='totals-section' class='pull-right' data-url='@Url.Action("Totals", new { id = Model.Id })'>
     @Html.Partial("_Totals")
 </div>
