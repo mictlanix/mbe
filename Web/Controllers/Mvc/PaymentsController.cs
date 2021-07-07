@@ -1,4 +1,4 @@
-﻿// 
+// 
 // PaymentsController.cs
 // 
 // Author:
@@ -225,13 +225,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var model = new CashCountReport ();
 			var session = CashSession.Find (id);
-			var qry = from x in CustomerPayment.Queryable
+			var qry_pymnts = from x in CustomerPayment.Queryable
 				  where x.CashSession.Id == session.Id
 				  select new {
 					  Type = x.Method,
 					  Amount = x.Amount
 				  };
-			var list = from x in qry.ToList ()
+			var list_mny = from x in qry_pymnts.ToList ()
 				   group x by x.Type into g
 				   select new MoneyCount { Type = g.Key, Amount = g.Sum (y => y.Amount) };
 
@@ -239,8 +239,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			model.CashDrawer = session.CashDrawer;
 			model.Start = session.Start;
 			model.End = session.End;
-			model.MoneyCounts = list.ToList ();
+			model.MoneyCounts = list_mny.ToList ();
 			model.CashCounts = session.CashCounts.Where (x => x.Type == CashCountType.CountedCash).ToList ();
+			//model.ExpensesCounts = ExpenseVoucher.Queryable.Where(x => x.CashSession == session).ToList();
 			model.StartingCash = session.StartingCash;
 			model.SessionId = session.Id;
 
@@ -471,7 +472,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			entity.Updater = CurrentUser.Employee;
 			entity.ModificationTime = DateTime.Now;
-			entity.IsCancelled = true;
+			//entity.IsCancelled = true;
 
 			using (var scope = new TransactionScope ()) {
 				foreach (var item in entity.Payments) {
@@ -484,6 +485,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 				entity.UpdateAndFlush ();
 			}
+
+			AbastosInventoryHelpers.CancelSalesOrder (entity, CurrentUser.Employee);
 
 			return RedirectToAction ("Index");
 		}
@@ -721,6 +724,42 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			});
 		}
 
+		[HttpPost]
+		public ActionResult UnapplySalesOrderPayment (int id, int sales_order_payment_id)
+		{
+
+			var drawer = WebConfig.CashDrawer;
+			var session = GetSession ();
+			var customer_payment = CustomerPayment.Find (id);
+			var sales_order_payment = SalesOrderPayment.Find (sales_order_payment_id);
+			var date = sales_order_payment.Payment.Date.AddDays (WebConfig.ModificationPaymentsDays);
+
+			if (sales_order_payment.Payment.Date.AddDays(WebConfig.ModificationPaymentsDays) < DateTime.Now) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			if (drawer == null) {
+				return View ("InvalidCashDrawer");
+			}
+
+			if (session == null) {
+				return RedirectToAction ("OpenSession");
+			}
+
+			using (var scope = new TransactionScope ()) {
+				sales_order_payment.SalesOrder.IsPaid = false;
+				sales_order_payment.SalesOrder.UpdateAndFlush ();
+				sales_order_payment.Delete ();
+			}
+
+			if (Request.IsAjaxRequest ()) {
+				return Json (new { id = id, result = true, empty = customer_payment.Allocations.Count() < 1 });
+			}
+
+			return View ();
+		}
+
 		CashSession GetSession ()
 		{
 			var item = WebConfig.CashDrawer;
@@ -730,6 +769,31 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return CashSession.Queryable.Where (x => x.End == null)
 			      .SingleOrDefault (x => x.CashDrawer.Id == item.Id);
+		}
+
+		[HttpPost]
+		public ActionResult DeleteCustomerPayment (int id) {
+			var drawer = WebConfig.CashDrawer;
+			var session = GetSession ();
+			var customer_payment = CustomerPayment.Find (id);
+
+			if (drawer == null) {
+				return View ("InvalidCashDrawer");
+			}
+
+			if (session == null) {
+				return RedirectToAction ("OpenSession");
+			}
+
+			if (customer_payment.Allocations.Count > 0) {
+				ModelState.AddModelError ("", "Este pago de crédito ha sido aplicado en algunos créditos. Elimínelos e intente nuevamente");
+				return RedirectToAction ("ViewCreditPayment", new { id = id });
+			}
+
+			using (var scope = new TransactionScope ()) {
+				customer_payment.Delete ();
+			}
+			return RedirectToAction ("CreditPayments");
 		}
 	}
 }

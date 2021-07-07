@@ -1,0 +1,88 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model SalesOrdersSummaryFilters
+
+@{
+				Layout = WebConfig.PrintLayout;
+				ViewBag.Title = (Resources.SalesOrderSummary);
+}
+<style type="text/css">
+				table.summary tr td {
+								font-size:9px;
+								border-collapse:collapse;
+				}
+
+				table > thead > tr > th, table > tbody > tr > th, table > tfoot > tr > th, table > thead > tr > td, table > tbody > tr > td, table > tfoot > tr > td {
+								/*padding: 2px;*/
+								line-height: 1.42857143;
+								vertical-align: top;
+								font: normal 10pt 'Open Sans', sans-serif;
+				}
+				.summary tr {
+								border-bottom: 1px solid #ccc;
+				}
+
+				.summary th, td {
+								text-align: left;
+				}
+</style>
+<div class="row">
+				<div class="col-xs-2">
+								@Html.LabelFor(x => x.StartDate)
+				</div>
+				<div class="col-xs-2">
+								@Html.DisplayFor(x => x.StartDate)
+				</div>
+				<div class="col-xs-2">
+								@Html.LabelFor(x => x.EndDate)
+				</div>
+				<div class="col-xs-2">
+								@Html.DisplayFor(x => x.EndDate)
+				</div>
+</div>
+@Html.LabelFor(x => x.Immediate)
+@Html.DisplayFor(x => x.Immediate)
+@Html.LabelFor(x => x.NetD)
+@Html.DisplayFor(x => x.NetD)
+
+
+<table class="summary">
+				<thead>
+								<tr>
+												<th class='center'>@Resources.Customer</th>
+												<th class=' center'>@Resources.Product</th>
+												<th class='center'>@Resources.LotNumber</th>
+												<th class='center'>@Resources.Quantity</th>
+												<th class=' center'>@Resources.Price</th>
+												<th class=' center'>@Resources.Subtotal</th>
+												<th class=' center'>@Resources.Date</th>
+								</tr>
+				</thead>
+				<tbody>
+								@foreach (var item in Model.Results)
+								{
+												foreach (var detail in item.Details)
+												{
+																<tr>
+																				<td>@Html.DisplayFor(x => detail.SalesOrder.Customer.Name)</td>
+																				<td>@Html.DisplayFor(x => detail.Product.Name)</td>
+																				<td>@Html.DisplayFor(x => detail.Lot.LotNumber)</td>
+																				<td class=' center'>@Html.DisplayFor(x => detail.Quantity)</td>
+																				<td>@Html.DisplayFor(x => detail.Price)</td>
+																				<td>@Html.DisplayFor(x => detail.Total)</td>
+																				<td>@detail.SalesOrder.Date.ToString("yyyy-MM-dd")</td>
+																</tr>
+												}
+								}
+				</tbody>
+				<tfoot>
+								<tr>
+												<td class='center' colspan='3'>@Model.Results.Count() @Resources.SalesOrders</td>
+												<td class='number'>@Model.Results.SelectMany(x => x.Details).Sum(y => y.Quantity).ToString("0.#") </td>
+												<td></td>
+												<td class='number'><b>@Model.Results.Sum(x => (decimal)x.Total).ToString("c")</b></td>
+								</tr>
+				</tfoot>
+</table>

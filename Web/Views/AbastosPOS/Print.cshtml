@@ -1,0 +1,121 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
+@using Mictlanix.BE.Web.Helpers
+@model SalesOrder
+
+@{
+    Layout = WebConfig.ReceiptLayout;
+    ViewBag.Title = Resources.SalesReceipt + (Model.IsCredit?" - " + Resources.Credit : "");
+    ViewBag.Store = Model.Store;
+    ViewBag.Address = Model.Store.Address;
+}
+
+<div class="display-label text-right">
+    @Html.LabelFor(model => model.Serial)<br/>
+    @Html.DisplayFor(model => model.Serial)
+</div>
+
+<div class="display-label date text-right">
+    @Html.LabelFor(model => model.Date)<br/>
+    @Html.DisplayFor(model => model.Date)
+</div>
+
+<div class="display-label">
+    @Html.LabelFor(model => model.Customer)<br/>
+    @Html.DisplayFor(model => model.Customer.Name)
+
+    @if (Model.Customer.Id == WebConfig.DefaultCustomer && !string.IsNullOrWhiteSpace(Model.CustomerName)) {
+        <br />
+        @Html.DisplayFor(model => model.CustomerName)
+    }
+</div>
+
+@if (Model.IsCredit) {
+    <div class="display-label date">
+        @Html.LabelFor(model => model.DueDate)<br/>
+        @Html.DisplayFor(model => model.DueDate)
+    </div>
+}
+
+<table>
+@foreach (var item in Model.Details) {
+    <tr>
+        <td class="line number" rowspan="2">
+            @Html.DisplayFor(x => item.Quantity)
+        </td>
+        <td colspan="2">
+            @Html.DisplayFor(x => item.ProductName)
+        </td>
+        <td class="line number" rowspan="2">
+            @Html.DisplayFor(x => item.Total)
+        </td>
+    </tr>
+    <tr>
+        <td class="line">
+			@Html.Encode("✕") @Html.DisplayFor(x => item.Price)
+            @if (item.DiscountRate > 0) {
+                <text>- @Html.DisplayFor(x => item.DiscountRate)</text>
+            }
+        </td>
+        <td class="line text-center">
+            @Html.DisplayFor(x => item.ProductCode)
+        </td>
+    </tr>
+}
+    <tr>
+        <td></td>
+        <td></td>
+        <td class="total text-right">@Resources.Total</td>
+        <td class="total number">@Html.DisplayFor(x => x.Total)</td>
+    </tr>
+    @foreach (var item in Model.Payments) {
+        <tr>
+            <td colspan="3" class="text-right">@item.Payment.Method.GetDisplayName()</td>
+            <td class="number">@Html.DisplayFor(x => item.Payment.Amount)</td>
+        </tr>
+    }
+        <tr>
+            <td colspan="3" class="text-right">@Resources.Change</td>
+            <td class="number">@Html.DisplayFor(x => Model.Change)</td>
+        </tr>
+</table>
+
+<div class="display-label display-field">
+    @Html.LabelFor(model => model.Taxes)
+    @Html.DisplayFor(model => model.Taxes)
+</div>
+
+@if (Model.Discount > 0) {
+<div class="display-field text-center">
+        <text>@string.Format(Resources.SavingsOnSalesOrder, Model.Discount)</text>
+</div>
+}
+
+@if (Model.IsCredit) {
+<div class="legend">
+    @string.Format(WebConfig.PromissoryNoteContent, Model.Customer.Name, Model.Total, Model.DueDate, Model.Store.Taxpayer.Name)
+</div>
+<div class="signature">
+    @Model.Customer.Name<br/>
+    @Resources.Accept
+</div>
+}
+
+<div class="display-label text-right">
+    @Html.LabelFor(model => model.SalesPerson)
+</div>
+<div class="display-field text-right">
+    @Html.DisplayFor(model => model.SalesPerson.Name)
+</div>
+
+@if (!string.IsNullOrEmpty(Model.Store.ReceiptMessage)) {
+<div class="legend">
+    <p class="text-center">@Model.Store.ReceiptMessage</p>
+</div>
+}
+
+@section Footer {
+	<img src='@Url.Action("Code128", "Barcodes", new { id = string.Format("{0}", Html.DisplayFor(x => x.Id)) })' alt='@Html.DisplayFor(x => x.Id)' title='@Html.DisplayFor(x => x.Id)'>
+	<p>@Html.DisplayFor(x => x.Id)</p>
+}

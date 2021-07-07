@@ -1,4 +1,4 @@
-﻿// 
+// 
 // InventoryHelpers.cs
 // 
 // Author:
@@ -95,6 +95,10 @@ namespace Mictlanix.BE.Web.Helpers
 				
 				rqmt.Create ();
 			}
+		}
+
+		public static string GetLotCode (PurchaseOrder order) {
+			return order.Supplier.Code + order.CreationTime.ToString ("ddMMyy") + order.Id;
 		}
 	}
 }

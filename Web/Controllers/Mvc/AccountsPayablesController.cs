@@ -1,4 +1,4 @@
-﻿// 
+// 
 // AccountsPayablesController.cs
 // 
 // Author:
@@ -47,6 +47,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var results = new List<AccountsPayableSummary> ();
 			var qry_payments = (from x in SupplierPayment.Queryable
+					    where !x.IsCancelled
 					    group x by x.Supplier into c
 					    select new {
 						    Supplier = c.Key,
@@ -123,7 +124,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			Supplier item = Supplier.Find (id);
 			var results = new List<AccountsPayableEntry> ();
 			var qry_purchases = (from x in PurchaseOrder.Queryable
-					     where x.IsCompleted && x.Supplier.Id == item.Id
+					     where x.IsCompleted && !x.IsCancelled && x.Supplier.Id == item.Id
 					     //&& x.ModificationTime > date.StartDate && 
 					     //x.ModificationTime < date.EndDate 
 					     select x).ToList ();
@@ -159,6 +160,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			var qry_payments = (from x in SupplierPayment.Queryable
 					    where x.Supplier.Id == item.Id
+					    && !x.IsCancelled
 					    //&& x.Date > date.StartDate && 
 					    //x.Date < date.EndDate
 					    select x).ToList ();

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
@@ -163,6 +163,40 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				id = id,
 				value = entity.Creator.ToString()
 			});
+		}
+
+		[HttpPost]
+		public ActionResult SetPurchaseOrder (int id, int value)
+		{
+			var entity = ExpenseVoucher.Find (id);
+			var item = PurchaseOrder.TryFind (value);
+
+			if (GetSession () == null) {
+				return Content (Resources.InvalidCashDrawer);
+			}
+
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			if (item != null) {
+				entity.Updater = CurrentUser.Employee;
+				entity.ModificationTime = DateTime.Now;
+				entity.PurchaseOrder = item;
+
+				using (var scope = new TransactionScope ()) {
+					entity.UpdateAndFlush ();
+				}
+
+				return Json (new {
+					id = id,
+					value = item.Id + " - " + AbastosInventoryHelpers.GetLotCode (item)
+				});
+			} else {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemNotFound);
+			}
 		}
 
 		[HttpPost]

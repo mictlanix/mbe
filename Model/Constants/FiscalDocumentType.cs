@@ -1,4 +1,4 @@
-﻿// 
+// 
 // FiscalDocumentType.cs
 // 
 // Author:
@@ -35,13 +35,15 @@ using Castle.ActiveRecord.Framework;
 namespace Mictlanix.BE.Model {
 	public enum FiscalDocumentType : int {
 		[Display (Name = "Invoice", ResourceType = typeof (Resources))]
-		Invoice,
+		Invoice = 0,
 		[Display (Name = "FeeReceipt", ResourceType = typeof (Resources))]
-		FeeReceipt,
+		FeeReceipt = 1,
 		[Display (Name = "RentReceipt", ResourceType = typeof (Resources))]
-		RentReceipt,
+		RentReceipt = 2,
 		[Display (Name = "DebitNote", ResourceType = typeof (Resources))]
-		DebitNote,
+		DebitNote = 3,
+		[Display (Name = "SalesSummaryInvoice", ResourceType = typeof (Resources))]
+		SalesSummaryInvoice = 4,
 		[Display (Name = "CreditNote", ResourceType = typeof (Resources))]
 		CreditNote = 100,
 		[Display (Name = "AdvancePaymentsApplied", ResourceType = typeof (Resources))]

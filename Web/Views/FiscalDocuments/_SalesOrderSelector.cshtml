@@ -1,0 +1,23 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model dynamic
+<table>
+				<tr>
+								<th>@Resources.Id @Resources.SalesOrder</th>
+								<th>@Resources.Date</th>
+								<th>@Resources.Customer</th>
+								<th>@Resources.SalesPerson</th>
+								<th>@Resources.Subtotal</th>
+								<th>@Resources.Taxes</th>
+								<th>@Resources.Total</th>
+								<th></th>
+				</tr>
+
+				@foreach (var item in ViewBag.items)
+				{
+								ViewBag.item = item;
+								
+								@Html.Partial("_SalesOrder", item as SalesOrder)
+				}
+</table>

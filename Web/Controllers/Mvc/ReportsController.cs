@@ -969,51 +969,54 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			ViewBag.FieldId = WebConfig.Store.Id;
 			ViewBag.FieldText = WebConfig.Store.Name;
 
-			return View ("SummaryReport", new DateRange ());
+			return View ("SalesOrderSummaryReport", new SalesOrdersSummaryFilters { Immediate = true, NetD = true });
 		}
 
 		[HttpPost]
-		public ActionResult SalesOrderSummary (int store, DateRange dates)
+		public ActionResult SalesOrderSummary (int store, SalesOrdersSummaryFilters filters)
 		{
 
-			var start = dates.StartDate.Date;
-			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
-			string sql = @"SELECT date Date, CONCAT(first_name, ' ', last_name) SalesPerson, sales_order SalesOrder, m.due_date DueDate, c.name Customer,
-							GROUP_CONCAT(DISTINCT (SELECT GROUP_CONCAT(DISTINCT f.batch, f.serial SEPARATOR ' ')
-								FROM fiscal_document_detail fd LEFT JOIN fiscal_document f ON fd.document = f.fiscal_document_id
-								WHERE f.cancelled = 0 AND fd.order_detail = d.sales_order_detail_id) SEPARATOR ' ') Invoices,
-							SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) * IF(d.tax_included = 0, IF(d.tax_rate > 0, 1 + d.tax_rate, 1), 1), 2)) TotalEx,
-							SUM(ROUND(d.quantity * d.price * (1 - d.discount) * IF(d.tax_included = 0, IF(d.tax_rate > 0, 1 + d.tax_rate, 1), 1), 2)) Total,
-							m.currency Currency
-						FROM sales_order m
-						INNER JOIN sales_order_detail d ON m.sales_order_id = d.sales_order
-						INNER JOIN employee e ON m.salesperson = e.employee_id
-						INNER JOIN customer c ON m.customer = c.customer_id
-						WHERE m.store = :store AND m.completed = 1 AND m.cancelled = 0 AND
-							m.date >= :start AND m.date <= :end
-						GROUP BY sales_order";
+			var start = filters.StartDate.Date;
+			var end = filters.EndDate.Date.AddDays (1).AddSeconds (-1);
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
-				var query = session.CreateSQLQuery (sql);
 
-				query.AddScalar ("Date", NHibernateUtil.DateTime);
-				query.AddScalar ("SalesPerson", NHibernateUtil.String);
-				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
-				query.AddScalar ("Invoices", NHibernateUtil.String);
-				query.AddScalar ("DueDate", NHibernateUtil.DateTime);
-				query.AddScalar ("Customer", NHibernateUtil.String);
-				query.AddScalar ("TotalEx", NHibernateUtil.Decimal);
-				query.AddScalar ("Total", NHibernateUtil.Decimal);
-				query.AddScalar ("Currency", NHibernateUtil.Int32);
+			var qry = (from x in SalesOrderDetail.Queryable
+				  where !x.SalesOrder.IsCancelled && x.SalesOrder.IsCompleted && x.SalesOrder.Date >= start && x.SalesOrder.Date <= end
+				  && x.Quantity > (CustomerRefundDetail.Queryable.Where (y => y.SalesOrderDetail == x && y.Refund.IsCompleted && !y.Refund.IsCancelled).Sum (q => (decimal?) q.Quantity) ?? 0)
+				  select x);
 
-				query.SetDateTime ("start", start);
-				query.SetDateTime ("end", end);
-				query.SetInt32 ("store", store);
+			if (!filters.Immediate)
+				qry = qry.Where (x => x.SalesOrder.Terms != PaymentTerms.Immediate);
+			if(!filters.NetD)
+				qry = qry.Where (x => x.SalesOrder.Terms != PaymentTerms.NetD);
 
-				return query.DynamicList ();
-			}, null);
+			filters.Results = qry.Select (x => x.SalesOrder).Distinct ().ToList();//qry.ToList ();
 
-			return PartialView ("_SalesOrderSummary", items);
+			return PartialView("_SalesOrderSummary", filters);
+		}
+
+		public ViewResult SalesOrderSummaryPdf (int store, SalesOrdersSummaryFilters filters)
+		{
+			var start = filters.StartDate.Date;
+			var end = filters.EndDate.Date.AddDays (1).AddSeconds (-1);
+
+
+			var qry = (from x in SalesOrderDetail.Queryable
+				   where !x.SalesOrder.IsCancelled && x.SalesOrder.IsCompleted && x.SalesOrder.Date >= start && x.SalesOrder.Date <= end
+				   && x.Quantity > (CustomerRefundDetail.Queryable.Where (y => y.SalesOrderDetail == x && y.Refund.IsCompleted && !y.Refund.IsCancelled).Sum (q => (decimal?) q.Quantity) ?? 0)
+				   select x);
+
+			if (!filters.Immediate)
+				qry = qry.Where (x => x.SalesOrder.Terms != PaymentTerms.Immediate);
+			if (!filters.NetD)
+				qry = qry.Where (x => x.SalesOrder.Terms != PaymentTerms.NetD);
+
+			filters.Results = qry.Select (x => x.SalesOrder).Distinct ().ToList();
+
+			ViewBag.Store = WebConfig.Store;
+			ViewBag.Address = WebConfig.Store.Address;
+
+			return View ("_SalesOrderSummaryPrint", filters);
 		}
 
 		public ViewResult ProductSalesBySalesPerson ()

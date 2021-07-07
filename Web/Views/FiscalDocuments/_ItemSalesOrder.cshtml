@@ -1,0 +1,24 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model SalesOrderDetail
+
+<li id='id:@Model.Id'>
+
+				<div class='action-link'>
+								@if (Model != null)
+								{
+												<span class='label label-info' title='@Resources.SalesOrder'>@Html.DisplayFor(x => x.Id)</span>
+								}
+				</div>
+				<div class='info'>
+								<br />
+								<b>@Resources.Subtotal: </b>
+								@Html.DisplayFor(x => x.Subtotal)
+								<b>@Resources.Taxes: </b>
+								@Html.DisplayFor(x => x.Taxes)
+								<b>@Resources.Amount: </b>
+								<span class='editable total'>@Html.DisplayFor(x => x.Total)</span>
+								<span class="glyphicon glyphicon-exclamation-sign"></span>
+				</div>
+</li>

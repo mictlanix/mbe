@@ -1,0 +1,36 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model PurchaseOrder
+
+<fieldset>
+    <legend>@Resources.DisplayName_PurchaseInformation</legend>
+@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "master-section" }))
+{
+    @Html.ValidationSummary(true)
+                
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Supplier)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.SupplierId)
+        @Html.ValidationMessageFor(model => model.SupplierId)
+    </div>
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Comment)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.Comment)
+    </div>
+    
+    <div class="action-buttons">
+        <button type="submit" class="icon save">@Resources.Save</button>
+        @Ajax.ActionLink(Resources.Discard, "DiscardChanges", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "master-section" }, new { @class = "button icon cancel" })
+    </div>
+}
+</fieldset>
+<script type="text/javascript">
+$(function () {
+    $("#SupplierId").tokenInput("add", { id: "@Model.Supplier.Id", name: "@Model.Supplier.Name" });
+});
+</script>

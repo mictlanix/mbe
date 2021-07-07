@@ -1,0 +1,106 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
+@using Mictlanix.BE.Web.Helpers
+@model PurchaseOrder
+
+@{
+				Layout = WebConfig.ReceiptLayout;
+				ViewBag.Title = Resources.Purchase + " - " + InventoryHelpers.GetLotCode(Model);
+				ViewBag.Store = Model.Details.First().Warehouse.Store;
+				ViewBag.Address = Model.Details.First().Warehouse.Store.Address;
+}
+
+
+<div class="display-label date text-right">
+				@Html.LabelFor(model => model.CreationTime)<br />
+				@Html.DisplayFor(model => model.CreationTime)
+</div>
+
+<div class="display-label date text-right">
+				@Resources.Status : 
+				<b>
+								@if (Model.IsCancelled)
+								{
+												@Resources.Cancelled
+								}
+								else
+								{
+												@Resources.Active
+								}
+				</b>
+												<br/>
+</div>
+
+
+<div class="display-label">
+				@Html.LabelFor(model => model.Supplier)<br />
+				@Html.DisplayFor(model => model.Supplier.Name)
+
+</div>
+
+<table>
+				@foreach (var item in Model.Details)
+				{
+								<tr>
+												<td class="line number" rowspan="2">
+																@Html.DisplayFor(x => item.Quantity)
+												</td>
+												<td colspan="2">
+																@Html.DisplayFor(x => item.ProductName)
+												</td>
+												<td class="line number" rowspan="2">
+																@Html.DisplayFor(x => item.Total)
+												</td>
+								</tr>
+								<tr>
+												<td class="line">
+																@Html.Encode("✕") @Html.DisplayFor(x => item.Price)
+																@if (item.DiscountRate > 0)
+																{
+																				<text>- @Html.DisplayFor(x => item.DiscountRate)</text>
+																}
+												</td>
+												<td class="line text-center">
+																@Html.DisplayFor(x => item.ProductCode)
+												</td>
+								</tr>
+				}
+				<tr>
+								<td></td>
+								<td></td>
+								<td class="total text-right">@Resources.Total</td>
+								<td class="total number">@Html.DisplayFor(x => x.Total)</td>
+				</tr>
+</table>
+
+<div class="display-label display-field">
+				@Html.LabelFor(model => model.Taxes)
+				@Html.DisplayFor(model => model.Taxes)
+</div>
+
+@if (Model.Discount > 0)
+{
+				<div class="display-field text-center">
+								<text>@string.Format(Resources.SavingsOnSalesOrder, Model.Discount)</text>
+				</div>
+}
+
+<div class="signature">
+				@Model.Supplier.Name<br />
+				@Resources.Accept
+</div>
+
+
+<div class="display-label text-right">
+				@Html.LabelFor(model => model.Creator)
+</div>
+<div class="display-field text-right">
+				@Html.DisplayFor(model => model.Updater.Name)
+</div>
+
+
+@section Footer {
+				<img src='@Url.Action("Code128", "Barcodes", new { id = string.Format("{0}", Html.DisplayFor(x => x.Id)) })' alt='@Html.DisplayFor(x => x.Id)' title='@Html.DisplayFor(x => x.Id)'>
+				<p>@Html.DisplayFor(x => x.Id)</p>
+}

@@ -1,0 +1,48 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model SalesOrder
+
+@if (!Model.IsCompleted && !Model.IsCancelled && Model.IsCredit && Model.IsOverCreditLimit ()) {
+<div class="alert alert-error">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <strong>@Resources.CreditLimitExceeded</strong>
+  @Model.AmountOverCreditLimit().ToString("c") @WebConfig.BaseCurrency
+</div>
+<script type='text/javascript'>$(function(){$('#confirm-button').hide()});</script>
+} else if (Model.Details.Count > 0) {
+<script type='text/javascript'>$(function(){$('#confirm-button').show()});</script>
+}
+
+<ul class='labeled-frames'>
+    <li>
+    	<span class='caption'>@Resources.Subtotal</span>
+    	<span class='value'>@Html.DisplayFor(x => x.Subtotal) @Html.DisplayFor(x => x.Currency)</span>
+    @if (Model.Currency != WebConfig.BaseCurrency) {
+        <span class='value muted'>(@Html.DisplayFor(x => x.SubtotalEx) @WebConfig.BaseCurrency)</span>
+    }
+    </li>
+@if (Model.Discount > 0m) {
+    <li>
+    	<span class='caption'>@Resources.Discount</span>
+        <span class='value'>@Html.DisplayFor(x => x.Discount) @Html.DisplayFor(x => x.Currency)</span>
+    @if (Model.Currency != WebConfig.BaseCurrency) {
+        <span class='value muted'>(@Html.DisplayFor(x => x.DiscountEx) @WebConfig.BaseCurrency)</span>
+    }
+    </li>
+}
+    <li>
+    	<span class='caption'>@Resources.Taxes</span>
+        <span class='value'>@Html.DisplayFor(x => x.Taxes) @Html.DisplayFor(x => x.Currency)</span>
+    @if (Model.Currency != WebConfig.BaseCurrency) {
+        <span class='value muted'>(@Html.DisplayFor(x => x.TaxesEx) @WebConfig.BaseCurrency)</span>
+    }
+    </li>
+    <li>
+    	<span class='caption'>@Resources.Total</span>
+        <span class='value'>@Html.DisplayFor(x => x.Total) @Html.DisplayFor(x => x.Currency)</span>
+    @if (Model.Currency != WebConfig.BaseCurrency) {
+        <span class='value muted'>(@Html.DisplayFor(x => x.TotalEx) @WebConfig.BaseCurrency)</span>
+    }
+    </li>
+</ul>

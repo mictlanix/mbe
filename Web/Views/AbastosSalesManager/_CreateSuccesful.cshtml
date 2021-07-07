@@ -1,0 +1,8 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model PurchaseOrder
+<script type='text/javascript'>
+    window.location = '@Url.Action("Edit","AbastosPurchases", new { id = Model.Id })';
+</script>
+

@@ -1,4 +1,4 @@
-﻿// 
+// 
 // SupplierPaymentsController.cs
 // 
 // Author:
@@ -46,14 +46,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public ActionResult Index ()
 		{
-			var qry = from x in SupplierPayment.Queryable
-				  orderby x.Id descending
-				  select x;
-
-			Search<SupplierPayment> search = new Search<SupplierPayment> ();
+			Search<SupplierPayment> search = GetSupplierPayments( new Search<SupplierPayment> ());
 			search.Limit = WebConfig.PageSize;
-			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
-			search.Total = qry.Count ();
+			search.Results = search.Results.Skip (search.Offset).Take (search.Limit).ToList ();
+			search.Total = search.Results.Count();
 
 			return View (search);
 		}
@@ -76,8 +72,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		Search<SupplierPayment> GetSupplierPayments (Search<SupplierPayment> search)
 		{
+			search.Limit = WebConfig.PageSize;
 			if (search.Pattern == null) {
 				var qry = from x in SupplierPayment.Queryable
+					  where !x.IsCancelled
 					  orderby x.Id descending
 					  select x;
 
@@ -110,6 +108,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public ActionResult NewPay ()
 		{
+			var session = GetSession ();
+			if (session == null)
+				return RedirectToAction ("OpenSession", "Payments");
+
 			return View (new SupplierPayment ());
 		}
 
@@ -119,12 +121,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		[HttpPost]
 		public ActionResult NewPay (SupplierPayment item)
 		{
+
+			var session = GetSession ();
+			if (session == null)
+				return RedirectToAction ("OpenSession", "Payments");
+
+
 			if (!ModelState.IsValid)
 				return View (item);
 
 			item.Supplier = Supplier.Find (item.SupplierId);
 			item.Date = DateTime.Now;
 			item.Creator = CurrentUser.Employee;
+			item.CashSession = session;
 
 			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
@@ -138,7 +147,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public ActionResult Delete (int id)
 		{
-			return View ();
+			var item = SupplierPayment.Queryable.Where (x => x.Id == id).Single();
+
+
+			return View ("Delete", item);
 		}
 
 		//
@@ -148,11 +160,38 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Delete (int id, FormCollection collection)
 		{
 			try {
-				// TODO: Add delete logic here
+				if (CurrentUser.IsAdministrator) {
+					var item = SupplierPayment.Find (id);
+					item.IsCancelled = true;
+					using (var scope = new TransactionScope ()) {
+						//var new_item = new SupplierPayment { Supplier = item.Supplier, Amount = -item.Amount,
+						//	Comment = Resources.Cancelled  + item.Id, Method = PaymentMethod.NA,
+						//	Reference = item.Id.ToString(),  Date = DateTime.Now, Creator = CurrentUser.Employee };
+						item.UpdateAndFlush ();
+					}
+				}
 				return RedirectToAction ("Index");
 			} catch {
 				return View ();
 			}
+		}
+
+		public ActionResult Pdf (int id)
+		{
+			var model = SupplierPayment.Find (id);
+			ViewBag.Logo = WebConfig.Store.Logo;
+			return PdfTicketView ("Print", model);
+		}
+
+		CashSession GetSession ()
+		{
+			var item = WebConfig.CashDrawer;
+
+			if (item == null)
+				return null;
+
+			return CashSession.Queryable.Where (x => x.End == null)
+			      .SingleOrDefault (x => x.CashDrawer.Id == item.Id);
 		}
 	}
 }

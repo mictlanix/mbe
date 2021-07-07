@@ -1,0 +1,69 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model FiscalDocument
+
+@{
+    ViewBag.Title = Resources.FiscalDocument;
+    var orders = FiscalDocumentDetailSalesOrderDetail.Queryable.Where(x => x.FiscalDocumentDetail.Document == Model).Select(y => y.SalesOrderDetail).ToList();
+}
+
+<h2>@Resources.FiscalDocument</h2>
+
+<div id="master-section">
+	@Html.Partial("_DisplayView")
+</div>
+
+<div class='tabbable'>
+    <ul class='nav nav-tabs'>
+        <li class='active'><a href='#tab-1' data-toggle='tab'>@Resources.Concepts</a></li>
+        <li><a href='#tab-2' data-toggle='tab'>@Resources.ReplacementCdfi</a></li>
+    </ul>
+    <div class='tab-content'>
+        <div id='tab-1' class='tab-pane active'>
+												<div id="items-container">
+																<ul id="items" class="list-items">
+																				@foreach (var item in Model.Details)
+																				{
+																								@Html.Partial("_ItemDisplayView", item)
+																				}
+																</ul>
+																<ul id="items" class="list-items">
+																				@foreach (var order in orders)
+																				{
+																								@Html.Partial("_ItemSalesOrder", order)
+																				}
+																</ul>
+												</div>
+        </div>
+        <div id='tab-2' class='tab-pane'>
+            <div id='relations-container'>
+                <ul id="relations" class="list-items">
+                @foreach (var item in Model.Relations) {
+                    @Html.Partial("_SimpleRelationDisplayView", item)
+                }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id='totals-section' class='pull-right' data-url='@Url.Action("Totals", new { id = Model.Id })'>
+    @Html.Partial("_Totals")
+</div>
+<div class='clearfix'></div>
+<div id='back-to-list' class='pull-left'>
+    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+</div>
+<div class='pull-right'>
+				@Html.ActionLink(Resources.PrintTicket + " " + Resources.SalesOrders, "PdfTicket", new { id = Model.Id }, new { @class = "button icon print", target = "_blank" })
+</div>
+<div class='pull-right'>
+	@Html.ActionLink(Resources.Print + " " + Resources.Invoice, "Pdf", new { id = Model.Id }, new { @class = "button icon print", target = "_blank" })
+</div>
+<div class='clearfix'></div>
+<script type='text/javascript'>
+$(function () {
+	$('[data-toggle="tooltip"]').tooltip();
+});
+</script>

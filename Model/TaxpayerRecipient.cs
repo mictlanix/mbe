@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CustomerTaxpayer.cs
 // 
 // Author:
@@ -53,8 +53,10 @@ namespace Mictlanix.BE.Model {
 		[Property]
 		[DataType (DataType.EmailAddress)]
 		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
-		[EmailAddress (ErrorMessageResourceName = "Validation_Email", ErrorMessageResourceType = typeof (Resources), ErrorMessage = null)]
-		[StringLength (80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
+		[RegularExpression (@"^((\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*)\s*[,]{0,1}\s*)+$",
+		ErrorMessageResourceName = "Validation_Email", ErrorMessageResourceType = typeof (Resources), ErrorMessage = null)]
+		//[EmailAddress (ErrorMessageResourceName = "Validation_Email", ErrorMessageResourceType = typeof (Resources), ErrorMessage = null)]
+		[StringLength (250, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		[Display (Name = "Email", ResourceType = typeof (Resources))]
 		public virtual string Email { get; set; }
 

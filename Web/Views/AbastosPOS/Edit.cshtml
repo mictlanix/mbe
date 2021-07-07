@@ -1,0 +1,62 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model SalesOrder
+
+@{
+    ViewBag.Title = Resources.Edit;
+}
+
+<h2>@Resources.SalesOrder</h2> 
+
+<div id='master-section'>
+	@Html.Partial("_EditorView")
+</div>
+<div>
+				@Html.ValidationSummary()
+</div>
+<div id='details-section'>
+    <div id='items-container' data-url='@Url.Action("Items", new { id = Model.Id })'>
+        @Html.Partial("_Items", Model.Details)
+    </div>
+    <div class='search-box'>
+        <input type='text' id='product-search' name='product-search' />
+    </div>
+</div>
+<div id='totals-section' class='pull-right' data-url='@Url.Action("Totals", new { id = Model.Id })'>
+    @Html.Partial("_Totals")
+</div>
+<div class='clearfix'></div>
+<div id='back-to-list' class='pull-left'>
+    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+</div>
+<div id='confirm-button' class='pull-right @(Model.Details.Count == 0 ? "hide" : "")'>
+@using (Html.BeginForm("Confirm", "AbastosPOS", new { id = Model.Id })) {
+    <button id='complete' type='submit'>@Resources.CompleteSale</button>
+}
+</div>
+<div class='clearfix'></div>
+<script type='text/javascript'>
+$(function () {
+    $('#product-search').tokenInput('@Url.Action("GetSuggestions", "AbastosPOS", new { order = Model.Id })', {
+        hintText:'@Resources.HIntText',
+        noResultsText:'@Resources.NoResultsText',
+        searchingText:'@Resources.SearchingText',          
+								resultsFormatter: function (item) { console.log(item); return ProductFormatter(item);},
+        queryParam:'pattern',minChars:3,tokenLimit:1,
+        onAdd:function(item) {
+            $.post('@Url.Action("AddItem")', { 'order_id': @Model.Id, 'lot_id': '' + item.id }, function (detail) {
+                $.get('@Url.Action("Item", new { id = 0 })' + detail.id, function (data) {
+                    $('#items').append(data);
+                    $('#totals-section').loadUrl();
+                    $('#product-search').tokenInput('clear');
+                    $('#confirm-button').removeClass('hide');
+                });
+            }, 'json');
+        }
+    });
+});
+</script>
+<style type='text/css'>
+ul.token-input-list { width: 100%; }
+</style>

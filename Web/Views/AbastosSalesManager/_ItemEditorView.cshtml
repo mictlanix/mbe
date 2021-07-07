@@ -1,0 +1,52 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model PurchaseClearanceDetailEntry
+
+
+<li id='clearance_detail-@Model.Id' style="height:40px;">
+
+				<div class='info'>
+								<b>@Resources.Price</b>
+								<a class='editable name' data-type='text' data-inputclass='' data-placement='bottom'
+											data-pk='@Model.Id' data-url='@Url.Action("SetItemPrice", new { id = Model.Id })'>@Html.DisplayFor(x => x.Price)</a>
+								
+								<b>@Resources.Quantity: </b>
+								<a class='editable quantity' data-type='text' data-placement='right'
+											data-pk='@Model.Id' data-url='@Url.Action("SetItemQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
+								<a class='button icon-only icon delete pull-right' title='@Resources.Message_DeleteConfirmation'
+											data-type='checklist' data-placement='left' data-pk='@Model.Id'
+											data-source='{}' data-value='@Model.Id' data-url='@Url.Action("RemovePurchaseClearanceDetailEntry", new { id = Model.Id })'
+											data-emptytext='' data-emptyclass=''></a>
+				</div>
+				<div class='action-link'>
+				</div>
+</li>
+<script type='text/javascript'>
+				$('#clearance_detail-@Model.Id [data-toggle="tooltip"]').tooltip();
+				$('#clearance_detail-@Model.Id a.editable').editable({
+								success: function(response, newValue) {
+						var $this = $(this);
+												$("#totals-clearance-@Model.PurchaseClearanceDetail.Id").loadUrl();
+								},
+    display: function(value, response) {
+        if (typeof response === 'undefined') {
+        	$(this).html(value);
+        } else if (Array.isArray(response)) {
+          	arr = $.grep(response, function(o){
+  				return o.value == value;
+			});
+          	$(this).html(arr[0].text);
+        } else {
+          	$(this).html(response.value);
+        }
+    }
+				});
+				$('#clearance_detail-@Model.Id a.delete').editable({
+	success: function(response, newValue) {
+												$('#clearance_detail-@Model.Id').remove();
+												$("#totals-clearance-@Model.PurchaseClearanceDetail.Id").loadUrl();
+
+    }
+});
+</script>

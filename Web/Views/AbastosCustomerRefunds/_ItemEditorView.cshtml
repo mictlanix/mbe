@@ -1,0 +1,85 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model CustomerRefundDetail
+
+<li id='id:@Model.Id'>
+    <div class='photo'>
+        <img src='@Url.Content(Model.Product.Photo)' title='@Model.ProductName' />
+    </div>
+    <div class='action-link'>
+        <a class='button icon-only icon delete' title='@Resources.Message_DeleteConfirmation'
+		   data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id' data-url='@Url.Action("RemoveItem", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
+    </div>
+    <div class='info'>
+        <span class='thick'>@Html.DisplayFor(x => x.ProductName)</span>
+        <br/>
+        <b>@Resources.Code: </b>
+        <span>@Html.DisplayFor(x => x.ProductCode)</span>
+        @if (!string.IsNullOrEmpty (Model.Product.Model)) {
+        <b>@Resources.Model: </b>
+        <span>@Html.DisplayFor(x => x.Product.Model)</span>
+        }
+        @if (!string.IsNullOrEmpty (Model.Product.SKU)) {
+        <b>@Resources.SKU: </b>
+        <span>@Html.DisplayFor(x => x.Product.SKU)</span>
+        }
+        <br/>
+        <b>@Resources.Discount:</b>
+        <span class='editable discount'>@Html.DisplayFor(x => x.DiscountRate)</span>
+        <b>@Resources.TaxRate:</b>
+        <span class='editable tax'>@Html.DisplayFor(x => x.TaxRate)</span>
+        <b>@Resources.Amount:</b>
+        <span class='editable subtotal'>@Html.DisplayFor(x => x.Total)</span>
+        <span class='editable currency'>@Html.DisplayFor(x => x.Currency)</span>
+        @if (Model.Currency != WebConfig.BaseCurrency) {
+        	<a href="javascript:void(0)" class="total2" data-toggle="tooltip" title="@Html.DisplayFor(x => x.TotalEx) @WebConfig.BaseCurrency">
+				<span class="glyphicon glyphicon-exclamation-sign"></span>
+			</a>
+        }
+        <br />
+        <b>@Resources.Price:</b>
+        <span class='editable price'>@Html.DisplayFor(x => x.Price)</span>
+        <span class='editable currency'>@Html.DisplayFor(x => x.Currency)</span>
+        <br />
+        <b>@Resources.QuantitySold:</b>
+        <span>@Html.DisplayFor(x => x.SalesOrderDetail.Quantity)</span>
+        <b>@Resources.QuantityRefund:</b>
+        <a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
+    </div>
+</li>
+<script type='text/javascript'>
+$('#id\\:@Model.Id [data-toggle="tooltip"]').tooltip();
+$('#id\\:@Model.Id a.editable').editable({
+	success: function(response, newValue) {
+		if ('total' in response) {
+			$(this).siblings('.total').html(response.total);
+		}
+		if ('total2' in response) {
+			$(this).siblings('.total2').attr('data-original-title', response.total2 + ' @WebConfig.BaseCurrency');
+		}
+        $('#totals-section').loadUrl();
+    },
+    display: function(value, response) {
+        if (typeof response === 'undefined') {
+        	$(this).html(value);
+        } else if (Array.isArray(response)) {
+          	arr = $.grep(response, function(o){
+  				return o.value == value;
+			});
+          	$(this).html(arr[0].text);
+        } else {
+          	$(this).html(response.value);
+        }
+    }
+});
+$('#id\\:@Model.Id a.delete').editable({
+	success: function(response, newValue) {
+        $('#id\\:@Model.Id').remove();
+        $('#totals-section').loadUrl();
+        if ($('#items li').length === 0) {
+	        $('#confirm-button').addClass('hide');
+	    }
+    }
+});
+</script>

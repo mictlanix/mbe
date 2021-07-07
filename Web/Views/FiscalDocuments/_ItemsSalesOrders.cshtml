@@ -1,0 +1,10 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model IEnumerable<FiscalDocumentDetailSalesOrderDetail>
+
+<ul id="order_detail_items" class="list-items">
+@foreach (var item in Model) {
+    @Html.Partial("_ItemEditorViewSalesOrder", item)
+}
+</ul>

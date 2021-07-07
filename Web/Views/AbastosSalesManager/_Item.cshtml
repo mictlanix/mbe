@@ -1,0 +1,43 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model DeliveryOrder
+
+<tr id='id:@Model.Id'>
+    <td class="number">
+    	@Html.DisplayFor(x => x.Id)
+    	<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => x.Serial)">
+			<span class="glyphicon glyphicon-exclamation-sign"></span>
+		</a>
+    </td>
+    <td class="date">@Html.DisplayFor(x => x.Date)</td>
+    <td class="">@Html.DisplayFor(x => x.Customer.Name)</td>
+    <td class="bool">@Html.DisplayFor(x => x.IsCompleted)</td>
+    <td class="bool">@Html.DisplayFor(x => x.IsCancelled)</td>
+    <td class="bool">@Html.DisplayFor(x => x.IsDelivered)</td>
+
+    <td class="actions">
+        @if (ViewBag.Privilege.AllowRead) {
+            @Html.ActionLink(" ", "View", new { id = Model.Id }, 
+                    new { @class = "button icon view icon-only", title = Resources.Details })
+
+            if (Model.IsCompleted && !Model.IsCancelled) { 
+            @Html.ActionLink(" ", "Print",  new { id = Model.Id }, 
+                    new { @class = "button icon print icon-only", title = Resources.Print, target = "_blank" })}
+        }
+        @if (ViewBag.Privilege.AllowUpdate)
+        {
+
+            if (!Model.IsCompleted){
+                @Html.ActionLink(" ", "Edit", new { id = Model.Id },
+                    new { @class = "button icon edit icon-only", title = Resources.Edit })
+            }
+
+            if (Model.IsCompleted && !Model.IsDelivered && !Model.IsCancelled) {
+            @Html.ActionLink(" ", "Delivery", new { id = Model.Id },
+             new { @class = "button icon shipping icon-only", title = Resources.Delivery })}
+        }
+    </td>
+</tr>
+
+

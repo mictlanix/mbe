@@ -1,0 +1,81 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model PurchaseOrderDetail
+
+<li id='id:@Model.Id'>
+    <div class='photo'>
+        <img src='@Url.Content(Model.Product.Photo)' title='@Model.ProductName' />
+    </div>
+    <div class='action-link'>
+        <a class='button icon-only icon delete' title='@Resources.Message_DeleteConfirmation'
+		   data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id' data-url='@Url.Action("RemovePurchaseDetail", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
+    </div>
+    <div class='info'>
+        <span class='thick'>@Html.DisplayFor(x => x.ProductName)</span>
+        <br/>
+        <b>@Resources.Code: </b>
+        <span>@Html.DisplayFor(x => x.ProductCode)</span>
+        @if (!string.IsNullOrEmpty (Model.Product.Model)) {
+        <b>@Resources.Model: </b>
+        <span>@Html.DisplayFor(x => x.Product.Model)</span>
+        }
+        @if(!string.IsNullOrEmpty(Model.Product.SKU)) {
+        <b>@Resources.SKU: </b>
+        <span>@Html.DisplayFor(x => x.Product.SKU)</span>
+        }
+        <b>@Resources.ExchangeRate:</b>
+        <span class='rate'>@Html.DisplayFor(x => x.ExchangeRate)</span>
+        <br/>
+        <b>@Resources.Quantity:</b>
+        <a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetDetailQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
+        <b>@Resources.Price:</b>
+        <a class='editable price' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetDetailPrice", new { id = Model.Id })'>@Html.DisplayFor(x => x.Price)</a>
+        <a class='editable currency' data-type='select' data-placement='right' data-source='@Url.Action("Currencies", "ExchangeRates")' data-pk='@Model.Id' data-value='@((int)Model.Currency)' data-url='@Url.Action("EditDetailCurrency", new { id = Model.Id })'>@Html.DisplayFor(x => x.Currency)</a>
+        <b>@Resources.Discount:</b>
+        <a class='editable discount' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("EditDetailDiscount", new { id = Model.Id })'>@Html.DisplayFor(x => x.DiscountRate)</a>
+        <b>@Resources.TaxRate:</b>
+        <a class='editable tax' data-type='select' data-placement='right' data-source='@Url.Action("TaxRates", "Pricing")' data-pk='@Model.Id' data-value='@Model.TaxRate.ToString("0.####")' data-url='@Url.Action("SetItemTaxRate", new { id = Model.Id })'>@Html.DisplayFor(x => x.TaxRate)</a>
+        <b>@Resources.Amount:</b>
+        <span class='editable total'>@Html.DisplayFor(x => x.Total)</span>
+        <span class='editable currency'>@WebConfig.BaseCurrency</span>
+        <br />
+        <b>@Resources.Warehouse:</b>
+        <a class='editable warehouse' data-type='select' data-inputclass='input-xlarge' data-placement='bottom' data-source='@Url.Action("List", "Warehouses")' data-pk='@Model.Id' data-value='@Model.Warehouse.Id' data-url='@Url.Action("EditDetailWarehouse", new { id = Model.Id })'>@Model.Warehouse</a>
+    </div>
+</li>
+<script type='text/javascript'>
+$('#id\\:@Model.Id a.editable').editable({
+	success: function(response, newValue) {
+		var $this = $(this);
+        if ('rate' in response) {
+          	$this.siblings('.rate').html(response.rate);
+        }
+		if ('total' in response) {
+			$this.siblings('.total').html(response.total);
+		}
+		if ('total2' in response) {
+			$this.siblings('.total2').attr('data-original-title', response.total2 + ' @WebConfig.BaseCurrency');
+		}
+        updateTotals();
+    },
+    display: function(value, response) {
+        if (typeof response === 'undefined') {
+        	$(this).html(value);
+        } else if (Array.isArray(response)) {
+        	arr = $.grep(response, function(o){
+  				return o.value == value;
+			});
+          	$(this).html(arr[0].text);
+        } else {
+          	$(this).html(response.value);
+        }
+    }
+});
+$('#id\\:@Model.Id a.delete').editable({
+	success: function(response, newValue) {
+        $('#id\\:@Model.Id').remove();
+        updateTotals();
+    }
+});
+</script>

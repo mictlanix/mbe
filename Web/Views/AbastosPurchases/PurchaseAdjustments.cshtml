@@ -1,0 +1,94 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model PurchaseOrder
+
+@{
+    ViewBag.Title = Resources.Edit;
+}
+
+<h2>@Resources.PurchaseOrder</h2> 
+
+<div id='master-section'>
+	@Html.Partial("_MasterView")
+</div>
+<div id='details-section'>
+    <div id='items-container'>
+        <ul id='items' class='list-items'>
+        @foreach (var item in Model.Details) {
+            @Html.Partial("_DetailUpdateView", item) 
+        }
+        </ul>
+    </div>
+    <div class="selector-warehouse">
+        <input type="text" id="warehouse-search" name="warehouse-search" />
+    </div>
+    <div class='search-box'>
+        <input type='text' id='product-search' name='product-search' />
+    </div>
+</div>
+<div id='totals-section' class='pull-right' data-url='@Url.Action("Totals", new { id = Model.Id })'>
+    @Html.Partial("_Totals")
+</div>
+<div class='clearfix'></div>
+<div id='back-to-list' class='pull-left'>
+    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+</div>
+@*<div id='confirm-button' class='pull-right @(Model.Total == 0m ? "hide" : "")'>
+@using (Html.BeginForm("Confirm", "AbastosPurchases", new { id = Model.Id })) {
+    <button id='complete' type='submit'>@Resources.Complete</button>
+}
+</div>*@
+<div class='clearfix'></div>
+<script type="text/javascript">
+function updateTotals(){
+	$.get('@Url.Action("GetTotals", new { id = Model.Id })', function(data) {
+		$('#totals-section').html(data);
+        if ($('#items li').length === 0) {
+            $('#edit-button').show('slow');
+            $('#confirm-button').addClass('hide');
+        }
+	});
+}
+$(function () {
+    $('#warehouse-search').tokenInput('@Url.Action("GetSuggestions", "Warehouses")', {
+        hintText: '@Resources.ChooseWarehouse',
+        noResultsText: '@Resources.NoResultsText',
+        searchingText: '@Resources.SearchingText',
+        queryParam: 'pattern',
+        minChars: 1,
+        tokenLimit: 1,
+        onAdd: function () { $('.search-box').show('slow'); },
+        onDelete: function () { $('.search-box').hide(); }
+    });
+
+    $('#product-search').tokenInput('@Url.Action("GetSuggestions", "Products")', {
+        hintText: '@Resources.HIntText',
+        noResultsText: '@Resources.NoResultsText',
+        searchingText: '@Resources.SearchingText',          
+        resultsFormatter: function(item){return ProductFormatter(item);},
+        queryParam: 'pattern',minChars: 3,tokenLimit: 1,
+        onAdd: function (item) {
+            var w = $('#warehouse-search').tokenInput("get")[0];
+            $.post('@Url.Action("AddPurchaseDetail")', { 'movement': PurchaseMovement.Id, 'warehouse': '' + w.id, 'product': '' + item.id }, function (detail) {
+                $.get('@Url.Action("GetDetail")/' + detail.id, function (data) {
+                    $('#items').append(data);                
+                    $('#product-search').tokenInput('clear');
+
+                    updateTotals();
+
+                    $('#edit-button').hide('slow');
+                    $('#confirm-button').removeClass('hide');
+                });
+
+            }, 'json');
+        }
+    });
+
+    $('.search-box').hide();
+});
+</script>
+<style type='text/css'>
+ul.token-input-list { width: 100%; }
+</style>

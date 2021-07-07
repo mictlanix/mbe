@@ -72,11 +72,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View (search);
 		}
 
-		Search<SalesOrder> SearchSalesOrders (Search<SalesOrder> search)
+		protected virtual Search<SalesOrder> SearchSalesOrders (Search<SalesOrder> search)
 		{
 			var item = WebConfig.Store;
 			var pattern = (search.Pattern ?? string.Empty).Trim ();
 			IQueryable<SalesOrder> query = from x in SalesOrder.Queryable
+						       where x.IsCancelled
 						       select x;
 
 			if (!WebConfig.ShowSalesOrdersFromAllStores) {
@@ -317,7 +318,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult SetCustomer (int id, int value)
+		public virtual ActionResult SetCustomer (int id, int value)
 		{
 			var entity = SalesOrder.Find (id);
 			var item = Customer.TryFind (value);
@@ -647,7 +648,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult SetTerms (int id, string value)
+		public virtual ActionResult SetTerms (int id, string value)
 		{
 			bool success;
 			PaymentTerms val;
@@ -693,7 +694,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult AddItem (int order, int product)
+		public virtual ActionResult AddItem (int order, int product)
 		{
 			var entity = SalesOrder.TryFind (order);
 			var p = Product.TryFind (product);
@@ -844,7 +845,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult SetItemQuantity (int id, decimal value)
+		public virtual ActionResult SetItemQuantity (int id, decimal value)
 		{
 			var entity = SalesOrderDetail.Find (id);
 
@@ -1088,7 +1089,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult Cancel (int id)
+		public virtual ActionResult Cancel (int id)
 		{
 			var entity = SalesOrder.Find (id);
 
@@ -1108,7 +1109,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		// TODO: Rename param: order -> id
-		public JsonResult GetSuggestions (int order, string pattern)
+		public virtual JsonResult GetSuggestions (int order, string pattern)
 		{
 			int pl = SalesOrder.Queryable.Where (x => x.Id == order)
 						.Select (x => x.Customer.PriceList.Id).Single ();

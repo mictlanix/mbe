@@ -1,0 +1,68 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model FiscalDocumentDetailSalesOrderDetail
+
+<li id='id:@Model.Id'>
+
+    <div class='action-link'>
+    @if(Model != null) {
+        <span class='label label-info' title='@Resources.SalesOrder'>@Html.DisplayFor(x => x.SalesOrderDetail.SalesOrder.Id)</span>
+    }
+        <a class='button icon-only icon delete' title='@Resources.Message_DeleteConfirmation'
+		   data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id' data-url='@Url.Action("RemoveItemSalesOrderDetail", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
+    </div>
+    <div class='info'>
+        <br/>
+        <b>@Resources.Product: </b>
+            @Html.DisplayFor(x => x.SalesOrderDetail.Product.Id)
+        <b>@Resources.Taxes: </b><b>@Resources.Subtotal: </b>
+            @Html.DisplayFor(x => x.SalesOrderDetail.Subtotal)
+        <b>@Resources.Taxes: </b>
+            @Html.DisplayFor(x => x.SalesOrderDetail.Taxes)
+        <b>@Resources.Amount: </b>
+        <span class='editable total'>@Html.DisplayFor(x => x.SalesOrderDetail.Total)</span>
+				<span class="glyphicon glyphicon-exclamation-sign"></span>
+    </div>
+</li>
+<script type='text/javascript'>
+$('#id\\:@Model.Id [data-toggle="tooltip"]').tooltip();
+$('#id\\:@Model.Id a.editable').editable({
+	success: function(response, newValue) {
+		if ('total' in response) {
+			$(this).siblings('.total').html(response.total);
+		}
+		if ('total2' in response) {
+			$(this).siblings('.total2').html(response.total2);
+		}
+        $('#totals-section').loadUrl();
+    },
+    display: function(value, response) {
+        if (typeof response === 'undefined') 
+        	return;
+
+        if (Array.isArray(response)) {
+          	arr = $.grep(response, function(o){
+  				return o.value == value;
+			});
+      		if(arr.length > 0) {
+      			$(this).html(arr[0].text);
+  			}
+        } else {
+          	$(this).html(response.value);
+        }
+    }
+});
+$('#id\\:@Model.Id a.delete').editable({
+	success: function(response, newValue) {
+        $('#id\\:@Model.Id').remove();
+        $('#totals-section').loadUrl();
+								$("#items-container").loadUrl();
+
+	    if ($('#order_detail_items li').length === 0) {
+	        $('#confirm-button').addClass('hide');
+	    }
+    }
+});
+
+</script>

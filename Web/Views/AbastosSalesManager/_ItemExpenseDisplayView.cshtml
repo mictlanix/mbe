@@ -1,0 +1,34 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model PurchaseClearanceDetail
+
+
+				<tr class='info'>
+								<td colspan="7" style="padding-top:20px;">
+								<span class='thick'>@Html.DisplayFor(x => x.ProductName)</span>
+								<br />
+								<b>@Resources.LotNumber: </b>
+								<span class='um'>@Html.DisplayFor(x => Model.PurchaseClearance.LotCode)</span>
+								@if (!string.IsNullOrWhiteSpace(Model.ProductName))
+								{
+												<b>@Resources.Model: </b>
+												<span>@Html.DisplayFor(x => x.ProductCode)</span>
+								}
+								<br />
+						
+				</tr>
+												@foreach (var entry in Model.Details) {
+																<tr>
+																				<td colspan="2">@Html.DisplayFor(x => entry.ProductName)</td>
+																				<td>@Html.DisplayFor(x => entry.Total)</td>
+																</tr>
+												}
+				<tr>
+								<td>
+																<b>@Resources.Quantity: @Html.DisplayFor(x => x.Quantity)</b><br />
+								</td>
+								<td colspan="2"></td>
+								<td><b>@Resources.Subtotal: @Html.DisplayFor(x => x.TotalSold)</b></td>
+    </tr>
+				<tr class="clearfix"></tr>

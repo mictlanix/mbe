@@ -1,0 +1,80 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model FiscalDocumentDetail
+
+<li id='id:@Model.Id'>
+				<div class='info'>
+								<a class='editable name input-xxlarge' data-type='text' data-inputclass='input-xxlarge' data-placement='bottom' data-pk='@Model.Id' data-url='@Url.Action("SetItemProductName", new { id = Model.Id })'>@Html.DisplayFor(x => x.ProductName)</a>
+								<br />
+								<b>@Resources.Code: </b>
+								<a class='editable code' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemProductCode", new { id = Model.Id })'>@Html.DisplayFor(x => x.ProductCode)</a>
+								<b>@Resources.UnitOfMeasurement: </b>
+								<span>@Html.DisplayFor(x => x.UnitOfMeasurementName)</span>
+								<b>@Resources.ProductServiceKey: </b>
+								<span>@Html.DisplayFor(x => x.ProductService.Id)</span>
+								<br />
+								<b>@Resources.Quantity: </b>
+												@Html.DisplayFor(x => x.Quantity)
+								<b>@Resources.Price: </b>
+								@Html.DisplayFor(x => x.Price)
+								<span class='editable currency'>@Html.DisplayFor(x => x.Currency)</span>
+								<b>@Resources.Discount: </b>
+								<a class='discount' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemDiscount", new { id = Model.Id })'>@Html.DisplayFor(x => x.DiscountRate)</a>
+								<b>@Resources.TaxRate: </b>
+								<a class='editable tax' data-type='select' data-placement='right' data-autotext='never' data-source='@Url.Action("TaxRates", "Pricing")' data-pk='@Model.Id' data-value='@Model.TaxRate.ToString("0.####")' data-url='@Url.Action("SetItemTaxRate", new { id = Model.Id })'>@Html.DisplayFor(x => x.TaxRate)</a>
+								<b>@Resources.Amount: </b>
+								<span class='editable total'>@Html.DisplayFor(x => x.Total)</span>
+								<span class='editable currency'>@Html.DisplayFor(x => x.Currency)</span>
+								@if (Model.Currency != WebConfig.BaseCurrency)
+								{
+												<a href="javascript:void(0)" class="total2" data-toggle="tooltip" title="@Html.DisplayFor(x => x.TotalEx) @WebConfig.BaseCurrency">
+																<span class="glyphicon glyphicon-exclamation-sign"></span>
+												</a>
+								}
+								<br />
+								<b style='vertical-align:top;'>@Resources.Comment:</b>
+								<a class='editable' data-type="textarea" data-placement='right' data-pk='@Model.Id'
+											data-url='@Url.Action("SetItemComment", new { id = Model.Id })'
+											data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>@Model.Comment</a>
+				</div>
+</li>
+<script type='text/javascript'>
+$('#id\\:@Model.Id [data-toggle="tooltip"]').tooltip();
+$('#id\\:@Model.Id a.editable').editable({
+	success: function(response, newValue) {
+		if ('total' in response) {
+			$(this).siblings('.total').html(response.total);
+		}
+		if ('total2' in response) {
+			$(this).siblings('.total2').html(response.total2);
+		}
+        $('#totals-section').loadUrl();
+    },
+    display: function(value, response) {
+        if (typeof response === 'undefined')
+        	return;
+
+        if (Array.isArray(response)) {
+          	arr = $.grep(response, function(o){
+  				return o.value == value;
+			});
+      		if(arr.length > 0) {
+      			$(this).html(arr[0].text);
+  			}
+        } else {
+          	$(this).html(response.value);
+        }
+    }
+});
+$('#id\\:@Model.Id a.delete').editable({
+	success: function(response, newValue) {
+        $('#id\\:@Model.Id').remove();
+		$('#totals-section').loadUrl();
+	    if ($('#items li').length === 0) {
+	        $('#confirm-button').addClass('hide');
+	    }
+    }
+});
+
+</script>

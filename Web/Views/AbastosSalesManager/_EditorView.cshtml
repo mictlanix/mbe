@@ -1,0 +1,123 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model PurchaseClearance
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.DeliveryOrders);
+}
+
+<fieldset>
+	<div class='row'>
+		<div class='col-xs-8'>
+	  		<dl class=''>
+				<dt>@Resources.Supplier</dt>
+				<dd>
+			        	@Html.DisplayFor(x => x.Supplier)
+			    </dd>
+				<dt>@Resources.LotNumber</dt>
+				<dd>
+			        	@Html.DisplayFor(x => x.LotCode)
+				</dd>
+        <dt>@Resources.Comment</dt>
+        <dd>
+            <a class='editable' data-type="textarea" data-placement='right' data-pk='@Model.Id'
+                data-url='@Url.Action("SetComment", new { id = Model.Id })'
+                data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>@Model.Comment</a>
+        </dd>
+								<dt>@Resources.Commision</dt>
+        <dd>
+            <a class='editable' data-type="text" data-placement='right' data-pk='@Model.Id'
+                data-url='@Url.Action("SetCommission", new { id = Model.Id })'
+                data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>@Html.DisplayFor(x => x.Commission)</a>
+        </dd>
+			</dl>
+		</div>
+	  	<div class='col-xs-4'>
+	  		<dl class='dl-horizontal'>
+				
+				<dt>@Resources.Date</dt>
+				<dd>
+						@Html.DisplayFor(x => x.CreationTime)
+				</dd>
+			</dl>
+  		</div>
+	</div>
+@if(Privilege.AllowDelete && !Model.IsCancelled) {
+	<div class='row'>
+  		<div class='col-xs-12'>
+	    @using (Html.BeginForm("Cancel", "AbastosSalesManager", new { id =  Model.Id }, FormMethod.Post, new { @class = "modal-form pull-right" })) {
+			<button type="submit" class="icon cancel">@Resources.Cancel</button>
+	    }
+  		</div>
+	</div>
+}
+</fieldset>
+<script type='text/javascript'>
+	$('[data-toggle="tooltip"]').tooltip();
+	$('#customer').editable({
+		select2: {
+			minimumInputLength: 3,
+			ajax: {
+				url: '@Url.Action("GetSuggestions", "Customers")',
+	        dataType: 'json',
+	        type: 'POST',
+	        data: function(term,page,context) {
+	        	return { pattern:term };
+	        },
+	        results: function(data,page) {
+	            return { results:data };
+	        }
+	    },
+	    initSelection: function(element, callback) {
+	        var data = {
+	        	id: $('#customer').data('value'),
+	        	name: $('#customer').text()
+        	};
+	        callback(data);
+	    },
+	    formatResult: function(result) {
+	        return result.name + " (" + result.code + ")";
+	    },
+	    formatSelection: function(selection) {
+	        return selection.name;
+	    }
+	},
+	success: function(response, newValue) {
+	    $('#address').text('').editable('setValue', '');
+        $('#items-container').text()
+    },
+    display: function(value, response) {
+    	if (typeof response !== 'undefined') {
+			$(this).html(response.value);
+		}
+    }
+	});
+
+	$('#date').editable({
+		datepicker: {
+			language: '@WebConfig.Language'
+		}
+	});
+
+
+$('a.editable').editable({
+    display: function(value, response) {
+		if (typeof response === 'undefined')
+        	return;
+
+        if (Array.isArray(response)) {
+          	var arr = $.grep(response, function(o){
+  				return o.value == value;
+			});
+			if (arr.length != 0) {
+          		$(this).html(arr[0].text);
+          	}
+        } else {
+          	$(this).html(response.value);
+        }
+    }
+});
+</script>

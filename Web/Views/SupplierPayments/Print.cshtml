@@ -1,0 +1,52 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
+@using Mictlanix.BE.Web.Helpers
+@model SupplierPayment
+
+@{
+    Layout = WebConfig.ReceiptLayout;
+    ViewBag.Title = Resources.SupplierPayment;
+    ViewBag.Store = WebConfig.Store;
+    ViewBag.Address = WebConfig.Store.Address;
+}
+
+<div class="display-label">
+				@Html.LabelFor(model => model.Id)<br />
+				@Html.DisplayFor(model => model.Id)
+</div>
+
+<div class="display-label date text-right">
+    @Html.LabelFor(model => model.Date)<br/>
+    @Html.DisplayFor(model => model.Date)
+</div>
+
+<div class="display-label">
+    @Html.LabelFor(model => model.Supplier)<br/>
+    @Html.DisplayFor(model => model.Supplier.Name)
+</div>
+
+<div class="display-label">
+				@Html.LabelFor(model => model.Amount)<br />
+				@Html.DisplayFor(model => model.Amount)
+</div>
+<div class="display-label">
+				@Html.LabelFor(model => model.Method)<br />
+				@Model.Method.GetDisplayName()
+</div>
+<div class="signature">
+    @Model.Supplier.Name<br/>
+    @Resources.Accept
+</div>
+
+<div class="display-label text-right">
+    @Html.LabelFor(model => model.Creator)
+</div>
+<div class="display-field text-right">
+    @Html.DisplayFor(model => model.Creator.Name)
+</div>
+
+@section Footer {
+	<img src='@Url.Action("Code128", "Barcodes", new { id = string.Format("{0}", Html.DisplayFor(x => x.Id)) })' alt='@Html.DisplayFor(x => x.Id)' title='@Html.DisplayFor(x => x.Id)'>
+	<p>@Html.DisplayFor(x => x.Id)</p>
+}

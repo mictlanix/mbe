@@ -52,31 +52,39 @@
 			</dl>
 		</div>
 	  	<div class='col-xs-4'>
-	  		<dl class='dl-horizontal'>
-				<dt>@Resources.Id</dt>
-				<dd>
-				@if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders).AllowRead) {
-					<a href='@Url.Action("View", "SalesOrders", new { id = Model.Id })' target='_blank'>@Html.DisplayFor(x => x.Id)</a>
-				} else {
-					<span>@Html.DisplayFor(x => x.Id)</span>
-				}
-					<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => x.Serial)">
-						<span class="glyphicon glyphicon-exclamation-sign"></span>
-					</a>
-				</dd>
-				<dt>@Resources.Date</dt>
-				<dd>@Html.DisplayFor(x => x.Date)</dd>
-				<dt>@Resources.PromiseDate</dt>
-				<dd>@Html.DisplayFor(x => x.PromiseDate)</dd>
-				<dt>@Resources.Currency</dt>
-				<dd>@Html.DisplayFor(x => x.Currency)</dd>
-				<dt>@Resources.ExchangeRate</dt>
-				<dd>@Html.DisplayFor(x => x.ExchangeRate)</dd>
-				<dt>@Resources.PaymentTerms</dt>
-				<dd>@Model.Terms.GetDisplayName()</dd>
-				<dt>@Resources.DueDate</dt>
-				<dd>@Html.DisplayFor(x => x.DueDate)</dd>
-			</dl>
+										<dl class='dl-horizontal'>
+														<dt>@Resources.Id</dt>
+														<dd>
+																		@if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders).AllowRead) {
+																						<a href='@Url.Action("View", "POSAbastos", new { id = Model.Id })' target='_blank'>@Html.DisplayFor(x => x.Id)</a>
+																		}
+																		else {
+																						<span>@Html.DisplayFor(x => x.Id)</span>
+																		}
+																		<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => x.Serial)">
+																						<span class="glyphicon glyphicon-exclamation-sign"></span>
+																		</a>
+														</dd>
+														<dt>@Resources.Date</dt>
+														<dd>@Html.DisplayFor(x => x.Date)</dd>
+														<dt>@Resources.PromiseDate</dt>
+														<dd>@Html.DisplayFor(x => x.PromiseDate)</dd>
+														<dt>@Resources.Currency</dt>
+														<dd>@Html.DisplayFor(x => x.Currency)</dd>
+														<dt>@Resources.ExchangeRate</dt>
+														<dd>@Html.DisplayFor(x => x.ExchangeRate)</dd>
+														<dt>@Resources.PaymentTerms</dt>
+														<dd>
+																		<a id='terms' class='editable' data-type='select' data-placement='left' data-pk='@Model.Id'
+																					data-value='@((int)Model.Terms)' data-source='@Url.Action("Terms","AbastosPOS")'
+																					data-url='@Url.Action("SetTerms","AbastosPOS", new { id = Model.Id })'
+																					data-emptytext='@Resources.Empty'>
+																						@Model.Terms.GetDisplayName()
+																		</a>
+														</dd>
+														<dt>@Resources.DueDate</dt>
+														<dd>@Html.DisplayFor(x => x.DueDate)</dd>
+										</dl>
   		</div>
 	</div>
 @if(Privilege.AllowDelete && !Model.IsCancelled) {

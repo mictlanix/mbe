@@ -53,9 +53,9 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "ServiceCard", ResourceType = typeof (Resources))]
 		ServiceCard = 29,
 		[Display (Name = "AdvancePaymentsApplied", ResourceType = typeof (Resources))]
-        AdvancePayments = 30,
-        [Display(Name = "ToBeDefined", ResourceType = typeof(Resources))]
-        ToBeDefined = 99,
+		AdvancePayments = 30,
+		[Display(Name = "ToBeDefined", ResourceType = typeof(Resources))]
+		ToBeDefined = 99,
 		[Display (Name = "GovernmentFunding", ResourceType = typeof (Resources))]
 		GovernmentFunding = 1001
 	}

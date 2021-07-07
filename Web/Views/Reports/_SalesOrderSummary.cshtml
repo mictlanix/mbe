@@ -1,45 +1,58 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
-@model IEnumerable<dynamic>
+@model SalesOrdersSummaryFilters
 
-<table class='table table-condensed'>
+<table>
 	<thead>
-	    <tr>
-	        <th class='nowrap center'>@Resources.Date</th>
-	        <th class='nowrap center'>@Resources.SalesPerson</th>
-	        <th class='nowrap center'>@Resources.SalesOrder</th>
-	        <th class='center'>@Resources.FiscalDocument</th>
-	        <th class='center'>@Resources.DueDate</th>
-	        <th class='nowrap center'>@Resources.Customer</th>
-	        <th class='nowrap center'>@Resources.Total</th>
-	        <th class='nowrap center'></th>
-	    </tr>
+						<tr>
+										<th class='center'>@Resources.Customer</th>
+										<th class='nowrap center'>@Resources.Product</th>
+										<th class='center'>@Resources.LotNumber</th>
+										<th class='center'>@Resources.Quantity</th>
+										<th class='nowrap center'>@Resources.Price</th>
+										<th class='nowrap center'>@Resources.Subtotal</th>
+										<th class='nowrap center'>@Resources.Date</th>
+						</tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-    <tr>
-        <td class='date'>@item.Date.ToString("yyyy-MM-dd")</td>
-        <td class='nowrap'>@item.SalesPerson</td>
-        <td class='number'>@item.SalesOrder</td>
-        <td class='center' style='word-wrap:break-word'>@item.Invoices</td>
-        <td class='date'>@item.DueDate</td>
-        <td>@item.Customer</td>
-        <td class='currency'>@item.TotalEx.ToString("c")</td>
-    @if ((CurrencyCode)item.Currency == WebConfig.BaseCurrency) {
-        <td class='currency'></td>
-    } else {
-        <td class='currency'>@item.Total.ToString("c") @((CurrencyCode)item.Currency)</td>
-    }
-    </tr>
-}
+				@foreach (var item in Model.Results) {
+								foreach (var detail in item.Details)
+								{
+								<tr style="background-color:#E0E0E0">
+												<td class='number'>@Html.DisplayFor(x => detail.SalesOrder.Customer.Name)</td>
+												<td class='number'>@Html.DisplayFor(x => detail.Product.Name)</td>
+												<td class='number'>@Html.DisplayFor(x => detail.Lot.LotNumber)</td>
+												<td class='number'>@Html.DisplayFor(x => detail.Quantity)</td>
+												<td class='number'>@Html.DisplayFor(x => detail.Price)</td>
+												<td class='number'>@Html.DisplayFor(x => detail.Total)</td>
+												<td class='date'>@detail.SalesOrder.Date.ToString("yyyy-MM-dd")</td>
+								</tr>
+								}
+				}
     </tbody>
     <tfoot>
-	    <tr>
-	        <td class='center' colspan='6'>@Model.Count() @Resources.SalesOrders</td>
-	        <td class='number'><b>@Model.Sum(x => (decimal)x.TotalEx).ToString("c")</b></td>
-	        <td class='number'><b>@Model.Where(x => (CurrencyCode)x.Currency != WebConfig.BaseCurrency).Sum(x => (decimal)x.Total).ToString("c")</b></td>
-	    </tr>
+								<tr>
+												<td class='center' colspan='3'>@Model.Results.Count() @Resources.SalesOrders</td>
+												<td class='number'>@Model.Results.SelectMany(x => x.Details).Sum(y => y.Quantity).ToString("0.#") </td>
+												<td></td>
+												<td class='number'><b>@Model.Results.Sum(x => (decimal)x.Total).ToString("c")</b></td>
+								</tr>
     </tfoot>
 </table>
+
+<div class='pull-right'>
+				@using (Html.BeginForm("SalesOrderSummaryPdf", "Reports", FormMethod.Post, new { target = "_blank" }))
+				{
+								<button id='complete' type='submit'>@Resources.Print</button>
+								<input type="hidden" name="store" value=1 />
+								@Html.HiddenFor(x => Model.StartDate)
+								@Html.HiddenFor(x => Model.EndDate)
+								@Html.HiddenFor(x => Model.NetD)
+								@Html.HiddenFor(x => Model.Immediate)
+
+
+				}
+</div>
+<div class="clearfix"></div>

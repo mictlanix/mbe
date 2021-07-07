@@ -1,0 +1,38 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model PurchaseClearance
+@{
+				var CurrentUser = Html.CurrentUser() ?? new User();
+				var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.POS);
+}
+
+
+<fieldset>
+	<div class='row'>
+		<div class='col-xs-8'>
+	  		<dl class=''>
+				<dt>@Resources.Supplier</dt>
+				<dd>@Html.DisplayFor(x => x.Supplier)</dd>
+				<dt>@Resources.Purchase</dt>
+				<dd>@Html.DisplayFor(x => x.PurchaseOrder)</dd>
+				<dt>@Resources.LotNumber</dt>
+				<dd>@Html.DisplayFor(x => x.LotCode)</dd>
+				<dt>@Resources.Comment</dt>
+				<dd>@Html.DisplayFor(x => x.Comment)</dd>
+			</dl>
+		</div>
+	  	<div class='col-xs-4'>
+	  		<dl class='dl-horizontal'>
+				<dt>@Resources.Id</dt>
+				<dd>
+					<span>@Html.DisplayFor(x => x.Id)</span>
+				</dd>
+				<dt>@Resources.Date</dt>
+				<dd>@Html.DisplayFor(x => x.ModificationTime)</dd>
+				<dt>@Resources.Commision</dt>
+				<dd>@Html.DisplayFor(x => x.Commission)</dd>
+			</dl>
+  		</div>
+	</div>
+</fieldset>

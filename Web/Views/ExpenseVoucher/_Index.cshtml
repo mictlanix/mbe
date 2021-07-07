@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE.Model
+@using Mictlanix.BE.Model
 @using Mictlanix.BE
 @using Mictlanix.BE.Web.Models
 
@@ -9,6 +9,7 @@
 		<tr>
 			<th>@Resources.Id</th>
 			<th>@Resources.Date</th>
+			<th>@Resources.Concepts</th>
 			<th>@Resources.Creator</th>
 			<th></th>
 		</tr>
@@ -16,22 +17,23 @@
 	<tbody>
 		@foreach (var item in Model.Results)
 		{
-			<tr>
-				<td>@Html.DisplayFor(x => item.Id)</td>
-				<td>@Html.DisplayFor(x => item.Date)</td>
-				<td>@Html.DisplayFor(x => item.Creator.Name)</td>
-				<td class='actions'>
-					@if ((item.IsCompleted || item.IsCancelled))
-					{
-						@Html.ActionLink(" ", "View", new { id = item.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
-						@Html.ActionLink(" ", "Print", new { id = item.Id }, new { @class = "button icon print icon-only", title = Resources.Print, target = "_blank" })
-					}
-					@if (!item.IsCompleted && !item.IsCancelled)
-					{
-						@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", title = Resources.Edit })
-					}
-				</td>
-			</tr>
+						<tr>
+										<td>@Html.DisplayFor(x => item.Id)</td>
+										<td>@Html.DisplayFor(x => item.Date)</td>
+										<td>@string.Join(",", item.Details.Select(x => x.Expense.Name))</td>
+										<td>@Html.DisplayFor(x => item.Creator.Name)</td>
+										<td class='actions'>
+														@if ((item.IsCompleted || item.IsCancelled))
+														{
+																		@Html.ActionLink(" ", "View", new { id = item.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
+																		@Html.ActionLink(" ", "Print", new { id = item.Id }, new { @class = "button icon print icon-only", title = Resources.Print, target = "_blank" })
+														}
+														@if (!item.IsCompleted && !item.IsCancelled)
+														{
+																		@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", title = Resources.Edit })
+														}
+										</td>
+						</tr>
 		}
 	</tbody>
 	<tfoot></tfoot>

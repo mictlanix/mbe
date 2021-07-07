@@ -1,0 +1,55 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model dynamic
+
+@{
+				var item = ViewBag.item as SalesOrderDetail;
+				var id = ViewBag.id;
+}
+
+<tr id="salesOrderDetail@(item.Id)">
+				<td class="number">@Html.DisplayFor(x => item.SalesOrder.Id)</td>
+				<td class="info">
+								<span class="date">@Html.DisplayFor(x => item.SalesOrder.Date)</span>
+				</td>
+				@*<td class="info">
+								<span class="text">@Html.DisplayFor(x => item.Customer.Name)</span>
+				</td>
+				<td class="info">
+								<span class="text">@Html.DisplayFor(x => item.SalesPerson.Nickname)</span>
+				</td>*@
+				<td>
+												@Html.DisplayFor(x => item.ProductName)
+				</td>
+				<td class="info">
+								<span class="text">@Html.DisplayFor(x => item.Subtotal)</span>
+				</td>
+				<td>
+								<span class="text">@Html.DisplayFor(x => item.Taxes) </span>
+				</td>
+				<td>
+								<span class="text">@Html.DisplayFor(x => item.Total) </span>
+				</td>
+				<td class="action-link">
+												<a class='button icon-only icon add receive' title='@Resources.Apply'
+															data-type='checklist' data-placement='left' data-pk='@id' data-source='{}' data-value='@id'
+															data-url='@Url.Action("AddSalesOrderDetail", new { id = id, sales_order_detail = item.Id })' data-emptytext='' data-emptyclass=''></a>
+				</td>
+</tr>
+<script type='text/javascript'>
+
+				$('#salesOrderDetail@(item.Id) a.receive').editable({
+					success: function (response, newValue) {
+												$('#salesOrderDetail@(item.Id)').fadeOut(1000, function () { $(this).remove(); });
+												$.get("/FiscalDocuments/ItemSalesOrderDetail/" + response.id, function (data) {
+																$("#order_detail_items").append(data);
+																$("#items-container").loadUrl();
+																	$.get('@Url.Action("Totals", new { id = id })', function(data) {
+																					$('#totals-section').html(data);
+																					$('#confirm-button').removeClass('hide');
+																	});
+												});
+								}
+					});
+</script>

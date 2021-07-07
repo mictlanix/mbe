@@ -1,0 +1,30 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model;
+@using Mictlanix.BE.Web.Helpers;
+@model PurchaseOrder
+
+@{
+    ViewBag.Title = Resources.PurchaseOrder;
+}
+
+<h2>@Resources.PurchaseOrder</h2>
+
+<div id="master-section">
+	@Html.Partial("_MasterView")
+</div>
+<div>@Html.ValidationSummary()</div>
+<div id="details-section">
+    <div id="items-container">
+        <ul id="items" class="list-items">
+        @foreach (var item in Model.Details) {
+            @Html.Partial("_DetailView", item) 
+        }
+        </ul>
+    </div>
+</div>
+<div id='totals-section' class='pull-right' data-url='@Url.Action("Totals", new { id = Model.Id })'>
+    @Html.Partial("_Totals")
+</div>
+<div id="back-to-list" style="clear:both">
+    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+</div>

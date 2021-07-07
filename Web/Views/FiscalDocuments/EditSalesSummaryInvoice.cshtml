@@ -1,0 +1,142 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model FiscalDocument
+
+@{
+    ViewBag.Title = Resources.Edit;
+    var CurrentUser = Html.CurrentUser () ?? new User ();
+    var Privilege = CurrentUser.GetPrivilege (SystemObjects.StandaloneFiscalDocuments);
+				var orders = FiscalDocumentDetailSalesOrderDetail.Queryable.Where(x => x.FiscalDocumentDetail.Document == Model).ToList();
+}
+
+<h2>@Resources.FiscalDocument</h2> 
+
+<div id='master-section'>
+	@Html.Partial("_EditorView")
+</div>
+
+<div class='tabbable'>
+				<ul class='nav nav-tabs'>
+								<li class='active'><a href='#tab-1' data-toggle='tab'>@Resources.Concepts</a></li>
+								<li><a href='#tab-2' data-toggle='tab'>@Resources.Details</a></li>
+				</ul>
+				<div class='tab-content'>
+								<div id="tab-1" class="tab-pane active">
+																<div id='items-container' data-url='@Url.Action("DocumentDetails", new { id = Model.Id })'>
+																				@Html.Partial("_DocumentDetails", Model.Details)
+																</div>
+								</div>
+								<div id='tab-2' class='tab-pane'>
+												@using (Ajax.BeginForm("GetSalesOrdersDetails", new { id = Model.Id }, new AjaxOptions {
+																UpdateTargetId = "search-results",
+																LoadingElementId = "activity-indicator",
+																OnBegin = "onSearchBegin"
+												}))
+												{
+																var datetime = new Mictlanix.BE.Web.Models.DateRange(DateTime.Now, DateTime.Now);
+																<div class="row">
+																				<div class="col-xs-7"></div>
+																				<div class="col-xs-2">
+																								@Html.LabelFor(x => datetime.StartDate)
+																								@Html.EditorFor(x => datetime.StartDate)
+																				</div>
+																				<div class="col-xs-2">
+																								@Html.LabelFor(x => datetime.EndDate)
+																								@Html.EditorFor(x => datetime.EndDate)
+																				</div>
+																				<div class="col-xs-1">
+																								<label>&nbsp;</label>
+																								<button class="btn btn-primary btn-block" type="submit">
+																												<span class="glyphicon glyphicon-refresh"></span>
+																								</button>
+																				</div>
+																</div>
+												}
+
+												@*<div id='detail'>
+																@if (Privilege.AllowCreate)
+																{
+																				<div class='search-box'>
+																								<input type='text' id='product-search' name='product-search' />
+																				</div>
+																}
+												</div>*@
+												<div id='details-section'>
+																<div data-url='@Url.Action("ItemsSalesOrderDetails", new { id = Model.Id })'>
+																				@Html.Partial("_ItemsSalesOrders", orders)
+																</div>
+												</div>
+												<div id="search-results"></div>
+								</div>
+				</div>
+</div>
+
+<div id='totals-section' class='pull-right' data-url='@Url.Action("Totals", new { id = Model.Id })'>
+    @Html.Partial("_Totals")
+</div>
+<div class='clearfix'></div>
+<div id='back-to-list' class='pull-left'>
+    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+</div>
+<div id='confirm-button' class='pull-right @(orders.Count == 0 ? "hide" : "")'>
+@using (Html.BeginForm("Confirm", "FiscalDocuments", new { id = Model.Id })) {
+    <button id='complete' type='submit'>@Resources.Complete</button>
+}
+</div>
+<div class='clearfix'></div>
+<script type='text/javascript'>
+$(function () {
+@if (Privilege.AllowCreate) {
+<text>
+    $('#product-search').tokenInput('@Url.Action("GetSuggestions", "FiscalDocuments", new { id = Model.Id })', {
+        hintText:'@Resources.HIntText',
+        noResultsText:'@Resources.NoResultsText',
+        searchingText:'@Resources.SearchingText',          
+        resultsFormatter:function(item){return ProductFormatter(item);},
+        queryParam:'pattern',minChars:3,tokenLimit:1,
+        onAdd:function(item) {
+            $.post('@Url.Action("AddSalesOrder", new { id = Model.Id })', { 'product': item.id }, function (detail) {
+																$.get('@Url.Action("ItemSalesOrder", new { id = 0 })' + detail.id, function (data) {
+																				console.log(data);
+																				$('#order_items').append(data);
+																				$('#items').loadUrl();
+                    $('#totals-section').loadUrl();
+                    $('#product-search').tokenInput('clear');
+                    $('#confirm-button').removeClass('hide');
+                });
+            }, 'json');
+        }
+    });
+</text>
+}
+    $('#add-items').editable({
+								success: function(response, newValue) {
+        	$('#items-container').loadUrl();
+        	$('#totals-section').loadUrl();
+            $('#confirm-button').removeClass('hide');
+            setTimeout(function(){$('#add-items').editable('setValue', '');},500);
+	    }
+    }).removeClass('editable-click');
+
+    $('#relation-search').tokenInput('@Url.Action("GetReplacementRelations", "FiscalDocuments", new { id = Model.Id })', {
+        hintText:'@Resources.HIntText',
+        noResultsText:'@Resources.NoResultsText',
+        searchingText:'@Resources.SearchingText',
+        propertyToSearch: 'stamp',
+        resultsFormatter:function(item){return DocumentFormatter(item);},
+        queryParam:'pattern',minChars:3,tokenLimit:1,
+        onAdd:function(item) {
+            $.post('@Url.Action("AddRelation", new { id = Model.Id })', { 'relation': item.id }, function (relation) {
+                $.get('@Url.Action("Relation", new { id = 0 })' + relation.id, function (data) {
+                    $('#relations').append(data);
+                    $('#relation-search').tokenInput('clear');
+                });
+            }, 'json');
+        }
+    });
+});
+</script>
+<style type='text/css'>
+ul.token-input-list { width: 100%; }
+</style>

@@ -1,0 +1,40 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model CustomerRefund
+
+<fieldset>
+	<div class='row'>
+		<div class='col-xs-8'>
+	  		<dl class=''>
+				<dt>@Resources.Customer</dt>
+				<dd>@Html.DisplayFor(x => x.Customer.Name)</dd>
+				<dt>@Resources.SalesPerson</dt>
+				<dd>@Html.DisplayFor(x => x.SalesPerson.Name)</dd>
+			</dl>
+		</div>
+	  	<div class='col-xs-4'>
+	  		<dl class='dl-horizontal'>
+				<dt>@Resources.Id</dt>
+				<dd>
+					<span>@Html.DisplayFor(x => x.Id)</span>
+					<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => x.Serial)">
+						<span class="glyphicon glyphicon-exclamation-sign"></span>
+					</a>
+				</dd>
+			@if (Model.Date.HasValue) {
+				<dt>@Resources.Date</dt>
+				<dd>@Html.DisplayFor(x => x.Date)</dd>
+			}
+				<dt>@Resources.SalesOrder</dt>
+				<dd>@Html.DisplayFor(x => x.SalesOrder.Id)</dd>
+				<dt>@Resources.SalesOrderDate</dt>
+				<dd>@Html.DisplayFor(x => x.SalesOrder.Date)</dd>
+				<dt>@Resources.Currency</dt>
+				<dd>@Html.DisplayFor(x => x.Currency)</dd>
+				<dt>@Resources.ExchangeRate</dt>
+				<dd>@Html.DisplayFor(x => x.ExchangeRate)</dd>
+			</dl>
+  		</div>
+	</div>
+</fieldset>

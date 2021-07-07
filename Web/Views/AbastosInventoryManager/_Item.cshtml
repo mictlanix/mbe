@@ -1,0 +1,23 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model PurchaseOrder
+
+<tr id='id:@Model.Id'>
+	<td class="code">@AbastosInventoryHelpers.GetLotNumber(Model)</td>
+    <td class="date">@Html.DisplayFor(x => x.CreationTime)</td>
+    <td>@Html.DisplayFor(x => x.Supplier.Name)</td>
+				<td class="actions">
+								@Html.ActionLink(" ", "Details", new { id = Model.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+								@if (ViewBag.Privilege.AllowUpdate && !Model.IsCompleted && !Model.IsCancelled)
+								{
+												@Html.ActionLink(" ", "Edit", new { id = Model.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
+								}
+								@if (ViewBag.Privilege.AllowRead && (Model.IsCompleted || Model.IsCancelled))
+								{
+												@Html.ActionLink(" ", "Pdf", new { id = Model.Id }, new { @class = "button icon print icon-only", title = Resources.Print, target = "_blank" })
+								}
+				</td>
+</tr>
+
+

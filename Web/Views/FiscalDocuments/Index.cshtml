@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
@@ -30,6 +30,7 @@
                     <ul class="dropdown-menu">
                         <li><a class="open-modal" href="/FiscalDocuments/New/CreditNote" data-modal-id="fiscalDocument-modal">@Resources.CreditNote</a></li>
                         <li><a class="open-modal" href="/FiscalDocuments/New/AdvancePaymentsApplied" data-modal-id="fiscalDocument-modal">@Resources.AdvancePaymentsApplied</a></li>
+                        <li><a class="open-modal" href="/FiscalDocuments/New/SalesSummaryInvoice" data-modal-id="fiscalDocument-modal">@Resources.SalesSummaryInvoice</a></li>
                     @if (PrivilegePR.AllowCreate) {
                         <li><a class="open-modal" href="/FiscalDocuments/New/PaymentReceipt" data-modal-id="fiscalDocument-modal">@Resources.PaymentReceipt</a></li>
                     }

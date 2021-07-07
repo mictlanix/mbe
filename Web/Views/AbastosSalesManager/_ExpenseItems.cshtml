@@ -1,0 +1,36 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
+@using Mictlanix.BE.Web.Helpers
+@model PurchaseClearanceDetail
+
+
+
+								<ul id="items-expenses" class="list-items">
+								@foreach (var item in Model.Details) {
+												@Html.Partial("_ExpenseClearanceEditorView", item)
+								}
+								</ul>
+								<div class="clearfix"></div>
+								<div class="pull-right">
+												<a class='button icon-only icon add receive' title='@Resources.Add' id="addExpense-@Model.Id" data-source='{}'
+															data-type='checklist' data-placement='left' data-pk='@Model.Id' data-value='@Model.Id'
+															data-url='@Url.Action("AddExpenseClearanceDetailEntry", new { id = Model.Id })'
+															data-emptytext='' data-emptyclass=''></a>
+								</div>
+								<div class="clearfix"></div>
+								<div id='totals-expenses' class='pull-right' data-url='@Url.Action("TotalExpensesDetail", new { id = Model.Id })'>
+												@Html.Partial("_TotalExpensesClearance", new PurchaseClearanceDetailSummary(Model.Id))
+								</div>
+								<script type='text/javascript'>
+																				$('#addExpense-@Model.Id').editable({
+																								success: function (response, newValue) {
+																												console.log(response)
+																												$.get("/AbastosSalesManager/ItemExpense/" + response.id, function (data) {
+																																$("#items-expenses").append(data);
+																																$('#totals-expenses').loadUrl();
+																												});
+																								}
+
+																				});
+								</script>

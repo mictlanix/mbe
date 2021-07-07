@@ -38,19 +38,21 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "SalesOrder", ResourceType = typeof (Resources))]
 		SalesOrder = 1,
 		[Display (Name = "CustomerRefund", ResourceType = typeof (Resources))]
-		CustomerRefund,
+		CustomerRefund = 2,
 		[Display (Name = "InventoryIssue", ResourceType = typeof (Resources))]
-		InventoryIssue,
+		InventoryIssue = 3,
 		[Display (Name = "InventoryReceipt", ResourceType = typeof (Resources))]
-		InventoryReceipt,
+		InventoryReceipt = 4,
 		[Display (Name = "InventoryTransfer", ResourceType = typeof (Resources))]
-		InventoryTransfer,
+		InventoryTransfer =5,
 		[Display (Name = "PurchaseOrder", ResourceType = typeof (Resources))]
-		PurchaseOrder,
+		PurchaseOrder = 6,
 		[Display (Name = "SupplierReturn", ResourceType = typeof (Resources))]
-		SupplierReturn,
+		SupplierReturn = 7,
 		[Display (Name = "InventoryAdjustment", ResourceType = typeof (Resources))]
-		InventoryAdjustment
+		InventoryAdjustment = 8,
+		[Display (Name = "CancelledSaleProduct", ResourceType = typeof (Resources))]
+		CancelledSaleProduct = 9
 	}
 }
 

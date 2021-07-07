@@ -1,10 +1,11 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Models
 @using Mictlanix.BE.Web.Helpers;
 @model IEnumerable<dynamic>
+@{  var items = Model.Where(x => x.Total > x.Refunds);}
 @foreach (var currency in new []{ CurrencyCode.MXN, CurrencyCode.USD, CurrencyCode.EUR }) {
-	var g = Model.Where (x => x.Currency == (int)currency);
+	var g = items.Where (x => x.Currency == (int)currency);
 	if (g.Any ()) {
 		<table class='table table-condensed'>
 			<thead>
@@ -24,23 +25,24 @@
 		    </thead>
 		    <tbody>
 			@foreach (var item in g) {
-				<tr>
-					<td class='date'>@item.DueDate.ToString("yyyy-MM-dd")</td>
-					<td class='number'>
-				        <a href='@Url.Action("View", "SalesOrders", new { id = item.SalesOrder })' target='_blank'>@item.SalesOrder.ToString("D8")</a>
-			        </td>
-					<td class='date'>@item.Date.ToString("yyyy-MM-dd")</td>
-					<td class='center' style='word-wrap:break-word'>@item.Invoices</td>
-					<td class='fill'>@item.Customer</td>
-					<td class='currency'>@item.Total.ToString("c")</td>
-					<td class='currency'>@item.Refunds.ToString("c")</td>
-					<td class='currency'>@item.Payments.ToString("c")</td>
-					<td class='currency'>@item.Balance.ToString("c")</td>
-					<td class='center'>@((CurrencyCode)item.Currency)</td>
-					<td class='actions'>
-						@Html.ActionLink(" ", "ApplyPayment", new { id = item.SalesOrder }, new { @class = "button icon pay icon-only open-modal", data_modal_id = "apply-payment-modal" })
-					</td>
-				</tr>
+								<tr>
+									<td class='date'>@item.DueDate.ToString("yyyy-MM-dd")</td>
+									<td class='number'>
+																<a href='@Url.Action("View", "SalesOrders", new { id = item.SalesOrder })' target='_blank'>@item.SalesOrder.ToString("D8")</a>
+															</td>
+									<td class='date'>@item.Date.ToString("yyyy-MM-dd")</td>
+									<td class='center' style='word-wrap:break-word'>@item.Invoices</td>
+									<td class='fill'>@item.Customer</td>
+									<td class='currency'>@item.Total.ToString("c")</td>
+									<td class='currency'>@item.Refunds.ToString("c")</td>
+									<td class='currency'>@item.Payments.ToString("c")</td>
+									<td class='currency'>@item.Balance.ToString("c")</td>
+									<td class='center'>@((CurrencyCode)item.Currency)</td>
+									<td class='actions'>
+										@Html.ActionLink(" ", "ApplyPayment", new { id = item.SalesOrder }, new { @class = "button icon pay icon-only open-modal", data_modal_id = "apply-payment-modal" })
+									</td>
+								</tr>
+							
 			}
 		    </tbody>
 		    <tfoot>

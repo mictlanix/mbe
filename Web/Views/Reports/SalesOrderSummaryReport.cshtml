@@ -1,0 +1,50 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model SalesOrdersSummaryFilters
+
+<h2>@ViewBag.Title</h2>
+
+<div id='master-section'>
+@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
+	<div class="row">
+  		<div class="col-sm-7">
+			@Html.Editor((string)ViewBag.EditorField, (string)ViewBag.EditorTemplate)
+		</div>
+		<div class="col-sm-2">
+			@Html.EditorFor(x => x.StartDate)
+		</div>
+		<div class="col-sm-2">
+			@Html.EditorFor(x => x.EndDate)
+		</div>
+		<div class="col-sm-1">
+			<button class="btn btn-primary btn-block" type="submit">
+				<span class="glyphicon glyphicon-refresh"></span>
+			</button>
+		</div>
+	</div>
+		<div class="row">
+						<div class="col-sm-1">
+										@Html.EditorFor(x => x.NetD)
+						</div>
+						<div class="col-sm-1">
+										@Html.EditorFor(x => x.Immediate)
+						</div>
+		</div>
+}
+</div>
+<div id='activity-indicator'>
+    <img alt='@Resources.Loading' src='@Url.Content("~/Content/images/loading-bar.gif")' />
+</div>
+<div id='search-results'></div>
+<style type='text/css'>
+ul.token-input-list { width: 100%; }
+</style>
+<script type="text/javascript">
+$(function() {
+@if (!string.IsNullOrWhiteSpace (Convert.ToString (ViewBag.FieldId))) {
+	<text>$("#@ViewBag.EditorField").tokenInput("add", { id: "@ViewBag.FieldId", name: "@ViewBag.FieldText" });</text>
+}
+});
+</script>
