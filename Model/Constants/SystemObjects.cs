@@ -1,4 +1,4 @@
-﻿// 
+// 
 // SystemObjects.cs
 // 
 // Author:
@@ -202,6 +202,10 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "PaymentMethodOptions", ResourceType = typeof (Resources))]
 		PaymentMethodOptions = 84,
 		[Display (Name = "PaymentReceipt", ResourceType = typeof (Resources))]
-		PaymentReceipt = 85
-	}
+		PaymentReceipt = 85,
+		[Display (Name = "Purchases", ResourceType = typeof (Resources))]
+		PurchasesFast = 86,
+		[Display (Name = "PurchaseClearance", ResourceType = typeof (Resources))]
+		PurchaseClearance = 87
+		}
 }

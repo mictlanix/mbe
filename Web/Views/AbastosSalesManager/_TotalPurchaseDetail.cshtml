@@ -1,0 +1,39 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model PurchaseClearanceDetailSummary
+
+
+<div class="col-sm-push-12">
+				<ul class='labeled-frames pull-right' id="purchase_detail_summary:@Model.Id">
+								<li>
+												<span class='caption'>@Resources.PurchasedQuantity</span>
+												<span class='value'>@Html.DisplayFor(x => x.PurchasedQuantity)</span>
+								</li>
+
+								<li>
+												<span class='caption'>@Resources.SoldQuantity</span>
+																								<span class='value'>@Html.DisplayFor(x => x.SoldQuantity)</span>
+								</li>
+								@if (Model.DecreasedProduct > 0)
+								{
+												<li>
+																<span class='caption'>@Resources.DecreasedProduct</span>
+																																<span class='value'>@Html.DisplayFor(x => x.DecreasedProduct)</span>
+												</li>
+								}
+								<li>
+												<span class='caption'>@Resources.QuantityRemaining</span>
+																								<span class='value'>@Html.DisplayFor(x => x.RemainingQuantity)</span>
+								</li>
+								<li>
+												<span class='caption'>@Resources.AveragePrice</span>
+												<span class='value'>@Html.DisplayFor(x => x.AveragePrice) @Html.DisplayFor(x => x.PurchaseClearanceDetail.Currency)</span>
+								</li>
+								<li>
+												<span class='caption'>@Resources.Total</span>
+												<span class='value'>@Html.DisplayFor(x => x.Total) @Html.DisplayFor(x => x.PurchaseClearanceDetail.Currency)</span>
+								</li>
+				</ul>
+</div>

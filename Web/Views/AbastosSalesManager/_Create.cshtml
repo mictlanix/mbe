@@ -1,0 +1,24 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
+@using Mictlanix.BE.Web.Helpers
+@model PurchaseOrder
+
+<div class='modal-header'>
+    <button type='button' class='close' data-dismiss='modal'>&times;</button>
+    <h3>@Resources.PurchaseOrder</h3>
+</div>
+<div class='modal-body'>
+    @using (Ajax.BeginForm (null, null, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "purchaseOrder-modal-content" }, new { @class = "modal-form" })) {
+        @Html.ValidationSummary(true)
+        <div class="form-horizontal">
+            @Html.EditorForModel()
+        </div>
+    }
+</div>
+<div class='modal-footer'>
+    <button type='button' class='btn btn-default' data-dismiss='modal'>@Resources.Discard</button>
+    <button type='submit' class='btn btn-primary' onclick='$("#purchaseOrder-modal form").submit();'>@Resources.Create</button>
+</div>
+
+

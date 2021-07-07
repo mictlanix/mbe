@@ -1,4 +1,4 @@
-﻿using Castle.ActiveRecord;
+using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System;
 using System.Collections.Generic;
@@ -72,5 +72,9 @@ namespace Mictlanix.BE.Model
 		[Property("cancelled")]
 		[Display(Name = "Cancelled", ResourceType = typeof(Resources))]
 		public virtual bool IsCancelled { get; set; }
+
+		[BelongsTo ("purchase_order", Lazy = FetchWhen.OnInvoke)]
+		[Display (Name = "PurchaseOrder", ResourceType = typeof (Resources))]
+		public virtual PurchaseOrder PurchaseOrder { get; set; }
 	}
 }

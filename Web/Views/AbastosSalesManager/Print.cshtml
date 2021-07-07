@@ -1,0 +1,31 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model PurchaseClearance
+
+@{
+    ViewBag.Title = Resources.PurchaseClearance;
+}
+
+<h2>@Resources.PurchaseClearance</h2>
+
+<div id="master-section">
+	@Html.Partial("_DisplayView")
+</div>
+<div id="items-container">
+    <table>
+        @foreach (var item in Model.Details.Where(x => x.IsCharge)) {
+            @Html.Partial("_ItemDisplayView", item) 
+        }
+        @foreach (var item in Model.Details.Where(x => !x.IsCharge)) {
+            @Html.Partial("_ItemExpenseDisplayView", item) 
+        }
+        <tr>
+            <td colspan="4" class="text-center"><b>@Resources.Totals</b></td>
+        </tr>
+        <tr><td></td><td><b>@Resources.Sales @Resources.Totals</b></td><td><b>@Html.DisplayFor(x => Model.TotalSales)</b></td></tr>
+        <tr><td></td><td><b>@Resources.Commision (@Html.DisplayFor(x => Model.Commission))</b></td><td><b>-@Html.DisplayFor(x => Model.TotalCommision)</b></td></tr>
+        <tr><td></td><td><b>@Resources.Expenses @Resources.Totals</b></td><td><b>-@Html.DisplayFor(x => Model.TotalExpenses)</b></td></tr>
+        <tr><td></td><td><b>@Resources.Total</b></td><td><b>@Html.DisplayFor(x => Model.Total)</b></td></tr>
+    </table>
+</div>

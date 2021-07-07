@@ -1,4 +1,4 @@
-﻿// 
+// 
 // SupplierPayment.cs
 // 
 // Author:
@@ -79,6 +79,14 @@ namespace Mictlanix.BE.Model {
 		[DataType (DataType.MultilineText)]
 		[StringLength (500, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public string Comment { get; set; }
+
+		[Property ("cancelled")]
+		[Display (Name = "Cancelled", ResourceType = typeof (Resources))]
+		public virtual bool IsCancelled { get; set; }
+
+		[BelongsTo ("cash_session")]
+		[Display (Name = "CashSession", ResourceType = typeof (Resources))]
+		public virtual CashSession CashSession { get; set; }
 
 		#region Override Base Methods
 

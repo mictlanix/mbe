@@ -68,7 +68,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 		}
 
-		Search<PurchaseOrder> SearchPurchaseOrders (Search<PurchaseOrder> search)
+		protected virtual Search<PurchaseOrder> SearchPurchaseOrders (Search<PurchaseOrder> search)
 		{
 			IQueryable<PurchaseOrder> qry;
 
@@ -130,8 +130,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_CreateSuccesful", new PurchaseOrder { Id = item.Id });
 		}
 
-		public ActionResult Edit (int id)
-		{
+		public ActionResult Edit (int id) {
+
 			var item = PurchaseOrder.Find (id);
 
 			if (Request.IsAjaxRequest ()) {
@@ -151,14 +151,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View (item);
 		}
 
-		public ActionResult DiscardChanges (int id)
-		{
+		public ActionResult DiscardChanges (int id) {
+
 			return PartialView ("_MasterView", PurchaseOrder.TryFind (id));
+
 		}
 
 		[HttpPost]
-		public ActionResult Edit (PurchaseOrder item)
-		{
+		public ActionResult Edit (PurchaseOrder item) {
+
 			var entity = PurchaseOrder.Find (item.Id);
 
 			entity.Supplier = Supplier.Find (item.SupplierId);
@@ -174,8 +175,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public JsonResult AddPurchaseDetail (int movement, int warehouse, int product)
-		{
+		public virtual JsonResult AddPurchaseDetail (int movement, int warehouse, int product) {
+
 			var p = Product.Find (product);
 			var cost = (from x in ProductPrice.Queryable
 				    where x.Product.Id == product && x.List.Id == 0
@@ -206,8 +207,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public JsonResult EditDetailQuantity (int id, decimal value)
-		{
+		public virtual JsonResult EditDetailQuantity (int id, decimal value) {
 			var detail = PurchaseOrderDetail.Find (id);
 
 			if (value > 0) {
@@ -226,8 +226,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public JsonResult EditDetailPrice (int id, string value)
-		{
+		public virtual JsonResult EditDetailPrice (int id, string value) {
 			var detail = PurchaseOrderDetail.Find (id);
 			bool success;
 			decimal val;
@@ -252,8 +251,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult EditDetailCurrency (int id, string value)
-		{
+		public ActionResult EditDetailCurrency (int id, string value) {
 			var detail = PurchaseOrderDetail.Find (id);
 			CurrencyCode val;
 			bool success;
@@ -285,8 +283,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public JsonResult EditDetailDiscount (int id, string value)
-		{
+		public JsonResult EditDetailDiscount (int id, string value) {
 			var detail = PurchaseOrderDetail.Find (id);
 			bool success;
 			decimal discount;
@@ -310,8 +307,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult SetItemTaxRate (int id, string value)
-		{
+		public ActionResult SetItemTaxRate (int id, string value) {
 			var entity = PurchaseOrderDetail.Find (id);
 			bool success;
 			decimal val;
@@ -341,8 +337,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public JsonResult EditDetailWarehouse (int id, int value)
-		{
+		public JsonResult EditDetailWarehouse (int id, int value) {
 			var detail = PurchaseOrderDetail.Find (id);
 
 			detail.Warehouse = Warehouse.Find (value);
@@ -357,20 +352,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			});
 		}
 
-		public ActionResult GetTotals (int id)
-		{
+		public ActionResult GetTotals (int id) {
 			var order = PurchaseOrder.Find (id);
 			return PartialView ("_Totals", order);
 		}
 
-		public ActionResult GetDetail (int id)
-		{
+		public ActionResult GetDetail (int id) {
 			return PartialView ("_DetailEditView", PurchaseOrderDetail.Find (id));
 		}
 
 		[HttpPost]
-		public JsonResult RemoveDetail (int id)
-		{
+		public virtual JsonResult RemoveDetail (int id) {
 			var item = PurchaseOrderDetail.Find (id);
 
 			using (var scope = new TransactionScope ()) {
@@ -385,8 +377,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		// TODO: Remove inventory stuff
 		[HttpPost]
-		public ActionResult Confirm (int id)
-		{
+		public virtual ActionResult Confirm (int id) {
 			PurchaseOrder item = PurchaseOrder.Find (id);
 
 			var qry = from x in item.Details
@@ -453,8 +444,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult Cancel (int id)
-		{
+		public virtual ActionResult Cancel (int id) {
 			var item = PurchaseOrder.Find (id);
 
 			item.IsCancelled = true;

@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Models
 @using Mictlanix.BE.Web.Helpers
@@ -52,6 +52,7 @@
 		margin: 0;
 		padding: 0;
 	}
+
 	body {
 	    font:normal 10px 'Oswald';
 		color:#00001c !important;
@@ -205,6 +206,31 @@
 	.small {
 		font-size: 75%
 	}
+
+					.float-container {
+									width: 100%;
+									height: 2em;
+									position: absolute;
+									left: 0px;
+									top: 300px;
+									/*	z-index: -1;*/
+									/*border: 3px solid blue;*/
+									display: block;
+									color: gray;
+									font-size: 15em;
+									opacity: 0.2;
+									/*margin: 0 auto;*/
+									text-align: center;
+									-webkit-transform: rotate(-40deg);
+									/* Firefox */
+									-moz-transform: rotate(-40deg);
+									/* IE */
+									-ms-transform: rotate(-40deg);
+									/* Opera */
+									-o-transform: rotate(-40deg);
+									/* Internet Explorer */
+									filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+					}
 	</style>
 </head>
 <body>
@@ -275,6 +301,7 @@
 		</div>
 	</div>
 }
+
 
 @if (Model.Type == FiscalDocumentType.PaymentReceipt) {
     <table>
@@ -377,7 +404,7 @@
                     <td class="nowrap text-center">@Html.DisplayFor(x => item.UnitOfMeasurement.Id) / @Html.DisplayFor(x => item.UnitOfMeasurementName)</td>
                     <td class="nowrap text-center">@Html.DisplayFor(x => item.ProductService.Id)</td>
                     <td class="text-center">
-						@Html.DisplayFor(x => item.ProductName) (@Html.DisplayFor(x => item.ProductCode))
+						@Html.DisplayFor(x => item.ProductName)
 					@if (!string.IsNullOrEmpty (item.Comment)) {
 						<p class="pre-wrapped small text-center">@item.Comment</p>
 					}
@@ -528,5 +555,11 @@
 			</div>
 		</div>
 	</div>
+																
+@if (Model.IsCancelled) {
+<div class="float-container">
+																@Resources.Cancelled
+</div>
+}
 </body>
 </html>

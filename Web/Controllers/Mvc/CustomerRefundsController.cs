@@ -71,7 +71,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View (search);
 		}
 
-		Search<CustomerRefund> SearchRefunds (Search<CustomerRefund> search)
+		protected virtual Search<CustomerRefund> SearchRefunds (Search<CustomerRefund> search)
 		{
 			IQueryable<CustomerRefund> query;
 			var item = WebConfig.Store;
@@ -241,7 +241,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult Confirm (int id)
+		public virtual ActionResult Confirm (int id)
 		{
 			var dt = DateTime.Now;
 			bool changed = false;
@@ -311,7 +311,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return RedirectToAction ("Index");
 		}
 
-		decimal GetRefundableQuantity (int id)
+		protected decimal GetRefundableQuantity (int id)
 		{
 			var item = SalesOrderDetail.Find (id);
 			string sql = @"SELECT SUM(d.quantity) quantity

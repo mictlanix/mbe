@@ -1,0 +1,28 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model IEnumerable<PurchaseOrder>
+@{
+    ViewBag.Title = Resources.InventoryAdjustment;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.PurchasesOrders);
+
+    var total_updates = ViewBag.TotalUpdates;
+}
+<div class="page-header">
+    <div class="pull-right col-xs-6">
+	</div>
+    <h1>@Resources.InventoryAdjustment</h1>
+</div>
+<div id='activity-indicator'>
+    <img alt='@Resources.Loading' src='@Url.Content("~/Content/images/loading-bar.gif")' />
+</div>
+<div id='search-results'>
+				<div class=" row">
+								<span>Se ha efectuado la normalización de los nombres de lotes con la siguiente configuración: XXXXAAMMDDC</span>
+				</div>
+				<div class=" row">
+								<span>Se realizaron @total_updates modificaciones.</span>
+				</div>
+</div>

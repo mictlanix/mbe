@@ -1,4 +1,4 @@
-﻿// 
+// 
 // WebConfig.cs
 // 
 // Author:
@@ -364,6 +364,8 @@ namespace Mictlanix.BE.Web.Helpers {
 			}
 		}
 
+		public static int ModificationPaymentsDays { get { return int.Parse (ConfigurationManager.AppSettings ["ModificationPaymentsDays"]); } }
+
 		#endregion
-	}
+								}
 }

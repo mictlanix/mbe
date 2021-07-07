@@ -1,47 +1,67 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Models
 @model Mictlanix.BE.Model.SupplierPayment
 
 <link href="@Url.Content("~/Content/selection-options.css")" rel="stylesheet" type="text/css" />
+<style>
+				#Amount {
+        font-size:3em;
+				}
+</style>
 
 @using (Html.BeginForm())
 {
     @Html.ValidationSummary(true)
-    
-    <div class="display-label">
-        @Html.LabelFor(x => x.Supplier)
+    <div class="row">
+        <div class="col-xs-2">
+            @Html.LabelFor(x => x.Supplier)
+        </div>
+        <div class="col-xs-2">
+            @Html.LabelFor(x => x.Amount)
+        </div>
+        <div class="col-xs-2">
+            @Html.LabelFor(x => x.Comment)
+        </div>
     </div>
-    <div class="editor-label">
-        @Html.EditorFor(x => x.SupplierId)
-        @Html.ValidationMessageFor(x => x.SupplierId)
+    <div class="row">
+        <div class="col-xs-2">
+            @Html.EditorFor(x => x.SupplierId)
+            @Html.ValidationMessageFor(x => x.SupplierId)
+        </div>
+        <div class="col-xs-2">
+            @Html.EditorFor(x => x.Amount)
+            @Html.ValidationMessageFor(x => x.Amount)
+        </div>
+        <div class="col-xs-2">
+            @Html.EditorFor(x => x.Comment)
+            @Html.ValidationMessageFor(x => x.Comment)
+        </div>
     </div>
-    <div class="display-label">
-        @Html.LabelFor(x => x.Amount)
+    <div class="row">
+        <div class="col-xs-2">
+            @Html.LabelFor(x => x.Method)
+        </div>
     </div>
-    <div class="display-field">
-        @Html.EditorFor(x => x.Amount)
-        @Html.ValidationMessageFor(x => x.Amount)
-    </div>
-    <div class="display-label">
-        @Html.LabelFor(x => x.Method)
-    </div>
-    <div class="editor-field">
-        <ul class="selection-options">
-        @foreach (var item in WebConfig.CashierPaymentOptions) {
-            <li>
-                <label>
-                    @Html.RadioButtonFor(x => x.Method, (int)item)
-                    <span class="option-desc">
-                        <span class="icon dollar">@Resources.Pay</span>
-                        <span class="text">@(((PaymentMethod)item).GetDisplayName())</span>
-                    </span>
-                </label>
-            </li>
-        }
-        </ul>
-        @Html.ValidationMessageFor(x => x.Method)
+    <div class="row">
+        <div class="col-xs-4">
+            <ul class="selection-options">
+            @foreach (var item in WebConfig.CashierPaymentOptions) {
+                <li>
+                    <label>
+                        @Html.RadioButtonFor(x => x.Method, (int)item)
+                        <span class="option-desc">
+                            <span class="icon dollar">@Resources.Pay</span>
+                            <span class="text">@(((PaymentMethod)item).GetDisplayName())</span>
+                        </span>
+                    </label>
+                </li>
+            }
+            </ul>
+            @Html.ValidationMessageFor(x => x.Method)
+        </div>
+
     </div>
     <div id="reference" style="display:none">
         <div class="display-label">
@@ -50,13 +70,6 @@
         <div class="display-field">
             @Html.EditorFor(x => x.Reference)
         </div>
-    </div>
-    <div class="display-label">
-        @Html.LabelFor(x => x.Comment)
-    </div>
-    <div class="display-field">
-        @Html.EditorFor(x => x.Comment)
-        @Html.ValidationMessageFor(x => x.Comment)
     </div>
     <p class="right"><button id="pay" type="submit" class="icon pay">@Resources.Pay</button></p>
 }

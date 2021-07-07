@@ -1,4 +1,4 @@
-﻿
+
 @using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Models
@@ -29,7 +29,7 @@
 
 <table>
 	<tr>
-		<td class="line number">
+		<td class="number">
 			@Html.LabelFor(x => x.Method)
 		</td>
 		<td></td>
@@ -44,14 +44,14 @@
 		</td>
 		<td></td>
 		<td></td>
-		<td class="line text-center">
+		<td class="line text-right">
 			@Html.DisplayFor(x => x.Balance)
 		</td>
 	</tr>
 	<tr>
+		<td class="total number">@Resources.Total</td>
 		<td></td>
 		<td></td>
-		<td class="total text-right">@Resources.Total</td>
 		<td class="total number">@Html.DisplayFor(x => x.Amount)</td>
 	</tr>
 </table>

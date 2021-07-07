@@ -51,7 +51,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		[HttpPost]
 		public ActionResult Index (int? customer)
 		{
-			string sql1 = @"SELECT m.date Date, d.sales_order SalesOrder, m.due_date DueDate, c.name Customer,
+			string sql1 = @"SELECT * FROM (SELECT m.date Date, d.sales_order SalesOrder, m.due_date DueDate, c.name Customer,
 						GROUP_CONCAT(DISTINCT (SELECT GROUP_CONCAT(DISTINCT f.batch, LPAD(f.serial, 6, '0') SEPARATOR ' ')
 							FROM fiscal_document_detail fd LEFT JOIN fiscal_document f ON fd.document = f.fiscal_document_id
 							WHERE f.cancelled = 0 AND fd.order_detail = d.sales_order_detail_id) SEPARATOR ' ') Invoices,
@@ -65,7 +65,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					LEFT JOIN customer_refund_detail r ON d.sales_order_detail_id = r.sales_order_detail
 					WHERE m.completed = 1 AND m.cancelled = 0 AND m.paid = 0 and m.payment_terms = 1 CUSTOMER_FILTER
 					GROUP BY d.sales_order
-					ORDER BY m.due_date";
+					ORDER BY m.due_date) AS innerTable WHERE Total > 1";
 			string sql2 = @"SELECT m.sales_order_id SalesOrder, SUM(ROUND(amount, 2)) Payments
 					FROM sales_order m
 					INNER JOIN sales_order_payment p ON m.sales_order_id = p.sales_order

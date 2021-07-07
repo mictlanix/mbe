@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Models
@@ -29,6 +29,45 @@
 </div>
 <div class="row">
 	<div class="col-xs-12">@Model.Method.GetDisplayName()</div>
+</div>
+<div id='delete-button' class='pull-right @(Model.Allocations.Count > 0 ? "hide" : "")'>
+				@using (Html.BeginForm("DeleteCustomerPayment", "Payments", new { id = Model.Id }))
+				{
+								<button id='complete' type='submit'>@Resources.Delete @Resources.Payment</button>
+				}
+</div>
+<div class="row">
+				<table>
+								<tr>
+												<th>@Resources.SalesOrderId</th>
+												<th>@Resources.Amount</th>
+												<th>@Resources.Change</th>
+												<th></th>
+								</tr>
+								@foreach (var payment in Model.Allocations)
+								{
+								<tr id="payment@(payment.Id)">
+												<td class="center">@Html.ActionLink(payment.SalesOrder.Id.ToString(), "View", "AbastosPOS", new { id = payment.SalesOrder.Id }, new { target = "_blank" })  </td>
+												<td class="center">@Html.DisplayFor(x => payment.Amount)</td>
+												<td class="center">@Html.DisplayFor(x => payment.Change)</td>
+												<td class="action-link pull-right">
+																<a class='button icon-only icon delete receive' title='@Resources.Message_DeleteConfirmation'
+																				data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id'
+																				data-url='@Url.Action("UnapplySalesOrderPayment", new { id = Model.Id, sales_order_payment_id = payment.Id })' data-emptytext='' data-emptyclass=''></a>
+																<script type='text/javascript'>
+																				$('#payment@(payment.Id) a.delete').editable({
+																								success: function (response, newValue) {
+																												$('#payment@(payment.Id)').hide('slow', function () { $('#payment@(payment.Id)').remove() });
+																												if (response.empty) {
+																																$('#delete-button').removeClass('hide');
+																												}
+																								}
+																				});
+																</script>
+												</td>
+								</tr>
+								}
+				</table>
 </div>
 <div id="back-to-list" class='pull-right'>
 	@Html.ActionLink(Resources.Print, "PrintCreditPayment", new { id = Model.Id }, new { @class = "button icon print", title = Resources.Print, target = "_blank" })

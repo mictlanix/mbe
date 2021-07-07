@@ -401,6 +401,7 @@ namespace Mictlanix.BE.Web.Helpers {
 			case FiscalDocumentType.FeeReceipt:
 			case FiscalDocumentType.RentReceipt:
 			case FiscalDocumentType.DebitNote:
+			case FiscalDocumentType.SalesSummaryInvoice:
 				return (int) c_TipoDeComprobante.Ingreso;
 			case FiscalDocumentType.CreditNote:
 			case FiscalDocumentType.AdvancePaymentsApplied:

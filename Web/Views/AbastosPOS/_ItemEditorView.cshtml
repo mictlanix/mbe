@@ -1,0 +1,131 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model SalesOrderDetail
+
+<li id='id:@Model.Id'>
+    <div class='photo'>
+        <img src='@Url.Content(Model.Product.Photo)' title='@Model.ProductName' />
+    </div>
+    <div class='action-link'>
+        <a class='button icon-only icon delete' title='@Resources.Message_DeleteConfirmation'
+		   data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id'
+           data-url='@Url.Action("RemoveItem", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
+    </div>
+    <div class='info'>
+    @if (Model.Product.HasVariablePricing) {
+ 		<a class='editable name input-xxlarge' data-type='text' data-inputclass='input-xxlarge'
+      data-placement='bottom' data-pk='@Model.Id' data-url='@Url.Action("SetItemProductName", new { id = Model.Id })'>
+        @Html.DisplayFor(x => x.ProductName)</a>
+    } else {
+        <span class='thick'>@Html.DisplayFor(x => x.ProductName)</span>
+    }
+        <br/>
+        <b>@Resources.Code: </b>
+        <span>@Html.DisplayFor(x => x.ProductCode)</span>
+        <b>@Resources.UnitOfMeasurement: </b>
+        <span>@Html.DisplayFor(x => Model.Product.UnitOfMeasurement.Name)</span>
+    @if (!string.IsNullOrEmpty (Model.Product.Model)) {
+        <b>@Resources.Model: </b>
+        <span>@Html.DisplayFor(x => x.Product.Model)</span>
+    }
+    @if (!string.IsNullOrEmpty (Model.Product.SKU)) {
+        <b>@Resources.SKU: </b>
+        <span>@Html.DisplayFor(x => x.Product.SKU)</span>
+    }
+				@if (!string.IsNullOrEmpty (Model.Product.SKU)) {
+        <b>@Resources.SKU: </b>
+        <span>@Html.DisplayFor(x => x.Product.SKU)</span>
+    }
+				@if (!string.IsNullOrEmpty (Model.Product.SKU)) {
+        <b>@Resources.SKU: </b>
+        <span>@Html.DisplayFor(x => x.Product.SKU)</span>
+    }
+				@if (!string.IsNullOrEmpty (Model.Product.SKU)) {
+        <b>@Resources.SKU: </b>
+        <span>@Html.DisplayFor(x => x.Product.SKU)</span>
+    }
+				@if (Model.Lot != null){
+								<b>@Resources.LotNumber</b>
+								<span>@Html.DisplayFor(x => x.Lot.LotNumber)</span>
+				}
+        <br/>
+        <b>@Resources.Price:</b>
+    @if (Model.Product.HasVariablePricing) {
+        <a class='editable price' data-type='text' data-placement='right' data-pk='@Model.Id'
+           data-url='@Url.Action("SetItemPrice", new { id = Model.Id })'>@Html.DisplayFor(x => x.Price)</a>
+    } else {
+        <span class='editable price'>@Html.DisplayFor(x => x.Price)</span>
+    }
+        <span class='editable currency'>@Html.DisplayFor(x => x.Currency)</span>
+			<b>@Resources.Quantity:</b>
+			<a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id'
+      data-url='@Url.Action("SetItemQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
+			<b>@Resources.Discount:</b>
+			<a class='editable discount-percentage' data-type='text' data-placement='right' data-pk='@Model.Id'
+      data-url='@Url.Action("SetItemDiscountPercentage", new { id = Model.Id })'>@Html.DisplayFor(x => x.DiscountRate)</a>
+			<b>
+			<b>@Resources.TaxRate:</b>
+			<a class='editable tax' data-type='select' data-placement='right' data-source='@Url.Action("TaxRates", "Pricing")' data-pk='@Model.Id'
+      data-value='@Model.TaxRate.ToString("0.####")' data-url='@Url.Action("SetItemTaxRate", new { id = Model.Id })'>
+        @Html.DisplayFor(x => x.TaxRate)</a>
+			<b>@Resources.Amount:</b>
+			<span class='editable total'>@Html.DisplayFor(x => x.Total)</span>
+<span class='editable currency'>@Html.DisplayFor(x => x.Currency)</span>
+    @if (Model.Currency != WebConfig.BaseCurrency) {
+    	<a href="javascript:void(0)" class="total2" data-toggle="tooltip" title="@Html.DisplayFor(x => x.TotalEx) @WebConfig.BaseCurrency">
+			<span class="glyphicon glyphicon-exclamation-sign"></span>
+		</a>
+    }
+    	<br/>
+    	<b style='vertical-align:top;'>@Resources.Comment:</b>
+    	<a class='editable' data-type="textarea" data-placement='right' data-pk='@Model.Id'
+			data-url='@Url.Action("SetItemComment", new { id = Model.Id })'
+			data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>@Model.Comment</a>
+    </div>
+</li>
+<script type='text/javascript'>
+$('#id\\:@Model.Id [data-toggle="tooltip"]').tooltip();
+$('#id\\:@Model.Id a.editable').editable({
+	success: function(response, newValue) {
+		var $this = $(this);
+		if ('total' in response) {
+			$this.siblings('.total').html(response.total);
+		}
+		if ('total2' in response) {
+			$this.siblings('.total2').attr('data-original-title', response.total2 + ' @WebConfig.BaseCurrency');
+		}
+	    if ('discount_percentage' in response) {
+	        $this.siblings('.discount-percentage').html(response.discount_percentage);
+		}
+		 if ('discount_price' in response) {
+			 $this.siblings('.discount-price').html(response.discount_price);
+		 }
+		if ($this.hasClass('name')) {
+			setTimeout(function(){$this.editable('setValue', response.value);},500);
+		}
+        $('#totals-section').loadUrl();
+    },
+    display: function(value, response) {
+        if (typeof response === 'undefined') {
+        	$(this).html(value);
+        } else if (Array.isArray(response)) {
+          	arr = $.grep(response, function(o){
+  				return o.value == value;
+			});
+          	$(this).html(arr[0].text);
+        } else {
+          	$(this).html(response.value);
+        }
+    }
+});
+$('#id\\:@Model.Id a.delete').editable({
+	success: function(response, newValue) {
+        $('#id\\:@Model.Id').remove();
+        $('#totals-section').loadUrl();
+        if ($('#items li').length === 0) {
+	        $('#confirm-button').addClass('hide');
+	    }
+    }
+});
+</script>

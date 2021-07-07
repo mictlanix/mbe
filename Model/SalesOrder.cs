@@ -214,9 +214,9 @@ namespace Mictlanix.BE.Model {
 			get { return Payments.Sum (x => x.Amount + x.Change); }
 		}
 
-		[DataType(DataType.Currency)]
-		[Display(Name = "ExtraCharges", ResourceType = typeof(Resources))]
-		public virtual decimal ExtraFee { get { return Payments.Where(x => x.Payment.ExtraFee != null).Count() > 0 ? Payments.Where (x => x.Payment.ExtraFee != null).Sum(x => x.Payment.Commission * x.Payment.Amount): 0.0m; } }
+		[DataType (DataType.Currency)]
+		[Display (Name = "ExtraCharges", ResourceType = typeof (Resources))]
+		public virtual decimal ExtraFee { get { return Payments.Sum (y => (decimal?) y.Payment.Commission * (decimal?) y.Payment.Amount) ?? 0; } }
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Balance", ResourceType = typeof (Resources))]

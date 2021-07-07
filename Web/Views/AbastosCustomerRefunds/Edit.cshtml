@@ -1,0 +1,47 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
+@model CustomerRefund
+
+@{
+    ViewBag.Title = Resources.Edit;
+}
+
+<h2>@Resources.CustomerRefund</h2> 
+
+<div id='master-section'>
+	@Html.Partial("_EditorView")
+</div>
+@if (Html.ViewContext.Controller.ValueProvider.ContainsPrefix ("notify")) {
+<div class="alert alert-error">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <strong>@Resources.Warning</strong> @Resources.QuantitiesHaveChanged
+</div>
+}
+<div id='details-section'>
+    <div id='items-container' data-url='@Url.Action("Items", new { id = Model.Id })'>
+		<ul id="items" class="list-items">
+		@foreach (var item in Model.Details) {
+		    @Html.Partial("_ItemEditorView", item)
+		}
+		</ul>
+    </div>
+</div>
+<div id='totals-section' class='pull-right' data-url='@Url.Action("Totals", new { id = Model.Id })'>
+    @Html.Partial("_Totals")
+</div>
+<div class='clearfix'></div>
+<div id='back-to-list' class='pull-left'>
+    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+</div>
+<div id='confirm-button' class='pull-right @(Model.Details.Count == 0 ? "hide" : "")'>
+@using (Html.BeginForm("Confirm", "AbastosCustomerRefunds", new { id = Model.Id })) {
+    <button id='complete' type='submit'>@Resources.Complete</button>
+}
+</div>
+<div class='clearfix'></div>
+<script type='text/javascript'>
+$(function () {
+	$('[data-toggle="tooltip"]').tooltip();
+});
+</script>

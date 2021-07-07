@@ -1,4 +1,4 @@
-﻿// 
+// 
 // SalesOrderDetail.cs
 // 
 // Author:
@@ -47,11 +47,21 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Product", ResourceType = typeof (Resources))]
 		public virtual Product Product { get; set; }
 
+		[BelongsTo ("lot_serial_tracking")]
+		[Display (Name = "LotCode", ResourceType = typeof (Resources))]
+		public virtual LotSerialTracking Lot { get; set; }
+
 		[Property]
 		[DisplayFormat (DataFormatString = "{0:0.####}")]
 		[Display (Name = "Quantity", ResourceType = typeof (Resources))]
 		[Required (ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof (Resources))]
 		public decimal Quantity { get; set; }
+
+		[Property("confirmed_quantity")]
+		[DisplayFormat (DataFormatString = "{0:0.####}")]
+		[Display (Name = "Quantity", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof (Resources))]
+		public decimal ConfirmedQuantity { get; set; }
 
 		[Property]
 		[Display (Name = "Cost", ResourceType = typeof (Resources))]
@@ -64,6 +74,12 @@ namespace Mictlanix.BE.Model {
 		[DataType (DataType.Currency)]
 		[Required (ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof (Resources))]
 		public decimal Price { get; set; }
+
+		[Property("confirmed_price")]
+		[Display (Name = "Price", ResourceType = typeof (Resources))]
+		[DataType (DataType.Currency)]
+		[Required (ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof (Resources))]
+		public decimal ConfirmedPrice { get; set; }
 
 		[Display (Name = "Price", ResourceType = typeof (Resources))]
 		[DataType (DataType.Currency)]
@@ -141,12 +157,6 @@ namespace Mictlanix.BE.Model {
 		public decimal Total {
 			get { return ModelHelpers.Total (Quantity, Price, 1, DiscountRate, TaxRate, IsTaxIncluded); }
 		}
-
-		//[DataType (DataType.Currency)]
-		//[Display (Name = "Savings", ResourceType = typeof (Resources))]
-		//public decimal Savings {
-		//	get { return ModelHelpers.Savings (Quantity, Price, 1, DiscountRate, TaxRate, IsTaxIncluded); }
-		//}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Subtotal", ResourceType = typeof (Resources))]

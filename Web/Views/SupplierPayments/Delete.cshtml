@@ -1,0 +1,65 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model;
+@using Mictlanix.BE.Web.Helpers;
+@model SupplierPayment
+
+@{
+				ViewBag.Title = Resources.Title_SuppliersPayments;
+				var CurrentUser = Html.CurrentUser() ?? new User();
+				var Privilege = Html.GetPrivilege( CurrentUser , SystemObjects.SupplierPayment);
+}
+
+<h2>@Resources.DisplayName_SupplierPayment</h2>
+
+<fieldset>
+				<legend>@Resources.DisplayName_PaymentInformation</legend>
+				<div class="display-label">
+								@Html.LabelFor(model => model.Id) @Html.Label(":")
+								@Html.DisplayFor(model => model.Id)
+				</div>
+				<div class="display-label">
+								@Html.LabelFor(model => model.Supplier) @Html.Label(":")
+								@Html.DisplayFor(model => model.Supplier.Name)
+				</div>
+				<div class="display-label">
+								@Html.LabelFor(model => model.Date) @Html.Label(":")
+								@Html.DisplayFor(model => model.Date)
+				</div>
+				<div class="display-label">
+								@Html.LabelFor(model => model.Amount) @Html.Label(":")
+								@Html.DisplayFor(model => model.Amount)
+				</div>
+				<div class="display-label">
+								@Html.LabelFor(model => model.Method) @Html.Label(":")
+								@Model.Method.GetDisplayName()
+				</div>
+				@if (!string.IsNullOrEmpty(Model.Reference))
+				{
+								<div class="display-label">
+												@Html.LabelFor(model => model.Reference) @Html.Label(":")
+												@Html.DisplayFor(model => model.Reference)
+								</div>
+				}
+				@if (!string.IsNullOrEmpty(Model.Comment))
+				{
+								<div class="display-label">
+												@Html.LabelFor(model => model.Comment) @Html.Label(":")
+												@Html.DisplayFor(model => model.Comment)
+								</div>
+				}
+				@if (Privilege.AllowDelete)
+				{
+								<div class='row'>
+												<div class='col-xs-12'>
+																@using (Html.BeginForm("Delete", "SupplierPayments", new { id = Model.Id }, FormMethod.Post, new { @class = "modal-form pull-right" }))
+																{
+																				<button type="submit" class="icon cancel">@Resources.Message_DeleteConfirmation</button>
+																}
+												</div>
+								</div>
+				}
+</fieldset>
+
+<div id="backTo">
+				@Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+</div>

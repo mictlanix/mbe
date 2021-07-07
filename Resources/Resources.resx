@@ -394,7 +394,7 @@
     <value>Fecha Invalida</value>
   </data>
   <data name="Validation_Email" xml:space="preserve">
-    <value>Lo introducido no corresponde a un {0}.</value>
+    <value>Verificar que los correos sean válidos y separados por comas.</value>
   </data>
   <data name="Validation_Url" xml:space="preserve">
     <value>Lo introducido no corresponde a un {0}.</value>
@@ -2306,7 +2306,7 @@ Gracias por utilizar nuestros servicios.
     <value>Gastos</value>
   </data>
   <data name="QuantityRemaining" xml:space="preserve">
-    <value>Pendiente a entregar</value>
+    <value>Cantidad Restante</value>
   </data>
   <data name="QuantityPendantBeforeDelivering" xml:space="preserve">
     <value>Pendiente antes de envío</value>
@@ -2491,5 +2491,38 @@ Atte: {1}.</value>
   </data>
   <data name="CFDI_RelationType_AdvancePayment" xml:space="preserve">
     <value>07 : CFDI por Aplicación de Anticipo</value>
+  </data>
+  <data name="QuantityAvailable" xml:space="preserve">
+    <value>Cantidad disponible: {0} {1}</value>
+  </data>
+  <data name="SalesSummaryInvoice" xml:space="preserve">
+    <value>Factura Ventas de Piso</value>
+  </data>
+  <data name="AveragePrice" xml:space="preserve">
+    <value>Precio Promedio</value>
+  </data>
+  <data name="DecreasedProduct" xml:space="preserve">
+    <value>Merma</value>
+  </data>
+  <data name="PurchaseClearance" xml:space="preserve">
+    <value>Liquidación de Compras</value>
+  </data>
+  <data name="PurchasedQuantity" xml:space="preserve">
+    <value>C. Comprada</value>
+  </data>
+  <data name="SoldQuantity" xml:space="preserve">
+    <value>C. Vendida</value>
+  </data>
+  <data name="Commision" xml:space="preserve">
+    <value>Comisión</value>
+  </data>
+  <data name="AverageCost" xml:space="preserve">
+    <value>Costo Promedio</value>
+  </data>
+  <data name="Utility" xml:space="preserve">
+    <value>Utilidad</value>
+  </data>
+  <data name="PuchaseOrderWithZeroCosts" xml:space="preserve">
+    <value>La orden de compra contiene productos con precio 0</value>
   </data>
 </root>

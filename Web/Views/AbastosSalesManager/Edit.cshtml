@@ -1,0 +1,69 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model PurchaseClearance
+
+@{
+				ViewBag.Title = Resources.Edit;
+
+				var active = Model.Details.First();
+				var rest = Model.Details.Skip(1);
+}
+
+<h2>@Resources.PurchaseClearance</h2> 
+
+<div id='master-section'>
+	@Html.Partial("_EditorView")
+</div>
+
+<div class="tabbable">
+				<ul class="nav nav-tabs">
+								<li class="active"><a href="#tab-@active.Id" data-toggle='tab'>@active.ProductName</a></li>
+								@foreach (var item in rest) {
+												<li><a href="#tab-@item.Id" data-toggle='tab'>@item.ProductName</a></li>
+
+								}
+				</ul>
+				<div class="tab-content">								
+								<div id="tab-@active.Id" class="tab-pane active">
+												@(active.IsCharge? Html.Partial("_Items", active): Html.Partial("_ExpenseItems", active))
+								</div>
+								@foreach (var item in rest) {
+												<div id="tab-@item.Id" class="tab-pane">
+																@(item.IsCharge? Html.Partial("_Items", item): Html.Partial("_ExpenseItems", item))
+												</div>
+								}
+				</div>
+</div>
+<div class='clearfix'></div>
+<div>
+				<div id='back-to-list' class='pull-left'>
+								@Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+				</div>
+				<div id='confirm-button' class='pull-right @(Model.Details.Count() == 0 ? "hide" : "")'>
+
+												@using(Html.BeginForm("Confirm", "AbastosSalesManager", new { id = Model.Id }, FormMethod.Post, new { style = "display:inline" })) {
+												<button id='complete' type='submit' class="icon save">@Resources.Complete</button>
+												}
+												@using(Html.BeginForm("Cancel", "AbastosSalesManager", new { id = Model.Id }, FormMethod.Post, new { style = "display:inline" }))
+												{
+																<button type="submit" class="icon cancel">@Resources.Cancel</button>
+												}
+				</div>
+</div>
+<div class='clearfix'></div>
+@*<script type='text/javascript'>
+$(function () {
+    $('#add-items').editable({
+		success: function(response, newValue) {
+        	$('#items-container').loadUrl();
+            $('#confirm-button').removeClass('hide');
+            setTimeout(function(){$('#add-items').editable('setValue', '');},500);
+	    }
+	}).removeClass('editable-click');
+});
+</script>*@
+<style type='text/css'>
+ul.token-input-list { width: 100%; }
+</style>

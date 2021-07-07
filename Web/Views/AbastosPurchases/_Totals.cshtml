@@ -1,0 +1,33 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model PurchaseOrder
+<ul class='labeled-frames'>
+    <li>
+    	<span class='caption'>@Resources.Subtotal</span>
+    	<span class='value'>@Html.DisplayFor(x => x.Subtotal)</span>
+    </li>
+@if (Model.Discount > 0m) {
+    <li>
+    	<span class='caption'>@Resources.Discount</span>
+        <span class='value'>@Html.DisplayFor(x => x.Discount)</span>
+    </li>
+}
+    <li>
+    	<span class='caption'>@Resources.Taxes</span>
+        <span class='value'>@Html.DisplayFor(x => x.Taxes)</span>
+    </li>
+    <li>
+    	<span class='caption'>@Resources.Total</span>
+        <span class='value'>@Html.DisplayFor(x => x.Total)</span>
+    </li>
+</ul>
+
+<script>
+    @if (Model.Details.Count == 0 || Model.Details.Any(x => x.Price == 0)) {
+        <text>
+				    $('#edit-button').show('slow');
+        $('#confirm-button').addClass('hide');
+        </text>
+    }
+</script>

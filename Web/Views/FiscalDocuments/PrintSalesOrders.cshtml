@@ -1,0 +1,176 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
+@using Mictlanix.BE.Web.Helpers
+@model FiscalDocument
+
+@{
+				Layout = WebConfig.ReceiptLayout;
+				ViewBag.Title = Resources.Sales;
+				ViewBag.Store = Model.Store;
+				ViewBag.Address = Model.Store.Address;
+
+				var details = FiscalDocumentDetailSalesOrderDetail.Queryable.Where(x => x.FiscalDocumentDetail.Document == Model).Select(y => y.SalesOrderDetail).ToList();
+}
+
+<div class="display-label date text-right">
+				@Resources.Date<br />
+				@Html.DisplayFor(model => model.ModificationTime)
+</div>
+<div class="display-label date">
+				@Resources.Invoice<br />
+				@Html.DisplayFor(model => model.Id)
+</div>
+
+<table>
+				@foreach (var item in details)
+				{
+								<tr>
+												<td>
+																@Html.DisplayFor(x => item.SalesOrder.Date)
+												</td>
+												<td>
+																#	@Html.DisplayFor(x => item.SalesOrder.Id)
+												</td>
+												<td class="number">
+																@Html.DisplayFor(x => item.Subtotal)
+												</td>
+								</tr>
+				}
+				<tr>
+								<td class="line" colspan="3"></td>
+				</tr>
+				<tr>
+								<td></td>
+								<td class="total">@Resources.Total</td>
+								<td class="total number">@Html.DisplayFor(x => Model.Total)</td>
+				</tr>
+</table>
+
+<div class="display-label display-field">
+				@Resources.Taxes
+				@string.Format("{0:C2}", details.Sum(x => x.Taxes))
+</div>
+
+<div class="display-label display-field">
+				# @Resources.SalesOrders:
+				@details.Count()
+</div>
+
+@section Footer {
+				<img src='@Url.Action("Code128", "Barcodes", new { id = string.Format("{0}", Html.DisplayFor(x => x.Id)) })' alt='@Html.DisplayFor(x => x.Id)' title='@Html.DisplayFor(x => x.Id)'>
+				<p>@Html.DisplayFor(x => x.Id)</p>
+}
+
+@foreach (var detail in details)
+{
+				<div class="display-label text-right">
+								@Html.LabelFor(model => detail.SalesOrder.Serial)<br />
+								@Html.DisplayFor(model => detail.SalesOrder.Serial)
+				</div>
+
+				<div class="display-label date text-right">
+								@Html.LabelFor(model => detail.SalesOrder.Date)<br />
+								@Html.DisplayFor(model => detail.SalesOrder.Date)
+				</div>
+
+				<div class="display-label">
+								@Html.LabelFor(model => detail.SalesOrder.Customer)<br />
+								@Html.DisplayFor(model => detail.SalesOrder.Customer.Name)
+
+								@if (Model.Customer.Id == WebConfig.DefaultCustomer && !string.IsNullOrWhiteSpace(detail.SalesOrder.CustomerName))
+								{
+												<br />
+												@Html.DisplayFor(model => detail.SalesOrder.CustomerName)
+								}
+				</div>
+
+				if (detail.SalesOrder.IsCredit)
+				{
+								<div class="display-label date">
+												@Html.LabelFor(model => detail.SalesOrder.DueDate)<br />
+												@Html.DisplayFor(model => detail.SalesOrder.DueDate)
+								</div>
+				}
+
+				<table>
+												<tr>
+																<td class="line number" rowspan="2">
+																				@Html.DisplayFor(x => detail.Quantity)
+																</td>
+																<td colspan="2">
+																				@Html.DisplayFor(x => detail.ProductName)
+																</td>
+																<td class="line number" rowspan="2">
+																				@Html.DisplayFor(x => detail.Total)
+																</td>
+												</tr>
+												<tr>
+																<td class="line">
+																				@Html.Encode("✕") @Html.DisplayFor(x => detail.Price)
+																				@if (detail.DiscountRate > 0)
+																				{
+																								<text>- @Html.DisplayFor(x => detail.DiscountRate)</text>
+																				}
+																</td>
+																<td class="line text-center">
+																				@Html.DisplayFor(x => detail.ProductCode)
+																</td>
+												</tr>
+								}
+								<tr>
+												<td></td>
+												<td></td>
+												<td class="total text-right">@Resources.Total</td>
+												<td class="total number">@Html.DisplayFor(x => detail.Total)</td>
+								</tr>
+								@*@foreach (var item in detail.SalesOrder.Payments)
+								{
+												<tr>
+																<td colspan="3" class="text-right">@item.Payment.Method.GetDisplayName()</td>
+																<td class="number">@Html.DisplayFor(x => item.Payment.Amount)</td>
+												</tr>
+								}
+								<tr>
+												<td colspan="3" class="text-right">@Resources.Change</td>
+												<td class="number">@Html.DisplayFor(x => detail.SalesOrder.Change)</td>
+								</tr>*@
+				</table>
+
+				<div class="display-label display-field">
+								@Html.LabelFor(model => detail.Taxes)
+								@Html.DisplayFor(model => detail.Taxes)
+				</div>
+
+				if (detail.Discount > 0)
+				{
+								<div class="display-field text-center">
+												<text>@string.Format(Resources.SavingsOnSalesOrder, detail.Discount)</text>
+								</div>
+				}
+
+				if (detail.SalesOrder.IsCredit)
+				{
+								<div class="legend">
+												@string.Format(WebConfig.PromissoryNoteContent, Model.Customer.Name, Model.Total, detail.SalesOrder.DueDate, Model.Store.Taxpayer.Name)
+								</div>
+								<div class="signature">
+												@Model.Customer.Name<br />
+												@Resources.Accept
+								</div>
+				}
+
+				<div class="display-label text-right">
+								@Html.LabelFor(model => detail.SalesOrder.SalesPerson)
+				</div>
+				<div class="display-field text-right">
+								@Html.DisplayFor(model => detail.SalesOrder.SalesPerson.Name)
+				</div>
+
+				if (!string.IsNullOrEmpty(detail.SalesOrder.Store.ReceiptMessage))
+				{
+								<div class="legend">
+												<p class="text-center">@detail.SalesOrder.Store.ReceiptMessage</p>
+								</div>
+				}
+}

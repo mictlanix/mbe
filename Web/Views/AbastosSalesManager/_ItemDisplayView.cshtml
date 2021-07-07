@@ -1,0 +1,58 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model PurchaseClearanceDetail
+
+
+				<tr class='info'>
+								<td colspan="7" style="padding-top:20px;">
+								<span class='thick'>@Html.DisplayFor(x => x.ProductName)</span>
+								<br />
+								<b>@Resources.Code: </b>
+								<span>@Html.DisplayFor(x => x.ProductCode)</span>
+								<b>@Resources.UnitOfMeasurement: </b>
+								<span class='um'>@Html.DisplayFor(x => Model.UnitOfMeasurement)</span>
+								<b>@Resources.LotNumber: </b>
+								<span class='um'>@Html.DisplayFor(x => Model.PurchaseClearance.LotCode)</span>
+								@if (!string.IsNullOrWhiteSpace(Model.ProductName))
+								{
+												<b>@Resources.Model: </b>
+												<span>@Html.DisplayFor(x => x.ProductCode)</span>
+								}
+								<br />
+								<b>@Resources.Price:</b>
+								<span class='price'>@Html.DisplayFor(x => x.Price)</span>
+								<span class='currency'>@Html.DisplayFor(x => x.Currency)</span>
+								<b>@Resources.Quantity:</b>
+								<span class='quantity'>@Html.DisplayFor(x => x.Quantity)</span>
+								<b>@Resources.Discount:</b>
+								<span class='discount'>@Html.DisplayFor(x => x.DiscountRate) : @string.Format("{0:c}", Model.DiscountRate * Model.Price)</span>
+								<b>@Resources.TaxRate:</b>
+								<span class='tax'>@Html.DisplayFor(x => x.TaxRate)</span>
+								<b>@Resources.Amount:</b>
+								<span class='subtotal'>@Html.DisplayFor(x => x.Total)</span>
+								<span class='currency'>@Html.DisplayFor(x => x.Currency)</span>
+								</td>
+				</tr>
+												@foreach (var entry in Model.Details) {
+																<tr>
+																				<td>@Html.DisplayFor(x => entry.Quantity)</td>
+																				<td>@Html.DisplayFor(x => entry.Price) </td>
+																				<td>@Html.DisplayFor(x => entry.Total)</td>
+																</tr>
+												}
+				<tr>
+								<td>
+																<b>@Resources.PurchasedQuantity: @Html.DisplayFor(x => x.Quantity)</b><br />
+																<b>@Resources.SoldQuantity: @Html.DisplayFor(x => x.TotalQuantitySold)</b><br />
+																<b>@Resources.DecreasedProduct: @Html.DisplayFor(x => x.DecreasedProduct)</b><br />
+																<b>@Resources.QuantityRemaining: @Html.DisplayFor(x => x.RemainingQuantity)</b>
+								</td>
+								<td><b>@Resources.AveragePrice: @Html.DisplayFor(x => x.AveragePrice)<br />
+															@Resources.AverageCost:	@Html.DisplayFor(x => x.AverageCost)<br />
+																<span style="color:@(Model.Utility < 0 ? "red":"");" >@Resources.Utility:	@Html.DisplayFor(x => x.Utility) </span></b>
+								</td>
+								<td></td>
+								<td><b>@Resources.Subtotal: @Html.DisplayFor(x => x.TotalSold)</b></td>
+    </tr>
+				<tr class="clearfix"></tr>

@@ -1,111 +1,118 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
+@using NHibernate;
+@using Castle.ActiveRecord;
+
 @model MasterDetails<CashSession, MoneyCount>
 
 @{
-    ViewBag.Title = Resources.Title_CloseSession;
-    ViewBag.ShowCloseSession = false;
+				ViewBag.Title = Resources.Title_CloseSession;
+				ViewBag.ShowCloseSession = false;
 }
 
 <h2>@Resources.DisplayName_CloseSession</h2>
 
 <fieldset>
-    <legend>@Resources.DisplayName_CashSession</legend>
+				<legend>@Resources.DisplayName_CashSession</legend>
 
-    <div class="display-label">
-        @Html.LabelFor(model => model.Master.CashDrawer) :
-        @Html.DisplayFor(model => model.Master.CashDrawer.Name)
-    </div>
-    
-    <div class="display-label">
-        @Html.LabelFor(model => model.Master.Cashier) :
-        @Html.DisplayFor(model => model.Master.Cashier.Name)
-    </div>
+				<div class="display-label">
+								@Html.LabelFor(model => model.Master.CashDrawer) :
+								@Html.DisplayFor(model => model.Master.CashDrawer.Name)
+				</div>
 
-    <div class="display-label">
-        @Html.LabelFor(model => model.Master.Start) :
-        @Html.DisplayFor(model => model.Master.Start)
-    </div>
+				<div class="display-label">
+								@Html.LabelFor(model => model.Master.Cashier) :
+								@Html.DisplayFor(model => model.Master.Cashier.Name)
+				</div>
 
-    <div class="display-label">
-        @Html.LabelFor(model => model.Master.End) :
-        @Html.DisplayFor(model => model.Master.End)
-    </div>
+				<div class="display-label">
+								@Html.LabelFor(model => model.Master.Start) :
+								@Html.DisplayFor(model => model.Master.Start)
+				</div>
 
-    <div class="display-label">
-        @Html.LabelFor(model => model.Master.StartingCash) :
-        @Html.DisplayFor(model => model.Master.StartingCash)
-    </div>
+				<div class="display-label">
+								@Html.LabelFor(model => model.Master.End) :
+								@Html.DisplayFor(model => model.Master.End)
+				</div>
 
-    <div class="display-label">
-        @Html.LabelFor(model => model.Master.CountedCash) :
-        @Html.DisplayFor(model => model.Master.CountedCash)
-    </div>
-    
+				<div class="display-label">
+								@Html.LabelFor(model => model.Master.StartingCash) :
+								@Html.DisplayFor(model => model.Master.StartingCash)
+				</div>
+
+				<div class="display-label">
+								@Html.LabelFor(model => model.Master.CountedCash) :
+								@Html.DisplayFor(model => model.Master.CountedCash)
+				</div>
+
 </fieldset>
 
 <div id="details-section">
-<table>
-    <tr>
-        <th>
-            @Html.LabelFor(x => new CustomerPayment().Method)
-        </th>
+				<table>
+								<tr>
+												<th>
+																@Html.LabelFor(x => new CustomerPayment().Method)
+												</th>
 
-        <th>
-            @Html.LabelFor(x => new CustomerPayment().Amount)
-        </th>
-    </tr>
+												<th>
+																@Html.LabelFor(x => new CustomerPayment().Amount)
+												</th>
+								</tr>
 
-@foreach (var item in Model.Details) {
-    <tr>
-        <td class="number">
-            @item.Type.GetDisplayName()
-        </td>
-       
-        <td class="number">
-            @Html.DisplayFor(modelItem => item.Amount)
-        </td>
-    </tr>
-}
+								@foreach (var item in Model.Details)
+								{
+												<tr>
+																<td class="number">
+																				@item.Type.GetDisplayName()
+																</td>
 
-	@{
+																<td class="number">
+																				@Html.DisplayFor(modelItem => item.Amount)
+																</td>
+												</tr>
+								}
 
-		var Expenses = ExpenseVoucher.Queryable.Where(x => x.CashSession == Model.Master && x.IsCompleted && !x.IsCancelled && x.Details.Count > 0).ToList();
-        //var Refunds = CustomerRefund.Queryable.Where(x => x.IsCompleted && !x.IsCancelled && x.Details.Count > 0).ToList();
-		var TotalExpenses = Expenses.Sum(x => x.Total);
-        //var TotalRefunds = Refunds.Sum(x => x.Total);
-	}
-	@if (TotalExpenses > 0){
-	<tr>
-		<td class="number">
-			@Resources.Expenses
-		</td>
-		<td class="number">
+								@{
 
-			@((-TotalExpenses).ToString("c"))
-		</td>
-	</tr>
-	}
+												var Expenses = ExpenseVoucher.Queryable.Where(x => x.CashSession == Model.Master).ToList();
+												//var Refunds = CustomerRefund.Queryable.Where(x => x.IsCompleted && !x.IsCancelled && x.Details.Count > 0).ToList();
+												var TotalExpenses = Expenses.Sum(x => x.Total);
+												//var TotalRefunds = Refunds.Sum(x => x.Total);
+								}
 
 
-    <tr>
-        <td class="number">
-            @Resources.Total
-        </td>
+								@if (Expenses.Sum(x => x.Total) > 0)
+								{
+												<tr>
+																<td class="number">
+																				@Resources.Expenses
+																</td>
+																<td class="number">
 
-        <td class="number">
-            @((Model.Details.Sum(x => x.Amount) - TotalExpenses).ToString("c"))
-        </td>
-    </tr>
-</table>
+																				@((-TotalExpenses).ToString("c"))
+																</td>
+												</tr>
+								}
+
+
+								<tr>
+												<td class="number">
+																@Resources.Total
+												</td>
+
+												<td class="number">
+																@((Model.Details.Sum(x => x.Amount) - TotalExpenses).ToString("c"))
+												</td>
+								</tr>
+				</table>
 </div>
 <div class='clearfix'></div>
 <div id='back-to-list' class='pull-left'>
-    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+				@Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
 <div class='pull-right'>
-	@Html.ActionLink(Resources.Print, "PrintCashCount", new { id = Model.Master.Id }, new { @class = "button icon print", target = "_blank" })
+				@Html.ActionLink(Resources.Print, "PrintCashCount", new { id = Model.Master.Id }, new { @class = "button icon print", target = "_blank" })
 </div>
 <div class='clearfix'></div>

@@ -1,0 +1,239 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model SalesOrder
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.POS);
+}
+
+<fieldset>
+	<div class='row'>
+		<div class='col-xs-8'>
+	  		<dl class=''>
+				<dt>@Resources.Customer</dt>
+				<dd>
+			        <a id='customer' data-type='select2' data-placement='right' data-pk='@Model.Id' 
+			        	data-value='@Model.Customer.Id' data-url='@Url.Action("SetCustomer", new { id = Model.Id })'
+			        	data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+			        	@Html.DisplayFor(x => x.Customer.Name)
+			        </a>
+
+                    <span id="name">
+                        @Html.Partial("_CustomerName", Model)
+                    </span>
+
+			    </dd>
+				<dt>@Resources.Contact</dt>
+				<dd>
+			        <a id='contact' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id'
+			        	data-value='@(Model.Contact == null ? "" : Model.Contact.Id.ToString ())'
+			        	data-source='@Url.Action("Contacts", new { id = Model.Id })' data-source-cache='false'
+			        	data-url='@Url.Action("SetContact", new { id = Model.Id })'
+			        	data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
+			        @if (Model.Contact != null) {
+			        	@Html.DisplayFor(x => x.Contact, "String")
+		        	}
+			        </a>
+			    </dd>
+				<dt>@Resources.ShipTo</dt>
+				<dd>
+			        <a id='address' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id'
+			        	data-value='@(Model.ShipTo == null ? "" : Model.ShipTo.Id.ToString ())'
+			        	data-source='@Url.Action("Addresses", new { id = Model.Id })' data-source-cache='false'
+			        	data-url='@Url.Action("SetShipTo", new { id = Model.Id })'
+			        	data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+			        @if (Model.ShipTo != null) {
+			        	@Html.DisplayFor(x => x.ShipTo, "String")
+		        	}
+			        </a>
+				</dd>
+				<dt>@Resources.SalesPerson</dt>
+				<dd>
+			        <a id='salesperson' data-type='select2' data-placement='right' data-pk='@Model.Id'
+			        	data-value='@Model.SalesPerson.Id' data-url='@Url.Action("SetSalesPerson", new { id = Model.Id })'
+			        	data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
+			        	@Html.DisplayFor(x => x.SalesPerson.Name)
+			        </a>
+		        </dd>
+				<dt>@Resources.Comment</dt>
+				<dd>
+					<a class='editable' data-type="textarea" data-placement='right' data-pk='@Model.Id'
+						data-url='@Url.Action("SetComment", new { id = Model.Id })'
+						data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>@Model.Comment</a>
+				</dd>
+			</dl>
+		</div>
+	  	<div class='col-xs-4'>
+	  		<dl class='dl-horizontal'>
+				<dt>@Resources.Id</dt>
+				<dd>
+					<span>@Html.DisplayFor(x => x.Id)</span>
+					<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => x.Serial)">
+						<span class="glyphicon glyphicon-exclamation-sign"></span>
+					</a>
+				</dd>
+				<dt>@Resources.Date</dt>
+				<dd>
+			        <a id='promise-date' data-type='date' data-placement='left' data-pk='@Model.Id'
+			        	data-value='@Html.DisplayFor(x => x.Date)' data-url='@Url.Action("SetDate", new { id = Model.Id })'
+			        	data-emptytext='@Resources.Empty' data-clear='false'>
+			        	@Html.DisplayFor(x => x.Date)
+			        </a>
+				</dd>
+				<dt>@Resources.Currency</dt>
+				<dd>
+			        <a class='editable currency' data-type='select' data-placement='left' data-pk='@Model.Id'
+			        	data-value='@((int)Model.Currency)' data-source='@Url.Action("Currencies", "ExchangeRates")'
+			        	data-url='@Url.Action("SetCurrency", new { id = Model.Id })'
+			        	data-emptytext='@Resources.Empty'>
+			        	@Html.DisplayFor(x => x.Currency)
+			        </a>
+				</dd>
+				<dt>@Resources.ExchangeRate</dt>
+				<dd>
+			        <a id='exchange-rate' class='editable' data-type='text' data-placement='left' data-pk='@Model.Id' 
+			        	data-value='@Html.DisplayFor(x => x.ExchangeRate)' data-url='@Url.Action("SetExchangeRate", new { id = Model.Id })'
+			        	data-inputclass='input-mini' data-emptytext='@Resources.Empty'>
+			        	@Html.DisplayFor(x => x.ExchangeRate)
+			        </a>
+				</dd>
+				<dt>@Resources.PaymentTerms</dt>
+				<dd>
+			        <a id='terms' class='editable' data-type='select' data-placement='left' data-pk='@Model.Id' 
+			        	data-value='@((int)Model.Terms)' data-source='@Url.Action("Terms")'
+			        	data-url='@Url.Action("SetTerms", new { id = Model.Id })'
+			        	data-emptytext='@Resources.Empty'>
+			        	@Model.Terms.GetDisplayName()
+			        </a>
+				</dd>
+				<dt>@Resources.DueDate</dt>
+				<dd id='due-date'>@Html.DisplayFor(x => x.DueDate)</dd>
+			</dl>
+  		</div>
+	</div>
+@if(Privilege.AllowDelete && !Model.IsCancelled) {
+	<div class='row'>
+  		<div class='col-xs-12'>
+	    @using (Html.BeginForm("Cancel", "AbastosPOS", new { id =  Model.Id }, FormMethod.Post, new { @class = "modal-form pull-right" })) {
+			<button type="submit" class="icon cancel">@Resources.Cancel</button>
+	    }
+  		</div>
+	</div>
+}
+</fieldset>
+<script type='text/javascript'>
+$('[data-toggle="tooltip"]').tooltip();
+$('#customer').editable({
+    select2: {
+    	minimumInputLength: 3,
+	    ajax: {
+	        url: '@Url.Action("GetSuggestions", "Customers")',
+	        dataType: 'json',
+	        type: 'POST',
+	        data: function(term,page,context) {
+	        	return { pattern:term };
+	        },
+	        results: function(data,page) {
+	            return { results:data };
+	        }
+	    },
+	    initSelection: function(element, callback) {
+	        var data = {
+	        	id: $('#customer').data('value'),
+	        	name: $('#customer').text()
+        	};
+	        callback(data);
+	    },
+	    formatResult: function(result ) {
+	        return result.name + " (" + result.code + ")";
+	    },
+	    formatSelection: function(selection) {
+	        return selection.name;
+	    }
+	},
+	success: function(response, newValue) {
+		$('#contact,#address').text('').editable('setValue', '');
+		$('#terms').text(response.termsText)
+				   .editable('setValue', response.terms);
+		$('#due-date').text(response.dueDate);
+		$('#name').load('@Url.Action("GetCustomerName","AbastosPOS", new { id = Model.Id } )');
+    },
+    display: function(value, response) {
+    	if (typeof response !== 'undefined') {
+			$(this).html(response.value);
+		}
+    }
+});
+$('#salesperson').editable({
+    select2: {
+	    ajax: {
+	        url: '@Url.Action("SalesPeople", "Employees")',
+	        dataType: 'json',
+	        type: 'POST',
+	        data: function(term,page,context) {
+	        	return { pattern:term };
+	        },
+	        results: function(data,page) {
+	            return { results:data };
+	        }
+	    },
+	    initSelection: function(element, callback) {
+	        var data = {
+	        	id: $('#salesperson').data('value'),
+	        	name: $('#salesperson').text()
+        	};
+	        callback(data);
+	    },
+	    formatResult: function(result ) {
+	        return result.name;
+	    },
+	    formatSelection: function(selection) {
+	        return selection.name;
+	    }
+	},
+    display: function(value, response) {
+    	if (typeof response !== 'undefined') {
+			$(this).html(response.value);
+		}
+    }
+});
+$('#promise-date').editable({
+	datepicker: {
+    	language:'@WebConfig.Language'
+	}
+});
+$('a.editable').editable({
+	success: function(response, newValue) {
+		if ('rate' in response) {
+			$('#exchange-rate').text(response.rate)
+							   .editable('setValue', response.rate);
+        }
+		if ('dueDate' in response) {
+			$('#due-date').text(response.dueDate);
+        }
+		if('itemsChanged' in response) {
+			$('#items-container').loadUrl();
+			$('#totals-section').loadUrl();
+		} else if('totalsChanged' in response) {
+			$('#totals-section').loadUrl();
+		}
+    },
+    display: function(value, response) {
+		if (typeof response === 'undefined')
+        	return;
+        
+        if (Array.isArray(response)) {
+          	var arr = $.grep(response, function(o){
+  				return o.value == value;
+			});
+			if (arr.length != 0) {
+          		$(this).html(arr[0].text);
+          	}
+        } else {
+          	$(this).html(response.value);
+        }
+    }
+});
+</script>

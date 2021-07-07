@@ -1,0 +1,42 @@
+﻿@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model CustomerRefundDetail
+
+<li id='id:@Model.Id'>
+    <div class='photo'>
+        <img src='@Url.Content(Model.Product.Photo)' title='@Model.ProductName' />
+    </div>
+    <div class='info'>
+        <span class='thick'>@Html.DisplayFor(x => x.ProductName)</span>
+        <br/>
+        <b>@Resources.Code: </b>
+        <span>@Html.DisplayFor(x => x.ProductCode)</span>
+        @if (!string.IsNullOrEmpty (Model.Product.Model)) {
+        <b>@Resources.Model: </b>
+        <span>@Html.DisplayFor(x => x.Product.Model)</span>
+        }
+        @if (!string.IsNullOrEmpty (Model.Product.SKU)) {
+        <b>@Resources.SKU: </b>
+        <span>@Html.DisplayFor(x => x.Product.SKU)</span>
+        }
+        <br/>
+        <b>@Resources.Price:</b>
+        <span class='editable price'>@Html.DisplayFor(x => x.Price)</span>
+        <span class='editable currency'>@Html.DisplayFor(x => x.Currency)</span>
+        <b>@Resources.Quantity:</b>
+        <span class='editable quantity'>@Html.DisplayFor(x => x.Quantity)</span>
+        <b>@Resources.Discount:</b>
+        <span class='editable discount'>@Html.DisplayFor(x => x.DiscountRate)</span>
+        <b>@Resources.TaxRate:</b>
+        <span class='editable tax'>@Html.DisplayFor(x => x.TaxRate)</span>
+        <b>@Resources.Amount:</b>
+        <span class='editable subtotal'>@Html.DisplayFor(x => x.Total)</span>
+        <span class='editable currency'>@Html.DisplayFor(x => x.Currency)</span>
+        @if (Model.Currency != WebConfig.BaseCurrency) {
+        	<a href="javascript:void(0)" class="total2" data-toggle="tooltip" title="@Html.DisplayFor(x => x.TotalEx) @WebConfig.BaseCurrency">
+				<span class="glyphicon glyphicon-exclamation-sign"></span>
+			</a>
+        }
+    </div>
+</li>

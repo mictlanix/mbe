@@ -1,4 +1,4 @@
-﻿// 
+// 
 // DateRange.cs
 // 
 // Author:
@@ -38,6 +38,9 @@ using Mictlanix.BE.Model;
 
 namespace Mictlanix.BE.Web.Models {
 	public class DateRange {
+
+		private DateTime _StartDate;
+		private DateTime _EndDate;
 	    public DateRange()
         {
 			var now = DateTime.Now;
@@ -53,11 +56,11 @@ namespace Mictlanix.BE.Web.Models {
     
         [DataType(DataType.Date)]
         [Display(Name = "StartDate", ResourceType = typeof(Resources))]
-        public DateTime StartDate { get; set; }
+        public DateTime StartDate { get { return _StartDate; } set { _StartDate = value.Date; } }
 
         [DataType(DataType.Date)]
         [Display(Name = "EndDate", ResourceType = typeof(Resources))]
         [DateGreaterThan("StartDate", ErrorMessageResourceName = "Validation_DateGreaterThan", ErrorMessageResourceType = typeof(Resources))]
-        public DateTime EndDate { get; set; }
+        public DateTime EndDate { get { return _EndDate; } set { _EndDate = value.Date.AddDays (1).AddSeconds (-1); } }
 	}
 }

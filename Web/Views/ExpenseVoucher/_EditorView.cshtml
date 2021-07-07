@@ -1,6 +1,7 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
+
 @model ExpenseVoucher
 
 @{
@@ -11,23 +12,30 @@
 <fieldset>
 	<div class='row'>
 		<div class='col-xs-8'>
-			<dl class=''>
-				<dt>@Resources.Cashier</dt>
-				<dd>
-					<a id='cashier' data-type='select2' data-placement='right' data-pk='@Model.Id'
-						data-value='@Model.Creator' data-url='@Url.Action("SetCashier", new { id = Model.Id })'
-						data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
-						@Html.DisplayFor(x => x.Creator.Name)
-					</a>
-				</dd>
-				
-				<dt>@Resources.Comment</dt>
-				<dd>
-					<a class='editable' data-type="textarea" data-placement='right' data-pk='@Model.Id'
-						data-url='@Url.Action("SetComment", new { id = Model.Id })'
-						data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>@Model.Comment</a>
-					</dd>
-				</dl>
+								<dl class=''>
+												<dt>@Resources.Cashier</dt>
+												<dd>
+																<a id='cashier' data-type='select2' data-placement='right' data-pk='@Model.Id'
+																			data-value='@Model.Creator' data-url='@Url.Action("SetCashier", new { id = Model.Id })'
+																			data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+																				@Html.DisplayFor(x => x.Creator.Name)
+																</a>
+												</dd>
+												<dt>@Resources.Purchase</dt>
+												<dd>
+																<a id='purchase' data-type='select2' data-placement='right' data-pk='@Model.Id'
+																			data-value='@Model.PurchaseOrder' data-url='@Url.Action("SetPurchaseOrder", new { id = Model.Id })'
+																			data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+																				@(Model.PurchaseOrder == null ? Resources.Empty : Model.PurchaseOrder.Id + " - " + AbastosInventoryHelpers.GetLotCode(Model.PurchaseOrder))
+																</a>
+												</dd>
+												<dt>@Resources.Comment</dt>
+												<dd>
+																<a class='editable' data-type="textarea" data-placement='right' data-pk='@Model.Id'
+																			data-url='@Url.Action("SetComment", new { id = Model.Id })'
+																			data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>@Model.Comment</a>
+												</dd>
+								</dl>
 			</div>
 			<div class='col-xs-4'>
 				<dl class='dl-horizontal'>
@@ -48,7 +56,7 @@
 			</div>
 		}
 	</fieldset>
-	<script type='text/javascript'>
+<script type='text/javascript'>
 $(function () {
 	$('[data-toggle="tooltip"]').tooltip();
 	$('#cashier').editable({
@@ -94,6 +102,50 @@ $(function () {
 	    }
 	});
 
+ 	$('#purchase').editable({
+	    select2: {
+	    	minimumInputLength: 3,
+		    ajax: {
+		        url: '@Url.Action("GetSuggestions", "AbastosPurchases")',
+		        dataType: 'json',
+		        type: 'POST',
+		        data: function(term,page,context) {
+		        	return { pattern:term };
+		        },
+		        results: function(data,page) {
+		            return { results:data };
+		        }
+		    },
+		    initSelection: function(element, callback) {
+		        var data = {
+		        	id: $('#purchase').data('value'),
+		        	name: $('#purchase').text()
+	        	};
+		        callback(data);
+		    },
+		    formatResult: function(result) {
+		        return result.name + " [" + result.code + "]";
+		    },
+		    formatSelection: function(selection) {
+										return selection.name + " (" + selection.code + ")";
+		    }
+		},
+		success: function(response, newValue) {
+			$('#contact,#address').text('').editable('setValue', '');
+			$('#terms').text(response.termsText)
+					   .editable('setValue', response.terms);
+			$('#due-date').text(response.dueDate);
+			$('#salesperson').text(response.salesPersonName)
+					   .editable('setValue', response.salesPerson);
+	    },
+	    display: function(value, response) {
+	    	if (typeof response !== 'undefined') {
+				$(this).html(response.value);
+			}
+	    }
+	});
+
+
 	$('a.editable').editable({
 		success: function(response, newValue) {
 			if ('rate' in response) {
@@ -127,4 +179,4 @@ $(function () {
 	    }
 	});
 });
-	</script>
+</script>
