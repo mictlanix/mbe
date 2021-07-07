@@ -118,7 +118,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					};
 
 					clearanceDetail.Create ();
-					var lot_detail = LotSerialTracking.Queryable.Single (x => x.Reference == detail.Id && x.Source == TransactionType.InventoryReceipt);
+					var lot_detail = LotSerialTracking.Queryable.Single (x => x.Reference == detail.Id && x.Source == TransactionType.PurchaseOrder);
 
 					foreach (var entry in items.Where (x => x.Lot == lot_detail.Id)) {
 						new PurchaseClearanceDetailEntry {
