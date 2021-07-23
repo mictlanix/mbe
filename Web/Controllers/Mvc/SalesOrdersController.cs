@@ -84,16 +84,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			if (int.TryParse (pattern, out int id) && id > 0) {
-				query = from x in SalesOrder.Queryable
-					where x.Id == id || x.Serial == id
-					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending
-					select x;
+				query = query.Where (x => x.Id == id || x.Serial == id);
 			} else if (string.IsNullOrEmpty (pattern)) {
-				query = from x in SalesOrder.Queryable
+				query = from x in query
 					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending
 					select x;
 			} else {
-				query = from x in SalesOrder.Queryable
+				query = from x in query
 					where x.Customer.Name.Contains (pattern) ||
 						x.SalesPerson.Nickname.Contains (pattern) ||
 						(x.SalesPerson.FirstName + " " + x.SalesPerson.LastName).Contains (pattern)
