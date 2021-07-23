@@ -105,8 +105,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			if (int.TryParse (pattern, out id) && id > 0) {
 				query = query.Where (x => x.Id == id);
 			} else if (!string.IsNullOrEmpty (pattern)) {
-				query = query.Where (x => x.Terms == PaymentTerms.Immediate && x.Customer.Name.Contains (pattern) ||
-						     (x.SalesPerson.FirstName + " " + x.SalesPerson.LastName).Contains (pattern));
+				query = query.Where (x => x.Terms == PaymentTerms.Immediate && (x.Customer.Name.Contains (pattern) ||
+						     (x.SalesPerson.FirstName + " " + x.SalesPerson.LastName).Contains (pattern)));
+			} else {
+				query = query.Where (x => x.Terms == PaymentTerms.Immediate);
 			}
 
 			search.Total = query.Count ();
