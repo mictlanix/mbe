@@ -69,23 +69,23 @@ namespace Mictlanix.BE.Web.Helpers {
 				var builder = new BodyBuilder ();
 				var message = new MimeMessage ();
 
-				message.From.Add (new MailboxAddress (addrFrom));
+				message.From.Add (new MailboxAddress (string.Empty, addrFrom));
 
 				if (addrTo != null) {
 					foreach (var addr in addrTo) {
-						message.To.Add (new MailboxAddress (addr));
+						message.To.Add (new MailboxAddress (string.Empty, addr));
 					}
 				}
 
 				if (addrCc != null) {
 					foreach (var addr in addrCc) {
-						message.Cc.Add (new MailboxAddress (addr));
+						message.Cc.Add (new MailboxAddress (string.Empty, addr));
 					}
 				}
 
 				if (addrBcc != null) {
 					foreach (var addr in addrBcc) {
-						message.Bcc.Add (new MailboxAddress (addr));
+						message.Bcc.Add (new MailboxAddress (string.Empty, addr));
 					}
 				}
 
