@@ -367,6 +367,25 @@ namespace Mictlanix.BE.Web.Helpers {
 				cfd.Impuestos.TotalImpuestosRetenidosSpecified = true;
 			}
 
+			if (item.LocalRetentionRate > 0m) {
+				var implocal = new ImpuestosLocalesRetencionesLocales {
+					ImpLocRetenido = item.LocalRetentionName,
+					Importe = item.LocalRetentionTaxes,
+					TasadeRetencion = Math.Round (item.LocalRetentionRate * 100m, 2)
+				};
+
+				if (cfd.Complemento == null) {
+					cfd.Complemento = new List<object> ();
+				}
+
+				cfd.Complemento.Add (new ImpuestosLocales {
+					TotaldeRetenciones = 76.50m,
+					RetencionesLocales = new ImpuestosLocalesRetencionesLocales [] {
+						implocal
+					}
+				});
+			}
+
 			if (item.Relations.Any ()) {
 				var rels = new ComprobanteCfdiRelacionados {
 					CfdiRelacionado = new ComprobanteCfdiRelacionadosCfdiRelacionado [item.Relations.Count]

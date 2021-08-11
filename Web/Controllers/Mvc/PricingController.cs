@@ -35,6 +35,7 @@ using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
+using Newtonsoft.Json;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
@@ -222,24 +223,26 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
 		}
 
-		// TODO: json config
 		public JsonResult TaxRates ()
 		{
-			var rates = new [] {
-				new { value = -1.0, text = "Exento" },
-				new { value = 0.00, text = "0 %" },
-				new { value = 0.16, text = "16 %" }
-			};
+			var rates = from x in WebConfig.TaxRates
+				    select new { value = x.Value, text = x.Key };
 
 			return Json (rates, JsonRequestBehavior.AllowGet);
 		}
 
 		public JsonResult RetentionRates ()
 		{
-			var rates = new [] {
-				new { value = 0.00, text = "0 %" },
-				new { value = 0.04, text = "4 %" }
-			};
+			var rates = from x in WebConfig.RetentionRates
+				    select new { value = x.Value, text = x.Key };
+
+			return Json (rates, JsonRequestBehavior.AllowGet);
+		}
+
+		public JsonResult LocalRetentionRates ()
+		{
+			var rates = from x in WebConfig.LocalRetentionRates
+				    select new { value = x.Value, text = x.Key };
 
 			return Json (rates, JsonRequestBehavior.AllowGet);
 		}
