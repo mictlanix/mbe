@@ -37,6 +37,7 @@ using System.Web.Routing;
 using System.Configuration;
 using Mictlanix.BE.Model;
 using System.Net.Mail;
+using Newtonsoft.Json;
 
 namespace Mictlanix.BE.Web.Helpers {
 	public static class WebConfig {
@@ -45,6 +46,9 @@ namespace Mictlanix.BE.Web.Helpers {
 		public const string CashDrawerCookieKey = "CashDrawer";
 		static PaymentMethod [] cashier_payment_options;
 		static string [] default_email_cc;
+		static IList<KeyValuePair<string, decimal>> tax_rates;
+		static IList<KeyValuePair<string, decimal>> retention_rates;
+		static IList<KeyValuePair<string, decimal>> local_retention_rates;
 
 		#region Application Global Settings
 
@@ -294,6 +298,36 @@ namespace Mictlanix.BE.Web.Helpers {
 
 		public static bool ShowSalesOrdersFromAllStores {
 			get { return Convert.ToBoolean(ConfigurationManager.AppSettings ["ShowSalesOrdersFromAllStores"]); }
+		}
+
+		public static IList<KeyValuePair<string, decimal>> TaxRates {
+			get {
+				if (tax_rates == null) {
+					tax_rates = JsonConvert.DeserializeObject<IList<KeyValuePair<string, decimal>>> (ConfigurationManager.AppSettings ["TaxRates"]);
+				}
+
+				return tax_rates;
+			}
+		}
+
+		public static IList<KeyValuePair<string, decimal>> RetentionRates {
+			get {
+				if (retention_rates == null) {
+					retention_rates = JsonConvert.DeserializeObject<IList<KeyValuePair<string, decimal>>> (ConfigurationManager.AppSettings ["RetentionRates"]);
+				}
+
+				return retention_rates;
+			}
+		}
+
+		public static IList<KeyValuePair<string, decimal>> LocalRetentionRates {
+			get {
+				if (local_retention_rates == null) {
+					local_retention_rates = JsonConvert.DeserializeObject<IList<KeyValuePair<string, decimal>>> (ConfigurationManager.AppSettings ["LocalRetentionRates"]);
+				}
+
+				return local_retention_rates;
+			}
 		}
 
 		#endregion

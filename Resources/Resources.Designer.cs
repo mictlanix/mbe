@@ -3971,6 +3971,18 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string LocalRetentionRate {
+            get {
+                return ResourceManager.GetString("LocalRetentionRate", resourceCulture);
+            }
+        }
+        
+        public static string LocalRetentionTaxes {
+            get {
+                return ResourceManager.GetString("LocalRetentionTaxes", resourceCulture);
+            }
+        }
+        
         public static string SalesPersonOrdersAndRefunds {
             get {
                 return ResourceManager.GetString("SalesPersonOrdersAndRefunds", resourceCulture);

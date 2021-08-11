@@ -775,8 +775,42 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return Json (new {
 				id = entity.Id,
 				value = entity.FormattedValueFor (x => x.RetentionRate),
-				total = entity.FormattedValueFor (x => x.Total),
-				total2 = entity.FormattedValueFor (x => x.TotalEx),
+				itemsChanged = success
+			});
+		}
+
+		[HttpPost]
+		public ActionResult SetLocalRetentionRate (int id, string value)
+		{
+			var entity = FiscalDocument.Find (id);
+			bool success;
+			decimal val;
+
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			success = decimal.TryParse (value.TrimEnd (new char [] { ' ', '%' }), out val);
+
+			if (success) {
+				var rate = WebConfig.LocalRetentionRates.SingleOrDefault (x => x.Value == val);
+
+				if (rate.Key != null) {
+					entity.LocalRetentionName = rate.Key;
+					entity.LocalRetentionRate = rate.Value;
+
+					using (var scope = new TransactionScope ()) {
+						entity.UpdateAndFlush ();
+					}
+				} else {
+					success = false;
+				}
+			}
+
+			return Json (new {
+				id = entity.Id,
+				value = entity.FormattedValueFor (x => x.LocalRetentionName),
 				itemsChanged = success
 			});
 		}
