@@ -124,6 +124,12 @@
                         data-source='@Url.Action("RetentionRates", "Pricing")' data-pk='@Model.Id' data-value='@Model.RetentionRate.ToString("0.####")'
                         data-url='@Url.Action("SetRetentionRate", new { id = Model.Id })'>@Html.DisplayFor(x => x.RetentionRate)</a>
                     </dd>
+                    <dt>@Resources.LocalRetentionRate</dt>
+                    <dd>
+                        <a class='editable tax' data-type='select' data-placement='right' data-autotext='never'
+                        data-source='@Url.Action("LocalRetentionRates", "Pricing")' data-pk='@Model.Id' data-value='@Model.LocalRetentionRate.ToString("0.####")'
+                        data-url='@Url.Action("SetLocalRetentionRate", new { id = Model.Id })'>@Html.DisplayFor(x => x.RetentionRate)</a>
+                    </dd>
                 }
 			</dl>
   		</div>

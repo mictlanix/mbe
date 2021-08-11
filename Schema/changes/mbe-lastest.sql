@@ -237,6 +237,13 @@ ALTER TABLE `contact`
 	CHANGE COLUMN `phone` `phone` VARCHAR(25) NULL,
 	CHANGE COLUMN `mobile` `mobile` VARCHAR(25) NOT NULL DEFAULT '';
 
+-- AUG 2021
+
+ALTER TABLE `fiscal_document`
+	ADD COLUMN `local_retention_name` VARCHAR(32) NULL AFTER `retention_rate`,
+	ADD COLUMN `local_retention_rate` DECIMAL(5,4) NOT NULL AFTER `local_retention_name`;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

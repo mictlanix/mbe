@@ -240,6 +240,14 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "RetentionRate", ResourceType = typeof (Resources))]
 		public virtual decimal RetentionRate { get; set; }
 
+		[Property ("local_retention_name")]
+		public virtual string LocalRetentionName { get; set; }
+
+		[Property ("local_retention_rate")]
+		[DisplayFormat (DataFormatString = "{0:p}")]
+		[Display (Name = "LocalRetentionRate", ResourceType = typeof (Resources))]
+		public virtual decimal LocalRetentionRate { get; set; }
+
 		[Property ("payment_date")]
 		[DataType (DataType.Date)]
 		[Display (Name = "PaymentDate", ResourceType = typeof (Resources))]
@@ -287,9 +295,15 @@ namespace Mictlanix.BE.Model {
 		}
 
 		[DataType (DataType.Currency)]
+		[Display (Name = "LocalRetentionTaxes", ResourceType = typeof (Resources))]
+		public virtual decimal LocalRetentionTaxes {
+			get { return Details.Sum (x => x.LocalRetentionTaxes); }
+		}
+
+		[DataType (DataType.Currency)]
 		[Display (Name = "Total", ResourceType = typeof (Resources))]
 		public virtual decimal Total {
-			get { return Details.Sum (x => x.Total) - RetentionTaxes; }
+			get { return Details.Sum (x => x.Total) - RetentionTaxes - LocalRetentionTaxes; }
 		}
 
 		[DataType (DataType.Currency)]
@@ -317,9 +331,15 @@ namespace Mictlanix.BE.Model {
 		}
 
 		[DataType (DataType.Currency)]
+		[Display (Name = "LocalRetentionTaxes", ResourceType = typeof (Resources))]
+		public virtual decimal LocalRetentionTaxesEx {
+			get { return ModelHelpers.TotalRounding ((SubtotalEx - DiscountEx) * LocalRetentionRate); }
+		}
+
+		[DataType (DataType.Currency)]
 		[Display (Name = "Total", ResourceType = typeof (Resources))]
 		public virtual decimal TotalEx {
-			get { return Details.Sum (x => x.TotalEx) - RetentionTaxesEx; }
+			get { return Details.Sum (x => x.TotalEx) - RetentionTaxesEx - LocalRetentionTaxesEx; }
 		}
 
 		[DataType (DataType.Currency)]
