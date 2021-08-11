@@ -36,6 +36,15 @@
     }
     </li>
 }
+@if (Model.LocalRetentionRate != 0m) {
+    <li>
+    	<span class='caption'>@Resources.LocalRetentionTaxes</span>
+        <span class='value'>@Html.DisplayFor(x => x.LocalRetentionTaxes) @Html.DisplayFor(x => x.Currency)</span>
+    @if (Model.Currency != WebConfig.BaseCurrency) {
+        <span class='value muted'>(@Html.DisplayFor(x => x.LocalRetentionTaxesEx) @WebConfig.BaseCurrency)</span>
+    }
+    </li>
+}
     <li>
     	<span class='caption'>@Resources.Total</span>
         <span class='value'>@Html.DisplayFor(x => x.Total) @Html.DisplayFor(x => x.Currency)</span>

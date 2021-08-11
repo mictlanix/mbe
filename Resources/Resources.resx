@@ -2084,6 +2084,12 @@ Realizada el: {0:d}</value>
   <data name="RetentionTaxes" xml:space="preserve">
     <value>IVA Retenido</value>
   </data>
+  <data name="LocalRetentionRate" xml:space="preserve">
+    <value>Retención (imp. local)</value>
+  </data>
+  <data name="LocalRetentionTaxes" xml:space="preserve">
+    <value>Retención (imp. local)</value>
+  </data>
   <data name="SalesPersonOrdersAndRefunds" xml:space="preserve">
     <value>Pedidos y Devoluciones Por Vendedor</value>
   </data>
