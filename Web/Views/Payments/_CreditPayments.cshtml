@@ -1,4 +1,4 @@
-﻿
+
 @using Mictlanix.BE.Model
 @using Mictlanix.BE
 @using Mictlanix.BE.Web.Models
@@ -14,7 +14,7 @@
 			<th>@Resources.Customer</th>
 			<th>@Resources.Amount</th>
 			<th>@Resources.PaymentMethod</th>
-			<th>@Resources.Currency</th>
+			<th>@Resources.SalesOrders</th>
 			<th>@Resources.Reference</th>
 			<th>@Resources.ApplyPayment</th>
 			<th></th>
@@ -28,20 +28,24 @@
 
 
 			
-				<tr>
-					<td>@Html.DisplayFor(x => item.Id)</td>
-					<td>@Html.DisplayFor(x => item.Date)</td>
-					<td>@Html.DisplayFor(x => item.Customer.Name)</td>
-					<td>@Html.DisplayFor(x => item.Amount)</td>
-					<td>@item.Method.GetDisplayName()</td>
-					<td>@Html.DisplayFor(x => item.Currency)</td>
-					<td>@Html.DisplayFor(x => item.Reference)</td>
-					<td>@Html.DisplayFor(x => applied)</td>
-					<td class='actions'>
-								@Html.ActionLink(" ", "ViewCreditPayment", "Payments", new { id = item.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
-								@Html.ActionLink(" ", "PrintCreditPayment", "Payments", new { id = item.Id }, new { @class = "button icon print icon-only", title = Resources.Print, target = "_blank" })
-					</td>
-				</tr>
+						<tr>
+										<td>@Html.DisplayFor(x => item.Id)</td>
+										<td>@Html.DisplayFor(x => item.Date)</td>
+										<td>@Html.DisplayFor(x => item.Customer.Name)</td>
+										<td>@Html.DisplayFor(x => item.Amount)</td>
+										<td>@item.Method.GetDisplayName()</td>
+								  <td>@foreach (var x in item.Allocations) {
+																						<span>@x.SalesOrder.Id - @x.Amount.ToString("C2")</span><br />
+										}</td>
+										@*<td>@string.Join("<br/>" ,item.Allocations.Select(x => "[" + x.SalesOrder.Id + " : " + x.Amount.ToString("C2") + "]<br/>"))</td>
+												<td>@Html.DisplayFor(x => item.Allocations.Select(y => y.SalesOrder.Id))</td>*@
+										<td>@Html.DisplayFor(x => item.Reference)</td>
+										<td>@Html.DisplayFor(x => applied)</td>
+										<td class='actions'>
+														@Html.ActionLink(" ", "ViewCreditPayment", "Payments", new { id = item.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
+														@Html.ActionLink(" ", "PrintCreditPayment", "Payments", new { id = item.Id }, new { @class = "button icon print icon-only", title = Resources.Print, target = "_blank" })
+										</td>
+						</tr>
 		}
 	</tbody>
 	<tfoot></tfoot>

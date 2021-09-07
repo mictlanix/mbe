@@ -1,0 +1,270 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model AbastosCashCountReport
+
+@{
+				Layout = WebConfig.PrintLayout;
+				ViewBag.Title = Resources.CashSummary;
+				ViewBag.Store = WebConfig.Store;
+				ViewBag.Address = WebConfig.Store.Address;
+}
+
+<style type="text/css">
+				table.summary tr td {
+								font-size: 7px;
+								border-collapse: collapse;
+				}
+
+				table > thead > tr > th, table > tbody > tr > th, table > tfoot > tr > th, table > thead > tr > td, table > tbody > tr > td, table > tfoot > tr > td {
+								/*padding: 2px;*/
+								line-height: 1.0;
+								vertical-align: top;
+								font: normal 10pt 'Open Sans', sans-serif;
+				}
+
+				.summary tr {
+								border-bottom: 1px solid #ccc;
+				}
+
+				.summary th, td {
+								text-align: left;
+				}
+</style>
+
+<div id='master-section'>
+				<div class="row">
+								<div class="col-xs-2">
+												@Html.LabelFor(x => x.Start)
+								</div>
+								<div class="col-xs-2">
+												@Html.DisplayFor(x => x.Start)
+								</div>
+								<div class="col-xs-2">
+												@Html.LabelFor(x => x.End)
+								</div>
+								<div class="col-xs-2">
+												@Html.DisplayFor(x => x.End)
+								</div>
+				</div>
+</div>
+
+<div>
+				<h2>@Resources.CashSummary</h2>
+				<table class="summary">
+								<thead>
+												<tr>
+																<th>@Resources.Customer</th>
+																<th>@Resources.ProductName</th>
+																<th>@Resources.Quantity</th>
+																<th>@Resources.Price</th>
+																<th>@Resources.Subtotal</th>
+																<th>@Resources.Date</th>
+												</tr>
+								</thead>
+								<tbody>
+												@foreach (var salegroup in Model.Sales.GroupBy(x => new { x.Term }, (key, group) => new { Key = key.Term, Result = group.ToList() }))
+												{
+																<tr><td colspan="6" class="text-center">@Resources.PaymentTerms: @salegroup.Key</td></tr>
+																foreach (var sale in salegroup.Result)
+																{
+																				<tr>
+																								<td>@sale.Customer</td>
+																								<td>@sale.Product</td>
+																								<td>@Html.DisplayFor(x => sale.Quantity)</td>
+																								<td>@Html.DisplayFor(x => sale.Price)</td>
+																								<td>@Html.DisplayFor(x => sale.Subtotal)</td>
+																								<td>@Html.DisplayFor(x => sale.Date)</td>
+																				</tr>
+																}
+												}
+												<tr>
+																<td><b>@Resources.QuantitySold</b></td>
+																<td><b>@Html.DisplayFor(x => Model.TotalQuantitySales)</b></td>
+												</tr>
+												<tr><td><b>@Resources.Immediate</b></td><td><b>@Html.DisplayFor(x => x.InmediateSales)</b></td></tr>
+												<tr><td><b>@Resources.NetD</b></td><td><b>@Html.DisplayFor(x => x.NetDSales)</b></td></tr>
+												<tr><td><b>@Resources.Total</b></td><td><b>@Html.DisplayFor(x => Model.TotalSales)</b></td></tr>
+								</tbody>
+				</table>
+</div>
+<div>
+				<h2>@Resources.Expenses</h2>
+				<table class="summary">
+								<thead>
+												<tr>
+																<th>@Resources.Date</th>
+																<th>@Resources.Employee</th>
+																<th>@Resources.Amount</th>
+																<th>@Resources.Concepts</th>
+																<th>@Resources.Comment</th>
+																<th>@Resources.LotNumber</th>
+												</tr>
+								</thead>
+								<tbody>
+												@foreach (var expense in Model.Expenses)
+												{
+																<tr>
+																				<td>@Html.DisplayFor(x => expense.Date)</td>
+																				<td>@Html.DisplayFor(x => expense.Cashier)</td>
+																				<td>@Html.DisplayFor(x => expense.Amount)</td>
+																				<td>@Html.DisplayFor(x => expense.Concept)</td>
+																				<td>@Html.DisplayFor(x => expense.Comment)</td>
+																				<td>@Html.DisplayFor(x => expense.LotCode)</td>
+																</tr>
+												}
+												<tr>
+																<td></td>
+																<td><b>@Resources.TotalAmount</b></td>
+																<td>@Html.DisplayFor(x => Model.TotalExpenses)</td>
+												</tr>
+								</tbody>
+				</table>
+</div>
+<div>
+				<h2>@Resources.DisplayName_AccountsPayable</h2>
+				<table class="summary">
+								<thead>
+												<tr>
+																<th>@Resources.Date</th>
+																<th>@Resources.Supplier</th>
+																<th>@Resources.Amount</th>
+																<th>@Resources.PaymentMethod</th>
+												</tr>
+								</thead>
+								<tbody>
+												@foreach (var payable in Model.Payables)
+												{
+																<tr>
+																				<td>@Html.DisplayFor(x => payable.Date)</td>
+																				<td>@Html.DisplayFor(x => payable.Supplier)</td>
+																				<td>@Html.DisplayFor(x => payable.Amount)</td>
+																				<td>@payable.PaymentMethod.GetDisplayName()</td>
+																</tr>
+												}
+												<tr>
+																<td></td>
+																<td><b>@Resources.TotalAmount</b></td>
+																<td>@Html.DisplayFor(x => Model.TotalPayables)</td>
+												</tr>
+								</tbody>
+				</table>
+</div>
+<div>
+				<h2>@Resources.WarehouseStockReport</h2>
+				<table class="summary">
+								<thead>
+												<tr>
+																<th>@Resources.LotNumber</th>
+																<th>@Resources.Warehouse</th>
+																<th>@Resources.Product</th>
+																<th>@Resources.Quantity @Resources.Start</th>
+																<th>@Resources.PurchasedQuantity</th>
+																<th>@Resources.SoldQuantity</th>
+																<th>@Resources.QuantityRemaining</th>
+												</tr>
+								</thead>
+								<tbody>
+												@foreach (var item in Model.Stock)
+												{
+																<tr>
+																				<td>@Html.DisplayFor(x => item.LotCode)</td>
+																				<td>@Html.DisplayFor(x => item.Warehouse)</td>
+																				<td>@Html.DisplayFor(x => item.Product)</td>
+																				<td>@Html.DisplayFor(x => item.StartQuantity)</td>
+																				<td>@Html.DisplayFor(x => item.PurchasedQuantity)</td>
+																				<td>@Html.DisplayFor(x => item.SoldQuantity)</td>
+																				<td>@Html.DisplayFor(x => item.FinalQuantity)</td>
+																</tr>
+												}
+												<tr>
+																<td colspan="2"></td>
+																<td><b>@Resources.Total @Resources.Quantity</b></td>
+																<td><b>@Model.Stock.Sum(x => x.StartQuantity)</b></td>
+																<td><b>@Model.Stock.Sum(x => x.PurchasedQuantity)</b></td>
+																<td><b>@Model.Stock.Sum(x => x.SoldQuantity)</b></td>
+																<td><b>@Model.Stock.Sum(x => x.FinalQuantity)</b></td>
+												</tr>
+								</tbody>
+				</table>
+</div>
+<div>
+				<h2>@Resources.ReceivedPayments</h2>
+				<table class="summary">
+								<thead>
+												<tr>
+																<th>@Resources.PaymentTerms</th>
+																<th>@Resources.PaymentMethod</th>
+																<th>@Resources.Customer</th>
+																<th>@Resources.Amount</th>
+																<th>@Resources.Subtotal</th>
+												</tr>
+								</thead>
+								<tbody>
+												@foreach (var receivablegroup in Model.Receivables.GroupBy(x => new { x.Terms },
+(key, group) => new
+{
+Term = key.Terms,
+Group = group.GroupBy(x => new { x.PaymentMethod },
+(k, g) => new { Method = k.PaymentMethod, Items = g.ToList() })
+}))
+												{
+																<tr><td>@receivablegroup.Term.GetDisplayName()</td><td colspan="2"></td></tr>
+																foreach (var rec in receivablegroup.Group)
+																{
+																				<tr><td></td><td>@rec.Method.GetDisplayName()</td></tr>
+																				if (receivablegroup.Term == PaymentTerms.NetD)
+																				{
+
+																								foreach (var receivable in rec.Items)
+																								{
+																												<tr>
+																																<td colspan="2"></td>
+																																<td>@Html.DisplayFor(x => receivable.Customer)</td>
+																																<td>@Html.DisplayFor(x => receivable.Amount)</td>
+																												</tr>
+																								}
+																				}
+																				<tr><td colspan="4"></td><td><b>@rec.Items.Sum(x => x.Amount).ToString("C")</b></td></tr>
+																}
+												}
+												<tr>
+																<td colspan="3"></td>
+																<td><b>@Resources.TotalAmount</b></td>
+																<td><b>@Html.DisplayFor(x => Model.TotalReceivables)</b></td>
+												</tr>
+								</tbody>
+				</table>
+</div>
+
+<div>
+				<h2>@Resources.Title_CashMovements</h2>
+				<table>
+								<thead>
+												<tr>
+																<th>@Resources.StartingCash</th>
+																<th>@Resources.ReceivedPayments</th>
+																<th>- @Resources.Expenses</th>
+																<th>- @Resources.SupplierPayment</th>
+																<th>- @Resources.Refunds</th>
+																<th>@Resources.Total</th>
+												</tr>
+								</thead>
+								<tbody>
+												<tr class="center">
+																<td>@Html.DisplayFor(x => x.InitialCash)</td>
+																<td>@Html.DisplayFor(x => x.TotalReceivables)</td>
+																<td>- @Html.DisplayFor(x => x.TotalExpenses)</td>
+																<td>- @Html.DisplayFor(x => x.TotalPayables)</td>
+																<td>- @Html.DisplayFor(x => x.TotalRefunds)</td>
+																<td>@Html.DisplayFor(x => x.Balance)</td>
+												</tr>
+								</tbody>
+				</table>
+</div>
+<style type='text/css'>
+				ul.token-input-list {
+								width: 100%;
+				}
+</style>

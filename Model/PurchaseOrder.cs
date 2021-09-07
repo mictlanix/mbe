@@ -1,4 +1,4 @@
-﻿// 
+// 
 // PurchaseOrder.cs
 // 
 // Author:
@@ -83,6 +83,11 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "InvoiceNumber", ResourceType = typeof (Resources))]
 		[StringLength (50, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public string InvoiceNumber { get; set; }
+
+		[Property ("lot_number")]
+		[Display (Name = "LotNumber", ResourceType = typeof (Resources))]
+		[StringLength (50, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
+		public string LotNumber { get; set; }
 
 		[Property]
 		[DataType (DataType.MultilineText)]

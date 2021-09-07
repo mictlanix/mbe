@@ -25,15 +25,21 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			foreach (var item in entity.Details) {
 				var qty = GetRefundableQuantity (item.SalesOrderDetail.Id);
 
+				//if (qty < item.Quantity) {
+				//	changed = true;
+
+				//	if (qty > 0.0m) {
+				//		item.Quantity = qty;
+				//		item.Update ();
+				//	} else {
+				//		item.Delete ();
+				//	}
+				//}
+
 				if (qty < item.Quantity) {
 					changed = true;
-
-					if (qty > 0.0m) {
-						item.Quantity = qty;
-						item.Update ();
-					} else {
-						item.Delete ();
-					}
+					item.Quantity = qty;
+					item.Update ();
 				}
 			}
 
@@ -47,13 +53,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		}
 
 		using (var scope = new TransactionScope ()) {
-				
 
-			foreach (var detail in entity.Details.Where (x => !(x.Quantity > 0.0m)).ToList ()) {
-				detail.DeleteAndFlush ();
-			}
-				
-			foreach (var x in entity.Details) {
+			var details = entity.Details.Where (x => x.Quantity > 0.0m).ToList ();
+			var zeroes = entity.Details.Where (x => x.Quantity <= 0.0m).ToList();
+
+			foreach (var x in details) {
 				AbastosInventoryHelpers.RefundProductToLot(x, CurrentUser.Employee);
 			}
 

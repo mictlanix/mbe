@@ -4,7 +4,7 @@
 @model PurchaseOrder
 
 <tr id='id:@Model.Id'>
-	<td class="code">@AbastosInventoryHelpers.GetLotCode(Model)</td>
+				<td class="code">@Html.DisplayFor(x => x.LotNumber)</td>
     <td class="date">@Html.DisplayFor(x => x.CreationTime)</td>
     <td>@Html.DisplayFor(x => x.Supplier.Name)</td>
 				<td class="actions">

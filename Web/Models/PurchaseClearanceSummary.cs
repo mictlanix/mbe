@@ -12,12 +12,14 @@ namespace Mictlanix.BE.Web.Models {
 		public List<PurchaseClearanceDetailSummary> DetailSummaries;
 		public PurchaseClearanceDetail ClearanceExpenses;
 		public PurchaseOrder PurchaseOrder;
+		public List<SupplierPayment> supplierPayments;
 		public decimal ChargePercent;
 		public PurchaseClearanceSummary (int id) {
 			PurchaseClearance = PurchaseClearance.Find(id);
 			PurchaseOrder = PurchaseOrder.Find(PurchaseClearance.PurchaseOrder);
 			ClearanceExpenses = PurchaseClearance.Details.Last();
 			DetailSummaries = new List<PurchaseClearanceDetailSummary> ();
+			supplierPayments = SupplierPayment.Queryable.Where (x => x.PurchaseOrder == PurchaseOrder).ToList ();
 			foreach (var detail in PurchaseClearance.Details) {
 				DetailSummaries.Add (
 					new PurchaseClearanceDetailSummary(detail.Id)
@@ -34,6 +36,9 @@ namespace Mictlanix.BE.Web.Models {
 		public decimal TotalSales { get { return (decimal?) DetailSummaries.Sum (x => x.Total) ?? 0; } }
 
 		[DataType (DataType.Currency)]
+		public decimal TotalSupplierPayments { get { return (decimal?) supplierPayments.Sum (x => x.Amount) ?? 0; } }
+
+		[DataType (DataType.Currency)]
 		public decimal TotalExpenses { get { return (decimal?) ClearanceExpenses.Details.Sum (x => x.Price) ?? 0; } }
 
 		//[DataType (DataType.Currency)]
@@ -43,7 +48,7 @@ namespace Mictlanix.BE.Web.Models {
 		public decimal Commision { get { return TotalSales * ChargePercent; } }
 
 		[DataType (DataType.Currency)]
-		public decimal Total { get { return TotalSales - Commision - TotalExpenses; } }
+		public decimal Total { get { return TotalSales - Commision - TotalExpenses - TotalSupplierPayments; } }
 	}
 
 	public class PurchaseClearanceDetailSummary {

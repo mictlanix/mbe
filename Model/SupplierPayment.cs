@@ -50,6 +50,15 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Supplier", ResourceType = typeof (Resources))]
 		public virtual Supplier Supplier { get; set; }
 
+
+		[Display (Name = "PurchaseOrder", ResourceType = typeof (Resources))]
+		[UIHint ("PurchaseOrderSelector")]
+		public int? PurchaseOrderId { get; set; }
+
+		[BelongsTo ("purchase_order")]
+		[Display (Name = "PurchaseOrder", ResourceType = typeof (Resources))]
+		public virtual PurchaseOrder PurchaseOrder { get; set; }
+
 		[BelongsTo ("creator")]
 		[Display (Name = "Creator", ResourceType = typeof (Resources))]
 		public virtual Employee Creator { get; set; }

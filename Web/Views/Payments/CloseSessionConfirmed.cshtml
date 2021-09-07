@@ -74,36 +74,13 @@
 												</tr>
 								}
 
-								@{
-
-												var Expenses = ExpenseVoucher.Queryable.Where(x => x.CashSession == Model.Master).ToList();
-												//var Refunds = CustomerRefund.Queryable.Where(x => x.IsCompleted && !x.IsCancelled && x.Details.Count > 0).ToList();
-												var TotalExpenses = Expenses.Sum(x => x.Total);
-												//var TotalRefunds = Refunds.Sum(x => x.Total);
-								}
-
-
-								@if (Expenses.Sum(x => x.Total) > 0)
-								{
-												<tr>
-																<td class="number">
-																				@Resources.Expenses
-																</td>
-																<td class="number">
-
-																				@((-TotalExpenses).ToString("c"))
-																</td>
-												</tr>
-								}
-
-
 								<tr>
 												<td class="number">
 																@Resources.Total
 												</td>
 
 												<td class="number">
-																@((Model.Details.Sum(x => x.Amount) - TotalExpenses).ToString("c"))
+																@Model.Details.Sum(y => y.Amount).ToString("c")
 												</td>
 								</tr>
 				</table>

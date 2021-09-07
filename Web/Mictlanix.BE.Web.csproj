@@ -1362,6 +1362,9 @@
     <Content Include="Views\AbastosSalesManager\_ItemExpenseDisplayView.cshtml" />
     <Content Include="Views\AbastosSalesManager\Print.cshtml" />
     <Content Include="Views\AbastosCashSummary\Index.cshtml" />
+    <Content Include="Views\AbastosCashSummary\_Index.cshtml" />
+    <Content Include="Views\AbastosCashSummary\Print.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\PurchaseOrderSelector.cshtml" />
   </ItemGroup>
   <ItemGroup />
 </Project>

@@ -2525,4 +2525,7 @@ Atte: {1}.</value>
   <data name="PuchaseOrderWithZeroCosts" xml:space="preserve">
     <value>La orden de compra contiene productos con precio 0</value>
   </data>
+  <data name="CashSummary" xml:space="preserve">
+    <value>Resumen de Operaciones</value>
+  </data>
 </root>

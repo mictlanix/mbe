@@ -131,6 +131,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return View (item);
 
 			item.Supplier = Supplier.Find (item.SupplierId);
+			item.PurchaseOrder = PurchaseOrder.Queryable.Where (x => x.Id == item.PurchaseOrderId).SingleOrDefault ();
 			item.Date = DateTime.Now;
 			item.Creator = CurrentUser.Employee;
 			item.CashSession = session;

@@ -556,6 +556,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Resumen de Operaciones.
+        /// </summary>
+        public static string CashSummary {
+            get {
+                return ResourceManager.GetString("CashSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Línea de Producto.
         /// </summary>
         public static string Category {

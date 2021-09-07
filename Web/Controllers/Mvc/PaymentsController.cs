@@ -241,7 +241,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			model.End = session.End;
 			model.MoneyCounts = list_mny.ToList ();
 			model.CashCounts = session.CashCounts.Where (x => x.Type == CashCountType.CountedCash).ToList ();
-			//model.ExpensesCounts = ExpenseVoucher.Queryable.Where(x => x.CashSession == session).ToList();
 			model.StartingCash = session.StartingCash;
 			model.SessionId = session.Id;
 

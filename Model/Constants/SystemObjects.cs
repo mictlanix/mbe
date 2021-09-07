@@ -206,6 +206,8 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Purchases", ResourceType = typeof (Resources))]
 		PurchasesFast = 86,
 		[Display (Name = "PurchaseClearance", ResourceType = typeof (Resources))]
-		PurchaseClearance = 87
+		PurchaseClearance = 87,
+		[Display (Name = "CashSummary", ResourceType = typeof (Resources))]
+		AbastosCashSummary = 88
 		}
 }

@@ -85,7 +85,7 @@ namespace Mictlanix.BE.Model {
 		public string ProductName { get; set; }
 
 		[Property ("unit_of_measurement")]
-		[Display (Name = "ProductName", ResourceType = typeof (Resources))]
+		[Display (Name = "UnitOfMeasurement", ResourceType = typeof (Resources))]
 		[DataType (DataType.Text)]
 		public string UnitOfMeasurement { get; set; }
 
