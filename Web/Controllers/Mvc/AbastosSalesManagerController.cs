@@ -58,17 +58,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var clearance = new PurchaseClearance {
 				PurchaseOrder = item.Id,
 				Supplier = item.Supplier.Name,
-				LotCode = AbastosInventoryHelpers.GetLotCode(item),
+				LotCode = item.LotNumber,
 				Creator = CurrentUser.Employee,
 				Updater = CurrentUser.Employee,
 				CreationTime = DateTime.Now,
 				ModificationTime = DateTime.Now,
-				Commission = 0.1m
+				Commission = 0m
 			};
 
 			using (var scope = new TransactionScope ()) {
 				clearance.Create ();
-				var lot_number = AbastosInventoryHelpers.GetLotCode (item);
+				var lot_number = item.LotNumber;
 
 				var sql = @"SELECT T.product Product, T.product_name ProductName, T.Price Price, -SUM(T.quantity) Quantity, T.lot Lot FROM 
 					       (SELECT sd.sales_order_detail_id, l.product, sd.product_name, sd.price -sd.price * sd.discount Price, l.quantity, sd.lot_serial_tracking lot FROM lot_serial_tracking l
@@ -114,6 +114,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						Quantity = detail.Quantity,
 						TaxRate = detail.TaxRate,
 						Warehouse = detail.Warehouse.Name,
+						UnitOfMeasurement = detail.Product.UnitOfMeasurement.ToString(),   //Fixit
 						IsCharge = true
 					};
 
@@ -381,7 +382,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public virtual ActionResult Pdf (int id) {
 			var item = PurchaseClearance.Find (id);
 
-			if (item.IsCancelled || !item.IsCompleted) {
+			if (item.IsCancelled) {
 				return RedirectToAction ("Index");
 			}
 			return PdfView ("Print", item);

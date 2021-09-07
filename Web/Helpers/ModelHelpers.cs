@@ -25,12 +25,15 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Mvc;
+using Castle.ActiveRecord;
 using Mictlanix.BE.Model;
+using NHibernate;
 
 namespace Mictlanix.BE.Web.Helpers {
 	public static class ModelHelpers {
@@ -61,25 +64,40 @@ namespace Mictlanix.BE.Web.Helpers {
 
 		public static decimal Debt (this Customer entity)
 		{
-			IQueryable<decimal> query;
+			//IQueryable<decimal> query;
 
-			query = from x in SalesOrder.Queryable
-				from y in x.Payments
-				where x.Terms == PaymentTerms.NetD &&
-				      x.IsCompleted && !x.IsCancelled && !x.IsPaid &&
-				      x.Customer.Id == entity.Id
-				select y.Amount * x.ExchangeRate;
-			var paid = query.Count () > 0 ? query.ToList ().Sum () : 0;
+			//query = from x in SalesOrder.Queryable
+			//	from y in x.Payments
+			//	where x.Terms == PaymentTerms.NetD &&
+			//	      x.IsCompleted && !x.IsCancelled && !x.IsPaid &&
+			//	      x.Customer.Id == entity.Id
+			//	select y.Amount * x.ExchangeRate;
+			//var paid = query.Count () > 0 ? query.ToList ().Sum () : 0;
 
-			query = from x in SalesOrder.Queryable
-				from y in x.Details
-				where x.Terms == PaymentTerms.NetD &&
-				      x.IsCompleted && !x.IsCancelled && !x.IsPaid &&
-				      x.Customer.Id == entity.Id
-				select y.Quantity * y.Price * y.ExchangeRate * (1 - y.DiscountRate) * (y.IsTaxIncluded || y.TaxRate <= 0m ? 1m : (1m + y.TaxRate));
-			var bought = query.Count () > 0 ? query.ToList ().Sum () : 0;
+			//query = from x in SalesOrder.Queryable
+			//	from y in x.Details
+			//	where x.Terms == PaymentTerms.NetD &&
+			//	      x.IsCompleted && !x.IsCancelled && !x.IsPaid &&
+			//	      x.Customer.Id == entity.Id
+			//	select y.Quantity * y.Price * y.ExchangeRate * (1 - y.DiscountRate) * (y.IsTaxIncluded || y.TaxRate <= 0m ? 1m : (1m + y.TaxRate));
+			//var bought = query.Count () > 0 ? query.ToList ().Sum () : 0;
 
-			return bought - paid;
+			var sql = @"SELECT SUM((sd.quantity - IFNULL(cd.quantity,0)) * sd.price *(1 + sd.tax_included * sd.tax_rate - sd.discount))
+					- SUM( s.exchange_rate * IFNULL(sop.amount,0))	Debt FROM sales_order s
+					LEFT JOIN sales_order_payment sop ON sop.sales_order = s.sales_order_id
+					LEFT JOIN sales_order_detail sd ON sd.sales_order = s.sales_order_id
+					LEFT JOIN customer_refund_detail cd ON cd.sales_order_detail = sd.sales_order_detail_id
+					WHERE s.completed = 1 AND s.cancelled = 0 AND s.payment_terms = 1 AND s.customer = :Customer AND paid = 0";
+
+			var debt = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
+				query.AddScalar ("Debt", NHibernateUtil.Decimal);
+				query.SetParameter ("Customer", entity.Id);
+				return query.DynamicList();
+			}, null);
+
+			return debt.Sum(x => (decimal?)x.Debt ?? 0);
+			//return bought - paid;
 		}
 
 		public static bool IsOverCreditLimit (this SalesOrder entity)

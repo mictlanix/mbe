@@ -42,15 +42,6 @@ namespace Mictlanix.BE.Web.Models
 {
     public class AbastosCashCountReport
     {
-        [DisplayFormat(DataFormatString = "{0:000000}")]
-        public int SessionId { get; set; }
-
-        [Display(Name = "Cashier", ResourceType = typeof(Resources))]
-        public Employee Cashier { get; set; }
-
-        [Display(Name = "CashDrawer", ResourceType = typeof(Resources))]
-        public CashDrawer CashDrawer { get; set; }
-
         [DataType(DataType.DateTime)]
         [Display(Name = "StartDate", ResourceType = typeof(Resources))]
         public DateTime Start { get; set; }
@@ -76,10 +67,56 @@ namespace Mictlanix.BE.Web.Models
         }
 
 	[DataType(DataType.Currency)]
+        [Display(Name = "Refunds", ResourceType = typeof(Resources))]
+        public decimal TotalRefunds {
+			get; set;
+        }
+
+	[DataType(DataType.Currency)]
+        [Display(Name = "Sales", ResourceType = typeof(Resources))]
+        public decimal NetDSales {
+            get {
+                return (decimal?)Sales.Where(x => x.Term == "Crédito").Sum(x => x.Price * x.Quantity)??0;
+            }
+        }
+
+	[DataType(DataType.Currency)]
+        [Display(Name = "Sales", ResourceType = typeof(Resources))]
+        public decimal InmediateSales {
+            get {
+                return (decimal?)Sales.Where(x => x.Term == "Contado").Sum(x => x.Price * x.Quantity)??0;
+            }
+        }
+
+	[DataType(DataType.Currency)]
+        [Display(Name = "Sales", ResourceType = typeof(Resources))]
+        public decimal OnlyCashReceivedPaymentsTotal {
+            get {
+                return (decimal?)Receivables.Where(x => x.PaymentMethod == PaymentMethod.Cash).Sum(x => x.Amount)??0;
+            }
+        }
+
+	[DataType(DataType.Currency)]
+        [Display(Name = "Sales", ResourceType = typeof(Resources))]
+        public decimal OnlyCashSupplierPaymentsTotal {
+            get {
+                return (decimal?)Payables.Where(x => x.PaymentMethod == PaymentMethod.Cash).Sum(x => x.Amount)??0;
+            }
+        }
+
+	[DataType(DataType.Currency)]
+        [Display(Name = "Sales", ResourceType = typeof(Resources))]
+        public decimal OnlyCashTotal {
+            get {
+                return OnlyCashReceivedPaymentsTotal - TotalExpenses - OnlyCashSupplierPaymentsTotal - TotalRefunds;
+            }
+        }
+
+	[DataType(DataType.Text)]
         [Display(Name = "Quantity", ResourceType = typeof(Resources))]
         public decimal TotalQuantitySales {
             get {
-                return (decimal?)Sales.Sum(x => x.Quantity)??0;
+                return (decimal?)Sales.Where(y => y.Price > 0).Sum(x => x.Quantity)??0;
             }
         }
 	
@@ -87,7 +124,7 @@ namespace Mictlanix.BE.Web.Models
         [Display(Name = "AccountReceivables", ResourceType = typeof(Resources))]
         public decimal TotalReceivables {
             get {
-                return (decimal?)Receivables.Sum(x => x.Amount)??0;
+                return (decimal?)Receivables.Sum(x => x.Amount)??0 - TotalRefunds;
             }
         }
 		
@@ -99,6 +136,11 @@ namespace Mictlanix.BE.Web.Models
             }
         }
 
+	[DataType(DataType.Currency)]
+        [Display(Name = "Cash", ResourceType = typeof(Resources))]
+        public decimal Balance {
+			get { return InitialCash + TotalReceivables - TotalPayables - TotalExpenses - TotalRefunds; }
+        }
 
 
         public IList<AbastosAccountPayable> Payables { get; set; }
@@ -106,6 +148,10 @@ namespace Mictlanix.BE.Web.Models
 	public IList<AbastosSalesOrder> Sales { get; set; }
 	public IList<AbastosExpense> Expenses { get; set; }
 	public IList<AbastosStock> Stock { get; set; }
+
+	[DataType (DataType.Currency)]
+	[Display (Name = "AccountPayables", ResourceType = typeof (Resources))]
+	public decimal InitialCash { get; set; }
     }
 
 	[ActiveRecord]
@@ -113,10 +159,16 @@ namespace Mictlanix.BE.Web.Models
 
 		public string Customer { get; set; }
 		public string Product { get; set; }
+
+		[DataType (DataType.Date)]
 		public DateTime Date { get; set; }
 		public string UnitOfMeasure { get; set; }
 		public decimal Quantity { get; set; }
+
+		[DataType(DataType.Currency)]
 		public decimal Price { get; set; }
+
+		[DataType(DataType.Currency)]
 		public decimal Subtotal { get; set; }
 		public string Term { get; set; }
 		public int Reference { get; set; }
@@ -124,10 +176,13 @@ namespace Mictlanix.BE.Web.Models
 	}
 
 	public class AbastosStock {
-		public string Product { get; set; }
 		public string LotCode { get; set; }
 		public string Warehouse { get; set; }
-		public decimal Quantity { get; set; }
+		public string Product { get; set; }
+		public decimal StartQuantity { get; set; }
+		public decimal PurchasedQuantity { get; set; }
+		public decimal SoldQuantity { get; set; }
+		public decimal FinalQuantity { get; set; }
 	}
 
 	public class AbastosExpense {
@@ -136,8 +191,11 @@ namespace Mictlanix.BE.Web.Models
 		[DataType(DataType.DateTime)]
 		public DateTime Date { get; set; }
 		public string Concept { get; set; }
+
+		[DataType(DataType.Currency)]
 		public decimal Amount { get; set; }
 		public string Comment { get; set; }
+		public string LotCode { get; set; }
 
 	}
 
@@ -146,8 +204,15 @@ namespace Mictlanix.BE.Web.Models
 
 		[DataType(DataType.DateTime)]
 		public DateTime Date { get; set; }
+
+		[DataType(DataType.Currency)]
 		public decimal Amount { get; set; }
+
+		[DataType(DataType.Currency)]
+		public decimal Applied { get; set; }
 		public PaymentMethod PaymentMethod { get; set; }
+
+		public PaymentTerms? Terms { get; set; }
 
 	}
 
@@ -156,8 +221,12 @@ namespace Mictlanix.BE.Web.Models
 
 		[DataType(DataType.DateTime)]
 		public DateTime Date { get; set; }
+
+		[DataType(DataType.Currency)]
 		public decimal Amount { get; set; }
 		public PaymentMethod PaymentMethod { get; set; }
+
+		public string LotNumber { get; set; }
 
 	}
 

@@ -4,7 +4,13 @@
 @model PurchaseClearance
 
 @{
-    ViewBag.Title = Resources.PurchaseClearance;
+				Layout = WebConfig.PrintLayout;
+				ViewBag.Title = Resources.PurchaseClearance;
+				ViewBag.Store = WebConfig.Store;
+				ViewBag.Address = WebConfig.Store.Address;
+				var payments = SupplierPayment.Queryable.Where(x => x.PurchaseOrder.Id == Model.PurchaseOrder).ToList();
+				var total_payments = (payments.Select(x => (decimal?)x.Amount).Sum() ?? 0);
+				var total = Model.Total - total_payments;
 }
 
 <h2>@Resources.PurchaseClearance</h2>
@@ -13,19 +19,25 @@
 	@Html.Partial("_DisplayView")
 </div>
 <div id="items-container">
-    <table>
-        @foreach (var item in Model.Details.Where(x => x.IsCharge)) {
-            @Html.Partial("_ItemDisplayView", item) 
-        }
-        @foreach (var item in Model.Details.Where(x => !x.IsCharge)) {
-            @Html.Partial("_ItemExpenseDisplayView", item) 
-        }
-        <tr>
-            <td colspan="4" class="text-center"><b>@Resources.Totals</b></td>
-        </tr>
-        <tr><td></td><td><b>@Resources.Sales @Resources.Totals</b></td><td><b>@Html.DisplayFor(x => Model.TotalSales)</b></td></tr>
-        <tr><td></td><td><b>@Resources.Commision (@Html.DisplayFor(x => Model.Commission))</b></td><td><b>-@Html.DisplayFor(x => Model.TotalCommision)</b></td></tr>
-        <tr><td></td><td><b>@Resources.Expenses @Resources.Totals</b></td><td><b>-@Html.DisplayFor(x => Model.TotalExpenses)</b></td></tr>
-        <tr><td></td><td><b>@Resources.Total</b></td><td><b>@Html.DisplayFor(x => Model.Total)</b></td></tr>
-    </table>
+				<table>
+								@foreach (var item in Model.Details.Where(x => x.IsCharge))
+								{
+												@Html.Partial("_ItemDisplayView", item)
+								}
+								@foreach (var item in Model.Details.Where(x => !x.IsCharge))
+								{
+												@Html.Partial("_ItemExpenseDisplayView", item)
+								}
+								<tr>
+												<td colspan="4" class="text-center"><b>@Resources.Totals</b></td>
+								</tr>
+								<tr><td></td><td><b>@Resources.Sales @Resources.Totals</b></td><td><b>@Html.DisplayFor(x => Model.TotalSales)</b></td></tr>
+								@if (Model.Commission > 0)
+								{
+												<tr><td></td><td><b>@Resources.Commision (@Html.DisplayFor(x => Model.Commission))</b></td><td><b>-@Html.DisplayFor(x => Model.TotalCommision)</b></td></tr>
+								}
+								<tr><td></td><td><b>@Resources.Expenses @Resources.Totals</b></td><td><b>-@Html.DisplayFor(x => Model.TotalExpenses)</b></td></tr>
+								<tr><td></td><td><b>@Resources.SupplierPayment @Resources.Totals</b></td><td><b>-@((total_payments.ToString("C")))</b></td></tr>
+								<tr><td></td><td><b>@Resources.Total</b></td><td><b>@(total.ToString("C") )</b></td></tr>
+				</table>
 </div>

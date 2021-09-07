@@ -191,7 +191,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 
 				return Json (new {
 					id = id,
-					value = item.Id + " - " + AbastosInventoryHelpers.GetLotCode (item)
+					value = item.Id + " - " + item.LotNumber
 				});
 			} else {
 				Response.StatusCode = 400;

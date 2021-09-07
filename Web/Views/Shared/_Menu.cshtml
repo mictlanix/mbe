@@ -38,7 +38,8 @@
 									CurrentUser.GetPrivilege (SystemObjects.SupplierPayment).AllowRead;
 
 	var ShowAdministrationMenu = CurrentUser.GetPrivilege (SystemObjects.AccountsReceivable).AllowRead ||
-										  CurrentUser.GetPrivilege (SystemObjects.AccountsPayable).AllowRead;
+										  CurrentUser.GetPrivilege (SystemObjects.AccountsPayable).AllowRead ||
+										  CurrentUser.GetPrivilege (SystemObjects.AbastosCashSummary).AllowRead;
 
 	var ShowFiscalDocumentsMenu = CurrentUser.GetPrivilege (SystemObjects.FiscalDocuments).AllowRead ||
 											CurrentUser.GetPrivilege (SystemObjects.Taxpayers).AllowRead;
@@ -448,6 +449,11 @@
                             <li class="gbmtc">
                                 <a class="gbmt @(Html.IsMenuSelected("Index", "AccountsPayables") ? "gbm0l" : "")"
                                    href="@Url.Action("Index", "AccountsPayables")">@Resources.Title_AccountsPayable</a>
+                            </li>
+                            } @if (CurrentUser.GetPrivilege (SystemObjects.AbastosCashSummary).AllowRead) {
+                            <li class="gbmtc">
+                                <a class="gbmt @(Html.IsMenuSelected("Index", "AbastosCashSummary") ? "gbm0l" : "")"
+                                   href="@Url.Action("Index", "AbastosCashSummary")">@Resources.CashSummary</a>
                             </li>
                             }
                         </ol>

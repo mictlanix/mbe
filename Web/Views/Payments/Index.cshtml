@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
@@ -13,7 +13,7 @@
 
 @{
 		  var delivery_payments = Model.Details.Where (x => x.IsPaid && x.Payments.Any (y => y.Payment.CashSession == null)).ToList ();
-		  var cash_payments = Model.Details.Where (x => !x.IsPaid).ToList ();
+		  var cash_payments = Model.Details.Where (x => !x.IsPaid && x.Terms == PaymentTerms.Immediate).ToList ();
 }
 
 <h2>@Resources.DisplayName_CustomerPayments</h2>

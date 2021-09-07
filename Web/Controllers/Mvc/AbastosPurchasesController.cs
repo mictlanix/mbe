@@ -13,6 +13,27 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 	public class AbastosPurchasesController : PurchasesController
 	{
 		[HttpPost]
+		public override ActionResult Create (PurchaseOrder item)
+		{
+			if (!ModelState.IsValid)
+				return PartialView ("_Create", item);
+
+			item.Supplier = Supplier.Find (item.SupplierId);
+			item.Creator = CurrentUser.Employee;
+			item.Updater = item.Creator;
+			item.CreationTime = DateTime.Now;
+			item.ModificationTime = item.CreationTime;
+
+			using (var scope = new TransactionScope ()) {
+				item.CreateAndFlush ();
+			}
+
+			AbastosInventoryHelpers.SetLotCode (item.Id);
+
+			return PartialView ("_CreateSuccesful", new PurchaseOrder { Id = item.Id });
+		}
+
+		[HttpPost]
 		public override ActionResult Confirm (int id) {
 			PurchaseOrder item = PurchaseOrder.Find (id);
 
@@ -182,7 +203,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 		{
 
 			var item = PurchaseOrderDetail.Find (id);
-			var lot_code = AbastosInventoryHelpers.GetLotCode (item.Order);
+			var lot_code = item.Order.LotNumber;
 
 			if (item.Order.IsCancelled || item.Order.IsCompleted) {
 				Response.StatusCode = 400;
@@ -313,7 +334,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 				    select x;
 
 
-			var items = list.ToList ().Select (x => new { id = x.Id, name = x.Supplier.Name , code = AbastosInventoryHelpers.GetLotCode(x) });
+			var items = list.ToList ().Select (x => new { id = x.Id, name = x.Supplier.Name + " - " + x.LotNumber , code = x.LotNumber });
 
 			return Json (items.ToList (), JsonRequestBehavior.AllowGet);
 		}

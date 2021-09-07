@@ -22,6 +22,10 @@
 								@Html.DisplayFor(model => model.Supplier.Name)
 				</div>
 				<div class="display-label">
+								@Html.LabelFor(model => model.PurchaseOrder) @Html.Label(":")
+								@Html.DisplayFor(model => model.PurchaseOrder.LotNumber)
+				</div>
+				<div class="display-label">
 								@Html.LabelFor(model => model.Date) @Html.Label(":")
 								@Html.DisplayFor(model => model.Date)
 				</div>

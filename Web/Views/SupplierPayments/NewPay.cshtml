@@ -24,6 +24,9 @@
         <div class="col-xs-2">
             @Html.LabelFor(x => x.Comment)
         </div>
+								<div class="col-xs-2">
+            @Html.LabelFor(x => x.PurchaseOrder)
+								</div>
     </div>
     <div class="row">
         <div class="col-xs-2">
@@ -37,6 +40,10 @@
         <div class="col-xs-2">
             @Html.EditorFor(x => x.Comment)
             @Html.ValidationMessageFor(x => x.Comment)
+        </div>
+        <div class="col-xs-3">
+								    @Html.EditorFor(x => x.PurchaseOrderId)
+            @Html.ValidationMessageFor(x => x.PurchaseOrderId)
         </div>
     </div>
     <div class="row">
@@ -61,7 +68,6 @@
             </ul>
             @Html.ValidationMessageFor(x => x.Method)
         </div>
-
     </div>
     <div id="reference" style="display:none">
         <div class="display-label">
@@ -83,7 +89,7 @@ ul.token-input-list { width: 100%; }
 
         $(":radio").change(function() {
             var status = $("#Method:checked").val();
-            
+
             if (status === "4" || status === "5") {
                 $("#reference").show("slow");
             } else {

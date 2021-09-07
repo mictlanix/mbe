@@ -112,7 +112,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult Create (PurchaseOrder item)
+		public virtual ActionResult Create (PurchaseOrder item)
 		{
 			if (!ModelState.IsValid)
 				return PartialView ("_Create", item);

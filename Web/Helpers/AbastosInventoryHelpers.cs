@@ -71,7 +71,7 @@ namespace Mictlanix.BE.Web.Helpers {
 					Quantity = detail.Quantity,
 					Warehouse = warehouse,
 					Reference = detail.Id,
-					LotNumber = GetLotCode (detail.Order)
+					LotNumber = detail.Order.LotNumber
 				}.Save ();
 			}
 		}
@@ -113,10 +113,9 @@ namespace Mictlanix.BE.Web.Helpers {
 			if (order.IsCancelled)
 				return false;
 
-			var lot_code = GetLotCode (order);
 			foreach (var detail in order.Details) {
 				var qty = AvailableQuantityProduct (new LotSerialTracking {
-					LotNumber = lot_code, Product = detail.Product, Warehouse = detail.Warehouse
+					LotNumber = order.LotNumber, Product = detail.Product, Warehouse = detail.Warehouse
 				});
 
 				if (detail.Quantity - qty > 0) {
@@ -136,7 +135,7 @@ namespace Mictlanix.BE.Web.Helpers {
 						Quantity = -detail.Quantity,
 						Warehouse = detail.Warehouse,
 						Reference = detail.Id,
-						LotNumber = lot_code
+						LotNumber = order.LotNumber
 					}.Save ();
 				}
 				order.IsCancelled = true;
@@ -162,12 +161,12 @@ namespace Mictlanix.BE.Web.Helpers {
 
 				foreach (var purchase in PurchaseOrder.Queryable.ToList ()) {
 					var previousCode = purchase.Supplier.Code + purchase.CreationTime.ToString ("ddMMyy") + purchase.Id;
-					var newCode = GetLotCode (purchase);
+					SetLotCode (purchase.Id);
 
 					var lots = LotSerialTracking.Queryable.Where (x => x.LotNumber == previousCode);
 					total += lots.Count();
 					foreach (var lot in lots.ToList ()) {
-						lot.LotNumber = newCode;
+						lot.LotNumber = purchase.LotNumber;
 						lot.UpdateAndFlush ();
 					}
 				}
@@ -177,19 +176,29 @@ namespace Mictlanix.BE.Web.Helpers {
 			return total;
 		}
 
-		public static string GetLotCode (PurchaseOrder purchase) {
+		public static void SetLotCode (int purchase_id) {
 
 			string numbers = "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 			string newCode = "";
 			int index;
+			var purchase = PurchaseOrder.Queryable.Where(x => x.Id == purchase_id).SingleOrDefault();
 
-			var purchases = PurchaseOrder.Queryable.Where (x => x.CreationTime.Date == purchase.CreationTime.Date && x.Supplier == purchase.Supplier).ToList ();
-			index = purchases.Count () > 0 ? purchases.FindIndex (x => x.Id == purchase.Id) : 0;
+			if (purchase == null)
+				return;
+
+			var list_of_purchases = PurchaseOrder.Queryable.Where (x => x.CreationTime.Date == purchase.CreationTime.Date && x.Supplier == purchase.Supplier).ToList ();
+			index = list_of_purchases.FindIndex (x => x.Id == purchase.Id);
+
+			index = index < 0 ? list_of_purchases.Count() : index;
 			var code = new string (purchase.Supplier.Code.Where (x => char.IsLetterOrDigit (x)).ToArray ());
-			code = code + "XXX";
+			code = code + "XXXX";
 			newCode = code.Substring (0, 4) + purchase.CreationTime.ToString ("yyMMdd") + numbers [index];
 
-			return newCode;
+			using (var scope = new TransactionScope ()) {
+				purchase.LotNumber = newCode;
+				purchase.UpdateAndFlush ();
+			}
+
 		}
 	}
 }

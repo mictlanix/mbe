@@ -252,24 +252,6 @@ ALTER TABLE `supplier_payment`
 	ADD COLUMN `cash_session` INT(11) NULL DEFAULT NULL AFTER `cancelled`,
 	ADD CONSTRAINT `FK_supplier_payment_cash_session` FOREIGN KEY (`cash_session`) REFERENCES `cash_session` (`cash_session_id`);
 	
-CREATE TABLE IF NOT EXISTS `purchase_clearance` (
-  `purchase_clearance_id` int(11) NOT NULL AUTO_INCREMENT,
-  `purchase_order` int(11) NOT NULL,
-  `creation_time` datetime NOT NULL,
-  `modification_time` datetime NOT NULL,
-  `creator` int(11) NOT NULL DEFAULT '0',
-  `updater` int(11) NOT NULL DEFAULT '0',
-  `comment` varchar(250) DEFAULT '',
-  `completed` tinyint(1) NOT NULL DEFAULT '0',
-  `cancelled` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`purchase_clearance_id`),
-  KEY `FK__purchase_order` (`purchase_order`),
-  KEY `FK__employee_creator` (`creator`),
-  KEY `FK__employee_updater` (`updater`),
-  CONSTRAINT `FK__employee_creator` FOREIGN KEY (`creator`) REFERENCES `employee` (`employee_id`),
-  CONSTRAINT `FK__employee_updater` FOREIGN KEY (`updater`) REFERENCES `employee` (`employee_id`),
-  CONSTRAINT `FK__purchase_order` FOREIGN KEY (`purchase_order`) REFERENCES `purchase_order` (`purchase_order_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `fiscal_document_detail_sales_order_detail` (
   `fiscal_document_detail_sales_order_detail_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -281,71 +263,74 @@ CREATE TABLE IF NOT EXISTS `fiscal_document_detail_sales_order_detail` (
   CONSTRAINT `FK_fiscal_document_sales_orders_fiscal_document_detail` FOREIGN KEY (`fiscal_document_detail`) REFERENCES `fiscal_document_detail` (`fiscal_document_detail_id`),
   CONSTRAINT `FK_fiscal_document_sales_orders_sales_order_detail` FOREIGN KEY (`sales_order_detail`) REFERENCES `sales_order_detail` (`sales_order_detail_id`)
 );
-CREATE TABLE IF NOT EXISTS `purchase_clearance` (
-  `purchase_clearance_id` int(11) NOT NULL AUTO_INCREMENT,
-  `purchase_order` int(11) NOT NULL,
-  `supplier` varchar(50) NOT NULL DEFAULT '',
-  `lot_code` varchar(50) NOT NULL DEFAULT '',
-  `creation_time` datetime NOT NULL,
-  `modification_time` datetime NOT NULL,
-  `creator` int(11) NOT NULL DEFAULT '0',
-  `updater` int(11) NOT NULL DEFAULT '0',
-  `comment` varchar(250) DEFAULT '',
-  `commission` decimal(6,4) NOT NULL DEFAULT '0.0000',
-  `completed` tinyint(1) NOT NULL DEFAULT '0',
-  `cancelled` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`purchase_clearance_id`),
-  KEY `FK__purchase_order` (`purchase_order`),
-  KEY `FK__employee_creator` (`creator`),
-  KEY `FK__employee_updater` (`updater`),
-  CONSTRAINT `FK__employee_creator` FOREIGN KEY (`creator`) REFERENCES `employee` (`employee_id`),
-  CONSTRAINT `FK__employee_updater` FOREIGN KEY (`updater`) REFERENCES `employee` (`employee_id`)
+
+CREATE TABLE `purchase_clearance` (
+	`purchase_clearance_id` INT(11) NOT NULL AUTO_INCREMENT,
+	`purchase_order` INT(11) NOT NULL,
+	`supplier` VARCHAR(50) NOT NULL DEFAULT '',
+	`lot_code` VARCHAR(50) NOT NULL DEFAULT '',
+	`creation_time` DATETIME NOT NULL,
+	`modification_time` DATETIME NOT NULL,
+	`creator` INT(11) NOT NULL DEFAULT '0',
+	`updater` INT(11) NOT NULL DEFAULT '0',
+	`comment` VARCHAR(250) NULL DEFAULT '',
+	`commission` DECIMAL(6,4) NOT NULL DEFAULT '0.0000',
+	`completed` TINYINT(1) NOT NULL DEFAULT '0',
+	`cancelled` TINYINT(1) NOT NULL DEFAULT '0',
+	PRIMARY KEY (`purchase_clearance_id`),
+	INDEX `FK__purchase_order` (`purchase_order`),
+	INDEX `FK__employee_creator` (`creator`),
+	INDEX `FK__employee_updater` (`updater`),
+	CONSTRAINT `FK__employee_creator` FOREIGN KEY (`creator`) REFERENCES `employee` (`employee_id`),
+	CONSTRAINT `FK__employee_updater` FOREIGN KEY (`updater`) REFERENCES `employee` (`employee_id`)
 );
 
--- La exportación de datos fue deseleccionada.
-
--- Volcando estructura para tabla mbe_q13.purchase_clearance_detail
-CREATE TABLE IF NOT EXISTS `purchase_clearance_detail` (
-  `purchase_clearance_detail_id` int(11) NOT NULL AUTO_INCREMENT,
-  `purchase_clearance` int(11) NOT NULL,
-  `warehouse` varchar(50) DEFAULT NULL,
-  `quantity` decimal(10,0) DEFAULT NULL,
-  `price` decimal(10,0) DEFAULT NULL,
-  `discount` decimal(10,0) DEFAULT NULL,
-  `tax_rate` decimal(10,0) DEFAULT NULL,
-  `product_code` varchar(50) DEFAULT NULL,
-  `product_name` varchar(50) DEFAULT NULL,
-  `unit_of_measurement` varchar(50) DEFAULT NULL,
-  `exchange_rate` decimal(10,0) DEFAULT NULL,
-  `currency` decimal(10,0) DEFAULT NULL,
-  `tax_included` tinyint(1) NOT NULL DEFAULT '0',
-  `is_charge` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`purchase_clearance_detail_id`),
-  KEY `FK_purchase_clearance_detail_purchase_clearance` (`purchase_clearance`),
-  CONSTRAINT `FK_purchase_clearance_detail_purchase_clearance` FOREIGN KEY (`purchase_clearance`) REFERENCES `purchase_clearance` (`purchase_clearance_id`)
+CREATE TABLE `purchase_clearance_detail` (
+	`purchase_clearance_detail_id` INT(11) NOT NULL AUTO_INCREMENT,
+	`purchase_clearance` INT(11) NOT NULL,
+	`warehouse` VARCHAR(50) NULL DEFAULT NULL,
+	`quantity` DECIMAL(10,0) NULL DEFAULT NULL,
+	`price` DECIMAL(10,0) NULL DEFAULT NULL,
+	`discount` DECIMAL(10,0) NULL DEFAULT NULL,
+	`tax_rate` DECIMAL(10,0) NULL DEFAULT NULL,
+	`product_code` VARCHAR(50) NULL DEFAULT NULL,
+	`product_name` VARCHAR(50) NULL DEFAULT NULL,
+	`unit_of_measurement` VARCHAR(50) NULL DEFAULT NULL,
+	`exchange_rate` DECIMAL(10,0) NULL DEFAULT NULL,
+	`currency` DECIMAL(10,0) NULL DEFAULT NULL,
+	`tax_included` TINYINT(1) NOT NULL DEFAULT '0',
+	`is_charge` TINYINT(1) NOT NULL DEFAULT '1',
+	PRIMARY KEY (`purchase_clearance_detail_id`),
+	INDEX `FK_purchase_clearance_detail_purchase_clearance` (`purchase_clearance`),
+	CONSTRAINT `FK_purchase_clearance_detail_purchase_clearance` FOREIGN KEY (`purchase_clearance`) REFERENCES `purchase_clearance` (`purchase_clearance_id`)
 );
 
--- La exportación de datos fue deseleccionada.
-
--- Volcando estructura para tabla mbe_q13.purchase_clearance_entry
-CREATE TABLE IF NOT EXISTS `purchase_clearance_entry` (
-  `purchase_clearance_entry_id` int(11) NOT NULL AUTO_INCREMENT,
-  `purchase_clearance_detail` int(11) NOT NULL,
-  `product_name` varchar(200) DEFAULT NULL,
-  `quantity` int(11) NOT NULL,
-  `price` decimal(18,7) NOT NULL DEFAULT '0.0000000',
-  `discount` decimal(9,8) NOT NULL DEFAULT '0.00000000',
-  `tax_rate` decimal(5,4) NOT NULL DEFAULT '0.0000',
-  `exchange_rate` decimal(8,4) NOT NULL DEFAULT '0.0000',
-  `currency` int(11) NOT NULL DEFAULT '0',
-  `tax_included` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`purchase_clearance_entry_id`),
-  KEY `FK_purchase_clearance_entry_purchase_clearance_detail` (`purchase_clearance_detail`),
-  CONSTRAINT `FK_purchase_clearance_entry_purchase_clearance_detail` FOREIGN KEY (`purchase_clearance_detail`) REFERENCES `purchase_clearance_detail` (`purchase_clearance_detail_id`)
-) ;
+CREATE TABLE `purchase_clearance_entry` (
+	`purchase_clearance_entry_id` INT(11) NOT NULL AUTO_INCREMENT,
+	`purchase_clearance_detail` INT(11) NOT NULL,
+	`product_name` VARCHAR(200) NULL DEFAULT NULL,
+	`quantity` INT(11) NOT NULL,
+	`price` DECIMAL(18,7) NOT NULL DEFAULT '0.0000000',
+	`discount` DECIMAL(9,8) NOT NULL DEFAULT '0.00000000',
+	`tax_rate` DECIMAL(5,4) NOT NULL DEFAULT '0.0000',
+	`exchange_rate` DECIMAL(8,4) NOT NULL DEFAULT '0.0000',
+	`currency` INT(11) NOT NULL DEFAULT '0',
+	`tax_included` TINYINT(1) NOT NULL DEFAULT '0',
+	PRIMARY KEY (`purchase_clearance_entry_id`),
+	INDEX `FK_purchase_clearance_entry_purchase_clearance_detail` (`purchase_clearance_detail`),
+	CONSTRAINT `FK_purchase_clearance_entry_purchase_clearance_detail` FOREIGN KEY (`purchase_clearance_detail`) REFERENCES `purchase_clearance_detail` (`purchase_clearance_detail_id`)
+);
 
 ALTER TABLE `expense_voucher`
 	ADD COLUMN `purchase_order` INT NULL AFTER `cancelled`;
+	
+ALTER TABLE `purchase_order`
+	ADD COLUMN `lot_number` VARCHAR(12) NULL DEFAULT '' AFTER `invoice_number`;
+	
+ALTER TABLE `supplier_payment`
+	ADD COLUMN `purchase_order` INT NULL AFTER `supplier`,
+	ADD CONSTRAINT `FK_supplier_payment_purchase_order` FOREIGN KEY (`purchase_order`) REFERENCES `purchase_order` (`purchase_order_id`);
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

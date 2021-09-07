@@ -45,7 +45,7 @@
             @Html.DisplayFor(x => item.Quantity)
         </td>
         <td colspan="2">
-            @Html.DisplayFor(x => item.ProductName)
+            @Html.DisplayFor(x => item.ProductName) @Html.DisplayFor(x => item.Lot.LotNumber)
         </td>
         <td class="line number" rowspan="2">
             @Html.DisplayFor(x => item.Total)
