@@ -507,6 +507,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			success = decimal.TryParse (value.Trim (), out val);
 
 			if (success) {
+				if (entity.Currency == WebConfig.BaseCurrency) {
+					Response.StatusCode = 400;
+					return Content (Resources.Message_InvalidBaseExchangeRate);
+				}
+
 				if (val <= 0m) {
 					Response.StatusCode = 400;
 					return Content (Resources.Message_InvalidExchangeRate);

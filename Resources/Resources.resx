@@ -1559,6 +1559,9 @@ Realizada el: {0:d}</value>
   <data name="Message_InvalidExchangeRate" xml:space="preserve">
     <value>No se ha establecido un tipo de cambio válido.</value>
   </data>
+  <data name="Message_InvalidBaseExchangeRate" xml:space="preserve">
+    <value>El tipo de cambio para la moneda base no se puede modificar.</value>
+  </data>
   <data name="Other" xml:space="preserve">
     <value>Otro</value>
   </data>

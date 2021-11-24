@@ -2921,6 +2921,12 @@ namespace Mictlanix.BE {
             }
         }
         
+        public static string Message_InvalidBaseExchangeRate {
+            get {
+                return ResourceManager.GetString("Message_InvalidBaseExchangeRate", resourceCulture);
+            }
+        }
+        
         public static string Other {
             get {
                 return ResourceManager.GetString("Other", resourceCulture);
