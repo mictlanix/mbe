@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33424.131
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{36C5FC21-C386-4494-B93D-C6239075DFEB}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -11,6 +13,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mictlanix.BE.Model", "Model\Mictlanix.BE.Model.csproj", "{F9363BAC-A7BB-4A77-81E0-892C8CCCD297}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mictlanix.BE.Resources", "Resources\Mictlanix.BE.Resources.csproj", "{CBB1BA70-351E-4009-86FB-484810DC6364}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "..\dfacture-client\test\Test.csproj", "{58B28C7C-DBEC-4FFD-94EF-243710F70A6D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mictlanix.DFactureClient", "..\dfacture-client\src\Mictlanix.DFactureClient\Mictlanix.DFactureClient.csproj", "{9CAAE36D-F2B9-41CC-8AB3-F02C5A49229E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mictlanix.CFDLib", "..\cfdlib\src\Mictlanix.CFDLib.csproj", "{63EBACD8-7BB0-480F-81BF-5E0690B27112}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,9 +38,27 @@ Global
 		{CBB1BA70-351E-4009-86FB-484810DC6364}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBB1BA70-351E-4009-86FB-484810DC6364}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CBB1BA70-351E-4009-86FB-484810DC6364}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58B28C7C-DBEC-4FFD-94EF-243710F70A6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58B28C7C-DBEC-4FFD-94EF-243710F70A6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58B28C7C-DBEC-4FFD-94EF-243710F70A6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58B28C7C-DBEC-4FFD-94EF-243710F70A6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CAAE36D-F2B9-41CC-8AB3-F02C5A49229E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CAAE36D-F2B9-41CC-8AB3-F02C5A49229E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CAAE36D-F2B9-41CC-8AB3-F02C5A49229E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CAAE36D-F2B9-41CC-8AB3-F02C5A49229E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63EBACD8-7BB0-480F-81BF-5E0690B27112}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63EBACD8-7BB0-480F-81BF-5E0690B27112}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63EBACD8-7BB0-480F-81BF-5E0690B27112}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63EBACD8-7BB0-480F-81BF-5E0690B27112}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{58B28C7C-DBEC-4FFD-94EF-243710F70A6D} = {36C5FC21-C386-4494-B93D-C6239075DFEB}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {45B70545-7E4A-4918-83A9-31B7FC21B746}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0

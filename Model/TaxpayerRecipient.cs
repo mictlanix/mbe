@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CustomerTaxpayer.cs
 // 
 // Author:
@@ -57,6 +57,22 @@ namespace Mictlanix.BE.Model {
 		[StringLength (80, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		[Display (Name = "Email", ResourceType = typeof (Resources))]
 		public virtual string Email { get; set; }
+
+		[Property ("regime", Update = false, Insert = false)]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[Display (Name = "TaxRegime", ResourceType = typeof (Resources))]
+		[UIHint ("TaxRegimeSelector")]
+		public virtual string RegimeId { get; set; }
+
+		[BelongsTo ("regime")]
+		[Display (Name = "TaxRegime", ResourceType = typeof (Resources))]
+		public virtual SatTaxRegime Regime { get; set; }
+
+		[Property ("postal_code")]
+		[Display (Name = "PostalCodeFiscal", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[RegularExpression (@"^\d{5}$", ErrorMessageResourceName = "Validation_DigitsOnly", ErrorMessageResourceType = typeof (Resources))]
+		public virtual string PostalCode { get; set; }
 
 		#region Override Base Methods
 
