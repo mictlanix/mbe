@@ -1,4 +1,4 @@
-﻿// 
+// 
 // TaxpayerRecipientsController.cs
 // 
 // Author:
@@ -91,12 +91,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public ActionResult Create ()
 		{
-			return PartialView ("_Create");
+			return PartialView ("_Create", new TaxpayerRecipient ());
 		}
 
 		[HttpPost]
 		public ActionResult Create (TaxpayerRecipient item)
 		{
+			item.Regime = SatTaxRegime.TryFind (item.RegimeId);
+
 			if (!string.IsNullOrEmpty (item.Id)) {
 				var entity = TaxpayerRecipient.TryFind (item.Id);
 
@@ -112,6 +114,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.Id = item.Id.ToUpper ().Trim ();
 			item.Name = item.Name?.Trim ();
 			item.Email = item.Email.Trim ();
+			
 
 			if (string.IsNullOrWhiteSpace (item.Name)) {
 				item.Name = null;
@@ -141,14 +144,21 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		[HttpPost]
 		public ActionResult Edit (TaxpayerRecipient item)
 		{
+			
+
 			if (!ModelState.IsValid) {
 				return PartialView ("_Edit", item);
 			}
+
+			item.Regime = SatTaxRegime.TryFind (item.RegimeId);
 
 			var entity = TaxpayerRecipient.Find (item.Id);
 
 			entity.Name = item.Name?.Trim ();
 			entity.Email = item.Email.Trim ();
+			entity.Regime = item.Regime;
+			entity.RegimeId = item.RegimeId;
+			entity.PostalCode = item.PostalCode.Trim ();
 
 			if (string.IsNullOrWhiteSpace (item.Name)) {
 				item.Name = null;
@@ -182,6 +192,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			return PartialView ("_DeleteSuccesful", item);
+		}
+		public JsonResult Regimes (string pattern)
+		{
+			var query = from x in SatTaxRegime.Queryable
+				    where x.Id.Contains (pattern) || x.Description.Contains (pattern)
+				    select new { id = x.Id, name = x.Description };
+
+			return Json (query.Take (15), JsonRequestBehavior.AllowGet);
 		}
 	}
 }

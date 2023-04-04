@@ -2501,4 +2501,13 @@ Atte: {1}.</value>
   <data name="CFDI_RelationType_AdvancePayment" xml:space="preserve">
     <value>07 : CFDI por Aplicación de Anticipo</value>
   </data>
+  <data name="PostalCodeFiscal" xml:space="preserve">
+    <value>Dom. Fiscal (C.P.)</value>
+  </data>
+  <data name="Reason" xml:space="preserve">
+    <value>Motivo de cancelación</value>
+  </data>
+  <data name="CancellationSubstitution" xml:space="preserve">
+    <value>Sustituye por</value>
+  </data>
 </root>
