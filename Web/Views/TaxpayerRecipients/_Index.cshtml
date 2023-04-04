@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
@@ -10,20 +10,25 @@
     ViewBag.Privilege = Privilege;
 }
 
-<table id='taxpayers'>
-    <tr>
-        <th>@Resources.TaxpayerId</th>
-        <th>@Resources.TaxpayerName</th>
-        <th>@Resources.Email</th>
-        <th></th>
-    </tr>
-@foreach (var item in Model.Results) {
-    @Html.Partial("_Item", item)
-}
-</table>
-<div class="buttons right">
-	<label class='button left'>@Model.ToString()</label>@if (Model.HasPrev) {<a class='button middle icon prev icon-only paging' title='@Resources.PrevPage' href='javascript:void(0)'></a>}@if (Model.HasNext) {<a class='button right icon next icon-only paging' title='@Resources.NextPage' href='javascript:void(0)'></a>}
-</div>
+	<table id='taxpayers'>
+		<tr>
+			<th>@Resources.TaxpayerId</th>
+			<th>@Resources.TaxpayerName</th>
+			<th>@Resources.TaxRegime</th>
+			<th>@Resources.Email</th>
+			<th></th>
+		</tr>
+		@foreach (var item in Model.Results)
+		{
+			@Html.Partial("_Item", item)
+		}
+	</table>
+	<div class="buttons right">
+		<label class='button left'>@Model.ToString()</label>@if (Model.HasPrev)
+		{<a class='button middle icon prev icon-only paging' title='@Resources.PrevPage' href='javascript:void(0)'></a>}@if (Model.HasNext)
+		{<a class='button right icon next icon-only paging' title='@Resources.NextPage' href='javascript:void(0)'></a>}
+	</div>
+
 <script type='text/javascript'>
 bindModal('.open-modal');
 $('a.paging').click(function (e) {

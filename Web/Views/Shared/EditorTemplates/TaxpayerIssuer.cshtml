@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @model TaxpayerIssuer
 
@@ -14,8 +14,11 @@
 ul.token-input-list { width: 100%; }
 </style>
 <script type="text/javascript">
-$("#Id").css('text-transform', 'uppercase');
+    $("#Id").css('text-transform', 'uppercase');
+    $(document).ready(function () {
 @if (Model.Regime != null) {
-<text>$("#RegimeId").tokenInput("add", { id: "@Model.Regime.Id", name: "@Model.Regime.Description"});</text>
+<text>$("#RegimeId").tokenInput("add", { id: "@Model.Regime.Id", name: "@Model.Regime.Description" });</text>
 }
+	});
+
 </script>

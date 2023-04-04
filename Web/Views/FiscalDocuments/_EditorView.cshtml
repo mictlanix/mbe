@@ -9,135 +9,167 @@
 <fieldset>
 	<div class='row'>
 		<div class='col-xs-8'>
-	  		<dl class=''>
+			<dl class=''>
 				<dt>@Resources.Issuer</dt>
 				<dd>
-			        <a id='issuer' data-type='select2' data-placement='right' data-pk='@Model.Id' 
-			        	data-value='@Model.Issuer.Id' data-url='@Url.Action("SetIssuer", new { id = Model.Id })'
-			        	data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
-			        	@Html.DisplayFor(x => x.Issuer, "String")
-			        </a>
+					<a id='issuer' data-type='select2' data-placement='right' data-pk='@Model.Id'
+					   data-value='@Model.Issuer.Id' data-url='@Url.Action("SetIssuer", new { id = Model.Id })'
+					   data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+						@Html.DisplayFor(x => x.Issuer, "String")
+					</a>
 				</dd>
 				<dt>@Resources.Customer</dt>
 				<dd>
-			        <a id='customer' data-type='select2' data-placement='right' data-pk='@Model.Id' 
-			        	data-value='@Model.Customer.Id' data-url='@Url.Action("SetCustomer", new { id = Model.Id })'
-			        	data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
-			        	@Html.DisplayFor(x => x.Customer.Name)
-			        </a>
-			    </dd>
+					<a id='customer' data-type='select2' data-placement='right' data-pk='@Model.Id'
+					   data-value='@Model.Customer.Id' data-url='@Url.Action("SetCustomer", new { id = Model.Id })'
+					   data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+						@Html.DisplayFor(x => x.Customer.Name)
+					</a>
+				</dd>
 				<dt>@Resources.Recipient</dt>
 				<dd>
-			        <a id='recipient' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id'
-			        	data-value='@Model.Recipient' data-source='@Url.Action("Recipients", new { id = Model.Id })'
-			        	data-source-cache='false' data-url='@Url.Action("SetRecipient", new { id = Model.Id })'
-			        	data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
-			        	@Html.DisplayFor(x => x.Recipient)
-                    @if(!string.IsNullOrWhiteSpace (@Model.RecipientName)) {
-                        <text>(@Model.RecipientName)</text>
-                    }
-			        </a>
+					<a id='recipient' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id'
+					   data-value='@Model.Recipient' data-source='@Url.Action("Recipients", new { id = Model.Id })'
+					   data-source-cache='false' data-url='@Url.Action("SetRecipient", new { id = Model.Id })'
+					   data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+						@Html.DisplayFor(x => x.Recipient)
+						@if (!string.IsNullOrWhiteSpace(@Model.RecipientName))
+						{
+							<text>(@Model.RecipientName)</text>
+						}
+					</a>
 				</dd>
-                <dt>@Resources.CfdiUsage</dt>
-                <dd>
-                    <a id='usage' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id' 
-                        data-value='@Model.Usage.Id' data-source='@Url.Action("Usages")'
-                        data-url='@Url.Action("SetUsage", new { id = Model.Id })'
-                        data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
-                        @Html.DisplayFor(x => x.Usage.Description)
-                    </a>
-                </dd>
+				<dt>@Resources.CfdiUsage</dt>
+				<dd>
+					<a id='usage' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id'
+					   data-value='@Model.Usage.Id' data-source='@Url.Action("Usages")'
+					   data-url='@Url.Action("SetUsage", new { id = Model.Id })'
+					   data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+						@Html.DisplayFor(x => x.Usage.Description)
+					</a>
+				</dd>
+
 				<dt>@Resources.Reference</dt>
 				<dd>
-			        <a class='editable' data-type='text' data-placement='right' data-pk='@Model.Id' 
-			        	data-value='@Model.Reference' data-url='@Url.Action("SetReference", new { id = Model.Id })'
-			        	data-inputclass='input-large' data-emptytext='@Resources.Empty'>
-			        	@Html.DisplayFor(x => x.Reference)
-			        </a>
+					<a class='editable' data-type='text' data-placement='right' data-pk='@Model.Id'
+					   data-value='@Model.Reference' data-url='@Url.Action("SetReference", new { id = Model.Id })'
+					   data-inputclass='input-large' data-emptytext='@Resources.Empty'>
+						@Html.DisplayFor(x => x.Reference)
+					</a>
 				</dd>
 			</dl>
+			<div class='row'>
+				<div class='col-xs-12'>
+					<div class='row'>
+						<div class='col-xs-3'>
+							<b>@Resources.TaxRegime:</b>
+						</div>
+						<div class='col-xs-8'>
+							@Html.DisplayFor(x => x.TaxpayerRegime.Id)	-@Html.DisplayFor(x => x.TaxpayerRegime.Description)
+						</div>
+					</div>
+				</div>
+				<div class='col-xs-12'>
+					<div class='row'>
+						<div class='col-xs-3'>
+							<b>@Resources.PostalCodeFiscal:</b>
+						</div>
+						<div class='col-xs-8'>
+							@Html.DisplayFor(x => x.TaxpayerPostalCode)
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
-	  	<div class='col-xs-4'>
-	  		<dl class='dl-horizontal'>
-				<dt>@Resources.Id</dt>
-				<dd>@Html.DisplayFor(x => x.Id)</dd>
-				<dt>@Resources.Type</dt>
-				<dd id='type'>@Model.Type.GetDisplayName()</dd>
-				<dt>@Resources.Batch</dt>
-				<dd>
-			        <a id='batch' class='editable' data-type='select' data-placement='left' data-pk='@Model.Id'
-			        	data-value='@Model.Batch' data-source='@Url.Action("Batches", new { id = Model.Id })'
-			        	data-source-cache='false' data-url='@Url.Action("SetBatch", new { id = Model.Id })'
-			        	data-emptytext='@Resources.Empty'>
-			        	@Html.DisplayFor(x => x.Batch)
-			        </a>
-		        </dd>
-				<dt>@Resources.Currency</dt>
-				<dd>
-			        <a class='editable currency' data-type='select' data-placement='left' data-pk='@Model.Id'
-			        	data-value='@((int)Model.Currency)' data-source='@Url.Action("Currencies", "ExchangeRates")'
-			        	data-url='@Url.Action("SetCurrency", new { id = Model.Id })'
-			        	data-emptytext='@Resources.Empty'>
-			        	@Html.DisplayFor(x => x.Currency)
-			        </a>
-				</dd>
-				<dt>@Resources.ExchangeRate</dt>
-				<dd>
-			        <a id='exchange-rate' class='editable' data-type='text' data-placement='left' data-pk='@Model.Id' 
-			        	data-value='@Html.DisplayFor(x => x.ExchangeRate)' data-url='@Url.Action("SetExchangeRate", new { id = Model.Id })'
-			        	data-inputclass='input-mini' data-emptytext='@Resources.Empty'>
-			        	@Html.DisplayFor(x => x.ExchangeRate)
-			        </a>
-				</dd>
-                <dt>@Resources.PaymentTerms</dt>
-                <dd>
-                    <a id='terms' class='editable' data-type='select' data-placement='left' data-pk='@Model.Id' 
-                        data-value='@((int)Model.Terms)' data-source='@Url.Action("Terms")'
-                        data-url='@Url.Action("SetTerms", new { id = Model.Id })'
-                        data-emptytext='@Resources.Empty'>
-                        @if(Model.Terms == PaymentTerms.Immediate){
-                            <text>@Resources.SinglePayment</text>
-                        } else if(Model.Terms == PaymentTerms.NetD){
-                            <text>@Resources.InstallmentPayments</text>
-                        }
-                    </a>
-                </dd>
-				<dt>@Resources.PaymentMethod</dt>
-				<dd>
-			        <a id='payment-method' class='editable' data-type='select' data-placement='left' data-pk='@Model.Id'
-			        	data-value='@((int)Model.PaymentMethod)' data-source='@Url.Action("AllPaymentMethods")'
-			        	data-url='@Url.Action("SetPaymentMethod", new { id = Model.Id })'
-			        	data-inputclass='input-large' data-emptytext='@Resources.Empty'>
-			        	@Model.PaymentMethod.GetDisplayName()
-			        </a>
-				</dd>
-                @if(Model.Type == FiscalDocumentType.AdvancePaymentsApplied) {
-                    <dt>@Resources.RelationType</dt>
-                    <dd>@Resources.CFDI_RelationType_AdvancePayment</dd>
-                } else if (Model.Type == FiscalDocumentType.CreditNote) {
-                    <dt>@Resources.RelationType</dt>
-                    <dd>@Resources.CFDI_RelationType_CreditNote</dd>
-                } else {
-                    <dt>@Resources.RetentionRate</dt>
-                    <dd>
-                        <a class='editable tax' data-type='select' data-placement='right' data-autotext='never'
-                        data-source='@Url.Action("RetentionRates", "Pricing")' data-pk='@Model.Id' data-value='@Model.RetentionRate.ToString("0.####")'
-                        data-url='@Url.Action("SetRetentionRate", new { id = Model.Id })'>@Html.DisplayFor(x => x.RetentionRate)</a>
-                    </dd>
-                    <dt>@Resources.LocalRetentionRate</dt>
-                    <dd>
-                        <a class='editable tax' data-type='select' data-placement='right' data-autotext='never'
-                        data-source='@Url.Action("LocalRetentionRates", "Pricing")' data-pk='@Model.Id' data-value='@Model.LocalRetentionRate.ToString("0.####")'
-                        data-url='@Url.Action("SetLocalRetentionRate", new { id = Model.Id })'>@Html.DisplayFor(x => x.RetentionRate)</a>
-                    </dd>
-                }
-			</dl>
-  		</div>
-	</div>
+			<div class='col-xs-4'>
+				<dl class='dl-horizontal'>
+					<dt>@Resources.Id</dt>
+					<dd>@Html.DisplayFor(x => x.Id)</dd>
+					<dt>@Resources.Type</dt>
+					<dd id='type'>@Model.Type.GetDisplayName()</dd>
+					<dt>@Resources.Batch</dt>
+					<dd>
+						<a id='batch' class='editable' data-type='select' data-placement='left' data-pk='@Model.Id'
+						   data-value='@Model.Batch' data-source='@Url.Action("Batches", new { id = Model.Id })'
+						   data-source-cache='false' data-url='@Url.Action("SetBatch", new { id = Model.Id })'
+						   data-emptytext='@Resources.Empty'>
+							@Html.DisplayFor(x => x.Batch)
+						</a>
+					</dd>
+					<dt>@Resources.Currency</dt>
+					<dd>
+						<a class='editable currency' data-type='select' data-placement='left' data-pk='@Model.Id'
+						   data-value='@((int)Model.Currency)' data-source='@Url.Action("Currencies", "ExchangeRates")'
+						   data-url='@Url.Action("SetCurrency", new { id = Model.Id })'
+						   data-emptytext='@Resources.Empty'>
+							@Html.DisplayFor(x => x.Currency)
+						</a>
+					</dd>
+					<dt>@Resources.ExchangeRate</dt>
+					<dd>
+						<a id='exchange-rate' class='editable' data-type='text' data-placement='left' data-pk='@Model.Id'
+						   data-value='@Html.DisplayFor(x => x.ExchangeRate)' data-url='@Url.Action("SetExchangeRate", new { id = Model.Id })'
+						   data-inputclass='input-mini' data-emptytext='@Resources.Empty'>
+							@Html.DisplayFor(x => x.ExchangeRate)
+						</a>
+					</dd>
+					<dt>@Resources.PaymentTerms</dt>
+					<dd>
+						<a id='terms' class='editable' data-type='select' data-placement='left' data-pk='@Model.Id'
+						   data-value='@((int)Model.Terms)' data-source='@Url.Action("Terms")'
+						   data-url='@Url.Action("SetTerms", new { id = Model.Id })'
+						   data-emptytext='@Resources.Empty'>
+							@if (Model.Terms == PaymentTerms.Immediate)
+							{
+								<text>@Resources.SinglePayment</text>
+							}
+							else if (Model.Terms == PaymentTerms.NetD)
+							{
+								<text>@Resources.InstallmentPayments</text>
+							}
+						</a>
+					</dd>
+					<dt>@Resources.PaymentMethod</dt>
+					<dd>
+						<a id='payment-method' class='editable' data-type='select' data-placement='left' data-pk='@Model.Id'
+						   data-value='@((int)Model.PaymentMethod)' data-source='@Url.Action("AllPaymentMethods")'
+						   data-url='@Url.Action("SetPaymentMethod", new { id = Model.Id })'
+						   data-inputclass='input-large' data-emptytext='@Resources.Empty'>
+							@Model.PaymentMethod.GetDisplayName()
+						</a>
+					</dd>
+					@if (Model.Type == FiscalDocumentType.AdvancePaymentsApplied)
+					{
+						<dt>@Resources.RelationType</dt>
+						<dd>@Resources.CFDI_RelationType_AdvancePayment</dd>
+					}
+					else if (Model.Type == FiscalDocumentType.CreditNote)
+					{
+						<dt>@Resources.RelationType</dt>
+						<dd>@Resources.CFDI_RelationType_CreditNote</dd>
+					}
+					else
+					{
+						<dt>@Resources.RetentionRate</dt>
+						<dd>
+							<a class='editable tax' data-type='select' data-placement='right' data-autotext='never'
+							   data-source='@Url.Action("RetentionRates", "Pricing")' data-pk='@Model.Id' data-value='@Model.RetentionRate.ToString("0.####")'
+							   data-url='@Url.Action("SetRetentionRate", new { id = Model.Id })'>@Html.DisplayFor(x => x.RetentionRate)</a>
+						</dd>
+						<dt>@Resources.LocalRetentionRate</dt>
+						<dd>
+							<a class='editable tax' data-type='select' data-placement='right' data-autotext='never'
+							   data-source='@Url.Action("LocalRetentionRates", "Pricing")' data-pk='@Model.Id' data-value='@Model.LocalRetentionRate.ToString("0.####")'
+							   data-url='@Url.Action("SetLocalRetentionRate", new { id = Model.Id })'>@Html.DisplayFor(x => x.RetentionRate)</a>
+						</dd>
+					}
+				</dl>
+			</div>
+		</div>
 @if(Privilege.AllowDelete && !Model.IsCancelled) {
 	<div class='row'>
   		<div class='col-xs-12'>
-	    @using (Html.BeginForm("Cancel", "FiscalDocuments", new { id =  Model.Id }, FormMethod.Post, new { @class = "modal-form pull-right" })) {
+	    @using (Html.BeginForm("CancelNoReason", "FiscalDocuments", new { id =  Model.Id }, FormMethod.Post, new { @class = "modal-form pull-right" })) {
 			<button type="submit" class="icon cancel">@Resources.Cancel</button>
 	    }
   		</div>
