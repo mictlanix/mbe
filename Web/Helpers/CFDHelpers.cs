@@ -132,14 +132,8 @@ namespace Mictlanix.BE.Web.Helpers {
 							uuidRelated:"");
 		
 			} catch (DFactureClientException ex) {
-				if (ex.Code == "202") { // UUID Previamente cancelado
-					return true;
-				}
-
 				throw ex;
 			}
-			
-			return true;
 		}
 
 		public static bool PrivateKeyTest (byte [] data, byte [] password)
