@@ -7,6 +7,7 @@ ADD `cancellation_reason` varchar(250) DEFAULT NULL,
 ADD `cancellation_substitution` varchar(250) DEFAULT NULL,
 ADD `taxpayer_regime` varchar(3) DEFAULT NULL,
 ADD `taxpayer_postal_code` varchar(5) DEFAULT NULL,
+ADD `rfc_pac` varchar(13) DEFAULT NULL,
 ADD `taxpayer_regime_name` varchar(250) DEFAULT NULL;
 
 INSERT INTO sat_tax_regime (`sat_tax_regime_id`, `description`) VALUES ('000', 'No capturado');
