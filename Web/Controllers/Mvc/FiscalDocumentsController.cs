@@ -1473,6 +1473,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					entity.AuthorityDigitalSeal = tfd.SelloSAT;
 					entity.AuthorityCertificateNumber = tfd.NoCertificadoSAT;
 					entity.OriginalString = tfd.ToString ();
+					entity.RfcPac = tfd.RfcProvCertif;
 					break;
 				}
 			}
@@ -1545,7 +1546,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
 			}
-
+			//fixme successful
 			return RedirectToAction ("Index");
 		}
 

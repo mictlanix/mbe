@@ -5014,6 +5014,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to RFC del proveedor de certificación.
+        /// </summary>
+        public static string RfcPac {
+            get {
+                return ResourceManager.GetString("RfcPac", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clabe Interbancaria.
         /// </summary>
         public static string RoutingNumber {
