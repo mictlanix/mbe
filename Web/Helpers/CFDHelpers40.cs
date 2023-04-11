@@ -98,13 +98,8 @@ namespace Mictlanix.BE.Web.Helpers40 {
 							reason:item.CancellationReason.Id,
 							uuidRelated:item.CancellationSubstitution);
 			} catch (DFactureClientException40 ex) {
-				if (ex.Code == "202") { // UUID Previamente cancelado
-					return true;
-				}
-
 				throw ex;
 			}
-			
 		}
 
 		public static bool PrivateKeyTest (byte [] data, byte [] password)
