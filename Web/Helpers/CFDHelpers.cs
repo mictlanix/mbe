@@ -386,7 +386,7 @@ namespace Mictlanix.BE.Web.Helpers {
 				}
 
 				cfd.Complemento.Add (new ImpuestosLocales {
-					TotaldeRetenciones = 76.50m,
+					TotaldeRetenciones = implocal.Importe,
 					RetencionesLocales = new ImpuestosLocalesRetencionesLocales [] {
 						implocal
 					}

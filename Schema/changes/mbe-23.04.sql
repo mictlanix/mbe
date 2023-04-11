@@ -1,22 +1,21 @@
 ALTER TABLE taxpayer_recipient
-ADD `postal_code` varchar(5) DEFAULT NULL,
-ADD `regime` varchar(3) DEFAULT '000';
+    ADD `postal_code` varchar(5) COLLATE utf8_unicode_ci DEFAULT NULL,
+    ADD `regime` varchar(3) COLLATE utf8_unicode_ci DEFAULT NULL;
 
 ALTER TABLE fiscal_document
-ADD `cancellation_reason` varchar(250) DEFAULT NULL,
-ADD `cancellation_substitution` varchar(250) DEFAULT NULL,
-ADD `taxpayer_regime` varchar(3) DEFAULT NULL,
-ADD `taxpayer_postal_code` varchar(5) DEFAULT NULL,
-ADD `rfc_pac` varchar(13) DEFAULT NULL,
-ADD `taxpayer_regime_name` varchar(250) DEFAULT NULL;
-
-INSERT INTO sat_tax_regime (`sat_tax_regime_id`, `description`) VALUES ('000', 'No capturado');
+    ADD `cancellation_reason` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
+    ADD `cancellation_substitution` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
+    ADD `taxpayer_regime` varchar(3) COLLATE utf8_unicode_ci DEFAULT NULL,
+    ADD `taxpayer_postal_code` varchar(5) COLLATE utf8_unicode_ci DEFAULT NULL,
+    ADD `rfc_pac` varchar(13) COLLATE utf8_unicode_ci DEFAULT NULL,
+    ADD `taxpayer_regime_name` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL;
 
 CREATE TABLE sat_reason_cancellation (
-    sat_reason_cancellation_id VARCHAR(2) NOT NULL,
-    description VARCHAR(100),
+    sat_reason_cancellation_id VARCHAR(2) COLLATE utf8_unicode_ci NOT NULL,
+    description VARCHAR(100) COLLATE utf8_unicode_ci,
     PRIMARY KEY (sat_reason_cancellation_id)
-);
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 INSERT INTO sat_reason_cancellation (sat_reason_cancellation_id, description)
 VALUES ('01', 'Comprobantes emitidos con errores con relación.'),
        ('02', 'Comprobantes emitidos con errores sin relación.'),

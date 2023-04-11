@@ -27,19 +27,16 @@
 //
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Text;
 using Mictlanix.BE.Model;
+using Mictlanix.BE.Web.Helpers;
 using Mictlanix.CFDv40;
 using Mictlanix.DFacture.Client40;
-using System.Text;
-using System.Security.Cryptography.X509Certificates;
-using Mictlanix.BE.Web.Helpers;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
-using Mictlanix.CFDLib.Addendas.Mabe;
-using System.Data;
 
 namespace Mictlanix.BE.Web.Helpers40 {
-	internal static class CFDHelpers40 {
+		internal static class CFDHelpers40 {
 
 		public static Comprobante IssueCFD (FiscalDocument item)
 		{
@@ -470,7 +467,10 @@ namespace Mictlanix.BE.Web.Helpers40 {
 					Impuesto = c_Impuesto.IVA,
 					TipoFactor = c_TipoFactor.Tasa,
 					TasaOCuota = 0.000000m,
-					Importe = 0.00m
+					TasaOCuotaSpecified = true,
+					Base = 0.00m,
+					Importe = 0.00m,
+					ImporteSpecified = true
 				});
 			}
 
@@ -479,10 +479,10 @@ namespace Mictlanix.BE.Web.Helpers40 {
 					Impuesto = c_Impuesto.IVA,
 					TipoFactor = c_TipoFactor.Tasa,
 					TasaOCuota = WebConfig.DefaultVAT,
-					 TasaOCuotaSpecified =true,
-					Base = cfd.Conceptos.Where (x => x.Impuestos != null).Sum (c => c.Impuestos.Traslados.Where (x => x.TasaOCuota == WebConfig.DefaultVAT).Sum (x => x.Base)),
+					TasaOCuotaSpecified = true,
+					Base = Model.ModelHelpers.TotalRounding (cfd.Conceptos.Where (x => x.Impuestos != null).Sum (c => c.Impuestos.Traslados.Where (x => x.TasaOCuota == WebConfig.DefaultVAT).Sum (x => x.Base))),
 					Importe = cfd.Conceptos.Where (x => x.Impuestos != null).Sum (c => c.Impuestos.Traslados.Where (x => x.TasaOCuota == WebConfig.DefaultVAT).Sum (x => x.Importe)),
-					ImporteSpecified=true
+					ImporteSpecified = true
 				});
 			}
 
@@ -515,7 +515,7 @@ namespace Mictlanix.BE.Web.Helpers40 {
 				}
 
 				cfd.Complemento.Add (new ImpuestosLocales {
-					TotaldeRetenciones = 76.50m,
+					TotaldeRetenciones = implocal.Importe,
 					RetencionesLocales = new ImpuestosLocalesRetencionesLocales [] {
 						implocal
 					}
