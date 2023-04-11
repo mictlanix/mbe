@@ -1778,6 +1778,9 @@ Realizada el: {0:d}</value>
   <data name="FiscalDocumentLegendV3" xml:space="preserve">
     <value>Este documento es una representación impresa de un CFDI.</value>
   </data>
+  <data name="FiscalDocumentLegendV4" xml:space="preserve">
+    <value>Este documento es una representación impresa de un CFDI.</value>
+  </data>
   <data name="SalesOrderDate" xml:space="preserve">
     <value>Fecha del Pedido</value>
   </data>
