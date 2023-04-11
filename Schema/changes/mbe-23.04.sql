@@ -22,6 +22,9 @@ VALUES ('01', 'Comprobantes emitidos con errores con relación.'),
        ('03', 'No se llevó a cabo la operación.'),
        ('04', 'Operación nominativa relacionada en una factura global.');
 
+ALTER TABLE `sat_cfdi_usage` 
+	CHANGE COLUMN `sat_cfdi_usage_id` `sat_cfdi_usage_id` VARCHAR(4) NOT NULL;
+
 INSERT INTO sat_cfdi_usage (sat_cfdi_usage_id, description)
 VALUES ('S01', 'Sin Obligaciones Fiscales'),
        ('CP01', 'Pagos'),
