@@ -391,5 +391,9 @@ namespace Mictlanix.BE.Model {
 		[Property ("taxpayer_postal_code")]
 		[Display (Name = "TaxpayerPostalCode", ResourceType = typeof (Resources))]
 		public virtual string TaxpayerPostalCode { get; set; }
+
+		[Property ("rfc_pac")]
+		[Display (Name = "RfcPac", ResourceType = typeof (Resources))]
+		public virtual string RfcPac { get; set; }
 	}
 }

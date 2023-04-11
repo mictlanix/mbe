@@ -2510,4 +2510,7 @@ Atte: {1}.</value>
   <data name="CancellationSubstitution" xml:space="preserve">
     <value>Sustituye por</value>
   </data>
+  <data name="RfcPac" xml:space="preserve">
+    <value>RFC del proveedor de certificación</value>
+  </data>
 </root>

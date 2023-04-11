@@ -35,6 +35,8 @@ using System.Text;
 using System.Security.Cryptography.X509Certificates;
 using Mictlanix.BE.Web.Helpers;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
+using Mictlanix.CFDLib.Addendas.Mabe;
+using System.Data;
 
 namespace Mictlanix.BE.Web.Helpers40 {
 	internal static class CFDHelpers40 {
@@ -520,8 +522,14 @@ namespace Mictlanix.BE.Web.Helpers40 {
 				});
 			}
 			
-			if (item.Relations.Any ()) {
+			if (item.Relations.Any ()) {				
+
+				//master node
+				ComprobanteCfdiRelacionados [] cFdV40ComprobanteCfdiRelacionados = new ComprobanteCfdiRelacionados [1];
+
+				//object
 				var rels = new ComprobanteCfdiRelacionados {
+					//list
 					CfdiRelacionado = new ComprobanteCfdiRelacionadosCfdiRelacionado [item.Relations.Count]
 				};
 
@@ -534,13 +542,19 @@ namespace Mictlanix.BE.Web.Helpers40 {
 				}
 
 				i = 0;
+
+				//fill the list of the object
 				foreach (var relation in item.Relations) {
 					rels.CfdiRelacionado [i++] = new ComprobanteCfdiRelacionadosCfdiRelacionado {
 						UUID = relation.Relation.StampId
 					};
 				}
 
-				//fixme cfd.CfdiRelacionados = rels;
+				//fill master node with object and list
+				cFdV40ComprobanteCfdiRelacionados [0] = rels;
+
+				//put in cfd
+				cfd.CfdiRelacionados = cFdV40ComprobanteCfdiRelacionados;
 			}
 			
 			return cfd;
