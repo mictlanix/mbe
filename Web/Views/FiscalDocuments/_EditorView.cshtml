@@ -65,7 +65,12 @@
 							<b>@Resources.TaxRegime:</b>
 						</div>
 						<div class='col-xs-8'>
-							@Html.DisplayFor(x => x.TaxpayerRegime.Id)	-@Html.DisplayFor(x => x.TaxpayerRegime.Description)
+							<span id="recipientRegime">
+								@Html.DisplayFor(x => x.TaxpayerRegime.Id)
+							</span>
+							<span id="recipientRegimeDescription">
+								@Html.DisplayFor(x => x.TaxpayerRegime.Description)
+							</span>
 						</div>
 					</div>
 				</div>
@@ -75,7 +80,9 @@
 							<b>@Resources.PostalCodeFiscal:</b>
 						</div>
 						<div class='col-xs-8'>
-							@Html.DisplayFor(x => x.TaxpayerPostalCode)
+							<span id="recipientPostalCode">
+								@Html.DisplayFor(x => x.TaxpayerPostalCode)
+							</span>
 						</div>
 					</div>
 				</div>
@@ -246,7 +253,13 @@ $('#customer').editable({
 	},
 	success: function(response, newValue) {
 		$('#recipient').text(response.recipientText)
-				       .editable('setValue', response.recipient);
+			.editable('setValue', response.recipient);
+		
+			$('#recipientPostalCode').text(response.recipientPostalCode)
+			
+			$('#recipientRegime').text(response.recipientRegime)
+			$('#recipientRegimeDescription').text(response.recipientRegimeDescription)
+		
     },
     display: function(value, response) {
     	if (typeof response !== 'undefined') {
@@ -266,7 +279,16 @@ $('a.editable').editable({
         if('paymentMethod' in response) {
             $('#payment-method').text(response.paymentMethodText)
                                 .editable('setValue', response.paymentMethod);
-        }
+		}
+		if ('recipientPostalCode' in response) {
+			$('#recipientPostalCode').text(response.recipientPostalCode)				
+		}
+		if ('recipientRegime' in response) {
+			$('#recipientRegime').text(response.recipientRegime)
+		}
+		if ('recipientRegimeDescription' in response) {
+			$('#recipientRegimeDescription').text(response.recipientRegimeDescription)
+		}
 		if('itemsChanged' in response) {
 			$('#items-container').loadUrl();
 			$('#totals-section').loadUrl();

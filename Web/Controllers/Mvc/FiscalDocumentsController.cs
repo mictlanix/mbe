@@ -391,6 +391,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				entity.RecipientName = recipient.Name;
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
+				entity.TaxpayerPostalCode = recipient.PostalCode;
+				entity.TaxpayerRegime = recipient.Regime;
 
 				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
@@ -401,7 +403,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				id = id,
 				value = entity.FormattedValueFor (x => x.Customer),
 				recipient = entity.Recipient,
-				recipientText = entity.FormattedValueFor (x => x.Recipient)
+				recipientText = entity.FormattedValueFor (x => x.Recipient),
+				recipientPostalCode = entity.FormattedValueFor (x => x.TaxpayerPostalCode),
+				recipientRegime = entity.FormattedValueFor (x => x.TaxpayerRegime.Id),
+				recipientRegimeDescription = entity.FormattedValueFor (x => x.TaxpayerRegime.Description)
 			});
 		}
 
@@ -421,6 +426,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				entity.RecipientName = item.Name;
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
+				entity.TaxpayerPostalCode = item.PostalCode;
+				entity.TaxpayerRegime = item.Regime;
 
 				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
@@ -429,7 +436,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return Json (new {
 				id = id,
-				value = entity.FormattedValueFor (x => x.Recipient)
+				value = entity.FormattedValueFor (x => x.Recipient),
+				recipientPostalCode= entity.FormattedValueFor (x => x.TaxpayerPostalCode),
+				recipientRegime = entity.FormattedValueFor (x => x.TaxpayerRegime.Id),
+				recipientRegimeDescription = entity.FormattedValueFor (x => x.TaxpayerRegime.Description)
 			});
 		}
 
