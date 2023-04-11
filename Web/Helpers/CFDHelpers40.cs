@@ -67,7 +67,7 @@ namespace Mictlanix.BE.Web.Helpers40 {
 		{
 			var cfd = SignCFD (item);
 
-			//-- fixme System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd.xml", cfd.ToXmlString ());
+			//-- fixme System.IO.File.WriteAllText (@"cfd.xml", cfd.ToXmlString ());
 
 			var cli = new DFactureClient40 (WebConfig.DFactureUser, WebConfig.DFacturePassword, WebConfig.DFactureUrl);
 			
@@ -462,7 +462,7 @@ namespace Mictlanix.BE.Web.Helpers40 {
 					TipoFactor = c_TipoFactor.Tasa,
 					TasaOCuota = 0.000000m,
 					TasaOCuotaSpecified = true,
-					Base = 0.00m,
+					Base = Model.ModelHelpers.TotalRounding (cfd.Conceptos.Where (x => x.Impuestos != null).Sum (c => c.Impuestos.Traslados.Where (x => x.TasaOCuota == 0.000000m).Sum (x => x.Base))),
 					Importe = 0.00m,
 					ImporteSpecified = true
 				});
