@@ -21,3 +21,8 @@ VALUES ('01', 'Comprobantes emitidos con errores con relación.'),
        ('02', 'Comprobantes emitidos con errores sin relación.'),
        ('03', 'No se llevó a cabo la operación.'),
        ('04', 'Operación nominativa relacionada en una factura global.');
+
+INSERT INTO sat_cfdi_usage (sat_cfdi_usage_id, description)
+VALUES ('S01', 'Sin Obligaciones Fiscales'),
+       ('CP01', 'Pagos'),
+       ('CN01', 'Pagos Nomina');
