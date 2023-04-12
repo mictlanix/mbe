@@ -56,7 +56,7 @@ namespace Mictlanix.BE.Web.Helpers40 {
 		{
 			var cfd = FiscalDocumentToCFDv40 (item);
 			var cer = item.Issuer.Certificates.Single (x => x.Id == item.IssuerCertificateNumber);
-			// System.IO.File.WriteAllText (@"cfd.xml", cfd.ToXmlString ());
+			//-- System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd.xml", cfd.ToXmlString ());
 			cfd.Sign (cer.KeyData, cer.KeyPassword);
 
 			return cfd;
@@ -190,20 +190,28 @@ namespace Mictlanix.BE.Web.Helpers40 {
 				};
 
 				//taxes for doctoRel
+
+
+				decimal baseDR = 0m;
 				
-				decimal baseDR = Math.Round (relation.Amount / (relation.Relation.Total / 100),6);
 
 				bool hasTraslado= relation.Relation.Details.Any (d => d.TaxRate != 0);
 				var distinctTaxRates = relation.Relation.Details.Select (d => d.TaxRate).Distinct ();				
 				var trasladoCount = distinctTaxRates.Count ();
 				bool hasRetencion= relation.Relation.RetentionRate>0m;
 
+				if (hasTraslado && !hasRetencion) {
+					baseDR = Math.Round (relation.Amount / (1+WebConfig.DefaultVAT), 6);
+				} else if (hasTraslado && hasRetencion) {
+					baseDR = Math.Round (relation.Amount / 1.05333m, 6);
+				}
+
 				if (hasTraslado || hasRetencion) {
 
 					var impuestosDR = new PagosPagoDoctoRelacionadoImpuestosDR ();
 					
 					if (hasTraslado) {
-						decimal importeDR = Math.Round (baseDR * (relation.Relation.Taxes / 100),6);
+						decimal importeDR = Math.Round (baseDR * WebConfig.DefaultVAT, 6);
 						var  traslados = new PagosPagoDoctoRelacionadoImpuestosDRTrasladoDR [trasladoCount];
 
 						var distinctTaxRatesArray = distinctTaxRates.ToArray ();
