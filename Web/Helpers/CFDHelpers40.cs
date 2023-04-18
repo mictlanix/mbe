@@ -56,7 +56,7 @@ namespace Mictlanix.BE.Web.Helpers40 {
 		{
 			var cfd = FiscalDocumentToCFDv40 (item);
 			var cer = item.Issuer.Certificates.Single (x => x.Id == item.IssuerCertificateNumber);
-			//-- System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd.xml", cfd.ToXmlString ());
+			System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd.xml", cfd.ToXmlString ());
 			cfd.Sign (cer.KeyData, cer.KeyPassword);
 
 			return cfd;
@@ -68,6 +68,7 @@ namespace Mictlanix.BE.Web.Helpers40 {
 			var cfd = SignCFD (item);
 
 			//-- fixme System.IO.File.WriteAllText (@"cfd.xml", cfd.ToXmlString ());
+			System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd.xml", cfd.ToXmlString ());
 
 			var cli = new DFactureClient40 (WebConfig.DFactureUser, WebConfig.DFacturePassword, WebConfig.DFactureUrl);
 			
@@ -79,7 +80,7 @@ namespace Mictlanix.BE.Web.Helpers40 {
 
 			cfd.Complemento.Add (tfd);
 
-			//-- fixme System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd.xml", cfd.ToXmlString ());
+			System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd.xml", cfd.ToXmlString ());
 
 			return cfd;
 		}
@@ -396,6 +397,13 @@ namespace Mictlanix.BE.Web.Helpers40 {
 
 			int i = 0;
 			foreach (var detail in item.Details) {
+
+				var objImp = detail.TaxRate >= 0m ? c_ObjetoImp.SiObjetoImpuesto : c_ObjetoImp.NoObjetoImpuesto;
+				if (detail.Subtotal == detail.Discount) {
+					objImp = c_ObjetoImp.NoObjetoImpuesto;
+				}
+
+
 				cfd.Conceptos [i] = new ComprobanteConcepto {
 					Cantidad = detail.Quantity,
 					ClaveUnidad = detail.UnitOfMeasurement.Id,
@@ -404,7 +412,7 @@ namespace Mictlanix.BE.Web.Helpers40 {
 					ClaveProdServ = detail.ProductService.Id,
 					Descripcion = detail.ProductName,
 					ValorUnitario = detail.NetPrice,
-					ObjetoImp = detail.TaxRate >= 0m ? c_ObjetoImp.SiObjetoImpuesto: c_ObjetoImp.NoObjetoImpuesto ,
+					ObjetoImp = objImp,
 					Importe = detail.Subtotal,
 					Descuento = detail.Discount,
 					DescuentoSpecified = detail.Discount > 0m
