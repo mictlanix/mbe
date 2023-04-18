@@ -56,7 +56,7 @@ namespace Mictlanix.BE.Web.Helpers40 {
 		{
 			var cfd = FiscalDocumentToCFDv40 (item);
 			var cer = item.Issuer.Certificates.Single (x => x.Id == item.IssuerCertificateNumber);
-			System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd.xml", cfd.ToXmlString ());
+			//System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd.xml", cfd.ToXmlString ());
 			cfd.Sign (cer.KeyData, cer.KeyPassword);
 
 			return cfd;
@@ -68,7 +68,7 @@ namespace Mictlanix.BE.Web.Helpers40 {
 			var cfd = SignCFD (item);
 
 			//-- fixme System.IO.File.WriteAllText (@"cfd.xml", cfd.ToXmlString ());
-			System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd.xml", cfd.ToXmlString ());
+			//System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd.xml", cfd.ToXmlString ());
 
 			var cli = new DFactureClient40 (WebConfig.DFactureUser, WebConfig.DFacturePassword, WebConfig.DFactureUrl);
 			
@@ -80,7 +80,7 @@ namespace Mictlanix.BE.Web.Helpers40 {
 
 			cfd.Complemento.Add (tfd);
 
-			System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd.xml", cfd.ToXmlString ());
+			//System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd.xml", cfd.ToXmlString ());
 
 			return cfd;
 		}
