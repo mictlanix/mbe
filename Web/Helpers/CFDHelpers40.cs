@@ -56,7 +56,7 @@ namespace Mictlanix.BE.Web.Helpers40 {
 		{
 			var cfd = FiscalDocumentToCFDv40 (item);
 			var cer = item.Issuer.Certificates.Single (x => x.Id == item.IssuerCertificateNumber);
-			//System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd.xml", cfd.ToXmlString ());
+			//-- System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd.xml", cfd.ToXmlString ());
 			cfd.Sign (cer.KeyData, cer.KeyPassword);
 
 			return cfd;
@@ -67,8 +67,8 @@ namespace Mictlanix.BE.Web.Helpers40 {
 		{
 			var cfd = SignCFD (item);
 
-			//-- fixme System.IO.File.WriteAllText (@"cfd.xml", cfd.ToXmlString ());
-			//System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd.xml", cfd.ToXmlString ());
+			//-- System.IO.File.WriteAllText (@"cfd.xml", cfd.ToXmlString ());
+			 System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd.xml", cfd.ToXmlString ());
 
 			var cli = new DFactureClient40 (WebConfig.DFactureUser, WebConfig.DFacturePassword, WebConfig.DFactureUrl);
 			
@@ -80,7 +80,7 @@ namespace Mictlanix.BE.Web.Helpers40 {
 
 			cfd.Complemento.Add (tfd);
 
-			//System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd.xml", cfd.ToXmlString ());
+			//-- System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd.xml", cfd.ToXmlString ());
 
 			return cfd;
 		}
@@ -398,7 +398,7 @@ namespace Mictlanix.BE.Web.Helpers40 {
 			int i = 0;
 			foreach (var detail in item.Details) {
 
-				var objImp = detail.TaxRate >= 0m ? c_ObjetoImp.SiObjetoImpuesto : c_ObjetoImp.NoObjetoImpuesto;
+				var objImp = c_ObjetoImp.SiObjetoImpuesto; 
 				if (detail.Subtotal == detail.Discount) {
 					objImp = c_ObjetoImp.NoObjetoImpuesto;
 				}
@@ -472,6 +472,31 @@ namespace Mictlanix.BE.Web.Helpers40 {
 
 			var taxes = new List<ComprobanteImpuestosTraslado> ();
 
+			var resultComprobanteImpuestosTraslado = cfd.Conceptos
+			    .SelectMany (c => c.Impuestos.Traslados)
+			    .GroupBy (t => new { t.Impuesto, t.TipoFactor, t.TasaOCuota })
+			    .Select (g => new {
+				    g.Key.Impuesto,
+				    g.Key.TipoFactor,
+				    g.Key.TasaOCuota,
+				    SumaBase = g.Sum (t => t.Base),
+				    SumaImporte = g.Sum (t => t.Importe)
+			    });
+
+			
+			foreach (var group in resultComprobanteImpuestosTraslado) {
+
+				taxes.Add (new ComprobanteImpuestosTraslado {
+					Impuesto = group.Impuesto,
+					TipoFactor = group.TipoFactor,
+					TasaOCuota = group.TasaOCuota,
+					TasaOCuotaSpecified = group.TipoFactor == c_TipoFactor.Exento ? false : true,
+					Base = Model.ModelHelpers.TotalRounding (group.SumaBase),
+					Importe = Model.ModelHelpers.TotalRounding (group.SumaImporte),
+					ImporteSpecified = group.TipoFactor == c_TipoFactor.Exento ?false : true
+				});
+			}
+/*
 			if (cfd.Conceptos.Any (c => c.Impuestos != null && c.Impuestos.Traslados.Any (x => x.TasaOCuota == decimal.Zero))) {
 				taxes.Add (new ComprobanteImpuestosTraslado {
 					Impuesto = c_Impuesto.IVA,
@@ -495,22 +520,35 @@ namespace Mictlanix.BE.Web.Helpers40 {
 					ImporteSpecified = true
 				});
 			}
-
+*/
 			cfd.Impuestos.Traslados = taxes.ToArray ();
 			cfd.Impuestos.TotalImpuestosTrasladados = cfd.Impuestos.Traslados.Sum (x => x.Importe);
 			cfd.Impuestos.TotalImpuestosTrasladadosSpecified = true;
 
-			if (item.RetentionRate > 0m) {
-				cfd.Impuestos.Retenciones = new ComprobanteImpuestosRetencion [] {
+			try {
+				var resultComprobanteImpuestosRetencion = cfd.Conceptos
+					.SelectMany (c => c.Impuestos.Retenciones)
+					.Aggregate (new { Importe = 0m }, (a, d) => new {
+					Importe = a.Importe + d.Importe
+				});
+
+				if (item.RetentionRate > 0m) {
+					cfd.Impuestos.Retenciones = new ComprobanteImpuestosRetencion [] {
 					new ComprobanteImpuestosRetencion {
 						Impuesto = c_Impuesto.IVA,
 						Importe = item.RetentionTaxes,
-					}
-				};
+						}
+					};
 
-				cfd.Impuestos.TotalImpuestosRetenidos = cfd.Impuestos.Retenciones.Sum (x => x.Importe);
-				cfd.Impuestos.TotalImpuestosRetenidosSpecified = true;
+					cfd.Impuestos.TotalImpuestosRetenidos = cfd.Impuestos.Retenciones.Sum (x => x.Importe);
+					cfd.Impuestos.TotalImpuestosRetenidosSpecified = true;
+				}
+			} catch (Exception) {
+
+				cfd.Impuestos.TotalImpuestosRetenidos = 0;
+				cfd.Impuestos.TotalImpuestosRetenidosSpecified = false;
 			}
+			
 
 			
 			if (item.LocalRetentionRate > 0m) {
