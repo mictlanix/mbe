@@ -68,7 +68,7 @@ namespace Mictlanix.BE.Web.Helpers40 {
 			var cfd = SignCFD (item);
 
 			//-- System.IO.File.WriteAllText (@"cfd.xml", cfd.ToXmlString ());
-			 System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd.xml", cfd.ToXmlString ());
+			 //-- System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd.xml", cfd.ToXmlString ());
 
 			var cli = new DFactureClient40 (WebConfig.DFactureUser, WebConfig.DFacturePassword, WebConfig.DFactureUrl);
 			
