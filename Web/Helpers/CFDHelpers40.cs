@@ -473,6 +473,7 @@ namespace Mictlanix.BE.Web.Helpers40 {
 			var taxes = new List<ComprobanteImpuestosTraslado> ();
 
 			var resultComprobanteImpuestosTraslado = cfd.Conceptos
+			    .Where (c => c.Impuestos != null) // Filtrar elementos con Impuestos no nulos
 			    .SelectMany (c => c.Impuestos.Traslados)
 			    .GroupBy (t => new { t.Impuesto, t.TipoFactor, t.TasaOCuota })
 			    .Select (g => new {
@@ -483,7 +484,7 @@ namespace Mictlanix.BE.Web.Helpers40 {
 				    SumaImporte = g.Sum (t => t.Importe)
 			    });
 
-			
+
 			foreach (var group in resultComprobanteImpuestosTraslado) {
 
 				taxes.Add (new ComprobanteImpuestosTraslado {
