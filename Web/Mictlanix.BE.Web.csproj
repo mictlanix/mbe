@@ -1281,6 +1281,7 @@
     <None Include="Scripts\jquery-3.4.1.slim.min.map" />
     <None Include="Scripts\jquery-3.4.1.min.map" />
     <Content Include="Views\FiscalDocuments\Print40T02Blue.cshtml" />
+    <Content Include="Views\FiscalDocuments\_AdvancePaymentsAppliedRelations.cshtml" />
   </ItemGroup>
   <ItemGroup />
 </Project>

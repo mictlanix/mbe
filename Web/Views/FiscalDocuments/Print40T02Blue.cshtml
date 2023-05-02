@@ -480,7 +480,18 @@
                 } else if (Model.Type == FiscalDocumentType.CreditNote) {
                     <td colspan="2" class="no-bg"><strong>@Resources.RelationType</strong> @Resources.CFDI_RelationType_CreditNote</td>
                 } else {
-                    <td colspan="2" class="no-bg"><strong>@Resources.RelationType</strong> @Resources.CFDI_RelationType_Replacement</td>
+			<td colspan="2" class="no-bg">
+				<strong>@Resources.RelationType</strong>
+				@if (Model.Relations[0].Type == Mictlanix.CFDv40.c_TipoRelacion.Sustitucion)
+				{
+					@Resources.CFDI_RelationType_Replacement
+				}
+				else
+				{
+					@Resources.CFDI_RelationType_AdvancePayment
+				}
+
+			</td>
                 }
             </tr>
         @for (int i = 0; i < Model.Relations.Count; i++) {
