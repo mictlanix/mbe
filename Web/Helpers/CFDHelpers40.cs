@@ -587,7 +587,7 @@ namespace Mictlanix.BE.Web.Helpers40 {
 				} else if (item.Type == FiscalDocumentType.CreditNote) {
 					rels.TipoRelacion = c_TipoRelacion.NotaDeCredito;
 				} else {
-					rels.TipoRelacion = c_TipoRelacion.Sustitucion;
+					rels.TipoRelacion = item.Relations [0].Type;					
 				}
 
 				i = 0;

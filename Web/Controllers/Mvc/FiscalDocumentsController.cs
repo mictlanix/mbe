@@ -916,12 +916,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult AddRelation (int id, int relation)
+		public ActionResult AddRelation (int id, int relation, int type=0)
 		{
+		
 			var item = new FiscalDocumentRelation {
 				Document = FiscalDocument.Find (id),
-				Relation = FiscalDocument.Find (relation)
+				Relation = FiscalDocument.Find (relation)				
 			};
+
+			if (type != 0) {
+				item.Type = (CFDv40.c_TipoRelacion) type;
+			}
 
 			if (item.Document.IsCompleted || item.Document.IsCancelled) {
 				Response.StatusCode = 400;
@@ -937,6 +942,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return Json (new { id = item.Id });
 		}
+
 
 		[HttpPost]
 		public ActionResult RemoveRelation (int id)
