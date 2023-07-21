@@ -56,7 +56,7 @@ namespace Mictlanix.BE.Web.Helpers40 {
 		{
 			var cfd = FiscalDocumentToCFDv40 (item);
 			var cer = item.Issuer.Certificates.Single (x => x.Id == item.IssuerCertificateNumber);
-			//-- System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd.xml", cfd.ToXmlString ());
+			System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd1.xml", cfd.ToXmlString ());
 			cfd.Sign (cer.KeyData, cer.KeyPassword);
 
 			return cfd;
@@ -68,9 +68,10 @@ namespace Mictlanix.BE.Web.Helpers40 {
 			var cfd = SignCFD (item);
 
 			//-- System.IO.File.WriteAllText (@"cfd.xml", cfd.ToXmlString ());
-			 //-- System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd.xml", cfd.ToXmlString ());
+			//-- System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd2.xml", cfd.ToXmlString ());
 
 			var cli = new DFactureClient40 (WebConfig.DFactureUser, WebConfig.DFacturePassword, WebConfig.DFactureUrl);
+
 			
 			var tfd = cli.Stamp (cfd);
 
@@ -165,7 +166,7 @@ namespace Mictlanix.BE.Web.Helpers40 {
 						MonedaP = item.Currency.GetDisplayName (),
 						TipoCambioP = 1,
 						TipoCambioPSpecified = true,
-						Monto = item.PaymentAmount,
+						Monto = item.Paid,
 						NumOperacion = string.IsNullOrWhiteSpace (item.PaymentReference) ? null : item.PaymentReference,
 						NomBancoOrdExt = string.IsNullOrWhiteSpace (item.Reference) ? null : item.Reference,
 						DoctoRelacionado = new PagosPagoDoctoRelacionado [item.Relations.Count]
