@@ -56,7 +56,7 @@ namespace Mictlanix.BE.Web.Helpers40 {
 		{
 			var cfd = FiscalDocumentToCFDv40 (item);
 			var cer = item.Issuer.Certificates.Single (x => x.Id == item.IssuerCertificateNumber);
-			System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd1.xml", cfd.ToXmlString ());
+			System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd-timbrado.xml", cfd.ToXmlString ());
 			cfd.Sign (cer.KeyData, cer.KeyPassword);
 
 			return cfd;
@@ -81,7 +81,7 @@ namespace Mictlanix.BE.Web.Helpers40 {
 
 			cfd.Complemento.Add (tfd);
 
-			//-- System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd.xml", cfd.ToXmlString ());
+			//- System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd.xml", cfd.ToXmlString ());
 
 			return cfd;
 		}
@@ -166,7 +166,7 @@ namespace Mictlanix.BE.Web.Helpers40 {
 						MonedaP = item.Currency.GetDisplayName (),
 						TipoCambioP = 1,
 						TipoCambioPSpecified = true,
-						Monto = item.Paid,
+						Monto = item.PaymentAmount, //Monto = item.Paid,
 						NumOperacion = string.IsNullOrWhiteSpace (item.PaymentReference) ? null : item.PaymentReference,
 						NomBancoOrdExt = string.IsNullOrWhiteSpace (item.Reference) ? null : item.Reference,
 						DoctoRelacionado = new PagosPagoDoctoRelacionado [item.Relations.Count]
@@ -258,10 +258,14 @@ namespace Mictlanix.BE.Web.Helpers40 {
 			decimal totalTrasladosImpuestoIVA16 = 0;
 			decimal totalRetencionesIVA = 0;
 
+			/*
 			decimal montoTotalPagos = Math.Round (pagos.Pago
 				    .SelectMany (p => p.DoctoRelacionado)
 				    .Sum (d => d.ImpPagado),2);
-				    
+			*/
+
+			decimal montoTotalPagos = Math.Round (pagos.Pago.Sum (x => x.Monto), 2);
+
 			bool nodoRet =true;
 			bool nodoTras =true;
 
