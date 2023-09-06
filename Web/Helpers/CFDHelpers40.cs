@@ -56,7 +56,7 @@ namespace Mictlanix.BE.Web.Helpers40 {
 		{
 			var cfd = FiscalDocumentToCFDv40 (item);
 			var cer = item.Issuer.Certificates.Single (x => x.Id == item.IssuerCertificateNumber);
-			System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd-timbrado.xml", cfd.ToXmlString ());
+			//System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd-timbrado.xml", cfd.ToXmlString ());
 			cfd.Sign (cer.KeyData, cer.KeyPassword);
 
 			return cfd;
@@ -679,6 +679,8 @@ namespace Mictlanix.BE.Web.Helpers40 {
 				return c_UsoCFDI.DepositosEnCuentasParaElAhorroPrimasQueTenganComoBasePlanesDePensiones;
 			case "D10":
 				return c_UsoCFDI.PagosPorServiciosEducativos;
+			case "S01":
+				return c_UsoCFDI.SinEfectosFiscales;
 			case "P01": // for compatibility
 				return c_UsoCFDI.GastosEnGeneral;
 			}
