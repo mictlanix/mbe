@@ -1654,6 +1654,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Olvidó contraseña.
+        /// </summary>
+        public static string DisplayName_ForgotPassword {
+            get {
+                return ResourceManager.GetString("DisplayName_ForgotPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Información del Movimiento.
         /// </summary>
         public static string DisplayName_InventoryInformation {
@@ -1848,6 +1857,15 @@ namespace Mictlanix.BE {
         public static string DisplayName_PurchasesOrders {
             get {
                 return ResourceManager.GetString("DisplayName_PurchasesOrders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recuperación de contraseña.
+        /// </summary>
+        public static string DisplayName_RecoveryEmailSent {
+            get {
+                return ResourceManager.GetString("DisplayName_RecoveryEmailSent", resourceCulture);
             }
         }
         
@@ -3493,6 +3511,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to La recuperación de contraseña no fue exitosa. Por favor, corrija los errores y vuelva a intentarlo..
+        /// </summary>
+        public static string Message_ForgotPasswordFail {
+            get {
+                return ResourceManager.GetString("Message_ForgotPasswordFail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to El tipo de cambio para la moneda base no se puede modificar..
         /// </summary>
         public static string Message_InvalidBaseExchangeRate {
@@ -3570,6 +3597,15 @@ namespace Mictlanix.BE {
         public static string Message_LoginUnsuccessful {
             get {
                 return ResourceManager.GetString("Message_LoginUnsuccessful", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Se ha enviado un correo de recuperación de contraseña a {0}..
+        /// </summary>
+        public static string Message_RecoveryEmailSent {
+            get {
+                return ResourceManager.GetString("Message_RecoveryEmailSent", resourceCulture);
             }
         }
         
@@ -4002,6 +4038,51 @@ namespace Mictlanix.BE {
         public static string Password {
             get {
                 return ResourceManager.GetString("Password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recibiste este correo porque has solicitado reiniciar la contraseña de la aplicación Mictlanix MBE..
+        /// </summary>
+        public static string PasswordRecovery_FirstParagraph {
+            get {
+                return ResourceManager.GetString("PasswordRecovery_FirstParagraph", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saludos!.
+        /// </summary>
+        public static string PasswordRecovery_FourthParagraph {
+            get {
+                return ResourceManager.GetString("PasswordRecovery_FourthParagraph", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Para completar el proceso de recuperación de contraseña, ingresa al siguiente vínculo:.
+        /// </summary>
+        public static string PasswordRecovery_SecondParagraph {
+            get {
+                return ResourceManager.GetString("PasswordRecovery_SecondParagraph", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Si el vínculo no aparece habilitado, por favor copia la URL en la barra de navegación de tu browser..
+        /// </summary>
+        public static string PasswordRecovery_ThirdParagraph {
+            get {
+                return ResourceManager.GetString("PasswordRecovery_ThirdParagraph", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hola {0}!.
+        /// </summary>
+        public static string PasswordRecovery_UserGreeting {
+            get {
+                return ResourceManager.GetString("PasswordRecovery_UserGreeting", resourceCulture);
             }
         }
         
@@ -4821,6 +4902,24 @@ namespace Mictlanix.BE {
         public static string RecipientName {
             get {
                 return ResourceManager.GetString("RecipientName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recuperar Contraseña.
+        /// </summary>
+        public static string RecoverPassword {
+            get {
+                return ResourceManager.GetString("RecoverPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recuperación de contraseña.
+        /// </summary>
+        public static string RecoverPasswordEmailSubject {
+            get {
+                return ResourceManager.GetString("RecoverPasswordEmailSubject", resourceCulture);
             }
         }
         
@@ -6330,6 +6429,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Olvidó Contraseña.
+        /// </summary>
+        public static string Title_ForgotPassword {
+            get {
+                return ResourceManager.GetString("Title_ForgotPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mictlanix BE.
         /// </summary>
         public static string Title_Home {
@@ -6488,6 +6596,15 @@ namespace Mictlanix.BE {
         public static string Title_PurchaseOrder {
             get {
                 return ResourceManager.GetString("Title_PurchaseOrder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recuperación de Contraseña.
+        /// </summary>
+        public static string Title_RecoveryEmailSent {
+            get {
+                return ResourceManager.GetString("Title_RecoveryEmailSent", resourceCulture);
             }
         }
         

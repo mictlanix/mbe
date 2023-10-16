@@ -2525,4 +2525,43 @@ Atte: {1}.</value>
   <data name="UserSettingsMode" xml:space="preserve">
     <value>Modo de configuración de usuario</value>
   </data>
+  <data name="DisplayName_ForgotPassword" xml:space="preserve">
+    <value>Olvidó contraseña</value>
+  </data>
+  <data name="Message_ForgotPasswordFail" xml:space="preserve">
+    <value>La recuperación de contraseña no fue exitosa. Por favor, corrija los errores y vuelva a intentarlo.</value>
+  </data>
+  <data name="RecoverPassword" xml:space="preserve">
+    <value>Recuperar Contraseña</value>
+  </data>
+  <data name="Title_ForgotPassword" xml:space="preserve">
+    <value>Olvidó Contraseña</value>
+  </data>
+  <data name="DisplayName_RecoveryEmailSent" xml:space="preserve">
+    <value>Recuperación de contraseña</value>
+  </data>
+  <data name="Message_RecoveryEmailSent" xml:space="preserve">
+    <value>Se ha enviado un correo de recuperación de contraseña a {0}.</value>
+  </data>
+  <data name="Title_RecoveryEmailSent" xml:space="preserve">
+    <value>Recuperación de Contraseña</value>
+  </data>
+  <data name="PasswordRecovery_FirstParagraph" xml:space="preserve">
+    <value>Recibiste este correo porque has solicitado reiniciar la contraseña de la aplicación Mictlanix MBE.</value>
+  </data>
+  <data name="PasswordRecovery_FourthParagraph" xml:space="preserve">
+    <value>Saludos!</value>
+  </data>
+  <data name="PasswordRecovery_SecondParagraph" xml:space="preserve">
+    <value>Para completar el proceso de recuperación de contraseña, ingresa al siguiente vínculo:</value>
+  </data>
+  <data name="PasswordRecovery_ThirdParagraph" xml:space="preserve">
+    <value>Si el vínculo no aparece habilitado, por favor copia la URL en la barra de navegación de tu browser.</value>
+  </data>
+  <data name="PasswordRecovery_UserGreeting" xml:space="preserve">
+    <value>Hola {0}!</value>
+  </data>
+  <data name="RecoverPasswordEmailSubject" xml:space="preserve">
+    <value>Recuperación de contraseña</value>
+  </data>
 </root>

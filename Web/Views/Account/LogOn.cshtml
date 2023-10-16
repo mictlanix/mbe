@@ -1,47 +1,51 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @model Mictlanix.BE.Web.Models.LogOnModel
 
 @{
-    ViewBag.Title = Resources.Title_LogOn;
+	ViewBag.Title = Resources.Title_LogOn;
 }
 
 <h2>@Resources.DisplayName_LogOn</h2>
 <p>
-    @Resources.Message_LoginRegister
-    @Html.ActionLink(Resources.Register, "Register").
+	@Resources.Message_LoginRegister
+	@Html.ActionLink(Resources.Register, "Register").
 </p>
 
 @Html.ValidationSummary(true, Resources.Message_LoginUnsuccessful)
 
-@using (Html.BeginForm()) {
-<div>
-    <fieldset>
-        <legend>@Resources.AccountInformation</legend>
+@using (Html.BeginForm())
+{
+	<div>
+		<fieldset>
+			<legend>@Resources.AccountInformation</legend>
 
-        <div class="editor-label">
-            @Html.LabelFor(m => m.UserName)
-        </div>
-        <div class="editor-field">
-            @Html.TextBoxFor(m => m.UserName)
-            @Html.ValidationMessageFor(m => m.UserName)
-        </div>
+			<div class="editor-label">
+				@Html.LabelFor(m => m.UserName)
+			</div>
+			<div class="editor-field">
+				@Html.TextBoxFor(m => m.UserName)
+				@Html.ValidationMessageFor(m => m.UserName)
+			</div>
 
-        <div class="editor-label">
-            @Html.LabelFor(m => m.Password)
-        </div>
-        <div class="editor-field">
-            @Html.PasswordFor(m => m.Password)
-            @Html.ValidationMessageFor(m => m.Password)
-        </div>
+			<div class="editor-label">
+				@Html.LabelFor(m => m.Password)
+			</div>
+			<div class="editor-field">
+				@Html.PasswordFor(m => m.Password)
+				@Html.ValidationMessageFor(m => m.Password)
+			</div>
 
-        <div class="editor-label">
-            @Html.CheckBoxFor(m => m.RememberMe)
-            @Html.LabelFor(m => m.RememberMe)
-        </div>
-    </fieldset>
+			<div class="editor-label">
+				@Html.CheckBoxFor(m => m.RememberMe)
+				@Html.LabelFor(m => m.RememberMe)
+			</div>
+			<div class="editor-field">
+				@Html.ActionLink(Resources.DisplayName_ForgotPassword, "ForgotPassword")
+			</div>
+		</fieldset>
 
-    <div class="action-buttons">
-        <button type="submit">@Resources.LogOn</button>
-    </div>
-</div>
+		<div class="action-buttons">
+			<button type="submit">@Resources.LogOn</button>
+		</div>
+	</div>
 }
