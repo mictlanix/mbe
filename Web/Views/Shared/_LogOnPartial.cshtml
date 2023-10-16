@@ -1,51 +1,56 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @model Mictlanix.BE.Model.User
 <div id="gbw">
-    <div id="gbg">
-        <h2 class="gbxx">Account Options</h2>
-        <span class="gbtcb"></span>
-        <ol class="gbtc">
-            <li class="gbt">
-                <a id="gbg4" class="gbgt" href="@(Request.IsAuthenticated ? "javascript:void(0)" : @Url.Action("LogOn", "Account"))">
-                    <span class="gbtb2"></span>
-                    <span id="gbgs4" class="gbts gbtsa">
-                        <span id="gbi4">
-                            <span id="gbi4m1">@(Request.IsAuthenticated ? User.Identity.Name : Resources.SignIn)</span>
-                            <span class="gbma"></span>
-                        </span>
-                    </span>
-                </a>
-                @if (Request.IsAuthenticated) {
-                <div id="gbd4" class="gbm" style="top:32px;right:-6px;left:auto;visibility:hidden;">
-                    <div class="gbmc">
-                        <div id="gbmpdv" style="width:240px;">
-                            <div class="gbpc">
-                                <span id="gbmpn" class="gbps">@Model.Employee</span>
-                                <span class="gbps2">@Model.Email</span>
-                                <ol class="gbmcc">
-                                    <li class="gbmtc"></li>
-                                    <li class="gbmtc">
-                                        <a class="gbml1" href="@Url.Action("ChangePassword", "Account")">@Resources.ChangePassword</a>
-                                    </li>
-                                    <li class="gbmtc">
-                                        <a class="gbml1" href="@Url.Action("LocalSettings", "Account")">@Resources.LocalSettings</a>
-                                    </li>
-                                </ol>
-                            </div>
-                            <div class="gbmh"></div>
-                            <div class="gbmpal">
-                                <a class="gbml1" href="@Url.Action("LogOff", "Account")">
-                                    <span class="gbmpala">@Resources.LogOff</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                }
-            </li>
-            <li class="gbt gbtb">
-                <span class="gbts"></span>
-            </li>
-        </ol>
-    </div>
+	<div id="gbg">
+		<h2 class="gbxx">Account Options</h2>
+		<span class="gbtcb"></span>
+		<ol class="gbtc">
+			<li class="gbt">
+				<a id="gbg4" class="gbgt" href="@(Request.IsAuthenticated ? "javascript:void(0)" : @Url.Action("LogOn", "Account"))">
+					<span class="gbtb2"></span>
+					<span id="gbgs4" class="gbts gbtsa">
+						<span id="gbi4">
+							<span id="gbi4m1">@(Request.IsAuthenticated ? User.Identity.Name : Resources.SignIn)</span>
+							<span class="gbma"></span>
+						</span>
+					</span>
+				</a>
+				@if (Request.IsAuthenticated)
+				{
+					<div id="gbd4" class="gbm" style="top:32px;right:-6px;left:auto;visibility:hidden;">
+						<div class="gbmc">
+							<div id="gbmpdv" style="width:240px;">
+								<div class="gbpc">
+									<span id="gbmpn" class="gbps">@Model.Employee</span>
+									<span class="gbps2">@Model.Email</span>
+									<ol class="gbmcc">
+										<li class="gbmtc"></li>
+										<li class="gbmtc">
+											<a class="gbml1" href="@Url.Action("ChangePassword", "Account")">@Resources.ChangePassword</a>
+										</li>
+										@if (Mictlanix.BE.Web.Helpers.WebConfig.UserSettingsMode == Mictlanix.BE.Model.UserSettingsMode.SelfService)
+										{
+
+											<li class="gbmtc">
+												<a class="gbml1" href="@Url.Action("LocalSettings", "Account")">@Resources.LocalSettings</a>
+											</li>
+										}
+									</ol>
+								</div>
+								<div class="gbmh"></div>
+								<div class="gbmpal">
+									<a class="gbml1" href="@Url.Action("LogOff", "Account")">
+										<span class="gbmpala">@Resources.LogOff</span>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				}
+			</li>
+			<li class="gbt gbtb">
+				<span class="gbts"></span>
+			</li>
+		</ol>
+	</div>
 </div>

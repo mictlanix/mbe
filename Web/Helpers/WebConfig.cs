@@ -1,4 +1,4 @@
-﻿// 
+// 
 // WebConfig.cs
 // 
 // Author:
@@ -53,45 +53,45 @@ namespace Mictlanix.BE.Web.Helpers {
 		#region Application Global Settings
 
 		public static string ApplicationTitle {
-			get { return ConfigurationManager.AppSettings["ApplicationTitle"]; }
+			get { return ConfigurationManager.AppSettings ["ApplicationTitle"]; }
 		}
 
 		public static string LogoTitle {
-			get { return ConfigurationManager.AppSettings["LogoTitle"]; }
+			get { return ConfigurationManager.AppSettings ["LogoTitle"]; }
 		}
 
 		public static string Company {
-			get { return ConfigurationManager.AppSettings["Company"]; }
+			get { return ConfigurationManager.AppSettings ["Company"]; }
 		}
 
 		public static string PromissoryNoteContent {
-			get { return ConfigurationManager.AppSettings["PromissoryNoteContent"]; }
+			get { return ConfigurationManager.AppSettings ["PromissoryNoteContent"]; }
 		}
 
 		public static string PhotosPath {
-			get { return ConfigurationManager.AppSettings["PhotosPath"]; }
+			get { return ConfigurationManager.AppSettings ["PhotosPath"]; }
 		}
 
 		public static string DefaultPhotoFile {
-			get { return ConfigurationManager.AppSettings["DefaultPhotoFile"]; }
+			get { return ConfigurationManager.AppSettings ["DefaultPhotoFile"]; }
 		}
 
 		public static decimal DefaultVAT {
-			get { return Convert.ToDecimal (ConfigurationManager.AppSettings["DefaultVAT"]); }
+			get { return Convert.ToDecimal (ConfigurationManager.AppSettings ["DefaultVAT"]); }
 		}
 
 		public static bool IsTaxIncluded {
-			get { return Convert.ToBoolean (ConfigurationManager.AppSettings["IsTaxIncluded"]); }
+			get { return Convert.ToBoolean (ConfigurationManager.AppSettings ["IsTaxIncluded"]); }
 		}
 
 		public static int PageSize {
-			get { return int.Parse (ConfigurationManager.AppSettings["PageSize"]); }
+			get { return int.Parse (ConfigurationManager.AppSettings ["PageSize"]); }
 		}
 
 		public static CurrencyCode BaseCurrency {
 			get {
 				var currency = CurrencyCode.MXN;
-				Enum.TryParse (ConfigurationManager.AppSettings["BaseCurrency"], out currency);
+				Enum.TryParse (ConfigurationManager.AppSettings ["BaseCurrency"], out currency);
 				return currency;
 			}
 		}
@@ -99,33 +99,33 @@ namespace Mictlanix.BE.Web.Helpers {
 		public static CurrencyCode DefaultCurrency {
 			get {
 				var currency = CurrencyCode.MXN;
-				Enum.TryParse (ConfigurationManager.AppSettings["DefaultCurrency"], out currency);
+				Enum.TryParse (ConfigurationManager.AppSettings ["DefaultCurrency"], out currency);
 				return currency;
 			}
 		}
 
 		public static int DefaultCustomer {
-			get { return Convert.ToInt32 (ConfigurationManager.AppSettings["DefaultCustomer"]); }
+			get { return Convert.ToInt32 (ConfigurationManager.AppSettings ["DefaultCustomer"]); }
 		}
 
 		public static PriceType DefaultPriceType {
 			get {
 				var val = PriceType.Fixed;
-				Enum.TryParse<PriceType> (ConfigurationManager.AppSettings["DefaultPriceType"], out val);
+				Enum.TryParse<PriceType> (ConfigurationManager.AppSettings ["DefaultPriceType"], out val);
 				return val;
 			}
 		}
 
 		public static string MainLayout {
-			get { return ConfigurationManager.AppSettings["MainLayout"]; }
+			get { return ConfigurationManager.AppSettings ["MainLayout"]; }
 		}
 
 		public static string PrintLayout {
-			get { return ConfigurationManager.AppSettings["PrintLayout"]; }
+			get { return ConfigurationManager.AppSettings ["PrintLayout"]; }
 		}
 
 		public static string ReceiptLayout {
-			get { return ConfigurationManager.AppSettings["ReceiptLayout"]; }
+			get { return ConfigurationManager.AppSettings ["ReceiptLayout"]; }
 		}
 
 		public static string Language {
@@ -133,39 +133,39 @@ namespace Mictlanix.BE.Web.Helpers {
 		}
 
 		public static string FiscoClicUrl {
-			get { return ConfigurationManager.AppSettings["FiscoClicUrl"]; }
+			get { return ConfigurationManager.AppSettings ["FiscoClicUrl"]; }
 		}
 
 		public static string FiscoClicUser {
-			get { return ConfigurationManager.AppSettings["FiscoClicUser"]; }
+			get { return ConfigurationManager.AppSettings ["FiscoClicUser"]; }
 		}
 
 		public static string FiscoClicPasswd {
-			get { return ConfigurationManager.AppSettings["FiscoClicPasswd"]; }
+			get { return ConfigurationManager.AppSettings ["FiscoClicPasswd"]; }
 		}
 
 		public static string ServisimUrl {
-			get { return ConfigurationManager.AppSettings["ServisimUrl"]; }
+			get { return ConfigurationManager.AppSettings ["ServisimUrl"]; }
 		}
 
 		public static string ServisimUser {
-			get { return ConfigurationManager.AppSettings["ServisimUser"]; }
+			get { return ConfigurationManager.AppSettings ["ServisimUser"]; }
 		}
 
 		public static string ServisimPasswd {
-			get { return ConfigurationManager.AppSettings["ServisimPasswd"]; }
+			get { return ConfigurationManager.AppSettings ["ServisimPasswd"]; }
 		}
 
 		public static string ServisimPartnerCode {
-			get { return ConfigurationManager.AppSettings["ServisimPartnerCode"]; }
+			get { return ConfigurationManager.AppSettings ["ServisimPartnerCode"]; }
 		}
 
 		public static string ProFactUser {
-			get { return ConfigurationManager.AppSettings["ProFactUser"]; }
+			get { return ConfigurationManager.AppSettings ["ProFactUser"]; }
 		}
 
 		public static string ProFactUrl {
-			get { return ConfigurationManager.AppSettings["ProFactUrl"]; }
+			get { return ConfigurationManager.AppSettings ["ProFactUrl"]; }
 		}
 
 		public static string ProFactUrlV32 {
@@ -173,7 +173,7 @@ namespace Mictlanix.BE.Web.Helpers {
 		}
 
 		public static string ProFactCode {
-			get { return ConfigurationManager.AppSettings["ProFactCode"]; }
+			get { return ConfigurationManager.AppSettings ["ProFactCode"]; }
 		}
 
 		public static string DFactureUrl {
@@ -189,35 +189,35 @@ namespace Mictlanix.BE.Web.Helpers {
 		}
 
 		public static string LogFilePattern {
-			get { return ConfigurationManager.AppSettings["LogFilePattern"]; }
+			get { return ConfigurationManager.AppSettings ["LogFilePattern"]; }
 		}
 
 		public static string AppServerUrl {
-			get { return ConfigurationManager.AppSettings["AppServerUrl"]; }
+			get { return ConfigurationManager.AppSettings ["AppServerUrl"]; }
 		}
 
 		public static string SmtpServer {
-			get { return ConfigurationManager.AppSettings["SmtpServer"]; }
+			get { return ConfigurationManager.AppSettings ["SmtpServer"]; }
 		}
 
 		public static int SmtpPort {
-			get { return int.Parse (ConfigurationManager.AppSettings["SmtpPort"]); }
+			get { return int.Parse (ConfigurationManager.AppSettings ["SmtpPort"]); }
 		}
 
 		public static bool SmtpSsl {
-			get { return Convert.ToBoolean (ConfigurationManager.AppSettings["SmtpSsl"]); }
+			get { return Convert.ToBoolean (ConfigurationManager.AppSettings ["SmtpSsl"]); }
 		}
 
 		public static string SmtpUser {
-			get { return ConfigurationManager.AppSettings["SmtpUser"]; }
+			get { return ConfigurationManager.AppSettings ["SmtpUser"]; }
 		}
 
 		public static string SmtpPassword {
-			get { return ConfigurationManager.AppSettings["SmtpPassword"]; }
+			get { return ConfigurationManager.AppSettings ["SmtpPassword"]; }
 		}
 
 		public static string DefaultSender {
-			get { return ConfigurationManager.AppSettings["DefaultSender"]; }
+			get { return ConfigurationManager.AppSettings ["DefaultSender"]; }
 		}
 
 		public static string [] DefaultEmailCC {
@@ -242,11 +242,11 @@ namespace Mictlanix.BE.Web.Helpers {
 		}
 
 		public static int DefaultQuotationDueDays {
-			get { return int.Parse (ConfigurationManager.AppSettings["DefaultQuotationDueDays"]); }
+			get { return int.Parse (ConfigurationManager.AppSettings ["DefaultQuotationDueDays"]); }
 		}
 
 		public static string DefaultCfdiUsage {
-			get { return ConfigurationManager.AppSettings["DefaultCfdiUsage"]; }
+			get { return ConfigurationManager.AppSettings ["DefaultCfdiUsage"]; }
 		}
 
 		public static PaymentMethod [] CashierPaymentOptions {
@@ -297,7 +297,7 @@ namespace Mictlanix.BE.Web.Helpers {
 		}
 
 		public static bool ShowSalesOrdersFromAllStores {
-			get { return Convert.ToBoolean(ConfigurationManager.AppSettings ["ShowSalesOrdersFromAllStores"]); }
+			get { return Convert.ToBoolean (ConfigurationManager.AppSettings ["ShowSalesOrdersFromAllStores"]); }
 		}
 
 		public static IList<KeyValuePair<string, decimal>> TaxRates {
@@ -384,7 +384,7 @@ namespace Mictlanix.BE.Web.Helpers {
 
 		public static CashDrawer CashDrawer {
 			get {
-				var cookie = System.Web.HttpContext.Current.Request.Cookies[CashDrawerCookieKey];
+				var cookie = System.Web.HttpContext.Current.Request.Cookies [CashDrawerCookieKey];
 
 				if (cookie != null) {
 					return CashDrawer.TryFind (int.Parse (cookie.Value));
@@ -395,6 +395,15 @@ namespace Mictlanix.BE.Web.Helpers {
 				}
 
 				return null;
+			}
+		}
+
+		public static Model.UserSettingsMode UserSettingsMode {
+			get {
+				var mode = ConfigurationManager.AppSettings ["UserSettingsMode"];
+
+				return (Model.UserSettingsMode) Enum.Parse(typeof (Model.UserSettingsMode), mode);
+
 			}
 		}
 

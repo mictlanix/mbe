@@ -1,4 +1,4 @@
-﻿// 
+// 
 // UsersController.cs
 // 
 // Author:
@@ -35,6 +35,7 @@ using System.Web;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
 using Mictlanix.BE.Model;
+using Mictlanix.BE.Web.Helpers;
 using Mictlanix.BE.Web.Mvc;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
@@ -57,6 +58,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Edit (string id)
 		{
 			User user = Model.User.Find (id);
+
 			return View (user);
 		}
 
@@ -73,6 +75,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				user.Employee = Employee.Find (item.EmployeeId);
 				user.Email = item.Email;
 				user.IsAdministrator = item.IsAdministrator;
+
+				if (WebConfig.UserSettingsMode == UserSettingsMode.Managed) {
+					user.UserSettings.Store = Store.Find (item.UserSettings.StoreId);
+					user.UserSettings.PointOfSale = PointOfSale.Find (item.UserSettings.PointOfSaleId);
+
+					if (item.UserSettings.CashDrawerId.HasValue) {
+						user.UserSettings.CashDrawer = CashDrawer.Find (item.UserSettings.CashDrawerId);
+					}
+				}
 
 				foreach (var i in Enum.GetValues (typeof (SystemObjects))) {
 					var obj = (SystemObjects) i;
@@ -117,10 +128,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult DeleteConfirmed (string id)
 		{
 			var item = Model.User.Find (id);
+			var settings = Model.UserSettings.TryFind (id);
 
 			using (var scope = new TransactionScope ()) {
 				foreach (var x in item.Privileges.ToList ()) {
 					x.Delete ();
+				}
+
+				if (settings != null && WebConfig.UserSettingsMode == UserSettingsMode.Managed) {
+					settings.Delete ();
 				}
 
 				scope.Flush ();

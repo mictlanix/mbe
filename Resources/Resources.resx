@@ -2516,4 +2516,13 @@ Atte: {1}.</value>
   <data name="RfcPac" xml:space="preserve">
     <value>RFC del proveedor de certificación</value>
   </data>
+  <data name="Managed" xml:space="preserve">
+    <value>Administrado</value>
+  </data>
+  <data name="SelfService" xml:space="preserve">
+    <value>Auto servicio</value>
+  </data>
+  <data name="UserSettingsMode" xml:space="preserve">
+    <value>Modo de configuración de usuario</value>
+  </data>
 </root>
