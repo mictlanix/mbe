@@ -1,202 +1,205 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F9363BAC-A7BB-4A77-81E0-892C8CCCD297}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Mictlanix.BE</RootNamespace>
-    <AssemblyName>Mictlanix.BE.Model</AssemblyName>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugType>none</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <WarningLevel>4</WarningLevel>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
-    <Optimize>True</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <WarningLevel>4</WarningLevel>
-    <DefineConstants>TRACE</DefineConstants>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Remotion.Data.Linq">
-      <HintPath>..\packages\NHibernate.3.0.0.4000\lib\Remotion.Data.Linq.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="Castle.Components.Validator, Version=2.5.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc">
-      <HintPath>..\packages\Castle.Components.Validator.2.5.0\lib\NET40\Castle.Components.Validator.dll</HintPath>
-    </Reference>
-    <Reference Include="NHibernate">
-      <HintPath>..\packages\NHibernate.3.0.0.4000\lib\NHibernate.dll</HintPath>
-    </Reference>
-    <Reference Include="NHibernate.ByteCode.Castle">
-      <HintPath>..\packages\NHibernate.3.0.0.4000\lib\NHibernate.ByteCode.Castle.dll</HintPath>
-    </Reference>
-    <Reference Include="NHibernate.Search, Version=0.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc">
-      <HintPath>..\packages\Castle.Activerecord.3.0.0.1\lib\Net40\NHibernate.Search.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Xml" />
-    <Reference Include="Castle.ActiveRecord">
-      <HintPath>..\Packages\Castle.Activerecord.3.0.0.1\lib\Net40\Castle.ActiveRecord.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.ActiveRecord.Web">
-      <HintPath>..\Packages\Castle.Activerecord.3.0.0.1\lib\Net40\Castle.ActiveRecord.Web.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Numerics" />
-    <Reference Include="Lucene.Net">
-      <HintPath>..\Packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
-    </Reference>
-    <Reference Include="Iesi.Collections">
-      <HintPath>..\packages\Iesi.Collections.3.1.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
-    </Reference>
-    <Reference Include="Antlr3.Runtime">
-      <HintPath>..\packages\Antlr.3.1.3.42154\lib\Antlr3.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.Core">
-      <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net">
-      <HintPath>..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Web" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Check.cs" />
-    <Compile Include="Attendance.cs" />
-    <Compile Include="CashCount.cs" />
-    <Compile Include="CashDrawer.cs" />
-    <Compile Include="CashSession.cs" />
-    <Compile Include="BankAccount.cs" />
-    <Compile Include="Address.cs" />
-    <Compile Include="AccessPrivilege.cs" />
-    <Compile Include="Constants\CashCountType.cs" />
-    <Compile Include="Constants\SupplierPaymentMethod.cs" />
-    <Compile Include="Constants\DebitCreditEnum.cs" />
-    <Compile Include="Constants\SystemObjects.cs" />
-    <Compile Include="Constants\AccessRight.cs" />
-    <Compile Include="EmployeeSchedule.cs" />
-    <Compile Include="Expense.cs" />
-    <Compile Include="ExpenseVoucher.cs" />
-    <Compile Include="ExpenseVoucherDetail.cs" />
-    <Compile Include="PaymentOnDelivery.cs" />
-    <Compile Include="PaymentMethodOption.cs" />
-    <Compile Include="SalesQuote.cs" />
-    <Compile Include="SalesQuoteDetail.cs" />
-    <Compile Include="SatReasonCancellation.cs" />
-    <Compile Include="SpecialReceipt.cs" />
-    <Compile Include="Store.cs" />
-    <Compile Include="SupplierReturnDetail.cs" />
-    <Compile Include="SupplierReturn.cs" />
-    <Compile Include="SupplierPayment.cs" />
-    <Compile Include="PurchaseOrderDetail.cs" />
-    <Compile Include="PurchaseOrder.cs" />
-    <Compile Include="InventoryTransferDetail.cs" />
-    <Compile Include="InventoryTransfer.cs" />
-    <Compile Include="InventoryIssue.cs" />
-    <Compile Include="InventoryIssueDetail.cs" />
-    <Compile Include="InventoryReceiptDetail.cs" />
-    <Compile Include="InventoryReceipt.cs" />
-    <Compile Include="CustomerPayment.cs" />
-    <Compile Include="Employee.cs" />
-    <Compile Include="PointOfSale.cs" />
-    <Compile Include="SalesOrder.cs" />
-    <Compile Include="SalesOrderDetail.cs" />
-    <Compile Include="SupplierAgreement.cs" />
-    <Compile Include="Contact.cs" />
-    <Compile Include="TimeClock.cs" />
-    <Compile Include="User.cs" />
-    <Compile Include="Validation\DistinctAttribute.cs" />
-    <Compile Include="Validation\DateGreaterThanAttribute.cs" />
-    <Compile Include="Validation\UniqueProductCodeAttribute.cs" />
-    <Compile Include="Warehouse.cs" />
-    <Compile Include="PriceList.cs" />
-    <Compile Include="Customer.cs" />
-    <Compile Include="Supplier.cs" />
-    <Compile Include="Product.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Constants\PaymentMethod.cs" />
-    <Compile Include="Constants\GenderEnum.cs" />
-    <Compile Include="Constants\FiscalDocumentType.cs" />
-    <Compile Include="FiscalDocument.cs" />
-    <Compile Include="FiscalDocumentDetail.cs" />
-    <Compile Include="Constants\TransactionType.cs" />
-    <Compile Include="ProductPrice.cs" />
-    <Compile Include="LotSerialTracking.cs" />
-    <Compile Include="LotSerialRequirement.cs" />
-    <Compile Include="Constants\CurrencyCode.cs" />
-    <Compile Include="Helpers\ModelHelpers.cs" />
-    <Compile Include="ExchangeRate.cs" />
-    <Compile Include="Constants\AddressType.cs" />
-    <Compile Include="TaxpayerCertificate.cs" />
-    <Compile Include="TaxpayerBatch.cs" />
-    <Compile Include="PostalCode.cs" />
-    <Compile Include="Constants\FiscalScheme.cs" />
-    <Compile Include="Constants\FiscalCertificationProvider.cs" />
-    <Compile Include="Label.cs" />
-    <Compile Include="Constants\PriceType.cs" />
-    <Compile Include="Constants\PaymentTerms.cs" />
-    <Compile Include="FiscalDocumentXml.cs" />
-    <Compile Include="CustomerRefund.cs" />
-    <Compile Include="CustomerRefundDetail.cs" />
-    <Compile Include="TaxpayerIssuer.cs" />
-    <Compile Include="TaxpayerRecipient.cs" />
-    <Compile Include="CustomerDiscount.cs" />
-    <Compile Include="TranslationRequest.cs" />
-    <Compile Include="Notarization.cs" />
-    <Compile Include="TechnicalServiceReport.cs" />
-    <Compile Include="TechnicalServiceRequest.cs" />
-    <Compile Include="Constants\TechnicalServiceRequestType.cs" />
-    <Compile Include="TechnicalServiceRequestComponent.cs" />
-    <Compile Include="TechnicalServiceReceipt.cs" />
-    <Compile Include="TechnicalServiceReceiptComponent.cs" />
-    <Compile Include="DeliveryOrder.cs" />
-    <Compile Include="DeliveryOrderDetail.cs" />
-    <Compile Include="SalesOrderPayment.cs" />
-    <Compile Include="SatUnitOfMeasurement.cs" />
-    <Compile Include="SatProductService.cs" />
-    <Compile Include="SatPostalCode.cs" />
-    <Compile Include="SatCurrency.cs" />
-    <Compile Include="SatCountry.cs" />
-    <Compile Include="SatTaxRegime.cs" />
-    <Compile Include="SatCfdiUsage.cs" />
-    <Compile Include="FiscalDocumentRelation.cs" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+<Project ToolsVersion="4.0" DefaultTargets="Build"
+	xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+		<ProjectGuid>{F9363BAC-A7BB-4A77-81E0-892C8CCCD297}</ProjectGuid>
+		<OutputType>Library</OutputType>
+		<AppDesignerFolder>Properties</AppDesignerFolder>
+		<RootNamespace>Mictlanix.BE</RootNamespace>
+		<AssemblyName>Mictlanix.BE.Model</AssemblyName>
+		<FileAlignment>512</FileAlignment>
+		<TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+		<ProductVersion>8.0.30703</ProductVersion>
+		<SchemaVersion>2.0</SchemaVersion>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+		<DebugType>none</DebugType>
+		<Optimize>False</Optimize>
+		<OutputPath>bin\Debug</OutputPath>
+		<WarningLevel>4</WarningLevel>
+		<DefineConstants>DEBUG;TRACE</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+		<DebugType>none</DebugType>
+		<Optimize>True</Optimize>
+		<OutputPath>bin\Release</OutputPath>
+		<WarningLevel>4</WarningLevel>
+		<DefineConstants>TRACE</DefineConstants>
+		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+	</PropertyGroup>
+	<ItemGroup>
+		<Reference Include="Remotion.Data.Linq">
+			<HintPath>..\packages\NHibernate.3.0.0.4000\lib\Remotion.Data.Linq.dll</HintPath>
+		</Reference>
+		<Reference Include="System" />
+		<Reference Include="System.ComponentModel.DataAnnotations" />
+		<Reference Include="System.Core" />
+		<Reference Include="System.Data" />
+		<Reference Include="Castle.Components.Validator, Version=2.5.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc">
+			<HintPath>..\packages\Castle.Components.Validator.2.5.0\lib\NET40\Castle.Components.Validator.dll</HintPath>
+		</Reference>
+		<Reference Include="NHibernate">
+			<HintPath>..\packages\NHibernate.3.0.0.4000\lib\NHibernate.dll</HintPath>
+		</Reference>
+		<Reference Include="NHibernate.ByteCode.Castle">
+			<HintPath>..\packages\NHibernate.3.0.0.4000\lib\NHibernate.ByteCode.Castle.dll</HintPath>
+		</Reference>
+		<Reference Include="NHibernate.Search, Version=0.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc">
+			<HintPath>..\packages\Castle.Activerecord.3.0.0.1\lib\Net40\NHibernate.Search.dll</HintPath>
+		</Reference>
+		<Reference Include="System.Xml" />
+		<Reference Include="Castle.ActiveRecord">
+			<HintPath>..\Packages\Castle.Activerecord.3.0.0.1\lib\Net40\Castle.ActiveRecord.dll</HintPath>
+		</Reference>
+		<Reference Include="Castle.ActiveRecord.Web">
+			<HintPath>..\Packages\Castle.Activerecord.3.0.0.1\lib\Net40\Castle.ActiveRecord.Web.dll</HintPath>
+		</Reference>
+		<Reference Include="System.Numerics" />
+		<Reference Include="Lucene.Net">
+			<HintPath>..\Packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
+		</Reference>
+		<Reference Include="Iesi.Collections">
+			<HintPath>..\packages\Iesi.Collections.3.1.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
+		</Reference>
+		<Reference Include="Antlr3.Runtime">
+			<HintPath>..\packages\Antlr.3.1.3.42154\lib\Antlr3.Runtime.dll</HintPath>
+		</Reference>
+		<Reference Include="Castle.Core">
+			<HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
+		</Reference>
+		<Reference Include="log4net">
+			<HintPath>..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="System.Configuration" />
+		<Reference Include="System.Web" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Include="Check.cs" />
+		<Compile Include="Attendance.cs" />
+		<Compile Include="CashCount.cs" />
+		<Compile Include="CashDrawer.cs" />
+		<Compile Include="CashSession.cs" />
+		<Compile Include="BankAccount.cs" />
+		<Compile Include="Address.cs" />
+		<Compile Include="AccessPrivilege.cs" />
+		<Compile Include="Constants\CashCountType.cs" />
+		<Compile Include="Constants\SupplierPaymentMethod.cs" />
+		<Compile Include="Constants\DebitCreditEnum.cs" />
+		<Compile Include="Constants\SystemObjects.cs" />
+		<Compile Include="Constants\AccessRight.cs" />
+		<Compile Include="Constants\UserSettingsMode.cs" />
+		<Compile Include="EmployeeSchedule.cs" />
+		<Compile Include="Expense.cs" />
+		<Compile Include="ExpenseVoucher.cs" />
+		<Compile Include="ExpenseVoucherDetail.cs" />
+		<Compile Include="PaymentOnDelivery.cs" />
+		<Compile Include="PaymentMethodOption.cs" />
+		<Compile Include="SalesQuote.cs" />
+		<Compile Include="SalesQuoteDetail.cs" />
+		<Compile Include="SatReasonCancellation.cs" />
+		<Compile Include="SpecialReceipt.cs" />
+		<Compile Include="Store.cs" />
+		<Compile Include="SupplierReturnDetail.cs" />
+		<Compile Include="SupplierReturn.cs" />
+		<Compile Include="SupplierPayment.cs" />
+		<Compile Include="PurchaseOrderDetail.cs" />
+		<Compile Include="PurchaseOrder.cs" />
+		<Compile Include="InventoryTransferDetail.cs" />
+		<Compile Include="InventoryTransfer.cs" />
+		<Compile Include="InventoryIssue.cs" />
+		<Compile Include="InventoryIssueDetail.cs" />
+		<Compile Include="InventoryReceiptDetail.cs" />
+		<Compile Include="InventoryReceipt.cs" />
+		<Compile Include="CustomerPayment.cs" />
+		<Compile Include="Employee.cs" />
+		<Compile Include="PointOfSale.cs" />
+		<Compile Include="SalesOrder.cs" />
+		<Compile Include="SalesOrderDetail.cs" />
+		<Compile Include="SupplierAgreement.cs" />
+		<Compile Include="Contact.cs" />
+		<Compile Include="TimeClock.cs" />
+		<Compile Include="User.cs" />
+		<Compile Include="UserSettings.cs" />
+		<Compile Include="Validation\DistinctAttribute.cs" />
+		<Compile Include="Validation\DateGreaterThanAttribute.cs" />
+		<Compile Include="Validation\UniqueProductCodeAttribute.cs" />
+		<Compile Include="Warehouse.cs" />
+		<Compile Include="PriceList.cs" />
+		<Compile Include="Customer.cs" />
+		<Compile Include="Supplier.cs" />
+		<Compile Include="Product.cs" />
+		<Compile Include="Properties\AssemblyInfo.cs" />
+		<Compile Include="Constants\PaymentMethod.cs" />
+		<Compile Include="Constants\GenderEnum.cs" />
+		<Compile Include="Constants\FiscalDocumentType.cs" />
+		<Compile Include="FiscalDocument.cs" />
+		<Compile Include="FiscalDocumentDetail.cs" />
+		<Compile Include="Constants\TransactionType.cs" />
+		<Compile Include="ProductPrice.cs" />
+		<Compile Include="LotSerialTracking.cs" />
+		<Compile Include="LotSerialRequirement.cs" />
+		<Compile Include="Constants\CurrencyCode.cs" />
+		<Compile Include="Helpers\ModelHelpers.cs" />
+		<Compile Include="ExchangeRate.cs" />
+		<Compile Include="Constants\AddressType.cs" />
+		<Compile Include="TaxpayerCertificate.cs" />
+		<Compile Include="TaxpayerBatch.cs" />
+		<Compile Include="PostalCode.cs" />
+		<Compile Include="Constants\FiscalScheme.cs" />
+		<Compile Include="Constants\FiscalCertificationProvider.cs" />
+		<Compile Include="Label.cs" />
+		<Compile Include="Constants\PriceType.cs" />
+		<Compile Include="Constants\PaymentTerms.cs" />
+		<Compile Include="FiscalDocumentXml.cs" />
+		<Compile Include="CustomerRefund.cs" />
+		<Compile Include="CustomerRefundDetail.cs" />
+		<Compile Include="TaxpayerIssuer.cs" />
+		<Compile Include="TaxpayerRecipient.cs" />
+		<Compile Include="CustomerDiscount.cs" />
+		<Compile Include="TranslationRequest.cs" />
+		<Compile Include="Notarization.cs" />
+		<Compile Include="TechnicalServiceReport.cs" />
+		<Compile Include="TechnicalServiceRequest.cs" />
+		<Compile Include="Constants\TechnicalServiceRequestType.cs" />
+		<Compile Include="TechnicalServiceRequestComponent.cs" />
+		<Compile Include="TechnicalServiceReceipt.cs" />
+		<Compile Include="TechnicalServiceReceiptComponent.cs" />
+		<Compile Include="DeliveryOrder.cs" />
+		<Compile Include="DeliveryOrderDetail.cs" />
+		<Compile Include="SalesOrderPayment.cs" />
+		<Compile Include="SatUnitOfMeasurement.cs" />
+		<Compile Include="SatProductService.cs" />
+		<Compile Include="SatPostalCode.cs" />
+		<Compile Include="SatCurrency.cs" />
+		<Compile Include="SatCountry.cs" />
+		<Compile Include="SatTaxRegime.cs" />
+		<Compile Include="SatCfdiUsage.cs" />
+		<Compile Include="FiscalDocumentRelation.cs" />
+	</ItemGroup>
+	<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+	<!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup />
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\cfdlib\src\Mictlanix.CFDLib.csproj">
-      <Project>{63EBACD8-7BB0-480F-81BF-5E0690B27112}</Project>
-      <Name>Mictlanix.CFDLib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">
-      <Project>{CBB1BA70-351E-4009-86FB-484810DC6364}</Project>
-      <Name>Mictlanix.BE.Resources</Name>
-    </ProjectReference>
-  </ItemGroup>
+	<ItemGroup />
+	<ItemGroup>
+		<None Include="app.config" />
+		<None Include="packages.config" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\cfdlib\src\Mictlanix.CFDLib.csproj">
+			<Project>{63EBACD8-7BB0-480F-81BF-5E0690B27112}</Project>
+			<Name>Mictlanix.CFDLib</Name>
+		</ProjectReference>
+		<ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">
+			<Project>{CBB1BA70-351E-4009-86FB-484810DC6364}</Project>
+			<Name>Mictlanix.BE.Resources</Name>
+		</ProjectReference>
+	</ItemGroup>
 </Project>

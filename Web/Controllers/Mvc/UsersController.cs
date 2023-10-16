@@ -59,6 +59,20 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			User user = Model.User.Find (id);
 
+			if (user.UserSettings == null) {
+				var storeId = int.Parse (WebConfig.DefaultStore);
+				var store = Store.TryFind (storeId);
+
+				var pointOfSaleId = int.Parse (WebConfig.DefaultPointOfSale);
+				var pointOfSale = PointOfSale.TryFind (pointOfSaleId);
+
+				user.UserSettings = new UserSettings () {
+					UserName = user.UserName,
+					Store = store,
+					PointOfSale = pointOfSale
+				};
+			}
+
 			return View (user);
 		}
 
@@ -77,11 +91,28 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				user.IsAdministrator = item.IsAdministrator;
 
 				if (WebConfig.UserSettingsMode == UserSettingsMode.Managed) {
-					user.UserSettings.Store = Store.Find (item.UserSettings.StoreId);
-					user.UserSettings.PointOfSale = PointOfSale.Find (item.UserSettings.PointOfSaleId);
+					if (user.UserSettings == null) {
+						var store = Store.TryFind (item.UserSettings.StoreId);
+						var pointOfSale = PointOfSale.TryFind (item.UserSettings.PointOfSaleId);
+						CashDrawer cashDrawer = null;
 
-					if (item.UserSettings.CashDrawerId.HasValue) {
-						user.UserSettings.CashDrawer = CashDrawer.Find (item.UserSettings.CashDrawerId);
+						if (item.UserSettings.CashDrawerId.HasValue) {
+							cashDrawer = CashDrawer.Find (item.UserSettings.CashDrawerId);
+						}
+
+						user.UserSettings = new UserSettings () {
+							UserName = user.UserName,
+							Store = store,
+							PointOfSale = pointOfSale,
+							CashDrawer = cashDrawer
+						};
+					} else{
+						user.UserSettings.Store = Store.Find (item.UserSettings.StoreId);
+						user.UserSettings.PointOfSale = PointOfSale.Find (item.UserSettings.PointOfSaleId);
+
+						if (item.UserSettings.CashDrawerId.HasValue) {
+							user.UserSettings.CashDrawer = CashDrawer.Find (item.UserSettings.CashDrawerId);
+						}
 					}
 				}
 
@@ -109,6 +140,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					}
 
 					privilege.Save ();
+				}
+
+				if (WebConfig.UserSettingsMode == UserSettingsMode.Managed) {
+					user.UserSettings.Save ();
 				}
 
 				user.UpdateAndFlush ();
