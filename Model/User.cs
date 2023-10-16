@@ -67,7 +67,7 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Employee", ResourceType = typeof (Resources))]
 		public virtual Employee Employee { get; set; }
 
-		[BelongsTo ("user_id", Fetch = FetchEnum.Join)]
+		[BelongsTo ("user_id", Fetch = FetchEnum.Join, Insert = false, Update = true, NotFoundBehaviour = NotFoundBehaviour.Ignore)]
 		[Display (Name = "UserSettings", ResourceType = typeof (Resources))]
 		public virtual UserSettings UserSettings { get; set; }
 

@@ -1,4 +1,4 @@
-﻿// 
+// 
 // AccountController.cs
 // 
 // Author:
@@ -61,8 +61,34 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				Email = email.ToLower ()
 			};
 
+			UserSettings settings = null;
+
+			if (WebConfig.UserSettingsMode == UserSettingsMode.Managed) {
+				var storeId = int.Parse (WebConfig.DefaultStore);
+				var store = Store.TryFind (storeId);
+
+				var pointOfSaleId = int.Parse (WebConfig.DefaultPointOfSale);
+				var pointOfSale = PointOfSale.TryFind (pointOfSaleId);
+
+				settings = new UserSettings {
+					UserName = username,
+					Store = store,
+					//StoreId = store.Id,
+					PointOfSale = pointOfSale,
+					//PointOfSaleId = pointOfSale.Id
+				};
+
+				//item.UserSettings = settings;
+			}
+
 			using (var scope = new TransactionScope ()) {
-				item.CreateAndFlush ();
+				item.Create ();
+
+				if (settings != null) {
+					settings.Create ();
+				}
+
+				scope.Flush ();
 			}
 
 			return true;

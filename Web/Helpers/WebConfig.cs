@@ -334,11 +334,11 @@ namespace Mictlanix.BE.Web.Helpers {
 
 		#region Request's (Local) Settings
 
-		static string DefaultStore {
+		public static string DefaultStore {
 			get { return ConfigurationManager.AppSettings ["DefaultStore"]; }
 		}
 
-		static string DefaultPointOfSale {
+		public static string DefaultPointOfSale {
 			get { return ConfigurationManager.AppSettings ["DefaultPointOfSale"]; }
 		}
 
