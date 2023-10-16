@@ -402,9 +402,13 @@ namespace Mictlanix.BE.Web.Helpers {
 			get {
 				var mode = ConfigurationManager.AppSettings ["UserSettingsMode"];
 
-				return (Model.UserSettingsMode) Enum.Parse(typeof (Model.UserSettingsMode), mode);
+				return (Model.UserSettingsMode) Enum.Parse (typeof (Model.UserSettingsMode), mode);
 
 			}
+		}
+
+		public static string BaseUrl {
+			get => ConfigurationManager.AppSettings ["BaseUrl"];
 		}
 
 		#endregion
