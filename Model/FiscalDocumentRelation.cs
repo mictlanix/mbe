@@ -1,4 +1,4 @@
-﻿// 
+// 
 // FiscalDocumentRelation.cs
 // 
 // Author:
@@ -31,6 +31,7 @@ using System.Linq;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
+using Mictlanix.CFDv40;
 
 namespace Mictlanix.BE.Model {
 	[ActiveRecord ("fiscal_document_relation")]
@@ -83,5 +84,8 @@ namespace Mictlanix.BE.Model {
 		public decimal OutstandingBalance {
 			get { return PreviousBalance - Amount; }
 		}
+
+		[Property]		
+		public virtual c_TipoRelacion Type { get; set; }
 	}
 }

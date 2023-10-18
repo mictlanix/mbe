@@ -27,16 +27,16 @@
 //
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
-using Mictlanix.BE.Model;
-using Mictlanix.CFDv33;
-using Mictlanix.ProFact.Client;
-using Mictlanix.DFacture.Client;
 using System.Text;
-using System.Security.Cryptography.X509Certificates;
+using Mictlanix.BE.Model;
+using Mictlanix.BE.Web.Helpers;
+using Mictlanix.CFDv40;
+using Mictlanix.DFacture.Client40;
 
-namespace Mictlanix.BE.Web.Helpers {
-	internal static class CFDHelpers {
+namespace Mictlanix.BE.Web.Helpers40 {
+		internal static class CFDHelpers40 {
 
 		public static Comprobante IssueCFD (FiscalDocument item)
 		{
@@ -54,58 +54,25 @@ namespace Mictlanix.BE.Web.Helpers {
 
 		public static Comprobante SignCFD (FiscalDocument item)
 		{
-			var cfd = FiscalDocumentToCFDv33 (item);
+			var cfd = FiscalDocumentToCFDv40 (item);
 			var cer = item.Issuer.Certificates.Single (x => x.Id == item.IssuerCertificateNumber);
-
+			//System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd-timbrado.xml", cfd.ToXmlString ());
 			cfd.Sign (cer.KeyData, cer.KeyPassword);
-
-			//System.IO.File.WriteAllText (System.Web.HttpContext.Current.Server.MapPath ("~/cfd.xml"), cfd.ToXmlString ());
 
 			return cfd;
 		}
 
-		//static Comprobante ProFactStamp (FiscalDocument item)
-		//{
-		//	var cfd = SignCFD (item);
-		//	var cli = new ProFactClient (WebConfig.ProFactUser, WebConfig.ProFactUrl);
-		//	var id = string.Format ("{0}-{1:D6}", WebConfig.ProFactCode, item.Id);
-		//	//System.IO.File.WriteAllText ("cfd.xml", cfd.ToXmlString ());
-		//	var tfd = cli.Stamp (id, cfd);
-
-		//	if (cfd.Complemento == null) {
-		//		cfd.Complemento = new List<object> ();
-		//	}
-
-		//	cfd.Complemento.Add (tfd);
-
-		//	return cfd;
-		//}
-
-		//static bool ProFactCancel (FiscalDocument item)
-		//{
-		//	try {
-		//		if (item.Version > 3.2m) {
-		//			var cli = new ProFactClient (WebConfig.ProFactUser, WebConfig.ProFactUrl);
-		//			return cli.Cancel (item.Issuer.Id, item.StampId);
-		//		} else {
-		//			var cli = new ProFactClient (WebConfig.ProFactUser, WebConfig.ProFactUrlV32);
-		//			return cli.CancelV32 (item.Issuer.Id, item.StampId);
-		//		}
-		//	} catch (ProFactClientException ex) {
-		//		if (ex.Code == "202") { // UUID Previamente cancelado
-		//			return true;
-		//		}
-
-		//		throw ex;
-		//	}
-		//}
 
 		static Comprobante DFactureStamp (FiscalDocument item)
 		{
 			var cfd = SignCFD (item);
+
+			//-- System.IO.File.WriteAllText (@"cfd.xml", cfd.ToXmlString ());
+			//-- System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd2.xml", cfd.ToXmlString ());
+
+			var cli = new DFactureClient40 (WebConfig.DFactureUser, WebConfig.DFacturePassword, WebConfig.DFactureUrl);
+
 			
-			var cli = new DFactureClient (WebConfig.DFactureUser, WebConfig.DFacturePassword, WebConfig.DFactureUrl);
-			//System.IO.File.WriteAllText ("cfd.xml", cfd.ToXmlString ());
 			var tfd = cli.Stamp (cfd);
 
 			if (cfd.Complemento == null) {
@@ -113,7 +80,9 @@ namespace Mictlanix.BE.Web.Helpers {
 			}
 
 			cfd.Complemento.Add (tfd);
-			
+
+			//- System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd.xml", cfd.ToXmlString ());
+
 			return cfd;
 		}
 
@@ -121,17 +90,16 @@ namespace Mictlanix.BE.Web.Helpers {
 		{
 			
 			var cer = item.Issuer.Certificates.First (x => x.IsActive);
-			var cli = new DFactureClient (WebConfig.DFactureUser, WebConfig.DFacturePassword, WebConfig.DFactureUrl);
+			var cli = new DFactureClient40 (WebConfig.DFactureUser, WebConfig.DFacturePassword, WebConfig.DFactureUrl);
 
 			try {
 				return cli.Cancel (item.Issuer.Id, item.Recipient, item.StampId, item.Total.ToString (),
 							Convert.ToBase64String (cer.CertificateData),
 						      	Convert.ToBase64String (cer.KeyData),
 							Encoding.UTF8.GetString (cer.KeyPassword),
-							reason:"",
-							uuidRelated:"");
-		
-			} catch (DFactureClientException ex) {
+							reason:item.CancellationReason.Id,
+							uuidRelated:item.CancellationSubstitution);
+			} catch (DFactureClientException40 ex) {
 				throw ex;
 			}
 		}
@@ -141,29 +109,30 @@ namespace Mictlanix.BE.Web.Helpers {
 			return CFDLib.Utils.PrivateKeyTest (data, password);
 		}
 
-		static Comprobante FiscalDocumentToCFDv33 (FiscalDocument item)
+		static Comprobante FiscalDocumentToCFDv40 (FiscalDocument item)
 		{
 			if (item.Type == FiscalDocumentType.PaymentReceipt) {
-				return PaymentReceiptToCFDv33 (item);
+				return PaymentReceiptToCFDv40 (item);
 			}
 
-			return InvoiceToCFDv33 (item);
+			return InvoiceToCFDv40 (item);
 		}
 
-		static Comprobante PaymentReceiptToCFDv33 (FiscalDocument item)
+		static Comprobante PaymentReceiptToCFDv40 (FiscalDocument item)
 		{
 			var cer = item.Issuer.Certificates.SingleOrDefault (x => x.Id == item.IssuerCertificateNumber);
 			var cfd = new Comprobante {
 				Serie = item.Batch,
 				Folio = item.Serial.ToString (),
 				Fecha = item.Issued.GetValueOrDefault (),
+				LugarExpedicion = item.IssuedLocation,
 				NoCertificado = item.IssuerCertificateNumber.PadLeft (20, '0'),
 				Certificado = (cer == null ? null : SecurityHelpers.EncodeBase64 (cer.CertificateData)),
 				SubTotal = 0,
-				Moneda = "XXX",
+				Moneda = c_Moneda.XXX,
 				Total = 0,
 				TipoDeComprobante = c_TipoDeComprobante.Pago,
-				LugarExpedicion = item.IssuedLocation,
+				Exportacion = c_Exportacion.NoAplica,
 				Emisor = new ComprobanteEmisor {
 					Rfc = item.Issuer.Id,
 					Nombre = item.IssuerName,
@@ -172,7 +141,9 @@ namespace Mictlanix.BE.Web.Helpers {
 				Receptor = new ComprobanteReceptor {
 					Rfc = item.Recipient,
 					Nombre = item.RecipientName,
-					UsoCFDI = c_UsoCFDI.PorDefinir
+					UsoCFDI = c_UsoCFDI.Pagos,
+					RegimenFiscalReceptor = (c_RegimenFiscal) int.Parse (item.TaxpayerRegime.Id),
+					DomicilioFiscalReceptor = item.TaxpayerPostalCode
 				},
 				Conceptos = new ComprobanteConcepto [] {
 					new ComprobanteConcepto {
@@ -181,7 +152,8 @@ namespace Mictlanix.BE.Web.Helpers {
 						ClaveUnidad = "ACT",
 						Descripcion = "Pago",
 						ValorUnitario = 0,
-						Importe = 0
+						Importe = 0,
+						ObjetoImp=c_ObjetoImp.NoObjetoImpuesto
 					}
 				},
 				Complemento = new List<object> ()
@@ -192,33 +164,197 @@ namespace Mictlanix.BE.Web.Helpers {
 						FechaPago = item.PaymentDate.GetValueOrDefault (),
 						FormaDePagoP = (c_FormaPago)(int)item.PaymentMethod,
 						MonedaP = item.Currency.GetDisplayName (),
-						TipoCambioP = item.ExchangeRate,
-						TipoCambioPSpecified = item.Currency != CurrencyCode.MXN,
-						Monto = item.PaymentAmount,
+						TipoCambioP = 1,
+						TipoCambioPSpecified = true,
+						Monto = item.PaymentAmount, //Monto = item.Paid,
 						NumOperacion = string.IsNullOrWhiteSpace (item.PaymentReference) ? null : item.PaymentReference,
 						NomBancoOrdExt = string.IsNullOrWhiteSpace (item.Reference) ? null : item.Reference,
 						DoctoRelacionado = new PagosPagoDoctoRelacionado [item.Relations.Count]
 					}
 				}
 			};
+			
 
 			int i = 0;
 			foreach (var relation in item.Relations) {
-				pagos.Pago [0].DoctoRelacionado [i++] = new PagosPagoDoctoRelacionado {
+				pagos.Pago [0].DoctoRelacionado [i] = new PagosPagoDoctoRelacionado {
 					IdDocumento = relation.Relation.StampId,
 					Serie = relation.Relation.Batch,
 					Folio = relation.Relation.Serial.ToString (),
-					MonedaDR = relation.Relation.Currency.GetDisplayName (),
-					TipoCambioDR = relation.ExchangeRate,
-					TipoCambioDRSpecified = relation.Relation.Currency != item.Currency,
-					MetodoDePagoDR = c_MetodoPago.PagoEnParcialidadesODiferido,
+					MonedaDR = relation.Relation.Currency.GetDisplayName (),					
 					NumParcialidad = relation.Installment.ToString (),
-					ImpSaldoAnt = relation.PreviousBalance,
-					ImpSaldoAntSpecified = true,
+					ImpSaldoAnt = relation.PreviousBalance,					
 					ImpPagado = relation.Amount,
-					ImpPagadoSpecified = true,
 					ImpSaldoInsoluto = relation.OutstandingBalance,
-					ImpSaldoInsolutoSpecified = true
+					EquivalenciaDR=1,
+					EquivalenciaDRSpecified=true,
+					ObjetoImpDR = c_ObjetoImp.SiObjetoImpuesto,					 
+				};
+
+				//taxes for doctoRel
+
+
+				decimal baseDR = 0m;
+				
+
+				bool hasTraslado= relation.Relation.Details.Any (d => d.TaxRate != 0);
+				var distinctTaxRates = relation.Relation.Details.Select (d => d.TaxRate).Distinct ();				
+				var trasladoCount = distinctTaxRates.Count ();
+				bool hasRetencion= relation.Relation.RetentionRate>0m;
+
+				if (hasTraslado && !hasRetencion) {
+					baseDR = Math.Round (relation.Amount / (1+WebConfig.DefaultVAT), 6);
+				} else if (hasTraslado && hasRetencion) {
+					baseDR = Math.Round (relation.Amount / 1.05333m, 6);
+				}
+
+				if (hasTraslado || hasRetencion) {
+
+					var impuestosDR = new PagosPagoDoctoRelacionadoImpuestosDR ();
+					
+					if (hasTraslado) {
+						decimal importeDR = Math.Round (baseDR * WebConfig.DefaultVAT, 6);
+						var  traslados = new PagosPagoDoctoRelacionadoImpuestosDRTrasladoDR [trasladoCount];
+
+						var distinctTaxRatesArray = distinctTaxRates.ToArray ();
+						for (int ii = 0; ii < distinctTaxRatesArray.Length; ii++) {
+							var rate = distinctTaxRatesArray [ii];
+							var traslado = new PagosPagoDoctoRelacionadoImpuestosDRTrasladoDR {
+								BaseDR = baseDR,
+								ImpuestoDR = c_Impuesto.IVA,
+								TipoFactorDR = c_TipoFactor.Tasa,
+								TasaOCuotaDR=rate,
+								ImporteDR= importeDR,
+								ImporteDRSpecified=true,
+								TasaOCuotaDRSpecified = true,								 
+							};
+							
+							traslados [ii] = traslado;
+						}
+						impuestosDR.TrasladosDR = traslados;
+					}
+					if (hasRetencion) {
+						var retenciones = new PagosPagoDoctoRelacionadoImpuestosDRRetencionDR [1];
+						decimal importeDR = Math.Round (baseDR * (relation.Relation.RetentionRate), 6);
+						var retencion = new PagosPagoDoctoRelacionadoImpuestosDRRetencionDR {
+							 BaseDR= baseDR,
+							 ImpuestoDR=c_Impuesto.IVA,
+							 TasaOCuotaDR= relation.Relation.RetentionRate,
+							 TipoFactorDR=c_TipoFactor.Tasa,
+							 ImporteDR = importeDR,							  
+						};
+						retenciones [0] = retencion;
+						impuestosDR.RetencionesDR = retenciones;
+					}
+
+					pagos.Pago [0].DoctoRelacionado [i].ImpuestosDR = impuestosDR;
+				}
+				i++;
+			}
+
+			// taxes ImpuestosP
+
+			decimal totalTrasladosBaseIVA16 = 0;
+			decimal totalTrasladosImpuestoIVA16 = 0;
+			decimal totalRetencionesIVA = 0;
+
+			/*
+			decimal montoTotalPagos = Math.Round (pagos.Pago
+				    .SelectMany (p => p.DoctoRelacionado)
+				    .Sum (d => d.ImpPagado),2);
+			*/
+
+			decimal montoTotalPagos = Math.Round (pagos.Pago.Sum (x => x.Monto), 2);
+
+			bool nodoRet =true;
+			bool nodoTras =true;
+
+			var impuestosP = new PagosPagoImpuestosP ();
+			try {
+				var sumRetenciones = pagos.Pago
+				    .SelectMany (p => p.DoctoRelacionado)
+				    .SelectMany (d => d.ImpuestosDR.RetencionesDR)
+				    .GroupBy (r => r.TasaOCuotaDR)
+				    .ToDictionary (g => g.Key, g => new {
+					    SumaImporteP = g.Sum (r => r.ImporteDR),
+					    SumaBaseP = g.Sum (r => r.BaseDR)
+				    });
+
+				totalRetencionesIVA = Math.Round (pagos.Pago
+				    .SelectMany (p => p.DoctoRelacionado)
+				    .SelectMany (d => d.ImpuestosDR.RetencionesDR)
+				    .Sum (d => d.ImporteDR),2);
+
+				var retencionesP = new PagosPagoImpuestosPRetencionP [sumRetenciones.Count];
+				int t = 0;
+				foreach (var tr in sumRetenciones) {
+					var retencionP = new PagosPagoImpuestosPRetencionP {
+						ImporteP = Math.Round (tr.Value.SumaImporteP,6),
+						 ImpuestoP=c_Impuesto.IVA
+					};
+					retencionesP [t++] = retencionP;
+				};
+								
+				impuestosP.RetencionesP= retencionesP;
+
+			} catch (Exception) {
+				nodoRet = false;				
+			}
+
+			try {
+				var sumTraslados = pagos.Pago
+					.SelectMany (p => p.DoctoRelacionado)
+					.SelectMany (d => d.ImpuestosDR.TrasladosDR)
+					.GroupBy (r => r.TasaOCuotaDR)
+					.ToDictionary (g => g.Key, g => new {
+						SumaImporteP = g.Sum (r => r.ImporteDR),
+						SumaBaseP = g.Sum (r => r.BaseDR)
+					});
+
+				var totalesTrasladosIva16 = pagos.Pago
+					.SelectMany (p => p.DoctoRelacionado)
+					.SelectMany (d => d.ImpuestosDR.TrasladosDR)
+					.Aggregate (new { ImporteDR = 0m, BaseDR = 0m }, (a, d) => new {
+						ImporteDR = a.ImporteDR + d.ImporteDR,
+						BaseDR = a.BaseDR + d.BaseDR
+					});
+
+				totalTrasladosBaseIVA16 = Math.Round (totalesTrasladosIva16.BaseDR,2);
+				totalTrasladosImpuestoIVA16 = Math.Round (totalesTrasladosIva16.ImporteDR,2);
+
+				var trasladosP = new PagosPagoImpuestosPTrasladoP [sumTraslados.Count];
+
+				int t = 0;
+				foreach (var tr in sumTraslados) {
+					 var trasladoP = new PagosPagoImpuestosPTrasladoP {
+						BaseP= Math.Round (tr.Value.SumaBaseP,6),
+						ImporteP= Math.Round (tr.Value.SumaImporteP,6),
+						TipoFactorP=c_TipoFactor.Tasa,
+						TasaOCuotaP=tr.Key,
+						ImportePSpecified=true,
+						ImpuestoP=c_Impuesto.IVA,
+						TasaOCuotaPSpecified=true,
+					};
+					trasladosP [t++] = trasladoP;					
+				};
+
+				impuestosP.TrasladosP = trasladosP;
+
+			} catch (Exception) {
+				nodoTras = false;
+			}
+
+			if (nodoRet || nodoTras) {				
+
+				pagos.Pago [0].ImpuestosP=impuestosP;
+				pagos.Totales = new PagosTotales {
+					TotalRetencionesIVA= totalRetencionesIVA,
+					TotalRetencionesIVASpecified = nodoRet,
+					TotalTrasladosBaseIVA16= totalTrasladosBaseIVA16,
+					TotalTrasladosBaseIVA16Specified = nodoTras,
+					TotalTrasladosImpuestoIVA16 = totalTrasladosImpuestoIVA16,
+					TotalTrasladosImpuestoIVA16Specified = nodoTras,
+					MontoTotalPagos = montoTotalPagos
 				};
 			}
 
@@ -227,7 +363,7 @@ namespace Mictlanix.BE.Web.Helpers {
 			return cfd;
 		}
 
-		static Comprobante InvoiceToCFDv33 (FiscalDocument item)
+		static Comprobante InvoiceToCFDv40 (FiscalDocument item)
 		{
 			var cer = item.Issuer.Certificates.SingleOrDefault (x => x.Id == item.IssuerCertificateNumber);
 			var cfd = new Comprobante {
@@ -236,16 +372,17 @@ namespace Mictlanix.BE.Web.Helpers {
 				Serie = item.Batch,
 				Folio = item.Serial.ToString (),
 				Fecha = item.Issued.GetValueOrDefault (),
+				LugarExpedicion = item.IssuedLocation,
 				MetodoPago = item.Terms == PaymentTerms.Immediate ? c_MetodoPago.PagoEnUnaSolaExhibicion : c_MetodoPago.PagoEnParcialidadesODiferido,
 				MetodoPagoSpecified = true,
 				FormaPago = (c_FormaPago) (int) item.PaymentMethod,
 				FormaPagoSpecified = true,
-				LugarExpedicion = item.IssuedLocation,
-				SubTotal = item.Subtotal,
-				Total = item.Total,
-				Moneda = item.Currency.GetDisplayName (),
 				TipoCambio = item.ExchangeRate,
+				Exportacion = c_Exportacion.NoAplica,
 				TipoCambioSpecified = item.Currency != CurrencyCode.MXN,
+				Moneda = c_Moneda.MXN, 
+				SubTotal = item.Subtotal,
+				Total = item.Total,								
 				Sello = item.IssuerDigitalSeal,
 				Certificado = (cer == null ? null : SecurityHelpers.EncodeBase64 (cer.CertificateData)),
 				Emisor = new ComprobanteEmisor {
@@ -256,13 +393,22 @@ namespace Mictlanix.BE.Web.Helpers {
 				Receptor = new ComprobanteReceptor {
 					Rfc = item.Recipient,
 					Nombre = item.RecipientName,
-					UsoCFDI = CfdiUsage2UsoCFDI (item.Usage.Id)
+					UsoCFDI = CfdiUsage2UsoCFDI (item.Usage.Id),
+					RegimenFiscalReceptor = (c_RegimenFiscal) int.Parse (item.TaxpayerRegime.Id),
+					DomicilioFiscalReceptor=item.TaxpayerPostalCode
 				},
 				Conceptos = new ComprobanteConcepto [item.Details.Count]
 			};
 
 			int i = 0;
 			foreach (var detail in item.Details) {
+
+				var objImp = c_ObjetoImp.SiObjetoImpuesto; 
+				if (detail.Subtotal == detail.Discount) {
+					objImp = c_ObjetoImp.NoObjetoImpuesto;
+				}
+
+
 				cfd.Conceptos [i] = new ComprobanteConcepto {
 					Cantidad = detail.Quantity,
 					ClaveUnidad = detail.UnitOfMeasurement.Id,
@@ -271,16 +417,12 @@ namespace Mictlanix.BE.Web.Helpers {
 					ClaveProdServ = detail.ProductService.Id,
 					Descripcion = detail.ProductName,
 					ValorUnitario = detail.NetPrice,
+					ObjetoImp = objImp,
 					Importe = detail.Subtotal,
 					Descuento = detail.Discount,
 					DescuentoSpecified = detail.Discount > 0m
 				};
 
-				//cfd.Conceptos [i].InformacionAduanera = new ComprobanteConceptoInformacionAduanera [] {
-				//	new ComprobanteConceptoInformacionAduanera {
-				//		NumeroPedimento = ""
-				//	}
-				//};
 
 				if (detail.Subtotal == detail.Discount) {
 					i++;
@@ -288,6 +430,7 @@ namespace Mictlanix.BE.Web.Helpers {
 				}
 
 				if (detail.TaxRate >= 0m) {
+					
 					cfd.Conceptos [i].Impuestos = new ComprobanteConceptoImpuestos {
 						Traslados = new ComprobanteConceptoImpuestosTraslado [] {
 							new ComprobanteConceptoImpuestosTraslado {
@@ -334,12 +477,41 @@ namespace Mictlanix.BE.Web.Helpers {
 
 			var taxes = new List<ComprobanteImpuestosTraslado> ();
 
+			var resultComprobanteImpuestosTraslado = cfd.Conceptos
+			    .Where (c => c.Impuestos != null) // Filtrar elementos con Impuestos no nulos
+			    .SelectMany (c => c.Impuestos.Traslados)
+			    .GroupBy (t => new { t.Impuesto, t.TipoFactor, t.TasaOCuota })
+			    .Select (g => new {
+				    g.Key.Impuesto,
+				    g.Key.TipoFactor,
+				    g.Key.TasaOCuota,
+				    SumaBase = g.Sum (t => t.Base),
+				    SumaImporte = g.Sum (t => t.Importe)
+			    });
+
+
+			foreach (var group in resultComprobanteImpuestosTraslado) {
+
+				taxes.Add (new ComprobanteImpuestosTraslado {
+					Impuesto = group.Impuesto,
+					TipoFactor = group.TipoFactor,
+					TasaOCuota = group.TasaOCuota,
+					TasaOCuotaSpecified = group.TipoFactor == c_TipoFactor.Exento ? false : true,
+					Base = Model.ModelHelpers.TotalRounding (group.SumaBase),
+					Importe = Model.ModelHelpers.TotalRounding (group.SumaImporte),
+					ImporteSpecified = group.TipoFactor == c_TipoFactor.Exento ?false : true
+				});
+			}
+/*
 			if (cfd.Conceptos.Any (c => c.Impuestos != null && c.Impuestos.Traslados.Any (x => x.TasaOCuota == decimal.Zero))) {
 				taxes.Add (new ComprobanteImpuestosTraslado {
 					Impuesto = c_Impuesto.IVA,
 					TipoFactor = c_TipoFactor.Tasa,
 					TasaOCuota = 0.000000m,
-					Importe = 0.00m
+					TasaOCuotaSpecified = true,
+					Base = Model.ModelHelpers.TotalRounding (cfd.Conceptos.Where (x => x.Impuestos != null).Sum (c => c.Impuestos.Traslados.Where (x => x.TasaOCuota == 0.000000m).Sum (x => x.Base))),
+					Importe = 0.00m,
+					ImporteSpecified = true
 				});
 			}
 
@@ -348,26 +520,43 @@ namespace Mictlanix.BE.Web.Helpers {
 					Impuesto = c_Impuesto.IVA,
 					TipoFactor = c_TipoFactor.Tasa,
 					TasaOCuota = WebConfig.DefaultVAT,
-					Importe = cfd.Conceptos.Where (x => x.Impuestos != null).Sum (c => c.Impuestos.Traslados.Where (x => x.TasaOCuota == WebConfig.DefaultVAT).Sum (x => x.Importe))
+					TasaOCuotaSpecified = true,
+					Base = Model.ModelHelpers.TotalRounding (cfd.Conceptos.Where (x => x.Impuestos != null).Sum (c => c.Impuestos.Traslados.Where (x => x.TasaOCuota == WebConfig.DefaultVAT).Sum (x => x.Base))),
+					Importe = cfd.Conceptos.Where (x => x.Impuestos != null).Sum (c => c.Impuestos.Traslados.Where (x => x.TasaOCuota == WebConfig.DefaultVAT).Sum (x => x.Importe)),
+					ImporteSpecified = true
 				});
 			}
-
+*/
 			cfd.Impuestos.Traslados = taxes.ToArray ();
 			cfd.Impuestos.TotalImpuestosTrasladados = cfd.Impuestos.Traslados.Sum (x => x.Importe);
 			cfd.Impuestos.TotalImpuestosTrasladadosSpecified = true;
 
-			if (item.RetentionRate > 0m) {
-				cfd.Impuestos.Retenciones = new ComprobanteImpuestosRetencion [] {
+			try {
+				var resultComprobanteImpuestosRetencion = cfd.Conceptos
+					.SelectMany (c => c.Impuestos.Retenciones)
+					.Aggregate (new { Importe = 0m }, (a, d) => new {
+					Importe = a.Importe + d.Importe
+				});
+
+				if (item.RetentionRate > 0m) {
+					cfd.Impuestos.Retenciones = new ComprobanteImpuestosRetencion [] {
 					new ComprobanteImpuestosRetencion {
 						Impuesto = c_Impuesto.IVA,
 						Importe = item.RetentionTaxes,
-					}
-				};
+						}
+					};
 
-				cfd.Impuestos.TotalImpuestosRetenidos = cfd.Impuestos.Retenciones.Sum (x => x.Importe);
-				cfd.Impuestos.TotalImpuestosRetenidosSpecified = true;
+					cfd.Impuestos.TotalImpuestosRetenidos = cfd.Impuestos.Retenciones.Sum (x => x.Importe);
+					cfd.Impuestos.TotalImpuestosRetenidosSpecified = true;
+				}
+			} catch (Exception) {
+
+				cfd.Impuestos.TotalImpuestosRetenidos = 0;
+				cfd.Impuestos.TotalImpuestosRetenidosSpecified = false;
 			}
+			
 
+			
 			if (item.LocalRetentionRate > 0m) {
 				var implocal = new ImpuestosLocalesRetencionesLocales {
 					ImpLocRetenido = item.LocalRetentionName,
@@ -386,9 +575,15 @@ namespace Mictlanix.BE.Web.Helpers {
 					}
 				});
 			}
+			
+			if (item.Relations.Any ()) {				
 
-			if (item.Relations.Any ()) {
+				//master node
+				ComprobanteCfdiRelacionados [] cFdV40ComprobanteCfdiRelacionados = new ComprobanteCfdiRelacionados [1];
+
+				//object
 				var rels = new ComprobanteCfdiRelacionados {
+					//list
 					CfdiRelacionado = new ComprobanteCfdiRelacionadosCfdiRelacionado [item.Relations.Count]
 				};
 
@@ -397,19 +592,25 @@ namespace Mictlanix.BE.Web.Helpers {
 				} else if (item.Type == FiscalDocumentType.CreditNote) {
 					rels.TipoRelacion = c_TipoRelacion.NotaDeCredito;
 				} else {
-					rels.TipoRelacion = c_TipoRelacion.Sustitucion;
+					rels.TipoRelacion = item.Relations [0].Type;					
 				}
 
 				i = 0;
+
+				//fill the list of the object
 				foreach (var relation in item.Relations) {
 					rels.CfdiRelacionado [i++] = new ComprobanteCfdiRelacionadosCfdiRelacionado {
 						UUID = relation.Relation.StampId
 					};
 				}
 
-				cfd.CfdiRelacionados = rels;
-			}
+				//fill master node with object and list
+				cFdV40ComprobanteCfdiRelacionados [0] = rels;
 
+				//put in cfd
+				cfd.CfdiRelacionados = cFdV40ComprobanteCfdiRelacionados;
+			}
+			
 			return cfd;
 		}
 
@@ -478,9 +679,12 @@ namespace Mictlanix.BE.Web.Helpers {
 				return c_UsoCFDI.DepositosEnCuentasParaElAhorroPrimasQueTenganComoBasePlanesDePensiones;
 			case "D10":
 				return c_UsoCFDI.PagosPorServiciosEducativos;
-			case "P01":
-				return c_UsoCFDI.PorDefinir;
+			case "S01":
+				return c_UsoCFDI.SinEfectosFiscales;
+			case "P01": // for compatibility
+				return c_UsoCFDI.GastosEnGeneral;
 			}
+
 
 			throw new ArgumentOutOfRangeException (nameof (code));
 		}

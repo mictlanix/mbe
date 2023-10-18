@@ -1,14 +1,36 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @model TaxpayerRecipient
 
+<style>
+	ul.token-input-list {	
+		width: unset;
+	}
+</style>
 <div class="form-group">
-  	<div class="col-xs-4 field-required">@Html.LabelFor(x => x.Id) @Html.EditorFor(x => x.Id) @Html.ValidationMessageFor(x => x.Id)</div>
+	<div class="col-xs-4 field-required">@Html.LabelFor(x => x.Id) @Html.EditorFor(x => x.Id) @Html.ValidationMessageFor(x => x.Id)</div>
 	<div class="col-xs-8">@Html.LabelFor(x => x.Name) @Html.EditorFor(x => x.Name) @Html.ValidationMessageFor(x => x.Name)</div>
 </div>
+
 <div class="form-group">
-  	<div class="col-xs-12 field-required">@Html.LabelFor(x => x.Email) @Html.EditorFor(x => x.Email, new { htmlAttributes = new { @class = "form-control" } }) @Html.ValidationMessageFor(x => x.Email)</div>
+	<div class="col-xs-4 field-required">@Html.LabelFor(x => x.PostalCode) @Html.EditorFor(x => x.PostalCode) @Html.ValidationMessageFor(x => x.PostalCode)</div>
+	<div class="col-xs-8 field-required">@Html.LabelFor(x => x.RegimeId) @Html.EditorFor(x => x.RegimeId) @Html.ValidationMessageFor(x => x.RegimeId)</div>
 </div>
+
+<div class="form-group">
+	<div class="col-xs-12 field-required">@Html.LabelFor(x => x.Email) @Html.EditorFor(x => x.Email, new { htmlAttributes = new { @class = "form-control" } }) @Html.ValidationMessageFor(x => x.Email)</div>
+</div>
+
 <script type="text/javascript">
-$("#Id").css('text-transform', 'uppercase');
+	$("#Id").css('text-transform', 'uppercase');
+
+	$(document).ready(function () {
+@if (Model.Regime != null)
+{
+<text>$("#RegimeId").tokenInput("add", { id: "@Model.Regime.Id", name: "@Model.Regime.Description" });</text>
+}
+
+	});
+
+
 </script>
