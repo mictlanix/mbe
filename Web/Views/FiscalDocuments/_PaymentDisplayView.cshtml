@@ -4,62 +4,96 @@
 @model FiscalDocument
 
 @{
-    var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.PaymentReceipt);
+	var CurrentUser = Html.CurrentUser() ?? new User();
+	var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.PaymentReceipt);
 }
 
 <fieldset>
 	<div class='row'>
 		<div class='col-xs-8'>
-	  		<dl class=''>
+			<dl class=''>
 				<dt>@Resources.Issuer</dt>
 				<dd>@Html.DisplayFor(x => x.Issuer, "String")</dd>
 				<dt>@Resources.Customer</dt>
 				<dd>@Html.DisplayFor(x => x.Customer.Name)</dd>
 				<dt>@Resources.Recipient</dt>
 				<dd>
-                    @Model.Recipient
-                    @if(!string.IsNullOrWhiteSpace (@Model.RecipientName)) {
-                        <text>(@Model.RecipientName)</text>
-                    }
-                </dd>
-			@if (!string.IsNullOrEmpty (Model.Reference)) {
-                <dt>@Resources.ForeignBankName</dt>
-				<dd>@Html.DisplayFor(x => x.Reference)</dd>
-			}
+					@Model.Recipient
+					@if (!string.IsNullOrWhiteSpace(@Model.RecipientName))
+					{
+						<text>(@Model.RecipientName)</text>
+					}
+				</dd>
+				@if (!string.IsNullOrEmpty(Model.Reference))
+				{
+					<dt>@Resources.ForeignBankName</dt>
+					<dd>@Html.DisplayFor(x => x.Reference)</dd>
+				}
 			</dl>
 		</div>
-	  	<div class='col-xs-4'>
-            <dl class='dl-horizontal'>
-                <dt>@Resources.Id</dt>
-                <dd>@Html.DisplayFor(x => x.Id)</dd>
-                <dt>@Resources.Batch</dt>
-                <dd>@Html.DisplayFor(x => x.Batch)</dd>
-                <dt>@Resources.Serial</dt>
-                <dd>@Html.DisplayFor(x => x.Serial)</dd>
-                <dt>@Resources.PaymentDate</dt>
-                <dd>@Html.DisplayFor(x => x.PaymentDate)</dd>
-                <dt>@Resources.TotalAmount</dt>
-                <dd>@Html.DisplayFor(x => x.PaymentAmount)</dd>
-                <dt>@Resources.Currency</dt>
-                <dd>@Html.DisplayFor(x => x.Currency)</dd>
-                <dt>@Resources.ExchangeRate</dt>
-                <dd>@Html.DisplayFor(x => x.ExchangeRate)</dd>
-                <dt>@Resources.PaymentMethod</dt>
-                <dd>@Model.PaymentMethod.GetDisplayName()</dd>
-            @if (!string.IsNullOrEmpty (Model.PaymentReference)) {
-                <dt>@Resources.PaymentReference</dt>
-                <dd>@Html.DisplayFor(x => x.PaymentReference)</dd>
-            }
-  		</div>
+		<div class='col-xs-4'>
+			<dl class='dl-horizontal'>
+				<dt>@Resources.Id</dt>
+				<dd>@Html.DisplayFor(x => x.Id)</dd>
+				<dt>@Resources.Batch</dt>
+				<dd>@Html.DisplayFor(x => x.Batch)</dd>
+				<dt>@Resources.Serial</dt>
+				<dd>@Html.DisplayFor(x => x.Serial)</dd>
+				<dt>@Resources.PaymentDate</dt>
+				<dd>@Html.DisplayFor(x => x.PaymentDate)</dd>
+				<dt>@Resources.TotalAmount</dt>
+				<dd>@Html.DisplayFor(x => x.PaymentAmount)</dd>
+				<dt>@Resources.Currency</dt>
+				<dd>@Html.DisplayFor(x => x.Currency)</dd>
+				<dt>@Resources.ExchangeRate</dt>
+				<dd>@Html.DisplayFor(x => x.ExchangeRate)</dd>
+				<dt>@Resources.PaymentMethod</dt>
+				<dd>@Model.PaymentMethod.GetDisplayName()</dd>
+				@if (!string.IsNullOrEmpty(Model.PaymentReference))
+				{
+					<dt>@Resources.PaymentReference</dt>
+					<dd>@Html.DisplayFor(x => x.PaymentReference)</dd>
+				}
+		</div>
 	</div>
-@if(Privilege.AllowDelete && !Model.IsCancelled) {
-	<div class='row'>
-  		<div class='col-xs-12'>
-	    @using (Html.BeginForm("Cancel", "FiscalDocuments", new { id =  Model.Id }, FormMethod.Post, new { @class = "modal-form pull-right" })) {
-			<button type="submit" class="icon cancel">@Resources.Cancel</button>
-	    }
-  		</div>
-	</div>
-}
 </fieldset>
+@if (Privilege.AllowDelete && !Model.IsCancelled)
+{
+	<fieldset>
+
+		@using (Html.BeginForm("Cancel", "FiscalDocuments", new { id = Model.Id }, FormMethod.Post, new { @class = "" }))
+		{
+			<div class="row">
+				<div class="col-xs-6 ">
+					@Resources.Reason
+				</div>
+				<div class="col-xs-4 ">
+					@Html.LabelFor(x => x.CancellationSubstitution)
+				</div>
+				<div class="col-xs-2"></div>
+
+			</div>
+			<div class="row ">
+				<div class="col-xs-6 ">
+					<a id='reason' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id'
+					   data-value='@Model.CancellationReason.Id' data-source='@Url.Action("Reasons")'
+					   data-url='@Url.Action("SetCancellationReason", new { id = Model.Id })'
+					   data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+						@Html.DisplayFor(x => x.CancellationReason.Description)
+					</a>
+				</div>
+				<div class="col-xs-4">
+					@Html.EditorFor(x => x.CancellationSubstitution) @Html.ValidationMessageFor(x => x.CancellationSubstitution)
+				</div>
+				<div class="col-xs-2 pull-right">
+					<button type="submit" class="icon cancel pull-right">@Resources.Cancel</button>
+				</div>
+			</div>
+
+		}
+
+		<script>
+			$("#reason").editable();
+		</script>
+	</fieldset>
+}

@@ -229,6 +229,14 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "CancellationDate", ResourceType = typeof (Resources))]
 		public virtual DateTime? CancellationDate { get; set; }
 
+		[BelongsTo ("`cancellation_reason`")]		
+		[Display (Name = "CancellationReason", ResourceType = typeof (Resources))]
+		public virtual SatReasonCancellation CancellationReason { get; set; }
+
+		[Display (Name = "CancellationSubstitution", ResourceType = typeof (Resources))]
+		[Property ("cancellation_substitution")]
+		public virtual string CancellationSubstitution { get; set; }
+
 		[Property]
 		public virtual decimal Version { get; set; }
 
@@ -371,5 +379,21 @@ namespace Mictlanix.BE.Model {
 		public virtual decimal BalanceEx {
 			get { return PaymentAmountEx - PaidEx; }
 		}
+
+		[BelongsTo ("taxpayer_regime")]
+		[Display (Name = "TaxRegime", ResourceType = typeof (Resources))]
+		public virtual SatTaxRegime TaxpayerRegime { get; set; }
+
+		[Property ("taxpayer_regime_name")]
+		[Display (Name = "TaxRegime", ResourceType = typeof (Resources))]
+		public virtual string TaxpayerRegimeName { get; set; }
+
+		[Property ("taxpayer_postal_code")]
+		[Display (Name = "TaxpayerPostalCode", ResourceType = typeof (Resources))]
+		public virtual string TaxpayerPostalCode { get; set; }
+
+		[Property ("rfc_pac")]
+		[Display (Name = "RfcPac", ResourceType = typeof (Resources))]
+		public virtual string RfcPac { get; set; }
 	}
 }

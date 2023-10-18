@@ -97,6 +97,7 @@
     <Compile Include="PaymentMethodOption.cs" />
     <Compile Include="SalesQuote.cs" />
     <Compile Include="SalesQuoteDetail.cs" />
+    <Compile Include="SatReasonCancellation.cs" />
     <Compile Include="SpecialReceipt.cs" />
     <Compile Include="Store.cs" />
     <Compile Include="SupplierReturnDetail.cs" />
@@ -189,6 +190,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\cfdlib\src\Mictlanix.CFDLib.csproj">
+      <Project>{63EBACD8-7BB0-480F-81BF-5E0690B27112}</Project>
+      <Name>Mictlanix.CFDLib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">
       <Project>{CBB1BA70-351E-4009-86FB-484810DC6364}</Project>
       <Name>Mictlanix.BE.Resources</Name>
