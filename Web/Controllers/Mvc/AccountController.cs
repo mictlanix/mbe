@@ -46,6 +46,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		bool ValidateUser (string username, string password)
 		{
 			var item = Model.User.Queryable.SingleOrDefault (x => x.UserName == username);
+
+			if (WebConfig.UserSettingsMode == UserSettingsMode.Managed && item.UserSettings != null) {
+				var localSettings = new LocalSettings () {
+					StoreId = item.UserSettings.Store.Id,
+					PointOfSaleId = item.UserSettings.PointOfSale.Id,
+					CashDrawerId = item.UserSettings.CashDrawer.Id
+				};
+
+				LocalSettings (localSettings);
+			}
+
 			return item != null && item.Password == SecurityHelpers.SHA1 (password);
 		}
 
@@ -154,7 +165,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			var result = await Task.Factory.StartNew (() =>
 				NotificationsHelpers.SendEmail (WebConfig.DefaultSender, new string [] { email }, null, null, subject, message));
-			
+
 			return result;
 		}
 
