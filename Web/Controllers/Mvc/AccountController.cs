@@ -48,11 +48,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var item = Model.User.Queryable.SingleOrDefault (x => x.UserName == username);
 
 			if (WebConfig.UserSettingsMode == UserSettingsMode.Managed && item.UserSettings != null) {
-				var localSettings = new LocalSettings () {
-					StoreId = item.UserSettings.Store.Id,
-					PointOfSaleId = item.UserSettings.PointOfSale.Id,
-					CashDrawerId = item.UserSettings.CashDrawer.Id
-				};
+				var localSettings = new LocalSettings ();
+
+				if(item.UserSettings.Store != null) {
+					localSettings.StoreId = item.UserSettings.Store.Id;
+				}
+
+				if (item.UserSettings.PointOfSale != null) {
+					localSettings.PointOfSaleId = item.UserSettings.PointOfSale.Id;
+				}
+
+				if (item.UserSettings.CashDrawer != null) {
+					localSettings.CashDrawerId = item.UserSettings.CashDrawer.Id;
+				}
 
 				LocalSettings (localSettings);
 			}
