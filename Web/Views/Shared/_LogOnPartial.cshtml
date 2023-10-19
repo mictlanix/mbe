@@ -25,9 +25,6 @@
 									<span class="gbps2">@Model.Email</span>
 									<ol class="gbmcc">
 										<li class="gbmtc"></li>
-										<li class="gbmtc">
-											<a class="gbml1" href="@Url.Action("ChangePassword", "Account")">@Resources.ChangePassword</a>
-										</li>
 										@if (Mictlanix.BE.Web.Helpers.WebConfig.UserSettingsMode == Mictlanix.BE.Model.UserSettingsMode.SelfService)
 										{
 
@@ -35,6 +32,30 @@
 												<a class="gbml1" href="@Url.Action("LocalSettings", "Account")">@Resources.LocalSettings</a>
 											</li>
 										}
+										else
+										{
+											if (Model.UserSettings.Store != null)
+											{
+												<li class="gbmtc">
+													<span class="gbps2">@Model.UserSettings.Store.Name</span>
+												</li>
+											}
+											if (Model.UserSettings.PointOfSale != null)
+											{
+												<li class="gbmtc">
+													<span class="gbps2">@Model.UserSettings.PointOfSale.Name</span>
+												</li>
+											}
+											if (Model.UserSettings.CashDrawer != null)
+											{
+												<li class="gbmtc">
+													<span class="gbps2">@Model.UserSettings.CashDrawer.Name</span>
+												</li>
+											}
+										}
+										<li class="gbmtc">
+											<a class="gbml1" href="@Url.Action("ChangePassword", "Account")">@Resources.ChangePassword</a>
+										</li>
 									</ol>
 								</div>
 								<div class="gbmh"></div>
