@@ -1,4 +1,4 @@
-﻿$(function () {
+$(function () {
 	$.ajaxSetup({ cache: false });
 	
 	$(document).click(hidePopups);
@@ -18,6 +18,8 @@
 		} else {
 			$(this).datepicker({ language: 'es', format: 'yyyy-mm-dd' });
 		}
+
+		setTimeout(function () { $(".datepicker div.datepicker-days").show() }, 500);
 	});
 });
 function onSearchBegin() {
