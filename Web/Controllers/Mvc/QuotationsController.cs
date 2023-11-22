@@ -923,7 +923,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			int pl = SalesQuote.Queryable.Where (x => x.Id == order)
 				    .Select (x => x.Customer.PriceList.Id).Single ();
 			var query = from x in ProductPrice.Queryable
-				    where x.List.Id == pl && (
+				    where x.List.Id == pl && x.Product.IsSalable && ( 
 					x.Product.Name.Contains (pattern) ||
 					x.Product.Code.Contains (pattern) ||
 					x.Product.Model.Contains (pattern) ||
