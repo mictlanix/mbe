@@ -1,5 +1,3 @@
-USE mbe_ramos;
-
 CREATE TABLE `user_settings` (
   `user` varchar(20) NOT NULL,
   `store` int(11) NOT NULL,
@@ -14,9 +12,9 @@ CREATE TABLE `user_settings` (
   CONSTRAINT `user_settings_store_fk` FOREIGN KEY (`store`) REFERENCES `store` (`store_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `user_settings_point_sale_fk` FOREIGN KEY (`point_sale`) REFERENCES `point_sale` (`point_sale_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `user_settings_cash_drawer_fk` FOREIGN KEY (`cash_drawer`) REFERENCES `cash_drawer` (`cash_drawer_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=245634 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `user_settings` VALUES
+INSERT INTO `user_settings` VALUE
 ('achuicalco', '8', '13', '9'),
 ('admin', '1', '1', '4'),
 ('andres', '1', '1', '4'),
@@ -32,4 +30,4 @@ INSERT INTO `user_settings` VALUES
 ('huehuetoca', '1', '1', '4'),
 ('laura', '1', '1', '4'),
 ('mauricio', '1', '1', '4'),
-('raga84', '1', '1', '4')
+('raga84', '1', '1', '4');
