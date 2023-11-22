@@ -1,100 +1,130 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model;
 @using Mictlanix.BE.Web.Helpers;
 @model Mictlanix.BE.Model.User
 
 @{
-    ViewBag.Title = Resources.Edit;
+	ViewBag.Title = Resources.Edit;
 }
 
 <h2>@Resources.Edit</h2>
 
-@using (Html.BeginForm()) {
-    @Html.ValidationSummary(true)
-    <fieldset>
-        <legend>@Resources.User</legend>
-        
-        @Html.HiddenFor(model => model.UserName)
+@using (Html.BeginForm())
+{
+	@Html.ValidationSummary(true)
+	<fieldset>
+		<legend>@Resources.User</legend>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.UserName)
-        </div>
-        <div class="editor-field">
-            @Html.DisplayFor(model => model.UserName)
-        </div>
+		@Html.HiddenFor(model => model.UserName)
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Employee)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.EmployeeId)
-            @Html.ValidationMessageFor(model => model.EmployeeId)
-        </div>
+		<div class="editor-label">
+			@Html.LabelFor(model => model.UserName)
+		</div>
+		<div class="editor-field">
+			@Html.DisplayFor(model => model.UserName)
+		</div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Email)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Email)
-        </div>
+		<div class="editor-label">
+			@Html.LabelFor(model => model.Employee)
+		</div>
+		<div class="editor-field">
+			@Html.EditorFor(model => model.EmployeeId)
+			@Html.ValidationMessageFor(model => model.EmployeeId)
+		</div>
 
-        <div class="editor-label">
-            @Html.EditorFor(model => model.IsAdministrator)
-        </div>
+		<div class="editor-label">
+			@Html.LabelFor(model => model.Email)
+		</div>
+		<div class="editor-field">
+			@Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+			@Html.ValidationMessageFor(model => model.Email)
+		</div>
 
-        <table>
-            <tr>
-                <th>@Resources.Module</th>
-                <th>
-                    @Html.CheckBox("Read")
-                    @Resources.Read
-                </th>
-                <th>
-                    @Html.CheckBox("Create")
-                    @Resources.Create
-                </th>
-                <th>
-                    @Html.CheckBox("Update")
-                    @Resources.Update
-                </th>
-                <th>
-                    @Html.CheckBox("Delete")
-                    @Resources.Delete
-                </th>
-            </tr>
-            @foreach(var item in Enum.GetValues(typeof(SystemObjects)))
-            {
-            <tr class="center">
-                <td class="left">
-                    @(((SystemObjects)item).GetDisplayName())
-                </td>
-                <td>
-                    @Html.CheckBox(Enum.GetName(typeof(SystemObjects), item) + "Read",
-                                    Model.Privileges.Count(x => x.Object == (SystemObjects)item && (x.Privileges & AccessRight.Read) != 0) > 0)
-                </td>
-                <td>
-                    @Html.CheckBox(Enum.GetName(typeof(SystemObjects), item) + "Create",
-                                   Model.Privileges.Count(x => x.Object == (SystemObjects)item && (x.Privileges & AccessRight.Create) != 0) > 0)
-                </td>
-                <td>
-                    @Html.CheckBox(Enum.GetName(typeof(SystemObjects), item) + "Update",
-                                    Model.Privileges.Count(x => x.Object == (SystemObjects)item && (x.Privileges & AccessRight.Update) != 0) > 0)
-                </td>
-                <td>
-                    @Html.CheckBox(Enum.GetName(typeof(SystemObjects), item) + "Delete",
-                                    Model.Privileges.Count(x => x.Object == (SystemObjects)item && (x.Privileges & AccessRight.Delete) != 0) > 0)
-                </td>
-            </tr>
-            }
-        </table>
-       
-    </fieldset>
-    <p><button type="submit" class="icon save pull-right">@Resources.Save</button></p>
+		@if (WebConfig.UserSettingsMode == UserSettingsMode.Managed)
+		{
+			<div class="editor-label">
+				@Html.LabelFor(model => model.UserSettings.Store)
+			</div>
+			<div class="editor-field">
+				@Html.EditorFor(model => model.UserSettings.StoreId)
+				@Html.ValidationMessageFor(model => model.UserSettings.StoreId)
+			</div>
+
+			<div class="editor-label">
+				@Html.LabelFor(model => model.UserSettings.PointOfSale)
+			</div>
+			<div class="editor-field">
+				@Html.EditorFor(model => model.UserSettings.PointOfSaleId)
+				@Html.ValidationMessageFor(model => model.UserSettings.PointOfSaleId)
+			</div>
+
+			<div class="editor-label">
+				@Html.LabelFor(model => model.UserSettings.CashDrawer)
+			</div>
+			<div class="editor-field">
+				@Html.EditorFor(model => model.UserSettings.CashDrawerId)
+				@Html.ValidationMessageFor(model => model.UserSettings.CashDrawerId)
+			</div>
+
+		}
+
+		<div class="editor-label">
+			@Html.EditorFor(model => model.IsAdministrator)
+		</div>
+
+		<table>
+			<tr>
+				<th>@Resources.Module</th>
+				<th>
+					@Html.CheckBox("Read")
+					@Resources.Read
+				</th>
+				<th>
+					@Html.CheckBox("Create")
+					@Resources.Create
+				</th>
+				<th>
+					@Html.CheckBox("Update")
+					@Resources.Update
+				</th>
+				<th>
+					@Html.CheckBox("Delete")
+					@Resources.Delete
+				</th>
+			</tr>
+			@foreach (var item in Enum.GetValues(typeof(SystemObjects)))
+			{
+				<tr class="center">
+					<td class="left">
+						@(((SystemObjects)item).GetDisplayName())
+					</td>
+					<td>
+						@Html.CheckBox(Enum.GetName(typeof(SystemObjects), item) + "Read",
+																							   Model.Privileges.Count(x => x.Object == (SystemObjects)item && (x.Privileges & AccessRight.Read) != 0) > 0)
+					</td>
+					<td>
+						@Html.CheckBox(Enum.GetName(typeof(SystemObjects), item) + "Create",
+																							  Model.Privileges.Count(x => x.Object == (SystemObjects)item && (x.Privileges & AccessRight.Create) != 0) > 0)
+					</td>
+					<td>
+						@Html.CheckBox(Enum.GetName(typeof(SystemObjects), item) + "Update",
+																							   Model.Privileges.Count(x => x.Object == (SystemObjects)item && (x.Privileges & AccessRight.Update) != 0) > 0)
+					</td>
+					<td>
+						@Html.CheckBox(Enum.GetName(typeof(SystemObjects), item) + "Delete",
+																							   Model.Privileges.Count(x => x.Object == (SystemObjects)item && (x.Privileges & AccessRight.Delete) != 0) > 0)
+					</td>
+				</tr>
+			}
+		</table>
+
+	</fieldset>
+
+	<p><button type="submit" class="icon save pull-right">@Resources.Save</button></p>
 }
 
 <div>
-        @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+	@Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
 <script type="text/javascript">
     $(function () {
@@ -106,6 +136,54 @@
             $("table tr td input:checkbox[name$='" + this.name + "']").each(function () {
                 this.checked = checkedStatus;
             });
+		});
+
+		$("#UserSettings_StoreId").tokenInput("@Url.Action("GetSuggestions", "Stores")", {
+            hintText: "@Resources.HIntText",
+            noResultsText: "@Resources.NoResultsText",
+            searchingText: "@Resources.SearchingText",
+            queryParam: "pattern", minChars: 1, tokenLimit: 1,
+		    @if (Model.UserSettings.Store != null) {
+		    	<text>prePopulate: [{ id: "@Model.UserSettings.Store.Id", name: "@Model.UserSettings.Store.Name"}],</text>
+			}
+            onDelete: function (item){
+				$("#UserSettings_PointOfSaleId").tokenInput("clear");
+				$("#UserSettings_CashDrawerId").tokenInput("clear");
+            }
+        });
+
+		$("#UserSettings_PointOfSaleId").tokenInput(function() {
+			var item = $("#UserSettings_StoreId").tokenInput("get")[0];
+
+			if(typeof(item) === "undefined") {
+				item = {id : 0};
+			}
+
+			return "@Url.Action("GetSuggestions", "PointsOfSale", new { store = 0 })" + item.id; }, {
+            hintText: "@Resources.HIntText",
+            noResultsText: "@Resources.NoResultsText",
+            searchingText: "@Resources.SearchingText",
+            queryParam: "pattern",minChars: 3,tokenLimit: 1
+		    @if (Model.UserSettings.PointOfSale != null) {
+		    	<text>,prePopulate: [{ id: "@Model.UserSettings.PointOfSale.Id", name: "@Model.UserSettings.PointOfSale.Name"}]</text>
+			}
+        });
+
+		$("#UserSettings_CashDrawerId").tokenInput(function() {
+			var item = $("#UserSettings_StoreId").tokenInput("get")[0];
+
+			if(typeof(item) === "undefined") {
+				item = {id : 0};
+			}
+
+			return "@Url.Action("GetSuggestions", "CashDrawers", new { store = 0 })" + item.id; }, {
+            hintText: "@Resources.HIntText",
+            noResultsText: "@Resources.NoResultsText",
+            searchingText: "@Resources.SearchingText",
+            queryParam: "pattern",minChars: 3,tokenLimit: 1
+		    @if (Model.UserSettings.CashDrawer != null) {
+		    	<text>,prePopulate: [{ id: "@Model.UserSettings.CashDrawer.Id", name: "@Model.UserSettings.CashDrawer.Name"}]</text>
+			}
         });
     });
 </script>

@@ -1,4 +1,4 @@
-﻿// 
+// 
 // NotificationsHelpers.cs
 // 
 // Author:
@@ -34,6 +34,13 @@ using MailKit;
 using MimeKit;
 
 namespace Mictlanix.BE.Web.Helpers {
+
+	public enum TextPartSubtype
+	{
+		Plain,
+		Html
+	}
+
 	public static class NotificationsHelpers {
 		public static bool SendEmail (string addrFrom, IEnumerable<string> addrTo, IEnumerable<string> addrCc,
 		                              IEnumerable<string> addrBcc, string subject, string textBody)
@@ -65,9 +72,88 @@ namespace Mictlanix.BE.Web.Helpers {
 		                              IEnumerable<string> addrBcc, string subject, string textBody,
 		                              IEnumerable<MimePart> attachments)
 		{
+			//try {
+			//	var builder = new BodyBuilder ();
+			//	var message = new MimeMessage ();
+
+			//	message.From.Add (new MailboxAddress (string.Empty, addrFrom));
+
+			//	if (addrTo != null) {
+			//		foreach (var addr in addrTo) {
+			//			message.To.Add (new MailboxAddress (string.Empty, addr));
+			//		}
+			//	}
+
+			//	if (addrCc != null) {
+			//		foreach (var addr in addrCc) {
+			//			message.Cc.Add (new MailboxAddress (string.Empty, addr));
+			//		}
+			//	}
+
+			//	if (addrBcc != null) {
+			//		foreach (var addr in addrBcc) {
+			//			message.Bcc.Add (new MailboxAddress (string.Empty, addr));
+			//		}
+			//	}
+
+			//	message.Subject = subject;
+
+			//	if (attachments == null) {
+			//		message.Body = new TextPart ("plain") {
+			//			Text = textBody
+			//		};
+			//	} else {
+			//		var multipart = new Multipart ("mixed");
+
+			//		multipart.Add (new TextPart ("plain") {
+			//			Text = textBody
+			//		});
+
+			//		foreach (var attachment in attachments) {
+			//			multipart.Add (attachment);
+			//		}
+
+			//		message.Body = multipart;
+			//	}
+
+			//	using (var client = new SmtpClient ()) {
+			//		client.ServerCertificateValidationCallback = (s, c, h, e) => true;
+
+			//		if (WebConfig.SmtpSsl) {
+			//			client.Connect (WebConfig.SmtpServer, WebConfig.SmtpPort);
+			//		} else {
+			//			client.Connect (WebConfig.SmtpServer, WebConfig.SmtpPort, MailKit.Security.SecureSocketOptions.None);
+			//		}
+
+			//		// Note: since we don't have an OAuth2 token, disable
+			//		// the XOAUTH2 authentication mechanism.
+			//		client.AuthenticationMechanisms.Remove ("XOAUTH2");
+
+			//		if (!string.IsNullOrWhiteSpace (WebConfig.SmtpUser)) {
+			//			client.Authenticate (WebConfig.SmtpUser, WebConfig.SmtpPassword);
+			//		}
+
+			//		client.Send (message);
+			//		client.Disconnect (true);
+			//	}
+			//} catch (Exception e) {
+			//	Console.Error.WriteLine (e);
+			//	return false;
+			//}
+
+			//return true;
+
+			return SendEmail (addrFrom, addrTo, addrCc, addrBcc, subject, textBody, attachments, TextPartSubtype.Plain);
+		}
+
+		public static bool SendEmail (string addrFrom, IEnumerable<string> addrTo, IEnumerable<string> addrCc,
+					      IEnumerable<string> addrBcc, string subject, string textBody,
+					      IEnumerable<MimePart> attachments, TextPartSubtype textPartSubtype)
+		{
 			try {
 				var builder = new BodyBuilder ();
 				var message = new MimeMessage ();
+				var subtype = textPartSubtype == TextPartSubtype.Plain ? "plain" : "html"; 
 
 				message.From.Add (new MailboxAddress (string.Empty, addrFrom));
 
@@ -92,13 +178,13 @@ namespace Mictlanix.BE.Web.Helpers {
 				message.Subject = subject;
 
 				if (attachments == null) {
-					message.Body = new TextPart ("plain") {
+					message.Body = new TextPart (subtype) {
 						Text = textBody
 					};
 				} else {
 					var multipart = new Multipart ("mixed");
 
-					multipart.Add (new TextPart ("plain") {
+					multipart.Add (new TextPart (subtype) {
 						Text = textBody
 					});
 
@@ -136,5 +222,5 @@ namespace Mictlanix.BE.Web.Helpers {
 
 			return true;
 		}
-    }
+	}
 }
