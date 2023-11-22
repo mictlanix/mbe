@@ -1,4 +1,4 @@
-﻿// 
+// 
 // AccountController.cs
 // 
 // Author:
@@ -38,12 +38,33 @@ using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
+using System.Security.Cryptography;
+using System.Threading.Tasks;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	public class AccountController : CustomController {
 		bool ValidateUser (string username, string password)
 		{
 			var item = Model.User.Queryable.SingleOrDefault (x => x.UserName == username);
+
+			if (WebConfig.UserSettingsMode == UserSettingsMode.Managed && item.UserSettings != null) {
+				var localSettings = new LocalSettings ();
+
+				if(item.UserSettings.Store != null) {
+					localSettings.StoreId = item.UserSettings.Store.Id;
+				}
+
+				if (item.UserSettings.PointOfSale != null) {
+					localSettings.PointOfSaleId = item.UserSettings.PointOfSale.Id;
+				}
+
+				if (item.UserSettings.CashDrawer != null) {
+					localSettings.CashDrawerId = item.UserSettings.CashDrawer.Id;
+				}
+
+				LocalSettings (localSettings);
+			}
+
 			return item != null && item.Password == SecurityHelpers.SHA1 (password);
 		}
 
@@ -61,8 +82,34 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				Email = email.ToLower ()
 			};
 
+			UserSettings settings = null;
+
+			if (WebConfig.UserSettingsMode == UserSettingsMode.Managed) {
+				var storeId = int.Parse (WebConfig.DefaultStore);
+				var store = Store.TryFind (storeId);
+
+				var pointOfSaleId = int.Parse (WebConfig.DefaultPointOfSale);
+				var pointOfSale = PointOfSale.TryFind (pointOfSaleId);
+
+				settings = new UserSettings {
+					UserName = username,
+					Store = store,
+					//StoreId = store.Id,
+					PointOfSale = pointOfSale,
+					//PointOfSaleId = pointOfSale.Id
+				};
+
+				//item.UserSettings = settings;
+			}
+
 			using (var scope = new TransactionScope ()) {
-				item.CreateAndFlush ();
+				item.Create ();
+
+				if (settings != null) {
+					settings.Create ();
+				}
+
+				scope.Flush ();
 			}
 
 			return true;
@@ -83,6 +130,51 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			return true;
+		}
+
+		bool CompletePasswordRecovery (string username, string token, string newPassword)
+		{
+			User item = Model.User.Find (username);
+
+			if (item == null || item.Password.ToUpper () != token.ToUpper ())
+				return false;
+
+			item.Password = SecurityHelpers.SHA1 (newPassword);
+
+			using (var scope = new TransactionScope ()) {
+				item.UpdateAndFlush ();
+			}
+
+			return true;
+		}
+
+		async Task<bool> SendRecoveryMail (string email)
+		{
+			User item = Model.User.Queryable.Where (x => x.Email == email).FirstOrDefault ();
+
+			if (item == null)
+				return false;
+
+			var newPassword = new Random ().Next ().ToString ();
+			item.Password = SecurityHelpers.SHA1 (newPassword);
+
+			using (var scope = new TransactionScope ()) {
+				item.UpdateAndFlush ();
+			}
+
+			var recoverModel = new PasswordRecoveryEmailModel () {
+				UserName = item.UserName,
+				RecoveryUrl = string.Format ("{0}/Account/RecoverPassword?user={1}&token={2}", WebConfig.BaseUrl, item.UserName, item.Password)
+			};
+
+			var subject = Resources.RecoverPasswordEmailSubject;
+
+			var message = RenderPartialView ("RecoverPasswordEmail", recoverModel);
+
+			var result = await Task.Factory.StartNew (() =>
+				NotificationsHelpers.SendEmail (WebConfig.DefaultSender, new string [] { email }, null, null, subject, message));
+
+			return result;
 		}
 
 		public ActionResult LogOn ()
@@ -148,6 +240,95 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				}
 			} catch (Exception ex) {
 				ModelState.AddModelError ("", ex.Message);
+			}
+
+			// If we got this far, something failed, redisplay form
+			return View (model);
+		}
+
+		[AllowAnonymous]
+		public ActionResult ForgotPassword ()
+		{
+			return View ();
+		}
+
+		[HttpPost]
+		[AllowAnonymous]
+		public async Task<ActionResult> ForgotPassword (ForgotPasswordModel model)
+		{
+			if (!ModelState.IsValid)
+				return View (model);
+
+			try {
+				var result = await SendRecoveryMail (model.Email);
+
+				if (result) {
+					return RedirectToAction ("RecoveryEmailSent", model);
+				} else {
+					ModelState.AddModelError ("", Mictlanix.BE.Resources.Message_UnknownError);
+				}
+			} catch (Exception ex) {
+				ModelState.AddModelError ("", ex.Message);
+			}
+
+			// If we got this far, something failed, redisplay form
+			return View (model);
+		}
+
+		[AllowAnonymous]
+		public ActionResult RecoverPasswordEmail (PasswordRecoveryEmailModel model)
+		{
+			return PartialView (model);
+		}
+
+		[AllowAnonymous]
+		public ActionResult RecoveryEmailSent (ForgotPasswordModel model)
+		{
+			return View (model);
+		}
+
+		[AllowAnonymous]
+		public ActionResult RecoverPassword (PasswordRecoveryModel model)
+		{
+			if (!ModelState.IsValid)
+				return RedirectToAction ("Index", "Home");
+
+			var item = Model.User.Find (model.User);
+
+			if (item != null && item.Password.ToUpper () == model.Token) {
+				ModelState.Clear ();
+
+				var formModel = new ProcessedPasswordRecoveryModel () {
+					User = model.User,
+					Token = model.Token
+				};
+
+				return View (formModel);
+			}
+
+			return RedirectToAction ("Index", "Home");
+		}
+
+		[HttpPost]
+		[AllowAnonymous]
+		public ActionResult RecoverPassword (ProcessedPasswordRecoveryModel model)
+		{
+			if (ModelState.IsValid) {
+				// ChangePassword will throw an exception rather
+				// than return false in certain failure scenarios.
+				bool changePasswordSucceeded;
+
+				try {
+					changePasswordSucceeded = CompletePasswordRecovery (model.User, model.Token, model.NewPassword);
+				} catch (Exception) {
+					changePasswordSucceeded = false;
+				}
+
+				if (changePasswordSucceeded) {
+					return RedirectToAction ("Index", "Home");
+				} else {
+					ModelState.AddModelError ("", Mictlanix.BE.Resources.Message_ChangePasswordWrong);
+				}
 			}
 
 			// If we got this far, something failed, redisplay form

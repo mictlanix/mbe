@@ -1,0 +1,11 @@
+@using Mictlanix.BE
+@model Mictlanix.BE.Web.Models.ForgotPasswordModel
+
+@{
+	ViewBag.Title = Resources.Title_RecoveryEmailSent;
+}
+
+<h2>@Resources.DisplayName_RecoveryEmailSent</h2>
+<p>
+	@string.Format(Resources.Message_RecoveryEmailSent, Model.Email)
+</p>

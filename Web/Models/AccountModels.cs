@@ -1,4 +1,4 @@
-﻿// 
+// 
 // AccountModels.cs
 // 
 // Author:
@@ -55,7 +55,42 @@ namespace Mictlanix.BE.Web.Models
         public string ConfirmPassword { get; set; }
     }
 
-    public class LogOnModel
+	public class ForgotPasswordModel {
+		[Required]
+		[DataType (DataType.EmailAddress)]
+		[Display (Name = "Email", ResourceType = typeof (Resources))]
+		[StringLength (250, MinimumLength = 6, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
+		public string Email { get; set; }
+	}
+
+	public class PasswordRecoveryEmailModel {
+        public string UserName { get; set; }
+		public string RecoveryUrl { get; set; }
+	}
+
+	public class PasswordRecoveryModel {
+		public string User { get; set; }
+		public string Token { get; set; }
+	}
+
+	public class ProcessedPasswordRecoveryModel {
+		public string User { get; set; }
+		public string Token { get; set; }
+
+		[Required]
+		[DataType (DataType.Password)]
+		[Display (Name = "NewPassword", ResourceType = typeof (Resources))]
+		[StringLength (40, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
+		public string NewPassword { get; set; }
+
+		[DataType (DataType.Password)]
+		[Compare ("NewPassword", ErrorMessageResourceName = "Validation_PasswordDoNotMatch", ErrorMessageResourceType = typeof (Resources))]
+		[Display (Name = "ConfirmPassword", ResourceType = typeof (Resources))]
+		[StringLength (40, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
+		public string ConfirmPassword { get; set; }
+	}
+
+	public class LogOnModel
     {
         [Required]
         [StringLength(20, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof(Resources))]

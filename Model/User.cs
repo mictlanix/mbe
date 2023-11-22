@@ -1,4 +1,4 @@
-﻿// 
+// 
 // User.cs
 // 
 // Author:
@@ -66,6 +66,10 @@ namespace Mictlanix.BE.Model {
 		[BelongsTo ("employee", Fetch = FetchEnum.Join)]
 		[Display (Name = "Employee", ResourceType = typeof (Resources))]
 		public virtual Employee Employee { get; set; }
+
+		[BelongsTo ("user_id", Fetch = FetchEnum.Join, Insert = false, Update = true, NotFoundBehaviour = NotFoundBehaviour.Ignore)]
+		[Display (Name = "UserSettings", ResourceType = typeof (Resources))]
+		public virtual UserSettings UserSettings { get; set; }
 
 		[Property ("administrator")]
 		[Display (Name = "Administrator", ResourceType = typeof (Resources))]
