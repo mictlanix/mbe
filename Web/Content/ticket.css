@@ -1,24 +1,24 @@
-﻿@font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 400;
-  src: url(http://fonts.gstatic.com/s/opensans/v13/cJZKeOuBrn4kERxqtaUH3bO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
+@font-face {
+	font-family: 'Open Sans';
+	font-style: normal;
+	font-weight: 400;
+	src: url(http://fonts.gstatic.com/s/opensans/v13/cJZKeOuBrn4kERxqtaUH3bO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
 }
 @font-face {
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 700;
-  src: url(http://fonts.gstatic.com/s/roboto/v15/d-6IYplOFocCacKzxwXSOLO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
+	font-family: 'Roboto';
+	font-style: normal;
+	font-weight: 700;
+	src: url(http://fonts.gstatic.com/s/roboto/v15/d-6IYplOFocCacKzxwXSOLO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
 }
 @font-face {
-  font-family: 'Roboto Mono';
-  font-style: normal;
-  font-weight: 400;
-  src: url(http://fonts.gstatic.com/s/robotomono/v4/hMqPNLsu_dywMa4C_DEpY7rIa-7acMAeDBVuclsi6Gc.woff) format('woff');
+	font-family: 'Roboto Mono';
+	font-style: normal;
+	font-weight: 400;
+	src: url(http://fonts.gstatic.com/s/robotomono/v4/hMqPNLsu_dywMa4C_DEpY7rIa-7acMAeDBVuclsi6Gc.woff) format('woff');
 }
 @page {
-    size:72mm 297mm;
-    margin:0 0;
+	size:72mm 297mm;
+	margin:0 0;
 }
 html, body {
 	width: 100%;
@@ -27,13 +27,13 @@ html, body {
 	padding: 1px;
 }
 body {
-    font:normal 7.5pt 'Open Sans', sans-serif;
+	font:normal 7.5pt 'Open Sans', sans-serif;
 }
 footer {
-    text-align:center;
+	text-align:center;
 }
 img {
-    border:none;
+	border:none;
 }
 h1,h2 {
 	font-family: 'Roboto', sans-serif;
@@ -55,80 +55,112 @@ label {
 	margin-bottom: 0px;
 }
 td.text-right {
-    padding-right:3px;
+	padding-right:3px;
 }
-td.text-right:last-child {
-    padding-right:0;
-}
+	td.text-right:last-child {
+		padding-right:0;
+	}
 #logo {
-    text-align:center;
+	text-align:center;
 }
 .date {
-  white-space:nowrap;
+	white-space:nowrap;
 }
 .left {
-  text-align:left;
+	text-align:left;
 }
 .right {
-  text-align:right;
+	text-align:right;
 }
 .center {
-  text-align:center;
+	text-align:center;
 }
 .right,.number,input.number  {
-  text-align:right;
-  padding-right:5px;
+	text-align:right;
+	padding-right:5px;
 }
 .left.floating {
-  float:left;
-  clear:left;
+	float:left;
+	clear:left;
 }
 .right.floating {
-  float:right;
-  clear:right;
+	float:right;
+	clear:right;
 }
 .total {
 	font-family: 'Roboto', sans-serif;
 	font-weight:bold;
 }
 table {
-    margin:10px 0;
-    width:100%;
-    border-collapse:collapse;
+	margin:10px 0;
+	width:100%;
+	border-collapse:collapse;
 }
 td.line {
-    border-bottom:1px solid black;
+	border-bottom:1px solid black;
 }
 td.line-top {
-    border-top:1px solid black;
+	border-top:1px solid black;
 }
 td.title {
-    font-size:13px;
-    font-weight:bold;
+	font-size:13px;
+	font-weight:bold;
 }
 th {
-    font-size:18px;
-    font-weight:bold;
+	font-size:18px;
+	font-weight:bold;
 }
-th.line {
-    border-bottom:2px solid black;
-}
+	th.line {
+		border-bottom:1px solid black;
+	}
 .display-label {
-    margin-top:5px;
+	margin-top:5px;
 }
 .display-field {
-    margin-bottom:5px;
+	margin-bottom:3px;
 }
 .signature {
 	margin:50px 20px;
-    border-top:1px solid black;
-    text-align:center;
+	border-top:1px solid black;
+	text-align:center;
 }
 legend,.legend {
-	margin:20px 10px;
+	margin-top:2px;
+	margin-bottom:2px;
 	text-align:justify;
 }
 fieldset {
 	margin:10px 0;
 	clear:both;
+}
+body.ticket header #logo img {
+	height: 60px;
+}
+body.ticket header h1 {
+	font-size:10pt;
+	margin-top:2px;
+	margin-bottom:3px;
+}
+body.ticket header h2 {
+	font-size:9pt;
+	margin-top:2px;
+	margin-bottom:3px;
+}
+body.ticket header h3 {
+	font-size:7pt;
+	margin-top:2px;
+	margin-bottom:2px;
+}
+body.ticket section#main .display-label {
+	font-size:6pt;
+	margin-top:1px;
+	margin-bottom:0px;
+}
+body.ticket section#main table {
+	font-size:6pt;
+	margin-top:4px;
+	margin-bottom:2px;
+}
+body.ticket section#main table tr:first-child {
+	border-top:1px solid black;
 }
