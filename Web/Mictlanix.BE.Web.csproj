@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build"
-	xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
 	<PropertyGroup>
 		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -35,10 +34,10 @@
 		<DefineConstants>DEBUG;TRACE</DefineConstants>
 		<DebugSymbols>True</DebugSymbols>
 		<EnvironmentVariables>
-			<EnvironmentVariables>
-				<Variable name="MONO_ASPNET_WEBCONFIG_CACHESIZE" value="200" />
-				<Variable name="MONO_GC_PARAMS" value="nursery-size=8m" />
-			</EnvironmentVariables>
+		  <EnvironmentVariables>
+		    <Variable name="MONO_ASPNET_WEBCONFIG_CACHESIZE" value="200" />
+		    <Variable name="MONO_GC_PARAMS" value="nursery-size=8m" />
+		  </EnvironmentVariables>
 		</EnvironmentVariables>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -112,9 +111,6 @@
 		</Reference>
 		<Reference Include="MailKit">
 			<HintPath>..\packages\MailKit.2.11.1\lib\net48\MailKit.dll</HintPath>
-		</Reference>
-		<Reference Include="Mictlanix.ProFactClient">
-			<HintPath>..\packages\Mictlanix.ProFactClient.3.3.0-beta6\lib\net45\Mictlanix.ProFactClient.dll</HintPath>
 		</Reference>
 		<Reference Include="Newtonsoft.Json">
 			<HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -231,14 +227,6 @@
 		</Reference>
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\..\cfdlib\src\Mictlanix.CFDLib.csproj">
-			<Project>{63ebacd8-7bb0-480f-81bf-5e0690b27112}</Project>
-			<Name>Mictlanix.CFDLib</Name>
-		</ProjectReference>
-		<ProjectReference Include="..\..\dfacture-client\src\Mictlanix.DFactureClient\Mictlanix.DFactureClient.csproj">
-			<Project>{9caae36d-f2b9-41cc-8ab3-f02c5a49229e}</Project>
-			<Name>Mictlanix.DFactureClient</Name>
-		</ProjectReference>
 		<ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">
 			<Project>{CBB1BA70-351E-4009-86FB-484810DC6364}</Project>
 			<Name>Mictlanix.BE.Resources</Name>
@@ -246,6 +234,14 @@
 		<ProjectReference Include="..\Model\Mictlanix.BE.Model.csproj">
 			<Project>{F9363BAC-A7BB-4A77-81E0-892C8CCCD297}</Project>
 			<Name>Mictlanix.BE.Model</Name>
+		</ProjectReference>
+		<ProjectReference Include="..\..\cfdlib\src\Mictlanix.CFDLib.csproj">
+		  <Project>{63EBACD8-7BB0-480F-81BF-5E0690B27112}</Project>
+		  <Name>Mictlanix.CFDLib</Name>
+		</ProjectReference>
+		<ProjectReference Include="..\..\dfacture-client\src\Mictlanix.DFactureClient\Mictlanix.DFactureClient.csproj">
+		  <Project>{9CAAE36D-F2B9-41CC-8AB3-F02C5A49229E}</Project>
+		  <Name>Mictlanix.DFactureClient</Name>
 		</ProjectReference>
 	</ItemGroup>
 	<ItemGroup>
@@ -288,7 +284,6 @@
 		<Compile Include="Models\ReceivedPayment.cs" />
 		<Compile Include="Models\SummaryItem.cs" />
 		<Compile Include="Helpers\InventoryHelpers.cs" />
-		<Compile Include="Helpers\CFDHelpers.cs" />
 		<Compile Include="Helpers\ModelHelpers.cs" />
 		<Compile Include="Helpers\NHibernateExtensions.cs" />
 		<Compile Include="Controllers\Mvc\AccountController.cs" />
@@ -1061,9 +1056,9 @@
 			</FlavorProperties>
 		</VisualStudio>
 		<MonoDevelop>
-			<Properties>
-				<XspParameters Port="8080" Address="0.0.0.0" SslMode="None" SslProtocol="Default" KeyType="None" CertFile="" KeyFile="" PasswordOptions="None" Password="" Verbose="True" />
-			</Properties>
+		  <Properties>
+		    <XspParameters Port="8080" Address="0.0.0.0" SslMode="None" SslProtocol="Default" KeyType="None" CertFile="" KeyFile="" PasswordOptions="None" Password="" Verbose="True" />
+		  </Properties>
 		</MonoDevelop>
 	</ProjectExtensions>
 	<ItemGroup />
@@ -1287,6 +1282,7 @@
 		<Content Include="Views\Account\ForgotPassword.cshtml" />
 		<Content Include="Views\Account\RecoveryEmailSent.cshtml" />
 		<Content Include="Views\Account\RecoverPasswordEmail.cshtml" />
+		<None Include="Helpers\CFDHelpers.cs" />
 	</ItemGroup>
 	<ItemGroup />
 </Project>
