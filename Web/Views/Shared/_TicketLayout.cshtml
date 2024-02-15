@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Models
 @using Mictlanix.BE.Web.Helpers
@@ -9,34 +9,34 @@
 	<title>@ViewBag.Title</title>
 	@Styles.Render("~/Content/ticket")
 </head>
-<body>
-    <header>
-        <div id="logo">
-        	@if (!string.IsNullOrEmpty (ViewBag.Store.Logo)) {
-            <img src="@Url.Content(ViewBag.Store.Logo)" alt="Logo" />
-            }
-        </div>
-        <h1 class="text-center">@ViewBag.Store.Name</h1>
-    @if (ViewBag.SkipAddress == null || !ViewBag.SkipAddress) {
-        <h3 class="text-center">@ViewBag.Store.Taxpayer.Id</h3>
-        <h3 class="text-center">
-        	@ViewBag.Address.StreetAndNumber
-        	@ViewBag.Address.Neighborhood,
-		@if (!string.IsNullOrEmpty (ViewBag.Address.Locality)) {
-        	<text>@ViewBag.Address.Locality,</text>
-    	}
-        	@ViewBag.Address.PostalCode<br>
-        	@ViewBag.Address.Borough,
-        	@ViewBag.Address.State
-    	</h3>
-    }
-        <h2 class="text-center">@ViewBag.Title</h2>
-    </header>
-    <section id="main">
-        @RenderBody()
-    </section>
-    <footer>
-    	@RenderSection("Footer", required: false)
+<body class="ticket">
+	<header>
+		<div id="logo">
+			@if (!string.IsNullOrEmpty (ViewBag.Store.Logo)) {
+				<img src="@Url.Content(ViewBag.Store.Logo)" alt="Logo" />
+			}
+		</div>
+		<h1 class="text-center">@ViewBag.Store.Name</h1>
+		@if (ViewBag.SkipAddress == null || !ViewBag.SkipAddress) {
+			<h3 class="text-center">@ViewBag.Store.Taxpayer.Id</h3>
+			<h3 class="text-center">
+				@ViewBag.Address.StreetAndNumber
+				@ViewBag.Address.Neighborhood,
+				@if (!string.IsNullOrEmpty (ViewBag.Address.Locality)) {
+					<text>@ViewBag.Address.Locality,</text>
+				}
+				@ViewBag.Address.PostalCode
+				@ViewBag.Address.Borough,
+				@ViewBag.Address.State
+			</h3>
+		}
+		<h2 class="text-center">@ViewBag.Title</h2>
+	</header>
+	<section id="main">
+		@RenderBody()
+	</section>
+	<footer>
+		@RenderSection("Footer", required: false)
 	</footer>
 </body>
 </html>
