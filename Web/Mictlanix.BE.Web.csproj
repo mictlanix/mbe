@@ -140,7 +140,7 @@
 			<HintPath>..\packages\QrCode.Net.0.4.0.0\lib\net45\Gma.QrCodeNet.Encoding.dll</HintPath>
 		</Reference>
 		<Reference Include="Google.Protobuf">
-			<HintPath>..\packages\Google.Protobuf.3.15.6\lib\net45\Google.Protobuf.dll</HintPath>
+			<HintPath>..\packages\Google.Protobuf.3.21.9\lib\net45\Google.Protobuf.dll</HintPath>
 		</Reference>
 		<Reference Include="System.Configuration.Install" />
 		<Reference Include="System.Drawing.Design" />
@@ -171,9 +171,6 @@
 		</Reference>
 		<Reference Include="K4os.Compression.LZ4.Streams">
 			<HintPath>..\packages\K4os.Compression.LZ4.Streams.1.2.6\lib\net46\K4os.Compression.LZ4.Streams.dll</HintPath>
-		</Reference>
-		<Reference Include="BouncyCastle.Crypto">
-			<HintPath>..\packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
 		</Reference>
 		<Reference Include="jsreport.Types">
 			<HintPath>..\packages\jsreport.Types.2.7.1\lib\net45\jsreport.Types.dll</HintPath>
@@ -210,13 +207,7 @@
 			<HintPath>..\packages\jsreport.Client.3.1.1\lib\net45\jsreport.Client.dll</HintPath>
 		</Reference>
 		<Reference Include="MySql.Data">
-			<HintPath>..\packages\MySql.Data.8.0.23\lib\net48\MySql.Data.dll</HintPath>
-		</Reference>
-		<Reference Include="Ubiety.Dns.Core">
-			<HintPath>..\packages\MySql.Data.8.0.23\lib\net48\Ubiety.Dns.Core.dll</HintPath>
-		</Reference>
-		<Reference Include="Zstandard.Net">
-			<HintPath>..\packages\MySql.Data.8.0.23\lib\net48\Zstandard.Net.dll</HintPath>
+			<HintPath>..\packages\MySql.Data.8.0.32.1\lib\net48\MySql.Data.dll</HintPath>
 		</Reference>
 		<Reference Include="System.Data.DataSetExtensions" />
 		<Reference Include="System.Threading.Tasks.Extensions">
@@ -225,6 +216,7 @@
 		<Reference Include="System.Web.Mvc">
 			<HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.9\lib\net45\System.Web.Mvc.dll</HintPath>
 		</Reference>
+		<Reference Include="System.ComponentModel" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">
