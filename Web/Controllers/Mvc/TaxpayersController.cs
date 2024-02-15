@@ -40,6 +40,7 @@ using NHibernate.Exceptions;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Helpers;
 using Mictlanix.BE.Web.Mvc;
+using Mictlanix.BE.Web.Helpers40;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
@@ -180,7 +181,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				}
 			}
 
-			if (!CFDHelpers.PrivateKeyTest (item.KeyData, item.KeyPassword)) {
+			if (!CFDHelpers40.PrivateKeyTest (item.KeyData, item.KeyPassword)) {
 				ModelState.AddModelError ("KeyPassword", Resources.Validation_InvalidPassword);
 				return View (item);
 			}
