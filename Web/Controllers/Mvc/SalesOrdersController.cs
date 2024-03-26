@@ -229,7 +229,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				Currency = x.Currency,
 				ExchangeRate = x.ExchangeRate,
 				IsTaxIncluded = x.IsTaxIncluded,
-				Price = x.Price +  x.PriceAdjustment,
+				Price = x.Price + x.PriceAdjustment,
 				Product = x.Product,
 				ProductCode = x.ProductCode,
 				ProductName = x.ProductName,
@@ -1045,9 +1045,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				}
 			}
 
-			if (entity.ShipTo == null) {
-				//entity.IsDelivered = true;
-				using (var scope = new TransactionScope ()) {
+			using (var scope = new TransactionScope ()) {
+				if (entity.ShipTo == null) {
+					//entity.IsDelivered = true;
 					var warehouse = entity.PointOfSale.Warehouse;
 					var dt = DateTime.Now;
 
@@ -1056,13 +1056,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						x.Update ();
 
 						InventoryHelpers.ChangeNotification (TransactionType.SalesOrder, entity.Id,
-							dt, warehouse, null, x.Product, -x.Quantity);
+							dt, x.Warehouse, null, x.Product, -x.Quantity);
 					}
 
-					entity.UpdateAndFlush ();
+				} else {
+					return RedirectToAction ("New", "DeliveryOrders", new { id = entity.Id });
 				}
-			} else {
-				return RedirectToAction ("New", "DeliveryOrders", new { id = entity.Id });
+				entity.UpdateAndFlush ();
 			}
 
 			return RedirectToAction ("Index");
@@ -1138,7 +1138,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var Warehouse = WebConfig.PointOfSale.Warehouse;
 
 			var all_warehouses = pattern.EndsWith ("**");
-			pattern = pattern.TrimEnd(new char [] { '*' });
+			pattern = pattern.TrimEnd (new char [] { '*' });
 
 			string warehouse_filter = all_warehouses ? "" : " AND w.warehouse_id = " + Warehouse.Id;
 
@@ -1169,7 +1169,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					ORDER BY p.product_id DESC
 					LIMIT 15";
 
-				sql = sql.Replace ("WAREHOUSE_FILTER", warehouse_filter);
+			sql = sql.Replace ("WAREHOUSE_FILTER", warehouse_filter);
 
 			var raw = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
@@ -1192,19 +1192,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}, null);
 
 			var items = (from x in raw
-				    select new {
-					    id = x.id,
-					    name = x.name,
-					    code = x.code,
-					    sku = x.sku,
-					    model = x.model,
-					    url = x.url,
-					    warehouse_id = x.warehouse_id,
-					    quantity = x.quantity,
-					    warehouse = x.warehouse,
-					    price = x.price,
-					    stockable = x.stockable,
-				    }).ToList();
+				     select new {
+					     id = x.id,
+					     name = x.name,
+					     code = x.code,
+					     sku = x.sku,
+					     model = x.model,
+					     url = x.url,
+					     warehouse_id = x.warehouse_id,
+					     quantity = x.quantity,
+					     warehouse = x.warehouse,
+					     price = x.price,
+					     stockable = x.stockable,
+				     }).ToList ();
 
 
 			return Json (items, JsonRequestBehavior.AllowGet);
