@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model SalesOrder
@@ -20,14 +20,14 @@
 			<div class="form-group">
 				<div class="col-xs-3"><label for="amount">@Resources.Amount</label></div>
 				<div class="col-xs-3"><label for="reference">@Resources.Reference</label></div>
-				<div class="col-xs-1 paymentondelivery @(String.IsNullOrEmpty(Model.CustomerShipTo) ? "hidden" : "")">
+				<div class="col-xs-1 paymentondelivery">
 					<label for="payment_upon_delivery">@Resources.PaymentOnDelivery</label>
 				</div>
 			</div>
 			<div class="form-group">
 				<div class="col-xs-3"><input id='amount' class='form-control text-right' type='text' autocomplete="off"></div>
 				<div class="col-xs-3"><input id='reference' class='form-control' type='text' value=''></div>
-				<div class="col-xs-1 paymentondelivery @(String.IsNullOrEmpty(Model.CustomerShipTo) ? "hidden" : "")">
+				<div class="col-xs-1 paymentondelivery">
 					<input id='ondelivery' class='form-control' type='checkbox'>
 				</div>
 			</div>
@@ -59,12 +59,40 @@
 	@Html.Partial("_SalesOrderBalance")
 </div>
 <script type="text/javascript">
+
+	function openClientEditor() {
+		var customer = $('#customer').attr('data-value');
+		if (customer != @WebConfig.DefaultCustomer) {
+			var url = '/Customers/Details/' + customer;
+			window.open(url, '_blank');
+		}
+	}
+
+	$("#ondelivery").on('click', function () {
+		var customer =
+			$('#customer').attr('data-value');
+		var shipto = $('#address').attr('data-value');
+
+		if (customer == @WebConfig.DefaultCustomer) {
+			alert(`No aplica para P\xfablico en General`);
+			$("#ondelivery").prop('checked', false);
+			return;
+		}
+
+		if (shipto === '') {
+			alert("Debe agregar el domicilio en el cual se realizar\xe1 el pago a contraentrega");
+			$("#ondelivery").prop('checked', false);
+		}
+		
+	});
+
 function updateTotals() {
     $.get('@Url.Action("GetSalesOrderBalance", new { id = Model.Id })', function (data) {
         $("#sales-order-balance").html(data);
     });
 }
-$(function () {
+	$(function () {
+
 	$('[data-toggle="tooltip"]').tooltip();
 	$(".pay").click(function () {
         var type = $(this).data('value');
@@ -75,15 +103,14 @@ $(function () {
         var ondelivery = $("#ondelivery").is(":checked");
 
         if (ship_to != '') {
-            //console.log(ship_to);
 			  $("#ondelivery").prop('checked', false);
 		  }
 
         $.post('@Url.Action("AddPayment", new { id = Model.Id })', { 'type': type, 'amount': amount, 'reference': reference, 'fee': fee, 'ondelivery': ondelivery }, function (detail) {
-            //console.log(ondelivery);
             $.get('@Url.Action("GetPayment")/' + detail.id, function (data) {
                 $('#items').append(data);
-                $("#amount,#reference").val('');
+				$("#amount,#reference").val('');
+				$("#ondelivery").prop('checked', false);
                 updateTotals();
             });
 
@@ -117,13 +144,14 @@ $(function () {
 		        return selection.name;
 		    }
 		},
-		success: function(response, newValue) {
+		success: function (response, newValue) {
+			$('#customer').attr('data-value', newValue)
+			$('#contact,#address,#customer_shipto').attr('data-value', '');
 			$('#contact,#address,#customer_shipto').text('').editable('setValue', '');
 			$('#name').load('@Url.Action("GetCustomerName","Payments", new { id = Model.Id } )');
 			$('#items-container').load('@Url.Action("GetPayments", new { id = Model.Id } )');
-			$('.paymentondelivery').addClass('hidden');
+			$("#ondelivery").prop('checked', false);
 			updateTotals();
-			console.log("Done!")
 	    },
 	    display: function(value, response) {
 	    	if (typeof response !== 'undefined') {
@@ -131,8 +159,9 @@ $(function () {
 			}
 	    }
 	});
+ 
 	$('a.editable').editable({
-        success: function (response, newValue) {
+		success: function (response, newValue) {
 
 			if ('type' in response) {
 				$('.paymentondelivery').removeClass('hidden');
@@ -144,11 +173,14 @@ $(function () {
             else {
 
 			    $("#ondelivery").prop('checked', false);
-                $('.paymentondelivery').addClass('hidden');
-                $('#items-container').load('@Url.Action("GetPayments", new { id = Model.Id } )');
-			    $('.paymentondelivery').addClass('hidden');
+				$('#items-container').load('@Url.Action("GetPayments", new { id = Model.Id } )');
+				$("#ondelivery").prop('checked', false);
 			    updateTotals();
-            }
+			}
+
+			if (response['type'] == 'shipto') {
+				$('#address').attr('data-value', newValue);
+			}
 		},
 		display: function (value, response) {
 			if (typeof response === 'undefined')

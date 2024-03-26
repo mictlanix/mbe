@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CustomersController.cs
 // 
 // Author:
@@ -128,6 +128,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Edit (int id)
 		{
 			var item = Customer.Find (id);
+			//item.PriceList = PriceList.Find (item.PriceListId);
+			//item.SalesPerson = Employee.Find(item.SalesPersonId.Value);
 			return PartialView ("_Edit", item);
 		}
 
@@ -148,6 +150,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			entity.Name = item.Name;
 			entity.Zone = item.Zone;
 			entity.PriceList = item.PriceList;
+			entity.PriceListId = item.PriceListId;
 			entity.CreditDays = item.CreditDays;
 			entity.CreditLimit = item.CreditLimit;
 			entity.Shipping = item.Shipping;

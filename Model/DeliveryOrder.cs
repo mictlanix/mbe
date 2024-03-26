@@ -1,4 +1,4 @@
-﻿// 
+// 
 // InventoryReceipt.cs
 // 
 // Author:
@@ -77,6 +77,10 @@ namespace Mictlanix.BE.Model {
 		[BelongsTo ("ship_to", Lazy = FetchWhen.OnInvoke)]
 		[Display (Name = "ShipTo", ResourceType = typeof (Resources))]
 		public virtual Address ShipTo { get; set; }
+
+		[BelongsTo ("contact", Lazy = FetchWhen.OnInvoke)]
+		[Display (Name = "Contact", ResourceType = typeof (Resources))]
+		public virtual Contact Contact { get; set; }
 
 		[Property]
 		[DataType (DataType.Date)]

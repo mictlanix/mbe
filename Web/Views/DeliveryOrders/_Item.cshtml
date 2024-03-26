@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model DeliveryOrder
@@ -33,9 +33,9 @@
                     new { @class = "button icon edit icon-only", title = Resources.Edit })
             }
 
-            if (Model.IsCompleted && !Model.IsDelivered && !Model.IsCancelled) {
+            @*if (Model.IsCompleted && !Model.IsDelivered && !Model.IsCancelled) {
             @Html.ActionLink(" ", "Delivery", new { id = Model.Id },
-             new { @class = "button icon shipping icon-only", title = Resources.Delivery })}
+             new { @class = "button icon shipping icon-only", title = Resources.Delivery })}*@
         }
     </td>
 </tr>

@@ -49,76 +49,92 @@
 }
 
 <table>
-    @foreach (var item in Model.Details)
-    {
-        <tr>
-            <td class="line number" rowspan="2">
-                @Html.DisplayFor(x => item.Quantity)
-            </td>
-            <td colspan="2">
-                @Html.DisplayFor(x => item.ProductName)
-            </td>
-            <td class="line number" rowspan="2">
-                @Html.DisplayFor(x => item.Total)
-            </td>
-        </tr>
-        <tr>
-            <td class="line">
-                @Html.Encode("✕") @Html.DisplayFor(x => item.Price)
-                @if (item.DiscountRate > 0)
-                {
-                    <text>- @Html.DisplayFor(x => item.DiscountRate)</text>
-                }
-            </td>
-            <td class="line text-center">
-                @Html.DisplayFor(x => item.ProductCode)
-            </td>
-        </tr>
-    }
-    <tr>
-        <td></td>
-        <td></td>
-        <td class="total text-right">@Resources.Total</td>
-        <td class="total number">@Html.DisplayFor(x => x.Total)</td>
-    </tr>
-    @foreach (var item in Model.Payments)
-    {
+	@foreach (var item in Model.Details)
+	{
+		<tr>
+			<td class="line number" rowspan="2">
+				@Html.DisplayFor(x => item.Quantity)
+			</td>
+			<td colspan="2">
+				@Html.DisplayFor(x => item.ProductName)
+			</td>
+			<td class="line number" rowspan="2">
+				@Html.DisplayFor(x => item.Total)
+			</td>
+		</tr>
+		<tr>
+			<td class="line">
+				@Html.Encode("✕") @Html.DisplayFor(x => item.Price)
+				@if (item.DiscountRate > 0)
+				{
+					<text>- @Html.DisplayFor(x => item.DiscountRate)</text>
+				}
+			</td>
+			<td class="line text-center">
+				@Html.DisplayFor(x => item.ProductCode)
+			</td>
+		</tr>
+	}
+	<tr>
+		<td></td>
+		<td></td>
+		<td class="total text-right">@Resources.Subtotal</td>
+		<td class="total number">@Html.DisplayFor(x => x.Subtotal)</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td class="total text-right">@Resources.Taxes</td>
+		<td class="total number">@Html.DisplayFor(x => x.Taxes)</td>
+	</tr>
+	@if (Model.Discount > 0)
+	{
+		<tr>
+			<td></td>
+			<td></td>
+			<td class="total text-right">@Resources.Discount</td>
+			<td class="total number">@Html.DisplayFor(x => x.Discount)</td>
+		</tr>
+	}
+	<tr>
+		<td></td>
+		<td></td>
+		<td class="total text-right">@Resources.Total</td>
+		<td class="total number">@Html.DisplayFor(x => x.Total)</td>
+	</tr>
+	@foreach (var item in Model.Payments)
+	{
 
-        string desc = "";
+		string desc = "";
 
-        if (item.Payment.ExtraFee != null)
-        {
-            desc += item.Payment.ExtraFee.Name + "\n";
-            if (item.Payment.ExtraFee.isDisplayedOnTicket)
-            {
-                item.Payment.Amount *= (item.Payment.Commission + 1.0m);
-            }
-        }
+		if (item.Payment.ExtraFee != null)
+		{
+			desc += item.Payment.ExtraFee.Name + "\n";
+			if (item.Payment.ExtraFee.isDisplayedOnTicket)
+			{
+				item.Payment.Amount *= (item.Payment.Commission + 1.0m);
+			}
+		}
 
-        if (item.Payment.CashSession == null)
-        {
-            desc += Resources.PaymentOnDelivery;
-        }
+		if (item.Payment.CashSession == null)
+		{
+			desc += Resources.PaymentOnDelivery;
+		}
 
-        <tr>
-            <td colspan="2" class="text-right" style="padding-right:14px">@item.Payment.Method.GetDisplayName()</td>
-            <td class="gbmt">@desc</td>
-            <td class="number">
-                @Html.DisplayFor(x => item.Payment.Amount)
-            </td>
-        </tr>
+		<tr>
+			<td colspan="2" class="text-right" style="padding-right:14px">@item.Payment.Method.GetDisplayName()</td>
+			<td class="gbmt">@desc</td>
+			<td class="number">
+				@Html.DisplayFor(x => item.Payment.Amount)
+			</td>
+		</tr>
 
-    }
-    <tr>
-        <td colspan="3" class="text-right">@Resources.Change</td>
-        <td class="number">@Html.DisplayFor(x => Model.Change)</td>
-    </tr>
+	}
+	<tr>
+		<td colspan="3" class="text-right">@Resources.Change</td>
+		<td class="number">@Html.DisplayFor(x => Model.Change)</td>
+	</tr>
 </table>
-
-<div class="display-label display-field">
-    @Html.LabelFor(model => model.Taxes)
-    @Html.DisplayFor(model => model.Taxes)
-</div>
 
 @if (Model.Discount > 0)
 {

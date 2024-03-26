@@ -40,21 +40,20 @@
 <script type='text/javascript'>
 $('#id\\:@Model.Id [data-toggle="tooltip"]').tooltip();
 $('#id\\:@Model.Id a.editable').editable({
-	success: function(response, newValue) {
+    success: function (response, newValue) {
+
     },
     display: function(value, response) {
-        if (typeof response === 'undefined') 
+        if (typeof response === 'undefined')
         	return;
-        
+
         $(this).html(response.value);
     }
 });
 $('#id\\:@Model.Id a.delete').editable({
 	success: function(response, newValue) {
         $('#id\\:@Model.Id').remove();
-	    if ($('#items li').length === 0) {
-	        $('#confirm-button').addClass('hide');
-	    }
+		$('#buttons').loadUrl();
     }
 });
 </script>

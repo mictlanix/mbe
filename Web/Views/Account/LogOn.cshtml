@@ -5,19 +5,20 @@
 	ViewBag.Title = Resources.Title_LogOn;
 }
 
-<h2>@Resources.DisplayName_LogOn</h2>
-<p>
-	@Resources.Message_LoginRegister
-	@Html.ActionLink(Resources.Register, "Register").
-</p>
+
 
 @Html.ValidationSummary(true, Resources.Message_LoginUnsuccessful)
 
 @using (Html.BeginForm())
 {
-	<div>
+	<div class="center">
+	<h2>@Resources.DisplayName_LogOn</h2>
+	@*<p>
+		@Resources.Message_LoginRegister
+		@Html.ActionLink(Resources.Register, "Register").
+	</p>*@
 		<fieldset>
-			<legend>@Resources.AccountInformation</legend>
+			@*<legend>@Resources.AccountInformation</legend>*@
 
 			<div class="editor-label">
 				@Html.LabelFor(m => m.UserName)
@@ -35,17 +36,20 @@
 				@Html.ValidationMessageFor(m => m.Password)
 			</div>
 
-			<div class="editor-label">
+			@*<div class="editor-label">
 				@Html.CheckBoxFor(m => m.RememberMe)
 				@Html.LabelFor(m => m.RememberMe)
-			</div>
-			<div class="editor-field">
+			</div>*@
+			@*<div class="editor-field">
 				@Html.ActionLink(Resources.DisplayName_ForgotPassword, "ForgotPassword")
-			</div>
+			</div>*@
 		</fieldset>
 
-		<div class="action-buttons">
+		<div class="">
 			<button type="submit">@Resources.LogOn</button>
+		</div>
+		<div class="action-buttons">
+			@Html.ActionLink(Resources.DisplayName_ForgotPassword, "ForgotPassword") | @Html.ActionLink(Resources.Register, "Register").
 		</div>
 	</div>
 }

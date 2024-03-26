@@ -15,10 +15,14 @@
 				<dt>@Resources.Customer</dt>
 				<dd>
 					<a id='customer' data-type='select2' data-placement='right' data-pk='@Model.Id'
-						data-value='@Model.Customer.Id' data-url='@Url.Action("SetCustomer", "Payments",new { id = Model.Id })'
-						data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+					   data-value='@Model.Customer.Id' data-url='@Url.Action("SetCustomer", "Payments",new { id = Model.Id })'
+					   data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
 						@Html.DisplayFor(x => x.Customer.Name)
 					</a>
+					(<a id="customer-info" onclick="openClientEditor()">
+						<i class="glyphicon-pencil"></i>
+
+					</a>)
 					<span id="name">
 						@Html.Partial("_CustomerName", Model)
 					</span>
@@ -29,12 +33,12 @@
 			    }
 				<dt>@Resources.ShipTo</dt>
                 <dd>
-                    <a id="customer_shipto" class="editable alert-link" data-type="text" data-placement="right" data-pk="@Model.Id"
-                       data-url='@Url.Action("SetCustomerShipTo", new { id = Model.Id })'
+                    @*<a id="customer_shipto" class="editable alert-link" data-type="text" data-placement="right" data-pk="@Model.Id"
+                       data-url='@Url.Action("SetCustomerShipTo", new { id = Model.Id })' data-value='@(Model.ShipTo==null?"":Model.ShipTo.ToString())'
                        data-inputclass="input-xlarge" data-emptytext="@Resources.Empty">
                         @Html.DisplayFor(x => x.CustomerShipTo)
-                    </a>
-                    @*<a id='address' class="editable" data-type='select' data-placement='right' data-pk='@Model.Id'
+                    </a>*@
+                    <a id='address' class="editable" data-type='select' data-placement='right' data-pk='@Model.Id'
             data-value='@(Model.ShipTo == null ? "" : Model.ShipTo.Id.ToString ())'
             data-source='@Url.Action("Addresses", new { id = Model.Id })' data-source-cache='false'
             data-url='@Url.Action("SetShipTo", new { id = Model.Id })'
@@ -44,7 +48,7 @@
             } else {
                     @Resources.Empty
             }
-        </a>*@
+        </a>
 
                 </dd>
 				<dt>@Resources.SalesPerson</dt>

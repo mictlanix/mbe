@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @model int?
 
@@ -10,7 +10,7 @@
 <script type="text/javascript">
     $(function () {
         $("#@field").tokenInput("@Url.Action("GetSuggestions", "PriceLists")", {
-            hintText: "@Resources.HIntText",
+            hintText: "@Resources.ChoosePriceList",
             noResultsText: "@Resources.NoResultsText",
             searchingText: "@Resources.SearchingText",
             queryParam: "pattern",

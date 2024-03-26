@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model SalesQuoteDetail
@@ -37,7 +37,11 @@
     } else {
         <span class='editable price'>@Html.DisplayFor(x => x.Price)</span>
     }
+
         <span class='editable currency'>@Html.DisplayFor(x => x.Currency)</span>
+        <b>@Resources.PriceAdjustment:</b>
+        <a class='editable adjstmentprice' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemAdjustmentPrice", new { id = Model.Id })'>@Html.DisplayFor(x => x.PriceAdjustment)</a>
+
         <b>@Resources.Quantity:</b>
         <a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
         <b>@Resources.Discount:</b>

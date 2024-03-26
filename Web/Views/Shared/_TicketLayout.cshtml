@@ -11,25 +11,43 @@
 </head>
 <body class="ticket">
 	<header>
-		<div id="logo">
-			@if (!string.IsNullOrEmpty (ViewBag.Store.Logo)) {
-				<img src="@Url.Content(ViewBag.Store.Logo)" alt="Logo" />
-			}
-		</div>
-		<h1 class="text-center">@ViewBag.Store.Name</h1>
-		@if (ViewBag.SkipAddress == null || !ViewBag.SkipAddress) {
-			<h3 class="text-center">@ViewBag.Store.Taxpayer.Id</h3>
-			<h3 class="text-center">
-				@ViewBag.Address.StreetAndNumber
-				@ViewBag.Address.Neighborhood,
-				@if (!string.IsNullOrEmpty (ViewBag.Address.Locality)) {
-					<text>@ViewBag.Address.Locality,</text>
-				}
-				@ViewBag.Address.PostalCode
-				@ViewBag.Address.Borough,
-				@ViewBag.Address.State
-			</h3>
-		}
+		<table>
+			<tr>
+				<td>
+					<div id="logo" style="display:inline-block; margin:10px">
+						@if (!string.IsNullOrEmpty(ViewBag.Store.Logo))
+						{
+							<img src="@Url.Content(ViewBag.Store.Logo)" alt="Logo" />
+						}
+					</div>
+				</td>
+				<td>
+					<div style="display:inline-block">
+						<h1 class="text-center">@ViewBag.Store.Name</h1>
+						@if (ViewBag.SkipAddress == null || !ViewBag.SkipAddress)
+						{
+							<h3 class="text-center">@ViewBag.Store.Taxpayer.Id</h3>
+							<h3 class="text-center">
+								@ViewBag.Address.StreetAndNumber
+								@ViewBag.Address.Neighborhood,
+								@if (!string.IsNullOrEmpty(ViewBag.Address.Locality))
+								{
+									<text>@ViewBag.Address.Locality,</text>
+								}
+							</h3>
+							<h3 class="text-center">
+								@ViewBag.Address.PostalCode
+								@ViewBag.Address.Borough,
+								@ViewBag.Address.State
+
+							</h3>
+						}
+					</div>
+				</td>
+			</tr>
+		</table>
+
+
 		<h2 class="text-center">@ViewBag.Title</h2>
 	</header>
 	<section id="main">

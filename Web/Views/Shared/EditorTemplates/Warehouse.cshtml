@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @model Warehouse
 
@@ -17,6 +17,8 @@ ul.token-input-list { width:100%; }
 </style>
 @if (Model != null && Model.Store != null) {
 <script type='text/javascript'>
-$("#StoreId").tokenInput("add", { id: "@Model.Store.Id", name: "@Model.Store.Name"});
+    $(document).ready(function () {
+        $("#StoreId").tokenInput("add", { id: "@Model.Store.Id", name: "@Model.Store.Name" });
+    })
 </script>
 }

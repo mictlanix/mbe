@@ -113,6 +113,9 @@ button.icon.pay,a.button.icon.pay {
 button.icon.print,a.button.icon.print {
     background:#f3f3f3 url(icons/print.png) no-repeat;
 }
+button.icon.duplicate,a.button.icon.duplicate {
+    background:#f3f3f3 url(icons/star.png) no-repeat;
+}
 button.icon.next,a.button.icon.next {
     background:#f3f3f3 url(icons/next-item.png) no-repeat;
 }

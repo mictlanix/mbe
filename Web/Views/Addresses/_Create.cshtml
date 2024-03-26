@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model Address
@@ -11,7 +11,7 @@
 @using (Ajax.BeginForm(null, null, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "address-modal-content" }, new { @class = "modal-form" })) {
     @Html.ValidationSummary(true)
 	<div class="form-horizontal">
-	@Html.EditorForModel()
+	@Html.EditorFor(x => Model)
 	</div>
 }
 </div>

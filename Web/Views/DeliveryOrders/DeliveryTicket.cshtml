@@ -1,50 +1,55 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
-@model DeliveryOrder
+@using Mictlanix.BE.Web.Models
+@model DeliveryViewModel
 
 @{
 		  Layout = WebConfig.ReceiptLayout;
-		  ViewBag.Title = Html.PrintFileName (Resources.DeliveryOrder, Model.Id);
-		  ViewBag.Store = Model.Store;
-		  ViewBag.TaxpayerName = Model.Store.Taxpayer.Name;
-		  ViewBag.Taxpayer = Model.Store.Taxpayer.Id;
-		  ViewBag.Address = Model.Store.Address;
+		  ViewBag.Title = Resources.DeliveryOrder;
+		  ViewBag.Store = Model.DeliveryOrder.Store;
+		  ViewBag.TaxpayerName = Model.DeliveryOrder.Store.Taxpayer.Name;
+		  ViewBag.Taxpayer = Model.DeliveryOrder.Store.Taxpayer.Id;
+		  ViewBag.Address = Model.DeliveryOrder.Store.Address;
 }
 
 <div class="row">
 	<div class="col-xs-6 text-left">
 		<div class="row">
 			<div class="col-xs-12 uppercase">
-				<h2>@Resources.Customer</h2>
+				<h2 class="text-left uppercase mylabel">@Resources.Customer</h2>
 			</div>
 		 	<div class="col-xs-12">
-		 		<p><span class="mylabel">@Resources.Name</span></p>
+				<p><span class="mylabel">@Resources.Name</span>: @Html.DisplayFor(x => x.DeliveryOrder.Customer.Name)</p>
 	 		</div>
-	 		<div class="col-xs-12">
-	 			<p>@Html.DisplayFor(x => x.Customer.Name)</p>
- 			</div>
 		 	<div class="col-xs-12">
-		 		<p><span class="mylabel">@Resources.ShipTo</span></p>
+		 		<p><span class="mylabel">@Resources.ShipTo</span>: </p>
 	 		</div>
-	 		<div class="col-xs-12">
-	 			<p>
-				    @Html.DisplayFor(x => x.ShipTo.Street)
-				    @Html.DisplayFor(x => x.ShipTo.ExteriorNumber)
-				    @Html.DisplayFor(x => x.ShipTo.InteriorNumber)<br>
-				    @Html.DisplayFor(x => x.ShipTo.Neighborhood),
-				    @Html.DisplayFor(x => x.ShipTo.Borough)<br>
-				    @Html.DisplayFor(x => x.ShipTo.State),
-				    @Html.DisplayFor(x => x.ShipTo.Country),
-				    @Html.DisplayFor(x => x.ShipTo.PostalCode)
-			    </p>
+			<div class="col-xs-12">
+				<p>
+					@Html.DisplayFor(x => x.DeliveryOrder.ShipTo.StreetAndNumber)
+					@Html.DisplayFor(x => x.DeliveryOrder.ShipTo.InteriorNumber)<br>
+					@Html.DisplayFor(x => x.DeliveryOrder.ShipTo.Neighborhood),
+					@Html.DisplayFor(x => x.DeliveryOrder.ShipTo.Borough)<br>
+					@Html.DisplayFor(x => x.DeliveryOrder.ShipTo.State), @Resources.PostalCode
+					@Html.DisplayFor(x => x.DeliveryOrder.ShipTo.PostalCode)
+				</p>	
+			</div>
+			<div class="col-xs-12">
+		 		<p><span class="mylabel">@Resources.Contact</span>: </p>
 	 		</div>
+			<div class="col-xs-12">
+				<p>
+					@Html.DisplayFor(x => x.DeliveryOrder.Contact.Name)
+					@Html.DisplayFor(x => x.DeliveryOrder.Contact.Mobile)
+				</p>	
+			</div>
+			@if (!string.IsNullOrEmpty (Model.DeliveryOrder.Comment)) {
             <div class="col-xs-12">
                 <p><span class="mylabel">@Resources.Comment</span></p>
             </div>
-			@if (!string.IsNullOrEmpty (Model.Comment)) {
             <div class="col-xs-12">
-                <p>@Html.DisplayFor(x => x.Comment)</p>
+                <p>@Html.DisplayFor(x => x.DeliveryOrder.Comment)</p>
             </div>
 			}
  		</div>
@@ -52,20 +57,17 @@
 	<div class="col-xs-6 text-right">
 		<div class="row">
 			<div class="col-xs-12">
-				<h2 class="text-right uppercase">@Resources.DeliveryOrder @Html.DisplayFor(x => x.Id)</h2>
+				<h2 class="text-right uppercase mylabel" style="display:inline-block">@Resources.DeliveryOrderId</h2>
+
+				<p style="display:inline-block">@Html.DisplayFor(x => x.DeliveryOrder.Id)</p>
 			</div>
 			<div class="col-xs-12">
-				<p><span class="mylabel">@Resources.Serial</span></p>
+				<p><span class="mylabel">@Resources.Serial</span>: @Html.DisplayFor(x => x.DeliveryOrder.Serial)</p>
+				<p></p>
 			</div>
-	 		<div class="col-xs-12">
-				<p>@Html.DisplayFor(x => x.Serial)</p>
-	 		</div>
 			<div class="col-xs-12">
-				<p><span class="mylabel">@Resources.DateTime</span></p>
+				<p><span class="mylabel">@Resources.DeliveryDate</span>: @Html.DisplayFor(x => x.DeliveryOrder.Date)</p>
 			</div>
-	 		<div class="col-xs-12">
-				<p>@Html.DisplayFor(x => x.Date)</p>
-	 		</div>
 		</div>
 	</div>
 </div>
@@ -73,11 +75,19 @@
 <div style="min-height: 2.2mm; border-top: #333 solid 1px; border-bottom: #333 solid 3px"></div>
 
 <table  style="border-spacing:0 4px;border-collapse: separate;">
+	<thead>
+		<tr>
+			<td>@Resources.Quantity</td>
+			<td>@Resources.Name</td>
+			<td>@Resources.SalesOrderId</td>
+		</tr>
+	</thead>
     <tbody>
-        @foreach (var item in Model.Details.Where (x => x.Quantity > 0)) {
+        @foreach (var item in Model.DeliveryOrder.Details.Where (x => x.Quantity > 0)) {
             <tr class="alt">
-                <td class="">@Html.DisplayFor(x => item.Quantity)</td>
-                <td class="">@Html.DisplayFor(x => item.Product.UnitOfMeasurement.Name)</td>
+                <td class="">@Html.DisplayFor(x => item.Quantity)
+				<br/>
+               @Html.DisplayFor(x => item.Product.UnitOfMeasurement.Name)</td>
                 <td class="">@Html.DisplayFor(x => item.ProductName)</td>
                 <td class="">@Html.DisplayFor(x => item.OrderDetail.SalesOrder.Id)</td>
             </tr>
@@ -90,14 +100,9 @@
 
 <div style="min-height: 2.2mm; border-top: #333 solid 3px; border-bottom: #333 solid 1px"></div>
 
-@{
-		  var payments_on_delivery = Model.Details.Select (x => x.OrderDetail.SalesOrder).Distinct ().SelectMany (x => x.Payments.Where(y => y.Payment.CashSession == null)).ToList();
-		 
-} 
-
-@if (payments_on_delivery.Count () > 0) {
+@if (Model.PaymentsOnDelivery.Count () > 0) {
 		<span>Pagos Pendientes</span>
-	foreach (var item in payments_on_delivery) {
+	foreach (var item in Model.PaymentsOnDelivery) {
 		item.Payment.Amount *= (item.Payment.Commission + 1.0m);
 					<div>
 						<ul>

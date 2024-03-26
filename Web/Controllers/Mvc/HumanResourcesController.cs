@@ -1,4 +1,4 @@
-﻿using Castle.ActiveRecord;
+using Castle.ActiveRecord;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
@@ -369,7 +369,7 @@ namespace Mictlanix.BE.Web.Controllers
 
             if (AlreadyExistEnrollNumber) {
                 Response.StatusCode = 400;
-                return Content(Resources.Duplicate);
+                return Content(Resources.Duplicated);
             }
 
             return Json(new { });

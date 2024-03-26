@@ -35,6 +35,7 @@ using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 using MimeKit;
 using System.Collections.Generic;
+using Mictlanix.BE.Web.Utils;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
@@ -76,30 +77,38 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		Search<SalesQuote> SearchSalesQuotes (Search<SalesQuote> search)
 		{
-			IQueryable<SalesQuote> query;
 			var item = WebConfig.Store;
-			var pattern = (search.Pattern ?? string.Empty).Trim ();
+			IQueryable<SalesQuote> query = from x in SalesQuote.Queryable
+						       select x;
+			 var pattern = (search.Pattern ?? string.Empty).Trim ();
 			int id = 0;
 
 			if (int.TryParse (pattern, out id) && id > 0) {
+
 				query = from x in SalesQuote.Queryable
-					where x.Store.Id == item.Id && (
-					    x.Id == id || x.Serial == id)
-					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending
+					where (x.Id == id || x.Serial == id)
 					select x;
-			} else if (string.IsNullOrEmpty (pattern)) {
-				query = from x in SalesQuote.Queryable
-					where x.Store.Id == item.Id
-					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending
-					select x;
-			} else {
-				query = from x in SalesQuote.Queryable
-					where x.Store.Id == item.Id && (
+
+			} else if (!string.IsNullOrEmpty (pattern)) {
+				query = from x in query
+					where (
 					    x.Customer.Name.Contains (pattern) ||
-					    x.SalesPerson.Nickname.Contains (pattern))
-					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending
+					    x.SalesPerson.Nickname.Contains (pattern) ||
+					    x.Customer.Name.Contains(pattern)
+					    )
+						select x;
+			} else {
+				query = from x in query
+					where (x.Creator == CurrentUser.Employee
+						       || x.Updater == CurrentUser.Employee
+						       || x.SalesPerson == CurrentUser.Employee)
 					select x;
 			}
+
+			query = from x in query
+				orderby (x.IsCompleted || x.IsCancelled ? 1 : 0),
+							       x.Date descending
+				select x;
 
 			search.Total = query.Count ();
 			search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
@@ -197,6 +206,61 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			return View (item);
+		}
+
+		public ActionResult Duplicate (int id)
+		{
+			var item = SalesQuote.Find (id);
+
+			//if(item.Creator != CurrentUser.Employee || item.Updater != CurrentUser.Employee) {
+			//	Response.StatusCode = (int) HTTPResponseStatusCodes.BadRequest;
+			//	return Content (Resources);
+			//}
+
+			SalesQuote copy = new SalesQuote {
+				IsCompleted = false,
+				Contact = item.Contact,
+				CreationTime = DateTime.Now,
+				Creator = CurrentUser.Employee,
+				IsCancelled = false,
+				Comment = item.Comment,
+				Currency = item.Currency,
+				Customer = item.Customer,
+				Date = DateTime.Now,
+				DueDate = DateTime.Now.AddDays (WebConfig.DefaultQuotationDueDays),
+				ExchangeRate = item.ExchangeRate,
+				ModificationTime = DateTime.Now,
+				SalesPerson = CurrentUser.Employee,
+				ShipTo = item.ShipTo,
+				Store = item.Store,
+				Terms = item.Terms,
+				Updater = item.Updater
+			};
+			
+
+			using(var scope = new TransactionScope ()) {
+				copy.CreateAndFlush ();
+
+				foreach(var detail in item.Details) {
+					(new SalesQuoteDetail {
+						SalesQuote = copy,
+						Comment = detail.Comment,
+						Currency = detail.Currency,
+						DiscountRate = detail.DiscountRate,
+						ExchangeRate = detail.ExchangeRate,
+						IsTaxIncluded = detail.IsTaxIncluded,
+						Price = detail.Price,
+						PriceAdjustment = detail.PriceAdjustment,
+						Product = detail.Product,
+						ProductCode = detail.ProductCode,
+						ProductName = detail.ProductName,
+						Quantity = detail.Quantity,
+						TaxRate = detail.TaxRate
+					}).CreateAndFlush ();
+				}
+			}
+
+			return RedirectToAction("Edit", new {id = copy.Id});
 		}
 
 		public JsonResult Contacts (int id)
@@ -626,6 +690,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				IsTaxIncluded = p.IsTaxIncluded,
 				Quantity = p.MinimumOrderQuantity,
 				Price = price.Value,
+				PriceAdjustment = 0,
 				DiscountRate = discount,
 				Currency = entity.Currency,
 				ExchangeRate = entity.ExchangeRate
@@ -793,6 +858,38 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
+		public ActionResult SetItemAdjustmentPrice (int id, string value)
+		{
+			var entity = SalesQuoteDetail.Find (id);
+			bool success;
+			decimal val;
+
+			if (entity.SalesQuote.IsCompleted || entity.SalesQuote.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			success = decimal.TryParse (value.Trim (),
+					System.Globalization.NumberStyles.Currency,
+					null, out val);
+
+			if (success && val >= 0) {
+				entity.PriceAdjustment = val;
+
+				using (var scope = new TransactionScope ()) {
+					entity.UpdateAndFlush ();
+				}
+			}
+
+			return Json (new {
+				id = entity.Id,
+				value = entity.FormattedValueFor (x => x.PriceAdjustment),
+				total = entity.FormattedValueFor (x => x.Total),
+				total2 = entity.FormattedValueFor (x => x.TotalEx)
+			});
+		}
+
+		[HttpPost]
 		public ActionResult SetItemDiscount (int id, string value)
 		{
 			var entity = SalesQuoteDetail.Find (id);
@@ -866,7 +963,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				entity.UpdateAndFlush ();
 			}
 
-			return RedirectToAction ("Index");
+			return RedirectToAction ("View", new {id = id});
 		}
 
 		[HttpPost]
@@ -923,7 +1020,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			int pl = SalesQuote.Queryable.Where (x => x.Id == order)
 				    .Select (x => x.Customer.PriceList.Id).Single ();
 			var query = from x in ProductPrice.Queryable
-				    where x.List.Id == pl && x.Product.IsSalable && ( 
+				    where x.List.Id == pl && x.Product.IsSalable &&
+					!x.Product.IsDeactivated  && ( 
 					x.Product.Name.Contains (pattern) ||
 					x.Product.Code.Contains (pattern) ||
 					x.Product.Model.Contains (pattern) ||

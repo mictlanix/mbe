@@ -1,4 +1,4 @@
-﻿// 
+// 
 // PaymentsController.cs
 // 
 // Author:
@@ -432,7 +432,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				}
 			}
 
-			return Json (new { id = id, value = entity.ShipTo.ToString (), type = "shipto" });
+			return Json (new {
+				id = id,
+				value = entity.ShipTo.ToString (),
+				address_id = item.Id,
+				type = "shipto" });
 		}
 
 		public JsonResult Addresses (int id)
@@ -518,10 +522,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				Amount = amount
 			};
 
-			if (fee.HasValue) {
-				item.Payment.ExtraFee = PaymentMethodOption.Find (fee.Value);
-				item.Payment.Commission = item.Payment.ExtraFee.CommissionByManage;
-			}
+			//if (fee.HasValue) {
+			//	item.Payment.ExtraFee = PaymentMethodOption.Find (fee.Value);
+			//	item.Payment.Commission = item.Payment.ExtraFee.CommissionByManage;
+			//}
 
 			// Store and Serial
 
@@ -545,7 +549,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				item.Amount = item.SalesOrder.Balance;
 			}
 
-			if (ondelivery && !string.IsNullOrEmpty (sales_order.CustomerShipTo)) {
+			//if (ondelivery && !string.IsNullOrEmpty (sales_order.CustomerShipTo)) {
+			if (ondelivery) {
 
 				item.Payment.CashSession = null;
 			}

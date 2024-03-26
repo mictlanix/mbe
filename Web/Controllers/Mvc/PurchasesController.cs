@@ -177,6 +177,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public JsonResult AddPurchaseDetail (int movement, int warehouse, int product)
 		{
 			var p = Product.Find (product);
+
+
 			var cost = (from x in ProductPrice.Queryable
 				    where x.Product.Id == product && x.List.Id == 0
 				    select x.Value).SingleOrDefault ();
