@@ -11,33 +11,48 @@
 <fieldset>
 	<div class='row'>
 		<div class='col-xs-8'>
-	  		<dl class=''>
+			<dl class=''>
 				<dt>@Resources.Customer</dt>
 				<dd>
-			        <a id='customer' data-type='select2' data-placement='right' data-pk='@Model.Id' 
-			        	data-value='@Model.Customer.Id' data-url='@Url.Action("SetCustomer", new { id = Model.Id })'
-			        	data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
-			        	@Html.DisplayFor(x => x.Customer.Name)
-			        </a>
-			    </dd>
+					@Html.DisplayFor(x => x.Customer.Name)
+
+					(<a id="delivery-info" target="_blank" href='/Customers/Details/@Model.Customer.Id' >
+							<i class="glyphicon-pencil"></i>
+						
+					</a>)
+				</dd>
+				<dt>@Resources.Contact</dt>
+				<dd>
+					<a id='contact' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id'
+					   data-value='@(Model.Contact == null ? "" : Model.Contact.Id.ToString ())'
+					   data-source='@Url.Action("Contacts", new { id = Model.Id })' data-source-cache='false'
+					   data-url='@Url.Action("SetContact", new { id = Model.Id })'
+					   data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+						@if (Model.Contact != null)
+						{
+							@Html.DisplayFor(x => x.Contact, "String")
+						}
+					</a>
+				</dd>
 				<dt>@Resources.ShipTo</dt>
 				<dd>
-			        <a id='address' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id'
-			        	data-value='@(Model.ShipTo == null ? "" : Model.ShipTo.Id.ToString ())'
-			        	data-source='@Url.Action("Addresses", new { id = Model.Id })' data-source-cache='false'
-			        	data-url='@Url.Action("SetShipTo", new { id = Model.Id })'
-			        	data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
-			        @if (Model.ShipTo != null) {
-			        	@Html.DisplayFor(x => x.ShipTo, "String")
-		        	}
-			        </a>
+					<a id='address' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id'
+					   data-value='@(Model.ShipTo == null ? "" : Model.ShipTo.Id.ToString ())'
+					   data-source='@Url.Action("Addresses", new { id = Model.Id })' data-source-cache='false'
+					   data-url='@Url.Action("SetShipTo", new { id = Model.Id })'
+					   data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+						@if (Model.ShipTo != null)
+						{
+							@Html.DisplayFor(x => x.ShipTo, "String")
+						}
+					</a>
 				</dd>
-                <dt>@Resources.Comment</dt>
-                <dd>
-                    <a class='editable' data-type="textarea" data-placement='right' data-pk='@Model.Id'
-                       data-url='@Url.Action("SetComment", new { id = Model.Id })'
-                       data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>@Model.Comment</a>
-                </dd>
+				<dt>@Resources.Comment</dt>
+				<dd>
+					<a class='editable' data-type="textarea" data-placement='right' data-pk='@Model.Id'
+					   data-url='@Url.Action("SetComment", new { id = Model.Id })'
+					   data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>@Model.Comment</a>
+				</dd>
 			</dl>
 		</div>
 	  	<div class='col-xs-4'>
@@ -72,44 +87,6 @@
 </fieldset>
 <script type='text/javascript'>
 	$('[data-toggle="tooltip"]').tooltip();
-	$('#customer').editable({
-		select2: {
-			minimumInputLength: 3,
-			ajax: {
-				url: '@Url.Action("GetSuggestions", "Customers")',
-	        dataType: 'json',
-	        type: 'POST',
-	        data: function(term,page,context) {
-	        	return { pattern:term };
-	        },
-	        results: function(data,page) {
-	            return { results:data };
-	        }
-	    },
-	    initSelection: function(element, callback) {
-	        var data = {
-	        	id: $('#customer').data('value'),
-	        	name: $('#customer').text()
-        	};
-	        callback(data);
-	    },
-	    formatResult: function(result) {
-	        return result.name + " (" + result.code + ")";
-	    },
-	    formatSelection: function(selection) {
-	        return selection.name;
-	    }
-	},
-	success: function(response, newValue) {
-	    $('#address').text('').editable('setValue', '');
-        $('#items-container').text()
-    },
-    display: function(value, response) {
-    	if (typeof response !== 'undefined') {
-			$(this).html(response.value);
-		}
-    }
-	});
 
 	$('#date').editable({
 		datepicker: {
@@ -118,21 +95,42 @@
 	});
 
 
-$('a.editable').editable({
-    display: function(value, response) {
-		if (typeof response === 'undefined')
-        	return;
+	$('a.editable').editable({
 
-        if (Array.isArray(response)) {
-          	var arr = $.grep(response, function(o){
-  				return o.value == value;
-			});
-			if (arr.length != 0) {
-          		$(this).html(arr[0].text);
-          	}
-        } else {
-          	$(this).html(response.value);
-        }
-    }
+		success: function (response, newValue) {
+			var contact = $("#contact").val();
+			var address = $("#address").val();
+			$('#buttons').loadUrl();
+		},
+		error: function(response, newValue){
+			console.log("en error del contacto o domicilio...");
+			console.log(response)
+			console.log(newValue)
+			if (response.status === 400) {
+				console.log("vamos bien...")
+			}
+		},
+		validate: function (value) {
+			if (value < 0) {
+				console.log(value)
+			}
+		},
+		display: function (value, response) {
+			console.log(value)
+			console.log(response)
+			if (typeof response === 'undefined')
+        		return;
+
+			if (Array.isArray(response)) {
+          		var arr = $.grep(response, function(o){
+  					return o.value == value;
+				});
+				if (arr.length != 0) {
+          			$(this).html(arr[0].text);
+          		}
+			} else {
+          		$(this).html(response.value);
+			}
+		}
 });
 </script>

@@ -43,6 +43,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Index ()
 		{
 			var qry = from x in Product.Queryable
+				  where !x.IsDeactivated
 				  orderby x.Name
 				  select x;
 
@@ -69,16 +70,18 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return View (search);
 
 			var qry = from x in Product.Queryable
+				  where !x.IsDeactivated
 				  orderby x.Name
 				  select x;
 
 			if (!string.IsNullOrEmpty (search.Pattern)) {
 				qry = from x in Product.Queryable
-				      where x.Name.Contains (search.Pattern) ||
+				      where (x.Name.Contains (search.Pattern) ||
 						    x.Code.Contains (search.Pattern) ||
 						    x.Model.Contains (search.Pattern) ||
 						    x.SKU.Contains (search.Pattern) ||
-						    x.Brand.Contains (search.Pattern)
+						    x.Brand.Contains (search.Pattern))
+						&& !x.IsDeactivated
 				      orderby x.Name
 				      select x;
 			}

@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model DeliveryOrder
@@ -28,21 +28,18 @@
 <div id='back-to-list' class='pull-left'>
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
-<div class='pull-right @(Model.Details.Count == 0 ? "hide" : "")'>
-@using (Html.BeginForm("Confirm", "DeliveryOrders", new { id = Model.Id }, FormMethod.Post, new { style = "display:inline" })) {
-    <button id='complete' type='submit' class="icon save">@Resources.Complete</button>
-}
-@using (Html.BeginForm("Cancel", "DeliveryOrders", new { id = Model.Id }, FormMethod.Post, new { style = "display:inline" })){
-    <button type="submit" class="icon cancel">@Resources.Cancel</button>
-}
+
+<div id="buttons" data-url='@Url.Action("Deliverable", new { id = Model.Id })'>
+	@Html.Partial("_buttons", Model)
 </div>
 <div class='clearfix'></div>
 <script type='text/javascript'>
 $(function () {
     $('#add-items').editable({
-		success: function(response, newValue) {
-        	$('#items-container').loadUrl();
-            $('#confirm-button').removeClass('hide');
+		success: function (response, newValue) {
+			$('#items-container').loadUrl();
+			$('#buttons').loadUrl();
+            //$('#confirm-button').removeClass('hide');
             setTimeout(function(){$('#add-items').editable('setValue', '');},500);
 	    }
 	}).removeClass('editable-click');

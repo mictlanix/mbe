@@ -16,7 +16,7 @@
 
 <fieldset>
     <legend>@Resources.Title_Customer</legend>
-@Html.DisplayForModel()
+@Html.DisplayFor(x => Model)
 </fieldset>
 <div class='tabbable'>
     <ul class='nav nav-tabs'>
@@ -72,7 +72,7 @@ $(function () {
 		success: function(response, newValue) {
         	$('#taxpayers').loadUrl();
             setTimeout(function(){$('#add-taxpayer').editable('setValue', null);},500);
-	    }
+		},
 	}).removeClass('editable-click');
 
 	$('.tab-content').delegate( "a.remove", "click", function (e) {

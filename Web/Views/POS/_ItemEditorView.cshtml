@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model SalesOrderDetail
@@ -9,11 +9,15 @@
     </div>
     <div class='action-link'>
         <a class='button icon-only icon delete' title='@Resources.Message_DeleteConfirmation'
-		   data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id' data-url='@Url.Action("RemoveItem", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
+		   data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}'
+           data-value='@Model.Id' data-url='@Url.Action("RemoveItem", new { id = Model.Id })'
+           data-emptytext='' data-emptyclass=''></a>
     </div>
     <div class='info'>
     @if (Model.Product.HasVariablePricing) {
- 		<a class='editable name input-xxlarge' data-type='text' data-inputclass='input-xxlarge' data-placement='bottom' data-pk='@Model.Id' data-url='@Url.Action("SetItemProductName", new { id = Model.Id })'>@Html.DisplayFor(x => x.ProductName)</a>
+ 		<a class='editable name input-xxlarge' data-type='text' data-inputclass='input-xxlarge'
+          data-placement='bottom' data-pk='@Model.Id' data-url='@Url.Action("SetItemProductName", new { id = Model.Id })'>
+            @Html.DisplayFor(x => x.ProductName)</a>
     } else {
         <span class='thick'>@Html.DisplayFor(x => x.ProductName)</span>
     }

@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model Warehouse
@@ -8,7 +8,9 @@
     <h3>@Resources.Warehouse</h3>
 </div>
 <div class='modal-body'>
-    @using (Ajax.BeginForm (null, null, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "warehouse-modal-content" }, new { @class = "modal-form" })) {
+    @using (Ajax.BeginForm (null, null,
+        new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "warehouse-modal-content" },
+        new { @class = "modal-form" })) {
         @Html.ValidationSummary(true)
         <div class="form-horizontal">
             @Html.EditorForModel()

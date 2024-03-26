@@ -33,6 +33,9 @@ using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
+using System.Web.WebPages;
+using NHibernate;
+using System.Collections.Generic;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
@@ -226,7 +229,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				Currency = x.Currency,
 				ExchangeRate = x.ExchangeRate,
 				IsTaxIncluded = x.IsTaxIncluded,
-				Price = x.Price,
+				Price = x.Price +  x.PriceAdjustment,
 				Product = x.Product,
 				ProductCode = x.ProductCode,
 				ProductName = x.ProductName,
@@ -695,11 +698,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult AddItem (int order, int product)
+		public ActionResult AddItem (int order, int product, int warehouse_id)
 		{
 			var entity = SalesOrder.TryFind (order);
 			var p = Product.TryFind (product);
 			int pl = entity.Customer.PriceList.Id;
+			var w = Warehouse.TryFind (warehouse_id);
 			var cost = (from x in ProductPrice.Queryable
 				    where x.Product.Id == product && x.List.Id == 0
 				    select x).SingleOrDefault ();
@@ -709,6 +713,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var discount = (from x in CustomerDiscount.Queryable
 					where x.Product.Id == product && x.Customer.Id == entity.Customer.Id
 					select x.Discount).SingleOrDefault ();
+
+
 
 			if (entity.IsCompleted || entity.IsCancelled) {
 				Response.StatusCode = 400;
@@ -730,7 +736,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var item = new SalesOrderDetail {
 				SalesOrder = entity,
 				Product = p,
-				Warehouse = entity.PointOfSale.Warehouse,
+				//Warehouse = entity.PointOfSale.Warehouse,
+				Warehouse = w,
 				ProductCode = p.Code,
 				ProductName = p.Name,
 				TaxRate = p.TaxRate,
@@ -1045,7 +1052,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					var dt = DateTime.Now;
 
 					foreach (var x in entity.Details) {
-						x.Warehouse = warehouse;
+						//x.Warehouse = warehouse;
 						x.Update ();
 
 						InventoryHelpers.ChangeNotification (TransactionType.SalesOrder, entity.Id,
@@ -1055,35 +1062,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					entity.UpdateAndFlush ();
 				}
 			} else {
-				DeliveryOrder deliver = new DeliveryOrder ();
-
-				deliver.Date = DateTime.Now;
-				deliver.CreationTime = DateTime.Now;
-				deliver.Creator = CurrentUser.Employee;
-				deliver.Updater = entity.Creator;
-
-				deliver.Customer = entity.Customer;
-				deliver.ShipTo = entity.ShipTo;
-				deliver.Store = entity.Store;
-
-				using (var scope = new TransactionScope ()) {
-					deliver.CreateAndFlush ();
-				}
-
-				foreach (var detail in entity.Details) {
-					var detaild = (new DeliveryOrderDetail {
-						DeliveryOrder = deliver,
-						OrderDetail = detail,
-						Quantity = detail.Quantity,
-						ProductName = detail.ProductName,
-						Product = detail.Product,
-						ProductCode = detail.ProductCode
-					});
-					using (var scope = new TransactionScope ()) {
-						detaild.CreateAndFlush ();
-					}
-				}
-
+				return RedirectToAction ("New", "DeliveryOrders", new { id = entity.Id });
 			}
 
 			return RedirectToAction ("Index");
@@ -1110,42 +1089,125 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		// TODO: Rename param: order -> id
-		public JsonResult GetSuggestions (int order, string pattern)
-		{
-			int pl = SalesOrder.Queryable.Where (x => x.Id == order)
-						.Select (x => x.Customer.PriceList.Id).Single ();
-			var query = from x in ProductPrice.Queryable
-				    where x.List.Id == pl && x.Product.IsSalable && (
-					    x.Product.Name.Contains (pattern) ||
-					    x.Product.Code.Contains (pattern) ||
-					    x.Product.Model.Contains (pattern) ||
-					    x.Product.SKU.Contains (pattern) ||
-					    x.Product.Brand.Contains (pattern))
-				    orderby x.Product.Name
-				    select new {
-					    x.Product.Id,
-					    x.Product.Name,
-					    x.Product.Code,
-					    x.Product.Model,
-					    x.Product.SKU,
-					    x.Product.Photo,
-					    Price = x.Value
-				    };
-			var items = from x in query.Take (15).ToList ()
-				    select new {
-					    id = x.Id,
-					    name = x.Name,
-					    code = x.Code,
-					    model = x.Model ?? Resources.None,
-					    sku = x.SKU ?? Resources.None,
-					    url = Url.Content (x.Photo),
-					    price = x.Price,
-					    quantity = LotSerialTracking.Queryable.Where (y => y.Product.Code == x.Code
-											 && y.Warehouse == WebConfig.PointOfSale.Warehouse)
-								    .Sum (y => (decimal?) y.Quantity) ?? 0
-				    };
+		//public JsonResult GetSuggestions (int id, string pattern, bool AllWarehouses = false)
+		//{
+		//	int pl = SalesOrder.Queryable.Where (x => x.Id == id)
+		//				.Select (x => x.Customer.PriceList.Id).Single ();
+		//	var query = from x in ProductPrice.Queryable
+		//		    where x.List.Id == pl && x.Product.IsSalable &&
+		//			   !x.Product.IsDeactivated && (
+		//			    x.Product.Name.Contains (pattern) ||
+		//			    x.Product.Code.Contains (pattern) ||
+		//			    x.Product.Model.Contains (pattern) ||
+		//			    x.Product.SKU.Contains (pattern) ||
+		//			    x.Product.Brand.Contains (pattern))
+		//		    orderby x.Product.Name
+		//		    select new {
+		//			    x.Product.Id,
+		//			    x.Product.Name,
+		//			    x.Product.Code,
+		//			    x.Product.Model,
+		//			    x.Product.SKU,
+		//			    x.Product.Photo,
+		//			    Price = x.Value,
+		//			    warehouse = WebConfig.PointOfSale.Warehouse.Name
+		//		    };
+		//	var items = from x in query.Take (15).ToList ()
+		//		    select new {
+		//			    id = x.Id,
+		//			    name = x.Name,
+		//			    code = x.Code,
+		//			    model = x.Model ?? Resources.None,
+		//			    sku = x.SKU ?? Resources.None,
+		//			    url = Url.Content (x.Photo),
+		//			    price = x.Price,
+		//			    quantity = LotSerialTracking.Queryable.Where (y => y.Product.Code == x.Code
+		//						&& y.Warehouse == WebConfig.PointOfSale.Warehouse)
+		//						.Sum (y => (decimal?) y.Quantity) ?? 0,
+		//			    warehouse = x.warehouse ??Resources.None
+		//		    };
 
-			return Json (items.ToList (), JsonRequestBehavior.AllowGet);
+		//	return Json (items.ToList (), JsonRequestBehavior.AllowGet);
+		//}
+
+		public JsonResult GetSuggestions (int id, string pattern)
+		{
+			int pl = SalesOrder.Queryable.Where (x => x.Id == id)
+						.Select (x => x.Customer.PriceList.Id).Single ();
+
+			var Warehouse = WebConfig.PointOfSale.Warehouse;
+
+			var all_warehouses = pattern.EndsWith ("**");
+			pattern = pattern.TrimEnd(new char [] { '*' });
+
+			string warehouse_filter = all_warehouses ? "" : " AND w.warehouse_id = " + Warehouse.Id;
+
+			var sql = @"SELECT	p.product_id		id,
+						p.name			name,
+						p.code			code,
+						p.sku			sku,
+						p.photo			url,
+						p.model			model,
+						lst.warehouse		warehouse_id,
+						SUM(lst.quantity)	quantity,
+						w.name			warehouse,
+						pp.price		price,
+						p.stockable		stockable
+					FROM product p 
+					JOIN lot_serial_tracking lst ON p.product_id = lst.product
+					JOIN warehouse w ON w.warehouse_id = lst.warehouse
+					JOIN product_price pp ON pp.product = p.product_id
+					WHERE (
+						(p.name LIKE :pattern) OR
+						(p.code LIKE :pattern) OR
+						(p.sku LIKE :pattern) OR
+						(p.brand LIKE :pattern) OR
+						(p.model LIKE :pattern)) AND pp.`list` = :pricelist
+						WAREHOUSE_FILTER
+						AND p.salable = TRUE
+					GROUP BY lst.warehouse, p.product_id
+					ORDER BY p.product_id DESC
+					LIMIT 15";
+
+				sql = sql.Replace ("WAREHOUSE_FILTER", warehouse_filter);
+
+			var raw = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
+				query.AddScalar ("id", NHibernateUtil.Int32);
+				query.AddScalar ("name", NHibernateUtil.String);
+				query.AddScalar ("code", NHibernateUtil.String);
+				query.AddScalar ("sku", NHibernateUtil.String);
+				query.AddScalar ("url", NHibernateUtil.String);
+				query.AddScalar ("model", NHibernateUtil.String);
+				query.AddScalar ("warehouse_id", NHibernateUtil.Int32);
+				query.AddScalar ("quantity", NHibernateUtil.Decimal);
+				query.AddScalar ("warehouse", NHibernateUtil.String);
+				query.AddScalar ("price", NHibernateUtil.Decimal);
+				query.AddScalar ("stockable", NHibernateUtil.Boolean);
+
+
+				query.SetParameter ("pricelist", pl);
+				query.SetParameter ("pattern", "%" + pattern + "%");
+				return query.DynamicList ();
+			}, null);
+
+			var items = (from x in raw
+				    select new {
+					    id = x.id,
+					    name = x.name,
+					    code = x.code,
+					    sku = x.sku,
+					    model = x.model,
+					    url = x.url,
+					    warehouse_id = x.warehouse_id,
+					    quantity = x.quantity,
+					    warehouse = x.warehouse,
+					    price = x.price,
+					    stockable = x.stockable,
+				    }).ToList();
+
+
+			return Json (items, JsonRequestBehavior.AllowGet);
 		}
 	}
 }

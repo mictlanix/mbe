@@ -2105,7 +2105,7 @@ Realizada el: {0:d}</value>
   <data name="ProductsMerge" xml:space="preserve">
     <value>Fusión de Productos</value>
   </data>
-  <data name="Duplicate" xml:space="preserve">
+  <data name="Duplicated" xml:space="preserve">
     <value>Duplicado</value>
   </data>
   <data name="Merge" xml:space="preserve">
@@ -2563,5 +2563,23 @@ Atte: {1}.</value>
   </data>
   <data name="RecoverPasswordEmailSubject" xml:space="preserve">
     <value>Recuperación de contraseña</value>
+  </data>
+  <data name="Message_NotContactOrShipTo" xml:space="preserve">
+    <value>Verificar Contacto y/o Domicilio de entrega</value>
+  </data>
+  <data name="ChoosePriceList" xml:space="preserve">
+    <value>Seleccione la Lista de Precios correspondiente</value>
+  </data>
+  <data name="ShipmentTicket" xml:space="preserve">
+    <value>Ticket de Envío</value>
+  </data>
+  <data name="PickupTicket" xml:space="preserve">
+    <value>Ticket de Entrega en Tienda</value>
+  </data>
+  <data name="PriceAdjustment" xml:space="preserve">
+    <value>Ajuste de Precio</value>
+  </data>
+  <data name="Duplicate" xml:space="preserve">
+    <value>Crear Duplicado</value>
   </data>
 </root>

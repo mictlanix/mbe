@@ -81,11 +81,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					select x;
 			} else {
 				query = from x in Product.Queryable
-					where x.Name.Contains (pattern) ||
+					where (x.Name.Contains (pattern) ||
 						x.Code.Contains (pattern) ||
 						x.Model.Contains (pattern) ||
 						x.SKU.Contains (pattern) ||
-						x.Brand.Contains (pattern)
+						x.Brand.Contains (pattern))
+						&& !x.IsDeactivated
 					orderby x.Name
 					select x;
 
@@ -141,6 +142,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var entity = Product.Find (id);
 
+			if (entity.IsDeactivated)
+				return RedirectToAction ("index");
+
 			entity.Photo = SavePhoto (file) ?? WebConfig.DefaultPhotoFile;
 
 			using (var scope = new TransactionScope ()) {
@@ -153,12 +157,20 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult View (int id)
 		{
 			var entity = Product.Find (id);
+
+			if (entity.IsDeactivated)
+				return RedirectToAction ("index");
+
 			return PartialView ("_View", entity);
 		}
 
 		public ActionResult Edit (int id)
 		{
 			var entity = Product.Find (id);
+
+			if (entity.IsDeactivated)
+				return RedirectToAction ("index");
+
 			return PartialView ("_Edit", entity);
 		}
 
@@ -173,6 +185,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return PartialView ("_Edit", item);
 
 			var entity = Product.Find (item.Id);
+
+			if (entity.IsDeactivated)
+				return RedirectToAction ("index");
 
 			entity.Brand = item.Brand;
 			entity.Code = item.Code;
@@ -190,6 +205,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			entity.UnitOfMeasurement = item.UnitOfMeasurement;
 			entity.Supplier = item.Supplier;
 			entity.ProductService = item.ProductService;
+			//entity.IsDeactivated = false;
 
 			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
@@ -208,6 +224,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult DeleteConfirmed (int id)
 		{
 			var item = Product.Find (id);
+
+			if (item.IsDeactivated)
+				return RedirectToAction ("index");
 
 			try {
 				using (var scope = new TransactionScope ()) {
@@ -326,11 +345,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public JsonResult GetSuggestions (string pattern)
 		{
 			var query = from x in Product.Queryable
-				    where x.Name.Contains (pattern) ||
+				    where (x.Name.Contains (pattern) ||
 			x.Code.Contains (pattern) ||
 			x.Model.Contains (pattern) ||
 			x.SKU.Contains (pattern) ||
-			x.Brand.Contains (pattern)
+			x.Brand.Contains (pattern)) && !x.IsDeactivated
 				    orderby x.Name
 				    select x;
 
@@ -349,14 +368,21 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public ActionResult Labels (int id)
 		{
-			var item = Product.Find (id);
-			return PartialView ("_Labels", item.Labels);
+			var entity = Product.Find (id);
+
+			if (entity.IsDeactivated)
+				return RedirectToAction ("index");
+
+			return PartialView ("_Labels", entity.Labels);
 		}
 
 		[HttpPost]
 		public ActionResult SetLabels (int id, int [] value)
 		{
 			var entity = Product.Find (id);
+
+			if (entity.IsDeactivated)
+				return RedirectToAction ("index");
 
 			if (value == null) {
 				var param = Request.Params ["value[]"];

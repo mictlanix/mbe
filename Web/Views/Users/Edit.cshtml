@@ -7,6 +7,12 @@
 	ViewBag.Title = Resources.Edit;
 }
 
+<style>
+	tr:hover td {
+		background-color: burlywood;
+	}
+</style>
+
 <h2>@Resources.Edit</h2>
 
 @using (Html.BeginForm())
@@ -100,19 +106,19 @@
 					</td>
 					<td>
 						@Html.CheckBox(Enum.GetName(typeof(SystemObjects), item) + "Read",
-																							   Model.Privileges.Count(x => x.Object == (SystemObjects)item && (x.Privileges & AccessRight.Read) != 0) > 0)
+						Model.Privileges.Count(x => x.Object == (SystemObjects)item && (x.Privileges & AccessRight.Read) != 0) > 0)
 					</td>
 					<td>
 						@Html.CheckBox(Enum.GetName(typeof(SystemObjects), item) + "Create",
-																							  Model.Privileges.Count(x => x.Object == (SystemObjects)item && (x.Privileges & AccessRight.Create) != 0) > 0)
+						Model.Privileges.Count(x => x.Object == (SystemObjects)item && (x.Privileges & AccessRight.Create) != 0) > 0)
 					</td>
 					<td>
 						@Html.CheckBox(Enum.GetName(typeof(SystemObjects), item) + "Update",
-																							   Model.Privileges.Count(x => x.Object == (SystemObjects)item && (x.Privileges & AccessRight.Update) != 0) > 0)
+						Model.Privileges.Count(x => x.Object == (SystemObjects)item && (x.Privileges & AccessRight.Update) != 0) > 0)
 					</td>
 					<td>
 						@Html.CheckBox(Enum.GetName(typeof(SystemObjects), item) + "Delete",
-																							   Model.Privileges.Count(x => x.Object == (SystemObjects)item && (x.Privileges & AccessRight.Delete) != 0) > 0)
+						Model.Privileges.Count(x => x.Object == (SystemObjects)item && (x.Privileges & AccessRight.Delete) != 0) > 0)
 					</td>
 				</tr>
 			}

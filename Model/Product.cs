@@ -1,4 +1,4 @@
-﻿// 
+// 
 // Product.cs
 // 
 // Author:
@@ -174,6 +174,10 @@ namespace Mictlanix.BE.Model {
 		[DataType (DataType.MultilineText)]
 		[Display (Name = "Comment", ResourceType = typeof (Resources))]
 		public string Comment { get; set; }
+
+		[Property ("deactivated")]
+		[Display (Name = "Deactivated")]
+		public bool IsDeactivated { get; set; }
 
 		[HasAndBelongsToMany (typeof (Label), Table = "product_label", ColumnKey = "product", ColumnRef = "label", Lazy = true)]
 		public virtual IList<Label> Labels {

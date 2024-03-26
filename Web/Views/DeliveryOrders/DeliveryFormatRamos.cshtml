@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model DeliveryOrder
@@ -24,7 +24,6 @@
 	 		<div class="col-xs-12">
 	 			<p>@Html.DisplayFor(x => x.Customer.Name)</p>
  			</div>
- 		@if(Model.ShipTo != null) {
 		 	<div class="col-xs-12">
 		 		<p><span class="mylabel">@Resources.ShipTo</span></p>
 	 		</div>
@@ -41,7 +40,18 @@
                 @Html.DisplayFor(x => x.ShipTo.Comment)
 			    </p>
 	 		</div>
-		}
+			<div class="col-xs-12">
+		 		<p><span class="mylabel">@Resources.Contact</span></p>
+	 		</div>
+	 		<div class="col-xs-12">
+	 			<p>
+				    @Html.DisplayFor(x => x.Contact.Name)
+				    @Html.DisplayFor(x => x.ShipTo.InteriorNumber)<br>
+				    @Html.DisplayFor(x => x.ShipTo.Borough)<br>
+				    @Html.DisplayFor(x => x.ShipTo.PostalCode)<br>
+                @Html.DisplayFor(x => x.ShipTo.Comment)
+			    </p>
+	 		</div>
 
 			<div class="col-xs-12">
 				<p><span class="mylabel">@Resources.Comment</span></p>

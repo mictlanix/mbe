@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model Customer
@@ -8,8 +8,10 @@
     <h3>@Resources.Customer</h3>
 </div>
 <div class='modal-body'>
-    @using(Ajax.BeginForm(null, null, new AjaxOptions{ HttpMethod = "POST", UpdateTargetId = "customer-modal-content" }, new { @class = "modal-form" })) {
-        @*@Html.ValidationSummary (true)*@
+    @using(Ajax.BeginForm(null, null,
+        new AjaxOptions{ HttpMethod = "POST", UpdateTargetId = "customer-modal-content" },
+        new { @class = "modal-form" })) {
+        Html.ValidationSummary(true);
         <div class="form-horizontal">
             @Html.EditorForModel()
         </div>

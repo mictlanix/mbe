@@ -1,1280 +1,1287 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-	<PropertyGroup>
-		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-		<ProjectGuid>{D13A33DE-A12D-420E-ABB2-76A7C0F2E2E5}</ProjectGuid>
-		<ProjectTypeGuids>{349C5851-65DF-11DA-9384-00065B846F21};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-		<OutputType>Library</OutputType>
-		<AppDesignerFolder>Properties</AppDesignerFolder>
-		<RootNamespace>Mictlanix.BE.Web</RootNamespace>
-		<AssemblyName>Mictlanix.BE.Web</AssemblyName>
-		<UseIISExpress>true</UseIISExpress>
-		<TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-		<MvcProjectUpgradeChecked>true</MvcProjectUpgradeChecked>
-		<FileUpgradeFlags>
-		</FileUpgradeFlags>
-		<UpgradeBackupLocation>
-		</UpgradeBackupLocation>
-		<OldToolsVersion>4.0</OldToolsVersion>
-		<TargetFrameworkProfile />
-		<IISExpressSSLPort />
-		<IISExpressAnonymousAuthentication />
-		<IISExpressWindowsAuthentication />
-		<IISExpressUseClassicPipelineMode />
-		<UseGlobalApplicationHostFile />
-		<Use64BitIISExpress />
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-		<DebugType>full</DebugType>
-		<Optimize>False</Optimize>
-		<OutputPath>bin</OutputPath>
-		<WarningLevel>4</WarningLevel>
-		<DefineConstants>DEBUG;TRACE</DefineConstants>
-		<DebugSymbols>True</DebugSymbols>
-		<EnvironmentVariables>
-		  <EnvironmentVariables>
-		    <Variable name="MONO_ASPNET_WEBCONFIG_CACHESIZE" value="200" />
-		    <Variable name="MONO_GC_PARAMS" value="nursery-size=8m" />
-		  </EnvironmentVariables>
-		</EnvironmentVariables>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-		<DebugType>none</DebugType>
-		<Optimize>True</Optimize>
-		<OutputPath>bin</OutputPath>
-		<WarningLevel>4</WarningLevel>
-		<DefineConstants>TRACE</DefineConstants>
-		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-	</PropertyGroup>
-	<ItemGroup>
-		<Reference Include="Microsoft.CSharp" />
-		<Reference Include="System" />
-		<Reference Include="System.Data" />
-		<Reference Include="System.Drawing" />
-		<Reference Include="System.ComponentModel.DataAnnotations" />
-		<Reference Include="System.Web" />
-		<Reference Include="System.Web.Routing" />
-		<Reference Include="System.Xml" />
-		<Reference Include="System.Configuration" />
-		<Reference Include="WebActivator">
-			<HintPath>..\packages\WebActivator.1.4.2\lib\net40\WebActivator.dll</HintPath>
-		</Reference>
-		<Reference Include="Lucene.Net">
-			<HintPath>..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
-		</Reference>
-		<Reference Include="Castle.ActiveRecord">
-			<HintPath>..\packages\Castle.Activerecord.3.0.0.1\lib\Net40\Castle.ActiveRecord.dll</HintPath>
-		</Reference>
-		<Reference Include="Castle.ActiveRecord.Web">
-			<HintPath>..\packages\Castle.Activerecord.3.0.0.1\lib\Net40\Castle.ActiveRecord.Web.dll</HintPath>
-		</Reference>
-		<Reference Include="NHibernate.Search">
-			<HintPath>..\packages\Castle.Activerecord.3.0.0.1\lib\Net40\NHibernate.Search.dll</HintPath>
-		</Reference>
-		<Reference Include="Castle.Components.Validator">
-			<HintPath>..\packages\Castle.Components.Validator.2.5.0\lib\NET40\Castle.Components.Validator.dll</HintPath>
-		</Reference>
-		<Reference Include="NHibernate">
-			<HintPath>..\packages\NHibernate.3.0.0.4000\lib\NHibernate.dll</HintPath>
-		</Reference>
-		<Reference Include="NHibernate.ByteCode.Castle">
-			<HintPath>..\packages\NHibernate.3.0.0.4000\lib\NHibernate.ByteCode.Castle.dll</HintPath>
-		</Reference>
-		<Reference Include="Remotion.Data.Linq">
-			<HintPath>..\packages\NHibernate.3.0.0.4000\lib\Remotion.Data.Linq.dll</HintPath>
-		</Reference>
-		<Reference Include="Iesi.Collections">
-			<HintPath>..\packages\Iesi.Collections.3.1.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
-		</Reference>
-		<Reference Include="Castle.Core">
-			<HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
-		</Reference>
-		<Reference Include="System.Core" />
-		<Reference Include="System.Web.Abstractions" />
-		<Reference Include="System.Web.Optimization">
-			<HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.0\lib\net40\System.Web.Optimization.dll</HintPath>
-		</Reference>
-		<Reference Include="WebGrease">
-			<HintPath>..\packages\WebGrease.1.3.0\lib\WebGrease.dll</HintPath>
-		</Reference>
-		<Reference Include="Antlr3.Runtime">
-			<HintPath>..\packages\Antlr.3.1.3.42154\lib\Antlr3.Runtime.dll</HintPath>
-		</Reference>
-		<Reference Include="System.Security" />
-		<Reference Include="log4net">
-			<HintPath>..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
-		</Reference>
-		<Reference Include="MimeKit">
-			<HintPath>..\packages\MimeKit.2.11.0\lib\net48\MimeKit.dll</HintPath>
-		</Reference>
-		<Reference Include="MailKit">
-			<HintPath>..\packages\MailKit.2.11.1\lib\net48\MailKit.dll</HintPath>
-		</Reference>
-		<Reference Include="Newtonsoft.Json">
-			<HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-		</Reference>
-		<Reference Include="System.Web.Razor">
-			<HintPath>..\packages\Microsoft.AspNet.Razor.3.2.9\lib\net45\System.Web.Razor.dll</HintPath>
-		</Reference>
-		<Reference Include="System.Web.Helpers">
-			<HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.Helpers.dll</HintPath>
-		</Reference>
-		<Reference Include="System.Web.WebPages.Deployment">
-			<HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
-		</Reference>
-		<Reference Include="System.Web.WebPages">
-			<HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.dll</HintPath>
-		</Reference>
-		<Reference Include="System.Web.WebPages.Razor">
-			<HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
-		</Reference>
-		<Reference Include="EPPlus">
-			<HintPath>..\packages\EPPlus.4.5.3.2\lib\net40\EPPlus.dll</HintPath>
-		</Reference>
-		<Reference Include="ICSharpCode.SharpZipLib">
-			<HintPath>..\packages\SharpZipLib.1.4.2\lib\netstandard2.0\ICSharpCode.SharpZipLib.dll</HintPath>
-		</Reference>
-		<Reference Include="Gma.QrCodeNet.Encoding">
-			<HintPath>..\packages\QrCode.Net.0.4.0.0\lib\net45\Gma.QrCodeNet.Encoding.dll</HintPath>
-		</Reference>
-		<Reference Include="Google.Protobuf">
-			<HintPath>..\packages\Google.Protobuf.3.21.9\lib\net45\Google.Protobuf.dll</HintPath>
-		</Reference>
-		<Reference Include="System.Configuration.Install" />
-		<Reference Include="System.Drawing.Design" />
-		<Reference Include="System.Management" />
-		<Reference Include="System.Transactions" />
-		<Reference Include="Renci.SshNet">
-			<HintPath>..\packages\SSH.NET.2020.0.2\lib\net40\Renci.SshNet.dll</HintPath>
-		</Reference>
-		<Reference Include="System.Buffers">
-			<HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
-		</Reference>
-		<Reference Include="mscorlib" />
-		<Reference Include="System.Numerics.Vectors">
-			<HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
-		</Reference>
-		<Reference Include="System.Numerics" />
-		<Reference Include="System.Runtime.CompilerServices.Unsafe">
-			<HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-		</Reference>
-		<Reference Include="System.Memory">
-			<HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
-		</Reference>
-		<Reference Include="K4os.Compression.LZ4">
-			<HintPath>..\packages\K4os.Compression.LZ4.1.2.6\lib\net46\K4os.Compression.LZ4.dll</HintPath>
-		</Reference>
-		<Reference Include="K4os.Hash.xxHash">
-			<HintPath>..\packages\K4os.Hash.xxHash.1.0.6\lib\net46\K4os.Hash.xxHash.dll</HintPath>
-		</Reference>
-		<Reference Include="K4os.Compression.LZ4.Streams">
-			<HintPath>..\packages\K4os.Compression.LZ4.Streams.1.2.6\lib\net46\K4os.Compression.LZ4.Streams.dll</HintPath>
-		</Reference>
-		<Reference Include="jsreport.Types">
-			<HintPath>..\packages\jsreport.Types.2.7.1\lib\net45\jsreport.Types.dll</HintPath>
-		</Reference>
-		<Reference Include="System.IO">
-			<HintPath>..\packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
-		</Reference>
-		<Reference Include="System.IO.Compression">
-			<HintPath>..\packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
-		</Reference>
-		<Reference Include="jsreport.Shared">
-			<HintPath>..\packages\jsreport.Shared.2.3.2\lib\net45\jsreport.Shared.dll</HintPath>
-		</Reference>
-		<Reference Include="System.Runtime">
-			<HintPath>..\packages\System.Runtime.4.3.1\lib\net462\System.Runtime.dll</HintPath>
-		</Reference>
-		<Reference Include="System.ComponentModel.Composition" />
-		<Reference Include="System.Security.Cryptography.Encoding">
-			<HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
-		</Reference>
-		<Reference Include="System.Security.Cryptography.Primitives">
-			<HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
-		</Reference>
-		<Reference Include="System.Security.Cryptography.Algorithms">
-			<HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net463\System.Security.Cryptography.Algorithms.dll</HintPath>
-		</Reference>
-		<Reference Include="System.Security.Cryptography.X509Certificates">
-			<HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.2\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
-		</Reference>
-		<Reference Include="System.Net.Http">
-			<HintPath>..\packages\System.Net.Http.4.3.4\lib\net46\System.Net.Http.dll</HintPath>
-		</Reference>
-		<Reference Include="jsreport.Client">
-			<HintPath>..\packages\jsreport.Client.3.1.1\lib\net45\jsreport.Client.dll</HintPath>
-		</Reference>
-		<Reference Include="MySql.Data">
-			<HintPath>..\packages\MySql.Data.8.0.32.1\lib\net48\MySql.Data.dll</HintPath>
-		</Reference>
-		<Reference Include="System.Data.DataSetExtensions" />
-		<Reference Include="System.Threading.Tasks.Extensions">
-			<HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.2\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
-		</Reference>
-		<Reference Include="System.Web.Mvc">
-			<HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.9\lib\net45\System.Web.Mvc.dll</HintPath>
-		</Reference>
-		<Reference Include="System.ComponentModel" />
-	</ItemGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">
-			<Project>{CBB1BA70-351E-4009-86FB-484810DC6364}</Project>
-			<Name>Mictlanix.BE.Resources</Name>
-		</ProjectReference>
-		<ProjectReference Include="..\Model\Mictlanix.BE.Model.csproj">
-			<Project>{F9363BAC-A7BB-4A77-81E0-892C8CCCD297}</Project>
-			<Name>Mictlanix.BE.Model</Name>
-		</ProjectReference>
-		<ProjectReference Include="..\..\cfdlib\src\Mictlanix.CFDLib.csproj">
-		  <Project>{63EBACD8-7BB0-480F-81BF-5E0690B27112}</Project>
-		  <Name>Mictlanix.CFDLib</Name>
-		</ProjectReference>
-		<ProjectReference Include="..\..\dfacture-client\src\Mictlanix.DFactureClient\Mictlanix.DFactureClient.csproj">
-		  <Project>{9CAAE36D-F2B9-41CC-8AB3-F02C5A49229E}</Project>
-		  <Name>Mictlanix.DFactureClient</Name>
-		</ProjectReference>
-	</ItemGroup>
-	<ItemGroup>
-		<Compile Include="Controllers\Mvc\ExpensesController.cs" />
-		<Compile Include="Controllers\Mvc\ExpenseVoucherController.cs" />
-		<Compile Include="Controllers\Mvc\HumanResourcesController.cs" />
-		<Compile Include="Controllers\Mvc\PaymentMethodOptionsController.cs" />
-		<Compile Include="Controllers\Mvc\QuotationsController.cs" />
-		<Compile Include="Controllers\Mvc\SpecialReceiptsController.cs" />
-		<Compile Include="Global.asax.cs">
-			<DependentUpon>Global.asax</DependentUpon>
-		</Compile>
-		<Compile Include="Helpers\CashHelpers.cs" />
-		<Compile Include="Helpers\CFDHelpers40.cs" />
-		<Compile Include="Helpers\SecurityHelpers.cs" />
-		<Compile Include="Helpers\HtmlHelpers.cs" />
-		<Compile Include="Models\AccountModels.cs" />
-		<Compile Include="Models\AttendanceDayDBRecorder.cs" />
-		<Compile Include="Models\AttendanceSheetByEmployee.cs" />
-		<Compile Include="Models\CashCountReport.cs" />
-		<Compile Include="Models\AccountsReceivableSummary.cs" />
-		<Compile Include="Models\AccountsReceivableEntry.cs" />
-		<Compile Include="Models\AccountsPayableEntry.cs" />
-		<Compile Include="Models\AccountsPayableSummary.cs" />
-		<Compile Include="Models\CreditAndCollectionSummary.cs" />
-		<Compile Include="Models\EmployeeAttendanceDBRecorder.cs" />
-		<Compile Include="Models\ItemDateRange.cs" />
-		<Compile Include="Models\DateRange.cs" />
-		<Compile Include="Models\MoneyCount.cs" />
-		<Compile Include="Models\MasterDetails.cs" />
-		<Compile Include="Models\CancelFiscalDocument.cs" />
-		<Compile Include="Models\Search.cs" />
-		<Compile Include="Properties\AssemblyInfo.cs" />
-		<Compile Include="Utils\Code128Content.cs" />
-		<Compile Include="Utils\Code128Rendering.cs" />
-		<Compile Include="Models\LocalSettings.cs" />
-		<Compile Include="Utils\CurrencyConverter.cs" />
-		<Compile Include="Models\FiscalReport.cs" />
-		<Compile Include="Models\Pair.cs" />
-		<Compile Include="Models\ReceivedPayment.cs" />
-		<Compile Include="Models\SummaryItem.cs" />
-		<Compile Include="Helpers\InventoryHelpers.cs" />
-		<Compile Include="Helpers\ModelHelpers.cs" />
-		<Compile Include="Helpers\NHibernateExtensions.cs" />
-		<Compile Include="Controllers\Mvc\AccountController.cs" />
-		<Compile Include="Controllers\Mvc\AccountsPayablesController.cs" />
-		<Compile Include="Controllers\Mvc\AccountsReceivablesController.cs" />
-		<Compile Include="Controllers\Mvc\AddressesController.cs" />
-		<Compile Include="Controllers\Mvc\BankAccountsController.cs" />
-		<Compile Include="Controllers\Mvc\BarcodesController.cs" />
-		<Compile Include="Controllers\Mvc\CashDrawersController.cs" />
-		<Compile Include="Controllers\Mvc\ContactsController.cs" />
-		<Compile Include="Controllers\Mvc\CustomerRefundsController.cs" />
-		<Compile Include="Controllers\Mvc\CustomersController.cs" />
-		<Compile Include="Controllers\Mvc\DeliveryOrdersController.cs" />
-		<Compile Include="Controllers\Mvc\EmployeesController.cs" />
-		<Compile Include="Controllers\Mvc\ExchangeRatesController.cs" />
-		<Compile Include="Controllers\Mvc\FiscalDocumentsController.cs" />
-		<Compile Include="Controllers\Mvc\HomeController.cs" />
-		<Compile Include="Controllers\Mvc\InventoryController.cs" />
-		<Compile Include="Controllers\Mvc\LabelsController.cs" />
-		<Compile Include="Controllers\Mvc\NotarizationsController.cs" />
-		<Compile Include="Controllers\Mvc\PaymentsController.cs" />
-		<Compile Include="Controllers\Mvc\PointsOfSaleController.cs" />
-		<Compile Include="Controllers\Mvc\POSController.cs" />
-		<Compile Include="Controllers\Mvc\PriceListsController.cs" />
-		<Compile Include="Controllers\Mvc\PricingController.cs" />
-		<Compile Include="Controllers\Mvc\ProductionOrdersController.cs" />
-		<Compile Include="Controllers\Mvc\ProductsController.cs" />
-		<Compile Include="Controllers\Mvc\PurchasesController.cs" />
-		<Compile Include="Controllers\Mvc\ReportsController.cs" />
-		<Compile Include="Controllers\Mvc\SalesOrdersController.cs" />
-		<Compile Include="Controllers\Mvc\StoresController.cs" />
-		<Compile Include="Controllers\Mvc\SupplierAgreementsController.cs" />
-		<Compile Include="Controllers\Mvc\SupplierPaymentsController.cs" />
-		<Compile Include="Controllers\Mvc\SuppliersController.cs" />
-		<Compile Include="Controllers\Mvc\TaxpayerRecipientsController.cs" />
-		<Compile Include="Controllers\Mvc\TaxpayersController.cs" />
-		<Compile Include="Controllers\Mvc\TechnicalServiceReceiptsController.cs" />
-		<Compile Include="Controllers\Mvc\TechnicalServiceReportsController.cs" />
-		<Compile Include="Controllers\Mvc\TechnicalServiceRequestsController.cs" />
-		<Compile Include="Controllers\Mvc\TranslationRequestsController.cs" />
-		<Compile Include="Controllers\Mvc\UsersController.cs" />
-		<Compile Include="Controllers\Mvc\WarehousesController.cs" />
-		<Compile Include="Mvc\CustomController.cs" />
-		<Compile Include="Mvc\CustomWebViewPage.cs" />
-		<Compile Include="Security\CustomPrincipal.cs" />
-		<Compile Include="Helpers\WebConfig.cs" />
-		<Compile Include="Helpers\NotificationsHelpers.cs" />
-		<Compile Include="App_Start\BundleConfig.cs" />
-		<Compile Include="Models\AccountReceivable.cs" />
-		<Compile Include="Models\OrderDetailDeliveries.cs" />
-		<Compile Include="Models\Template.cs" />
-		<Compile Include="Helpers\ViewExtensions.cs" />
-	</ItemGroup>
-	<ItemGroup>
-		<Content Include="Content\bootstrap-clockpicker.min.css" />
-		<Content Include="Content\buttons.css" />
-		<Content Include="Content\images\loading-bar.gif" />
-		<Content Include="Content\images\loading-circle.gif" />
-		<Content Include="Content\images\logo.png" />
-		<Content Include="Content\images\print_icon.gif" />
-		<Content Include="Content\images\wait.gif" />
-		<Content Include="Content\images\welcome.png" />
-		<Content Include="Content\menu.css" />
-		<Content Include="Content\ticket.css" />
-		<Content Include="Content\icons\add-item.png" />
-		<Content Include="Content\icons\addressbook.png" />
-		<Content Include="Content\icons\agent.png" />
-		<Content Include="Content\icons\apple.png" />
-		<Content Include="Content\icons\arrow-round.png" />
-		<Content Include="Content\icons\badge.png" />
-		<Content Include="Content\icons\bar-chart-02.png" />
-		<Content Include="Content\icons\bar-chart.png" />
-		<Content Include="Content\icons\battery-full.png" />
-		<Content Include="Content\icons\bird.png" />
-		<Content Include="Content\icons\boat.png" />
-		<Content Include="Content\icons\bookmark.png" />
-		<Content Include="Content\icons\briefcase.png" />
-		<Content Include="Content\icons\calculator.png" />
-		<Content Include="Content\icons\calendar.png" />
-		<Content Include="Content\icons\cassette.png" />
-		<Content Include="Content\icons\chain.png" />
-		<Content Include="Content\icons\chat-.png" />
-		<Content Include="Content\icons\chat-02.png" />
-		<Content Include="Content\icons\cloud-filled.png" />
-		<Content Include="Content\icons\cloud-outline.png" />
-		<Content Include="Content\icons\computer.png" />
-		<Content Include="Content\icons\configuration.png" />
-		<Content Include="Content\icons\configuration02.png" />
-		<Content Include="Content\icons\connected.png" />
-		<Content Include="Content\icons\connections.png" />
-		<Content Include="Content\icons\container.png" />
-		<Content Include="Content\icons\copy-item.png" />
-		<Content Include="Content\icons\database.png" />
-		<Content Include="Content\icons\delete-item.png" />
-		<Content Include="Content\icons\disc.png" />
-		<Content Include="Content\icons\dollar.png" />
-		<Content Include="Content\icons\download.png" />
-		<Content Include="Content\icons\edit.png" />
-		<Content Include="Content\icons\email.png" />
-		<Content Include="Content\icons\fan.png" />
-		<Content Include="Content\icons\fancy-globe.png" />
-		<Content Include="Content\icons\female-user.png" />
-		<Content Include="Content\icons\fire.png" />
-		<Content Include="Content\icons\first-aid.png" />
-		<Content Include="Content\icons\flag.png" />
-		<Content Include="Content\icons\flower.png" />
-		<Content Include="Content\icons\full-screen.png" />
-		<Content Include="Content\icons\glasses.png" />
-		<Content Include="Content\icons\globe.png" />
-		<Content Include="Content\icons\happy-face.png" />
-		<Content Include="Content\icons\headphone.png" />
-		<Content Include="Content\icons\heart.png" />
-		<Content Include="Content\icons\home.png" />
-		<Content Include="Content\icons\ID.png" />
-		<Content Include="Content\icons\ipod.png" />
-		<Content Include="Content\icons\lab.png" />
-		<Content Include="Content\icons\lady.png" />
-		<Content Include="Content\icons\lamp.png" />
-		<Content Include="Content\icons\leaves.png" />
-		<Content Include="Content\icons\light.png" />
-		<Content Include="Content\icons\line-globe.png" />
-		<Content Include="Content\icons\lock.png" />
-		<Content Include="Content\icons\lookup.png" />
-		<Content Include="Content\icons\male-user.png" />
-		<Content Include="Content\icons\microphone.png" />
-		<Content Include="Content\icons\mobile.png" />
-		<Content Include="Content\icons\mobile2.png" />
-		<Content Include="Content\icons\mouse.png" />
-		<Content Include="Content\icons\multi-agents.png" />
-		<Content Include="Content\icons\music-node.png" />
-		<Content Include="Content\icons\network-pc.png" />
-		<Content Include="Content\icons\network.png" />
-		<Content Include="Content\icons\next-item.png" />
-		<Content Include="Content\icons\phone.png" />
-		<Content Include="Content\icons\pie-chart.png" />
-		<Content Include="Content\icons\pin.png" />
-		<Content Include="Content\icons\plane.png" />
-		<Content Include="Content\icons\print.png" />
-		<Content Include="Content\icons\processing-02.png" />
-		<Content Include="Content\icons\processing.png" />
-		<Content Include="Content\icons\push-pin.png" />
-		<Content Include="Content\icons\recycle-empty.png" />
-		<Content Include="Content\icons\recycle-full.png" />
-		<Content Include="Content\icons\reload.png" />
-		<Content Include="Content\icons\rss.png" />
-		<Content Include="Content\icons\satellite.png" />
-		<Content Include="Content\icons\save.png" />
-		<Content Include="Content\icons\scale.png" />
-		<Content Include="Content\icons\Scissors.png" />
-		<Content Include="Content\icons\screen.png" />
-		<Content Include="Content\icons\search.png" />
-		<Content Include="Content\icons\server.png" />
-		<Content Include="Content\icons\shield.png" />
-		<Content Include="Content\icons\shut-down.png" />
-		<Content Include="Content\icons\star.png" />
-		<Content Include="Content\icons\tag.png" />
-		<Content Include="Content\icons\tap.png" />
-		<Content Include="Content\icons\tree.png" />
-		<Content Include="Content\icons\umbrella.png" />
-		<Content Include="Content\icons\unlock.png" />
-		<Content Include="Content\icons\usb.png" />
-		<Content Include="Content\icons\van.png" />
-		<Content Include="Content\icons\view-item.png" />
-		<Content Include="Content\icons\wifi.png" />
-		<Content Include="Content\icons\world.png" />
-		<Content Include="Content\selection-options.css" />
-		<Content Include="Content\images\body-bg.png" />
-		<Content Include="Content\images\false.png" />
-		<Content Include="Content\images\header-bg.png" />
-		<Content Include="Content\images\mtx-logo-small.png" />
-		<Content Include="Content\images\true.png" />
-		<Content Include="Content\main.css" />
-		<Content Include="Content\token-input.css" />
-		<Content Include="Global.asax" />
-		<Content Include="Scripts\bootstrap-clockpicker.min.js" />
-		<Content Include="Scripts\jquery.form.js" />
-		<Content Include="Scripts\jquery.tokeninput.js" />
-		<Content Include="packages.config">
-			<SubType>Designer</SubType>
-		</Content>
-		<Content Include="Views\POS\_ItemDisplayView.cshtml" />
-		<Content Include="Views\POS\_ItemEditorView.cshtml" />
-		<Content Include="Web.config">
-			<SubType>Designer</SubType>
-		</Content>
-		<Content Include="Views\_ViewStart.cshtml" />
-		<Content Include="Views\Account\ChangePassword.cshtml" />
-		<Content Include="Views\Account\ChangePasswordSuccess.cshtml" />
-		<Content Include="Views\Account\LogOn.cshtml" />
-		<Content Include="Views\Account\Register.cshtml" />
-		<Content Include="Views\Home\About.cshtml" />
-		<Content Include="Views\Home\Index.cshtml" />
-		<Content Include="Views\Shared\Error.cshtml" />
-		<Content Include="Views\Shared\_LogOnPartial.cshtml" />
-		<Content Include="Views\Shared\_Layout.cshtml" />
-		<Content Include="Views\Web.config">
-			<SubType>Designer</SubType>
-		</Content>
-		<Content Include="Views\Shared\InvalidPointOfSale.cshtml" />
-		<Content Include="Views\Shared\InvalidCashDrawer.cshtml" />
-		<Content Include="Views\Payments\_CreditPaymentSuccesful.cshtml" />
-		<Content Include="Views\Payments\_CreditPayment.cshtml" />
-		<Content Include="Views\Payments\_CashPayment.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\PriceListSelector.cshtml" />
-		<Content Include="Views\Taxpayers\Details.cshtml" />
-		<Content Include="Views\Taxpayers\_Index.cshtml" />
-		<Content Include="Views\Taxpayers\Index.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\TaxpayerSelector.cshtml" />
-		<Content Include="MictlanixBE.config">
-			<SubType>Designer</SubType>
-		</Content>
-		<Content Include="Views\Account\LocalSettings.cshtml" />
-		<Content Include="Views\Shared\InvalidStore.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\Address.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\Address.cshtml" />
-		<Content Include="Views\Purchases\_Totals.cshtml" />
-		<Content Include="Views\Shared\_PrintLayout.cshtml" />
-		<Content Include="Views\FiscalDocuments\Index.cshtml" />
-		<Content Include="Views\FiscalDocuments\Edit.cshtml" />
-		<Content Include="Views\FiscalDocuments\_Totals.cshtml" />
-		<Content Include="Views\PointsOfSale\Index.cshtml" />
-		<Content Include="Content\print.css" />
-		<Content Include="Views\Purchases\Edit.cshtml" />
-		<Content Include="Views\FiscalDocuments\InvalidBatch.cshtml" />
-		<Content Include="Views\Reports\ReceivedPayments.cshtml" />
-		<Content Include="Views\Reports\_SummaryReport.cshtml" />
-		<Content Include="Views\Reports\SummaryReport.cshtml" />
-		<Content Include="Views\Pricing\Index.cshtml" />
-		<Content Include="Views\Pricing\_Index.cshtml" />
-		<Content Include="Content\icons\prev-item.png" />
-		<Content Include="Content\images\na.png" />
-		<Content Include="Views\Inventory\LotSerialNumbers.cshtml" />
-		<Content Include="Views\Inventory\_LotSerialNumbers.cshtml" />
-		<Content Include="Views\Inventory\AssignLotSerialNumbers.cshtml" />
-		<Content Include="Views\Inventory\_LotSerialNumber.cshtml" />
-		<Content Include="Views\Shared\InvalidExchangeRate.cshtml" />
-		<Content Include="Views\Taxpayers\_Batches.cshtml" />
-		<Content Include="Views\Taxpayers\_Certificates.cshtml" />
-		<Content Include="Views\Taxpayers\AddCertificate.cshtml" />
-		<Content Include="Content\images\glyphicons-halflings-white.png" />
-		<Content Include="Content\images\glyphicons-halflings.png" />
-		<Content Include="Scripts\bootstrap-editable.js" />
-		<Content Include="Scripts\bootstrap-editable.min.js" />
-		<Content Include="Views\Addresses\_Refresh.cshtml" />
-		<Content Include="Views\Contacts\_Refresh.cshtml" />
-		<Content Include="Views\Addresses\_Create.cshtml" />
-		<Content Include="Views\Addresses\_Delete.cshtml" />
-		<Content Include="Views\Addresses\_Details.cshtml" />
-		<Content Include="Views\Addresses\_Edit.cshtml" />
-		<Content Include="Views\Contacts\_Create.cshtml" />
-		<Content Include="Views\Contacts\_Delete.cshtml" />
-		<Content Include="Views\Contacts\_Details.cshtml" />
-		<Content Include="Views\Contacts\_Edit.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\Contact.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\Contact.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\Boolean.cshtml" />
-		<Content Include="Views\Taxpayers\_Create.cshtml" />
-		<Content Include="Views\Taxpayers\_Edit.cshtml" />
-		<Content Include="Views\Taxpayers\_Delete.cshtml" />
-		<Content Include="Views\Taxpayers\_Refresh.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\FiscalScheme.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\FiscalCertificationProvider.cshtml" />
-		<Content Include="Views\ExchangeRates\_Index.cshtml" />
-		<Content Include="Views\ExchangeRates\Create.cshtml" />
-		<Content Include="Views\ExchangeRates\Delete.cshtml" />
-		<Content Include="Views\ExchangeRates\Index.cshtml" />
-		<Content Include="Views\SalesOrders\_Index.cshtml" />
-		<Content Include="Views\SalesOrders\Edit.cshtml" />
-		<Content Include="Views\SalesOrders\Index.cshtml" />
-		<Content Include="Views\SalesOrders\_Totals.cshtml" />
-		<Content Include="Views\SalesOrders\Print.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\UnitOfMeasurement.cshtml" />
-		<Content Include="Views\Labels\Index.cshtml" />
-		<Content Include="Views\Labels\Edit.cshtml" />
-		<Content Include="Views\Labels\_Index.cshtml" />
-		<Content Include="Views\Products\_Labels.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\ProductSelector.cshtml" />
-		<Content Include="Content\bootstrap-editable.css" />
-		<Content Include="Views\Purchases\_MasterView.cshtml" />
-		<Content Include="Views\Purchases\_MasterEditView.cshtml" />
-		<Content Include="Views\Purchases\_DetailEditView.cshtml" />
-		<Content Include="Views\Purchases\_DetailView.cshtml" />
-		<Content Include="Views\Inventory\Receipts\Index.cshtml" />
-		<Content Include="Views\Inventory\Receipts\_Index.cshtml" />
-		<Content Include="Views\Inventory\Receipts\Edit.cshtml" />
-		<Content Include="Views\Inventory\Receipts\Print.cshtml" />
-		<Content Include="Views\Inventory\Receipts\_DetailEditView.cshtml" />
-		<Content Include="Views\Inventory\Receipts\_MasterEditView.cshtml" />
-		<Content Include="Views\Inventory\Receipts\_MasterView.cshtml" />
-		<Content Include="Views\Inventory\Receipts\New.cshtml" />
-		<Content Include="Views\Inventory\Receipts\View.cshtml" />
-		<Content Include="Views\Inventory\Issues\Edit.cshtml" />
-		<Content Include="Views\Inventory\Issues\Index.cshtml" />
-		<Content Include="Views\Inventory\Issues\Print.cshtml" />
-		<Content Include="Views\Inventory\Issues\View.cshtml" />
-		<Content Include="Views\Inventory\Issues\_DetailEditView.cshtml" />
-		<Content Include="Views\Inventory\Issues\_Index.cshtml" />
-		<Content Include="Views\Inventory\Issues\_MasterEditView.cshtml" />
-		<Content Include="Views\Inventory\Issues\_MasterView.cshtml" />
-		<Content Include="Views\Inventory\Transfers\Edit.cshtml" />
-		<Content Include="Views\Inventory\Transfers\Index.cshtml" />
-		<Content Include="Views\Inventory\Transfers\New.cshtml" />
-		<Content Include="Views\Inventory\Transfers\Print.cshtml" />
-		<Content Include="Views\Inventory\Transfers\View.cshtml" />
-		<Content Include="Views\Inventory\Transfers\_DetailEditView.cshtml" />
-		<Content Include="Views\Inventory\Transfers\_Index.cshtml" />
-		<Content Include="Views\Inventory\Transfers\_MasterEditView.cshtml" />
-		<Content Include="Views\Inventory\Transfers\_MasterView.cshtml" />
-		<Content Include="Views\Products\Index.cshtml" />
-		<Content Include="Views\Suppliers\Index.cshtml" />
-		<Content Include="Views\Suppliers\Details.cshtml" />
-		<Content Include="Views\Suppliers\_Create.cshtml" />
-		<Content Include="Views\Customers\_Index.cshtml" />
-		<Content Include="Views\PriceLists\Index.cshtml" />
-		<Content Include="Views\Warehouses\Index.cshtml" />
-		<Content Include="Views\Contacts\_Index.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\Boolean.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\Date.cshtml" />
-		<Content Include="Views\SupplierAgreements\_Index.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\Date.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\Image.cshtml" />
-		<Content Include="Views\Users\Delete.cshtml" />
-		<Content Include="Views\Users\Details.cshtml" />
-		<Content Include="Views\Users\Edit.cshtml" />
-		<Content Include="Views\Users\Index.cshtml" />
-		<Content Include="Views\Shared\DeleteUnsuccessful.cshtml" />
-		<Content Include="Views\Addresses\_Index.cshtml" />
-		<Content Include="Views\BankAccounts\_Index.cshtml" />
-		<Content Include="Views\Shared\_Menu.cshtml" />
-		<Content Include="Views\Shared\_Success.cshtml" />
-		<Content Include="Views\Employees\Index.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\CustomerSelector.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\EmployeeSelector.cshtml" />
-		<Content Include="Views\Payments\_Payment.cshtml" />
-		<Content Include="Views\Payments\_SalesOrderBalance.cshtml" />
-		<Content Include="Views\Payments\PayOrder.cshtml" />
-		<Content Include="Views\Payments\Index.cshtml" />
-		<Content Include="Views\Shared\UnknownError.cshtml" />
-		<Content Include="Views\Payments\OpenSession.cshtml" />
-		<Content Include="Views\CashDrawers\Index.cshtml" />
-		<Content Include="Views\Payments\_SessionInfo.cshtml" />
-		<Content Include="Views\Payments\CloseSessionConfirmed.cshtml" />
-		<Content Include="Views\Products\_Index.cshtml" />
-		<Content Include="Views\Shared\_TicketLayout.cshtml" />
-		<Content Include="Views\Payments\_OpenSession.cshtml" />
-		<Content Include="Views\Payments\CloseSession.cshtml" />
-		<Content Include="Views\Payments\_CashCountTicket.cshtml" />
-		<Content Include="Views\Payments\_SessionInfoPrinter.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\WarehouseSelector.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\MultilineText.cshtml" />
-		<Content Include="Views\Payments\_CashPaymentList.cshtml" />
-		<Content Include="Views\AccountsReceivables\Index.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\SupplierSelector.cshtml" />
-		<Content Include="Views\Purchases\Index.cshtml" />
-		<Content Include="Views\Purchases\Details.cshtml" />
-		<Content Include="Views\SupplierPayments\Index.cshtml" />
-		<Content Include="Views\SupplierPayments\NewPay.cshtml" />
-		<Content Include="Views\AccountsPayables\AccountStatement.cshtml" />
-		<Content Include="Views\AccountsPayables\Index.cshtml" />
-		<Content Include="Views\SupplierPayments\Details.cshtml" />
-		<Content Include="Views\AccountsPayables\Dates.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\StoreSelector.cshtml" />
-		<Content Include="Views\Stores\Index.cshtml" />
-		<Content Include="Views\Customers\Index.cshtml" />
-		<Content Include="Views\Employees\_Index.cshtml" />
-		<Content Include="Views\PriceLists\_Index.cshtml" />
-		<Content Include="Views\PointsOfSale\_Index.cshtml" />
-		<Content Include="Views\CashDrawers\_Index.cshtml" />
-		<Content Include="Views\Purchases\_Index.cshtml" />
-		<Content Include="Views\FiscalDocuments\_Index.cshtml" />
-		<Content Include="Views\AccountsReceivables\_Index.cshtml" />
-		<Content Include="Views\Suppliers\_Index.cshtml" />
-		<Content Include="Views\Warehouses\_Index.cshtml" />
-		<Content Include="Views\Stores\_Index.cshtml" />
-		<Content Include="Views\SupplierPayments\_Index.cshtml" />
-		<Content Include="Scripts\helper.functions.js" />
-		<Content Include="Scripts\helper.formatters.js" />
-		<Content Include="Views\Payments\Print.cshtml" />
-		<Content Include="Scripts\select2_locale_es.js" />
-		<Content Include="Scripts\select2.js" />
-		<Content Include="Scripts\select2.min.js" />
-		<Content Include="Content\select2.css" />
-		<Content Include="Views\SalesOrders\View.cshtml" />
-		<Content Include="Views\SalesOrders\_Items.cshtml" />
-		<Content Include="Views\SalesOrders\_ItemDisplayView.cshtml" />
-		<Content Include="Views\SalesOrders\_ItemEditorView.cshtml" />
-		<Content Include="Views\SalesOrders\_DisplayView.cshtml" />
-		<Content Include="Views\SalesOrders\_EditorView.cshtml" />
-		<Content Include="Views\Payments\_DisplayView.cshtml" />
-		<Content Include="Views\FiscalDocuments\_DisplayView.cshtml" />
-		<Content Include="Views\FiscalDocuments\_EditorView.cshtml" />
-		<Content Include="Views\FiscalDocuments\_ItemDisplayView.cshtml" />
-		<Content Include="Views\FiscalDocuments\_ItemEditorView.cshtml" />
-		<Content Include="Views\FiscalDocuments\_Items.cshtml" />
-		<Content Include="Views\FiscalDocuments\View.cshtml" />
-		<Content Include="Views\FiscalDocuments\Print20.cshtml" />
-		<Content Include="Views\FiscalDocuments\Print22.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\Breakable.cshtml" />
-		<Content Include="Views\FiscalDocuments\Print32.cshtml" />
-		<Content Include="Views\POS\Edit.cshtml" />
-		<Content Include="Views\POS\Index.cshtml" />
-		<Content Include="Views\POS\Print.cshtml" />
-		<Content Include="Views\POS\View.cshtml" />
-		<Content Include="Views\POS\_DisplayView.cshtml" />
-		<Content Include="Views\POS\_EditorView.cshtml" />
-		<Content Include="Views\POS\_Index.cshtml" />
-		<Content Include="Views\POS\_Items.cshtml" />
-		<Content Include="Views\POS\_Totals.cshtml" />
-		<Content Include="Views\CustomerRefunds\_Index.cshtml" />
-		<Content Include="Views\CustomerRefunds\_Totals.cshtml" />
-		<Content Include="Views\CustomerRefunds\Index.cshtml" />
-		<Content Include="Views\CustomerRefunds\Print.cshtml" />
-		<Content Include="Views\CustomerRefunds\Edit.cshtml" />
-		<Content Include="Views\CustomerRefunds\_EditorView.cshtml" />
-		<Content Include="Views\CustomerRefunds\_ItemEditorView.cshtml" />
-		<Content Include="Views\CustomerRefunds\View.cshtml" />
-		<Content Include="Views\CustomerRefunds\_DisplayView.cshtml" />
-		<Content Include="Views\CustomerRefunds\_ItemDisplayView.cshtml" />
-		<Content Include="Views\Employees\_Refresh.cshtml" />
-		<Content Include="Views\Employees\_Create.cshtml" />
-		<Content Include="Views\Employees\_Delete.cshtml" />
-		<Content Include="Views\Employees\_Details.cshtml" />
-		<Content Include="Views\Employees\_Edit.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\Employee.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\GenderEnum.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\Employee.cshtml" />
-		<Content Include="Views\Taxpayers\_Details.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\Store.cshtml" />
-		<Content Include="Views\Stores\_Refresh.cshtml" />
-		<Content Include="Views\Stores\_Create.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\Store.cshtml" />
-		<Content Include="Views\Stores\_Details.cshtml" />
-		<Content Include="Views\Stores\_Edit.cshtml" />
-		<Content Include="Views\Stores\_Delete.cshtml" />
-		<Content Include="Scripts\jquery.min.map" />
-		<Content Include="Views\Shared\EditorTemplates\Product.cshtml" />
-		<Content Include="Views\Products\_Create.cshtml" />
-		<Content Include="Views\Products\_Edit.cshtml" />
-		<Content Include="Views\Products\_Delete.cshtml" />
-		<Content Include="Views\Products\_View.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\Product.cshtml" />
-		<Content Include="Views\Products\_Refresh.cshtml" />
-		<Content Include="Views\Products\_DeleteSuccesful.cshtml" />
-		<Content Include="Views\Products\_CreateSuccesful.cshtml" />
-		<Content Include="Views\Products\_Item.cshtml" />
-		<Content Include="Views\Reports\_CustomerDebt.cshtml" />
-		<Content Include="Views\Reports\_SalesOrderSummary.cshtml" />
-		<Content Include="Views\Reports\_FiscalDocuments.cshtml" />
-		<Content Include="Views\Reports\_SalesPersonOrders.cshtml" />
-		<Content Include="Views\Reports\_CustomerSalesOrders.cshtml" />
-		<Content Include="Views\Reports\_ProductSalesByCustomer.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\ProductModelSelector.cshtml" />
-		<Content Include="Views\Reports\_ProductSalesByCategory.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\ProductBrandSelector.cshtml" />
-		<Content Include="Views\FiscalDocuments\Print32Dataprint.cshtml" />
-		<Content Include="Views\FiscalDocuments\Print32Tinbox.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\TaxpayerRecipient.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\TaxpayerRecipient.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\TaxpayerIssuer.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\TaxpayerIssuer.cshtml" />
-		<Content Include="Views\TaxpayerRecipients\_Create.cshtml" />
-		<Content Include="Views\TaxpayerRecipients\_Delete.cshtml" />
-		<Content Include="Views\TaxpayerRecipients\_Details.cshtml" />
-		<Content Include="Views\TaxpayerRecipients\_Edit.cshtml" />
-		<Content Include="Views\TaxpayerRecipients\_Refresh.cshtml" />
-		<Content Include="Views\Customers\_Taxpayers.cshtml" />
-		<Content Include="Views\TaxpayerRecipients\_Index.cshtml" />
-		<Content Include="Views\TaxpayerRecipients\Index.cshtml" />
-		<Content Include="Views\TaxpayerRecipients\_Item.cshtml" />
-		<Content Include="Views\TaxpayerRecipients\_CreateSuccesful.cshtml" />
-		<Content Include="Views\TaxpayerRecipients\_DeleteSuccesful.cshtml" />
-		<Content Include="Views\Reports\_SalesBySalesPerson.cshtml" />
-		<Content Include="Views\Reports\_ProductSalesBySalesPerson.cshtml" />
-		<Content Include="Views\Reports\_SalesByCustomer.cshtml" />
-		<Content Include="Views\Reports\_SalesByProduct.cshtml" />
-		<Content Include="Views\Customers\_NewDiscount.cshtml" />
-		<Content Include="Views\Customers\_Discounts.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\CustomerDiscount.cshtml" />
-		<Content Include="Views\Customers\_Refresh.cshtml" />
-		<Content Include="Views\ProductionOrders\_Index.cshtml" />
-		<Content Include="Views\ProductionOrders\Index.cshtml" />
-		<Content Include="Views\ProductionOrders\View.cshtml" />
-		<Content Include="Views\ProductionOrders\_DisplayView.cshtml" />
-		<Content Include="Views\ProductionOrders\_ItemDisplayView.cshtml" />
-		<Content Include="Views\ProductionOrders\Print.cshtml" />
-		<Content Include="Views\Shared\_PrintDLayout.cshtml" />
-		<Content Include="Views\FiscalDocuments\Print22Dataprint.cshtml" />
-		<Content Include="Views\FiscalDocuments\Print20Dataprint.cshtml" />
-		<Content Include="Views\TranslationRequests\_Create.cshtml" />
-		<Content Include="Views\TranslationRequests\_CreateSuccesful.cshtml" />
-		<Content Include="Views\TranslationRequests\_Delete.cshtml" />
-		<Content Include="Views\TranslationRequests\_DeleteSuccesful.cshtml" />
-		<Content Include="Views\TranslationRequests\_Edit.cshtml" />
-		<Content Include="Views\TranslationRequests\_Index.cshtml" />
-		<Content Include="Views\TranslationRequests\_Item.cshtml" />
-		<Content Include="Views\TranslationRequests\_Refresh.cshtml" />
-		<Content Include="Views\TranslationRequests\_View.cshtml" />
-		<Content Include="Views\TranslationRequests\Index.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\TranslationRequest.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\TranslationRequest.cshtml" />
-		<Content Include="Views\Notarizations\_Create.cshtml" />
-		<Content Include="Views\Notarizations\_CreateSuccesful.cshtml" />
-		<Content Include="Views\Notarizations\_Delete.cshtml" />
-		<Content Include="Views\Notarizations\_DeleteSuccesful.cshtml" />
-		<Content Include="Views\Notarizations\_Edit.cshtml" />
-		<Content Include="Views\Notarizations\_Index.cshtml" />
-		<Content Include="Views\Notarizations\_Item.cshtml" />
-		<Content Include="Views\Notarizations\_Refresh.cshtml" />
-		<Content Include="Views\Notarizations\_View.cshtml" />
-		<Content Include="Views\Notarizations\Index.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\Notarization.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\Notarization.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\LabelSelector.cshtml" />
-		<Content Include="Views\Reports\SalesPersonSummaryReport.cshtml" />
-		<Content Include="Content\printe.css" />
-		<Content Include="Views\TechnicalServiceReports\_Create.cshtml" />
-		<Content Include="Views\TechnicalServiceReports\_CreateSuccesful.cshtml" />
-		<Content Include="Views\TechnicalServiceReports\_Delete.cshtml" />
-		<Content Include="Views\TechnicalServiceReports\_DeleteSuccesful.cshtml" />
-		<Content Include="Views\TechnicalServiceReports\_Edit.cshtml" />
-		<Content Include="Views\TechnicalServiceReports\_Index.cshtml" />
-		<Content Include="Views\TechnicalServiceReports\_Item.cshtml" />
-		<Content Include="Views\TechnicalServiceReports\_Refresh.cshtml" />
-		<Content Include="Views\TechnicalServiceReports\Index.cshtml" />
-		<Content Include="Views\TechnicalServiceReports\_View.cshtml" />
-		<Content Include="Views\TechnicalServiceReports\Print.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\TechnicalServiceReport.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\TechnicalServiceReport.cshtml" />
-		<Content Include="Views\TechnicalServiceRequests\_Create.cshtml" />
-		<Content Include="Views\TechnicalServiceRequests\_CreateSuccesful.cshtml" />
-		<Content Include="Views\TechnicalServiceRequests\_Delete.cshtml" />
-		<Content Include="Views\TechnicalServiceRequests\_DeleteSuccesful.cshtml" />
-		<Content Include="Views\TechnicalServiceRequests\_Edit.cshtml" />
-		<Content Include="Views\TechnicalServiceRequests\_Index.cshtml" />
-		<Content Include="Views\TechnicalServiceRequests\_Item.cshtml" />
-		<Content Include="Views\TechnicalServiceRequests\_Refresh.cshtml" />
-		<Content Include="Views\TechnicalServiceRequests\Index.cshtml" />
-		<Content Include="Views\TechnicalServiceRequests\Print.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\TechnicalServiceRequest.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\TechnicalServiceRequestType.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\TechnicalServiceRequest.cshtml" />
-		<Content Include="Views\TechnicalServiceRequests\Details.cshtml" />
-		<Content Include="Views\TechnicalServiceRequests\_Component.cshtml" />
-		<Content Include="Views\TechnicalServiceRequests\_Details.cshtml" />
-		<Content Include="Views\TechnicalServiceRequests\_CreateComponent.cshtml" />
-		<Content Include="Views\TechnicalServiceRequests\_CreateComponentSuccesful.cshtml" />
-		<Content Include="Views\TechnicalServiceReceipts\_Component.cshtml" />
-		<Content Include="Views\TechnicalServiceReceipts\_Create.cshtml" />
-		<Content Include="Views\TechnicalServiceReceipts\_CreateComponent.cshtml" />
-		<Content Include="Views\TechnicalServiceReceipts\_CreateComponentSuccesful.cshtml" />
-		<Content Include="Views\TechnicalServiceReceipts\_CreateSuccesful.cshtml" />
-		<Content Include="Views\TechnicalServiceReceipts\_Delete.cshtml" />
-		<Content Include="Views\TechnicalServiceReceipts\_DeleteSuccesful.cshtml" />
-		<Content Include="Views\TechnicalServiceReceipts\_Details.cshtml" />
-		<Content Include="Views\TechnicalServiceReceipts\_Edit.cshtml" />
-		<Content Include="Views\TechnicalServiceReceipts\_Index.cshtml" />
-		<Content Include="Views\TechnicalServiceReceipts\_Item.cshtml" />
-		<Content Include="Views\TechnicalServiceReceipts\_Refresh.cshtml" />
-		<Content Include="Views\TechnicalServiceReceipts\Details.cshtml" />
-		<Content Include="Views\TechnicalServiceReceipts\Index.cshtml" />
-		<Content Include="Views\TechnicalServiceReceipts\Print.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\TechnicalServiceReceipt.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\TechnicalServiceReceipt.cshtml" />
-		<Content Include="Views\Reports\WarehouseStockReport.cshtml" />
-		<Content Include="Views\Reports\_WarehouseStockReport.cshtml" />
-		<Content Include="Views\Reports\WarehouseStockByLotReport.cshtml" />
-		<Content Include="Views\Reports\_WarehouseStockByLotReport.cshtml" />
-		<Content Include="Views\Reports\_WarehouseStockBySerialNumberReport.cshtml" />
-		<Content Include="Views\Reports\WarehouseStockBySerialNumberReport.cshtml" />
-		<Content Include="Views\Reports\Kardex.cshtml" />
-		<Content Include="Views\Reports\_Kardex.cshtml" />
-		<Content Include="Views\DeliveryOrders\_DisplayView.cshtml" />
-		<Content Include="Views\DeliveryOrders\_EditorView.cshtml" />
-		<Content Include="Views\DeliveryOrders\_Index.cshtml" />
-		<Content Include="Views\DeliveryOrders\_Item.cshtml" />
-		<Content Include="Views\DeliveryOrders\_ItemDisplayView.cshtml" />
-		<Content Include="Views\DeliveryOrders\_ItemEditorView.cshtml" />
-		<Content Include="Views\DeliveryOrders\_Items.cshtml" />
-		<Content Include="Views\DeliveryOrders\Edit.cshtml" />
-		<Content Include="Views\DeliveryOrders\Index.cshtml" />
-		<Content Include="Views\DeliveryOrders\New.cshtml" />
-		<Content Include="Views\DeliveryOrders\View.cshtml" />
-		<Content Include="Views\FiscalDocuments\Error.cshtml" />
-		<Content Include="Views\DeliveryOrders\DeliveryTicket.cshtml" />
-		<Content Include="Views\Reports\_SalesPersonOrdersAndRefunds.cshtml" />
-		<Content Include="Views\Products\Merge.cshtml" />
-		<Content Include="Views\Pricing\_IsTaxIncluded.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\String.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\MultilineText.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\Decimal.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\Int32.cshtml" />
-		<Content Include="Views\FiscalDocuments\Print.cshtml" />
-		<Content Include="Views\FiscalDocuments\_SendEmailSuccesful.cshtml" />
-		<Content Include="Views\FiscalDocuments\_SendEmail.cshtml" />
-		<Content Include="Content\select2-bootstrap.css" />
-		<Content Include="Views\AccountsReceivables\_ApplyPayment.cshtml" />
-		<Content Include="Views\AccountsReceivables\_ApplyPaymentSuccesful.cshtml" />
-		<Content Include="Views\FiscalDocuments\Print32T02Blue.cshtml" />
-		<Content Include="Views\FiscalDocuments\Print32T02Blue_PageFoot.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\ProductServiceSelector.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\TaxRegimeSelector.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\PostalCodeSelector.cshtml" />
-		<Content Include="Views\FiscalDocuments\Print33T02Blue.cshtml" />
-		<Content Include="Views\FiscalDocuments\Print33T02Blue_PageFoot.cshtml" />
-		<Content Include="Views\Shared\ZeroPriceError.cshtml" />
-		<Content Include="Views\FiscalDocuments\EditPayment.cshtml" />
-		<Content Include="Views\FiscalDocuments\_PaymentEditorView.cshtml" />
-		<Content Include="Content\bootstrap-datepicker.css" />
-		<Content Include="Content\bootstrap-datepicker.min.css" />
-		<Content Include="Content\bootstrap-datepicker.standalone.css" />
-		<Content Include="Content\bootstrap-datepicker.standalone.min.css" />
-		<Content Include="Content\bootstrap-datepicker3.css" />
-		<Content Include="Content\bootstrap-datepicker3.min.css" />
-		<Content Include="Content\bootstrap-datepicker3.standalone.css" />
-		<Content Include="Content\bootstrap-datepicker3.standalone.min.css" />
-		<Content Include="Views\FiscalDocuments\_RelationEditorView.cshtml" />
-		<Content Include="Views\FiscalDocuments\_Relations.cshtml" />
-		<Content Include="Views\FiscalDocuments\_PaymentTotals.cshtml" />
-		<Content Include="Views\FiscalDocuments\ViewPayment.cshtml" />
-		<Content Include="Views\FiscalDocuments\_PaymentDisplayView.cshtml" />
-		<Content Include="Views\FiscalDocuments\_RelationDisplayView.cshtml" />
-		<Content Include="Scripts\bootstrap.min.js" />
-		<Content Include="Scripts\bootstrap.js" />
-		<Content Include="fonts\glyphicons-halflings-regular.woff" />
-		<Content Include="fonts\glyphicons-halflings-regular.ttf" />
-		<Content Include="fonts\glyphicons-halflings-regular.svg" />
-		<Content Include="fonts\glyphicons-halflings-regular.eot" />
-		<Content Include="Content\bootstrap.min.css" />
-		<Content Include="Content\bootstrap.css" />
-		<Content Include="Content\bootstrap-theme.min.css" />
-		<Content Include="Content\bootstrap-theme.css" />
-		<Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
-		<Content Include="Scripts\jquery.unobtrusive-ajax.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.zh-TW.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.zh-CN.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.vi.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.uz-latn.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.uz-cyrl.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.uk.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.tr.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.tk.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.th.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.tg.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.ta.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.sw.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.sv.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.sr.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.sr-latin.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.sq.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.sl.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.sk.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.si.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.ru.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.rs.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.rs-latin.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.ro.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.pt.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.pt-BR.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.pl.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.oc.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.no.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.nl.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.nl-BE.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.ms.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.mn.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.mk.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.me.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.lv.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.lt.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.kr.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.ko.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.km.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.kk.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.kh.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.ka.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.ja.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.it.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.it-CH.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.is.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.id.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.hy.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.hu.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.hr.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.hi.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.he.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.gl.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.fr.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.fr-CH.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.fo.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.fi.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.fa.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.eu.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.et.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.es.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.eo.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.en-ZA.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.en-NZ.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.en-IE.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.en-GB.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.en-CA.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.en-AU.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.el.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.de.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.da.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.cy.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.cs.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.ca.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.bs.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.br.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.bn.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.bg.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.az.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.ar.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker.ar-tn.min.js" />
-		<Content Include="Scripts\locales\bootstrap-datepicker-en-CA.min.js" />
-		<Content Include="Scripts\bootstrap-datepicker.min.js" />
-		<Content Include="Scripts\bootstrap-datepicker.js" />
-		<Content Include="Views\FiscalDocuments\EditOutcome.cshtml" />
-		<Content Include="Views\FiscalDocuments\_SimpleRelations.cshtml" />
-		<Content Include="Views\FiscalDocuments\_SimpleRelationEditorView.cshtml" />
-		<Content Include="Views\FiscalDocuments\_SimpleRelationDisplayView.cshtml" />
-		<Content Include="Views\FiscalDocuments\ViewOutcome.cshtml" />
-		<Content Include="Views\FiscalDocuments\Print32Partial.cshtml" />
-		<Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-		<Content Include="Scripts\jquery.validate.unobtrusive.js" />
-		<Content Include="Scripts\jquery.validate.min.js" />
-		<Content Include="Scripts\jquery.validate.js" />
-		<Content Include="Scripts\jquery.validate-vsdoc.js" />
-		<Content Include="Scripts\jquery-3.4.1.slim.min.js" />
-		<Content Include="Scripts\jquery-3.4.1.slim.js" />
-		<Content Include="Scripts\jquery-3.4.1.min.js" />
-		<Content Include="Scripts\jquery-3.4.1.js" />
-		<Content Include="Scripts\jquery-3.4.1-vsdoc.js" />
-		<Content Include="Views\FiscalDocuments\Print40T02Blue_PageFoot.cshtml" />
-	</ItemGroup>
-	<ItemGroup>
-		<Folder Include="Content\fonts\" />
-	</ItemGroup>
-	<PropertyGroup>
-		<VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
-		<VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-	</PropertyGroup>
-	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-	<Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
-	<!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D13A33DE-A12D-420E-ABB2-76A7C0F2E2E5}</ProjectGuid>
+    <ProjectTypeGuids>{349C5851-65DF-11DA-9384-00065B846F21};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Mictlanix.BE.Web</RootNamespace>
+    <AssemblyName>Mictlanix.BE.Web</AssemblyName>
+    <UseIISExpress>true</UseIISExpress>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <MvcProjectUpgradeChecked>true</MvcProjectUpgradeChecked>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <TargetFrameworkProfile />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugSymbols>True</DebugSymbols>
+    <EnvironmentVariables>
+      <EnvironmentVariables>
+        <Variable name="MONO_ASPNET_WEBCONFIG_CACHESIZE" value="200" />
+        <Variable name="MONO_GC_PARAMS" value="nursery-size=8m" />
+      </EnvironmentVariables>
+    </EnvironmentVariables>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>TRACE</DefineConstants>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.2.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="WebActivator">
+      <HintPath>..\packages\WebActivator.1.4.2\lib\net40\WebActivator.dll</HintPath>
+    </Reference>
+    <Reference Include="Lucene.Net">
+      <HintPath>..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.ActiveRecord">
+      <HintPath>..\packages\Castle.Activerecord.3.0.0.1\lib\Net40\Castle.ActiveRecord.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.ActiveRecord.Web">
+      <HintPath>..\packages\Castle.Activerecord.3.0.0.1\lib\Net40\Castle.ActiveRecord.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.Search">
+      <HintPath>..\packages\Castle.Activerecord.3.0.0.1\lib\Net40\NHibernate.Search.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Components.Validator">
+      <HintPath>..\packages\Castle.Components.Validator.2.5.0\lib\NET40\Castle.Components.Validator.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\packages\NHibernate.3.0.0.4000\lib\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.ByteCode.Castle">
+      <HintPath>..\packages\NHibernate.3.0.0.4000\lib\NHibernate.ByteCode.Castle.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Data.Linq">
+      <HintPath>..\packages\NHibernate.3.0.0.4000\lib\Remotion.Data.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\packages\Iesi.Collections.3.1.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core">
+      <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.0\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <HintPath>..\packages\WebGrease.1.3.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\packages\Antlr.3.1.3.42154\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security" />
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="MimeKit">
+      <HintPath>..\packages\MimeKit.2.11.0\lib\net48\MimeKit.dll</HintPath>
+    </Reference>
+    <Reference Include="MailKit">
+      <HintPath>..\packages\MailKit.2.11.1\lib\net48\MailKit.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.9\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Helpers">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus">
+      <HintPath>..\packages\EPPlus.4.5.3.2\lib\net40\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\packages\SharpZipLib.1.4.2\lib\netstandard2.0\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Gma.QrCodeNet.Encoding">
+      <HintPath>..\packages\QrCode.Net.0.4.0.0\lib\net45\Gma.QrCodeNet.Encoding.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Protobuf">
+      <HintPath>..\packages\Google.Protobuf.3.21.9\lib\net45\Google.Protobuf.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="Renci.SshNet">
+      <HintPath>..\packages\SSH.NET.2020.0.2\lib\net40\Renci.SshNet.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Buffers">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib" />
+    <Reference Include="System.Numerics.Vectors">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="K4os.Compression.LZ4">
+      <HintPath>..\packages\K4os.Compression.LZ4.1.2.6\lib\net46\K4os.Compression.LZ4.dll</HintPath>
+    </Reference>
+    <Reference Include="K4os.Hash.xxHash">
+      <HintPath>..\packages\K4os.Hash.xxHash.1.0.6\lib\net46\K4os.Hash.xxHash.dll</HintPath>
+    </Reference>
+    <Reference Include="K4os.Compression.LZ4.Streams">
+      <HintPath>..\packages\K4os.Compression.LZ4.Streams.1.2.6\lib\net46\K4os.Compression.LZ4.Streams.dll</HintPath>
+    </Reference>
+    <Reference Include="jsreport.Types">
+      <HintPath>..\packages\jsreport.Types.2.7.1\lib\net45\jsreport.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO">
+      <HintPath>..\packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression">
+      <HintPath>..\packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
+    </Reference>
+    <Reference Include="jsreport.Shared">
+      <HintPath>..\packages\jsreport.Shared.2.3.2\lib\net45\jsreport.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime">
+      <HintPath>..\packages\System.Runtime.4.3.1\lib\net462\System.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Security.Cryptography.Encoding">
+      <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives">
+      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Algorithms">
+      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net463\System.Security.Cryptography.Algorithms.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates">
+      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.2\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+      <HintPath>..\packages\System.Net.Http.4.3.4\lib\net46\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="jsreport.Client">
+      <HintPath>..\packages\jsreport.Client.3.1.1\lib\net45\jsreport.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data">
+      <HintPath>..\packages\MySql.Data.8.0.32.1\lib\net48\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Threading.Tasks.Extensions">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.2\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.9\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">
+      <Project>{CBB1BA70-351E-4009-86FB-484810DC6364}</Project>
+      <Name>Mictlanix.BE.Resources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Model\Mictlanix.BE.Model.csproj">
+      <Project>{F9363BAC-A7BB-4A77-81E0-892C8CCCD297}</Project>
+      <Name>Mictlanix.BE.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\cfdlib\src\Mictlanix.CFDLib.csproj">
+      <Project>{63EBACD8-7BB0-480F-81BF-5E0690B27112}</Project>
+      <Name>Mictlanix.CFDLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\dfacture-client\src\Mictlanix.DFactureClient\Mictlanix.DFactureClient.csproj">
+      <Project>{9CAAE36D-F2B9-41CC-8AB3-F02C5A49229E}</Project>
+      <Name>Mictlanix.DFactureClient</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controllers\Mvc\ExpensesController.cs" />
+    <Compile Include="Controllers\Mvc\ExpenseVoucherController.cs" />
+    <Compile Include="Controllers\Mvc\HumanResourcesController.cs" />
+    <Compile Include="Controllers\Mvc\PaymentMethodOptionsController.cs" />
+    <Compile Include="Controllers\Mvc\QuotationsController.cs" />
+    <Compile Include="Controllers\Mvc\SpecialReceiptsController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\CashHelpers.cs" />
+    <Compile Include="Helpers\CFDHelpers40.cs" />
+    <Compile Include="Helpers\SecurityHelpers.cs" />
+    <Compile Include="Helpers\HtmlHelpers.cs" />
+    <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\AttendanceDayDBRecorder.cs" />
+    <Compile Include="Models\AttendanceSheetByEmployee.cs" />
+    <Compile Include="Models\CashCountReport.cs" />
+    <Compile Include="Models\AccountsReceivableSummary.cs" />
+    <Compile Include="Models\AccountsReceivableEntry.cs" />
+    <Compile Include="Models\AccountsPayableEntry.cs" />
+    <Compile Include="Models\AccountsPayableSummary.cs" />
+    <Compile Include="Models\CreditAndCollectionSummary.cs" />
+    <Compile Include="Models\DeliveryViewModel.cs" />
+    <Compile Include="Models\EmployeeAttendanceDBRecorder.cs" />
+    <Compile Include="Models\ItemDateRange.cs" />
+    <Compile Include="Models\DateRange.cs" />
+    <Compile Include="Models\MoneyCount.cs" />
+    <Compile Include="Models\MasterDetails.cs" />
+    <Compile Include="Models\CancelFiscalDocument.cs" />
+    <Compile Include="Models\Search.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\Code128Content.cs" />
+    <Compile Include="Utils\Code128Rendering.cs" />
+    <Compile Include="Models\LocalSettings.cs" />
+    <Compile Include="Utils\CurrencyConverter.cs" />
+    <Compile Include="Models\FiscalReport.cs" />
+    <Compile Include="Models\Pair.cs" />
+    <Compile Include="Models\ReceivedPayment.cs" />
+    <Compile Include="Models\SummaryItem.cs" />
+    <Compile Include="Helpers\InventoryHelpers.cs" />
+    <Compile Include="Helpers\ModelHelpers.cs" />
+    <Compile Include="Helpers\NHibernateExtensions.cs" />
+    <Compile Include="Controllers\Mvc\AccountController.cs" />
+    <Compile Include="Controllers\Mvc\AccountsPayablesController.cs" />
+    <Compile Include="Controllers\Mvc\AccountsReceivablesController.cs" />
+    <Compile Include="Controllers\Mvc\AddressesController.cs" />
+    <Compile Include="Controllers\Mvc\BankAccountsController.cs" />
+    <Compile Include="Controllers\Mvc\BarcodesController.cs" />
+    <Compile Include="Controllers\Mvc\CashDrawersController.cs" />
+    <Compile Include="Controllers\Mvc\ContactsController.cs" />
+    <Compile Include="Controllers\Mvc\CustomerRefundsController.cs" />
+    <Compile Include="Controllers\Mvc\CustomersController.cs" />
+    <Compile Include="Controllers\Mvc\DeliveryOrdersController.cs" />
+    <Compile Include="Controllers\Mvc\EmployeesController.cs" />
+    <Compile Include="Controllers\Mvc\ExchangeRatesController.cs" />
+    <Compile Include="Controllers\Mvc\FiscalDocumentsController.cs" />
+    <Compile Include="Controllers\Mvc\HomeController.cs" />
+    <Compile Include="Controllers\Mvc\InventoryController.cs" />
+    <Compile Include="Controllers\Mvc\LabelsController.cs" />
+    <Compile Include="Controllers\Mvc\NotarizationsController.cs" />
+    <Compile Include="Controllers\Mvc\PaymentsController.cs" />
+    <Compile Include="Controllers\Mvc\PointsOfSaleController.cs" />
+    <Compile Include="Controllers\Mvc\POSController.cs" />
+    <Compile Include="Controllers\Mvc\PriceListsController.cs" />
+    <Compile Include="Controllers\Mvc\PricingController.cs" />
+    <Compile Include="Controllers\Mvc\ProductionOrdersController.cs" />
+    <Compile Include="Controllers\Mvc\ProductsController.cs" />
+    <Compile Include="Controllers\Mvc\PurchasesController.cs" />
+    <Compile Include="Controllers\Mvc\ReportsController.cs" />
+    <Compile Include="Controllers\Mvc\SalesOrdersController.cs" />
+    <Compile Include="Controllers\Mvc\StoresController.cs" />
+    <Compile Include="Controllers\Mvc\SupplierAgreementsController.cs" />
+    <Compile Include="Controllers\Mvc\SupplierPaymentsController.cs" />
+    <Compile Include="Controllers\Mvc\SuppliersController.cs" />
+    <Compile Include="Controllers\Mvc\TaxpayerRecipientsController.cs" />
+    <Compile Include="Controllers\Mvc\TaxpayersController.cs" />
+    <Compile Include="Controllers\Mvc\TechnicalServiceReceiptsController.cs" />
+    <Compile Include="Controllers\Mvc\TechnicalServiceReportsController.cs" />
+    <Compile Include="Controllers\Mvc\TechnicalServiceRequestsController.cs" />
+    <Compile Include="Controllers\Mvc\TranslationRequestsController.cs" />
+    <Compile Include="Controllers\Mvc\UsersController.cs" />
+    <Compile Include="Controllers\Mvc\WarehousesController.cs" />
+    <Compile Include="Mvc\CustomController.cs" />
+    <Compile Include="Mvc\CustomWebViewPage.cs" />
+    <Compile Include="Security\CustomPrincipal.cs" />
+    <Compile Include="Helpers\WebConfig.cs" />
+    <Compile Include="Helpers\NotificationsHelpers.cs" />
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="Models\AccountReceivable.cs" />
+    <Compile Include="Models\RemainingOrderDetail.cs" />
+    <Compile Include="Models\Template.cs" />
+    <Compile Include="Helpers\ViewExtensions.cs" />
+    <Compile Include="Utils\HTTPResponseStatusCodes.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\bootstrap-clockpicker.min.css" />
+    <Content Include="Content\buttons.css" />
+    <Content Include="Content\images\casamaestra.png" />
+    <Content Include="Content\images\loading-bar.gif" />
+    <Content Include="Content\images\loading-circle.gif" />
+    <Content Include="Content\images\logo.png" />
+    <Content Include="Content\images\print_icon.gif" />
+    <Content Include="Content\images\wait.gif" />
+    <Content Include="Content\images\welcome.png" />
+    <Content Include="Content\menu.css" />
+    <Content Include="Content\ticket.css" />
+    <Content Include="Content\icons\add-item.png" />
+    <Content Include="Content\icons\addressbook.png" />
+    <Content Include="Content\icons\agent.png" />
+    <Content Include="Content\icons\apple.png" />
+    <Content Include="Content\icons\arrow-round.png" />
+    <Content Include="Content\icons\badge.png" />
+    <Content Include="Content\icons\bar-chart-02.png" />
+    <Content Include="Content\icons\bar-chart.png" />
+    <Content Include="Content\icons\battery-full.png" />
+    <Content Include="Content\icons\bird.png" />
+    <Content Include="Content\icons\boat.png" />
+    <Content Include="Content\icons\bookmark.png" />
+    <Content Include="Content\icons\briefcase.png" />
+    <Content Include="Content\icons\calculator.png" />
+    <Content Include="Content\icons\calendar.png" />
+    <Content Include="Content\icons\cassette.png" />
+    <Content Include="Content\icons\chain.png" />
+    <Content Include="Content\icons\chat-.png" />
+    <Content Include="Content\icons\chat-02.png" />
+    <Content Include="Content\icons\cloud-filled.png" />
+    <Content Include="Content\icons\cloud-outline.png" />
+    <Content Include="Content\icons\computer.png" />
+    <Content Include="Content\icons\configuration.png" />
+    <Content Include="Content\icons\configuration02.png" />
+    <Content Include="Content\icons\connected.png" />
+    <Content Include="Content\icons\connections.png" />
+    <Content Include="Content\icons\container.png" />
+    <Content Include="Content\icons\copy-item.png" />
+    <Content Include="Content\icons\database.png" />
+    <Content Include="Content\icons\delete-item.png" />
+    <Content Include="Content\icons\disc.png" />
+    <Content Include="Content\icons\dollar.png" />
+    <Content Include="Content\icons\download.png" />
+    <Content Include="Content\icons\edit.png" />
+    <Content Include="Content\icons\email.png" />
+    <Content Include="Content\icons\fan.png" />
+    <Content Include="Content\icons\fancy-globe.png" />
+    <Content Include="Content\icons\female-user.png" />
+    <Content Include="Content\icons\fire.png" />
+    <Content Include="Content\icons\first-aid.png" />
+    <Content Include="Content\icons\flag.png" />
+    <Content Include="Content\icons\flower.png" />
+    <Content Include="Content\icons\full-screen.png" />
+    <Content Include="Content\icons\glasses.png" />
+    <Content Include="Content\icons\globe.png" />
+    <Content Include="Content\icons\happy-face.png" />
+    <Content Include="Content\icons\headphone.png" />
+    <Content Include="Content\icons\heart.png" />
+    <Content Include="Content\icons\home.png" />
+    <Content Include="Content\icons\ID.png" />
+    <Content Include="Content\icons\ipod.png" />
+    <Content Include="Content\icons\lab.png" />
+    <Content Include="Content\icons\lady.png" />
+    <Content Include="Content\icons\lamp.png" />
+    <Content Include="Content\icons\leaves.png" />
+    <Content Include="Content\icons\light.png" />
+    <Content Include="Content\icons\line-globe.png" />
+    <Content Include="Content\icons\lock.png" />
+    <Content Include="Content\icons\lookup.png" />
+    <Content Include="Content\icons\male-user.png" />
+    <Content Include="Content\icons\microphone.png" />
+    <Content Include="Content\icons\mobile.png" />
+    <Content Include="Content\icons\mobile2.png" />
+    <Content Include="Content\icons\mouse.png" />
+    <Content Include="Content\icons\multi-agents.png" />
+    <Content Include="Content\icons\music-node.png" />
+    <Content Include="Content\icons\network-pc.png" />
+    <Content Include="Content\icons\network.png" />
+    <Content Include="Content\icons\next-item.png" />
+    <Content Include="Content\icons\phone.png" />
+    <Content Include="Content\icons\pie-chart.png" />
+    <Content Include="Content\icons\pin.png" />
+    <Content Include="Content\icons\plane.png" />
+    <Content Include="Content\icons\print.png" />
+    <Content Include="Content\icons\processing-02.png" />
+    <Content Include="Content\icons\processing.png" />
+    <Content Include="Content\icons\push-pin.png" />
+    <Content Include="Content\icons\recycle-empty.png" />
+    <Content Include="Content\icons\recycle-full.png" />
+    <Content Include="Content\icons\reload.png" />
+    <Content Include="Content\icons\rss.png" />
+    <Content Include="Content\icons\satellite.png" />
+    <Content Include="Content\icons\save.png" />
+    <Content Include="Content\icons\scale.png" />
+    <Content Include="Content\icons\Scissors.png" />
+    <Content Include="Content\icons\screen.png" />
+    <Content Include="Content\icons\search.png" />
+    <Content Include="Content\icons\server.png" />
+    <Content Include="Content\icons\shield.png" />
+    <Content Include="Content\icons\shut-down.png" />
+    <Content Include="Content\icons\star.png" />
+    <Content Include="Content\icons\tag.png" />
+    <Content Include="Content\icons\tap.png" />
+    <Content Include="Content\icons\tree.png" />
+    <Content Include="Content\icons\umbrella.png" />
+    <Content Include="Content\icons\unlock.png" />
+    <Content Include="Content\icons\usb.png" />
+    <Content Include="Content\icons\van.png" />
+    <Content Include="Content\icons\view-item.png" />
+    <Content Include="Content\icons\wifi.png" />
+    <Content Include="Content\icons\world.png" />
+    <Content Include="Content\selection-options.css" />
+    <Content Include="Content\images\body-bg.png" />
+    <Content Include="Content\images\false.png" />
+    <Content Include="Content\images\header-bg.png" />
+    <Content Include="Content\images\mtx-logo-small.png" />
+    <Content Include="Content\images\true.png" />
+    <Content Include="Content\main.css" />
+    <Content Include="Content\token-input.css" />
+    <Content Include="Global.asax" />
+    <Content Include="Scripts\bootstrap-clockpicker.min.js" />
+    <Content Include="Scripts\jquery.form.js" />
+    <Content Include="Scripts\jquery.tokeninput.js" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\POS\_ItemDisplayView.cshtml" />
+    <Content Include="Views\POS\_ItemEditorView.cshtml" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Account\ChangePassword.cshtml" />
+    <Content Include="Views\Account\ChangePasswordSuccess.cshtml" />
+    <Content Include="Views\Account\LogOn.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_LogOnPartial.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\Shared\InvalidPointOfSale.cshtml" />
+    <Content Include="Views\Shared\InvalidCashDrawer.cshtml" />
+    <Content Include="Views\Payments\_CreditPaymentSuccesful.cshtml" />
+    <Content Include="Views\Payments\_CreditPayment.cshtml" />
+    <Content Include="Views\Payments\_CashPayment.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\PriceListSelector.cshtml" />
+    <Content Include="Views\Taxpayers\Details.cshtml" />
+    <Content Include="Views\Taxpayers\_Index.cshtml" />
+    <Content Include="Views\Taxpayers\Index.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\TaxpayerSelector.cshtml" />
+    <Content Include="MictlanixBE.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\Account\LocalSettings.cshtml" />
+    <Content Include="Views\Shared\InvalidStore.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Address.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Address.cshtml" />
+    <Content Include="Views\Purchases\_Totals.cshtml" />
+    <Content Include="Views\Shared\_PrintLayout.cshtml" />
+    <Content Include="Views\FiscalDocuments\Index.cshtml" />
+    <Content Include="Views\FiscalDocuments\Edit.cshtml" />
+    <Content Include="Views\FiscalDocuments\_Totals.cshtml" />
+    <Content Include="Views\PointsOfSale\Index.cshtml" />
+    <Content Include="Content\print.css" />
+    <Content Include="Views\Purchases\Edit.cshtml" />
+    <Content Include="Views\FiscalDocuments\InvalidBatch.cshtml" />
+    <Content Include="Views\Reports\ReceivedPayments.cshtml" />
+    <Content Include="Views\Reports\_SummaryReport.cshtml" />
+    <Content Include="Views\Reports\SummaryReport.cshtml" />
+    <Content Include="Views\Pricing\Index.cshtml" />
+    <Content Include="Views\Pricing\_Index.cshtml" />
+    <Content Include="Content\icons\prev-item.png" />
+    <Content Include="Content\images\na.png" />
+    <Content Include="Views\Inventory\LotSerialNumbers.cshtml" />
+    <Content Include="Views\Inventory\_LotSerialNumbers.cshtml" />
+    <Content Include="Views\Inventory\AssignLotSerialNumbers.cshtml" />
+    <Content Include="Views\Inventory\_LotSerialNumber.cshtml" />
+    <Content Include="Views\Shared\InvalidExchangeRate.cshtml" />
+    <Content Include="Views\Taxpayers\_Batches.cshtml" />
+    <Content Include="Views\Taxpayers\_Certificates.cshtml" />
+    <Content Include="Views\Taxpayers\AddCertificate.cshtml" />
+    <Content Include="Content\images\glyphicons-halflings-white.png" />
+    <Content Include="Content\images\glyphicons-halflings.png" />
+    <Content Include="Scripts\bootstrap-editable.js" />
+    <Content Include="Scripts\bootstrap-editable.min.js" />
+    <Content Include="Views\Addresses\_Refresh.cshtml" />
+    <Content Include="Views\Contacts\_Refresh.cshtml" />
+    <Content Include="Views\Addresses\_Create.cshtml" />
+    <Content Include="Views\Addresses\_Delete.cshtml" />
+    <Content Include="Views\Addresses\_Details.cshtml" />
+    <Content Include="Views\Addresses\_Edit.cshtml" />
+    <Content Include="Views\Contacts\_Create.cshtml" />
+    <Content Include="Views\Contacts\_Delete.cshtml" />
+    <Content Include="Views\Contacts\_Details.cshtml" />
+    <Content Include="Views\Contacts\_Edit.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Contact.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Contact.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Boolean.cshtml" />
+    <Content Include="Views\Taxpayers\_Create.cshtml" />
+    <Content Include="Views\Taxpayers\_Edit.cshtml" />
+    <Content Include="Views\Taxpayers\_Delete.cshtml" />
+    <Content Include="Views\Taxpayers\_Refresh.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FiscalScheme.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FiscalCertificationProvider.cshtml" />
+    <Content Include="Views\ExchangeRates\_Index.cshtml" />
+    <Content Include="Views\ExchangeRates\Create.cshtml" />
+    <Content Include="Views\ExchangeRates\Delete.cshtml" />
+    <Content Include="Views\ExchangeRates\Index.cshtml" />
+    <Content Include="Views\SalesOrders\_Index.cshtml" />
+    <Content Include="Views\SalesOrders\Edit.cshtml" />
+    <Content Include="Views\SalesOrders\Index.cshtml" />
+    <Content Include="Views\SalesOrders\_Totals.cshtml" />
+    <Content Include="Views\SalesOrders\Print.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\UnitOfMeasurement.cshtml" />
+    <Content Include="Views\Labels\Index.cshtml" />
+    <Content Include="Views\Labels\Edit.cshtml" />
+    <Content Include="Views\Labels\_Index.cshtml" />
+    <Content Include="Views\Products\_Labels.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ProductSelector.cshtml" />
+    <Content Include="Content\bootstrap-editable.css" />
+    <Content Include="Views\Purchases\_MasterView.cshtml" />
+    <Content Include="Views\Purchases\_MasterEditView.cshtml" />
+    <Content Include="Views\Purchases\_DetailEditView.cshtml" />
+    <Content Include="Views\Purchases\_DetailView.cshtml" />
+    <Content Include="Views\Inventory\Receipts\Index.cshtml" />
+    <Content Include="Views\Inventory\Receipts\_Index.cshtml" />
+    <Content Include="Views\Inventory\Receipts\Edit.cshtml" />
+    <Content Include="Views\Inventory\Receipts\Print.cshtml" />
+    <Content Include="Views\Inventory\Receipts\_DetailEditView.cshtml" />
+    <Content Include="Views\Inventory\Receipts\_MasterEditView.cshtml" />
+    <Content Include="Views\Inventory\Receipts\_MasterView.cshtml" />
+    <Content Include="Views\Inventory\Receipts\New.cshtml" />
+    <Content Include="Views\Inventory\Receipts\View.cshtml" />
+    <Content Include="Views\Inventory\Issues\Edit.cshtml" />
+    <Content Include="Views\Inventory\Issues\Index.cshtml" />
+    <Content Include="Views\Inventory\Issues\Print.cshtml" />
+    <Content Include="Views\Inventory\Issues\View.cshtml" />
+    <Content Include="Views\Inventory\Issues\_DetailEditView.cshtml" />
+    <Content Include="Views\Inventory\Issues\_Index.cshtml" />
+    <Content Include="Views\Inventory\Issues\_MasterEditView.cshtml" />
+    <Content Include="Views\Inventory\Issues\_MasterView.cshtml" />
+    <Content Include="Views\Inventory\Transfers\Edit.cshtml" />
+    <Content Include="Views\Inventory\Transfers\Index.cshtml" />
+    <Content Include="Views\Inventory\Transfers\New.cshtml" />
+    <Content Include="Views\Inventory\Transfers\Print.cshtml" />
+    <Content Include="Views\Inventory\Transfers\View.cshtml" />
+    <Content Include="Views\Inventory\Transfers\_DetailEditView.cshtml" />
+    <Content Include="Views\Inventory\Transfers\_Index.cshtml" />
+    <Content Include="Views\Inventory\Transfers\_MasterEditView.cshtml" />
+    <Content Include="Views\Inventory\Transfers\_MasterView.cshtml" />
+    <Content Include="Views\Products\Index.cshtml" />
+    <Content Include="Views\Suppliers\Index.cshtml" />
+    <Content Include="Views\Suppliers\Details.cshtml" />
+    <Content Include="Views\Suppliers\_Create.cshtml" />
+    <Content Include="Views\Customers\_Index.cshtml" />
+    <Content Include="Views\PriceLists\Index.cshtml" />
+    <Content Include="Views\Warehouses\Index.cshtml" />
+    <Content Include="Views\Contacts\_Index.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Boolean.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />
+    <Content Include="Views\SupplierAgreements\_Index.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Date.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Image.cshtml" />
+    <Content Include="Views\Users\Delete.cshtml" />
+    <Content Include="Views\Users\Details.cshtml" />
+    <Content Include="Views\Users\Edit.cshtml" />
+    <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Shared\DeleteUnsuccessful.cshtml" />
+    <Content Include="Views\Addresses\_Index.cshtml" />
+    <Content Include="Views\BankAccounts\_Index.cshtml" />
+    <Content Include="Views\Shared\_Menu.cshtml" />
+    <Content Include="Views\Shared\_Success.cshtml" />
+    <Content Include="Views\Employees\Index.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CustomerSelector.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\EmployeeSelector.cshtml" />
+    <Content Include="Views\Payments\_Payment.cshtml" />
+    <Content Include="Views\Payments\_SalesOrderBalance.cshtml" />
+    <Content Include="Views\Payments\PayOrder.cshtml" />
+    <Content Include="Views\Payments\Index.cshtml" />
+    <Content Include="Views\Shared\UnknownError.cshtml" />
+    <Content Include="Views\Payments\OpenSession.cshtml" />
+    <Content Include="Views\CashDrawers\Index.cshtml" />
+    <Content Include="Views\Payments\_SessionInfo.cshtml" />
+    <Content Include="Views\Payments\CloseSessionConfirmed.cshtml" />
+    <Content Include="Views\Products\_Index.cshtml" />
+    <Content Include="Views\Shared\_TicketLayout.cshtml" />
+    <Content Include="Views\Payments\_OpenSession.cshtml" />
+    <Content Include="Views\Payments\CloseSession.cshtml" />
+    <Content Include="Views\Payments\_CashCountTicket.cshtml" />
+    <Content Include="Views\Payments\_SessionInfoPrinter.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\WarehouseSelector.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\MultilineText.cshtml" />
+    <Content Include="Views\Payments\_CashPaymentList.cshtml" />
+    <Content Include="Views\AccountsReceivables\Index.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SupplierSelector.cshtml" />
+    <Content Include="Views\Purchases\Index.cshtml" />
+    <Content Include="Views\Purchases\Details.cshtml" />
+    <Content Include="Views\SupplierPayments\Index.cshtml" />
+    <Content Include="Views\SupplierPayments\NewPay.cshtml" />
+    <Content Include="Views\AccountsPayables\AccountStatement.cshtml" />
+    <Content Include="Views\AccountsPayables\Index.cshtml" />
+    <Content Include="Views\SupplierPayments\Details.cshtml" />
+    <Content Include="Views\AccountsPayables\Dates.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\StoreSelector.cshtml" />
+    <Content Include="Views\Stores\Index.cshtml" />
+    <Content Include="Views\Customers\Index.cshtml" />
+    <Content Include="Views\Employees\_Index.cshtml" />
+    <Content Include="Views\PriceLists\_Index.cshtml" />
+    <Content Include="Views\PointsOfSale\_Index.cshtml" />
+    <Content Include="Views\CashDrawers\_Index.cshtml" />
+    <Content Include="Views\Purchases\_Index.cshtml" />
+    <Content Include="Views\FiscalDocuments\_Index.cshtml" />
+    <Content Include="Views\AccountsReceivables\_Index.cshtml" />
+    <Content Include="Views\Suppliers\_Index.cshtml" />
+    <Content Include="Views\Warehouses\_Index.cshtml" />
+    <Content Include="Views\Stores\_Index.cshtml" />
+    <Content Include="Views\SupplierPayments\_Index.cshtml" />
+    <Content Include="Scripts\helper.functions.js" />
+    <Content Include="Scripts\helper.formatters.js" />
+    <Content Include="Views\Payments\Print.cshtml" />
+    <Content Include="Scripts\select2_locale_es.js" />
+    <Content Include="Scripts\select2.js" />
+    <Content Include="Scripts\select2.min.js" />
+    <Content Include="Content\select2.css" />
+    <Content Include="Views\SalesOrders\View.cshtml" />
+    <Content Include="Views\SalesOrders\_Items.cshtml" />
+    <Content Include="Views\SalesOrders\_ItemDisplayView.cshtml" />
+    <Content Include="Views\SalesOrders\_ItemEditorView.cshtml" />
+    <Content Include="Views\SalesOrders\_DisplayView.cshtml" />
+    <Content Include="Views\SalesOrders\_EditorView.cshtml" />
+    <Content Include="Views\Payments\_DisplayView.cshtml" />
+    <Content Include="Views\FiscalDocuments\_DisplayView.cshtml" />
+    <Content Include="Views\FiscalDocuments\_EditorView.cshtml" />
+    <Content Include="Views\FiscalDocuments\_ItemDisplayView.cshtml" />
+    <Content Include="Views\FiscalDocuments\_ItemEditorView.cshtml" />
+    <Content Include="Views\FiscalDocuments\_Items.cshtml" />
+    <Content Include="Views\FiscalDocuments\View.cshtml" />
+    <Content Include="Views\FiscalDocuments\Print20.cshtml" />
+    <Content Include="Views\FiscalDocuments\Print22.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Breakable.cshtml" />
+    <Content Include="Views\FiscalDocuments\Print32.cshtml" />
+    <Content Include="Views\POS\Edit.cshtml" />
+    <Content Include="Views\POS\Index.cshtml" />
+    <Content Include="Views\POS\Print.cshtml" />
+    <Content Include="Views\POS\View.cshtml" />
+    <Content Include="Views\POS\_DisplayView.cshtml" />
+    <Content Include="Views\POS\_EditorView.cshtml" />
+    <Content Include="Views\POS\_Index.cshtml" />
+    <Content Include="Views\POS\_Items.cshtml" />
+    <Content Include="Views\POS\_Totals.cshtml" />
+    <Content Include="Views\CustomerRefunds\_Index.cshtml" />
+    <Content Include="Views\CustomerRefunds\_Totals.cshtml" />
+    <Content Include="Views\CustomerRefunds\Index.cshtml" />
+    <Content Include="Views\CustomerRefunds\Print.cshtml" />
+    <Content Include="Views\CustomerRefunds\Edit.cshtml" />
+    <Content Include="Views\CustomerRefunds\_EditorView.cshtml" />
+    <Content Include="Views\CustomerRefunds\_ItemEditorView.cshtml" />
+    <Content Include="Views\CustomerRefunds\View.cshtml" />
+    <Content Include="Views\CustomerRefunds\_DisplayView.cshtml" />
+    <Content Include="Views\CustomerRefunds\_ItemDisplayView.cshtml" />
+    <Content Include="Views\Employees\_Refresh.cshtml" />
+    <Content Include="Views\Employees\_Create.cshtml" />
+    <Content Include="Views\Employees\_Delete.cshtml" />
+    <Content Include="Views\Employees\_Details.cshtml" />
+    <Content Include="Views\Employees\_Edit.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Employee.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\GenderEnum.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Employee.cshtml" />
+    <Content Include="Views\Taxpayers\_Details.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Store.cshtml" />
+    <Content Include="Views\Stores\_Refresh.cshtml" />
+    <Content Include="Views\Stores\_Create.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Store.cshtml" />
+    <Content Include="Views\Stores\_Details.cshtml" />
+    <Content Include="Views\Stores\_Edit.cshtml" />
+    <Content Include="Views\Stores\_Delete.cshtml" />
+    <Content Include="Scripts\jquery.min.map" />
+    <Content Include="Views\Shared\EditorTemplates\Product.cshtml" />
+    <Content Include="Views\Products\_Create.cshtml" />
+    <Content Include="Views\Products\_Edit.cshtml" />
+    <Content Include="Views\Products\_Delete.cshtml" />
+    <Content Include="Views\Products\_View.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Product.cshtml" />
+    <Content Include="Views\Products\_Refresh.cshtml" />
+    <Content Include="Views\Products\_DeleteSuccesful.cshtml" />
+    <Content Include="Views\Products\_CreateSuccesful.cshtml" />
+    <Content Include="Views\Products\_Item.cshtml" />
+    <Content Include="Views\Reports\_CustomerDebt.cshtml" />
+    <Content Include="Views\Reports\_SalesOrderSummary.cshtml" />
+    <Content Include="Views\Reports\_FiscalDocuments.cshtml" />
+    <Content Include="Views\Reports\_SalesPersonOrders.cshtml" />
+    <Content Include="Views\Reports\_CustomerSalesOrders.cshtml" />
+    <Content Include="Views\Reports\_ProductSalesByCustomer.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ProductModelSelector.cshtml" />
+    <Content Include="Views\Reports\_ProductSalesByCategory.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ProductBrandSelector.cshtml" />
+    <Content Include="Views\FiscalDocuments\Print32Dataprint.cshtml" />
+    <Content Include="Views\FiscalDocuments\Print32Tinbox.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\TaxpayerRecipient.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\TaxpayerRecipient.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\TaxpayerIssuer.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\TaxpayerIssuer.cshtml" />
+    <Content Include="Views\TaxpayerRecipients\_Create.cshtml" />
+    <Content Include="Views\TaxpayerRecipients\_Delete.cshtml" />
+    <Content Include="Views\TaxpayerRecipients\_Details.cshtml" />
+    <Content Include="Views\TaxpayerRecipients\_Edit.cshtml" />
+    <Content Include="Views\TaxpayerRecipients\_Refresh.cshtml" />
+    <Content Include="Views\Customers\_Taxpayers.cshtml" />
+    <Content Include="Views\TaxpayerRecipients\_Index.cshtml" />
+    <Content Include="Views\TaxpayerRecipients\Index.cshtml" />
+    <Content Include="Views\TaxpayerRecipients\_Item.cshtml" />
+    <Content Include="Views\TaxpayerRecipients\_CreateSuccesful.cshtml" />
+    <Content Include="Views\TaxpayerRecipients\_DeleteSuccesful.cshtml" />
+    <Content Include="Views\Reports\_SalesBySalesPerson.cshtml" />
+    <Content Include="Views\Reports\_ProductSalesBySalesPerson.cshtml" />
+    <Content Include="Views\Reports\_SalesByCustomer.cshtml" />
+    <Content Include="Views\Reports\_SalesByProduct.cshtml" />
+    <Content Include="Views\Customers\_NewDiscount.cshtml" />
+    <Content Include="Views\Customers\_Discounts.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CustomerDiscount.cshtml" />
+    <Content Include="Views\Customers\_Refresh.cshtml" />
+    <Content Include="Views\ProductionOrders\_Index.cshtml" />
+    <Content Include="Views\ProductionOrders\Index.cshtml" />
+    <Content Include="Views\ProductionOrders\View.cshtml" />
+    <Content Include="Views\ProductionOrders\_DisplayView.cshtml" />
+    <Content Include="Views\ProductionOrders\_ItemDisplayView.cshtml" />
+    <Content Include="Views\ProductionOrders\Print.cshtml" />
+    <Content Include="Views\Shared\_PrintDLayout.cshtml" />
+    <Content Include="Views\FiscalDocuments\Print22Dataprint.cshtml" />
+    <Content Include="Views\FiscalDocuments\Print20Dataprint.cshtml" />
+    <Content Include="Views\TranslationRequests\_Create.cshtml" />
+    <Content Include="Views\TranslationRequests\_CreateSuccesful.cshtml" />
+    <Content Include="Views\TranslationRequests\_Delete.cshtml" />
+    <Content Include="Views\TranslationRequests\_DeleteSuccesful.cshtml" />
+    <Content Include="Views\TranslationRequests\_Edit.cshtml" />
+    <Content Include="Views\TranslationRequests\_Index.cshtml" />
+    <Content Include="Views\TranslationRequests\_Item.cshtml" />
+    <Content Include="Views\TranslationRequests\_Refresh.cshtml" />
+    <Content Include="Views\TranslationRequests\_View.cshtml" />
+    <Content Include="Views\TranslationRequests\Index.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\TranslationRequest.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\TranslationRequest.cshtml" />
+    <Content Include="Views\Notarizations\_Create.cshtml" />
+    <Content Include="Views\Notarizations\_CreateSuccesful.cshtml" />
+    <Content Include="Views\Notarizations\_Delete.cshtml" />
+    <Content Include="Views\Notarizations\_DeleteSuccesful.cshtml" />
+    <Content Include="Views\Notarizations\_Edit.cshtml" />
+    <Content Include="Views\Notarizations\_Index.cshtml" />
+    <Content Include="Views\Notarizations\_Item.cshtml" />
+    <Content Include="Views\Notarizations\_Refresh.cshtml" />
+    <Content Include="Views\Notarizations\_View.cshtml" />
+    <Content Include="Views\Notarizations\Index.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Notarization.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Notarization.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\LabelSelector.cshtml" />
+    <Content Include="Views\Reports\SalesPersonSummaryReport.cshtml" />
+    <Content Include="Content\printe.css" />
+    <Content Include="Views\TechnicalServiceReports\_Create.cshtml" />
+    <Content Include="Views\TechnicalServiceReports\_CreateSuccesful.cshtml" />
+    <Content Include="Views\TechnicalServiceReports\_Delete.cshtml" />
+    <Content Include="Views\TechnicalServiceReports\_DeleteSuccesful.cshtml" />
+    <Content Include="Views\TechnicalServiceReports\_Edit.cshtml" />
+    <Content Include="Views\TechnicalServiceReports\_Index.cshtml" />
+    <Content Include="Views\TechnicalServiceReports\_Item.cshtml" />
+    <Content Include="Views\TechnicalServiceReports\_Refresh.cshtml" />
+    <Content Include="Views\TechnicalServiceReports\Index.cshtml" />
+    <Content Include="Views\TechnicalServiceReports\_View.cshtml" />
+    <Content Include="Views\TechnicalServiceReports\Print.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\TechnicalServiceReport.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\TechnicalServiceReport.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\_Create.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\_CreateSuccesful.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\_Delete.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\_DeleteSuccesful.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\_Edit.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\_Index.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\_Item.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\_Refresh.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\Index.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\Print.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\TechnicalServiceRequest.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\TechnicalServiceRequestType.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\TechnicalServiceRequest.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\Details.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\_Component.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\_Details.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\_CreateComponent.cshtml" />
+    <Content Include="Views\TechnicalServiceRequests\_CreateComponentSuccesful.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\_Component.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\_Create.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\_CreateComponent.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\_CreateComponentSuccesful.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\_CreateSuccesful.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\_Delete.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\_DeleteSuccesful.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\_Details.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\_Edit.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\_Index.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\_Item.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\_Refresh.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\Details.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\Index.cshtml" />
+    <Content Include="Views\TechnicalServiceReceipts\Print.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\TechnicalServiceReceipt.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\TechnicalServiceReceipt.cshtml" />
+    <Content Include="Views\Reports\WarehouseStockReport.cshtml" />
+    <Content Include="Views\Reports\_WarehouseStockReport.cshtml" />
+    <Content Include="Views\Reports\WarehouseStockByLotReport.cshtml" />
+    <Content Include="Views\Reports\_WarehouseStockByLotReport.cshtml" />
+    <Content Include="Views\Reports\_WarehouseStockBySerialNumberReport.cshtml" />
+    <Content Include="Views\Reports\WarehouseStockBySerialNumberReport.cshtml" />
+    <Content Include="Views\Reports\Kardex.cshtml" />
+    <Content Include="Views\Reports\_Kardex.cshtml" />
+    <Content Include="Views\DeliveryOrders\_DisplayView.cshtml" />
+    <Content Include="Views\DeliveryOrders\_EditorView.cshtml" />
+    <Content Include="Views\DeliveryOrders\_Index.cshtml" />
+    <Content Include="Views\DeliveryOrders\_Item.cshtml" />
+    <Content Include="Views\DeliveryOrders\_ItemDisplayView.cshtml" />
+    <Content Include="Views\DeliveryOrders\_ItemEditorView.cshtml" />
+    <Content Include="Views\DeliveryOrders\_Items.cshtml" />
+    <Content Include="Views\DeliveryOrders\Edit.cshtml" />
+    <Content Include="Views\DeliveryOrders\Index.cshtml" />
+    <Content Include="Views\DeliveryOrders\New.cshtml" />
+    <Content Include="Views\DeliveryOrders\View.cshtml" />
+    <Content Include="Views\FiscalDocuments\Error.cshtml" />
+    <Content Include="Views\DeliveryOrders\DeliveryTicket.cshtml" />
+    <Content Include="Views\Reports\_SalesPersonOrdersAndRefunds.cshtml" />
+    <Content Include="Views\Products\Merge.cshtml" />
+    <Content Include="Views\Pricing\_IsTaxIncluded.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\String.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\MultilineText.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Decimal.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Int32.cshtml" />
+    <Content Include="Views\FiscalDocuments\Print.cshtml" />
+    <Content Include="Views\FiscalDocuments\_SendEmailSuccesful.cshtml" />
+    <Content Include="Views\FiscalDocuments\_SendEmail.cshtml" />
+    <Content Include="Content\select2-bootstrap.css" />
+    <Content Include="Views\AccountsReceivables\_ApplyPayment.cshtml" />
+    <Content Include="Views\AccountsReceivables\_ApplyPaymentSuccesful.cshtml" />
+    <Content Include="Views\FiscalDocuments\Print32T02Blue.cshtml" />
+    <Content Include="Views\FiscalDocuments\Print32T02Blue_PageFoot.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ProductServiceSelector.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\TaxRegimeSelector.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\PostalCodeSelector.cshtml" />
+    <Content Include="Views\FiscalDocuments\Print33T02Blue.cshtml" />
+    <Content Include="Views\FiscalDocuments\Print33T02Blue_PageFoot.cshtml" />
+    <Content Include="Views\Shared\ZeroPriceError.cshtml" />
+    <Content Include="Views\FiscalDocuments\EditPayment.cshtml" />
+    <Content Include="Views\FiscalDocuments\_PaymentEditorView.cshtml" />
+    <Content Include="Content\bootstrap-datepicker.css" />
+    <Content Include="Content\bootstrap-datepicker.min.css" />
+    <Content Include="Content\bootstrap-datepicker.standalone.css" />
+    <Content Include="Content\bootstrap-datepicker.standalone.min.css" />
+    <Content Include="Content\bootstrap-datepicker3.css" />
+    <Content Include="Content\bootstrap-datepicker3.min.css" />
+    <Content Include="Content\bootstrap-datepicker3.standalone.css" />
+    <Content Include="Content\bootstrap-datepicker3.standalone.min.css" />
+    <Content Include="Views\FiscalDocuments\_RelationEditorView.cshtml" />
+    <Content Include="Views\FiscalDocuments\_Relations.cshtml" />
+    <Content Include="Views\FiscalDocuments\_PaymentTotals.cshtml" />
+    <Content Include="Views\FiscalDocuments\ViewPayment.cshtml" />
+    <Content Include="Views\FiscalDocuments\_PaymentDisplayView.cshtml" />
+    <Content Include="Views\FiscalDocuments\_RelationDisplayView.cshtml" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.zh-TW.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.zh-CN.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.vi.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.uz-latn.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.uz-cyrl.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.uk.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.tr.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.tk.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.th.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.tg.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ta.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sw.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sv.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sr.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sr-latin.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sq.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sl.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sk.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.si.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ru.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.rs.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.rs-latin.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ro.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.pt.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.pt-BR.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.pl.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.oc.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.no.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.nl.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.nl-BE.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ms.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.mn.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.mk.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.me.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.lv.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.lt.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.kr.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ko.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.km.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.kk.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.kh.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ka.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ja.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.it.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.it-CH.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.is.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.id.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.hy.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.hu.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.hr.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.hi.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.he.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.gl.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fr.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fr-CH.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fo.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fi.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fa.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.eu.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.et.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.es.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.eo.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.en-ZA.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.en-NZ.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.en-IE.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.en-GB.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.en-CA.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.en-AU.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.el.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.de.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.da.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.cy.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.cs.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ca.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.bs.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.br.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.bn.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.bg.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.az.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ar.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ar-tn.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker-en-CA.min.js" />
+    <Content Include="Scripts\bootstrap-datepicker.min.js" />
+    <Content Include="Scripts\bootstrap-datepicker.js" />
+    <Content Include="Views\FiscalDocuments\EditOutcome.cshtml" />
+    <Content Include="Views\FiscalDocuments\_SimpleRelations.cshtml" />
+    <Content Include="Views\FiscalDocuments\_SimpleRelationEditorView.cshtml" />
+    <Content Include="Views\FiscalDocuments\_SimpleRelationDisplayView.cshtml" />
+    <Content Include="Views\FiscalDocuments\ViewOutcome.cshtml" />
+    <Content Include="Views\FiscalDocuments\Print32Partial.cshtml" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.js" />
+    <Content Include="Scripts\jquery-3.4.1.min.js" />
+    <Content Include="Scripts\jquery-3.4.1.js" />
+    <Content Include="Scripts\jquery-3.4.1-vsdoc.js" />
+    <Content Include="Views\FiscalDocuments\Print40T02Blue_PageFoot.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\fonts\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">
   </Target> -->
-	<Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
-		<AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
-	</Target>
-	<ProjectExtensions>
-		<VisualStudio>
-			<FlavorProperties GUID="{349C5851-65DF-11DA-9384-00065B846F21}">
-				<WebProjectProperties>
-					<UseIIS>True</UseIIS>
-					<AutoAssignPort>True</AutoAssignPort>
-					<DevelopmentServerPort>51103</DevelopmentServerPort>
-					<DevelopmentServerVPath>/</DevelopmentServerVPath>
-					<IISUrl>http://localhost:8080/</IISUrl>
-					<NTLMAuthentication>False</NTLMAuthentication>
-					<UseCustomServer>False</UseCustomServer>
-					<CustomServerUrl>
-					</CustomServerUrl>
-					<SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
-				</WebProjectProperties>
-			</FlavorProperties>
-		</VisualStudio>
-		<MonoDevelop>
-		  <Properties>
-		    <XspParameters Port="8080" Address="0.0.0.0" SslMode="None" SslProtocol="Default" KeyType="None" CertFile="" KeyFile="" PasswordOptions="None" Password="" Verbose="True" />
-		  </Properties>
-		</MonoDevelop>
-	</ProjectExtensions>
-	<ItemGroup />
-	<ItemGroup />
-	<ItemGroup>
-		<Content Include="Views\Reports\CustomersReport.cshtml" />
-		<Content Include="Views\Reports\_CustomersReport.cshtml" />
-		<Content Include="Views\Customers\_Create.cshtml" />
-		<Content Include="Views\Customers\_CreateSuccesful.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\Customer.cshtml" />
-		<Content Include="Views\Customers\_Item.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\Customer.cshtml" />
-		<Content Include="Views\Customers\_Edit.cshtml" />
-		<Content Include="Views\Customers\_Delete.cshtml" />
-		<Content Include="Views\Customers\_DeleteSuccesful.cshtml" />
-		<Content Include="Views\Customers\Details.cshtml" />
-		<Content Include="Views\Labels\_Item.cshtml" />
-		<Content Include="Views\Labels\_Create.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\Label.cshtml" />
-		<Content Include="Views\Labels\_CreateSuccesful.cshtml" />
-		<Content Include="Views\Labels\_Edit.cshtml" />
-		<Content Include="Views\Labels\_Refresh.cshtml" />
-		<Content Include="Views\Labels\_View.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\Label.cshtml" />
-		<Content Include="Views\Labels\_Delete.cshtml" />
-		<Content Include="Views\Labels\_DeleteSuccesful.cshtml" />
-		<Content Include="Views\PriceLists\_Create.cshtml" />
-		<Content Include="Views\PriceLists\_CreateSuccesful.cshtml" />
-		<Content Include="Views\PriceLists\_Delete.cshtml" />
-		<Content Include="Views\PriceLists\_DeleteSuccesful.cshtml" />
-		<Content Include="Views\PriceLists\_Edit.cshtml" />
-		<Content Include="Views\PriceLists\_Item.cshtml" />
-		<Content Include="Views\PriceLists\_Refresh.cshtml" />
-		<Content Include="Views\PriceLists\_View.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\PriceList.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\PriceList.cshtml" />
-		<Content Include="Views\Suppliers\_CreateSuccesful.cshtml" />
-		<Content Include="Views\Suppliers\_Delete.cshtml" />
-		<Content Include="Views\Suppliers\_DeleteSuccesful.cshtml" />
-		<Content Include="Views\Suppliers\_Edit.cshtml" />
-		<Content Include="Views\Suppliers\_Item.cshtml" />
-		<Content Include="Views\Suppliers\_Refresh.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\Supplier.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\Supplier.cshtml" />
-		<Content Include="Views\BankAccounts\_Create.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\BankAccount.cshtml" />
-		<Content Include="Views\BankAccounts\_Refresh.cshtml" />
-		<Content Include="Views\SupplierAgreements\_Create.cshtml" />
-		<Content Include="Views\SupplierAgreements\_Refresh.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\SupplierAgreement.cshtml" />
-		<Content Include="Views\Warehouses\_Create.cshtml" />
-		<Content Include="Views\Warehouses\_CreateSuccesful.cshtml" />
-		<Content Include="Views\Warehouses\_Delete.cshtml" />
-		<Content Include="Views\Warehouses\_DeleteSuccesful.cshtml" />
-		<Content Include="Views\Warehouses\_Edit.cshtml" />
-		<Content Include="Views\Warehouses\_View.cshtml" />
-		<Content Include="Views\Warehouses\_Item.cshtml" />
-		<Content Include="Views\Warehouses\_Refresh.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\Warehouse.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\Warehouse.cshtml" />
-		<Content Include="Views\BankAccounts\_Edit.cshtml" />
-		<Content Include="Views\BankAccounts\_Details.cshtml" />
-		<Content Include="Views\BankAccounts\_Delete.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\BankAccount.cshtml" />
-		<Content Include="Views\SupplierAgreements\_Delete.cshtml" />
-		<Content Include="Views\SupplierAgreements\_Details.cshtml" />
-		<Content Include="Views\SupplierAgreements\_Edit.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\SupplierAgreement.cshtml" />
-		<Content Include="Views\PointsOfSale\_Create.cshtml" />
-		<Content Include="Views\PointsOfSale\_CreateSuccesful.cshtml" />
-		<Content Include="Views\PointsOfSale\_Delete.cshtml" />
-		<Content Include="Views\PointsOfSale\_DeleteSuccesful.cshtml" />
-		<Content Include="Views\PointsOfSale\_Edit.cshtml" />
-		<Content Include="Views\PointsOfSale\_Item.cshtml" />
-		<Content Include="Views\PointsOfSale\_Refresh.cshtml" />
-		<Content Include="Views\PointsOfSale\_View.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\PointOfSale.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\PointOfSale.cshtml" />
-		<Content Include="Views\CashDrawers\_Create.cshtml" />
-		<Content Include="Views\CashDrawers\_CreateSuccesful.cshtml" />
-		<Content Include="Views\CashDrawers\_Delete.cshtml" />
-		<Content Include="Views\CashDrawers\_DeleteSuccesful.cshtml" />
-		<Content Include="Views\CashDrawers\_Edit.cshtml" />
-		<Content Include="Views\CashDrawers\_Item.cshtml" />
-		<Content Include="Views\CashDrawers\_Refresh.cshtml" />
-		<Content Include="Views\CashDrawers\_View.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\CashDrawer.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\CashDrawer.cshtml" />
-		<Content Include="Views\ExchangeRates\_Create.cshtml" />
-		<Content Include="Views\ExchangeRates\_CreateSuccesful.cshtml" />
-		<Content Include="Views\ExchangeRates\_Delete.cshtml" />
-		<Content Include="Views\ExchangeRates\_DeleteSuccesful.cshtml" />
-		<Content Include="Views\ExchangeRates\_Item.cshtml" />
-		<Content Include="Views\ExchangeRates\_Refresh.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\ExchangeRate.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\ExchangeRate.cshtml" />
-		<Content Include="Views\Inventory\Receipts\_Create.cshtml" />
-		<Content Include="Views\Inventory\Receipts\_CreateSuccesful.cshtml" />
-		<Content Include="Views\Inventory\Receipts\_Item.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\InventoryReceipt.cshtml" />
-		<Content Include="Views\Inventory\Receipts\_Refresh.cshtml" />
-		<Content Include="Views\Inventory\Issues\_Create.cshtml" />
-		<Content Include="Views\Inventory\Issues\_CreateSuccesful.cshtml" />
-		<Content Include="Views\Inventory\Issues\_Item.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\InventoryIssue.cshtml" />
-		<Content Include="Views\Inventory\Transfers\_Create.cshtml" />
-		<Content Include="Views\Inventory\Transfers\_CreateSuccesful.cshtml" />
-		<Content Include="Views\Inventory\Transfers\_Item.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\InventoryTransfer.cshtml" />
-		<Content Include="Views\Purchases\_Create.cshtml" />
-		<Content Include="Views\Purchases\_CreateSuccesful.cshtml" />
-		<Content Include="Views\Purchases\_Item.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\PurchaseOrder.cshtml" />
-		<Content Include="Views\FiscalDocuments\_Create.cshtml" />
-		<Content Include="Views\FiscalDocuments\_CreateSuccesful.cshtml" />
-		<Content Include="Views\FiscalDocuments\_Item.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\FiscalDocument.cshtml" />
-		<Content Include="Views\Reports\_SerialNumberKardex.cshtml" />
-		<Content Include="Views\Customers\_DiscountsRefresh.cshtml" />
-		<Content Include="Views\Inventory\PhysicalCountAdjustment.cshtml" />
-		<Content Include="Views\Inventory\Receipts\_TotalQuantity.cshtml" />
-		<Content Include="Views\Inventory\Issues\_TotalQuantity.cshtml" />
-		<Content Include="Views\Inventory\Transfers\_TotalQuantity.cshtml" />
-		<Content Include="Views\Quotations\_DisplayView.cshtml" />
-		<Content Include="Views\Quotations\_EditorView.cshtml" />
-		<Content Include="Views\Quotations\_Index.cshtml" />
-		<Content Include="Views\Quotations\_ItemDisplayView.cshtml" />
-		<Content Include="Views\Quotations\_ItemEditorView.cshtml" />
-		<Content Include="Views\Quotations\_Items.cshtml" />
-		<Content Include="Views\Quotations\_Totals.cshtml" />
-		<Content Include="Views\Quotations\Edit.cshtml" />
-		<Content Include="Views\Quotations\Index.cshtml" />
-		<Content Include="Views\Quotations\Print.cshtml" />
-		<Content Include="Views\Quotations\View.cshtml" />
-		<Content Include="Views\Reports\ProductsBySupplier.cshtml" />
-		<Content Include="Views\Reports\_ProductsBySupplierReport.cshtml" />
-		<Content Include="Views\HumanResources\Attendance.cshtml" />
-		<Content Include="Views\HumanResources\SynchronizeTimeClocks.cshtml" />
-		<Content Include="Views\HumanResources\_Attendance.cshtml" />
-		<Content Include="Views\HumanResources\_AttendanceSheetEmployee.cshtml" />
-		<Content Include="Views\HumanResources\_AttendanceEmployeeByDay.cshtml" />
-		<Content Include="Views\HumanResources\_Edit.cshtml" />
-		<Content Include="Views\Shared\DisplayTemplates\TimeSpan.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\AttendanceSheet.cshtml" />
-		<Content Include="Views\HumanResources\EmployeeSchedules.cshtml" />
-		<Content Include="Views\HumanResources\_EmployeeSchedules.cshtml" />
-		<Content Include="Views\HumanResources\_EmployeeScheduleDays.cshtml" />
-		<Content Include="Views\Reports\_PdfReceivedPayments.cshtml" />
-		<Content Include="Views\POS\_CustomerName.cshtml" />
-		<Content Include="Views\Reports\_ProductsOrderAndRefundsBySalesPerson.cshtml" />
-		<Content Include="Views\DeliveryOrders\PendantDeliveries.cshtml" />
-		<Content Include="Views\DeliveryOrders\_PendantDeliveries.cshtml" />
-		<Content Include="Views\Reports\_ReceivedPayments.cshtml" />
-		<Content Include="Views\AccountsReceivables\Print.cshtml" />
-		<Content Include="Views\Expenses\Index.cshtml" />
-		<Content Include="Views\Expenses\_Create.cshtml" />
-		<Content Include="Views\Expenses\_Delete.cshtml" />
-		<Content Include="Views\Expenses\_Index.cshtml" />
-		<Content Include="Views\DeliveryOrders\Delivery.cshtml" />
-		<Content Include="Views\Expenses\_Refresh.cshtml" />
-		<Content Include="Views\Expenses\_Edit.cshtml" />
-		<Content Include="Views\ExpenseVoucher\Index.cshtml" />
-		<Content Include="Views\ExpenseVoucher\_Index.cshtml" />
-		<Content Include="Views\ExpenseVoucher\Edit.cshtml" />
-		<Content Include="Views\ExpenseVoucher\_Items.cshtml" />
-		<Content Include="Views\ExpenseVoucher\_ItemEditorView.cshtml" />
-		<Content Include="Views\ExpenseVoucher\_EditorView.cshtml" />
-		<Content Include="Views\ExpenseVoucher\_Totals.cshtml" />
-		<Content Include="Views\ExpenseVoucher\Print.cshtml" />
-		<Content Include="Views\ExpenseVoucher\View.cshtml" />
-		<Content Include="Views\ExpenseVoucher\_DisplayView.cshtml" />
-		<Content Include="Views\ExpenseVoucher\_ItemDisplayView.cshtml" />
-		<Content Include="Views\Payments\PrintCreditPayment.cshtml" />
-		<Content Include="Views\Payments\CreditPayments.cshtml" />
-		<Content Include="Views\Payments\_CreditPayments.cshtml" />
-		<Content Include="Views\Payments\ViewCreditPayment.cshtml" />
-		<Content Include="Views\PaymentMethodOptions\Index.cshtml" />
-		<Content Include="Views\PaymentMethodOptions\_Index.cshtml" />
-		<Content Include="Views\PaymentMethodOptions\_Create.cshtml" />
-		<Content Include="Views\Shared\EditorTemplates\PaymentMethodOption.cshtml" />
-		<Content Include="Views\PaymentMethodOptions\_Refresh.cshtml" />
-		<Content Include="Views\PaymentMethodOptions\_Edit.cshtml" />
-		<Content Include="Views\PaymentMethodOptions\_Delete.cshtml" />
-		<Content Include="Views\Customers\Merge.cshtml" />
-		<Content Include="Views\Payments\_DetailsView.cshtml" />
-		<Content Include="Views\Payments\DeliveryTicket.cshtml" />
-		<Content Include="Views\DeliveryOrders\DeliveryFormat.cshtml" />
-		<Content Include="Views\SalesOrders\_CustomerName.cshtml" />
-		<Content Include="Views\Payments\_DeliveryPayment.cshtml" />
-		<Content Include="Views\Payments\_DeliveryPaymentList.cshtml" />
-		<Content Include="Views\Reports\CreditAndCollection.cshtml" />
-		<Content Include="Views\Reports\_CreditAndCollection.cshtml" />
-		<Content Include="Views\Quotations\_SendEmail.cshtml" />
-		<Content Include="Views\Quotations\_SendEmailSuccesful.cshtml" />
-		<Content Include="Views\DeliveryOrders\DeliveryFormatRamos.cshtml" />
-		<Content Include="Views\Payments\_CustomerName.cshtml" />
-		<Content Include="Views\Payments\_Payments.cshtml" />
-		<None Include="Content\bootstrap-datepicker.css.map" />
-		<None Include="Content\bootstrap-datepicker.standalone.css.map" />
-		<None Include="Content\bootstrap-datepicker3.css.map" />
-		<None Include="Content\bootstrap-datepicker3.standalone.css.map" />
-		<Content Include="Views\SpecialReceipts\Index.cshtml" />
-		<Content Include="Views\SpecialReceipts\_Index.cshtml" />
-		<Content Include="Views\SpecialReceipts\Edit.cshtml" />
-		<Content Include="Views\SpecialReceipts\_EditorView.cshtml" />
-		<Content Include="Views\SpecialReceipts\_CustomerName.cshtml" />
-		<Content Include="Views\SpecialReceipts\Print.cshtml" />
-		<Content Include="Views\SpecialReceipts\_ItemEditorView.cshtml" />
-		<None Include="fonts\glyphicons-halflings-regular.woff2" />
-		<None Include="Content\bootstrap.min.css.map" />
-		<None Include="Content\bootstrap.css.map" />
-		<None Include="Content\bootstrap-theme.min.css.map" />
-		<None Include="Content\bootstrap-theme.css.map" />
-		<Content Include="Views\SpecialReceipts\View.cshtml" />
-		<Content Include="Views\SpecialReceipts\_DisplayView.cshtml" />
-		<None Include="Scripts\jquery-3.4.1.slim.min.map" />
-		<None Include="Scripts\jquery-3.4.1.min.map" />
-		<Content Include="Views\FiscalDocuments\Print40T02Blue.cshtml" />
-		<Content Include="Views\FiscalDocuments\_AdvancePaymentsAppliedRelations.cshtml" />
-		<Content Include="Views\Account\RecoverPassword.cshtml" />
-		<Content Include="Views\Account\ForgotPassword.cshtml" />
-		<Content Include="Views\Account\RecoveryEmailSent.cshtml" />
-		<Content Include="Views\Account\RecoverPasswordEmail.cshtml" />
-		<None Include="Helpers\CFDHelpers.cs" />
-	</ItemGroup>
-	<ItemGroup />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349C5851-65DF-11DA-9384-00065B846F21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>51103</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:8080/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+    <MonoDevelop>
+      <Properties>
+        <XspParameters Port="8080" Address="0.0.0.0" SslMode="None" SslProtocol="Default" KeyType="None" CertFile="" KeyFile="" PasswordOptions="None" Password="" Verbose="True" />
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\Reports\CustomersReport.cshtml" />
+    <Content Include="Views\Reports\_CustomersReport.cshtml" />
+    <Content Include="Views\Customers\_Create.cshtml" />
+    <Content Include="Views\Customers\_CreateSuccesful.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Customer.cshtml" />
+    <Content Include="Views\Customers\_Item.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Customer.cshtml" />
+    <Content Include="Views\Customers\_Edit.cshtml" />
+    <Content Include="Views\Customers\_Delete.cshtml" />
+    <Content Include="Views\Customers\_DeleteSuccesful.cshtml" />
+    <Content Include="Views\Customers\Details.cshtml" />
+    <Content Include="Views\Labels\_Item.cshtml" />
+    <Content Include="Views\Labels\_Create.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Label.cshtml" />
+    <Content Include="Views\Labels\_CreateSuccesful.cshtml" />
+    <Content Include="Views\Labels\_Edit.cshtml" />
+    <Content Include="Views\Labels\_Refresh.cshtml" />
+    <Content Include="Views\Labels\_View.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Label.cshtml" />
+    <Content Include="Views\Labels\_Delete.cshtml" />
+    <Content Include="Views\Labels\_DeleteSuccesful.cshtml" />
+    <Content Include="Views\PriceLists\_Create.cshtml" />
+    <Content Include="Views\PriceLists\_CreateSuccesful.cshtml" />
+    <Content Include="Views\PriceLists\_Delete.cshtml" />
+    <Content Include="Views\PriceLists\_DeleteSuccesful.cshtml" />
+    <Content Include="Views\PriceLists\_Edit.cshtml" />
+    <Content Include="Views\PriceLists\_Item.cshtml" />
+    <Content Include="Views\PriceLists\_Refresh.cshtml" />
+    <Content Include="Views\PriceLists\_View.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\PriceList.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\PriceList.cshtml" />
+    <Content Include="Views\Suppliers\_CreateSuccesful.cshtml" />
+    <Content Include="Views\Suppliers\_Delete.cshtml" />
+    <Content Include="Views\Suppliers\_DeleteSuccesful.cshtml" />
+    <Content Include="Views\Suppliers\_Edit.cshtml" />
+    <Content Include="Views\Suppliers\_Item.cshtml" />
+    <Content Include="Views\Suppliers\_Refresh.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Supplier.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Supplier.cshtml" />
+    <Content Include="Views\BankAccounts\_Create.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\BankAccount.cshtml" />
+    <Content Include="Views\BankAccounts\_Refresh.cshtml" />
+    <Content Include="Views\SupplierAgreements\_Create.cshtml" />
+    <Content Include="Views\SupplierAgreements\_Refresh.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SupplierAgreement.cshtml" />
+    <Content Include="Views\Warehouses\_Create.cshtml" />
+    <Content Include="Views\Warehouses\_CreateSuccesful.cshtml" />
+    <Content Include="Views\Warehouses\_Delete.cshtml" />
+    <Content Include="Views\Warehouses\_DeleteSuccesful.cshtml" />
+    <Content Include="Views\Warehouses\_Edit.cshtml" />
+    <Content Include="Views\Warehouses\_View.cshtml" />
+    <Content Include="Views\Warehouses\_Item.cshtml" />
+    <Content Include="Views\Warehouses\_Refresh.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Warehouse.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Warehouse.cshtml" />
+    <Content Include="Views\BankAccounts\_Edit.cshtml" />
+    <Content Include="Views\BankAccounts\_Details.cshtml" />
+    <Content Include="Views\BankAccounts\_Delete.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\BankAccount.cshtml" />
+    <Content Include="Views\SupplierAgreements\_Delete.cshtml" />
+    <Content Include="Views\SupplierAgreements\_Details.cshtml" />
+    <Content Include="Views\SupplierAgreements\_Edit.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SupplierAgreement.cshtml" />
+    <Content Include="Views\PointsOfSale\_Create.cshtml" />
+    <Content Include="Views\PointsOfSale\_CreateSuccesful.cshtml" />
+    <Content Include="Views\PointsOfSale\_Delete.cshtml" />
+    <Content Include="Views\PointsOfSale\_DeleteSuccesful.cshtml" />
+    <Content Include="Views\PointsOfSale\_Edit.cshtml" />
+    <Content Include="Views\PointsOfSale\_Item.cshtml" />
+    <Content Include="Views\PointsOfSale\_Refresh.cshtml" />
+    <Content Include="Views\PointsOfSale\_View.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\PointOfSale.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\PointOfSale.cshtml" />
+    <Content Include="Views\CashDrawers\_Create.cshtml" />
+    <Content Include="Views\CashDrawers\_CreateSuccesful.cshtml" />
+    <Content Include="Views\CashDrawers\_Delete.cshtml" />
+    <Content Include="Views\CashDrawers\_DeleteSuccesful.cshtml" />
+    <Content Include="Views\CashDrawers\_Edit.cshtml" />
+    <Content Include="Views\CashDrawers\_Item.cshtml" />
+    <Content Include="Views\CashDrawers\_Refresh.cshtml" />
+    <Content Include="Views\CashDrawers\_View.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\CashDrawer.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CashDrawer.cshtml" />
+    <Content Include="Views\ExchangeRates\_Create.cshtml" />
+    <Content Include="Views\ExchangeRates\_CreateSuccesful.cshtml" />
+    <Content Include="Views\ExchangeRates\_Delete.cshtml" />
+    <Content Include="Views\ExchangeRates\_DeleteSuccesful.cshtml" />
+    <Content Include="Views\ExchangeRates\_Item.cshtml" />
+    <Content Include="Views\ExchangeRates\_Refresh.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ExchangeRate.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\ExchangeRate.cshtml" />
+    <Content Include="Views\Inventory\Receipts\_Create.cshtml" />
+    <Content Include="Views\Inventory\Receipts\_CreateSuccesful.cshtml" />
+    <Content Include="Views\Inventory\Receipts\_Item.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\InventoryReceipt.cshtml" />
+    <Content Include="Views\Inventory\Receipts\_Refresh.cshtml" />
+    <Content Include="Views\Inventory\Issues\_Create.cshtml" />
+    <Content Include="Views\Inventory\Issues\_CreateSuccesful.cshtml" />
+    <Content Include="Views\Inventory\Issues\_Item.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\InventoryIssue.cshtml" />
+    <Content Include="Views\Inventory\Transfers\_Create.cshtml" />
+    <Content Include="Views\Inventory\Transfers\_CreateSuccesful.cshtml" />
+    <Content Include="Views\Inventory\Transfers\_Item.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\InventoryTransfer.cshtml" />
+    <Content Include="Views\Purchases\_Create.cshtml" />
+    <Content Include="Views\Purchases\_CreateSuccesful.cshtml" />
+    <Content Include="Views\Purchases\_Item.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\PurchaseOrder.cshtml" />
+    <Content Include="Views\FiscalDocuments\_Create.cshtml" />
+    <Content Include="Views\FiscalDocuments\_CreateSuccesful.cshtml" />
+    <Content Include="Views\FiscalDocuments\_Item.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FiscalDocument.cshtml" />
+    <Content Include="Views\Reports\_SerialNumberKardex.cshtml" />
+    <Content Include="Views\Customers\_DiscountsRefresh.cshtml" />
+    <Content Include="Views\Inventory\PhysicalCountAdjustment.cshtml" />
+    <Content Include="Views\Inventory\Receipts\_TotalQuantity.cshtml" />
+    <Content Include="Views\Inventory\Issues\_TotalQuantity.cshtml" />
+    <Content Include="Views\Inventory\Transfers\_TotalQuantity.cshtml" />
+    <Content Include="Views\Quotations\_DisplayView.cshtml" />
+    <Content Include="Views\Quotations\_EditorView.cshtml" />
+    <Content Include="Views\Quotations\_Index.cshtml" />
+    <Content Include="Views\Quotations\_ItemDisplayView.cshtml" />
+    <Content Include="Views\Quotations\_ItemEditorView.cshtml" />
+    <Content Include="Views\Quotations\_Items.cshtml" />
+    <Content Include="Views\Quotations\_Totals.cshtml" />
+    <Content Include="Views\Quotations\Edit.cshtml" />
+    <Content Include="Views\Quotations\Index.cshtml" />
+    <Content Include="Views\Quotations\Print.cshtml" />
+    <Content Include="Views\Quotations\View.cshtml" />
+    <Content Include="Views\Reports\ProductsBySupplier.cshtml" />
+    <Content Include="Views\Reports\_ProductsBySupplierReport.cshtml" />
+    <Content Include="Views\HumanResources\Attendance.cshtml" />
+    <Content Include="Views\HumanResources\SynchronizeTimeClocks.cshtml" />
+    <Content Include="Views\HumanResources\_Attendance.cshtml" />
+    <Content Include="Views\HumanResources\_AttendanceSheetEmployee.cshtml" />
+    <Content Include="Views\HumanResources\_AttendanceEmployeeByDay.cshtml" />
+    <Content Include="Views\HumanResources\_Edit.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\TimeSpan.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\AttendanceSheet.cshtml" />
+    <Content Include="Views\HumanResources\EmployeeSchedules.cshtml" />
+    <Content Include="Views\HumanResources\_EmployeeSchedules.cshtml" />
+    <Content Include="Views\HumanResources\_EmployeeScheduleDays.cshtml" />
+    <Content Include="Views\Reports\_PdfReceivedPayments.cshtml" />
+    <Content Include="Views\POS\_CustomerName.cshtml" />
+    <Content Include="Views\Reports\_ProductsOrderAndRefundsBySalesPerson.cshtml" />
+    <Content Include="Views\DeliveryOrders\PendantDeliveries.cshtml" />
+    <Content Include="Views\DeliveryOrders\_PendantDeliveries.cshtml" />
+    <Content Include="Views\Reports\_ReceivedPayments.cshtml" />
+    <Content Include="Views\AccountsReceivables\Print.cshtml" />
+    <Content Include="Views\Expenses\Index.cshtml" />
+    <Content Include="Views\Expenses\_Create.cshtml" />
+    <Content Include="Views\Expenses\_Delete.cshtml" />
+    <Content Include="Views\Expenses\_Index.cshtml" />
+    <Content Include="Views\DeliveryOrders\Delivery.cshtml" />
+    <Content Include="Views\Expenses\_Refresh.cshtml" />
+    <Content Include="Views\Expenses\_Edit.cshtml" />
+    <Content Include="Views\ExpenseVoucher\Index.cshtml" />
+    <Content Include="Views\ExpenseVoucher\_Index.cshtml" />
+    <Content Include="Views\ExpenseVoucher\Edit.cshtml" />
+    <Content Include="Views\ExpenseVoucher\_Items.cshtml" />
+    <Content Include="Views\ExpenseVoucher\_ItemEditorView.cshtml" />
+    <Content Include="Views\ExpenseVoucher\_EditorView.cshtml" />
+    <Content Include="Views\ExpenseVoucher\_Totals.cshtml" />
+    <Content Include="Views\ExpenseVoucher\Print.cshtml" />
+    <Content Include="Views\ExpenseVoucher\View.cshtml" />
+    <Content Include="Views\ExpenseVoucher\_DisplayView.cshtml" />
+    <Content Include="Views\ExpenseVoucher\_ItemDisplayView.cshtml" />
+    <Content Include="Views\Payments\PrintCreditPayment.cshtml" />
+    <Content Include="Views\Payments\CreditPayments.cshtml" />
+    <Content Include="Views\Payments\_CreditPayments.cshtml" />
+    <Content Include="Views\Payments\ViewCreditPayment.cshtml" />
+    <Content Include="Views\PaymentMethodOptions\Index.cshtml" />
+    <Content Include="Views\PaymentMethodOptions\_Index.cshtml" />
+    <Content Include="Views\PaymentMethodOptions\_Create.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\PaymentMethodOption.cshtml" />
+    <Content Include="Views\PaymentMethodOptions\_Refresh.cshtml" />
+    <Content Include="Views\PaymentMethodOptions\_Edit.cshtml" />
+    <Content Include="Views\PaymentMethodOptions\_Delete.cshtml" />
+    <Content Include="Views\Customers\Merge.cshtml" />
+    <Content Include="Views\Payments\_DetailsView.cshtml" />
+    <Content Include="Views\Payments\DeliveryTicket.cshtml" />
+    <Content Include="Views\DeliveryOrders\DeliveryFormat.cshtml" />
+    <Content Include="Views\SalesOrders\_CustomerName.cshtml" />
+    <Content Include="Views\Payments\_DeliveryPayment.cshtml" />
+    <Content Include="Views\Payments\_DeliveryPaymentList.cshtml" />
+    <Content Include="Views\Reports\CreditAndCollection.cshtml" />
+    <Content Include="Views\Reports\_CreditAndCollection.cshtml" />
+    <Content Include="Views\Quotations\_SendEmail.cshtml" />
+    <Content Include="Views\Quotations\_SendEmailSuccesful.cshtml" />
+    <Content Include="Views\DeliveryOrders\DeliveryFormatRamos.cshtml" />
+    <Content Include="Views\Payments\_CustomerName.cshtml" />
+    <Content Include="Views\Payments\_Payments.cshtml" />
+    <None Include="Content\bootstrap-datepicker.css.map" />
+    <None Include="Content\bootstrap-datepicker.standalone.css.map" />
+    <None Include="Content\bootstrap-datepicker3.css.map" />
+    <None Include="Content\bootstrap-datepicker3.standalone.css.map" />
+    <Content Include="Views\SpecialReceipts\Index.cshtml" />
+    <Content Include="Views\SpecialReceipts\_Index.cshtml" />
+    <Content Include="Views\SpecialReceipts\Edit.cshtml" />
+    <Content Include="Views\SpecialReceipts\_EditorView.cshtml" />
+    <Content Include="Views\SpecialReceipts\_CustomerName.cshtml" />
+    <Content Include="Views\SpecialReceipts\Print.cshtml" />
+    <Content Include="Views\SpecialReceipts\_ItemEditorView.cshtml" />
+    <None Include="fonts\glyphicons-halflings-regular.woff2" />
+    <None Include="Content\bootstrap.min.css.map" />
+    <None Include="Content\bootstrap.css.map" />
+    <None Include="Content\bootstrap-theme.min.css.map" />
+    <None Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Views\SpecialReceipts\View.cshtml" />
+    <Content Include="Views\SpecialReceipts\_DisplayView.cshtml" />
+    <None Include="Scripts\jquery-3.4.1.slim.min.map" />
+    <None Include="Scripts\jquery-3.4.1.min.map" />
+    <Content Include="Views\FiscalDocuments\Print40T02Blue.cshtml" />
+    <Content Include="Views\FiscalDocuments\_AdvancePaymentsAppliedRelations.cshtml" />
+    <Content Include="Views\Account\RecoverPassword.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\RecoveryEmailSent.cshtml" />
+    <Content Include="Views\Account\RecoverPasswordEmail.cshtml" />
+    <None Include="Helpers\CFDHelpers.cs" />
+    <Content Include="Views\DeliveryOrders\_buttons.cshtml" />
+  </ItemGroup>
+  <ItemGroup />
 </Project>

@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
@@ -12,8 +12,9 @@
 }
 
 @{
-		  var delivery_payments = Model.Details.Where (x => x.IsPaid && x.Payments.Any (y => y.Payment.CashSession == null)).ToList ();
-		  var cash_payments = Model.Details.Where (x => !x.IsPaid).ToList ();
+	var delivery_payments = SalesOrderPayment.Queryable.Where(x => x.Payment.CashSession == null).
+		Select(x => x.SalesOrder).OrderByDescending(x => x.Id).ToList();
+	var cash_payments = Model.Details.Where (x => !x.IsPaid).ToList ();
 }
 
 <h2>@Resources.DisplayName_CustomerPayments</h2>
@@ -38,13 +39,11 @@
 	        	@Html.Partial("_CreditPayment", new CustomerPayment { Date = DateTime.Now })
 	        </div>
 	    </div>
-		 @if (delivery_payments.Count() > 0) {
 	 		<div id='tab-3' class='tab-pane'>
 	 			<div id='delivery-payment'>
 	 				@Html.Partial("_DeliveryPayment", delivery_payments)
 	 			</div>
 			</div>
-		 }
 	</div>
 </div>
 }
