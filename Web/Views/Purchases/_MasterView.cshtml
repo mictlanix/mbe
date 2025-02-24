@@ -1,44 +1,57 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model PurchaseOrder
 
 @{
-    var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.PurchasesOrders);
+				var CurrentUser = Html.CurrentUser() ?? new User();
+				var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.PurchasesOrders);
 }
 
 <fieldset>
-    <legend>@Resources.DisplayName_PurchaseInformation</legend>
-    <div class="display-label right floating">
-        @Html.LabelFor(model => model.Id):
-        @Html.DisplayFor(model => model.Id)
-    </div>
-    <div class="display-label right floating">
-        @Html.LabelFor(model => model.CreationTime):
-        @Html.DisplayFor(model => model.CreationTime)
-    </div>
-    <div class="display-label">
-        @Html.LabelFor(model => model.Supplier)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Supplier.Name)
-    </div>
-    <div class="display-label">
-        @Html.LabelFor(model => model.Comment)
-        @Html.DisplayFor(model => model.Comment)
-    </div>
-    <div class="right">
-        @Ajax.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "master-section" }, new { @class = "button icon edit" })
-        @if(Privilege.AllowDelete)
-        {
-            using (Html.BeginForm("Cancel", "Purchases", new { id = Model.Id }, FormMethod.Post, new { style = "display:inline" }))
-            {
-                <button type="submit" class="icon cancel">@Resources.Cancel</button>
-            }
-        }
-    </div>
+				<legend>@Resources.DisplayName_PurchaseInformation</legend>
+				<div class="display-label right floating">
+								@Html.LabelFor(model => model.Id):
+								@Html.DisplayFor(model => model.Id)
+				</div>
+				<div class="display-label right floating">
+								@Html.LabelFor(model => model.EstimatedReceiptDate):
+								<a id='EstimatedReceiptDate' class="editable" data-type='date' data-placement='left' data-pk='@Model.Id'
+											data-value='@Html.DisplayFor(x => x.EstimatedReceiptDate)' data-url='@Url.Action("SetEstimatedReceiptDate", new { id = Model.Id })'
+											data-emptytext='@Resources.Empty' data-clear='false'>
+												@Html.DisplayFor(x => x.EstimatedReceiptDate)
+								</a>
+				</div>
+				<div class="display-label right floating">
+								@Html.LabelFor(model => model.CreationTime):
+								@Html.DisplayFor(model => model.CreationTime)
+				</div>
+				<div class="display-label">
+								@Html.LabelFor(model => model.Supplier)
+				</div>
+				<div class="display-field">
+								@Html.DisplayFor(model => model.Supplier.Name)
+				</div>
+				<div class="display-label">
+								@Html.LabelFor(model => model.Comment)
+								@Html.DisplayFor(model => model.Comment)
+				</div>
+				<div class="right floating">
+								@Ajax.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "master-section" }, new { @class = "button icon edit" })
+								@if (Privilege.AllowDelete)
+								{
+												using (Html.BeginForm("Cancel", "Purchases", new { id = Model.Id }, FormMethod.Post, new { style = "display:inline" }))
+												{
+																<button type="submit" class="icon cancel">@Resources.Cancel</button>
+												}
+								}
+				</div>
 </fieldset>
 <script type="text/javascript">
     var PurchaseMovement = { Id: @Model.Id };
+				$('#EstimatedReceiptDate').editable({
+		datepicker: {
+	    	language:'@WebConfig.Language'
+		}
+	});
 </script>

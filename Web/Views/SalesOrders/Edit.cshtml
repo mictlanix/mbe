@@ -3,57 +3,91 @@
 @using Mictlanix.BE.Web.Helpers
 @model SalesOrder
 
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="-1">
+
 @{
-    ViewBag.Title = Resources.Edit;
+				ViewBag.Title = Resources.Edit;
 }
 
-<h2>@Resources.SalesOrder</h2> 
+<h2>@Resources.SalesOrder</h2>
 
 <div id='master-section'>
-	@Html.Partial("_EditorView")
+				@Html.Partial("_EditorView")
 </div>
 <div id='details-section'>
-    <div id='items-container' data-url='@Url.Action("Items", new { id = Model.Id })'>
-        @Html.Partial("_Items", Model.Details)
-    </div>
-    <div class='search-box'>
-        <input type='text' id='product-search' name='product-search' />
-    </div>
+				<div id='items-container' data-url='@Url.Action("Items", new { id = Model.Id })'>
+								@Html.Partial("_Items", Model.Details)
+				</div>
+				<div class="alert alert-danger alert-dismissible fade in" style="display:none;">
+				</div>
+				<div class='search-box'>
+								<input type='text' id='product-search' name='product-search' />
+				</div>
 </div>
 <div id='totals-section' class='pull-right' data-url='@Url.Action("Totals", new { id = Model.Id })'>
-    @Html.Partial("_Totals")
+				@Html.Partial("_Totals")
 </div>
 <div class='clearfix'></div>
 <div id='back-to-list' class='pull-left'>
-    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+				@Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
 <div id='confirm-button' class='pull-right @(Model.Details.Count == 0 ? "hide" : "")'>
-@using (Html.BeginForm("Confirm", "SalesOrders", new { id = Model.Id })) {
-    <button id='complete' type='submit'>@Resources.CompleteSale</button>
-}
+				@using (Html.BeginForm("Confirm", "SalesOrders", new { id = Model.Id }))
+				{
+								<button id='complete' type='submit'>@Resources.CompleteSale</button>
+				}
 </div>
 <div class='clearfix'></div>
 <script type='text/javascript'>
 $(function () {
     $('#product-search').tokenInput('@Url.Action("GetSuggestions", "SalesOrders", new { id = Model.Id })', {
-        hintText:'@Resources.HIntText',
-        noResultsText:'@Resources.NoResultsText',
-        searchingText:'@Resources.SearchingText',          
-        resultsFormatter:function(item){return ProductFormatter(item);},
-        queryParam:'pattern',minChars:3,tokenLimit:1,
+        hintText:'@Resources.HIntText @string.Format(Resources.WildCardSearchWarehouseHint, Resources.WilcardStringPatternForSearch)',
+        noResultsText:'@Resources.NoResultsText @string.Format(Resources.WildCardSearchWarehouseHint, Resources.WilcardStringPatternForSearch)',
+        searchingText:'@Resources.SearchingText',
+        resultsFormatter: function (item) {
+            return ProductFormatter(item);
+        },
+        queryParam: 'pattern',
+        minChars: 3,
+        tokenLimit: 1,
+        /*onResult: function (data) {
+            //if (data.length === 1) {
+            //    AddItem(data[0]);
+            //}
+            //console.log(data.length);
+            return data;
+        },*/
         onAdd:function(item) {
-			$.post('@Url.Action("AddItem")', { 'order': @Model.Id, 'product': '' + item.id, 'warehouse_id': item.warehouse_id }, function (detail) {
-                $.get('@Url.Action("Item", new { id = 0 })' + detail.id, function (data) {
-                    $('#items').append(data);
-                    $('#totals-section').loadUrl();
-                    $('#product-search').tokenInput('clear');
-                    $('#confirm-button').removeClass('hide');
-                });
-            }, 'json');
+            AddItem(item);
         }
     });
 });
+
+    function AddItem(item) {
+        			$.post('@Url.Action("AddItem")', { 'order': @Model.Id, 'product': '' + item.id, 'warehouse_id': item.warehouse_id }, function (detail) {
+               @*if (detail['updated'] == true) {
+                    $.get('@Url.Action("Item", new { id = 0 })' + detail.id, function (data) {
+																			    $('#items-container').loadUrl();
+                    });
+               } else {
+                    $.get('@Url.Action("Item", new { id = 0 })' + detail.id, function (data) {
+                        $('#items').append(data);
+                    });
+               }*@
+															$('#items-container').loadUrl();
+               $('#totals-section').loadUrl();
+               $('#product-search').tokenInput('clear');
+               $('#confirm-button').removeClass('hide');
+											}, 'json').fail(function (e) {
+															$('.alert').text(e.responseText);
+															$('.alert').fadeIn(1).delay(5000).fadeOut(1000);
+															$('#product-search').tokenInput('clear');
+											});
+    }
 </script>
 <style type='text/css'>
-ul.token-input-list { width: 100%; }
+				ul.token-input-list {
+								width: 100%;
+				}
 </style>

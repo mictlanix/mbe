@@ -228,10 +228,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				item.Recipient = recipient.Id;
 				item.RecipientName = recipient.Name;
 				item.TaxpayerRegime = recipient.Regime;
-				item.TaxpayerPostalCode = recipient.PostalCode;
-
-
-
+				item.TaxpayerPostalCode = item.Recipient == Resources.TaxpayerGeneralReceiptId ?
+					WebConfig.Store.LocationId : recipient.PostalCode;
 			}
 
 			if (item.Issuer != null) {
@@ -331,6 +329,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var entity = FiscalDocument.Find (id);
 			var item = TaxpayerIssuer.TryFind (value);
+			var recipient = TaxpayerRecipient.Find (entity.Recipient);
 
 			if (entity.IsCompleted || entity.IsCancelled) {
 				Response.StatusCode = 400;
@@ -353,6 +352,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				entity.Type = batch.Type;
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
+				entity.TaxpayerPostalCode = entity.Recipient == Resources.TaxpayerGeneralReceiptId ?
+					entity.Store.LocationId : recipient.PostalCode;
 
 				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
@@ -363,7 +364,47 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				id = id,
 				value = entity.FormattedValueFor (x => x.Issuer),
 				batch = entity.FormattedValueFor (x => x.Batch),
-				type = entity.Type.GetDisplayName ()
+				type = entity.Type.GetDisplayName (),
+				recipientPostalCode = entity.FormattedValueFor (x => x.TaxpayerPostalCode),
+			});
+		}
+
+		[HttpPost]
+		public ActionResult SetIssuedLocation (int id, int value)
+		{
+			var entity = FiscalDocument.Find (id);
+			var store = MBEQueryable.IQStores.Where (x => x.Id == value).Single();
+			var privilege = GetAccessPrivilege (SystemObjects.IssuedLocationId);
+			var recipient = TaxpayerRecipient.Find (entity.Recipient);
+
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			if (!privilege.AllowUpdate) {
+				Response.StatusCode = 403;
+				return Content (string.Format(Resources.ModificationRequiresPermission, Resources.IssuedLocation));
+			}
+
+			if (store != null) {
+
+				entity.Store = store;
+				entity.Updater = CurrentUser.Employee;
+				entity.ModificationTime = DateTime.Now;
+				entity.TaxpayerPostalCode = entity.Recipient == Resources.TaxpayerGeneralReceiptId ?
+					store.LocationId : recipient.PostalCode;
+				entity.IssuedLocation = store.LocationId;
+
+				using (var scope = new TransactionScope ()) {
+					entity.UpdateAndFlush ();
+				}
+			}
+
+			return Json (new {
+				id = id,
+				value = entity.FormattedValueFor (x => x.Store.Name),
+				recipientPostalCode = entity.FormattedValueFor (x => x.TaxpayerPostalCode),
 			});
 		}
 
@@ -372,6 +413,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var entity = FiscalDocument.Find (id);
 			var item = Customer.TryFind (value);
+			//var recipient = TaxpayerRecipient.Find (entity.Recipient);
 
 			if (entity.IsCompleted || entity.IsCancelled) {
 				Response.StatusCode = 400;
@@ -391,7 +433,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				entity.RecipientName = recipient.Name;
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
-				entity.TaxpayerPostalCode = recipient.PostalCode;
+				entity.TaxpayerPostalCode = recipient.Id == Resources.TaxpayerGeneralReceiptId ?
+					entity.Store.LocationId : recipient.PostalCode;
 				entity.TaxpayerRegime = recipient.Regime;
 
 				using (var scope = new TransactionScope ()) {
@@ -426,7 +469,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				entity.RecipientName = item.Name;
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
-				entity.TaxpayerPostalCode = item.PostalCode;
+				entity.TaxpayerPostalCode = item.Id == Resources.TaxpayerGeneralReceiptId ?
+					TaxpayerRecipient.Find (entity.Issuer.Id).PostalCode : item.PostalCode;
 				entity.TaxpayerRegime = item.Regime;
 
 				using (var scope = new TransactionScope ()) {
@@ -1816,6 +1860,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				new { value = (int) PaymentTerms.Immediate, text = Resources.SinglePayment },
 				new { value = (int) PaymentTerms.NetD, text = Resources.InstallmentPayments }
 			};
+
+			return Json (items, JsonRequestBehavior.AllowGet);
+		}
+
+		public JsonResult Stores ()
+		{
+
+			var stores = MBEQueryable.IQStores.ToList ();
+			var items = new ArrayList ();
+
+			foreach (var store in stores) {
+				items.Add (new { value = store.Id, text = store.Name });
+			}
 
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}

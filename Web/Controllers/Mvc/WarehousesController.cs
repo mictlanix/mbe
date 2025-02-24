@@ -1,4 +1,4 @@
-﻿// 
+// 
 // WarehousesController.cs
 // 
 // Author:
@@ -45,14 +45,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 	public class WarehousesController : CustomController {
 		public ViewResult Index ()
 		{
-			var qry = from x in Warehouse.Queryable
-				  orderby x.Name
-				  select x;
-
-			Search<Warehouse> search = new Search<Warehouse> ();
+			Search<Warehouse> search = SearchWarehouses (new Search<Warehouse> {
+				Limit=WebConfig.PageSize,
+			});
 			search.Limit = WebConfig.PageSize;
-			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
-			search.Total = qry.Count ();
 
 			return View (search);
 		}
@@ -61,7 +57,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Index (Search<Warehouse> search)
 		{
 			if (ModelState.IsValid) {
-				search = GetWarehouses (search);
+				search = SearchWarehouses (search);
 			}
 
 			if (Request.IsAjaxRequest ()) {
@@ -71,11 +67,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 		}
 
-		Search<Warehouse> GetWarehouses (Search<Warehouse> search)
+		Search<Warehouse> SearchWarehouses (Search<Warehouse> search)
 		{
 			if (search.Pattern == null) {
-				var qry = from x in Warehouse.Queryable
-					  orderby x.Name
+				var qry = from x in MBEQueryable.IQWarehouses
 					  select x;
 
 				search.Total = qry.Count ();
@@ -158,7 +153,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			try {
 				using (var scope = new TransactionScope ()) {
-					item.DeleteAndFlush ();
+					item.IsDisabled = true;
+					item.UpdateAndFlush ();
 				}
 
 				return PartialView ("_DeleteSuccesful", item);
@@ -169,7 +165,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public JsonResult GetSuggestions (string pattern)
 		{
-			var qry = from x in Warehouse.Queryable
+			var qry = from x in MBEQueryable.IQWarehouses
 				  where x.Code.Contains (pattern) ||
 					x.Name.Contains (pattern)
 				  select new { id = x.Id, name = x.Name };
@@ -179,7 +175,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public JsonResult List ()
 		{
-			var qry = from x in Warehouse.Queryable
+			var qry = from x in MBEQueryable.IQWarehouses
 				  orderby x.Name
 				  select new {
 					  value = x.Id,

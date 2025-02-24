@@ -34,43 +34,44 @@ using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 
 namespace Mictlanix.BE.Model {
-    [ActiveRecord("sales_order", Lazy = true)]
-    public class SalesOrder : ActiveRecordLinqBase<SalesOrder> {
-        IList<SalesOrderDetail> details = new List<SalesOrderDetail>();
-        IList<SalesOrderPayment> payments = new List<SalesOrderPayment>();
+	[ActiveRecord ("sales_order", Lazy = true)]
+	[Serializable]
+	public class SalesOrder : ActiveRecordLinqBase<SalesOrder> {
+		IList<SalesOrderDetail> details = new List<SalesOrderDetail> ();
+		IList<SalesOrderPayment> payments = new List<SalesOrderPayment> ();
 
-        [PrimaryKey(PrimaryKeyType.Identity, "sales_order_id")]
-        [Display(Name = "Id", ResourceType = typeof(Resources))]
-        [DisplayFormat(DataFormatString = "{0:D8}")]
-        public virtual int Id { get; set; }
+		[PrimaryKey (PrimaryKeyType.Identity, "sales_order_id")]
+		[Display (Name = "Id", ResourceType = typeof (Resources))]
+		[DisplayFormat (DataFormatString = "{0:D8}")]
+		public virtual int Id { get; set; }
 
-        [BelongsTo("store")]
-        [Display(Name = "Store", ResourceType = typeof(Resources))]
-        public virtual Store Store { get; set; }
+		[BelongsTo ("store")]
+		[Display (Name = "Store", ResourceType = typeof (Resources))]
+		public virtual Store Store { get; set; }
 
-        [Property("serial")]
-        [Display(Name = "Serial", ResourceType = typeof(Resources))]
-        [DisplayFormat(DataFormatString = "{0:D8}")]
-        public virtual int Serial { get; set; }
+		[Property ("serial")]
+		[Display (Name = "Serial", ResourceType = typeof (Resources))]
+		[DisplayFormat (DataFormatString = "{0:D8}")]
+		public virtual int? Serial { get; set; }
 
-        [BelongsTo("customer", NotNull = true, Fetch = FetchEnum.Join)]
-        [Display(Name = "Customer", ResourceType = typeof(Resources))]
-        public virtual Customer Customer { get; set; }
+		[BelongsTo ("customer", NotNull = true, Fetch = FetchEnum.Join)]
+		[Display (Name = "Customer", ResourceType = typeof (Resources))]
+		public virtual Customer Customer { get; set; }
 
-        [Property("customer_name")]
-        public virtual string CustomerName { get; set; }
+		[Property ("customer_name")]
+		public virtual string CustomerName { get; set; }
 
-        [BelongsTo("contact", Lazy = FetchWhen.OnInvoke)]
-        [Display(Name = "Contact", ResourceType = typeof(Resources))]
-        public virtual Contact Contact { get; set; }
+		[BelongsTo ("contact", Lazy = FetchWhen.OnInvoke)]
+		[Display (Name = "Contact", ResourceType = typeof (Resources))]
+		public virtual Contact Contact { get; set; }
 
-        [BelongsTo("ship_to", Lazy = FetchWhen.OnInvoke)]
-        [Display(Name = "ShipTo", ResourceType = typeof(Resources))]
-        public virtual Address ShipTo { get; set; }
+		[BelongsTo ("ship_to", Lazy = FetchWhen.OnInvoke)]
+		[Display (Name = "ShipTo", ResourceType = typeof (Resources))]
+		public virtual Address ShipTo { get; set; }
 
-        [Property("customer_shipto")]
-        [Display(Name = "ShipTo", ResourceType = typeof(Resources))]
-        public virtual string CustomerShipTo { get; set; }
+		[Property ("customer_shipto")]
+		[Display (Name = "ShipTo", ResourceType = typeof (Resources))]
+		public virtual string CustomerShipTo { get; set; }
 
 		[Property]
 		[DataType (DataType.DateTime)]
@@ -99,8 +100,8 @@ namespace Mictlanix.BE.Model {
 			get { return Terms != PaymentTerms.Immediate; }
 		}
 
-		[Property("recipient")]
-		[Display(Name = "Recipient", ResourceType = typeof(Resources))]
+		[Property ("recipient")]
+		[Display (Name = "Recipient", ResourceType = typeof (Resources))]
 		public virtual string Recipient { get; set; }
 
 		[Property ("recipient_name")]
@@ -125,6 +126,10 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "DueDate", ResourceType = typeof (Resources))]
 		[DisplayFormat (DataFormatString = "{0:yyyy-MM-dd}")]
 		public virtual DateTime DueDate { get; set; }
+
+		[Property]
+		[Display (Name = "Priority", ResourceType = typeof (Resources))]
+		public virtual Priority Priority { get; set; }
 
 		[Property ("completed")]
 		[Display (Name = "Completed", ResourceType = typeof (Resources))]
@@ -211,23 +216,41 @@ namespace Mictlanix.BE.Model {
 		[DataType (DataType.Currency)]
 		[Display (Name = "Paid", ResourceType = typeof (Resources))]
 		public virtual decimal Paid {
-			get { return Payments.Sum (x => x.Amount + x.Change); }
+			get { return Payments.Where(x => x.Payment.PaymentType.HasValue).Sum (x => x.Amount); }
 		}
 
-		[DataType(DataType.Currency)]
-		[Display(Name = "ExtraCharges", ResourceType = typeof(Resources))]
-		public virtual decimal ExtraFee { get { return Payments.Where(x => x.Payment.ExtraFee != null).Count() > 0 ? Payments.Where (x => x.Payment.ExtraFee != null).Sum(x => x.Payment.Commission * x.Payment.Amount): 0.0m; } }
+		[DataType (DataType.Currency)]
+		[Display (Name = "ExtraCharges", ResourceType = typeof (Resources))]
+		public virtual decimal ExtraFee { get { return Payments.Where (x => x.Payment.ExtraFee != null).Count () > 0 ? Payments.Where (x => x.Payment.ExtraFee != null).Sum (x => x.Payment.Commission * x.Payment.Amount) : 0.0m; } }
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Balance", ResourceType = typeof (Resources))]
 		public virtual decimal Balance {
-			get { return Total - Paid; }
+			get { return Total - Paid - Refund; }
 		}
 
-		[DataType (DataType.Currency)]
+			[DataType (DataType.Currency)]
 		[Display (Name = "Change", ResourceType = typeof (Resources))]
 		public virtual decimal Change {
 			get { return Payments.Sum (x => x.Change); }
+		}
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "Refund", ResourceType = typeof (Resources))]
+		public virtual decimal Refund {
+			get {
+				return Details.Sum (x => x.RefundDetails.Where (z => !z.Refund.IsCancelled && z.Refund.IsCompleted)
+			.Sum (y => (decimal?) y.Total) ?? 0);
+			}
+			//get { return Payments.Where (x => x.Payment.PaymentType == PaymentType.Refund).Sum (x => (decimal?) x.Amount) ?? 0; }
+		}
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "Refund", ResourceType = typeof (Resources))]
+		public virtual List<CustomerRefund> CustomerRefunds {
+			get {
+				return CustomerRefund.Queryable.Where (x => x.SalesOrder == this && x.IsCompleted && !x.IsCancelled).ToList ();
+			}
 		}
 
 		[BelongsTo ("creator", Lazy = FetchWhen.OnInvoke)]
@@ -277,5 +300,19 @@ namespace Mictlanix.BE.Model {
 		}
 
 		#endregion
+
+		public virtual SalesOrder GetSerializable () {
+			return new SalesOrder {
+				Id = Id,
+				Customer = Customer,
+				Date = Date,
+				SalesPerson = SalesPerson,
+				CustomerName = CustomerName,
+				Details = Details.Select(x => x.GetSerializable()).ToList(),
+				IsPaid = IsPaid,
+				IsCancelled = IsCancelled,
+				IsCompleted = IsCompleted,
+			};
+		}
 	}
 }

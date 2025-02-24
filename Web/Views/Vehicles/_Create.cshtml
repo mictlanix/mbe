@@ -1,0 +1,42 @@
+@using Mictlanix.BE.Model
+@using Mictlanix.BE
+@model Vehicle
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h3>@Resources.Trucks</h3>
+</div>
+
+<div class="modal-body">
+    @using (Ajax.BeginForm("New", "Vehicles", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "vehicle-modal-content" }, new { @class = "modal-form"}))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        <div class="form-group field-required">
+            <div class="col-xs-6">
+            @Html.LabelFor(model => model.LicensePlate) @Html.EditorFor(model => model.LicensePlate) @Html.ValidationMessageFor(model => model.LicensePlate)
+            </div>
+        </div>
+
+		<div class="form-group field-required">
+			<div class="col-xs-6">
+			@Html.LabelFor(model => model.Name) @Html.EditorFor(model => model.Name) @Html.ValidationMessageFor(model => model.Name)
+			</div>
+		</div>
+        <div class="form-group field-required">
+			<div class="col-xs-6">
+			@Html.LabelFor(model => model.NickName) @Html.EditorFor(model => model.NickName) @Html.ValidationMessageFor(model => model.NickName)
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-xs-6">
+			@Html.LabelFor(model => model.TonsCapacity) @Html.EditorFor(model => model.TonsCapacity) @Html.ValidationMessageFor(model => model.TonsCapacity)
+			</div>
+		</div>
+	 }
+</div>
+<div class="clear"></div>
+<div class='modal-footer'>
+    <button type='button' class='btn btn-default' data-dismiss='modal'>@Resources.Discard</button>
+    <button type='submit' class='btn btn-primary' onclick='$("#vehicle-modal form").submit();'>@Resources.Create</button>
+</div>

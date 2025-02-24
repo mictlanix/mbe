@@ -1,4 +1,4 @@
-﻿using Castle.ActiveRecord;
+using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System;
 using System.Collections.Generic;
@@ -63,7 +63,8 @@ namespace Mictlanix.BE.Model
 
 		[DataType(DataType.Currency)]
 		[Display(Name = "Total", ResourceType = typeof(Resources))]
-		public virtual decimal Total { get { return Details.Sum(x => x.Amount); } }
+		public virtual decimal Total {
+			get { return Details.Sum(x => x.Amount); } }
 
 		[Property("completed")]
 		[Display(Name = "Completed", ResourceType = typeof(Resources))]

@@ -1,0 +1,74 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model PurchaseOrder
+
+@{
+				var user_settings = UserSettings.Find(CurrentUser.Employee.Nickname);
+				//Layout = WebConfig.PrintLayout;
+				//ViewBag.Title = Html.PrintFileName(Resources.PurchaseQuotation, Model.Id);
+				//ViewBag.Store = user_settings.Store;
+				//ViewBag.TaxpayerName = null;
+				//ViewBag.Taxpayer = null;
+				//ViewBag.Address = user_settings.Store.Address;
+}
+
+<html>
+
+<body>
+				<table style="border:1px solid black; border-spacing:2px 4px;table-layout:auto;width:100%">
+								<thead>
+												<tr>
+																<td colspan="4"><img src="@Url.Content(user_settings.Store.Logo)" alt="Logo de Empresa" /></td>
+												</tr>
+												<tr>
+																<td colspan="4"><h3 class="text-right uppercase">@Resources.PurchaseQuotation  @Html.DisplayFor(x => x.Id)</h3></td>
+												</tr>
+												<tr>
+																<td colspan="4"><h4 class="text-right uppercase">@Resources.ContactName:  @Html.DisplayFor(x => x.Creator.Name)</h4></td>
+												</tr>
+												<tr>
+																<td colspan="4"><h4 class="text-right uppercase">@Resources.DateTime: @Html.DisplayFor(x => x.CreationTime)</h4></td>
+												</tr>
+												<tr>
+																<td colspan="4"><h4 class="text-right uppercase mylabel">@Resources.PromiseDate: </h4></td>
+												</tr>
+												@if (!string.IsNullOrWhiteSpace(Model.Comment))
+												{
+																<tr class="col-xs-12">
+																				<td><span class="mylabel">@Resources.Comment: @Html.DisplayFor(x => x.Comment)</span></td>
+																</tr>
+												}
+												<tr>
+																<th class="col-xs-1 text-center" style="color:white; background-color:darkslategray;">@Resources.Quantity</th>
+																<th class="col-xs-9 text-center" style="color: white; background-color: darkslategray; width:700px;">@Resources.ProductName</th>
+																<th class="col-xs-1 text-center" style="color: white; background-color: darkslategray;">@Resources.Price</th>
+																<th class="col-xs-1 text-center" style="color: white; background-color: darkslategray;">@Resources.Amount</th>
+												</tr>
+								</thead>
+								<tbody>
+												@foreach (var item in Model.Details)
+												{
+																<tr class="alt">
+																				<td class="nowrap text-right" style="color:aquamarine; background-color:cadetblue">@Html.DisplayFor(x => item.Quantity)</td>
+																				<td class="text-center" align="justify" width="700px">@Html.DisplayFor(x => item.Product.Name)</td>
+																				<td></td>
+																				<td></td>
+																</tr>
+												}
+												<tr>
+																<td colspan="3" align="right"><h4>@Resources.Subtotal</h4></td>
+																<td></td>
+												</tr>
+												<tr>
+																<td colspan="3" align="right"><h4>@Resources.Taxes</h4></td>
+																<td></td>
+												</tr>
+												<tr>
+																<td colspan="3" align="right"><h3>@Resources.Total</h3></td>
+																<td></td>
+												</tr>
+								</tbody>
+				</table>
+</body>
+</html>

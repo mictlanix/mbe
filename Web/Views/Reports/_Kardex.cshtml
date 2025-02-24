@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
@@ -23,7 +23,7 @@
         <td class='text-right' colspan='3'>@balance.ToString("0.####")</td>
     </tr>
     @foreach (var item in Model) {
-	balance += item.Quantity;
+	       balance += (decimal)item.Quantity;
     <tr>
         <td class='date'>@item.Date.ToString("d")</td>
         <td>@(((TransactionType)item.Source).GetDisplayName())</td>
@@ -40,9 +40,10 @@
             }
         </td>
         <td class='number' style="background-color:#f8f8f8">
-            @if (item.Quantity < 0) {
+            @if(item.Quantity < 0) {
                 @Math.Abs(item.Quantity).ToString("0.####")
             }
+            
         </td>
         <td class='number'>@balance.ToString("0.####")</td>
     </tr> 

@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model SalesOrderDetail
@@ -14,6 +14,8 @@
         <span>@Html.DisplayFor(x => x.ProductCode)</span>
         <b>@Resources.UnitOfMeasurement: </b>
         <span>@Html.DisplayFor(x => Model.Product.UnitOfMeasurement.Name)</span>
+        <b>@Resources.Warehouse: </b>
+        <span>@Html.DisplayFor(x => Model.Warehouse.Name)</span>
     @if (!string.IsNullOrWhiteSpace (Model.Product.Model)) {
         <b>@Resources.Model: </b>
         <span>@Html.DisplayFor(x => x.Product.Model)</span>

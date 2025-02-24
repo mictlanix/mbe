@@ -9,7 +9,8 @@
     </div>
     <div class='action-link'>
         <a class='button icon-only icon delete' title='@Resources.Message_DeleteConfirmation'
-		   data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id' data-url='@Url.Action("RemoveReceiptDetail", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
+		   data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id'
+           data-url='@Url.Action("RemoveReceiptDetail", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
     </div>
     <div class='info'>
         <span class='thick'>@Html.DisplayFor(x => x.ProductName)</span>
@@ -20,14 +21,15 @@
         <b>@Resources.SKU: </b><span>@Html.DisplayFor(x => x.Product.SKU)</span>
         }
         <br/>
-        @if(@Model.QuantityOrdered > 0) {
+        @if(@Model.PurchaseOrderDetail != null) {
         <b>@Resources.QuantityOrdered: </b>
         <span class='editable quantity'>@Html.DisplayFor(x => x.QuantityOrdered)</span>
-        <b>@Resources.QuantityDelivered: </b>
+        <b>@Resources.ReceivedQuantity: </b>
         } else {
         <b>@Resources.Quantity: </b>
         }
-        <a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("EditReceiptDetailQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
+        <a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id'
+           data-url='@Url.Action("EditReceiptDetailQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
     </div>
 </li>
 <script type='text/javascript'>

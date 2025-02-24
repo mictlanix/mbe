@@ -1,4 +1,4 @@
-﻿// 
+// 
 // Search.cs
 // 
 // Author:

@@ -1,0 +1,97 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model PurchaseRequest
+
+@{
+				ViewBag.Title = Resources.PurchaseRequestApproval;
+				var CurrentUser = Html.CurrentUser() ?? new User();
+				var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.PurchaseRequestApproval);
+}
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<meta charset="UTF-8">
+
+<h2>@Resources.PurchaseRequestApproval</h2>
+
+<div id="master-section">
+				@Html.Partial("_DisplayView")
+</div>
+<div id="details-section">
+				<div id="items-container">
+								<ul id="items" class="list-items">
+												@foreach (var item in Model.Details)
+												{
+																@Html.Partial("_ItemDisplayView", item)
+												}
+								</ul>
+				</div>
+</div>
+<div class='clearfix'></div>
+<div id='back-to-list' class='pull-left'>
+				@Html.ActionLink(Resources.BackToList, "PurchaseRequestsApproval", new { }, new { @class = "button icon back" })
+</div>
+
+@if (Privilege.AllowUpdate	&& (Model.IsApproved != true))
+{
+				<div class='pull-right'>
+								<a class="button icon lock" id="buttonConfirm">@string.Format(Resources.Confirm, Resources.PurchaseRequest)</a>
+								<a class="button icon edit" id="buttonRefuse">@string.Format(Resources.Reedit, Resources.PurchaseRequest)</a>
+				</div>
+}
+<div class='clearfix'></div>
+<script type='text/javascript'>
+				$(function () {
+								$('[data-toggle="tooltip"]').tooltip();
+				});
+				$(document).ready(function () {
+								$('#buttonConfirm').click(function () {
+												console.log("Confirm button");
+												var dialog = $('<div>').dialog({
+																title: '@string.Format(Resources.Confirm, Resources.PurchaseRequest)',
+																modal: true,
+																buttons: {
+																				'@string.Format(Resources.Confirm,string.Empty)': function () {
+																								$.post('@Url.Action("PurchaseRequestApproval/" + Model.Id)',{ approval : true, value : "success" }
+																												, function (detail) {
+																															window.location.href = "/PurchaseRequests/PurchaseRequestsApproval";
+																											}, 'json').fail(function (xhr, status, error) {
+																															console.log(xhr);
+																															alert(xhr.responseText);
+																											});
+
+																								$(this).dialog('close');
+																				},
+																				'@string.Format(Resources.Cancel)': function () {
+																								$(this).dialog('close');
+																				}
+																}
+												});
+												dialog.append($('<p>').text('Continuar?'));
+								});
+								$('#buttonRefuse').click(function () {
+												var dialog = $('<div><textarea value="" id="inputReason" cols="35" rows="5" />').dialog({
+																title: 'Ingrese el motivo:',
+																modal: true,
+																buttons: {
+																				'@string.Format(Resources.Reedit, string.Empty)': function () {
+																								$.post('@Url.Action("PurchaseRequestApproval/")', { id:@Model.Id, value: $("#inputReason").val(), approval : false }, function (detail) {
+																													$("#inputReason").val('');
+																												window.location.href = "/PurchaseRequests/PurchaseRequestsApproval";
+																									}, 'json').fail(function (xhr, status, error) {
+																													console.log(xhr);
+																													alert(xhr.responseText);
+																													$("#inputReason").val('')
+																									});
+																									$(this).dialog('close');
+																				},
+																				'@string.Format(Resources.Cancel, string.Empty)': function () {
+																								$(this).dialog('close');
+																				}
+																}
+												});
+												dialog.append($('<p>').text('Continuar?'));
+								});
+				});
+</script>

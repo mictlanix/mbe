@@ -28,14 +28,14 @@
 //
 
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
+using Castle.Core.Internal;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Helpers;
+using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
@@ -43,10 +43,28 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 	public class UsersController : CustomController {
 		public ActionResult Index ()
 		{
-			var qry = from x in Model.User.Queryable
+			var qry = from x in MBEQueryable.IQUsers
 				  select x;
 
-			return View (qry.ToList ());
+			var search = SearchUsers( new Search<User> {
+				Limit = WebConfig.PageSize
+			});
+
+			return View (search);
+		}
+
+		[HttpPost]
+		public ActionResult Index (Search<User> search)
+		{
+			if (ModelState.IsValid) {
+				search = SearchUsers (search);
+			}
+
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_Index", search);
+			}
+
+			return View (search);
 		}
 
 		public ViewResult Details (string id)
@@ -55,16 +73,34 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View (user);
 		}
 
+		Search<User> SearchUsers (Search<User> search) {
+			var query = from x in MBEQueryable.IQUsers
+				    select x;
+			if (!string.IsNullOrEmpty (search.Pattern)) {
+				query = from x in query
+					where x.UserName.Contains (search.Pattern)
+					|| x.Email.Contains (search.Pattern)
+					|| x.Employee.FirstName.Contains (search.Pattern)
+					|| x.Employee.LastName.Contains (search.Pattern)
+					select x;
+			}
+			search.Total = query.Count ();
+			search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
+
+			return search;
+		}
+
 		public ActionResult Edit (string id)
 		{
-			User user = Model.User.Find (id);
+			//User user = Model.User.Find (id);			
+			User user = MBEQueryable.IQUsers.Single(x => x.UserName == id);
 
 			if (user.UserSettings == null) {
 				var storeId = int.Parse (WebConfig.DefaultStore);
-				var store = Store.TryFind (storeId);
+				var store = MBEQueryable.IQStores.SingleOrDefault(x => x.Id == storeId);
 
 				var pointOfSaleId = int.Parse (WebConfig.DefaultPointOfSale);
-				var pointOfSale = PointOfSale.TryFind (pointOfSaleId);
+				var pointOfSale = MBEQueryable.IQPointsOfSales.SingleOrDefault(x => x.Id == pointOfSaleId);
 
 				user.UserSettings = new UserSettings () {
 					UserName = user.UserName,
@@ -108,7 +144,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						};
 					} else{
 						user.UserSettings.Store = Store.Find (item.UserSettings.StoreId);
-						user.UserSettings.PointOfSale = PointOfSale.Find (item.UserSettings.PointOfSaleId);
+						user.UserSettings.PointOfSale = item.UserSettings.PointOfSaleId.HasValue ?
+							PointOfSale.TryFind (item.UserSettings.PointOfSaleId.Value):null;
 
 						if (item.UserSettings.CashDrawerId.HasValue) {
 							user.UserSettings.CashDrawer = CashDrawer.Find (item.UserSettings.CashDrawerId);
@@ -155,7 +192,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public ActionResult Delete (string id)
 		{
-			User item = Model.User.Find (id);
+			User item = Model.User.TryFind (id);
+			if (item == null) {
+				return RedirectToAction ("Index");
+			}
 			return View (item);
 		}
 
@@ -163,19 +203,25 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult DeleteConfirmed (string id)
 		{
 			var item = Model.User.Find (id);
-			var settings = Model.UserSettings.TryFind (id);
+			var settings = UserSettings.TryFind (id);
+
 
 			using (var scope = new TransactionScope ()) {
-				foreach (var x in item.Privileges.ToList ()) {
-					x.Delete ();
-				}
+
+
+				item.Privileges.ForEach (privilege => { privilege.DeleteAndFlush (); });
 
 				if (settings != null && WebConfig.UserSettingsMode == UserSettingsMode.Managed) {
-					settings.Delete ();
+					settings.DeleteAndFlush ();
 				}
-
 				scope.Flush ();
-				item.DeleteAndFlush ();
+			}
+
+			using (var scope = new TransactionScope ()) {
+				var user = MBEQueryable.IQUsers.SingleOrDefault (s => s.UserName == id);
+				user.UserSettings = null;
+				user.Privileges.Clear ();
+				user.DeleteAndFlush ();
 			}
 
 			return RedirectToAction ("Index");

@@ -1,4 +1,4 @@
-﻿// 
+// 
 // AddressesController.cs
 // 
 // Author:
@@ -37,6 +37,9 @@ using Castle.ActiveRecord;
 using NHibernate.Exceptions;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Mvc;
+using Mictlanix.BE.Web.Models;
+using System.Security.Policy;
+using NHibernate;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
@@ -56,6 +59,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			if (!ModelState.IsValid) {
 				return PartialView ("_Create", item);
+			}
+			if (!string.IsNullOrEmpty (item.PreLink)) {
+				if (Uri.TryCreate (item.PreLink, UriKind.Absolute, out Uri uriResult)
+				&& (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps)) {
+					item.Link = uriResult;
+				} else {
+					ModelState.AddModelError ("PreLink", Resources.Message_InvalidAddressLinkURL);
+					return PartialView ("_Create", item);
+				}
 			}
 
 			using (var scope = new TransactionScope ()) {
@@ -98,6 +110,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Edit (int id)
 		{
 			var item = Address.Find (id);
+			item.PreLink = item.Link != null ? item.Link.ToString () : string.Empty;
 			return PartialView ("_Edit", item);
 		}
 
@@ -109,8 +122,27 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			var entity = Address.Find (item.Id);
 
-			if (entity.Equals (item))
-				return PartialView ("_Refresh");
+			if (!string.IsNullOrEmpty (item.PreLink)) {
+				if (Uri.TryCreate (item.PreLink, UriKind.Absolute, out Uri uriResult)
+				&& (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps)) {
+					entity.Link = uriResult;
+					item.Link = uriResult;
+				} else {
+					ModelState.AddModelError ("PreLink", Resources.Message_InvalidAddressLinkURL);
+					return PartialView ("_Create", item);
+				}
+			} else {
+				entity.PreLink = string.Empty;
+				entity.Link = null;
+			}
+
+
+			if (entity.Equals (item)) {
+				using (var scope = new TransactionScope ()) {
+					entity.UpdateAndFlush ();
+				}
+					return PartialView ("_Refresh");
+			}
 
 			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
@@ -184,11 +216,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public JsonResult GetSuggestions (int customer)
 		{
-			var qry = from x in Address.Queryable
-				  from y in x.Customers
-				  where y.Id == customer
-				  orderby x.Street
-				  select new { id = x.Id, name = x.ToString () };
+			//var qry = from x in MBEQueryable.IQAddresses
+			//	  from y in MBEQueryable.IQCustomers
+			//	  where y.Id == customer
+			//	  orderby x.Street
+			//	  select new { id = x.Id, name = !string.IsNullOrEmpty (x.Nickname) ? x.Nickname : x.ToString () };
+
+			var qry = MBEQueryable.IQCustomers.Single(x => x.Id == customer).Addresses
+				.Select(y => new { value = y.Id, text = !string.IsNullOrEmpty (y.Nickname) ? y.Nickname.ToString() : y.ToString () }).ToList();
 
 			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
 		}
@@ -197,7 +232,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var query = from x in SatPostalCode.Queryable
 				    where x.Id.Contains (pattern)
-                                    select x;
+				    select x;
 			var items = from x in query.Take (15).ToList ()
 				    select new { id = x.Id, name = x.ToString () };
 

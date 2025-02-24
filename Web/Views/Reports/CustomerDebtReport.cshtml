@@ -1,0 +1,69 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model IEnumerable<dynamic>
+
+@{
+				ViewBag.Title = Resources.CustomersReport;
+}
+
+
+<h2>@Resources.CustomersReport</h2>
+<h3>
+				@Resources.Customer: @ViewBag.CustomerName
+</h3>
+<h3>
+				@Resources.Date: @DateTime.Now.ToString("yyyy-MM-dd")
+</h3>
+
+<table class='debts'>
+				<thead>
+								<tr>
+												<th class='center'>@Resources.SalesOrder</th>
+												<th class='center'>@Resources.DueDate</th>
+												<th class='center'>@Resources.PaymentTerms</th>
+												<th class='center'>@Resources.Customer</th>
+												<th class='center'>@Resources.User</th>
+												<th class='center'>@Resources.SalesPerson</th>
+												<th class='center'>@Resources.Total</th>
+												<th class='center'>@Resources.Refund</th>
+												<th class='center'>@Resources.Paid</th>
+												<th class='center'>@Resources.Balance</th>
+												<th class='center'>@Resources.Payments</th>
+												<th class='center'>@Resources.Refunds</th>
+												<th class='center'>@Resources.PaymentOnDelivery</th>
+												<th class='center'>@Resources.Paid</th>
+												<th class='center'></th>
+								</tr>
+				</thead>
+				<tbody>
+								@foreach (var item in Model)
+								{
+												string order_id = item.SalesOrderId.ToString("D5");
+												<tr class="@(item.Overdue > 0.01 || item.OnDelivery > 0 ? "warning":string.Empty )">
+																<td class="date">@Html.ActionLink(order_id, "Pdf", "POS", new { id = (int)item.SalesOrderId }, new { target = "_blank" })</td>
+																<td class="date">@item.DueDate.ToString("yyyy-MM-dd")</td>
+																<td class="date">@item.Terms</td>
+																<td class="date">@item.CustomerName</td>
+																<td class="date">@item.User</td>
+																<td class="date">@item.SalesPerson</td>
+																<td class="number">@item.Total.ToString("C")</td>
+																<td class="number">@(item.Refund!= null ? item.Refund.ToString("C"):string.Empty)</td>
+																<td class="number">@(item.Paid!= null ? item.Paid.ToString("C"):Resources.NoPayment)</td>
+																<td class="number">@item.Balance.ToString("C")</td>
+																<td class="date">@(!string.IsNullOrEmpty(item.PaymentsDesc) ? Html.Raw(item.PaymentsDesc.Replace("\n", "<br />")):string.Empty)</td>
+																<td class="date">@item.RefundsDesc</td>
+																<td class="date">@(item.OnDelivery != null ? item.OnDelivery.ToString("C") + " ???":string.Empty)</td>
+																<td class="text-center">@(item.OrderPaidStatus ? Resources.Paid : string.Empty)</td>
+												</tr>
+								}
+								<tr class="warning">
+												<td class="text-right" colspan="8"><b>@Resources.Balance</b></td>
+												<td class="number">@Model.Where(x => (decimal)x.Balance < 0).Sum(y => (decimal)y.Balance).ToString("C")</td>
+								</tr>
+				</tbody>
+</table>
+<script type='text/javascript'>
+				$('[data-toggle="tooltip"]').tooltip();
+</script>

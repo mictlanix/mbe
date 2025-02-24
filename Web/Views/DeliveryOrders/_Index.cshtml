@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
@@ -14,9 +14,13 @@
         <th>@Resources.DeliveryOrderId</th>
         <th>@Resources.Date</th>
         <th>@Resources.Customer</th>
+        <th>@Resources.SalesOrders</th>
         <th>@Resources.Completed</th>
         <th>@Resources.Cancelled</th>
+								@if (WebConfig.DeliveryOrderApprovalRequired) {
         <th>@Resources.Delivered</th>
+        <th>@Resources.Comment</th>
+								}
         <th></th>
     </tr>
     @foreach (var item in Model.Results) {

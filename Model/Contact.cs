@@ -1,4 +1,4 @@
-﻿// 
+// 
 // Contact.cs
 // 
 // Author:
@@ -35,6 +35,7 @@ using Castle.ActiveRecord.Framework;
 
 namespace Mictlanix.BE.Model {
 	[ActiveRecord ("contact")]
+	[Serializable]
 	public class Contact : ActiveRecordLinqBase<Contact> {
 		IList<Supplier> suppliers = new List<Supplier> ();
 		IList<Customer> customers = new List<Customer> ();
@@ -120,6 +121,13 @@ namespace Mictlanix.BE.Model {
 		public IList<Customer> Customers {
 			get { return customers; }
 			set { customers = value; }
+		}
+
+		public virtual Contact GetSerializable () {
+			return new Contact {
+				Id = Id,
+				Name = Name,
+			};
 		}
 
 		#region Override Base Methods

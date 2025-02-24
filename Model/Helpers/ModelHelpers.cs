@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ModelHelpers.cs
 // 
 // Author:
@@ -135,6 +135,12 @@ namespace Mictlanix.BE.Model {
 			}
 
 			return PriceRounding (price);
+		}
+
+		public static decimal UnitPriceTotal (decimal price, decimal exchangeRate, decimal discountRate, decimal taxRate, bool taxIncluded, int scale)
+		{
+
+			return Total (1, price, exchangeRate, discountRate, taxRate, taxIncluded, scale);
 		}
 	}
 }

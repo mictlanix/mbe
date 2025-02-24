@@ -1,59 +1,77 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model SalesOrder
 
 <ul class='labeled-frames pull-right'>
-	<li>
-		<span class='caption'>@Resources.Total</span>
-		<span class='value'>@Html.DisplayFor(x => x.TotalEx) @WebConfig.BaseCurrency</span>
-		@if (Model.Currency != WebConfig.BaseCurrency) {
-				<span class='value'>@Html.DisplayFor(x => x.Total) @Html.DisplayFor(x => x.Currency)</span>
-		}
-	</li>
-	<li>
-		<span class='caption'>@Resources.Paid</span>
-		<span class='value'>@Html.DisplayFor(x => x.Paid) @WebConfig.BaseCurrency</span>
-	</li>
-	@if (Model.ExtraFee > 0.0m) {
-			<li>
-				<span class="caption">@Resources.ExtraFees</span>
-				<span class="value">@Html.DisplayFor(x => x.ExtraFee) @WebConfig.BaseCurrency</span>
-			</li>
-	}
-    @if (Model.Balance > 0.0m) { 
-            <li>
-                <span class="caption">Restante</span>
-                <span class="value">@Html.DisplayFor(x => x.Balance) @WebConfig.BaseCurrency</span>
-            </li>
-    }
-	<li>
-		<span class='caption'>@Resources.Change</span>
-		<span class='value'>@Html.DisplayFor(x => x.Change) @WebConfig.BaseCurrency</span>
-	</li>
+				<li>
+								<span class='caption'>@Resources.Total</span>
+								<span class='value'>@Html.DisplayFor(x => x.TotalEx) @WebConfig.BaseCurrency</span>
+								@if (Model.Currency != WebConfig.BaseCurrency)
+								{
+												<span class='value'>@Html.DisplayFor(x => x.Total) @Html.DisplayFor(x => x.Currency)</span>
+								}
+				</li>
+				@if(Model.Refund > 0.0m) {
+				<li>
+								<span class='caption'>@Resources.Refund</span>
+								<span class='value'>@Html.DisplayFor(x => x.Refund) @WebConfig.BaseCurrency</span>
+								@if (Model.Currency != WebConfig.BaseCurrency)
+								{
+												<span class='value'>@Html.DisplayFor(x => x.Refund) @Html.DisplayFor(x => x.Currency)</span>
+								}
+				</li>
+				}
+				<li>
+								<span class='caption'>@Resources.Paid</span>
+								<span class='value'>@Html.DisplayFor(x => x.Paid) @WebConfig.BaseCurrency</span>
+				</li>
+				@if (Model.ExtraFee > 0.0m)
+				{
+								<li>
+												<span class="caption">@Resources.ExtraFees</span>
+												<span class="value">@Html.DisplayFor(x => x.ExtraFee) @WebConfig.BaseCurrency</span>
+								</li>
+				}
+				@if (Model.Balance > 0.0m)
+				{
+								<li>
+												<span class="caption">@Resources.Balance</span>
+												<span class="value">@Html.DisplayFor(x => x.Balance) @WebConfig.BaseCurrency</span>
+								</li>
+				}
+				<li>
+								<span class='caption'>@Resources.Change</span>
+								<span class='value'>@Html.DisplayFor(x => x.Change) @WebConfig.BaseCurrency</span>
+				</li>
 </ul>
 
 <div class='clearfix'></div>
 <div id='back-to-list' class='pull-left'>
-	@Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+				@Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
 
-@if (Model.IsPaid) {
-		<div class='pull-right'>
-			@Html.ActionLink(Resources.SalesReceipt, "Print", new { id = Model.Id }, new { @class = "button icon print", target = "_blank" })
-		</div>
-	if (Model.ShipTo == null) {
-		<div class='pull-right'>
-			@Html.ActionLink(Resources.DeliveryTicket, "PrintDeliveryTicket", new { id = Model.Id }, new { @class = "button icon print", target = "_blank" })
-		</div>
-	}
-} else if (Model.Balance <= 0.01m) {
-		<div id='confirm-button' class='pull-right'>
-			@using (Ajax.BeginForm("ConfirmPayment", "Payments", new { id = Model.Id },
-										  new AjaxOptions{ HttpMethod = "POST", UpdateTargetId = "detais-order" })) {
-					<button type="submit" class='icon pay'>@Resources.CompletePayment</button>
-			}
-		</div>
+@if (Model.IsPaid || Model.Terms == PaymentTerms.NetD)
+{
+				<div class='pull-right'>
+								@Html.ActionLink(Resources.SalesReceipt, "Print", new { id = Model.Id },
+																															new { @class = "button icon print", target = "_blank" })
+				</div>
+
+								<div class='pull-right'>
+												<button id="delivery" class = "button icon delivery">@Resources.DeliveryTicket</button>
+								</div>
+
+}
+@if (Model.Payments.Any(x => !x.Payment.PaymentType.HasValue))
+{
+				<div id='confirm-button' class='pull-right'>
+								@using (Ajax.BeginForm("ConfirmPayment", "Payments", new { id = Model.Id },
+												new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "details-order" }))
+								{
+												<button type="submit" class='icon pay'>@Resources.CompletePayment</button>
+								}
+				</div>
 }
 <div class='clearfix'></div>
 <script type="text/javascript">
@@ -63,8 +81,21 @@
 	<text>
 		//$("#amount").val("@((Model.Balance).ToString("0.00"))");
         //$("#amount").val("Ingresa importe").select();
+    //$("#amount").attr("placeholder", Number(@Model.Balance).toFixed(2))
     $("#amount").attr("placeholder", Number(@Model.Balance).toFixed(2))
         $("#form").show("slow");
 	</text>
 }
+
+		$(function () {
+					$('[data-toggle="tooltip"]').tooltip();
+		});
+
+				$("#delivery").on("click",function () {
+								console.log("working");
+								$.post("/DeliveryOrders/New", { value: @Model.Id }, function (data) {
+												console.log(data);
+												location.href = data.url;
+								});
+				});
 </script>

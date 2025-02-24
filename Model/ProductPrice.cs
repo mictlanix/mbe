@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ProductPrice.cs
 // 
 // Author:
@@ -52,6 +52,18 @@ namespace Mictlanix.BE.Model {
 		[DataType (DataType.Currency)]
 		[Required (ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof (Resources))]
 		public virtual decimal Value { get; set; }
+
+		[Property ("low_profit")]
+		[Display (Name = "LowProfitMargin", ResourceType = typeof (Resources))]
+		[DisplayFormat (DataFormatString = "{0:p}")]
+		[Required (ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof (Resources))]
+		public virtual decimal LowProfitRate { get; set; }
+
+		[Property ("high_profit")]
+		[Display (Name = "HighProfitMargin", ResourceType = typeof (Resources))]
+		[DisplayFormat (DataFormatString = "{0:p}")]
+		[Required (ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof (Resources))]
+		public virtual decimal HighProfitRate { get; set; }
 
 		#region Override Base Methods
 

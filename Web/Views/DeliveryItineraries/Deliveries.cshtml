@@ -1,0 +1,67 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model List<DeliveriesOnDay>
+@{
+				ViewBag.Title = Resources.DeliveryOrders;
+				var CurrentUser = Html.CurrentUser() ?? new User();
+				var Privilege = CurrentUser.GetPrivilege(SystemObjects.DeliveryOrders);
+}
+<div class="page-header">
+				<div class="pull-right col-xs-6">
+								<div class="row">
+												@*<div class="col-xs-8 input-group">
+																				@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))
+																				{
+																								@Html.HiddenFor(x => x.Offset)
+																								@Html.HiddenFor(x => x.Limit)
+																								<div class="input-group">
+																												<input id="Pattern" name="Pattern" type="text" class="form-control" placeholder="@Resources.SearchFor">
+																												<span class="input-group-btn">
+																																<button class="btn btn-default" type="submit">
+																																				<span class="glyphicon glyphicon-search"></span>
+																																</button>
+																												</span>
+																								</div>
+																				}
+																</div>*@
+								</div>
+				</div>
+				<h1>@Resources.DeliveryOrders</h1>
+</div>
+@*<div id="activity-indicator">
+								<img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
+				</div>*@
+@if (Privilege.AllowRead)
+{
+				<div class='tabbable'>
+								<ul class='nav nav-tabs'>
+												@for (int i = 0; i < Model.Count; i++)
+												{
+																<li  class="@(Model[i].Selected?"active":"")"><a href='#tab-@i' data-toggle='tab'>@Model[i].Title</a></li>
+
+												}
+								</ul>
+								<div class="tab-content">
+												@for (int i = 0; i < Model.Count; i++)
+												{
+																<div id='tab-@i' class='tab-pane @(Model[i].Selected?"active":"")'>
+																				@Html.Partial("_DeliveryOrderDetailsDisplayView", Model[i].Details)
+																</div>
+												}
+								</div>
+				</div>
+}
+<script type="text/javascript">
+				bindModal('.open-modal');
+
+				$(function () {
+								$('#new').editable({
+												success: function (response, newValue) {
+																window.location.replace(response.url);
+																setTimeout(function () { $('#add-items').editable('setValue', ''); }, 500);
+												}
+								}).removeClass('editable-click');
+				});
+</script>

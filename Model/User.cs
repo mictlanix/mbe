@@ -33,7 +33,7 @@ using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 
 namespace Mictlanix.BE.Model {
-	[ActiveRecord ("user")]
+	[ActiveRecord ("user", Lazy = true)]
 	public class User : ActiveRecordLinqBase<User> {
 		IList<AccessPrivilege> privileges = new List<AccessPrivilege> ();
 
@@ -42,13 +42,13 @@ namespace Mictlanix.BE.Model {
 		[RegularExpression (@"^[0-9a-zA-Z]+$", ErrorMessageResourceName = "Validation_UserName", ErrorMessageResourceType = typeof (Resources))]
 		[StringLength (20, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		[Display (Name = "UserName", ResourceType = typeof (Resources))]
-		public string UserName { get; set; }
+		public virtual string UserName { get; set; }
 
 		[Property ()]
 		[DataType (DataType.Password)]
 		[Display (Name = "Password", ResourceType = typeof (Resources))]
 		[StringLength (40, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
-		public string Password { get; set; }
+		public virtual string Password { get; set; }
 
 		[Property ("email")]
 		[DataType (DataType.EmailAddress)]
@@ -56,12 +56,12 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Email", ResourceType = typeof (Resources))]
 		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
 		[StringLength (250, MinimumLength = 6, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
-		public string Email { get; set; }
+		public virtual string Email { get; set; }
 
 		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
 		[Display (Name = "Employee", ResourceType = typeof (Resources))]
 		[UIHint ("EmployeeSelector")]
-		public int EmployeeId { get; set; }
+		public virtual int EmployeeId { get; set; }
 
 		[BelongsTo ("employee", Fetch = FetchEnum.Join)]
 		[Display (Name = "Employee", ResourceType = typeof (Resources))]
@@ -73,10 +73,14 @@ namespace Mictlanix.BE.Model {
 
 		[Property ("administrator")]
 		[Display (Name = "Administrator", ResourceType = typeof (Resources))]
-		public bool IsAdministrator { get; set; }
+		public virtual bool IsAdministrator { get; set; }
+
+		[Property ("disabled")]
+		[Display (Name = "LogicalDelete", ResourceType = typeof (Resources))]
+		public virtual bool IsDisabled { get; set; }
 
 		[HasMany (typeof (AccessPrivilege), Table = "access_privilege", ColumnKey = "user")]
-		public IList<AccessPrivilege> Privileges {
+		public virtual IList<AccessPrivilege> Privileges {
 			get { return privileges; }
 			set { privileges = value; }
 		}

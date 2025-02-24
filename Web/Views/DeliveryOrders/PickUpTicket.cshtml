@@ -1,0 +1,75 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
+@using Mictlanix.BE.Web.Helpers
+@model DeliveryViewModel
+
+@{
+    Layout = WebConfig.ReceiptLayout;
+    ViewBag.Title = Resources.PickupTicket;
+    ViewBag.Store = Model.DeliveryOrder.Store;
+    ViewBag.Address = Model.DeliveryOrder.Store.Address;
+}
+
+<div class="display-label text-right">
+    @Html.LabelFor(model => model.DeliveryOrder.Serial)<br />
+    @Html.DisplayFor(model => model.DeliveryOrder.Serial)
+</div>
+
+<div class="display-label date text-right">
+    @Html.LabelFor(model => model.DeliveryOrder.Date)<br />
+    @Html.DisplayFor(model => model.DeliveryOrder.Date)
+</div>
+
+<div class="display-label">
+    @Html.LabelFor(model => model.DeliveryOrder.Customer)<br />
+    @Html.DisplayFor(model => model.DeliveryOrder.Customer.Name)
+    @if (Model.DeliveryOrder.Customer.Id == WebConfig.DefaultCustomer && !string.IsNullOrWhiteSpace(Model.SalesOrders.First().CustomerName))
+    {
+        <span>(</span>@Html.DisplayFor(x => x.SalesOrders.First().CustomerName)<span>)</span>
+    }
+</div>
+    <div class="display-label">
+        @Resources.PickUp<br />
+    </div>
+
+<table>
+    @foreach (var item in Model.DeliveryOrder.Details)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(x => item.Quantity)
+            </td>
+            <td>
+                @Html.DisplayFor(x => item.Product.UnitOfMeasurement.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(x => item.ProductName)
+            </td>
+            <td>@Html.DisplayFor(x => item.OrderDetail.SalesOrder.Id)</td>
+        </tr>
+        <tr>
+            <td class="line" colspan="4"></td>
+        </tr>
+    }
+</table>
+
+<div class="display-label text-right">
+    @Html.LabelFor(model => model.DeliveryOrder.Updater)
+</div>
+<div class="display-field text-right">
+    @Html.DisplayFor(model => model.DeliveryOrder.Updater.Name)
+</div>
+
+@foreach(var item in Model.PaymentsOnDelivery)
+{
+    <div class="legend">
+        <p class="center">@Resources.PaymentOnDelivery: @Html.DisplayFor(x => item.Amount)</p>
+    </div>
+}
+
+@section Footer {
+    <img src='@Url.Action("Code128", "Barcodes", new { id = string.Format("{0}", Html.DisplayFor(x => x.DeliveryOrder.Id)) })'
+         alt='@Html.DisplayFor(x => x.DeliveryOrder.Id)' title='@Html.DisplayFor(x => x.DeliveryOrder.Id)'>
+    <p>@Html.DisplayFor(x => x.DeliveryOrder.Id)</p>
+}

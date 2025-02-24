@@ -1,4 +1,4 @@
-﻿// 
+// 
 // PointsOfSaleController.cs
 // 
 // Author:
@@ -47,7 +47,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public ViewResult Index ()
 		{
-			var qry = from x in PointOfSale.Queryable
+			var qry = from x in MBEQueryable.IQPointsOfSales
 				  orderby x.Name
 				  select x;
 
@@ -78,14 +78,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		Search<PointOfSale> GetPointsOfSale (Search<PointOfSale> search)
 		{
 			if (search.Pattern == null) {
-				var qry = from x in PointOfSale.Queryable
+				var qry = from x in MBEQueryable.IQPointsOfSales
 					  orderby x.Name
 					  select x;
 
 				search.Total = qry.Count ();
 				search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
 			} else {
-				var qry = from x in PointOfSale.Queryable
+				var qry = from x in MBEQueryable.IQPointsOfSales
 					  where x.Name.Contains (search.Pattern) ||
 					  x.Code.Contains (search.Pattern) ||
 					  x.Store.Name.Contains (search.Pattern)
@@ -199,7 +199,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public JsonResult GetSuggestions (int store, string pattern)
 		{
-			var qry = from x in PointOfSale.Queryable
+			var qry = from x in MBEQueryable.IQPointsOfSales
 				  where x.Store.Id == store &&
 								    (x.Code.Contains (pattern) ||
 								      x.Name.Contains (pattern))

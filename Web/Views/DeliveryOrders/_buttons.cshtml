@@ -5,7 +5,7 @@
 
 
 <div class='pull-right'>
-	@if (Model.Contact == null || Model.ShipTo == null || Model.Details.Count == 0)
+	@if (!DeliveryHelpers.IsReadyToDeliver(Model))
 	{
 
 		<button id='complete' type='submit' class="icon save"

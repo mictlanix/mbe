@@ -1,4 +1,4 @@
-﻿// 
+// 
 // InventoryReceipt.cs
 // 
 // Author:
@@ -72,12 +72,12 @@ namespace Mictlanix.BE.Model {
 		public virtual Employee Updater { get; set; }
 
 		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
-		[Display (Name = "Warehouse", ResourceType = typeof (Resources))]
+		[Display (Name = "WarehouseTo", ResourceType = typeof (Resources))]
 		[UIHint ("WarehouseSelector")]
 		public int WarehouseId { get; set; }
 
 		[BelongsTo ("warehouse")]
-		[Display (Name = "Warehouse", ResourceType = typeof (Resources))]
+		[Display (Name = "WarehouseTo", ResourceType = typeof (Resources))]
 		public virtual Warehouse Warehouse { get; set; }
 
 		[BelongsTo ("purchase_order")]

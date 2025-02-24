@@ -1,0 +1,37 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@model DeliveriesItinerary
+
+<div class="form-group">
+				<div class="col-xs-4 field-required">@Html.LabelFor(x => x.DueDate) @Html.EditorFor(x => x.DueDate) @Html.ValidationMessageFor(x => x.DueDate)</div>
+</div>
+<div class="form-group">
+				<div class="col-xs-4 field-required">@Html.LabelFor(x => x.VehicleOperator) @Html.EditorFor(x => x.VehicleOperatorId) @Html.ValidationMessageFor(x => x.VehicleOperator)</div>
+</div>
+<div class="form-group">
+				<div class="col-xs-4 field-required">@Html.LabelFor(x => x.Vehicle) @Html.EditorFor(x => x.VehicleId) @Html.ValidationMessageFor(x => x.Vehicle)</div>
+</div>
+<div class="form-group">
+				<div class="col-xs-12">@Html.LabelFor(x => x.Comment) @Html.EditorFor(x => x.Comment) @Html.ValidationMessageFor(x => x.Comment)</div>
+</div>
+
+@if(Model != null) {
+
+				if (Model.Vehicle != null)
+				{
+								<script type='text/javascript'>
+						$(document).ready(function(){
+							$("#VehicleId").tokenInput("add", { id: "@Model.Vehicle.Id", name: "@Html.Raw(Model.Vehicle.NickName)"});
+						})
+								</script>
+				}
+				if (Model.VehicleOperator != null)
+				{
+								<script type='text/javascript'>
+						$(document).ready(function () {
+										$("#VehicleOperatorId").tokenInput("add", { id: "@Model.VehicleOperator.Id", name: "@Html.Raw(Model.VehicleOperator.Operator.Nickname)"});
+						})
+								</script>
+				}
+
+}

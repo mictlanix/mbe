@@ -1,11 +1,11 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model ExpenseVoucher
 
 @{
     Layout = WebConfig.ReceiptLayout;
-    ViewBag.Title = Html.PrintFileName(Resources.ExpenseVoucher, Model.Id);
+    ViewBag.Title = Html.PrintFileName(Resources.ExpenseTicket, Model.Id);
     ViewBag.Store = Model.Store;
     ViewBag.TaxpayerName = null;
     ViewBag.Taxpayer = null;

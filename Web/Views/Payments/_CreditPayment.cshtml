@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Models
@@ -11,10 +11,13 @@
 	        <div class="col-xs-12">@Html.LabelFor(x => x.Customer)</div>
 	    </div>
 		<div class="form-group">
-			<div class="col-xs-12">
-	        @Html.EditorFor(x => x.CustomerId)
-	        @Html.ValidationMessageFor(x => x.CustomerId)
-	        </div>
+								<div class="col-xs-12">
+												@*@Html.EditorFor(x => x.CustomerId)*@
+												@Html.ValidationMessageFor(x => x.CustomerId)
+												<div class='search-box'>
+																<input type='text' name='credit_payer' class="customer" />
+												</div>
+								</div>
 		</div>
 		<div class="form-group">
 		  	<div class="col-xs-2">@Html.LabelFor(x => x.Date)</div>
@@ -48,7 +51,7 @@
 			<div class="col-xs-12">
 		        <div class="btn-group">
 		        @foreach (var item in WebConfig.CashierPaymentOptions) {
-		        	<button class="pay btn btn-default" type="button" data-value='@((int)item)'>@item.GetDisplayName()</button>
+		        	<button class="pay_credit btn btn-default" type="button" data-value='@((int)item)'>@item.GetDisplayName()</button>
 		        }
 				</div>
 			</div>
@@ -60,10 +63,20 @@ ul.token-input-list { width: 100%; }
 </style>
 <script type="text/javascript">
 $(function () {
-	$(".pay").click(function () {
+	$(".pay_credit").click(function () {
 		var type = $(this).data('value');
 		$('#Method').val(type);
 		$(this).closest('form').submit();
+    });
+});
+
+$(function () {
+    $('.customer').tokenInput('@Url.Action("GetSuggestions", "Customers")', {
+        hintText:'@Resources.HIntText',
+        noResultsText:'@Resources.NoResultsText',
+        searchingText:'@Resources.SearchingText',
+		  resultsFormatter: function (item) { return CustomerFormatter(item);},
+        queryParam:'pattern',minChars:3,tokenLimit:1
     });
 });
 </script>

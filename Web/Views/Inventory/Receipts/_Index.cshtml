@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
@@ -15,11 +15,12 @@
 <table id="inventory-receipts">
     <tr>
         <th>@Resources.Id</th>
-        <th>@Html.LabelFor(x => new InventoryReceipt().CreationTime)</th>
-        <th>@Html.LabelFor(x => new InventoryReceipt().Warehouse)</th>
-        <th>@Html.LabelFor(x => new InventoryReceipt().Order)</th>
-        <th>@Html.LabelFor(x => new InventoryReceipt().IsCompleted)</th>
-        <th>@Html.LabelFor(x => new InventoryReceipt().IsCancelled)</th>
+        <th>@Resources.CreationTime</th>
+        <th>@Resources.Warehouse</th>
+        <th>@Resources.PurchaseOrder</th>
+        <th>@Resources.InventoryReceipt</th>
+        <th>@Resources.Completed</th>
+        <th>@Resources.Cancelled</th>
         <th></th>
     </tr>
 @foreach (var item in Model.Results) {

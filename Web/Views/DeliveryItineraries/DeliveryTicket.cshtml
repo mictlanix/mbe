@@ -1,0 +1,124 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model DeliveryOrderViewModel
+
+@{
+		  Layout = WebConfig.ReceiptLayout;
+		  ViewBag.Title = Resources.DeliveryOrder;
+		  ViewBag.Store = Model.DeliveryOrder.Store;
+		  ViewBag.TaxpayerName = Model.DeliveryOrder.Store.Taxpayer.Name;
+		  ViewBag.Taxpayer = Model.DeliveryOrder.Store.Taxpayer.Id;
+		  ViewBag.Address = Model.DeliveryOrder.Store.Address;
+}
+
+<div class="row">
+	<div class="col-xs-6 text-left">
+		<div class="row">
+			<div class="col-xs-12 uppercase">
+				<h2 class="text-left uppercase mylabel">@Resources.Customer</h2>
+			</div>
+		 	<div class="col-xs-12">
+				<p><span class="mylabel">@Resources.Name</span>: @Html.DisplayFor(x => x.DeliveryOrder.Customer.Name)</p>
+	 		</div>
+		 	<div class="col-xs-12">
+		 		<p><span class="mylabel">@Resources.ShipTo</span>: </p>
+	 		</div>
+			<div class="col-xs-12">
+				<p>
+					@Html.DisplayFor(x => x.DeliveryOrder.ShipTo.StreetAndNumber)
+					@Html.DisplayFor(x => x.DeliveryOrder.ShipTo.InteriorNumber)<br>
+					@Html.DisplayFor(x => x.DeliveryOrder.ShipTo.Neighborhood),
+					@Html.DisplayFor(x => x.DeliveryOrder.ShipTo.Borough)<br>
+					@Html.DisplayFor(x => x.DeliveryOrder.ShipTo.State), @Resources.PostalCode
+					@Html.DisplayFor(x => x.DeliveryOrder.ShipTo.PostalCode)
+				</p>	
+			</div>
+			<div class="col-xs-12">
+		 		<p><span class="mylabel">@Resources.Contact</span>: </p>
+	 		</div>
+			<div class="col-xs-12">
+				<p>
+					@Html.DisplayFor(x => x.DeliveryOrder.Contact.Name)
+					@Html.DisplayFor(x => x.DeliveryOrder.Contact.Mobile)
+				</p>	
+			</div>
+			@if (!string.IsNullOrEmpty (Model.DeliveryOrder.Comment)) {
+            <div class="col-xs-12">
+                <p><span class="mylabel">@Resources.Comment</span></p>
+            </div>
+            <div class="col-xs-12">
+                <p>@Html.DisplayFor(x => x.DeliveryOrder.Comment)</p>
+            </div>
+			}
+ 		</div>
+	</div>
+	<div class="col-xs-6 text-right">
+		<div class="row">
+			<div class="col-xs-12">
+				<h2 class="text-right uppercase mylabel" style="display:inline-block">@Resources.DeliveryOrderId</h2>
+
+				<p style="display:inline-block">@Html.DisplayFor(x => x.DeliveryOrder.Id)</p>
+			</div>
+			<div class="col-xs-12">
+				<p><span class="mylabel">@Resources.Serial</span>: @Html.DisplayFor(x => x.DeliveryOrder.Serial)</p>
+				<p></p>
+			</div>
+			<div class="col-xs-12">
+				<p><span class="mylabel">@Resources.DeliveryDate</span>: @Html.DisplayFor(x => x.DeliveryOrder.Date)</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div style="min-height: 2.2mm; border-top: #333 solid 1px; border-bottom: #333 solid 3px"></div>
+
+<table  style="border-spacing:0 4px;border-collapse: separate;">
+	<thead>
+		<tr>
+			<td>@Resources.Quantity</td>
+			<td>@Resources.Name</td>
+			<td>@Resources.SalesOrderId</td>
+		</tr>
+	</thead>
+    <tbody>
+        @foreach (var item in Model.DeliveryOrder.Details.Where (x => x.Quantity > 0)) {
+            <tr class="alt">
+                <td class="">@Html.DisplayFor(x => item.Quantity)
+				<br/>
+               @Html.DisplayFor(x => item.Product.UnitOfMeasurement.Name)</td>
+                <td class="">@Html.DisplayFor(x => item.ProductName)</td>
+                <td class="">@Html.DisplayFor(x => item.OrderDetail.SalesOrder.Id)</td>
+            </tr>
+				<tr>
+					<td class="line" colspan="5"></td>
+				</tr>
+		  }
+    </tbody>
+</table>
+
+<div style="min-height: 2.2mm; border-top: #333 solid 3px; border-bottom: #333 solid 1px"></div>
+
+@if (Model.PaymentsOnDelivery.Count () > 0) {
+		<span>Pagos Pendientes</span>
+	foreach (var item in Model.PaymentsOnDelivery) {
+		item.Payment.Amount *= (item.Payment.Commission + 1.0m);
+					<div>
+						<ul>
+							<li>
+								<span>@Resources.SalesOrderId: @Html.DisplayFor(x => item.SalesOrder.Id)</span><br />
+								<span>@Resources.Amount: <b>@Html.DisplayFor(x => item.Payment.Amount)</b></span><br />
+								<span>@Resources.PaymentMethod: @item.Payment.Method.GetDisplayName()</span></li>
+						</ul>
+					</div>
+	}
+}
+
+<div style="min-height: 2.2mm; border-top: #333 solid 3px; border-bottom: #333 solid 1px"></div>
+<div class="row" style="margin-top:20mm">
+	<div class="col-xs-8 col-xs-offset-2 text-center" style="border-top: #333 solid 1px">
+		@Resources.PersonReceipt<br />
+		@Resources.NameAndSignature
+	</div>
+</div>

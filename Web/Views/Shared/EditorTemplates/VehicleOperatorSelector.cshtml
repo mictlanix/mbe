@@ -1,0 +1,22 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@model int?
+
+@{
+				var field = ViewData.TemplateInfo.HtmlFieldPrefix;
+}
+
+@Html.TextBox("", Model)
+<script type="text/javascript">
+    $(function () {
+        $("#@field").tokenInput("@Url.Action("GetSuggestions", "VehicleOperators")", {
+            hintText: "@Resources.ChooseVehicleOperator",
+            noResultsText: "@Resources.NoResultsText",
+            searchingText: "@Resources.SearchingText",
+            queryParam: "pattern",
+            minChars: 1,
+            tokenLimit: 1
+        });
+        console.log("vehicle operator query done");
+    });
+</script>

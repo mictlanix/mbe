@@ -43,20 +43,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Index ()
 		{
 			var qry = from x in Product.Queryable
-				  where !x.IsDeactivated
-				  orderby x.Name
+				  where !x.IsDisabled
 				  select x;
 
 			var search = new Search<Product> ();
 			search.Limit = WebConfig.PageSize;
-			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+			search.Results = qry.OrderByDescending(x => x.Id).Skip (search.Offset).Take (search.Limit).ToList ();
 			search.Total = qry.Count ();
 
 			var list = PriceList.Queryable.ToList ();
 
-			if (!CurrentUser.IsInRole ("PriceLists.Update")) {
-				list.Remove (list.Single (x => x.Id == 0));
-			}
+			//if (!CurrentUser.IsInRole ("PriceLists.Update")) {
+				list.Remove (list.Single (x => x == WebConfig.CostsList));
+			//}
 
 			ViewBag.PriceLists = list;
 
@@ -70,26 +69,27 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return View (search);
 
 			var qry = from x in Product.Queryable
-				  where !x.IsDeactivated
-				  orderby x.Name
+				  where !x.IsDisabled
 				  select x;
 
-			if (!string.IsNullOrEmpty (search.Pattern)) {
+			var pattern = string.IsNullOrEmpty(search.Pattern)?string.Empty : search.Pattern.Trim();
+
+			if (!string.IsNullOrEmpty (pattern)) {
 				qry = from x in Product.Queryable
-				      where (x.Name.Contains (search.Pattern) ||
-						    x.Code.Contains (search.Pattern) ||
-						    x.Model.Contains (search.Pattern) ||
-						    x.SKU.Contains (search.Pattern) ||
-						    x.Brand.Contains (search.Pattern))
-						&& !x.IsDeactivated
+				      where (x.Name.Contains (pattern) ||
+						    x.Code.Contains (pattern) ||
+						    x.Model.Contains (pattern) ||
+						    x.SKU.Contains (pattern) ||
+						    x.Brand.Contains (pattern))
+						&& !x.IsDisabled
 				      orderby x.Name
 				      select x;
 			}
 
 			search.Total = qry.Count ();
-			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+			search.Results = qry.OrderByDescending (x => x.Id).Skip (search.Offset).Take (search.Limit).ToList ();
 
-			ViewBag.PriceLists = PriceList.Queryable.ToList ();
+			ViewBag.PriceLists = PriceList.Queryable.Where(x => x != WebConfig.CostsList).ToList ();
 
 			return PartialView ("_Index", search);
 		}
@@ -122,7 +122,72 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				}
 			}
 
-			return Json (new { id = item.Id, value = item.FormattedValueFor (x => x.Value) });
+			return Json (new {
+				id = item.Id,
+				value = item.FormattedValueFor (x => x.Value)
+			});
+		}
+
+		[HttpPost]
+		public JsonResult SetLowProfit (int product, int list, string value)
+		{
+			decimal val;
+			bool success;
+			var p = Product.TryFind (product);
+			var l = PriceList.TryFind (list);
+			var item = ProductPrice.Queryable.SingleOrDefault (x => x.Product.Id == product && x.List.Id == list);
+
+			if (item == null) {
+				item = new ProductPrice {
+					Product = p,
+					List = l
+				};
+			}
+
+			success = decimal.TryParse (value.Trim (),
+						    System.Globalization.NumberStyles.Currency,
+						    null, out val);
+
+			if (success && val >= 0) {
+				item.LowProfitRate = val/100;
+
+				using (var scope = new TransactionScope ()) {
+					item.SaveAndFlush ();
+				}
+			}
+
+			return Json (new { id = item.Id, value = item.FormattedValueFor (x => x.LowProfitRate) });
+		}
+
+		[HttpPost]
+		public JsonResult SetHighProfit (int product, int list, string value)
+		{
+			decimal val;
+			bool success;
+			var p = Product.TryFind (product);
+			var l = PriceList.TryFind (list);
+			var item = ProductPrice.Queryable.SingleOrDefault (x => x.Product.Id == product && x.List.Id == list);
+
+			if (item == null) {
+				item = new ProductPrice {
+					Product = p,
+					List = l
+				};
+			}
+
+			success = decimal.TryParse (value.Trim (),
+						    System.Globalization.NumberStyles.Currency,
+						    null, out val);
+
+			if (success && val >= 0) {
+				item.HighProfitRate = val / 100;
+
+				using (var scope = new TransactionScope ()) {
+					item.SaveAndFlush ();
+				}
+			}
+
+			return Json (new { id = item.Id, value = item.FormattedValueFor (x => x.HighProfitRate) });
 		}
 
 		[HttpPost]
@@ -186,9 +251,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			success = Enum.TryParse<PriceType> (value.Trim (), out val);
 
 			if (success && val >= 0) {
-				item.PriceType = val;
 
 				using (var scope = new TransactionScope ()) {
+					if (val == PriceType.Variable) {
+						var incidence = new Incidence {
+							ModificationTime = DateTime.Now,
+							Updater = CurrentUser.Employee,
+							PreviousState = JsonConvert.SerializeObject(item.GetSerializable()),
+							SourceType = SourceType.Pricing,
+							Reference = item.Id
+						};
+						incidence.CreateAndFlush ();
+					}
+					item.PriceType = val;
 					item.UpdateAndFlush ();
 				}
 			}

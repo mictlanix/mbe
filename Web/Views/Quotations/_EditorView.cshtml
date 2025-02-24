@@ -72,14 +72,12 @@
 
                 <dt>@Resources.Date</dt>
                 <dd>
-                    <a id='date' data-type='date' data-placement='left' data-pk='@Model.Id'
+                    <a id='date' class="editable" data-type='date' data-placement='left' data-pk='@Model.Id'
                        data-value='@Html.DisplayFor(x => x.Date)' data-url='@Url.Action("SetDate", new { id = Model.Id })'
                        data-emptytext='@Resources.Empty' data-clear='false'>
                         @Html.DisplayFor(x => x.Date)
                     </a>
                 </dd>
-                <!--<dd>@Html.DisplayFor(x => x.Date)</dd>-->
-
                 <dt>@Resources.Currency</dt>
                 <dd>
                     <a class='editable currency' data-type='select' data-placement='left' data-pk='@Model.Id'
@@ -107,9 +105,9 @@
                     </a>
                 </dd>
 
-                <dt>@Resources.DueDate</dt>
+                <dt>@Resources.ExpirationQuotationDate</dt>
                 <dd>
-                    <a id='due-date' data-type='date' data-placement='left' data-pk='@Model.Id'
+                    <a id='due-date' data-type='date' class="editable" data-placement='left' data-pk='@Model.Id'
                        data-value='@Html.DisplayFor(x => x.DueDate)' data-url='@Url.Action("SetDueDate", new { id = Model.Id })'
                        data-emptytext='@Resources.Empty' data-clear='false'>
                         @Html.DisplayFor(x => x.DueDate)
@@ -163,10 +161,11 @@ $(function () {
 		        return selection.name;
 		    }
 		},
-		success: function(response, newValue) {
+					success: function (response, newValue) {
+									console.log(response);
 			$('#contact,#address').text('').editable('setValue', '');
 			$('#terms').text(response.termsText)
-					   .editable('setValue', response.terms);
+										.editable('setValue', response.terms);
 			$('#due-date').text(response.dueDate);
 			$('#salesperson').text(response.salesPersonName)
 					   .editable('setValue', response.salesPerson);
@@ -223,7 +222,8 @@ $(function () {
 	});
 
 	$('a.editable').editable({
-		success: function(response, newValue) {
+					success: function (response, newValue) {
+									console.log(response);
 			if ('rate' in response) {
 				$('#exchange-rate').text(response.rate)
 								   .editable('setValue', response.rate);

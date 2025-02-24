@@ -1,4 +1,4 @@
-﻿// 
+// 
 // InventoryReceiptDetail.cs
 // 
 // Author:
@@ -32,9 +32,11 @@ using System.Collections.Generic;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace Mictlanix.BE.Model {
 	[ActiveRecord ("delivery_order_detail")]
+	[Serializable]
 	public class DeliveryOrderDetail : ActiveRecordLinqBase<DeliveryOrderDetail> {
 		[PrimaryKey (PrimaryKeyType.Identity, "delivery_order_detail_id")]
 		public int Id { get; set; }
@@ -66,30 +68,22 @@ namespace Mictlanix.BE.Model {
 		[StringLength (250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string ProductName { get; set; }
 
-		[DataType (DataType.Currency)]
-		[Display (Name = "Subtotal", ResourceType = typeof (Resources))]
-		public decimal Subtotal {
-			get { return ModelHelpers.Subtotal (Quantity, OrderDetail.Price, 1, OrderDetail.TaxRate, OrderDetail.IsTaxIncluded); }
+		[Display (Name = "Delivery", ResourceType = typeof (Resources))]
+		public IEnumerable<DeliveriesItineraryDetail> DeliveriesItineraryDetails {
+			get { return DeliveriesItineraryDetail.Queryable.Where (x => x.DeliveryOrderDetail == this
+			&& !x.DeliveriesItinerary.IsCancelled).ToList (); }
 		}
 
-		[DataType (DataType.Currency)]
-		[Display (Name = "Discount", ResourceType = typeof (Resources))]
-		public decimal Discount {
-			get { return ModelHelpers.Discount (Quantity, OrderDetail.Price, 1, OrderDetail.DiscountRate, OrderDetail.TaxRate, OrderDetail.IsTaxIncluded); }
+		public virtual DeliveryOrderDetail GetSerializable () {
+			return new DeliveryOrderDetail {
+				Id = Id,
+				ProductCode = ProductCode,
+				ProductName = ProductName,
+				Quantity = Quantity,
+				Product = Product.GetSerializable(),
+				OrderDetail = OrderDetail.GetSerializable(),
+			};
 		}
-
-		[DataType (DataType.Currency)]
-		[Display (Name = "Taxes", ResourceType = typeof (Resources))]
-		public decimal Taxes {
-			get { return Total - Subtotal + Discount; }
-		}
-
-		[DataType (DataType.Currency)]
-		[Display (Name = "Total", ResourceType = typeof (Resources))]
-		public decimal Total {
-			get { return ModelHelpers.Total (Quantity, OrderDetail.Price, 1, OrderDetail.DiscountRate, OrderDetail.TaxRate, OrderDetail.IsTaxIncluded); }
-		}
-
 		#region Override Base Methods
 
 		public override string ToString ()

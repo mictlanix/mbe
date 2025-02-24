@@ -1,0 +1,138 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model PurchaseRequestDetail
+
+<li id='id:@Model.Id'>
+    <div class='photo'>
+        <img src='@Url.Content(Model.Product.Photo)' title='@Model.Product.Photo' />
+    </div>
+    <div class='action-link'>
+    @*@if(Model.PurchaseRequest != null) {
+        <span class='label label-info' title='@Resources.PurchaseRequest'>@Html.DisplayFor(x => x.PurchaseRequest.Id)</span>
+    }*@
+        <a class='button icon-only icon delete' title='@Resources.Message_DeleteConfirmation'
+								data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id'
+											data-url='@Url.Action("RemoveDetail", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
+    </div>
+				<div class='info'>
+								@if (Model.Product.HasVariablePricing)
+								{
+												<a class='editable name input-xxlarge' data-type='text' data-inputclass='input-xxlarge' data-placement='bottom' data-pk='@Model.Id' data-url='@Url.Action("SetDetailProductName", new { id = Model.Id })'>@Html.DisplayFor(x => x.ProductName)</a>
+								}
+								else
+								{
+												<span class='thick'>@Html.DisplayFor(x => x.Product.Name)</span>
+								}
+								<br />
+								<b>@Resources.Code: </b>
+								<span>@Html.DisplayFor(x => x.Product.Code)</span>
+								<b>@Resources.UnitOfMeasurement: </b>
+								<span>@Html.DisplayFor(x => Model.Product.UnitOfMeasurement.Name)</span>
+								@if (!string.IsNullOrEmpty(Model.Product.Model))
+								{
+												<b>@Resources.Model: </b>
+												<span>@Html.DisplayFor(x => x.Product.Model)</span>
+								}
+								@if (!string.IsNullOrEmpty(Model.Product.SKU))
+								{
+												<b>@Resources.SKU: </b>
+												<span>@Html.DisplayFor(x => x.Product.SKU)</span>
+								}
+								<br />
+								<b>@Resources.Quantity: </b>
+								<a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id'
+											data-url='@Url.Action("SetDetailQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
+
+								<b>@Resources.Warehouse:</b>
+								<a class='editable warehouse' data-type='select' data-inputclass='input-xlarge' data-placement='bottom'
+											data-source='@Url.Action("List", "Warehouses")' data-pk='@Model.Id' data-value='@Model.Warehouse.Id'
+											data-url='@Url.Action("SetDetailWarehouse", new { id = Model.Id })'>@Model.Warehouse</a>
+
+								<b>@Resources.Customer: </b>
+								<a id="customer:@Model.Id" class="customer" data-type='select2' data-placement='right' data-pk='@Model.Id'
+											data-value='@Model.Customer.Id' data-url='@Url.Action("SetDetailCustomer", new { id = Model.Id })'
+											data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+												@Html.DisplayFor(x => x.Customer.Name)
+								</a>
+				</div>
+</li>
+<script type='text/javascript'>
+$('#id\\:@Model.Id [data-toggle="tooltip"]').tooltip();
+$('#id\\:@Model.Id a.editable').editable({
+	success: function(response, newValue) {
+		var $this = $(this);
+        if ('rate' in response) {
+          	$this.siblings('.rate').html(response.rate);
+        }
+    },
+    display: function(value, response) {
+        if (typeof response === 'undefined') {
+        	$(this).html(value);
+        } else if (Array.isArray(response)) {
+        	arr = $.grep(response, function(o){
+  				return o.value == value;
+			});
+          	$(this).html(arr[0].text);
+        } else {
+          	$(this).html(response.value);
+        }
+    }
+});
+$('#id\\:@Model.Id a.delete').editable({
+	success: function(response, newValue) {
+        $('#id\\:@Model.Id').remove();
+								$('#buttons').loadUrl();
+								if ($('#items li').length === 0) {
+												$('#confirm-button').addClass('hide');
+								}
+    }
+});
+
+	$('#id\\:@Model.Id a.customer').editable({
+	    select2: {
+	    	minimumInputLength: 3,
+		    ajax: {
+		        url: '@Url.Action("GetSuggestions", "Customers")',
+		        dataType: 'json',
+		        type: 'POST',
+										data: function (term, page, context) {
+		        	return { pattern:term };
+		        },
+		        results: function(data,page) {
+		            return { results:data };
+		        }
+		    },
+		    initSelection: function(element, callback) {
+										var data = {
+		        	id: $("#id:\\@Model.Id customer").data('value'),
+		        	name: $("#id:\\@Model.Id customer").text()
+										};
+										//console.log($("#customer:\\@Model.Id").data('value'));
+		        callback(data);
+		    },
+		    formatResult: function(result) {
+		        return result.name + " (" + result.code + ")";
+		    },
+		    formatSelection: function(selection) {
+		        return selection.name;
+		    }
+		},
+					success: function (response, newValue) {
+
+			//$('#contact,#address').text('').editable('setValue', '');
+			//$('#terms').text(response.termsText)
+					//   .editable('setValue', response.terms);
+			//$('#due-date').text(response.dueDate);
+			//$('#salesperson').text(response.salesPersonName)
+				//.editable('setValue', response.salesPerson);
+			//$('#name').load('@Url.Action("GetCustomerName","POS", new { id = Model.Id } )');
+			//$('#taxpayer').text('').editable('setValue', '');
+	    },
+	    display: function(value, response) {
+	    	if (typeof response !== 'undefined') {
+				$(this).html(response.value);
+			}
+	    }
+	});
+</script>

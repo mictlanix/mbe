@@ -1,4 +1,4 @@
-﻿// 
+// 
 // SystemObjects.cs
 // 
 // Author:
@@ -196,12 +196,57 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Expenses", ResourceType = typeof (Resources))]
 		Expenses = 81,
 		[Display (Name = "ExpenseVoucher", ResourceType = typeof (Resources))]
-		ExpenseVoucher = 82,
+		ExpenseTicket = 82,
 		[Display (Name = "CreditPayments", ResourceType = typeof (Resources))]
 		CreditPayments = 83,
 		[Display (Name = "PaymentMethodOptions", ResourceType = typeof (Resources))]
 		PaymentMethodOptions = 84,
 		[Display (Name = "PaymentReceipt", ResourceType = typeof (Resources))]
-		PaymentReceipt = 85
+		PaymentReceipt = 85,
+		[Display (Name = "PurchaseRequest", ResourceType = typeof (Resources))]
+		PurchaseRequest = 86,
+		[Display (Name = "DeliveryItineraries", ResourceType = typeof (Resources))]
+		DeliveryItineraries = 87,
+		[Display (Name = "Vehicles", ResourceType = typeof (Resources))]
+		Vehicle = 88,
+		[Display (Name = "VehicleOperators", ResourceType = typeof (Resources))]
+		VehicleOperators = 89,
+		[Display (Name = "ServiceOrders", ResourceType = typeof (Resources))]
+		VehicleServiceOrders = 90,
+		[Display (Name = "ForDeliver", ResourceType = typeof (Resources))]
+		ForDeliver = 91,
+		[Display (Name = "Users", ResourceType = typeof (Resources))]
+		Users = 92,
+		[Display (Name = "InventoryAdjustment", ResourceType = typeof (Resources))]
+		InventoryAdjustments = 93,
+		[Display (Name = "DeliveryOrdersApproval", ResourceType = typeof (Resources))]
+		DeliveryOrderApproval = 94,
+		[Display (Name = "PurchaseOrderApproval", ResourceType = typeof (Resources))]
+		PurchaseOrderApproval = 95,
+		[Display (Name = "PurchaseRequestApproval", ResourceType = typeof (Resources))]
+		PurchaseRequestApproval = 96,
+		[Display (Name = "ReceivedPaymentsAdvancedSearchFilter", ResourceType = typeof (Resources))]
+		ReceivedPaymentsAdvancedSearchFilter = 97,
+		[Display (Name = "CreditCustomerConfiguration", ResourceType = typeof (Resources))]
+		CreditCustomerConfiguration = 98,
+		[Display (Name = "StoreMovementsSummary", ResourceType = typeof (Resources))]
+		StoreMovementsSummary = 99,
+		[Display (Name = "ChangesToPayments", ResourceType = typeof (Resources))]
+		PaymentsEditor = 100,
+		[Display (Name = "SearchCreditsFromAllStores", ResourceType = typeof (Resources))]
+		SearchCreditsFromAllStores = 101,
+		[Display (Name = "ExcludePriceRangeValidation", ResourceType = typeof (Resources))]
+		ExcludePriceRangeValidation = 102,
+		[Display (Name = "IssuedLocationFiscalDocumentSettingPermission", ResourceType = typeof (Resources))]
+		IssuedLocationId = 103,
+		[Display (Name = "SearchAllSalesOrderFromCurrentStore", ResourceType = typeof (Resources))]
+		SearchAllSalesOrderFromAllUsers = 104,
+		[Display (Name = "SearchAllSalesOrderFromAllStores", ResourceType = typeof (Resources))]
+		SearchAllSalesOrderFromAllStores = 105,
+		[Display (Name = "Pricing", ResourceType = typeof (Resources))]
+		Pricing = 106,
+		[Display (Name = "ProductionSites", ResourceType = typeof (Resources))]
+		ProductionSites = 107,
+
 	}
 }

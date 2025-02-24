@@ -1,10 +1,10 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
 @model IEnumerable<SalesOrder>
 
-@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))
+@using (Ajax.BeginForm("Index","Payments",new AjaxOptions { UpdateTargetId = "search-results-on-delivery", LoadingElementId = "activity-indicator-on-delivery", OnBegin = "onSearchBegin" }))
 {
     <div class="search-box">
         <button type="submit" class="icon search">@Resources.Search</button>
@@ -13,11 +13,11 @@
         </div>
     </div>
 }
-<div id="details-section">
-    <div id="activity-indicator">
+<div id="details-section-on-delivery">
+    <div id="activity-indicator-on-delivery">
         <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
     </div>
-    <div id="search-results">
+    <div id="search-results-on-delivery">
         @Html.Partial("_DeliveryPaymentList", Model)
     </div>
 </div>

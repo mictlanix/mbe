@@ -37,6 +37,10 @@ using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
+using System.Text;
+using System.Text.RegularExpressions;
+using Gma.QrCodeNet.Encoding.Masking;
+using NHibernate;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
@@ -68,16 +72,66 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 		}
 
+		public ActionResult Approvals ()
+		{
+			if (!CashHelpers.ValidateExchangeRate ()) {
+				return View ("InvalidExchangeRate");
+			}
+
+			var search = SearchPurchaseOrdersApproved (new Search<PurchaseOrder> {
+				Limit = WebConfig.PageSize
+			});
+
+			return View (search);
+		}
+
+		[HttpPost]
+		public ActionResult Approvals (Search<PurchaseOrder> search)
+		{
+			if (ModelState.IsValid) {
+				search = SearchPurchaseOrdersApproved (search);
+			}
+
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_Index", search);
+			} else {
+				return View (search);
+			}
+		}
+
+		Search<PurchaseOrder> SearchPurchaseOrdersApproved (Search<PurchaseOrder> search)
+		{
+			IQueryable<PurchaseOrder> qry = from x in PurchaseOrder.Queryable
+							where x.IsCompleted && !x.IsApproved && !x.IsCancelled
+							select x; ;
+
+			if (search.Pattern != null) {
+				search.Pattern = search.Pattern.Trim ();
+				qry = from x in qry
+				      where x.Supplier.Name.Contains (search.Pattern) ||
+				      x.Creator.Nickname.Contains (search.Pattern)
+				      select x;
+			}
+
+			qry = qry.OrderByDescending (x => x.Id);
+
+			search.Total = qry.Count ();
+			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+
+			return search;
+		}
 		Search<PurchaseOrder> SearchPurchaseOrders (Search<PurchaseOrder> search)
 		{
-			IQueryable<PurchaseOrder> qry;
+			IQueryable<PurchaseOrder> qry = from x in PurchaseOrder.Queryable
+							where x.Creator == CurrentUser.Employee || x.Updater == CurrentUser.Employee
+							select x; ;
 
 			if (search.Pattern == null) {
-				qry = from x in PurchaseOrder.Queryable
+				qry = from x in qry
 				      orderby x.Id descending
 				      select x;
 			} else {
-				qry = from x in PurchaseOrder.Queryable
+				qry = from x in qry
 				      where x.Supplier.Name.Contains (search.Pattern)
 				      orderby x.Id descending
 				      select x;
@@ -102,6 +156,40 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View (item);
 		}
 
+		public ActionResult Approve (int id)
+		{
+			var item = PurchaseOrder.Find (id);
+
+			if (!item.IsCancelled && item.IsCompleted && !item.IsApproved) {
+				return View (item);
+			}
+			return RedirectToAction ("Approvals");
+		}
+
+		[HttpPost]
+		public ActionResult Approve (int id, bool approve)
+		{
+			var item = PurchaseOrder.Find (id);
+
+			if (!item.IsCancelled && item.IsCompleted && item.IsApproved) {
+				return RedirectToAction("Approvals");
+			}
+
+			using (var scope = new TransactionScope ()) {
+				item.Approver = CurrentUser.Employee;
+				item.IsApproved = approve;
+				item.IsCompleted = approve;
+				item.ModificationTime = DateTime.Now;
+				item.UpdateAndFlush ();
+			}
+
+			if (WebConfig.PurchaseOrderApprovalRequired && approve) {
+				GenerateInventoryEntries (item);
+			}
+
+			return RedirectToAction ("Approvals");
+		}
+
 		public ActionResult Create ()
 		{
 			//if (!CashHelpers.ValidateExchangeRate ()) {
@@ -122,6 +210,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.Updater = item.Creator;
 			item.CreationTime = DateTime.Now;
 			item.ModificationTime = item.CreationTime;
+			//item.EstimatedReceiptDate = item.CreationTime;
 
 			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
@@ -174,6 +263,38 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
+		public ActionResult SetEstimatedReceiptDate (int id, DateTime? value)
+		{
+			var entity = PurchaseOrder.Find (id);
+
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			if (value != null) {
+
+				if (value.Value < DateTime.Now) {
+					Response.StatusCode = 400;
+					return Content (string.Format (Resources.Validation_DateGreaterThan, Resources.EstimatedReceiptDate, "Hoy"));
+				}
+
+				entity.EstimatedReceiptDate = value.Value;
+				entity.Updater = CurrentUser.Employee;
+				entity.ModificationTime = DateTime.Now;
+
+				using (var scope = new TransactionScope ()) {
+					entity.UpdateAndFlush ();
+				}
+			}
+
+			return Json (new {
+				id = id,
+				value = entity.FormattedValueFor (x => x.EstimatedReceiptDate),
+			});
+		}
+
+		[HttpPost]
 		public JsonResult AddPurchaseDetail (int movement, int warehouse, int product)
 		{
 			var p = Product.Find (product);
@@ -205,6 +326,104 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return Json (new {
 				id = item.Id
 			});
+		}
+
+		[HttpPost]
+		public ActionResult AddFromPurchaseRequest (int id, string value)
+		{
+			var details = new List<PurchaseRequestDetail> ();
+			var entity = PurchaseOrder.TryFind (id);
+			int request_id = 0;
+
+			string request_filter = WebConfig.PurchaseRequestApprovalRequired ? " AND pr.approved = 1 " : "";
+
+
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			if (value.Contains (Resources.WilcardStringPatternForSearch)) {
+
+				var sql = @"
+					SELECT prd.purchase_request_detail_id id 
+					FROM purchase_request_detail prd
+					LEFT JOIN purchase_request pr ON prd.purchase_request = pr.purchase_request_id
+					LEFT JOIN (
+						SELECT pod.purchase_request_detail detail, pod.product_name , pod.purchase_order 
+						FROM purchase_order_detail pod
+						JOIN purchase_order po ON po.purchase_order_id = pod.purchase_order
+						WHERE pod.purchase_request_detail IS NOT NULL AND po.cancelled = FALSE
+						) AS P1 ON P1.detail = prd.purchase_request_detail_id 
+					WHERE pr.cancelled = 0 AND pr.completed = 1 AND P1.detail IS NULL REQUEST_APPROVAL_FILTER;
+					";
+
+				sql = sql.Replace ("REQUEST_APPROVAL_FILTER", request_filter);
+
+				var raw = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+					var query = session.CreateSQLQuery (sql);
+					query.AddScalar ("id", NHibernateUtil.Int32);
+					return query.DynamicList ();
+				}, null);
+
+				foreach (var x in raw) {
+					details.Add (PurchaseRequestDetail.Find (x.id));
+				}
+
+
+
+			} else if (int.TryParse (value, out request_id) && request_id > 0) {
+				var request = PurchaseRequest.TryFind (request_id);
+				if (request == null || !request.IsCompleted || request.IsCancelled || request.Details.Count <= 0) {
+					Response.StatusCode = 400;
+					return Content (Resources.ItemNotFound);
+				}
+				if (!request.IsApproved && WebConfig.PurchaseRequestApprovalRequired) {
+					Response.StatusCode = 400;
+					return Content (string.Format (Resources.DoctoRequiresApproval, Resources.PurchaseRequest));
+				}
+
+				//TODO: Revisar por qué sigue metiendo items de requests cancelados
+				var items = request.Details.Where (x => !PurchaseOrderDetail.Queryable
+					.Select(y => y.PurchaseRequestDetail).Where(z =>
+									  !z.PurchaseRequest.IsCancelled
+									&& z.PurchaseRequest.IsCompleted
+									&& z.PurchaseRequest.IsApproved).Contains (x));
+
+				details.AddRange (items.ToList ());
+			}
+
+			List<int> added = new List<int> ();
+
+			using (var scope = new TransactionScope ()) {
+				foreach (var x in details) {
+
+					var item = new PurchaseOrderDetail {
+						Order = entity,
+						Warehouse = x.Warehouse,
+						WarehouseId = x.WarehouseId,
+						Product = x.Product,
+						PurchaseRequestDetail = x,
+						ProductCode = x.Product.Code,
+						ProductName = x.Product.Name,
+						Quantity = x.Quantity,
+						TaxRate = x.Product.TaxRate,
+						IsTaxIncluded = x.Product.IsTaxIncluded,
+						DiscountRate = 0,
+						Price = (from y in ProductPrice.Queryable
+							 where y.Product == x.Product && y.List.Id == 0
+							 select y.Value).SingleOrDefault (),
+						ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate (),
+						Currency = WebConfig.DefaultCurrency
+					};
+
+					item.Create ();
+					added.Add (item.Id);
+				}
+			}
+
+
+			return Json (new { id = id, value = string.Empty, itemsChanged = string.Join (",", added) });
 		}
 
 		[HttpPost]
@@ -370,6 +589,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_DetailEditView", PurchaseOrderDetail.Find (id));
 		}
 
+		public ActionResult GetDetails (string itemsChanged)
+		{
+
+			bool ok = Regex.IsMatch (itemsChanged, "^\\d+(,\\d+)*$");
+			if (!ok) {
+				return null;
+			}
+			var ids = itemsChanged.Split (',').Select (x => Int32.Parse (x)).ToList ();
+			var items = PurchaseOrderDetail.Queryable.Where (x => ids.Contains (x.Id)).ToList ();
+
+			return PartialView ("_DetailsViewEdit", items);
+		}
+
 		[HttpPost]
 		public JsonResult RemoveDetail (int id)
 		{
@@ -390,48 +622,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Confirm (int id)
 		{
 			PurchaseOrder item = PurchaseOrder.Find (id);
-
-			var qry = from x in item.Details
-				  group x by x.Warehouse into g
-				  select new {
-					  Warehouse = g.Key,
-					  Details = g.ToList ()
-				  };
-
 			var dt = DateTime.Now;
 			var employee = CurrentUser.Employee;
 
+			item.IsCompleted = true;
+			item.ModificationTime = DateTime.Now;
+
+
 			using (var scope = new TransactionScope ()) {
-				foreach (var x in qry) {
-					var master = new InventoryReceipt {
-						Order = item,
-						Warehouse = x.Warehouse,
-						CreationTime = dt,
-						ModificationTime = dt,
-						Creator = employee,
-						Updater = employee,
-						Store = x.Warehouse.Store
-					};
-
-					master.Create ();
-
-					foreach (var y in x.Details) {
-						var detail = new InventoryReceiptDetail {
-							Receipt = master,
-							Product = y.Product,
-							QuantityOrdered = y.Quantity,
-							Quantity = y.Quantity,
-							ProductCode = y.ProductCode,
-							ProductName = y.ProductName
-						};
-
-						detail.Create ();
-
-						//InventoryHelpers.ChangeNotification (TransactionType.PurchaseOrder, item.Id,
-						//	item.ModificationTime, x.Warehouse, null, y.Product, y.Quantity);
-					}
-				}
-
 				foreach (var x in item.Details) {
 					var price = x.Product.Prices.SingleOrDefault (t => t.List.Id == 0);
 
@@ -442,13 +640,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						};
 					}
 
-					price.Value = x.Price;
+					price.Value = price.Value < x.Price ? x.Price : price.Value;
 					price.Save ();
 				}
 
-				item.IsCompleted = true;
-				item.ModificationTime = DateTime.Now;
 				item.UpdateAndFlush ();
+			}
+
+			if (!WebConfig.PurchaseOrderApprovalRequired) {
+				GenerateInventoryEntries (item);
 			}
 
 			return RedirectToAction ("Index");
@@ -466,6 +666,99 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			return RedirectToAction ("Index");
+		}
+
+		public ViewResult View (int id)
+		{
+			var item = PurchaseOrder.Find (id);
+			return View (item);
+		}
+
+		public ViewResult Print (int id)
+		{
+			var model = PurchaseOrder.Find (id);
+			if (model.IsCompleted)
+				return View ("PrintOrder", model);
+
+			return View ("PrintQuotation", model);
+		}
+
+		public virtual ActionResult Pdf (int id)
+		{
+			var model = PurchaseOrder.Find (id);
+			if (model.IsCompleted) {
+				return PdfView ("PrintOrder", model);
+			}
+			return PdfView ("PrintQuotation", model);
+		}
+
+		[HttpPost]
+		[ValidateInput (false)]
+		public FileResult Export (int id)
+		{
+			var model = PurchaseOrder.Find (id);
+			if (model.IsCompleted) {
+				return null;
+			}
+
+			var html = PartialView ("PrintQuotation", model);
+
+			return File (Encoding.ASCII.GetBytes (html.RenderToString ()),
+				"application/vnd.ms-excel",
+				Resources.PurchaseQuotation + " - " + model.Id + ".xls");
+		}
+
+		private void GenerateInventoryEntries (PurchaseOrder purchaseOrder)
+		{
+			if (purchaseOrder == null)
+				return;
+			if (purchaseOrder.IsCancelled)
+				return;
+			if (!purchaseOrder.IsCompleted)
+				return;
+			if (!purchaseOrder.IsApproved && WebConfig.PurchaseOrderApprovalRequired)
+				return;
+
+			var dt = DateTime.Now;
+			var qry = from x in purchaseOrder.Details
+				  group x by x.Warehouse into g
+				  select new {
+					  Warehouse = g.Key,
+					  Details = g.ToList ()
+				  };
+
+			using (var scope = new TransactionScope ()) {
+
+				foreach (var x in qry) {
+					var master = new InventoryReceipt {
+						Order = purchaseOrder,
+						Warehouse = x.Warehouse,
+						CreationTime = dt,
+						ModificationTime = dt,
+						Creator = CurrentUser.Employee,
+						Updater = CurrentUser.Employee,
+						Store = x.Warehouse.Store
+					};
+
+					master.Create ();
+
+					foreach (var y in x.Details) {
+						var already_received = InventoryReceiptDetail.Queryable.Where (z => z.PurchaseOrderDetail == y
+									&& !z.Receipt.IsCancelled).Sum (w => (decimal?) w.Quantity) ?? 0;
+						var detail = new InventoryReceiptDetail {
+							Receipt = master,
+							Product = y.Product,
+							QuantityOrdered = y.Quantity,
+							Quantity = y.Quantity - already_received,
+							ProductCode = y.ProductCode,
+							ProductName = y.ProductName,
+							PurchaseOrderDetail = y
+						};
+
+						detail.Create ();
+					}
+				}
+			}
 		}
 
 	}

@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
@@ -16,9 +16,10 @@
 
 <table id="cash-drawers">
     <tr>
-        <th>@Html.LabelFor(x => new CashDrawer().Code)</th>
-        <th>@Html.LabelFor(x => new CashDrawer().Name)</th>
-        <th>@Html.LabelFor(x => new CashDrawer().Store)</th>
+        <th>@Resources.Code</th>
+        <th>@Resources.Name</th>
+        <th>@Resources.Store</th>
+        <th>@Resources.Cashier</th>
         <th></th>
     </tr>
 

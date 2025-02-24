@@ -1,10 +1,16 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model;
 @using Mictlanix.BE.Web.Helpers;
+@using Mictlanix.BE.Web.Controllers.Mvc
 @model InventoryReceipt
 
 @{
     ViewBag.Title = Resources.Title_InventoryReceipt;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.InventoryReceipts);
+    var zero = Html.GetPrivilege(CurrentUser, SystemObjects.InventoryAdjustments);
+    var physical = Html.GetPrivilege(CurrentUser, SystemObjects.PhysicalCountAdjustment);
+    var completed = InventoryController.IsPurchaseReceiptCompleted(Model.Id);
 }
 
 <h2>@Resources.DisplayName_InventoryReceipts</h2>
@@ -65,14 +71,20 @@
     <p></p>
 </div>
 
-
 <div class="right floating">
     @Html.ActionLink(Resources.Print, "PrintReceipt", new { id = Model.Id }, new { @class = "button icon print", title = Resources.Print, target = "_blank" })
-    @Html.ActionLink(Resources.Adjustment, "PhysicalCountAdjustment", new { id = Model.Id }, new { @class = "button icon configuration" })
+    @if (physical.AllowUpdate) {
+        @Html.ActionLink(Resources.Adjustment, "PhysicalCountAdjustment", new { id = Model.Id }, new { @class = "button icon configuration" })
+    }
+    @if (completed.HasValue && completed.Value == false) {
+        @Html.ActionLink(Resources.Create + " " + Resources.ComplementaryInventoryReceipt, "CreateComplementaryReceipt", new { id = Model.Id }, new { @class = "button icon duplicate" })
+    }
 </div>
 <div id="back-to-list">
     @Html.ActionLink(Resources.BackToList, "Receipts", new { }, new { @class = "button icon back" })
-    @Html.ActionLink(Resources.ZeroOutInventory, "ZeroOut", new { id = Model.Id }, new { @class = "button icon cancel" })
+    @if (zero.AllowUpdate) {
+        @Html.ActionLink(Resources.ZeroOutInventory, "ZeroOut", new { id = Model.Id }, new { @class = "button icon cancel" })
+    }
 </div>
 <script type='text/javascript'>
     $(function () {

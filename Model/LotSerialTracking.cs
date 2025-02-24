@@ -62,10 +62,11 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Product", ResourceType = typeof (Resources))]
 		public virtual Product Product { get; set; }
 
-		[Property]
+		//[Property]
 		[DisplayFormat (DataFormatString = "{0:0.####}")]
+		[Property (ColumnType = "decimal(18, 2)")]
 		[Display (Name = "Quantity", ResourceType = typeof (Resources))]
-		public virtual decimal Quantity { get; set; }
+		public decimal Quantity { get; set; }
 
 		[Property ("lot_number")]
 		[Display (Name = "LotNumber", ResourceType = typeof (Resources))]

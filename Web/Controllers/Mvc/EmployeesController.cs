@@ -1,4 +1,4 @@
-﻿// 
+// 
 // EmployeesController.cs
 // 
 // Author:
@@ -71,15 +71,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		Search<Employee> SearchEmployees (Search<Employee> search)
 		{
-			IQueryable<Employee> query;
+			IQueryable<Employee> query = MBEQueryable.IQEmployees;
 			var pattern = string.Format ("{0}", search.Pattern).Trim ();
 
-			if (string.IsNullOrEmpty (pattern)) {
-				query = from x in Employee.Queryable
-					orderby x.FirstName
-					select x;
-			} else {
-				query = from x in Employee.Queryable
+			if (!string.IsNullOrEmpty (pattern)) {
+				
+				query = from x in query
 					where x.FirstName.Contains (pattern) ||
 						x.LastName.Contains (pattern)
 					orderby x.FirstName
@@ -150,7 +147,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			try {
 				using (var scope = new TransactionScope ()) {
-					entity.DeleteAndFlush ();
+					entity.IsDisabled = true;
+					entity.UpdateAndFlush ();
 				}
 			} catch (Exception) {
 				return PartialView ("DeleteUnsuccessful");
@@ -161,8 +159,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public JsonResult GetSuggestions (string pattern)
 		{
-			var query = from x in Employee.Queryable
-				    where x.IsActive && (
+			var query = from x in MBEQueryable.IQEmployees
+				    where (
 					    x.FirstName.Contains (pattern) ||
 					    x.LastName.Contains (pattern))
 				    select new { id = x.Id, name = x.FirstName + " " + x.LastName };
@@ -172,8 +170,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public JsonResult SalesPeople (string pattern)
 		{
-			var query = from x in Employee.Queryable
-				    where x.IsActive && x.IsSalesPerson && (
+			var query = from x in MBEQueryable.IQEmployees
+				    where x.IsSalesPerson && (
 					    x.FirstName.Contains (pattern) ||
 					    x.LastName.Contains (pattern))
 				    select new { id = x.Id, name = x.FirstName + " " + x.LastName };

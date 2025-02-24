@@ -1,0 +1,43 @@
+@*@using Mictlanix.BE
+	@using Mictlanix.BE.Model
+	@using Mictlanix.BE.Web.Helpers
+	@model int?
+	@{
+		var values = from v in Vehicle.Queryable
+					  where v.IsActive
+					  select v;
+	}
+	<select id='@ViewData.TemplateInfo.GetFullHtmlFieldId("")'
+			name='@ViewData.TemplateInfo.GetFullHtmlFieldName("")'
+			class="form-control">
+		@foreach (var item in values) {
+			<option value="@item.Id" @(item.Id == Model ? "selected" : string.Empty)>@item.NickName</option>
+		}
+	</select>
+	<script type="text/javascript">
+		$(function () {
+			$("#@ViewData.TemplateInfo.GetFullHtmlFieldId("")").select2();
+		});
+	</script>*@
+
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@model int?
+
+@{
+	var field = ViewData.TemplateInfo.HtmlFieldPrefix;
+}
+
+@Html.TextBox("", Model)
+<script type="text/javascript">
+    $(function () {
+        $("#@field").tokenInput("@Url.Action("GetSuggestions", "Vehicles")", {
+            hintText: "@Resources.ChooseVehicle",
+            noResultsText: "@Resources.NoResultsText",
+            searchingText: "@Resources.SearchingText",
+            queryParam: "pattern",
+            minChars: 1,
+            tokenLimit: 1
+        });
+    });
+</script>

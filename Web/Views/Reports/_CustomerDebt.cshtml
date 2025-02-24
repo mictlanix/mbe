@@ -1,66 +1,47 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
-@model IEnumerable<SalesOrder>
+@model IEnumerable<Customer>
 
-<table class='table table-condensed'>
-	<thead>
-	    <tr>
-	        <th class='nowrap center'>@Resources.SalesOrder</th>
-	        <th class='nowrap center'>@Resources.ProductName</th>
-	        <th class='nowrap center'>@Resources.Quantity</th>
-	        <th class='nowrap center'>@Resources.Price</th>
-	        <th class='nowrap center'>@Resources.Subtotal</th>
-	        <th class='nowrap center'>@Resources.Taxes</th>
-	        <th class='nowrap center'>@Resources.Total</th>
-	    </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-	var invoices = item.InvoiceSerials();
-    <tr>
-    	<td class="text-nowrap">
-			@Html.DisplayFor(x => item.Id)
-		@if (!string.IsNullOrWhiteSpace (invoices)) {
-			<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Invoice @invoices">
-				<span class="glyphicon glyphicon-exclamation-sign"></span>
-			</a>
-		}
-		</td>
-    	<td>@item.Comment</td>
-        <td class='date' colspan='5'>@item.Date.ToShortDateString()</td>
-    </tr>
-	foreach (var detail in item.Details) {
-    <tr>
-    	<td class='number' />
-        <td>
-        	@Html.DisplayFor(x => detail.ProductName)
-        	<br>
-        	@Html.DisplayFor(x => detail.Comment)
-        </td>
-        <td class='currency'>@Html.DisplayFor(x => detail.Quantity)</td>
-        <td class='currency'>@Html.DisplayFor(x => detail.NetPrice)</td>
-        <td class='currency'>@Html.DisplayFor(x => detail.SubtotalEx)</td>
-        <td class='currency' />
-        <td class='currency' />
-    </tr>
-	}
-    <tr class='info'>
-        <td colspan='4'/>
-        <td class='currency'>@Html.DisplayFor(x => item.SubtotalEx)</td>
-        <td class='currency'>@Html.DisplayFor(x => item.TaxesEx)</td>
-        <td class='currency'>@Html.DisplayFor(x => item.TotalEx)</td>
-    </tr>
-}
-    <tr class='warning'>
-        <td class='center' colspan='4'><b>@Resources.Totals</b></td>
-        <td class='number'><b>@Model.Sum(x => x.SubtotalEx).ToString("c")</b></td>
-        <td class='number'><b>@Model.Sum(x => x.TaxesEx).ToString("c")</b></td>
-        <td class='number'><b>@Model.Sum(x => x.TotalEx).ToString("c")</b></td>
-    </tr>
-    </tbody>
+<table class=''>
+				<thead>
+								<tr>
+												<th class='center'>@Resources.Customer</th>
+												<th class='center'>@Resources.CreditLimit</th>
+												<th class='center'>@Resources.CreditDays</th>
+												<th class='center'>@Resources.Total</th>
+												<th class='center'>@Resources.Refund</th>
+												<th class='center'>@Resources.Paid</th>
+												<th class='center'>@Resources.Balance</th>
+												<th class='center'>@Resources.ExpiredCredits</th>
+								</tr>
+				</thead>
+				<tbody>
+								@foreach (var item in Model)
+								{
+												<tr>
+																<td class='date'>@Html.DisplayFor(x => item.Name)</td>
+																<td class="text-center">
+																				@Html.ActionLink(item.Id.ToString(), "CustomerDebtReport", new { id = item.Id }, new { target = "_blank" })
+																<td />
+																<td>
+																				@Html.DisplayFor(x => item.CreditLimit)
+																</td>
+																<td>
+																				@Html.DisplayFor(x => item.CreditDays)
+																</td>
+																<td class="text-nowrap">
+																<td />
+																<td class='currency'>@item.Debt().ToString("C")</td>
+												</tr>
+								}
+								<tr class="warning">
+												<td colspan="4"><b>@Resources.Totals</b></td>
+												<td><b>@Model.Sum(x => Model.Sum(y => y.Debt())).ToString("c")</b></td>
+								</tr>
+				</tbody>
 </table>
 <script type='text/javascript'>
-$('[data-toggle="tooltip"]').tooltip();
+				$('[data-toggle="tooltip"]').tooltip();
 </script>

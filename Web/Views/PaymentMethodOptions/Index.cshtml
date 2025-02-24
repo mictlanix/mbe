@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE.Model
+@using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Models
 @using Mictlanix.BE
 @using Mictlanix.BE.Web.Helpers
@@ -7,7 +7,7 @@
 @{
 		  ViewBag.Title = Resources.MethodPaymentOptions;
 		  var CurrentUser = Html.CurrentUser() ?? new User();
-		  var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.ExpenseVoucher);
+		  var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.PaymentMethodOptions);
 }
 
 <div class="page-header">

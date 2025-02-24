@@ -1,7 +1,10 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @model Address
 
+<div class='row'>
+  	<div class='col-xs-4'>@Html.LabelFor(x => x.Nickname) @Html.DisplayFor(x => x.Nickname)</div>
+</div>
 <div class='row'>
   	<div class='col-xs-4'>@Html.LabelFor(x => x.Street)</div>
 	<div class='col-xs-2'>@Html.LabelFor(x => x.ExteriorNumber)</div>

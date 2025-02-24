@@ -1,0 +1,41 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model PurchaseRequest
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.PurchaseRequest);
+}
+
+<fieldset>
+	<div class='row'>
+		<div class='col-xs-8'>
+	  		<dl class=''>
+				<dt>@Resources.Customer</dt>
+				<dd>@Html.DisplayFor(x => x.Creator.Name)</dd>
+				<dt>@Resources.Warehouse</dt>
+				<dd>@Html.DisplayFor(x => x.Warehouse.Name, "String")</dd>
+				<dt>@Resources.Store</dt>
+				<dd>@Html.DisplayFor(x => x.Warehouse.Store.Name, "String")</dd>
+			</dl>
+		</div>
+	  	<div class='col-xs-4'>
+	  		<dl class='dl-horizontal'>
+				<dt>@Resources.Date</dt>
+				<dd>@Html.DisplayFor(x => x.Date)</dd>
+				<dt>@Resources.Serial</dt>
+				<dd>@Html.DisplayFor(x => x.Serial)</dd>
+			</dl>
+  		</div>
+	</div>
+@if(Privilege.AllowDelete && !Model.IsCancelled) {
+	<div class='row'>
+  		<div class='col-xs-12'>
+	    @using (Html.BeginForm("Cancel", "DeliveryOrders", new { id =  Model.Id }, FormMethod.Post, new { @class = "modal-form pull-right" })) {
+			<button type="submit" class="icon cancel">@Resources.Cancel</button>
+	    }
+  		</div>
+	</div>
+}
+</fieldset>

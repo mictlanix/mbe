@@ -1,0 +1,43 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model CustomerPayment
+
+<div class="form-group">
+    <div class="col-xs-6 field-required" style="font-size:3em;">@Html.LabelFor(x => x.Amount) @Html.DisplayFor(x => x.Amount) @Html.ValidationMessageFor(x => x.Amount)</div>
+</div>
+<div class="form-group">
+				<input id="Amount" name="Amount" style="font-size:3em; height:1.5em;" class="form-control text-right" type="text" autocomplete="off" placeholder="@Model.Amount">
+</div>
+<div class="form-group">
+				<div class="col-xs-12 field-required">
+								@Html.LabelFor(x => x.Method)
+								<select name="Method">
+												@foreach (var method in WebConfig.CashierPaymentOptions)
+												{
+																<option value="@method" @(method == Model.Method ? "Selected":"") >@method.GetDisplayName()</option>
+												}
+								</select>
+								@Html.ValidationMessageFor(x => x.Method)
+				</div>
+</div>
+<div class="form-group">
+				<div class="col-xs-12 field-required">
+								@Html.LabelFor(x => x.PaymentType)
+								@Html.EditorFor(x => x.PaymentType)
+								@Html.ValidationMessageFor(x => x.PaymentType)
+				</div>
+</div>
+<div class="form-group">
+    <div class="col-xs-12 field-required">@Html.LabelFor(x => x.Reference)
+				@Html.EditorFor(x => x.Reference)
+				@Html.ValidationMessageFor(x => x.Reference)</div>
+</div>
+<div class="form-group">
+				@Html.ValidationSummary()
+</div>
+
+
+<style type="text/css">
+ul.token-input-list { width: 100%; }
+</style>

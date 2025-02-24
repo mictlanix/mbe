@@ -1,0 +1,25 @@
+@using Mictlanix.BE
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model dynamic
+
+<table>
+				<thead>
+								<tr>
+												@foreach (var column in Model.columns)
+												{
+																<th>@column</th>
+												}
+								</tr>
+				</thead>
+</table>
+<table>
+				<tbody>
+								@foreach (var row in Model.rows)
+								{
+												//@Html.Partial("", row)
+								}
+				</tbody>
+</table>

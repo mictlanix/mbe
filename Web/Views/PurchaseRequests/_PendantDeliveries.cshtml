@@ -1,0 +1,87 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Web.Models
+@using Mictlanix.BE.Model
+
+@model Search<RemainingOrderDetail>
+
+<table class="table-hover">
+	<thead>
+		<tr>
+			<th>@Resources.SalesOrderId</th>
+			<th>@Resources.SalesOrderDate</th>
+			<th>@Resources.ProductName</th>
+			<th>@Resources.UnitOfMeasurement</th>
+			<th>@Resources.QuantitySold</th>
+			<th>@Resources.QuantityRemaining</th>
+			<th>@Resources.Details</th>
+		</tr>
+	</thead>
+	<tbody>
+
+		@foreach (var item in Model.Results) {
+				<tr>
+
+					<td class="nowrap center">@Html.DisplayFor(x => item.SalesOrderId)</td>
+					<td class="nowrap center">@Html.DisplayFor(x => item.Date)</td>
+					<td class="nowrap center">@Html.DisplayFor(x => item.ProductName)</td>
+					<td class="nowrap center">@Html.DisplayFor(x => item.UnitOfMeasure)</td>
+					<td class="nowrap center">@Html.DisplayFor(x => item.Quantity)</td>
+					<td class="nowrap center">@Html.DisplayFor(x => item.QuantityRemain)</td>
+					<td class="nowrap center">
+						@if (item.Details!= null && item.Details.Count > 0) {
+						<table>
+							<thead>
+								<tr>
+									<th class="small">@Resources.DeliveryOrderId</th>
+									<th>@Resources.Date</th>
+									<th>@Resources.QuantityDelivered</th>
+									<th>@Resources.Delivered</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var detail in item.Details) {
+										  <tr>
+											  <td>@Html.DisplayFor(x => detail.DeliveryOrder.Id)</td>
+											  <td>@Html.DisplayFor(x => detail.DeliveryOrder.Date)</td>
+											  <td>@Html.DisplayFor(x => detail.Quantity)</td>
+											  <td>@Html.DisplayFor(x => detail.DeliveryOrder.IsDelivered)</td>
+										  </tr>
+								}
+							</tbody>
+						</table>
+					}
+					</td>
+				</tr>
+
+
+		}
+
+	</tbody>
+</table>
+
+<div class="buttons right">
+	<label class='button left'>@Model.ToString()</label>@if (Model.HasPrev) {<a class='button middle icon prev icon-only paging' title='@Resources.PrevPage' href='javascript:void(0)'></a>}@if (Model.HasNext) {<a class='button right icon next icon-only paging' title='@Resources.NextPage' href='javascript:void(0)'></a>}
+</div>
+<script type="text/javascript">
+bindModal('.open-modal');
+$('a.paging').click(function (e) {
+	var offset=@Model.Offset;
+
+	if($(this).hasClass('next')) {
+		offset+=@Model.Limit;
+	} else {
+		offset-=@Model.Limit;
+	}
+
+	e.preventDefault();
+	$('#activity-indicator').show();
+	$('#search-results').hide();
+
+	$.post('@Url.Action("PendantDeliveries")', { Pattern: '@Model.Pattern', Offset: offset, Limit: @Model.Limit }, function(data) {
+		$('#search-results').html(data);
+		$('#search-results').show();
+		$('#activity-indicator').hide();
+	});
+});
+
+</script>

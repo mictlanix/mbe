@@ -1,4 +1,4 @@
-﻿// 
+// 
 // DateRange.cs
 // 
 // Author:
@@ -28,6 +28,8 @@
 //
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Mictlanix.BE.Model;
 
@@ -42,8 +44,8 @@ namespace Mictlanix.BE.Web.Models {
 		[Display(Name = "Date", ResourceType = typeof(Resources))]
 		public DateTime Date { get; set; }
 		
-		[Display(Name = "SalesOrder", ResourceType = typeof(Resources))]
-		public int? SalesOrder { get; set; }
+		//[Display(Name = "SalesOrder", ResourceType = typeof(Resources))]
+		//public int? SalesOrder { get; set; }
 		
 		[Display(Name = "Serial", ResourceType = typeof(Resources))]
 		public int? Serial { get; set; }
@@ -56,5 +58,9 @@ namespace Mictlanix.BE.Web.Models {
 		
 		[Display(Name = "Amount", ResourceType = typeof(Resources))]
 		public decimal Amount { get; set; }
+
+		public decimal AmountApplied { get; set; }
+		public decimal Balance { get; set; }
+		public IList<SalesOrderPayment> Allocations { get; set; }
 	}
 }

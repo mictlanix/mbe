@@ -1,0 +1,20 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Web.Models
+@model CancellationStampViewModel
+
+	<div id="cancellation_stamp"
+		 style="
+			-webkit-transform: rotate(-35deg);
+			position: absolute;
+			top: 200px;
+			left:auto;
+			width:100%;
+			text-align:center;
+			">
+		<span style="font-size: 4.5em; font-weight: bold; display:block; background-color: white !important; padding-bottom: 2px;">@Resources.Cancelled</span>
+		<span style="display:block; background-color:white !important; margin-top:0;">
+			@Model.DateTime
+		</span><span style="display:block; background-color:white !important;">
+			@Model.Id
+		</span>
+	</div>

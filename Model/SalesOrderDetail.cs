@@ -1,4 +1,4 @@
-﻿// 
+// 
 // SalesOrderDetail.cs
 // 
 // Author:
@@ -32,10 +32,15 @@ using System.Collections.Generic;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
+using static NHibernate.Engine.Query.CallableParser;
+using System.Linq;
 
 namespace Mictlanix.BE.Model {
 	[ActiveRecord ("sales_order_detail")]
 	public class SalesOrderDetail : ActiveRecordLinqBase<SalesOrderDetail> {
+
+		IList<CustomerRefundDetail> refunds = new List<CustomerRefundDetail> ();
+
 		[PrimaryKey (PrimaryKeyType.Identity, "sales_order_detail_id")]
 		public int Id { get; set; }
 
@@ -51,7 +56,7 @@ namespace Mictlanix.BE.Model {
 		[DisplayFormat (DataFormatString = "{0:0.####}")]
 		[Display (Name = "Quantity", ResourceType = typeof (Resources))]
 		[Required (ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof (Resources))]
-		public decimal Quantity { get; set; }
+		public decimal Quantity { get ; set;  }
 
 		[Property]
 		[Display (Name = "Cost", ResourceType = typeof (Resources))]
@@ -71,7 +76,7 @@ namespace Mictlanix.BE.Model {
 			get { return ModelHelpers.NetPrice (Price, TaxRate, IsTaxIncluded); }
 		}
 
-		[Property ("discount")]
+		[Property ("discount_rate")]
 		[DisplayFormat (DataFormatString = "{0:p}")]
 		[Display (Name = "Discount", ResourceType = typeof (Resources))]
 		public decimal DiscountRate { get; set; }
@@ -171,6 +176,35 @@ namespace Mictlanix.BE.Model {
 		public decimal TotalEx {
 			get { return ModelHelpers.Total (Quantity, Price, ExchangeRate, DiscountRate, TaxRate, IsTaxIncluded); }
 		}
+
+		[HasMany (typeof (CustomerRefundDetail), Table = "customer_refund_detail", ColumnKey = "sales_order_detail", Lazy = true)]
+		public virtual IList<CustomerRefundDetail> RefundDetails {
+			get { return refunds; }
+			set { refunds = value; }
+		}
+
+
+		public virtual SalesOrderDetail GetSerializable () {
+			return new SalesOrderDetail {
+				Id = Id,
+				Comment = Comment,
+				Cost = Cost,
+				Price = Price,
+				ProductCode = ProductCode,
+				ProductName = ProductName,
+				TaxRate = TaxRate,
+				DiscountRate = DiscountRate,
+				Currency = Currency,
+				ExchangeRate = ExchangeRate,
+				IsDelivery = IsDelivery,
+				IsTaxIncluded = IsTaxIncluded,
+				Quantity = Quantity,
+				
+			};
+		}
+
+		public List<string> Errors { get; set; }
+		public List<string> Warnings { get; set; }
 
 		#region Override Base Methods
 

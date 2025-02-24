@@ -1,4 +1,4 @@
-﻿
+
 @using Mictlanix.BE
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
@@ -16,7 +16,7 @@
 		<th class="nowrap">@Resources.PaymentTerms</th>
 		<th class="nowrap">@Resources.PaymentMethod</th>
 	</tr>
-	@foreach (var item in Model.Immediates) {
+	@*@foreach (var item in Model.Immediates) {
 			<tr>
 				<td class="number">@Html.DisplayFor(x => item.Id)</td>
 				<td class="number">@Html.DisplayFor(x => item.Serial)</td>
@@ -34,11 +34,11 @@
 				 			 <td class="text">@payment.Payment.Method.GetDisplayName()</td>
 						 </tr>
 		}
-	}
+	}*@
 
 	<tr><td colspan="8">&nbsp;</td></tr>
 
-	@foreach (var item in Model.Credits) {
+	@*@foreach (var item in Model.Credits) {
 			<tr>
 				<td class="number">@Html.DisplayFor(x => item.Id)</td>
 				<td class="number">@Html.DisplayFor(x => item.Serial)</td>
@@ -56,9 +56,9 @@
 							<td class="text">@payment.Method.GetDisplayName()</td>
 						</tr>
 		}
-	}
+	}*@
 
-	<tr><td colspan="8">&nbsp;</td></tr>
+	@*<tr><td colspan="8">&nbsp;</td></tr>
 
 	@foreach (var item in Model.Expenses) {
 			<tr>
@@ -85,7 +85,7 @@
 				<td class="number"><i>@Model.GetSubTotal(item).ToString("c")</i></td>
 				<td></td>
 			</tr>
-	}
+	}*@
 
 
 </table>

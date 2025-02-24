@@ -1,0 +1,11 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model;
+@using Mictlanix.BE.Web.Helpers;
+@model IEnumerable<PurchaseOrderDetail>
+
+
+
+@foreach (var item in Model)
+{
+				@Html.Partial("_DetailEditView", item)
+}

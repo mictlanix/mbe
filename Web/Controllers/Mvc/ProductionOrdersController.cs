@@ -72,17 +72,20 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		Search<SalesOrder> SearchSalesOrders (Search<SalesOrder> search)
 		{
-			IQueryable<SalesOrder> query;
+			IQueryable<SalesOrder> query = from x in SalesOrder.Queryable
+						       where x.Details.Any(y => !y.Product.IsStockable)
+						       && x.IsCompleted && !x.IsCancelled
+						       select x;
 			var item = WebConfig.Store;
 
 			if (string.IsNullOrEmpty (search.Pattern)) {
-				query = from x in SalesOrder.Queryable
-					where x.Store.Id == item.Id && x.IsCompleted && !x.IsCancelled
+				query = from x in query
+					where x.Store.Id == item.Id
 					orderby x.Date descending
 					select x;
 			} else {
-				query = from x in SalesOrder.Queryable
-					where x.Store.Id == item.Id && x.IsCompleted && !x.IsCancelled && (
+				query = from x in query
+					where x.Store.Id == item.Id && (
 				      x.Customer.Name.Contains (search.Pattern) ||
 				      x.SalesPerson.Nickname.Contains (search.Pattern))
 					orderby x.Date descending

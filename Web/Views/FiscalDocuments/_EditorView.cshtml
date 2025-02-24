@@ -18,6 +18,14 @@
                         @Html.DisplayFor(x => x.Issuer, "String")
                     </a>
                 </dd>
+																<dt>@Resources.IssuedLocation</dt>
+                <dd>
+                    <a id='issued-location' data-type='select2' data-placement='right' data-pk='@Model.Id'
+                       data-value='@Model.Store.Id' data-url='@Url.Action("SetIssuedLocation", new { id = Model.Id })'
+                       data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+                        @Html.DisplayFor(x => x.Store.Name, "String")
+                    </a>
+                </dd>
                 <dt>@Resources.Customer</dt>
                 <dd>
                     <a id='customer' data-type='select2' data-placement='right' data-pk='@Model.Id'
@@ -208,7 +216,57 @@ $('#issuer').editable({
 	        return selection.name;
 	    }
 	},
-	success: function(response, newValue) {
+				success: function (response, newValue) {
+		      if (response.recipientPostalCode) {
+													$('#recipientPostalCode').text(response.recipientPostalCode);
+												} else {
+													$('#recipientPostalCode').html('<span class="editable-empty">@Resources.Empty</span>');
+												}
+
+		$('#type').text(response.type);
+		$('#batch').text(response.batch)
+				   .editable('setValue', response.batch);
+    },
+    display: function(value, response) {
+    	if (typeof response !== 'undefined') {
+			$(this).html(response.value);
+		}
+    }
+});
+				$('#issued-location').editable({
+    select2: {
+	    ajax: {
+	        url: '@Url.Action("GetSuggestions", "Stores")',
+	        dataType: 'json',
+	        type: 'POST',
+	        data: function(term,page,context) {
+	        	return { pattern:term };
+	        },
+	        results: function(data,page) {
+	            return { results:data };
+	        }
+	    },
+	    initSelection: function(element, callback) {
+	        var data = {
+													id: $('#issued-location').data('value'),
+													name: $('#issued-location').text()
+        	};
+	        callback(data);
+	    },
+	    formatResult: function(result ) {
+	        return result.name;
+	    },
+	    formatSelection: function(selection) {
+	        return selection.name;
+	    }
+	},
+				success: function (response, newValue) {
+		      if (response.recipientPostalCode) {
+													$('#recipientPostalCode').text(response.recipientPostalCode);
+												} else {
+													$('#recipientPostalCode').html('<span class="editable-empty">@Resources.Empty</span>');
+												}
+
 		$('#type').text(response.type);
 		$('#batch').text(response.batch)
 				   .editable('setValue', response.batch);

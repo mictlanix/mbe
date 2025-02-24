@@ -1,4 +1,4 @@
-﻿// 
+// 
 // BarcodesController.cs
 // 
 // Author:
@@ -60,6 +60,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult QRCode (string id)
 		{
 			return QRCodeAction (id);
+		}
+
+		[AllowAnonymous]
+		public ActionResult QRCodeUrl (string url)
+		{
+			return QRCodeAction (url);
 		}
 
 		internal static ActionResult QRCodeAction (string id)

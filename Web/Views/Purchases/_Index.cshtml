@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
@@ -14,11 +14,16 @@
 
 <table id="purchases-orders">
     <tr>
-        <th>@Html.LabelFor(x => new PurchaseOrder ().Id)</th>
-        <th>@Html.LabelFor(x => new PurchaseOrder ().CreationTime)</th>
-        <th>@Html.LabelFor(x => new PurchaseOrder ().Supplier)</th>
-        <th>@Html.LabelFor(x => new PurchaseOrder ().IsCompleted)</th>
-        <th>@Html.LabelFor(x => new PurchaseOrder ().IsCancelled)</th>
+        <th>@Resources.PurchaseOrderId</th>
+        <th>@Resources.CreationTime</th>
+        <th>@Resources.Supplier</th>
+        <th>@Resources.Warehouse</th>
+        <th>@Resources.EstimatedReceiptDate</th>
+        <th>@Resources.Completed</th>
+        <th>@Resources.Cancelled</th>
+        @if (WebConfig.PurchaseOrderApprovalRequired) {
+            <th>@Resources.Approved</th>
+        }
         <th></th>
     </tr>
     @foreach (var item in Model.Results) {

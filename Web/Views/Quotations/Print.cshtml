@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model;
 @using Mictlanix.BE.Web.Helpers;
 @model SalesQuote
@@ -18,91 +18,118 @@
 			<div class="col-xs-12 uppercase">
 				<h2>@Resources.Customer</h2>
 			</div>
-		 	<div class="col-xs-12">
-		 		<p><span class="mylabel">@Resources.Name</span></p>
-	 		</div>
-	 		<div class="col-xs-12">
-	 			<p>@Html.DisplayFor(x => x.Customer.Name)</p>
- 			</div>
-            @if (Model.Contact != null) {
-                <div class="col-xs-12">
-                    <p><span class="mylabel">@Resources.Contact</span></p>
-                </div>
-                <div class="col-xs-12">
-                    <p>@Html.DisplayFor(x => x.Contact.Name)</p>
-                </div>
-            }
-             @if (!string.IsNullOrEmpty(Model.Comment)) {
-                <div class="col-xs-12">
-                    <p><span class="mylabel">@Resources.Comment</span></p>
-                </div>
-                <div class="col-xs-12">
-                    <p>@Html.DisplayFor(x => x.Comment)</p>
-                </div>
-            }
-            @if (Model.ShipTo != null) {
-                <div class="col-xs-12">
-                    <p><span class="mylabel">@Resources.ShipTo</span></p>
-                </div>
-                <div class="col-xs-12">
-                    <p>
-                        @Html.DisplayFor(x => x.ShipTo.Street)
-                        @Html.DisplayFor(x => x.ShipTo.ExteriorNumber)
-                        @Html.DisplayFor(x => x.ShipTo.InteriorNumber)<br>
-                        @Html.DisplayFor(x => x.ShipTo.Neighborhood),
-                        @Html.DisplayFor(x => x.ShipTo.Borough)<br>
-                        @Html.DisplayFor(x => x.ShipTo.State),
-                        @Html.DisplayFor(x => x.ShipTo.Country),
-                        @Html.DisplayFor(x => x.ShipTo.PostalCode)
-                    </p>
-                </div>
-            }
- 		</div>
+			<div class="col-xs-12">
+				<p><span class="mylabel">@Resources.Name: </span>@Html.DisplayFor(x => x.Customer.Name)</p>
+			</div>
+			@if (Model.Contact != null)
+			{
+				<div class="col-xs-12">
+					<p>
+						<span class="mylabel">@Resources.Contact: </span>
+						@Html.DisplayFor(x => x.Contact.Name)
+					</p>
+				</div>
+				<div class="col-xs-12">
+					@if (!string.IsNullOrEmpty(Model.Contact.Mobile))
+					{
+						<p>
+							<span class="mylabel">@Resources.Mobile: </span> @Model.Contact.Mobile
+						</p>
+					}
+					else if (!string.IsNullOrEmpty(Model.Contact.Phone))
+					{
+						<p>
+							<span class="mylabel">@Resources.Phone: </span> @Model.Contact.Phone
+							@if (!string.IsNullOrEmpty(Model.Contact.PhoneExt)) {
+								@Resources.PhoneExt @Model.Contact.PhoneExt
+							}
+						</p>
+					}
+				</div>
+			}
+			</div>
 	</div>
 	<div class="col-xs-6 text-right">
 		<div class="row">
-			<div class="col-xs-12">
+			<div class="col-xs-12" @*style="width:200px; position:fixed; top:165px; right:-20px;"*@>
 				<h2 class="text-right uppercase">@Resources.SalesQuote @Html.DisplayFor(x => x.Id)</h2>
 			</div>
-			<div class="col-xs-12">
-				<p><span class="mylabel">@Resources.DateTime</span></p>
+			<div class="col-xs-12 uppercase">
+				<h4>&nbsp;</h4>
 			</div>
-	 		<div class="col-xs-12">
-				<p>@Html.DisplayFor(x => x.Date)</p>
-	 		</div>
 			<div class="col-xs-12">
-				<p><span class="mylabel">@Resources.DueDate</span></p>
+				<p><span class="mylabel">@Resources.DateTime: </span>@Html.DisplayFor(x => x.Date)</p>
 			</div>
-	 		<div class="col-xs-12">
-				<p>@Html.DisplayFor(x => x.DueDate)</p>
-	 		</div>
+			<div class="col-xs-12">
+				<p></p>
+			</div>
+			<div class="col-xs-12">
+				<p><span class="mylabel">@Resources.DueDate: </span>@Html.DisplayFor(x => x.DueDate)</p>
+			</div>
+			<div class="col-xs-12">
+				<p></p>
+			</div>
 		</div>
 	</div>
+	<div class="col-xs-12 text-left">
+		@if (!string.IsNullOrEmpty(Model.Comment))
+		{
+			<div class="col-xs-12">
+				<p><span class="mylabel">@Resources.Comment</span></p>
+			</div>
+			<div class="col-xs-12">
+				<p>@Model.Comment</p>
+			</div>
+		}
+		@if (Model.ShipTo != null)
+		{
+			<div class="col-xs-12">
+				<p><span class="mylabel">@Resources.ShipTo</span></p>
+			</div>
+			<div class="col-xs-12">
+				<p>
+					@Model.ShipTo.Street
+					@Model.ShipTo.ExteriorNumber
+					@Model.ShipTo.InteriorNumber
+					@Model.ShipTo.Neighborhood,
+					@Model.ShipTo.Borough
+					@Model.ShipTo.State,
+					@Model.ShipTo.Country,
+					@Model.ShipTo.PostalCode
+				</p>
+			</div>
+		}
+	</div>
+</div>
+<div class="row">
+	
 </div>
 
 <table  style="border-spacing:0 4px;border-collapse: separate;">
     <thead>
         <tr>
-            <th class="col-xs-1 text-center">@Resources.Quantity</th>
             <th class="col-xs-3 text-center">@Resources.ProductCode</th>
             <th class="col-xs-6 text-center">@Resources.ProductName</th>
             <th class="col-xs-1 text-center">@Resources.Price</th>
+            <th class="col-xs-1 text-center">@Resources.Quantity</th>
             <th class="col-xs-1 text-center">@Resources.Amount</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Details) {
+        @foreach (var item in Model.Details)
+								{
+												//item.Price += item.PriceIncrement;
             <tr class="alt">
-                <td class="nowrap text-right">@Html.DisplayFor(x => item.Quantity)</td>
-                <td class="text-center">@Html.DisplayFor(x => item.ProductCode)</td>
-                <td class="text-center">
+                <td class="text-left">@Html.DisplayFor(x => item.ProductCode)</td>
+                <td class="text-left">
 					@Html.DisplayFor(x => item.ProductName)
 				@if (!string.IsNullOrEmpty (item.Comment)) {
 					<br>
 					@Html.DisplayFor(x => item.Comment)
 				}
 				</td>
-                <td class="nowrap text-right">@Html.DisplayFor(x => item.PriceTaxIncluded)</td>
+                <td class="nowrap text-right">@Html.DisplayFor(x => item.UnitPriceWithDiscount)</td>
+                <td class="nowrap text-center">@Html.DisplayFor(x => item.Quantity)</td>
                 <td class="nowrap text-right">@Html.DisplayFor(x => item.Total)</td>
             </tr>
         }
@@ -113,24 +140,31 @@
 
 <table>
 	<tfoot>
-        <tr>
-            <td rowspan="@(Model.Discount > 0m ? 2 : 1)" class="col-xs-10 text-center" style="vertical-align:middle">
-                <div style="border-top: solid black 1px; border-bottom:solid black 1px; margin: 0 2cm 0 2cm;">
-                    @Html.CurrencyToString(Model.Total, WebConfig.BaseCurrency)
-                </div>
-            </td>
-            <td class="col-xs-1 nowrap text-right">@Resources.Total</td>
-            <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Total)</td>
-        </tr>
-	@if (Model.Discount > 0m) {
-        <tr>
-            <th class="col-xs-1 nowrap text-right">@Resources.Discount</th>
-            <td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Discount)</td>
-        </tr>
-	}
-        <tr>
-            <td colspan="3" class="col-xs-3 nowrap text-right">Incluye un IVA de @Html.DisplayFor(x => x.Taxes)</td>
-        </tr>
+		<tr>
+			<td rowspan="3" class="col-xs-10 text-center" style="vertical-align:middle">
+				<p style="border-top: solid black 1px; border-bottom:solid black 1px; margin: 0 2cm 0 2cm;">
+					@Html.CurrencyToString(Model.Total, Model.Currency)
+				</p>
+			</td>
+			<td class="col-xs-1 nowrap text-right">@Resources.Subtotal</td>
+			<td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Subtotal)</td>
+		</tr>
+		<tr>
+			<td class="col-xs-1 nowrap text-right">@Resources.Taxes</td>
+			<td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Taxes)</td>
+		</tr>
+		<tr>
+			<td class="col-xs-1 nowrap text-right">@Resources.Total</td>
+			<td class="col-xs-1 nowrap text-right">@Html.DisplayFor(x => x.Total)</td>
+		</tr>
+		@if (Model.Discount > 0)
+		{
+			<tr>
+				<td class="text-center">
+					@*<text>@string.Format(Resources.SavingOnSalesQuote, Model.Details.Sum(x => x.Total * x.DiscountRate))</text>*@
+				</td>
+			</tr>
+		}
 	</tfoot>
 </table>
 

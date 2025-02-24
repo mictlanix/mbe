@@ -1,78 +1,116 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
 @model Search<Customer>
 
 @{
-    ViewBag.Title = Resources.Title_Customer;
-    var CurrentUser = Html.CurrentUser() ?? new User ();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Customers);
+				ViewBag.Title = Resources.Title_Customer;
+				var CurrentUser = Html.CurrentUser() ?? new User();
+				var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Customers);
 }
 
 <p>@Html.ValidationMessageFor(x => x.Pattern)</p>
 
 <table>
-    <tr>
-        <th>@Html.LabelFor(x => new Customer ().Code)</th>
-        <th colspan="3" >@Html.LabelFor(x => new Customer ().Name)</th>
-        <th style="width:25%">@Html.LabelFor(x => new Customer ().Zone)</th>
-        <th style="width:3%">@Html.LabelFor(x => new Customer ().CreditLimit)</th>
-        <th colspan="2">@Html.LabelFor(x => new Customer ().CreditDays)</th>
-    </tr>
-@foreach (var item in Model.Results) {
-    <tr style="background-color:#f8f8f8">
-        <td>@Html.DisplayFor(x => item.Code)</td>
-        <td colspan="3" >@Html.DisplayFor(x => item.Name)</td>
-        <td style="width:25%">@Html.DisplayFor(x => item.Zone)</td>
-        <td style="width:3%">@Html.DisplayFor(x => item.CreditLimit)</td>
-        <td colspan="2">@Html.DisplayFor(x => item.CreditDays)</td>
-    </tr>
-	if (!string.IsNullOrWhiteSpace (item.Comment)) {
-    <tr>
-        <td></td>
-        <td colspan="1"><strong>Comentarios</strong></td>
-        <td colspan="5"> @Html.DisplayFor(x => item.Comment)</td>
-    </tr>
-	}
-    if (item.Taxpayers.Count () > 0) {
-    <tr>
-        <td></td>
-        <td colspan="6"><strong>Datos Fiscales</strong></td>
-    </tr>
-        foreach (var data in item.Taxpayers) {
-            <tr>
-                <td></td>
-                <td colspan="1">@data.Id</td>
-                <td>@data.Name</td>
-                <td style="width:10%">@data.Email</td>
-                <td colspan="3"></td>
-            </tr>
-        }
-    }
-    if(item.Addresses.Count () > 0){
-    <tr>
-        <td></td>
-        <td colspan="6"><strong>Direcciones</strong></td>
-    </tr>
-        foreach (var data in item.Addresses) {
-            <tr>
-                <td></td>
-                <td colspan="6">@data.Street @data.ExteriorNumber, @data.PostalCode, @data.Neighborhood, @data.Locality @data.Borough, @data.State, @data.City @data.Country</td>
-            </tr>
-        }
-	}
-	if(item.Contacts.Count () > 0){
-	    <tr>
-	        <td></td>
-	        <td colspan="6"><strong>Contactos</strong></td>
-	    </tr>
-	    foreach (var data in item.Contacts) {
-	        <tr>
-	            <td></td>
-	            <td colspan="6">@data.Name, @data.Email, @data.Phone, @data.PhoneExt @data.Mobile @data.Fax </td>
-	        </tr>
-	    }
-	}
-}
+				<tr>
+								<th>@Html.LabelFor(x => new Customer().Code)</th>
+								<th colspan="3">@Html.LabelFor(x => new Customer().Name)</th>
+								<th style="width:25%">@Html.LabelFor(x => new Customer().Zone)</th>
+								<th style="width:3%">@Html.LabelFor(x => new Customer().CreditLimit)</th>
+								<th colspan="2">@Html.LabelFor(x => new Customer().CreditDays)</th>
+				</tr>
+				@foreach (var item in Model.Results)
+				{
+								<tr><td colspan="7" style="background-color:lightgray; color:whitesmoke">@Resources.Customer</td></tr>
+								<tr style="background-color:#f8f8f8">
+												<td>@Html.DisplayFor(x => item.Code)</td>
+												<td colspan="3">@Html.DisplayFor(x => item.Name)</td>
+												<td style="width:25%">@Html.DisplayFor(x => item.Zone)</td>
+												<td style="width:3%">@Html.DisplayFor(x => item.CreditLimit)</td>
+												<td colspan="2">@Html.DisplayFor(x => item.CreditDays)</td>
+								</tr>
+								if (!string.IsNullOrWhiteSpace(item.Comment))
+								{
+												<tr>
+																<td></td>
+																<td colspan="1"><strong>Comentarios</strong></td>
+																<td colspan="5"> @Html.DisplayFor(x => item.Comment)</td>
+												</tr>
+								}
+								if (item.Taxpayers.Count() > 0)
+								{
+												<tr>
+																<td></td>
+																<td colspan="6"><strong>Datos Fiscales</strong></td>
+												</tr>
+												foreach (var data in item.Taxpayers)
+												{
+																<tr>
+																				<td></td>
+																				<td colspan="1">@data.Id</td>
+																				<td>@data.Name</td>
+																				<td style="width:10%">@data.Email</td>
+																				<td colspan="3"></td>
+																</tr>
+												}
+								}
+								if (item.Addresses.Count() > 0)
+								{
+												<tr>
+																<td></td>
+																<td colspan="6"><strong>Direcciones</strong></td>
+												</tr>
+												foreach (var data in item.Addresses)
+												{
+																<tr>
+																				<td></td>
+																				<td colspan="6">@data.Street @data.ExteriorNumber, @data.PostalCode, @data.Neighborhood, @data.Locality @data.Borough, @data.State, @data.City @data.Country</td>
+																</tr>
+												}
+								}
+								if (item.Contacts.Count() > 0)
+								{
+												<tr>
+																<td></td>
+																<td colspan="6"><strong>Contactos</strong></td>
+												</tr>
+												foreach (var data in item.Contacts)
+												{
+																<tr>
+																				<td></td>
+																				<td colspan="6">@data.Name, @data.Email, @data.Phone, @data.PhoneExt @data.Mobile @data.Fax </td>
+																</tr>
+												}
+								}
+
+
+
+								if (item.Debt() > 0.1m)
+								{
+
+												<tr><td colspan="6" style="background-color:orange; color:whitesmoke" align="right">@Resources.CustomerDebt:</td><td align="left">@item.Debt().ToString("c")</td></tr>
+												<tr><td colspan="6" style="background-color:@(item.HasExpiredCredits()?"red":"orange"); color:whitesmoke" align="right">@Resources.ExpiredCredits:</td><td align="left">@((bool)item.HasExpiredCredits()?Resources.ExpiredCredits:Resources.No)</td></tr>
+												foreach (var order in SalesOrder.Queryable.Where(x => !x.IsPaid && !x.IsCancelled && x.Terms == PaymentTerms.NetD && x.Customer == item))
+												{
+																<tr>
+																				<td>
+																								@Html.ActionLink((string)order.Id.ToString(), "View", "SalesOrders", new { id = order.Id },
+																												new { title = Resources.Details, target = "_blank" })
+																				</td>
+																				<td>
+																								@order.Balance.ToString("c")
+																				</td>
+																				<td>
+																								@order.Paid.ToString("c")
+																				</td>
+																</tr>
+												}
+								}
+								if (!item.HasCredit)
+								{
+												<tr><td colspan="6" align="right">@Resources.CreditLimitIsNotSet</td></tr>
+								}
+
+				}
 </table>

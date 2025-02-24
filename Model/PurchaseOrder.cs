@@ -1,4 +1,4 @@
-﻿// 
+// 
 // PurchaseOrder.cs
 // 
 // Author:
@@ -59,9 +59,14 @@ namespace Mictlanix.BE.Model {
 		public DateTime CreationTime { get; set; }
 
 		[Property ("modification_time")]
-		[DataType (DataType.DateTime)]
+		[DataType (DataType.Date)]
 		[Display (Name = "ModificationTime", ResourceType = typeof (Resources))]
 		public DateTime ModificationTime { get; set; }
+
+		[Property ("estimated_receipt_date")]
+		[DataType (DataType.Date)]
+		[Display (Name = "EstimatedReceiptDate", ResourceType = typeof (Resources))]
+		public virtual DateTime? EstimatedReceiptDate { get; set; }
 
 		[BelongsTo ("creator")]
 		[Display (Name = "Creator", ResourceType = typeof (Resources))]
@@ -70,6 +75,10 @@ namespace Mictlanix.BE.Model {
 		[BelongsTo ("updater")]
 		[Display (Name = "Updater", ResourceType = typeof (Resources))]
 		public virtual Employee Updater { get; set; }
+
+		[BelongsTo ("approver")]
+		[Display (Name = "Approver", ResourceType = typeof (Resources))]
+		public virtual Employee Approver { get; set; }
 
 		[Property ("completed")]
 		[Display (Name = "Completed", ResourceType = typeof (Resources))]
@@ -95,6 +104,10 @@ namespace Mictlanix.BE.Model {
 			get { return details; }
 			set { details = value; }
 		}
+
+		[Property ("approved")]
+		[Display (Name = "Approved", ResourceType = typeof (Resources))]
+		public virtual bool IsApproved { get; set; }
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Subtotal", ResourceType = typeof (Resources))]

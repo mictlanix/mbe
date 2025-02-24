@@ -1,11 +1,11 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model ExpenseVoucher
 
 @{
 	var CurrentUser = Html.CurrentUser() ?? new User();
-	var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders);
+	var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.ExpenseTicket);
 }
 
 <fieldset>

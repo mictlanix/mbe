@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model DeliveryOrderDetail
@@ -27,7 +27,7 @@
         <b>@Resources.SKU: </b>
         <span>@Html.DisplayFor(x => x.Product.SKU)</span>
     }
-	 @if (!string.IsNullOrEmpty (Model.OrderDetail.Comment)) {
+	 @if (Model.OrderDetail != null && !string.IsNullOrEmpty (Model.OrderDetail.Comment)) {
 	 		<b>@Resources.Comment: </b><span>@Model.OrderDetail.Comment</span><br />
 	 }
         <br/>

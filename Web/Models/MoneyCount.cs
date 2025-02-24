@@ -1,4 +1,4 @@
-﻿// 
+// 
 // Search.cs
 // 
 // Author:
@@ -34,14 +34,13 @@ using System.Web.Mvc;
 using System.Web.Security;
 using Mictlanix.BE.Model;
 
-namespace Mictlanix.BE.Web.Models
-{
-    public class MoneyCount
-    {
-        public PaymentMethod Type { get; set; }
-        
-		[DataType(DataType.Currency)]
-        public decimal Amount { get; set; }
-    }
-    
+namespace Mictlanix.BE.Web.Models {
+	public class MoneyCount {
+		public PaymentMethod Method { get; set; }
+		public PaymentType Type { get; set; }
+
+		[DataType (DataType.Currency)]
+		public decimal Amount { get; set; }
+	}
+
 }

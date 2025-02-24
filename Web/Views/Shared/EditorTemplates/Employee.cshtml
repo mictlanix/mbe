@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @model Employee
 
@@ -13,8 +13,8 @@
 	<div class="col-xs-4 field-required">@Html.LabelFor(x => x.StartJobDate) @Html.EditorFor(x => x.StartJobDate) @Html.ValidationMessageFor(x => x.StartJobDate)</div>
 </div>
 <div class="form-group">
-  	<div class="col-xs-3">@Html.LabelFor(x => x.TaxpayerId) @Html.EditorFor(x => x.TaxpayerId)</div>
-	<div class="col-xs-5">@Html.LabelFor(x => x.PersonalId) @Html.EditorFor(x => x.PersonalId)</div>
+				<div class="col-xs-3">@Html.LabelFor(x => x.TaxpayerId) @Html.EditorFor(x => x.TaxpayerId) @Html.ValidationMessageFor(x => x.TaxpayerId)</div>
+				<div class="col-xs-5">@Html.LabelFor(x => x.PersonalId) @Html.EditorFor(x => x.PersonalId)  @Html.ValidationMessageFor(x => x.PersonalId)</div>
 	<div class="col-xs-4">
 		<label>&nbsp;</label>
 		<p class="form-control-static">@Html.EditorFor(x => x.IsActive) @Html.EditorFor(x => x.IsSalesPerson)</p>

@@ -1,0 +1,63 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model DeliveriesItineraryDetail
+
+<li id='id:@Model.Id'>
+				<div class='action-link'>
+								@*<img src='@Url.Content(Model.Product.Photo)' title='@Model.Product.Photo' />*@
+				</div>
+    <div class='action-link'>
+    @*@if(Model.PurchaseRequest != null) {
+        <span class='label label-info' title='@Resources.PurchaseRequest'>@Html.DisplayFor(x => x.PurchaseRequest.Id)</span>
+    }*@
+								<span class='label label-info' title='@Resources.DeliveryOrder @Resources.DetailInformation'>@Html.DisplayFor(x => x.DeliveryOrderDetail.Id)</span>
+								<span class='label label-info' title='@Resources.SalesOrder  @Resources.DetailInformation'>@Html.DisplayFor(x => x.DeliveryOrderDetail.OrderDetail.Id)</span>
+        <a class='button icon-only icon delete' title='@Resources.Message_DeleteConfirmation'
+		   data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id' data-url='@Url.Action("RemoveDetail", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
+    </div>
+    <div class='info'>
+		  @Html.DisplayFor(x => x.DeliveryOrderDetail.Product.Name)
+        <br/>
+        @*<b>@Resources.QuantityOrdered: </b>
+        <span>@Html.DisplayFor(x => x.DeliveryOrderDetail.Quantity)</span>*@
+        <b>@Resources.UnitOfMeasurement: </b>
+        <span>@Html.DisplayFor(x => Model.DeliveryOrderDetail.Product.UnitOfMeasurement.Name)</span>
+    @if (!string.IsNullOrEmpty (Model.DeliveryOrderDetail.Product.Model)) {
+        <b>@Resources.Model: </b>
+        <span>@Html.DisplayFor(x => x.DeliveryOrderDetail.Product.Model)</span>
+    }
+    @if (!string.IsNullOrEmpty (Model.DeliveryOrderDetail.Product.SKU)) {
+        <b>@Resources.SKU: </b>
+        <span>@Html.DisplayFor(x => x.DeliveryOrderDetail.Product.SKU)</span>
+    }
+		 @if (!string.IsNullOrEmpty (Model.Comment)) {
+					<b>@Resources.Comment: </b><span>@Model.Comment</span> 
+		 }
+        <b>@Resources.QuantityOrdered: @Html.DisplayFor(x => x.DeliveryOrderDetail.Quantity)</b> <br/>
+        <b>@Resources.QuantityToDeliver: </b>
+        <a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemDetailQuantity", new { id = Model.Id })'>
+            @Html.DisplayFor(x => x.SentQuantity)
+        </a>
+    </div>
+</li>
+<script type='text/javascript'>
+$('#id\\:@Model.Id [data-toggle="tooltip"]').tooltip();
+$('#id\\:@Model.Id a.editable').editable({
+    success: function (response, newValue) {
+
+    },
+    display: function(value, response) {
+        if (typeof response === 'undefined')
+        	return;
+
+        $(this).html(response.value);
+    }
+});
+$('#id\\:@Model.Id a.delete').editable({
+	success: function(response, newValue) {
+        $('#id\\:@Model.Id').remove();
+		$('#buttons').loadUrl();
+    }
+});
+</script>

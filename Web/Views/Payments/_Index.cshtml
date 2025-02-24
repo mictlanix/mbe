@@ -1,0 +1,83 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model Search<CustomerPayment>
+@{
+				var CurrentUser = Html.CurrentUser () ?? new User ();
+				var Privilege = Html.GetPrivilege (CurrentUser, SystemObjects.PaymentsEditor);
+				var zeros = "00000000";
+
+}
+				<div class="row scrollable-header">
+							<div class="col-sm-1 ">@Resources.Date</div>
+							<div class="col-sm-2 ">@Resources.Customer</div>
+							<div class="col-sm-1 ">@Resources.SalesPerson</div>
+							<div class="col-sm-1 ">@Resources.Updater</div>
+							<div class="col-sm-1 ">@Resources.Amount</div>
+							<div class="col-sm-1 ">@Resources.PaymentMethod</div>
+							<div class="col-sm-1 ">@Resources.PaymentType</div>
+							<div class="col-sm-1 ">@Resources.SalesOrders</div>
+							<div class="col-sm-1 "></div>
+				</div>
+
+<div class="scrollable">
+				@foreach(var item in Model.Results) {
+				<div class="row">
+								<div class="col-sm-1 data date text-center">@Html.DisplayFor(x => item.Date)</div>
+								<div class="col-sm-2 data text-center">@Html.DisplayFor(x => item.Customer.Name)</div>
+								<div class="col-sm-1 data text-center">@Html.DisplayFor(x => item.CashSession.Cashier.Nickname)</div>
+								<div class="col-sm-1 data text-center">@(item.ModificationTime != item.CreationTime ? item.Updater.Nickname : string.Empty)</div>
+								<div class="col-sm-1 data text-center">@Html.DisplayFor(x => item.Amount)</div>
+								<div class="col-sm-1 data text-center">@item.Method.GetDisplayName()</div>
+								<div class="col-sm-1 data text-center">@item.PaymentType.GetDisplayName()</div>
+																<div class="col-sm-1 data text-center">
+																				@foreach (var order in item.Allocations.Select(x => x.SalesOrder).Distinct())
+																				{
+																								@Html.ActionLink((string)order.Id.ToString(zeros), "View", "SalesOrders", new { id = order.Id },
+																														 new { title = string.Join("\n", order.Details.Select(x => x.Quantity + " - " + x.ProductName)), target = "_blank" }) <br />
+
+																				}
+																</div>
+								<div class="col-sm-1">
+												@*@if (Privilege.AllowRead)
+												{
+																@Html.ActionLink(" ", "View", new { id = item.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
+												}*@
+												@if (Privilege.AllowUpdate && item.CreationTime == item.ModificationTime)
+												{
+																@Html.ActionLink(" ", "EditPayment", new { id = item.Id }, new { @class = "button icon edit icon-only open-modal", title = Resources.Edit, data_modal_id = "customer-payment-modal" })
+												}
+								</div>
+				</div>
+				}
+</div>
+
+				<div class='buttons right'>
+								<label class='button left'>@Model.ToString()</label>@if (Model.HasPrev)
+								{<a class='button middle icon prev icon-only paging' title='@Resources.PrevPage' href='javascript:void(0)'></a>}@if (Model.HasNext)
+								{<a class='button right icon next icon-only paging' title='@Resources.NextPage' href='javascript:void(0)'></a>}
+				</div>
+				<script type='text/javascript'>
+								bindModal('.open-modal');
+$('[data-toggle="tooltip"]').tooltip();
+$('a.paging').click(function (e) {
+	var offset=@Model.Offset;
+
+	if($(this).hasClass('next')) {
+		offset+=@Model.Limit;
+	} else {
+		offset-=@Model.Limit;
+	}
+
+	e.preventDefault();
+	$('#activity-indicator').show();
+	$('#search-results').hide();
+
+	$.post('@Url.Action("Payments")', { Pattern: '@Model.Pattern', Offset: offset, Limit: @Model.Limit }, function(data) {
+		$('#search-results').html(data);
+		$('#search-results').show();
+		$('#activity-indicator').hide();
+	});
+});
+				</script>

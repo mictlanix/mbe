@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Models
 @model CustomerRefund
@@ -19,29 +19,33 @@
 </div>
 }
 <div id='details-section'>
-    <div id='items-container' data-url='@Url.Action("Items", new { id = Model.Id })'>
-		<ul id="items" class="list-items">
-		@foreach (var item in Model.Details) {
-		    @Html.Partial("_ItemEditorView", item)
-		}
-		</ul>
-    </div>
-</div>
-<div id='totals-section' class='pull-right' data-url='@Url.Action("Totals", new { id = Model.Id })'>
-    @Html.Partial("_Totals")
-</div>
-<div class='clearfix'></div>
-<div id='back-to-list' class='pull-left'>
-    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
-</div>
-<div id='confirm-button' class='pull-right @(Model.Details.Count == 0 ? "hide" : "")'>
-@using (Html.BeginForm("Confirm", "CustomerRefunds", new { id = Model.Id })) {
-    <button id='complete' type='submit'>@Resources.Complete</button>
-}
-</div>
-<div class='clearfix'></div>
-<script type='text/javascript'>
-$(function () {
-	$('[data-toggle="tooltip"]').tooltip();
-});
-</script>
+				<div id='items-container' data-url='@Url.Action("Items", new { id = Model.Id })'>
+								<ul id="items" class="list-items">
+												@foreach (var item in Model.Details)
+												{
+																@Html.Partial("_ItemEditorView", item)
+												}
+								</ul>
+				</div>
+				</div>
+				<div class="alert alert-info alert-dismissible fade in" style="display:none;">
+				</div>
+				<div id='totals-section' class='pull-right' data-url='@Url.Action("Totals", new { id = Model.Id })'>
+								@Html.Partial("_Totals")
+				</div>
+				<div class='clearfix'></div>
+				<div id='back-to-list' class='pull-left'>
+								@Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+				</div>
+				<div id='confirm-button' class='pull-right @(Model.Total <= 0 ? "hide" : "")'>
+								@using (Html.BeginForm("Confirm", "CustomerRefunds", new { id = Model.Id }))
+								{
+												<button id='complete' type='submit'>@Resources.Complete</button>
+								}
+				</div>
+				<div class='clearfix'></div>
+				<script type='text/javascript'>
+								$(function () {
+												$('[data-toggle="tooltip"]').tooltip();
+								});
+				</script>

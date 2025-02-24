@@ -15,7 +15,7 @@
 				<dt>@Resources.Customer</dt>
 				<dd>@Html.DisplayFor(x => x.Customer.Name)</dd>
 				<dt>@Resources.ShipTo</dt>
-				<dd>@Html.DisplayFor(x => x.ShipTo, "String")</dd>
+				<dd>@(DeliveryHelpers.IsAddressStore(Model.ShipTo)?Resources.PickUp:Model.ShipTo.ToString())</dd>
 			</dl>
 		</div>
 	  	<div class='col-xs-4'>
@@ -27,12 +27,12 @@
 						<span class="glyphicon glyphicon-exclamation-sign"></span>
 					</a>
 				</dd>
-				<dt>@Resources.Date</dt>
+				<dt>@Resources.DeliveryDate</dt>
 				<dd>@Html.DisplayFor(x => x.Date)</dd>
 			</dl>
   		</div>
 	</div>
-@if(Privilege.AllowDelete && !Model.IsCancelled) {
+@if(Privilege.AllowDelete && !Model.IsCancelled && Model.IsConfirmed != false ) {
 	<div class='row'>
   		<div class='col-xs-12'>
 	    @using (Html.BeginForm("Cancel", "DeliveryOrders", new { id =  Model.Id }, FormMethod.Post, new { @class = "modal-form pull-right" })) {

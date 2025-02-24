@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model IEnumerable<Address>
@@ -10,20 +10,28 @@
 
 <table>
     <tr>
-        <th>@Html.LabelFor(x => new Address().StreetAndNumber)</th>
-        <th>@Html.LabelFor(x => new Address().Neighborhood)</th>
-        <th>@Html.LabelFor(x => new Address().Borough)</th>
-        <th>@Html.LabelFor(x => new Address().State)</th>
-        <th>@Html.LabelFor(x => new Address().PostalCode)</th>
+        <th>@Resources.Nickname</th>
+        <th>@Resources.Street</th>
+        <th>@Resources.Neighborhood)</th>
+        <th>@Resources.Borough)</th>
+        <th>@Resources.State)</th>
+        <th>@Resources.PostalCode</th>
+        <th>@Resources.AddressLinkURL</th>
         <th></th>
     </tr>
 @foreach (var item in Model) {
     <tr>
+        <td>@Html.DisplayFor(x => item.Nickname)</td>
         <td>@Html.DisplayFor(x => item.StreetAndNumber)</td>
         <td>@Html.DisplayFor(x => item.Neighborhood)</td>
         <td>@Html.DisplayFor(x => item.Borough)</td>
         <td>@Html.DisplayFor(x => item.State)</td>
         <td class='number'>@Html.DisplayFor(x => item.PostalCode)</td>
+        <td>
+            @if(item.Link != null){
+                <a href="@HttpUtility.HtmlEncode(item.Link)" target="_blank" rel="noopener noreferrer">@item.Link.ToString().Substring(0,30) ...</a>
+             }
+        </td>
         <td class='actions'>
         	@if(Privilege.AllowRead){
         	    @Html.ActionLink(" ", "Details", "Addresses", new { id = item.Id }, new { @class = "button icon view icon-only open-modal", title = Resources.Details, data_modal_id = "address-modal" })

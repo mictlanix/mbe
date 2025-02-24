@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CustomController.cs
 // 
 // Author:
@@ -35,6 +35,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using jsreport.Client;
 using jsreport.Types;
+using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Helpers;
 using Mictlanix.BE.Web.Security;
 using MimeKit;
@@ -51,6 +52,18 @@ namespace Mictlanix.BE.Web.Mvc
 			get {
 				return User as CustomPrincipal;
 			}
+		}
+
+		public AccessPrivilege GetAccessPrivilege (SystemObjects systemObjects) {
+			var username = CurrentUser.Identity.Name;
+			var user = Model.User.Find (username);
+			return SecurityHelpers.GetPrivilege (user, systemObjects)
+				?? new AccessPrivilege {
+					AllowCreate = false,
+					AllowDelete = false,
+					AllowRead = false,
+					AllowUpdate = false,
+				};
 		}
 
 		public string ReportServerUrl {

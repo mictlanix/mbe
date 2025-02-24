@@ -1,0 +1,49 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
+@using Mictlanix.BE.Web.Helpers
+@model PurchaseRequest
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.PurchaseRequestApproval);
+    //var objection = DeliveryOrderObjection.Queryable.Where(x => x.DeliveryOrder == Model).OrderByDescending(y => y.Id).FirstOrDefault();
+    //var message = objection == null ? string.Empty : objection.Report;
+    }
+
+<tr id='id:@Model.Id'>
+				<td class="number">
+								@Html.DisplayFor(x => x.Id)
+								<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => x.Serial)">
+												<span class="glyphicon glyphicon-exclamation-sign"></span>
+								</a>
+				</td>
+				<td class="date">@Html.DisplayFor(x => x.Date)</td>
+				<td class="">@Html.DisplayFor(x => x.Creator.Name)</td>
+				<td class="bool">@string.Join(", ", Model.Details.Select(x => x.Warehouse.Code).Distinct())</td>
+				<td class="bool">@(Model.IsApproved ? Resources.Approved:Resources.OnRequest)</td>
+
+				<td class="actions">
+								@if (Privilege.AllowRead)
+								{
+												@Html.ActionLink(" ", "PurchaseRequestApproval", new { id = Model.Id },
+																				new { @class = "button icon view icon-only", title = Resources.Details })
+
+								}
+								@if (Privilege.AllowUpdate)
+								{
+
+												if (!Model.IsCompleted)
+												{
+																@Html.ActionLink(" ", "Edit", new { id = Model.Id },
+																				new { @class = "button icon edit icon-only", title = Resources.Edit })
+												}
+
+												@*if (Model.IsCompleted && !Model.IsDelivered && !Model.IsCancelled) {
+																@Html.ActionLink(" ", "Delivery", new { id = Model.Id },
+																	new { @class = "button icon shipping icon-only", title = Resources.Delivery })}*@
+								}
+				</td>
+</tr>
+
+

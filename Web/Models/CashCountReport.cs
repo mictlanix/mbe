@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CashCut.cs
 // 
 // Author:
@@ -36,71 +36,80 @@ using System.Linq;
 using System.Web.Security;
 using Mictlanix.BE.Model;
 
-namespace Mictlanix.BE.Web.Models
-{
-    public class CashCountReport
-    {
-        [DisplayFormat(DataFormatString = "{0:000000}")]
-        public int SessionId { get; set; }
+namespace Mictlanix.BE.Web.Models {
+	public class CashCountReport {
+		[DisplayFormat (DataFormatString = "{0:000000}")]
+		public int SessionId { get; set; }
 
-        [Display(Name = "Cashier", ResourceType = typeof(Resources))]
-        public Employee Cashier { get; set; }
+		[Display (Name = "Cashier", ResourceType = typeof (Resources))]
+		public Employee Cashier { get; set; }
 
-        [Display(Name = "CashDrawer", ResourceType = typeof(Resources))]
-        public CashDrawer CashDrawer { get; set; }
+		[Display (Name = "CashDrawer", ResourceType = typeof (Resources))]
+		public CashDrawer CashDrawer { get; set; }
 
-        [DataType(DataType.DateTime)]
-        [Display(Name = "StartDate", ResourceType = typeof(Resources))]
-        public DateTime Start { get; set; }
+		[DataType (DataType.DateTime)]
+		[Display (Name = "StartDate", ResourceType = typeof (Resources))]
+		public DateTime Start { get; set; }
 
-        [DataType(DataType.DateTime)]
-        [Display(Name = "End", ResourceType = typeof(Resources))]
-        public DateTime? End { get; set; }
+		[DataType (DataType.DateTime)]
+		[Display (Name = "End", ResourceType = typeof (Resources))]
+		public DateTime? End { get; set; }
 
-        [DataType(DataType.Currency)]
-        [Display(Name = "StartingCash", ResourceType = typeof(Resources))]
-        public decimal StartingCash { get; set; }
+		[DataType (DataType.Currency)]
+		[Display (Name = "StartingCash", ResourceType = typeof (Resources))]
+		public decimal StartingCash { get; set; }
 
-        [DataType(DataType.Currency)]
-        [Display(Name = "CashSales", ResourceType = typeof(Resources))]
-        public decimal CashSales
-        {
-            get
-            {
-                var item = MoneyCounts.SingleOrDefault(x => x.Type == PaymentMethod.Cash);
-                return item == null ? 0 : item.Amount;
-            }
-        }
+		[DataType (DataType.Currency)]
+		[Display (Name = "CashSales", ResourceType = typeof (Resources))]
+		public decimal CashSales {
+			get {
+				var item = MoneyCounts.SingleOrDefault (x => x.Method == PaymentMethod.Cash);
+				return item == null ? 0 : item.Amount;
+			}
+		}
 
-        [DataType(DataType.Currency)]
-        [Display(Name = "CashInDrawer", ResourceType = typeof(Resources))]
-        public decimal CashInDrawer
-        {
-            get
-            {
-               return  CashSales + StartingCash;
-            }
-        }
+		[DataType (DataType.Currency)]
+		[Display (Name = "ExpensesCount", ResourceType = typeof (Resources))]
+		public decimal ExpensesCount {
+			get {
+				return Expenses.Sum (x => (decimal?) x.Total) ?? 0;
+			}
+		}
 
-        [DataType(DataType.Currency)]
-        [Display(Name = "Balance", ResourceType = typeof(Resources))]
-        public decimal Balance
-        {
-            get
-            {
-                return Math.Abs(CountedCash - CashInDrawer);
-            }
-        }
+		[DataType (DataType.Currency)]
+		[Display (Name = "RefundsCount", ResourceType = typeof (Resources))]
+		public decimal RefundsCount {
+			get {
+				return this.Refunds.Sum (x => (decimal?) x.Amount) ?? 0; 
+			}
+		}
 
-        [DataType(DataType.Currency)]
-        [Display(Name = "CountedCash", ResourceType = typeof(Resources))]
-        public decimal CountedCash
-        {
-            get { return CashCounts.Where(x => x.Type == CashCountType.CountedCash).Sum(x => x.Total); }
-        }
+		[DataType (DataType.Currency)]
+		[Display (Name = "CashInDrawer", ResourceType = typeof (Resources))]
+		public decimal CashInDrawer {
+			get {
+				return CashSales + StartingCash - ExpensesCount - RefundsCount;
+			}
+		}
 
-        public IList<MoneyCount> MoneyCounts { get; set;}
-        public IList<CashCount> CashCounts { get; set; }
-    }
-    
+		[DataType (DataType.Currency)]
+		[Display (Name = "Balance", ResourceType = typeof (Resources))]
+		public decimal Balance {
+			get {
+				return Math.Abs (CountedCash - CashInDrawer);
+			}
+		}
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "CountedCash", ResourceType = typeof (Resources))]
+		public decimal CountedCash {
+			get { return CashCounts.Where (x => x.Type == CashCountType.CountedCash).Sum (x => x.Total); }
+		}
+
+		public IList<MoneyCount> MoneyCounts { get; set; }
+		public IList<CashCount> CashCounts { get; set; }
+		public IList<ExpenseVoucher> Expenses { get; set; }
+		public IList<MoneyCount> Refunds { get; set; }
+	}
+
 }

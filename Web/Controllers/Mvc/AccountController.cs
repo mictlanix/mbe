@@ -85,11 +85,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			UserSettings settings = null;
 
 			if (WebConfig.UserSettingsMode == UserSettingsMode.Managed) {
+				//var storeId = int.Parse (WebConfig.DefaultStore);
+				//var store = Store.TryFind (storeId);
+
+				//var pointOfSaleId = int.Parse (WebConfig.DefaultPointOfSale);
+				//var pointOfSale = PointOfSale.TryFind (pointOfSaleId);
+
 				var storeId = int.Parse (WebConfig.DefaultStore);
-				var store = Store.TryFind (storeId);
+				var store = MBEQueryable.IQStores.SingleOrDefault(x => x.Id == storeId);
 
 				var pointOfSaleId = int.Parse (WebConfig.DefaultPointOfSale);
-				var pointOfSale = PointOfSale.TryFind (pointOfSaleId);
+				var pointOfSale = MBEQueryable.IQPointsOfSales.SingleOrDefault (x => x.Id == pointOfSaleId);
 
 				settings = new UserSettings {
 					UserName = username,
@@ -104,7 +110,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			using (var scope = new TransactionScope ()) {
 				item.Create ();
-
+				scope.Flush ();
 				if (settings != null) {
 					settings.Create ();
 				}
@@ -214,14 +220,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return RedirectToAction ("Index", "Home");
 		}
 
-		[AllowAnonymous]
+		//[AllowAnonymous]
 		public ActionResult Register ()
 		{
 			return View (new RegisterModel ());
 		}
 
 		[HttpPost]
-		[AllowAnonymous]
+		//[AllowAnonymous]
 		public ActionResult Register (RegisterModel model)
 		{
 			if (!ModelState.IsValid)
@@ -233,8 +239,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			try {
 				// Attempt to register the user
 				if (CreateUser (model.UserName, model.Password, model.Email)) {
-					FormsAuthentication.SetAuthCookie (model.UserName, false);
-					return RedirectToAction ("Index", "Home");
+					//FormsAuthentication.SetAuthCookie (model.UserName, false);
+					return RedirectToAction ("Edit", "Users", new { id = model.UserName });
 				} else {
 					ModelState.AddModelError ("", Mictlanix.BE.Resources.Message_UnknownError);
 				}

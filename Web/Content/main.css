@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------
+/*----------------------------------------------------------
 CSS from ASP.NET MVC 3 template (Site.css)
 ----------------------------------------------------------*/
 header,
@@ -131,6 +131,9 @@ div#logo {
   margin-top:14px;
   float:right;
 }
+div#logo img{
+  max-width:150px;
+}
 .page {
   min-width:900px;
   margin:10px 20px;
@@ -222,6 +225,7 @@ table th {
   text-align:center;
   color:#DD4B39;
 }
+
 table.noborder, table.noborder td {
   border:none;
 }
@@ -285,10 +289,11 @@ ul.list-items li div.action-link {
   top:259px;
   right:40px;
 }
-#activity-indicator {
-  display:none;
-  padding:10px;
-  text-align:center;
+#activity-indicator, #activity-indicator-orders,
+#activity-indicator-payments, #activity-indicator-on-delivery {
+				display: none;
+				padding: 10px;
+				text-align: center;
 }
 .search-box {
   display:block;
@@ -346,8 +351,8 @@ li div.value.name {
   text-align:right;
 }
 table.tabular, table.tabular th, table.tabular td {
-  margin:0;
-  padding:0 1px;
+  margin:10px;
+  padding:10px;
   border:none;
   border-collapse:collapse;
   line-height:1;
@@ -551,4 +556,64 @@ i.icon-arrow-right:before {
 
 .input-xxlarge {
   width: 530px;
+}
+
+/* Custom styles*/
+
+div.scrollable {
+				height: 400px;
+				overflow-y: scroll;
+				overflow-x: hidden;
+				border: 1px solid #CCC6CC;
+}
+
+				div.scrollable .row {
+								border: 0.5px solid #CCC6CC;
+								/*margin: 10px;*/
+								padding-left:10px;
+				}
+
+				div.scrollable .row div.data {
+								padding-top:7px;
+								padding-bottom:7px;
+				}
+
+
+div.scrollable-header {
+				padding: 4px 8px;
+				font-weight: normal;
+				text-align: center;
+				/*color: #DD4B39;*/
+				color: white;
+				background-color:cornflowerblue;
+}
+
+
+
+table.debts {
+				background-color: #ffeeee;
+/*				overflow-y: scroll;
+				height: 500px;
+				overflow-x: hidden;*/
+				border: 1px solid #CCC6CC;
+				border-collapse: separate;
+				border-spacing: 0;
+				border-radius: 10px;
+}
+
+				table.debts tr td {
+								padding-top: 15px;
+								padding-bottom: 15px;
+								border: 1px solid #ddd;
+								padding: 8px;
+				}
+
+table.debts tr.warning td {
+				background-color: red;
+				color: white;
+}
+
+table.debts tr.warning td a {
+				background-color: red;
+				color: white;
 }

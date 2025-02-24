@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
@@ -6,6 +6,7 @@
 
 <table>
     <tr>
+        <th class='nowrap'>@Resources.Code</th>
         <th class='nowrap'>@Resources.Model</th>
         <th class='nowrap'>@Resources.Product</th>
         <th class='nowrap'>@Resources.Units</th>
@@ -15,6 +16,7 @@
     </tr>
 @foreach (var item in Model.OrderByDescending (x => x.Total)) {
     <tr>
+        <td class='center stretch'>@item.Code</td>
         <td class='center stretch'>@item.Model</td>
         <td>@item.Product</td>
         <td class='number'>@item.Units.ToString("#,##0.#")</td>

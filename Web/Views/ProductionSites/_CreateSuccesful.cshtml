@@ -1,0 +1,18 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model ProductionSite
+
+@{
+    var Privilege = Html.GetPrivilege(Html.CurrentUser () ?? new User (), SystemObjects.ProductionSites);
+    ViewBag.Privilege = Privilege;
+}
+
+@Html.Partial("_Item", Model)
+<script type='text/javascript'>
+$('#production-sites tr:first').after($('#id\\:@Model.Id'));
+$('#production-site-modal').modal('hide');
+bindModal('#id\\:@Model.Id a.open-modal');
+</script>
+
+

@@ -1,0 +1,13 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model PaymentType?
+
+@{
+    var values = Enum.GetValues(typeof(PaymentType)).Cast<PaymentType>();
+}
+<select id='@ViewData.TemplateInfo.GetFullHtmlFieldId("")' name='@ViewData.TemplateInfo.GetFullHtmlFieldName("")' class="form-control">
+    @foreach (var item in values) {
+        <option value="@((int)item)" @(item == Model ? "selected" : string.Empty)>@item.GetDisplayName()</option>
+    }
+</select>

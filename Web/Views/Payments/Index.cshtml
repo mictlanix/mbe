@@ -13,8 +13,9 @@
 
 @{
 	var delivery_payments = SalesOrderPayment.Queryable.Where(x => x.Payment.CashSession == null).
-		Select(x => x.SalesOrder).OrderByDescending(x => x.Id).ToList();
+		Select(x => x.SalesOrder).OrderByDescending(x => x.Id).Take(WebConfig.PageSize).ToList();
 	var cash_payments = Model.Details.Where (x => !x.IsPaid).ToList ();
+				var payments = CustomerPayment.Queryable.Where(x => x.PaymentType == PaymentType.CreditPayment || x.PaymentType == PaymentType.PaymentInAdvance).OrderByDescending(x => x.Id).Take(WebConfig.PageSize).ToList();
 }
 
 <h2>@Resources.DisplayName_CustomerPayments</h2>
@@ -24,26 +25,36 @@
 @if (Privilege.AllowUpdate) {
 <div class='tabbable'>
     <ul class='nav nav-tabs'>
-        <li class='active'><a href='#tab-1' data-toggle='tab'>@Resources.DisplayName_CashPayment</a></li>
-        <li><a href='#tab-2' data-toggle='tab'>@Resources.DisplayName_CreditPayment</a></li>
-		  @if (delivery_payments.Count () > 0) {
-					<li><a href='#tab-3' data-toggle='tab'>@Resources.PaymentOnDelivery</a></li>
-		  }
+        <li class='active'><a href='#tab-1' data-toggle='tab'>@Resources.SalesOrders</a></li>
+        <li><a href='#tab-2' data-toggle='tab'>@Resources.CreditPayment</a></li>
+								<li><a href='#tab-3' data-toggle='tab'>@Resources.PaymentOnDelivery</a></li>
+        <li><a href='#tab-4' data-toggle='tab'>@Resources.PaymentInAdvance</a></li>
+        <li><a href='#tab-5' data-toggle='tab'>@Resources.PrintTicket @Resources.Payment</a></li>
     </ul>
-    <div class="tab-content">
-	    <div id='tab-1' class='tab-pane active'>
-	        @Html.Partial("_CashPayment", cash_payments)
-	    </div>
-	    <div id='tab-2' class='tab-pane'>
-	    	<div id='credit-payment'>
-	        	@Html.Partial("_CreditPayment", new CustomerPayment { Date = DateTime.Now })
-	        </div>
-	    </div>
-	 		<div id='tab-3' class='tab-pane'>
-	 			<div id='delivery-payment'>
-	 				@Html.Partial("_DeliveryPayment", delivery_payments)
-	 			</div>
-			</div>
-	</div>
+				<div class="tab-content">
+								<div id='tab-1' class='tab-pane active'>
+												@Html.Partial("_CashPayment", cash_payments)
+								</div>
+								<div id='tab-2' class='tab-pane'>
+												<div id='credit-payment'>
+																@Html.Partial("_CreditPayment", new CustomerPayment { Date = DateTime.Now })
+												</div>
+								</div>
+								<div id='tab-3' class='tab-pane'>
+												<div id='delivery-payment'>
+																@Html.Partial("_DeliveryPayment", delivery_payments)
+												</div>
+								</div>
+								<div id='tab-4' class='tab-pane'>
+												<div id='payment-in-advance'>
+																@Html.Partial("_PaymentInAdvance", new CustomerPayment { Date = DateTime.Now })
+												</div>
+								</div>
+								<div id='tab-5' class='tab-pane'>
+												<div id='payment-list'>
+																@Html.Partial("_PaymentList", payments)
+												</div>
+								</div>
+				</div>
 </div>
 }

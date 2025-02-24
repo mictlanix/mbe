@@ -216,7 +216,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public JsonResult GetSuggestions (string pattern)
 		{
-			var qry = from x in Customer.Queryable
+			var qry = from x in MBEQueryable.IQCustomers
 				  where x.Code.Contains (pattern) ||
 				      x.Name.Contains (pattern) ||
 				      x.Zone.Contains (pattern)
@@ -233,7 +233,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public JsonResult ListTaxpayers (int id)
 		{
 			JsonResult result = new JsonResult ();
-			var qry = from x in Customer.Queryable
+			var qry = from x in MBEQueryable.IQCustomers
 				  from y in x.Taxpayers
 				  where x.Id == id
 				  select new { id = y.Id, name = string.Format ("{1} ({0})", y.Id, y.Name) };

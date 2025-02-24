@@ -40,6 +40,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public override ActionResult Pdf (int id)
 		{
 			var model = SalesOrder.Find (id);
+			if (model.IsCompleted) {
+				return RedirectToAction("Print","Payments", new { id = model.Id });
+			}
 			return PdfTicketView ("Print", model);
 		}
 
@@ -47,12 +50,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public override ActionResult Confirm (int id)
 		{
 			var action = base.Confirm (id);
+			var order = MBEQueryable.IQSalesOrders.Single (q => q.Id == id);
 
 			if (action is ViewResult) {
 				return action;
 			}
 
-			return RedirectToAction ("PayOrder", "Payments", new { id = id });
+			if (order.Terms == PaymentTerms.Immediate) {
+				return RedirectToAction ("PayOrder", "Payments", new { id = id });
+			}
+
+			return RedirectToAction ("View", "POS", new { id = id });
 		}
 	}
 }

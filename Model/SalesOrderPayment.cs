@@ -1,4 +1,4 @@
-﻿// 
+// 
 // SalesOrderPayment.cs
 // 
 // Author:
@@ -27,10 +27,12 @@
 //
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Mictlanix.BE.Model {
 	[ActiveRecord ("sales_order_payment")]
+	[Serializable]
 	public class SalesOrderPayment : ActiveRecordLinqBase<SalesOrderPayment> {
 		[PrimaryKey (PrimaryKeyType.Identity, "sales_order_payment_id")]
 		public virtual int Id { get; set; }
@@ -82,5 +84,15 @@ namespace Mictlanix.BE.Model {
 		}
 
 		#endregion
+		public virtual SalesOrderPayment GetSerializable () {
+			return new SalesOrderPayment {
+				Amount = Amount,
+				Change = Change,
+				Id = Id,
+				Payment	= Payment,
+				PaymentId = PaymentId,
+				SalesOrder = SalesOrder.GetSerializable()
+			};
+		}
 	}
 }

@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
@@ -13,16 +13,22 @@
     <tr>
         <th>@Resources.FirstName</th>
         <th>@Resources.LastName</th>
-        <th class='date'>@Resources.Birthday</th>
-        <th class='date'>@Resources.StartJobDate</th>
+        <th class='date'>@Resources.Nickname</th>
+        <th class='date'>@Resources.SalesPerson</th>
+        <th class='date'>@Resources.Store</th>
+        <th class='date'>@Resources.PointOfSale</th>
+        <th class='date'>@Resources.CashDrawer</th>
         <th></th>
     </tr>
 @foreach (var item in Model.Results) {
     <tr>
         <td>@Html.DisplayFor(x => item.FirstName)</td>
         <td>@Html.DisplayFor(x => item.LastName)</td>
-        <td class='date'>@Html.DisplayFor(x => item.Birthday)</td>
-        <td class='date'>@Html.DisplayFor(x => item.StartJobDate)</td>
+        <td>@Html.DisplayFor(x => item.Nickname)</td>
+        <td>@Html.DisplayFor(x => item.IsSalesPerson)</td>
+        <td class='date'>@string.Join(",",Mictlanix.BE.Model.User.Queryable.Where(x => x.Employee == item).Select(y => y.UserSettings.Store.Name))</td>
+        <td class='date'>@string.Join(",", Mictlanix.BE.Model.User.Queryable.Where(x => x.Employee == item).Select(y => y.UserSettings.PointOfSale.Name))</td>
+        <td class='date'>@string.Join(",", Mictlanix.BE.Model.User.Queryable.Where(x => x.Employee == item).Select(y => y.UserSettings.CashDrawer.Name))</td>
         <td class="actions">
         	@if (Privilege.AllowRead) {
             	@Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "button icon view icon-only open-modal", @title = Resources.Details, data_modal_id = "employee-modal" })

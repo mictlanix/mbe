@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model InventoryTransfer
@@ -12,7 +12,8 @@
         @Html.LabelFor(model => model.From)
     </div>
     <div class="editor-field">
-        @Html.EditorFor(model => model.FromId)
+        @Html.HiddenFor(model => model.FromId)
+        @Html.DisplayFor(model => model.From.Name)
         @Html.ValidationMessageFor(model => model.FromId)
     </div>
     <div class="editor-label">

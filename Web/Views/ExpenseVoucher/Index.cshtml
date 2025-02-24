@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE.Model
+@using Mictlanix.BE.Model
 @using Mictlanix.BE
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
@@ -6,9 +6,9 @@
 @model Search<ExpenseVoucher>
 
 @{
-	ViewBag.Title = Resources.ExpenseVouchers;
+	ViewBag.Title = Resources.ExpenseTickets;
 	var CurrentUser = Html.CurrentUser() ?? new User();
-	var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders);
+	var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.ExpenseTicket);
 }
 
 <div class="page-header">
@@ -42,7 +42,7 @@
 			</div>
 		</div>
 	</div>
-	<h1>@Resources.ExpenseVouchers</h1>
+	<h1>@Resources.ExpenseTickets</h1>
 </div>
 <div id='activity-indicator'>
 	<img alt='@Resources.Loading' src='@Url.Content("~/Content/images/loading-bar.gif")' />

@@ -1,0 +1,55 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model IEnumerable<CustomerPayment>
+
+@{
+    ViewBag.Title = Resources.Title_CustomerPayment;
+    ViewBag.ShowCloseSession = true;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments);
+}
+
+<table>
+    <tr>
+        <th>@Resources.Id</th>
+        <th>@Resources.Date</th>
+        <th>@Resources.Customer</th>
+        <th>@Resources.SalesPerson</th>
+        <th>@Resources.PointOfSale</th>
+        <th>@Resources.PaymentType</th>
+        <th></th>
+    </tr>
+@foreach (var item in Model) {
+    <tr>
+        <td class="number">
+        	@Html.DisplayFor(x => item.Id)
+        	<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => item.Serial)">
+				<span class="glyphicon glyphicon-exclamation-sign"></span>
+			</a>
+        </td>
+        <td class="date">@Html.DisplayFor(x => item.Date)</td>
+        <td>@Html.DisplayFor(x => item.Customer.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(x => item.CashSession.Cashier.Nickname)
+        </td>
+        <td class="center">
+            @Html.DisplayFor(x => item.CashSession.CashDrawer.Store.Name)
+        </td>
+        <td class="center">
+            @item.PaymentType.GetDisplayName()
+        </td>
+        <td class="actions">
+        	@Html.ActionLink(" ", "PrintCreditPayment", new { id = item.Id }, new { @class = "button icon print icon-only", target = "_blank" })
+            @if(item.Allocated <= 0) {
+        	       @*@Html.ActionLink(" ", "DeleteCreditPayment", new { id = item.Id }, new { @class = "button icon delete icon-only", target = "_blank" })*@
+            }
+        </td>
+    </tr>
+}
+</table>
+<script type="text/javascript">
+$('[data-toggle="tooltip"]').tooltip();
+</script>

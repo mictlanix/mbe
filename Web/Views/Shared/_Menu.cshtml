@@ -1,773 +1,198 @@
 @using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
 
 @{
-	var CurrentUser = Html.CurrentUser() ?? new User();
-	var ShowMasterDataMenu = CurrentUser.GetPrivilege (SystemObjects.Products).AllowRead ||
-									 CurrentUser.GetPrivilege (SystemObjects.Labels).AllowRead ||
-									 CurrentUser.GetPrivilege (SystemObjects.PriceLists).AllowRead ||
-									 CurrentUser.GetPrivilege (SystemObjects.Customers).AllowRead ||
-									 CurrentUser.GetPrivilege (SystemObjects.TaxpayerRecipients).AllowRead ||
-									 CurrentUser.GetPrivilege (SystemObjects.Suppliers).AllowRead ||
-									 CurrentUser.GetPrivilege (SystemObjects.Employees).AllowRead ||
-									 CurrentUser.GetPrivilege (SystemObjects.Warehouses).AllowRead ||
-									 CurrentUser.GetPrivilege (SystemObjects.PointsOfSale).AllowRead ||
-									 CurrentUser.GetPrivilege (SystemObjects.CashDrawers).AllowRead ||
-									 CurrentUser.GetPrivilege (SystemObjects.Stores).AllowRead ||
-									 CurrentUser.GetPrivilege (SystemObjects.ExchangeRates).AllowRead ||
-									 CurrentUser.GetPrivilege (SystemObjects.Expenses).AllowRead ||
-									 CurrentUser.GetPrivilege (SystemObjects.PaymentMethodOptions).AllowRead;
 
-	var ShowSalesMenu = CurrentUser.GetPrivilege (SystemObjects.SalesOrders).AllowRead ||
-							  CurrentUser.GetPrivilege (SystemObjects.POS).AllowRead ||
-							  CurrentUser.GetPrivilege (SystemObjects.CustomerPayments).AllowRead ||
-							  CurrentUser.GetPrivilege (SystemObjects.CustomerRefunds).AllowRead ||
-							  CurrentUser.GetPrivilege (SystemObjects.SalesQuotes).AllowRead ||
-							  CurrentUser.GetPrivilege (SystemObjects.CreditPayments).AllowRead;
+				var CurrentUser = Html.CurrentUser() ?? new User();
 
-	var ShowProductionMenu = CurrentUser.GetPrivilege (SystemObjects.ProductionOrders).AllowRead;
+				var master_data_menu_items = new List<MenuItemModel> {
+		new MenuItemModel{ SystemObject = SystemObjects.Products, Controller = "Products", DefaultAction = "Index", Resources = Resources.Title_Product },
+		new MenuItemModel{ SystemObject = SystemObjects.PriceLists, Controller = "PriceLists", DefaultAction = "Index", Resources = Resources.Title_PriceList },
+		new MenuItemModel{ SystemObject = SystemObjects.Customers, Controller = "Customers", DefaultAction = "Index", Resources = Resources.Title_Customer },
+		new MenuItemModel{ SystemObject = SystemObjects.Labels, Controller = "Labels", DefaultAction = "Index", Resources = Resources.Labels },
+		new MenuItemModel{ SystemObject = SystemObjects.TaxpayerRecipients, Controller = "TaxpayerRecipients", DefaultAction = "Index", Resources = Resources.TaxpayerRecipient },
+		new MenuItemModel{ SystemObject = SystemObjects.Suppliers, Controller = "Suppliers", DefaultAction = "Index", Resources = Resources.Title_Supplier },
+		new MenuItemModel{ SystemObject = SystemObjects.Employees, Controller = "Employees", DefaultAction = "Index", Resources = Resources.Title_Employee },
+		new MenuItemModel{ SystemObject = SystemObjects.Warehouses, Controller = "Warehouses", DefaultAction = "Index", Resources = Resources.Title_Warehouse },
+		new MenuItemModel{ SystemObject = SystemObjects.PointsOfSale, Controller = "PointsOfSale", DefaultAction = "Index", Resources = Resources.Title_PointOfSale },
+		new MenuItemModel{ SystemObject = SystemObjects.CashDrawers, Controller = "CashDrawers", DefaultAction = "Index", Resources = Resources.Title_CashDrawer },
+		new MenuItemModel{ SystemObject = SystemObjects.Stores, Controller = "Stores", DefaultAction = "Index", Resources = Resources.DisplayName_Stores },
+		new MenuItemModel{ SystemObject = SystemObjects.ExchangeRates, Controller = "ExchangeRates", DefaultAction = "Index", Resources = Resources.ExchangeRate },
+		new MenuItemModel{ SystemObject = SystemObjects.Expenses, Controller = "Expenses", DefaultAction = "Index", Resources = Resources.Expenses },
+		new MenuItemModel{ SystemObject = SystemObjects.PaymentMethodOptions, Controller = "PaymentMethodOptions", DefaultAction = "Index", Resources = Resources.PaymentMethodOptions },
+		new MenuItemModel{ SystemObject = SystemObjects.Vehicle, Controller = "Vehicles", DefaultAction = "Index", Resources = Resources.Trucks },
+		new MenuItemModel{ SystemObject = SystemObjects.VehicleOperators, Controller = "VehicleOperators", DefaultAction = "Index", Resources = Resources.VehicleOperators },
+		new MenuItemModel{ SystemObject = SystemObjects.ProductionSites, Controller = "ProductionSites", DefaultAction = "Index", Resources = Resources.ProductionSites },
+	};
 
-	var ShowInventoryMenu = CurrentUser.GetPrivilege (SystemObjects.InventoryReceipts).AllowRead ||
-									CurrentUser.GetPrivilege (SystemObjects.InventoryIssues).AllowRead ||
-									CurrentUser.GetPrivilege (SystemObjects.InventoryTransfers).AllowRead ||
-									CurrentUser.GetPrivilege (SystemObjects.LotSerialNumbers).AllowRead||
-									CurrentUser.GetPrivilege (SystemObjects.PendantDeliveries).AllowRead;
+				var sales_menu_items = new List<MenuItemModel> {
+		new MenuItemModel{ SystemObject = SystemObjects.Pricing, Controller = "Pricing", DefaultAction = "Index", Resources = Resources.Pricing },
+		new MenuItemModel{ SystemObject = SystemObjects.SalesQuotes, Controller = "Quotations", DefaultAction = "Index", Resources = Resources.SalesQuotes },
+		new MenuItemModel{ SystemObject = SystemObjects.POS, Controller = "POS", DefaultAction = "Index", Resources = Resources.PointOfSale },
+		new MenuItemModel{ SystemObject = SystemObjects.SalesOrders, Controller = "SalesOrders", DefaultAction = "Index", Resources = Resources.SalesOrders },
+		new MenuItemModel{ SystemObject = SystemObjects.CustomerPayments, Controller = "Payments", DefaultAction = "Index", Resources = Resources.Title_CustomerPayment },
+		new MenuItemModel{ SystemObject = SystemObjects.CustomerRefunds, Controller = "CustomerRefunds", DefaultAction = "Index", Resources = Resources.CustomerRefunds },
+		new MenuItemModel{ SystemObject = SystemObjects.CreditPayments, Controller = "Payments", DefaultAction = "CreditPayments", Resources = Resources.CreditPayments },
+		new MenuItemModel{ SystemObject = SystemObjects.PaymentsEditor, Controller = "Payments", DefaultAction = "Payments", Resources = Resources.PaymentsEditor },
+		//new MenuItemModel{SystemObject = SystemObjects.PendantDeliveries, Controller="DeliveryOrders", DefaultAction = "RemainingDeliveries", Resources = Resources.PendantDeliveries},
 
-	var ShowPurchasesMenu = CurrentUser.GetPrivilege (SystemObjects.PurchasesOrders).AllowRead ||
-									CurrentUser.GetPrivilege (SystemObjects.SupplierPayment).AllowRead;
+	};
 
-	var ShowAdministrationMenu = CurrentUser.GetPrivilege (SystemObjects.AccountsReceivable).AllowRead ||
-										  CurrentUser.GetPrivilege (SystemObjects.AccountsPayable).AllowRead;
+				var production_menu_items = new List<MenuItemModel> {
+		new MenuItemModel{SystemObject = SystemObjects.ProductionOrders, Controller = "ProductionOrders", DefaultAction = "Index", Resources = Resources.ProductionOrders },
+	};
 
-	var ShowFiscalDocumentsMenu = CurrentUser.GetPrivilege (SystemObjects.FiscalDocuments).AllowRead ||
-											CurrentUser.GetPrivilege (SystemObjects.Taxpayers).AllowRead;
+				var inventory_menu_items = new List<MenuItemModel> {
+		new MenuItemModel{ SystemObject = SystemObjects.InventoryReceipts, Controller="Inventory", DefaultAction = "Receipts", Resources = Resources.Title_InventoryReceipt},
+		new MenuItemModel{ SystemObject = SystemObjects.InventoryIssues, Controller="Inventory", DefaultAction = "Issues", Resources = Resources.Title_InventoryIssue},
+		new MenuItemModel{ SystemObject = SystemObjects.InventoryTransfers, Controller="Inventory", DefaultAction = "Transfers", Resources = Resources.Title_InventoryTransfer},
+		new MenuItemModel{ SystemObject = SystemObjects.LotSerialNumbers, Controller="Inventory", DefaultAction = "LotSerialNumbers", Resources = Resources.LotSerialNumbers },
 
-	var ShowReportsMenu = CurrentUser.GetPrivilege (SystemObjects.SupplierReturnHistoric).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.ReceivedPayments).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.SalesByCustomer).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.SalesBySalesPerson).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.SalesByProduct).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.GrossProfitsByCustomer).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.GrossProfitsBySalesPerson).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.GrossProfitsByProduct).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.BestSellingProductsByCustomer).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.BestSellingProductsBySalesPerson).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.CustomerDebtReport).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.SalesOrderSummaryReport).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.FiscalDocumentsReport).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.SalesPersonOrdersReport).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.SalesPersonOrdersAndRefundsReport).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.CustomerSalesOrdersReport).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.ProductSalesByCustomerReport).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.ProductSalesByModelReport).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.ProductSalesByBrandReport).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPerson).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPersonAndLabel).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPersonAndBrand).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPersonAndModel).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.CustomersReport).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.WarehouseStockReport).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.WarehouseStockByLotReport).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.WarehouseStockBySerialNumberReport).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.Kardex).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.SerialNumberKardex).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.ProductsBySupplierReport).AllowRead ||
-								 CurrentUser.GetPrivilege (SystemObjects.ProductsOrdersAndRefundsBySalesPerson).AllowRead
-								 ;
+	};
 
-	var ShowTechnicalServiceMenu =  CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceReports).AllowRead ||
-											  CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceRequests).AllowRead ||
-											  CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceReceipts).AllowRead;
+				var logistic_menu_items = new List<MenuItemModel> {
+		//new MenuItemModel{ SystemObject = SystemObjects.DeliveryItineraries, Controller="DeliveryItineraries", DefaultAction = "Index", Resources = Resources.DeliveryItineraries},
+		//new MenuItemModel{ SystemObject = SystemObjects.ForDeliver, Controller="DeliveryItineraries", DefaultAction = "Deliveries", Resources = Resources.ForDeliver},
+		new MenuItemModel{ SystemObject = SystemObjects.DeliveryOrders, Controller="DeliveryOrders", DefaultAction = "Index", Resources = Resources.DeliveryOrders},
+		new MenuItemModel{ SystemObject = SystemObjects.DeliveryOrderApproval, Controller="DeliveryOrders", DefaultAction = "DeliveryOrdersApproval", Resources = Resources.DeliveryOrdersApproval},
+				};
 
-	var ShowFrontDeskMenu = CurrentUser.GetPrivilege (SystemObjects.TranslationRequests).AllowRead ||
-									CurrentUser.GetPrivilege (SystemObjects.Notarizations).AllowRead;
+				var purchases_menu_items = new List<MenuItemModel> {
+		new MenuItemModel{ SystemObject = SystemObjects.PurchaseRequest, Controller = "PurchaseRequests", DefaultAction = "Index", Resources = Resources.PurchaseRequests },
+		new MenuItemModel{ SystemObject = SystemObjects.PurchaseRequestApproval, Controller="PurchaseRequests", DefaultAction = "PurchaseRequestsApproval", Resources = Resources.PurchaseRequestApproval},
+		new MenuItemModel{ SystemObject = SystemObjects.PurchasesOrders, Controller = "Purchases", DefaultAction = "Index", Resources = Resources.Title_PurchaseOrder},
+		new MenuItemModel{ SystemObject = SystemObjects.PurchaseOrderApproval, Controller="Purchases", DefaultAction = "Approvals", Resources = Resources.PurchaseOrderApproval},
+		new MenuItemModel{ SystemObject = SystemObjects.ExpenseTicket, Controller = "ExpenseVoucher", DefaultAction = "Index", Resources = Resources.ExpenseVoucher},
+		new MenuItemModel{ SystemObject = SystemObjects.SupplierPayment, Controller = "SupplierPayments", DefaultAction = "Index", Resources = Resources.Title_SuppliersPayments}
+	};
 
-	//var ShowHumanResources = CurrentUser.GetPrivilege(SystemObjects.EmployeeAttendance).AllowRead ||
-	//                        CurrentUser.GetPrivilege(SystemObjects.EmployeeSchedules).AllowRead ||
-	//                        CurrentUser.GetPrivilege(SystemObjects.SynchronizeClocks).AllowRead
-	//                    ;
+				var administration_menu_items = new List<MenuItemModel> {
+		new MenuItemModel{SystemObject = SystemObjects.AccountsReceivable, Controller = "AccountsReceivables", DefaultAction = "Index", Resources = Resources.Title_AccountsReceivable },
+		new MenuItemModel{SystemObject = SystemObjects.AccountsPayable, Controller = "AccountsPayables", DefaultAction = "Index", Resources = Resources.Title_AccountsPayable },
+	};
+
+				var technical_service_menu_items = new List<MenuItemModel> {
+		new MenuItemModel{ SystemObject = SystemObjects.TechnicalServiceReceipts, Controller = "TechnicalServiceReceipts", DefaultAction = "Index", Resources = Resources.TechnicalServiceReceipts },
+		new MenuItemModel{ SystemObject = SystemObjects.TechnicalServiceReports, Controller = "TechnicalServiceReports", DefaultAction = "Index", Resources = Resources.TechnicalServiceReports },
+		new MenuItemModel{ SystemObject = SystemObjects.TechnicalServiceRequests, Controller = "TechnicalServiceRequests", DefaultAction = "Index", Resources = Resources.TechnicalServiceRequests },
+		new MenuItemModel{ SystemObject = SystemObjects.VehicleServiceOrders, Controller="Vehicles", DefaultAction = "ServiceOrders", Resources = Resources.ServiceOrders }
+	};
+
+				var front_desk_menu_items = new List<MenuItemModel> {
+		new MenuItemModel{ SystemObject = SystemObjects.TranslationRequests, Controller = "TranslationRequests", DefaultAction = "Index", Resources = Resources.TranslationRequests },
+		new MenuItemModel{ SystemObject = SystemObjects.Notarizations, Controller = "Notarizations", DefaultAction = "Index", Resources = Resources.Notarizations }
+	};
+
+				var fiscal_document_menu_items = new List<MenuItemModel> {
+		new MenuItemModel{SystemObject = SystemObjects.Taxpayers, Controller = "Taxpayers", DefaultAction = "Index", Resources = Resources.Title_Taxpayer },
+		new MenuItemModel{SystemObject = SystemObjects.FiscalDocuments, Controller = "FiscalDocuments", DefaultAction = "Index", Resources = Resources.FiscalDocuments },
+	};
+
+				var reports_menu_1_items = new List<MenuItemModel> {
+		new MenuItemModel{ SystemObject = SystemObjects.ReceivedPayments, Controller = "Reports", DefaultAction = "ReceivedPayments", Resources = Resources.ReceivedPayments },
+		new MenuItemModel{ SystemObject = SystemObjects.SalesByProduct, Controller = "Reports", DefaultAction = "SalesByProduct", Resources = Resources.SalesByProduct },
+		new MenuItemModel{ SystemObject = SystemObjects.GrossProfitsByCustomer, Controller = "Reports", DefaultAction = "GrossProfitsByCustomer", Resources = Resources.GrossProfitsByCustomer },
+		new MenuItemModel{ SystemObject = SystemObjects.GrossProfitsBySalesPerson, Controller = "Reports", DefaultAction = "GrossProfitsBySalesPerson", Resources = Resources.GrossProfitsBySalesPerson },
+		new MenuItemModel{ SystemObject = SystemObjects.GrossProfitsByProduct, Controller = "Reports", DefaultAction = "GrossProfitsByProduct", Resources = Resources.GrossProfitsByProduct },
+		new MenuItemModel{ SystemObject = SystemObjects.BestSellingProductsByCustomer, Controller = "Reports", DefaultAction = "BestSellingProductsByCustomer", Resources = Resources.BestSellingProductsByCustomer },
+		new MenuItemModel{ SystemObject = SystemObjects.BestSellingProductsBySalesPerson, Controller = "Reports", DefaultAction = "BestSellingProductsBySalesPerson", Resources = Resources.BestSellingProductsBySalesPerson },
+		new MenuItemModel{ SystemObject = SystemObjects.CustomersReport, Controller = "Reports", DefaultAction = "CustomersReport", Resources = Resources.CustomersReport },
+		new MenuItemModel{ SystemObject = SystemObjects.SalesByCustomer, Controller = "Reports", DefaultAction = "SalesByCustomer", Resources = Resources.SalesByCustomer },
+		new MenuItemModel{ SystemObject = SystemObjects.SalesBySalesPerson, Controller = "Reports", DefaultAction = "SalesBySalesPerson", Resources = Resources.SalesBySalesPerson },
+		new MenuItemModel{ SystemObject = SystemObjects.CustomerSalesOrdersReport, Controller = "Reports", DefaultAction = "CustomerSalesOrders", Resources = Resources.CustomerSalesOrders },
+		new MenuItemModel{ SystemObject = SystemObjects.SalesPersonOrdersReport, Controller = "Reports", DefaultAction = "SalesPersonOrders", Resources = Resources.SalesPersonOrders },
+		new MenuItemModel{ SystemObject = SystemObjects.SalesPersonOrdersAndRefundsReport, Controller = "Reports", DefaultAction = "SalesPersonOrdersAndRefunds", Resources = Resources.SalesPersonOrdersAndRefunds },
+		new MenuItemModel{ SystemObject = SystemObjects.ProductSalesByCustomerReport, Controller = "Reports", DefaultAction = "ProductSalesByCustomer", Resources = Resources.ProductSalesByCustomer },
+		new MenuItemModel{ SystemObject = SystemObjects.ProductSalesByBrandReport, Controller = "Reports", DefaultAction = "ProductSalesByBrand", Resources = Resources.ProductSalesByBrand },
+		new MenuItemModel{ SystemObject = SystemObjects.ProductSalesByModelReport, Controller = "Reports", DefaultAction = "ProductSalesByModel", Resources = Resources.ProductSalesByModel },
+		new MenuItemModel{ SystemObject = SystemObjects.ProductSalesBySalesPerson, Controller = "Reports", DefaultAction = "ProductSalesBySalesPerson", Resources = Resources.ProductSalesBySalesPerson },
+		new MenuItemModel{ SystemObject = SystemObjects.ProductSalesBySalesPersonAndLabel, Controller = "Reports", DefaultAction = "ProductSalesBySalesPersonAndLabel", Resources = Resources.ProductSalesBySalesPersonAndLabel },
+		new MenuItemModel{ SystemObject = SystemObjects.ProductSalesBySalesPersonAndBrand, Controller = "Reports", DefaultAction = "ProductSalesBySalesPersonAndBrand", Resources = Resources.ProductSalesBySalesPersonAndBrand },
+		new MenuItemModel{ SystemObject = SystemObjects.ProductSalesBySalesPersonAndModel, Controller = "Reports", DefaultAction = "ProductSalesBySalesPersonAndModel", Resources = Resources.ProductSalesBySalesPersonAndModel },
+		new MenuItemModel{ SystemObject = SystemObjects.SalesOrderSummaryReport, Controller = "Reports", DefaultAction = "SalesOrderSummary", Resources = Resources.SalesOrderSummary },
+		new MenuItemModel{ SystemObject = SystemObjects.FiscalDocumentsReport, Controller = "Reports", DefaultAction = "FiscalDocuments", Resources = Resources.FiscalDocumentsReport },
+		new MenuItemModel{ SystemObject = SystemObjects.WarehouseStockReport, Controller = "Reports", DefaultAction = "WarehouseStockReport", Resources = Resources.WarehouseStockReport },
+		new MenuItemModel{ SystemObject = SystemObjects.WarehouseStockByLotReport, Controller = "Reports", DefaultAction = "WarehouseStockByLotReport", Resources = Resources.WarehouseStockByLotReport },
+		new MenuItemModel{ SystemObject = SystemObjects.WarehouseStockBySerialNumberReport, Controller = "Reports", DefaultAction = "WarehouseStockBySerialNumberReport", Resources = Resources.WarehouseStockBySerialNumberReport },
+		new MenuItemModel{ SystemObject = SystemObjects.Kardex, Controller = "Reports", DefaultAction = "Kardex", Resources = Resources.Title_Kardex },
+		new MenuItemModel{ SystemObject = SystemObjects.SerialNumberKardex, Controller = "Reports", DefaultAction = "SerialNumberKardex", Resources = Resources.SerialNumberKardex },
+		new MenuItemModel{ SystemObject = SystemObjects.ProductsBySupplierReport, Controller = "Reports", DefaultAction = "ProductsBySupplier", Resources = Resources.ProductsBySupplier },
+		new MenuItemModel{ SystemObject = SystemObjects.ProductsOrdersAndRefundsBySalesPerson, Controller = "Reports", DefaultAction = "ProductsOrderAndRefundsBySalesPerson", Resources = Resources.ProductsOrdersAndRefundsBySalesPerson },
+		new MenuItemModel{ SystemObject = SystemObjects.StoreMovementsSummary, Controller = "Reports", DefaultAction = "StoreMovementsSummary", Resources = Resources.StoreMovementsSummary },
+		new MenuItemModel{ SystemObject = SystemObjects.CustomerDebtReport, Controller = "Reports", DefaultAction = "CustomersDebtSummary", Resources = Resources.CustomerDebt },
+
+	};
+
+				var columns = new Dictionary<string, List<MenuItemModel>>() {
+								{ Resources.MasterData, master_data_menu_items },
+								{ Resources.Sales, sales_menu_items },
+								{ Resources.Production, production_menu_items },
+								{ Resources.Inventory, inventory_menu_items },
+								{ Resources.Purchase, purchases_menu_items },
+								{ Resources.Logistic, logistic_menu_items },
+								{ Resources.Administration, administration_menu_items },
+								{ Resources.TechnicalService, technical_service_menu_items },
+								{ Resources.FrontDesk, front_desk_menu_items },
+								{ Resources.FiscalDocuments, fiscal_document_menu_items },
+								{ Resources.Reports, reports_menu_1_items }
+				};
+
+
 }
 
 <div id="gb" class='no-print'>
-    <div id="gbz">
-        <ol class="gbtc">
-            <li class="gbt">
-                <a class="gbzt @(Html.IsMenuSelected("Index", "Home") ? "gbz0l" : "")"
-                   href="@Url.Action("Index", "Home")">
-                    <span class="gbtb2"></span>
-                    <span class="gbts">@Resources.Menu_Home</span>
-                </a>
-            </li>
-            @if (ShowMasterDataMenu) {
-            <li class="gbt">
-                <a id="master-data-menu" class="gbgt" href="javascript:void(0)">
-                    <span class="gbtb2"></span>
-                    <span class="gbts gbtsa">
-                        <span>@Resources.MasterData</span>
-                        <span class="gbma"></span>
-                    </span>
-                </a>
-                <div id="master-data-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
-                    <div class="gbmc">
-                        <ol class="gbmcc">
-                            @if (CurrentUser.GetPrivilege (SystemObjects.Labels).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "Labels") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "Labels")">@Resources.Labels</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.Products).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "Products") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "Products")">@Resources.Title_Product</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.PriceLists).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "PriceLists") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "PriceLists")">@Resources.Title_PriceList</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.Customers).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "Customers") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "Customers")">@Resources.Title_Customer</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.TaxpayerRecipients).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "TaxpayerRecipients") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "TaxpayerRecipients")">@Resources.TaxpayerRecipients</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.Suppliers).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "Suppliers") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "Suppliers")">@Resources.Title_Supplier</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.Employees).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "Employees") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "Employees")">@Resources.Title_Employee</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.Warehouses).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "Warehouses") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "Warehouses")">@Resources.Title_Warehouse</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.Stores).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "Stores") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "Stores")">@Resources.DisplayName_Stores</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.PointsOfSale).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "PointsOfSale") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "PointsOfSale")">@Resources.Title_PointOfSale</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.CashDrawers).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "CashDrawers") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "CashDrawers")">@Resources.Title_CashDrawer</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.ExchangeRates).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "ExchangeRates") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "ExchangeRates")">@Resources.ExchangeRates</a>
-                            </li>
-                            }
-									@if (CurrentUser.GetPrivilege(SystemObjects.Expenses).AllowRead) {
-									<li class="gbmtc">
-										<a class="gbmt @(Html.IsMenuSelected("Index", "Expenses") ? "gbm0l" : "")"
-											href="@Url.Action("Index", "Expenses")">@Resources.Expenses</a>
-									</li>
-									}
-									@if (CurrentUser.GetPrivilege (SystemObjects.PaymentMethodOptions).AllowRead) {
-											<li class="gbmtc">
-												<a class="gbmt @(Html.IsMenuSelected("Index", "PaymentMethodOptions") ? "gbm0l" : "")"
-													href="@Url.Action("Index", "PaymentMethodOptions")">@Resources.PaymentMethodOptions</a>
+				<div id="gbz">
+								<ol class="gbtc">
+												<li class="gbt">
+																<a class="gbzt @(Html.IsMenuSelected("Index", "Home") ? "gbz0l" : "")"
+																			href="@Url.Action("Index", "Home")">
+																				<span class="gbtb2"></span>
+																				<span class="gbts">@Resources.Menu_Home</span>
+																</a>
 												</li>
-									}
-                        </ol>
-                    </div>
-                </div>
-            </li>
-            }
-            @if (ShowSalesMenu) {
-            <li class="gbt">
-                <a id="sales-menu" class="gbgt" href="javascript:void(0)">
-                    <span class="gbtb2"></span>
-                    <span class="gbts gbtsa">
-                        <span>@Resources.Sales</span>
-                        <span class="gbma"></span>
-                    </span>
-                </a>
-                <div id="sales-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
-                    <div class="gbmc">
-                        <ol class="gbmcc">
-                            @if (CurrentUser.GetPrivilege (SystemObjects.PriceLists).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "Pricing") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "Pricing")">@Resources.Pricing</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.SalesQuotes).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "Quotations") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "Quotations")">@Resources.SalesQuotes</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.POS).AllowRead)
-                            {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "POS") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "POS")">@Resources.PointOfSale</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.SalesOrders).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "SalesOrders") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "SalesOrders")">@Resources.SalesOrders</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.CustomerPayments).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "Payments") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "Payments")">@Resources.Title_CustomerPayment</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.CustomerRefunds).AllowRead) {
-                            <li class='gbmtc'>
-                                <a class='gbmt @(Html.IsMenuSelected("Index", "CustomerRefunds") ? "gbm0l" : "")'
-                                   href='@Url.Action("Index", "CustomerRefunds")'>@Resources.CustomerRefunds</a>
-                            </li>
-                            }
-									@if (CurrentUser.GetPrivilege (SystemObjects.CreditPayments).AllowRead) {
-											<li class='gbmtc'>
-												<a class='gbmt @(Html.IsMenuSelected("CreditPayments", "Payments") ? "gbm0l" : "")'
-													href='@Url.Action("CreditPayments", "Payments")'>@Resources.CreditPayments</a>
-												</li>
-									}
-                        </ol>
-                    </div>
-                </div>
-            </li>
-            }
 
-            @if (ShowProductionMenu) {
-            <li class="gbt">
-                <a id="production-menu" class="gbgt" href="javascript:void(0)">
-                    <span class="gbtb2"></span>
-                    <span class="gbts gbtsa">
-                        <span>@Resources.Production</span>
-                        <span class="gbma"></span>
-                    </span>
-                </a>
-                <div id="production-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
-                    <div class="gbmc">
-                        <ol class="gbmcc">
-                            @if (CurrentUser.GetPrivilege (SystemObjects.ProductionOrders).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "ProductionOrders") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "ProductionOrders")">@Resources.ProductionOrders</a>
-                            </li>
-                            }
-                        </ol>
-                    </div>
-                </div>
-            </li>
-            }
+												@foreach (var column in columns.Where(x => x.Value.Any(y => CurrentUser.GetPrivilege(y.SystemObject).AllowRead)))
+												{
+																<li class="gbt">
+																				<a id="master-data-menu" class="gbgt" href="javascript:void(0)">
+																								<span class="gbtb2"></span>
+																								<span class="gbts gbtsa">
+																												<span>@column.Key</span>
+																												<span class="gbma"></span>
+																								</span>
+																				</a>
+																				<div id="master-data-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
+																								<div class="gbmc">
+																												<ol class="gbmcc">
 
-            @*@if (ShowHumanResources)
-            {
-            <li class="gbt">
-                <a id="humanresources-menu" class="gbgt" href="javascript:void(0)">
-                    <span class="gbtb2"></span>
-                    <span class="gbts gbtsa">
-                        <span>@Resources.HumanResources</span>
-                        <span class="gbma"></span>
-                    </span>
-                </a>
-                <div id="production-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
-                    <div class="gbmc">
-                        <ol class="gbmcc">
-                            @if (CurrentUser.GetPrivilege(SystemObjects.EmployeeAttendance).AllowRead)
-                            {
-                                <li class="gbmtc">
-                                    <a class="gbmt @(Html.IsMenuSelected("AttendanceEmployees", "HumanResources") ? "gbm0l" : "")"
-                                        href="@Url.Action("AttendanceEmployees", "HumanResources")">@Resources.EmployeeAttendance</a>
-                                </li>
-                            }
+																																@foreach (var item in column.Value.Where(x => CurrentUser.GetPrivilege(x.SystemObject).AllowRead).OrderBy(y => y.Resources))
+																																{
+																																				<li class="gbmtc">
+																																								<a class="gbmt @(Html.IsMenuSelected(item.DefaultAction, item.Controller) ? "gbm0l" : "")"
+																																											href="@Url.Action(item.DefaultAction, item.Controller)">@item.Resources</a>
+																																				</li>
+																																}
 
-                            @if (CurrentUser.GetPrivilege(SystemObjects.EmployeeSchedules).AllowRead)
-                            {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("EmployeeSchedules", "HumanResources") ? "gbm0l" : "")"
-                                   href="@Url.Action("EmployeeSchedules", "HumanResources")">@Resources.EmployeeSchedules</a>
-                            </li>
-                            }
-
-                            @if (CurrentUser.GetPrivilege(SystemObjects.SynchronizeClocks).AllowRead)
-                            {
-                                <li class="gbmtc">
-                                    <a class="gbmt @(Html.IsMenuSelected("SynchronizeClocks", "HumanResources") ? "gbm0l" : "")"
-                                       href="@Url.Action("SynchronizeClocks", "HumanResources")">@Resources.SynchronizeClocks</a>
-                                </li>
-                            }
-                        </ol>
-                    </div>
-                </div>
-            </li>
-            }*@
-
-            @if (ShowInventoryMenu) {
-            <li class="gbt">
-                <a id="inventory-menu" class="gbgt" href="javascript:void(0)">
-                    <span class="gbtb2"></span>
-                    <span class="gbts gbtsa">
-                        <span>@Resources.Inventory</span>
-                        <span class="gbma"></span>
-                    </span>
-                </a>
-                <div id="inventory-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
-                    <div class="gbmc">
-                        <ol class="gbmcc">
-                            @if (CurrentUser.GetPrivilege (SystemObjects.InventoryReceipts).AllowRead)
-                            {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Receipts", "Inventory") ? "gbm0l" : "")"
-                                   href="@Url.Action("Receipts", "Inventory")">@Resources.Title_InventoryReceipt</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.InventoryIssues).AllowRead)
-                            {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Issues", "Inventory") ? "gbm0l" : "")"
-                                   href="@Url.Action("Issues", "Inventory")">@Resources.Title_InventoryIssue</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.InventoryTransfers).AllowRead)
-                            {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Transfers", "Inventory") ? "gbm0l" : "")"
-                                   href="@Url.Action("Transfers", "Inventory")">@Resources.Title_InventoryTransfer</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.LotSerialNumbers).AllowRead)
-                            {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("LotSerialNumbers", "Inventory") ? "gbm0l" : "")"
-                                   href="@Url.Action("LotSerialNumbers", "Inventory")">@Resources.LotSerialNumbers</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.DeliveryOrders).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "DeliveryOrders") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "DeliveryOrders")">@Resources.DeliveryOrders</a>
-                            </li>
-                            }
-									@if (CurrentUser.GetPrivilege (SystemObjects.PendantDeliveries).AllowRead) {
-									<li class="gbmtc">
-											<a class="gbmt @(Html.IsMenuSelected("PendantDeliveries", "DeliveryOrders") ? "gbm0l" : "")"
-											href="@Url.Action("PendantDeliveries", "DeliveryOrders")">@Resources.PendantDeliveries</a>
-									</li>
-									}
-
-
-                        </ol>
-                    </div>
-                </div>
-            </li>
-            }
-
-            @if (ShowPurchasesMenu) {
-            <li class="gbt">
-                <a id="purchases-menu" class="gbgt" href="javascript:void(0)">
-                    <span class="gbtb2"></span>
-                    <span class="gbts gbtsa">
-                        <span>@Resources.Purchases</span>
-                        <span class="gbma"></span>
-                    </span>
-                </a>
-                <div id="purchases-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
-                    <div class="gbmc">
-                        <ol class="gbmcc">
-                            @if (CurrentUser.GetPrivilege (SystemObjects.PurchasesOrders).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "Purchases") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "Purchases")">@Resources.Title_PurchaseOrder</a>
-                            </li>
-                            }
-									@if (CurrentUser.GetPrivilege(SystemObjects.ExpenseVoucher).AllowRead) {
-										<li class='gbmtc'>
-											<a class='gbmt @(Html.IsMenuSelected("Index", "ExpenseVoucher") ? "gbm0l" : "")'
-												href='@Url.Action("Index", "ExpenseVoucher")'>@Resources.ExpenseVouchers</a>
-											</li>
-									}
-                            @if (CurrentUser.GetPrivilege (SystemObjects.SupplierPayment).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "SupplierPayments") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "SupplierPayments")">@Resources.Title_SuppliersPayments</a>
-                            </li>
-                            }
-                        </ol>
-                    </div>
-                </div>
-            </li>
-            }
-
-            @if (ShowAdministrationMenu) {
-            <li class="gbt">
-                <a id="mgmt-menu" class="gbgt" href="javascript:void(0)">
-                    <span class="gbtb2"></span>
-                    <span class="gbts gbtsa">
-                        <span>@Resources.Administration</span>
-                        <span class="gbma"></span>
-                    </span>
-                </a>
-                <div id="mgmt-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
-                    <div class="gbmc">
-                        <ol class="gbmcc">
-                            @if (CurrentUser.GetPrivilege (SystemObjects.AccountsReceivable).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "AccountsReceivables") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "AccountsReceivables")">@Resources.Title_AccountsReceivable</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.AccountsPayable).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "AccountsPayables") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "AccountsPayables")">@Resources.Title_AccountsPayable</a>
-                            </li>
-                            }
-                        </ol>
-                    </div>
-                </div>
-            </li>
-            }
-
-            @if (ShowTechnicalServiceMenu) {
-            <li class="gbt">
-                <a id="frontdesk-menu" class="gbgt" href="javascript:void(0)">
-                    <span class="gbtb2"></span>
-                    <span class="gbts gbtsa">
-                        <span>@Resources.TechnicalService</span>
-                        <span class="gbma"></span>
-                    </span>
-                </a>
-                <div id="frontdesk-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
-                    <div class="gbmc">
-                        <ol class="gbmcc">
-                            @if (CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceReceipts).AllowRead) {
-                            <li class="gbmtc">
-                                <a class='gbmt @(Html.IsMenuSelected("Index", "TechnicalServiceReceipts") ? "gbm0l" : "")'
-                                   href='@Url.Action("Index", "TechnicalServiceReceipts")'>@Resources.TechnicalServiceReceipts</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceReports).AllowRead) {
-                            <li class="gbmtc">
-                                <a class='gbmt @(Html.IsMenuSelected("Index", "TechnicalServiceReports") ? "gbm0l" : "")'
-                                   href='@Url.Action("Index", "TechnicalServiceReports")'>@Resources.TechnicalServiceReports</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.TechnicalServiceRequests).AllowRead) {
-                            <li class="gbmtc">
-                                <a class='gbmt @(Html.IsMenuSelected("Index", "TechnicalServiceRequests") ? "gbm0l" : "")'
-                                   href='@Url.Action("Index", "TechnicalServiceRequests")'>@Resources.TechnicalServiceRequests</a>
-                            </li>
-                            }
-                        </ol>
-                    </div>
-                </div>
-            </li>
-            }
-
-            @if (ShowFrontDeskMenu) {
-            <li class="gbt">
-                <a id="cfd-menu" class="gbgt" href="javascript:void(0)">
-                    <span class="gbtb2"></span>
-                    <span class="gbts gbtsa">
-                        <span>@Resources.FrontDesk</span>
-                        <span class="gbma"></span>
-                    </span>
-                </a>
-                <div id="frontdesk-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
-                    <div class="gbmc">
-                        <ol class="gbmcc">
-                            @if (CurrentUser.GetPrivilege (SystemObjects.TranslationRequests).AllowRead) {
-                            <li class="gbmtc">
-                                <a class='gbmt @(Html.IsMenuSelected("Index", "TranslationRequests") ? "gbm0l" : "")'
-                                   href='@Url.Action("Index", "TranslationRequests")'>@Resources.TranslationRequests</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.Notarizations).AllowRead) {
-                            <li class="gbmtc">
-                                <a class='gbmt @(Html.IsMenuSelected("Index", "Notarizations") ? "gbm0l" : "")'
-                                   href='@Url.Action("Index", "Notarizations")'>@Resources.Notarizations</a>
-                            </li>
-                            }
-                        </ol>
-                    </div>
-                </div>
-            </li>
-            }
-
-            @if (ShowFiscalDocumentsMenu) {
-            <li class="gbt">
-                <a id="cfd-menu" class="gbgt" href="javascript:void(0)">
-                    <span class="gbtb2"></span>
-                    <span class="gbts gbtsa">
-                        <span>@Resources.FiscalDocuments</span>
-                        <span class="gbma"></span>
-                    </span>
-                </a>
-                <div id="cfd-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
-                    <div class="gbmc">
-                        <ol class="gbmcc">
-                            @if (CurrentUser.GetPrivilege (SystemObjects.Taxpayers).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "Taxpayers") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "Taxpayers")">@Resources.Title_Taxpayer</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.FiscalDocuments).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("Index", "FiscalDocuments") ? "gbm0l" : "")"
-                                   href="@Url.Action("Index", "FiscalDocuments")">@Resources.FiscalDocuments</a>
-                            </li>
-                            }
-                        </ol>
-                    </div>
-                </div>
-            </li>
-            }
-            @if (ShowReportsMenu) {
-            <li class="gbt">
-                <a id="reports-menu" class="gbgt" href="javascript:void(0)">
-                    <span class="gbtb2"></span>
-                    <span class="gbts gbtsa">
-                        <span>@Resources.Reports</span>
-                        <span class="gbma"></span>
-                    </span>
-                </a>
-                <div id="reports-menu-items" class="gbm" style="left:0px;top:32px;visibility:hidden;">
-                    <div class="gbmc">
-                        <ol class="gbmcc">
-                            @if (CurrentUser.GetPrivilege(SystemObjects.ReceivedPayments).AllowRead) {
-                                <li class="gbmtc">
-                                    <a class="gbmt @(Html.IsMenuSelected("ReceivedPayments", "Reports") ? "gbm0l" : "")"
-                                       href="@Url.Action("ReceivedPayments", "Reports")">@Resources.ReceivedPayments</a>
-                                </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.SalesByProduct).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("SalesByProduct", "Reports") ? "gbm0l" : "")"
-                                   href="@Url.Action("SalesByProduct", "Reports")">@Resources.SalesByProduct</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.GrossProfitsByCustomer).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("GrossProfitsByCustomer", "Reports") ? "gbm0l" : "")"
-                                   href="@Url.Action("GrossProfitsByCustomer", "Reports")">@Resources.GrossProfitsByCustomer</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.GrossProfitsBySalesPerson).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("GrossProfitsBySalesPerson", "Reports") ? "gbm0l" : "")"
-                                   href="@Url.Action("GrossProfitsBySalesPerson", "Reports")">@Resources.GrossProfitsBySalesPerson</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.GrossProfitsByProduct).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("GrossProfitsByProduct", "Reports") ? "gbm0l" : "")"
-                                   href="@Url.Action("GrossProfitsByProduct", "Reports")">@Resources.GrossProfitsByProduct</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.BestSellingProductsByCustomer).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("BestSellingProductsByCustomer", "Reports") ? "gbm0l" : "")"
-                                   href="@Url.Action("BestSellingProductsByCustomer", "Reports")">@Resources.BestSellingProductsByCustomer</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.BestSellingProductsBySalesPerson).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("BestSellingProductsBySalesPerson", "Reports") ? "gbm0l" : "")"
-                                   href="@Url.Action("BestSellingProductsBySalesPerson", "Reports")">@Resources.BestSellingProductsBySalesPerson</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.CustomerDebtReport).AllowRead) {
-                            <li class='gbmtc'>
-                                <a class='gbmt @(Html.IsMenuSelected("CustomerDebt", "Reports") ? "gbm0l" : "")'
-                                   href='@Url.Action("CustomerDebt", "Reports")'>@Resources.CustomerDebt</a>
-                            </li>
-                            }
-
-                            <div class="gbmh"></div>
-
-                            @if (CurrentUser.GetPrivilege (SystemObjects.CustomersReport).AllowRead) {
-                                <li class="gbmtc">
-                                    <a class="gbmt @(Html.IsMenuSelected("CustomersReport", "Reports") ? "gbm0l" : "")"
-                                       href="@Url.Action("CustomersReport", "Reports")">@Resources.CustomersReport</a>
-                                </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.SalesByCustomer).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("SalesByCustomer", "Reports") ? "gbm0l" : "")"
-                                   href="@Url.Action("SalesByCustomer", "Reports")">@Resources.SalesByCustomer</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.SalesBySalesPerson).AllowRead) {
-                            <li class="gbmtc">
-                                <a class="gbmt @(Html.IsMenuSelected("SalesBySalesPerson", "Reports") ? "gbm0l" : "")"
-                                   href="@Url.Action("SalesBySalesPerson", "Reports")">@Resources.SalesBySalesPerson</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.CustomerSalesOrdersReport).AllowRead) {
-                            <li class='gbmtc'>
-                                <a class='gbmt @(Html.IsMenuSelected("CustomerSalesOrders", "Reports") ? "gbm0l" : "")'
-                                   href='@Url.Action("CustomerSalesOrders", "Reports")'>@Resources.CustomerSalesOrders</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.SalesPersonOrdersReport).AllowRead) {
-                            <li class='gbmtc'>
-                                <a class='gbmt @(Html.IsMenuSelected("SalesPersonOrders", "Reports") ? "gbm0l" : "")'
-                                   href='@Url.Action("SalesPersonOrders", "Reports")'>@Resources.SalesPersonOrders</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.SalesPersonOrdersAndRefundsReport).AllowRead) {
-                            <li class='gbmtc'>
-                                <a class='gbmt @(Html.IsMenuSelected("SalesPersonOrdersAndRefunds", "Reports") ? "gbm0l" : "")'
-                                   href='@Url.Action("SalesPersonOrdersAndRefunds", "Reports")'>@Resources.SalesPersonOrdersAndRefunds</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.ProductSalesByCustomerReport).AllowRead) {
-                            <li class='gbmtc'>
-                                <a class='gbmt @(Html.IsMenuSelected("ProductSalesByCustomer", "Reports") ? "gbm0l" : "")'
-                                   href='@Url.Action("ProductSalesByCustomer", "Reports")'>@Resources.ProductSalesByCustomer</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.ProductSalesByBrandReport).AllowRead) {
-                            <li class='gbmtc'>
-                                <a class='gbmt @(Html.IsMenuSelected("ProductSalesByBrand", "Reports") ? "gbm0l" : "")'
-                                   href='@Url.Action("ProductSalesByBrand", "Reports")'>@Resources.ProductSalesByBrand</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.ProductSalesByModelReport).AllowRead) {
-                            <li class='gbmtc'>
-                                <a class='gbmt @(Html.IsMenuSelected("ProductSalesByModel", "Reports") ? "gbm0l" : "")'
-                                   href='@Url.Action("ProductSalesByModel", "Reports")'>@Resources.ProductSalesByModel</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPerson).AllowRead) {
-                            <li class='gbmtc'>
-                                <a class='gbmt @(Html.IsMenuSelected("ProductSalesBySalesPerson", "Reports") ? "gbm0l" : "")'
-                                   href='@Url.Action("ProductSalesBySalesPerson", "Reports")'>@Resources.ProductSalesBySalesPerson</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPersonAndLabel).AllowRead) {
-                            <li class='gbmtc'>
-                                <a class='gbmt @(Html.IsMenuSelected("ProductSalesBySalesPersonAndLabel", "Reports") ? "gbm0l" : "")'
-                                   href='@Url.Action("ProductSalesBySalesPersonAndLabel", "Reports")'>@Resources.ProductSalesBySalesPersonAndLabel</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPersonAndBrand).AllowRead) {
-                            <li class='gbmtc'>
-                                <a class='gbmt @(Html.IsMenuSelected("ProductSalesBySalesPersonAndBrand", "Reports") ? "gbm0l" : "")'
-                                   href='@Url.Action("ProductSalesBySalesPersonAndBrand", "Reports")'>@Resources.ProductSalesBySalesPersonAndBrand</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.ProductSalesBySalesPersonAndModel).AllowRead) {
-                            <li class='gbmtc'>
-                                <a class='gbmt @(Html.IsMenuSelected("ProductSalesBySalesPersonAndModel", "Reports") ? "gbm0l" : "")'
-                                   href='@Url.Action("ProductSalesBySalesPersonAndModel", "Reports")'>@Resources.ProductSalesBySalesPersonAndModel</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.SalesOrderSummaryReport).AllowRead) {
-                            <li class='gbmtc'>
-                                <a class='gbmt @(Html.IsMenuSelected("SalesOrderSummary", "Reports") ? "gbm0l" : "")'
-                                   href='@Url.Action("SalesOrderSummary", "Reports")'>@Resources.SalesOrderSummary</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.FiscalDocumentsReport).AllowRead) {
-                            <li class='gbmtc'>
-                                <a class='gbmt @(Html.IsMenuSelected("FiscalDocuments", "Reports") ? "gbm0l" : "")'
-                                   href='@Url.Action("FiscalDocuments", "Reports")'>@Resources.FiscalDocumentsReport</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.WarehouseStockReport).AllowRead) {
-                                <li class="gbmtc">
-                                    <a class='gbmt @(Html.IsMenuSelected ("WarehouseStockReport", "Reports") ? "gbm0l" : "")'
-                                       href='@Url.Action("WarehouseStockReport", "Reports")'>@Resources.WarehouseStockReport</a>
-                                </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.WarehouseStockByLotReport).AllowRead) {
-                                <li class="gbmtc">
-                                    <a class='gbmt @(Html.IsMenuSelected("WarehouseStockByLotReport", "Reports") ? "gbm0l" : "")'
-                                       href='@Url.Action("WarehouseStockByLotReport", "Reports")'>@Resources.WarehouseStockByLotReport</a>
-                                </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.WarehouseStockBySerialNumberReport).AllowRead) {
-                                <li class="gbmtc">
-                                    <a class='gbmt @(Html.IsMenuSelected("WarehouseStockBySerialNumberReport", "Reports") ? "gbm0l" : "")'
-                                       href='@Url.Action("WarehouseStockBySerialNumberReport", "Reports")'>@Resources.WarehouseStockBySerialNumberReport</a>
-                                </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.Kardex).AllowRead) {
-                            <li class="gbmtc">
-                                <a class='gbmt @(Html.IsMenuSelected("Kardex", "Reports") ? "gbm0l" : "")'
-                                   href='@Url.Action("Kardex", "Reports")'>@Resources.Title_Kardex</a>
-                            </li>
-                            }
-                            @if (CurrentUser.GetPrivilege (SystemObjects.SerialNumberKardex).AllowRead) {
-                                <li class="gbmtc">
-                                    <a class='gbmt @(Html.IsMenuSelected("SerialNumberKardex", "Reports") ? "gbm0l" : "")'
-                                       href='@Url.Action("SerialNumberKardex", "Reports")'>@Resources.SerialNumberKardex</a>
-                                </li>
-                            }
-                            @if (CurrentUser.GetPrivilege(SystemObjects.ProductsBySupplierReport).AllowRead) {
-                                <li class="gbmtc">
-                                    <a class='gbmt @(Html.IsMenuSelected("ProductsBySupplier", "Reports") ? "gbm0l" : "")'
-                                       href='@Url.Action("ProductsBySupplier", "Reports")'>@Resources.ProductsBySupplier</a>
-                                </li>
-                            }
-                            @if (CurrentUser.GetPrivilege(SystemObjects.ProductsOrdersAndRefundsBySalesPerson).AllowRead)
-                            {
-                                <li class="gbmtc">
-                                    <a class='gbmt @(Html.IsMenuSelected("ProductsOrderAndRefundsBySalesPerson", "Reports") ? "gbm0l" : "")'
-                                       href='@Url.Action("ProductsOrderAndRefundsBySalesPerson", "Reports")'>@Resources.ProductsOrdersAndRefundsBySalesPerson</a>
-                                </li>
-                            }
-                        </ol>
-                    </div>
-                </div>
-            </li>
-            }
-            @if (CurrentUser.IsAdministrator) {
-            <li class="gbt">
-                <a class="gbzt @(Html.IsMenuSelected("Index", "Users") ? "gbz0l" : "")"
-                   href="@Url.Action("Index", "Users")">
-                    <span class="gbtb2"></span>
-                    <span class="gbts">@Resources.Title_Users</span>
-                </a>
-            </li>
-            }
-            @*<li class="gbt">
-                <a class="gbzt @(Html.IsMenuSelected("About", "Home") ? "gbz0l" : "")"
-                   href="@Url.Action("About", "Home")">
-                    <span class="gbtb2"></span>
-                    <span class="gbts">@Resources.Title_About</span>
-                </a>
-            </li>*@
-        </ol>
-    </div>
-    @Html.Partial("_LogOnPartial", CurrentUser)
-    <div id="gbx3"></div>
-    <div id="gbx4"></div>
+																												</ol>
+																								</div>
+																				</div>
+																</li>
+												}
+												@if (CurrentUser.IsAdministrator)
+												{
+																<li class="gbt">
+																				<a class="gbzt @(Html.IsMenuSelected("Index", "Users") ? "gbz0l" : "")"
+																							href="@Url.Action("Index", "Users")">
+																								<span class="gbtb2"></span>
+																								<span class="gbts">@Resources.Title_Users</span>
+																				</a>
+																</li>
+												}
+								</ol>
+				</div>
+				@Html.Partial("_LogOnPartial", CurrentUser)
+				<div id="gbx3"></div>
+				<div id="gbx4"></div>
 </div>

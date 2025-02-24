@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
@@ -10,11 +10,13 @@
 <table>
     <tr>
         <th>@Resources.Id</th>
+        <th>@Resources.Serial</th>
         <th>@Resources.Date</th>
         <th>@Resources.Customer</th>
         <th>@Resources.SalesPerson</th>
         <th>@Resources.Completed</th>
         <th>@Resources.Cancelled</th>
+        <th>@Resources.Paid</th>
         <th></th>
     </tr>
 @foreach (var item in Model.Results) {
@@ -25,6 +27,7 @@
 				<span class="glyphicon glyphicon-exclamation-sign"></span>
 			</a>
         </td>
+        <td class='number'>@Html.DisplayFor(x => item.Serial)</td>
         <td class="date">@Html.DisplayFor(x => item.Date)</td>
         <td>@Html.DisplayFor(x => item.Customer.Name)
             @if (!string.IsNullOrWhiteSpace(item.CustomerName))
@@ -32,9 +35,10 @@
                 <text> - (@item.CustomerName)</text>
             }
         </td>
-        <td class='center'>@Html.DisplayFor(x => item.SalesPerson.Nickname)</td>
+        <td class='center'>@Html.DisplayFor(x => item.SalesPerson.FirstName)</td>
         <td class="bool">@Html.DisplayFor(x => item.IsCompleted)</td>
         <td class="bool">@Html.DisplayFor(x => item.IsCancelled)</td>
+        <td class="bool">@Html.DisplayFor(x => item.IsPaid)</td>
         <td class="actions">
         	@if (Privilege.AllowRead && (item.IsCompleted || item.IsCancelled)) {
             	@Html.ActionLink(" ", "View", new { id = item.Id }, new { @class = "button icon view icon-only", title = Resources.Details })

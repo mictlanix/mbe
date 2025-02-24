@@ -1,4 +1,4 @@
-﻿// 
+// 
 // Address.cs
 // 
 // Author:
@@ -30,11 +30,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Policy;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 
 namespace Mictlanix.BE.Model {
 	[ActiveRecord ("address", Lazy = true)]
+	[Serializable]
 	public class Address : ActiveRecordLinqBase<Address> {
 		IList<Supplier> suppliers = new List<Supplier> ();
 		IList<Customer> customers = new List<Customer> ();
@@ -107,11 +109,26 @@ namespace Mictlanix.BE.Model {
 		[StringLength (50, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Country { get; set; }
 
+		[Property("url_address")]
+		[DataType (DataType.Url)]
+		[Display (Name = "AddressLinkURL", ResourceType = typeof (Resources))]
+		public virtual Uri Link { get; set; }
+
+
+		[Display (Name = "AddressLinkURL", ResourceType = typeof (Resources))]
+		[StringLength (150, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
+		public virtual string PreLink { get; set; }
+
 		[Property]
 		[DataType (DataType.MultilineText)]
 		[Display (Name = "Comment", ResourceType = typeof (Resources))]
 		[StringLength (500, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Comment { get; set; }
+
+		[Property("nickname")]
+		[Display (Name = "Nickname", ResourceType = typeof (Resources))]
+		[StringLength (100, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
+		public virtual string Nickname { get; set; }
 
 		[HasAndBelongsToMany (typeof (Supplier), Table = "supplier_address", ColumnKey = "address", ColumnRef = "supplier", Inverse = true, Lazy = true)]
 		public virtual IList<Supplier> Suppliers {
@@ -133,6 +150,10 @@ namespace Mictlanix.BE.Model {
 				return string.Format (fmt, Street, ExteriorNumber, InteriorNumber).Trim ();
 			}
 		}
+
+		[Property ("disabled")]
+		[Display (Name = "Disabled", ResourceType = typeof (Resources))]
+		public virtual bool IsDisabled { get; set; }
 
 		#region Override Base Methods
 
@@ -159,6 +180,8 @@ namespace Mictlanix.BE.Model {
 				State == other.State &&
 				City == other.City &&
 				Country == other.Country &&
+				Nickname == other.Nickname &&
+				Link == other.Link &&
 				Comment == other.Comment;
 		}
 
@@ -168,6 +191,25 @@ namespace Mictlanix.BE.Model {
 				return base.GetHashCode ();
 
 			return string.Format ("{0}#{1}", GetType ().FullName, Id).GetHashCode ();
+		}
+
+		public virtual Address GetSerializable () {
+			return new Address {
+				Borough = Borough,
+				City = City,
+				Comment = Comment,
+				Country = Country,
+				ExteriorNumber = ExteriorNumber,
+				InteriorNumber = InteriorNumber,
+				PostalCode = PostalCode,
+				Link = Link,
+				Nickname = Nickname,
+				State = State,
+				Street = Street,
+				Neighborhood = Neighborhood,
+				Locality = Locality,
+				Id = Id
+			};
 		}
 
 		#endregion

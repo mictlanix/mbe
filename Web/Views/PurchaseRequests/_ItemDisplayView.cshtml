@@ -1,0 +1,43 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model PurchaseRequestDetail
+
+@{
+				var receipt = PurchaseOrderDetail.Queryable.FirstOrDefault(x => x.PurchaseRequestDetail == Model);
+				var order = receipt != null ? receipt.Order : null;
+    }
+
+<li id='id:@Model.Id'>
+    <div class='photo'>
+        <img src='@Url.Content(Model.Product.Photo)' title='@Model.Product.Name' />
+    </div>
+    <div class='action-link'>
+     </div>
+				<div class='info'>
+								<span class='editable name input-xxlarge'>@Html.DisplayFor(x => x.ProductName)</span>
+								<br />
+								<b>@Resources.Code: </b>
+								<span class='editable code'>@Html.DisplayFor(x => x.Product.Code)</span>
+								<b>@Resources.UnitOfMeasurement: </b>
+								<span class='editable um'>@Html.DisplayFor(x => x.Product.UnitOfMeasurement.Name)</span>
+								@if (!string.IsNullOrEmpty(Model.Product.Model))
+								{
+												<b>@Resources.Model: </b>
+												<span>@Html.DisplayFor(x => x.Product.Model)</span>
+								}
+								@if (!string.IsNullOrEmpty(Model.Product.SKU))
+								{
+												<b>@Resources.SKU: </b>
+												<span>@Html.DisplayFor(x => x.Product.SKU)</span>
+								}
+								<br />
+								<b>@Resources.Quantity: </b>
+								<span class='editable quantity'>@Html.DisplayFor(x => x.Quantity)</span>
+								@if (order != null)
+								{
+												<b>@Resources.EstimatedReceiptDate: </b>
+												<span>@Html.DisplayFor(x => order.EstimatedReceiptDate)</span>
+								}
+				</div>
+</li>

@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
@@ -40,7 +40,7 @@
         	@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
         }
     	@if (Privilege.AllowRead && (item.IsCompleted || item.IsCancelled)) {
-        	@Html.ActionLink(" ", "Print", new { id = item.Id }, new { @class = "button icon print icon-only", title = Resources.Details, target = "_blank" })
+        	@Html.ActionLink(" ", "Pdf", new { id = item.Id }, new { @class = "button icon print icon-only", title = Resources.Details, target = "_blank" })
         }
         </td>
     </tr>

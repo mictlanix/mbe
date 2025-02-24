@@ -1,47 +1,59 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model InventoryReceipt
 
 @{
-    var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.InventoryReceipts);
+				var CurrentUser = Html.CurrentUser() ?? new User();
+				var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.InventoryReceipts);
 }
 
 <fieldset>
-    <legend>@Resources.DisplayName_InventoryInformation</legend>
-    <div class="display-label right floating">
-		<label>@Resources.Id</label>
-		<span>@Html.DisplayFor(x => x.Id)</span>
-		<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => x.Serial)">
-			<span class="glyphicon glyphicon-exclamation-sign"></span>
-		</a>
-    </div>
-    <div class="display-label right floating">
-        @Html.LabelFor(model => model.CreationTime):
-        @Html.DisplayFor(model => model.CreationTime)
-    </div>
-    <div class="display-label">
-        @Html.LabelFor(model => model.Warehouse)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Warehouse.Name)
-    </div>
-    <div class="display-label">
-        @Html.LabelFor(model => model.Comment)
-        @Html.DisplayFor(model => model.Comment)
-    </div>
-    <div class="right">
-        @Ajax.ActionLink(Resources.Edit, "EditReceipt", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "master-section" }, new { id = "edit-button", @class = "button icon edit" })
-        @if(Privilege.AllowDelete) {
-            using (Html.BeginForm("CancelReceipt", "Inventory", new { id = Model.Id }, FormMethod.Post, new { style = "display:inline" })) {
-                <button type="submit" class="icon cancel">@Resources.Cancel</button>
-            }
-        }
-    </div>
+				<legend>@Resources.DisplayName_InventoryInformation</legend>
+				<div class="display-label right floating">
+								<label>@Resources.Id</label>
+								<span>@Html.DisplayFor(x => x.Id)</span>
+								<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => x.Serial)">
+												<span class="glyphicon glyphicon-exclamation-sign"></span>
+								</a>
+				</div>
+				<div class="display-label right floating">
+								@Html.LabelFor(model => model.Order.Id):
+								@if (Model.Order != null)
+								{
+												@Html.DisplayFor(model => model.Order.Id)
+								}
+								else
+								{
+												<span>@Resources.NA</span>
+								}
+				</div>    <div class="display-label right floating">
+								@Html.LabelFor(model => model.CreationTime):
+								@Html.DisplayFor(model => model.CreationTime)
+				</div>
+				<div class="display-label">
+								@Html.LabelFor(model => model.Warehouse)
+				</div>
+				<div class="display-field">
+								@Html.DisplayFor(model => model.Warehouse.Name)
+				</div>
+				<div class="display-label">
+								@Html.LabelFor(model => model.Comment)
+								@Html.DisplayFor(model => model.Comment)
+				</div>
+				<div class="right">
+								@Ajax.ActionLink(Resources.Edit, "EditReceipt", new { id = Model.Id }, new AjaxOptions { UpdateTargetId = "master-section" }, new { id = "edit-button", @class = "button icon edit" })
+								@if (Privilege.AllowDelete)
+								{
+												using (Html.BeginForm("CancelReceipt", "Inventory", new { id = Model.Id }, FormMethod.Post, new { style = "display:inline" }))
+												{
+																<button type="submit" class="icon cancel">@Resources.Cancel</button>
+												}
+								}
+				</div>
 </fieldset>
 <script type='text/javascript'>
-$(function () {
-	$('[data-toggle="tooltip"]').tooltip();
-});
+				$(function () {
+								$('[data-toggle="tooltip"]').tooltip();
+				});
 </script>

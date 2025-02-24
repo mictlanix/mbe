@@ -1,66 +1,73 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model CashSession
 
 @{
-    var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments);
+				var CurrentUser = Html.CurrentUser() ?? new User();
+				var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments);
 }
 <link href="@Url.Content("~/Content/selection-options.css")" rel="stylesheet" type="text/css" />
 
 <fieldset>
-    <legend>@Resources.DisplayName_CashSession</legend>
+				<legend>@Resources.DisplayName_CashSession</legend>
 
-    <div class="display-label">
-        @Html.LabelFor(x => x.CashDrawer) :
-        @Html.DisplayFor(x => x.CashDrawer.Name)
-    </div>
-    
-    <div class="display-label">
-        @Html.LabelFor(x => x.Cashier) :
-        @Html.DisplayFor(x => x.Cashier.Name)
-    </div>
+				<div class="display-label">
+								@Html.LabelFor(x => x.CashDrawer) :
+								@Html.DisplayFor(x => x.CashDrawer.Name)
+				</div>
 
-    <div class="display-label">
-        @Html.LabelFor(x => x.Start) :
-        @Html.DisplayFor(x => x.Start)
-    </div>
+				<div class="display-label">
+								@Html.LabelFor(x => x.Cashier) :
+								@Html.DisplayFor(x => x.Cashier.Name)
+				</div>
+
+				<div class="display-label">
+								@Html.LabelFor(x => x.Start) :
+								@Html.DisplayFor(x => x.Start)
+				</div>
 </fieldset>
 <div>
-@if (Privilege.AllowCreate)
-{
-    using (Html.BeginForm("OpenSession", "Payments"))
-    {
-    <ul class="selection-options">
-        @for (int i = 0; i < Model.CashCounts.Count; i++)
-        {
-            <li>
-                <label>
-                    <span class="option-desc">
-                        <span class="icon">@Html.DisplayFor(x => Model.CashCounts[i].Denomination)</span>
-                        <span class="text">@Html.EditorFor(x => Model.CashCounts[i].Quantity)</span>
-                    </span>
-                </label>
-                @Html.HiddenFor(x => Model.CashCounts[i].Denomination)
-            </li>
-        }
-    </ul>
-    <div class="action-buttons">
-        <button type="submit" class="save">@Resources.StartSession</button>
-    </div>
-    }
-}
+				@if (Privilege.AllowCreate)
+				{
+								using (Html.BeginForm("OpenSession", "Payments"))
+								{
+												<ul class="selection-options">
+																@for (int i = 0; i < Model.CashCounts.Count; i++)
+																{
+																				<li>
+																								<label>
+																												<span class="option-desc">
+																																@if (WebConfig.CashCountsByDenominations)
+																																{
+																																				<span class="icon">@Html.DisplayFor(x => Model.CashCounts[i].Denomination)</span>
+																																}
+																																else
+																																{
+																																				<span class="icon">@Resources.StartingCash</span>
+																																}
+																																<span class="text">@Html.EditorFor(x => Model.CashCounts[i].Quantity)</span>
+																												</span>
+																								</label>
+																								@Html.HiddenFor(x => Model.CashCounts[i].Denomination)
+																				</li>
+																}
+												</ul>
+												<div class="action-buttons">
+																<button type="submit" class="save">@Resources.StartSession</button>
+												</div>
+								}
+				}
 </div>
 <script type="text/javascript">
-    $(function () { 
+    $(function () {
         document.onkeydown = function (e) {
                 if (e.code == 'Enter' || e.code == 'NumpadEnter')
                     if(e.target.type != "submit") {
                     e.preventDefault();
                     }
         }
-     
+
         $('form').submit(function(){
             $('button.save').prop('disabled', true);
 		    $('button.save').html('@Resources.PleaseWait');

@@ -1,91 +1,142 @@
 @using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
 @model SalesOrderDetail
 
 <li id='id:@Model.Id'>
-    <div class='photo'>
-        <img src='@Url.Content(Model.Product.Photo)' title='@Model.ProductName' />
-    </div>
-    <div class='action-link'>
-        <a class='button icon-only icon delete' title='@Resources.Message_DeleteConfirmation'
-		   data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}'
-           data-value='@Model.Id' data-url='@Url.Action("RemoveItem", new { id = Model.Id })'
-           data-emptytext='' data-emptyclass=''></a>
-    </div>
-    <div class='info'>
-    @if (Model.Product.HasVariablePricing) {
- 		<a class='editable name input-xxlarge' data-type='text' data-inputclass='input-xxlarge'
-          data-placement='bottom' data-pk='@Model.Id' data-url='@Url.Action("SetItemProductName", new { id = Model.Id })'>
-            @Html.DisplayFor(x => x.ProductName)</a>
-    } else {
-        <span class='thick'>@Html.DisplayFor(x => x.ProductName)</span>
-    }
-        <br/>
-        <b>@Resources.Code: </b>
-        <span>@Html.DisplayFor(x => x.ProductCode)</span>
-        <b>@Resources.UnitOfMeasurement: </b>
-        <span>@Html.DisplayFor(x => Model.Product.UnitOfMeasurement.Name)</span>
-    @if (!string.IsNullOrEmpty (Model.Product.Model)) {
-        <b>@Resources.Model: </b>
-        <span>@Html.DisplayFor(x => x.Product.Model)</span>
-    }
-    @if (!string.IsNullOrEmpty (Model.Product.SKU)) {
-        <b>@Resources.SKU: </b>
-        <span>@Html.DisplayFor(x => x.Product.SKU)</span>
-    }
-        <br/>
-        <b>@Resources.Price:</b>
-    @if (Model.Product.HasVariablePricing) {
-        <a class='editable price' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemPrice", new { id = Model.Id })'>@Html.DisplayFor(x => x.Price)</a>
-    } else {
-        <span class='editable price'>@Html.DisplayFor(x => x.Price)</span>
-    }
-        <span class='editable currency'>@Html.DisplayFor(x => x.Currency)</span>
-			<b>@Resources.Quantity:</b>
-			<a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
-			<b>@Resources.Discount:</b>
-			<a class='editable discount-percentage' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemDiscountPercentage", new { id = Model.Id })'>@Html.DisplayFor(x => x.DiscountRate)</a>
-			<b>:</b>
-			<a class='editable discount-price' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemDiscountPrice", new { id = Model.Id })'>@string.Format("{0:C}",(Model.Price * Model.DiscountRate)) </a>
-			<b>@Resources.TaxRate:</b>
-			<a class='editable tax' data-type='select' data-placement='right' data-source='@Url.Action("TaxRates", "Pricing")' data-pk='@Model.Id' data-value='@Model.TaxRate.ToString("0.####")' data-url='@Url.Action("SetItemTaxRate", new { id = Model.Id })'>@Html.DisplayFor(x => x.TaxRate)</a>
-			<b>@Resources.Amount:</b>
-			<span class='editable total'>@Html.DisplayFor(x => x.Total)</span>
-<span class='editable currency'>@Html.DisplayFor(x => x.Currency)</span>
-    @if (Model.Currency != WebConfig.BaseCurrency) {
-    	<a href="javascript:void(0)" class="total2" data-toggle="tooltip" title="@Html.DisplayFor(x => x.TotalEx) @WebConfig.BaseCurrency">
-			<span class="glyphicon glyphicon-exclamation-sign"></span>
-		</a>
-    }
-    	<br/>
-    	<b style='vertical-align:top;'>@Resources.Comment:</b>
-    	<a class='editable' data-type="textarea" data-placement='right' data-pk='@Model.Id'
-			data-url='@Url.Action("SetItemComment", new { id = Model.Id })'
-			data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>@Model.Comment</a>
-    </div>
+				<div class='photo'>
+								<img src='@Url.Content(Model.Product.Photo)' title='@Model.ProductName' />
+				</div>
+				<div class='action-link'>
+								<a class='button icon-only icon delete' title='@Resources.Message_DeleteConfirmation'
+											data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id'
+											data-url='@Url.Action("RemoveItem", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
+				</div>
+				<div class='info'>
+								@if (Model.Product.HasVariablePricing)
+								{
+												<a class='editable name input-xxlarge' data-type='text' data-inputclass='input-xxlarge' data-placement='bottom' data-pk='@Model.Id'
+															data-url='@Url.Action("SetItemProductName", new { id = Model.Id })'>@Html.DisplayFor(x => x.ProductName)</a>
+								}
+								else
+								{
+												<span class='thick'>@Html.DisplayFor(x => x.ProductName)</span>
+								}
+								<br />
+								<b>@Resources.Code: </b>
+								<span>@Html.DisplayFor(x => x.ProductCode)</span>
+								<b>@Resources.UnitOfMeasurement: </b>
+								<span>@Html.DisplayFor(x => Model.Product.UnitOfMeasurement.Name)</span>
+								@if (!string.IsNullOrEmpty(Model.Product.Model))
+								{
+												<b>@Resources.Model: </b>
+												<span>@Html.DisplayFor(x => x.Product.Model)</span>
+								}
+								@if (!string.IsNullOrEmpty(Model.Product.SKU))
+								{
+												<b>@Resources.SKU: </b>
+												<span>@Html.DisplayFor(x => x.Product.SKU)</span>
+								}
+
+								@if (Model.Product.IsStockable)
+								{
+												<b>@Resources.Warehouse: </b>
+												<a class='warehouse editable' data-type='select' data-placement='right' data-pk='@Model.Id'
+															data-value="@(Model.Warehouse == null ? Resources.Empty: Model.Warehouse.Name)"
+															data-source='@Url.Action("WarehouseStock", new {id = Model.Product.Id })' data-source-cache='false'
+															data-url='@Url.Action("SetItemWarehouse", new { id = Model.Id })'
+															data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+																@if (Model.Warehouse != null)
+																{
+																				@Html.DisplayFor(x => x.Warehouse.Name)
+																}
+																else
+																{ @Resources.Empty}
+												</a>
+								}
+								<br />
+								<b>@Resources.Price:</b>
+								@if (Model.Product.HasVariablePricing)
+								{
+												<a class='editable price' data-type='text' data-placement='right' data-pk='@Model.Id'
+															data-url='@Url.Action("SetItemPrice", new { id = Model.Id })'>@Html.DisplayFor(x => x.Price)</a>
+								}
+								else
+								{
+												<span class='editable price'>@Html.DisplayFor(x => x.Price)</span>
+								}
+								<span class='editable currency'>@Html.DisplayFor(x => x.Currency)</span>
+								<b>@Resources.Quantity:</b>
+								<a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id'
+											data-url='@Url.Action("SetItemQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
+								<b>@Resources.Discount:</b>
+								<a class='editable discount-percentage' data-type='text' data-placement='right' data-pk='@Model.Id'
+											data-url='@Url.Action("SetItemDiscountPercentage", new { id = Model.Id })'>@Html.DisplayFor(x => x.DiscountRate)</a>
+								<b>:</b>
+								<a class='editable discount-price' data-type='text' data-placement='right' data-pk='@Model.Id'
+											data-url='@Url.Action("SetItemDiscountPrice", new { id = Model.Id })'>
+												@string.Format("{0:C}", ModelHelpersV2.Discount(1, Model.Price, Model.ExchangeRate, Model.DiscountRate))
+								</a>
+								<b>@Resources.TaxRate:</b>
+								<a class='editable tax' data-type='select' data-placement='right' data-source='@Url.Action("TaxRates", "Pricing")'
+											data-pk='@Model.Id' data-value='@Model.TaxRate.ToString("0.####")'
+											data-url='@Url.Action("SetItemTaxRate", new { id = Model.Id })'>@Html.DisplayFor(x => x.TaxRate)</a>
+								<b>@Resources.Amount:</b>
+								<span class='editable total'>@Html.DisplayFor(x => x.Total)</span>
+								<span class='editable currency'>@Html.DisplayFor(x => x.Currency)</span>
+								@if (Model.Currency != WebConfig.BaseCurrency)
+								{
+												<a href="javascript:void(0)" class="total2" data-toggle="tooltip" title="@Html.DisplayFor(x => x.TotalEx) @WebConfig.BaseCurrency">
+																<span class="glyphicon glyphicon-exclamation-sign"></span>
+												</a>
+								}
+								<br />
+								<b style='vertical-align:top;'>@Resources.Comment:</b>
+								<a class='editable' data-type="textarea" data-placement='right' data-pk='@Model.Id'
+											data-url='@Url.Action("SetItemComment", new { id = Model.Id })'
+											data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>@Model.Comment</a>
+				</div>
+				@if (Model.Errors != null && Model.Errors.Any())
+				{
+								<div class="alert alert-danger alert-dismissible fade in" style="display:block;">
+												<ul>
+																@foreach (var error in Model.Errors)
+																{
+																				<li>@error</li>
+																}
+												</ul>
+								</div>
+				}
 </li>
 <script type='text/javascript'>
 $('#id\\:@Model.Id [data-toggle="tooltip"]').tooltip();
 $('#id\\:@Model.Id a.editable').editable({
 	success: function(response, newValue) {
 		var $this = $(this);
+								console.log(response);
+								$('#items-container').loadUrl();
+								$('#totals-section').loadUrl();
 		if ('total' in response) {
 			$this.siblings('.total').html(response.total);
 		}
 		if ('total2' in response) {
 			$this.siblings('.total2').attr('data-original-title', response.total2 + ' @WebConfig.BaseCurrency');
 		}
-	    if ('discount_percentage' in response) {
-	        $this.siblings('.discount-percentage').html(response.discount_percentage);
+		if ('discountRate' in response) {
+			var discountElement = $this.siblings('.discount-percentage');
+			discountElement.html(response.discountRate);
+			discountElement.editable('setValue', response.discountRate);
 		}
-		 if ('discount_price' in response) {
-			 $this.siblings('.discount-price').html(response.discount_price);
-		 }
+		if ('discountPrice' in response) {
+			var discountElement = $this.siblings('.discount-price');
+			discountElement.html(response.discountPrice);
+			discountElement.editable('setValue', response.discountPrice);
+		}
 		if ($this.hasClass('name')) {
 			setTimeout(function(){$this.editable('setValue', response.value);},500);
 		}
-        $('#totals-section').loadUrl();
+      $('#totals-section').loadUrl();
     },
     display: function(value, response) {
         if (typeof response === 'undefined') {
@@ -107,6 +158,12 @@ $('#id\\:@Model.Id a.delete').editable({
         if ($('#items li').length === 0) {
 	        $('#confirm-button').addClass('hide');
 	    }
+    }
+});
+
+$('#id\\:@Model.Id a.duplicate').editable({
+	success: function(response, newValue) {
+        $('#totals-section').loadUrl();
     }
 });
 </script>

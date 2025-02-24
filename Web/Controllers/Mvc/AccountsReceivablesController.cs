@@ -51,26 +51,71 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		[HttpPost]
 		public ActionResult Index (int? customer)
 		{
-			string sql1 = @"SELECT m.date Date, d.sales_order SalesOrder, m.due_date DueDate, c.name Customer,
-						GROUP_CONCAT(DISTINCT (SELECT GROUP_CONCAT(DISTINCT f.batch, LPAD(f.serial, 6, '0') SEPARATOR ' ')
-							FROM fiscal_document_detail fd LEFT JOIN fiscal_document f ON fd.document = f.fiscal_document_id
-							WHERE f.cancelled = 0 AND fd.order_detail = d.sales_order_detail_id) SEPARATOR ' ') Invoices,
-						SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) TotalEx,
-						SUM(ROUND(d.quantity * d.price * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) Total,
-						IFNULL(SUM(ROUND(r.quantity * d.price * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)), 0) Refunds,
+			//string sql1 = @"SELECT m.date Date, d.sales_order SalesOrder, m.due_date DueDate, c.name Customer,
+			//			GROUP_CONCAT(DISTINCT (SELECT GROUP_CONCAT(DISTINCT f.batch, LPAD(f.serial, 6, '0') SEPARATOR ' ')
+			//				FROM fiscal_document_detail fd LEFT JOIN fiscal_document f ON fd.document = f.fiscal_document_id
+			//				WHERE f.cancelled = 0 AND fd.order_detail = d.sales_order_detail_id) SEPARATOR ' ') Invoices,
+			//			SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) TotalEx,
+			//			SUM(ROUND(d.quantity * d.price * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) Total,
+			//			IFNULL(SUM(ROUND(r.quantity * d.price * (1 - d.discount) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)), 0) Refunds,
+			//			m.currency Currency
+			//		FROM sales_order m
+			//		INNER JOIN sales_order_detail d ON m.sales_order_id = d.sales_order
+			//		INNER JOIN customer c ON m.customer = c.customer_id
+			//		LEFT JOIN customer_refund_detail r ON d.sales_order_detail_id = r.sales_order_detail
+			//		WHERE m.completed = 1 AND m.cancelled = 0 AND m.paid = 0 and m.payment_terms = 1 CUSTOMER_FILTER
+			//		GROUP BY d.sales_order
+			//		ORDER BY m.due_date DESC";
+			//string sql2 = @"SELECT m.sales_order_id SalesOrder, SUM(ROUND(amount, 2)) Payments
+			//		FROM sales_order m
+			//		INNER JOIN sales_order_payment p ON m.sales_order_id = p.sales_order
+			//		WHERE m.completed = 1 AND m.cancelled = 0 AND m.paid = 0 and m.payment_terms = 1 CUSTOMER_FILTER
+			//		GROUP BY m.sales_order_id";
+
+			
+			var privilege = GetAccessPrivilege(SystemObjects.SearchCreditsFromAllStores);
+			var FILTERALLSTORES = privilege.AllowRead ? string.Empty : " AND m.store = " + WebConfig.Store.Id + " ";
+
+			string sql1 = @"SELECT m.date Date, m.sales_order_id SalesOrder, m.due_date DueDate, c.name Customer, s.code Store, m.paid Paid,
+						Invoices, TotalEx, Total, IFNULL(r.refund, 0) Refunds,
 						m.currency Currency
 					FROM sales_order m
-					INNER JOIN sales_order_detail d ON m.sales_order_id = d.sales_order
+					LEFT JOIN store s on s.store_id = m.store
 					INNER JOIN customer c ON m.customer = c.customer_id
-					LEFT JOIN customer_refund_detail r ON d.sales_order_detail_id = r.sales_order_detail
-					WHERE m.completed = 1 AND m.cancelled = 0 AND m.paid = 0 and m.payment_terms = 1 CUSTOMER_FILTER
-					GROUP BY d.sales_order
-					ORDER BY m.due_date";
+					INNER JOIN (SELECT d.sales_order,
+						SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount_rate) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) TotalEx,
+						SUM(ROUND(d.quantity * d.price * (1 - d.discount_rate) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) Total
+						FROM sales_order_detail d
+						GROUP BY d.sales_order
+						) AS det ON m.sales_order_id = det.sales_order
+					LEFT JOIN (
+						SELECT sod.sales_order,
+							GROUP_CONCAT(DISTINCT f.batch, LPAD(f.serial, 6, '0') SEPARATOR ' ') Invoices
+							FROM sales_order_detail sod
+							LEFT JOIN fiscal_document_detail fd ON fd.order_detail = sod.sales_order_detail_id
+							LEFT JOIN fiscal_document f ON fd.document = f.fiscal_document_id
+							WHERE f.cancelled = 0
+							GROUP BY sod.sales_order
+						) AS i ON i.sales_order = m.sales_order_id
+					LEFT JOIN (
+						SELECT cr.sales_order,ROUND( SUM(crd.quantity * crd.price * (1 - crd.discount) *
+							IF(crd.tax_included = 0, 1 + crd.tax_rate, 1)), 2) refund
+						FROM customer_refund_detail crd
+						JOIN customer_refund cr ON crd.customer_refund = cr.customer_refund_id
+						GROUP BY cr.sales_order) AS r ON r.sales_order = m.sales_order_id
+					WHERE m.completed = 1 AND m.cancelled = 0 AND (m.paid = 0 OR
+							(m.paid = 1 AND DATE_ADD(m.modification_time, INTERVAL 60 DAY) > NOW()))
+					AND m.payment_terms = 1 CUSTOMER_FILTER FILTERALLSTORES
+					ORDER BY m.due_date DESC";
 			string sql2 = @"SELECT m.sales_order_id SalesOrder, SUM(ROUND(amount, 2)) Payments
 					FROM sales_order m
 					INNER JOIN sales_order_payment p ON m.sales_order_id = p.sales_order
-					WHERE m.completed = 1 AND m.cancelled = 0 AND m.paid = 0 and m.payment_terms = 1 CUSTOMER_FILTER
+					WHERE m.completed = 1 AND m.cancelled = 0 AND m.paid = 0 and m.payment_terms = 1
+					CUSTOMER_FILTER FILTERALLSTORES
 					GROUP BY m.sales_order_id";
+
+			sql1 = sql1.Replace ("FILTERALLSTORES", FILTERALLSTORES);
+			sql2 = sql2.Replace ("FILTERALLSTORES", FILTERALLSTORES);
 
 			if (customer.HasValue) {
 				sql1 = sql1.Replace ("CUSTOMER_FILTER", "AND m.customer = :customer");
@@ -85,7 +130,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 				query.AddScalar ("Date", NHibernateUtil.DateTime);
 				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
+				query.AddScalar ("Paid", NHibernateUtil.Boolean);
 				query.AddScalar ("Invoices", NHibernateUtil.String);
+				query.AddScalar ("Store", NHibernateUtil.String);
 				query.AddScalar ("DueDate", NHibernateUtil.DateTime);
 				query.AddScalar ("Customer", NHibernateUtil.String);
 				query.AddScalar ("TotalEx", NHibernateUtil.Decimal);
@@ -119,9 +166,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			foreach (var payment in payments) {
-				var item = items.Single (x => x.SalesOrder == payment.SalesOrder);
-				item.Payments = payment.Payments;
-				item.Balance -= payment.Payments;
+				var item = items.SingleOrDefault (x => x.SalesOrder == payment.SalesOrder);
+				if (item != null) {
+					item.Payments = payment.Payments;
+					item.Balance -= payment.Payments;
+				}
 			}
 
 			return PartialView ("_Index", items);
@@ -157,7 +206,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			balance -= entity.Amount;
 
 			using (var scope = new TransactionScope ()) {
-				if (balance <= 0) {
+				if (balance <= 0.01m) {
 					entity.SalesOrder.IsPaid = true;
 					entity.SalesOrder.Update ();
 				}

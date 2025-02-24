@@ -1,0 +1,49 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model Search<PurchaseRequest>
+@{
+    ViewBag.Title = Resources.PurchaseRequestApproval;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = CurrentUser.GetPrivilege (SystemObjects.PurchaseRequestApproval);
+}
+<div class="page-header">
+    <div class="pull-right col-xs-6">
+		<div class="row">
+	        <div class="col-xs-8 input-group">
+			@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
+			    @Html.HiddenFor(x => x.Offset)
+			    @Html.HiddenFor(x => x.Limit)
+			    <div class="input-group">
+					<input id="Pattern" name="Pattern" type="text" class="form-control" placeholder="@Resources.SearchFor">
+					<span class="input-group-btn">
+						<button class="btn btn-default" type="submit">
+							<span class="glyphicon glyphicon-search"></span>
+						</button>
+					</span>
+				</div>
+			}
+	        </div>
+	    </div>
+	</div>
+    <h1>@Resources.PurchaseRequestsApproval</h1>
+</div>
+<div id="activity-indicator">
+    <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
+</div>
+<div id="search-results">
+    @Html.Partial("_PurchaseRequestsApproval")
+</div>
+<script type="text/javascript">
+    bindModal('.open-modal');
+
+    $(function () {
+        $('#new').editable({
+            success: function (response, newValue) {
+                window.location.replace(response.url);
+                setTimeout(function () { $('#add-items').editable('setValue', ''); }, 500);
+            }
+        }).removeClass('editable-click');
+    });
+</script>

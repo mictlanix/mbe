@@ -36,9 +36,13 @@ using Mictlanix.BE.Web.Helpers;
 using System.Web.WebPages;
 using NHibernate;
 using System.Collections.Generic;
+using Castle.Core.Internal;
+using System.Text.RegularExpressions;
+using Mictlanix.BE.Web.Services;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
+	[SessionState (System.Web.SessionState.SessionStateBehavior.Required)]
 	public class SalesOrdersController : CustomController {
 		public ViewResult Index ()
 		{
@@ -64,6 +68,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		[HttpPost]
 		public ActionResult Index (Search<SalesOrder> search)
 		{
+
+			var attribs = search.GetType ().Attributes;
+
 			if (ModelState.IsValid) {
 				search = SearchSalesOrders (search);
 			}
@@ -79,27 +86,40 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var item = WebConfig.Store;
 			var pattern = (search.Pattern ?? string.Empty).Trim ();
-			IQueryable<SalesOrder> query = from x in SalesOrder.Queryable
-						       select x;
+			IQueryable<SalesOrder> query = MBEQueryable.IQSalesOrders;
+			//query = query.Where (x => x.Creator == CurrentUser.Employee || x.SalesPerson == CurrentUser.Employee);
 
-			if (!WebConfig.ShowSalesOrdersFromAllStores) {
-				query = query.Where (x => x.Store.Id == item.Id);
+			//if (!WebConfig.ShowSalesOrdersFromAllStores) {
+			//	query = query.Where (x => x.Store.Id == item.Id || x.Creator == CurrentUser.Employee);
+			//}
+
+			var privilege_all_users = GetAccessPrivilege (SystemObjects.SearchAllSalesOrderFromAllUsers);
+			var privilege_all_stores = GetAccessPrivilege (SystemObjects.SearchAllSalesOrderFromAllStores);
+
+			if (!privilege_all_users.AllowRead) {
+				query = from x in query
+					where x.Creator == CurrentUser.Employee
+					|| x.SalesPerson == CurrentUser.Employee
+					select x;
+			}
+
+			if (!privilege_all_stores.AllowRead) {
+				query = from x in query
+					where x.Store == WebConfig.Store
+					select x;
 			}
 
 			if (int.TryParse (pattern, out int id) && id > 0) {
 				query = query.Where (x => x.Id == id || x.Serial == id);
-			} else if (string.IsNullOrEmpty (pattern)) {
-				query = from x in query
-					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending
-					select x;
-			} else {
+			} else if (!string.IsNullOrEmpty (pattern)) {
 				query = from x in query
 					where x.Customer.Name.Contains (pattern) ||
 						x.SalesPerson.Nickname.Contains (pattern) ||
 						(x.SalesPerson.FirstName + " " + x.SalesPerson.LastName).Contains (pattern)
-					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending
 					select x;
 			}
+
+			query = query.OrderByDescending (x => x.Id).OrderBy (y => y.IsCompleted || y.IsCancelled ? 1 : 0);
 
 			search.Total = query.Count ();
 			search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
@@ -116,6 +136,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ViewResult Print (int id)
 		{
 			var model = SalesOrder.Find (id);
+
 			return View (model);
 		}
 
@@ -141,16 +162,29 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return View ("InvalidExchangeRate");
 			}
 
+			//var orders = SalesOrder.Queryable.Where (x => !x.IsPaid
+			//				&& x.Creator == CurrentUser.Employee
+			//				&& x.Terms == PaymentTerms.Immediate
+			//				&& !x.IsCancelled
+			//				&& x.IsCompleted
+			//				).ToList();
+			//if (orders.Count() > WebConfig.MaxSalesOrdersCompletedAndPayless) {
+			//	return View ("MaxCountSalesOrders");
+			//}
+
 			// Store and Serial
 			item.Store = item.PointOfSale.Store;
 
-			try {
-				item.Serial = (from x in SalesOrder.Queryable
-					       where x.Store.Id == item.Store.Id
-					       select x.Serial).Max () + 1;
-			} catch {
-				item.Serial = 1;
-			}
+			//try {
+			//	item.Serial = (from x in SalesOrder.Queryable
+			//		       where x.Store.Id == item.Store.Id
+			//		       select x.Serial).Max () + 1;
+			//} catch {
+			//	item.Serial = 1;
+			//}
+
+			//item.Serial = SalesOrder.Queryable.Where(x => x.Store == WebConfig.Store)
+			//	.Select (x => (int?)x.Serial).Max () + 1 ?? 1;
 
 			item.Customer = Customer.TryFind (WebConfig.DefaultCustomer);
 			item.SalesPerson = CurrentUser.Employee;
@@ -188,6 +222,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return View ("InvalidPointOfSale");
 			}
 
+			if (salesquote.HasExpired) {
+				Response.StatusCode = 400;
+				return Content (Resources.ExpirationDate);
+			}
+
 			if (!CashHelpers.ValidateExchangeRate ()) {
 				return View ("InvalidExchangeRate");
 			}
@@ -199,20 +238,22 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			// Store and Serial
 			item.Store = item.PointOfSale.Store;
 
-			try {
-				item.Serial = (from x in SalesOrder.Queryable
-					       where x.Store.Id == item.Store.Id
-					       select x.Serial).Max () + 1;
-			} catch {
-				item.Serial = 1;
-			}
+			//try {
+			//	item.Serial = (from x in SalesOrder.Queryable
+			//		       where x.Store.Id == item.Store.Id
+			//		       select x.Serial).Max () + 1;
+			//} catch {
+			//	item.Serial = 1;
+			//}
+
+			//item.Serial = SalesOrder.Queryable.Where (x => x.Store == WebConfig.Store).Select (y => (int?)y.Serial).Max () + 1 ?? 1;
 
 			item.Customer = salesquote.Customer;
 			item.SalesPerson = salesquote.SalesPerson;
 			item.Date = dt;
 			item.PromiseDate = dt;
 			item.Terms = salesquote.Terms;
-			item.DueDate = dt.AddDays (item.Customer.CreditDays);
+			item.DueDate = salesquote.Terms == PaymentTerms.NetD ? dt.AddDays (item.Customer.CreditDays) : dt ;
 			item.Currency = salesquote.Currency;
 			item.ExchangeRate = salesquote.ExchangeRate;
 			item.Contact = salesquote.Contact;
@@ -229,16 +270,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				Currency = x.Currency,
 				ExchangeRate = x.ExchangeRate,
 				IsTaxIncluded = x.IsTaxIncluded,
-				Price = x.Price + x.PriceAdjustment,
+				Price = x.Price + x.PriceIncrement,
 				Product = x.Product,
 				ProductCode = x.ProductCode,
 				ProductName = x.ProductName,
 				Quantity = x.Quantity,
 				SalesOrder = item,
 				TaxRate = x.TaxRate,
-				Warehouse = item.PointOfSale.Warehouse,
 				Comment = x.Comment,
-				DiscountRate = x.DiscountRate
+				DiscountRate = x.DiscountRate,
+				Warehouse = WebConfig.PointOfSale.Warehouse
 			}).ToList ();
 
 
@@ -247,6 +288,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				details.ForEach (x => x.CreateAndFlush ());
 			}
 
+			if (Request.IsAjaxRequest ()) {
+				return Json (new { id = item.Id });
+			}
 
 			return RedirectToAction ("Edit", new {
 				id = item.Id
@@ -261,6 +305,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return RedirectToAction ("View", new {
 					id = item.Id
 				});
+			}
+
+			foreach (var detail in item.Details) {
+				detail.Errors = GetValidationMessages (detail);
 			}
 
 			if (!CashHelpers.ValidateExchangeRate ()) {
@@ -293,10 +341,36 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
 		}
 
+		public JsonResult WarehouseStock (int id)
+		{
+			string sql = @"SELECT w.warehouse_id value,
+					CONCAT(w.name, ' - (' ,ROUND(SUM(lst.quantity), 2), ' ',IFNULL(s.symbol, '** Definir **') , ')' ) text
+					FROM product p
+					LEFT JOIN lot_serial_tracking lst ON lst.product = p.product_id
+					JOIN warehouse w ON lst.warehouse = w.warehouse_id
+					JOIN sat_unit_of_measurement s ON s.sat_unit_of_measurement_id = p.unit_of_measurement
+					WHERE p.product_id = :product AND w.disabled = 0
+					GROUP BY lst.warehouse
+					HAVING SUM(lst.quantity) >= 0";
+
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
+				query.AddScalar ("value", NHibernateUtil.Int32);
+				query.AddScalar ("text", NHibernateUtil.String);
+				query.SetInt32 ("product", id);
+				return query.DynamicList ();
+			}, null);
+
+			var qry = items.Select (x => new { value = x.value, text = x.text });
+			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
+
+		}
+
 		public JsonResult Addresses (int id)
 		{
 			var item = SalesOrder.TryFind (id);
 			var query = from x in item.Customer.Addresses
+				    where x.IsDisabled == false
 				    select new {
 					    value = x.Id,
 					    text = x.ToString ()
@@ -316,6 +390,18 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
 		}
 
+		public JsonResult PriorityLevels (int id)
+		{
+			var item = SalesOrder.TryFind (id);
+
+			var priorities = Enum.GetValues (typeof (Priority))
+				.Cast<Priority> ()
+				.Select (x => new { value = (int) x, text = x.GetDisplayName () })
+				.ToList ();
+
+			return Json (priorities, JsonRequestBehavior.AllowGet);
+		}
+
 		[HttpPost]
 		public ActionResult SetCustomer (int id, int value)
 		{
@@ -333,25 +419,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				entity.ShipTo = null;
 				entity.CustomerShipTo = null;
 				entity.CustomerName = null;
+				entity.Terms = entity.Customer.HasCredit && entity.Customer.Id != WebConfig.DefaultCustomer ? PaymentTerms.NetD : PaymentTerms.Immediate;
+				entity.DueDate = entity.Terms == PaymentTerms.Immediate ? entity.Date :
+					entity.Date.AddDays (entity.Customer.CreditDays);
+				entity.SalesPerson = CurrentUser.Employee;
 
-				if (item.SalesPerson == null) {
-					entity.SalesPerson = CurrentUser.Employee;
-				} else {
-					entity.SalesPerson = item.SalesPerson;
-				}
-
-				if (entity.Terms == PaymentTerms.NetD && !entity.Customer.HasCredit) {
-					entity.Terms = PaymentTerms.Immediate;
-				}
-
-				switch (entity.Terms) {
-				case PaymentTerms.Immediate:
-					entity.DueDate = entity.Date;
-					break;
-				case PaymentTerms.NetD:
-					entity.DueDate = entity.Date.AddDays (entity.Customer.CreditDays);
-					break;
-				}
+				//if (item.SalesPerson == null) {
+				//	entity.SalesPerson = CurrentUser.Employee;
+				//} else {
+				//	entity.SalesPerson = item.SalesPerson;
+				//}
 
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
@@ -657,6 +734,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			bool success;
 			PaymentTerms val;
 			var entity = SalesOrder.Find (id);
+			var dt = DateTime.Now;
 
 			if (entity.IsCompleted || entity.IsCancelled) {
 				Response.StatusCode = 400;
@@ -673,14 +751,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 				entity.Terms = val;
 				entity.Updater = CurrentUser.Employee;
-				entity.ModificationTime = DateTime.Now;
+				entity.ModificationTime = dt;
 
 				switch (entity.Terms) {
 				case PaymentTerms.Immediate:
 					entity.DueDate = entity.Date;
 					break;
 				case PaymentTerms.NetD:
-					entity.DueDate = entity.Date.AddDays (entity.Customer.CreditDays);
+					entity.DueDate = dt.AddDays (entity.Customer.CreditDays);
 					break;
 				}
 
@@ -698,12 +776,44 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult AddItem (int order, int product, int warehouse_id)
+		public ActionResult SetPriorityLevel (int id, string value)
+		{
+			bool success;
+			Priority val = Priority.Low;
+			var entity = SalesOrder.Find (id);
+
+			//if (entity.IsCompleted || entity.IsCancelled) {
+			//	Response.StatusCode = 400;
+			//	return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			//}
+
+			success = Enum.TryParse (value.Trim (), out val);
+
+			if (success) {
+
+				entity.Priority = val;
+				entity.Updater = CurrentUser.Employee;
+				//entity.ModificationTime = DateTime.Now;
+
+				using (var scope = new TransactionScope ()) {
+					entity.UpdateAndFlush ();
+				}
+			}
+
+			return Json (new {
+				id = id,
+				value = entity.Priority
+			});
+		}
+
+
+		[HttpPost]
+		public ActionResult AddItem (int order, int product, int? warehouse_id)
 		{
 			var entity = SalesOrder.TryFind (order);
 			var p = Product.TryFind (product);
 			int pl = entity.Customer.PriceList.Id;
-			var w = Warehouse.TryFind (warehouse_id);
+			var w = warehouse_id.HasValue ? Warehouse.TryFind (warehouse_id) : null;
 			var cost = (from x in ProductPrice.Queryable
 				    where x.Product.Id == product && x.List.Id == 0
 				    select x).SingleOrDefault ();
@@ -714,6 +824,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					where x.Product.Id == product && x.Customer.Id == entity.Customer.Id
 					select x.Discount).SingleOrDefault ();
 
+			//if (p.StockRequired && p.IsStockable) {
+			//	var stock = LotSerialTracking.Queryable.Where (x => x.Product == p && x.Warehouse == w).Sum (y => (decimal?) y.Quantity) ?? 0.0m;
+
+			//	if (stock < p.MinimumOrderQuantity) {
+			//		Response.StatusCode = 400;
+			//		return Content (string.Format (Resources.NoStockEnough, stock));
+
+			//	}
+			//}
 
 
 			if (entity.IsCompleted || entity.IsCancelled) {
@@ -732,6 +851,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					Value = decimal.MaxValue
 				};
 			}
+
+			//SalesOrderDetail item2 = entity.Details.Where (x => x.Product == p && x.Warehouse == w && x.SalesOrder == entity).FirstOrDefault ();
+
+			//if (item2 != null) {
+			//	using (var scope = new TransactionScope ()) {
+			//		item2.Quantity += 1;
+			//		item2.UpdateAndFlush ();
+			//	}
+			//	return Json (new {
+			//		id = item2.Id,
+			//		updated = true
+			//	});
+			//}
 
 			var item = new SalesOrderDetail {
 				SalesOrder = entity,
@@ -785,15 +917,57 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			});
 		}
 
+		[HttpPost]
+		public ActionResult DuplicateItem (int id)
+		{
+			var entity = SalesOrderDetail.Find (id);
+
+			if (entity.SalesOrder.IsCompleted || entity.SalesOrder.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			var item = new SalesOrderDetail {
+				ProductCode = entity.ProductCode,
+				ProductName = entity.ProductName,
+				Price = entity.Price,
+				Warehouse = entity.Warehouse,
+				Comment = entity.Comment,
+				Cost = entity.Cost,
+				Currency = entity.Currency,
+				DiscountRate = entity.DiscountRate,
+				ExchangeRate = entity.ExchangeRate,
+				IsDelivery = entity.IsDelivery,
+				IsTaxIncluded = entity.IsTaxIncluded,
+				Product = entity.Product,
+				Quantity = entity.Product.MinimumOrderQuantity,
+				SalesOrder = entity.SalesOrder,
+				TaxRate = entity.TaxRate
+			};
+
+			using (var scope = new TransactionScope ()) {
+				item.SaveAndFlush ();
+			}
+
+			return Json (new {
+				id = item.Id,
+				result = true
+			});
+		}
+
 		public ActionResult Item (int id)
 		{
 			var entity = SalesOrderDetail.Find (id);
+			entity.Errors = GetValidationMessages (entity);
 			return PartialView ("_ItemEditorView", entity);
 		}
 
 		public ActionResult Items (int id)
 		{
 			var entity = SalesOrder.Find (id);
+			foreach (var detail in entity.Details) {
+				detail.Errors = GetValidationMessages (detail);
+			}
 			return PartialView ("_Items", entity.Details);
 		}
 
@@ -809,9 +983,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var entity = SalesOrderDetail.Find (id);
 			string val = (value ?? string.Empty).Trim ();
 
-			if (entity.SalesOrder.IsCompleted || entity.SalesOrder.IsCancelled) {
+			var validation = EvalDetailEditable (entity);
+
+
+			if (!validation.Success) {
 				Response.StatusCode = 400;
-				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+				return Content (string.Join (",", validation.Errors));
 			}
 
 			if (val.Length == 0) {
@@ -834,13 +1011,20 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult SetItemComment (int id, string value)
 		{
 			var entity = SalesOrderDetail.Find (id);
+			entity.Comment = string.IsNullOrWhiteSpace (value) ? null : value.Trim ();
 
-			if (entity.SalesOrder.IsCompleted || entity.SalesOrder.IsCancelled) {
+			Result<SalesOrderDetail> validation = EvalDetailEditable (entity);
+
+			if (!validation.Success) {
 				Response.StatusCode = 400;
-				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+				return Content (string.Join (",", validation.Errors));
 			}
 
-			entity.Comment = string.IsNullOrWhiteSpace (value) ? null : value.Trim ();
+			//if (entity.SalesOrder.IsCompleted || entity.SalesOrder.IsCancelled) {
+			//	Response.StatusCode = 400;
+			//	return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			//}
+
 
 			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
@@ -862,23 +1046,60 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
+			entity.Quantity = value;
+
+			var validation = EvalDetailEditable(entity).Bind(ValidateStock);
+
 			if (value < entity.Product.MinimumOrderQuantity) {
 				Response.StatusCode = 400;
 				return Content (string.Format (Resources.MinimumQuantityRequired, entity.Product.MinimumOrderQuantity));
 			}
 
-			entity.Quantity = value;
+
+			//if (!validation.Success) {
+			//	Response.StatusCode = 400;
+			//	return Content (string.Join (",", validation.Errors));
+			//}
+
 
 			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
 			}
 
-			return Json (new {
-				id = entity.Id,
-				value = entity.FormattedValueFor (x => x.Quantity),
-				total = entity.FormattedValueFor (x => x.Total),
-				total2 = entity.FormattedValueFor (x => x.TotalEx)
-			});
+			//return Json (new {
+			//	id = entity.Id,
+			//	value = entity.FormattedValueFor (x => x.Quantity),
+			//	total = entity.FormattedValueFor (x => x.Total),
+			//	total2 = entity.FormattedValueFor (x => x.TotalEx)
+			//});
+
+			return RedirectToAction ("Item", new { id = entity.Id });
+		}
+
+		[HttpPost]
+		public ActionResult SetItemWarehouse (int id, int value)
+		{
+			var entity = SalesOrderDetail.Find (id);
+
+			if (entity.SalesOrder.IsCompleted || entity.SalesOrder.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			entity.Warehouse = MBEQueryable.IQWarehouses.Single(x => x.Id == value);
+
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
+			}
+
+			//return Json (new {
+			//	id = entity.Id,
+			//	value = entity.FormattedValueFor (x => x.Quantity),
+			//	total = entity.FormattedValueFor (x => x.Total),
+			//	total2 = entity.FormattedValueFor (x => x.TotalEx)
+			//});
+
+			return RedirectToAction ("Item", new { id = entity.Id });
 		}
 
 		[HttpPost]
@@ -887,6 +1108,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var entity = SalesOrderDetail.Find (id);
 			bool success;
 			decimal val;
+
+			var result = EvalDetailEditable (entity).Bind(ValidatePrice).Bind(ValidateStock);
 
 			if (entity.SalesOrder.IsCompleted || entity.SalesOrder.IsCancelled) {
 				Response.StatusCode = 400;
@@ -1029,6 +1252,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public virtual ActionResult Confirm (int id)
 		{
 			var entity = SalesOrder.TryFind (id);
+			var messages = new List<string> ();
 
 			if (entity == null || entity.IsCompleted || entity.IsCancelled) {
 				return RedirectToAction ("Index");
@@ -1039,29 +1263,31 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			entity.IsDelivered = false;
 			entity.IsCompleted = true;
 
+			entity.Serial = (SalesOrder.Queryable.Where(x => x.Store == WebConfig.Store).Max (x => (int?)x.Serial) + 1 ?? 1);
+
 			foreach (var detail in entity.Details) {
 				if (detail.Price == decimal.Zero) {
 					return View ("ZeroPriceError", entity);
 				}
+				messages.AddRange (GetValidationMessages (detail));
+			}
+
+			if (messages.Count > 0) {
+				return RedirectToAction("Edit", new { id = entity.Id });
 			}
 
 			using (var scope = new TransactionScope ()) {
-				if (entity.ShipTo == null) {
-					//entity.IsDelivered = true;
-					var warehouse = entity.PointOfSale.Warehouse;
-					var dt = DateTime.Now;
+				var warehouse = entity.PointOfSale.Warehouse;
+				var dt = DateTime.Now;
 
-					foreach (var x in entity.Details) {
-						//x.Warehouse = warehouse;
-						x.Update ();
+				// TODO: y.warehouse comprobation shouldn't be necessary....
 
-						InventoryHelpers.ChangeNotification (TransactionType.SalesOrder, entity.Id,
-							dt, x.Warehouse, null, x.Product, -x.Quantity);
-					}
+				entity.Details.Where (y => y.Product.IsStockable && y.Warehouse != null).ForEach (x => {
+					x.Update ();
+					InventoryHelpers.ChangeNotification (TransactionType.SalesOrder, entity.Id,
+						dt, x.Warehouse, null, x.Product, -x.Quantity);
+				});
 
-				} else {
-					return RedirectToAction ("New", "DeliveryOrders", new { id = entity.Id });
-				}
 				entity.UpdateAndFlush ();
 			}
 
@@ -1135,14 +1361,30 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			int pl = SalesOrder.Queryable.Where (x => x.Id == id)
 						.Select (x => x.Customer.PriceList.Id).Single ();
 
-			var Warehouse = WebConfig.PointOfSale.Warehouse;
+			var warehouse = WebConfig.PointOfSale.Warehouse;
+			string Pattern = "^\\d{13}$";
+			string sql = "";
+			var match = Regex.IsMatch (pattern, Pattern);
 
-			var all_warehouses = pattern.EndsWith ("**");
+			var all_warehouses = pattern.EndsWith (Resources.WilcardStringPatternForSearch);
 			pattern = pattern.TrimEnd (new char [] { '*' });
 
-			string warehouse_filter = all_warehouses ? "" : " AND w.warehouse_id = " + Warehouse.Id;
+			string warehouse_filter = " AND ((p.stockable = TRUE AND w.warehouse_id = " + warehouse.Id + ") OR p.stockable = FALSE) ";
+			string searchOn = @"p.name LIKE :pattern
+						OR p.code LIKE :pattern
+						OR p.sku LIKE :pattern
+						OR p.brand LIKE :pattern
+						OR p.model LIKE :pattern";
+			if (match) {
+				searchOn = " p.bar_code LIKE :pattern ";
+			}
 
-			var sql = @"SELECT	p.product_id		id,
+			if (all_warehouses) {
+				warehouse_filter = "";
+			}
+
+
+			sql = @"SELECT	p.product_id		id,
 						p.name			name,
 						p.code			code,
 						p.sku			sku,
@@ -1154,22 +1396,23 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						pp.price		price,
 						p.stockable		stockable
 					FROM product p 
-					JOIN lot_serial_tracking lst ON p.product_id = lst.product
-					JOIN warehouse w ON w.warehouse_id = lst.warehouse
-					JOIN product_price pp ON pp.product = p.product_id
+					LEFT JOIN product_price pp ON pp.product = p.product_id
+					LEFT JOIN lot_serial_tracking lst ON p.product_id = lst.product
+					LEFT JOIN warehouse w ON w.warehouse_id = lst.warehouse
 					WHERE (
-						(p.name LIKE :pattern) OR
-						(p.code LIKE :pattern) OR
-						(p.sku LIKE :pattern) OR
-						(p.brand LIKE :pattern) OR
-						(p.model LIKE :pattern)) AND pp.`list` = :pricelist
-						WAREHOUSE_FILTER
+						SEARCH_FILTER
+					      )
+						AND pp.`list` = :pricelist
+						AND p.deactivated = FALSE
 						AND p.salable = TRUE
+						AND (w.disabled = FALSE OR w.disabled IS NULL)
+						WAREHOUSE_FILTER
 					GROUP BY lst.warehouse, p.product_id
 					ORDER BY p.product_id DESC
 					LIMIT 15";
 
 			sql = sql.Replace ("WAREHOUSE_FILTER", warehouse_filter);
+			sql = sql.Replace ("SEARCH_FILTER", searchOn);
 
 			var raw = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
@@ -1208,6 +1451,86 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 
 			return Json (items, JsonRequestBehavior.AllowGet);
+		}
+
+		private int GetSalesOrdersPaylessCount (Employee e)
+		{
+			return SalesOrder.Queryable.Where (x => x.Creator == e && !x.IsPaid
+			&& x.Terms == PaymentTerms.Immediate).Count ();
+		}
+
+		private Result<SalesOrder> EvalEditable (SalesOrder salesOrder)
+		{
+
+			if (salesOrder.IsCompleted || salesOrder.IsCancelled) {
+				return Result.Failure<SalesOrder> (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+			return salesOrder;
+		}
+
+		private Result<SalesOrderDetail> EvalDetailEditable (SalesOrderDetail detail)
+		{
+			var editable = EvalEditable (detail.SalesOrder);
+
+			if (!editable.Success) {
+				return Result.Failure<SalesOrderDetail> (editable.Errors);
+			}
+
+			return Result.Success (detail);
+
+		}
+
+		private Result<SalesOrderDetail> ValidateStock (SalesOrderDetail detail)
+		{
+			if (detail.Product.StockRequired && detail.Product.IsStockable) {
+
+				if (detail.Warehouse == null) {
+					return Result.Failure<SalesOrderDetail> (Resources.WarehouseToBeDefined);
+				}
+
+				var stock = LotSerialTracking.Queryable.Where (x => x.Warehouse == detail.Warehouse && x.Product == detail.Product).Sum (y => (decimal?) y.Quantity) ?? 0;
+				var quantity = detail.Quantity + detail.SalesOrder.Details.Where (x => x.Product == detail.Product && x.Warehouse == detail.Warehouse && x != detail).Sum (y => (decimal?) y.Quantity) ?? 0;
+				if (stock - quantity < 0) {
+					return Result.Failure<SalesOrderDetail> (string.Format (Resources.NoStockEnough, detail.Product.Name, stock, detail.Product.UnitOfMeasurement.Name));
+				}
+
+			}
+
+			return detail;
+
+		}
+
+		private Result<SalesOrderDetail> ValidatePrice (SalesOrderDetail detail)
+		{
+
+			var privileges = GetAccessPrivilege (SystemObjects.ExcludePriceRangeValidation);
+
+			//var price_list = entity.SalesQuote.Customer.PriceList;
+			if (WebConfig.PriceValidationInRangeRequired && !privileges.AllowUpdate) {
+				var minimal_price = detail.Product.GetMinimalPrice ();
+				var maximum_price = detail.Product.GetMaximumPrice ();
+				if (!detail.IsPriceInRange ()) {
+					return Result.Failure<SalesOrderDetail> (string.Format (Resources.PriceInvalidRange, minimal_price, maximum_price));
+				}
+			}
+
+
+			return detail;
+
+		}
+
+		private List<string> GetValidationMessages (SalesOrderDetail detail) {
+			var errors = new List<string> ();
+			var stock = ValidateStock (detail);
+			var price = ValidatePrice (detail);
+			if (!stock.Success) {
+				errors.AddRange (stock.Errors);
+			}
+			if (!price.Success) {
+			//	errors.AddRange(price.Errors);
+			}
+
+			return errors;
 		}
 	}
 }

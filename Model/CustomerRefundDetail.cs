@@ -47,6 +47,10 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Product", ResourceType = typeof (Resources))]
 		public virtual Product Product { get; set; }
 
+		[BelongsTo ("warehouse")]
+		[Display (Name = "Warehouse", ResourceType = typeof (Resources))]
+		public virtual Warehouse Warehouse { get; set; }
+
 		[Property ("product_code")]
 		[Display (Name = "ProductCode", ResourceType = typeof (Resources))]
 		[StringLength (25, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]

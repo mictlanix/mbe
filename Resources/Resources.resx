@@ -121,7 +121,7 @@
     <value>Número de Cuenta</value>
   </data>
   <data name="Address" xml:space="preserve">
-    <value>Dirección</value>
+    <value>Domicilio</value>
   </data>
   <data name="BackToList" xml:space="preserve">
     <value>Regresar</value>
@@ -130,7 +130,7 @@
     <value>Nombre del Banco</value>
   </data>
   <data name="Birthday" xml:space="preserve">
-    <value>Cumpleaños</value>
+    <value>Fecha de Nacimiento</value>
   </data>
   <data name="Borough" xml:space="preserve">
     <value>Delegación o Municipio</value>
@@ -175,7 +175,7 @@
     <value>Detalles</value>
   </data>
   <data name="Addresses" xml:space="preserve">
-    <value>Direcciones</value>
+    <value>Domicilios</value>
   </data>
   <data name="DisplayName_BankAccounts" xml:space="preserve">
     <value>Bancos</value>
@@ -211,7 +211,7 @@
     <value>Fax</value>
   </data>
   <data name="HighProfitMargin" xml:space="preserve">
-    <value>Margen de Ganancia Alto</value>
+    <value>Margen de Ganancia Máximo</value>
   </data>
   <data name="Im" xml:space="preserve">
     <value>Mensajero</value>
@@ -229,7 +229,7 @@
     <value>Ubicación</value>
   </data>
   <data name="LowProfitMargin" xml:space="preserve">
-    <value>Margen de Ganancia Bajo</value>
+    <value>Margen de Ganancia Mínimo</value>
   </data>
   <data name="Mobile" xml:space="preserve">
     <value>Móvil</value>
@@ -499,7 +499,7 @@
     <value>Vendedor</value>
   </data>
   <data name="StartJobDate" xml:space="preserve">
-    <value>Fecha de Entrada</value>
+    <value>Fecha de Ingreso</value>
   </data>
   <data name="TaxRate" xml:space="preserve">
     <value>Impuesto</value>
@@ -1245,10 +1245,10 @@ Realizada el: {0:d}</value>
     <value>Orden de Despacho</value>
   </data>
   <data name="DeliveryOrder" xml:space="preserve">
-    <value>Orden de Transporte</value>
+    <value>Orden de Envío</value>
   </data>
   <data name="DeliveryOrders" xml:space="preserve">
-    <value>Ordenes de Transporte</value>
+    <value>Órdenes de Envío</value>
   </data>
   <data name="DisplayName_InvoiceInformation" xml:space="preserve">
     <value>Información de la Factura</value>
@@ -1911,7 +1911,7 @@ Realizada el: {0:d}</value>
     <value>Orden de Producción</value>
   </data>
   <data name="ProductionOrders" xml:space="preserve">
-    <value>Ordenes de Producción</value>
+    <value>Órdenes de Producción</value>
   </data>
   <data name="Status" xml:space="preserve">
     <value>Estado</value>
@@ -1956,7 +1956,7 @@ Realizada el: {0:d}</value>
     <value>Nombre del Documento</value>
   </data>
   <data name="DeliveryDate" xml:space="preserve">
-    <value>Fecha de Entrega</value>
+    <value>Fecha De Entrega</value>
   </data>
   <data name="PaymentDate" xml:space="preserve">
     <value>Fecha del Pago</value>
@@ -2222,10 +2222,10 @@ Gracias por utilizar nuestros servicios.
     <value>Asistencia</value>
   </data>
   <data name="LastCheckIn" xml:space="preserve">
-    <value>Llegada de Comer</value>
+    <value>Ingreso</value>
   </data>
   <data name="LastCheckOut" xml:space="preserve">
-    <value>Hora de Salida</value>
+    <value>Salida</value>
   </data>
   <data name="IsDelayed" xml:space="preserve">
     <value>Retardo</value>
@@ -2383,8 +2383,8 @@ Gracias por utilizar nuestros servicios.
   <data name="CreditAndCollection" xml:space="preserve">
     <value>Crédito y Cobranza</value>
   </data>
-  <data name="ToBeDefined" xml:space="preserve">
-    <value>Por definir</value>
+  <data name="WarehouseToBeDefined" xml:space="preserve">
+    <value>Almacén de procedencia por definir</value>
   </data>
   <data name="PayrollReceipt" xml:space="preserve">
     <value>Recibo de Nómina</value>
@@ -2576,10 +2576,397 @@ Atte: {1}.</value>
   <data name="PickupTicket" xml:space="preserve">
     <value>Ticket de Entrega en Tienda</value>
   </data>
-  <data name="PriceAdjustment" xml:space="preserve">
-    <value>Ajuste de Precio</value>
+  <data name="PriceIncrement" xml:space="preserve">
+    <value>Incremento al Precio</value>
   </data>
   <data name="Duplicate" xml:space="preserve">
     <value>Crear Duplicado</value>
+  </data>
+  <data name="CounterDelivery" xml:space="preserve">
+    <value>Entrega en Mostrador</value>
+  </data>
+  <data name="PartialDeliveries" xml:space="preserve">
+    <value>Entregas diferidas</value>
+  </data>
+  <data name="Critical" xml:space="preserve">
+    <value>Crítica</value>
+  </data>
+  <data name="High" xml:space="preserve">
+    <value>Alta</value>
+  </data>
+  <data name="Low" xml:space="preserve">
+    <value>Baja</value>
+  </data>
+  <data name="Normal" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="Priority" xml:space="preserve">
+    <value>Prioridad</value>
+  </data>
+  <data name="LicensePlate" xml:space="preserve">
+    <value>Placa Vehicular</value>
+  </data>
+  <data name="TonsCapacity" xml:space="preserve">
+    <value>Capacidad de Carga</value>
+  </data>
+  <data name="Truck" xml:space="preserve">
+    <value>Camión de Transporte</value>
+  </data>
+  <data name="Trucks" xml:space="preserve">
+    <value>Camiones de Transporte</value>
+  </data>
+  <data name="LicensePlateAlreadyExists" xml:space="preserve">
+    <value>La placa ya existe</value>
+  </data>
+  <data name="AttributeAlreadyExists" xml:space="preserve">
+    <value>El atributo {0} 
+con  valor {1} ya existe</value>
+  </data>
+  <data name="BreakdownReport" xml:space="preserve">
+    <value>Informe de Avería</value>
+  </data>
+  <data name="ServiceTruckOrders" xml:space="preserve">
+    <value>Órdenes de Servicio a Vehículos de Transporte</value>
+  </data>
+  <data name="Vehicle" xml:space="preserve">
+    <value>Vehículo</value>
+  </data>
+  <data name="Notifier" xml:space="preserve">
+    <value>Reportó</value>
+  </data>
+  <data name="ServiceOrderId" xml:space="preserve">
+    <value>Id de Orden de Servicio</value>
+  </data>
+  <data name="SolutionReport" xml:space="preserve">
+    <value>Informe de Solución</value>
+  </data>
+  <data name="ServiceOrder" xml:space="preserve">
+    <value>Órden de Servicio a Vehículo</value>
+  </data>
+  <data name="SavingOnSalesQuote" xml:space="preserve">
+    <value>¡Con esta compra usted ahorra {0:C2}!</value>
+  </data>
+  <data name="CurrentValid" xml:space="preserve">
+    <value>Vigente</value>
+  </data>
+  <data name="DriverLicenseNumber" xml:space="preserve">
+    <value>Número de Licencia de Manejo</value>
+  </data>
+  <data name="IssuingLocation" xml:space="preserve">
+    <value>Lugar de Expedición</value>
+  </data>
+  <data name="VehicleOperator" xml:space="preserve">
+    <value>Operador de Transporte</value>
+  </data>
+  <data name="VehicleOperatorId" xml:space="preserve">
+    <value>Id del Operador</value>
+  </data>
+  <data name="VehicleOperators" xml:space="preserve">
+    <value>Operadores de Vehículos de Transporte</value>
+  </data>
+  <data name="Validation_WrongDateRange" xml:space="preserve">
+    <value>Rango de fechas inválido</value>
+  </data>
+  <data name="ChooseVehicle" xml:space="preserve">
+    <value>Seleccione vehículo</value>
+  </data>
+  <data name="PurchaseRequest" xml:space="preserve">
+    <value>Solicitud de Compra</value>
+  </data>
+  <data name="PurchaseRequests" xml:space="preserve">
+    <value>Solicitudes de Compras</value>
+  </data>
+  <data name="ItemAlreadyAdded" xml:space="preserve">
+    <value>El elemento ya se encuentra en la lista</value>
+  </data>
+  <data name="ProductNotFound" xml:space="preserve">
+    <value>El producto no fue encontrado</value>
+  </data>
+  <data name="OnPurchase" xml:space="preserve">
+    <value>En proceso de compra</value>
+  </data>
+  <data name="OnReception" xml:space="preserve">
+    <value>Recibiendo en almacén</value>
+  </data>
+  <data name="OnRequest" xml:space="preserve">
+    <value>En solicitud</value>
+  </data>
+  <data name="OnStock" xml:space="preserve">
+    <value>Ingresado almacén</value>
+  </data>
+  <data name="ForceStockVerification" xml:space="preserve">
+    <value>Forzar Verificación de Existencia</value>
+  </data>
+  <data name="NoStockEnough" xml:space="preserve">
+    <value> {0}: {1} {2} disponibles.</value>
+  </data>
+  <data name="DeliveryItineraries" xml:space="preserve">
+    <value>Despachos</value>
+  </data>
+  <data name="Vehicles" xml:space="preserve">
+    <value>Vehículos de Transporte</value>
+  </data>
+  <data name="ChooseVehicleOperator" xml:space="preserve">
+    <value>Seleccione operador de vehículo de transporte</value>
+  </data>
+  <data name="RemainingAmountToPay" xml:space="preserve">
+    <value>Por pagar</value>
+  </data>
+  <data name="PaymentIncomplete" xml:space="preserve">
+    <value>El pago no está completo</value>
+  </data>
+  <data name="PurchaseQuotation" xml:space="preserve">
+    <value>Solicitud de Cotización Para Proveedor</value>
+  </data>
+  <data name="WilcardStringPatternForSearch" xml:space="preserve">
+    <value>**</value>
+  </data>
+  <data name="ServiceOrders" xml:space="preserve">
+    <value>Órdenes de Servicio</value>
+  </data>
+  <data name="Logistic" xml:space="preserve">
+    <value>Logística</value>
+  </data>
+  <data name="FollowingDeliveryOrders" xml:space="preserve">
+    <value>Órdenes de envío próximas</value>
+  </data>
+  <data name="PreviousDeliveryOrders" xml:space="preserve">
+    <value>Órdenes de envío previas</value>
+  </data>
+  <data name="TodayDeliveryOrders" xml:space="preserve">
+    <value>Órdenes de envío para hoy </value>
+  </data>
+  <data name="TomorrowDeliveryOrders" xml:space="preserve">
+    <value>Órdenes de envío para mañana</value>
+  </data>
+  <data name="ConfirmationDate" xml:space="preserve">
+    <value>Fecha</value>
+  </data>
+  <data name="ChooseItinerary" xml:space="preserve">
+    <value>Buscar Itinerario...</value>
+  </data>
+  <data name="ForDeliver" xml:space="preserve">
+    <value>Entregas del Día</value>
+  </data>
+  <data name="PickUp" xml:space="preserve">
+    <value>Entrega en Mostrador</value>
+  </data>
+  <data name="DeliveryItinerary" xml:space="preserve">
+    <value>Despacho</value>
+  </data>
+  <data name="CustomerId" xml:space="preserve">
+    <value>Id Cliente</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>Catálogo de Usuarios</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Logical Delete</value>
+  </data>
+  <data name="LogicalDelete" xml:space="preserve">
+    <value>Eliminar</value>
+  </data>
+  <data name="NotAPaymentReceipt" xml:space="preserve">
+    <value>Este recibo no es un comprobante de pago.</value>
+  </data>
+  <data name="AlreadyFullyDelivered" xml:space="preserve">
+    <value>Pedido completado</value>
+  </data>
+  <data name="NotPendingShippingRequestsYet" xml:space="preserve">
+    <value>Aún no hay solicitudes de envío registradas</value>
+  </data>
+  <data name="WildCardSearchWarehouseHint" xml:space="preserve">
+    <value>Agregue {0} para buscar en todos los almacenes</value>
+  </data>
+  <data name="MinimumHoursSpanForDeliveries" xml:space="preserve">
+    <value>Se requiere un mínimo de {0} horas para realizar un envío.</value>
+  </data>
+  <data name="ExpirationQuotationDate" xml:space="preserve">
+    <value>Expira el</value>
+  </data>
+  <data name="MaxAmountOnPaymentDelivery" xml:space="preserve">
+    <value>El monto máximo para pagos a contraentrega es de {0:C2}</value>
+  </data>
+  <data name="EstimatedReceiptDate" xml:space="preserve">
+    <value>Recepción Estimada</value>
+  </data>
+  <data name="PartialReceipt" xml:space="preserve">
+    <value>Recepción Parcial</value>
+  </data>
+  <data name="ReceivedQuantity" xml:space="preserve">
+    <value>Cantidad Recibida</value>
+  </data>
+  <data name="ComplementaryInventoryReceipt" xml:space="preserve">
+    <value>Entrada Complementaria de Almacén</value>
+  </data>
+  <data name="ConfirmedForDelivery" xml:space="preserve">
+    <value>Confirmado Para Envío</value>
+  </data>
+  <data name="DeliveryOrdersApproval" xml:space="preserve">
+    <value>Notificaciones de Envíos</value>
+  </data>
+  <data name="CreatorDoesntMatchWithCurrentUser" xml:space="preserve">
+    <value>El creador de la orden no coincide con el usuario actual.</value>
+  </data>
+  <data name="ReEditByCreator" xml:space="preserve">
+    <value>Reeditar por el Vendedor</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirmar {0}</value>
+  </data>
+  <data name="Reedit" xml:space="preserve">
+    <value>Reeditar {0}</value>
+  </data>
+  <data name="Refuse" xml:space="preserve">
+    <value>Rechazar {0}</value>
+  </data>
+  <data name="DeliveryOrderApproval" xml:space="preserve">
+    <value>Notificación de Envío</value>
+  </data>
+  <data name="BarCodeNumber" xml:space="preserve">
+    <value>Código de Barras</value>
+  </data>
+  <data name="PurchaseOrderApproval" xml:space="preserve">
+    <value>Aprobación de Compras</value>
+  </data>
+  <data name="PurchaseRequestApproval" xml:space="preserve">
+    <value>Aprobación de Solicitudes de Compra</value>
+  </data>
+  <data name="AddressLinkURL" xml:space="preserve">
+    <value>Link</value>
+  </data>
+  <data name="Message_InvalidAddressLinkURL" xml:space="preserve">
+    <value>Liga de mapa inválida</value>
+  </data>
+  <data name="Validation_WrongRegexMatch" xml:space="preserve">
+    <value>Error de Regex, el campo {0} no es un valor válido</value>
+  </data>
+  <data name="OpenInNewTab" xml:space="preserve">
+    <value>Abrir en nueva pestaña...</value>
+  </data>
+  <data name="PurchaseRequestsApproval" xml:space="preserve">
+    <value>Aprobación de Solicitudes de Compra</value>
+  </data>
+  <data name="Approved" xml:space="preserve">
+    <value>Aprobado</value>
+  </data>
+  <data name="OnApproval" xml:space="preserve">
+    <value>En aprobación</value>
+  </data>
+  <data name="OnlyAppliedPayments" xml:space="preserve">
+    <value>Sólo pagos aplicados a pedidos</value>
+  </data>
+  <data name="ReceivedPaymentsAdvancedSearchFilter" xml:space="preserve">
+    <value>Filtro Avanzado para Reporte de Pagos Recibidos</value>
+  </data>
+  <data name="PaymentInAdvance" xml:space="preserve">
+    <value>Pago Anticipado</value>
+  </data>
+  <data name="PaymentType" xml:space="preserve">
+    <value>Tipo de Pago</value>
+  </data>
+  <data name="ExpiredCredits" xml:space="preserve">
+    <value>Crédito Vencido</value>
+  </data>
+  <data name="NoDebt" xml:space="preserve">
+    <value>Sin Adeudos</value>
+  </data>
+  <data name="CreditCustomerConfiguration" xml:space="preserve">
+    <value>Configurar Crédito del Cliente</value>
+  </data>
+  <data name="StoreMovementsSummary" xml:space="preserve">
+    <value>Resumen de Movimientos</value>
+  </data>
+  <data name="NoPayment" xml:space="preserve">
+    <value>Sin Pago</value>
+  </data>
+  <data name="ChangesToPayments" xml:space="preserve">
+    <value>Modificaciones a Pagos Recibidos</value>
+    <comment>Autorización para realizar modificaciones a pagos recibidos, puede dejar incongruente el balance general.</comment>
+  </data>
+  <data name="SearchCreditsFromAllStores" xml:space="preserve">
+    <value>Consulta de Créditos en Todas Las Tiendas</value>
+    <comment>Habilita la consulta de créditos en todas las tiendas. Por defecto la consulta de créditos sólo devuelve los que corresponden a la tienda actual.</comment>
+  </data>
+  <data name="ItemCanBeChangedOnlyOnce" xml:space="preserve">
+    <value>El elemento sólo puede ser modificado una vez.</value>
+  </data>
+  <data name="PaymentsEditor" xml:space="preserve">
+    <value>Corrección de Datos de Pagos</value>
+  </data>
+  <data name="PriceInvalidRange" xml:space="preserve">
+    <value>Este Precio debe estar entre {0:c} y {1:c}</value>
+  </data>
+  <data name="ExcludePriceRangeValidation" xml:space="preserve">
+    <value>Excluir validación por rangos de precios</value>
+  </data>
+  <data name="DoctoRequiresApproval" xml:space="preserve">
+    <value>{0} requiere aprobación previa.</value>
+  </data>
+  <data name="PurchaseOrdersApprovals" xml:space="preserve">
+    <value>Aprobación de Órdenes de Compra</value>
+  </data>
+  <data name="ExpenseTicket" xml:space="preserve">
+    <value>Ticket de Gastos</value>
+  </data>
+  <data name="ExpenseTickets" xml:space="preserve">
+    <value>Tickets de Gastos</value>
+  </data>
+  <data name="CardPaymentNoteContent" xml:space="preserve">
+    <value>Cobro con tarjeta de crédito o débito</value>
+  </data>
+  <data name="MaxSalesOrdersCompletedAndPayless" xml:space="preserve">
+    <value>Cantidad Máxima de Pedidos al Contado sin Pago</value>
+  </data>
+  <data name="Message_MaxSalesOrdersCompletedAndPayless" xml:space="preserve">
+    <value>Debe realizar los pagos correspondientes a pedidos que fueron completados y aún no han sido registrados sus pagos.</value>
+  </data>
+  <data name="TaxpayerGeneralReceiptId" xml:space="preserve">
+    <value>XAXX010101000</value>
+  </data>
+  <data name="IssuedLocationFiscalDocumentSettingPermission" xml:space="preserve">
+    <value>Cambio de Lugar de Expedición en Facturación.</value>
+  </data>
+  <data name="ModificationRequiresPermission" xml:space="preserve">
+    <value>{0} requiere permisos para modificación.</value>
+  </data>
+  <data name="Profits" xml:space="preserve">
+    <value>Márgenes de Utilidad</value>
+  </data>
+  <data name="SearchAllSalesOrderFromAllStores" xml:space="preserve">
+    <value>Consulta de Pedidos en todas las Tiendas</value>
+  </data>
+  <data name="SearchAllSalesOrderFromCurrentStore" xml:space="preserve">
+    <value>Consulta de Pedidos en toda la Tienda</value>
+  </data>
+  <data name="ProductionSite" xml:space="preserve">
+    <value>Planta de Producción</value>
+  </data>
+  <data name="ProductionSites" xml:space="preserve">
+    <value>Plantas de Producción</value>
+  </data>
+  <data name="ProductProperties" xml:space="preserve">
+    <value>Propiedades del Producto</value>
+  </data>
+  <data name="CreditStatusNeedsToBeVerified" xml:space="preserve">
+    <value>Favor de Revisar el Estado del Crédito del Cliente.</value>
+  </data>
+  <data name="OnlyCredits" xml:space="preserve">
+    <value>Sólo créditos</value>
+  </data>
+  <data name="OnlyDebtors" xml:space="preserve">
+    <value>Sólo clientes con deuda</value>
+  </data>
+  <data name="DateRange" xml:space="preserve">
+    <value>Intervalo de Fechas</value>
+  </data>
+  <data name="RefundPaysSalesOrder" xml:space="preserve">
+    <value>Esta devolución marcará como PAGADO al pedido {0} devolviendo al cliente {1:C} {2}</value>
+  </data>
+  <data name="Title_Outflow" xml:space="preserve">
+    <value>Egresos</value>
+  </data>
+  <data name="InsufficientFunds" xml:space="preserve">
+    <value>Fondos Insuficientes</value>
   </data>
 </root>

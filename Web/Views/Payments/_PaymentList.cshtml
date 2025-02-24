@@ -1,0 +1,23 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model IEnumerable<CustomerPayment>
+
+@using (Ajax.BeginForm("PrintablePaymentTickets" ,new AjaxOptions { UpdateTargetId = "search-results-printable-payments", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }))
+{
+    <div class="search-box">
+        <button type="submit" class="icon search">@Resources.Search</button>
+        <div class="search-field">
+            <input type="text" id="id" name="value" />
+        </div>
+    </div>
+}
+<div id="details-section">
+    <div id="activity-indicator">
+        <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
+    </div>
+    <div id="search-results-printable-payments">
+        @Html.Partial("_CustomerPaymentList", Model)
+    </div>
+</div>

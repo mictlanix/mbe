@@ -1,4 +1,4 @@
-﻿// 
+// 
 // PointsOfSaleController.cs
 // 
 // Author:
@@ -37,6 +37,7 @@ using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
+using Castle.Core.Internal;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
@@ -70,15 +71,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		Search<Store> SearchStores (Search<Store> search)
 		{
-			IQueryable<Store> query;
+			IQueryable<Store> query = MBEQueryable.IQStores;
 			var pattern = string.Format ("{0}", search.Pattern).Trim ();
 
-			if (string.IsNullOrEmpty (pattern)) {
-				query = from x in Store.Queryable
-					orderby x.Name
-					select x;
-			} else {
-				query = from x in Store.Queryable
+			if (!string.IsNullOrEmpty (pattern)) {
+					query = from x in Store.Queryable
 					where x.Name.Contains (pattern)
 					orderby x.Name
 					select x;
@@ -123,6 +120,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Edit (int id)
 		{
 			var entity = Store.Find (id);
+			entity.TaxpayerId = entity.Taxpayer.Id;
+			entity.Location = SatPostalCode.TryFind (entity.LocationId);
 			return PartialView ("_Edit", entity);
 		}
 
@@ -181,8 +180,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			try {
 				using (var scope = new TransactionScope ()) {
-					entity.Delete ();
-					entity.Address.Delete ();
+
+					MBEQueryable.IQWarehouses.Where (warehouse => warehouse.Store == entity)
+						.ForEach (x => { x.IsDisabled = true; x.UpdateAndFlush (); });
+
+					MBEQueryable.IQCashDrawers.Where (cash => cash.Store == entity)
+						.ForEach (x => { x.IsDisabled = true; x.UpdateAndFlush ();
+					});
+
+					MBEQueryable.IQPointsOfSales.Where(pos => pos.Store == entity)
+						.ForEach (x => { x.IsDisabled= true; x.UpdateAndFlush (); });	
+
+					entity.IsDisabled = true;
+					entity.Update ();
 				}
 			} catch (TransactionException) {
 				return PartialView ("DeleteUnsuccessful");
@@ -193,7 +203,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public JsonResult GetSuggestions (string pattern)
 		{
-			var query = from x in Store.Queryable
+			var query = from x in MBEQueryable.IQStores
 				    where x.Code.Contains (pattern) ||
 					    x.Name.Contains (pattern)
 				    select new { id = x.Id, name = x.Name };

@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
@@ -16,9 +16,10 @@
 
 <table id="pointOfSales">
     <tr>
-        <th>@Html.LabelFor(x => new PointOfSale().Code)</th>
-        <th>@Html.LabelFor(x => new PointOfSale().Name)</th>
-        <th>@Html.LabelFor(x => new PointOfSale().Store)</th>
+        <th>@Resources.Code</th>
+        <th>@Resources.Name</th>
+        <th>@Resources.Store</th>
+        <th>@Resources.Warehouse</th>
         <th></th>
     </tr>
 

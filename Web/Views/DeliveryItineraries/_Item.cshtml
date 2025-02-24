@@ -1,0 +1,51 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Controllers.Mvc
+@using Mictlanix.BE.Web.Utils
+@model DeliveriesItinerary
+
+@{
+				var CurrentUser = Html.CurrentUser() ?? new User();
+				var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.DeliveryItineraries);
+}
+
+<tr id='id:@Model.Id'>
+				@*<td class="number">
+									@Html.DisplayFor(x => x.Id)
+									<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => x.Id)">
+										<span class="glyphicon glyphicon-exclamation-sign"></span>
+									</a>
+								</td>*@
+				<td class="">@Html.DisplayFor(x => x.Id)</td>
+				<td class="">@Html.DisplayFor(x => x.DueDate)</td>
+				<td class="center">@Html.DisplayFor(x => x.VehicleOperator.Operator.Nickname)</td>
+				<td class="center">@Html.DisplayFor(x => x.Vehicle.NickName)</td>
+				<td class="">@Html.DisplayFor(x => x.Comment)</td>
+				<td class="">@string.Join(", ", Model.Details.Select(x => x.DeliveryOrderDetail.DeliveryOrder.Id).Distinct())</td>
+				<td class="">@Html.DisplayFor(x => x.IsCompleted)</td>
+				<td class="">@Html.DisplayFor(x => x.IsCancelled)</td>
+				<td class=""></td>
+				<td class="bool">@Html.DisplayFor(x => x.IsCancelled)</td>
+				<td class="actions">
+								@if (Privilege.AllowRead)
+								{
+												@Html.ActionLink(" ", "View", new { id = Model.Id }, new { @class = "button icon view icon-only open-modal",
+																																title = Resources.Details, data_modal_id = "purchase-request-modal" })
+								}
+
+
+								@if (Privilege.AllowUpdate && !Model.IsCompleted && !Model.IsCancelled)
+								{
+												@Html.ActionLink(" ", "Edit", new { id = Model.Id }, new { @class = "button icon edit icon-only", title = Resources.Edit })
+								}
+
+								@if (Privilege.AllowDelete)
+								{
+												@Html.ActionLink(" ", "Delete", new { id = Model.Id }, new { @class = "button icon delete icon-only open-modal",
+																																title = Resources.Delete, data_modal_id = "purchase-request-modal" })
+								}
+				</td>
+</tr>
+
+

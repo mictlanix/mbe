@@ -1,0 +1,44 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model DeliveryOrder
+
+
+<div class='pull-right'>
+	@if (Model.Contact == null || Model.ShipTo == null || Model.Details.Count == 0)
+	{
+
+		<button id='complete' type='submit' class="icon save"
+				data-toggle="popover" title="Faltan datos de contacto"
+				data-content='@Resources.Message_NotContactOrShipTo'
+				data-placement='top'>
+			@Resources.Complete
+		</button>
+
+	}
+	else
+	{
+		using (Html.BeginForm("Confirm", "DeliveryOrders", new { id = Model.Id
+		}, FormMethod.Post, new { Style = "display:inline"
+		}))
+		{
+			<button id='complete' type='submit' class="icon save">
+				@Resources.Complete
+			</button>
+		}
+	}
+</div>
+<div class="pull-right">
+	@using (Html.BeginForm("Cancel", "DeliveryOrders",
+	new { id = Model.Id }, FormMethod.Post, new { style = "display:inline" }))
+	{
+		<button type="submit" class="icon cancel">@Resources.Cancel</button>
+	}
+</div>
+
+<script>
+	$(document).ready(function () {
+		$('#complete').popover();
+	});
+</script>
+

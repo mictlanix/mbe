@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model CustomerRefund
@@ -35,3 +35,29 @@
     }
     </li>
 </ul>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        if (@Model.SalesOrder.Balance < @Model.Total) {
+            var order_id = @Model.SalesOrder.Id;
+            var info = "@Html.Raw(string.Format(
+                       Resources.RefundPaysSalesOrder, Model.SalesOrder.Id, Model.Total - Model.SalesOrder.Balance,
+                        Model.SalesOrder.Currency
+                       )
+                       )"
+
+            $('.alert').css("display", 'block');
+            $('.alert').text(info).fadeIn(1).delay(5000)
+        }
+        else {
+            $('.alert').css("display", 'none');
+        }
+
+        if (@Model.Total <= 0) {
+            $("#confirm-button").addClass("hide")
+        } else {
+            $("#confirm-button").removeClass("hide")
+        }
+				});
+</script>

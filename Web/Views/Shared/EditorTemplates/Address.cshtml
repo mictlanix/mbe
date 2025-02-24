@@ -1,7 +1,10 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @model Address
 
+<div class="form-group">
+  	<div class="col-xs-6">@Html.LabelFor(x => x.Nickname) @Html.EditorFor(x => x.Nickname) @Html.ValidationMessageFor(x => x.Nickname)</div>
+</div>
 <div class="form-group">
   	<div class="col-xs-6 field-required">@Html.LabelFor(x => x.Street) @Html.EditorFor(x => x.Street) @Html.ValidationMessageFor(x => x.Street)</div>
 	<div class="col-xs-3 field-required">@Html.LabelFor(x => x.ExteriorNumber) @Html.EditorFor(x => x.ExteriorNumber) @Html.ValidationMessageFor(x => x.ExteriorNumber)</div>
@@ -19,6 +22,9 @@
 <div class="form-group">
   	<div class="col-xs-6">@Html.LabelFor(x => x.City) @Html.EditorFor(x => x.City) @Html.ValidationMessageFor(x => x.City)</div>
 	<div class="col-xs-6 field-required">@Html.LabelFor(x => x.Country) @Html.EditorFor(x => x.Country) @Html.ValidationMessageFor(x => x.Country)</div>
+</div>
+<div class="form-group">
+	<div class="col-xs-6">@Html.LabelFor(x => x.Link) @Html.EditorFor(x => x.PreLink) @Html.ValidationMessageFor(x => x.PreLink)</div>
 </div>
 
 <div class="form-group">

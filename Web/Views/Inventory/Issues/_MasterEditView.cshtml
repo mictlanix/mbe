@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model InventoryIssue
@@ -12,7 +12,8 @@
         @Html.LabelFor(model => model.Warehouse)
     </div>
     <div class="editor-field">
-        @Html.EditorFor(model => model.WarehouseId)
+        @Html.HiddenFor(model => model.WarehouseId)
+        @Html.DisplayFor(model => model.Warehouse.Name)
         @Html.ValidationMessageFor(model => model.WarehouseId)
     </div>
     <div class="editor-label">

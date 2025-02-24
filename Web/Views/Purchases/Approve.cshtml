@@ -1,0 +1,45 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model;
+@using Mictlanix.BE.Web.Helpers;
+@model PurchaseOrder
+
+@{
+    ViewBag.Title = Resources.PurchaseOrder;
+}
+
+<h2>@Resources.PurchaseOrder</h2>
+
+<div id="master-section">
+	@Html.Partial("_MasterView")
+</div>
+<div id="details-section">
+    <div id="items-container">
+        <ul id="items" class="list-items">
+        @foreach (var item in Model.Details) {
+            @Html.Partial("_DetailView", item) 
+        }
+        </ul>
+    </div>
+</div>
+<div id='totals-section' class='pull-right' data-url='@Url.Action("Totals", new { id = Model.Id })'>
+    @Html.Partial("_Totals")
+</div>
+<div class='clearfix'></div>
+<div id="back-to-list" class="pull-left">
+    @Html.ActionLink(Resources.BackToList, "Approvals", new { }, new { @class = "button icon back" })
+</div>
+<div id='confirm-button' class='pull-right'>
+				@using (Html.BeginForm("Approve", "Purchases", new { id = Model.Id, approve = true }))
+    {
+								<button id='complete' type='submit'>@string.Format(Resources.Confirm, Resources.PurchaseOrder)</button>
+        
+				}
+</div>
+<div id='confirm-button' class='pull-right'>
+				@using (Html.BeginForm("Approve", "Purchases", new { id = Model.Id, approve = false }))
+    {
+								<button id='complete' type='submit'>@string.Format(Resources.Reedit, Resources.PurchaseOrder)</button>
+        
+				}
+</div>
+<div class='clearfix'></div>

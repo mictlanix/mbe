@@ -46,10 +46,10 @@ namespace Mictlanix.BE.Model {
 		[UIHint("StoreSelector")]
 		public int StoreId { get; set; }
 
-		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		//[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
 		[Display (Name = "PointOfSale", ResourceType = typeof (Resources))]
 		[UIHint("PointOfSaleSelector")]
-		public int PointOfSaleId { get; set; }
+		public int? PointOfSaleId { get; set; }
 
 		//[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
 		[Display (Name = "CashDrawer", ResourceType = typeof (Resources))]

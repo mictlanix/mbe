@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CustomerPayment.cs
 // 
 // Author:
@@ -32,9 +32,11 @@ using System.Linq;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
+using NHibernate.Mapping;
 
 namespace Mictlanix.BE.Model {
 	[ActiveRecord ("customer_payment")]
+	[Serializable]
 	public class CustomerPayment : ActiveRecordLinqBase<CustomerPayment> {
 		IList<SalesOrderPayment> allocations = new List<SalesOrderPayment> ();
 
@@ -62,6 +64,10 @@ namespace Mictlanix.BE.Model {
 
 		[BelongsTo ("payment_charge", Lazy = FetchWhen.OnInvoke)]
 		public virtual PaymentMethodOption ExtraFee { get; set; }
+
+		[Property ("payment_type")]
+		[Display (Name = "PaymentType", ResourceType = typeof (Resources))]
+		public virtual PaymentType? PaymentType { get; set; }
 
 		[Property("commission")]
 		[DisplayFormat(DataFormatString = "{0:+#;-#;+p}")]
@@ -157,6 +163,25 @@ namespace Mictlanix.BE.Model {
 				return base.GetHashCode ();
 
 			return string.Format ("{0}#{1}", GetType ().FullName, Id).GetHashCode ();
+		}
+
+		public virtual CustomerPayment GetSerializable () {
+			return new CustomerPayment {
+				Updater = Updater.GetSerializable(),
+				Amount = Amount,
+				Serial = Serial,
+				ModificationTime = ModificationTime,
+				Commission = Commission,
+				CreationTime = CreationTime,
+				CustomerId = CustomerId,
+				Date = Date,
+				ExtraFee = ExtraFee,
+				Method = Method,
+				Id = Id,
+				PaymentType = PaymentType,
+				Reference= Reference,
+				Store = Store.GetSerializable(),
+			};
 		}
 
 		#endregion

@@ -38,7 +38,7 @@
 				<dd>
 					<a id='address' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id'
 					   data-value='@(Model.ShipTo == null ? "" : Model.ShipTo.Id.ToString ())'
-					   data-source='@Url.Action("Addresses", new { id = Model.Id })' data-source-cache='false'
+					   data-source='@Url.Action("Addresses" ,new { id = Model.Id })' data-source-cache='false'
 					   data-url='@Url.Action("SetShipTo", new { id = Model.Id })'
 					   data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
 						@if (Model.ShipTo != null)
@@ -64,7 +64,7 @@
 						<span class="glyphicon glyphicon-exclamation-sign"></span>
 					</a>
 				</dd>
-				<dt>@Resources.Date</dt>
+				<dt>@Resources.DeliveryDate</dt>
 				<dd>
 					<a id='date' data-type='date' data-placement='left' data-pk='@Model.Id'
 						data-value='@Html.DisplayFor(x => x.Date)' data-url='@Url.Action("SetDate", new { id = Model.Id })'

@@ -1,4 +1,4 @@
-﻿// 
+// 
 // Employee.cs
 // 
 // Author:
@@ -35,6 +35,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Mictlanix.BE.Model {
 	[ActiveRecord ("employee", Lazy = true)]
+	[Serializable]
 	public class Employee : ActiveRecordLinqBase<Employee> {
 		public Employee ()
 		{
@@ -101,7 +102,8 @@ namespace Mictlanix.BE.Model {
 
 		[Property ("personal_id")]
 		[Display (Name = "PersonalId", ResourceType = typeof (Resources))]
-		[StringLength (18, MinimumLength = 18, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
+		[RegularExpression("^[A-Z][AEIOUX][A-Z]{2}\\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[^AEIOU]{3}[A-Z\\d]\\d$",
+			ErrorMessageResourceName = "Validation_WrongRegexMatch", ErrorMessageResourceType = typeof(Resources))]
 		public virtual string PersonalId { get; set; }
 
 		[Property]
@@ -109,6 +111,29 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Comment", ResourceType = typeof (Resources))]
 		[StringLength (500, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Comment { get; set; }
+
+		[Property ("disabled")]
+		[Display (Name = "LogicalDelete", ResourceType = typeof (Resources))]
+		public virtual bool IsDisabled { get; set; }
+
+		public virtual Employee GetSerializable () {
+			return new Employee {
+				Birthday = Birthday,
+				Comment = Comment,
+				FirstName = FirstName,
+				LastName = LastName,
+				Gender = Gender,
+				Id = Id,
+				IsActive = IsActive,
+				IsDisabled = IsDisabled,
+				IsSalesPerson = IsSalesPerson,
+				Nickname = Nickname,
+				PersonalId = PersonalId,
+				StartJobDate = StartJobDate,
+				Enroll_Number = Enroll_Number,
+				TaxpayerId = TaxpayerId	
+			};
+		}
 
 		#region Override Base Methods
 

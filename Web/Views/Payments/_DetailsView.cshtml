@@ -7,11 +7,17 @@
 		  var Privilege = Html.GetPrivilege (CurrentUser, SystemObjects.CustomerPayments);
 }
 <div id="items-container">
-	<ul id="items" class="list-items">
-		@foreach (var item in Model.Payments) {
-				@Html.Partial("_Payment", item)
-		}
-	</ul>
+				<ul id="items" class="list-items">
+								@foreach (var item in Model.Payments)
+								{
+												@Html.Partial("_Payment", item)
+								}
+				</ul>
+				<div class="alert alert-danger alert-dismissible fade in" style="display:none;">
+				</div>
+				@if(Model.Payments.Any(x => !x.Payment.PaymentType.HasValue)) {
+								<div class="alert alert-success alert-dismissible fade in" style="display:block;">Confirma los pagos recibidos...</div>
+				}
 </div>
 <div id="form">
 	<fieldset>
@@ -20,34 +26,52 @@
 			<div class="form-group">
 				<div class="col-xs-3"><label for="amount">@Resources.Amount</label></div>
 				<div class="col-xs-3"><label for="reference">@Resources.Reference</label></div>
-				<div class="col-xs-1 paymentondelivery">
-					<label for="payment_upon_delivery">@Resources.PaymentOnDelivery</label>
-				</div>
+							@if(Model.Terms == PaymentTerms.Immediate) {
+								<div class="col-xs-1 paymentondelivery">
+									<label for="payment_upon_delivery">@Resources.PaymentOnDelivery</label>
+								</div>
+							}
 			</div>
 			<div class="form-group">
-				<div class="col-xs-3"><input id='amount' class='form-control text-right' type='text' autocomplete="off"></div>
-				<div class="col-xs-3"><input id='reference' class='form-control' type='text' value=''></div>
-				<div class="col-xs-1 paymentondelivery">
-					<input id='ondelivery' class='form-control' type='checkbox'>
-				</div>
+				<div class="col-xs-3"><input id='amount'  style="font-size:3em; height:1.5em;"
+								class='form-control text-right' type='text' autocomplete="off"></div>
+				<div class="col-xs-3"><input id='reference' style="font-size:3em; height:1.5em;" class='form-control' type='text' value=''></div>
+							@if(Model.Terms == PaymentTerms.Immediate) {
+								<div class="col-xs-1 paymentondelivery">
+									<input id='ondelivery' class='form-control' type='checkbox'>
+								</div>
+							}
 			</div>
 			<div class="form-group">
 				<div class="col-xs-12">
-					@Html.LabelFor(x => new CustomerPayment ().Method)
+					@Resources.PaymentMethod
 				</div>
 				<div class="col-xs-12">
-					<div class="btn-group">
-						@foreach (var item in WebConfig.CashierPaymentOptions) {
-								<button class="pay btn btn-default" type="button" data-value='@((int)item)'>@item.GetDisplayName()</button>
-						}
-					</div>
+												<div class="btn-group">
+																@foreach (var item in WebConfig.CashierPaymentOptions)
+																{
+																				<button class="pay btn btn-default" type="button" data-value='@((int)item)'>@item.GetDisplayName()</button>
+																}
+
+																@if (Model.Customer.Id != WebConfig.DefaultCustomer && Model.Customer.HasCredit) {
+																				<button class="pay btn btn-default @(Model.IsOverCreditLimit() || Model.Customer.HasExpiredCredits() || Model.Terms == PaymentTerms.NetD ? "disabled":"" )"
+																												type="button" data-value='credit'>@(Resources.CreditLimit + ": " + (Model.Customer.CreditLimit - Model.Customer.Debt()).ToString("C"))
+																				</button>
+																}
+																@if(Model.Customer.Prepayments() > 0) {
+																				<button class="pay btn btn-default" type="button" data-value='prepayment'>
+																								@(Resources.PaymentInAdvance + ": " + (Model.Customer.Prepayments()).ToString("C"))
+																				</button>
+																}
+												</div>
 				</div>
 			</div>
 			<div class="form-group">
 				<div class="col-xs-12">
 					<div class="btn-group">
 						@foreach (var item in WebConfig.StorePaymentOptions) {
-								<button class="pay btn btn-default" type="button" data-value="@((int)item.PaymentMethod)" data-fee="@item.Id">@item.Name (@Html.DisplayFor(x => item.CommissionByManage))</button>
+								<button class="pay btn btn-default" type="button" data-value="@((int)item.PaymentMethod)"
+																data-fee="@item.Id">@item.Name (@Html.DisplayFor(x => item.CommissionByManage))</button>
 						}
 					</div>
 				</div>
@@ -60,7 +84,7 @@
 </div>
 <script type="text/javascript">
 
-	function openClientEditor() {
+	function openCustomerEditor() {
 		var customer = $('#customer').attr('data-value');
 		if (customer != @WebConfig.DefaultCustomer) {
 			var url = '/Customers/Details/' + customer;
@@ -74,16 +98,16 @@
 		var shipto = $('#address').attr('data-value');
 
 		if (customer == @WebConfig.DefaultCustomer) {
-			alert(`No aplica para P\xfablico en General`);
+						DisplayErrorMessage(`No aplica para P\xfablico en General`);
 			$("#ondelivery").prop('checked', false);
 			return;
 		}
 
 		if (shipto === '') {
-			alert("Debe agregar el domicilio en el cual se realizar\xe1 el pago a contraentrega");
+						DisplayErrorMessage("Debe agregar el domicilio en el cual se realizar\xe1 el cobro a contraentrega");
 			$("#ondelivery").prop('checked', false);
 		}
-		
+
 	});
 
 function updateTotals() {
@@ -100,21 +124,62 @@ function updateTotals() {
 		  var reference = $("#reference").val();
 		  var fee = $(this).data('fee');
 		  var ship_to =  '@Model.CustomerShipTo';
-        var ondelivery = $("#ondelivery").is(":checked");
+					var ondelivery = $("#ondelivery").is(":checked");
+					const regex = /^-?\d+(\.\d+)?$/;
+
+					console.log(type)
 
         if (ship_to != '') {
-			  $("#ondelivery").prop('checked', false);
-		  }
+								$("#ondelivery").prop('checked', false);
+					}
 
-        $.post('@Url.Action("AddPayment", new { id = Model.Id })', { 'type': type, 'amount': amount, 'reference': reference, 'fee': fee, 'ondelivery': ondelivery }, function (detail) {
-            $.get('@Url.Action("GetPayment")/' + detail.id, function (data) {
+					if (!regex.test(amount)) {
+									DisplayErrorMessage("Ingrese el importe...");
+									return;
+					}
+
+					if (type === 'credit') {
+									//DisplayErrorMessage("Vamos por el crédito...");
+													$.post('@Url.Action("SetTermToCredit", new { id = Model.Id })', function (detail) {
+																	location.reload();
+
+									}, "json").fail(function (e) {
+													console.log(e);
+													DisplayErrorMessage(e.responseText)
+													$('#product-search').tokenInput('clear');
+									});
+									return;
+					}
+
+					if (type === 'prepayment') {
+									//DisplayErrorMessage("Vamos por el prepago...");
+												$.post('@Url.Action("ApplyInAdvancePayment", new { id = Model.Id })', { 'value': amount } ,function (detail) {
+																location.reload();
+
+												}, "json").fail(function (e) {
+																console.log(e);
+												DisplayErrorMessage(e.responseText)
+												$('#product-search').tokenInput('clear');
+								});
+									return;
+					}
+
+
+					$.post('@Url.Action("AddPayment", new { id = Model.Id })',
+									{ 'type': type, 'amount': amount, 'reference': reference, 'fee': fee, 'ondelivery': ondelivery }, function (detail) {
+            @*$.get('@Url.Action("GetPayment")/' + detail.id, function (data) {
                 $('#items').append(data);
-				$("#amount,#reference").val('');
-				$("#ondelivery").prop('checked', false);
+																$("#amount,#reference").val('');
+																$("#ondelivery").prop('checked', false);
                 updateTotals();
-            });
+            });*@
+												location.reload();
 
-        }, "json");
+								}, "json").fail(function (e) {
+												console.log(e);
+												DisplayErrorMessage(e)
+												$('#product-search').tokenInput('clear');
+								});
 	});
 	$('#customer').editable({
 	    select2: {
@@ -159,7 +224,7 @@ function updateTotals() {
 			}
 	    }
 	});
- 
+
 	$('a.editable').editable({
 		success: function (response, newValue) {
 
@@ -199,5 +264,10 @@ function updateTotals() {
 		}
 
     });
-});
+	});
+
+				function DisplayErrorMessage(errorMessage) {
+								$('.alert').text(errorMessage);
+								$('.alert').fadeIn(1).delay(5000).fadeOut(1000);
+				}
 </script>

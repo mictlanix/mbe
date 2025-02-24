@@ -1,0 +1,77 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
+@model CustomerPayment
+
+@using (Ajax.BeginForm("PaymentInAdvance", "Payments", new AjaxOptions { UpdateTargetId = "payment-in-advance" }))
+{
+				@Html.ValidationSummary(true)
+<div class="form-horizontal">
+				<div class="form-group">
+								<div class="col-xs-12">@Html.LabelFor(x => x.Customer)</div>
+				</div>
+				<div class="form-group">
+								<div class="col-xs-12">
+												@Html.EditorFor(x => x.CustomerId)
+												@Html.ValidationMessageFor(x => x.CustomerId)
+								</div>
+				</div>
+				<div class="form-group">
+								<div class="col-xs-2">@Html.LabelFor(x => x.Date)</div>
+								<div class="col-xs-2">@Html.LabelFor(x => x.Amount)</div>
+								<div class="col-xs-1">@Html.LabelFor(x => x.Currency)</div>
+								<div class="col-xs-3">@Html.LabelFor(x => x.Reference)</div>
+				</div>
+				<div class="form-group">
+								<div class="col-xs-2">@Html.EditorFor(x => x.Date) @Html.ValidationMessageFor(x => x.Date)</div>
+								<div class="col-xs-2">@Html.EditorFor(x => x.Amount) @Html.ValidationMessageFor(x => x.Amount)</div>
+								<div class="col-xs-1">
+												<select id="target-list" name="Currency" class="form-control">
+																@foreach (var item in Enum.GetValues(typeof(CurrencyCode)))
+																{
+																				if (WebConfig.DefaultCurrency == (CurrencyCode)item)
+																				{
+																								<option value="@((int)item)" selected>@item.ToString()</option>
+																				}
+																				else
+																				{
+																								<option value="@((int)item)">@item.ToString()</option>
+																				}
+																}
+												</select>
+								</div>
+								<div class="col-xs-3">@Html.EditorFor(x => x.Reference)</div>
+				</div>
+				@Html.HiddenFor(x => x.Method)
+				<input type="hidden" id="PaymentInAdvanceMethod" name="PaymentInAdvanceMethod" />
+				<div class="form-group">
+								<div class="col-xs-12">
+												@Html.LabelFor(x => new CustomerPayment().Method)
+								</div>
+								<div class="col-xs-12">
+												<div class="btn-group">
+																@foreach (var item in WebConfig.CashierPaymentOptions)
+																{
+																				<button class="payment_in_advance btn btn-default" type="button" data-value='@((int)item)'>@item.GetDisplayName()</button>
+																}
+												</div>
+								</div>
+				</div>
+</div>
+}
+<style type="text/css">
+				ul.token-input-list {
+								width: 100%;
+				}
+</style>
+<script type="text/javascript">
+				$(function () {
+								$(".payment_in_advance").click(function () {
+												var type = $(this).data('value');
+												console.log(type)
+												$('#PaymentInAdvanceMethod').val(type);
+												$(this).closest('form').submit();
+								});
+				});
+</script>

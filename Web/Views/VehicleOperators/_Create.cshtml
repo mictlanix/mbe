@@ -1,0 +1,62 @@
+@using Mictlanix.BE.Model
+@using Mictlanix.BE
+@model VehicleOperator
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h3>@Resources.VehicleOperator</h3>
+</div>
+
+<div class="modal-body">
+	@using (Ajax.BeginForm("New", "VehicleOperators", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "vehicle-operator-modal-content" }, new { @class = "modal-form" }))
+	{
+		@Html.AntiForgeryToken()
+		@Html.ValidationSummary(true)
+		<div class="form-horizontal">
+			@Html.LabelFor(model => model.Operator, htmlAttributes: new { @class = "control-label col-md-2" })
+			<div class="col-xs-4">
+				@Html.EditorFor(model => model.OperatorId, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.ValidationMessageFor(model => model.OperatorId, "", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<div class="form-group field-required">
+			<div class="col-xs-6">
+				@Html.LabelFor(model => model.LicenseDriverNumber)
+				@Html.EditorFor(model => model.LicenseDriverNumber)
+				@Html.ValidationMessageFor(model => model.LicenseDriverNumber)
+			</div>
+		</div>
+		<div class="form-group field-required">
+			<div class="col-xs-6">
+				@Html.LabelFor(model => model.LicenseType)
+				@Html.EditorFor(model => model.LicenseType)
+				@Html.ValidationMessageFor(model => model.LicenseType)
+			</div>
+		</div>
+		<div class="form-group field-required">
+			<div class="col-xs-6">
+				@Html.LabelFor(model => model.IssueLicenceDate)
+				@Html.EditorFor(model => model.IssueLicenceDate)
+				@Html.ValidationMessageFor(model => model.IssueLicenceDate)
+			</div>
+		</div>
+		<div class="form-group field-required">
+			<div class="col-xs-6">
+				@Html.LabelFor(model => model.ExpirationLicenceDate)
+				@Html.EditorFor(model => model.ExpirationLicenceDate)
+				@Html.ValidationMessageFor(model => model.ExpirationLicenceDate)
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-xs-6">
+				@Html.LabelFor(model => model.IssuingLocation) @Html.EditorFor(model => model.IssuingLocation) @Html.ValidationMessageFor(model => model.IssuingLocation)
+			</div>
+		</div>
+	}
+</div>
+<div class="clear"></div>
+<div class='modal-footer'>
+    <button type='button' class='btn btn-default' data-dismiss='modal'>@Resources.Discard</button>
+    <button type='submit' class='btn btn-primary' onclick='$("#vehicle-operator-modal form").submit();'>@Resources.Create</button>
+</div>

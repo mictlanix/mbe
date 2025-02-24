@@ -35,6 +35,7 @@ using Mictlanix.BE.Model.Validation;
 
 namespace Mictlanix.BE.Model {
 	[ActiveRecord ("product")]
+	[Serializable]
 	public class Product : ActiveRecordLinqBase<Product> {
 		IList<Label> labels = new List<Label> ();
 		IList<ProductPrice> prices = new List<ProductPrice> ();
@@ -84,6 +85,12 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Location", ResourceType = typeof (Resources))]
 		[StringLength (50, MinimumLength = 1, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public string Location { get; set; }
+
+		[Property ("bar_code")]
+		[Display (Name = "BarCodeNumber", ResourceType = typeof (Resources))]
+		[RegularExpression ("^\\d{13}$",
+			ErrorMessageResourceName = "Validation_WrongRegexMatch", ErrorMessageResourceType = typeof (Resources))]
+		public string BarCodeNumber { get; set; }
 
 		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
 		[Property ("unit_of_measurement", Update = false, Insert = false)]
@@ -177,7 +184,11 @@ namespace Mictlanix.BE.Model {
 
 		[Property ("deactivated")]
 		[Display (Name = "Deactivated")]
-		public bool IsDeactivated { get; set; }
+		public bool IsDisabled { get; set; }
+
+		[Property ("stock_verification")]
+		[Display (Name = "ForceStockVerification", ResourceType = typeof (Resources))]
+		public bool StockRequired { get; set; }
 
 		[HasAndBelongsToMany (typeof (Label), Table = "product_label", ColumnKey = "product", ColumnRef = "label", Lazy = true)]
 		public virtual IList<Label> Labels {
@@ -189,6 +200,18 @@ namespace Mictlanix.BE.Model {
 		public IList<ProductPrice> Prices {
 			get { return prices; }
 			set { prices = value; }
+		}
+
+		public virtual Product GetSerializable () {
+			return new Product {
+				Id = Id,
+				Name = Name,
+				IsDisabled = IsDisabled,
+				Model = Model,
+				Code = Code,
+				UnitOfMeasurementId = UnitOfMeasurementId,
+				SupplierId = SupplierId,
+			};
 		}
 
 		#region Override Base Methods

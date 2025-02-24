@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
@@ -12,6 +12,13 @@
 
 <div id='master-section'>
 	@Html.Partial("_MasterView")
+</div>
+<div class='control-group text-right'>
+				<a id='add-purchase-request' class='btn btn-default' data-url='@Url.Action("AddFromPurchaseRequest", new { id = Model.Id })'
+							data-type='text' data-placement='left' data-pk='@Model.Id' data-value=''
+							data-display='false' data-emptytext='' data-emptyclass='' data-highlight='false'>
+								<i class='icon-plus'></i>@Resources.Add @Resources.PurchaseRequest
+				</a>
 </div>
 <div id='details-section'>
     <div id='items-container'>
@@ -40,6 +47,13 @@
     <button id='complete' type='submit'>@Resources.Complete</button>
 }
 </div>
+
+<div id="export-button" class="pull-right @(Model.Details.Count == 0 ? "hide": "")">
+    @using (Html.BeginForm("Export", "Purchases", new { id = Model.Id })) {
+        <button id='export' type='submit'>@Resources.Download @Resources.PurchaseQuotation</button>
+    }
+</div>
+
 <div class='clearfix'></div>
 <script type="text/javascript">
 function updateTotals(){
@@ -48,6 +62,7 @@ function updateTotals(){
         if ($('#items li').length === 0) {
             $('#edit-button').show('slow');
             $('#confirm-button').addClass('hide');
+												$('#export-button').addClass('hide');
         }
 	});
 }
@@ -63,17 +78,17 @@ $(function () {
         onDelete: function () { $('.search-box').hide(); }
     });
 
-    $('#product-search').tokenInput('@Url.Action("GetSuggestions", "Products")', {
+    $('#product-search').tokenInput('@Url.Action("GetSuggestions", "Products", new { purchasable = true})', {
         hintText: '@Resources.HIntText',
         noResultsText: '@Resources.NoResultsText',
-        searchingText: '@Resources.SearchingText',          
+        searchingText: '@Resources.SearchingText',
         resultsFormatter: function(item){return ProductFormatter(item);},
         queryParam: 'pattern',minChars: 3,tokenLimit: 1,
         onAdd: function (item) {
             var w = $('#warehouse-search').tokenInput("get")[0];
             $.post('@Url.Action("AddPurchaseDetail")', { 'movement': PurchaseMovement.Id, 'warehouse': '' + w.id, 'product': '' + item.id }, function (detail) {
                 $.get('@Url.Action("GetDetail")/' + detail.id, function (data) {
-                    $('#items').append(data);                
+                    $('#items').append(data);
                     $('#product-search').tokenInput('clear');
 
                     updateTotals();
@@ -85,6 +100,41 @@ $(function () {
             }, 'json');
         }
     });
+
+    //$('#add-purchase-requests').click(function () {
+
+    //    var url = $('#add-purchase-requests')[0].dataset.url;
+    //    $.post(url, function (data) {
+    //        console.log(data["itemsChanged"]);
+
+    //        $.get()
+    //    });
+
+    //}).removeClass('editable-click');
+
+    $('#add-purchase-request').editable({
+        success: function (response, newValue) {
+            console.log(response);
+             $.get('@Url.Action("GetDetails")/?itemsChanged=' + response["itemsChanged"], function (data) {
+                 $('#items').append(data);
+                 $('#product-search').tokenInput('clear');
+
+                 updateTotals();
+
+                 $('#edit-button').hide('slow');
+                 $('#confirm-button').removeClass('hide');
+                 $('#export-button').removeClass('hide');
+
+																	if ($('#items li').length === 0) {
+																					$('#edit-button').show('slow');
+																					$('#confirm-button').addClass('hide');
+																					$('#export-button').addClass('hide');
+																	}
+                 
+             });
+            $('#add-purchase-request').editable('setValue', '');
+        }
+    }).removeClass('editable-click');
 
     $('.search-box').hide();
 });

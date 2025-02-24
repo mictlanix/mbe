@@ -76,15 +76,36 @@ namespace Mictlanix.BE.Web.Helpers {
 				where x.Terms == PaymentTerms.NetD &&
 				      x.IsCompleted && !x.IsCancelled && !x.IsPaid &&
 				      x.Customer.Id == entity.Id
-				select y.Quantity * y.Price * y.ExchangeRate * (1 - y.DiscountRate) * (y.IsTaxIncluded || y.TaxRate <= 0m ? 1m : (1m + y.TaxRate));
+				select (y.Quantity - (CustomerRefundDetail.Queryable.Where (z => z.SalesOrderDetail == y && !z.Refund.IsCancelled && z.Refund.IsCompleted)
+					.Sum (w => (decimal?) w.Quantity) ?? 0)
+					) * y.Price * y.ExchangeRate * (1 - y.DiscountRate) * (y.IsTaxIncluded || y.TaxRate <= 0m ? 1m : (1m + y.TaxRate));
 			var bought = query.Count () > 0 ? query.ToList ().Sum () : 0;
 
 			return bought - paid;
 		}
 
+		public static decimal Prepayments (this Customer entity)
+		{
+			//IQueryable<decimal> query;
+
+			var prepayment = 0;
+
+			var query = (from x in CustomerPayment.Queryable
+				     where x.PaymentType == PaymentType.PaymentInAdvance
+				     && x.Customer == entity
+				     select x).ToList ();
+			var summary = query.Sum (x => x.Amount - x.Allocated);
+
+			return prepayment + summary;
+		}
+
+		public static bool HasExpiredCredits (this Customer customer) {
+			return SalesOrder.Queryable.Any (x => x.Terms == PaymentTerms.NetD && !x.IsPaid && x.Customer == customer && x.DueDate < DateTime.Now);
+		}
+
 		public static bool IsOverCreditLimit (this SalesOrder entity)
 		{
-			return (entity.Customer.Debt () + entity.TotalEx) > entity.Customer.CreditLimit;
+			return (entity.Customer.Debt () + entity.Balance) > entity.Customer.CreditLimit;
 		}
 
 		public static decimal AmountOverCreditLimit (this SalesOrder entity)

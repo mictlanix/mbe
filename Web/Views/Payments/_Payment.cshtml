@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Model
 @model SalesOrderPayment
@@ -7,10 +7,12 @@
         <img src="@Url.Content("~/Content/icons/dollar.png")" title="@Resources.Pay" />
     </div>
 	@if (!Model.SalesOrder.IsPaid) {
+					if(Model.Payment.PaymentType == null) {
     <div class='action-link'>
         <a class='button icon-only icon delete' title='@Resources.Message_DeleteConfirmation'
 		   data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id' data-url='@Url.Action("RemovePayment", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
     </div>
+					}
 	} else if (Model.SalesOrder.IsPaid && Model.Payment.CashSession == null) {
 			<div class='action-link'>
 				<a class='button icon-only icon save receive' title='@Resources.Apply'
@@ -18,16 +20,15 @@
 			</div>
 	}
     <div class="info">
-        <label>@Resources.Amount:</label>
-        <span class="text">@Html.DisplayFor(x => x.Payment.Amount)</span>
-        <br/>
-        <label>@Resources.Type:</label>
-        <span class="text">@Model.Payment.Method.GetDisplayName()</span>
-		  <br />
+        <label>@Resources.Amount: </label><span class="text">@Html.DisplayFor(x => x.Amount)</span><br/>
+        <label>@Resources.PaymentMethod: </label><span class="text">@Model.Payment.Method.GetDisplayName()</span><br/>
+								@if(Model.Payment.PaymentType.HasValue && Model.Payment.PaymentType != PaymentType.Immediate) {
+												<label>@Model.Payment.PaymentType.GetDisplayName(): </label><span class="text">@Model.Payment.Id</span><br/>
+								}
         @if (!string.IsNullOrEmpty (Model.Payment.Reference)) {
             <label>@Resources.Reference:</label>
             <span class="text">@Model.Payment.Reference</span>
-				<br />
+				<br/>
         }
 
 		 @if (Model.Payment.ExtraFee != null) {
@@ -52,7 +53,8 @@
 <script type='text/javascript'>
 $('#payment@(Model.Id) a.delete').editable({
 	success: function(response, newValue) {
-        $('#payment@(Model.Id)').remove();
+								$('#payment@(Model.Id)').remove();
+								location.reload();
         updateTotals();
     }
 	});

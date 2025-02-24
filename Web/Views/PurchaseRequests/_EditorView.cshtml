@@ -1,0 +1,111 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model PurchaseRequest
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.DeliveryOrders);
+}
+
+<fieldset>
+	<div class='row'>
+		<div class='col-xs-8'>
+			<dl class=''>
+				<dt>@Resources.Customer</dt>
+				<dd>
+					@Html.DisplayFor(x => x.Creator.Name)
+
+				</dd>
+
+				<dt>@Resources.Warehouse</dt>
+				<dd>
+					<a id='address' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id'
+					   data-value='@(Model.Warehouse == null ? "" : Model.Warehouse.Id.ToString ())'
+					   data-source='@Url.Action("Warehouses", new { id = Model.Id })' @*data-source-cache='false'*@
+					   data-url='@Url.Action("SetWarehouse", new { id = Model.Id })'
+					   data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+						@if (Model.Warehouse != null)
+						{
+							@Html.DisplayFor(x => x.Warehouse, "String")
+						}
+					</a>
+				</dd>
+				<dt>@Resources.Comment</dt>
+				<dd>
+					<a class='editable' data-type="textarea" data-placement='right' data-pk='@Model.Id'
+					   data-url='@Url.Action("SetComment", new { id = Model.Id })'
+					   data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>@Model.Comment</a>
+				</dd>
+			</dl>
+		</div>
+	  	<div class='col-xs-4'>
+	  		<dl class='dl-horizontal'>
+				<dt>@Resources.Date</dt>
+				<dd>
+
+						@Html.DisplayFor(x => x.Date)
+	
+				</dd>
+			</dl>
+  		</div>
+	</div>
+@if(Privilege.AllowDelete && !Model.IsCancelled) {
+	<div class='row'>
+  		<div class='col-xs-12'>
+	    @using (Html.BeginForm("Cancel", "PurchaseRequests", new { id =  Model.Id }, FormMethod.Post, new { @class = "modal-form pull-right" })) {
+			<button type="submit" class="icon cancel">@Resources.Cancel</button>
+	    }
+  		</div>
+	</div>
+}
+</fieldset>
+<script type='text/javascript'>
+	$('[data-toggle="tooltip"]').tooltip();
+
+	$('#date').editable({
+		datepicker: {
+			language: '@WebConfig.Language'
+		}
+	});
+
+
+	$('a.editable').editable({
+
+		success: function (response, newValue) {
+			var contact = $("#contact").val();
+			var address = $("#address").val();
+			$('#buttons').loadUrl();
+		},
+		error: function(response, newValue){
+			console.log("en error del contacto o domicilio...");
+			console.log(response)
+			console.log(newValue)
+			if (response.status === 400) {
+				console.log("vamos bien...")
+			}
+		},
+		validate: function (value) {
+			if (value < 0) {
+				console.log(value)
+			}
+		},
+		display: function (value, response) {
+			console.log(value)
+			console.log(response)
+			if (typeof response === 'undefined')
+        		return;
+
+			if (Array.isArray(response)) {
+          		var arr = $.grep(response, function(o){
+  					return o.value == value;
+				});
+				if (arr.length != 0) {
+          			$(this).html(arr[0].text);
+          		}
+			} else {
+          		$(this).html(response.value);
+			}
+		}
+});
+</script>

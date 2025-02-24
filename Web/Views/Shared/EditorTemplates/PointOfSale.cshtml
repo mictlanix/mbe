@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @model PointOfSale
 
@@ -18,11 +18,15 @@ ul.token-input-list { width: 100%; }
 </style>
 @if (Model != null && Model.Store != null) {
 <script type='text/javascript'>
-$("#StoreId").tokenInput("add", { id: "@Model.Store.Id", name: "@Model.Store.Name"});
+    $(document).ready(function () {
+        $("#StoreId").tokenInput("add", { id: "@Model.Store.Id", name: "@Model.Store.Name"});
+    });
 </script>
 }
 @if (Model != null && Model.Warehouse != null) {
 <script type='text/javascript'>
-    $("#WarehouseId").tokenInput("add", { id: "@Model.Warehouse.Id", name: "@Model.Warehouse.Name" });
+    $(document).ready(function () {
+        $("#WarehouseId").tokenInput("add", { id: "@Model.Warehouse.Id", name: "@Model.Warehouse.Name" });
+    });
 </script>
 }

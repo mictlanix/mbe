@@ -1,4 +1,4 @@
-﻿// 
+// 
 // Store.cs
 // 
 // Author:
@@ -34,6 +34,7 @@ using Castle.ActiveRecord.Framework;
 
 namespace Mictlanix.BE.Model {
 	[ActiveRecord ("store", Lazy = true)]
+	[Serializable]
 	public class Store : ActiveRecordLinqBase<Store> {
 		[PrimaryKey (PrimaryKeyType.Identity, "store_id")]
 		public virtual int Id { get; set; }
@@ -84,6 +85,10 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Address", ResourceType = typeof (Resources))]
 		public virtual Address Address { get; set; }
 
+		[Property("disabled")]
+		[Display (Name = "LogicalDelete", ResourceType = typeof (Resources))]
+		public virtual bool IsDisabled { get; set; }
+
 		#region Override Base Methods
 
 		public override string ToString ()
@@ -113,5 +118,14 @@ namespace Mictlanix.BE.Model {
 		}
 
 		#endregion
+
+		public virtual Store GetSerializable () {
+			return new Store {
+				Code = Code,
+				Name = Name,
+				Id = Id,
+				TaxpayerId = TaxpayerId,
+			};
+		}
 	}
 }

@@ -80,6 +80,10 @@ namespace Mictlanix.BE.Web.Helpers {
 			get { return Convert.ToDecimal (ConfigurationManager.AppSettings ["DefaultVAT"]); }
 		}
 
+		public static decimal MaxAmountOnPaymentDelivery {
+			get { return Convert.ToDecimal (ConfigurationManager.AppSettings ["MaxAmountOnPaymentDelivery"]); }
+		}
+
 		public static bool IsTaxIncluded {
 			get { return Convert.ToBoolean (ConfigurationManager.AppSettings ["IsTaxIncluded"]); }
 		}
@@ -200,6 +204,10 @@ namespace Mictlanix.BE.Web.Helpers {
 			get { return ConfigurationManager.AppSettings ["SmtpServer"]; }
 		}
 
+		public static bool CashCountsByDenominations {
+			get { return bool.Parse(ConfigurationManager.AppSettings ["CashCountsByDenomination"]); }
+		}
+
 		public static int SmtpPort {
 			get { return int.Parse (ConfigurationManager.AppSettings ["SmtpPort"]); }
 		}
@@ -243,6 +251,26 @@ namespace Mictlanix.BE.Web.Helpers {
 
 		public static int DefaultQuotationDueDays {
 			get { return int.Parse (ConfigurationManager.AppSettings ["DefaultQuotationDueDays"]); }
+		}
+
+		public static Product DefaultEditableProductForPurchases {
+			get {
+				var editable = Product.TryFind(int.Parse (ConfigurationManager.AppSettings ["DefaultEditableProductForPurchases"]));
+				if (editable == null)
+					return null;
+				if (editable.PriceType == PriceType.Fixed
+					|| !editable.IsPurchasable
+					|| editable.IsSalable
+					|| editable.IsInvoiceable
+					|| editable.IsStockable
+					)
+					return null;
+				return editable;
+			}
+		}
+
+		public static int MaxSalesOrdersCompletedAndPayless {
+			get { return int.Parse (ConfigurationManager.AppSettings ["MaxSalesOrdersCompletedAndPayless"]); }
 		}
 
 		public static string DefaultCfdiUsage {
@@ -294,6 +322,16 @@ namespace Mictlanix.BE.Web.Helpers {
 
 		public static bool DeliveryOrdersUseMiniPrinter {
 			get { return Convert.ToBoolean (ConfigurationManager.AppSettings ["DeliveryOrdersUseMiniPrinter"]); }
+		}
+
+		public static bool DeliveryOrderApprovalRequired {
+			get { return Convert.ToBoolean (ConfigurationManager.AppSettings ["DeliveryOrderApprovalRequired"]); }
+		}
+		public static bool PurchaseOrderApprovalRequired {
+			get { return Convert.ToBoolean (ConfigurationManager.AppSettings ["PurchaseOrderApprovalRequired"]); }
+		}
+		public static bool PurchaseRequestApprovalRequired {
+			get { return Convert.ToBoolean (ConfigurationManager.AppSettings ["PurchaseRequestApprovalRequired"]); }
 		}
 
 		public static bool ShowSalesOrdersFromAllStores {
@@ -410,6 +448,24 @@ namespace Mictlanix.BE.Web.Helpers {
 		public static string BaseUrl {
 			get => ConfigurationManager.AppSettings ["BaseUrl"];
 		}
+
+		public static string PickUpTicket {
+			get => ConfigurationManager.AppSettings ["PickUpTicket"];
+		}
+
+		public static TimeSpan MinSpanHoursForDeliveries {
+			get { return TimeSpan.Parse( ConfigurationManager.AppSettings ["MinSpanHoursForDeliveries"]); }
+		}
+		public static PriceList CostsList {
+			get {
+				return PriceList.Find( Int32.Parse(ConfigurationManager.AppSettings ["CostsListID"]));
+			}
+		}
+
+		public static bool PriceValidationInRangeRequired {
+			get { return Convert.ToBoolean (ConfigurationManager.AppSettings ["PriceValidationInRangeRequired"]); }
+		}
+
 
 		#endregion
 	}

@@ -1,4 +1,4 @@
-﻿// 
+// 
 // SalesOrder.cs
 // 
 // Author:
@@ -33,6 +33,7 @@ using System.Linq;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Configuration;
 
 namespace Mictlanix.BE.Model {
 	[ActiveRecord ("sales_quote", Lazy = true)]
@@ -66,7 +67,7 @@ namespace Mictlanix.BE.Model {
 		public virtual Address ShipTo { get; set; }
 
 		[Property]
-		[DataType (DataType.DateTime)]
+		[DataType (DataType.Date)]
 		[Display (Name = "Date", ResourceType = typeof (Resources))]
 		public virtual DateTime Date { get; set; }
 
@@ -120,49 +121,49 @@ namespace Mictlanix.BE.Model {
 		[DataType (DataType.Currency)]
 		[Display (Name = "Subtotal", ResourceType = typeof (Resources))]
 		public virtual decimal Subtotal {
-			get { return ModelHelpers.TotalRounding (Details.Sum (x => x.Subtotal)); }
+			get { return ModelHelpersV2.TotalRounding (Details.Sum (x => x.Subtotal)); }
 		}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Discount", ResourceType = typeof (Resources))]
 		public virtual decimal Discount {
-			get { return ModelHelpers.TotalRounding (Details.Sum (x => x.Discount)); }
+			get { return ModelHelpersV2.TotalRounding (Details.Sum (x => x.Discount)); }
 		}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Taxes", ResourceType = typeof (Resources))]
 		public virtual decimal Taxes {
-			get { return ModelHelpers.TotalRounding (Details.Sum (x => x.Taxes)); }
+			get { return ModelHelpersV2.TotalRounding (Details.Sum (x => x.Taxes)); }
 		}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Total", ResourceType = typeof (Resources))]
 		public virtual decimal Total {
-			get { return ModelHelpers.TotalRounding (Details.Sum (x => x.Total)); }
+			get { return ModelHelpersV2.TotalRounding (Details.Sum (x => x.Total)); }
 		}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Subtotal", ResourceType = typeof (Resources))]
 		public virtual decimal SubtotalEx {
-			get { return ModelHelpers.TotalRounding (Details.Sum (x => x.SubtotalEx)); }
+			get { return ModelHelpersV2.TotalRounding (Details.Sum (x => x.SubtotalEx)); }
 		}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Discount", ResourceType = typeof (Resources))]
 		public virtual decimal DiscountEx {
-			get { return ModelHelpers.TotalRounding (Details.Sum (x => x.DiscountEx)); }
+			get { return ModelHelpersV2.TotalRounding (Details.Sum (x => x.DiscountEx)); }
 		}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Taxes", ResourceType = typeof (Resources))]
 		public virtual decimal TaxesEx {
-			get { return ModelHelpers.TotalRounding (Details.Sum (x => x.TaxesEx)); }
+			get { return ModelHelpersV2.TotalRounding (Details.Sum (x => x.TaxesEx)); }
 		}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Total", ResourceType = typeof (Resources))]
 		public virtual decimal TotalEx {
-			get { return ModelHelpers.TotalRounding (Details.Sum (x => x.TotalEx)); }
+			get { return ModelHelpersV2.TotalRounding (Details.Sum (x => x.TotalEx)); }
 		}
 
 		[BelongsTo ("creator", Lazy = FetchWhen.OnInvoke)]
@@ -182,6 +183,11 @@ namespace Mictlanix.BE.Model {
 		[DataType (DataType.DateTime)]
 		[Display (Name = "ModificationTime", ResourceType = typeof (Resources))]
 		public virtual DateTime ModificationTime { get; set; }
+		//TODO: quitar el harcodeado del días de vigencia.. ;D
+		[Display (Name = "ExpirationDate", ResourceType = typeof (Resources))]
+		public virtual bool HasExpired {
+			get => ModificationTime.AddDays(30) <= DateTime.Now;
+		}
 
 		#region Override Base Methods
 

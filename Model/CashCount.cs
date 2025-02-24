@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CashCount.cs
 // 
 // Author:
@@ -54,7 +54,7 @@ namespace Mictlanix.BE.Model {
 		[Property]
 		[Display (Name = "Quantity", ResourceType = typeof (Resources))]
 		[Required (ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof (Resources))]
-		public int Quantity { get; set; }
+		public decimal Quantity { get; set; }
 
 		[Property]
 		[Display (Name = "Type", ResourceType = typeof (Resources))]

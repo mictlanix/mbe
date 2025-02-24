@@ -1,4 +1,4 @@
-﻿// 
+// 
 // SecurityHelpers.cs
 // 
 // Author:
@@ -35,23 +35,21 @@ using System.Security.Cryptography;
 using System.Text;
 using Mictlanix.BE.Model;
 
-namespace Mictlanix.BE.Web.Helpers
-{
-    public static class SecurityHelpers
-    {
-        public static User CurrentUser (this HtmlHelper helper)
-        {
+namespace Mictlanix.BE.Web.Helpers {
+	public static class SecurityHelpers {
+		public static User CurrentUser (this HtmlHelper helper)
+		{
 			var user = helper.ViewContext.HttpContext.Items ["CurrentUser"] as User;
-			
+
 			if (user == null) {
 				user = User.TryFind (helper.ViewContext.HttpContext.User.Identity.Name);
 				helper.ViewContext.HttpContext.Items ["CurrentUser"] = user;
 			}
-			
-            return user;
-        }
 
-        public static AccessPrivilege GetPrivilege (this HtmlHelper helper, User user, SystemObjects obj)
+			return user;
+		}
+
+		public static AccessPrivilege GetPrivilege (this HtmlHelper helper, User user, SystemObjects obj)
 		{
 			return user.Privileges.SingleOrDefault (x => x.Object == obj) ?? new AccessPrivilege ();
 		}
@@ -67,18 +65,18 @@ namespace Mictlanix.BE.Web.Helpers
 				return null;
 			}
 
-			byte[] bytes = Encoding.Default.GetBytes ("" + text);
+			byte [] bytes = Encoding.Default.GetBytes ("" + text);
 			var sha1 = new SHA1CryptoServiceProvider ();
 
 			return BitConverter.ToString (sha1.ComputeHash (bytes)).Replace ("-", "");
 		}
 
-		internal static byte[] DecodeBase64 (string data)
+		internal static byte [] DecodeBase64 (string data)
 		{
 			return System.Convert.FromBase64String (data);
 		}
 
-		internal static string EncodeBase64 (byte[] data)
+		internal static string EncodeBase64 (byte [] data)
 		{
 			return System.Convert.ToBase64String (data, Base64FormattingOptions.None);
 		}
@@ -87,5 +85,5 @@ namespace Mictlanix.BE.Web.Helpers
 		{
 			return EncodeBase64 (Encoding.UTF8.GetBytes (data));
 		}
-    }
+	}
 }

@@ -1,0 +1,80 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model PurchaseRequest
+
+@{
+				Layout = WebConfig.ReceiptLayout;
+				//ViewBag.Title = Html.PrintFileName(Resources.PurchaseRequest, Model.Id);
+				ViewBag.Store = Model.Warehouse.Store;
+				ViewBag.TaxpayerName = null;
+				ViewBag.Taxpayer = null;
+				ViewBag.Address = Model.Warehouse.Store.Address;
+}
+
+<div class="row">
+	<div class="col-xs-6 text-left">
+		<div class="row">
+			<div class="col-xs-12 uppercase">
+				<h2 class="text-left uppercase mylabel">@Resources.Requester</h2>
+			</div>
+		 	<div class="col-xs-12">
+				<p><span class="mylabel">@Resources.Name</span>: @Html.DisplayFor(x => x.Creator.Name)</p>
+	 		</div>
+
+			@if (!string.IsNullOrEmpty (Model.Comment)) {
+            <div class="col-xs-12">
+                <p><span class="mylabel">@Resources.Comment</span></p>
+            </div>
+            <div class="col-xs-12">
+                <p>@Html.DisplayFor(x => x.Comment)</p>
+            </div>
+			}
+ 		</div>
+	</div>
+	<div class="col-xs-6 text-right">
+		<div class="row">
+			<div class="col-xs-12">
+				<h2 class="text-right uppercase mylabel" style="display:inline-block">@Resources.PurchaseRequest</h2>
+
+				<p style="display:inline-block">@Html.DisplayFor(x => x.Id)</p>
+			</div>
+			<div class="col-xs-12">
+				<p><span class="mylabel">@Resources.Date</span>: @Html.DisplayFor(x => x.Date)</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div style="min-height: 2.2mm; border-top: #333 solid 1px; border-bottom: #333 solid 3px"></div>
+
+<table  style="border-spacing:0 4px;border-collapse: separate;">
+	<thead>
+		<tr>
+			<td>@Resources.Quantity</td>
+			<td>@Resources.Name</td>
+		</tr>
+	</thead>
+    <tbody>
+        @foreach (var item in Model.Details.Where (x => x.Quantity > 0)) {
+            <tr class="alt">
+                <td class="">
+																				@Html.DisplayFor(x => item.Quantity)
+																				@Html.DisplayFor(x => item.Product.UnitOfMeasurement.Name)
+																</td>
+                <td class="">@Html.DisplayFor(x => item.Product.Name)</td>
+            </tr>
+				<tr>
+					<td class="line" colspan="5"></td>
+				</tr>
+		  }
+    </tbody>
+</table>
+
+<div style="min-height: 2.2mm; border-top: #333 solid 3px; border-bottom: #333 solid 1px"></div>
+
+
+<div style="min-height: 2.2mm; border-top: #333 solid 3px; border-bottom: #333 solid 1px"></div>
+<div class="row" style="margin-top:20mm">
+</div>

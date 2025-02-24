@@ -1,45 +1,66 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
 @model IEnumerable<dynamic>
 
 <table class='table table-condensed'>
-	<thead>
-	    <tr>
-	        <th class='nowrap center'>@Resources.Date</th>
-	        <th class='nowrap center'>@Resources.SalesPerson</th>
-	        <th class='nowrap center'>@Resources.SalesOrder</th>
-	        <th class='center'>@Resources.FiscalDocument</th>
-	        <th class='center'>@Resources.DueDate</th>
-	        <th class='nowrap center'>@Resources.Customer</th>
-	        <th class='nowrap center'>@Resources.Total</th>
-	        <th class='nowrap center'></th>
-	    </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-    <tr>
-        <td class='date'>@item.Date.ToString("yyyy-MM-dd")</td>
-        <td class='nowrap'>@item.SalesPerson</td>
-        <td class='number'>@item.SalesOrder</td>
-        <td class='center' style='word-wrap:break-word'>@item.Invoices</td>
-        <td class='date'>@item.DueDate</td>
-        <td>@item.Customer</td>
-        <td class='currency'>@item.TotalEx.ToString("c")</td>
-    @if ((CurrencyCode)item.Currency == WebConfig.BaseCurrency) {
-        <td class='currency'></td>
-    } else {
-        <td class='currency'>@item.Total.ToString("c") @((CurrencyCode)item.Currency)</td>
-    }
-    </tr>
-}
-    </tbody>
-    <tfoot>
-	    <tr>
-	        <td class='center' colspan='6'>@Model.Count() @Resources.SalesOrders</td>
-	        <td class='number'><b>@Model.Sum(x => (decimal)x.TotalEx).ToString("c")</b></td>
-	        <td class='number'><b>@Model.Where(x => (CurrencyCode)x.Currency != WebConfig.BaseCurrency).Sum(x => (decimal)x.Total).ToString("c")</b></td>
-	    </tr>
-    </tfoot>
+				<thead>
+								<tr>
+												<th class='nowrap center'>@Resources.Date</th>
+												<th class='nowrap center'>@Resources.SalesPerson</th>
+												<th class='nowrap center'>@Resources.SalesOrder</th>
+												<th class='nowrap center'>@Resources.Serial</th>
+												<th class='nowrap center'>@Resources.PaymentTerms</th>
+												<th class='center'>@Resources.FiscalDocument</th>
+												<th class='center'>@Resources.DueDate</th>
+												<th class='nowrap center'>@Resources.Customer</th>
+												<th class='nowrap center'>@Resources.Total</th>
+												<th class='nowrap center'>@Resources.Refunds</th>
+												<th class='nowrap center'>@Resources.Paid</th>
+												<th class='nowrap center'></th>
+								</tr>
+				</thead>
+				<tbody>
+								@foreach (var item in Model)
+								{
+												<tr>
+																<td class='date'>@item.Date.ToString("yyyy-MM-dd")</td>
+																<td class='nowrap'>@(item.SalesPerson.ToUpper())</td>
+																<td class='number'>@item.SalesOrder</td>
+																<td class='number'>@item.Serial</td>
+																<td class='center'>@(((PaymentTerms)item.Terms).GetDisplayName())</td>
+																<td class='center' style='word-wrap:break-word'>@item.Invoices</td>
+																<td class='date'>@item.DueDate.ToString("yyyy-MM-dd")</td>
+																<td>@item.Customer</td>
+																<td class='currency'>@item.TotalEx.ToString("c")</td>
+																@*@if ((CurrencyCode)item.Currency == WebConfig.BaseCurrency) {
+																								<td class='currency'></td>
+																				} else {
+																								<td class='currency'>@item.Total.ToString("c") @((CurrencyCode)item.Currency)</td>
+																				}*@
+																<td class='currency'>@(item.Refund != null ? item.RefundEx.ToString("c") : string.Empty)</td>
+																<td class='currency'>@(item.AmountPaid != null ? item.AmountPaid.ToString("c") : Resources.None)</td>
+																@*@if ((CurrencyCode)item.Currency == WebConfig.BaseCurrency) {
+																								<td class='currency'></td>
+																				} else {
+																								<td class='currency'>@item.Refund.ToString("c") @((CurrencyCode)item.Currency)</td>
+																				}*@
+												</tr>
+								}
+				</tbody>
+				<tfoot>
+								<tr>
+												<td class='right' colspan='7'>@Model.Count() @Resources.SalesOrders</td>
+												<td class='number'><b>@Model.Sum(x => (decimal)x.TotalEx).ToString("c")</b></td>
+												<td class='number'><b>@Model.Where(x => (CurrencyCode)x.Currency != WebConfig.BaseCurrency).Sum(x => (decimal)x.Total).ToString("c")</b></td>
+								</tr>
+								<tr>
+												<td class='right' colspan='7'>@Model.Where(y => y.Refund != null).Count() @Resources.Refunds</td>
+												<td class='number'><b>@Model.Where(y => y.Refund != null).Sum(x => (decimal)x.RefundEx).ToString("c")</b></td>
+												<td class='number'><b>@Model.Where(x => (CurrencyCode)x.Currency != WebConfig.BaseCurrency && x.Refund != null).Sum(x => (decimal)x.Refund).ToString("c")</b></td>
+								</tr>
+				</tfoot>
 </table>
+
+

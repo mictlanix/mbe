@@ -1,4 +1,4 @@
-﻿// 
+// 
 // PriceListsController.cs
 // 
 // Author:
@@ -109,6 +109,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			if (!ModelState.IsValid)
 				return PartialView ("_Create", item);
 
+			if (item.LowProfitMargin == 100 || item.HighProfitMargin == 100) {
+				ModelState.AddModelError (Resources.PriceList,Resources.Validation_InvalidRange);
+				return PartialView ("_Edit", item);
+			}
+
 			item.LowProfitMargin /= 100m;
 			item.HighProfitMargin /= 100m;
 
@@ -140,6 +145,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			entity.Name = item.Name;
 			entity.LowProfitMargin = item.LowProfitMargin;
 			entity.HighProfitMargin = item.HighProfitMargin;
+
+
+			if (item.LowProfitMargin == 100 || item.HighProfitMargin == 100) {
+				ModelState.AddModelError (Resources.PriceList, Resources.Validation_InvalidRange);
+				return PartialView ("_Edit", item);
+			}
 
 			entity.LowProfitMargin /= 100m;
 			entity.HighProfitMargin /= 100m;

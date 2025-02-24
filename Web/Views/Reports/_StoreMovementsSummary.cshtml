@@ -1,0 +1,207 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@using System.Linq
+@model StoreMovementsSummaryViewModel
+
+<h3>@Resources.StoreMovementsSummary</h3>
+
+@{
+				var groups = Model.Payments.GroupBy(x => x.Method, x => x, (key, g) => new { Method = key, Amounts = g.ToList() }).ToList();
+				string zeros = "00000000";
+}
+
+<div class="row scrollable-header">
+				<div class="col-sm-1 ">@Resources.Movement</div>
+				<div class="col-sm-1 ">@Resources.PaymentMethod</div>
+				<div class="col-sm-1 ">@Resources.Total</div>
+				<div class="col-sm-1 ">@Resources.Paid</div>
+				<div class="col-sm-1 "></div>
+</div>
+<div>
+				<div class="row">
+								<div class="col-sm-3" style="background-color:darkgray; color:white">@Resources.SalesOrders</div>
+				</div>
+				<div class="row">
+								<div class="col-sm-1"></div>
+								<div class="col-sm-1">@Resources.Immediate</div>
+								<div class="col-sm-1">@(Model.SalesOrder.Where(x => x.Terms == 0).Sum(y => (decimal)y.Total).ToString("c"))</div>
+								<div class="col-sm-1">@((Model.SalesOrder.Where(x => x.Terms == 0).Sum(y => (decimal?)y.AmountPaid)??0).ToString("c"))</div>
+				</div>
+								<div class="row">
+												<div class="col-sm-1"></div>
+												<div class="col-sm-1">@Resources.NetD</div>
+												<div class="col-sm-1">@(Model.SalesOrder.Where(x => x.Terms == 1).Sum(y => (decimal)y.Total).ToString("c"))</div>
+												<div class="col-sm-1">@((Model.SalesOrder.Where(x => x.Terms == 1).Sum(y => (decimal?)y.AmountPaid)??0).ToString("c"))</div>
+								</div>
+
+				<div class="row">
+								<div class="col-sm-3" style="background-color:darkgray; color:white">@Resources.ReceivedPayments</div>
+				</div>
+				@foreach (var item in groups)
+				{
+								<div class="row">
+												<div class="col-sm-1"></div>
+												<div class="col-sm-1">@item.Method.GetDisplayName()</div>
+												<div class="col-sm-1">@item.Amounts.Sum(x => x.Allocations.Sum(y => (decimal?)y.Amount) ?? 0m).ToString("c")</div>
+												<div class="col-sm-1">@item.Amounts.Sum(x => x.Balance).ToString("c")</div>
+								</div>
+				}
+				<div class="row">
+								<div class="col-sm-3" style="background-color:darkgray; color:white">@Resources.Expenses</div>
+				</div>
+				<div class="row data">
+								<div class="col-sm-1"></div>
+								<div class="col-sm-1">@Resources.Cash</div>
+								<div class="col-sm-1">@Model.Expenses.Sum(x => x.Total).ToString("c")</div>
+
+				</div>
+</div>
+
+<h3>@Resources.SalesOrders</h3>
+
+<div class="row scrollable-header">
+				<div class="col-sm-1 ">@Resources.SalesOrder</div>
+				<div class="col-sm-1 ">@Resources.Date</div>
+				<div class="col-sm-1 ">@Resources.Serial</div>
+				<div class="col-sm-1 ">@Resources.SalesPerson</div>
+				<div class="col-sm-1 ">@Resources.PaymentTerms</div>
+				<div class="col-sm-1 ">@Resources.FiscalDocument</div>
+				<div class="col-sm-1 ">@Resources.DueDate</div>
+				<div class="col-sm-1 ">@Resources.Customer</div>
+				<div class="col-sm-1 ">@Resources.Total</div>
+				<div class="col-sm-1 ">@Resources.Refunds</div>
+				<div class="col-sm-1 ">@Resources.CustomerRefund</div>
+				<div class="col-sm-1 ">@Resources.Paid</div>
+				<div class="col-sm-1 "></div>
+</div>
+
+<div class="scrollable">
+				@foreach (var item in Model.SalesOrder)
+				{
+								<div class="row">
+												<div class="col-sm-1 data date text-center">
+																@Html.ActionLink((string)item.SalesOrder.ToString(zeros), "View", "SalesOrders", new { id = item.SalesOrder }, new { title = Resources.Details, target = "_blank" })
+												</div>
+												<div class="col-sm-1 data">@item.Date.ToString("yyyy-MM-dd")</div>
+												<div class="col-sm-1 data text-center">@item.Serial.ToString(zeros)</div>
+												<div class="col-sm-1 data">@(item.SalesPerson.ToUpper())</div>
+												<div class="col-sm-1 data text-center">@(((PaymentTerms)item.Terms).GetDisplayName())</div>
+												<div class="col-sm-1 data text-center">@item.Invoices</div>
+												<div class="col-sm-1 data text-center">@(item.Terms == 1 ? item.DueDate.ToString("yyyy-MM-dd"):string.Empty)</div>
+												<div class="col-sm-1 data text-center">@item.Customer</div>
+												<div class="col-sm-1 data text-center">@item.TotalEx.ToString("c")</div>
+												<div class="col-sm-1 data text-center">
+																@if (item.RefundIDs != null)
+																{
+																				var ids = item.RefundIDs.Split(',');
+																				foreach (var id in ids)
+																				{
+																								@Html.ActionLink((string)Int32.Parse(id).ToString(zeros), "View", "CustomerRefunds", new { id = id }, new { title = Resources.Details, target = "_blank" }) <br />
+																				}
+																}
+												</div>
+												<div class="col-sm-1 data text-center">@(item.Refund != null?item.Refund.ToString("c"):string.Empty)</div>
+												<div class="col-sm-1 data text-center">@(item.AmountPaid != null?item.AmountPaid.ToString("c"):Resources.NoPayment)</div>
+												@*<div class="col-sm-1 data text-center">@(item.Refund == null ? string.Empty: item.Refund.ToString("c"))</div>*@
+
+								</div>
+				}
+</div>
+
+@*<tfoot>
+								<tr>
+												<td class='right' colspan='7'>@Model.SalesOrder.Count() @Resources.SalesOrders</td>
+												<td class='number'><b>@Model.SalesOrder.Sum(x => (decimal)x.TotalEx).ToString("c")</b></td>
+												<td class='number'><b>@Model.SalesOrder.Where(x => (CurrencyCode)x.Currency != WebConfig.BaseCurrency).Sum(x => (decimal)x.Total).ToString("c")</b></td>
+								</tr>
+								<tr>
+												<td class='right' colspan='7'>@Model.SalesOrder.Where(y => y.Refund != null).Count() @Resources.Refunds</td>
+												<td class='number'><b>@Model.SalesOrder.Where(y => y.Refund != null).Sum(x => (decimal)x.RefundEx).ToString("c")</b></td>
+												<td class='number'><b>@Model.SalesOrder.Where(x => (CurrencyCode)x.Currency != WebConfig.BaseCurrency && x.Refund != null).Sum(x => (decimal)x.Refund).ToString("c")</b></td>
+								</tr>
+				</tfoot>*@
+
+<h3>@Resources.Payments</h3>
+
+<div class="row scrollable-header">
+				<div class="col-sm-1 ">@Resources.Payment</div>
+				<div class="col-sm-1 ">@Resources.Date</div>
+				<div class="col-sm-1 ">@Resources.CashSession</div>
+				<div class="col-sm-1 ">@Resources.Serial</div>
+				<div class="col-sm-1 ">@Resources.SalesPerson</div>
+				<div class="col-sm-1 ">@Resources.Customer</div>
+				<div class="col-sm-1 ">@Resources.PaymentMethod</div>
+				<div class="col-sm-1 ">@Resources.PaymentType</div>
+				<div class="col-sm-1 ">@Resources.Amount</div>
+				<div class="col-sm-1 ">@Resources.Balance</div>
+				<div class="col-sm-1 ">@Resources.Change</div>
+				<div class="col-sm-1 ">@Resources.SalesOrders</div>
+				<div class="col-sm-1 "></div>
+</div>
+
+<div class="scrollable">
+				@foreach (var item in Model.Payments.OrderBy(x => x.Method))
+				{
+
+
+<div class="row">
+												<div class="col-sm-1 data date text-center">
+															@Html.DisplayFor(x => item.Id)
+												</div>
+												<div class="col-sm-1 data">@Html.DisplayFor(x => item.Date)</div>
+												<div class="col-sm-1 data">@Html.DisplayFor(x => item.CashSession.Id)</div>
+												<div class="col-sm-1 data text-center">@item.Serial.ToString()</div>
+												<div class="col-sm-1 data">@Html.DisplayFor(x => item.CashSession.Cashier.Nickname)</div>
+												<div class="col-sm-1 data text-center">@item.Customer.Name</div>
+												<div class="col-sm-1 data text-center">@item.Method.GetDisplayName()</div>
+												<div class="col-sm-1 data text-center">@item.PaymentType.GetDisplayName()</div>
+												<div class="col-sm-1 data text-center">@((item.Amount).ToString("c"))</div>
+												<div class="col-sm-1 data text-center">@((item.Allocations.Sum(x => (decimal?)x.Amount)??0).ToString("c"))</div>
+												<div class="col-sm-1 data text-center">@((item.Allocations.Sum(x => (decimal?)x.Change)??0).ToString("c"))</div>
+												<div class="col-sm-1 data text-center">
+																@if (item.Allocations.Count() > 0)
+																{
+																				foreach (var id in item.Allocations)
+																				{
+																								@Html.ActionLink((string)id.SalesOrder.Id.ToString(), "View", "SalesOrders",
+																												  new { id = id.SalesOrder.Id }, new { title = Resources.Details, target = "_blank" }) <br />
+																				}
+																}
+												</div>
+								</div>
+				}
+</div>
+
+<h3>@Resources.Expenses</h3>
+
+<div class="row scrollable-header">
+				<div class="col-sm-1 ">@Resources.Payment</div>
+				<div class="col-sm-1 ">@Resources.Date</div>
+				<div class="col-sm-1 ">@Resources.SalesPerson</div>
+				<div class="col-sm-1 ">@Resources.Total</div>
+				<div class="col-sm-1 "></div>
+</div>
+
+<div class="scrollable">
+				@foreach (var item in Model.Expenses)
+				{
+								<div class="row">
+												<div class="col-sm-1 data date text-center">
+																@Html.ActionLink(item.Id.ToString(), "View", "ExpenseVoucher", new { id = item.Id }, new { title = Resources.Details, target = "_blank" })
+												</div>
+												<div class="col-sm-1 data">@Html.DisplayFor(x => item.Date)</div>
+												<div class="col-sm-1 data">@Html.DisplayFor(x => item.CashSession.Cashier.Nickname)</div>
+												<div class="col-sm-1 data text-center">@Html.DisplayFor(x => item.Total)</div>
+												<div class="col-sm-1 data text-center">@Html.DisplayFor(x => item.Comment)</div>
+												<div class="col-sm-1 data text-center">
+																@Html.DisplayFor(x => item.Details.First().Expense.Name)
+												</div><div class="col-sm-1 data text-center">
+																@Html.DisplayFor(x => item.Details.First().Comment)
+												</div>
+												@*<div class="col-sm-1 data text-center">@(item.Refund == null ? string.Empty: item.Refund.ToString("c"))</div>*@
+
+								</div>
+				}
+</div>

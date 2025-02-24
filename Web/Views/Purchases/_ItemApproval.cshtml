@@ -1,0 +1,32 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model PurchaseOrder
+
+@{
+				ViewBag.Title = Resources.SalesOrders;
+				var CurrentUser = Html.CurrentUser() ?? new User();
+				var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.PurchaseOrderApproval);
+}
+
+<tr id='id:@Model.Id'>
+				<td class="number">@Html.DisplayFor(x => x.Id)</td>
+				<td class="date">@Html.DisplayFor(x => x.CreationTime)</td>
+				<td>@Html.DisplayFor(x => x.Supplier.Name)</td>
+				<td>@string.Join(", ", Model.Details.Select(x => x.Warehouse.Code).Distinct())</td>
+				<td>@Html.DisplayFor(x => x.EstimatedReceiptDate)</td>
+				<td class="bool">@Html.DisplayFor(x => x.IsCompleted)</td>
+				<td class="bool">@Html.DisplayFor(x => x.IsCancelled)</td>
+				@if (WebConfig.PurchaseOrderApprovalRequired)
+				{
+								<td class="bool">@Html.DisplayFor(x => x.IsApproved)</td>
+				}
+				<td class="actions">
+								@if (Privilege.AllowUpdate && Model.IsCompleted && !Model.IsCancelled && !Model.IsApproved)
+								{
+												@Html.ActionLink(" ", "Approve", new { id = Model.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
+								}
+				</td>
+</tr>
+
+

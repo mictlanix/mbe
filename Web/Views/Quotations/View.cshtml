@@ -4,49 +4,60 @@
 @model SalesQuote
 
 @{
-    ViewBag.Title = Resources.SalesQuote;
-    var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders);
+				ViewBag.Title = Resources.SalesQuote;
+				var CurrentUser = Html.CurrentUser() ?? new User();
+				var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesQuotes);
 }
 
 <h2>@Resources.SalesQuote</h2>
 
 <div id="master-section">
-	@Html.Partial("_DisplayView")
+				@Html.Partial("_DisplayView")
 </div>
 <div id="details-section">
-    <div id="items-container">
-        <ul id="items" class="list-items">
-        @foreach (var item in Model.Details) {
-            @Html.Partial("_ItemDisplayView", item) 
-        }
-        </ul>
-    </div>
+				<div id="items-container">
+								<ul id="items" class="list-items">
+												@foreach (var item in Model.Details)
+												{
+																@Html.Partial("_ItemDisplayView", item)
+												}
+								</ul>
+				</div>
 </div>
 <div id='totals-section' class='pull-right' data-url='@Url.Action("Totals", new { id = Model.Id })'>
-    @Html.Partial("_Totals")
+				@Html.Partial("_Totals")
 </div>
 <div class='clearfix'></div>
 <div id='back-to-list' class='pull-left'>
-    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+				@Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
-@if (Privilege.AllowCreate && Model.IsCompleted)
+@if (Model.IsCompleted)
 {
-    <div id='confirm-button' class='pull-right @(Model.Details.Count == 0 ? "hide" : "")'>
-        @using (Html.BeginForm("CreateFromSalesQuote", "SalesOrders", new { id = Model.Id }))
-        {
-            <button id='complete' type='submit'>@Resources.CreateSalesOrder</button>
-        }
-    </div>
+				<div id='confirm-button' class='pull-right @(Model.Details.Count == 0 || Model.HasExpired ? "hide" : "")'>
+								<button id='create' class='editable' data-placement='right' data-pk='@Model.Id'
+											data-source='@Url.Action("CreateFromSalesQuote","SalesOrders", new { id = Model.Id })' data-source-cache='false'
+											data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
+																@Resources.CreateSalesOrder
+								</button>
+				</div>
 }
 
 <div class='pull-right'>
-	@Html.ActionLink(Resources.Duplicate, "Duplicate", new { id = Model.Id }, new { @class = "button icon duplicate", target = "_blank" })
-	@Html.ActionLink(Resources.Print, "Print", new { id = Model.Id }, new { @class = "button icon print", target = "_blank" })
+				@Html.ActionLink(Resources.Duplicate, "Duplicate", new { id = Model.Id }, new { @class = "button icon duplicate", target = "_blank" })
+				@Html.ActionLink(Resources.Print, "Print", new { id = Model.Id }, new { @class = "button icon print", target = "_blank" })
 </div>
 <div class='clearfix'></div>
 <script type='text/javascript'>
-$(function () {
-	$('[data-toggle="tooltip"]').tooltip();
-});
+				$(function () {
+								$('[data-toggle="tooltip"]').tooltip();
+
+								$('#create').click(function () {
+												$.post('/SalesOrders/CreateFromSalesQuote', { id: @Model.Id}, function (result) {
+																location.href = '/SalesOrders/Edit/' + result.id;
+												}).fail(function (data) {
+																alert("Cotizaci&oacute;n: " + data);
+												});
+
+								});
+				});
 </script>

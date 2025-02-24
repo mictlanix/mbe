@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CashDrawersController.cs
 // 
 // Author:
@@ -47,14 +47,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public ViewResult Index ()
 		{
-			var qry = from x in CashDrawer.Queryable
-				  orderby x.Name
-				  select x;
+			Search<CashDrawer> search = SearchCashDrawers (new Search<CashDrawer> {
+				Limit = WebConfig.PageSize
+			});
 
-			Search<CashDrawer> search = new Search<CashDrawer> ();
-			search.Limit = WebConfig.PageSize;
-			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
-			search.Total = qry.Count ();
 
 			return View (search);
 		}
@@ -65,7 +61,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Index (Search<CashDrawer> search)
 		{
 			if (ModelState.IsValid) {
-				search = GetCashDrawers (search);
+				search = SearchCashDrawers (search);
 			}
 
 			if (Request.IsAjaxRequest ()) {
@@ -75,25 +71,21 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 		}
 
-		Search<CashDrawer> GetCashDrawers (Search<CashDrawer> search)
+		Search<CashDrawer> SearchCashDrawers (Search<CashDrawer> search)
 		{
-			if (search.Pattern == null) {
-				var qry = from x in CashDrawer.Queryable
-					  orderby x.Name
-					  select x;
+			var query = MBEQueryable.IQCashDrawers;
 
-				search.Total = qry.Count ();
-				search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
-			} else {
-				var qry = from x in CashDrawer.Queryable
+			if (search.Pattern == null) {
+				
+				var qry = from x in query
 					  where x.Name.Contains (search.Pattern)
 					  orderby x.Name
 					  select x;
 
-				search.Total = qry.Count ();
-				search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
 			}
 
+				search.Total = query.Count ();
+				search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
 			return search;
 		}
 
@@ -194,7 +186,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public JsonResult GetSuggestions (int store, string pattern)
 		{
-			var qry = from x in CashDrawer.Queryable
+			var qry = from x in MBEQueryable.IQCashDrawers
 				  where x.Store.Id == store &&
 								    (x.Code.Contains (pattern) ||
 								      x.Name.Contains (pattern))

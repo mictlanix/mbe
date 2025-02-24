@@ -39,6 +39,8 @@ using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
+using Castle.Core.Internal;
+using Microsoft.Ajax.Utilities;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
@@ -70,18 +72,28 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		Search<InventoryReceipt> SearchReceipts (Search<InventoryReceipt> search)
 		{
-			IQueryable<InventoryReceipt> qry;
 
-			if (search.Pattern == null) {
+			var warehouse = WebConfig.PointOfSale.Warehouse;
+
+			IQueryable<InventoryReceipt> qry = from x in InventoryReceipt.Queryable
+							   where x.Warehouse == warehouse
+							   select x;
+			int id = 0;
+			int.TryParse (search.Pattern, out id);
+
+			if (id > 0) {
 				qry = from x in InventoryReceipt.Queryable
-				      orderby x.Id descending
+				      where x.Order.Id == id || x.Id == id || x.Serial == id
 				      select x;
-			} else {
-				qry = from x in InventoryReceipt.Queryable
+			} else if (!string.IsNullOrEmpty (search.Pattern)) {
+				qry = from x in qry
 				      where x.Warehouse.Name.Contains (search.Pattern)
-				      orderby x.Id descending
 				      select x;
 			}
+
+			qry = from x in qry
+			      orderby x.Id descending
+			      select x;
 
 			search.Total = qry.Count ();
 			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
@@ -124,6 +136,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			return PartialView ("Receipts/_CreateSuccesful", new InventoryReceipt { Id = item.Id });
+		}
+
+		public ActionResult CreateComplementaryReceipt (int id)
+		{
+			var receipt = CreateComplementaryInventoryReceipt (id, CurrentUser.Employee);
+			if (receipt == null) {
+				return RedirectToAction ("Receipts");
+			}
+			return RedirectToAction ("EditReceipt", new { id = receipt.Id });
 		}
 
 		public ActionResult EditReceipt (int id)
@@ -212,10 +233,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("Receipts/_DetailEditView", InventoryReceiptDetail.Find (id));
 		}
 
-        public ActionResult GetTotalQuantityReceipt(int id) {
+		public ActionResult GetTotalQuantityReceipt (int id)
+		{
 
-            return PartialView("Receipts/_TotalQuantity", InventoryReceipt.Find(id));
-        }
+			return PartialView ("Receipts/_TotalQuantity", InventoryReceipt.Find (id));
+		}
 
 		[HttpPost]
 		public JsonResult RemoveReceiptDetail (int id)
@@ -242,13 +264,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			item.Store = item.Warehouse.Store;
 
-			try {
-				item.Serial = (from x in InventoryReceipt.Queryable
-					       where x.Store.Id == item.Store.Id
-					       select x.Serial).Max () + 1;
-			} catch {
-				item.Serial = 1;
-			}
+			//try {
+			//	item.Serial = (from x in InventoryReceipt.Queryable
+			//		       where x.Store.Id == item.Store.Id
+			//		       select x.Serial).Max () + 1;
+			//} catch {
+			//	item.Serial = 1;
+			//}
+
+			item.Serial = (InventoryReceipt.Queryable
+				.Where (x => x.Store == item.Warehouse.Store).Max (y => (int?) y.Serial) ?? 0) + 1;
 
 			item.IsCompleted = true;
 			item.ModificationTime = DateTime.Now;
@@ -308,18 +333,24 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		Search<InventoryIssue> SearchIssues (Search<InventoryIssue> search)
 		{
-			IQueryable<InventoryIssue> qry;
+
+			var warehouse = WebConfig.PointOfSale.Warehouse;
+
+			IQueryable<InventoryIssue> qry = from x in InventoryIssue.Queryable
+							   where x.Warehouse == warehouse
+							   select x;
+
 
 			if (search.Pattern == null) {
-				qry = from x in InventoryIssue.Queryable
-				      orderby x.Id descending
+				qry = from x in qry
 				      select x;
 			} else {
-				qry = from x in InventoryIssue.Queryable
+				qry = from x in qry
 				      where x.Warehouse.Name.Contains (search.Pattern)
-				      orderby x.Id descending
 				      select x;
 			}
+
+			qry = qry.OrderByDescending (x => x.Id);
 
 			search.Total = qry.Count ();
 			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
@@ -380,13 +411,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return View ("Issues/Edit", item);
 		}
 
-        public ActionResult GetTotalQuantityIssue(int id)
-        {
+		public ActionResult GetTotalQuantityIssue (int id)
+		{
 
-            return PartialView("Issues/_TotalQuantity", InventoryIssue.Find(id));
-        }
+			return PartialView ("Issues/_TotalQuantity", InventoryIssue.Find (id));
+		}
 
-        public ActionResult DiscardIssueChanges (int id)
+		public ActionResult DiscardIssueChanges (int id)
 		{
 			return PartialView ("Issues/_MasterView", InventoryIssue.TryFind (id));
 		}
@@ -546,19 +577,28 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		Search<InventoryTransfer> SearchTransfers (Search<InventoryTransfer> search)
 		{
-			IQueryable<InventoryTransfer> qry;
 
-			if (search.Pattern == null) {
+			var warehouse = WebConfig.PointOfSale.Warehouse;
+			int i = 0;
+
+			Int32.TryParse(search.Pattern, out i);
+
+			IQueryable<InventoryTransfer> qry = from x in InventoryTransfer.Queryable
+							   where x.From == warehouse || x.To == warehouse
+							   select x;
+
+			if (i > 0) {
 				qry = from x in InventoryTransfer.Queryable
-				      orderby x.Id descending
+				      where x.Id == i || x.Serial == i
 				      select x;
-			} else {
-				qry = from x in InventoryTransfer.Queryable
+			} else if(!string.IsNullOrEmpty(search.Pattern)) {
+				qry = from x in qry
 				      where x.To.Name.Contains (search.Pattern) ||
 						    x.From.Name.Contains (search.Pattern)
-				      orderby x.Id descending
 				      select x;
 			}
+
+			qry = qry.OrderByDescending (x => x.Id);
 
 			search.Total = qry.Count ();
 			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
@@ -621,13 +661,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return View ("Transfers/Edit", item);
 		}
 
-        public ActionResult GetTotalQuantityTransfer(int id)
-        {
+		public ActionResult GetTotalQuantityTransfer (int id)
+		{
 
-            return PartialView("Transfers/_TotalQuantity", InventoryTransfer.Find(id));
-        }
+			return PartialView ("Transfers/_TotalQuantity", InventoryTransfer.Find (id));
+		}
 
-        public ActionResult DiscardTransferChanges (int id)
+		public ActionResult DiscardTransferChanges (int id)
 		{
 			return PartialView ("Transfers/_MasterView", InventoryTransfer.TryFind (id));
 		}
@@ -847,6 +887,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		Search<LotSerialRequirement> SearchLotSerialNumbers (Search<LotSerialRequirement> search)
 		{
 			var query = from x in LotSerialRequirement.Queryable
+				    orderby x.Id descending
 				    select new {
 					    Source = x.Source,
 					    Reference = x.Reference,
@@ -1181,6 +1222,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			using (var scope = new TransactionScope ()) {
 				var dt = entity.ModificationTime.AddMilliseconds (-1);
+				//var details = items.GroupBy(y => y.ProductId)
 
 				foreach (var x in items) {
 					var item = new LotSerialTracking {
@@ -1207,14 +1249,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult ZeroOut (int id)
 		{
 			var entity = InventoryReceipt.Find (id);
-			string sql = @"SELECT p.code Code, p.name Name, s.lot_number LotNumber, s.expiration_date ExpirationDate, s.serial_number SerialNumber, SUM(s.quantity) Quantity
+			string sql = @"SELECT p.code Code, p.name Name, s.lot_number LotNumber,
+					s.expiration_date ExpirationDate, s.serial_number SerialNumber,
+					SUM(s.quantity) Quantity
                             FROM lot_serial_tracking s
                             INNER JOIN product p ON s.product = p.product_id
                             WHERE s.warehouse = :warehouse AND s.date < :date
                             GROUP BY s.product, s.lot_number, s.expiration_date, s.serial_number
                             HAVING SUM(s.quantity) <> 0";
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("Code", NHibernateUtil.String);
@@ -1237,13 +1281,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult ZeroOutConfirmed (int id)
 		{
 			var entity = InventoryReceipt.Find (id);
-			string sql = @"SELECT s.product ProductId, s.lot_number LotNumber, s.expiration_date ExpirationDate, s.serial_number SerialNumber, SUM(s.quantity) Quantity
+			string sql = @"SELECT s.product ProductId, s.lot_number LotNumber, s.expiration_date ExpirationDate,
+					s.serial_number SerialNumber, SUM(s.quantity) Quantity
                             FROM lot_serial_tracking s
                             WHERE s.warehouse = :warehouse AND s.date < :date
                             GROUP BY s.product, s.lot_number, s.expiration_date, s.serial_number
                             HAVING SUM(s.quantity) <> 0";
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("ProductId", NHibernateUtil.Int32);
@@ -1281,6 +1326,93 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			return RedirectToAction ("Receipts");
+		}
+
+		private InventoryReceipt CreateComplementaryInventoryReceipt (int id, Employee current)
+		{
+
+			var valid = IsPurchaseReceiptCompleted (id);
+
+			if (!valid.HasValue || valid.Value) {
+				return null;
+			}
+
+			var receipt = InventoryReceipt.TryFind (id);
+
+
+			var alive = InventoryReceipt.Queryable.Where (x => x.Order == receipt.Order
+				&& x.Warehouse == receipt.Warehouse && !x.IsCancelled && !x.IsCompleted).FirstOrDefault ();
+
+			if (alive != null)
+				return alive;
+
+
+
+			var complement_receipt = GetInventoryReceipt (receipt.Order.Id, receipt.Warehouse.Id);
+			var details = complement_receipt.Details.Where (x => x.Quantity > 0).ToList ();
+
+			if (details.Count () <= 0) {
+				return null;
+			}
+
+			var now = DateTime.Now;
+			var me = current;
+
+			using (var scope = new TransactionScope ()) {
+				complement_receipt.CreationTime = now;
+				complement_receipt.Creator = me;
+				complement_receipt.Updater = me;
+				complement_receipt.CreationTime = now;
+				complement_receipt.ModificationTime = now;
+				complement_receipt.Order = receipt.Order;
+				complement_receipt.Warehouse = receipt.Warehouse;
+				complement_receipt.Store = receipt.Store;
+				complement_receipt.Details = null;
+
+				complement_receipt.SaveAndFlush ();
+
+				details.ForEach (y => {
+					y.Receipt = complement_receipt;
+					y.SaveAndFlush ();
+				});
+			}
+
+			return complement_receipt;
+		}
+
+		public static bool? IsPurchaseReceiptCompleted (int id)
+		{
+
+			var receipt = InventoryReceipt.TryFind (id);
+			var purchase = receipt.Order;
+
+			if (receipt == null || purchase == null || purchase.IsCancelled || !purchase.IsCompleted) {
+				return null;
+			}
+
+			var res = purchase.Details.Where (x => x.Warehouse == receipt.Warehouse)
+				.Any (y => y.Quantity > (InventoryReceiptDetail.Queryable.Where (z => z.PurchaseOrderDetail == y
+							&& !z.Receipt.IsCancelled && z.Receipt.IsCompleted).Sum (z => (decimal?) z.Quantity) ?? 0));
+
+			return !res;
+		}
+
+		private static InventoryReceipt GetInventoryReceipt (int purchase_id, int warehouse_id)
+		{
+			var purchase = PurchaseOrder.Find (purchase_id);
+			var warehouse = MBEQueryable.IQWarehouses.Where (x => x.Id == warehouse_id).Single ();
+			var item = new InventoryReceipt { Order = purchase, Warehouse = warehouse };
+			item.Details = purchase.Details.Where (x => x.Warehouse == warehouse)
+				.Select (y => new InventoryReceiptDetail {
+					Product = y.Product, ProductCode = y.ProductCode,
+					ProductName = y.ProductName, PurchaseOrderDetail = y,
+					Receipt = item,
+					Quantity = y.Quantity - (InventoryReceiptDetail.Queryable.Where (z => z.PurchaseOrderDetail == y
+							&& !z.Receipt.IsCancelled && z.Receipt.IsCompleted).Sum (z => (decimal?) z.Quantity) ?? 0),
+					QuantityOrdered = y.Quantity - (InventoryReceiptDetail.Queryable.Where (z => z.PurchaseOrderDetail == y
+							&& !z.Receipt.IsCancelled && z.Receipt.IsCompleted).Sum (z => (decimal?) z.Quantity) ?? 0),
+				}).ToList ();
+			return item;
 		}
 
 		#endregion

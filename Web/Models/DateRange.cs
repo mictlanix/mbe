@@ -1,4 +1,4 @@
-﻿// 
+// 
 // DateRange.cs
 // 
 // Author:
@@ -47,8 +47,8 @@ namespace Mictlanix.BE.Web.Models {
 
         public DateRange(DateTime start, DateTime end)
         {
-	        StartDate = start;
-	        EndDate = end ;
+	        StartDate = start.Date;
+	        EndDate = end.Date.AddDays(1).AddMilliseconds(-1) ;
 	    }
     
         [DataType(DataType.Date)]

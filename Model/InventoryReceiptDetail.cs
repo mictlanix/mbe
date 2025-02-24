@@ -1,4 +1,4 @@
-﻿// 
+// 
 // InventoryReceiptDetail.cs
 // 
 // Author:
@@ -42,6 +42,10 @@ namespace Mictlanix.BE.Model {
 		[BelongsTo ("receipt", Lazy = FetchWhen.OnInvoke)]
 		[Display (Name = "InventoryReceipt", ResourceType = typeof (Resources))]
 		public virtual InventoryReceipt Receipt { get; set; }
+
+		[BelongsTo ("purchase_order_detail")]
+		[Display (Name = "PurchaseOrderDetail", ResourceType = typeof (Resources))]
+		public virtual PurchaseOrderDetail PurchaseOrderDetail { get; set; }
 
 		[BelongsTo ("product")]
 		[Display (Name = "Product", ResourceType = typeof (Resources))]

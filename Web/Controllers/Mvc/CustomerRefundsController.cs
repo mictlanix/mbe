@@ -38,6 +38,7 @@ using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
+using Castle.Core.Internal;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
@@ -107,6 +108,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View (entity);
 		}
 
+		public ActionResult Pdf (int id)
+		{
+			var model = CustomerRefund.Find (id);
+			if (!model.IsCompleted) {
+				return RedirectToAction ("Edit", new { id = model.Id });
+			}
+			return PdfTicketView ("Print", model);
+		}
+
 		[HttpPost]
 		public ActionResult CreateFromSalesOrder (string value)
 		{
@@ -115,6 +125,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			if (int.TryParse (value, out id)) {
 				entity = SalesOrder.TryFind (id);
+			}
+
+			if (CustomerRefund.Queryable.Any (x => x.SalesOrder == entity && !x.IsCancelled && x.IsCompleted)) {
+				Response.StatusCode = 400;
+				return Content (Resources.RefundableItemsNotFound);
 			}
 
 			if (entity == null) {
@@ -127,22 +142,26 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.SalesOrderIsNotRefundable);
 			}
 
-			if (entity.Store != WebConfig.Store) {
+			if (entity.Creator != CurrentUser.Employee && entity.Updater != CurrentUser.Employee && !CurrentUser.IsAdministrator) {
 				Response.StatusCode = 400;
-				return Content (Resources.InvalidStore);
+				return Content (Resources.CreatorDoesntMatchWithCurrentUser);
 			}
+
+
+			//El sistema debe permitir realizar la devolución en cualquier tienda
+			//Las políticas de la empresa definirán los términos de las devoluciones
+
+			//if (entity.Store != WebConfig.Store) {
+			//	Response.StatusCode = 400;
+			//	return Content (Resources.InvalidStore);
+			//}
 
 			var item = new CustomerRefund ();
 
-			// Store and Serial
-			item.Store = entity.Store;
-			try {
-				item.Serial = (from x in CustomerRefund.Queryable
-					       where x.Store.Id == item.Store.Id
-					       select x.Serial).Max () + 1;
-			} catch {
-				item.Serial = 1;
-			}
+			item.Store = WebConfig.Store;
+
+
+			item.Serial = CustomerRefund.Queryable.Where(x => x.Store == WebConfig.Store).Max (x => (int?)x.Serial) + 1 ?? 1;
 
 			item.SalesOrder = entity;
 			item.SalesPerson = entity.SalesPerson;
@@ -174,7 +193,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					Quantity = 0,
 					Price = x.Price,
 					ExchangeRate = x.ExchangeRate,
-					Currency = x.Currency
+					Currency = x.Currency,
+					Warehouse = WebConfig.PointOfSale.Warehouse,
 				};
 
 				item.Details.Add (detail);
@@ -212,6 +232,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public JsonResult SetItemQuantity (int id, decimal value)
 		{
 			var entity = CustomerRefundDetail.Find (id);
+			var sales_order = entity.SalesOrderDetail.SalesOrder;
+
 			decimal sum = GetRefundableQuantity (entity.SalesOrderDetail.Id);
 
 			entity.Quantity = (value >= 0 && value <= sum) ? value : sum;
@@ -224,7 +246,23 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				id = entity.Id,
 				value = entity.FormattedValueFor (x => x.Quantity),
 				total = entity.FormattedValueFor (x => x.Total),
-				total2 = entity.FormattedValueFor (x => x.TotalEx)
+				total2 = entity.FormattedValueFor (x => x.TotalEx),
+			});
+		}
+
+		[HttpPost]
+		public JsonResult SetItemWarehouse (int id, int value)
+		{
+			var entity = CustomerRefundDetail.Find (id);
+			entity.Warehouse = MBEQueryable.IQWarehouses.Single (x => x.Id == value);
+
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
+			}
+
+			return Json (new {
+				id = entity.Id,
+				value = entity.FormattedValueFor (x => x.Warehouse),
 			});
 		}
 
@@ -246,6 +284,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var dt = DateTime.Now;
 			bool changed = false;
 			var entity = CustomerRefund.Find (id);
+			var order = entity.SalesOrder;
+			var current_warehouse = WebConfig.PointOfSale.Warehouse;
+			var cash_session = GetSession ();
+
+			if (cash_session == null) {
+				return RedirectToAction ("OpenSession", "Payments");
+			}
 
 			using (var scope = new TransactionScope ()) {
 				foreach (var item in entity.Details) {
@@ -273,13 +318,18 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			using (var scope = new TransactionScope ()) {
-				
 
-				foreach (var detail in entity.Details.Where (x => !(x.Quantity > 0.0m)).ToList ()) {
-					detail.DeleteAndFlush ();
-				}
+				//foreach (var detail in entity.Details.Where (x => !(x.Quantity > 0.0m)).ToList ()) {
+				//	detail.DeleteAndFlush ();
+				//}
+				entity.Details.Where (x => x.Quantity <= 0).ForEach (x => {
+					x.DeleteAndFlush () ;
+				});
 				
-				foreach (var x in entity.Details) {
+				foreach (var x in entity.Details.Where(x => x.SalesOrderDetail.Product.IsStockable)) {
+					//InventoryHelpers.ChangeNotification (TransactionType.CustomerRefund, entity.Id, dt,
+					//	current_warehouse, null, x.Product, x.Quantity);
+
 					InventoryHelpers.ChangeNotification (TransactionType.CustomerRefund, entity.Id, dt,
 						x.SalesOrderDetail.Warehouse, null, x.Product, x.Quantity);
 				}
@@ -289,6 +339,36 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				entity.Date = dt;
 				entity.IsCompleted = true;
 				entity.UpdateAndFlush ();
+
+				if (entity.Total > order.Balance) {
+					order.IsPaid = true;
+					order.UpdateAndFlush();
+					var refund = entity.Total - order.Balance;
+
+					//var item = new SalesOrderPayment {
+					//	SalesOrder = order,
+					//	Payment = new CustomerPayment {
+					//		CashSession = cash_session,
+					//		CreationTime = dt,
+					//		Creator = CurrentUser.Employee,
+					//		Amount = -refund,
+					//		Currency = entity.Currency,
+					//		Customer = entity.Customer,
+					//		PaymentType = PaymentType.Refund,
+					//		Method = order.Payments.First ().Payment.Method,
+					//		ModificationTime = dt,
+					//		Serial = (CustomerPayment.Queryable.Where (x => x.Store == WebConfig.Store).Max (y => (int?) y.Serial) ?? 0) + 1,
+					//		Store = WebConfig.Store,
+					//		Updater = CurrentUser.Employee,
+					//		Date = dt,
+					//		CustomerId = entity.Customer.Id,
+					//	},
+					//	Amount = -refund
+					//};
+
+					//item.Payment.CreateAndFlush();
+					//item.CreateAndFlush ();
+				}
 			}
 
 			return RedirectToAction ("View", new { id = entity.Id });
@@ -298,6 +378,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Cancel (int id)
 		{
 			var entity = CustomerRefund.Find (id);
+
+			if (entity.IsCompleted) {
+				return RedirectToAction ("View", entity);
+			}
 
 			entity.Updater = CurrentUser.Employee;
 			entity.ModificationTime = DateTime.Now;
@@ -350,6 +434,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
 
 			return search;
+		}
+
+		CashSession GetSession ()
+		{
+			var item = WebConfig.CashDrawer;
+
+			if (item == null)
+				return null;
+
+			return CashSession.Queryable.Where (x => x.End == null)
+			      .SingleOrDefault (x => x.CashDrawer.Id == item.Id);
 		}
 	}
 }

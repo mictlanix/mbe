@@ -1,4 +1,4 @@
-﻿// 
+// 
 // Warehouse.cs
 // 
 // Author:
@@ -67,6 +67,11 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Comment", ResourceType = typeof (Resources))]
 		[StringLength (500, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Comment { get; set; }
+
+		[Property ("disabled")]
+		[Display (Name = "LogicalDelete", ResourceType = typeof (Resources))]
+		public virtual bool IsDisabled { get; set; }
+
 
 		#region Override Base Methods
 

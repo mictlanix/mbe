@@ -60,27 +60,68 @@ namespace Mictlanix.BE.Model {
 		public decimal Price { get; set; }
 
 		[Property("price_adjustment")]
-		[Display (Name = "PriceAdjustment", ResourceType = typeof (Resources))]
+		[Display (Name = "PriceIncrement", ResourceType = typeof (Resources))]
 		[DisplayFormat (DataFormatString = "{0:C4}")]
 		[Required (ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof (Resources))]
-		public decimal PriceAdjustment { get; set; }
+		public decimal PriceIncrement { get; set; }
+
+		[Display (Name = "PriceIncrement", ResourceType = typeof (Resources))]
+		[DisplayFormat (DataFormatString = "{0:p}")]
+		[Required (ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof (Resources))]
+		public decimal PriceIncrementRate {
+			get { return Price!= 0 ? (PriceIncrement /Price): 0; }
+			set { PriceIncrement = (Price) * value; }
+		}
+
+		[Property ("discount_rate")]
+		[DisplayFormat (DataFormatString = "{0:p}")]
+		[Display (Name = "Discount", ResourceType = typeof (Resources))]
+		public decimal DiscountRate { get; set; }
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "Discount", ResourceType = typeof (Resources))]
+		public decimal Discount {
+			get { return ModelHelpersV2.Discount (Quantity, Price + PriceIncrement, ExchangeRate, DiscountRate); }
+			set { DiscountRate = value / (Price + PriceIncrement); }
+		}
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "Discount", ResourceType = typeof (Resources))]
+		public decimal DiscountByUnit {
+			get { return DiscountRate * (Price + PriceIncrement); }
+			set { DiscountRate = value / (Price + PriceIncrement); }
+		}
+
+		//[DataType (DataType.Currency)]
+		//[Display (Name = "Discount", ResourceType = typeof (Resources))]
+		//public decimal DiscountPerUnit {
+		//	get { return ModelHelpersV2.Discount (Product.MinimumOrderQuantity, Price + PriceIncrement, ExchangeRate, DiscountRate); }
+		//	set { DiscountRate = value / (Price + PriceIncrement); }
+		//}
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "Discount", ResourceType = typeof (Resources))]
+		public decimal UnitPriceWithDiscount {
+			get { return ModelHelpersV2.UnitPriceTotal (1, Price + PriceIncrement, 1m, DiscountRate, TaxRate, IsTaxIncluded, 6); }
+		}
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "Discount", ResourceType = typeof (Resources))]
+		public decimal UnitPrice {
+			get { return ModelHelpersV2.UnitPriceTotal (1, Price + PriceIncrement, 1m, 0, TaxRate, IsTaxIncluded, 6); }
+		}
 
 		[Display (Name = "Price", ResourceType = typeof (Resources))]
 		[DisplayFormat (DataFormatString = "{0:C4}")]
 		public decimal NetPrice {
-			get { return ModelHelpers.NetPrice (Price + PriceAdjustment, TaxRate, IsTaxIncluded); }
+			get { return ModelHelpersV2.NetPrice (Price + PriceIncrement, TaxRate, IsTaxIncluded); }
 		}
 
 		[Display (Name = "Price", ResourceType = typeof (Resources))]
 		[DisplayFormat (DataFormatString = "{0:C4}")]
 		public decimal PriceTaxIncluded {
-			get { return ModelHelpers.PriceTaxIncluded (Price + PriceAdjustment, TaxRate, IsTaxIncluded); }
+			get { return ModelHelpersV2.PriceTaxIncluded (Price + PriceIncrement, TaxRate, IsTaxIncluded); }
 		}
-
-		[Property ("discount")]
-		[DisplayFormat (DataFormatString = "{0:p}")]
-		[Display (Name = "Discount", ResourceType = typeof (Resources))]
-		public decimal DiscountRate { get; set; }
 
 		[Property ("tax_rate")]
 		[DisplayFormat (DataFormatString = "{0:p}")]
@@ -120,37 +161,31 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Subtotal", ResourceType = typeof (Resources))]
 		[DisplayFormat (DataFormatString = "{0:C4}")]
 		public decimal Subtotal {
-			get { return ModelHelpers.Subtotal (Quantity, Price + PriceAdjustment, 1m, TaxRate, IsTaxIncluded, 6); }
-		}
-
-		[DataType (DataType.Currency)]
-		[Display (Name = "Discount", ResourceType = typeof (Resources))]
-		public decimal Discount {
-			get { return ModelHelpers.Discount (Quantity, Price + PriceAdjustment, 1m, DiscountRate, TaxRate, IsTaxIncluded, 6); }
+			get { return ModelHelpersV2.Subtotal (Quantity, Price + PriceIncrement, DiscountRate ,1m, TaxRate, IsTaxIncluded, 6); }
 		}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Taxes", ResourceType = typeof (Resources))]
 		public decimal Taxes {
-			get { return Total - Subtotal + Discount; }
+			get { return Total - Subtotal; }
 		}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Total", ResourceType = typeof (Resources))]
 		public decimal Total {
-			get { return ModelHelpers.Total (Quantity, Price + PriceAdjustment, 1m, DiscountRate, TaxRate, IsTaxIncluded, 6); }
+			get { return ModelHelpersV2.Total (Quantity, Price + PriceIncrement, 1m, DiscountRate, TaxRate, IsTaxIncluded, 6); }
 		}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Subtotal", ResourceType = typeof (Resources))]
 		public decimal SubtotalEx {
-			get { return ModelHelpers.Subtotal (Quantity, Price + PriceAdjustment, ExchangeRate, TaxRate, IsTaxIncluded, 6); }
+			get { return ModelHelpersV2.Subtotal (Quantity, Price + PriceIncrement, DiscountRate ,ExchangeRate, TaxRate, IsTaxIncluded, 6); }
 		}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Discount", ResourceType = typeof (Resources))]
 		public decimal DiscountEx {
-			get { return ModelHelpers.Discount (Quantity, Price + PriceAdjustment, ExchangeRate, DiscountRate, TaxRate, IsTaxIncluded, 6); }
+			get { return ModelHelpersV2.Discount (Quantity, Price + PriceIncrement, ExchangeRate, DiscountRate, 6); }
 		}
 
 		[DataType (DataType.Currency)]
@@ -162,7 +197,7 @@ namespace Mictlanix.BE.Model {
 		[DataType (DataType.Currency)]
 		[Display (Name = "Total", ResourceType = typeof (Resources))]
 		public decimal TotalEx {
-			get { return ModelHelpers.Total (Quantity, Price + PriceAdjustment, ExchangeRate, DiscountRate, TaxRate, IsTaxIncluded, 6); }
+			get { return ModelHelpersV2.Total (Quantity, Price + PriceIncrement, ExchangeRate, DiscountRate, TaxRate, IsTaxIncluded, 6); }
 		}
 
 		#region Override Base Methods
@@ -174,7 +209,7 @@ namespace Mictlanix.BE.Model {
 
 		public override bool Equals (object obj)
 		{
-			SalesOrderDetail other = obj as SalesOrderDetail;
+			SalesQuoteDetail other = obj as SalesQuoteDetail;
 
 			if (other == null)
 				return false;

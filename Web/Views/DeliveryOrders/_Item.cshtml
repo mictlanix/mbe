@@ -1,7 +1,14 @@
 @using Mictlanix.BE
 @using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
 @using Mictlanix.BE.Web.Helpers
 @model DeliveryOrder
+
+@{
+    var objection = Incidence.Queryable.Where(x => x.Reference == Model.Id && x.SourceType == SourceType.DeliveryOrder)
+                    .OrderByDescending(y => y.Id).FirstOrDefault();
+    var message = objection == null ? string.Empty : objection.Comment;
+    }
 
 <tr id='id:@Model.Id'>
     <td class="number">
@@ -12,9 +19,13 @@
     </td>
     <td class="date">@Html.DisplayFor(x => x.Date)</td>
     <td class="">@Html.DisplayFor(x => x.Customer.Name)</td>
+    <td class="center">@string.Join(", ", Model.Details.Select(x => x.OrderDetail.SalesOrder.Id).Distinct())</td>
     <td class="bool">@Html.DisplayFor(x => x.IsCompleted)</td>
     <td class="bool">@Html.DisplayFor(x => x.IsCancelled)</td>
-    <td class="bool">@Html.DisplayFor(x => x.IsDelivered)</td>
+    @if (WebConfig.DeliveryOrderApprovalRequired) {
+    <td class="bool">@Html.DisplayFor(x => x.IsConfirmed)</td>
+    <td class="bool"></td>
+    }
 
     <td class="actions">
         @if (ViewBag.Privilege.AllowRead) {

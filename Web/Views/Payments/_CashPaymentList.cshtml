@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
@@ -13,11 +13,13 @@
 
 <table>
     <tr>
-        <th>@Html.LabelFor(x => new SalesOrder().Id)</th>
-        <th>@Html.LabelFor(x => new SalesOrder().Date)</th>
-        <th>@Html.LabelFor(x => new SalesOrder().Customer)</th>
-        <th>@Html.LabelFor(x => new SalesOrder().SalesPerson)</th>
-        <th>@Html.LabelFor(x => new SalesOrder().PointOfSale)</th>
+        <th>@Resources.Id</th>
+        <th>@Resources.Date</th>
+        <th>@Resources.Customer</th>
+        <th>@Resources.SalesPerson</th>
+        <th>@Resources.PointOfSale</th>
+        <th>@Resources.PaymentTerms</th>
+        <th>@Resources.Paid</th>
         <th></th>
     </tr>
 @foreach (var item in Model) {
@@ -40,6 +42,12 @@
         </td>
         <td class="center">
             @Html.DisplayFor(x => item.PointOfSale.Code)
+        </td>
+        <td class="center">
+            @item.Terms.GetDisplayName()
+        </td>
+        <td class="center">
+            @Html.DisplayFor(x => item.IsPaid)
         </td>
         <td class="actions">
         	@Html.ActionLink(" ", "PayOrder", new { id = item.Id }, new { @class = "button icon pay icon-only" })

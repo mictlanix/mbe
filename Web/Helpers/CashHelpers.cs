@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CashHelpers.cs
 // 
 // Author:
@@ -36,6 +36,7 @@ namespace Mictlanix.BE.Web.Helpers {
 		public static IList<CashCount> ListDenominations ()
 		{
 			string [] denominations = Resources.Denominations.Split (',');
+			denominations = WebConfig.CashCountsByDenominations ? denominations : new string [] { "1" };
 			IList<CashCount> items = new List<CashCount> (denominations.Length);
 
 			foreach (var item in denominations) {

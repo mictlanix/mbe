@@ -1,4 +1,4 @@
-﻿// 
+// 
 // Customer.cs
 // 
 // Author:
@@ -35,6 +35,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Mictlanix.BE.Model {
 	[ActiveRecord ("customer", Lazy = true)]
+	[Serializable]
 	public class Customer : ActiveRecordLinqBase<Customer> {
 		IList<Address> addresses = new List<Address> ();
 		IList<Contact> contacts = new List<Contact> ();
@@ -131,6 +132,24 @@ namespace Mictlanix.BE.Model {
 		public virtual IList<CustomerDiscount> Discounts {
 			get { return discounts; }
 			set { discounts = value; }
+		}
+
+		[Property ("disabled")]
+		[Display (Name = "LogicalDelete", ResourceType = typeof (Resources))]
+		public virtual bool IsDisabled { get; set; }
+
+		public virtual Customer GetSerializable () {
+			return new Customer {
+				Code = Code,
+				CreditDays = CreditDays,
+				CreditLimit = CreditLimit,
+				Id = Id,
+				IsDisabled = IsDisabled,
+				PriceListId = PriceListId,
+				SalesPersonId = SalesPersonId,
+				Name = Name,
+				Zone = Zone,
+			};
 		}
 
 		#region Override Base Methods

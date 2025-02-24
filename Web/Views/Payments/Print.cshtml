@@ -5,159 +5,188 @@
 @model SalesOrder
 
 @{
-    Layout = WebConfig.ReceiptLayout;
-    ViewBag.Title = Resources.SalesReceipt;
-    ViewBag.Store = Model.Store;
-    ViewBag.Address = Model.Store.Address;
+				Layout = WebConfig.ReceiptLayout;
+				ViewBag.Title = Resources.SalesReceipt;
+				ViewBag.Store = Model.Store;
+				ViewBag.Address = Model.Store.Address;
 }
 
-<div class="display-label text-right">
-    @Html.LabelFor(model => model.Serial)<br />
-    @Html.DisplayFor(model => model.Serial)
-</div>
-
-<div class="display-label date text-right">
-    @Html.LabelFor(model => model.Date)<br />
-    @Html.DisplayFor(model => model.Date)
-</div>
-
-<div class="display-label">
-    @Html.LabelFor(model => model.Customer)<br />
-    @Html.DisplayFor(model => model.Customer.Name)
-    @if (Model.Customer.Id == int.Parse(Resources.GeneralPublicId)
-                && !string.IsNullOrWhiteSpace(Model.CustomerName))
-    {
-        <span>(</span>@Html.DisplayFor(x => x.CustomerName)<span>)</span>
-    }
-</div>
-@if (!string.IsNullOrEmpty(Model.CustomerShipTo))
+@if (Model.IsCancelled)
 {
-
-    <div class="display-label">
-        @Html.LabelFor(model => model.CustomerShipTo)<br />
-        @Html.DisplayFor(model => model.CustomerShipTo)
-    </div>
-
+				@Html.Partial("MiniPrinterCancellationStamp", new CancellationStampViewModel { DateTime = Model.ModificationTime, Id = Model.Id })
 }
 
+<div class="display-label text-left">
+				@Html.LabelFor(model => model.Serial)
+				@Html.DisplayFor(model => model.Serial)
+				&emsp;
+				@Html.LabelFor(model => model.Date)
+				@Html.DisplayFor(model => model.Date)
+</div>
+<div class="display-label text-left">
+				@Html.LabelFor(model => model.SalesPerson)
+				@Html.DisplayFor(model => model.SalesPerson.Nickname)
+</div>
+<div class="display-label">
+				@Html.LabelFor(model => model.Customer)
+				@Html.DisplayFor(model => model.Customer.Name)
+				&emsp;
+				@if (Model.Customer.Id == WebConfig.DefaultCustomer && !string.IsNullOrWhiteSpace(Model.CustomerName))
+				{
+								@Html.DisplayFor(model => model.CustomerName)
+				}
+</div>
+
+				<div class="display-label date">
+								@Html.LabelFor(model => model.Terms)<br />
+								@Model.Terms.GetDisplayName()
+				</div>
 @if (Model.IsCredit)
 {
-    <div class="display-label date">
-        @Html.LabelFor(model => model.DueDate)<br />
-        @Html.DisplayFor(model => model.DueDate)
-    </div>
+				<div class="display-label date">
+								@Html.LabelFor(model => model.DueDate)<br />
+								@Html.DisplayFor(model => model.DueDate)
+				</div>
 }
 
 <table>
-	@foreach (var item in Model.Details)
-	{
-		<tr>
-			<td class="line number" rowspan="2">
-				@Html.DisplayFor(x => item.Quantity)
-			</td>
-			<td colspan="2">
-				@Html.DisplayFor(x => item.ProductName)
-			</td>
-			<td class="line number" rowspan="2">
-				@Html.DisplayFor(x => item.Total)
-			</td>
-		</tr>
-		<tr>
-			<td class="line">
-				@Html.Encode("✕") @Html.DisplayFor(x => item.Price)
-				@if (item.DiscountRate > 0)
+				@foreach (var item in Model.Details)
 				{
-					<text>- @Html.DisplayFor(x => item.DiscountRate)</text>
+								<tr>
+												<td colspan="2">
+																@Html.DisplayFor(x => item.Quantity)
+																@Html.Encode("✕") @Html.DisplayFor(x => item.Price)
+																@if (item.DiscountRate > 0)
+																{
+																				<text>- @Html.DisplayFor(x => item.DiscountRate)</text>
+																}
+																<span>@Html.DisplayFor(x => item.ProductCode)</span>
+												</td>
+								</tr>
+								<tr>
+												<td class="line">
+																@Html.DisplayFor(x => item.ProductName)
+												</td>
+												<td class="line number">
+																@Html.DisplayFor(x => item.Total)
+												</td>
+								</tr>
 				}
-			</td>
-			<td class="line text-center">
-				@Html.DisplayFor(x => item.ProductCode)
-			</td>
-		</tr>
-	}
-	<tr>
-		<td></td>
-		<td></td>
-		<td class="total text-right">@Resources.Subtotal</td>
-		<td class="total number">@Html.DisplayFor(x => x.Subtotal)</td>
-	</tr>
-	<tr>
-		<td></td>
-		<td></td>
-		<td class="total text-right">@Resources.Taxes</td>
-		<td class="total number">@Html.DisplayFor(x => x.Taxes)</td>
-	</tr>
-	@if (Model.Discount > 0)
-	{
-		<tr>
-			<td></td>
-			<td></td>
-			<td class="total text-right">@Resources.Discount</td>
-			<td class="total number">@Html.DisplayFor(x => x.Discount)</td>
-		</tr>
-	}
-	<tr>
-		<td></td>
-		<td></td>
-		<td class="total text-right">@Resources.Total</td>
-		<td class="total number">@Html.DisplayFor(x => x.Total)</td>
-	</tr>
-	@foreach (var item in Model.Payments)
-	{
+				<tr>
+								<td class="text-right">@Resources.Subtotal</td>
+								<td class="number">@Html.DisplayFor(x => x.Subtotal)</td>
+				</tr>
+				@if (Model.Discount > 0)
+				{
+								<tr>
+												<td class="text-right">@Resources.Discount</td>
+												<td class="number">@Html.DisplayFor(x => x.Discount)</td>
+								</tr>
+				}
+				<tr>
+								<td class="text-right">@Resources.Taxes</td>
+								<td class="number">@Html.DisplayFor(x => Model.Taxes)</td>
+				</tr>
+				<tr>
+								<td class="total text-right">@Html.LabelFor(model => model.Total)</td>
+								<td class="total number"> @Html.DisplayFor(model => model.Total)</td>
+				</tr>
+				@if (Model.Refund > 0)
+				{
+								foreach (var refund in Model.CustomerRefunds)
+								{
+												<tr>
+																<td class="total text-right">@Resources.Refund @Html.DisplayFor(model => refund.Id)</td>
+																<td class="total number"> @Html.DisplayFor(model => refund.Total)</td>
+												</tr>
+								}
+				}
+				@foreach (var item in Model.Payments)
+				{
+								<tr>
+												<td class="text-right">
+																@(item.Payment.PaymentType.HasValue ? item.Payment.PaymentType.GetDisplayName() + " - " + item.Payment.Id
+																: item.Payment.Method.GetDisplayName())
+												</td>
+												<td class="number">@Html.DisplayFor(x => item.Amount)</td>
+								</tr>
+								if (item.Change > 0)
+								{
+												<tr>
+																<td class="text-right">@Resources.Change</td>
+																<td class="number">@Html.DisplayFor(x => item.Change)</td>
+												</tr>
+								}
+				}
+				@if (Model.IsPaid)
+				{
+								<tr>
+												<td class="total text-right">@Resources.Paid</td>
+												<td class="total number"> @Html.DisplayFor(x => Model.IsPaid)</td>
+								</tr>
+}
+else {
 
-		string desc = "";
-
-		if (item.Payment.ExtraFee != null)
-		{
-			desc += item.Payment.ExtraFee.Name + "\n";
-			if (item.Payment.ExtraFee.isDisplayedOnTicket)
-			{
-				item.Payment.Amount *= (item.Payment.Commission + 1.0m);
-			}
-		}
-
-		if (item.Payment.CashSession == null)
-		{
-			desc += Resources.PaymentOnDelivery;
-		}
-
-		<tr>
-			<td colspan="2" class="text-right" style="padding-right:14px">@item.Payment.Method.GetDisplayName()</td>
-			<td class="gbmt">@desc</td>
-			<td class="number">
-				@Html.DisplayFor(x => item.Payment.Amount)
-			</td>
-		</tr>
-
-	}
-	<tr>
-		<td colspan="3" class="text-right">@Resources.Change</td>
-		<td class="number">@Html.DisplayFor(x => Model.Change)</td>
-	</tr>
+				<tr>
+								<td class="total text-right">@Html.LabelFor(model => model.Balance)</td>
+								<td class="total number"> @Html.DisplayFor(model => model.Balance)</td>
+				</tr>
+				}
 </table>
 
-@if (Model.Discount > 0)
+@*@if (Model.Discount > 0)
 {
-    <div class="display-field text-center">
-        <text>@string.Format(Resources.SavingsOnSalesOrder, Model.Discount)</text>
-    </div>
+				<div class="display-field text-center">
+								<text>@string.Format(Resources.SavingsOnSalesOrder, Model.Discount)</text>
+				</div>
+}*@
+@if (Model.Payments.Any(x => x.Payment.CashSession == null))
+{
+				<div class="text-center" style="font-size:large;">
+								<span>@Resources.PaymentOnDelivery</span>
+
+								@foreach (var payment in Model.Payments.Where(x => x.Payment.CashSession == null))
+								{
+												<div>
+																@payment.Payment.Method.GetDisplayName() : @Html.DisplayFor(x => payment.Payment.Amount)
+												</div>
+
+								}
+				</div>
 }
 
-<div class="display-label text-right">
-    @Html.LabelFor(model => model.SalesPerson)
-</div>
-<div class="display-field text-right">
-    @Html.DisplayFor(model => model.SalesPerson.Name)
-</div>
+@if (Model.Payments.Any(x => x.Payment.Method == PaymentMethod.CreditCard
+|| x.Payment.Method == PaymentMethod.DebitCard))
+{
+				<div class="legend">
+								@string.Format(Resources.CardPaymentNoteContent)
+				</div>
+				<div class="signature">
+								@Model.Customer.Name<br />
+								@Resources.Accept
+				</div>
+}
+
+@if (Model.IsCredit && !Model.IsPaid)
+{
+				<div class="legend">
+								@string.Format(WebConfig.PromissoryNoteContent, Model.Customer.Name, Model.Balance, Model.DueDate, Model.Store.Taxpayer.Name)
+				</div>
+				<div class="signature">
+								@Model.Customer.Name<br />
+								@Resources.Accept
+				</div>
+}
 
 @if (!string.IsNullOrEmpty(Model.Store.ReceiptMessage))
 {
-    <div class="legend">
-        <p class="center">@Model.Store.ReceiptMessage</p>
-    </div>
+				<div class="legend">
+								<p class="text-center">@Model.Store.ReceiptMessage</p>
+				</div>
 }
 
 @section Footer {
-    <img src='@Url.Action("Code128", "Barcodes", new { id = string.Format("{0}", Html.DisplayFor(x => x.Id)) })' alt='@Html.DisplayFor(x => x.Id)' title='@Html.DisplayFor(x => x.Id)'>
-    <p>@Html.DisplayFor(x => x.Id)</p>
+				<img src='@Url.Action("Code128", "Barcodes", new { id = string.Format("{0}", Html.DisplayFor(x => x.Id)) })'
+									alt='@Html.DisplayFor(x => x.Id)' title='@Html.DisplayFor(x => x.Id)'>
+				<p>@Html.DisplayFor(x => x.Id)</p>
 }

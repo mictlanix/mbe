@@ -1,4 +1,4 @@
-﻿// 
+// 
 // PurchaseOrderDetail.cs
 // 
 // Author:
@@ -42,6 +42,10 @@ namespace Mictlanix.BE.Model {
 		[BelongsTo ("purchase_order", Lazy = FetchWhen.OnInvoke)]
 		[Display (Name = "PurchaseOrder", ResourceType = typeof (Resources))]
 		public virtual PurchaseOrder Order { get; set; }
+
+		[BelongsTo ("purchase_request_detail", Lazy = FetchWhen.OnInvoke)]
+		[Display (Name = "PurchaseRequestDetail", ResourceType = typeof (Resources))]
+		public virtual PurchaseRequestDetail PurchaseRequestDetail { get; set; }
 
 		[BelongsTo ("product")]
 		[Display (Name = "Product", ResourceType = typeof (Resources))]

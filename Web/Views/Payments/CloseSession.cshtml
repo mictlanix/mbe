@@ -1,50 +1,59 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model CashSession
 @{
-    var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments);
+				var CurrentUser = Html.CurrentUser() ?? new User();
+				var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments);
 }
 <link href="@Url.Content("~/Content/selection-options.css")" rel="stylesheet" type="text/css" />
 
-@using (Html.BeginForm("CloseSession", "Payments")) {
-<fieldset>
-    <legend>@Resources.DisplayName_CashSession</legend>
+@using (Html.BeginForm("CloseSession", "Payments"))
+{
+				<fieldset>
+								<legend>@Resources.DisplayName_CashSession</legend>
 
-    @Html.HiddenFor(x => x.Id)
+								@Html.HiddenFor(x => x.Id)
 
-    <div class="display-label">
-        @Html.LabelFor(x => x.CashDrawer) :
-        @Html.DisplayFor(x => x.CashDrawer.Name)
-    </div>
-    
-    <div class="display-label">
-        @Html.LabelFor(x => x.Cashier) :
-        @Html.DisplayFor(x => x.Cashier.Name)
-    </div>
+								<div class="display-label">
+												@Html.LabelFor(x => x.CashDrawer) :
+												@Html.DisplayFor(x => x.CashDrawer.Name)
+								</div>
 
-    <div class="display-label">
-        @Html.LabelFor(x => x.Start) :
-        @Html.DisplayFor(x => x.Start)
-    </div>
+								<div class="display-label">
+												@Html.LabelFor(x => x.Cashier) :
+												@Html.DisplayFor(x => x.Cashier.Name)
+								</div>
 
-    <ul class="selection-options">
-    @for (int i = 0; i < Model.CashCounts.Count; i++) {
-        <li>
-            <label>
-                <span class="option-desc">
-                    <span class="icon">@Html.DisplayFor(x => Model.CashCounts[i].Denomination)</span>
-                    <span class="text">@Html.EditorFor(x => Model.CashCounts[i].Quantity)</span>
-                </span>
-            </label>
-            @Html.HiddenFor(x => Model.CashCounts[i].Denomination)
-        </li>
-    }
-    </ul>
-    
-    <p><button type="submit">@Resources.CloseSession</button></p>
-</fieldset>
+								<div class="display-label">
+												@Html.LabelFor(x => x.Start) :
+												@Html.DisplayFor(x => x.Start)
+								</div>
+
+								<ul class="selection-options">
+												@for (int i = 0; i < Model.CashCounts.Count; i++)
+												{
+																<li>
+																				<label>
+																								<span class="option-desc">
+																												@if (WebConfig.CashCountsByDenominations)
+																												{
+																																<span class="icon">@Html.DisplayFor(x => Model.CashCounts[i].Denomination)</span>
+																												}
+																												else
+																												{
+																																<span class="icon">@Resources.CountedCash</span>
+																												}
+																												<span class="text">@Html.EditorFor(x => Model.CashCounts[i].Quantity)</span>
+																								</span>
+																				</label>
+																				@Html.HiddenFor(x => Model.CashCounts[i].Denomination)
+																</li>
+												}
+								</ul>
+
+								<p><button type="submit">@Resources.CloseSession</button></p>
+				</fieldset>
 }
 
 <script type="text/javascript">

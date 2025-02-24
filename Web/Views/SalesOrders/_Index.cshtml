@@ -1,69 +1,96 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
 @model Search<SalesOrder>
 @{
-    var CurrentUser = Html.CurrentUser () ?? new User ();
-    var Privilege = Html.GetPrivilege (CurrentUser, SystemObjects.SalesOrders);
+				var CurrentUser = Html.CurrentUser () ?? new User ();
+				var Privilege = Html.GetPrivilege (CurrentUser, SystemObjects.SalesOrders);
+
+				var gridview = new GridViewModel(typeof(SalesOrder));
+				var attribs = typeof(SalesOrder).GetProperties().Select(x => x.Name).ToList();
+				var methods_to_execute = new List<string> { "Customer.Name", "IsCompleted", "Date", "Customer" };
+				//var methods = instance.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 }
-<table>
-    <tr>
-        <th>@Resources.Id</th>
-        <th>@Resources.Date</th>
-        <th>@Resources.Customer</th>
-        <th>@Resources.SalesPerson</th>
-        <th>@Resources.Completed</th>
-        <th>@Resources.Cancelled</th>
-        <th></th>
-    </tr>
-@foreach (var item in Model.Results) {
-    <tr>
-        <td class='number'>
-        	@Html.DisplayFor(x => item.Id)
-        	<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => item.Serial)">
-				<span class="glyphicon glyphicon-exclamation-sign"></span>
-			</a>
-        </td>
-        <td class='date'>@Html.DisplayFor(x => item.Date)</td>
-        <td>@Html.DisplayFor(x => item.Customer.Name) @Html.DisplayFor(x => item.CustomerName) </td>
-        <td class='center'>@Html.DisplayFor(x => item.SalesPerson.Nickname)</td>
-        <td class='bool'>@Html.DisplayFor(x => item.IsCompleted)</td>
-        <td class='bool'>@Html.DisplayFor(x => item.IsCancelled)</td>
-        <td class='actions'>
-        	@if (Privilege.AllowRead && (item.IsCompleted || item.IsCancelled)) {
-            	@Html.ActionLink(" ", "View", new { id = item.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
-            	@Html.ActionLink(" ", "Print", new { id = item.Id }, new { @class = "button icon print icon-only", title = Resources.Print, target = "_blank" })
-            }
-        	@if (Privilege.AllowUpdate && !item.IsCompleted && !item.IsCancelled) {
-            	@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", title = Resources.Edit })
-            }
-        </td>
-    </tr>
-}
-</table>
-<div class='buttons right'>
-	<label class='button left'>@Model.ToString()</label>@if (Model.HasPrev) {<a class='button middle icon prev icon-only paging' title='@Resources.PrevPage' href='javascript:void(0)'></a>}@if (Model.HasNext) {<a class='button right icon next icon-only paging' title='@Resources.NextPage' href='javascript:void(0)'></a>}
+
+@*@foreach (var attrib in methods_to_execute) {
+				@attribs.Contains(string.Concat(typeof(SalesOrder).Name, ".", attrib)) <br />
+				@attrib @attribs.Contains(attrib)<br />
+}*@
+
+@*@foreach(var attrib in attribs) {
+				<span>@string.Concat(" ",typeof(SalesOrder).Name,".",@attrib.Name)</span><br />
+}*@
+
+				<div class="row scrollable-header">
+							<div class="col-sm-1 ">@Resources.Id</div>
+							<div class="col-sm-1 ">@Resources.Serial</div>
+							<div class="col-sm-2 ">@Resources.Date</div>
+							<div class="col-sm-2 ">@Resources.Customer</div>
+							<div class="col-sm-1 ">@Resources.SalesPerson</div>
+							<div class="col-sm-1 ">@Resources.Completed</div>
+							<div class="col-sm-1 ">@Resources.Cancelled</div>
+							<div class="col-sm-1 ">@Resources.PaymentTerms</div>
+							<div class="col-sm-1 ">@Resources.Paid</div>
+							<div class="col-sm-1 "></div>
+				</div>
+
+<div class="scrollable">
+				@foreach(var item in Model.Results) {
+				<div class="row">
+								<div class="col-sm-1 data">
+												@Html.DisplayFor(x => item.Id)
+												<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => item.Serial)">
+																<span class="glyphicon glyphicon-exclamation-sign"></span>
+												</a>
+								</div>
+								<div class="col-sm-1 data">@Html.DisplayFor(x => item.Serial)</div>
+								<div class="col-sm-2 data date text-center">@Html.DisplayFor(x => item.Date)</div>
+								<div class="col-sm-2 data text-center">@Html.DisplayFor(x => item.Customer.Name) @Html.DisplayFor(x => item.CustomerName)</div>
+								<div class="col-sm-1 data text-center">@Html.DisplayFor(x => item.SalesPerson.Nickname)</div>
+								<div class="col-sm-1 data text-center">@Html.DisplayFor(x => item.IsCompleted)</div>
+								<div class="col-sm-1 data text-center">@Html.DisplayFor(x => item.IsCancelled)</div>
+								<div class="col-sm-1 data text-center">@item.Terms.GetDisplayName()</div>
+								<div class="col-sm-1 data text-center">@Html.DisplayFor(x => item.IsPaid)</div>
+								<div class="col-sm-1">
+												@if (Privilege.AllowRead && (item.IsCompleted || item.IsCancelled))
+												{
+																@Html.ActionLink(" ", "View", new { id = item.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
+																@Html.ActionLink(" ", "Print", new { id = item.Id }, new { @class = "button icon print icon-only", title = Resources.Print, target = "_blank" })
+												}
+												@if (Privilege.AllowUpdate && !item.IsCompleted && !item.IsCancelled)
+												{
+																@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", title = Resources.Edit })
+												}
+								</div>
+				</div>
+				}
 </div>
-<script type='text/javascript'>
+
+				<div class='buttons right'>
+								<label class='button left'>@Model.ToString()</label>@if (Model.HasPrev)
+								{<a class='button middle icon prev icon-only paging' title='@Resources.PrevPage' href='javascript:void(0)'></a>}@if (Model.HasNext)
+								{<a class='button right icon next icon-only paging' title='@Resources.NextPage' href='javascript:void(0)'></a>}
+				</div>
+				<script type='text/javascript'>
 $('[data-toggle="tooltip"]').tooltip();
 $('a.paging').click(function (e) {
 	var offset=@Model.Offset;
-	
+
 	if($(this).hasClass('next')) {
 		offset+=@Model.Limit;
 	} else {
 		offset-=@Model.Limit;
 	}
-	
+
 	e.preventDefault();
 	$('#activity-indicator').show();
 	$('#search-results').hide();
-	
+
 	$.post('@Url.Action("Index")', { Pattern: '@Model.Pattern', Offset: offset, Limit: @Model.Limit }, function(data) {
 		$('#search-results').html(data);
 		$('#search-results').show();
 		$('#activity-indicator').hide();
 	});
 });
-</script>
+				</script>

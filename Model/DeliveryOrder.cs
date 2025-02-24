@@ -34,24 +34,25 @@ using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 
 namespace Mictlanix.BE.Model {
-	[ActiveRecord ("delivery_order")]
+	[ActiveRecord ("delivery_order", Lazy = true)]
+	[Serializable]
 	public class DeliveryOrder : ActiveRecordLinqBase<DeliveryOrder> {
 		IList<DeliveryOrderDetail> details = new List<DeliveryOrderDetail> ();
 
         [PrimaryKey (PrimaryKeyType.Identity, "delivery_order_id")]
 		[Display (Name = "DeliveryOrderId", ResourceType = typeof (Resources))]
 		[DisplayFormat (DataFormatString = "{0:D8}")]
-		public int Id { get; set; }
+		public virtual int Id { get; set; }
 
 		[Property ("creation_time")]
 		[DataType (DataType.DateTime)]
 		[Display (Name = "CreationTime", ResourceType = typeof (Resources))]
-		public DateTime CreationTime { get; set; }
+		public virtual DateTime CreationTime { get; set; }
 
 		[Property ("modification_time")]
 		[DataType (DataType.DateTime)]
 		[Display (Name = "ModificationTime", ResourceType = typeof (Resources))]
-		public DateTime ModificationTime { get; set; }
+		public virtual DateTime ModificationTime { get; set; }
 
 		[BelongsTo ("creator")]
 		[Display (Name = "Creator", ResourceType = typeof (Resources))]
@@ -78,62 +79,62 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "ShipTo", ResourceType = typeof (Resources))]
 		public virtual Address ShipTo { get; set; }
 
-		[BelongsTo ("contact", Lazy = FetchWhen.OnInvoke)]
+		[BelongsTo ("contact", NotNull = false, Lazy = FetchWhen.OnInvoke)]
 		[Display (Name = "Contact", ResourceType = typeof (Resources))]
 		public virtual Contact Contact { get; set; }
 
 		[Property]
 		[DataType (DataType.Date)]
-		[Display (Name = "Date", ResourceType = typeof (Resources))]
+		[Display (Name = "DeliveryDate", ResourceType = typeof (Resources))]
 		[DisplayFormat (DataFormatString = "{0:yyyy-MM-dd}")]
 		public virtual DateTime? Date { get; set; }
 
 		[Property ("completed")]
 		[Display (Name = "Completed", ResourceType = typeof (Resources))]
-		public bool IsCompleted { get; set; }
+		public virtual bool IsCompleted { get; set; }
 
 		[Property ("cancelled")]
 		[Display (Name = "Cancelled", ResourceType = typeof (Resources))]
-		public bool IsCancelled { get; set; }
+		public virtual bool IsCancelled { get; set; }
 
 		[Property("delivered")]
 		[Display(Name = "Delivered", ResourceType = typeof(Resources))]
-		public bool IsDelivered { get; set; }
+		public virtual bool IsDelivered { get; set; }
+
+		[Property("confirmed")]
+		[Display(Name = "Confirmed", ResourceType = typeof(Resources))]
+		public virtual bool IsConfirmed { get; set; }
 
 		[Property]
 		[DataType (DataType.MultilineText)]
 		[Display (Name = "Comment", ResourceType = typeof (Resources))]
 		[StringLength (500, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
-		public string Comment { get; set; }
+		public virtual string Comment { get; set; }
 
 		[HasMany (typeof (DeliveryOrderDetail), Table = "delivery_order_detail", ColumnKey = "delivery_order")]
-		public IList<DeliveryOrderDetail> Details {
+		public virtual IList<DeliveryOrderDetail> Details {
 			get { return details; }
 			set { details = value; }
 		}
 
-		[DataType (DataType.Currency)]
-		[Display (Name = "Subtotal", ResourceType = typeof (Resources))]
-		public virtual decimal Subtotal {
-			get { return Details.Sum (x => x.Subtotal); }
-		}
-
-		[DataType (DataType.Currency)]
-		[Display (Name = "Discount", ResourceType = typeof (Resources))]
-		public virtual decimal Discount {
-			get { return Details.Sum (x => x.Discount); }
-		}
-
-		[DataType (DataType.Currency)]
-		[Display (Name = "Taxes", ResourceType = typeof (Resources))]
-		public virtual decimal Taxes {
-			get { return Details.Sum (x => x.Taxes); }
-		}
-
-		[DataType (DataType.Currency)]
-		[Display (Name = "Total", ResourceType = typeof (Resources))]
-		public virtual decimal Total {
-			get { return Details.Sum (x => x.Total); }
+		public virtual DeliveryOrder GetSerializable () {
+			return new DeliveryOrder {
+				Id = Id,
+				Date = Date,
+				Contact = Contact.GetSerializable(),
+				CreationTime = CreationTime,
+				Comment = Comment,
+				Customer = Customer.GetSerializable(),
+				Creator = Creator.GetSerializable(),
+				IsCancelled = IsCancelled,
+				IsConfirmed = IsConfirmed,
+				IsDelivered = IsDelivered,
+				IsCompleted = IsCompleted,
+				ModificationTime = ModificationTime,
+				Serial = Serial,
+				ShipTo = ShipTo.GetSerializable(),
+				Details = Details.Select(x => x.GetSerializable()).ToList(),
+			};
 		}
 
 		#region Override Base Methods

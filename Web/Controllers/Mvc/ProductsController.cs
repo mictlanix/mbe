@@ -27,8 +27,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
@@ -38,7 +36,6 @@ using System.Web;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
 using NHibernate;
-using NHibernate.Exceptions;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
@@ -72,21 +69,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		Search<Product> SearchProducts (Search<Product> search)
 		{
-			IQueryable<Product> query;
+			IQueryable<Product> query = MBEQueryable.IQProducts;
 			var pattern = (search.Pattern ?? string.Empty).Trim ();
 
-			if (string.IsNullOrEmpty (pattern)) {
-				query = from x in Product.Queryable
-					orderby x.Name
-					select x;
-			} else {
-				query = from x in Product.Queryable
+			if (!string.IsNullOrEmpty (pattern)) {
+				query = from x in query
 					where (x.Name.Contains (pattern) ||
 						x.Code.Contains (pattern) ||
 						x.Model.Contains (pattern) ||
 						x.SKU.Contains (pattern) ||
 						x.Brand.Contains (pattern))
-						&& !x.IsDeactivated
 					orderby x.Name
 					select x;
 
@@ -107,8 +99,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Create (Product item)
 		{
 			item.Supplier = Supplier.TryFind (item.SupplierId);
-			item.ProductService = SatProductService.TryFind (item.ProductServiceId);
-			item.UnitOfMeasurement = SatUnitOfMeasurement.TryFind (item.UnitOfMeasurementId);
+			item.ProductService = string.IsNullOrEmpty( item.ProductServiceId) ? null : SatProductService.TryFind (item.ProductServiceId);
+			item.UnitOfMeasurement = string.IsNullOrEmpty(item.UnitOfMeasurementId) ? null: SatUnitOfMeasurement.TryFind (item.UnitOfMeasurementId);
+			item.BarCodeNumber = string.IsNullOrEmpty(item.BarCodeNumber)?string.Empty:item.BarCodeNumber;
 
 			if (!ModelState.IsValid) {
 				return PartialView ("_Create", item);
@@ -119,6 +112,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.IsTaxIncluded = WebConfig.IsTaxIncluded;
 			item.PriceType = WebConfig.DefaultPriceType;
 			item.Photo = WebConfig.DefaultPhotoFile;
+			item.StockRequired = true;
 
 			using (var scope = new TransactionScope ()) {
 				item.Create ();
@@ -142,7 +136,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var entity = Product.Find (id);
 
-			if (entity.IsDeactivated)
+			if (entity.IsDisabled)
 				return RedirectToAction ("index");
 
 			entity.Photo = SavePhoto (file) ?? WebConfig.DefaultPhotoFile;
@@ -158,7 +152,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var entity = Product.Find (id);
 
-			if (entity.IsDeactivated)
+			if (entity.IsDisabled)
 				return RedirectToAction ("index");
 
 			return PartialView ("_View", entity);
@@ -168,7 +162,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var entity = Product.Find (id);
 
-			if (entity.IsDeactivated)
+			if (entity.IsDisabled)
 				return RedirectToAction ("index");
 
 			return PartialView ("_Edit", entity);
@@ -186,11 +180,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			var entity = Product.Find (item.Id);
 
-			if (entity.IsDeactivated)
+			if (entity.IsDisabled)
 				return RedirectToAction ("index");
 
 			entity.Brand = item.Brand;
 			entity.Code = item.Code;
+			entity.BarCodeNumber = item.BarCodeNumber;
 			entity.Comment = item.Comment;
 			entity.IsStockable = item.IsStockable;
 			entity.IsPerishable = item.IsPerishable;
@@ -225,7 +220,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var item = Product.Find (id);
 
-			if (item.IsDeactivated)
+			if (item.IsDisabled)
 				return RedirectToAction ("index");
 
 			try {
@@ -235,7 +230,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						x.DeleteAndFlush ();
 					}
 
-					item.DeleteAndFlush ();
+					item.IsDisabled = true;
+					item.UpdateAndFlush ();
 				}
 				return PartialView ("_DeleteSuccesful", item);
 			} catch (Exception ex) {
@@ -344,12 +340,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public JsonResult GetSuggestions (string pattern)
 		{
-			var query = from x in Product.Queryable
+			var query = from x in MBEQueryable.IQProducts
 				    where (x.Name.Contains (pattern) ||
 			x.Code.Contains (pattern) ||
 			x.Model.Contains (pattern) ||
 			x.SKU.Contains (pattern) ||
-			x.Brand.Contains (pattern)) && !x.IsDeactivated
+			x.Brand.Contains (pattern)) && !x.IsDisabled
 				    orderby x.Name
 				    select x;
 
@@ -370,7 +366,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var entity = Product.Find (id);
 
-			if (entity.IsDeactivated)
+			if (entity.IsDisabled)
 				return RedirectToAction ("index");
 
 			return PartialView ("_Labels", entity.Labels);
@@ -381,7 +377,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var entity = Product.Find (id);
 
-			if (entity.IsDeactivated)
+			if (entity.IsDisabled)
 				return RedirectToAction ("index");
 
 			if (value == null) {
@@ -412,15 +408,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public JsonResult Brands (string pattern)
 		{
 			IQueryable<string> query;
+			var brands = MBEQueryable.IQProducts;
 
-			if (string.IsNullOrWhiteSpace (pattern)) {
-				query = from x in Product.Queryable
-					where x.Brand != null && x.Brand != string.Empty
+			if (!string.IsNullOrWhiteSpace (pattern)) {
+				query = from x in brands
+					where x.Brand.Contains (pattern)
 					orderby x.Brand
 					select x.Brand;
 			} else {
-				query = from x in Product.Queryable
-					where x.Brand.Contains (pattern)
+
+				query = from x in brands
+					where x.Brand == null && x.Model != string.Empty
 					orderby x.Brand
 					select x.Brand;
 			}
@@ -435,13 +433,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			IQueryable<string> query;
 
+			var models = MBEQueryable.IQProducts;
+
 			if (string.IsNullOrWhiteSpace (pattern)) {
-				query = from x in Product.Queryable
+				query = from x in models
 					where x.Model != null && x.Model != string.Empty
 					orderby x.Model
 					select x.Model;
 			} else {
-				query = from x in Product.Queryable
+				query = from x in models
 					where x.Model.Contains (pattern)
 					orderby x.Model
 					select x.Model;
@@ -460,6 +460,21 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				    select x;
 
 			var items = from x in query.Take (15).ToList ()
+				    select new {
+					    id = x.Id,
+					    name = x.ToString ()
+				    };
+
+			return Json (items, JsonRequestBehavior.AllowGet);
+		}
+
+		public JsonResult ProductUnitsOfMeasurements (string pattern)
+		{
+			var query = from x in SatUnitOfMeasurement.Queryable
+				    where x.Id.StartsWith (pattern) || x.Name.StartsWith (pattern)
+				    select x;
+
+			var items = from x in query.OrderBy (y => y.Name).Take (15).ToList ()
 				    select new {
 					    id = x.Id,
 					    name = x.ToString ()

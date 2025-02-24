@@ -4,8 +4,14 @@
 @using Mictlanix.BE.Web.Models
 @model CustomerPayment
 
-<h2>@Resources.DisplayName_PaymentSuccesful</h2>
+<h2>@Resources.DisplayName_PaymentSuccesful: @Model.PaymentType.GetDisplayName()</h2>
 
+<div class="row">
+    <div class="col-xs-12">@Html.LabelFor(x => x.Id)</div>
+</div>
+<div class="row">
+    <div class="col-xs-12">@Html.DisplayFor(x => x.Id)</div>
+</div>
 <div class="row">
     <div class="col-xs-12">@Html.LabelFor(x => x.Customer)</div>
 </div>

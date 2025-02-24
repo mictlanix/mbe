@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
@@ -51,6 +51,9 @@
     $(function () {
         $('#new').editable({
             success: function (response, newValue) {
+                //if (response.status == 400) {
+                //    console.log(response);
+                //}
                 window.location.replace(response.url);
                 setTimeout(function () { $('#add-items').editable('setValue', ''); }, 500);
             }
