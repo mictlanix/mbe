@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 //using System.Web.Http.Results;
 using System.Web.Mvc;
@@ -11,6 +12,8 @@ using Mictlanix.BE.Web.Utils;
 using Mysqlx;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using NHibernate;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 
@@ -42,9 +45,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			int id = 0;
 
 			if (int.TryParse (pattern, out id)) {
-				query = query.Where (x => x.Id == id);
+				query = PurchaseRequest.Queryable.Where (x => x.Id == id);
 			} else if (!string.IsNullOrEmpty (pattern)) {
 				query = query.Where (x => x.Updater.Name.Contains (pattern) || x.Comment.Contains (pattern));
+				if (pattern.Contains (Resources.WilcardStringPatternForSearch)) {
+					query = PurchaseRequest.Queryable.OrderByDescending (x => x.Id);
+				}
 			}
 
 			search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
@@ -171,7 +177,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					ProductName = item.Name,
 					Quantity = item.MinimumOrderQuantity,
 					Warehouse = entity.Warehouse,
-					Customer = Customer.Find (WebConfig.DefaultCustomer)
+					Customer = Customer.Find (WebConfig.DefaultCustomer),
+					ToPurchase = true
 				};
 
 				detail.CreateAndFlush ();
@@ -205,8 +212,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var query = Product.Queryable.Where (x => (x.Name.Contains (pattern)
 								|| x.Code.Contains (pattern) || x.SKU.Contains (pattern)
 								|| x.Brand.Contains (pattern) || x.BarCodeNumber.Contains (pattern)
+								|| (x.Supplier != null && x.Supplier.Name.Contains(pattern))
 								) && x.IsPurchasable && !x.IsDisabled);
-			var items = query.Take (15).ToList ().Select (x => new { id = x.Id, name = x.Name, comment = x.Comment });
+			var items = query.Take (15).ToList ().Select (x =>
+			new { id = x.Id, name = x.Name, comment = x.Comment,
+				supplier = x.Supplier == null ? string.Format(Resources.AttribValueMissing, Resources.Supplier): x.Supplier.Name
+				, code = x.Code, model = x.Model, brand = x.Brand });
 
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}
@@ -365,6 +376,30 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
+		public ActionResult ToogleToPurchase (int id)
+		{
+			var item = PurchaseRequestDetail.Find (id);
+
+			if (item == null) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemNotFound);
+			}
+
+			if (item.PurchaseRequest.IsApproved || item.PurchaseRequest.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			item.ToPurchase = !item.ToPurchase;
+
+			using (var scope = new TransactionScope ()) {
+				item.UpdateAndFlush ();
+			}
+
+			return PartialView ("_ItemDisplayView", item);
+		}
+
+		[HttpPost]
 		public virtual ActionResult Confirm (int id)
 		{
 			var entity = PurchaseRequest.TryFind (id);
@@ -380,6 +415,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			entity.Updater = CurrentUser.Employee;
 			entity.ModificationTime = DateTime.Now;
 			entity.IsCompleted = true;
+			entity.Serial = entity.Serial > 0 ? entity.Serial :
+				PurchaseRequest.Queryable.Where(x => x.Warehouse == WebConfig.PointOfSale.Warehouse).Select(x => (int?)x.Serial).Max()??0 + 1;
 
 			if (!WebConfig.PurchaseRequestApprovalRequired) {
 				entity.IsApproved = true;
@@ -495,7 +532,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 					item.IsApproved = false;
 					item.IsCompleted = false;
-					item.Comment = value.Trim();
 					item.UpdateAndFlush ();
 				}
 			}
@@ -515,15 +551,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			query = PurchaseRequest.Queryable.Where (x => !x.IsCancelled
 								     && x.IsCompleted
-						)
-						.OrderBy (x => x.IsApproved ? 1 : 0)
-						.OrderByDescending (x => x.Id);
+						);
 
 			if (int.TryParse (pattern, out id) && id > 0) {
-				query = query.Where (y => y.Id == id || y.Serial == id);
+				query = PurchaseRequest.Queryable.Where (y => y.Id == id || y.Serial == id);
 			} else {
 				query = query.Where (x => x.Creator.FirstName.Contains (pattern));
 			}
+
+			query = query.OrderBy (x => x.IsApproved ? 1 : 0)
+					.OrderByDescending (x => x.Id);
 
 			search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
 			search.Total = search.Results.Count ();

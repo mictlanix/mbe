@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CashSession.cs
 // 
 // Author:
@@ -62,6 +62,11 @@ namespace Mictlanix.BE.Model {
 		[DataType (DataType.DateTime)]
 		[Display (Name = "End", ResourceType = typeof (Resources))]
 		public DateTime? End { get; set; }
+
+		[BelongsTo ("cash_supervisor")]
+		[Display (Name = "CashSupervisor", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		public virtual Employee CashSupervisor { get; set; }
 
 		[HasMany (typeof (CashCount), Table = "cash_count", ColumnKey = "session")]
 		public IList<CashCount> CashCounts {

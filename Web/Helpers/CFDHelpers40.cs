@@ -70,8 +70,8 @@ namespace Mictlanix.BE.Web.Helpers40 {
 			//-- System.IO.File.WriteAllText (@"cfd.xml", cfd.ToXmlString ());
 			//-- System.IO.File.WriteAllText (@"C:\Users\Alfredo\Documents\out\cfd2.xml", cfd.ToXmlString ());
 
-			var cli = new DFactureClient40 (WebConfig.DFactureUser, WebConfig.DFacturePassword, WebConfig.DFactureUrl);
-
+			//var cli = new DFactureClient40 (WebConfig.DFactureUser, WebConfig.DFacturePassword, WebConfig.DFactureUrl);
+			var cli = new DFactureClient40 (WebConfig.FacturacionMexicoUser, WebConfig.FacturacionMexicoPassword, null, WebConfig.FacturacionMexicoInProduction);
 			
 			var tfd = cli.Stamp (cfd);
 
@@ -90,7 +90,9 @@ namespace Mictlanix.BE.Web.Helpers40 {
 		{
 			
 			var cer = item.Issuer.Certificates.First (x => x.IsActive);
-			var cli = new DFactureClient40 (WebConfig.DFactureUser, WebConfig.DFacturePassword, WebConfig.DFactureUrl);
+			//var cli = new DFactureClient40 (WebConfig.DFactureUser, WebConfig.DFacturePassword, WebConfig.DFactureUrl);
+			var cli = new DFactureClient40 (WebConfig.FacturacionMexicoUser, WebConfig.FacturacionMexicoPassword, null, WebConfig.FacturacionMexicoInProduction);
+
 
 			try {
 				return cli.Cancel (item.Issuer.Id, item.Recipient, item.StampId, item.Total.ToString (),

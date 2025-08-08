@@ -1,0 +1,84 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model IList<ReceivedPaymentsSummaryViewModel>
+
+@{
+				var all_payments = Model.SelectMany(x => x.CustomerPayments).ToList();
+				var methods = all_payments.Select(x => x.Method).Distinct();
+				var start = ViewBag.StartDate;
+				var end = ViewBag.EndDate;
+				var rangeDate = new DateRange { StartDate = start, EndDate = end};
+ }
+
+<table class="debts">
+    <tr>
+        <th class='nowrap'>@Resources.Store</th>
+        <th class='nowrap'>@Resources.SalesOrders</th>
+        <th class='nowrap'>@Resources.StartingCash</th>
+        <th class='nowrap'>@Resources.Expenses</th>
+        @foreach(var method in methods) {
+            <th>@method.GetDisplayName()  
+            @if (WebConfig.PaymentMethodsVerificationRequired.Contains(method)) {
+                    <span> / </span>@Resources.Verified
+                    }
+            </th>
+        }
+        <th class='nowrap'>@Resources.Credit</th>
+        <th class='nowrap'>@Resources.CreditPayments</th>
+        <th class='nowrap'>@Resources.CountedCash</th>
+    </tr>
+@foreach (var item in Model) {
+				<tr>
+								<td>
+												@*@using (Html.BeginForm("StoreMovementsSummary", "Reports", FormMethod.Post, new { target = "_blank" }))
+												{
+																<input type="submit" value="@item.Store.Name" />
+																@Html.Hidden("store", item.Store.Id);
+																@Html.Hidden("dates", rangeDate);
+												}*@
+												@Html.DisplayFor(x => item.Store.Name)
+								</td>
+								<td class='number'>@item.SalesOrders.Sum(x => x.Total).ToString("c")</td>
+								<td class='number'>@item.CashSession.Sum(x => x.StartingCash).ToString("c")</td>
+								<td class='number'>@item.Expenses.Sum(x => x.Total).ToString("c")</td>
+								@foreach (var method in methods)
+								{
+												<td class='number'>
+																@((item.CustomerPayments.Where(x => x.Method == method).Sum(x => (decimal?)x.Amount)??0).ToString("c"))
+																@if (WebConfig.PaymentMethodsVerificationRequired.Contains(method))
+																{
+																				<span> / </span>@((item.CustomerPayments.Where(x => x.Method == method && x.Verifier != null).Sum(x => (decimal?)x.Amount)??0).ToString("c"))
+																}
+												</td>
+								}
+								<td class='number'>@item.SalesOrders.Where(x => x.Terms == PaymentTerms.NetD).Sum(x => x.Total).ToString("c")</td>
+								<td class='number'>@item.CustomerPayments.Where(x => x.PaymentType == PaymentType.CreditPayment).Sum(x => x.Amount).ToString("c")</td>
+								<td class='number'>@item.CashSession.Sum(x => x.CountedCash).ToString("c")</td>
+				</tr>
+}
+<tr>
+				<td class='right' colspan='1'><b>@Resources.Total</b></td>
+				<td class='number'><b>@Model.SelectMany(x => x.SalesOrders).Sum(x => x.Total).ToString("c")</b></td>
+				<td class='number'><b>@Model.SelectMany(x => x.CashSession).Sum(x => x.StartingCash).ToString("c")</b></td>
+				<td class='number'><b>@Model.SelectMany(x => x.Expenses).Sum(x => x.Total).ToString("c")</b></td>
+				@foreach (var method in methods)
+				{
+								<td class='number'><b>
+								@((all_payments.Where(x => x.Method == method).Sum(x => (decimal?)x.Amount)??0).ToString("c"))
+																@if (WebConfig.PaymentMethodsVerificationRequired.Contains(method))
+																{
+																				<span> / </span>@((all_payments.Where(x => x.Method == method && x.Verifier != null).Sum(x => (decimal?)x.Amount)??0).ToString("c"))
+																}
+												</b>
+							</td>
+				}
+				<td class='number'><b>@Model.SelectMany(x => x.SalesOrders).Where(x => x.Terms == PaymentTerms.NetD).Sum(x => x.Total).ToString("c")</b></td>
+				<td class='number'><b>@all_payments.Where(x => x.PaymentType == PaymentType.CreditPayment).Sum(x => x.Amount).ToString("c")</b></td>
+				<td class='number'><b>@Model.SelectMany(x => x.CashSession).Sum(x => x.CountedCash).ToString("c")</b></td>
+</tr>
+</table>
+
+<div id="details-section">
+</div>

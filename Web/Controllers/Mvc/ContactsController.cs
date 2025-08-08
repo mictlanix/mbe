@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ContactsController.cs
 // 
 // Author:
@@ -37,6 +37,7 @@ using Castle.ActiveRecord;
 using NHibernate.Exceptions;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Mvc;
+using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
@@ -54,6 +55,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		[HttpPost]
 		public ActionResult CreateCustomerContact (int id, Contact item)
 		{
+
+			if (WebConfig.DefaultCustomer == id) {
+				ModelState.AddModelError ("Customer", Resources.CustomerNotFound);
+				return PartialView ("_Create", item);
+			}
+
 			if (!ModelState.IsValid) {
 				return PartialView ("_Create", item);
 			}

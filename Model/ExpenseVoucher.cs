@@ -70,6 +70,11 @@ namespace Mictlanix.BE.Model
 		[Display(Name = "Completed", ResourceType = typeof(Resources))]
 		public virtual bool IsCompleted { get; set; }
 
+		//[Property("payment_method")]
+		//[Display (Name = "PaymentMethod", ResourceType = typeof (Resources))]
+		//[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		//public virtual PaymentMethod Method { get; set; }
+
 		[Property("cancelled")]
 		[Display(Name = "Cancelled", ResourceType = typeof(Resources))]
 		public virtual bool IsCancelled { get; set; }

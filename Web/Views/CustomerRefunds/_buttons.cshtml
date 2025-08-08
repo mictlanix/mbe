@@ -1,0 +1,52 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model CustomerRefund
+
+
+<div id='confirm-button' class='pull-right @(Model.Total <= 0 ? "hide" : "")'>
+
+				@*@if (Model.Total > Model.SalesOrder.Balance)
+				{
+								foreach (var item in WebConfig.PaymentMethodsForRefund) {
+												<button class="refund btn btn-default" type="button" data-value='@((int)item)'>@item.GetDisplayName()</button>
+								}
+
+								if(Model.SalesOrder.Customer.Id != WebConfig.DefaultCustomer) {
+												<button class="refund btn btn-default" type="button">@Resources.CreditNote</button>
+								}
+
+				}
+				else
+				{
+				}*@
+								<button id='complete' class="refund" type='submit'>@Resources.Complete</button>
+
+</div>
+<div class='clearfix'></div>
+<script type='text/javascript'>
+					$(function () {
+									$('[data-toggle="tooltip"]').tooltip();
+					});
+
+						$(".refund").click(function () {
+									var type = $(this).data('value');
+
+										$.post('@Url.Action("Confirm", new { id = Model.Id })',
+														{ 'method': type }, function (detail) {
+																		location.reload();
+																		//window.location.href = window.location.host + "/CustomerRefunds";
+
+													}, "json").fail(function (e) {
+																	console.log(e);
+																	DisplayErrorMessage(e.responseText)
+													});
+						});
+
+									function DisplayErrorMessage(errorMessage) {
+													$('.alert').text(errorMessage);
+													$('.alert').fadeIn(1).delay(5000).fadeOut(1000);
+									}
+</script>
+
+

@@ -63,7 +63,8 @@
 								<b>@Resources.QuantitySold:</b>
 								<span>@Html.DisplayFor(x => x.SalesOrderDetail.Quantity)</span>
 								<b>@Resources.QuantityRefund:</b>
-								<a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
+								<a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id'
+											data-url='@Url.Action("SetItemQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
 				</div>
 </li>
 <script type='text/javascript'>
@@ -77,9 +78,9 @@ $('#id\\:@Model.Id a.editable').editable({
 			$(this).siblings('.total2').attr('data-original-title', response.total2 + ' @WebConfig.BaseCurrency');
 		}
         $('#totals-section').loadUrl();
+								$('#buttons-section').loadUrl();
 
         if ('info' in response && response.info != null) {
-            console.log(response.info);
             DisplayInfoMessage(response.info)
         }
     },
@@ -88,18 +89,19 @@ $('#id\\:@Model.Id a.editable').editable({
         	$(this).html(value);
         } else if (Array.isArray(response)) {
           	arr = $.grep(response, function(o){
-  				return o.value == value;
-			});
-          	$(this).html(arr[0].text);
+  																		return o.value == value;
+																});
+												$(this).html(arr[0].text);
         } else {
           	$(this).html(response.value);
         }
-    }
+				}
 });
 $('#id\\:@Model.Id a.delete').editable({
 	success: function(response, newValue) {
         $('#id\\:@Model.Id').remove();
-        $('#totals-section').loadUrl();
+								$('#totals-section').loadUrl();
+								$('#buttons-section').loadUrl();
         if ($('#items li').length === 0) {
 	        $('#confirm-button').addClass('hide');
 	    }

@@ -19,7 +19,8 @@
         <th>@Resources.Cancelled</th>
         <th></th>
     </tr>
-@foreach (var item in Model.Results) {
+@foreach (var item in Model.Results)
+{
     <tr>
         <td class='number'>
         	@Html.DisplayFor(x => item.Id)
@@ -33,16 +34,26 @@
         <td class='bool'>@Html.DisplayFor(x => item.IsCompleted)</td>
         <td class='bool'>@Html.DisplayFor(x => item.IsCancelled)</td>
         <td class='actions'>
-    	@if (Privilege.AllowRead && (item.IsCompleted || item.IsCancelled)) {
-        	@Html.ActionLink(" ", "View", new { id = item.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
-        }
-        @if (Privilege.AllowUpdate && !item.IsCompleted && !item.IsCancelled) {
-        	@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
-        }
-    	@if (Privilege.AllowRead && (item.IsCompleted || item.IsCancelled)) {
-        	@Html.ActionLink(" ", "Pdf", new { id = item.Id }, new { @class = "button icon print icon-only", title = Resources.Details, target = "_blank" })
-        }
-        </td>
+    	        @if (Privilege.AllowRead && (item.IsCompleted || item.IsCancelled))
+             {
+        	        @Html.ActionLink(" ", "View", new { id = item.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
+             }
+            @if (Privilege.AllowUpdate && !item.IsCompleted && !item.IsCancelled)
+            {
+        	       @Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "button icon edit icon-only", @title = Resources.Edit })
+            }
+    	        @if (Privilege.AllowRead && (item.IsCompleted || item.IsCancelled))
+             {
+        	        @Html.ActionLink(" ", "Pdf", new { id = item.Id }, new { @class = "button icon print icon-only", title = Resources.Details, target = "_blank" })
+             }
+												@{
+																var credit_note = CreditNote.Queryable.Where(x => x.CustomerRefund == item).SingleOrDefault();
+												}
+												@if (credit_note != null)
+												{
+																@Html.ActionLink(" ", "PrintPayment","Payments", new { id = credit_note.CustomerPayment.Id }, new { @class = "button icon tprint icon-only", @title = Resources.PrintTicket, target = "_blank" })
+												}
+								</td>
     </tr>
 }
 </table>

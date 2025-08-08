@@ -4,23 +4,16 @@
 @model DeliveriesItineraryDetail
 
 <li id='id:@Model.Id'>
-				<div class='action-link'>
-								@*<img src='@Url.Content(Model.Product.Photo)' title='@Model.Product.Photo' />*@
-				</div>
     <div class='action-link'>
-    @*@if(Model.PurchaseRequest != null) {
-        <span class='label label-info' title='@Resources.PurchaseRequest'>@Html.DisplayFor(x => x.PurchaseRequest.Id)</span>
-    }*@
-								<span class='label label-info' title='@Resources.DeliveryOrder @Resources.DetailInformation'>@Html.DisplayFor(x => x.DeliveryOrderDetail.Id)</span>
-								<span class='label label-info' title='@Resources.SalesOrder  @Resources.DetailInformation'>@Html.DisplayFor(x => x.DeliveryOrderDetail.OrderDetail.Id)</span>
+								@*<span class='label label-info' title='@Resources.DeliveryOrder @Resources.DetailInformation'>@Html.DisplayFor(x => x.DeliveryOrderDetail.Id)</span>*@
+								<span class='label label-info' title='@Resources.DeliveryOrder  @Resources.DetailInformation'>@Html.DisplayFor(x => x.DeliveryOrderDetail.DeliveryOrder.Id)</span>
         <a class='button icon-only icon delete' title='@Resources.Message_DeleteConfirmation'
 		   data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id' data-url='@Url.Action("RemoveDetail", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
     </div>
     <div class='info'>
+        @*@Model.DeliveryOrderDetail.DeliveryOrder.Id*@ 
 		  @Html.DisplayFor(x => x.DeliveryOrderDetail.Product.Name)
         <br/>
-        @*<b>@Resources.QuantityOrdered: </b>
-        <span>@Html.DisplayFor(x => x.DeliveryOrderDetail.Quantity)</span>*@
         <b>@Resources.UnitOfMeasurement: </b>
         <span>@Html.DisplayFor(x => Model.DeliveryOrderDetail.Product.UnitOfMeasurement.Name)</span>
     @if (!string.IsNullOrEmpty (Model.DeliveryOrderDetail.Product.Model)) {

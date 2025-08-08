@@ -1,0 +1,65 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model Mictlanix.BE.Web.Models.CustomerDebtViewModel
+
+@{
+    Layout = WebConfig.PrintLayout;
+    ViewBag.Title = Html.PrintFileName(Resources.CustomerDebt, Model.Customer.Id);
+    ViewBag.Store = WebConfig.Store;
+    ViewBag.TaxpayerName = null;
+    ViewBag.Taxpayer = null;
+    ViewBag.Address = WebConfig.Store.Address;
+}
+<h2>@Resources.CustomerDebt</h2>
+<h3>@Resources.Customer: @Html.DisplayFor(x => x.Customer.Name)</h3>
+<h3>@Resources.Code: @Html.DisplayFor(x => x.Customer.Code)</h3>
+<h3>@Resources.DateRange: @Html.DisplayFor(x => x.DateRange.StartDate) / @Html.DisplayFor(x => x.DateRange.EndDate)</h3>
+<h3>@Resources.SalesPerson @(Model.Customer.SalesPerson != null ? Model.Customer.SalesPerson.Name : string.Format(Resources.AttribValueMissing, Resources.SalesPerson))</h3>
+
+
+<div style="margin-top:5mm; min-height: 2.2mm; border-top: #333 solid 1px; border-bottom: #333 solid 3px"></div>
+<table style="border-spacing:0 4px;border-collapse: separate;">
+				<thead>
+								<tr>
+												<th class="">@Resources.SalesOrder</th>
+												<th class="">@Resources.Date</th>
+												<th class="">@Resources.DueDate</th>
+												<th class="">@Resources.PaymentTerms</th>
+												<th class="">@Resources.SalesPerson</th>
+												<th class="">@Resources.Total</th>
+												<th class="center">@Resources.Refunds</th>
+												<th class="center">@Resources.Balance</th>
+
+								</tr>
+				</thead>
+				<tbody>
+								@foreach (var item in Model.SalesOrders)
+								{
+												string order_id = item.SalesOrderId.ToString("D5");
+												<tr class="@(item.Overdue > 0.01 || item.OnDelivery > 0 ? "warning":string.Empty )">
+																<td class="date">@Html.ActionLink(order_id, "Pdf", "POS", new { id = (int)item.SalesOrderId }, new { target = "_blank" })</td>
+																<td class="date">@item.Date.ToString("yyyy-MM-dd")</td>
+																<td class="date">@item.DueDate.ToString("yyyy-MM-dd")</td>
+																<td class="">@item.Terms</td>
+																<td class="">@item.SalesPerson</td>
+																<td class="number text-right">@item.Total.ToString("C")</td>
+																<td class="number">@(item.Refund!= null ? item.Refund.ToString("C"):string.Empty)</td>
+																<td class="number text-right">@(item.Balance < 0 && !item.OrderPaidStatus ? item.Balance.ToString("C"): Resources.Paid)</td>
+												</tr>
+								}
+				</tbody>
+				<tfoot>
+								<tr class="warning">
+												<td class="text-right" colspan="6"></td>
+												<td class="text-right"><b>@Resources.Balance</b></td>
+												<td class="number">@Model.SalesOrders.Where(x => (decimal)x.Balance < 0 && !x.OrderPaidStatus).Sum(y => (decimal)y.Balance).ToString("C")</td>
+								</tr>
+				</tfoot>
+</table>
+
+<div style="min-height: 2.2mm; border-top: #333 solid 3px; border-bottom: #333 solid 1px"></div>
+
+<table>
+
+</table>

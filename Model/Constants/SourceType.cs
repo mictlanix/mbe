@@ -44,6 +44,12 @@ namespace Mictlanix.BE.Model {
 		PurchaseOrder = 5,
 		[Display (Name = "Pricing", ResourceType = typeof (Resources))]
 		Pricing = 6,
+		[Display (Name = "Customer", ResourceType = typeof (Resources))]
+		Customer = 7,
+		[Display (Name = "UserSettings", ResourceType = typeof (Resources))]
+		UserSettings = 8,
+		[Display (Name = "Product", ResourceType = typeof (Resources))]
+		Product = 9,
 
 	}
 }

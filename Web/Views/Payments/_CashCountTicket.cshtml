@@ -51,7 +51,7 @@
 												@Html.DisplayFor(model => model.Cashier.Name)
 								</td>
 				</tr>
-				<tr>
+				@*<tr>
 								<td colspan="2" class="line title center">
 												@Resources.StartingCash
 								</td>
@@ -64,7 +64,7 @@
 								<td class="number">
 												@Html.DisplayFor(model => model.StartingCash)
 								</td>
-				</tr>
+				</tr>*@
 
 				<tr>
 								<td colspan="2" class="line title center">
@@ -72,7 +72,7 @@
 								</td>
 				</tr>
 
-				@foreach (var item in Model.MoneyCounts)
+				@foreach (var item in Model.PaymentsReceivedByMethod)
 				{
 								<tr>
 												<td class="right">
@@ -89,7 +89,8 @@
 												@Resources.Total :
 								</td>
 								<td class="line number">
-												@Model.MoneyCounts.Sum(x => x.Amount).ToString("c")
+												@*@Model.MoneyCounts.Sum(x => x.Amount).ToString("c")*@
+												@Model.PaymentsReceivedByMethod.Sum(x => x.Amount).ToString("c")
 								</td>
 				</tr>
 				<tr>
@@ -97,7 +98,7 @@
 												@Resources.Refunds
 								</td>
 				</tr>
-				@foreach (var item in Model.Refunds)
+				@foreach (var item in Model.RefundsByMethod)
 				{
 								<tr>
 												<td class="right">
@@ -116,22 +117,32 @@
 								</td>
 				</tr>
 
+				@foreach (var item in Model.ExpensesByMethod)
+				{
 								<tr>
 												<td class="right">
-																@Resources.Cash :
+																@item.Method.GetDisplayName() :
 												</td>
 
 												<td class="number">
-																@((Model.ExpensesCount).ToString("c"))
+																@((item.Amount).ToString("c"))
 												</td>
 								</tr>
+				}
 
 				<tr>
 								<td colspan="2" class="line title center">
 												@Resources.Title_CashMovements
 								</td>
 				</tr>
-
+				<tr>
+								<td class="right">
+												@Resources.StartingCash :
+								</td>
+								<td class="number">
+												@Html.DisplayFor(model => model.StartingCash)
+								</td>
+				</tr>
 				<tr>
 								<td class="right">
 												@Resources.Title_CashCounted :
@@ -145,7 +156,7 @@
 												@Resources.Expenses :
 								</td>
 								<td class="number">
-												@Html.DisplayFor(model => model.ExpensesCount)
+												@Model.ExpensesInCash.ToString("c")
 								</td>
 				</tr>
 				<tr>
@@ -153,17 +164,17 @@
 												@Resources.Refunds :
 								</td>
 								<td class="number">
-												@Html.DisplayFor(model => model.RefundsCount)
+												@Model.RefundsInCash.ToString("c")
 								</td>
 				</tr>
-				<tr>
-								<td class="line right">
-												@Html.LabelFor(model => model.CashInDrawer) :
-								</td>
-								<td class="line number">
-												@Html.DisplayFor(model => model.CashInDrawer)
-								</td>
-				</tr>
+				@*<tr>
+												<td class="line right">
+																@Html.LabelFor(model => model.CashInDrawer) :
+												</td>
+												<td class="line number">
+																@Html.DisplayFor(model => model.CashInDrawer)
+												</td>
+								</tr>*@
 				@*<tr>
 												<td colspan="2" class="line title center">
 																@Resources.Title_CashCounted

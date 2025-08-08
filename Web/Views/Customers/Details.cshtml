@@ -58,7 +58,7 @@
 </div>
 <div class='row vspaced'>
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
-@if (ViewBag.Privilege.AllowUpdate) {
+@if (ViewBag.Privilege.AllowUpdate && Model.Id != WebConfig.DefaultCustomer) {
 	@Html.ActionLink(Resources.Edit, "Edit", new { id = Model.Id }, new { @class = "button icon edit pull-right open-modal", data_modal_id = "customer-modal" })
 }
 </div>

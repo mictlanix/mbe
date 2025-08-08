@@ -1,0 +1,46 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
+@using Mictlanix.BE.Web.Helpers
+@model CommissionTicketViewModel
+
+@{
+				Layout = WebConfig.ReceiptLayout;
+				ViewBag.Title = Resources.Commissions;
+				ViewBag.Store = Model.Store;
+				ViewBag.Address = Model.Store.Address;
+}
+
+
+<div class="display-label text-left">
+				@Html.LabelFor(model => model.DateRange.StartDate)
+				@Html.DisplayFor(model => model.DateRange.StartDate)
+				&emsp;
+				@Html.LabelFor(model => model.DateRange.EndDate)
+				@Html.DisplayFor(model => model.DateRange.EndDate)
+</div>
+<div class="display-label text-left">
+				@Resources.SalesPerson
+				@if(Model.CommissionAgent != null){
+								Html.DisplayFor(model => Model.CommissionAgent.Nickname);
+				}
+					@Model.CommissionAgent.Name
+</div>
+
+<table>
+				@foreach (var item in Model.Details)
+				{
+								<tr>
+												<td class="line">
+																@item.Label
+												</td>
+												<td class="line number">
+																@(item.CommissionByLabel.ToString("c"))
+												</td>
+								</tr>
+				}
+				<tr>
+								<td class="total text-right">@Resources.Total</td>
+								<td class="total number"> @(Model.Details.Sum(x => (decimal)x.CommissionByLabel).ToString("c"))</td>
+				</tr>
+</table>

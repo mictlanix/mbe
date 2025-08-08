@@ -1,0 +1,51 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model IList<dynamic>
+@{
+				ViewBag.Title = Resources.ToPurchaseBySupplier;
+				var CurrentUser = Html.CurrentUser() ?? new User();
+				var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.PurchasesOrders);
+}
+<div class="page-header">
+				<div class="pull-right col-xs-6">
+				</div>
+				<h1>@Resources.ToPurchaseBySupplier</h1>
+</div>
+<div id="activity-indicator">
+				<img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
+</div>
+<table id="search-results" class="debts">
+				<thead>
+								<tr>
+												<th>@Resources.Supplier</th>
+												<th>@Resources.Quantity</th>
+												<th>@Resources.Total</th>
+												<th></th>
+								</tr>
+				</thead>
+				@foreach (var item in Model)
+				{
+								<tr>
+												<td>
+																@item.SupplierName
+												</td>
+												<td>
+																@item.PurchaseRequestDetailsCount
+												</td>
+												<td>
+																@item.PurchaseTotal.ToString("c")
+												</td>
+												<td>
+																@Html.ActionLink(Resources.Create, "CreatePurchaseBySupplier", new {id = item.SupplierId }, new { target = "_blank"})
+												</td>
+												<td>
+																@foreach(var warehouse in item.WarehouseIds.Split('|')) {
+																				string text = Resources.Create + ": " + Warehouse.Find(int.Parse(warehouse)).Name;
+																				@Html.ActionLink( text, "CreatePurchaseBySupplier", new {id = item.SupplierId, warehouse_id = warehouse }, new { target = "_blank"}) <br />
+																}
+												</td>
+								</tr>
+				}
+</table>

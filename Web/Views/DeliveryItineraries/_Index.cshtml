@@ -17,8 +17,7 @@
         <th>@Resources.Truck</th>
         <th>@Resources.Comment</th>
         <th>@Resources.DeliveryOrders</th>
-        <th>@Resources.Completed</th>
-        <th>@Resources.Cancelled</th>
+        @*<th>@Resources.Completed</th>*@
         <th></th>
     </tr>
     @foreach (var item in Model.Results) {
@@ -26,7 +25,11 @@
     }
 </table>
 <div class="buttons right">
-	<label class='button left'>@Model.ToString()</label>@if (Model.HasPrev) {<a class='button middle icon prev icon-only paging' title='@Resources.PrevPage' href='javascript:void(0)'></a>}@if (Model.HasNext) {<a class='button right icon next icon-only paging' title='@Resources.NextPage' href='javascript:void(0)'></a>}
+	<label class='button left'>@Model.ToString()</label>@if (Model.HasPrev) {
+					<a class='button middle icon prev icon-only paging' title='@Resources.PrevPage' href='javascript:void(0)'>
+									</a>}@if (Model.HasNext) {
+													<a class='button right icon next icon-only paging' title='@Resources.NextPage' href='javascript:void(0)'>
+																	</a>}
 </div>
 
 <script type="text/javascript">

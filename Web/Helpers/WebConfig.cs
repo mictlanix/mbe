@@ -45,6 +45,8 @@ namespace Mictlanix.BE.Web.Helpers {
 		public const string PointOfSaleCookieKey = "PointOfSale";
 		public const string CashDrawerCookieKey = "CashDrawer";
 		static PaymentMethod [] cashier_payment_options;
+		static IList<PaymentMethod> payment_methods_requires_verification;
+		static IList<PaymentMethod> payment_methods_for_refunds;
 		static string [] default_email_cc;
 		static IList<KeyValuePair<string, decimal>> tax_rates;
 		static IList<KeyValuePair<string, decimal>> retention_rates;
@@ -192,6 +194,22 @@ namespace Mictlanix.BE.Web.Helpers {
 			get { return ConfigurationManager.AppSettings ["DFacturePassword"]; }
 		}
 
+		public static string FacturacionMexicoUser {
+			get { return ConfigurationManager.AppSettings ["FacturacionMexicoUser"]; }
+		}
+
+		public static string FacturacionMexicoPassword {
+			get { return ConfigurationManager.AppSettings ["FacturacionMexicoPassword"]; }
+		}
+		public static string FacturacionMexicoInProduction {
+			get { string on = ConfigurationManager.AppSettings ["FacturacionMexicoInProduction"];
+				if (on == null || on.ToUpper () != "SI") {
+					return "NO";
+				}
+				return "SI";
+			}
+		}
+
 		public static string LogFilePattern {
 			get { return ConfigurationManager.AppSettings ["LogFilePattern"]; }
 		}
@@ -298,6 +316,48 @@ namespace Mictlanix.BE.Web.Helpers {
 			}
 		}
 
+		public static IList<PaymentMethod> PaymentMethodsVerificationRequired {
+			get {
+				if (payment_methods_requires_verification == null) {
+					var list = new List<PaymentMethod> ();
+					var opts = ConfigurationManager.AppSettings ["PaymentMethodsVerificationRequired"].Split (',');
+
+					foreach (var opt in opts) {
+						PaymentMethod method = PaymentMethod.ToBeDefined;
+
+						if (Enum.TryParse (opt, out method)) {
+							list.Add ((PaymentMethod)method);
+						}
+					}
+
+					payment_methods_requires_verification = list;
+				}
+
+				return payment_methods_requires_verification;
+			}
+		}
+
+		public static IList<PaymentMethod> PaymentMethodsForRefund {
+			get {
+				if (payment_methods_requires_verification == null) {
+					var list = new List<PaymentMethod> ();
+					var opts = ConfigurationManager.AppSettings ["PaymentMethodsForRefund"].Split (',');
+
+					foreach (var opt in opts) {
+						PaymentMethod method = PaymentMethod.ToBeDefined;
+
+						if (Enum.TryParse (opt, out method)) {
+							list.Add ((PaymentMethod)method);
+						}
+					}
+
+					payment_methods_for_refunds = list;
+				}
+
+				return payment_methods_for_refunds;
+			}
+		}
+
 		public static IList<PaymentMethodOption> StorePaymentOptions {
 			get {
 				var options = from x in PaymentMethodOption.Queryable
@@ -319,6 +379,12 @@ namespace Mictlanix.BE.Web.Helpers {
 		public static string DeliveryOrderTicket {
 			get { return ConfigurationManager.AppSettings ["DeliveryOrderTicket"]; }
 		}
+		public static string GoogleClientId {
+			get { return ConfigurationManager.AppSettings ["GoogleClientId"]; }
+		}
+		public static string GoogleClientSecret {
+			get { return ConfigurationManager.AppSettings ["GoogleClientSecret"]; }
+		}
 
 		public static bool DeliveryOrdersUseMiniPrinter {
 			get { return Convert.ToBoolean (ConfigurationManager.AppSettings ["DeliveryOrdersUseMiniPrinter"]); }
@@ -332,6 +398,9 @@ namespace Mictlanix.BE.Web.Helpers {
 		}
 		public static bool PurchaseRequestApprovalRequired {
 			get { return Convert.ToBoolean (ConfigurationManager.AppSettings ["PurchaseRequestApprovalRequired"]); }
+		}
+		public static bool DeliveryOrderRequiresPaidOrCreditSalesOrder {
+			get { return Convert.ToBoolean (ConfigurationManager.AppSettings ["DeliveryOrderRequiresPaidOrCreditSalesOrder"]); }
 		}
 
 		public static bool ShowSalesOrdersFromAllStores {
@@ -464,6 +533,17 @@ namespace Mictlanix.BE.Web.Helpers {
 
 		public static bool PriceValidationInRangeRequired {
 			get { return Convert.ToBoolean (ConfigurationManager.AppSettings ["PriceValidationInRangeRequired"]); }
+		}
+		public static bool RefundToCreditNote {
+			get { return Convert.ToBoolean (ConfigurationManager.AppSettings ["RefundToCreditNote"]); }
+		}
+
+		public static int MaxDaysOneSingleCredit {
+			get { return Convert.ToInt32 (ConfigurationManager.AppSettings ["MaxDaysOneSingleCredit"]); }
+		}
+
+		public static decimal MaxAmountOneSingleCredit {
+			get { return Convert.ToDecimal (ConfigurationManager.AppSettings ["MaxAmountOneSingleCredit"]); }
 		}
 
 

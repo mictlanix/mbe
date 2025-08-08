@@ -7,8 +7,6 @@
 @{
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.PurchaseRequestApproval);
-    //var objection = DeliveryOrderObjection.Queryable.Where(x => x.DeliveryOrder == Model).OrderByDescending(y => y.Id).FirstOrDefault();
-    //var message = objection == null ? string.Empty : objection.Report;
     }
 
 <tr id='id:@Model.Id'>
@@ -20,7 +18,10 @@
 				</td>
 				<td class="date">@Html.DisplayFor(x => x.Date)</td>
 				<td class="">@Html.DisplayFor(x => x.Creator.Name)</td>
+				<td class="bool">@Model.Details.Count()</td>
+				<td class="bool">@Model.Details.Sum(x => x.Quantity)</td>
 				<td class="bool">@string.Join(", ", Model.Details.Select(x => x.Warehouse.Code).Distinct())</td>
+				<td class="bool">@Html.Raw(string.Join("<br/> ", Model.Details.Where(x => x.Product.Supplier != null).Select(x => x.Product.Supplier.Name).Distinct()))</td>
 				<td class="bool">@(Model.IsApproved ? Resources.Approved:Resources.OnRequest)</td>
 
 				<td class="actions">
@@ -38,10 +39,6 @@
 																@Html.ActionLink(" ", "Edit", new { id = Model.Id },
 																				new { @class = "button icon edit icon-only", title = Resources.Edit })
 												}
-
-												@*if (Model.IsCompleted && !Model.IsDelivered && !Model.IsCancelled) {
-																@Html.ActionLink(" ", "Delivery", new { id = Model.Id },
-																	new { @class = "button icon shipping icon-only", title = Resources.Delivery })}*@
 								}
 				</td>
 </tr>

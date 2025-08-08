@@ -500,5 +500,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}
+
+		public JsonResult List ()
+		{
+			var qry = (from x in MBEQueryable.IQVehicles
+				   orderby x.Name
+				   select new {
+					   id = x.Id,
+					   name = x.NickName + " - " + x.Name
+				   }).ToList ();
+
+			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
+		}
 	}
 }

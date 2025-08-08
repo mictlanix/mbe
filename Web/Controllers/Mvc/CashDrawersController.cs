@@ -194,5 +194,22 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return Json (qry.Take (15).ToList (), JsonRequestBehavior.AllowGet);
 		}
+
+		public JsonResult ListByStore (int? id)
+		{
+			var option = new { value = -1, text = string.Format (Resources.SetItemToEmpty, Resources.CashDrawer) };
+			var select = new List<object> ();
+			select.Add (option);
+			var store = MBEQueryable.IQStores.Where (x => x.Id == id).SingleOrDefault ();
+
+			if (store != null) {
+				var items = (from y in MBEQueryable.IQCashDrawers
+					where y.Store == store
+					     select new { value = y.Id, text = y.Name }).ToList ();
+				select.AddRange (items);
+			};
+
+			return Json (select, JsonRequestBehavior.AllowGet);
+		}
 	}
 }

@@ -71,6 +71,30 @@ function ProductQuotationFormatter(item) {
 				return fmt;
 }
 
+function ProductPurchaseFormatter(item) {
+
+
+				var fmt = `
+					<li title = ${item.name} >
+						<img style='float:left;max-width:50px;height:50px;' src='${item.url}' alt=''/>
+						<div style='margin:6px 0 0 52px;height:45px;'>
+   						<div style='font-weight:bold;overflow:hidden;text-overflow:ellipsis;white-space:nowrap'>
+						   ${item.name}
+						</div>
+							<span>
+									${item.code === null ? '' : 'Código: ' + item.code}
+									${item.model === null ? '' : 'Modelo: ' + item.model}
+									${item.sku === null ? '' : 'SKU: ' + item.sku}
+									${item.supplier === null ? '' : 'Proveedor: ' + item.supplier}
+									${item.brand === null ? '' : 'Marca: ' + item.brand}
+							</span>
+		    </div>
+					</li>
+				`;
+
+				return fmt;
+}
+
 function ExpenseFormatter(item) {
 
 				var desc = "";

@@ -59,6 +59,15 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.5.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Google.Apis, Version=1.69.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.69.0\lib\net462\Google.Apis.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth, Version=1.69.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.69.0\lib\net462\Google.Apis.Auth.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Core, Version=1.69.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Core.1.69.0\lib\net462\Google.Apis.Core.dll</HintPath>
+    </Reference>
     <Reference Include="LinqKit, Version=1.3.8.0, Culture=neutral, PublicKeyToken=bc217f8844052a91, processorArchitecture=MSIL">
       <HintPath>..\packages\LinqKit.1.3.8\lib\net45\LinqKit.dll</HintPath>
     </Reference>
@@ -68,6 +77,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.2.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -139,9 +151,6 @@
     </Reference>
     <Reference Include="MailKit">
       <HintPath>..\packages\MailKit.2.11.1\lib\net48\MailKit.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Razor">
       <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.9\lib\net45\System.Web.Razor.dll</HintPath>
@@ -259,6 +268,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\Mvc\CommissionsController.cs" />
+    <Compile Include="Controllers\Mvc\CorrectionController.cs" />
     <Compile Include="Controllers\Mvc\DeliveryItinerariesController.cs" />
     <Compile Include="Controllers\Mvc\ExpensesController.cs" />
     <Compile Include="Controllers\Mvc\ExpenseVoucherController.cs" />
@@ -273,12 +284,20 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\CashDrawHelpers.cs" />
     <Compile Include="Helpers\CashHelpers.cs" />
     <Compile Include="Helpers\CFDHelpers40.cs" />
     <Compile Include="Helpers\DeliveryHelpers.cs" />
+    <Compile Include="Helpers\InstancesModelMerger.cs" />
     <Compile Include="Helpers\PriceHelpers.cs" />
+    <Compile Include="Models\CommissionTicketViewModel.cs" />
     <Compile Include="Models\CustomersStatusFilter.cs" />
     <Compile Include="Models\CustomerStatusFilter.cs" />
+    <Compile Include="Models\CustomerDebtViewModel.cs" />
+    <Compile Include="Models\DeliveryItineraryAddressViewModel.cs" />
+    <Compile Include="Models\ReceivedPaymentsSummaryViewModel.cs" />
+    <Compile Include="Models\BigPictureAllStoresViewModel.cs" />
+    <Compile Include="Services\IDocument.cs" />
     <Compile Include="Services\Result.cs" />
     <Compile Include="Services\ResultBind.cs" />
     <Compile Include="Helpers\SecurityHelpers.cs" />
@@ -379,6 +398,12 @@
   <ItemGroup>
     <Content Include="Content\bootstrap-clockpicker.min.css" />
     <Content Include="Content\buttons.css" />
+    <Content Include="Content\icons\1.png" />
+    <Content Include="Content\icons\2.png" />
+    <Content Include="Content\icons\3.png" />
+    <Content Include="Content\icons\4.png" />
+    <Content Include="Content\icons\5.png" />
+    <Content Include="Content\icons\refund.png" />
     <Content Include="Content\images\casamaestra.png" />
     <Content Include="Content\images\loading-bar.gif" />
     <Content Include="Content\images\loading-circle.gif" />
@@ -499,6 +524,8 @@
     <Content Include="Content\token-input.css" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\bootstrap-clockpicker.min.js" />
+    <Content Include="Scripts\bootstrap-editable.js" />
+    <Content Include="Scripts\bootstrap-editable.min.js" />
     <Content Include="Scripts\jquery.form.js" />
     <Content Include="Scripts\jquery.tokeninput.js" />
     <Content Include="packages.config">
@@ -506,6 +533,23 @@
     </Content>
     <Content Include="Views\POS\_ItemDisplayView.cshtml" />
     <Content Include="Views\POS\_ItemEditorView.cshtml" />
+    <Content Include="Views\Payments\PaymentsValidation.cshtml" />
+    <Content Include="Views\Payments\_PaymentsValidation.cshtml" />
+    <Content Include="Views\Payments\_PaymentToValidate.cshtml" />
+    <Content Include="Views\CustomerRefunds\_buttons.cshtml" />
+    <Content Include="ServiceAccount.json" />
+    <Content Include="Views\Payments\TicketCreditNote.cshtml" />
+    <Content Include="Views\DeliveryItineraries\_Addresses.cshtml" />
+    <Content Include="Views\DeliveryItineraries\_Address.cshtml" />
+    <Content Include="Views\Correction\Index.cshtml" />
+    <Content Include="Views\Correction\RestoreDeliverableOrderStatus.cshtml" />
+    <Content Include="Views\Correction\RestoredOrderDeliveryStatus.cshtml" />
+    <Content Include="Views\Commissions\_CommissionProducts.cshtml" />
+    <Content Include="Views\Commissions\CommissionProducts.cshtml" />
+    <Content Include="Views\DeliveryItineraries\View.cshtml" />
+    <Content Include="Views\DeliveryItineraries\_DisplayView.cshtml" />
+    <Content Include="Views\DeliveryItineraries\_ItemDisplayView.cshtml" />
+    <Content Include="Views\DeliveryItineraries\ItineraryTicket.cshtml" />
     <None Include="Views\POS\_ItemEditorView.cshtml.bk" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -566,8 +610,6 @@
     <Content Include="Views\Taxpayers\AddCertificate.cshtml" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
-    <Content Include="Scripts\bootstrap-editable.js" />
-    <Content Include="Scripts\bootstrap-editable.min.js" />
     <Content Include="Views\Addresses\_Refresh.cshtml" />
     <Content Include="Views\Contacts\_Refresh.cshtml" />
     <Content Include="Views\Addresses\_Create.cshtml" />
@@ -1060,6 +1102,15 @@
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1-vsdoc.js" />
     <Content Include="Views\FiscalDocuments\Print40T02Blue_PageFoot.cshtml" />
+    <Content Include="Views\Reports\PrintCustomerDebtReport.cshtml" />
+    <Content Include="Views\Purchases\ToPurchaseBySupplier.cshtml" />
+    <Content Include="Views\Reports\_ReceivedPaymentsSummary.cshtml" />
+    <Content Include="Views\Reports\ReceivedPaymentsSummary.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\PointOfSaleSelector.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CashDrawerSelector.cshtml" />
+    <Content Include="Views\Reports\_CommissionsBySalesPerson.cshtml" />
+    <Content Include="Views\Reports\CommissionAgentTicket.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Priority.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\fonts\" />
@@ -1272,7 +1323,7 @@
     <Content Include="Views\ExpenseVoucher\View.cshtml" />
     <Content Include="Views\ExpenseVoucher\_DisplayView.cshtml" />
     <Content Include="Views\ExpenseVoucher\_ItemDisplayView.cshtml" />
-    <Content Include="Views\Payments\PrintCreditPayment.cshtml" />
+    <Content Include="Views\Payments\TicketCreditPayment.cshtml" />
     <Content Include="Views\Payments\CreditPayments.cshtml" />
     <Content Include="Views\Payments\_CreditPayments.cshtml" />
     <Content Include="Views\Payments\ViewCreditPayment.cshtml" />
@@ -1353,30 +1404,16 @@
     <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Shared\MiniPrinterCancellationStamp.cshtml" />
     <Content Include="Views\DeliveryItineraries\Deliveries.cshtml" />
-    <Content Include="Views\DeliveryItineraries\DeliveryFormat.cshtml" />
     <Content Include="Views\DeliveryItineraries\DeliveryFormatRamos.cshtml" />
-    <Content Include="Views\DeliveryItineraries\DeliveryTicket.cshtml" />
     <Content Include="Views\DeliveryItineraries\Edit.cshtml" />
     <Content Include="Views\DeliveryItineraries\Index.cshtml" />
-    <Content Include="Views\DeliveryItineraries\New.cshtml" />
-    <Content Include="Views\DeliveryItineraries\PendantDeliveries.cshtml" />
-    <Content Include="Views\DeliveryItineraries\View.cshtml" />
-    <Content Include="Views\DeliveryItineraries\_buttons.cshtml" />
     <Content Include="Views\DeliveryItineraries\_Create.cshtml" />
     <Content Include="Views\DeliveryItineraries\_CreateSuccesful.cshtml" />
-    <Content Include="Views\DeliveryItineraries\_Delete.cshtml" />
-    <Content Include="Views\DeliveryItineraries\_DeliveryOrderDetailDisplayView.cshtml" />
-    <Content Include="Views\DeliveryItineraries\_DeliveryOrderDetailsDisplayView.cshtml" />
-    <Content Include="Views\DeliveryItineraries\_DisplayView.cshtml" />
-    <Content Include="Views\DeliveryItineraries\_Edit.cshtml" />
     <Content Include="Views\DeliveryItineraries\_EditorView.cshtml" />
     <Content Include="Views\DeliveryItineraries\_Index.cshtml" />
     <Content Include="Views\DeliveryItineraries\_Item.cshtml" />
-    <Content Include="Views\DeliveryItineraries\_ItemDisplayView.cshtml" />
     <Content Include="Views\DeliveryItineraries\_ItemEditorView.cshtml" />
     <Content Include="Views\DeliveryItineraries\_Items.cshtml" />
-    <Content Include="Views\DeliveryItineraries\_PendantDeliveries.cshtml" />
-    <Content Include="Views\DeliveryItineraries\_Refresh.cshtml" />
     <Content Include="Views\DeliveryOrders\DeliveryOrderFormat.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\DeliveriesItinerary.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\DeliveriesItinerarySelector.cshtml" />
@@ -1442,7 +1479,7 @@
     <Content Include="Views\ProductionSites\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ProductionSite.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Productionsite.cshtml" />
-    <Content Include="Views\Payments\PrintPaymentInAdvance.cshtml" />
+    <Content Include="Views\Payments\TicketPaymentInAdvance.cshtml" />
     <Content Include="Views\Payments\ViewPaymentInAdvance.cshtml" />
     <Content Include="Views\Payments\_PaymentInAdvance.cshtml" />
     <Content Include="Views\Payments\_PaymentInAdvanceSuccesful.cshtml" />

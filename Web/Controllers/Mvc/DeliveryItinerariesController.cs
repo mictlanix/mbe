@@ -1,15 +1,15 @@
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using System.Collections.Generic;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Helpers;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Castle.ActiveRecord;
-using NHibernate;
-using System.Collections.Generic;
-using static NHibernate.Engine.Query.CallableParser;
 using Castle.Core.Internal;
+using NHibernate;
+
 
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
@@ -55,12 +55,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				.OrderByDescending (y => y.Id);
 
 			var pages = new List<DeliveriesOnDay> ();
-			var items = query.Where (x => x.DeliveryOrder.Date.Value.Date >= date.AddDays (-prev).Date && x.DeliveryOrder.Date.Value.Date <= date.AddDays (next).Date).ToList ();
+			var items = query.Where (x => x.DeliveryOrder.Date.Date >= date.AddDays (-prev).Date && x.DeliveryOrder.Date.Date <= date.AddDays (next).Date).ToList ();
 
 
 			pages.Add (new DeliveriesOnDay {
 				Title = Resources.PreviousDeliveryOrders, Selected = false,
-				Details = query.Where (x => x.DeliveryOrder.Date.Value.Date < date.AddDays (-prev)).Take (WebConfig.PageSize).ToList ()
+				Details = query.Where (x => x.DeliveryOrder.Date.Date < date.AddDays (-prev)).Take (WebConfig.PageSize).ToList ()
 			});
 
 
@@ -71,7 +71,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					Title = pivot.Date.ToShortDateString (),
 					Selected = false,
 					Date = pivot.Date,
-					Details = items.Where (y => y.DeliveryOrder.Date.Value.Date == pivot.Date)
+					Details = items.Where (y => y.DeliveryOrder.Date.Date == pivot.Date)
 					//.OrderBy (y => y.Quantity - y.DeliveriesItineraryDetails.Sum (z => (decimal?) z.SentQuantity ?? 0) > 0 ? 1:0 )
 					.OrderByDescending (z => z.OrderDetail.SalesOrder.Priority).ToList ()
 				});
@@ -86,7 +86,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			pages.Add (new DeliveriesOnDay {
 				Title = Resources.FollowingDeliveryOrders, Selected = false,
-				Details = query.Where (x => x.DeliveryOrder.Date.Value.Date > date.AddDays (next)).Take (WebConfig.PageSize).ToList ()
+				Details = query.Where (x => x.DeliveryOrder.Date.Date > date.AddDays (next)).Take (WebConfig.PageSize).ToList ()
 			});
 
 			return View (pages);
@@ -118,17 +118,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		Search<DeliveriesItinerary> SearchDeliveryItineraries (Search<DeliveriesItinerary> search)
 		{
-			IQueryable<DeliveriesItinerary> qry;
+			IQueryable<DeliveriesItinerary> qry = DeliveriesItinerary.Queryable;
 			DateTime date;
 			DateTime.TryParse (search.Pattern, out date);
+			var pattern = string.IsNullOrEmpty (search.Pattern) ? string.Empty : search.Pattern.Trim ();
+			var warehouse = UserSettings.Find (CurrentUser.Identity.Name).PointOfSale.Warehouse;
 
-			if (search.Pattern == null) {
-				qry = from x in DeliveriesItinerary.Queryable
+			if (string.IsNullOrEmpty(pattern)) {
+				qry = from x in qry
 				      orderby x.Id descending
 				      select x;
 			} else {
-				qry = from x in DeliveriesItinerary.Queryable
-				      where x.DueDate.Date == date.Date
+				qry = from x in qry
+				      where x.Date.Date == date.Date
 				      orderby x.Id descending
 				      select x;
 			}
@@ -161,18 +163,18 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.VehicleOperator = VehicleOperator.TryFind (item.VehicleOperatorId);
 			item.Vehicle = Vehicle.TryFind (item.VehicleId);
 
-			//if (item.DueDate.Date < DateTime.Now.Date) {
-			//	ModelState.AddModelError ("DueDate", Resources.Validation_Date);
-			//}
+			////if (item.DueDate.Date < DateTime.Now.Date) {
+			////	ModelState.AddModelError ("DueDate", Resources.Validation_Date);
+			////}
 
-			//var itinerary_invalid = DeliveriesItinerary.Queryable
-			//	.Where(x => x.DueDate.Date == item.DueDate.Date
-			//	&& x.VehicleOperator == item.VehicleOperator
-			//	&& x.Vehicle == item.Vehicle).Count() > 0;
+			////var itinerary_invalid = DeliveriesItinerary.Queryable
+			////	.Where(x => x.DueDate.Date == item.DueDate.Date
+			////	&& x.VehicleOperator == item.VehicleOperator
+			////	&& x.Vehicle == item.Vehicle).Count() > 0;
 
-			//if (itinerary_invalid) {
-			//	ModelState.AddModelError ("", Resources.ItemAlreadyAdded);
-			//}
+			////if (itinerary_invalid) {
+			////	ModelState.AddModelError ("", Resources.ItemAlreadyAdded);
+			////}
 
 			if (!ModelState.IsValid)
 				return PartialView ("_Create", item);
@@ -189,27 +191,40 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_CreateSuccesful", new DeliveriesItinerary { Id = item.Id });
 		}
 
+		[HttpPost]
+		public ActionResult New ()
+		{
+
+			var dt = DateTime.Now;
+			var user = CurrentUser.Employee;
+
+			var itinerary = new DeliveriesItinerary {
+				Creator = user,
+				Updater = user,
+				CreationTime = dt,
+				ModificationTime = dt,
+				Date = dt,
+				Warehouse = UserSettings.Find (CurrentUser.Identity.Name).PointOfSale.Warehouse
+			};
+			using (var scope = new TransactionScope ()) {
+				itinerary.CreateAndFlush ();
+			}
+			return RedirectToAction ("Edit", new { id = itinerary.Id });
+		}
+
 		public ActionResult Edit (int id)
 		{
 			var item = DeliveriesItinerary.Find (id);
 
-			if (Request.IsAjaxRequest ()) {
-				return PartialView ("_MasterEditView", item);
-			}
-
-			if (!CashHelpers.ValidateExchangeRate ()) {
-				return View ("InvalidExchangeRate");
-			}
-
-			if (item.IsCompleted || item.IsCancelled) {
-				return RedirectToAction ("Details", new {
-					id = item.Id
-				});
-			}
-
 			return View (item);
 		}
 
+		public ActionResult View (int id)
+		{
+			var item = DeliveriesItinerary.Find (id);
+
+			return View (item);
+		}
 
 		[HttpPost]
 		public ActionResult SetComment (int id, string value)
@@ -237,6 +252,100 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
+		public ActionResult SetVehicle (int id, int value)
+		{
+			var entity = DeliveriesItinerary.Find (id);
+
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			var vehicle = MBEQueryable.IQVehicles.SingleOrDefault (x => x.Id == value);
+
+			if (vehicle == null) {
+				Response.StatusCode = 400;
+				return Content (string.Format (Resources.ItemNotFound, Resources.Vehicle));
+			}
+
+			entity.Vehicle = vehicle;
+			entity.Updater = CurrentUser.Employee;
+			entity.ModificationTime = DateTime.Now;
+
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
+			}
+
+			return Json (new {
+				id = id,
+				value = vehicle.NickName + " - " + vehicle.Name
+			});
+		}
+
+		[HttpPost]
+		public ActionResult SetVehicleOperator (int id, int value)
+		{
+			var entity = DeliveriesItinerary.Find (id);
+
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			var vehicleoperator = MBEQueryable.IQVehicleOperators.SingleOrDefault (x => x.Id == value);
+
+			if (vehicleoperator == null) {
+				Response.StatusCode = 400;
+				return Content (string.Format (Resources.ItemNotFound, Resources.VehicleOperator));
+			}
+
+			entity.Updater = CurrentUser.Employee;
+			entity.ModificationTime = DateTime.Now;
+			entity.VehicleOperator = vehicleoperator;
+
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
+			}
+
+			return Json (new {
+				id = id,
+				value = entity.VehicleOperator.Operator.Nickname
+			});
+		}
+
+		[HttpPost]
+		public ActionResult SetDate (int id, DateTime? value)
+		{
+			var entity = DeliveriesItinerary.Find (id);
+			var dt = DateTime.Now;
+
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			//if (!value.HasValue || value.Value.Date < dt.Date) {
+			//	Response.StatusCode = 400;
+			//	return Content (Resources.InvalidDate);
+			//}
+
+			if (value != null) {
+				entity.Date = value.Value;
+				entity.Updater = CurrentUser.Employee;
+				entity.ModificationTime = DateTime.Now;
+
+				using (var scope = new TransactionScope ()) {
+					entity.UpdateAndFlush ();
+				}
+			}
+
+			return Json (new {
+				id = id,
+				value = entity.FormattedValueFor (x => x.Date)
+			});
+		}
+
+		[HttpPost]
 		public ActionResult SetItemDetailQuantity (int id, string value)
 		{
 			var entity = DeliveriesItineraryDetail.Find (id);
@@ -247,7 +356,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				Response.StatusCode = 400;
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
-			var remaining_delivery_detail = GetRemainingToDeliver (entity.DeliveryOrderDetail) + entity.SentQuantity;
+			var remaining_delivery_detail = GetRemainingQuantityToDeliver (entity.DeliveryOrderDetail) + entity.SentQuantity;
 			entity.SentQuantity = val > remaining_delivery_detail ? remaining_delivery_detail : val;
 			entity.DeliveriesItinerary.Updater = CurrentUser.Employee;
 			entity.DeliveriesItinerary.ModificationTime = DateTime.Now;
@@ -261,13 +370,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				value = entity.SentQuantity
 			});
 		}
-
-		/// <summary>
-		/// DeliveryItineraries/SetItemDetailQuantity/1
-		/// </summary>
-		/// <param name="delivery_order_detail_id"></param>
-		/// <param name="id"></param>
-		/// <returns></returns>
 
 		[HttpPost]
 		public ActionResult AddDeliveryOrderDetail (int delivery_order_detail_id, int id)
@@ -284,7 +386,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var detail = new DeliveriesItineraryDetail {
 				DeliveriesItinerary = entity,
 				DeliveryOrderDetail = delivery_order_detail,
-				SentQuantity = GetRemainingToDeliver (delivery_order_detail)
+				SentQuantity = GetRemainingQuantityToDeliver (delivery_order_detail)
 			};
 
 			using (var scope = new TransactionScope ()) {
@@ -306,7 +408,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
+
 			var delivery_order = DeliveryOrder.Find (value);
+
+			if (delivery_order.IsPickedUpInStore) {
+				Response.StatusCode = 400;
+				return Content (Resources.CounterDelivery);
+			}
 
 			if (delivery_order == null) {
 				Response.StatusCode = 400;
@@ -321,7 +429,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var details = delivery_order.Details.Select (x => new DeliveriesItineraryDetail {
 				DeliveriesItinerary = entity,
 				DeliveryOrderDetail = x,
-				SentQuantity = GetRemainingToDeliver (x)
+				SentQuantity = GetRemainingQuantityToDeliver (x)
 			}).ToList ();
 
 			details = details.Where (x => x.SentQuantity > 0).ToList ();
@@ -331,14 +439,36 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.AlreadyFullyDelivered);
 			}
 
-			details = details.Where (x => !entity.Details.Select (y => y.DeliveryOrderDetail).Contains (x.DeliveryOrderDetail)).ToList ();
+			details = details.Where (x => !entity.Details.Select (y => y.DeliveryOrderDetail)
+						.Contains (x.DeliveryOrderDetail)).ToList ();
 
 			using (var scope = new TransactionScope ()) {
-				details.Where (x => x.SentQuantity > 0).ForEach (y => y.CreateAndFlush ());
+				details.Where (x => x.SentQuantity > 0)
+					.ForEach (y => y.CreateAndFlush ());
 			}
 
 			return Json (new {
 				id = delivery_order.Id
+			});
+		}
+
+		[HttpPost]
+		public ActionResult AddDeliveryOrdersOfTheDay (int id)
+		{
+			var entity = DeliveriesItinerary.Find (id);
+
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			var settings = UserSettings.Queryable.Where(x => x.UserName == CurrentUser.Identity.Name).Single();
+			var warehouse = settings.PointOfSale.Warehouse;
+
+			GetDeliveriesItineraryDetails (entity, warehouse);
+
+			return Json (new {
+				id = entity.Id
 			});
 		}
 
@@ -348,10 +478,22 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_Items", DeliveriesItinerary.Find (id).Details);
 		}
 
+		public ActionResult GetAddresses (int id)
+		{
+			var entity = DeliveriesItinerary.Find (id);
+			var addresses = entity.DeliveryOrders.Select(x =>
+				new DeliveryItineraryAddressViewModel { DeliveryOrder = x, Itinerary = entity }).ToList();
+			return PartialView ("_Addresses", addresses);
+		}
+
 		[HttpPost]
-		public JsonResult RemoveDetail (int id)
+		public ActionResult RemoveDetail (int id)
 		{
 			var item = DeliveriesItineraryDetail.Find (id);
+			if (item.DeliveriesItinerary.IsCancelled || item.DeliveriesItinerary.IsCompleted) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
 
 			using (var scope = new TransactionScope ()) {
 				item.DeleteAndFlush ();
@@ -363,7 +505,52 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			});
 		}
 
-		// TODO: Remove inventory stuff
+		[HttpPost]
+		public ActionResult RemoveDeliveryOrder (int id, int order)
+		{
+			var itinerary = DeliveriesItinerary.Find (id);
+			if (itinerary.IsCancelled || itinerary.IsCompleted) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			var items = itinerary.Details.Where (x => x.DeliveryOrderDetail.DeliveryOrder.Id == order).ToList ();
+
+			using (var scope = new TransactionScope ()) {
+				items.ForEach (x => {
+					x.DeleteAndFlush ();
+				});
+			}
+
+			return Json (new {
+				id = id,
+				result = true
+			});
+		}
+
+		[HttpPost]
+		public ActionResult RemoveAll (int id)
+		{
+			var itinerary = DeliveriesItinerary.Find (id);
+			if (itinerary.IsCancelled || itinerary.IsCompleted) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			var items = itinerary.Details.ToList ();
+
+			using (var scope = new TransactionScope ()) {
+				items.ForEach (x => {
+					x.DeleteAndFlush ();
+				});
+			}
+
+			return Json (new {
+				id = id,
+				result = true
+			});
+		}
+
 		[HttpPost]
 		public ActionResult Confirm (int id)
 		{
@@ -373,11 +560,27 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var dt = DateTime.Now;
 			var employee = CurrentUser.Employee;
 
-			var verify = item.Details.Any (x => x.SentQuantity > GetRemainingToDeliver (x.DeliveryOrderDetail) + x.DeliveryOrderDetail.Quantity);
+			var verify = item.Details.Any (x => x.SentQuantity > GetRemainingQuantityToDeliver (x.DeliveryOrderDetail) + x.DeliveryOrderDetail.Quantity);
 
 			if (verify) {
+				ModelState.AddModelError ("", Resources.QuantitiesHaveChanged);
 				return RedirectToAction ("Edit", item);
 			}
+
+			if (item.Vehicle == null) {
+				Response.StatusCode = 400;
+				return Content (Resources.ChooseVehicle);
+			}
+
+			if (item.VehicleOperator == null) {
+				Response.StatusCode = 400;
+				return Content (Resources.ChooseVehicleOperator);
+			}
+
+			//if (item.Date.Date < dt.Date) {
+			//	Response.StatusCode = 400;
+			//	return Content (Resources.InvalidDate);
+			//}
 
 			using (var scope = new TransactionScope ()) {
 
@@ -386,10 +589,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				item.UpdateAndFlush ();
 			}
 
+			if(Request.IsAjaxRequest()) {
+				return Json (new {
+					id = id,
+					result = true
+				});
+			}
+
 			return RedirectToAction ("Index");
 		}
 
-		[HttpPost]
+		//[HttpPost]
 		public ActionResult Cancel (int id)
 		{
 			var item = DeliveriesItinerary.Find (id);
@@ -400,9 +610,24 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				item.UpdateAndFlush ();
 			}
 
+			if (Request.IsAjaxRequest()) {
+				return PartialView ("_item", item);
+			}
+
 			return RedirectToAction ("Index");
 		}
 
+		public ActionResult Print (int id)
+		{
+			var item = DeliveriesItinerary.Queryable.Where(x => x.Id == id).Single();
+
+			if (!item.IsCompleted) {
+				return RedirectToAction ("Edit", new { id });
+			}
+
+			return PdfTicketView ("ItineraryTicket", item);
+
+		}
 		public JsonResult GetSuggestions (int id, string pattern)
 		{
 			var sql = @"SELECT
@@ -448,7 +673,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		}
 
-		private decimal GetRemainingToDeliver (DeliveryOrderDetail detail)
+		private decimal GetRemainingQuantityToDeliver (DeliveryOrderDetail detail)
 		{
 
 			if (detail.DeliveryOrder.IsCancelled || !detail.DeliveryOrder.IsCompleted)
@@ -457,6 +682,53 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var items = DeliveriesItineraryDetail.Queryable
 				.Where (x => !x.DeliveriesItinerary.IsCancelled && x.DeliveryOrderDetail == detail).ToList ();
 			return detail.Quantity - items.Sum (x => (decimal?) x.SentQuantity ?? 0);
+		}
+
+		private List<DeliveryOrderDetail> GetDeliveryOrderDetails (DateRange date, Warehouse w)
+		{
+			var qry = DeliveryOrderDetail.Queryable.Where (x =>
+				x.DeliveryOrder.Date >= date.StartDate
+				&& x.DeliveryOrder.Date <= date.EndDate
+				//&& x.Product.IsStockable
+				&& !x.DeliveryOrder.IsPickedUpInStore
+				&& x.OrderDetail.Warehouse == w
+				&& !x.DeliveryOrder.IsCancelled
+				&& x.DeliveryOrder.IsCompleted);
+			return qry.ToList ();
+		}
+
+		private void GetDeliveriesItineraryDetails (DeliveriesItinerary entity, Warehouse w) {
+
+			var range = new DateRange (entity.Date, entity.Date);
+
+			var details = GetDeliveryOrderDetails (range, entity.Warehouse);
+
+			List<DeliveriesItineraryDetail> to_deliver = new List<DeliveriesItineraryDetail>();
+			foreach (var detail in details) {
+
+				if(entity.Details.Any(x => x.DeliveryOrderDetail == detail)) {
+					continue; // already added
+				}
+
+				var quantity_to_send = GetRemainingQuantityToDeliver(detail);
+
+				if(quantity_to_send <= 0) {
+					continue; // already fully delivered
+				}
+
+				using(var scope = new TransactionScope ()) {
+					// create the itinerary detail
+					// if the quantity is 0, it will not be created
+					// so we can avoid creating empty details
+					(new DeliveriesItineraryDetail {
+						DeliveryOrderDetail = detail,
+						SentQuantity = quantity_to_send,
+						DeliveriesItinerary = entity,
+						Comment = detail.OrderDetail.Comment
+					}).CreateAndFlush();
+				}
+
+			}
 		}
 
 	}

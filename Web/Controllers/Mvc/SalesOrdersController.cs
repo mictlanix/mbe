@@ -86,37 +86,22 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var item = WebConfig.Store;
 			var pattern = (search.Pattern ?? string.Empty).Trim ();
-			IQueryable<SalesOrder> query = MBEQueryable.IQSalesOrders;
-			//query = query.Where (x => x.Creator == CurrentUser.Employee || x.SalesPerson == CurrentUser.Employee);
-
-			//if (!WebConfig.ShowSalesOrdersFromAllStores) {
-			//	query = query.Where (x => x.Store.Id == item.Id || x.Creator == CurrentUser.Employee);
-			//}
-
-			var privilege_all_users = GetAccessPrivilege (SystemObjects.SearchAllSalesOrderFromAllUsers);
-			var privilege_all_stores = GetAccessPrivilege (SystemObjects.SearchAllSalesOrderFromAllStores);
-
-			if (!privilege_all_users.AllowRead) {
-				query = from x in query
-					where x.Creator == CurrentUser.Employee
-					|| x.SalesPerson == CurrentUser.Employee
-					select x;
-			}
-
-			if (!privilege_all_stores.AllowRead) {
-				query = from x in query
-					where x.Store == WebConfig.Store
-					select x;
-			}
+			var user = CurrentUser.Employee;
+			IQueryable<SalesOrder> query = MBEQueryable.IQSalesOrders.Where(x => x.Creator == user || x.Updater == user || x.SalesPerson == user);
 
 			if (int.TryParse (pattern, out int id) && id > 0) {
-				query = query.Where (x => x.Id == id || x.Serial == id);
+				query = MBEQueryable.IQSalesOrders.Where (x => x.Id == id || x.Serial == id);
 			} else if (!string.IsNullOrEmpty (pattern)) {
-				query = from x in query
-					where x.Customer.Name.Contains (pattern) ||
-						x.SalesPerson.Nickname.Contains (pattern) ||
-						(x.SalesPerson.FirstName + " " + x.SalesPerson.LastName).Contains (pattern)
+
+				query = from x in MBEQueryable.IQSalesOrders
 					select x;
+
+				if (!(pattern.Contains (Resources.WilcardStringPatternForSearch) && CurrentUser.IsAdministrator)) {
+					query = from x in query
+						where x.Customer.Name.Contains (pattern) ||
+							x.SalesPerson.Nickname.Contains (pattern)
+						select x;
+				}
 			}
 
 			query = query.OrderByDescending (x => x.Id).OrderBy (y => y.IsCompleted || y.IsCancelled ? 1 : 0);
@@ -260,6 +245,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.Comment = salesquote.Comment;
 			item.ShipTo = salesquote.ShipTo;
 			item.CustomerShipTo = salesquote.ShipTo == null ? "" : salesquote.ShipTo.ToString ();
+			item.SalesQuote = salesquote;
 
 			item.Creator = CurrentUser.Employee;
 			item.CreationTime = dt;
@@ -488,6 +474,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			if (entity.IsCompleted || entity.IsCancelled) {
 				Response.StatusCode = 400;
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			if (!item.IsSalesPerson) {
+				Response.StatusCode = 400;
+				return Content (string.Format (Resources.InvalidEntity, Resources.SalesPerson));
 			}
 
 			if (item != null) {
@@ -917,43 +908,43 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			});
 		}
 
-		[HttpPost]
-		public ActionResult DuplicateItem (int id)
-		{
-			var entity = SalesOrderDetail.Find (id);
+		//[HttpPost]
+		//public ActionResult DuplicateItem (int id)
+		//{
+		//	var entity = SalesOrderDetail.Find (id);
 
-			if (entity.SalesOrder.IsCompleted || entity.SalesOrder.IsCancelled) {
-				Response.StatusCode = 400;
-				return Content (Resources.ItemAlreadyCompletedOrCancelled);
-			}
+		//	if (entity.SalesOrder.IsCompleted || entity.SalesOrder.IsCancelled) {
+		//		Response.StatusCode = 400;
+		//		return Content (Resources.ItemAlreadyCompletedOrCancelled);
+		//	}
 
-			var item = new SalesOrderDetail {
-				ProductCode = entity.ProductCode,
-				ProductName = entity.ProductName,
-				Price = entity.Price,
-				Warehouse = entity.Warehouse,
-				Comment = entity.Comment,
-				Cost = entity.Cost,
-				Currency = entity.Currency,
-				DiscountRate = entity.DiscountRate,
-				ExchangeRate = entity.ExchangeRate,
-				IsDelivery = entity.IsDelivery,
-				IsTaxIncluded = entity.IsTaxIncluded,
-				Product = entity.Product,
-				Quantity = entity.Product.MinimumOrderQuantity,
-				SalesOrder = entity.SalesOrder,
-				TaxRate = entity.TaxRate
-			};
+		//	var item = new SalesOrderDetail {
+		//		ProductCode = entity.ProductCode,
+		//		ProductName = entity.ProductName,
+		//		Price = entity.Price,
+		//		Warehouse = entity.Warehouse,
+		//		Comment = entity.Comment,
+		//		Cost = entity.Cost,
+		//		Currency = entity.Currency,
+		//		DiscountRate = entity.DiscountRate,
+		//		ExchangeRate = entity.ExchangeRate,
+		//		IsDelivery = entity.IsDelivery,
+		//		IsTaxIncluded = entity.IsTaxIncluded,
+		//		Product = entity.Product,
+		//		Quantity = entity.Product.MinimumOrderQuantity,
+		//		SalesOrder = entity.SalesOrder,
+		//		TaxRate = entity.TaxRate
+		//	};
 
-			using (var scope = new TransactionScope ()) {
-				item.SaveAndFlush ();
-			}
+		//	using (var scope = new TransactionScope ()) {
+		//		item.SaveAndFlush ();
+		//	}
 
-			return Json (new {
-				id = item.Id,
-				result = true
-			});
-		}
+		//	return Json (new {
+		//		id = item.Id,
+		//		result = true
+		//	});
+		//}
 
 		public ActionResult Item (int id)
 		{
@@ -1258,6 +1249,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return RedirectToAction ("Index");
 			}
 
+			//if (entity.Terms == PaymentTerms.NetD
+			//	&& (entity.Customer.HasExpiredCredits () || entity.IsOverCreditLimit() )) {
+			//	Response.StatusCode = 400;
+			//	return Content (Resources.CreditStatusNeedsToBeVerified);
+			//}
+
 			entity.Updater = CurrentUser.Employee;
 			entity.ModificationTime = DateTime.Now;
 			entity.IsDelivered = false;
@@ -1488,10 +1485,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					return Result.Failure<SalesOrderDetail> (Resources.WarehouseToBeDefined);
 				}
 
-				var stock = LotSerialTracking.Queryable.Where (x => x.Warehouse == detail.Warehouse && x.Product == detail.Product).Sum (y => (decimal?) y.Quantity) ?? 0;
-				var quantity = detail.Quantity + detail.SalesOrder.Details.Where (x => x.Product == detail.Product && x.Warehouse == detail.Warehouse && x != detail).Sum (y => (decimal?) y.Quantity) ?? 0;
+				var stock = LotSerialTracking.Queryable.
+					Where (x => x.Warehouse == detail.Warehouse && x.Product == detail.Product).
+					Sum (y => (decimal?) y.Quantity) ?? 0;
+				var quantity = detail.Quantity + detail.SalesOrder.Details.
+					Where (x => x.Product == detail.Product && x.Warehouse == detail.Warehouse && x != detail).
+					Sum (y => (decimal?) y.Quantity) ?? 0;
 				if (stock - quantity < 0) {
-					return Result.Failure<SalesOrderDetail> (string.Format (Resources.NoStockEnough, detail.Product.Name, stock, detail.Product.UnitOfMeasurement.Name));
+					return Result.Failure<SalesOrderDetail> (
+						string.Format (Resources.NoStockEnough, detail.Product.Name,
+						stock, detail.Product.UnitOfMeasurement.Name));
 				}
 
 			}
@@ -1510,13 +1513,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				var minimal_price = detail.Product.GetMinimalPrice ();
 				var maximum_price = detail.Product.GetMaximumPrice ();
 				if (!detail.IsPriceInRange ()) {
-					return Result.Failure<SalesOrderDetail> (string.Format (Resources.PriceInvalidRange, minimal_price, maximum_price));
+					return Result.Failure<SalesOrderDetail> (
+						string.Format (Resources.PriceInvalidRange, minimal_price, maximum_price));
 				}
 			}
 
-
 			return detail;
-
 		}
 
 		private List<string> GetValidationMessages (SalesOrderDetail detail) {
@@ -1527,7 +1529,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				errors.AddRange (stock.Errors);
 			}
 			if (!price.Success) {
-			//	errors.AddRange(price.Errors);
+				errors.AddRange(price.Errors);
 			}
 
 			return errors;

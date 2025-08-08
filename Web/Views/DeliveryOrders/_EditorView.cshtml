@@ -11,49 +11,62 @@
 <fieldset>
 	<div class='row'>
 		<div class='col-xs-8'>
-			<dl class=''>
-				<dt>@Resources.Customer</dt>
-				<dd>
-					@Html.DisplayFor(x => x.Customer.Name)
+								<dl class=''>
+												<dt>@Resources.Customer</dt>
+												<dd>
+																@Html.DisplayFor(x => x.Customer.Name)
 
-					(<a id="delivery-info" target="_blank" href='/Customers/Details/@Model.Customer.Id' >
-							<i class="glyphicon-pencil"></i>
-						
-					</a>)
-				</dd>
-				<dt>@Resources.Contact</dt>
-				<dd>
-					<a id='contact' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id'
-					   data-value='@(Model.Contact == null ? "" : Model.Contact.Id.ToString ())'
-					   data-source='@Url.Action("Contacts", new { id = Model.Id })' data-source-cache='false'
-					   data-url='@Url.Action("SetContact", new { id = Model.Id })'
-					   data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
-						@if (Model.Contact != null)
-						{
-							@Html.DisplayFor(x => x.Contact, "String")
-						}
-					</a>
-				</dd>
-				<dt>@Resources.ShipTo</dt>
-				<dd>
-					<a id='address' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id'
-					   data-value='@(Model.ShipTo == null ? "" : Model.ShipTo.Id.ToString ())'
-					   data-source='@Url.Action("Addresses" ,new { id = Model.Id })' data-source-cache='false'
-					   data-url='@Url.Action("SetShipTo", new { id = Model.Id })'
-					   data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
-						@if (Model.ShipTo != null)
-						{
-							@Html.DisplayFor(x => x.ShipTo, "String")
-						}
-					</a>
-				</dd>
-				<dt>@Resources.Comment</dt>
-				<dd>
-					<a class='editable' data-type="textarea" data-placement='right' data-pk='@Model.Id'
-					   data-url='@Url.Action("SetComment", new { id = Model.Id })'
-					   data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>@Model.Comment</a>
-				</dd>
-			</dl>
+																(<a id="delivery-info" target="_blank" href='/Customers/Details/@Model.Customer.Id'>
+																				<i class="glyphicon-pencil"></i>
+
+																</a>)
+												</dd>
+												@if (Model.Customer.Id != WebConfig.DefaultCustomer)
+												{
+																<dt>@Resources.Contact</dt>
+																<dd>
+																				<a id='contact' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id'
+																							data-value='@(Model.Contact == null ? "" : Model.Contact.Id.ToString ())'
+																							data-source='@Url.Action("Contacts", new { id = Model.Id })' data-source-cache='false'
+																							data-url='@Url.Action("SetContact", new { id = Model.Id })'
+																							data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+																								@if (Model.Contact != null)
+																								{
+																												@Html.DisplayFor(x => x.Contact, "String")
+																								}
+																				</a>
+																</dd>
+																<dt>@Resources.ShipTo</dt>
+																<dd>
+																				<a id='address' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id'
+																							data-value='@(Model.ShipTo == null ? "" : Model.ShipTo.Id.ToString ())'
+																							data-source='@Url.Action("Addresses" ,new { id = Model.Id })' data-source-cache='false'
+																							data-url='@Url.Action("SetShipTo", new { id = Model.Id })'
+																							data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+																								@if (Model.ShipTo != null)
+																								{
+																												@Html.DisplayFor(x => x.ShipTo, "String")
+																								}
+																				</a>
+																</dd>
+																<dt>@Resources.Priority</dt>
+																<dd>
+																				<a id='priority' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id'
+																							data-value='@((int)Model.Priority))'
+																							data-source='@Url.Action("PriorityLevels", new { id = Model.Id })' data-source-cache='false'
+																							data-url='@Url.Action("SetPriorityLevel", new { id = Model.Id })'
+																							data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+																								@Model.Priority.GetDisplayName()
+																				</a>
+																</dd>
+																<dt>@Resources.Comment</dt>
+																<dd>
+																				<a class='editable' data-type="textarea" data-placement='right' data-pk='@Model.Id'
+																							data-url='@Url.Action("SetComment", new { id = Model.Id })'
+																							data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>@Model.Comment</a>
+																</dd>
+												}
+								</dl>
 		</div>
 	  	<div class='col-xs-4'>
 	  		<dl class='dl-horizontal'>

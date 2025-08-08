@@ -38,6 +38,8 @@ using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 using Microsoft.Ajax.Utilities;
 using Mictlanix.BE.Web.Security;
+using System.Web.UI.WebControls;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Database;
 
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
@@ -201,14 +203,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Kardex (int warehouse, int product, DateRange dates)
 		{
 
-			var start = dates.StartDate.Date;
-			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var start = dates.StartDate;
+			var end = dates.EndDate;
 
 
 			//var balance2 = LotSerialTracking.Queryable.Where (x => x.Warehouse.Id == warehouse && x.Product.Id == product && x.Date.Date < start).Sum (y => (decimal?) y.Quantity) ?? 0.0m;
 
 
-			string sql = @"SELECT DATE(l.date) Date, l.source Source, l.reference Reference, l.lot_number LotNumber, l.expiration_date ExpirationDate, SUM(quantity) Quantity
+			string sql = @"SELECT DATE(l.date) Date, l.source Source, l.reference Reference, l.lot_number LotNumber,
+						l.expiration_date ExpirationDate, SUM(quantity) Quantity
                             FROM lot_serial_tracking l
                             WHERE warehouse = :warehouse AND product = :product AND date >= :start AND date <= :end
                             GROUP BY DATE(l.date), l.source, l.reference, l.lot_number, l.expiration_date
@@ -264,8 +267,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult SerialNumberKardex (int warehouse, int product, DateRange dates)
 		{
 
-			var start = dates.StartDate.Date;
-			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var start = dates.StartDate;
+			var end = dates.EndDate;
 			var balance = from x in LotSerialTracking.Queryable
 				      where x.Warehouse.Id == warehouse && x.Product.Id == product && x.Date < start
 				      select x.Quantity;
@@ -451,8 +454,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		[HttpPost]
 		public ActionResult BestSellingProductsByCustomer (int customer, DateRange dates)
 		{
-			var start = dates.StartDate.Date;
-			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var start = dates.StartDate;
+			var end = dates.EndDate;
 			var qry = from x in SalesOrder.Queryable
 				  from y in x.Details
 				  where x.Customer.Id == customer &&
@@ -495,8 +498,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		[HttpPost]
 		public ActionResult BestSellingProductsBySalesPerson (int employee, DateRange dates)
 		{
-			var start = dates.StartDate.Date;
-			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var start = dates.StartDate;
+			var end = dates.EndDate;
 			var qry = from x in SalesOrder.Queryable
 				  from y in x.Details
 				  where x.SalesPerson.Id == employee &&
@@ -556,6 +559,178 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			
 		}
 
+		private string GetSalesOrdersDetailsSQLQuery () {
+			return @"
+				SELECT 	so.sales_order_id 'sales_order_id', 
+							so.payment_terms 'terms' ,
+							IF(so.payment_terms = 0, 'contado', 'crédito') 'terms_name',
+							c.credit_limit, 
+							c.credit_days, 
+							so.due_date AS 'due_date', 
+							crtr.employee_id 'creator_id',
+							crtr.nickname 'creator_nickname', 
+							sp.employee_id 'salesperson_id' ,
+							sp.nickname 'salesperson_nickname', 
+							c.customer_id 'customer_id',
+							c.name 'customer_name',
+							c.code 'customer_code' ,
+							so.date 'sales_order_date', 
+							t1.total 'sales_order_total',
+							t1.ordered_quantity 'ordered_quantity',
+							t2.refund 'sales_order_refund',
+							t2.refund_ids 'sales_order_refund_ids',
+							t3.paid, -(t1.total - IFNULL(t2.refund, 0) - IFNULL(t3.paid, 0)) AS 'sales_order_balance',
+							t3.payments 'sales_order_payments', 
+							t3.last_payment 'sales_order_last_payment', 
+							t4.on_delivery 'sales_order_payments_on_delivery_unregistered',
+							t5.delivered_quantity 'delivered_quantity',
+							t5.delivery_order_ids 'delivery_order_ids',
+							so.paid 'sales_order_paid_status', 
+							if( NOW() > so.due_date AND so.paid = 0 AND (-(t1.total - IFNULL(t2.refund, 0) - IFNULL(t3.paid, 0)) < 0), 1, 0 ) AS 'sales_order_due_status'
+				FROM sales_order so 
+				JOIN employee sp ON so.salesperson = sp.employee_id
+				JOIN employee crtr ON so.creator = crtr.employee_id
+				JOIN customer c ON so.customer = c.customer_id
+				JOIN (SELECT sod.sales_order, SUM(sod.quantity) ordered_quantity,
+								ROUND(SUM(sod.quantity * sod.price * (1-sod.discount_rate)) * (IF(sod.tax_included = 1, 1, 1 + sod.tax_rate)),2) AS total 
+								FROM sales_order_detail sod 
+								GROUP BY sod.sales_order) AS t1 ON t1.sales_order = so.sales_order_id
+				LEFT JOIN (SELECT cr.sales_order, ROUND(SUM(crd.quantity * crd.price * (1-crd.discount)),2) AS refund,
+									GROUP_CONCAT(DISTINCT cr.customer_refund_id ORDER BY cr.customer_refund_id SEPARATOR '|') refund_ids
+								FROM customer_refund cr
+								JOIN customer_refund_detail crd ON crd.customer_refund = cr.customer_refund_id
+								GROUP BY cr.sales_order) AS t2 ON t2.sales_order = so.sales_order_id
+				LEFT JOIN (SELECT sop.sales_order, sop.customer_payment, MAX(cp.date) last_payment, 
+									GROUP_CONCAT( 
+									CASE 
+										WHEN cp.method = 1  THEN CONCAT('Efectivo: ',' $', sop.amount)
+										WHEN cp.method = 3  THEN CONCAT('Transferencia: ',' $', sop.amount)
+										WHEN cp.method = 4  THEN CONCAT('T. Crédito: ',' $', sop.amount)
+										WHEN cp.method = 12 THEN CONCAT('Dación: ',' $', sop.amount)	
+										WHEN cp.method = 28 THEN CONCAT('T. Débito: ',' $', sop.amount)						
+										ELSE CONCAT('*Nuevo*: ', cp.customer_payment_id, ' $', sop.amount)
+										END
+									 SEPARATOR '|') payments, SUM(sop.amount) paid
+								FROM sales_order_payment sop 
+								JOIN customer_payment cp ON sop.customer_payment = cp.customer_payment_id
+								GROUP BY sop.sales_order) AS t3 ON t3.sales_order = so.sales_order_id
+				LEFT JOIN (SELECT sop.sales_order, SUM(sop.amount) on_delivery
+								FROM sales_order_payment sop 
+								JOIN customer_payment cp ON sop.customer_payment = cp.customer_payment_id
+								WHERE cp.cash_session IS null
+								GROUP BY sop.sales_order) AS t4 ON t4.sales_order = so.sales_order_id
+				LEFT JOIN (SELECT s.sales_order_id, SUM(dod.quantity) delivered_quantity, 
+								GROUP_CONCAT(DISTINCT delo.delivery_order_id SEPARATOR '|') delivery_order_ids 
+								FROM delivery_order_detail dod 
+								LEFT JOIN delivery_order delo ON dod.delivery_order = delo.delivery_order_id
+								LEFT JOIN sales_order_detail sd ON dod.sales_order_detail = sd.sales_order_detail_id
+								LEFT JOIN sales_order s ON sd.sales_order = s.sales_order_id
+								WHERE delo.cancelled = 0 AND delo.completed = 1
+								GROUP BY s.sales_order_id) AS t5 ON so.sales_order_id = t5.sales_order_id
+				WHERE so.completed = 1 AND so.cancelled = 0 AND date(so.creation_time) > '2024-01-01'
+			";
+		}
+
+		private string GetCommissionDetailsSQLQuery () {
+			return @"WITH details_orders AS (
+				SELECT so.sales_order_id sales_order, sod.sales_order_detail_id sales_order_detail, sod.quantity, 
+				ROUND((sod.price * (1-sod.discount_rate)* (1 + IF(sod.tax_included = 1, 0, sod.tax_rate))),2) price,
+				sod.product, sod.product_name, so.salesperson osp, c.salesperson csp,
+				so.paid, c.name customer, so.date, so.modification_time, 'sales' movement
+				FROM sales_order so
+				JOIN sales_order_detail sod ON so.sales_order_id = sod.sales_order
+				JOIN customer c ON c.customer_id = so.customer
+				WHERE (so.date BETWEEN :start AND :end OR so.modification_time BETWEEN :start AND :end)
+				AND (so.salesperson WHERE_SALESPERSON OR c.salesperson WHERE_SALESPERSON)
+			),
+			details_refunds AS(
+				SELECT  deto.sales_order, crd.sales_order_detail, crd.quantity,
+				ROUND((-1)*(crd.price * (1-crd.discount)* (1 + IF(crd.tax_included = 1, 0, crd.tax_rate))),2) price,
+				crd.product, crd.product_name, deto.osp, deto.csp, deto.paid, deto.customer, cr.date,
+				cr.modification_time, 'refund' movement
+				FROM customer_refund_detail crd
+				JOIN customer_refund cr ON crd.customer_refund = cr.customer_refund_id
+				JOIN details_orders deto ON deto.sales_order_detail = crd.sales_order_detail
+				WHERE cr.modification_time <= :end
+				AND cr.completed = 1 AND cr.cancelled = 0
+				UNION
+				SELECT sod.sales_order ,crd.sales_order_detail, crd.quantity,
+				ROUND((-1)*(crd.price * (1-crd.discount)* (1 + IF(crd.tax_included = 1, 0, crd.tax_rate))),2) price,
+				crd.product, crd.product_name, so.salesperson, c.salesperson, so.paid, c.name customer, cr.date,
+				cr.modification_time,  'refund' movement
+				FROM customer_refund_detail crd
+				JOIN customer_refund cr ON crd.customer_refund = cr.customer_refund_id
+				JOIN sales_order_detail sod ON crd.sales_order_detail = sod.sales_order_detail_id
+				JOIN sales_order so ON sod.sales_order = so.sales_order_id
+				JOIN customer c ON so.customer = c.customer_id
+				WHERE cr.modification_time BETWEEN :start AND :end
+				AND cr.completed = 1 AND cr.cancelled = 0 AND (so.salesperson WHERE_SALESPERSON OR c.salesperson WHERE_SALESPERSON)
+			),
+			details AS (
+			SELECT * FROM details_refunds cr
+			UNION 
+			SELECT * FROM details_orders deto
+			),
+			commission_detail_lifetime_customer AS(
+				SELECT d.sales_order, d.sales_order_detail, d.csp salesperson, d.osp, d.customer, d.paid, d.date, d.modification_time,
+					d.product, d.product_name,	d.price, d.quantity, ROUND((d.price * d.quantity) , 2) total_detail, 
+					(cm.commission_rate * cs.participation_rate) commission_rate, 
+					ROUND((d.price * d.quantity*d.paid * cm.commission_rate * cs.participation_rate) , 2) commission,
+					cm.name label, 'CLIENTE VITALICIO' participation 
+				FROM details d
+				LEFT JOIN commission_product cp ON cp.product = d.product
+				LEFT JOIN commission cm ON cm.commission_id = cp.commission
+				LEFT JOIN commission_salesperson cs ON cs.salesperson = d.csp AND cs.commission_participation = 1 AND cs.commission = cp.commission
+				WHERE cs.participation_rate IS NOT NULL AND cs.salesperson WHERE_SALESPERSON
+			),
+			commission_detail_customer_service AS(
+			SELECT d.sales_order, d.sales_order_detail, d.csp salesperson, d.osp, d.customer, d.paid, d.date, d.modification_time,
+					d.product, d.product_name,	d.price, d.quantity, ROUND((d.price * d.quantity) , 2) total_detail,
+					(cm.commission_rate * cs.participation_rate) commission_rate, 
+					ROUND((d.price * d.quantity*d.paid * cm.commission_rate * cs.participation_rate) , 2) commission,
+					cm.name label, 'ATENCIÓN TELEFÓNICA' participation  FROM details d
+				LEFT JOIN commission_product cp ON cp.product = d.product
+				LEFT JOIN commission cm ON cm.commission_id = cp.commission
+				LEFT JOIN commission_salesperson cs ON cs.salesperson = d.csp AND cs.commission_participation = 2 AND cs.commission = cp.commission
+				WHERE cs.participation_rate IS NOT NULL AND cs.salesperson WHERE_SALESPERSON
+			),
+			commission_detail_on_field AS(
+			SELECT d.sales_order, d.sales_order_detail, d.salesperson, d.osp ,d.customer, d.paid, d.date, d.modification_time,
+					d.product, d.product_name,	d.price, d.quantity, d.total_detail,
+					(cm.commission_rate * cs.participation_rate) commission_rate, 
+					ROUND((d.price * d.quantity*d.paid * cm.commission_rate * cs.participation_rate) , 2) commission,
+					cm.name label, 'ATENCIÓN EN CAMPO' participation
+				FROM commission_detail_customer_service d
+				LEFT JOIN commission_product cp ON cp.product = d.product
+				LEFT JOIN commission cm ON cm.commission_id = cp.commission
+				LEFT JOIN commission_salesperson cs ON cs.salesperson = d.osp AND cs.commission_participation = 3 AND cs.commission = cp.commission
+				WHERE cs.participation_rate IS NOT NULL AND d.salesperson != d.osp and d.osp WHERE_SALESPERSON
+			),
+			detailed AS(
+			SELECT * FROM commission_detail_on_field
+			UNION
+			SELECT  * FROM commission_detail_customer_service
+			UNION
+			SELECT * FROM commission_detail_lifetime_customer)
+			SELECT	sales_order SalesOrder,
+				sales_order_detail SalesOrderDetail,
+				salesperson SalesPerson,
+				customer Customer,
+				date OrderDate,
+				modification_time PaymentDate,
+				label Label,
+				product_name ProductName,
+				total_detail TotalDetail,
+				concat(round(commission_rate * 100, 2), '%') CommissionRate,
+				commission Commission,
+				price Price,
+				quantity Quantity,
+				participation Participation,
+				paid PaidStatus,
+				IF(price < 0, 'DEVOLUCIÓN', 'PEDIDO') Movement,
+				if(paid = 0, 'A SALDAR', 'PAGADO') Paid FROM detailed";
+		}
+
 		[HttpPost]
 		public ActionResult CustomersDebtSummary (CustomersStatusFilter filter) {
 
@@ -563,17 +738,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			string ONLY_DEBTORS_FILTER = filter.OnlyDebtors ? " HAVING (Balance < 0 OR OnDelivery > 0.01)" : string.Empty;
 			string CUSTOMER_ID_FILTER = filter.CustomerId.HasValue? " AND op.customer_id = " + filter.CustomerId.Value : string.Empty;
 
+			string REPORT = GetSalesOrdersDetailsSQLQuery ();
+
 			string sql = @"	SELECT op.customer_id AS CustomerId, op.customer_name AS CustomerName,
 					op.customer_code AS CustomerCode, op.credit_limit CreditLimit,
 					op.credit_days CreditDays, SUM(op.sales_order_total) Total,
 					SUM(op.sales_order_due_status) NumberOfOverdueOrders,
 					COUNT(*) NumberOfOrders,
 					SUM(op.sales_order_refund) Refunds, SUM(op.paid) Payment,
-					SUM(IF(op.sales_order_balance > 0, 0, op.sales_order_balance)) AS Balance,
+					SUM(IF(op.sales_order_balance < 0 AND op.sales_order_paid_status = 0, op.sales_order_balance, 0)) AS Balance,
 					SUM(op.sales_order_payments_on_delivery_unregistered) AS OnDelivery, 
 					MIN(op.due_date) AS OldestOverdueDate 
-					FROM orders_payments_report_view op
-					WHERE op.creation_time BETWEEN :start AND :end
+					FROM (REPORT) AS op
+					WHERE op.sales_order_date BETWEEN :start AND :end
 					CUSTOMER_ID_FILTER
 					GROUP BY op.customer_id
 					ONLY_DEBTORS_FILTER
@@ -582,6 +759,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			sql = sql.Replace ("ONLY_CREDITS_FILTER", ONLY_CREDITS_FILTER);
 			sql = sql.Replace ("ONLY_DEBTORS_FILTER", ONLY_DEBTORS_FILTER);
 			sql = sql.Replace ("CUSTOMER_ID_FILTER", CUSTOMER_ID_FILTER);
+			sql = sql.Replace ("REPORT", REPORT);
 
 			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
@@ -600,8 +778,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				query.AddScalar ("OnDelivery", NHibernateUtil.Decimal);
 				query.AddScalar ("OldestOverdueDate", NHibernateUtil.Date);
 
-				query.SetParameter ("start", filter.DateRange.StartDate);
-				query.SetParameter ("end", filter.DateRange.EndDate);
+				//query.SetParameter ("start", filter.DateRange.StartDate);
+				//query.SetParameter ("end", filter.DateRange.EndDate);
+				query.SetParameter ("start", new DateTime(2024,01,01));
+				query.SetParameter ("end", DateTime.Now);
 
 				return query.DynamicList ();
 			}, null);
@@ -610,28 +790,70 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_CustomersDebtSummary", items.ToList ());
 		}
 
-		public ViewResult CustomerDebtReport (int id)
+		public ViewResult PrintCustomerDebtReport (int id)
 		{
 
-			var customer = Customer.Queryable.Single(x => x.Id == id);
+			var item = new CustomerDebtViewModel {
+				Customer = MBEQueryable.IQCustomers.Where (x => x.Id == id).Single (),
+				OnlyDebts = false,
+				OnlyCredits = false,
+				DateRange = new DateRange { StartDate = new DateTime(2024,01,01), EndDate = DateTime.Now }
+			};
 
-			string sql = @"	SELECT sales_order_id SalesOrderId, creation_time CreationTime ,customer_name CustomerName,
+			item = GetCustomerDebtInfo(item);
+
+			return View (item);
+
+		}
+
+		public ViewResult CustomerDebtReport (int id)
+		{
+			var viewModel = new CustomerDebtViewModel {
+				Customer = MBEQueryable.IQCustomers.Single(x=> x.Id == id),
+				DateRange = new DateRange { StartDate = new DateTime(2024,01,01), EndDate = DateTime.Now },
+				OnlyCredits = false,
+				OnlyDebts = false,
+			};
+
+			var items = GetCustomerDebtInfo (viewModel);
+
+			return View ("CustomerDebtReport", items);
+		}
+
+		private CustomerDebtViewModel GetCustomerDebtInfo (CustomerDebtViewModel model) {
+
+			var ONLY_CREDITS = model.OnlyCredits ? " AND rpt.terms = 1 " : string.Empty;
+			var ONLY_DEBTS = model.OnlyDebts ? " HAVING Balance < 0 " : string.Empty;
+			var REPORT = GetSalesOrdersDetailsSQLQuery ();
+			var start = model.DateRange.StartDate.Date;
+			var end = model.DateRange.EndDate.AddDays(1).Date;
+
+			string sql = @"	SELECT sales_order_id SalesOrderId, sales_order_date Date ,customer_name CustomerName,
 					terms_name Terms, due_date DueDate,
 					creator_nickname User, salesperson_nickname SalesPerson,
+					ordered_quantity OrderedQuantity, delivered_quantity DeliveredQuantity,
+					delivery_order_ids DeliveryOrderIds, 
 					sales_order_total Total, sales_order_refund Refund,
-					sales_order_refund_ids RefundsDesc, paid Paid,
-					sales_order_balance Balance, sales_order_payments PaymentsDesc,
+					sales_order_refund_ids RefundsInfo, paid Paid,
+					sales_order_balance AS Balance, sales_order_payments PaymentsInfo,
 					sales_order_payments_on_delivery_unregistered OnDelivery,
 					sales_order_paid_status OrderPaidStatus, sales_order_due_status Overdue
-					FROM orders_payments_report_view
-					WHERE customer_id = :customer_id
-					ORDER BY SalesOrderId DESC;";
+					FROM (REPORT) AS rpt
+					WHERE rpt.customer_id = :customer_id
+					AND rpt.sales_order_date BETWEEN :start AND :end
+					ONLY_CREDITS
+					ONLY_DEBTS
+					ORDER BY sales_order_id DESC;";
+
+			sql = sql.Replace ("ONLY_CREDITS", ONLY_CREDITS);
+			sql = sql.Replace ("ONLY_DEBTS", ONLY_DEBTS);
+			sql = sql.Replace ("REPORT", REPORT);
 
 			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("SalesOrderId", NHibernateUtil.Int32);
-				query.AddScalar ("CreationTime", NHibernateUtil.Date);
+				query.AddScalar ("Date", NHibernateUtil.Date);
 				query.AddScalar ("CustomerName", NHibernateUtil.String);
 				query.AddScalar ("Terms", NHibernateUtil.String);
 				query.AddScalar ("DueDate", NHibernateUtil.Date);
@@ -639,22 +861,26 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				query.AddScalar ("User", NHibernateUtil.String);
 				query.AddScalar ("Total", NHibernateUtil.Decimal);
 				query.AddScalar ("Refund", NHibernateUtil.Decimal);
-				query.AddScalar ("RefundsDesc", NHibernateUtil.String);
+				query.AddScalar ("RefundsInfo", NHibernateUtil.String);
 				query.AddScalar ("Paid", NHibernateUtil.Decimal);
 				query.AddScalar ("Balance", NHibernateUtil.Decimal);
-				query.AddScalar ("PaymentsDesc", NHibernateUtil.String);
+				query.AddScalar ("OrderedQuantity", NHibernateUtil.Decimal);
+				query.AddScalar ("DeliveredQuantity", NHibernateUtil.Decimal);
+				query.AddScalar ("PaymentsInfo", NHibernateUtil.String);
+				query.AddScalar ("DeliveryOrderIds", NHibernateUtil.String);
 				query.AddScalar ("OnDelivery", NHibernateUtil.Decimal);
 				query.AddScalar ("OrderPaidStatus", NHibernateUtil.Boolean);
 				query.AddScalar ("Overdue", NHibernateUtil.Int32);
 
-				query.SetParameter ("customer_id", id);
+				query.SetParameter ("customer_id", model.Customer.Id);
+				query.SetDateTime ("start", start);
+				query.SetDateTime ("end", end);
 				return query.DynamicList ();
 			}, null);
 
+			model.SalesOrders = items;
 
-			ViewBag.CustomerName = customer.Name;
-
-			return View ("CustomerDebtReport", items.ToList ());
+			return model;
 		}
 
 		public ViewResult CustomersReport ()
@@ -720,7 +946,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult FiscalDocuments (string taxpayer, DateRange dates)
 		{
 
-			var start = dates.StartDate.Date;
+			var start = dates.StartDate;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var query = from x in FiscalDocument.Queryable
 				    where x.Issuer.Id == taxpayer && x.IsCompleted &&
@@ -744,8 +970,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult CustomerSalesOrders (int customer, DateRange dates)
 		{
 
-			var start = dates.StartDate.Date;
-			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var start = dates.StartDate;
+			var end = dates.EndDate;
 			var query = from x in SalesOrder.Queryable
 				    where x.Customer.Id == customer &&
 					x.IsCompleted && !x.IsCancelled &&
@@ -771,8 +997,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult ProductSalesByCustomer (int customer, DateRange dates)
 		{
 
-			var start = dates.StartDate.Date;
-			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var start = dates.StartDate;
+			var end = dates.EndDate;
 			var query = from x in SalesOrder.Queryable
 				    from y in x.Details
 				    where x.Customer.Id == customer &&
@@ -816,8 +1042,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult ProductSalesByModel (string productModel, DateRange dates)
 		{
 
-			var start = dates.StartDate.Date;
-			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var start = dates.StartDate;
+			var end = dates.EndDate;
 			var query = from x in SalesOrder.Queryable
 				    from y in x.Details
 				    where x.IsCompleted && !x.IsCancelled &&
@@ -865,8 +1091,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult ProductSalesByBrand (string brand, DateRange dates)
 		{
 
-			var start = dates.StartDate.Date;
-			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var start = dates.StartDate;
+			var end = dates.EndDate;
 			var query = from x in SalesOrder.Queryable
 				    from y in x.Details
 				    where x.IsCompleted && !x.IsCancelled &&
@@ -920,8 +1146,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult SalesBySalesPerson (int store, DateRange dates)
 		{
 
-			var start = dates.StartDate.Date;
-			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var start = dates.StartDate;
+			var end = dates.EndDate;
 			string sql = @"SELECT salesperson SalesPersonId, first_name FirstName, last_name LastName,
 							SUM(quantity) Units,
 							SUM(ROUND(quantity * price * d.exchange_rate * (1 - discount_rate) / IF(tax_included = 0, 1, 1 + tax_rate), 2)) Subtotal,
@@ -964,8 +1190,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult SalesByCustomer (int store, DateRange dates)
 		{
 
-			var start = dates.StartDate.Date;
-			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var start = dates.StartDate;
+			var end = dates.EndDate;
 			string sql = @"SELECT customer CustomerId, name Customer,
 							SUM(quantity) Units,
 							SUM(ROUND(quantity * price * d.exchange_rate * (1 - discount_rate) / IF(tax_included = 0, 1, 1 + tax_rate), 2)) Subtotal,
@@ -1008,8 +1234,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult SalesByProduct (int store, DateRange dates)
 		{
 
-			var start = dates.StartDate.Date;
-			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var start = dates.StartDate;
+			var end = dates.EndDate;
 			string sql = @"SELECT product ProductId, p.code Code, p.model Model, p.name Product,
 							SUM(quantity) Units,
 							SUM(ROUND(quantity * price * d.exchange_rate * (1 - discount_rate) / IF(d.tax_included = 0, 1, IF(d.tax_rate > 0, 1 + d.tax_rate, 1)), 2)) Subtotal,
@@ -1045,8 +1271,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult SalesPersonOrders (int employee, DateRange dates)
 		{
 
-			var start = dates.StartDate.Date;
-			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var start = dates.StartDate;
+			var end = dates.EndDate;
 			string sql = @"SELECT sales_order SalesOrder, date Date, name Customer,
 							GROUP_CONCAT(DISTINCT (SELECT GROUP_CONCAT(DISTINCT f.batch, f.serial SEPARATOR ' ')
 								FROM fiscal_document_detail fd LEFT JOIN fiscal_document f ON fd.document = f.fiscal_document_id
@@ -1080,6 +1306,101 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_SalesPersonOrders", items);
 		}
 
+		public ViewResult CommissionsBySalesPerson ()
+		{
+
+			ViewBag.EditorField = "employee";
+			ViewBag.EditorTemplate = "EmployeeSelector";
+			ViewBag.Title = Resources.CommissionsBySalesPerson;
+			return View ("SummaryReport", new DateRange ());
+		}
+
+		[HttpPost]
+		public ActionResult CommissionsBySalesPerson (int? employee, DateRange dates)
+		{
+
+			var start = dates.StartDate;
+			var end = dates.EndDate;
+			string WHERE_SALESPERSON = employee.HasValue ? " = " + employee.Value : "IN (17,33,54,77,78)";
+			string sql = GetCommissionDetailsSQLQuery();
+
+			sql = sql.Replace("WHERE_SALESPERSON", WHERE_SALESPERSON);
+
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
+
+				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
+				query.AddScalar ("SalesOrderDetail", NHibernateUtil.Int32);
+				query.AddScalar ("SalesPerson", NHibernateUtil.String);
+				query.AddScalar ("Customer", NHibernateUtil.String);
+				query.AddScalar ("OrderDate", NHibernateUtil.DateTime);
+				query.AddScalar ("PaymentDate", NHibernateUtil.DateTime);
+				query.AddScalar ("Label", NHibernateUtil.String);
+				query.AddScalar ("ProductName", NHibernateUtil.String);
+				query.AddScalar ("TotalDetail", NHibernateUtil.Decimal);
+				query.AddScalar ("CommissionRate", NHibernateUtil.String);
+				query.AddScalar ("Commission", NHibernateUtil.Decimal);
+				query.AddScalar ("Quantity", NHibernateUtil.Decimal);
+				query.AddScalar ("Price", NHibernateUtil.Decimal);
+				query.AddScalar ("Participation", NHibernateUtil.String);
+				query.AddScalar ("Movement", NHibernateUtil.String);
+				query.AddScalar ("Paid", NHibernateUtil.String);
+				query.AddScalar ("PaidStatus", NHibernateUtil.Int32);
+
+				query.SetDateTime ("start", start);
+				query.SetDateTime ("end", end);
+
+				return query.DynamicList ();
+			}, null);
+
+			var item = new CommissionTicketViewModel {
+				DateRange = dates,
+				Details = items,
+				CommissionAgent = employee.HasValue ?
+					MBEQueryable.IQEmployees.Where (x => x.Id == employee.Value).Single () : null,
+				Store = MBEQueryable.IQStores.Single(x => x.Id == Int32.Parse(WebConfig.DefaultStore))
+			};
+
+			return PartialView ("_CommissionsBySalesPerson", item);
+		}
+
+		[HttpPost]
+		public ActionResult PrintCommissionTicket (int? agent, DateRange dateRange)
+		{
+			var model = new CommissionTicketViewModel ();
+			var BIGQUERY = GetCommissionDetailsSQLQuery ();
+			var start = dateRange.StartDate;
+			var end = dateRange.EndDate;
+			var WHERE_SALESPERSON = agent.HasValue ? " = " + agent.Value : "IN (17,33,54,77,78)";
+			BIGQUERY = BIGQUERY.Replace ("WHERE_SALESPERSON", WHERE_SALESPERSON);
+			var qry = @"SELECT Label, ROUND(SUM(Commission),2) CommissionByLabel
+				    FROM (BIGQUERY) AS T1
+				    GROUP BY Label";
+
+			qry = qry.Replace ("BIGQUERY", BIGQUERY);	
+
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+				var query = session.CreateSQLQuery (qry);
+
+				query.AddScalar ("Label", NHibernateUtil.String);
+				query.AddScalar ("CommissionByLabel", NHibernateUtil.Decimal);
+
+				query.SetParameter ("start", start);
+				query.SetParameter ("end", end);
+
+				return query.DynamicList ();
+			}, null);
+
+			model.DateRange = dateRange;
+			model.Store = WebConfig.Store;
+			model.CommissionAgent = agent.HasValue ? MBEQueryable.IQEmployees.Where(x => x.Id == agent.Value).Single() : null;
+			model.Details = items;
+
+			return PdfTicketView ("CommissionAgentTicket", model);
+
+
+		}
+
 		public ViewResult SalesOrderSummary ()
 		{
 			if (WebConfig.Store == null) {
@@ -1100,8 +1421,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult SalesOrderSummary (int store, DateRange dates)
 		{
 
-			var start = dates.StartDate.Date;
-			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var start = dates.StartDate;
+			var end = dates.EndDate;
 			string sql = @"SELECT * FROM
 					(SELECT date Date, nickname SalesPerson, sales_order_id SalesOrder, m.serial Serial,
 						m.payment_terms Terms, m.due_date DueDate, c.name Customer,
@@ -1182,12 +1503,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult StoreMovementsSummary (int store, DateRange dates)
 		{
 
-			var start = dates.StartDate.Date;
-			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var start = dates.StartDate;
+			var end = dates.EndDate;
 			var summary = new StoreMovementsSummaryViewModel ();
-			string sql = @"SELECT * FROM
-					
-						(SELECT date Date, nickname SalesPerson, sales_order_id SalesOrder, m.serial Serial,
+			string sql = @"SELECT Date, SalesPerson, SalesOrder, Serial, Paid, Invoices, Terms, DueDate, Customer, RefundIDs, TotalEx,
+						Total, IFNULL(Refund, 0) Refund, IFNULL(RefundEx, 0) RefundEx, IFNULL(AmountPaid, 0) AmountPaid, Currency
+						FROM
+						(SELECT date Date, nickname SalesPerson, sales_order_id SalesOrder, m.serial Serial, m.paid Paid,
 							m.payment_terms Terms, m.due_date DueDate, c.name Customer,
 							GROUP_CONCAT(DISTINCT (SELECT GROUP_CONCAT(DISTINCT f.batch, f.serial SEPARATOR ' ')
 								FROM fiscal_document_detail fd LEFT JOIN fiscal_document f ON fd.document = f.fiscal_document_id
@@ -1228,6 +1550,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
 				query.AddScalar ("Serial", NHibernateUtil.Int32);
 				query.AddScalar ("Terms", NHibernateUtil.Int32);
+				query.AddScalar ("Paid", NHibernateUtil.Boolean);
 				query.AddScalar ("Invoices", NHibernateUtil.String);
 				query.AddScalar ("DueDate", NHibernateUtil.DateTime);
 				query.AddScalar ("Customer", NHibernateUtil.String);
@@ -1248,10 +1571,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			summary.SalesOrder = items;
 			summary.Expenses = ExpenseVoucher.Queryable.Where(x => x.Store.Id == store
-						&& x.IsCompleted && !x.IsCancelled && x.CreationTime > start && x.CreationTime < end).ToList();
-			summary.Payments = CustomerPayment.Queryable.Where (x => x.CreationTime < end && x.CreationTime > start && x.Store.Id == store).ToList ();
+						&& x.IsCompleted && !x.IsCancelled && x.Date > start && x.Date < end).ToList();
+			summary.Payments = CustomerPayment.Queryable.Where (x => x.CashSession.Start < end && x.CashSession.Start > start
+										&& x.CashSession.CashDrawer.Store.Id == store
+										&& x.PaymentType != PaymentType.CreditNote).ToList ();
 
-			return PartialView ("_StoreMovementsSummary", summary);
+			if (Request.IsAjaxRequest()) {
+				return PartialView ("_StoreMovementsSummary", summary);
+			}
+
+			return View ("SummaryReport",summary);
+
 		}
 
 		public ViewResult ProductSalesBySalesPerson ()
@@ -1267,8 +1597,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult ProductSalesBySalesPerson (int employee, DateRange dates)
 		{
 
-			var start = dates.StartDate.Date;
-			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var start = dates.StartDate;
+			var end = dates.EndDate;
 			string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name,
 							SUM(quantity) Units,
 							SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount_rate) / IF(d.tax_included = 0, 1, IF(d.tax_rate > 0, 1 + d.tax_rate, 1)), 2)) Subtotal,
@@ -1314,8 +1644,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult ProductSalesBySalesPersonAndLabel (int employee, int? label, DateRange dates)
 		{
 
-			var start = dates.StartDate.Date;
-			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var start = dates.StartDate;
+			var end = dates.EndDate;
 			string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name,
 							SUM(quantity) Units,
 							SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount_rate) / IF(d.tax_included = 0, 1, IF(d.tax_rate > 0, 1 + d.tax_rate, 1)), 2)) Subtotal,
@@ -1373,8 +1703,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult ProductSalesBySalesPersonAndBrand (int employee, string brand, DateRange dates)
 		{
 
-			var start = dates.StartDate.Date;
-			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var start = dates.StartDate;
+			var end = dates.EndDate;
 			string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name,
 							SUM(quantity) Units,
 							SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount_rate) / IF(d.tax_included = 0, 1, IF(d.tax_rate > 0, 1 + d.tax_rate, 1)), 2)) Subtotal,
@@ -1430,8 +1760,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult ProductSalesBySalesPersonAndModel (int employee, string productModel, DateRange dates)
 		{
 
-			var start = dates.StartDate.Date;
-			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var start = dates.StartDate;
+			var end = dates.EndDate;
 			string sql = @"SELECT p.brand Brand, p.model Model, p.code Code, p.name Name,
 							SUM(quantity) Units,
 							SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount_rate) / IF(d.tax_included = 0, 1, IF(d.tax_rate > 0, 1 + d.tax_rate, 1)), 2)) Subtotal,
@@ -1487,8 +1817,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult SalesPersonOrdersAndRefunds (int employee, DateRange dates)
 		{
 
-			var start = dates.StartDate.Date;
-			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var start = dates.StartDate;
+			var end = dates.EndDate;
 			string sql = @"SELECT sales_order SalesOrder, 0 Refund, date Date, name Customer,
 							GROUP_CONCAT(DISTINCT (SELECT GROUP_CONCAT(DISTINCT f.batch, f.serial SEPARATOR ' ')
 								FROM fiscal_document_detail fd LEFT JOIN fiscal_document f ON fd.document = f.fiscal_document_id
@@ -1620,8 +1950,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult ProductsOrderAndRefundsBySalesPerson (int employee, DateRange dates)
 		{
 
-			var start = dates.StartDate.Date;
-			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
+			var start = dates.StartDate;
+			var end = dates.EndDate;
 			string sql = @"SELECT sales_order SalesOrder, 0 Refund, date Date, c.name Customer, product_name Product, 
                             d.quantity Quantity, product_code Code, model Model,
 							GROUP_CONCAT(DISTINCT (SELECT GROUP_CONCAT(DISTINCT f.batch, f.serial SEPARATOR ' ')
@@ -1643,7 +1973,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
 				query.AddScalar ("Product", NHibernateUtil.String);
-				query.AddScalar ("Quantity", NHibernateUtil.Int32);
+				query.AddScalar ("Quantity", NHibernateUtil.Decimal);
 				query.AddScalar ("Refund", NHibernateUtil.Int32);
 				query.AddScalar ("Code", NHibernateUtil.String);
 				query.AddScalar ("Model", NHibernateUtil.String);
@@ -1752,6 +2082,41 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var items = received_payments.ToList ();
 
 			return PartialView ("_ReceivedPayments", items);
+		}
+
+		public ActionResult ReceivedPaymentsSummary () {
+			var dt = DateTime.Now;
+			var range = new DateRange { StartDate = dt.Date.AddDays(-1), EndDate = dt.Date };
+			return View (range);
+		}
+
+		[HttpPost]
+		public ActionResult ReceivedPaymentsSummary (DateRange range) {
+
+			var start = range.StartDate;
+			var end = range.EndDate;
+			ViewBag.StartDate = start;
+			ViewBag.EndDate = end;
+
+			var stores = MBEQueryable.IQStores.ToList ();
+			var expenses = ExpenseVoucher.Queryable.Where (x => x.Date < end && x.Date > start && !x.IsCancelled && x.IsCompleted).ToList ();
+			var sales_orders = MBEQueryable.IQSalesOrders.Where (x => x.Date < end && x.Date > start && !x.IsCancelled && x.IsCompleted).ToList ();
+			var payments = CustomerPayment.Queryable.Where (x => x.Date < end && x.Date > start).ToList ();
+			var cashcounts = CashSession.Queryable.Where (x => x.Start > start && x.Start < end);
+
+			var items = new List<ReceivedPaymentsSummaryViewModel> ();
+
+			foreach (var store in stores) {
+				items.Add (new ReceivedPaymentsSummaryViewModel {
+					Store = store,
+					Expenses = expenses.Where(x => x.Store == store).ToList(),
+					CustomerPayments = payments.Where(x => x.Store == store).ToList(),
+					SalesOrders = sales_orders.Where(x => x.Store == store).ToList(),
+					CashSession = cashcounts.Where(x => x.CashDrawer.Store == store).ToList()
+				});
+			}
+
+			return PartialView ("_ReceivedPaymentsSummary", items);
 		}
 
 		public ViewResult CreditAndCollection ()

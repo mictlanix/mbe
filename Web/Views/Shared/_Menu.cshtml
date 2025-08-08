@@ -22,7 +22,7 @@
 		new MenuItemModel{ SystemObject = SystemObjects.ExchangeRates, Controller = "ExchangeRates", DefaultAction = "Index", Resources = Resources.ExchangeRate },
 		new MenuItemModel{ SystemObject = SystemObjects.Expenses, Controller = "Expenses", DefaultAction = "Index", Resources = Resources.Expenses },
 		new MenuItemModel{ SystemObject = SystemObjects.PaymentMethodOptions, Controller = "PaymentMethodOptions", DefaultAction = "Index", Resources = Resources.PaymentMethodOptions },
-		new MenuItemModel{ SystemObject = SystemObjects.Vehicle, Controller = "Vehicles", DefaultAction = "Index", Resources = Resources.Trucks },
+		new MenuItemModel{ SystemObject = SystemObjects.Vehicle, Controller = "Vehicles", DefaultAction = "Index", Resources = Resources.Vehicles },
 		new MenuItemModel{ SystemObject = SystemObjects.VehicleOperators, Controller = "VehicleOperators", DefaultAction = "Index", Resources = Resources.VehicleOperators },
 		new MenuItemModel{ SystemObject = SystemObjects.ProductionSites, Controller = "ProductionSites", DefaultAction = "Index", Resources = Resources.ProductionSites },
 	};
@@ -36,8 +36,7 @@
 		new MenuItemModel{ SystemObject = SystemObjects.CustomerRefunds, Controller = "CustomerRefunds", DefaultAction = "Index", Resources = Resources.CustomerRefunds },
 		new MenuItemModel{ SystemObject = SystemObjects.CreditPayments, Controller = "Payments", DefaultAction = "CreditPayments", Resources = Resources.CreditPayments },
 		new MenuItemModel{ SystemObject = SystemObjects.PaymentsEditor, Controller = "Payments", DefaultAction = "Payments", Resources = Resources.PaymentsEditor },
-		//new MenuItemModel{SystemObject = SystemObjects.PendantDeliveries, Controller="DeliveryOrders", DefaultAction = "RemainingDeliveries", Resources = Resources.PendantDeliveries},
-
+		new MenuItemModel{ SystemObject = SystemObjects.PaymentsVerification, Controller = "Payments", DefaultAction = "PaymentsValidation", Resources = Resources.PaymentsValidation },
 	};
 
 				var production_menu_items = new List<MenuItemModel> {
@@ -53,20 +52,28 @@
 	};
 
 				var logistic_menu_items = new List<MenuItemModel> {
-		//new MenuItemModel{ SystemObject = SystemObjects.DeliveryItineraries, Controller="DeliveryItineraries", DefaultAction = "Index", Resources = Resources.DeliveryItineraries},
-		//new MenuItemModel{ SystemObject = SystemObjects.ForDeliver, Controller="DeliveryItineraries", DefaultAction = "Deliveries", Resources = Resources.ForDeliver},
+		new MenuItemModel{ SystemObject = SystemObjects.DeliveryItineraries, Controller="DeliveryItineraries", DefaultAction = "Index", Resources = Resources.DeliveryItineraries},
+		new MenuItemModel{ SystemObject = SystemObjects.ForDeliver, Controller="DeliveryItineraries", DefaultAction = "Deliveries", Resources = Resources.ForDeliver},
 		new MenuItemModel{ SystemObject = SystemObjects.DeliveryOrders, Controller="DeliveryOrders", DefaultAction = "Index", Resources = Resources.DeliveryOrders},
 		new MenuItemModel{ SystemObject = SystemObjects.DeliveryOrderApproval, Controller="DeliveryOrders", DefaultAction = "DeliveryOrdersApproval", Resources = Resources.DeliveryOrdersApproval},
 				};
 
 				var purchases_menu_items = new List<MenuItemModel> {
 		new MenuItemModel{ SystemObject = SystemObjects.PurchaseRequest, Controller = "PurchaseRequests", DefaultAction = "Index", Resources = Resources.PurchaseRequests },
-		new MenuItemModel{ SystemObject = SystemObjects.PurchaseRequestApproval, Controller="PurchaseRequests", DefaultAction = "PurchaseRequestsApproval", Resources = Resources.PurchaseRequestApproval},
+		new MenuItemModel { SystemObject = SystemObjects.PurchaseRequestApproval, Controller = "PurchaseRequests", DefaultAction = "PurchaseRequestsApproval", Resources = Resources.PurchaseRequestApproval },
 		new MenuItemModel{ SystemObject = SystemObjects.PurchasesOrders, Controller = "Purchases", DefaultAction = "Index", Resources = Resources.Title_PurchaseOrder},
-		new MenuItemModel{ SystemObject = SystemObjects.PurchaseOrderApproval, Controller="Purchases", DefaultAction = "Approvals", Resources = Resources.PurchaseOrderApproval},
+
+		//new MenuItemModel{ SystemObject = SystemObjects.PurchasesOrders, Controller="Purchases", DefaultAction = "ToPurchaseBySupplier", Resources = Resources.ToPurchaseBySupplier},
 		new MenuItemModel{ SystemObject = SystemObjects.ExpenseTicket, Controller = "ExpenseVoucher", DefaultAction = "Index", Resources = Resources.ExpenseVoucher},
-		new MenuItemModel{ SystemObject = SystemObjects.SupplierPayment, Controller = "SupplierPayments", DefaultAction = "Index", Resources = Resources.Title_SuppliersPayments}
+		new MenuItemModel{ SystemObject = SystemObjects.SupplierPayment, Controller = "SupplierPayments", DefaultAction = "Index", Resources = Resources.Title_SuppliersPayments},
+		//new MenuItemModel { SystemObject = SystemObjects.PurchaseOrderApproval, Controller = "Purchases", DefaultAction = "Approvals", Resources = Resources.PurchaseOrderApproval },
 	};
+				if (WebConfig.PurchaseOrderApprovalRequired) {
+								//purchases_menu_items.Add();
+				}
+				if (WebConfig.PurchaseRequestApprovalRequired) {
+								//purchases_menu_items.Add();
+				}
 
 				var administration_menu_items = new List<MenuItemModel> {
 		new MenuItemModel{SystemObject = SystemObjects.AccountsReceivable, Controller = "AccountsReceivables", DefaultAction = "Index", Resources = Resources.Title_AccountsReceivable },
@@ -122,6 +129,8 @@
 		new MenuItemModel{ SystemObject = SystemObjects.ProductsOrdersAndRefundsBySalesPerson, Controller = "Reports", DefaultAction = "ProductsOrderAndRefundsBySalesPerson", Resources = Resources.ProductsOrdersAndRefundsBySalesPerson },
 		new MenuItemModel{ SystemObject = SystemObjects.StoreMovementsSummary, Controller = "Reports", DefaultAction = "StoreMovementsSummary", Resources = Resources.StoreMovementsSummary },
 		new MenuItemModel{ SystemObject = SystemObjects.CustomerDebtReport, Controller = "Reports", DefaultAction = "CustomersDebtSummary", Resources = Resources.CustomerDebt },
+		new MenuItemModel{ SystemObject = SystemObjects.ReceivedPaymentsSummary, Controller = "Reports", DefaultAction = "ReceivedPaymentsSummary", Resources = Resources.ReceivedPaymentsSummary },
+		new MenuItemModel{ SystemObject = SystemObjects.CommissionsBySalesPerson, Controller = "Reports", DefaultAction = "CommissionsBySalesPerson", Resources = Resources.CommissionsBySalesPerson },
 
 	};
 
@@ -167,7 +176,7 @@
 																								<div class="gbmc">
 																												<ol class="gbmcc">
 
-																																@foreach (var item in column.Value.Where(x => CurrentUser.GetPrivilege(x.SystemObject).AllowRead).OrderBy(y => y.Resources))
+																																@foreach (var item in column.Value.Where(x => CurrentUser.GetPrivilege(x.SystemObject).AllowRead))
 																																{
 																																				<li class="gbmtc">
 																																								<a class="gbmt @(Html.IsMenuSelected(item.DefaultAction, item.Controller) ? "gbm0l" : "")"

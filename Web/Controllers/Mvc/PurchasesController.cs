@@ -41,6 +41,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Gma.QrCodeNet.Encoding.Masking;
 using NHibernate;
+using Castle.Core.Internal;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
@@ -123,19 +124,34 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		Search<PurchaseOrder> SearchPurchaseOrders (Search<PurchaseOrder> search)
 		{
 			IQueryable<PurchaseOrder> qry = from x in PurchaseOrder.Queryable
-							where x.Creator == CurrentUser.Employee || x.Updater == CurrentUser.Employee
-							select x; ;
+							where
+								(x.Creator == CurrentUser.Employee
+								|| x.Updater == CurrentUser.Employee)
+								&& !x.IsCancelled
+							select x;
 
-			if (search.Pattern == null) {
-				qry = from x in qry
-				      orderby x.Id descending
-				      select x;
-			} else {
-				qry = from x in qry
-				      where x.Supplier.Name.Contains (search.Pattern)
-				      orderby x.Id descending
-				      select x;
+			string pattern = search.Pattern != null ? search.Pattern.Trim():null;
+
+			if (!string.IsNullOrEmpty(pattern)) {
+
+				int id = 0;
+				if (Int32.TryParse (pattern, out id)) {
+					qry = from x in PurchaseOrder.Queryable
+					      where x.Id == id
+					      select x;
+				} else {
+					qry = from x in PurchaseOrder.Queryable
+					      where x.Supplier.Name.Contains (search.Pattern)
+					      select x;
+					if (pattern.Contains (Resources.WilcardStringPatternForSearch)) {
+						qry = from x in PurchaseOrder.Queryable
+						      where !x.IsCancelled
+						      select x;
+					}
+				}
 			}
+
+			qry = qry.OrderByDescending(x => x.Id);
 
 			search.Total = qry.Count ();
 			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
@@ -217,6 +233,93 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			return PartialView ("_CreateSuccesful", new PurchaseOrder { Id = item.Id });
+		}
+
+		//[HttpPost]
+		public ActionResult CreatePurchaseBySupplier (int? id, int? warehouse_id)
+		{
+			var supplier = id.HasValue ? Supplier.TryFind (id) : null;
+			var user = CurrentUser.Employee;
+			var date = DateTime.Now;
+			var PURCHASE_APPROVAL = WebConfig.PurchaseRequestApprovalRequired ? " prd.to_purchase = 1 " : string.Empty;
+
+			var items = PurchaseRequestDetail.Queryable.Where(x => x.Product.Supplier == supplier
+					&& !PurchaseOrderDetail.Queryable.Select(y => y.PurchaseRequestDetail).Any(y => y == x));
+			items = WebConfig.PurchaseRequestApprovalRequired ? items.Where(x => x.ToPurchase) : items;
+
+			items = warehouse_id.HasValue ? items.Where(x => x.Warehouse.Id == warehouse_id.Value) : items;
+
+			var details = items.ToList ();
+
+			if (details.Count <= 0) {
+				return RedirectToAction ("ToPurchaseBySupplier");
+			}
+
+			var purchase = new PurchaseOrder {
+				Updater = user,
+				Supplier = supplier,
+				Creator = user,
+				CreationTime = date,
+				ModificationTime = date
+			};
+
+			using (var scope = new TransactionScope ()) {
+				purchase.CreateAndFlush ();
+				foreach (var detail in details) {
+					(new PurchaseOrderDetail {
+						Order = purchase,
+						PurchaseRequestDetail = detail,
+						Warehouse = detail.Warehouse,
+						Product = detail.Product,
+						ProductCode = detail.Product.Code,
+						ProductName = detail.Product.Name,
+						Quantity = detail.Quantity,
+						TaxRate = detail.Product.TaxRate,
+						IsTaxIncluded = detail.Product.IsTaxIncluded,
+						DiscountRate = 0,
+						Price = ProductPrice.Queryable.Where(x => x.List == WebConfig.CostsList && x.Product == detail.Product).SingleOrDefault().Value,
+						ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate (),
+						Currency = WebConfig.DefaultCurrency
+					}).CreateAndFlush ();
+				}
+			}
+
+			return RedirectToAction("Edit", new { Id = purchase.Id });
+		}
+
+		public ActionResult ToPurchaseBySupplier ()
+		{
+
+			var PURCHASE_APPROVAL = WebConfig.PurchaseRequestApprovalRequired ? " AND prd.to_purchase = 1 " : string.Empty;
+
+			var sql = @"SELECT s.name 'SupplierName', s.supplier_id 'SupplierId', 
+					COUNT(*) 'PurchaseRequestDetailsCount', SUM(prd.quantity * pp.price) 'PurchaseTotal',
+					GROUP_CONCAT(prd.purchase_request_detail_id SEPARATOR '|') 'PurchaseRequestDetailIds',
+					GROUP_CONCAT(DISTINCT prd.warehouse SEPARATOR '|') 'WarehouseIds'
+					FROM purchase_request_detail prd
+					JOIN product p ON prd.product = p.product_id
+					LEFT JOIN supplier s ON p.supplier = s.supplier_id
+					LEFT JOIN purchase_order_detail pod ON prd.purchase_request_detail_id = pod.purchase_request_detail
+					LEFT JOIN purchase_order po ON pod.purchase_order = po.purchase_order_id
+					LEFT JOIN product_price pp ON pp.`list` = 0 AND pp.product = p.product_id
+					WHERE (po.purchase_order_id IS NULL) PURCHASE_APPROVAL
+					GROUP BY s.supplier_id;";
+			sql = sql.Replace ("PURCHASE_APPROVAL", PURCHASE_APPROVAL);
+
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
+
+				query.AddScalar ("SupplierId", NHibernateUtil.Int32);
+				query.AddScalar ("WarehouseIds", NHibernateUtil.String);
+				query.AddScalar ("PurchaseRequestDetailsCount", NHibernateUtil.Int32);
+				query.AddScalar ("SupplierName", NHibernateUtil.String);
+				query.AddScalar ("PurchaseRequestDetailIds", NHibernateUtil.String);
+				query.AddScalar ("PurchaseTotal", NHibernateUtil.Decimal);
+				return query.DynamicList ();
+			}, null);
+
+
+			return View (items);
 		}
 
 		public ActionResult Edit (int id)
@@ -334,6 +437,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var details = new List<PurchaseRequestDetail> ();
 			var entity = PurchaseOrder.TryFind (id);
 			int request_id = 0;
+			int supplier_id = entity.Supplier.Id;
 
 			string request_filter = WebConfig.PurchaseRequestApprovalRequired ? " AND pr.approved = 1 " : "";
 
@@ -349,19 +453,23 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					SELECT prd.purchase_request_detail_id id 
 					FROM purchase_request_detail prd
 					LEFT JOIN purchase_request pr ON prd.purchase_request = pr.purchase_request_id
+					JOIN product p on prd.product = p.product_id
 					LEFT JOIN (
 						SELECT pod.purchase_request_detail detail, pod.product_name , pod.purchase_order 
 						FROM purchase_order_detail pod
 						JOIN purchase_order po ON po.purchase_order_id = pod.purchase_order
 						WHERE pod.purchase_request_detail IS NOT NULL AND po.cancelled = FALSE
 						) AS P1 ON P1.detail = prd.purchase_request_detail_id 
-					WHERE pr.cancelled = 0 AND pr.completed = 1 AND P1.detail IS NULL REQUEST_APPROVAL_FILTER;
+					WHERE pr.cancelled = 0 AND pr.completed = 1
+					AND p.supplier = :supplier
+					AND P1.detail IS NULL REQUEST_APPROVAL_FILTER;
 					";
 
 				sql = sql.Replace ("REQUEST_APPROVAL_FILTER", request_filter);
 
 				var raw = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 					var query = session.CreateSQLQuery (sql);
+					query.SetParameter ("supplier", supplier_id);
 					query.AddScalar ("id", NHibernateUtil.Int32);
 					return query.DynamicList ();
 				}, null);
@@ -631,11 +739,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			using (var scope = new TransactionScope ()) {
 				foreach (var x in item.Details) {
-					var price = x.Product.Prices.SingleOrDefault (t => t.List.Id == 0);
+					var price = x.Product.Prices.SingleOrDefault (t => t.List == WebConfig.CostsList);
 
 					if (price == null) {
 						price = new ProductPrice {
-							List = PriceList.Find (0),
+							List = WebConfig.CostsList,
 							Product = x.Product
 						};
 					}
@@ -658,11 +766,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Cancel (int id)
 		{
 			var item = PurchaseOrder.Find (id);
+			if (item.IsCancelled || item.IsCompleted) {
+				return RedirectToAction("Index");
+			}
 
 			item.IsCancelled = true;
 
 			using (var scope = new TransactionScope ()) {
 				item.UpdateAndFlush ();
+				item.Details.Where (x => x.PurchaseRequestDetail != null)
+					.ForEach (x => { x.DeleteAndFlush(); });
 			}
 
 			return RedirectToAction ("Index");

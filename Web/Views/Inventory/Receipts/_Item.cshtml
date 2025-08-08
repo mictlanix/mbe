@@ -18,7 +18,11 @@
 	</td>
     <td class="date">@Html.DisplayFor(x => x.CreationTime)</td>
     <td>@Html.DisplayFor(x => x.Warehouse.Name)</td>
-    <td class="number">@Html.DisplayFor(x => x.Order.Id)</td>
+    <td class="number">
+        @if(Model.Order != null) {
+            Html.ActionLink(Model.Order.Id.ToString(), "View", "Purchases", new { id = Model.Id }, new { target = "_blank" });
+        }
+    </td>
     <td class="bool">@tag</td>
     <td class="bool">@Html.DisplayFor(x => x.IsCompleted)</td>
     <td class="bool">@Html.DisplayFor(x => x.IsCancelled)</td>

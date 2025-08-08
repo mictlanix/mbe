@@ -5,50 +5,61 @@
 @model DeliveryOrder
 
 @{
-    var objection = Incidence.Queryable.Where(x => x.Reference == Model.Id && x.SourceType == SourceType.DeliveryOrder)
-                    .OrderByDescending(y => y.Id).FirstOrDefault();
-    var message = objection == null ? string.Empty : objection.Comment;
-    }
+				var objection = Incidence.Queryable.Where(x => x.Reference == Model.Id && x.SourceType == SourceType.DeliveryOrder)
+																				.OrderByDescending(y => y.Id).FirstOrDefault();
+				var message = objection == null ? string.Empty : objection.Comment;
+
+				var with_warehouse = Model.Details.Where(x => x.OrderDetail != null).ToList();
+}
 
 <tr id='id:@Model.Id'>
-    <td class="number">
-    	@Html.DisplayFor(x => x.Id)
-    	<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => x.Serial)">
-			<span class="glyphicon glyphicon-exclamation-sign"></span>
-		</a>
-    </td>
-    <td class="date">@Html.DisplayFor(x => x.Date)</td>
-    <td class="">@Html.DisplayFor(x => x.Customer.Name)</td>
-    <td class="center">@string.Join(", ", Model.Details.Select(x => x.OrderDetail.SalesOrder.Id).Distinct())</td>
-    <td class="bool">@Html.DisplayFor(x => x.IsCompleted)</td>
-    <td class="bool">@Html.DisplayFor(x => x.IsCancelled)</td>
-    @if (WebConfig.DeliveryOrderApprovalRequired) {
-    <td class="bool">@Html.DisplayFor(x => x.IsConfirmed)</td>
-    <td class="bool"></td>
-    }
+				<td class="number">
+								@Html.DisplayFor(x => x.Id)
+								<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => x.Serial)">
+												<span class="glyphicon glyphicon-exclamation-sign"></span>
+								</a>
+				</td>
+				<td class="">@Html.DisplayFor(x => x.Customer.Name)</td>
+				<td class="center">@Html.Raw(string.Join("<br/>", with_warehouse.Select(x => x.OrderDetail.SalesOrder.Id).Distinct()))</td>
+				<td class="bool">@Html.DisplayFor(x => x.IsPickedUpInStore)</td>
+				<td class="bool">@Html.DisplayFor(x => x.Priority)</td>
+				<td class="date">@Html.DisplayFor(x => x.Date)</td>
+				@if (WebConfig.DeliveryOrderApprovalRequired)
+				{
+								<td class="bool">@Html.DisplayFor(x => x.IsConfirmed)</td>
+				}
+				<td class="">@Html.DisplayFor(x => x.Comment)</td>
+				<td class="bool">@Html.Raw(string.Join("<br/>", (with_warehouse.Where(x => x.OrderDetail.Warehouse != null)
+																																.Select(x => x.OrderDetail.Warehouse.Name).Distinct())))</td>
 
-    <td class="actions">
-        @if (ViewBag.Privilege.AllowRead) {
-            @Html.ActionLink(" ", "View", new { id = Model.Id }, 
-                    new { @class = "button icon view icon-only", title = Resources.Details })
+								<td class="actions">
+												@if (ViewBag.Privilege.AllowRead)
+												{
+																if (Model.IsCompleted && !Model.IsCancelled)
+																{
+																				@Html.ActionLink(" ", "Print", new { id = Model.Id },
+																				new { @class = "button icon print icon-only", title = Resources.Print, target = "_blank" })
+																				@Html.ActionLink(" ", "View", new { id = Model.Id },
+																				new { @class = "button icon view icon-only", title = Resources.Details })
+																}
+												}
+												@if (ViewBag.Privilege.AllowUpdate)
+												{
 
-            if (Model.IsCompleted && !Model.IsCancelled) { 
-            @Html.ActionLink(" ", "Print",  new { id = Model.Id }, 
-                    new { @class = "button icon print icon-only", title = Resources.Print, target = "_blank" })}
-        }
-        @if (ViewBag.Privilege.AllowUpdate)
-        {
-
-            if (!Model.IsCompleted){
-                @Html.ActionLink(" ", "Edit", new { id = Model.Id },
-                    new { @class = "button icon edit icon-only", title = Resources.Edit })
-            }
-
-            @*if (Model.IsCompleted && !Model.IsDelivered && !Model.IsCancelled) {
-            @Html.ActionLink(" ", "Delivery", new { id = Model.Id },
-             new { @class = "button icon shipping icon-only", title = Resources.Delivery })}*@
-        }
-    </td>
+																if (!Model.IsCompleted && !Model.IsCancelled)
+																{
+																				@Html.ActionLink(" ", "Edit", new { id = Model.Id },
+																				new { @class = "button icon edit icon-only", title = Resources.Edit })
+																}
+												}
+								</td>
+				<td class="center">
+								@if (Model.IsCompleted && with_warehouse.Any(x => x.OrderDetail.Warehouse == WebConfig.PointOfSale.Warehouse))
+								{
+												@Html.ActionLink(" ", "Print", new { id = Model.Id, only_current_warehouse = true },
+new { @class = "button icon print icon-only", title = Resources.Print, target = "_blank" })
+								}
+				</td>
 </tr>
 
 

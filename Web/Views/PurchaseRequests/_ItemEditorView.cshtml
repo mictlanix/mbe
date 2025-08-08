@@ -22,8 +22,16 @@
 								}
 								else
 								{
-												<span class='thick'>@Html.DisplayFor(x => x.Product.Name)</span>
+												<span>@Html.DisplayFor(x => x.Product.Name)</span>
 								}
+								<br />
+								<b>@Resources.Supplier: </b>
+								@if (Model.Product.Supplier != null)
+								{
+												<span class='thick'>@Html.DisplayFor(x => x.Product.Supplier.Name)</span>
+								}
+								else
+								{ <span class="alert-warning">@string.Format(Resources.Validation_Required, Resources.Supplier)</span>}
 								<br />
 								<b>@Resources.Code: </b>
 								<span>@Html.DisplayFor(x => x.Product.Code)</span>
@@ -40,6 +48,12 @@
 												<span>@Html.DisplayFor(x => x.Product.SKU)</span>
 								}
 								<br />
+								@if (!string.IsNullOrEmpty(Model.Product.Brand))
+								{
+												<b>@Resources.Brand: </b>
+												<span>@Html.DisplayFor(x => x.Product.Brand)</span>
+								}
+								<br />
 								<b>@Resources.Quantity: </b>
 								<a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id'
 											data-url='@Url.Action("SetDetailQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
@@ -49,12 +63,12 @@
 											data-source='@Url.Action("List", "Warehouses")' data-pk='@Model.Id' data-value='@Model.Warehouse.Id'
 											data-url='@Url.Action("SetDetailWarehouse", new { id = Model.Id })'>@Model.Warehouse</a>
 
-								<b>@Resources.Customer: </b>
+								@*<b>@Resources.Customer: </b>
 								<a id="customer:@Model.Id" class="customer" data-type='select2' data-placement='right' data-pk='@Model.Id'
 											data-value='@Model.Customer.Id' data-url='@Url.Action("SetDetailCustomer", new { id = Model.Id })'
 											data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
 												@Html.DisplayFor(x => x.Customer.Name)
-								</a>
+								</a>*@
 				</div>
 </li>
 <script type='text/javascript'>

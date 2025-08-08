@@ -15,7 +15,7 @@
 				<dt>@Resources.Customer</dt>
 				<dd>@Html.DisplayFor(x => x.Customer.Name)</dd>
 				<dt>@Resources.ShipTo</dt>
-				<dd>@(DeliveryHelpers.IsAddressStore(Model.ShipTo)?Resources.PickUp:Model.ShipTo.ToString())</dd>
+				<dd>@(DeliveryHelpers.IsAddressStore(Model.ShipTo == null?CurrentUser.UserSettings.Store.Address:Model.ShipTo)?Resources.PickUp:Model.ShipTo.ToString())</dd>
 			</dl>
 		</div>
 	  	<div class='col-xs-4'>

@@ -4,86 +4,91 @@
 @model FiscalDocument
 
 @{
-    ViewBag.Title = Resources.Edit;
-    var CurrentUser = Html.CurrentUser () ?? new User ();
-    var Privilege = CurrentUser.GetPrivilege (SystemObjects.StandaloneFiscalDocuments);
+				ViewBag.Title = Resources.Edit;
+				var CurrentUser = Html.CurrentUser() ?? new User();
+				var Privilege = CurrentUser.GetPrivilege(SystemObjects.StandaloneFiscalDocuments);
 }
 
-<h2>@Resources.FiscalDocument</h2> 
+<h2>@Resources.FiscalDocument</h2>
 
 <div id='master-section'>
-	@Html.Partial("_EditorView")
+				@Html.Partial("_EditorView")
+</div>
+@if (!string.IsNullOrEmpty(ViewBag.Error))
+{
+				<div class="alert alert-danger" style="display:block;">@Html.Raw(ViewBag.Error)</div>
+}
+<div class='tabbable'>
+				<ul class='nav nav-tabs'>
+								<li class='active'><a href='#tab-1' data-toggle='tab'>@Resources.Concepts</a></li>
+								<li><a href='#tab-2' data-toggle='tab'>@Resources.ReplacementCdfi</a></li>
+								<li><a href='#tab-3' data-toggle='tab'>@Resources.RelatedCdfi</a></li>
+				</ul>
+				<div class='tab-content'>
+								<div id='tab-1' class='tab-pane active'>
+
+												<div class='control-group text-right'>
+
+																<label class="radio-inline">
+																				<input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="sustitucion" class="radio-option">
+																				@Resources.ReplacementCdfi
+																</label>
+																&nbsp;&nbsp;&nbsp;
+																<label class="radio-inline">
+																				<input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="relacionados" class="radio-option">
+																				@Resources.RelatedCdfi
+																</label>
+																&nbsp;&nbsp;&nbsp;
+																<a id='add-items' class='btn btn-default' data-url='@Url.Action("AddItems", new { id = Model.Id })'
+																			data-type='text' data-placement='left' data-pk='@Model.Id' data-value=''
+																			data-display='false' data-emptytext='' data-emptyclass='' data-highlight='false'>
+																				<i class='icon-plus'></i> @Resources.SalesOrder
+																</a>
+												</div>
+												<div id='details-section'>
+																<div id='items-container' data-url='@Url.Action("Items", new { id = Model.Id })'>
+																				@Html.Partial("_Items", Model.Details)
+																</div>
+																@if (Privilege.AllowCreate)
+																{
+																				<div class='search-box'>
+																								<input type='text' id='product-search' name='product-search' />
+																				</div>
+																}
+												</div>
+								</div>
+								<div id='tab-2' class='tab-pane  cfd-rel01'>
+												<div id='relations-container'>
+																@Html.Partial("_SimpleRelations", Model.Relations)
+												</div>
+												<div class='search-box'>
+																<input type='text' id='relation-search' name='relation-search' />
+												</div>
+								</div>
+								<div id='tab-3' class='tab-pane cfd-rel07'>
+												<div id='relations-container-xt'>
+																@Html.Partial("_AdvancePaymentsAppliedRelations", Model.Relations)
+												</div>
+												<div class='search-box'>
+																<input type='text' id='relation-search-xt' name='relation-search-xt' />
+												</div>
+								</div>
+				</div>
 </div>
 
-<div class='tabbable'>
-	<ul class='nav nav-tabs'>
-		<li class='active'><a href='#tab-1' data-toggle='tab'>@Resources.Concepts</a></li>
-		<li><a href='#tab-2' data-toggle='tab'>@Resources.ReplacementCdfi</a></li>
-		<li><a href='#tab-3' data-toggle='tab'>@Resources.RelatedCdfi</a></li>
-	</ul>
-	<div class='tab-content'>
-		<div id='tab-1' class='tab-pane active'>
-			
-			<div class='control-group text-right'>
-				
-				<label class="radio-inline">
-					<input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="sustitucion" class="radio-option">
-					@Resources.ReplacementCdfi
-				</label>
-				&nbsp;&nbsp;&nbsp;
-				<label class="radio-inline">
-					<input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="relacionados" class="radio-option">
-					@Resources.RelatedCdfi
-				</label>
-				&nbsp;&nbsp;&nbsp;
-				<a id='add-items' class='btn btn-default' data-url='@Url.Action("AddItems", new { id = Model.Id })'
-				   data-type='text' data-placement='left' data-pk='@Model.Id' data-value=''
-				   data-display='false' data-emptytext='' data-emptyclass='' data-highlight='false'>
-					<i class='icon-plus'></i> @Resources.SalesOrder
-				</a>
-			</div>
-			<div id='details-section'>
-				<div id='items-container' data-url='@Url.Action("Items", new { id = Model.Id })'>
-					@Html.Partial("_Items", Model.Details)
-				</div>
-				@if (Privilege.AllowCreate)
-				{
-					<div class='search-box'>
-						<input type='text' id='product-search' name='product-search' />
-					</div>
-				}
-			</div>
-		</div>
-		<div id='tab-2' class='tab-pane  cfd-rel01'>
-			<div id='relations-container'>
-				@Html.Partial("_SimpleRelations", Model.Relations)
-			</div>
-			<div class='search-box'>
-				<input type='text' id='relation-search' name='relation-search' />
-			</div>
-		</div>
-		<div id='tab-3' class='tab-pane cfd-rel07'>
-			<div id='relations-container-xt'>
-				@Html.Partial("_AdvancePaymentsAppliedRelations", Model.Relations)
-			</div>
-			<div class='search-box'>
-				<input type='text' id='relation-search-xt' name='relation-search-xt' />
-			</div>
-		</div>
-	</div>
-</div>
 
 <div id='totals-section' class='pull-right' data-url='@Url.Action("Totals", new { id = Model.Id })'>
-    @Html.Partial("_Totals")
+				@Html.Partial("_Totals")
 </div>
 <div class='clearfix'></div>
 <div id='back-to-list' class='pull-left'>
-    @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+				@Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
 <div id='confirm-button' class='pull-right @(Model.Details.Count == 0 ? "hide" : "")'>
-@using (Html.BeginForm("Confirm", "FiscalDocuments", new { id = Model.Id })) {
-    <button id='complete' type='submit'>@Resources.Complete</button>
-}
+				@using (Html.BeginForm("Confirm", "FiscalDocuments", new { id = Model.Id }))
+				{
+								<button id='complete' type='submit'>@Resources.Complete</button>
+				}
 </div>
 <div class='clearfix'></div>
 <script type='text/javascript'>
@@ -101,7 +106,7 @@
 
     $(function () {
 		$('li').find('a[href="#tab-2"][data-toggle="tab"]').hide();
-		$('li').find('a[href="#tab-3"][data-toggle="tab"]').hide();        
+		$('li').find('a[href="#tab-3"][data-toggle="tab"]').hide();
 
 
 @if (Privilege.AllowCreate) {
@@ -169,5 +174,7 @@
 });
 </script>
 <style type='text/css'>
-ul.token-input-list { width: 100%; }
+				ul.token-input-list {
+								width: 100%;
+				}
 </style>

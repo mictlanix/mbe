@@ -159,16 +159,22 @@
 	@Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
 <script type="text/javascript">
-    $(function () {
+				$(function () {
+
+								console.log("Entrando al script...")
+								var select = $("#UserSettings.StoreId");
+								console.log(select);
+
     	@if(Model.Employee != null) {
-        @:$("#EmployeeId").tokenInput("add", { id: "@Model.Employee.Id", name: "@Model.Employee.Name"});
+        @:$("#EmployeeId").tokenInput("add", { id: "@Model.Employee.Id", name: "@Model.Employee.Name" });
         }
-        $("table tr:first th input:checkbox").click(function () {
-            var checkedStatus = this.checked;
-            $("table tr td input:checkbox[name$='" + this.name + "']").each(function () {
-                this.checked = checkedStatus;
-            });
-		});
+
+    $("table tr:first th input:checkbox").click(function () {
+        var checkedStatus = this.checked;
+        $("table tr td input:checkbox[name$='" + this.name + "']").each(function () {
+            this.checked = checkedStatus;
+        });
+				});
 
 		$("#UserSettings_StoreId").tokenInput("@Url.Action("GetSuggestions", "Stores")", {
             hintText: "@Resources.HIntText",
@@ -218,4 +224,51 @@
 			}
         });
     });
+</script>
+<script type="text/javascript">
+
+				$("[id='UserSettings.StoreId']").change(function () {
+								var selectedId = $(this).val();
+								var cashDrawerListUrl = "@Url.Action("ListByStore", "CashDrawers")";
+								var pointsOfSalesListUrl = "@Url.Action("ListByStore", "PointsOfSale")";
+
+								$.ajax({
+												url: cashDrawerListUrl,
+												type: "GET", // Puede ser "POST" si necesitas enviar datos de otra manera
+												data: { id: selectedId }, // Envía el ID seleccionado
+												dataType: "json",
+												success: function (response) {
+																var cashDrawerSelect = $("[id = 'UserSettings.CashDrawerId']");
+																cashDrawerSelect.empty(); // Limpia opciones anteriores
+
+																response.forEach(function (item) {
+																				console.log(item);
+																				cashDrawerSelect.append(new Option(item.text, item.value));
+																});
+												},
+												error: function () {
+																console.error("Error al obtener datos del servidor.");
+												}
+								});
+
+								$.ajax({
+												url: pointsOfSalesListUrl,
+												type: "GET", // Puede ser "POST" si necesitas enviar datos de otra manera
+												data: { id: selectedId }, // Envía el ID seleccionado
+												dataType: "json",
+												success: function (response) {
+																var cashDrawerSelect = $("[id = 'UserSettings.PointOfSaleId']");
+																cashDrawerSelect.empty(); // Limpia opciones anteriores
+
+																response.forEach(function (item) {
+																				console.log(item);
+																				cashDrawerSelect.append(new Option(item.text, item.value));
+																});
+												},
+												error: function () {
+																console.error("Error al obtener datos del servidor.");
+												}
+								});
+
+				});
 </script>

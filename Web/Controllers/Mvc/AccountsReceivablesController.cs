@@ -73,8 +73,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			//		GROUP BY m.sales_order_id";
 
 			
-			var privilege = GetAccessPrivilege(SystemObjects.SearchCreditsFromAllStores);
-			var FILTERALLSTORES = privilege.AllowRead ? string.Empty : " AND m.store = " + WebConfig.Store.Id + " ";
+			//var privilege = GetAccessPrivilege(SystemObjects.SearchCreditsFromAllStores);
+			//var FILTERALLSTORES = privilege.AllowRead ? string.Empty : " AND m.store = " + WebConfig.Store.Id + " ";
+			var FILTERALLSTORES = string.Empty;
+		
 
 			string sql1 = @"SELECT m.date Date, m.sales_order_id SalesOrder, m.due_date DueDate, c.name Customer, s.code Store, m.paid Paid,
 						Invoices, TotalEx, Total, IFNULL(r.refund, 0) Refunds,
@@ -182,7 +184,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				SalesOrder = SalesOrder.TryFind (id)
 			};
 
-			ViewBag.Balance = item.SalesOrder.Balance - GetRefunds (item.SalesOrder.Id);
+			ViewBag.Balance = item.SalesOrder.Balance;// - GetRefunds (item.SalesOrder.Id);
 			ViewBag.Payments = GetRemainingPayments (item.SalesOrder.Customer.Id, item.SalesOrder.Currency);
 			item.Amount = ViewBag.Balance;
 
@@ -192,12 +194,18 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		[HttpPost]
 		public ActionResult ApplyPayment (SalesOrderPayment item)
 		{
+
+			var dt = DateTime.Now;
+
 			var entity = new SalesOrderPayment {
 				SalesOrder = SalesOrder.TryFind (item.SalesOrder.Id),
 				Payment = CustomerPayment.TryFind (item.PaymentId),
-				Amount = item.Amount
+				Amount = item.Amount,
+				Applier = CurrentUser.Employee,
+				Date = dt,
+				IsConfirmed = true
 			};
-			var balance = entity.SalesOrder.Balance - GetRefunds (entity.SalesOrder.Id);
+			var balance = entity.SalesOrder.Balance;// - GetRefunds (entity.SalesOrder.Id);
 
 			if (entity.Amount > entity.Payment.Balance) {
 				entity.Amount = entity.Payment.Balance;
@@ -208,6 +216,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			using (var scope = new TransactionScope ()) {
 				if (balance <= 0.01m) {
 					entity.SalesOrder.IsPaid = true;
+					entity.SalesOrder.BalanceZeroedTime = dt;
+					entity.SalesOrder.ModificationTime = dt;
 					entity.SalesOrder.Update ();
 				}
 
@@ -234,8 +244,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		IEnumerable<CustomerPayment> GetRemainingPayments (int customer, CurrencyCode currency)
 		{
 			var query = from x in CustomerPayment.Queryable
-				    where x.Customer.Id == customer && x.Currency == currency &&
-				    	(x.Allocations.Count == 0 || x.Amount > x.Allocations.Sum (y => y.Amount + y.Change))
+				    where x.PaymentType == PaymentType.CreditPayment
+					&& x.Customer.Id == customer && x.Currency == currency
+				    	&& (x.Allocations.Count == 0 || x.Amount > x.Allocations.Sum (y => y.Amount + y.Change))
 				    select x;
 			var results = query.ToList ().Where (x => x.Balance >= 0.01m);
 

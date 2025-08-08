@@ -40,7 +40,9 @@ namespace Mictlanix.BE.Model {
 		CreditPayment,
 		[Display (Name = "PaymentInAdvance", ResourceType = typeof (Resources))]
 		PaymentInAdvance,
-		[Display (Name = "Refund", ResourceType = typeof (Resources))]
-		Refund,
+		[Display (Name = "CreditNote", ResourceType = typeof (Resources))]
+		CreditNote,
+		[Display (Name = "Expense", ResourceType = typeof (Resources))]
+		Expense,
 	}
 }

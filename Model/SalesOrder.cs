@@ -87,6 +87,10 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "SalesPerson", ResourceType = typeof (Resources))]
 		public virtual Employee SalesPerson { get; set; }
 
+		[BelongsTo ("sales_quote")]
+		[Display (Name = "SalesQuote", ResourceType = typeof (Resources))]
+		public virtual SalesQuote SalesQuote { get; set; }
+
 		[BelongsTo ("point_sale")]
 		[Display (Name = "PointOfSale", ResourceType = typeof (Resources))]
 		public virtual PointOfSale PointOfSale { get; set; }
@@ -140,8 +144,12 @@ namespace Mictlanix.BE.Model {
 		public virtual bool IsPaid { get; set; }
 
 		[Property ("delivered")]
-		[Display (Name = "Delivery", ResourceType = typeof (Resources))]
+		[Display (Name = "Delivered", ResourceType = typeof (Resources))]
 		public virtual bool IsDelivered { get; set; }
+
+		[Property ("partial_deliveries")]
+		[Display (Name = "PartialDeliveries", ResourceType = typeof (Resources))]
+		public virtual DeliveryMode DeliveryMode { get; set; }
 
 		[Property ("cancelled")]
 		[Display (Name = "Cancelled", ResourceType = typeof (Resources))]
@@ -216,20 +224,31 @@ namespace Mictlanix.BE.Model {
 		[DataType (DataType.Currency)]
 		[Display (Name = "Paid", ResourceType = typeof (Resources))]
 		public virtual decimal Paid {
-			get { return Payments.Where(x => x.Payment.PaymentType.HasValue).Sum (x => x.Amount); }
+			get { return Payments.Sum (x => x.Amount); }
+		}
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "Refund", ResourceType = typeof (Resources))]
+		public virtual decimal CreditNotesAmount {
+			get {
+				//return Payments.Where (x => x.Payment.PaymentType == PaymentType.CreditNote && x.IsConfirmed)
+				//	.Sum (x => (decimal?) x.Payment.Amount) ?? 0;
+				return CreditNote.Queryable.Where (x => x.SalesOrder == this).Sum (x => (decimal?) x.CustomerPayment.Amount) ?? 0;
+			}
 		}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "ExtraCharges", ResourceType = typeof (Resources))]
-		public virtual decimal ExtraFee { get { return Payments.Where (x => x.Payment.ExtraFee != null).Count () > 0 ? Payments.Where (x => x.Payment.ExtraFee != null).Sum (x => x.Payment.Commission * x.Payment.Amount) : 0.0m; } }
+		public virtual decimal ExtraFee { get { return Payments.Where (x => x.Payment.ExtraFee != null)
+					.Sum (x => (decimal?)(x.Payment.Commission * x.Payment.Amount))??0; } }
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Balance", ResourceType = typeof (Resources))]
 		public virtual decimal Balance {
-			get { return Total - Paid - Refund; }
+			get { return Total - (CustomerRefunds.Sum(x => (decimal?)x.Total)?? 0) - Paid + CreditNotesAmount; }
 		}
 
-			[DataType (DataType.Currency)]
+		[DataType (DataType.Currency)]
 		[Display (Name = "Change", ResourceType = typeof (Resources))]
 		public virtual decimal Change {
 			get { return Payments.Sum (x => x.Change); }
@@ -237,19 +256,10 @@ namespace Mictlanix.BE.Model {
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Refund", ResourceType = typeof (Resources))]
-		public virtual decimal Refund {
-			get {
-				return Details.Sum (x => x.RefundDetails.Where (z => !z.Refund.IsCancelled && z.Refund.IsCompleted)
-			.Sum (y => (decimal?) y.Total) ?? 0);
-			}
-			//get { return Payments.Where (x => x.Payment.PaymentType == PaymentType.Refund).Sum (x => (decimal?) x.Amount) ?? 0; }
-		}
-
-		[DataType (DataType.Currency)]
-		[Display (Name = "Refund", ResourceType = typeof (Resources))]
 		public virtual List<CustomerRefund> CustomerRefunds {
 			get {
-				return CustomerRefund.Queryable.Where (x => x.SalesOrder == this && x.IsCompleted && !x.IsCancelled).ToList ();
+				return CustomerRefund.Queryable.Where (x => x.SalesOrder == this
+				&& x.IsCompleted && !x.IsCancelled).ToList ();
 			}
 		}
 
@@ -270,6 +280,11 @@ namespace Mictlanix.BE.Model {
 		[DataType (DataType.DateTime)]
 		[Display (Name = "ModificationTime", ResourceType = typeof (Resources))]
 		public virtual DateTime ModificationTime { get; set; }
+
+		[Property ("balance_zeroed_time")]
+		[DataType (DataType.DateTime)]
+		[Display (Name = "BalanceZeroedTime", ResourceType = typeof (Resources))]
+		public virtual DateTime? BalanceZeroedTime { get; set; }
 
 		#region Override Base Methods
 

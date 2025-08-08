@@ -38,26 +38,29 @@ using Mictlanix.BE.Model;
 
 namespace Mictlanix.BE.Web.Models {
 	public class DateRange {
-	    public DateRange()
-        {
+
+		private DateTime start;
+		private DateTime end;
+		public DateRange ()
+		{
 			var now = DateTime.Now;
-			StartDate = new DateTime (now.Year, now.Month, 1);
-			EndDate = now.Date.AddDays (1).AddSeconds (-1);
-	    }
+			start = new DateTime (now.Year, now.Month, 1);
+			end = now.Date.AddDays (1).AddSeconds (-1);
+		}
 
-        public DateRange(DateTime start, DateTime end)
-        {
-	        StartDate = start.Date;
-	        EndDate = end.Date.AddDays(1).AddMilliseconds(-1) ;
-	    }
-    
-        [DataType(DataType.Date)]
-        [Display(Name = "StartDate", ResourceType = typeof(Resources))]
-        public DateTime StartDate { get; set; }
+		public DateRange (DateTime start, DateTime end)
+		{
+			this.start = start.Date;
+			this.end = end.Date;
+		}
 
-        [DataType(DataType.Date)]
-        [Display(Name = "EndDate", ResourceType = typeof(Resources))]
-        [DateGreaterThan("StartDate", ErrorMessageResourceName = "Validation_DateGreaterThan", ErrorMessageResourceType = typeof(Resources))]
-        public DateTime EndDate { get; set; }
+		[DataType (DataType.Date)]
+		[Display (Name = "StartDate", ResourceType = typeof (Resources))]
+		public DateTime StartDate { get { return start.Date; } set { start = value; } }
+
+		[DataType (DataType.Date)]
+		[Display (Name = "EndDate", ResourceType = typeof (Resources))]
+		[DateGreaterThan ("StartDate", ErrorMessageResourceName = "Validation_DateGreaterThan", ErrorMessageResourceType = typeof (Resources))]
+		public DateTime EndDate { get { return end.Date.AddDays (1).AddMilliseconds (-1); } set { end = value; } }
 	}
 }

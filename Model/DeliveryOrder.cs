@@ -87,7 +87,7 @@ namespace Mictlanix.BE.Model {
 		[DataType (DataType.Date)]
 		[Display (Name = "DeliveryDate", ResourceType = typeof (Resources))]
 		[DisplayFormat (DataFormatString = "{0:yyyy-MM-dd}")]
-		public virtual DateTime? Date { get; set; }
+		public virtual DateTime Date { get; set; }
 
 		[Property ("completed")]
 		[Display (Name = "Completed", ResourceType = typeof (Resources))]
@@ -105,6 +105,14 @@ namespace Mictlanix.BE.Model {
 		[Display(Name = "Confirmed", ResourceType = typeof(Resources))]
 		public virtual bool IsConfirmed { get; set; }
 
+		[Property("picked_up")]
+		[Display(Name = "CounterDelivery", ResourceType = typeof(Resources))]
+		public virtual bool IsPickedUpInStore { get; set; }
+
+		[Property]
+		[Display (Name = "Priority", ResourceType = typeof (Resources))]
+		public virtual Priority Priority { get; set; }
+
 		[Property]
 		[DataType (DataType.MultilineText)]
 		[Display (Name = "Comment", ResourceType = typeof (Resources))]
@@ -121,18 +129,18 @@ namespace Mictlanix.BE.Model {
 			return new DeliveryOrder {
 				Id = Id,
 				Date = Date,
-				Contact = Contact.GetSerializable(),
+				Contact = Contact == null ? null : Contact.GetSerializable(),
 				CreationTime = CreationTime,
 				Comment = Comment,
 				Customer = Customer.GetSerializable(),
-				Creator = Creator.GetSerializable(),
+				//Creator = Creator.GetSerializable(),
 				IsCancelled = IsCancelled,
 				IsConfirmed = IsConfirmed,
 				IsDelivered = IsDelivered,
 				IsCompleted = IsCompleted,
 				ModificationTime = ModificationTime,
 				Serial = Serial,
-				ShipTo = ShipTo.GetSerializable(),
+				ShipTo = ShipTo == null ? null : ShipTo.GetSerializable(),
 				Details = Details.Select(x => x.GetSerializable()).ToList(),
 			};
 		}

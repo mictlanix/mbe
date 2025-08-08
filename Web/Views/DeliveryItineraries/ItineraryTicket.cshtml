@@ -1,0 +1,143 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Controllers.Mvc
+@using Mictlanix.BE.Web.Models
+@using Gma.QrCodeNet.Encoding;
+@using Gma.QrCodeNet.Encoding.Windows.Render;
+@model DeliveriesItinerary
+
+@{
+				Layout = WebConfig.ReceiptLayout;
+				ViewBag.Title = Resources.DeliveryItinerary;
+				ViewBag.Store = Model.Warehouse.Store;
+				ViewBag.Address = Model.Warehouse.Store.Address;
+}
+
+<div class="row">
+				<div class="col-xs-6 text-left shipandcontact">
+								<div class="row">
+												<div class="col-xs-12 uppercase">
+																<h3 class="text-left">@Resources.VehicleOperator</h3>
+												</div>
+												<div class="col-xs-12">
+																<h3>@Html.DisplayFor(x => x.VehicleOperator.Operator.Nickname)</h3>
+												</div>
+												<div class="col-xs-12">
+																<p><span class="mylabel">@Resources.Vehicle</span>: </p>
+												</div>
+												<div class="col-xs-12">
+																												<p>@Html.DisplayFor(x => x.Vehicle.NickName) @Html.DisplayFor(x => x.Vehicle.LicensePlate)</p>
+												</div>
+												<div class="col-xs-12">
+																<p><span class="mylabel">@Resources.DeliveryDate</span>: </p>
+												</div>
+												<div class="col-xs-12">
+																<p>
+																				@Html.DisplayFor(x => x.Date)
+																</p>
+												</div>
+								</div>
+				</div>
+				<div class="col-xs-6 text-right shipandcontact">
+								<div class="row">
+												@if (!string.IsNullOrEmpty(Model.Comment))
+												{
+																<div class="col-xs-12">
+																				<p><span class="mylabel">@Resources.Comment</span></p>
+																</div>
+																<div class="col-xs-12">
+																				<p>@Html.SafeDisplayFor(x => x.Comment)</p>
+																</div>
+												}
+								</div>
+				</div>
+</div>
+
+<div style="min-height: 2.2mm; border-top: #333 solid 1px; border-bottom: #333 solid 3px"></div>
+
+<table class="details" style="border-spacing:0 4px;border-collapse: separate;">
+				<thead>
+								@*<tr>
+												<td>@Resources.Quantity</td>
+												<td class="text-center">@Resources.Name</td>
+												<td>@Resources.SalesOrder</td>
+								</tr>*@
+				</thead>
+								<tbody>
+												@foreach (var item in Model.Details
+.GroupBy(x => new
+{
+shipto = x.DeliveryOrderDetail.DeliveryOrder.ShipTo,
+contact = x.DeliveryOrderDetail.DeliveryOrder.Contact
+})
+.Select(g => new { info = g.Key, Details = g.ToList() }))
+												{
+																<tr>
+																				<td class="line" colspan="3"></td>
+																</tr>
+																<tr class="alt">
+																				<td colspan="3">
+																								@Resources.Contact:	@Html.DisplayFor(x => item.info.contact.Name)
+																								@Html.SafeDisplayFor(x => item.info.contact.Mobile)
+																								<br />
+																								@Resources.ShipTo:	@item.info.shipto.ToString()
+																								<br />
+																				</td>
+																</tr>
+																<tr>
+																				<td colspan="3">
+																								<div class="row">
+
+																												<div class="col-xs-4"></div>
+																												<div class="col-xs-4">
+																																<img class="" style="" src='@Url.Action("QRCodeUrl", "Barcodes", new { url = item.info.shipto.Link })' />
+																												</div>
+																								</div>
+																				</td>
+																</tr>
+																@*if (item.info.shipto.Link != null) {
+												<tr><td colspan="3">
+															<img class="" style="" src='@Url.Action("QRCodeUrl", "Barcodes", new { url = item.info.shipto.Link })' />
+																</td></tr>
+												}*@
+																foreach (var detail in item.Details)
+																{
+																				<tr>
+																								<td>@detail.SentQuantity.ToString("F2") @detail.DeliveryOrderDetail.Product.UnitOfMeasurement.Symbol</td>
+																								<td>@detail.DeliveryOrderDetail.ProductName</td>
+																								<td>@detail.DeliveryOrderDetail.DeliveryOrder.Id</td>
+																				</tr>
+
+																}
+																@*<tr>
+																				<td class="line" colspan="3"></td>
+																</tr>*@
+																<tr>
+																				<td colspan="3">
+																								<div class="row" style="margin-top:10mm"></div>
+																								<div class="col-xs-8 col-xs-offset-2 text-center" style="border-top: #333 solid 1px">
+																												@Resources.ContactName: @item.info.contact.Name<br />
+																												@Resources.AgreementSignature
+																								</div>
+																				</td>
+																</tr>
+												}
+								</tbody>
+</table>
+
+<div style="min-height: 2.2mm; border-top: #333 solid 3px; border-bottom: #333 solid 1px"></div>
+
+<div style="min-height: 2.2mm; border-top: #333 solid 3px; border-bottom: #333 solid 1px"></div>
+<div class="row" style="margin-top:20mm">
+				<div class="col-xs-8 col-xs-offset-2 text-center" style="border-top: #333 solid 1px">
+								Firma del Transportista <br />
+								Confirmación de Partidas y Cantidades descritas en el Despacho
+				</div>
+</div>
+
+@*@section Footer {
+								<img src='@Url.Action("QRCodeUrl", "Barcodes" ,new { url = Model.DeliveryOrder.ShipTo.Link })'
+													alt='@Html.DisplayFor(x => x.DeliveryOrder.Id)' title='@Html.DisplayFor(x => x.DeliveryOrder.Id)'>
+								<p>@Html.DisplayFor(x => x.DeliveryOrder.Id)</p>
+				}*@

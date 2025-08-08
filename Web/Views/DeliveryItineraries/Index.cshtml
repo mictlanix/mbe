@@ -11,14 +11,18 @@
 <div class="page-header">
     <div class="pull-right col-xs-6">
 		<div class="row">
-			<div class="col-xs-4 text-right">
-				@if (Privilege.AllowCreate)
-				{
-					<a class="btn btn-primary open-modal" href="/DeliveryItineraries/Create" data-modal-id="deliveries-itinerary-modal">
-						<span class="glyphicon glyphicon-plus"></span>
-					</a>
-				}
-			</div>
+								<div class="col-xs-4 text-right">
+												@if (Privilege.AllowCreate)
+												{
+																using (Html.BeginForm("New", "DeliveryItineraries", null,
+																				FormMethod.Post, new { @class = "modal-form" }))
+																{
+																				<button type="submit" class="btn btn-primary">
+																								<span class="glyphicon glyphicon-plus"></span>
+																				</button>
+																}
+												}
+								</div>
 	        <div class="col-xs-8 input-group">
 			@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
 			    @Html.HiddenFor(x => x.Offset)
@@ -36,6 +40,7 @@
 	    </div>
 	</div>
     <h1>@Resources.DeliveryItineraries</h1>
+				<h2>@CurrentUser.UserSettings.PointOfSale.Warehouse.Name</h2>
 </div>
 <div id="activity-indicator">
     <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
@@ -43,3 +48,19 @@
 <div id="search-results" data-url="@Url.Action("Index")">
     @Html.Partial("_Index", Model)
 </div>
+
+<script type="text/javascript">
+				$('a.to-validate').editable({
+								success: function() {
+												var self = $(this);
+												var value = self.data('value');
+																$.ajax({
+																				type: "POST",
+																				url: self.data('url')
+																}).done(function (data) {
+																				var item = $('#id\\:' + value);
+																				item.hide().replaceWith(data).fadeIn(3000);
+																});
+								}
+				});
+</script>

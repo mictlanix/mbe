@@ -13,15 +13,22 @@
 								<div class='col-xs-8'>
 												<dl class=''>
 																<dt>@Resources.VehicleOperator</dt>
-																<dd>
-																				@Html.DisplayFor(x => x.VehicleOperator.Operator.Name)
+																																<dd>
+																																				<a id='vehicleoperator' class="editable" data-type='select2' data-placement='right' data-pk='@Model.Id'
+																																							data-url='@Url.Action("SetVehicleOperator", new { id = Model.Id })'
+																																							data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+																																								@(Model.VehicleOperator == null ? Resources.Empty : Model.VehicleOperator.Operator.Nickname)
+																																				</a>
 
-																</dd>
+																																</dd>
 																<dt>@Resources.Vehicle</dt>
-																<dd>
-																				@Html.DisplayFor(x => x.Vehicle.Name)
-
-																</dd>
+																																<dd>
+																																				<a id='vehicle' class="editable" data-type='select2' data-placement='right' data-pk='@Model.Id'
+																																							data-url='@Url.Action("SetVehicle", new { id = Model.Id })'
+																																							data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+																																								@(Model.Vehicle == null ? Resources.Empty : Model.Vehicle.NickName + " - " + Model.Vehicle.Name)
+																																				</a>
+																																</dd>
 																<dt>@Resources.Comment</dt>
 																<dd>
 																				<a class='editable' data-type="textarea" data-placement='right' data-pk='@Model.Id'
@@ -34,7 +41,11 @@
 												<dl class='dl-horizontal'>
 																<dt>@Resources.Date</dt>
 																<dd>
-																				@Html.DisplayFor(x => x.DueDate)
+																				<a id='date' data-type='date' data-placement='left' data-pk='@Model.Id'
+																								data-value='@Html.DisplayFor(x => x.Date)' data-url='@Url.Action("SetDate", new { id = Model.Id })'
+																								data-emptytext='@Resources.Empty' data-clear='false'>
+																								@Html.DisplayFor(x => x.Date)
+																				</a>
 																</dd>
 												</dl>
 								</div>
@@ -60,43 +71,109 @@
 		}
 	});
 
-
-	$('a.editable').editable({
-
-		success: function (response, newValue) {
-			var contact = $("#contact").val();
-			var address = $("#address").val();
-			$('#buttons').loadUrl();
+		$('#vehicleoperator').editable({
+	    select2: {
+		    ajax: {
+		        url: '@Url.Action("List", "VehicleOperators")',
+		        dataType: 'json',
+		        type: 'POST',
+		        data: function(term,page,context) {
+		        	return { pattern:term };
+		        },
+		        results: function(data,page) {
+		            return { results:data };
+		        }
+		    },
+		    initSelection: function(element, callback) {
+		        var data = {
+														id: $('#vehicleoperator').data('value'),
+														name: $('#vehicleoperator').text()
+	        	};
+		        callback(data);
+		    },
+		    formatResult: function(result ) {
+		        return result.name;
+		    },
+		    formatSelection: function(selection) {
+		        return selection.name;
+		    }
 		},
-		error: function(response, newValue){
-			console.log("en error del contacto o domicilio...");
-			console.log(response)
-			console.log(newValue)
-			if (response.status === 400) {
-				console.log("vamos bien...")
+	    display: function(value, response) {
+	    	if (typeof response !== 'undefined') {
+				$(this).html(response.value);
 			}
-		},
-		validate: function (value) {
-			if (value < 0) {
-				console.log(value)
-			}
-		},
-		display: function (value, response) {
-			console.log(value)
-			console.log(response)
-			if (typeof response === 'undefined')
-        		return;
+	    }
+		});
 
-			if (Array.isArray(response)) {
-          		var arr = $.grep(response, function(o){
-  					return o.value == value;
-				});
-				if (arr.length != 0) {
-          			$(this).html(arr[0].text);
-          		}
-			} else {
-          		$(this).html(response.value);
-			}
+			$('#vehicle').editable({
+    select2: {
+	    ajax: {
+	        url: '@Url.Action("List", "Vehicles")',
+	        dataType: 'json',
+	        type: 'POST',
+	        data: function(term,page,context) {
+	        	return { pattern:term };
+	        },
+	        results: function(data,page) {
+	            return { results:data };
+	        }
+	    },
+	    initSelection: function(element, callback) {
+	        var data = {
+													id: $('#vehicle').data('value'),
+													name: $('#vehicle').text()
+        	};
+	        callback(data);
+	    },
+	    formatResult: function(result ) {
+	        return result.name;
+	    },
+	    formatSelection: function(selection) {
+	        return selection.name;
+	    }
+	},
+    display: function(value, response) {
+    	if (typeof response !== 'undefined') {
+			$(this).html(response.value);
 		}
-});
+    }
+			});
+
+				$('a.editable').editable({
+								success: function (response, newValue) {
+												//var contact = $("#contact").val();
+												//var address = $("#address").val();
+												//$('#buttons').loadUrl();
+								},
+								error: function (response, newValue) {
+												//console.log("en error del contacto o domicilio...");
+												//console.log(response)
+												//console.log(newValue)
+												//if (response.status === 400) {
+												//	console.log("vamos bien...")
+												//}
+								},
+								validate: function (value) {
+												if (value < 0) {
+																console.log(value)
+												}
+								},
+								display: function (value, response) {
+												console.log(value)
+												console.log(response)
+												if (typeof response === 'undefined')
+																return;
+
+												if (Array.isArray(response)) {
+																var arr = $.grep(response, function (o) {
+																				return o.value == value;
+																});
+																if (arr.length != 0) {
+																				$(this).html(arr[0].text);
+																}
+												} else {
+																$(this).html(response.value);
+												}
+								}
+				});
 </script>

@@ -3,6 +3,9 @@
 @model Address
 
 <div class="form-group">
+				<div class="col-xs-6">@Html.ValidationSummary(true, "", new { @class = "text-danger" })</div>
+</div>
+<div class="form-group">
   	<div class="col-xs-6">@Html.LabelFor(x => x.Nickname) @Html.EditorFor(x => x.Nickname) @Html.ValidationMessageFor(x => x.Nickname)</div>
 </div>
 <div class="form-group">

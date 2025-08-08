@@ -10,8 +10,6 @@
 												<th class='center'>@Resources.CustomerId</th>
 												<th class='center'>@Resources.Customer</th>
 												<th class='center'>@Resources.Customer @Resources.Code</th>
-												<th class='center'>@Resources.CreditLimit</th>
-												<th class='center'>@Resources.CreditDays</th>
 												<th class='center'>@Resources.SalesOrders</th>
 												<th class='center'>@Resources.Total</th>
 												<th class='center'>@Resources.Refund</th>
@@ -28,11 +26,20 @@
 								{
 												var warning = item.OnDelivery > 0 || item.Balance < 0;
 												<tr class="@( warning ? "warning" : string.Empty)">
-																<td class="text-center">@item.CustomerId.ToString().PadLeft(5,'0')</td>
-																<td class='text-left'>@item.CustomerName</td>
-																<td class='text-left'>@item.CustomerCode</td>
-																<td class="number">@item.CreditLimit.ToString("C")	</td>
-																<td class="number">@item.CreditDays	</td>
+																<td class="text-center">
+																				@item.CustomerId.ToString().PadLeft(5, '0')
+																</td>
+																<td class='text-left'>
+																				@item.CustomerName <br />
+																				@if(item.CreditLimit > 0 && item.CreditDays > 0) {
+																								@Resources.CreditLimit	@item.CreditLimit.ToString("C") <br />
+																								@Resources.CreditDays  @item.CreditDays
+																				}
+																				else {
+																								@Resources.CreditLimitIsNotSet
+																				}
+																</td>
+																<td class='number'>@item.CustomerCode</td>
 																<td class="number">@item.NumberOfOrders	</td>
 																<td class="number">@item.Total.ToString("C")</td>
 																<td class="number">@(item.Refunds > 0 ? item.Refunds.ToString("C") : "")</td>

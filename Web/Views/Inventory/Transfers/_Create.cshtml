@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Models
 @using Mictlanix.BE.Web.Helpers
@@ -9,7 +9,8 @@
     <h3>@Resources.InventoryTransfer</h3>
 </div>
 <div class='modal-body'>
-    @using (Ajax.BeginForm (null, null, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "inventoryTransfer-modal-content" }, new { @class = "modal-form" })) {
+    @using (Ajax.BeginForm (null, null, new AjaxOptions { HttpMethod = "POST",
+        UpdateTargetId = "inventoryTransfer-modal-content" }, new { @class = "modal-form" })) {
         @Html.ValidationSummary(true)
         <div class="form-horizontal">
             @Html.EditorForModel()
@@ -18,7 +19,9 @@
 </div>
 <div class='modal-footer'>
     <button type='button' class='btn btn-default' data-dismiss='modal'>@Resources.Discard</button>
-    <button type='submit' class='btn btn-primary' onclick='$("#inventoryTransfer-modal form").submit();'>@Resources.Create</button>
+    <button type='submit' class='btn btn-primary' onclick='$("#inventoryTransfer-modal form").submit();'>
+            @Resources.Create
+    </button>
 </div>
 
 

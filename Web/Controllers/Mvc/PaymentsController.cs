@@ -34,13 +34,10 @@ using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
-using NHibernate.Mapping;
-using System.Collections.Generic;
 using Newtonsoft.Json;
-using Castle.Core.Internal;
-using System.Runtime.CompilerServices;
-//using LinqKit;
-//using NHibernate.Linq;
+using System.Collections.Generic;
+using Mictlanix.BE.Web.Services;
+using LinqKit;
 
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
@@ -85,7 +82,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			var search = SearchSalesOrders (new Search<SalesOrder> {
-				Limit = int.MaxValue,
+				Limit = WebConfig.PageSize,
 				Pattern = id
 			});
 
@@ -102,42 +99,25 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var store = WebConfig.Store;
 			var cashier = GetSession ().Cashier;
 			var pattern = (search.Pattern ?? string.Empty).Trim ();
-			//var predicate = PredicateBuilder.New<SalesOrder> ();
-
-			//predicate.Or (x => x.Creator == cashier || x.Updater == cashier || x.SalesPerson == cashier);
-			
-			var from_all_users = GetAccessPrivilege (SystemObjects.SearchAllSalesOrderFromAllUsers);
-			var from_all_stores = GetAccessPrivilege (SystemObjects.SearchAllSalesOrderFromAllStores);
+ 
 			IQueryable<SalesOrder> query = from x in MBEQueryable.IQSalesOrders
 						       where x.IsCompleted && !x.IsCancelled
+						       && (x.Creator == cashier || x.Updater == cashier || x.SalesPerson == cashier)
 						       && !x.IsPaid 
 						       select x;
-			// TODO: revisar si va el filtro de abajo
-
-			//if (!WebConfig.ShowSalesOrdersFromAllStores) {
-			//	query = query.Where (x => x.Store.Id == store.Id);
-			//}
-
-			//query = from_all_stores.AllowRead ? query : query.Where (x => x.Store == store);
-			//if (!from_all_stores.AllowRead) {
-			//	predicate.And (x => x.Store == store);
-			//}
-
-			//if (!from_all_users.AllowRead) {
-			//	predicate.And (x => x.Creator == cashier || x.Updater == cashier || x.SalesPerson == cashier);
-			//}
-
-			query = from_all_users.AllowRead ? query : query.Where (x => x.Creator == cashier || x.SalesPerson == cashier);
 
 
 			if (int.TryParse (pattern, out id) && id > 0) {
 				query = MBEQueryable.IQSalesOrders.Where (x => x.Id == id || x.Serial == id);
-				//predicate.Or (x => x.Id == id || x.Serial == id);
 			} else if (!string.IsNullOrEmpty (pattern)) {
-				query = query.Where (x => (x.Customer.Name.Contains (pattern) ||
-						     (x.SalesPerson.FirstName + " " + x.SalesPerson.LastName).Contains (pattern)));
-			}
+				if (pattern.Contains (Resources.WilcardStringPatternForSearch) && CurrentUser.IsAdministrator) {
+					query = MBEQueryable.IQSalesOrders.Where(x => !x.IsCancelled && x.IsCompleted);
+				} else {
 
+					query = MBEQueryable.IQSalesOrders.Where (x => (x.Customer.Name.Contains (pattern) ||
+						     (x.SalesPerson.FirstName + " " + x.SalesPerson.LastName).Contains (pattern)));
+				}
+			}
 			//query = query.Where (predicate);
 
 			query = query.OrderByDescending (x => x.Date);
@@ -154,17 +134,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var store = WebConfig.Store;
 			var cashier = GetSession ().Cashier;
 			var pattern = (search.Pattern ?? string.Empty).Trim ();
-			//var predicate = PredicateBuilder.New<SalesOrder> ();
-
-			//var from_all_users = GetAccessPrivilege (SystemObjects.SearchAllSalesOrderFromAllUsers);
-			//var from_all_stores = GetAccessPrivilege (SystemObjects.SearchAllSalesOrderFromAllStores);
+ 
 			IQueryable<CustomerPayment> query = from x in CustomerPayment.Queryable
-							    where x.PaymentType == PaymentType.CreditPayment || x.PaymentType == PaymentType.PaymentInAdvance
+							    where x.PaymentType == PaymentType.CreditPayment
+							    || x.PaymentType == PaymentType.PaymentInAdvance
 						       select x;
 
 
 			if (int.TryParse (pattern, out id) && id > 0) {
-				query = CustomerPayment.Queryable.Where (x => x.Id == id || x.Serial == id);
+				query = query.Where (x => x.Id == id || x.Serial == id);
 			} else if (!string.IsNullOrEmpty (pattern)) {
 				query = query.Where (x => (x.Customer.Name.Contains (pattern) ||
 						     (x.CashSession.Cashier.Name).Contains (pattern)));
@@ -177,6 +155,72 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return search;
 		}
+
+		Search<CustomerPayment> SearchPaymentsValidation (Search<CustomerPayment> search)
+		{
+			int id = 0;
+			var pattern = (search.Pattern ?? string.Empty).Trim ();
+			var methods = WebConfig.PaymentMethodsVerificationRequired;
+			var list = methods.ToList ();
+			IQueryable<CustomerPayment> query = from x in CustomerPayment.Queryable
+							    //where x.Method == PaymentMethod.EFT
+				    select x;
+
+			//if (methods is IEnumerable<PaymentMethod>) {
+			//	query = from x in query
+			//		where methods.Contains (x.Method)
+			//		select x;
+			//}
+
+
+			if (!string.IsNullOrEmpty (pattern)) {
+				if (int.TryParse (pattern, out id) && id > 0) {
+					query = query.Where (x => x.Id == id || x.Serial == id || x.Allocations.Any(y => y.SalesOrder.Id == id));
+				} else {
+					query = query.Where (x => (x.Customer.Name.Contains (pattern) ||
+						     (x.CashSession.Cashier.FirstName).Contains (pattern)
+						     || (x.CashSession.Cashier.Nickname).Contains (pattern)));
+				}
+			}
+
+			query = query.Where (x => list.Contains (x.Method));
+
+			search.Total = query.Count ();
+			query = query.OrderByDescending (x => x.Id);
+			search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
+
+			return search;
+		}
+
+		//Search<CustomerPayment> SearchBankPayments (Search<CustomerPayment> search)
+		//{
+		//	int id = 0;
+		//	var store = WebConfig.Store;
+		//	var cashier = GetSession ().Cashier;
+		//	var pattern = (search.Pattern ?? string.Empty).Trim ();
+		//	//var predicate = PredicateBuilder.New<SalesOrder> ();
+
+		//	//var from_all_users = GetAccessPrivilege (SystemObjects.SearchAllSalesOrderFromAllUsers);
+		//	//var from_all_stores = GetAccessPrivilege (SystemObjects.SearchAllSalesOrderFromAllStores);
+		//	IQueryable<CustomerPayment> query = from x in CustomerPayment.Queryable
+		//					    where x.PaymentType == PaymentType.CreditPayment || x.PaymentType == PaymentType.PaymentInAdvance
+		//					    select x;
+
+
+		//	if (int.TryParse (pattern, out id) && id > 0) {
+		//		query = CustomerPayment.Queryable.Where (x => x.Id == id || x.Serial == id);
+		//	} else if (!string.IsNullOrEmpty (pattern)) {
+		//		query = query.Where (x => (x.Customer.Name.Contains (pattern) ||
+		//				     (x.CashSession.Cashier.Name).Contains (pattern)));
+		//	}
+
+		//	query = query.OrderByDescending (x => x.Id);
+
+		//	search.Total = query.Count ();
+		//	search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
+
+		//	return search;
+		//}
 
 		public ActionResult CreditPayments ()
 		{
@@ -256,7 +300,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View (search);
 		}
 
-		Search<CustomerPayment> GetCustomerPaymentSearch (Search<CustomerPayment> search)
+		Search<CustomerPayment> SearchCustomerPayment (Search<CustomerPayment> search)
 		{
 			IQueryable<CustomerPayment> query = from x in CustomerPayment.Queryable
 								    //orderby x.Id descending
@@ -275,9 +319,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						|| x.Updater.FirstName.Contains (pattern)
 						|| x.Customer.Name.Contains(pattern)
 						select x;
-
 				}
-
 			}
 
 			query = query.OrderByDescending (x => x.Id);
@@ -294,7 +336,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			Search<CustomerPayment> search = new Search<CustomerPayment> ();
 
 			search.Limit = WebConfig.PageSize;
-			search = GetCustomerPaymentSearch (search);
+			search = SearchCustomerPayment (search);
 
 
 			var drawer = WebConfig.CashDrawer;
@@ -339,7 +381,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			search.Limit = WebConfig.PageSize;
 
-			search = GetCustomerPaymentSearch (search);
+			search = SearchCustomerPayment (search);
 
 			if (Request.IsAjaxRequest ()) {
 				return PartialView ("_Index", search);
@@ -400,6 +442,66 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View (search);
 		}
 
+		public ActionResult PaymentsValidation ()
+		{
+
+			Search<CustomerPayment> search = new Search<CustomerPayment> ();
+
+			search.Limit = WebConfig.PageSize;
+			search = SearchPaymentsValidation (search);
+
+
+			var drawer = WebConfig.CashDrawer;
+			var session = GetSession ();
+			var privilege = GetAccessPrivilege (SystemObjects.PaymentsVerification);
+
+			if (!privilege.AllowRead && !CurrentUser.IsAdministrator) {
+				return RedirectToAction ("Index");
+			}
+
+			if (drawer == null) {
+				return View ("InvalidCashDrawer");
+			}
+
+			if (session == null) {
+				return RedirectToAction ("OpenSession");
+			}
+
+
+
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_PaymentsValidation", search);
+			}
+
+			return View (search);
+
+		}
+
+		[HttpPost]
+		public ActionResult PaymentsValidation (Search<CustomerPayment> search)
+		{
+
+			var drawer = WebConfig.CashDrawer;
+			//var session = GetSession ();
+
+			var privilege = GetAccessPrivilege (SystemObjects.PaymentsVerification);
+
+			if (!privilege.AllowRead && !CurrentUser.IsAdministrator) {
+				return RedirectToAction ("Index");
+			}
+
+
+			search.Limit = WebConfig.PageSize;
+
+			search = SearchPaymentsValidation (search);
+
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_PaymentsValidation", search);
+			}
+
+			return View (search);
+		}
+
 		public ActionResult EditPayment (int id)
 		{
 			var privilege = GetAccessPrivilege (SystemObjects.PaymentsEditor);
@@ -422,9 +524,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			var payment = CustomerPayment.Find (item.Id);
-			if (payment.CreationTime != payment.ModificationTime) {
-				ModelState.AddModelError ("Error", Resources.ItemCanBeChangedOnlyOnce);
-			}
+			//if (payment.CreationTime != payment.ModificationTime) {
+			//	ModelState.AddModelError ("Error", Resources.ItemCanBeChangedOnlyOnce);
+			//}
 
 			if (ModelState.IsValid) {
 				payment.Amount = item.Amount;
@@ -456,26 +558,44 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Print (int id)
 		{
 			var model = SalesOrder.Find (id);
-			if (model.IsCompleted) { return PdfTicketView ("Print", model); }
+
+			//if (model.Customer.Id == WebConfig.DefaultCustomer) {
+			//	model.PartialDeliveries = false;
+			//}
+			//model.IsDelivered = true;
+			//model.ModificationTime = DateTime.Now;
+			//model.Updater = CurrentUser.Employee;
+
+			using (var scope = new TransactionScope ()) {
+				model.UpdateAndFlush ();
+			}
+
+			if (model.IsCompleted) {
+				return PdfTicketView ("Print", model);
+			}
+
 			return RedirectToAction ("Index");
 
 		}
 
-		//public ActionResult PrintDeliveryTicket (int id)
-		//{
-		//	var model = SalesOrder.Find (id);
-		//	if (model.IsPaid && model.ShipTo == null) { return PdfTicketView ("DeliveryTicket", model); }
-		//	return RedirectToAction ("Index");
-		//}
-
-		public ActionResult PrintCreditPayment (int id)
+		public ActionResult PrintPayment (int id)
 		{
-
 			var model = CustomerPayment.Find (id);
-			if (model.PaymentType == PaymentType.PaymentInAdvance) {
-				return PdfTicketView ("PrintPaymentInAdvance", model);
-			}
-			return PdfTicketView ("PrintCreditPayment", model);
+
+			switch (model.PaymentType) {
+				case PaymentType.CreditPayment:
+					return PdfTicketView ("TicketCreditPayment", model);
+				case PaymentType.PaymentInAdvance:
+					return PdfTicketView ("TicketPaymentInAdvance", model);
+				case PaymentType.CreditNote:
+					var credit_note = CreditNote.Queryable.Where(x=> x.CustomerPayment == model).SingleOrDefault ();
+					if (credit_note != null) {
+						return PdfTicketView ("TicketCreditNote", credit_note);
+					}
+					return null;
+				default:
+					return null;
+			}			
 		}
 
 		public ActionResult ViewCreditPayment (int id)
@@ -497,6 +617,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var model = new CashCountReport ();
 			var session = CashSession.Find (id);
 
+			var session_payments = CustomerPayment.Queryable.Where(x => x.CashSession == session).ToList ();
+
 			var qry = from x in CustomerPayment.Queryable
 				  where x.CashSession.Id == session.Id
 				  select new {
@@ -505,38 +627,41 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					  Amount = x.Allocations.Sum (y => (decimal?) y.Amount) ?? 0,
 				  };
 
-			var refunds = (from x in CustomerRefund.Queryable
-				       where !x.IsCancelled && x.IsCompleted
-					      && x.Updater == session.Cashier
-					      && x.CreationTime > session.Start && x.CreationTime < session.End
-				       select x).ToList ();
-
-			var expenses = (from x in ExpenseVoucher.Queryable
-					where !x.IsCancelled && x.IsCompleted
-					&& x.Updater == session.Cashier
-					&& x.CreationTime > session.Start && x.CreationTime <= session.End
-					select x).ToList ();
 
 			var list = from x in qry.ToList ()
-				   where x.Type != PaymentType.Refund
+				   //where x.Type != PaymentType.Refund
 				   group x by x.Method into g
 				   select new MoneyCount { Method = g.Key, Amount = g.Sum (y => y.Amount) };
 
-			var list_refunds = from x in qry.ToList()
-					   where x.Type == PaymentType.Refund
-					   group x by x.Method into g
-					   select new MoneyCount { Method = g.Key, Amount = g.Sum (y => y.Amount) };
+			//var list_refunds = from x in qry.ToList()
+			//		   where x.Type == PaymentType.Refund
+			//		   group x by x.Method into g
+			//		   select new MoneyCount { Method = g.Key, Amount = g.Sum (y => y.Amount) };
 
 
 			model.Cashier = session.Cashier;
 			model.CashDrawer = session.CashDrawer;
 			model.Start = session.Start;
 			model.End = session.End;
-			model.MoneyCounts = list.Where(x => x.Type != PaymentType.Refund).ToList ();
-			model.Expenses = expenses;
-			model.Refunds = list_refunds.ToList();
+
+
+			model.MoneyCounts = list.Where (x => x.Type != PaymentType.CreditNote).ToList ();
+			model.Expenses = session_payments.Where (x => x.PaymentType == PaymentType.Expense).ToList ();
+
+			var expenses = ExpenseVoucher.Queryable.Where (x => x.CashSession == session).ToList();
+			model.Expenses = expenses.Select (x => new CustomerPayment {
+							Amount = (decimal?)x.Total??0,
+							CashSession = session,
+							CreationTime = x.CreationTime,
+							PaymentType = PaymentType.Expense,
+							Method = PaymentMethod.Cash,
+							}).ToList ();
+			model.Refunds = session_payments.Where (x => x.PaymentType == PaymentType.CreditNote).ToList ();
 			model.CashCounts = session.CashCounts.Where (x => x.Type == CashCountType.CountedCash).ToList ();
+			model.Payments = session_payments.Where (x => x.PaymentType == PaymentType.Immediate
+					|| x.PaymentType == PaymentType.CreditPayment || x.PaymentType == PaymentType.PaymentInAdvance || x.PaymentType == PaymentType.CreditNote).ToList ();
 			model.StartingCash = session.StartingCash;
+			
 			model.SessionId = session.Id;
 
 			return model;
@@ -610,6 +735,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			var item = SalesOrder.Find (id);
+
+			if (item.IsCancelled) {
+				return RedirectToAction("Index");
+			}
+
 			return View (item);
 		}
 
@@ -685,16 +815,41 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
+		public ActionResult ValidatePayment (int id)
+		{
+			var entity = CustomerPayment.Find (id);
+			entity.Verifier = CurrentUser.Employee;
+
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
+			}
+
+			return PartialView ("_PaymentToValidate", entity);
+		}
+
+		[HttpPost]
 		public ActionResult PrintablePaymentTickets (string value)
 		{
 			string val = (value ?? string.Empty).Trim ();
+			int id = 0;
 
-			var query = CustomerPayment.Queryable.Where (x => (x.PaymentType == PaymentType.CreditPayment || x.PaymentType == PaymentType.PaymentInAdvance)
-			&& x.Customer.Name.Contains(value)).Take(WebConfig.PageSize);
+			var query = CustomerPayment.Queryable.Where (x => (
+					x.PaymentType == PaymentType.CreditPayment
+					|| x.PaymentType == PaymentType.PaymentInAdvance
+					|| (x.PaymentType == PaymentType.CreditNote
+						&& x.Customer.Id != WebConfig.DefaultCustomer)));
 
+			if (!string.IsNullOrEmpty (value)) {
+				if (Int32.TryParse (val, out id)) {
+					query = query.Where (x => x.Id == id || x.Serial == id);
+				} else {
+					query = query.Where(x => x.Customer.Name.Contains(value));
+				}
+			}
 
-			//return Json (new { id = id, value = value });
-			return PartialView ("_PaymentList", query.ToList());
+			query = query.OrderByDescending(x => x.Id).Take (WebConfig.PageSize);
+
+			return PartialView ("_CustomerPaymentList", query.ToList());
 		}
 
 		public ActionResult GetCustomerName (int id)
@@ -770,32 +925,46 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var credit = entity.Customer.CreditLimit;
 			var dt = DateTime.Now;
 
-			if (entity.IsCancelled || entity.IsPaid) {
+			if (entity.IsCancelled || entity.IsPaid || entity.Terms == PaymentTerms.NetD) {
 				Response.StatusCode = 400;
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			if (!entity.Customer.HasCredit) {
+			if (entity.Customer.Id == WebConfig.DefaultCustomer) {
 				Response.StatusCode = 400;
-				return Content (Resources.CreditLimitIsNotSet);
+				return Content (Resources.CustomerNotFound);
 			}
 
-			if (expired || entity.IsOverCreditLimit()) {
-				Response.StatusCode = 400;
-				return Content (Resources.CreditStatusNeedsToBeVerified);
-			}
-
-			if (!expired && entity.Customer.HasCredit) {
+			if (entity.Customer.HasCredit) {
+				if (entity.IsOverCreditLimit () || entity.Customer.HasExpiredCredits()) {
+					Response.StatusCode = 400;
+					return Content (Resources.CreditStatusNeedsToBeVerified);
+				}
 
 				entity.Terms = PaymentTerms.NetD;
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = dt;
 				entity.DueDate = dt.Date.AddDays (entity.Customer.CreditDays);
-				
 
-				using (var scope = new TransactionScope ()) {
-					entity.UpdateAndFlush ();
+			} else {
+				if (entity.Customer.Debt() > 0) {
+					Response.StatusCode = 400;
+					return Content (Resources.CreditStatusNeedsToBeVerified);
 				}
+
+				if (entity.Balance > WebConfig.MaxAmountOneSingleCredit) {
+					Response.StatusCode = 400;
+					return Content (Resources.CreditLimitExceeded);
+				}
+
+				entity.Terms = PaymentTerms.NetD;
+				entity.Updater = CurrentUser.Employee;
+				entity.ModificationTime = dt;
+				entity.DueDate = dt.Date.AddDays (WebConfig.MaxDaysOneSingleCredit);
+			}
+
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
 			}
 
 			return Json (new {
@@ -816,16 +985,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 
 			var payments = CustomerPayment.Queryable.Where (x => x.PaymentType == PaymentType.PaymentInAdvance
-					&& x.Customer == entity.Customer).ToList ();
-			var remaining = payments.Where(x=> !x.Allocations.Select(y => y.SalesOrder).Contains(entity))
-						.Sum (x => (decimal?)x.Balance)??0;
+					&& !x.Allocations.Any(y => y.SalesOrder == entity)
+					&& x.Customer == entity.Customer
+					&& x.Amount - (x.Allocations.Sum(y => (decimal?)y.Amount)??0) > 0).ToList ();
+			//var remaining = payments.Where(x=> !x.Allocations.Select(y => y.SalesOrder).Contains(entity))
+			//			.Sum (x => (decimal?)x.Balance)??0;
+			var funds = payments.Sum (x => x.Amount - (x.Allocations.Sum (y => (decimal?) y.Amount) ?? 0));
 
 			if (entity.IsCancelled || entity.IsPaid) {
 				Response.StatusCode = 400;
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			if (value > remaining) {
+			if (value > funds) {
 				Response.StatusCode = 400;
 				return Content(Resources.InsufficientFunds);
 			}
@@ -849,14 +1021,125 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						break;
 					}
 				}
-			}
-			
+			}			
 
 			return Json (new {
 				id = id,
 				value = entity.Terms,
 				dueDate = entity.FormattedValueFor (x => x.DueDate),
 				success = true
+			});
+		}
+
+		[HttpPost]
+		public ActionResult ApplyCreditNotes (int id, decimal value)
+		{
+
+			var entity = SalesOrder.Find (id);
+			var to_pay = value;
+			var dt = DateTime.Now;
+			var customer = entity.Customer;
+			var credit_notes = customer.GetCreditNotes ();
+			var payments = credit_notes.Select (x => x.CustomerPayment)
+					.Where(x => x.Allocations.All(y => y.SalesOrder != entity));
+
+			var refund_balance = customer.RefundBalance(entity);
+
+			if (customer.Id == WebConfig.DefaultCustomer) {
+				Response.StatusCode = 400;
+				return Content (Resources.CustomerNotFound);
+			}
+
+			if (entity.IsCancelled || entity.IsPaid) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			if (value > refund_balance) {
+				Response.StatusCode = 400;
+				return Content (Resources.InsufficientFunds);
+			}
+
+			to_pay = value > entity.Balance ? entity.Balance : value;
+
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
+
+				foreach (var payment in payments) {
+					var sop = new SalesOrderPayment {
+						Amount = to_pay > payment.Balance ? payment.Balance : to_pay,
+						Payment = payment,
+						SalesOrder = entity,
+						Applier = CurrentUser.Employee,
+						IsConfirmed = false,
+						Date = dt
+					};
+
+					sop.CreateAndFlush ();
+
+					to_pay -= sop.Amount;
+					if (to_pay <= 0.01m) {
+						break;
+					}
+				}
+			}
+
+			return Json (new {
+				id = id,
+				value = entity.Terms,
+				dueDate = entity.FormattedValueFor (x => x.DueDate),
+				success = true
+			});
+		}
+
+		[HttpPost]
+		public ActionResult ApplyCreditNote (int id, int credit_note, decimal value)
+		{
+
+			var entity = SalesOrder.Find (id);
+			var to_pay = value;
+			var dt = DateTime.Now;
+			var note = CreditNote.Queryable.Where(x => x.CustomerPayment.Id == credit_note
+				&& x.CashSession == null).SingleOrDefault ();
+
+			if (entity.IsCancelled || entity.IsPaid) {
+				Response.StatusCode = 400;
+				return Content(Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			if (note == null) {
+				Response.StatusCode = 400;
+				return Content(Resources.ItemNotFound);
+			}
+
+			if (note.CustomerPayment.Allocations.Any (x => x.SalesOrder == entity)) {
+				Response.StatusCode = 400;
+				return Content(Resources.ItemAlreadyAdded);
+			}
+
+			value = value > entity.Balance ? entity.Balance : value;
+
+			if (value > note.CustomerPayment.Balance) {
+				Response.StatusCode = 400;
+				return Content(Resources.InsufficientFunds);
+			}
+
+
+
+			using (var scope = new TransactionScope ()) {
+				var sop = new SalesOrderPayment {
+					Amount = value,
+					Payment = note.CustomerPayment,
+					SalesOrder = entity,
+					Applier = CurrentUser.Employee,
+					Date = dt,
+				};
+
+				sop.CreateAndFlush ();
+			}
+
+			return Json (new {
+				id = id
 			});
 		}
 
@@ -897,21 +1180,30 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return RedirectToAction ("Index");
 			}
 
-			entity.Updater = CurrentUser.Employee;
-			entity.ModificationTime = date;
-			entity.IsCancelled = true;
+			if (DeliveryOrderDetail.Queryable.Where(x => x.DeliveryOrder.IsCompleted && !x.DeliveryOrder.IsCancelled)
+				.Any (x => entity.Details.Contains (x.OrderDetail))) {
+				Response.StatusCode = 400;
+				return Content (Resources.SalesOrdersHasDeliveryOrders);
+			}
 
 			using (var scope = new TransactionScope ()) {
-				foreach (var item in entity.Payments) {
+				foreach (var item in entity.Payments.Where(x => x.Payment.PaymentType == PaymentType.Immediate)) {
+					item.DeleteAndFlush ();
+					item.Payment.DeleteAndFlush ();
+				}
+
+				foreach (var item in entity.Payments.Where (x => x.Payment.PaymentType != PaymentType.Immediate)) {
 					item.Delete ();
-					if (item.Payment.PaymentType == PaymentType.Immediate) {
-						item.Payment.Delete ();
-					}
 				}
 
 				foreach (var detail in entity.Details.Where(x => x.Product.IsStockable)) {
-					InventoryHelpers.ChangeNotification (TransactionType.CustomerRefund, entity.Id, date, detail.Warehouse, null ,detail.Product, detail.Quantity);
+					InventoryHelpers.ChangeNotification (TransactionType.CustomerRefund,
+						entity.Id, date, detail.Warehouse, null ,detail.Product, detail.Quantity);
 				}
+
+				entity.Updater = CurrentUser.Employee;
+				entity.ModificationTime = date;
+				entity.IsCancelled = true;
 
 				entity.UpdateAndFlush ();
 			}
@@ -930,20 +1222,21 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var employee = CurrentUser.Employee;
 			var item = new SalesOrderPayment {
 				SalesOrder = sales_order,
+				Applier = employee,
+				Date = dt,
 				Payment = new CustomerPayment {
 					Creator = employee,
 					CreationTime = dt,
 					Updater = employee,
 					ModificationTime = dt,
 					CashSession = session,
-					/* SalesOrder = sales_order, */
 					Customer = sales_order.Customer,
 					Method = (PaymentMethod) type,
 					Amount = amount,
 					Date = DateTime.Now,
 					Reference = reference,
 					Currency = sales_order.Currency,
-					//PaymentType = PaymentType.Immediate
+					PaymentType = sales_order.Terms == PaymentTerms.Immediate ? PaymentType.Immediate : PaymentType.CreditPayment,
 				},
 				Amount = amount
 			};
@@ -956,29 +1249,20 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			// Store and Serial
 
 			item.Payment.Store = store;
-
-			//try {
-			//	item.Payment.Serial = (from x in CustomerPayment.Queryable
-			//			       where x.Store.Id == store.Id
-			//			       select x.Serial).Max () + 1;
-			//} catch {
-			//	item.Payment.Serial = 1;
-			//}
-
 			item.Payment.Serial = (CustomerPayment.Queryable.Where(x => x.Store == store).Max(y => (int?)y.Serial) ?? 0) + 1;
 
+
 			if (item.Amount > item.SalesOrder.Balance) {
-				//if (item.Payment.Method == PaymentMethod.Cash) {
-				//	item.Change = item.Amount - item.SalesOrder.Balance;
-				//} else {
-				//	item.Payment.Amount = item.SalesOrder.Balance;
-				//}
+				if (item.Payment.Method == PaymentMethod.Cash) {
+					item.Change = item.Amount - item.SalesOrder.Balance;
+				} else {
+					item.Payment.Amount = item.SalesOrder.Balance;
+				}
 
 				item.Amount = item.SalesOrder.Balance;
 			}
 
 			if (ondelivery) {
-
 				item.Payment.CashSession = null;
 				var amount_on_delivery = sales_order.Payments.Where (y => y.Payment.CashSession == null && y.Payment.Method == PaymentMethod.Cash)
 					.Sum (x => (decimal?) x.Amount ?? 0.0m) + (item.Payment.Method == PaymentMethod.Cash ? item.Payment.Amount : 0);
@@ -1122,15 +1406,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var item = SalesOrderPayment.Find (id);
 
-			//if (item.SalesOrder.IsCredit) {
-			//	Response.StatusCode = 400;
-			//	return Content (Resources.ItemAlreadyCompletedOrCancelled);
-			//}
+			if (item.SalesOrder.IsPaid || item.SalesOrder.IsCancelled || item.IsConfirmed) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompleted);
+			}
 
 			using (var scope = new TransactionScope ()) {
 
 				item.DeleteAndFlush ();
-				if (item.Payment.PaymentType == null) {
+				if (item.Payment.PaymentType == PaymentType.Immediate) {
 					item.Payment.DeleteAndFlush ();
 				}
 			}
@@ -1148,20 +1432,45 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var time = DateTime.Now;
 
 			using (var scope = new TransactionScope ()) {
-				item.Payments.ForEach (x => { x.Payment.PaymentType =
-							x.Payment.PaymentType.HasValue ? x.Payment.PaymentType : PaymentType.Immediate;
-					x.UpdateAndFlush ();
-				});
+				foreach (var payment in item.PaymentsToConfirm()) {
+					payment.IsConfirmed = true;
+					payment.Date = time;
+					payment.Applier = CurrentUser.Employee;
+					payment.UpdateAndFlush ();
+				}
 
-				if (item.Balance <= 0.1m) {
+				if (item.BalanceInCashDraw() <= 0.1m) {
 					item.IsPaid = true;
 					item.ModificationTime = time;
 					item.Updater = CurrentUser.Employee;
+					item.BalanceZeroedTime = time;
 					item.UpdateAndFlush();
 				}
 			}
 
 			return PartialView ("_DetailsView", item);
+		}
+
+
+		[HttpPost]
+		public ActionResult SetPartialDeliveries(int id, DeliveryMode value)
+		{
+			var item = SalesOrder.Find (id);
+			var time = DateTime.Now;
+			//var mode = value ? DeliveryMode.PartialDeliveries : DeliveryMode.PickUp;
+
+			if (DeliveryOrderDetail.Queryable.Any (x => item.Details.Contains (x.OrderDetail))) {
+				value = DeliveryMode.PartialDeliveries;
+			}
+
+			item.DeliveryMode = value;
+
+
+			using (var scope = new TransactionScope ()) {
+				item.UpdateAndFlush ();
+			}
+
+			return Json (new { id });
 		}
 
 		public ActionResult ReceiveDeliveryPayment (int id)
@@ -1195,7 +1504,20 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var cash_counts = item.CashCounts.Where (x => x.Quantity > 0).ToList ();
 
+			var privileges = GetAccessPrivilege (SystemObjects.CashSessionClose);
+
+			//if (!privileges.AllowUpdate) {
+			//	Response.StatusCode = 400;
+			//	return Content (string.Format(Resources.DocumentRequiressToBeConfirmedByManager, Resources.CloseSession));
+			//}
+
 			item = CashSession.Find (item.Id);
+
+			if (item.End != null) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompleted);
+			}
+
 			item.End = DateTime.Now;
 
 			using (var scope = new TransactionScope ()) {
@@ -1204,7 +1526,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					x.Type = CashCountType.CountedCash;
 					x.Create ();
 				}
-
+				item.CashSupervisor = CurrentUser.Employee;
 				item.UpdateAndFlush ();
 			}
 

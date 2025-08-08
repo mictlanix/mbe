@@ -128,6 +128,8 @@ namespace Mictlanix.BE.Model {
 
 		[Property]
 		[Display (Name = "IssueDate", ResourceType = typeof (Resources))]
+		[DataType(DataType.Date)]
+		[DisplayFormat (DataFormatString = "{0:yyyy-MM-dd}")]
 		public virtual DateTime? Issued { get; set; }
 
 		[BelongsTo ("issued_at", Lazy = FetchWhen.OnInvoke)]

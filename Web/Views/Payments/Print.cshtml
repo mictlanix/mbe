@@ -35,12 +35,13 @@
 				{
 								@Html.DisplayFor(model => model.CustomerName)
 				}
+				@*@Html.DisplayFor(model => model.PartialDeliveries)*@
 </div>
 
-				<div class="display-label date">
-								@Html.LabelFor(model => model.Terms)<br />
-								@Model.Terms.GetDisplayName()
-				</div>
+<div class="display-label date">
+				@Html.LabelFor(model => model.Terms)<br />
+				@Model.Terms.GetDisplayName()
+</div>
 @if (Model.IsCredit)
 {
 				<div class="display-label date">
@@ -65,7 +66,7 @@
 								</tr>
 								<tr>
 												<td class="line">
-																@Html.DisplayFor(x => item.ProductName)
+																@Html.DisplayFor(x => item.ProductName) <b><i> @Html.DisplayFor(x => item.Comment)</i></b>
 												</td>
 												<td class="line number">
 																@Html.DisplayFor(x => item.Total)
@@ -91,7 +92,7 @@
 								<td class="total text-right">@Html.LabelFor(model => model.Total)</td>
 								<td class="total number"> @Html.DisplayFor(model => model.Total)</td>
 				</tr>
-				@if (Model.Refund > 0)
+				@if (Model.CustomerRefunds.Any())
 				{
 								foreach (var refund in Model.CustomerRefunds)
 								{
@@ -104,11 +105,24 @@
 				@foreach (var item in Model.Payments)
 				{
 								<tr>
-												<td class="text-right">
-																@(item.Payment.PaymentType.HasValue ? item.Payment.PaymentType.GetDisplayName() + " - " + item.Payment.Id
-																: item.Payment.Method.GetDisplayName())
-												</td>
-												<td class="number">@Html.DisplayFor(x => item.Amount)</td>
+												@if (item.Payment.PaymentType == PaymentType.Immediate)
+												{
+																<td class="text-right">
+																				@item.Payment.Method.GetDisplayName()
+																</td>
+																<td class="number">
+																				@Html.DisplayFor(x => item.Payment.Amount)
+																</td>
+												}
+												else
+												{
+																<td class="text-right">
+																				@(item.Payment.PaymentType.GetDisplayName() + " - " + item.Payment.Id)
+																</td>
+																<td class="number">
+																				@Html.DisplayFor(x => item.Amount)
+																</td>
+												}
 								</tr>
 								if (item.Change > 0)
 								{
@@ -118,28 +132,41 @@
 												</tr>
 								}
 				}
+				@foreach (var cn in CreditNote.Queryable.Where(x => x.SalesOrder == Model))
+				{
+								<tr>
+												<td class="text-right">
+																@(cn.CustomerPayment.PaymentType.GetDisplayName() + " - " + cn.CustomerPayment.Id)
+												</td>
+												<td class="number">
+																@Html.DisplayFor(x => cn.CustomerPayment.Amount)
+												</td>
+								</tr>
+				}
+
 				@if (Model.IsPaid)
 				{
 								<tr>
 												<td class="total text-right">@Resources.Paid</td>
 												<td class="total number"> @Html.DisplayFor(x => Model.IsPaid)</td>
 								</tr>
-}
-else {
+				}
+				else
+				{
 
-				<tr>
-								<td class="total text-right">@Html.LabelFor(model => model.Balance)</td>
-								<td class="total number"> @Html.DisplayFor(model => model.Balance)</td>
-				</tr>
+								<tr>
+												<td class="total text-right">@Html.LabelFor(model => model.Balance)</td>
+												<td class="total number"> @Html.DisplayFor(model => model.Balance)</td>
+								</tr>
 				}
 </table>
 
 @*@if (Model.Discount > 0)
-{
-				<div class="display-field text-center">
-								<text>@string.Format(Resources.SavingsOnSalesOrder, Model.Discount)</text>
-				</div>
-}*@
+				{
+								<div class="display-field text-center">
+												<text>@string.Format(Resources.SavingsOnSalesOrder, Model.Discount)</text>
+								</div>
+				}*@
 @if (Model.Payments.Any(x => x.Payment.CashSession == null))
 {
 				<div class="text-center" style="font-size:large;">
@@ -152,6 +179,18 @@ else {
 												</div>
 
 								}
+				</div>
+}
+
+@if (Model.Balance > 0 && Model.Terms == PaymentTerms.Immediate && !Model.IsPaid)
+{
+				<div class="text-center" style="font-size:large;">
+								@*<span>@Resources.Balance</span>*@
+
+												<div>
+																Por Cobrar : @Html.DisplayFor(x => Model.Balance)
+												</div>
+
 				</div>
 }
 

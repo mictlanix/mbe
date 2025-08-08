@@ -571,13 +571,13 @@
     <value>Efectivo</value>
   </data>
   <data name="Check" xml:space="preserve">
-    <value>Cheque Nominativo</value>
+    <value>Cheque</value>
   </data>
   <data name="CreditCard" xml:space="preserve">
-    <value>Tarjeta de Crédito</value>
+    <value>T. de Crédito</value>
   </data>
   <data name="ElectronicFundsTransfer" xml:space="preserve">
-    <value>Transferencia Electrónica de Fondos</value>
+    <value>Transferencia Electrónica</value>
   </data>
   <data name="ElectronicPurse" xml:space="preserve">
     <value>Monedero Electrónico</value>
@@ -589,7 +589,7 @@
     <value>Vales de Despensa</value>
   </data>
   <data name="DebitCard" xml:space="preserve">
-    <value>Tarjeta de Débito</value>
+    <value>T. de Débito</value>
   </data>
   <data name="ServiceCard" xml:space="preserve">
     <value>Tarjeta de Servicio</value>
@@ -1092,10 +1092,10 @@ Vencimiento: {0:d}</value>
     <value>Número de Factura</value>
   </data>
   <data name="PurchaseOrder" xml:space="preserve">
-    <value>Compra</value>
+    <value>Orden de Compra</value>
   </data>
   <data name="PurchaseOrderId" xml:space="preserve">
-    <value>Folio de Compra</value>
+    <value>ID de Compra</value>
   </data>
   <data name="Purchase" xml:space="preserve">
     <value>Compra</value>
@@ -2609,12 +2609,6 @@ Atte: {1}.</value>
   <data name="TonsCapacity" xml:space="preserve">
     <value>Capacidad de Carga</value>
   </data>
-  <data name="Truck" xml:space="preserve">
-    <value>Camión de Transporte</value>
-  </data>
-  <data name="Trucks" xml:space="preserve">
-    <value>Camiones de Transporte</value>
-  </data>
   <data name="LicensePlateAlreadyExists" xml:space="preserve">
     <value>La placa ya existe</value>
   </data>
@@ -2656,13 +2650,13 @@ con  valor {1} ya existe</value>
     <value>Lugar de Expedición</value>
   </data>
   <data name="VehicleOperator" xml:space="preserve">
-    <value>Operador de Transporte</value>
+    <value>Operador</value>
   </data>
   <data name="VehicleOperatorId" xml:space="preserve">
     <value>Id del Operador</value>
   </data>
   <data name="VehicleOperators" xml:space="preserve">
-    <value>Operadores de Vehículos de Transporte</value>
+    <value>Operadores</value>
   </data>
   <data name="Validation_WrongDateRange" xml:space="preserve">
     <value>Rango de fechas inválido</value>
@@ -2704,7 +2698,7 @@ con  valor {1} ya existe</value>
     <value>Despachos</value>
   </data>
   <data name="Vehicles" xml:space="preserve">
-    <value>Vehículos de Transporte</value>
+    <value>Vehículos</value>
   </data>
   <data name="ChooseVehicleOperator" xml:space="preserve">
     <value>Seleccione operador de vehículo de transporte</value>
@@ -2749,7 +2743,7 @@ con  valor {1} ya existe</value>
     <value>Entregas del Día</value>
   </data>
   <data name="PickUp" xml:space="preserve">
-    <value>Entrega en Mostrador</value>
+    <value>Entrega Única en Mostrador</value>
   </data>
   <data name="DeliveryItinerary" xml:space="preserve">
     <value>Despacho</value>
@@ -2770,7 +2764,7 @@ con  valor {1} ya existe</value>
     <value>Este recibo no es un comprobante de pago.</value>
   </data>
   <data name="AlreadyFullyDelivered" xml:space="preserve">
-    <value>Pedido completado</value>
+    <value>Pedido ya enviado por completo</value>
   </data>
   <data name="NotPendingShippingRequestsYet" xml:space="preserve">
     <value>Aún no hay solicitudes de envío registradas</value>
@@ -2833,7 +2827,7 @@ con  valor {1} ya existe</value>
     <value>Aprobación de Solicitudes de Compra</value>
   </data>
   <data name="AddressLinkURL" xml:space="preserve">
-    <value>Link</value>
+    <value>Liga de Ubicación</value>
   </data>
   <data name="Message_InvalidAddressLinkURL" xml:space="preserve">
     <value>Liga de mapa inválida</value>
@@ -2880,7 +2874,7 @@ con  valor {1} ya existe</value>
   <data name="NoPayment" xml:space="preserve">
     <value>Sin Pago</value>
   </data>
-  <data name="ChangesToPayments" xml:space="preserve">
+  <data name="ModificationsToPayments" xml:space="preserve">
     <value>Modificaciones a Pagos Recibidos</value>
     <comment>Autorización para realizar modificaciones a pagos recibidos, puede dejar incongruente el balance general.</comment>
   </data>
@@ -2968,5 +2962,143 @@ con  valor {1} ya existe</value>
   </data>
   <data name="InsufficientFunds" xml:space="preserve">
     <value>Fondos Insuficientes</value>
+  </data>
+  <data name="ToBeDefined" xml:space="preserve">
+    <value>Por Definir</value>
+  </data>
+  <data name="PaymentsValidation" xml:space="preserve">
+    <value>Validación de Pagos</value>
+  </data>
+  <data name="ShortCredit" xml:space="preserve">
+    <value>Crédito Corto Por {0} Días</value>
+  </data>
+  <data name="Giving" xml:space="preserve">
+    <value>Dación</value>
+  </data>
+  <data name="ToBeDefinedPayment" xml:space="preserve">
+    <value>Dación</value>
+  </data>
+  <data name="AttribValueMissing" xml:space="preserve">
+    <value>No hay {0} asignado</value>
+  </data>
+  <data name="SalesOrdersHasDeliveryOrders" xml:space="preserve">
+    <value>El Pedido actual tiene órdenes de envío activas.</value>
+  </data>
+  <data name="Accepted" xml:space="preserve">
+    <value>Aceptado</value>
+  </data>
+  <data name="ToPurchase" xml:space="preserve">
+    <value>Comprar</value>
+  </data>
+  <data name="ToPurchaseBySupplier" xml:space="preserve">
+    <value>Para Comprar Por Proveedor</value>
+  </data>
+  <data name="Verifier" xml:space="preserve">
+    <value>Verificó</value>
+  </data>
+  <data name="TotalCantBeZero" xml:space="preserve">
+    <value>El Total del {0} no puede ser cero.</value>
+  </data>
+  <data name="NoCashCountEnough" xml:space="preserve">
+    <value>Caja insuficiente</value>
+  </data>
+  <data name="BigPictureReport" xml:space="preserve">
+    <value>Resumen General</value>
+  </data>
+  <data name="Verified" xml:space="preserve">
+    <value>Verificado</value>
+  </data>
+  <data name="ReceivedPaymentsSummary" xml:space="preserve">
+    <value>Resumen de Pagos Recibidos</value>
+  </data>
+  <data name="CashSessionRequired" xml:space="preserve">
+    <value>Se requiere iniciar sesión en caja de cobro.</value>
+  </data>
+  <data name="Expense" xml:space="preserve">
+    <value>Gasto</value>
+  </data>
+  <data name="DocumentRequiressToBeConfirmedByManager" xml:space="preserve">
+    <value>{0} requiere confirmarse por el Gerente</value>
+  </data>
+  <data name="CustomerRefundConfirm" xml:space="preserve">
+    <value>Confirmar Devoluciones</value>
+  </data>
+  <data name="PaymentCreditsNoRemovables" xml:space="preserve">
+    <value>Los pagos de créditos no son eliminables. Tenga cuidado al registrarlos.</value>
+  </data>
+  <data name="InvalidEntity" xml:space="preserve">
+    <value>{0} no válido</value>
+  </data>
+  <data name="ReceivableAmount" xml:space="preserve">
+    <value>Por Cobrar</value>
+  </data>
+  <data name="CancelledItem" xml:space="preserve">
+    <value>{0} cancelado</value>
+  </data>
+  <data name="ItemAlreadyAuthorized" xml:space="preserve">
+    <value>{0} Autorizado Previamente</value>
+  </data>
+  <data name="ItemAlreadyCancelled" xml:space="preserve">
+    <value>{0} Cancelado Previamente</value>
+  </data>
+  <data name="ItemAlreadyCompleted" xml:space="preserve">
+    <value>{0} Completado Previamente</value>
+  </data>
+  <data name="ItemAutorized" xml:space="preserve">
+    <value>{0} Autorizado</value>
+  </data>
+  <data name="ItemCancelled" xml:space="preserve">
+    <value>{0} Cancelado</value>
+  </data>
+  <data name="ItemCompleted" xml:space="preserve">
+    <value>{0} Completado</value>
+  </data>
+  <data name="ItemMissing" xml:space="preserve">
+    <value>{0} No Encontrado</value>
+  </data>
+  <data name="CashSupervisor" xml:space="preserve">
+    <value>Supervisor de Caja</value>
+  </data>
+  <data name="CashSessionClose" xml:space="preserve">
+    <value>Cierre de Sesión de Caja</value>
+  </data>
+  <data name="Applier" xml:space="preserve">
+    <value>Aplicador</value>
+  </data>
+  <data name="SingleDeliveryInStore" xml:space="preserve">
+    <value>Entrega Única en Mostrador</value>
+  </data>
+  <data name="SetItemToEmpty" xml:space="preserve">
+    <value>{0} vacío</value>
+  </data>
+  <data name="RefundToCreditNote" xml:space="preserve">
+    <value>La Devolución {0} generará una Nota de Crédito de {1}{2}.</value>
+  </data>
+  <data name="ItemRequiresValidation" xml:space="preserve">
+    <value>{0} requiere validación</value>
+  </data>
+  <data name="BalanceZeroedTime" xml:space="preserve">
+    <value>Fecha de puesta a cero del saldo</value>
+  </data>
+  <data name="CommissionsBySalesPerson" xml:space="preserve">
+    <value>Comisiones Por Vendedor</value>
+  </data>
+  <data name="ForbiddenDeliveryToDefaultCustomer" xml:space="preserve">
+    <value>Los envíos no están autorizados para el Público en General</value>
+  </data>
+  <data name="LogMessage" xml:space="preserve">
+    <value>Controlador: {0} | Acción: {1} | Mensaje: {3}</value>
+  </data>
+  <data name="Commissions" xml:space="preserve">
+    <value>Comisiones</value>
+  </data>
+  <data name="ItemReceipt" xml:space="preserve">
+    <value>Ticket de {0}</value>
+  </data>
+  <data name="InvalidDate" xml:space="preserve">
+    <value>Fecha Inválida. Rectifique</value>
+  </data>
+  <data name="Stock" xml:space="preserve">
+    <value>Existencia</value>
   </data>
 </root>

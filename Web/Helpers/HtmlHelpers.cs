@@ -31,7 +31,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Web;
 using System.Web.Mvc;
+using System.Web.Mvc.Html;
 using System.Web.Routing;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Utils;
@@ -113,6 +115,26 @@ namespace Mictlanix.BE.Web.Helpers {
 		public static string PrintFileName (this HtmlHelper helper, string documentName, int Folio)
 		{
 			return documentName + " - " + Folio.ToString ("D8");
+		}
+
+		public static IHtmlString SafeEditorFor<TModel, TProperty> (
+			this HtmlHelper<TModel> htmlHelper,
+			Expression<Func<TModel, TProperty>> expression)
+		{
+			var metadata = ModelMetadata.FromLambdaExpression (expression, htmlHelper.ViewData);
+			return metadata.Model == null
+			    ? MvcHtmlString.Empty
+			    : htmlHelper.EditorFor (expression);
+		}
+
+		public static IHtmlString SafeDisplayFor<TModel, TProperty> (
+			this HtmlHelper<TModel> htmlHelper,
+			Expression<Func<TModel, TProperty>> expression)
+		{
+			var metadata = ModelMetadata.FromLambdaExpression (expression, htmlHelper.ViewData);
+			return metadata.Model == null
+			    ? MvcHtmlString.Empty
+			    : htmlHelper.DisplayFor (expression);
 		}
 	}
 }

@@ -25,6 +25,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
@@ -84,19 +85,36 @@ namespace Mictlanix.BE.Web.Helpers {
 			return bought - paid;
 		}
 
-		public static decimal Prepayments (this Customer entity)
+		public static decimal PrepaymentsBalance (this Customer entity, SalesOrder salesOrder)
 		{
-			//IQueryable<decimal> query;
-
-			var prepayment = 0;
-
 			var query = (from x in CustomerPayment.Queryable
 				     where x.PaymentType == PaymentType.PaymentInAdvance
-				     && x.Customer == entity
-				     select x).ToList ();
-			var summary = query.Sum (x => x.Amount - x.Allocated);
+				     && x.Customer == entity && !x.Allocations.Any(y => y.SalesOrder == salesOrder)
+				     select x).ToArray ();
 
-			return prepayment + summary;
+			return query.Sum(x => (decimal?)x.Amount - x.Allocated)??0;
+		}
+
+		public static decimal RefundBalance (this Customer entity, SalesOrder salesOrder) {
+
+			if (entity.Id == WebConfig.DefaultCustomer) {
+				return 0;
+			}
+
+			var credits = entity.GetCreditNotes()
+				.Where(x => !x.CustomerPayment.Allocations.Any(y => y.SalesOrder == salesOrder))
+				.Select(x => x.CustomerPayment).ToArray();
+			return credits.Sum (x => (decimal?)x.Balance)??0;
+
+		}
+
+		public static List<CreditNote> GetCreditNotes (this Customer customer) {
+			if(customer.Id == WebConfig.DefaultCustomer) return new List<CreditNote> ();
+
+			return CreditNote.Queryable.Where (x =>
+				x.Customer == customer &&
+				x.CashSession == null)
+				.ToList ();
 		}
 
 		public static bool HasExpiredCredits (this Customer customer) {
@@ -106,6 +124,10 @@ namespace Mictlanix.BE.Web.Helpers {
 		public static bool IsOverCreditLimit (this SalesOrder entity)
 		{
 			return (entity.Customer.Debt () + entity.Balance) > entity.Customer.CreditLimit;
+		}
+		public static bool IsOverCreditLimit (this SalesQuote entity)
+		{
+			return (entity.Customer.Debt () + entity.TotalEx) > entity.Customer.CreditLimit;
 		}
 
 		public static decimal AmountOverCreditLimit (this SalesOrder entity)
@@ -124,10 +146,6 @@ namespace Mictlanix.BE.Web.Helpers {
 			return string.Join (",", query.ToList ().Distinct ().Select (x => string.Format ("{0}{1:D6}", x.Batch, x.Serial)));
 		}
 
-		public static bool IsOverCreditLimit (this SalesQuote entity)
-		{
-			return (entity.Customer.Debt () + entity.TotalEx) > entity.Customer.CreditLimit;
-		}
 
 		public static decimal AmountOverCreditLimit (this SalesQuote entity)
 		{
@@ -152,6 +170,28 @@ namespace Mictlanix.BE.Web.Helpers {
 						  item.IssuerDigitalSeal?.Substring (item.IssuerDigitalSeal.Length - 8));
 
 			return data;
+		}
+
+		public static decimal GetRefundableQuantity (this SalesOrderDetail detail) {
+			var refunded = CustomerRefundDetail.Queryable.Where (x => !x.Refund.IsCancelled
+					&& x.Refund.IsCompleted
+					&& x.SalesOrderDetail == detail)
+				.Sum (x => (decimal?) x.Quantity) ?? 0;
+
+			return detail.Quantity- refunded; // - delivered;
+		}
+
+		public static decimal GetDeliverableQuantity (this SalesOrderDetail detail) {
+			var delivered = DeliveryOrderDetail.Queryable.Where (x => x.DeliveryOrder.IsCompleted
+					&& !x.DeliveryOrder.IsCancelled
+					&& x.OrderDetail == detail)
+				.Sum (x => (decimal?) x.Quantity) ?? 0;
+			var refunded = CustomerRefundDetail.Queryable.Where (x => !x.Refund.IsCancelled
+				&& x.Refund.IsCompleted
+				&& x.SalesOrderDetail == detail)
+				.Sum (x => (decimal?) x.Quantity) ?? 0;
+
+			return detail.Quantity - delivered - refunded;
 		}
 	}
 }

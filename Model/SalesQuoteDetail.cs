@@ -112,9 +112,9 @@ namespace Mictlanix.BE.Model {
 		}
 
 		[Display (Name = "Price", ResourceType = typeof (Resources))]
-		[DisplayFormat (DataFormatString = "{0:C4}")]
+		//[DisplayFormat (DataFormatString = "{0:C4}")]
 		public decimal NetPrice {
-			get { return ModelHelpersV2.NetPrice (Price + PriceIncrement, TaxRate, IsTaxIncluded); }
+			get { return ModelHelpersV2.NetPrice (Price + PriceIncrement, DiscountRate, TaxRate, IsTaxIncluded); }
 		}
 
 		[Display (Name = "Price", ResourceType = typeof (Resources))]
@@ -159,9 +159,9 @@ namespace Mictlanix.BE.Model {
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "Subtotal", ResourceType = typeof (Resources))]
-		[DisplayFormat (DataFormatString = "{0:C4}")]
+		//[DisplayFormat (DataFormatString = "{0:C4}")]
 		public decimal Subtotal {
-			get { return ModelHelpersV2.Subtotal (Quantity, Price + PriceIncrement, DiscountRate ,1m, TaxRate, IsTaxIncluded, 6); }
+			get { return ModelHelpersV2.Subtotal (Quantity, Price + PriceIncrement, DiscountRate ,1m, TaxRate, IsTaxIncluded, 2); }
 		}
 
 		[DataType (DataType.Currency)]

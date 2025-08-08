@@ -118,7 +118,6 @@
     <tbody>
         @foreach (var item in Model.Details)
 								{
-												//item.Price += item.PriceIncrement;
             <tr class="alt">
                 <td class="text-left">@Html.DisplayFor(x => item.ProductCode)</td>
                 <td class="text-left">
@@ -128,9 +127,9 @@
 					@Html.DisplayFor(x => item.Comment)
 				}
 				</td>
-                <td class="nowrap text-right">@Html.DisplayFor(x => item.UnitPriceWithDiscount)</td>
+                <td class="nowrap text-right">@Html.DisplayFor(x => item.NetPrice)</td>
                 <td class="nowrap text-center">@Html.DisplayFor(x => item.Quantity)</td>
-                <td class="nowrap text-right">@Html.DisplayFor(x => item.Total)</td>
+                <td class="nowrap text-right">@Html.DisplayFor(x => item.Subtotal)</td>
             </tr>
         }
     </tbody>

@@ -109,6 +109,9 @@ namespace Mictlanix.BE.Model {
 		[BelongsTo("salesperson")]
 		[Display(Name = "SalesPerson", ResourceType = typeof(Resources))]
 		public virtual Employee SalesPerson { get; set; }
+		[BelongsTo("creator")]
+		[Display(Name = "Creator", ResourceType = typeof(Resources))]
+		public virtual Employee Creator { get; set; }
 
 		[HasAndBelongsToMany (typeof (Address), Table = "customer_address", ColumnKey = "customer", ColumnRef = "address", Lazy = true)]
 		public virtual IList<Address> Addresses {
@@ -136,7 +139,7 @@ namespace Mictlanix.BE.Model {
 
 		[Property ("disabled")]
 		[Display (Name = "LogicalDelete", ResourceType = typeof (Resources))]
-		public virtual bool IsDisabled { get; set; }
+		public virtual bool IsDeleted { get; set; }
 
 		public virtual Customer GetSerializable () {
 			return new Customer {
@@ -144,7 +147,7 @@ namespace Mictlanix.BE.Model {
 				CreditDays = CreditDays,
 				CreditLimit = CreditLimit,
 				Id = Id,
-				IsDisabled = IsDisabled,
+				IsDeleted = IsDeleted,
 				PriceListId = PriceListId,
 				SalesPersonId = SalesPersonId,
 				Name = Name,

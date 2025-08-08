@@ -1,0 +1,22 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Web.Helpers
+@model Mictlanix.BE.Model.Priority
+
+
+@switch (Model)
+{
+
+				case Mictlanix.BE.Model.Priority.Low:
+<img src='@Url.Content("~/Content/icons/1.png")' alt='@Model.GetDisplayName()' title='@Model.GetDisplayName()' />
+								break;
+				case Mictlanix.BE.Model.Priority.Normal:
+<img src='@Url.Content("~/Content/icons/2.png")' alt='@Model.GetDisplayName()' title='@Model.GetDisplayName()' />
+								break;
+				case Mictlanix.BE.Model.Priority.High:
+<img src='@Url.Content("~/Content/icons/3.png")' alt='@Model.GetDisplayName()' title='@Model.GetDisplayName()' />
+								break;
+				case Mictlanix.BE.Model.Priority.Critical:
+<img src='@Url.Content("~/Content/icons/4.png")' alt='@Model.GetDisplayName()' title='@Model.GetDisplayName()' />
+								break;
+
+}

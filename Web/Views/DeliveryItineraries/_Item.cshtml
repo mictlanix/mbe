@@ -11,41 +11,41 @@
 }
 
 <tr id='id:@Model.Id'>
-				@*<td class="number">
-									@Html.DisplayFor(x => x.Id)
-									<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => x.Id)">
-										<span class="glyphicon glyphicon-exclamation-sign"></span>
-									</a>
-								</td>*@
 				<td class="">@Html.DisplayFor(x => x.Id)</td>
-				<td class="">@Html.DisplayFor(x => x.DueDate)</td>
+				<td class="">@Html.DisplayFor(x => x.Date)</td>
 				<td class="center">@Html.DisplayFor(x => x.VehicleOperator.Operator.Nickname)</td>
 				<td class="center">@Html.DisplayFor(x => x.Vehicle.NickName)</td>
 				<td class="">@Html.DisplayFor(x => x.Comment)</td>
-				<td class="">@string.Join(", ", Model.Details.Select(x => x.DeliveryOrderDetail.DeliveryOrder.Id).Distinct())</td>
-				<td class="">@Html.DisplayFor(x => x.IsCompleted)</td>
-				<td class="">@Html.DisplayFor(x => x.IsCancelled)</td>
+				<td class="">@Model.Details.Select(x => x.DeliveryOrderDetail.DeliveryOrder.Id).Count()</td>
+				@*<td class="">@Html.DisplayFor(x => x.IsCompleted)</td>
+				<td class="">@Html.DisplayFor(x => x.IsCancelled)</td>*@
 				<td class=""></td>
-				<td class="bool">@Html.DisplayFor(x => x.IsCancelled)</td>
-				<td class="actions">
-								@if (Privilege.AllowRead)
-								{
-												@Html.ActionLink(" ", "View", new { id = Model.Id }, new { @class = "button icon view icon-only open-modal",
-																																title = Resources.Details, data_modal_id = "purchase-request-modal" })
-								}
+				@*<td class="bool">@Html.DisplayFor(x => x.IsCancelled)</td>*@
+								<td class="actions">
+												@if (Privilege.AllowRead)
+												{
+																@Html.ActionLink(" ", "View", new { id = Model.Id }, new
+																{
+																				@class = "button icon view icon-only",
+																								title = Resources.Details
+																})
+												}
 
 
-								@if (Privilege.AllowUpdate && !Model.IsCompleted && !Model.IsCancelled)
-								{
-												@Html.ActionLink(" ", "Edit", new { id = Model.Id }, new { @class = "button icon edit icon-only", title = Resources.Edit })
-								}
+												@if (Privilege.AllowUpdate && !Model.IsCompleted && !Model.IsCancelled)
+												{
+																@Html.ActionLink(" ", "Edit", new { id = Model.Id }, new { @class = "button icon edit icon-only", title = Resources.Edit })
+												}
 
-								@if (Privilege.AllowDelete)
-								{
-												@Html.ActionLink(" ", "Delete", new { id = Model.Id }, new { @class = "button icon delete icon-only open-modal",
-																																title = Resources.Delete, data_modal_id = "purchase-request-modal" })
-								}
-				</td>
+												@if (Privilege.AllowDelete && !Model.IsCancelled)
+												{
+																@*@Html.ActionLink(" ", "Cancel", new { id = Model.Id }, new { @class = "button icon delete icon-only",
+												title = Resources.Delete })*@
+																<a class='button icon-only icon delete to-validate' title='@string.Format(Resources.Cancel)'
+																			data-type='checklist' data-placement='bottom' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id'
+																			data-url='@Url.Action("Cancel", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
+												}
+								</td>
 </tr>
 
 

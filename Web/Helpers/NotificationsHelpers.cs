@@ -30,8 +30,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using MailKit.Net.Smtp;
-using MailKit;
+using MailKit.Security;
+using Google.Apis.Auth.OAuth2;
 using MimeKit;
+using Google.Apis.Auth.OAuth2.Flows;
+using Google.Apis.Auth.OAuth2.Responses;
+using System.Threading;
 
 namespace Mictlanix.BE.Web.Helpers {
 
@@ -153,7 +157,21 @@ namespace Mictlanix.BE.Web.Helpers {
 			try {
 				var builder = new BodyBuilder ();
 				var message = new MimeMessage ();
-				var subtype = textPartSubtype == TextPartSubtype.Plain ? "plain" : "html"; 
+				var subtype = textPartSubtype == TextPartSubtype.Plain ? "plain" : "html";
+				var clientId = WebConfig.GoogleClientId;
+				var clientSecret = WebConfig.GoogleClientSecret;
+				var refreshToken = "REFRESH_TOKEN";
+
+				var credential = new UserCredential (
+				    new GoogleAuthorizationCodeFlow (new GoogleAuthorizationCodeFlow.Initializer {
+					    ClientSecrets = new ClientSecrets { ClientId = clientId, ClientSecret = clientSecret },
+					    Scopes = new [] { "https://mail.google.com/" }
+				    }),
+				    WebConfig.SmtpUser,
+				    new TokenResponse { RefreshToken = refreshToken }
+				);
+
+				string accessToken = credential.GetAccessTokenForRequestAsync ().Result;
 
 				message.From.Add (new MailboxAddress (string.Empty, addrFrom));
 
@@ -196,21 +214,23 @@ namespace Mictlanix.BE.Web.Helpers {
 				}
 
 				using (var client = new SmtpClient ()) {
-					client.ServerCertificateValidationCallback = (s, c, h, e) => true;
+					//client.ServerCertificateValidationCallback = (s, c, h, e) => true;
 
-					if (WebConfig.SmtpSsl) {
-						client.Connect (WebConfig.SmtpServer, WebConfig.SmtpPort);
-					} else {
-						client.Connect (WebConfig.SmtpServer, WebConfig.SmtpPort, MailKit.Security.SecureSocketOptions.None);
-					}
+					//if (WebConfig.SmtpSsl) {
+					//	client.Connect (WebConfig.SmtpServer, WebConfig.SmtpPort);
+					//} else {
+					//	client.Connect (WebConfig.SmtpServer, WebConfig.SmtpPort, MailKit.Security.SecureSocketOptions.StartTls);
+					//}
 
 					// Note: since we don't have an OAuth2 token, disable
 					// the XOAUTH2 authentication mechanism.
-					client.AuthenticationMechanisms.Remove ("XOAUTH2");
+					//client.AuthenticationMechanisms.Remove ("XOAUTH2");
+					client.Connect(WebConfig.SmtpServer, WebConfig.SmtpPort, SecureSocketOptions.StartTls);
+					client.Authenticate (new SaslMechanismOAuth2 (WebConfig.SmtpUser, accessToken));
 
-					if (!string.IsNullOrWhiteSpace (WebConfig.SmtpUser)) {
-						client.Authenticate (WebConfig.SmtpUser, WebConfig.SmtpPassword);
-					}
+					//if (!string.IsNullOrWhiteSpace (WebConfig.SmtpUser)) {
+					//	client.Authenticate (WebConfig.SmtpUser, WebConfig.SmtpPassword);
+					//}
 
 					client.Send (message);
 					client.Disconnect (true);

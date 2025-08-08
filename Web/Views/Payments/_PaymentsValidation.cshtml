@@ -1,0 +1,41 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model Search<CustomerPayment>
+
+<div class="row scrollable-header">
+				<div class="col-sm-1 ">@Resources.Date</div>
+				<div class="col-sm-2 ">@Resources.Customer</div>
+				<div class="col-sm-1 ">@Resources.Cashier</div>
+				<div class="col-sm-1 ">@Resources.Verifier</div>
+				<div class="col-sm-1 ">@Resources.Amount</div>
+				<div class="col-sm-1 ">@Resources.PaymentMethod</div>
+				<div class="col-sm-2 ">@Resources.Reference</div>
+				<div class="col-sm-1 ">@Resources.PaymentType</div>
+				<div class="col-sm-1 ">@Resources.SalesOrders</div>
+				<div class="col-sm-1 "></div>
+</div>
+
+<div class="scrollable">
+				@foreach (var item in Model.Results)
+				{
+							@Html.Partial("_PaymentToValidate", item);
+				}
+</div>
+
+<script type="text/javascript">
+				$('a.to-validate').editable({
+								success: function() {
+												var self = $(this);
+												var value = self.data('value');
+																$.ajax({
+																				type: "POST",
+																				url: self.data('url')
+																}).done(function (data) {
+																				var item = $('#id\\:' + value);
+																				item.hide().html(data).fadeIn(3000);
+																});
+								}
+				});
+</script>

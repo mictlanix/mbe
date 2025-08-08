@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model InventoryTransfer
@@ -70,20 +70,20 @@
         });
 
            $('#add-items').editable({
-		success: function(response, newValue) {
-        	$('#items-container').loadUrl();
-        	$('#totals-section').loadUrl();
-            $('#confirm-button').removeClass('hide');
-            setTimeout(function(){$('#add-items').editable('setValue', '');},500);
-            location.reload();
-	    }
-	}).removeClass('editable-click');
+		        success: function(response, newValue) {
+        	        $('#items-container').loadUrl();
+        	        $('#totals-section').loadUrl();
+                    $('#confirm-button').removeClass('hide');
+                    setTimeout(function(){$('#add-items').editable('setValue', '');},500);
+                    location.reload();
+	            }
+	        }).removeClass('editable-click');
 
-        $('form').submit(function(){
-            $('button.lock').prop('disabled', true);
-            $('button.lock').html('@Resources.PleaseWait');
-        });
-    });
+                $('form').submit(function(){
+                    $('button.lock').prop('disabled', true);
+                    $('button.lock').html('@Resources.PleaseWait');
+                });
+            });
 </script>
 <style type='text/css'>
 ul.token-input-list { width: 100%; }

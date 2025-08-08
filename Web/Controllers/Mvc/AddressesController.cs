@@ -40,6 +40,7 @@ using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Models;
 using System.Security.Policy;
 using NHibernate;
+using Mictlanix.BE.Web.Helpers;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
@@ -57,9 +58,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		[HttpPost]
 		public ActionResult CreateCustomerAddress (int id, Address item)
 		{
+
+			if (WebConfig.DefaultCustomer == id) {
+				ModelState.AddModelError ("", Resources.CustomerNotFound);
+				return PartialView ("_Create", item);
+			}
+
 			if (!ModelState.IsValid) {
 				return PartialView ("_Create", item);
 			}
+
 			if (!string.IsNullOrEmpty (item.PreLink)) {
 				if (Uri.TryCreate (item.PreLink, UriKind.Absolute, out Uri uriResult)
 				&& (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps)) {
@@ -125,6 +133,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			if (!string.IsNullOrEmpty (item.PreLink)) {
 				if (Uri.TryCreate (item.PreLink, UriKind.Absolute, out Uri uriResult)
 				&& (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps)) {
+
+					if (!uriResult.ToString ().StartsWith ("https://maps.app.goo.gl/")) {
+						ModelState.AddModelError ("PreLink", "No es una liga dinámica de google maps válida");
+						return PartialView ("_Create", item);
+					}
+
 					entity.Link = uriResult;
 					item.Link = uriResult;
 				} else {

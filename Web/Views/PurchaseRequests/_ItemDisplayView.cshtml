@@ -8,14 +8,17 @@
 				var order = receipt != null ? receipt.Order : null;
     }
 
-<li id='id:@Model.Id'>
-    <div class='photo'>
-        <img src='@Url.Content(Model.Product.Photo)' title='@Model.Product.Name' />
-    </div>
-    <div class='action-link'>
-     </div>
-				<div class='info'>
+<li id='id:@Model.Id' class="to-purchase" data-url='@Url.Action("ToogleToPurchase", new { id = Model.Id })'>
+				<div class='photo'>
+								<img src='@Url.Content(Model.Product.Photo)' title='@Model.Product.Name' />
+				</div>
+				@*<div class='action-link'>
+				</div>*@
+				<div style="display:inline-block">
 								<span class='editable name input-xxlarge'>@Html.DisplayFor(x => x.ProductName)</span>
+								<br />
+								<b>@Resources.Supplier: </b>
+								<span class='editable name input-xxlarge'>@Html.DisplayFor(x => x.Product.Supplier.Name)</span>
 								<br />
 								<b>@Resources.Code: </b>
 								<span class='editable code'>@Html.DisplayFor(x => x.Product.Code)</span>
@@ -39,5 +42,12 @@
 												<b>@Resources.EstimatedReceiptDate: </b>
 												<span>@Html.DisplayFor(x => order.EstimatedReceiptDate)</span>
 								}
+								<b>@Resources.ToPurchase: </b>
+								<span class="name input-xxlarge">
+												@Html.DisplayFor(x => Model.ToPurchase)
+								</span>
+				</div>
+				<div style="display:inline-block">
+								<span>@Resources.Stock: @(LotSerialTracking.Queryable.Where(x => x.Warehouse == Model.Warehouse && x.Product == Model.Product).Sum(x => (decimal?)x.Quantity)??0)</span>
 				</div>
 </li>

@@ -591,12 +591,11 @@ div.scrollable-header {
 
 
 table.debts {
-				background-color: #ffeeee;
-/*				overflow-y: scroll;
-				height: 500px;
-				overflow-x: hidden;*/
+				background-color: #ebf5fb;
+				border: 1px solid #5499c7;
+				/*background-color: #ffeeee;
 				border: 1px solid #CCC6CC;
-				border-collapse: separate;
+*/ border-collapse: separate;
 				border-spacing: 0;
 				border-radius: 10px;
 }
@@ -609,11 +608,13 @@ table.debts {
 				}
 
 table.debts tr.warning td {
-				background-color: red;
-				color: white;
+				background-color: white;
+				color: red;
+				font-weight: bold;
 }
 
 table.debts tr.warning td a {
-				background-color: red;
-				color: white;
+				background-color: white;
+				color: red;
+				font-weight:bold
 }

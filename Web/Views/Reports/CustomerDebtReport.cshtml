@@ -2,7 +2,7 @@
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
-@model IEnumerable<dynamic>
+@model CustomerDebtViewModel
 
 @{
 				ViewBag.Title = Resources.CustomersReport;
@@ -10,12 +10,22 @@
 
 
 <h2>@Resources.CustomersReport</h2>
-<h3>
-				@Resources.Customer: @ViewBag.CustomerName
-</h3>
-<h3>
-				@Resources.Date: @DateTime.Now.ToString("yyyy-MM-dd")
-</h3>
+<h4>
+				@Resources.CustomerId: @Model.Customer.Id
+</h4>
+<h4>
+				@Resources.Customer: @Model.Customer.Name
+</h4>
+<h4>
+				@Resources.Code: @Model.Customer.Code
+</h4>
+<h4>@Resources.SalesPerson: @(Model.Customer.SalesPerson != null ? Model.Customer.SalesPerson.Nickname: Resources.ItemNotFound )</h4>
+<h5>
+				@Resources.Date: @Html.DisplayFor(x => Model.DateRange.StartDate) @Html.DisplayFor(x => Model.DateRange.EndDate)
+</h5>
+@*<h5>
+				@Resources.OnlyCredits  @Html.DisplayFor(x => Model.OnlyCredits)
+</h5>*@
 
 <table class='debts'>
 				<thead>
@@ -23,47 +33,65 @@
 												<th class='center'>@Resources.SalesOrder</th>
 												<th class='center'>@Resources.DueDate</th>
 												<th class='center'>@Resources.PaymentTerms</th>
-												<th class='center'>@Resources.Customer</th>
 												<th class='center'>@Resources.User</th>
 												<th class='center'>@Resources.SalesPerson</th>
 												<th class='center'>@Resources.Total</th>
 												<th class='center'>@Resources.Refund</th>
-												<th class='center'>@Resources.Paid</th>
 												<th class='center'>@Resources.Balance</th>
 												<th class='center'>@Resources.Payments</th>
 												<th class='center'>@Resources.Refunds</th>
+												<th class='center'>@Resources.QuantityOrdered</th>
+												<th class='center'>@Resources.QuantityDelivered</th>
+												<th class='center'>@Resources.DeliveryOrders</th>
 												<th class='center'>@Resources.PaymentOnDelivery</th>
-												<th class='center'>@Resources.Paid</th>
-												<th class='center'></th>
 								</tr>
 				</thead>
 				<tbody>
-								@foreach (var item in Model)
+								@foreach (var item in Model.SalesOrders)
 								{
 												string order_id = item.SalesOrderId.ToString("D5");
-												<tr class="@(item.Overdue > 0.01 || item.OnDelivery > 0 ? "warning":string.Empty )">
+												<tr class="@(item.Overdue > 0.01 || (item.OnDelivery > 0 && item.Balance < 0 ) ? "warning" : string.Empty )">
 																<td class="date">@Html.ActionLink(order_id, "Pdf", "POS", new { id = (int)item.SalesOrderId }, new { target = "_blank" })</td>
 																<td class="date">@item.DueDate.ToString("yyyy-MM-dd")</td>
 																<td class="date">@item.Terms</td>
-																<td class="date">@item.CustomerName</td>
 																<td class="date">@item.User</td>
 																<td class="date">@item.SalesPerson</td>
 																<td class="number">@item.Total.ToString("C")</td>
-																<td class="number">@(item.Refund!= null ? item.Refund.ToString("C"):string.Empty)</td>
-																<td class="number">@(item.Paid!= null ? item.Paid.ToString("C"):Resources.NoPayment)</td>
-																<td class="number">@item.Balance.ToString("C")</td>
-																<td class="date">@(!string.IsNullOrEmpty(item.PaymentsDesc) ? Html.Raw(item.PaymentsDesc.Replace("\n", "<br />")):string.Empty)</td>
-																<td class="date">@item.RefundsDesc</td>
+																<td class="number">@(item.Refund != null ? item.Refund.ToString("C") : string.Empty)</td>
+																<td class="number">@(item.OrderPaidStatus ? Resources.Paid:item.Balance.ToString("C"))</td>
+																<td class="date">@(!string.IsNullOrEmpty(item.PaymentsInfo) ? Html.Raw(item.PaymentsInfo.Replace("|", "<br />")) : string.Empty)</td>
+																<td class="date">@item.RefundsInfo</td>
+																<td class="date">@item.OrderedQuantity.ToString("F2")</td>
+																<td class="date">@item.DeliveredQuantity</td>
+																																<td class="date">
+																																				@if(!string.IsNullOrEmpty(item.DeliveryOrderIds)) {
+																																								var deliveries = item.DeliveryOrderIds.Split('|');
+																																								foreach (var delivery in deliveries)
+																																								{
+																																												@Html.ActionLink((string)delivery, "View", "DeliveryOrders", new { id = Int32.Parse(delivery) }, new { target = "_blank" }) <br />
+																																								}
+																																				}
+																																</td>
 																<td class="date">@(item.OnDelivery != null ? item.OnDelivery.ToString("C") + " ???":string.Empty)</td>
-																<td class="text-center">@(item.OrderPaidStatus ? Resources.Paid : string.Empty)</td>
 												</tr>
 								}
 								<tr class="warning">
-												<td class="text-right" colspan="8"><b>@Resources.Balance</b></td>
-												<td class="number">@Model.Where(x => (decimal)x.Balance < 0).Sum(y => (decimal)y.Balance).ToString("C")</td>
+												<td class="text-right" colspan="9"><b>@Resources.Balance</b></td>
+												<td class="number">@Model.SalesOrders.Where(x => (decimal)x.Balance < 0  && (bool)x.OrderPaidStatus == false).Sum(y => (decimal)y.Balance).ToString("C")</td>
 								</tr>
 				</tbody>
 </table>
+
+<div class='clearfix'></div>
+<div id='back-to-list' class='pull-left'>
+				@Html.ActionLink(Resources.BackToList, "CustomersDebtSummary", new { }, new { @class = "button icon back" })
+</div>
+<div class='pull-right'>
+				@Html.ActionLink(Resources.Print, "PrintCustomerDebtReport", new { id = Model.Customer.Id }, new { @class = "button icon print", target = "_blank" })
+</div>
+<div class='clearfix'></div>
 <script type='text/javascript'>
-				$('[data-toggle="tooltip"]').tooltip();
+				$(function () {
+								$('[data-toggle="tooltip"]').tooltip();
+				});
 </script>

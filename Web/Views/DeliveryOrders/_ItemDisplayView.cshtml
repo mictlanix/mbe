@@ -15,6 +15,8 @@
     <div class='info'>
         <span class='editable name input-xxlarge'>@Html.DisplayFor(x => x.ProductName)</span>
         <br/>
+        <span class='editable name input-xxlarge'>@Html.DisplayFor(x => x.OrderDetail.Warehouse.Name)</span>
+        <br/>
         <b>@Resources.Code: </b>
         <span class='editable code'>@Html.DisplayFor(x => x.ProductCode)</span>
         <b>@Resources.UnitOfMeasurement: </b>

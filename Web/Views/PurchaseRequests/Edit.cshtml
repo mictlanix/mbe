@@ -38,7 +38,7 @@ $(function () {
         hintText:'@Resources.HIntText',
         noResultsText:'@Resources.NoResultsText',
         searchingText:'@Resources.SearchingText',
-        resultsFormatter:function(item){return ProductFormatter(item);},
+        resultsFormatter:function(item){return ProductPurchaseFormatter(item);},
         queryParam:'pattern',minChars:3,tokenLimit:1,
         onAdd:function(item) {
 			$.post('@Url.Action("AddDetail")', { 'id': @Model.Id, 'product_id': '' + item.id }, function (detail) {

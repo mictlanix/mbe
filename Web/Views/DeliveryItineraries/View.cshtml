@@ -1,22 +1,74 @@
-@using Mictlanix.BE.Model
 @using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model DeliveriesItinerary
 
-@model PurchaseRequest
+@{
+				ViewBag.Title = Resources.DeliveryOrder;
+				var CurrentUser = Html.CurrentUser() ?? new User();
+				var deliveryPrivilege = Html.GetPrivilege(CurrentUser, SystemObjects.DeliveryOrders);
+}
 
-<div class="modal-header">
-	<button type='button' class='close' data-dismiss='modal'>&times;</button>
-	<h3>@Resources.PurchaseRequest</h3>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+<h2>@Resources.DeliveryOrder</h2>
+
+<div id="master-section">
+				@Html.Partial("_DisplayView")
 </div>
-<div class="modal-body">
-	@using (Ajax.BeginForm("Delete", "PurchaseRequests",
-		new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "purchase-request-modal-content" },
-		new { @class = "modal-form" }))
-	{
-		<div class="form-horizontal">
-			@Html.DisplayForModel()
-		</div>
-	}
+<div id="details-section">
+				<div id="items-container">
+								<ul id="items" class="list-items">
+												@foreach (var item in Model.Details
+																.GroupBy(a => a.DeliveryOrderDetail.DeliveryOrder)
+																.Select(g => new { DeliveryOrder = g.Key, Details = g.ToList()}))
+												{
+																<li>
+																				@Resources.Contact: @item.DeliveryOrder.Contact
+																    @Resources.ShipTo: @item.DeliveryOrder.ShipTo.ToString()
+																				<ul class="list-items">
+																								@foreach(var detail in item.Details) {
+																												@Html.Partial("_ItemDisplayView", detail)
+																								}
+																				</ul>
+																</li>
+																@*<li>@Html.DisplayFor(x => item.DeliveryOrderDetail.ProductName)</li>*@
+												}
+								</ul>
+				</div>
 </div>
-<div class="modal-footer">
-	<button type='button' class='btn btn-default' data-dismiss='modal'>@Resources.Discard</button>
+<div class='clearfix'></div>
+<div id='back-to-list' class='pull-left'>
+				@Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
+@if (deliveryPrivilege.AllowRead)
+{
+				if (WebConfig.DeliveryOrdersUseMiniPrinter)
+				{
+								<div class='pull-right'>
+												@Html.ActionLink(Resources.PrintTicket, "Print", new { id = Model.Id }, new { @class = "button icon print", target = "_blank" })
+								</div>
+				}
+				else
+				{
+								<div class='pull-right'>
+												@Html.ActionLink(Resources.PrintFormat, "PrintFormat", new { id = Model.Id }, new { @class = "button icon print", target = "_blank" })
+								</div>
+				}
+}
+
+@*@if (WebConfig.DeliveryOrderRequiresApprobation && schedulePrivilege.AllowRead && Model.IsCompleted
+				&& (Model.IsConfirmed != true))
+{
+				<div class='pull-right'>
+								<a class="button icon edit" id="buttonConfirm">@string.Format(Resources.Confirm, Resources.DeliveryOrder)</a>
+								<a class="button icon cancel" id="buttonRefuse">@string.Format(Resources.Refuse, Resources.DeliveryOrder)</a>
+				</div>
+}*@
+<div class='clearfix'></div>
+<script type='text/javascript'>
+				$(function () {
+								$('[data-toggle="tooltip"]').tooltip();
+				});
+</script>

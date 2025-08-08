@@ -58,6 +58,19 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Change", ResourceType = typeof (Resources))]
 		public decimal Change { get; set; }
 
+		[BelongsTo ("applier")]
+		[Display (Name = "Applier", ResourceType = typeof (Resources))]
+		public Employee Applier { get; set; }
+
+		[Property]
+		[DataType (DataType.DateTime)]
+		[Display (Name = "Date", ResourceType = typeof (Resources))]
+		public virtual DateTime Date { get; set; }
+
+		[Property("confirmed")]
+		//[Display (Name = "IsCompleted", ResourceType = typeof (Resources))]
+		public virtual bool IsConfirmed { get; set; }
+
 		#region Override Base Methods
 
 		public override string ToString ()

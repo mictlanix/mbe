@@ -42,10 +42,12 @@ namespace Mictlanix.BE.Model {
 			return Math.Round (d, 2, MidpointRounding.AwayFromZero);
 		}
 
-		public static decimal NetPrice (decimal price, decimal taxRate, bool taxIncluded)
+		public static decimal NetPrice (decimal price, decimal discount_rate, decimal taxRate, bool taxIncluded)
 		{
 			decimal divisor = taxIncluded ? 1 + taxRate : 1;
-
+			if (discount_rate < 1 && discount_rate > 0) {
+				price = price * (1 - discount_rate);
+			}
 			return PriceRounding (price/divisor);
 		}
 

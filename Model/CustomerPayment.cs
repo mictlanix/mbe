@@ -62,12 +62,16 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Updater", ResourceType = typeof (Resources))]
 		public virtual Employee Updater { get; set; }
 
+		[BelongsTo ("verifier", Lazy = FetchWhen.OnInvoke)]
+		[Display (Name = "Verifier", ResourceType = typeof (Resources))]
+		public virtual Employee Verifier { get; set; }
+
 		[BelongsTo ("payment_charge", Lazy = FetchWhen.OnInvoke)]
 		public virtual PaymentMethodOption ExtraFee { get; set; }
 
 		[Property ("payment_type")]
 		[Display (Name = "PaymentType", ResourceType = typeof (Resources))]
-		public virtual PaymentType? PaymentType { get; set; }
+		public virtual PaymentType PaymentType { get; set; }
 
 		[Property("commission")]
 		[DisplayFormat(DataFormatString = "{0:+#;-#;+p}")]

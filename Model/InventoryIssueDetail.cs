@@ -1,4 +1,4 @@
-﻿// 
+// 
 // InventoryIssueDetail.cs
 // 
 // Author:
@@ -62,6 +62,9 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "ProductName", ResourceType = typeof (Resources))]
 		[StringLength (250, MinimumLength = 4, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public string ProductName { get; set; }
+
+		public List<string> Errors { get; set; }
+		public List<string> Warnings { get; set; }
 
 		#region Override Base Methods
 

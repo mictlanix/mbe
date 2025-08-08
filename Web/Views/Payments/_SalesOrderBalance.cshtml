@@ -12,27 +12,47 @@
 												<span class='value'>@Html.DisplayFor(x => x.Total) @Html.DisplayFor(x => x.Currency)</span>
 								}
 				</li>
-				@if(Model.Refund > 0.0m) {
-				<li>
-								<span class='caption'>@Resources.Refund</span>
-								<span class='value'>@Html.DisplayFor(x => x.Refund) @WebConfig.BaseCurrency</span>
-								@if (Model.Currency != WebConfig.BaseCurrency)
-								{
-												<span class='value'>@Html.DisplayFor(x => x.Refund) @Html.DisplayFor(x => x.Currency)</span>
-								}
-				</li>
+				@if (Model.CustomerRefunds.Sum(x => x.Total) > 0.0m)
+				{
+								<li>
+												<span class='caption'>@Resources.Refund</span>
+												<span class='value'>@Model.CustomerRefunds.Sum(y => y.Total).ToString("c") @WebConfig.BaseCurrency</span>
+												@if (Model.Currency != WebConfig.BaseCurrency)
+												{
+																<span class='value'>@Html.DisplayFor(x => x.Currency) @Html.DisplayFor(x => x.Currency)</span>
+												}
+								</li>
 				}
 				<li>
 								<span class='caption'>@Resources.Paid</span>
 								<span class='value'>@Html.DisplayFor(x => x.Paid) @WebConfig.BaseCurrency</span>
 				</li>
-				@if (Model.ExtraFee > 0.0m)
+				@if (Model.Currency != WebConfig.BaseCurrency)
+				{
+
+					@Html.DisplayFor(x => x.Total);
+
+				@Html.DisplayFor(x => x.Currency);
+
+				}
+
+				@if (Model.CreditNotesAmount > 0.0m)
 				{
 								<li>
 												<span class="caption">@Resources.ExtraFees</span>
 												<span class="value">@Html.DisplayFor(x => x.ExtraFee) @WebConfig.BaseCurrency</span>
 								</li>
 				}
+				@if (Model.ExtraFee > 0.0m)
+				{
+
+
+				@Resources.ExtraFees;
+				 @Html.DisplayFor(x => x.ExtraFee);
+					@WebConfig.BaseCurrency;
+
+				}
+
 				@if (Model.Balance > 0.0m)
 				{
 								<li>
@@ -51,25 +71,46 @@
 				@Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
 
+
 @if (Model.IsPaid || Model.Terms == PaymentTerms.NetD)
 {
-				<div class='pull-right'>
-								@Html.ActionLink(Resources.SalesReceipt, "Print", new { id = Model.Id },
-																															new { @class = "button icon print", target = "_blank" })
-				</div>
 
-								<div class='pull-right'>
-												<button id="delivery" class = "button icon delivery">@Resources.DeliveryTicket</button>
+
+				if (Model.DeliveryMode == DeliveryMode.ToBeDefined)
+				{
+
+								<div class="pull-right col-xs-1"></div>
+								<div id='confirm-button' class='pull-right '>
+																<button type="submit" class='icon delivery partial_deliveries' value="@DeliveryMode.PickUp">@Resources.PickUp</button>
 								</div>
-
+								<div class="pull-right col-xs-1"></div>
+								<div id='confirm-button' class='pull-right'>
+																<button type="submit" class='icon shipping partial_deliveries' value="@DeliveryMode.PartialDeliveries">@Resources.PartialDeliveries</button>
+								</div>
+				}
+				else
+				{
+								if (Model.DeliveryMode == DeliveryMode.PartialDeliveries)
+								{
+												<div id='confirm-button' class='pull-right'>
+																								<button type="submit" id="delivery" class='icon shipping'>@Resources.CreateNew @Resources.DeliveryOrder</button>
+												</div>
+								}
+								<div class='pull-right'>
+												@Html.ActionLink(Resources.SalesReceipt, "Print", new { id = Model.Id },
+															new { @class = "button icon print", target = "_blank" })
+								</div>
+				}
 }
-@if (Model.Payments.Any(x => !x.Payment.PaymentType.HasValue))
+
+
+@if (Model.Payments.Any(x => !x.IsConfirmed))
 {
 				<div id='confirm-button' class='pull-right'>
 								@using (Ajax.BeginForm("ConfirmPayment", "Payments", new { id = Model.Id },
-												new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "details-order" }))
+new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "details-order" }))
 								{
-												<button type="submit" class='icon pay'>@Resources.CompletePayment</button>
+												<button type="submit" class='icon confirm-payments lock'>@Resources.CompletePayment</button>
 								}
 				</div>
 }
@@ -79,10 +120,7 @@
     <text>$("#form").hide("slow");</text>
 } else {
 	<text>
-		//$("#amount").val("@((Model.Balance).ToString("0.00"))");
-        //$("#amount").val("Ingresa importe").select();
-    //$("#amount").attr("placeholder", Number(@Model.Balance).toFixed(2))
-    $("#amount").attr("placeholder", Number(@Model.Balance).toFixed(2))
+    $("#amount").attr("placeholder", Number(@(Model.BalanceInCashDraw())))
         $("#form").show("slow");
 	</text>
 }
@@ -94,8 +132,30 @@
 				$("#delivery").on("click",function () {
 								console.log("working");
 								$.post("/DeliveryOrders/New", { value: @Model.Id }, function (data) {
-												console.log(data);
 												location.href = data.url;
+								}).fail(function (e) {
+												DisplayErrorMessage(e.responseText)
 								});
 				});
+
+								$(".partial_deliveries").on("click",function () {
+												console.log("working partials");
+												var val = $(this).val();
+												console.log(val);
+								$.post("/Payments/SetPartialDeliveries", { id: @Model.Id, value: val }, function (data) {
+												location.reload();
+								}).fail(function (e) {
+												DisplayErrorMessage(e.responseText)
+								});
+				});
+
+				$(".confirm-payments").click(function () {
+
+				$.post('@Url.Action("ConfirmPayment", new { id = Model.Id })',
+								function (detail) {
+											location.reload();
+							}, "json").fail(function (e) {
+											DisplayErrorMessage(e.responseText)
+							});
+});
 </script>

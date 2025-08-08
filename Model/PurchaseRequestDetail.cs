@@ -74,6 +74,11 @@ namespace Mictlanix.BE.Model {
 		[Required (ErrorMessageResourceName = "Validation_RequiredNumber", ErrorMessageResourceType = typeof (Resources))]
 		public virtual decimal Quantity { get; set; }
 
+		[Property("to_purchase")]
+		[DisplayFormat (DataFormatString = "{0:0.####}")]
+		[Display (Name = "Accepted", ResourceType = typeof (Resources))]
+		public virtual bool ToPurchase { get; set; }
+
 		#region Override Base Methods
 
 		public override string ToString ()

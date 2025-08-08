@@ -48,6 +48,8 @@ namespace Mictlanix.BE.Model {
 		ElectronicMoney = 6,
 		[Display (Name = "FoodVouchers", ResourceType = typeof (Resources))]
 		FoodVouchers = 8,
+		[Display (Name = "Giving", ResourceType = typeof (Resources))]
+		Giving = 12,
 		[Display (Name = "DebitCard", ResourceType = typeof (Resources))]
 		DebitCard = 28,
 		[Display (Name = "ServiceCard", ResourceType = typeof (Resources))]

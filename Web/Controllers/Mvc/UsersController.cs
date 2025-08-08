@@ -31,6 +31,7 @@ using System;
 using System.Data;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Security;
 using Castle.ActiveRecord;
 using Castle.Core.Internal;
 using Mictlanix.BE.Model;
@@ -94,19 +95,32 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			//User user = Model.User.Find (id);			
 			User user = MBEQueryable.IQUsers.Single(x => x.UserName == id);
+			//var storeId = user.UserSettings == null || user.UserSettings.Store == null ?  int.Parse (WebConfig.DefaultStore) : user.UserSettings.Store.Id;
+
+			//Int32.TryParse(user.UserSettings.Store.Id, out storeId);
+			//var store = MBEQueryable.IQStores.SingleOrDefault(x => x.Id == storeId);
+
+			//var pointOfSaleId = user.UserSettings == null ? int.Parse (WebConfig.DefaultPointOfSale) : user.UserSettings.PointOfSale.Id;
+			//var pointOfSale = MBEQueryable.IQPointsOfSales.SingleOrDefault(x => x.Id == pointOfSaleId);
 
 			if (user.UserSettings == null) {
-				var storeId = int.Parse (WebConfig.DefaultStore);
-				var store = MBEQueryable.IQStores.SingleOrDefault(x => x.Id == storeId);
-
-				var pointOfSaleId = int.Parse (WebConfig.DefaultPointOfSale);
-				var pointOfSale = MBEQueryable.IQPointsOfSales.SingleOrDefault(x => x.Id == pointOfSaleId);
-
-				user.UserSettings = new UserSettings () {
+				var defaultStoreId = int.Parse (WebConfig.DefaultStore);
+				var defaultStore = MBEQueryable.IQStores.Single (x => x.Id == defaultStoreId);
+				var defaultPointOfSaleId = int.Parse (WebConfig.DefaultPointOfSale); ;
+				var defaultPointOfSale = MBEQueryable.IQPointsOfSales.Single (x => x.Id == defaultPointOfSaleId);
+				var defaultCashDrawerId = (int?)null;
+				user.UserSettings = new UserSettings {
 					UserName = user.UserName,
-					Store = store,
-					PointOfSale = pointOfSale
+					StoreId = defaultStoreId,
+					Store = defaultStore,
+					PointOfSale = defaultPointOfSale,
+					PointOfSaleId = defaultPointOfSaleId,
+					CashDrawerId = defaultCashDrawerId,
 				};
+			} else {
+				user.UserSettings.StoreId = user.UserSettings.Store.Id;
+				user.UserSettings.PointOfSaleId = user.UserSettings.PointOfSale != null ? user.UserSettings.PointOfSale.Id: (int?)null;
+				user.UserSettings.CashDrawerId = user.UserSettings.CashDrawer != null ? user.UserSettings.CashDrawer.Id : (int?)null;
 			}
 
 			return View (user);
@@ -121,6 +135,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			using (var scope = new TransactionScope ()) {
 				var user = Model.User.Find (item.UserName);
+
+				var incidence = new Incidence {
+					ModificationTime = DateTime.Now,
+					SourceType = SourceType.UserSettings,
+					Updater = CurrentUser.Employee,
+					PreviousState = user.UserName.ToString(),
+					Reference = user.EmployeeId,
+				};
+				incidence.CreateAndFlush ();
 
 				user.Employee = Employee.Find (item.EmployeeId);
 				user.Email = item.Email;
@@ -148,7 +171,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 							PointOfSale.TryFind (item.UserSettings.PointOfSaleId.Value):null;
 
 						if (item.UserSettings.CashDrawerId.HasValue) {
-							user.UserSettings.CashDrawer = CashDrawer.Find (item.UserSettings.CashDrawerId);
+							user.UserSettings.CashDrawer = CashDrawer.TryFind (item.UserSettings.CashDrawerId);
 						}
 					}
 				}
@@ -183,7 +206,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					user.UserSettings.Save ();
 				}
 
+				//var session = FormsAuthentication.GetAuthCookie()
+
 				user.UpdateAndFlush ();
+				
 			}
 
 			return RedirectToAction ("Index");

@@ -48,11 +48,11 @@
 }
 </div>
 
-<div id="export-button" class="pull-right @(Model.Details.Count == 0 ? "hide": "")">
+@*<div id="export-button" class="pull-right @(Model.Details.Count == 0 ? "hide": "")">
     @using (Html.BeginForm("Export", "Purchases", new { id = Model.Id })) {
         <button id='export' type='submit'>@Resources.Download @Resources.PurchaseQuotation</button>
     }
-</div>
+</div>*@
 
 <div class='clearfix'></div>
 <script type="text/javascript">

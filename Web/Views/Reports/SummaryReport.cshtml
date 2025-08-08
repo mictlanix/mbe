@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
@@ -10,7 +10,7 @@
 @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
 	<div class="row">
   		<div class="col-sm-7">
-			@Html.Editor((string)ViewBag.EditorField, (string)ViewBag.EditorTemplate)
+			@Html.Editor((string)ViewBag.EditorField, (string)ViewBag.EditorTemplate, new { all = true })
 		</div>
 		<div class="col-sm-2">
 			@Html.EditorFor(x => x.StartDate)

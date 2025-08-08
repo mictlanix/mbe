@@ -1,22 +1,23 @@
-@using Mictlanix.BE
 @using Mictlanix.BE.Model
-@using Mictlanix.BE.Web.Models
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE
 @model CustomerRefund
 
 @{
-    ViewBag.Title = Resources.Edit;
+				ViewBag.Title = Resources.Edit;
 }
 
-<h2>@Resources.CustomerRefund</h2> 
+<h2>@Resources.CustomerRefund</h2>
 
 <div id='master-section'>
-	@Html.Partial("_EditorView")
+				@Html.Partial("_EditorView")
 </div>
-@if (Html.ViewContext.Controller.ValueProvider.ContainsPrefix ("notify")) {
-<div class="alert alert-error">
-  <button type="button" class="close" data-dismiss="alert">&times;</button>
-  <strong>@Resources.Warning</strong> @Resources.QuantitiesHaveChanged
-</div>
+@if (Html.ViewContext.Controller.ValueProvider.ContainsPrefix("notify"))
+{
+				<div class="alert alert-error">
+								<button type="button" class="close" data-dismiss="alert">&times;</button>
+								<strong>@Resources.Warning</strong> @Resources.QuantitiesHaveChanged
+				</div>
 }
 <div id='details-section'>
 				<div id='items-container' data-url='@Url.Action("Items", new { id = Model.Id })'>
@@ -27,25 +28,17 @@
 												}
 								</ul>
 				</div>
-				</div>
-				<div class="alert alert-info alert-dismissible fade in" style="display:none;">
-				</div>
-				<div id='totals-section' class='pull-right' data-url='@Url.Action("Totals", new { id = Model.Id })'>
-								@Html.Partial("_Totals")
-				</div>
-				<div class='clearfix'></div>
-				<div id='back-to-list' class='pull-left'>
-								@Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
-				</div>
-				<div id='confirm-button' class='pull-right @(Model.Total <= 0 ? "hide" : "")'>
-								@using (Html.BeginForm("Confirm", "CustomerRefunds", new { id = Model.Id }))
-								{
-												<button id='complete' type='submit'>@Resources.Complete</button>
-								}
-				</div>
-				<div class='clearfix'></div>
-				<script type='text/javascript'>
-								$(function () {
-												$('[data-toggle="tooltip"]').tooltip();
-								});
-				</script>
+</div>
+<div class="alert alert-info alert-dismissible fade in" style="display:none;">
+</div>
+<div id='totals-section' class='pull-right' data-url='@Url.Action("Totals", new { id = Model.Id })'>
+				@Html.Partial("_Totals")
+</div>
+<div class='clearfix'></div>
+<div id='back-to-list' class='pull-left'>
+				@Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+</div>
+<div id='buttons-section' class='pull-right' data-url='@Url.Action("Refundable", new { id = Model.Id })'>
+				@Html.Partial("_buttons")
+</div>
+<div class='clearfix'></div>

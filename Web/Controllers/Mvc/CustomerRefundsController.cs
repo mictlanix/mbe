@@ -32,7 +32,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
-using Castle.ActiveRecord.Queries;
 using NHibernate;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
@@ -74,21 +73,26 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		Search<CustomerRefund> SearchRefunds (Search<CustomerRefund> search)
 		{
-			IQueryable<CustomerRefund> query;
-			var item = WebConfig.Store;
+			IQueryable<CustomerRefund> query = from x in CustomerRefund.Queryable
+							   where x.Creator == CurrentUser.Employee || x.Updater == CurrentUser.Employee
+							   select x;
 
-			if (string.IsNullOrEmpty (search.Pattern)) {
-				query = from x in CustomerRefund.Queryable
-					where x.Store.Id == item.Id
-					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending, x.Id descending
-					select x;
-			} else {
-				query = from x in CustomerRefund.Queryable
-					where x.Store.Id == item.Id &&
-						  x.Customer.Name.Contains (search.Pattern)
-					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending, x.Id descending
-					select x;
+			if (!string.IsNullOrEmpty (search.Pattern)) {
+				int id = 0;
+				if (Int32.TryParse (search.Pattern.Trim (), out id)) {
+					query = from x in CustomerRefund.Queryable
+						where x.Id == id || x.Serial == id || x.SalesOrder.Id == id
+						select x;
+				} else {
+					query = from x in CustomerRefund.Queryable
+						where x.Customer.Name.Contains (search.Pattern)
+						select x;
+				}
 			}
+
+			query = from x in query
+				orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending, x.Id descending
+				select x;
 
 			search.Total = query.Count ();
 			search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
@@ -127,10 +131,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				entity = SalesOrder.TryFind (id);
 			}
 
-			if (CustomerRefund.Queryable.Any (x => x.SalesOrder == entity && !x.IsCancelled && x.IsCompleted)) {
-				Response.StatusCode = 400;
-				return Content (Resources.RefundableItemsNotFound);
-			}
+			//if (CustomerRefund.Queryable.Any (x => x.SalesOrder == entity && !x.IsCancelled && x.IsCompleted)) {
+			//	Response.StatusCode = 400;
+			//	return Content (Resources.RefundableItemsNotFound);
+			//}
 
 			if (entity == null) {
 				Response.StatusCode = 400;
@@ -142,10 +146,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.SalesOrderIsNotRefundable);
 			}
 
-			if (entity.Creator != CurrentUser.Employee && entity.Updater != CurrentUser.Employee && !CurrentUser.IsAdministrator) {
-				Response.StatusCode = 400;
-				return Content (Resources.CreatorDoesntMatchWithCurrentUser);
-			}
+			//if (entity.Creator != CurrentUser.Employee && entity.Updater != CurrentUser.Employee && !CurrentUser.IsAdministrator) {
+			//	Response.StatusCode = 400;
+			//	return Content (Resources.CreatorDoesntMatchWithCurrentUser);
+			//}
 
 
 			//El sistema debe permitir realizar la devolución en cualquier tienda
@@ -161,7 +165,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.Store = WebConfig.Store;
 
 
-			item.Serial = CustomerRefund.Queryable.Where(x => x.Store == WebConfig.Store).Max (x => (int?)x.Serial) + 1 ?? 1;
 
 			item.SalesOrder = entity;
 			item.SalesPerson = entity.SalesPerson;
@@ -176,7 +179,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.ModificationTime = item.CreationTime;
 
 			foreach (var x in entity.Details) {
-				var qty = GetRefundableQuantity (x.Id);
+				//var qty = GetRefundableQuantity (x.Id);
+				var qty = x.GetRefundableQuantity ();
 
 				if (qty <= 0)
 					continue;
@@ -219,6 +223,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Edit (int id)
 		{
 			var entity = CustomerRefund.Find (id);
+			if (entity.IsCompleted || entity.IsCancelled) {
+				return RedirectToAction ("Index");
+			}
 			return View (entity);
 		}
 
@@ -234,7 +241,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var entity = CustomerRefundDetail.Find (id);
 			var sales_order = entity.SalesOrderDetail.SalesOrder;
 
-			decimal sum = GetRefundableQuantity (entity.SalesOrderDetail.Id);
+			//decimal sum = GetRefundableQuantity (entity.SalesOrderDetail.Id);
+			decimal sum = entity.SalesOrderDetail.GetRefundableQuantity ();
 
 			entity.Quantity = (value >= 0 && value <= sum) ? value : sum;
 
@@ -278,8 +286,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return Json (new { id = id, result = true });
 		}
 
+		public ActionResult Refundable (int id)
+		{
+			var item = CustomerRefund.Find (id);
+			return PartialView ("_buttons", item);
+		}
+
 		[HttpPost]
-		public ActionResult Confirm (int id)
+		public ActionResult Confirm (int id, int? method)
 		{
 			var dt = DateTime.Now;
 			bool changed = false;
@@ -289,12 +303,21 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var cash_session = GetSession ();
 
 			if (cash_session == null) {
-				return RedirectToAction ("OpenSession", "Payments");
+				Response.StatusCode = 400;
+				return Content (Resources.CashSessionRequired);
 			}
 
+			if (entity.IsCancelled || entity.IsCompleted) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			// verifing valid refundable quantity details
+			// returning error message if invalid quantity
 			using (var scope = new TransactionScope ()) {
 				foreach (var item in entity.Details) {
-					var qty = GetRefundableQuantity (item.SalesOrderDetail.Id);
+					//var qty = GetRefundableQuantity (item.SalesOrderDetail.Id);
+					var qty = item.SalesOrderDetail.GetRefundableQuantity();
 
 					if (qty < item.Quantity) {
 						changed = true;
@@ -313,63 +336,79 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					entity.ModificationTime = dt;
 					entity.UpdateAndFlush ();
 
-					return RedirectToAction ("Edit", new { id = entity.Id, notify = true });
+					Response.StatusCode = 400;
+					return Content (Resources.QuantitiesHaveChanged);
 				}
 			}
 
+
+			// restoring products in inventory
+			// cash back if balance is +
 			using (var scope = new TransactionScope ()) {
 
-				//foreach (var detail in entity.Details.Where (x => !(x.Quantity > 0.0m)).ToList ()) {
-				//	detail.DeleteAndFlush ();
-				//}
 				entity.Details.Where (x => x.Quantity <= 0).ForEach (x => {
 					x.DeleteAndFlush () ;
 				});
-				
-				foreach (var x in entity.Details.Where(x => x.SalesOrderDetail.Product.IsStockable)) {
-					//InventoryHelpers.ChangeNotification (TransactionType.CustomerRefund, entity.Id, dt,
-					//	current_warehouse, null, x.Product, x.Quantity);
 
+				foreach (var x in entity.Details.Where (x => x.SalesOrderDetail.Product.IsStockable)) {
 					InventoryHelpers.ChangeNotification (TransactionType.CustomerRefund, entity.Id, dt,
-						x.SalesOrderDetail.Warehouse, null, x.Product, x.Quantity);
+						x.Warehouse, null, x.Product, x.Quantity);
 				}
 
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = dt;
 				entity.Date = dt;
-				entity.IsCompleted = true;
-				entity.UpdateAndFlush ();
+				entity.Serial = CustomerRefund.Queryable.Where (x => x.Store == WebConfig.Store).Max (x => (int?) x.Serial) + 1 ?? 1;
+
+
 
 				if (entity.Total > order.Balance) {
-					order.IsPaid = true;
-					order.UpdateAndFlush();
-					var refund = entity.Total - order.Balance;
 
-					//var item = new SalesOrderPayment {
-					//	SalesOrder = order,
-					//	Payment = new CustomerPayment {
-					//		CashSession = cash_session,
-					//		CreationTime = dt,
-					//		Creator = CurrentUser.Employee,
-					//		Amount = -refund,
-					//		Currency = entity.Currency,
-					//		Customer = entity.Customer,
-					//		PaymentType = PaymentType.Refund,
-					//		Method = order.Payments.First ().Payment.Method,
-					//		ModificationTime = dt,
-					//		Serial = (CustomerPayment.Queryable.Where (x => x.Store == WebConfig.Store).Max (y => (int?) y.Serial) ?? 0) + 1,
-					//		Store = WebConfig.Store,
-					//		Updater = CurrentUser.Employee,
-					//		Date = dt,
-					//		CustomerId = entity.Customer.Id,
-					//	},
-					//	Amount = -refund
-					//};
+					var cashback = entity.Total - order.Balance;
+					if (!order.IsPaid) {
+						order.IsPaid = true;
+						order.BalanceZeroedTime = dt;
+					}
+					order.UpdateAndFlush ();
 
-					//item.Payment.CreateAndFlush();
-					//item.CreateAndFlush ();
+					var item = new CreditNote {
+						SalesOrder = order,
+						Date = dt,
+						Refunded = 0,
+						Customer = entity.Customer,
+						CustomerRefund = entity,
+						CustomerPayment = new CustomerPayment {
+							CashSession = cash_session,
+							CreationTime = dt,
+							Creator = CurrentUser.Employee,
+							Amount = cashback,
+							Currency = entity.Currency,
+							Customer = entity.Customer,
+							PaymentType = PaymentType.CreditNote,
+							Method = PaymentMethod.NA,
+							ModificationTime = dt,
+							Serial = (CustomerPayment.Queryable.Where (x => x.Store == WebConfig.Store).Max (y => (int?) y.Serial) ?? 0) + 1,
+							Store = WebConfig.Store,
+							Updater = CurrentUser.Employee,
+							Date = dt,
+							CustomerId = entity.Customer.Id,
+						},
+					};
+
+					item.CustomerPayment.CreateAndFlush ();
+					item.CreateAndFlush ();
 				}
+
+				entity.IsCompleted = true;
+				entity.UpdateAndFlush ();
 			}
+
+			if (Request.IsAjaxRequest ()) {
+				return Json (new {
+					id = id
+				});
+			}
+
 
 			return RedirectToAction ("View", new { id = entity.Id });
 		}
@@ -395,38 +434,48 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return RedirectToAction ("Index");
 		}
 
-		decimal GetRefundableQuantity (int id)
-		{
-			var item = SalesOrderDetail.Find (id);
-			string sql = @"SELECT SUM(d.quantity) quantity
-                           FROM customer_refund_detail d INNER JOIN customer_refund m 
-                           ON d.customer_refund = m.customer_refund_id
-                           WHERE m.completed <> 0 AND m.cancelled = 0 AND d.sales_order_detail = :detail ";
+		//decimal GetRefundableQuantity (int id)
+		//{
+		//	//var item = SalesOrderDetail.Find (id);
+		//	//string sql = @"SELECT SUM(d.quantity) quantity
+  // //                        FROM customer_refund_detail d INNER JOIN customer_refund m 
+  // //                        ON d.customer_refund = m.customer_refund_id
+  // //                        WHERE m.completed <> 0 AND m.cancelled = 0 AND d.sales_order_detail = :detail ";
 
-			IList<decimal> quantities = (IList<decimal>) ActiveRecordMediator<CustomerRefundDetail>.Execute (
-			    delegate (ISession session, object instance) {
-				    try {
-					    return session.CreateSQLQuery (sql)
-							  .SetParameter ("detail", id)
-						      .SetMaxResults (1)
-						      .List<decimal> ();
-				    } catch (Exception) {
-					    return null;
-				    }
-			    }, null);
+		//	//IList<decimal> quantities = (IList<decimal>) ActiveRecordMediator<CustomerRefundDetail>.Execute (
+		//	//    delegate (ISession session, object instance) {
+		//	//	    try {
+		//	//		    return session.CreateSQLQuery (sql)
+		//	//				  .SetParameter ("detail", id)
+		//	//			      .SetMaxResults (1)
+		//	//			      .List<decimal> ();
+		//	//	    } catch (Exception) {
+		//	//		    return null;
+		//	//	    }
+		//	//    }, null);
 
-			if (quantities != null && quantities.Count > 0) {
-				return item.Quantity - quantities [0];
-			}
+		//	//if (quantities != null && quantities.Count > 0) {
+		//	//	return item.Quantity - quantities [0];
+		//	//}
 
-			return item.Quantity;
-		}
+		//	//return item.Quantity;
+
+		//	var item = SalesOrderDetail.Find (id);
+		//	var delivered = DeliveryOrderDetail.Queryable
+		//		.Where (x => x.OrderDetail.Id == id && x.DeliveryOrder.IsDelivered)
+		//		.Sum (x => (decimal?)x.Quantity)??0;
+		//	var refunded = CustomerRefundDetail.Queryable
+		//		.Where (x => x.SalesOrderDetail.Id == id && x.Refund.IsCompleted && !x.Refund.IsCancelled)
+		//		.Sum (x => (decimal?)x.Quantity) ?? 0;
+
+		//	return item.Quantity - delivered - refunded;
+		//}
 
 		Search<CustomerRefund> SearchRefunds (DateRange dates, Search<CustomerRefund> search)
 		{
 			var qry = from x in CustomerRefund.Queryable
 				  where (x.IsCompleted || x.IsCancelled) &&
-					  (x.ModificationTime >= dates.StartDate.Date && x.ModificationTime <= dates.EndDate.Date.Add (new TimeSpan (23, 59, 59)))
+					  (x.ModificationTime >= dates.StartDate && x.ModificationTime <= dates.EndDate)
 				  orderby x.Id descending
 				  select x;
 

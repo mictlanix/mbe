@@ -14,11 +14,12 @@
 			<dl class=''>
 				<dt>@Resources.Cashier</dt>
 				<dd>
-					<a id='cashier' data-type='select2' data-placement='right' data-pk='@Model.Id'
-						data-value='@Model.Creator' data-url='@Url.Action("SetCashier", new { id = Model.Id })'
+					@*<a id='cashier' data-type='select2' data-placement='right' data-pk='@Model.Id'
+						data-value='@Model.CashSession.Cashier.Id' data-url='@Url.Action("SetCashier", new { id = Model.Id })'
 						data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
 						@Html.DisplayFor(x => x.Creator.Name)
-					</a>
+					</a>*@
+						@Html.DisplayFor(x => x.CashSession.Cashier.Nickname)
 				</dd>
 				
 				<dt>@Resources.Comment</dt>

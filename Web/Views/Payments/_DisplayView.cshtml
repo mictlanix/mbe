@@ -80,16 +80,21 @@
 				<dd>@Model.Terms.GetDisplayName()</dd>
 				<dt>@Resources.DueDate</dt>
 				<dd>@Html.DisplayFor(x => x.DueDate)</dd>
+				<dt>@Resources.CreditAndCollection</dt>
+				<dd>@if (Model.Customer.Debt() > 0) {
+								@Html.ActionLink(Resources.CustomerDebt, "CustomerDebtReport", "Reports", new { id = Model.Customer.Id }, new { target = "_blank" })
+				} else {
+												@Resources.NoDebt
+				}
+				</dd>
 			</dl>
   		</div>
 	</div>
-@if(Privilege.AllowDelete && !Model.IsCancelled) {
-	<div class='row'>
+@*@if(Privilege.AllowDelete && !Model.IsCancelled) {
+	<div class='row pull-right'>
   		<div class='col-xs-12'>
-	    @using (Html.BeginForm("Cancel", "Payments", new { id =  Model.Id }, FormMethod.Post, new { @class = "modal-form pull-right" })) {
-			<button type="submit" class="icon cancel">@Resources.Cancel</button>
-	    }
+								<button type="submit" class="icon cancel">@Resources.Cancel</button>
   		</div>
 	</div>
-}
+}*@
 </fieldset>

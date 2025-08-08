@@ -40,20 +40,27 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using System.IO;
 using System.Collections.Generic;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
 	public class CustomersController : CustomController {
 		public ViewResult Index ()
 		{
-			var qry = from x in Customer.Queryable
-				  orderby x.Name
-				  select x;
+			//var qry = from x in Customer.Queryable
+			//	  orderby x.Name
+			//	  select x;
 
-			var search = new Search<Customer> ();
-			search.Limit = WebConfig.PageSize;
-			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
-			search.Total = qry.Count ();
+			//var search = new Search<Customer> ();
+			//search.Limit = WebConfig.PageSize;
+			//search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
+			//search.Total = qry.Count ();
+			var search = new Search<Customer> {
+				Limit = WebConfig.PageSize
+			};
+
+			search = GetCustomers(search);
 
 			return View (search);
 		}
@@ -74,25 +81,24 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		Search<Customer> GetCustomers (Search<Customer> search)
 		{
-			if (search.Pattern == null) {
-				var qry = from x in Customer.Queryable
-					  orderby x.Name
-					  select x;
 
-				search.Total = qry.Count ();
-				search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
-			} else {
-				var qry = from x in Customer.Queryable
+			var qry = from x in MBEQueryable.IQCustomers
+				  select x;
+
+			if (!string.IsNullOrEmpty(search.Pattern)) {
+				 qry = from x in qry
 					  where x.Name.Contains (search.Pattern) ||
 					      x.Code.Contains (search.Pattern) ||
 					      x.Zone.Contains (search.Pattern)
-					  orderby x.Name
 					  select x;
-
-				search.Total = qry.Count ();
-				search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
 			}
 
+			qry = from x in qry
+			      orderby x.Id descending
+			      select x;
+
+			search.Total = qry.Count ();
+			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
 			return search;
 		}
 
@@ -111,6 +117,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Create (Customer item)
 		{
 			item.PriceList = PriceList.TryFind (item.PriceListId);
+			item.Creator = CurrentUser.Employee;
 			if (item.SalesPersonId.HasValue) {
 				item.SalesPerson = Employee.TryFind (item.SalesPersonId.Value);
 			}
@@ -118,8 +125,21 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			if (!ModelState.IsValid)
 				return PartialView ("_Create", item);
 
+			var settings = new JsonSerializerSettings {
+				StringEscapeHandling = StringEscapeHandling.EscapeNonAscii
+			};
+
 			using (var scope = new TransactionScope ()) {
 				item.CreateAndFlush ();
+				var incidence = new Incidence {
+					ModificationTime = DateTime.Now,
+					PreviousState = JsonConvert.SerializeObject( item.GetSerializable(), settings),
+					SourceType = SourceType.Customer,
+					Reference = item.Id,
+					Updater = CurrentUser.Employee,
+				};
+
+				incidence.CreateAndFlush ();
 			}
 
 			return PartialView ("_CreateSuccesful", item);
@@ -140,7 +160,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			if (item.SalesPersonId.HasValue) {
 				item.SalesPerson = Employee.TryFind (item.SalesPersonId.Value);
 			}
-			
+
+			if (item.Id == WebConfig.DefaultCustomer) {
+				ModelState.AddModelError ("", "Modificación no autorizada");
+			}
+
+			//if (item.Creator != CurrentUser.Employee) {
+			//	ModelState.AddModelError ("", "Cliente perteneciente a otro vendedor");
+			//}
+
 			if (!ModelState.IsValid)
 				return PartialView ("_Edit", item);
 
@@ -176,17 +204,22 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var item = Customer.Find (id);
 
+			if (WebConfig.DefaultCustomer == id) {
+				return PartialView ("DeleteUnsuccesful");
+			}
+
 			try {
 				using (var scope = new TransactionScope ()) {
-					foreach (var discount in item.Discounts) {
-						discount.Delete ();
-					}
+					//foreach (var discount in item.Discounts) {
+					//	discount.Delete ();
+					//}
 					scope.Flush ();
-					item.DeleteAndFlush ();
+					item.IsDeleted = true;
+					item.UpdateAndFlush ();
 				}
 				return PartialView ("_DeleteSuccesful", item);
 			} catch (Exception) {
-				return PartialView ("DeleteUnsuccessful");
+				return PartialView ("DeleteUnsuccesful");
 			}
 		}
 
@@ -385,9 +418,23 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		[HttpPost]
 		public ActionResult Merge (int customer, int duplicate)
 		{
+			if (!CurrentUser.IsAdministrator) {
+				return RedirectToAction ("Index");
+			}
+
 			var prod = Customer.TryFind (customer);
 			var dup = Customer.TryFind (duplicate);
-			string sql = @"	UPDATE customer_address SET customer = :customer WHERE customer = :duplicate;
+			var to_delete = dup.Taxpayers.Intersect (prod.Taxpayers).ToList();
+
+			using (var scope = new TransactionScope ()) {
+				foreach (var t in to_delete) {
+					prod.Taxpayers.Remove (t);
+					prod.UpdateAndFlush ();
+				}
+			}
+
+
+				string sql = @"	UPDATE customer_address SET customer = :customer WHERE customer = :duplicate;
 					UPDATE customer_contact SET customer = :customer WHERE customer = :duplicate;
 					UPDATE customer_discount SET customer = :customer WHERE customer = :duplicate;
 					UPDATE customer_payment SET customer = :customer WHERE customer = :duplicate;

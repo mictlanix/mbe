@@ -75,11 +75,11 @@ namespace Mictlanix.BE.Web.Helpers {
 
 			var store_addresses = MBEQueryable.IQStores.Select (x => x.Address).ToList ();
 
-			var at_home = store_addresses.Contains(order.ShipTo);
-			var default_customer = order.Customer.Id == WebConfig.DefaultCustomer;
+			var at_store = store_addresses.Contains(order.ShipTo);
+			var customer = order.Customer.Id != WebConfig.DefaultCustomer;
 			var contact = order.Contact != null;
 			var address = order.ShipTo != null;
-			return (at_home) || (!default_customer && contact && address);
+			return (at_store) || (customer && contact && address);
 		}
 
 	}

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Linq;
 using System.Globalization;
@@ -123,7 +123,7 @@ namespace Mictlanix.BE.Web
 
 		protected void Application_PostAuthenticateRequest (Object sender, EventArgs e)
 		{
-			var cookie = Request.Cookies [FormsAuthentication.FormsCookieName];
+		var cookie = Request.Cookies [FormsAuthentication.FormsCookieName];
 
 			if (cookie == null)
 				return;

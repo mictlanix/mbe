@@ -21,13 +21,13 @@
     @foreach (var item in Model)
     {
         <tr>
-            <td class="number">@string.Join(",",item.Allocations.Select(x => x.SalesOrder.Id.ToString()))</td>
+            <td class="number">@Html.Raw(string.Join("<br/>",item.Allocations.Select(x => x.SalesOrder.Id.ToString())))</td>
             <td class="date">@Html.DisplayFor(x => item.Date)</td>
             <td class="number">@Html.DisplayFor(x => item.Serial)</td>
             <td class="date">@Html.DisplayFor(x => item.CashSession.Id)</td>
             <td class="text">@Html.DisplayFor(x => item.Customer.Name)</td>
-            <td class="date">@item.PaymentType.GetDisplayName()</td>
-            <td class="text">@Html.DisplayFor(x => item.Amount)</td>
+            <td class="date">@(item.PaymentType.GetDisplayName())</td>
+            <td class="number">@Html.DisplayFor(x => item.Amount)</td>
 												<td class="number">@((item.Allocations.Sum(y => (decimal?)y.Amount)??0).ToString("c"))</td>
 												<td class="number">@((item.Allocations.Sum(y => (decimal?)y.Change)??0).ToString("c"))</td>
             <td class="number">@Html.DisplayFor(x => item.Balance)</td>

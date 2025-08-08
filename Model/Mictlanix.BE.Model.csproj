@@ -85,6 +85,7 @@
     <Compile Include="Address.cs" />
     <Compile Include="AccessPrivilege.cs" />
     <Compile Include="Constants\CashCountType.cs" />
+    <Compile Include="Constants\DeliveryMode.cs" />
     <Compile Include="Constants\SourceType.cs" />
     <Compile Include="Constants\PaymentType.cs" />
     <Compile Include="Constants\PriorityEnum.cs" />
@@ -93,8 +94,10 @@
     <Compile Include="Constants\SystemObjects.cs" />
     <Compile Include="Constants\AccessRight.cs" />
     <Compile Include="Constants\UserSettingsMode.cs" />
+    <Compile Include="CreditNote.cs" />
     <Compile Include="DeliveriesItinerary.cs" />
     <Compile Include="DeliveriesItineraryDetail.cs" />
+    <Compile Include="Commission.cs" />
     <Compile Include="Helpers\ModelHelpersV2.cs" />
     <Compile Include="Incidence.cs" />
     <Compile Include="EmployeeSchedule.cs" />
@@ -102,6 +105,7 @@
     <Compile Include="ExpenseVoucher.cs" />
     <Compile Include="ExpenseVoucherDetail.cs" />
     <Compile Include="PaymentMethodOption.cs" />
+    <Compile Include="CommissionProduct.cs" />
     <Compile Include="PurchaseRequest.cs" />
     <Compile Include="PurchaseRequestDetail.cs" />
     <Compile Include="SalesQuote.cs" />

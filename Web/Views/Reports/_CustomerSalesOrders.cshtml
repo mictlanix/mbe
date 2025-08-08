@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
@@ -16,11 +16,15 @@
 	        <th class='nowrap center'>@Resources.Date</th>
 	        <th class='center'>@Resources.FiscalDocument</th>
 	        <th class='nowrap center'>@Resources.SalesPerson</th>
+	        <th class='center'>@Resources.Refunds</th>
+	        <th class='center'>@Resources.Refund</th>
 	        <th class='nowrap center'>@Resources.Total</th>
+	        <th class='nowrap center'>@Resources.Balance</th>
 	    </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
+				var refunds = item.CustomerRefunds.Sum(x => x.Total);
     <tr>
     @if (Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders).AllowRead) {
 		<td class='number'><a href='@Url.Action("View", "SalesOrders", new { id = item.Id })' target='_blank'>@Html.DisplayFor(x => item.Id)</a></td>
@@ -30,14 +34,19 @@
         <td class='date'>@Html.DisplayFor(x => item.Date)</td>
         <td class='date'>@item.InvoiceSerials()</td>
         <td>@Html.DisplayFor(x => item.SalesPerson.Name)</td>
+        <td class='date'>@foreach (var refund in item.CustomerRefunds) {
+																								<a href='@Url.Action("View", "CustomerRefunds", new { id = refund.Id })' target='_blank'>@Html.DisplayFor(x => refund.Id)</a>
+								}</td>
+        <td class="currency">@(refunds > 0 ? refunds.ToString("c"): string.Empty)</td>
         <td class='currency'>@Html.DisplayFor(x => item.TotalEx)</td>
+        <td class='currency'>@((item.Total - item.CustomerRefunds.Sum(x => x.Total)).ToString("c"))</td>
     </tr>
 }
     </tbody>
     <tfoot>
 	    <tr>
 	        <td colspan='4'/>
-	        <td class='currency'><b>@Model.Sum(x => x.TotalEx).ToString("c")</b></td>
+	        <td class='currency'><b>@Model.Sum(x => x.Balance).ToString("c")</b></td>
 	    </tr>
     </tfoot>
 </table>

@@ -63,24 +63,64 @@ namespace Mictlanix.BE.Web.Models {
 		[Display (Name = "CashSales", ResourceType = typeof (Resources))]
 		public decimal CashSales {
 			get {
-				var item = MoneyCounts.SingleOrDefault (x => x.Method == PaymentMethod.Cash);
-				return item == null ? 0 : item.Amount;
+				return Payments.Where (x => x.Method == PaymentMethod.Cash).Sum (x => x.Amount - x.Allocations.Sum (y => (decimal?) y.Change) ?? 0);
+			}
+		}
+
+		[DataType (DataType.Currency)]
+		[Display (Name = "CashSales", ResourceType = typeof (Resources))]
+		public List<MoneyCount> PaymentsReceivedByMethod {
+			get {
+				var types = new List<PaymentType>{ PaymentType.Immediate, PaymentType.CreditPayment, PaymentType.PaymentInAdvance};
+				var items = (from y in Payments.Where(x => types.Contains(x.PaymentType))
+					    group y by y.Method into g
+					    select new MoneyCount { Method = g.Key, Amount = g.Sum(x => x.Amount - x.Allocations.Sum (y => (decimal?) y.Change) ?? 0) }).ToList();
+
+				return items;
+			}
+		}
+
+		public decimal PaymentsReceivedInCash {
+			get {
+				return PaymentsReceivedByMethod.Where (x => x.Method == PaymentMethod.Cash).Sum (x => (decimal?) x.Amount) ?? 0;
+			}
+		}
+
+		public decimal ExpensesInCash {
+			get {
+				return Expenses.Where (x => x.Method == PaymentMethod.Cash).Sum (x => (decimal?) x.Amount) ?? 0;
+			}
+		}
+
+		public decimal RefundsInCash {
+			get {
+				return RefundsByMethod.Where (x => x.Method == PaymentMethod.Cash).Sum (x => (decimal?) x.Amount) ?? 0;
 			}
 		}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "ExpensesCount", ResourceType = typeof (Resources))]
-		public decimal ExpensesCount {
+		public List<MoneyCount> ExpensesByMethod {
 			get {
-				return Expenses.Sum (x => (decimal?) x.Total) ?? 0;
+				var types = new List<PaymentType> { PaymentType.Expense };
+				var items = (from y in Expenses.Where (x => types.Contains (x.PaymentType))
+					     group y by y.Method into g
+					     select new MoneyCount { Method = g.Key, Amount = g.Sum (x => x.Amount - x.Allocations.Sum (y => (decimal?) y.Change) ?? 0) }).ToList ();
+
+				return items;
 			}
 		}
 
 		[DataType (DataType.Currency)]
 		[Display (Name = "RefundsCount", ResourceType = typeof (Resources))]
-		public decimal RefundsCount {
+		public List<MoneyCount> RefundsByMethod {
 			get {
-				return this.Refunds.Sum (x => (decimal?) x.Amount) ?? 0; 
+				var types = new List<PaymentType> { PaymentType.CreditNote };
+				var items = (from y in Payments.Where (x => types.Contains(x.PaymentType))
+					     group y by y.Method into g
+					     select new MoneyCount { Method = g.Key, Amount = g.Sum (x => (decimal?)x.Amount) ?? 0 }).ToList ();
+
+				return items;
 			}
 		}
 
@@ -88,7 +128,7 @@ namespace Mictlanix.BE.Web.Models {
 		[Display (Name = "CashInDrawer", ResourceType = typeof (Resources))]
 		public decimal CashInDrawer {
 			get {
-				return CashSales + StartingCash - ExpensesCount - RefundsCount;
+				return StartingCash + PaymentsReceivedInCash - ExpensesInCash - RefundsInCash;
 			}
 		}
 
@@ -103,13 +143,14 @@ namespace Mictlanix.BE.Web.Models {
 		[DataType (DataType.Currency)]
 		[Display (Name = "CountedCash", ResourceType = typeof (Resources))]
 		public decimal CountedCash {
-			get { return CashCounts.Where (x => x.Type == CashCountType.CountedCash).Sum (x => x.Total); }
+			get { return (decimal?)CashCounts.Where (x => x.Type == CashCountType.CountedCash).Sum (x => x.Total) ?? 0; }
 		}
 
 		public IList<MoneyCount> MoneyCounts { get; set; }
 		public IList<CashCount> CashCounts { get; set; }
-		public IList<ExpenseVoucher> Expenses { get; set; }
-		public IList<MoneyCount> Refunds { get; set; }
+		public IList<CustomerPayment> Expenses { get; set; }
+		public IList<CustomerPayment> Refunds { get; set; }
+		public IList<CustomerPayment> Payments { get; set; }
 	}
 
 }

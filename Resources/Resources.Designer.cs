@@ -70,6 +70,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Aceptado.
+        /// </summary>
+        public static string Accepted {
+            get {
+                return ResourceManager.GetString("Accepted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Información del Usuario.
         /// </summary>
         public static string AccountInformation {
@@ -124,7 +133,7 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Link.
+        ///   Busca una cadena traducida similar a Liga de Ubicación.
         /// </summary>
         public static string AddressLinkURL {
             get {
@@ -178,7 +187,7 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Pedido completado.
+        ///   Busca una cadena traducida similar a Pedido ya enviado por completo.
         /// </summary>
         public static string AlreadyFullyDelivered {
             get {
@@ -192,6 +201,15 @@ namespace Mictlanix.BE {
         public static string Amount {
             get {
                 return ResourceManager.GetString("Amount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Aplicador.
+        /// </summary>
+        public static string Applier {
+            get {
+                return ResourceManager.GetString("Applier", resourceCulture);
             }
         }
         
@@ -251,6 +269,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a No hay {0} asignado.
+        /// </summary>
+        public static string AttribValueMissing {
+            get {
+                return ResourceManager.GetString("AttribValueMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Certificado Digital SAT.
         /// </summary>
         public static string AuthorityCertificateNumber {
@@ -301,6 +328,15 @@ namespace Mictlanix.BE {
         public static string Balance {
             get {
                 return ResourceManager.GetString("Balance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Fecha de puesta a cero del saldo.
+        /// </summary>
+        public static string BalanceZeroedTime {
+            get {
+                return ResourceManager.GetString("BalanceZeroedTime", resourceCulture);
             }
         }
         
@@ -422,6 +458,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Resumen General.
+        /// </summary>
+        public static string BigPictureReport {
+            get {
+                return ResourceManager.GetString("BigPictureReport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Datos del Receptor.
         /// </summary>
         public static string BillTo {
@@ -530,6 +575,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a {0} cancelado.
+        /// </summary>
+        public static string CancelledItem {
+            get {
+                return ResourceManager.GetString("CancelledItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Cancelar Orden.
         /// </summary>
         public static string CancelOrder {
@@ -607,6 +661,33 @@ namespace Mictlanix.BE {
         public static string CashSession {
             get {
                 return ResourceManager.GetString("CashSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Cierre de Sesión de Caja.
+        /// </summary>
+        public static string CashSessionClose {
+            get {
+                return ResourceManager.GetString("CashSessionClose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Se requiere iniciar sesión en caja de cobro..
+        /// </summary>
+        public static string CashSessionRequired {
+            get {
+                return ResourceManager.GetString("CashSessionRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Supervisor de Caja.
+        /// </summary>
+        public static string CashSupervisor {
+            get {
+                return ResourceManager.GetString("CashSupervisor", resourceCulture);
             }
         }
         
@@ -737,16 +818,7 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Modificaciones a Pagos Recibidos.
-        /// </summary>
-        public static string ChangesToPayments {
-            get {
-                return ResourceManager.GetString("ChangesToPayments", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a Cheque Nominativo.
+        ///   Busca una cadena traducida similar a Cheque.
         /// </summary>
         public static string Check {
             get {
@@ -940,6 +1012,24 @@ namespace Mictlanix.BE {
         public static string CommissionByManage {
             get {
                 return ResourceManager.GetString("CommissionByManage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Comisiones.
+        /// </summary>
+        public static string Commissions {
+            get {
+                return ResourceManager.GetString("Commissions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Comisiones Por Vendedor.
+        /// </summary>
+        public static string CommissionsBySalesPerson {
+            get {
+                return ResourceManager.GetString("CommissionsBySalesPerson", resourceCulture);
             }
         }
         
@@ -1223,7 +1313,7 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Tarjeta de Crédito.
+        ///   Busca una cadena traducida similar a T. de Crédito.
         /// </summary>
         public static string CreditCard {
             get {
@@ -1403,6 +1493,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Confirmar Devoluciones.
+        /// </summary>
+        public static string CustomerRefundConfirm {
+            get {
+                return ResourceManager.GetString("CustomerRefundConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Detalles de la Devolución de Clientes.
         /// </summary>
         public static string CustomerRefundDetails {
@@ -1529,7 +1628,7 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Tarjeta de Débito.
+        ///   Busca una cadena traducida similar a T. de Débito.
         /// </summary>
         public static string DebitCard {
             get {
@@ -2339,6 +2438,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a {0} requiere confirmarse por el Gerente.
+        /// </summary>
+        public static string DocumentRequiressToBeConfirmedByManager {
+            get {
+                return ResourceManager.GetString("DocumentRequiressToBeConfirmedByManager", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Descargar.
         /// </summary>
         public static string Download {
@@ -2402,7 +2510,7 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Transferencia Electrónica de Fondos.
+        ///   Busca una cadena traducida similar a Transferencia Electrónica.
         /// </summary>
         public static string ElectronicFundsTransfer {
             get {
@@ -2578,6 +2686,15 @@ namespace Mictlanix.BE {
         public static string ExcludePriceRangeValidation {
             get {
                 return ResourceManager.GetString("ExcludePriceRangeValidation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Gasto.
+        /// </summary>
+        public static string Expense {
+            get {
+                return ResourceManager.GetString("Expense", resourceCulture);
             }
         }
         
@@ -2929,6 +3046,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Los envíos no están autorizados para el Público en General.
+        /// </summary>
+        public static string ForbiddenDeliveryToDefaultCustomer {
+            get {
+                return ResourceManager.GetString("ForbiddenDeliveryToDefaultCustomer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Forzar Verificación de Existencia.
         /// </summary>
         public static string ForceStockVerification {
@@ -3047,6 +3173,15 @@ namespace Mictlanix.BE {
         public static string GeneralPublicId {
             get {
                 return ResourceManager.GetString("GeneralPublicId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Dación.
+        /// </summary>
+        public static string Giving {
+            get {
+                return ResourceManager.GetString("Giving", resourceCulture);
             }
         }
         
@@ -3267,11 +3402,29 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Fecha Inválida. Rectifique.
+        /// </summary>
+        public static string InvalidDate {
+            get {
+                return ResourceManager.GetString("InvalidDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Dirección de correo electrónico inválida..
         /// </summary>
         public static string InvalidEmailAddress {
             get {
                 return ResourceManager.GetString("InvalidEmailAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a {0} no válido.
+        /// </summary>
+        public static string InvalidEntity {
+            get {
+                return ResourceManager.GetString("InvalidEntity", resourceCulture);
             }
         }
         
@@ -3564,11 +3717,47 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a {0} Autorizado Previamente.
+        /// </summary>
+        public static string ItemAlreadyAuthorized {
+            get {
+                return ResourceManager.GetString("ItemAlreadyAuthorized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a {0} Cancelado Previamente.
+        /// </summary>
+        public static string ItemAlreadyCancelled {
+            get {
+                return ResourceManager.GetString("ItemAlreadyCancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a {0} Completado Previamente.
+        /// </summary>
+        public static string ItemAlreadyCompleted {
+            get {
+                return ResourceManager.GetString("ItemAlreadyCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a El elemento ha sido finalizado o cancelado..
         /// </summary>
         public static string ItemAlreadyCompletedOrCancelled {
             get {
                 return ResourceManager.GetString("ItemAlreadyCompletedOrCancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a {0} Autorizado.
+        /// </summary>
+        public static string ItemAutorized {
+            get {
+                return ResourceManager.GetString("ItemAutorized", resourceCulture);
             }
         }
         
@@ -3582,11 +3771,56 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a {0} Cancelado.
+        /// </summary>
+        public static string ItemCancelled {
+            get {
+                return ResourceManager.GetString("ItemCancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a {0} Completado.
+        /// </summary>
+        public static string ItemCompleted {
+            get {
+                return ResourceManager.GetString("ItemCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a {0} No Encontrado.
+        /// </summary>
+        public static string ItemMissing {
+            get {
+                return ResourceManager.GetString("ItemMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a No se encontró el elemento..
         /// </summary>
         public static string ItemNotFound {
             get {
                 return ResourceManager.GetString("ItemNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Ticket de {0}.
+        /// </summary>
+        public static string ItemReceipt {
+            get {
+                return ResourceManager.GetString("ItemReceipt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a {0} requiere validación.
+        /// </summary>
+        public static string ItemRequiresValidation {
+            get {
+                return ResourceManager.GetString("ItemRequiresValidation", resourceCulture);
             }
         }
         
@@ -3785,6 +4019,15 @@ namespace Mictlanix.BE {
         public static string Logistic {
             get {
                 return ResourceManager.GetString("Logistic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Controlador: {0} | Acción: {1} | Mensaje: {3}.
+        /// </summary>
+        public static string LogMessage {
+            get {
+                return ResourceManager.GetString("LogMessage", resourceCulture);
             }
         }
         
@@ -4241,6 +4484,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Modificaciones a Pagos Recibidos.
+        /// </summary>
+        public static string ModificationsToPayments {
+            get {
+                return ResourceManager.GetString("ModificationsToPayments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Fecha de Modificación.
         /// </summary>
         public static string ModificationTime {
@@ -4408,6 +4660,15 @@ namespace Mictlanix.BE {
         public static string No {
             get {
                 return ResourceManager.GetString("No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Caja insuficiente.
+        /// </summary>
+        public static string NoCashCountEnough {
+            get {
+                return ResourceManager.GetString("NoCashCountEnough", resourceCulture);
             }
         }
         
@@ -4826,6 +5087,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Los pagos de créditos no son eliminables. Tenga cuidado al registrarlos..
+        /// </summary>
+        public static string PaymentCreditsNoRemovables {
+            get {
+                return ResourceManager.GetString("PaymentCreditsNoRemovables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Fecha del Pago.
         /// </summary>
         public static string PaymentDate {
@@ -4952,6 +5222,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Validación de Pagos.
+        /// </summary>
+        public static string PaymentsValidation {
+            get {
+                return ResourceManager.GetString("PaymentsValidation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Forma de Pago.
         /// </summary>
         public static string PaymentTerms {
@@ -5051,7 +5330,7 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Entrega en Mostrador.
+        ///   Busca una cadena traducida similar a Entrega Única en Mostrador.
         /// </summary>
         public static string PickUp {
             get {
@@ -5519,7 +5798,7 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Compra.
+        ///   Busca una cadena traducida similar a Orden de Compra.
         /// </summary>
         public static string PurchaseOrder {
             get {
@@ -5546,7 +5825,7 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Folio de Compra.
+        ///   Busca una cadena traducida similar a ID de Compra.
         /// </summary>
         public static string PurchaseOrderId {
             get {
@@ -5771,6 +6050,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Por Cobrar.
+        /// </summary>
+        public static string ReceivableAmount {
+            get {
+                return ResourceManager.GetString("ReceivableAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Pagos Recibidos.
         /// </summary>
         public static string ReceivedPayments {
@@ -5785,6 +6073,15 @@ namespace Mictlanix.BE {
         public static string ReceivedPaymentsAdvancedSearchFilter {
             get {
                 return ResourceManager.GetString("ReceivedPaymentsAdvancedSearchFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Resumen de Pagos Recibidos.
+        /// </summary>
+        public static string ReceivedPaymentsSummary {
+            get {
+                return ResourceManager.GetString("ReceivedPaymentsSummary", resourceCulture);
             }
         }
         
@@ -5902,6 +6199,15 @@ namespace Mictlanix.BE {
         public static string Refunds {
             get {
                 return ResourceManager.GetString("Refunds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a La Devolución {0} generará una Nota de Crédito de {1}{2}..
+        /// </summary>
+        public static string RefundToCreditNote {
+            get {
+                return ResourceManager.GetString("RefundToCreditNote", resourceCulture);
             }
         }
         
@@ -6244,6 +6550,15 @@ namespace Mictlanix.BE {
         public static string SalesOrders {
             get {
                 return ResourceManager.GetString("SalesOrders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a El Pedido actual tiene órdenes de envío activas..
+        /// </summary>
+        public static string SalesOrdersHasDeliveryOrders {
+            get {
+                return ResourceManager.GetString("SalesOrdersHasDeliveryOrders", resourceCulture);
             }
         }
         
@@ -6700,6 +7015,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a {0} vacío.
+        /// </summary>
+        public static string SetItemToEmpty {
+            get {
+                return ResourceManager.GetString("SetItemToEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Ticket de Envío.
         /// </summary>
         public static string ShipmentTicket {
@@ -6763,6 +7087,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Crédito Corto Por {0} Días.
+        /// </summary>
+        public static string ShortCredit {
+            get {
+                return ResourceManager.GetString("ShortCredit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Acceder.
         /// </summary>
         public static string SignIn {
@@ -6777,6 +7110,15 @@ namespace Mictlanix.BE {
         public static string SinchronizeTimeClocks {
             get {
                 return ResourceManager.GetString("SinchronizeTimeClocks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Entrega Única en Mostrador.
+        /// </summary>
+        public static string SingleDeliveryInStore {
+            get {
+                return ResourceManager.GetString("SingleDeliveryInStore", resourceCulture);
             }
         }
         
@@ -6930,6 +7272,15 @@ namespace Mictlanix.BE {
         public static string Status {
             get {
                 return ResourceManager.GetString("Status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Existencia.
+        /// </summary>
+        public static string Stock {
+            get {
+                return ResourceManager.GetString("Stock", resourceCulture);
             }
         }
         
@@ -7825,6 +8176,24 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Por Definir.
+        /// </summary>
+        public static string ToBeDefined {
+            get {
+                return ResourceManager.GetString("ToBeDefined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Dación.
+        /// </summary>
+        public static string ToBeDefinedPayment {
+            get {
+                return ResourceManager.GetString("ToBeDefinedPayment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Órdenes de envío para hoy .
         /// </summary>
         public static string TodayDeliveryOrders {
@@ -7861,6 +8230,24 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Comprar.
+        /// </summary>
+        public static string ToPurchase {
+            get {
+                return ResourceManager.GetString("ToPurchase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Para Comprar Por Proveedor.
+        /// </summary>
+        public static string ToPurchaseBySupplier {
+            get {
+                return ResourceManager.GetString("ToPurchaseBySupplier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Total.
         /// </summary>
         public static string Total {
@@ -7875,6 +8262,15 @@ namespace Mictlanix.BE {
         public static string TotalAmount {
             get {
                 return ResourceManager.GetString("TotalAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a El Total del {0} no puede ser cero..
+        /// </summary>
+        public static string TotalCantBeZero {
+            get {
+                return ResourceManager.GetString("TotalCantBeZero", resourceCulture);
             }
         }
         
@@ -7956,24 +8352,6 @@ namespace Mictlanix.BE {
         public static string TranslationRequests {
             get {
                 return ResourceManager.GetString("TranslationRequests", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a Camión de Transporte.
-        /// </summary>
-        public static string Truck {
-            get {
-                return ResourceManager.GetString("Truck", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a Camiones de Transporte.
-        /// </summary>
-        public static string Trucks {
-            get {
-                return ResourceManager.GetString("Trucks", resourceCulture);
             }
         }
         
@@ -8338,7 +8716,7 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Operador de Transporte.
+        ///   Busca una cadena traducida similar a Operador.
         /// </summary>
         public static string VehicleOperator {
             get {
@@ -8356,7 +8734,7 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Operadores de Vehículos de Transporte.
+        ///   Busca una cadena traducida similar a Operadores.
         /// </summary>
         public static string VehicleOperators {
             get {
@@ -8365,11 +8743,29 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Vehículos de Transporte.
+        ///   Busca una cadena traducida similar a Vehículos.
         /// </summary>
         public static string Vehicles {
             get {
                 return ResourceManager.GetString("Vehicles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Verificado.
+        /// </summary>
+        public static string Verified {
+            get {
+                return ResourceManager.GetString("Verified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Verificó.
+        /// </summary>
+        public static string Verifier {
+            get {
+                return ResourceManager.GetString("Verifier", resourceCulture);
             }
         }
         

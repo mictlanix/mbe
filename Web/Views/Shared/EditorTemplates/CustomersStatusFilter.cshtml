@@ -6,10 +6,10 @@
 @model CustomersStatusFilter
 
 
-<div class="form-group">
+@*<div class="form-group">
 				<div class="col-xs-4">@Html.LabelFor(x => x.DateRange.StartDate) @Html.EditorFor(x => x.DateRange.StartDate) @Html.ValidationMessageFor(x => x.DateRange.StartDate)</div>
 				<div class="col-xs-4">@Html.LabelFor(x => x.DateRange.EndDate) @Html.EditorFor(x => x.DateRange.EndDate) @Html.ValidationMessageFor(x => x.DateRange.EndDate)</div>
-</div>
+</div>*@
 
 <div class="form-group">
 				<div class="col-xs-4">@Html.EditorFor(x => x.OnlyDebtors) @Html.ValidationMessageFor(x => x.OnlyDebtors)</div>

@@ -12,9 +12,9 @@
     <tr>
         <th>@Resources.Nickname</th>
         <th>@Resources.Street</th>
-        <th>@Resources.Neighborhood)</th>
-        <th>@Resources.Borough)</th>
-        <th>@Resources.State)</th>
+        <th>@Resources.Neighborhood</th>
+        <th>@Resources.Borough</th>
+        <th>@Resources.State</th>
         <th>@Resources.PostalCode</th>
         <th>@Resources.AddressLinkURL</th>
         <th></th>
@@ -29,7 +29,7 @@
         <td class='number'>@Html.DisplayFor(x => item.PostalCode)</td>
         <td>
             @if(item.Link != null){
-                <a href="@HttpUtility.HtmlEncode(item.Link)" target="_blank" rel="noopener noreferrer">@item.Link.ToString().Substring(0,30) ...</a>
+                <a href="@HttpUtility.HtmlEncode(item.Link)" target="_blank" rel="noopener noreferrer">@item.Link.ToString() ...</a>
              }
         </td>
         <td class='actions'>

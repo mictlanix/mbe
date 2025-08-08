@@ -19,15 +19,17 @@
 @foreach (var item in Model) {
     <tr>
         <td class="center">@Html.DisplayFor(x => item.Id)</td>
-        <td>@TaxpayerRecipient.Queryable.Where(y => y.Id == item.Id).FirstOrDefault().PostalCode</td>
+        <td>@Html.DisplayFor(x => item.PostalCode)</td>
         <td>@Html.DisplayFor(x => item.Name)</td>
         <td>@Html.DisplayFor(x => item.Regime.Description)</td>
         <td class="actions">
     	@if (Privilege.AllowRead) {
-        	@Html.ActionLink(" ", "Details", "Taxpayers", new { id = item.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
+        	@Html.ActionLink(" ", "Details", "Taxpayers", new { id = item.Id },
+           new { @class = "button icon view icon-only", title = Resources.Details })
         }
     	@if (Privilege.AllowDelete) {
-        	@Html.ActionLink(" ", "Delete", "Taxpayers", new { id = item.Id }, new { @class = "button icon delete icon-only open-modal", title = Resources.Delete, data_modal_id = "taxpayer-modal" })
+        	@Html.ActionLink(" ", "Delete", "Taxpayers", new { id = item.Id },
+           new { @class = "button icon delete icon-only open-modal", title = Resources.Delete, data_modal_id = "taxpayer-modal" })
         }
         </td>
     </tr>

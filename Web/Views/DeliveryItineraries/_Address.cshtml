@@ -1,0 +1,72 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Controllers.Mvc
+@using Mictlanix.BE.Web.Utils
+@model DeliveryItineraryAddressViewModel
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.DeliveryItineraries);
+}
+
+<li id='id:@Model.DeliveryOrder.Id'>
+				<div class="row" style="background-color:gainsboro">
+								<div class='photo'>
+												@Html.DisplayFor(x => x.DeliveryOrder.Priority)
+								</div>
+								<div class='action-link'>
+												<a class='button icon-only icon delete' title='@Resources.Message_DeleteConfirmation'
+															data-type='checklist' data-placement='left' data-pk='@Model.DeliveryOrder.Id' data-source='{}' data-value='@Model.DeliveryOrder.Id'
+															data-url='@Url.Action("RemoveDeliveryOrder", new { order = Model.DeliveryOrder.Id, id = Model.Itinerary.Id })' data-emptytext='' data-emptyclass=''></a>
+								</div>
+								<div class='info'>
+												<b>
+																@Resources.Contact: @Html.SafeDisplayFor(x => Model.DeliveryOrder.Contact.Name)
+																@Resources.Phone: @Html.SafeDisplayFor(x => x.DeliveryOrder.Contact.Mobile)
+																@Html.SafeDisplayFor(x => x.DeliveryOrder.Comment)
+												</b>
+												<br />
+												@Resources.Customer: @Model.DeliveryOrder.Customer.Name <br />
+												@Resources.ShipTo: @Model.DeliveryOrder.ShipTo.ToString()
+												@if (Model.DeliveryOrder.ShipTo.Link != null)
+												{
+																<a href="@Model.DeliveryOrder.ShipTo.Link" target="_blank">@Resources.AddressLinkURL</a>
+												} <br />
+												@Resources.SalesPerson: @Model.DeliveryOrder.Updater.Nickname
+												@Resources.DeliveryOrder: @Html.ActionLink(Model.DeliveryOrder.Id.ToString(), "Print", "DeliveryOrders", new { id = Model.DeliveryOrder.Id }, new { target = "_blank" })
+												@Resources.Details: @Model.DeliveryOrder.Details.Count()
+												@(Model.Itinerary.Date.Date > Model.DeliveryOrder.Date.Date ? "Extemporáneo":"A tiempo")<br />
+								</div>
+				</div>
+								<div class="row">
+												<ul id="addresses" class="list-items">
+																@foreach (var item in Model.Itinerary.Details.Where(x => x.DeliveryOrderDetail.DeliveryOrder == Model.DeliveryOrder))
+																{
+																				@Html.Partial("_ItemEditorView", item)
+																}
+												</ul>
+								</div>
+</li>
+<script type='text/javascript'>
+$('#id\\:@Model.DeliveryOrder.Id [data-toggle="tooltip"]').tooltip();
+$('#id\\:@Model.DeliveryOrder.Id a.editable').editable({
+    success: function (response, newValue) {
+
+    },
+    display: function(value, response) {
+        if (typeof response === 'undefined')
+        	return;
+
+        $(this).html(response.value);
+    }
+});
+$('#id\\:@Model.DeliveryOrder.Id a.delete').editable({
+	success: function(response, newValue) {
+								$('#id\\:@Model.DeliveryOrder.Id').remove();
+								$("#items-container").loadUrl();
+		$('#buttons').loadUrl();
+    }
+});
+</script>

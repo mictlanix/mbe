@@ -156,5 +156,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}
+
+		public JsonResult List ()
+		{
+			var qry = (from x in MBEQueryable.IQVehicleOperators
+				   orderby x.Operator.Nickname
+				   select new {
+					   id = x.Id,
+					   name = x.Operator.Nickname
+				   }).ToList ();
+
+			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
+		}
 	}
 }

@@ -30,10 +30,11 @@
 																			data-source='@Url.Action("Contacts", new { id = Model.Id })' data-source-cache='false'
 																			data-url='@Url.Action("SetContact", new { id = Model.Id })'
 																			data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
-																				@if (Model.Contact != null)
+																				@*@if (Model.Contact != null)
 																				{
 																								@Html.DisplayFor(x => x.Contact, "String")
-																				}
+																				}*@
+																				@Html.SafeEditorFor(x => x.Contact)
 																</a>
 												</dd>
 												<dt>@Resources.TaxpayerRecipient</dt>
@@ -43,10 +44,11 @@
 																			data-source='@Url.Action("Recipients", new { id = Model.Id })' data-source-cache='false'
 																			data-url='@Url.Action("SetRecipient", new { id = Model.Id })'
 																			data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
-																				@if (Model.Recipient != null)
+																				@*@if (Model.Recipient != null)
 																				{
 																								@Html.DisplayFor(x => x.RecipientName)
-																				}
+																				}*@
+																				@Html.SafeDisplayFor(x=> x.RecipientName)
 																</a>
 												</dd>
 
@@ -58,17 +60,18 @@
 																			data-source-cache='false'
 																			data-url='@Url.Action("SetShipTo", new { id = Model.Id })'
 																			data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
-																				@if (Model.ShipTo != null)
+																				@*@if (Model.ShipTo != null)
 																				{
 																								@Html.DisplayFor(x => x.ShipTo, "String")
-																				}
+																				}*@
+																				@Html.SafeDisplayFor(x=>x.ShipTo)
 																</a>
 												</dd>
 												<dt>@Resources.Priority</dt>
 												<dd>
 																<a id='priority' class='editable' data-type='select' data-placement='right' data-pk='@Model.Id'
 																			data-value='@((int)Model.Priority))'
-																			data-source='@Url.Action("PriorityLevels", new { id = Model.Id })' data-source-cache='false'
+																			data-source='@Url.Action("PriorityLevels","SalesOrders", new { id = Model.Id })' data-source-cache='false'
 																			data-url='@Url.Action("SetPriorityLevel", new { id = Model.Id })'
 																			data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
 																				@Model.Priority.GetDisplayName()

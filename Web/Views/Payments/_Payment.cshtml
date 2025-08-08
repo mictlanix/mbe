@@ -7,48 +7,70 @@
         <img src="@Url.Content("~/Content/icons/dollar.png")" title="@Resources.Pay" />
     </div>
 	@if (!Model.SalesOrder.IsPaid) {
-					if(Model.Payment.PaymentType == null) {
+					if(!Model.IsConfirmed) {
     <div class='action-link'>
         <a class='button icon-only icon delete' title='@Resources.Message_DeleteConfirmation'
-		   data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id' data-url='@Url.Action("RemovePayment", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
+		   data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id'
+											data-url='@Url.Action("RemovePayment", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
     </div>
 					}
 	} else if (Model.SalesOrder.IsPaid && Model.Payment.CashSession == null) {
 			<div class='action-link'>
 				<a class='button icon-only icon save receive' title='@Resources.Apply'
-					data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id' data-url='@Url.Action("ReceiveDeliveryPayment", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
+					data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id'
+							data-url='@Url.Action("ReceiveDeliveryPayment", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
 			</div>
 	}
-    <div class="info">
-        <label>@Resources.Amount: </label><span class="text">@Html.DisplayFor(x => x.Amount)</span><br/>
-        <label>@Resources.PaymentMethod: </label><span class="text">@Model.Payment.Method.GetDisplayName()</span><br/>
-								@if(Model.Payment.PaymentType.HasValue && Model.Payment.PaymentType != PaymentType.Immediate) {
-												<label>@Model.Payment.PaymentType.GetDisplayName(): </label><span class="text">@Model.Payment.Id</span><br/>
+<div class="info">
+				<label>@Resources.Amount: </label><span class="text">@Html.DisplayFor(x => x.Amount)</span><br />
+				@if (Model.Payment.PaymentType != PaymentType.Immediate)
+				{
+								<label>@Model.Payment.PaymentType.GetDisplayName(): </label>
+												<span class="text">@Html.ActionLink((string)Model.Payment.Id.ToString(), "PrintPayment","Payments",
+																																new { id = Model.Payment.Id }, new { title = Resources.Details, target = "_blank" })</span><br />
+				}
+				else {
+								<label>@Resources.PaymentMethod: </label><span class="text">@Model.Payment.Method.GetDisplayName()</span><br />
+				}
+				@if (!string.IsNullOrEmpty(Model.Payment.Reference))
+				{
+								<label>@Resources.Reference:</label>
+								<span class="text">@Model.Payment.Reference</span>
+								<br />
+				}
+
+				@*@if (Model.Payment.ExtraFee != null)
+				{
+								<label>@Resources.Bank:</label>
+								<span class="text">@Model.Payment.ExtraFee.Name</span><br />
+								<label>@Resources.PaymentsBankCharge:</label>
+								<span class="text">@string.Format("{0:c}", Model.Payment.Amount * (Model.Payment.Commission))</span><br />
+								<label>@Resources.NumberOfPayments:</label>
+								<span class="text">@Model.Payment.ExtraFee.NumberOfPayments pagos mensuales de @string.Format("{0:c}",
+												((Model.Payment.Amount * (Model.Payment.Commission + 1)) / Model.Payment.ExtraFee.NumberOfPayments)) c/u.</span><br />
+								<label>@Resources.TotalPayment:</label>
+								<span class="text"><b>@string.Format("{0:c}", Model.Payment.Amount * (Model.Payment.Commission + 1.0m)) </b></span>
+				}*@
+				@if (Model.Payment.CashSession == null)
+				{
+								<label>@Resources.PaymentOnDelivery</label>
+								<br />
+				}
+				else if (Model.Payment.CashSession.CashDrawer.Store != Model.SalesOrder.Store)
+				{
+								<label>@Resources.Store: @Model.Payment.Store.Name</label>
+								<br />
+				}
+				@if (WebConfig.PaymentMethodsVerificationRequired.Contains(Model.Payment.Method)) {
+								if (Model.Payment.Verifier != null)
+								{
+												<label>@Resources.PaymentsValidation: @Resources.Verifier @Model.Payment.Verifier.Nickname</label>
 								}
-        @if (!string.IsNullOrEmpty (Model.Payment.Reference)) {
-            <label>@Resources.Reference:</label>
-            <span class="text">@Model.Payment.Reference</span>
-				<br/>
-        }
-
-		 @if (Model.Payment.ExtraFee != null) {
-					<label>@Resources.Bank:</label>
-					<span class="text">@Model.Payment.ExtraFee.Name</span><br />
-					<label>@Resources.PaymentsBankCharge:</label>
-					<span class="text">@string.Format("{0:c}", Model.Payment.Amount * (Model.Payment.Commission))</span><br />
-					<label>@Resources.NumberOfPayments:</label>
-					<span class="text">@Model.Payment.ExtraFee.NumberOfPayments pagos mensuales de @string.Format("{0:c}",((Model.Payment.Amount*(Model.Payment.Commission + 1))/Model.Payment.ExtraFee.NumberOfPayments)) c/u.</span><br />
-					<label>@Resources.TotalPayment:</label>
-					<span class="text"><b>@string.Format("{0:c}", Model.Payment.Amount * (Model.Payment.Commission + 1.0m)) </b></span>
-		 }
-		 @if (Model.Payment.CashSession == null) {
-					<label>@Resources.PaymentOnDelivery</label>
-		 }else if(Model.Payment.CashSession.CashDrawer.Store != Model.SalesOrder.Store) {
-					<label>@Resources.Store: @Model.Payment.Store.Name</label>
-		 }
+								else { <label>@Resources.PaymentsValidation: @string.Format(Resources.ItemRequiresValidation, Model.Payment.Method.GetDisplayName())</label>}
+				}
 
 
-    </div>
+</div>
 </li>
 <script type='text/javascript'>
 $('#payment@(Model.Id) a.delete').editable({

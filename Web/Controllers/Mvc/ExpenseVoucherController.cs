@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
@@ -6,57 +6,58 @@ using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Helpers;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
+using static NHibernate.AdoNet.ConnectionManager;
 
-namespace Mictlanix.BE.Web.Controllers.Mvc
-{
+namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 	[Authorize]
-    public class ExpenseVoucherController : CustomController
-    {
-      public ActionResult Index(){
+	public class ExpenseVoucherController : CustomController {
+		public ActionResult Index ()
+		{
 
-			Search<ExpenseVoucher> search = new Search<ExpenseVoucher>(){
+			Search<ExpenseVoucher> search = new Search<ExpenseVoucher> () {
 				Limit = WebConfig.PageSize,
-				Results = ExpenseVoucher.Queryable.Where(x => !x.IsCancelled && x.CashSession.CashDrawer.Store == WebConfig.Store).OrderByDescending(x => x.Date).ToList()
+				Results = ExpenseVoucher.Queryable.Where (x => !x.IsCancelled && x.CashSession.CashDrawer.Store == WebConfig.Store).OrderByDescending (x => x.Date).ToList ()
 			};
-			search.Total = search.Results.Count();
-            return View(search);
-        }
-
-		[HttpPost]
-		public ActionResult Index(Search<ExpenseVoucher> search) {
-
-			var pattern = (search.Pattern ?? string.Empty).Trim();
-			var query = ExpenseVoucher.Queryable.Where(x => !x.IsCancelled && x.CashSession.CashDrawer.Store == WebConfig.Store);
-			int id = 0;
-
-			if (int.TryParse(pattern, out id)){
-				query = query.Where(x => x.Id == id);
-			}
-			else if (!string.IsNullOrEmpty(pattern)) {
-				query = query.Where(x => x.Details.Any(y => y.Comment.Contains(pattern) || x.Comment.Contains(pattern)));
-			}
-
-			search.Results = query.Skip(search.Offset).Take(search.Limit).ToList();
-			search.Total = search.Results.Count();
-
-			if (Request.IsAjaxRequest()) {
-				return PartialView("_Index", search);
-			}
-
-			return View(search);
+			search.Total = search.Results.Count ();
+			return View (search);
 		}
 
 		[HttpPost]
-		public ActionResult New() {
+		public ActionResult Index (Search<ExpenseVoucher> search)
+		{
 
-			var cashsession = GetSession();
+			var pattern = (search.Pattern ?? string.Empty).Trim ();
+			var query = ExpenseVoucher.Queryable.Where (x => !x.IsCancelled && x.CashSession.CashDrawer.Store == WebConfig.Store);
+			int id = 0;
 
-			if (cashsession == null) {
-				return RedirectToAction("OpenSession","Payments");
+			if (int.TryParse (pattern, out id)) {
+				query = ExpenseVoucher.Queryable.Where (x => x.Id == id);
+			} else if (!string.IsNullOrEmpty (pattern)) {
+				query = ExpenseVoucher.Queryable.Where (x => x.Details.Any (y => y.Comment.Contains (pattern) || x.Comment.Contains (pattern)));
 			}
 
-			ExpenseVoucher item = new ExpenseVoucher();
+			search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
+			search.Total = search.Results.Count ();
+
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_Index", search);
+			}
+
+			return View (search);
+		}
+
+		[HttpPost]
+		public ActionResult New ()
+		{
+
+			var cashsession = GetSession ();
+
+			if (cashsession == null) {
+				return RedirectToAction ("OpenSession", "Payments");
+			}
+
+			ExpenseVoucher item = new ExpenseVoucher ();
 
 			item.Date = DateTime.Now;
 			item.Creator = cashsession.Cashier;
@@ -68,235 +69,281 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			item.Date = DateTime.Now;
 
 
-			using (var scope = new TransactionScope()) {
-				item.CreateAndFlush();
+			using (var scope = new TransactionScope ()) {
+				item.CreateAndFlush ();
 			}
 
-				return RedirectToAction("Edit", new { id = item.Id });
+			return RedirectToAction ("Edit", new { id = item.Id });
 		}
 
-      public ActionResult Edit(int id) {
+		public ActionResult Edit (int id)
+		{
 
-            ExpenseVoucher item = ExpenseVoucher.Find(id);
-            if (item.IsCompleted || item.IsCancelled) {
-					return RedirectToAction("View", new { id = item.Id });
-            }
+			ExpenseVoucher item = ExpenseVoucher.Find (id);
+			if (item.IsCompleted || item.IsCancelled) {
+				return RedirectToAction ("View", new { id = item.Id });
+			}
 
-            return View(item);
+			return View (item);
 		}
 
-		public JsonResult GetSuggestions(int expensevoucher, string pattern) {
+		public JsonResult GetSuggestions (int expensevoucher, string pattern)
+		{
 
 
-			var item = ExpenseVoucher.Find(expensevoucher);
+			var item = ExpenseVoucher.Find (expensevoucher);
 
-			var query = Expense.Queryable.Where(x => x.Name.Contains(pattern) || x.Comment.Contains(pattern));
-			var items = query.Take(15).ToList().Select(x => new { id = x.Id, name = x.Name, comment = x.Comment });
+			var query = Expense.Queryable.Where (x => x.Name.Contains (pattern) || x.Comment.Contains (pattern));
+			var items = query.Take (15).ToList ().Select (x => new { id = x.Id, name = x.Name, comment = x.Comment });
 
-			return Json(items, JsonRequestBehavior.AllowGet);
+			return Json (items, JsonRequestBehavior.AllowGet);
 		}
 
 		[HttpPost]
-		public ActionResult SetComment(int id, string value)
+		public ActionResult SetComment (int id, string value)
 		{
 
-			if (GetSession() == null) {
-				return Content(Resources.InvalidCashDrawer);
+			if (GetSession () == null) {
+				return Content (Resources.InvalidCashDrawer);
 			}
 
-			var entity = ExpenseVoucher.Find(id);
-			string val = (value ?? string.Empty).Trim();
+			var entity = ExpenseVoucher.Find (id);
+			string val = (value ?? string.Empty).Trim ();
 
-			if (entity.IsCompleted || entity.IsCancelled)
-			{
+			if (entity.IsCompleted || entity.IsCancelled) {
 				Response.StatusCode = 400;
-				return Content(Resources.ItemAlreadyCompletedOrCancelled);
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
 			entity.Comment = (value.Length == 0) ? null : val;
 			entity.Updater = CurrentUser.Employee;
 			entity.ModificationTime = DateTime.Now;
 
-			using (var scope = new TransactionScope())
-			{
-				entity.UpdateAndFlush();
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
 			}
 
-			return Json(new
-			{
+			return Json (new {
 				id = id,
 				value = entity.Comment
 			});
 		}
 
 		[HttpPost]
-		public ActionResult SetCashier(int id, int value)
+		public ActionResult SetCashier (int id, int value)
 		{
-			var entity = ExpenseVoucher.Find(id);
-			var item = Employee.TryFind(value);
+			var entity = ExpenseVoucher.Find (id);
+			var item = Employee.TryFind (value);
 
-			if (GetSession() == null)
-			{
-				return Content(Resources.InvalidCashDrawer);
+			if (GetSession () == null) {
+				return Content (Resources.InvalidCashDrawer);
 			}
 
-			if (entity.IsCompleted || entity.IsCancelled)
-			{
+			if (entity.IsCompleted || entity.IsCancelled) {
 				Response.StatusCode = 400;
-				return Content(Resources.ItemAlreadyCompletedOrCancelled);
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			if (item != null)
-			{
+			if (item != null) {
 				entity.Creator = item;
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
 
-				using (var scope = new TransactionScope())
-				{
-					entity.UpdateAndFlush();
+				using (var scope = new TransactionScope ()) {
+					entity.UpdateAndFlush ();
 				}
 			}
 
-			return Json(new
-			{
+			return Json (new {
 				id = id,
-				value = entity.Creator.ToString()
+				value = entity.Creator.ToString ()
 			});
 		}
 
 		[HttpPost]
-		public ActionResult Cancel(int id)
+		public ActionResult Cancel (int id)
 		{
-			var entity = ExpenseVoucher.Find(id);
+			var entity = ExpenseVoucher.Find (id);
 
-			if (entity.IsCancelled || entity.IsCompleted)
-			{
-				return RedirectToAction("Index");
+			if (entity.IsCancelled || entity.IsCompleted) {
+				return RedirectToAction ("Index");
 			}
 
 			entity.Updater = CurrentUser.Employee;
 			entity.ModificationTime = DateTime.Now;
 			entity.IsCancelled = true;
 
-			using (var scope = new TransactionScope())
-			{
-				entity.UpdateAndFlush();
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
 			}
 
-			return RedirectToAction("Index");
+			return RedirectToAction ("Index");
 		}
 
 		[HttpPost]
-		public ActionResult AddItem(int expensevoucher, int expense) {
+		public ActionResult AddItem (int expensevoucher, int expense)
+		{
 
-			ExpenseVoucher entity = ExpenseVoucher.Find(expensevoucher);
-			Expense item = Expense.Find(expense);
+			ExpenseVoucher entity = ExpenseVoucher.Find (expensevoucher);
+			Expense item = Expense.Find (expense);
 
 			if (entity.IsCancelled || entity.IsCompleted) {
 				Response.StatusCode = 400;
-				return Content(Resources.ItemAlreadyCompletedOrCancelled);
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
 			ExpenseVoucherDetail detail = new ExpenseVoucherDetail { ExpenseVoucher = entity, Expense = item, Comment = item.Comment };
 
-			using (var scope = new TransactionScope()) {
-				detail.CreateAndFlush();
+			using (var scope = new TransactionScope ()) {
+				detail.CreateAndFlush ();
 			}
 
-				return Json(new { id = detail.Id }, JsonRequestBehavior.AllowGet);
+			return Json (new { id = detail.Id }, JsonRequestBehavior.AllowGet);
 		}
 
-		public ActionResult Item(int id)
+		public ActionResult Item (int id)
 		{
-			var entity = ExpenseVoucherDetail.Find(id);
-			return PartialView("_ItemEditorView", entity);
+			var entity = ExpenseVoucherDetail.Find (id);
+			return PartialView ("_ItemEditorView", entity);
 		}
 
 		[HttpPost]
-		public ActionResult RemoveItem(int id) {
+		public ActionResult RemoveItem (int id)
+		{
 
-			var entity = ExpenseVoucherDetail.Find(id);
+			var entity = ExpenseVoucherDetail.Find (id);
 
 			if (entity.ExpenseVoucher.IsCancelled || entity.ExpenseVoucher.IsCompleted) {
 				Response.StatusCode = 400;
-				return Content(Resources.ItemAlreadyCompletedOrCancelled);
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			using (var scope = new TransactionScope()) {
-				entity.DeleteAndFlush();
+			using (var scope = new TransactionScope ()) {
+				entity.DeleteAndFlush ();
 			}
 
-			return Json(new { id = id, result = true });
+			return Json (new { id = id, result = true });
 		}
 
 		[HttpPost]
-		public ActionResult SetItemAmount(int id, decimal value) {
+		public ActionResult SetItemAmount (int id, decimal value)
+		{
 
-			ExpenseVoucherDetail item = ExpenseVoucherDetail.Find(id);
+			ExpenseVoucherDetail item = ExpenseVoucherDetail.Find (id);
 
 			if (item.ExpenseVoucher.IsCancelled || item.ExpenseVoucher.IsCompleted) {
 				Response.StatusCode = 400;
-				return Content(Resources.ItemAlreadyCompletedOrCancelled);
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
 			if (value > 0) {
-				using (var scope = new TransactionScope()) {
+				using (var scope = new TransactionScope ()) {
 					item.Amount = value;
-					item.UpdateAndFlush();
+					item.UpdateAndFlush ();
 				}
 			}
 
-			return Json(new { id = item.Id, value = item.FormattedValueFor(x => x.Amount) });
+			return Json (new { id = item.Id, value = item.FormattedValueFor (x => x.Amount) });
 		}
 
 		[HttpPost]
-		public ActionResult SetItemComment(int id, string value) {
+		public ActionResult SetItemComment (int id, string value)
+		{
 
-			ExpenseVoucherDetail item = ExpenseVoucherDetail.Find(id);
+			ExpenseVoucherDetail item = ExpenseVoucherDetail.Find (id);
 
-			if (item.ExpenseVoucher.IsCancelled || item.ExpenseVoucher.IsCompleted)
-			{
+			if (item.ExpenseVoucher.IsCancelled || item.ExpenseVoucher.IsCompleted) {
 				Response.StatusCode = 400;
-				return Content(Resources.ItemAlreadyCompletedOrCancelled);
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			if (!string.IsNullOrWhiteSpace(value)) {
-				using (var scope = new TransactionScope()) {
-					item.Comment = value.Length > 500 ? value.Substring(0,500):value;
-					item.UpdateAndFlush();
+			if (!string.IsNullOrWhiteSpace (value)) {
+				using (var scope = new TransactionScope ()) {
+					item.Comment = value.Length > 500 ? value.Substring (0, 500) : value;
+					item.UpdateAndFlush ();
 				}
 			}
 
-			return Json(new { id = id, value = item.Comment });
+			return Json (new { id = id, value = item.Comment });
 		}
 
 		[HttpPost]
-		public ActionResult Confirm(int id) {
-			var entity = ExpenseVoucher.Find(id);
+		public ActionResult Confirm (int id)
+		{
+			var entity = ExpenseVoucher.Find (id);
+			var session = GetSession ();
 
-			if (entity.IsCancelled || entity.IsCompleted || GetSession() == null) {
-				return RedirectToAction("Index");
+			if (entity.IsCancelled || entity.IsCompleted) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
+			if (session == null) {
+				Response.StatusCode = 400;
+				return Content (Resources.CashSessionRequired);
+			}
+
+
+			if (!(entity.Total > 0)) {
+				Response.StatusCode = 400;
+				return Content (string.Format (Resources.TotalCantBeZero, Resources.ExpenseVoucher));
+			}
+
+			//var cash = session.StartingCash +
+			//	CustomerPayment.Queryable.Where (x => x.CashSession == session
+			//	&& x.Method == PaymentMethod.Cash).Sum (x => (decimal?) x.Amount
+			//		- (SalesOrderPayment.Queryable.Where (y => y.Payment == x).Sum (z => (decimal?) z.Change) ?? 0)) ?? 0;
+
+			//if (entity.Total > cash) {
+			//	Response.StatusCode = 400;
+			//	return Content (string.Format (Resources.NoCashCountEnough));
+			//}
+
+			var dt = DateTime.Now;
 			entity.Updater = CurrentUser.Employee;
-			entity.ModificationTime = DateTime.Now;
+			entity.ModificationTime = dt;
 			entity.IsCompleted = true;
+			entity.CashSession = session;
 
-			using (var scope = new TransactionScope()) {
+			using (var scope = new TransactionScope ()) {
 
-				entity.UpdateAndFlush();
+				entity.UpdateAndFlush ();
+
+
+				//var Payment = new CustomerPayment {
+				//	CashSession = session,
+				//	CreationTime = dt,
+				//	Creator = CurrentUser.Employee,
+				//	Amount = -entity.Total,
+				//	Currency = WebConfig.BaseCurrency,
+				//	Customer = null,
+				//	PaymentType = PaymentType.Expense,
+				//	Method = PaymentMethod.Cash,
+				//	ModificationTime = dt,
+				//	Serial = (CustomerPayment.Queryable.Where (x => x.Store == WebConfig.Store).Max (y => (int?) y.Serial) ?? 0) + 1,
+				//	Store = WebConfig.Store,
+				//	Updater = CurrentUser.Employee,
+				//	Date = dt,
+				//};
+
+				//Payment.CreateAndFlush ();
 			}
 
-			return RedirectToAction("Index");
+			if (Request.IsAjaxRequest ()) {
+				return new JsonResult { };
+			}
+
+			return RedirectToAction ("Index");
 		}
 
-		public ActionResult Totals(int id) {
-			var entity = ExpenseVoucher.Find(id);
-			return PartialView("_Totals", entity);
+		public ActionResult Totals (int id)
+		{
+			var entity = ExpenseVoucher.Find (id);
+			return PartialView ("_Totals", entity);
 		}
 
-		public ActionResult Print(int id) {
+		public ActionResult Print (int id)
+		{
 			var model = ExpenseVoucher.Find (id);
 			if (!model.IsCancelled && model.IsCompleted) {
 				return PdfTicketView ("Print", model);
@@ -304,22 +351,25 @@ namespace Mictlanix.BE.Web.Controllers.Mvc
 			return RedirectToAction ("Index");
 		}
 
-		public ViewResult View(int id) {
+		public ViewResult View (int id)
+		{
 
-			return View(ExpenseVoucher.Find(id));
+			return View (ExpenseVoucher.Find (id));
 		}
 
-		public ActionResult Pdf(int id) {
-			return PdfView("Print", ExpenseVoucher.Find(id));
+		public ActionResult Pdf (int id)
+		{
+			return PdfView ("Print", ExpenseVoucher.Find (id));
 		}
 
-		CashSession GetSession() {
+		CashSession GetSession ()
+		{
 			var item = WebConfig.CashDrawer;
 			if (item == null)
 				return null;
 
-			return CashSession.Queryable.Where(x => x.End == null)
-					.SingleOrDefault(x => x.CashDrawer.Id == item.Id);
+			return CashSession.Queryable.Where (x => x.End == null)
+					.SingleOrDefault (x => x.CashDrawer.Id == item.Id);
 		}
 	}
 }

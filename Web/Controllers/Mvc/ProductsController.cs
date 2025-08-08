@@ -250,6 +250,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var prod = Product.TryFind (product);
 			var dup = Product.TryFind (duplicate);
+			//InstancesModelMerger.Merge("product", "product_id", dup.Id, prod.Id);
+			//InstancesModelMerger.Test ();
 			string sql = @"UPDATE customer_discount SET product = :product WHERE product = :duplicate;
 							UPDATE customer_refund_detail SET product = :product WHERE product = :duplicate;
 							UPDATE delivery_order_detail SET product = :product WHERE product = :duplicate;
@@ -263,6 +265,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 							UPDATE sales_order_detail SET product = :product WHERE product = :duplicate;
 							UPDATE sales_quote_detail SET product = :product WHERE product = :duplicate;
 							UPDATE supplier_return_detail SET product = :product WHERE product = :duplicate;
+							UPDATE purchase_request_detail set product = :product WHERE product = :duplicate;
 							DELETE FROM product_label WHERE product = :duplicate;
 							DELETE FROM product_price WHERE product = :duplicate;
 							DELETE FROM product WHERE product_id = :duplicate;";
@@ -340,6 +343,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public JsonResult GetSuggestions (string pattern)
 		{
+			pattern = pattern.Trim ();
 			var query = from x in MBEQueryable.IQProducts
 				    where (x.Name.Contains (pattern) ||
 			x.Code.Contains (pattern) ||

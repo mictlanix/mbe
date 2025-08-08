@@ -1,21 +1,41 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @model int?
 
 @{
-    var field = ViewData.TemplateInfo.HtmlFieldPrefix;
+				var field = ViewData.TemplateInfo.HtmlFieldPrefix;
 }
 
-@Html.TextBox("", Model)
-<script type="text/javascript">
-    $(function () {
-        $("#@field").tokenInput("@Url.Action("GetSuggestions", "Stores")", {
-            hintText: "@Resources.ChooseStore",
-            noResultsText: "@Resources.NoResultsText",
-            searchingText: "@Resources.SearchingText",
-            queryParam: "pattern",
-            minChars: 1,
-            tokenLimit: 1
-        });
-    });
+@*@Html.TextBox("", Model)
+				<script type="text/javascript">
+								$(function () {
+												$("#@field").tokenInput("@Url.Action("GetSuggestions", "Stores")", {
+																hintText: "@Resources.ChooseStore",
+																noResultsText: "@Resources.NoResultsText",
+																searchingText: "@Resources.SearchingText",
+																queryParam: "pattern",
+																minChars: 1,
+																tokenLimit: 1
+												});
+								});
+				</script>*@
+
+<select type="text" href="#" class="form-control text-box single-line valid" name="@field" id="@field"></select>
+<script>
+				$(function () {
+								const select = document.getElementsByName('@field')[0];
+								var model = "@(Model.HasValue ? Model : null)"
+								fetch("/Stores/List").then(respuest => respuest.json())
+												.then(datos => {
+																datos.forEach(option => {
+																				const element = document.createElement('option');
+																				element.value = option.value;
+																				element.textContent = option.text;
+																				if (option.value == model) {
+																								element.selected = true;
+																				}
+																				select.appendChild(element);
+																});
+												})
+				});
 </script>

@@ -80,8 +80,7 @@ namespace Mictlanix.BE.Model {
 				ProductCode = ProductCode,
 				ProductName = ProductName,
 				Quantity = Quantity,
-				Product = Product.GetSerializable(),
-				OrderDetail = OrderDetail.GetSerializable(),
+				Product = Product.GetSerializable()
 			};
 		}
 		#region Override Base Methods

@@ -10,6 +10,7 @@
 
 }
 				<div class="row scrollable-header">
+							<div class="col-sm-1 ">@Resources.Id</div>
 							<div class="col-sm-1 ">@Resources.Date</div>
 							<div class="col-sm-2 ">@Resources.Customer</div>
 							<div class="col-sm-1 ">@Resources.SalesPerson</div>
@@ -17,6 +18,7 @@
 							<div class="col-sm-1 ">@Resources.Amount</div>
 							<div class="col-sm-1 ">@Resources.PaymentMethod</div>
 							<div class="col-sm-1 ">@Resources.PaymentType</div>
+							<div class="col-sm-1 ">@Resources.Verifier</div>
 							<div class="col-sm-1 ">@Resources.SalesOrders</div>
 							<div class="col-sm-1 "></div>
 				</div>
@@ -24,13 +26,15 @@
 <div class="scrollable">
 				@foreach(var item in Model.Results) {
 				<div class="row">
+								<div class="col-sm-1 data date text-center">@Html.DisplayFor(x => item.Id)</div>
 								<div class="col-sm-1 data date text-center">@Html.DisplayFor(x => item.Date)</div>
 								<div class="col-sm-2 data text-center">@Html.DisplayFor(x => item.Customer.Name)</div>
 								<div class="col-sm-1 data text-center">@Html.DisplayFor(x => item.CashSession.Cashier.Nickname)</div>
 								<div class="col-sm-1 data text-center">@(item.ModificationTime != item.CreationTime ? item.Updater.Nickname : string.Empty)</div>
 								<div class="col-sm-1 data text-center">@Html.DisplayFor(x => item.Amount)</div>
 								<div class="col-sm-1 data text-center">@item.Method.GetDisplayName()</div>
-								<div class="col-sm-1 data text-center">@item.PaymentType.GetDisplayName()</div>
+								<div class="col-sm-1 data text-center">@(item.PaymentType.GetDisplayName())</div>
+								<div class="col-sm-1 data text-center">@(WebConfig.PaymentMethodsVerificationRequired.Contains(item.Method) ? Resources.Yes: Resources.No)</div>
 																<div class="col-sm-1 data text-center">
 																				@foreach (var order in item.Allocations.Select(x => x.SalesOrder).Distinct())
 																				{

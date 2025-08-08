@@ -4,25 +4,37 @@
 @model InventoryTransferDetail
 
 <li id='id:@Model.Id'>
-    <div class='photo'>
-        <img src='@Url.Content(Model.Product.Photo)' title='@Model.ProductName' />
-    </div>
-    <div class='action-link'>
-        <a class='button icon-only icon delete' title='@Resources.Message_DeleteConfirmation'
-		   data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id' data-url='@Url.Action("RemoveTransferDetail", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
-    </div>
-    <div class='info'>
-        <span class='thick'>@Html.DisplayFor(x => x.ProductName)</span>
-        <br/>
-        <b>@Resources.Code: </b><span>@Html.DisplayFor(x => x.ProductCode)</span>
-        <b>@Resources.Model: </b><span>@Html.DisplayFor(x => x.Product.Model)</span>
-        @if(!string.IsNullOrEmpty(Model.Product.SKU)) {
-        <b>@Resources.SKU: </b><span>@Html.DisplayFor(x => x.Product.SKU)</span>
-        }
-        <br/>
-        <b>@Resources.Quantity: </b>
-        <a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("EditTransferDetailQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
-    </div>
+				<div class='photo'>
+								<img src='@Url.Content(Model.Product.Photo)' title='@Model.ProductName' />
+				</div>
+				<div class='action-link'>
+								<a class='button icon-only icon delete' title='@Resources.Message_DeleteConfirmation'
+											data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id' data-url='@Url.Action("RemoveTransferDetail", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
+				</div>
+				<div class='info'>
+								<span class='thick'>@Html.DisplayFor(x => x.ProductName)</span>
+								<br />
+								<b>@Resources.Code: </b><span>@Html.DisplayFor(x => x.ProductCode)</span>
+								<b>@Resources.Model: </b><span>@Html.DisplayFor(x => x.Product.Model)</span>
+								@if (!string.IsNullOrEmpty(Model.Product.SKU))
+								{
+												<b>@Resources.SKU: </b><span>@Html.DisplayFor(x => x.Product.SKU)</span>
+								}
+								<br />
+								<b>@Resources.Quantity: </b>
+								<a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("EditTransferDetailQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
+				</div>
+				@if (Model.Errors != null && Model.Errors.Any())
+				{
+								<div class="alert alert-danger alert-dismissible fade in" style="display:block;">
+												<ul>
+																@foreach (var error in Model.Errors)
+																{
+																				<li>@error</li>
+																}
+												</ul>
+								</div>
+				}
 </li>
 
 <script type='text/javascript'>

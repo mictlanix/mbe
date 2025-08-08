@@ -38,6 +38,7 @@ using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
+using System.Drawing;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
@@ -206,6 +207,26 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				  select new { id = x.Id, name = x.Name };
 
 			return Json (qry.Take (15).ToList (), JsonRequestBehavior.AllowGet);
+		}
+
+		public JsonResult ListByStore (int? id)
+		{
+
+			var option = new { value = -1, text = string.Format (Resources.SetItemToEmpty, Resources.PointOfSale) };
+			var select = new List<object> ();
+			select.Add (option);
+			var store = MBEQueryable.IQStores.Where (x => x.Id == id).SingleOrDefault ();
+
+			if (store != null) {
+				var items = (from y in MBEQueryable.IQPointsOfSales
+					     where y.Store == store
+					     select new { value = y.Id, text = y.Name }).ToList ();
+				select.AddRange (items);
+			};
+
+			return Json (select, JsonRequestBehavior.AllowGet);
+
+
 		}
 	}
 }

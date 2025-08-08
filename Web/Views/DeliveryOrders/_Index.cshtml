@@ -12,23 +12,28 @@
 <table class="table-hover">
     <tr>
         <th>@Resources.DeliveryOrderId</th>
-        <th>@Resources.Date</th>
         <th>@Resources.Customer</th>
         <th>@Resources.SalesOrders</th>
-        <th>@Resources.Completed</th>
-        <th>@Resources.Cancelled</th>
+        <th>@Resources.CounterDelivery</th>
+        <th>@Resources.Priority</th>
+        <th>@Resources.DeliveryDate</th>
 								@if (WebConfig.DeliveryOrderApprovalRequired) {
-        <th>@Resources.Delivered</th>
-        <th>@Resources.Comment</th>
+        <th>@Resources.DeliveryOrderApproval</th>
 								}
+        <th>@Resources.Comment</th>
         <th></th>
+        <th></th>
+        <th>@(CurrentUser.UserSettings.PointOfSale.Warehouse.Code)</th>
     </tr>
     @foreach (var item in Model.Results) {
         @Html.Partial("_Item", item)
     }
 </table>
 <div class="buttons right">
-	<label class='button left'>@Model.ToString()</label>@if (Model.HasPrev) {<a class='button middle icon prev icon-only paging' title='@Resources.PrevPage' href='javascript:void(0)'></a>}@if (Model.HasNext) {<a class='button right icon next icon-only paging' title='@Resources.NextPage' href='javascript:void(0)'></a>}
+	<label class='button left'>@Model.ToString()</label>@if (Model.HasPrev) {
+					<a class='button middle icon prev icon-only paging' title='@Resources.PrevPage' href='javascript:void(0)'></a>
+					}@if (Model.HasNext) {
+									<a class='button right icon next icon-only paging' title='@Resources.NextPage' href='javascript:void(0)'></a>}
 </div>
 
 <script type="text/javascript">

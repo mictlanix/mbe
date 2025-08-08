@@ -5,160 +5,166 @@
 @model Search<Product>
 
 @{
-    var CurrentUser = Html.CurrentUser() ?? new User();
-    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Pricing);
-    var DefaultPrice = new ProductPrice ();
+				var CurrentUser = Html.CurrentUser() ?? new User();
+				var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.Pricing);
+				var DefaultPrice = new ProductPrice();
 }
 
 <p>@Html.ValidationMessageFor(x => x.Pattern)</p>
 
 <table class='table-hover'>
-<thead>
-    <tr>
-        <th class=''>@Resources.Code</th>
-        <th class=''>@Resources.Name</th>
-        <th class='' style="min-width:85px">@Resources.UnitOfMeasurement</th>
-        <th class=''>@Resources.MinimumOrderQuantity</th>
-        <th class=''>@Resources.TaxRate</th>
-        <th class=''>@Resources.TaxIncluded</th>
-        <th class='' style="min-width:70px">@Resources.PriceType</th>
-								<th class=''>@Resources.Cost / @Resources.Profits</th>
-        <th class=''>@Resources.Prices</th>
-        <th class=''>@Resources.Currency</th>
-    </tr>
-</thead>
-<tbody>
-@foreach (var item in Model.Results) {
-				<tr>
-								<td class='center'>@Html.DisplayFor(x => item.Code)</td>
-								<td>
-												<span>@Html.DisplayFor(x => item.Name)</span><br />
-												@if (!string.IsNullOrEmpty(item.Model))
-												{
-																<span class='small muted'>@Resources.Model: @item.Model</span>
-												}
-												@if (!string.IsNullOrEmpty(item.SKU))
-												{
-																<span class='small muted'>@Resources.SKU: @item.SKU</span>
-												}
-								</td>
-								<td class='stretch center'>@Html.DisplayFor(x => item.UnitOfMeasurement.Name)</td>
-								<td class='stretch center'>
-												@if (Privilege.AllowUpdate)
-												{
-																<a class='editable' data-inputclass='input-small' data-type='text' data-placement='bottom' data-autotext='never' data-pk='@item.Id' data-value='@Html.DisplayFor(x => item.MinimumOrderQuantity)' data-url='@Url.Action("SetMOQ", new { id = item.Id })'>@Html.DisplayFor(x => item.MinimumOrderQuantity)</a>
-												}
-												else
-												{
-																<span>@Html.DisplayFor(x => item.MinimumOrderQuantity)</span>
-												}
-								</td>
-								<td class='stretch center'>
-												@if (Privilege.AllowUpdate)
-												{
-																<a class='editable tax' data-inputclass='input-small' data-type='select' data-placement='bottom' data-autotext='never' data-source='@Url.Action("TaxRates")' data-pk='@item.Id' data-value='@item.TaxRate.ToString("0.####")' data-url='@Url.Action("SetTaxRate", new { id = item.Id })'>@Html.DisplayFor(x => item.TaxRate)</a>
-												}
-												else
-												{
-																<span>@Html.DisplayFor(x => item.TaxRate)</span>
-												}
-								</td>
-								<td class='stretch center tax-included' title="Doble click para cambiar" data-url='@Url.Action("ToogleTaxIncluded", new { id = item.Id })'>
-												@Html.DisplayFor(x => item.IsTaxIncluded)
-								</td>
-								<td class='stretch center'>
-												@if (Privilege.AllowUpdate)
-												{
-																<a class='editable' data-type='select' data-placement='bottom' data-source='@Url.Action("PriceTypes")' data-pk='@item.Id' data-value='@((int)item.PriceType)' data-url='@Url.Action("SetPriceType", new { id = item.Id })'>@item.PriceType.GetDisplayName()</a>
-												}
-												else
-												{
-																<span>@item.PriceType.GetDisplayName()</span>
-												}
-								</td>
-								<td class='stretch nowrap'>
-												<table class='tabular'>
-																				@{ var cost = item.Prices.SingleOrDefault(x => x.List == WebConfig.CostsList) ?? DefaultPrice; }
-																				<tr>
-																								<th class='right nowrap muted'></th>
-																								<td class='nowrap'>
-																												@if (Privilege.AllowUpdate)
-																												{
-																																<a class='editable price' data-type='text' data-placement='left' data-pk='@item.Id'
-																																				data-url='@Url.Action("SetLowProfit", new { product = item.Id, list = WebConfig.CostsList.Id })'>
-																																								@Html.DisplayFor(x => cost.LowProfitRate)</a>
-																																<a class='editable price' data-type='text' data-placement='left' data-pk='@item.Id'
-																																				data-url='@Url.Action("SetPrice", new { product = item.Id, list = WebConfig.CostsList.Id })'>
-																																								@Html.DisplayFor(x => cost.Value)</a>
-																																<a class='editable price' data-type='text' data-placement='left' data-pk='@item.Id'
-																																				data-url='@Url.Action("SetHighProfit", new { product = item.Id, list = WebConfig.CostsList.Id })'>
-																																								@Html.DisplayFor(x => cost.HighProfitRate)</a>
-																																								<br />
-																																<span>@item.GetPriceRange()</span>
-																												}
-																												@*else
-																												{
-																																<span class='pull-right'>@Html.DisplayFor(x => cost.LowProfitRate)</span>
-																																<span class='pull-right'>@Html.DisplayFor(x => cost.Value)</span>
-																																<span class='pull-right'>@Html.DisplayFor(x => cost.HighProfitRate)</span>
-																												}*@
-																								</td>
-																				</tr>
-												</table>
-								</td>
-								<td class='stretch nowrap'>
-												<table class='tabular'>
-																@foreach (var p in ViewBag.PriceLists)
-																{
-																				var price = item.Prices.SingleOrDefault(x => x.List.Id == p.Id) ?? DefaultPrice;
-																				<tr>
-																								<th class='right nowrap muted'>@p.Name</th>
-																								<td class='nowrap'>
-																												@if (Privilege.AllowUpdate)
-																												{
-																																<a class='editable price' data-type='text' data-placement='left' data-pk='@item.Id' data-url='@Url.Action("SetPrice", new { product = item.Id, list = p.Id })'>@Html.DisplayFor(x => price.Value)</a>
-																												}
-																												else
-																												{
-																																<span class='pull-right'>@Html.DisplayFor(x => price.Value)</span>
-																												}
-																								</td>
-																				</tr>
-																}
-												</table>
-								</td>
-								<td class='stretch center'>
-												@if (Privilege.AllowUpdate)
-												{
-																<a class='editable currency' data-type='select' data-placement='left' data-source='@Url.Action("Currencies", "ExchangeRates")' data-pk='@item.Id' data-value='@((int)item.Currency)' data-url='@Url.Action("SetCurrency", new { id = item.Id })'>@Html.DisplayFor(x => item.Currency)</a>
-												}
-												else
-												{
-																<span>@Html.DisplayFor(x => item.Currency)</span>
-												}
-								</td>
-				</tr>
-}
-</tbody>
+				<thead>
+								<tr>
+												<th class=''>@Resources.Code</th>
+												<th class=''>@Resources.Name</th>
+												<th class='' style="min-width:85px">@Resources.UnitOfMeasurement</th>
+												<th class=''>@Resources.MinimumOrderQuantity</th>
+												<th class=''>@Resources.TaxRate</th>
+												<th class=''>@Resources.TaxIncluded</th>
+												<th class='' style="min-width:70px">@Resources.PriceType</th>
+												<th class=''>@Resources.Cost / @Resources.Profits</th>
+												<th class=''>@Resources.Prices</th>
+												<th class=''>@Resources.Currency</th>
+								</tr>
+				</thead>
+				<tbody>
+								@foreach (var item in Model.Results)
+								{
+												<tr>
+																<td class='center'>@Html.DisplayFor(x => item.Code)</td>
+																<td>
+																				<span>@Html.DisplayFor(x => item.Name)</span><br />
+																				@if (!string.IsNullOrEmpty(item.Model))
+																				{
+																								<span class='small muted'>@Resources.Model: @item.Model</span>
+																				}
+																				@if (!string.IsNullOrEmpty(item.SKU))
+																				{
+																								<span class='small muted'>@Resources.SKU: @item.SKU</span>
+																				}
+																</td>
+																<td class='stretch center'>@Html.DisplayFor(x => item.UnitOfMeasurement.Name)</td>
+																<td class='stretch center'>
+																				@if (Privilege.AllowUpdate)
+																				{
+																								<a class='editable' data-inputclass='input-small' data-type='text' data-placement='bottom' data-autotext='never' data-pk='@item.Id' data-value='@Html.DisplayFor(x => item.MinimumOrderQuantity)' data-url='@Url.Action("SetMOQ", new { id = item.Id })'>@Html.DisplayFor(x => item.MinimumOrderQuantity)</a>
+																				}
+																				else
+																				{
+																								<span>@Html.DisplayFor(x => item.MinimumOrderQuantity)</span>
+																				}
+																</td>
+																<td class='stretch center'>
+																				@if (Privilege.AllowUpdate)
+																				{
+																								<a class='editable tax' data-inputclass='input-small' data-type='select' data-placement='bottom' data-autotext='never' data-source='@Url.Action("TaxRates")' data-pk='@item.Id' data-value='@item.TaxRate.ToString("0.####")' data-url='@Url.Action("SetTaxRate", new { id = item.Id })'>@Html.DisplayFor(x => item.TaxRate)</a>
+																				}
+																				else
+																				{
+																								<span>@Html.DisplayFor(x => item.TaxRate)</span>
+																				}
+																</td>
+																<td class='stretch center tax-included' title="Doble click para cambiar" data-url='@Url.Action("ToogleTaxIncluded", new { id = item.Id })'>
+																				@Html.DisplayFor(x => item.IsTaxIncluded)
+																</td>
+																<td class='stretch center'>
+																				@if (Privilege.AllowUpdate)
+																				{
+																								<a class='editable' data-type='select' data-placement='bottom' data-source='@Url.Action("PriceTypes")' data-pk='@item.Id' data-value='@((int)item.PriceType)' data-url='@Url.Action("SetPriceType", new { id = item.Id })'>@item.PriceType.GetDisplayName()</a>
+																				}
+																				else
+																				{
+																								<span>@item.PriceType.GetDisplayName()</span>
+																				}
+																</td>
+																<td class='stretch nowrap'>
+																				<table class='tabular'>
+																								@{ var cost = item.Prices.SingleOrDefault(x => x.List == WebConfig.CostsList) ?? DefaultPrice; }
+																								<tr>
+																												<th class='right nowrap muted'></th>
+																												<td class='nowrap'>
+																																@if (Privilege.AllowUpdate)
+																																{
+																																				<a class='editable price' data-type='text' data-placement='left' data-pk='@item.Id'
+																																							data-url='@Url.Action("SetLowProfit", new { product = item.Id, list = WebConfig.CostsList.Id })'>
+																																								@Html.DisplayFor(x => cost.LowProfitRate)
+																																				</a>
+																																				<a class='editable price' data-type='text' data-placement='left' data-pk='@item.Id'
+																																							data-url='@Url.Action("SetPrice", new { product = item.Id, list = WebConfig.CostsList.Id })'>
+																																								@Html.DisplayFor(x => cost.Value)
+																																				</a>
+																																				<a class='editable price' data-type='text' data-placement='left' data-pk='@item.Id'
+																																							data-url='@Url.Action("SetHighProfit", new { product = item.Id, list = WebConfig.CostsList.Id })'>
+																																								@Html.DisplayFor(x => cost.HighProfitRate)
+																																				</a>
+																																				<br />
+																																				<span>@*@item.GetPriceRange()*@</span>
+																																}
+																																@*else
+																																				{
+																																								<span class='pull-right'>@Html.DisplayFor(x => cost.LowProfitRate)</span>
+																																								<span class='pull-right'>@Html.DisplayFor(x => cost.Value)</span>
+																																								<span class='pull-right'>@Html.DisplayFor(x => cost.HighProfitRate)</span>
+																																				}*@
+																												</td>
+																								</tr>
+																				</table>
+																</td>
+																<td class='stretch nowrap'>
+																				<table class='tabular'>
+																								@foreach (var p in ViewBag.PriceLists)
+																								{
+																												var price = item.Prices.SingleOrDefault(x => x.List.Id == p.Id) ?? DefaultPrice;
+																												<tr>
+																																<th class='right nowrap muted'>@p.Name</th>
+																																<td class='nowrap'>
+																																				@if (Privilege.AllowUpdate)
+																																				{
+																																								<a class='editable price' data-type='text' data-placement='left' data-pk='@item.Id' data-url='@Url.Action("SetPrice", new { product = item.Id, list = p.Id })'>@Html.DisplayFor(x => price.Value)</a>
+																																				}
+																																				else
+																																				{
+																																								<span class='pull-right'>@Html.DisplayFor(x => price.Value)</span>
+																																				}
+																																</td>
+																												</tr>
+																								}
+																				</table>
+																</td>
+																<td class='stretch center'>
+																				@if (Privilege.AllowUpdate)
+																				{
+																								<a class='editable currency' data-type='select' data-placement='left' data-source='@Url.Action("Currencies", "ExchangeRates")' data-pk='@item.Id' data-value='@((int)item.Currency)' data-url='@Url.Action("SetCurrency", new { id = item.Id })'>@Html.DisplayFor(x => item.Currency)</a>
+																				}
+																				else
+																				{
+																								<span>@Html.DisplayFor(x => item.Currency)</span>
+																				}
+																</td>
+												</tr>
+								}
+				</tbody>
 </table>
 <div class='buttons right'>
-	<label class='button left'>@Model.ToString()</label>@if (Model.HasPrev) {<a class='button middle icon prev icon-only paging' title='@Resources.PrevPage' href='javascript:void(0)'></a>}@if (Model.HasNext) {<a class='button right icon next icon-only paging' title='@Resources.NextPage' href='javascript:void(0)'></a>}
+				<label class='button left'>@Model.ToString()</label>@if (Model.HasPrev)
+				{<a class='button middle icon prev icon-only paging' title='@Resources.PrevPage' href='javascript:void(0)'></a>}@if (Model.HasNext)
+				{<a class='button right icon next icon-only paging' title='@Resources.NextPage' href='javascript:void(0)'></a>}
 </div>
 <script type='text/javascript'>
 $(function () {
 	$('a.paging').click(function (e) {
 		var offset=@Model.Offset;
-		
+
 		if($(this).hasClass('next')) {
 			offset+=@Model.Limit;
 		} else {
 			offset-=@Model.Limit;
 		}
-		
+
 		e.preventDefault();
 		$('#activity-indicator').show();
 		$('#search-results').hide();
-		
+
 		$.post('@Url.Action("Index")', { Pattern: '@Model.Pattern', Offset: offset, Limit: @Model.Limit }, function(data) {
 			$('#search-results').html(data);
 			$('#search-results').show();
@@ -170,9 +176,9 @@ $(function () {
 	<text>
 	$('a.editable').editable({
 	    display: function(value, response) {
-	    	if (typeof response === 'undefined') 
+	    	if (typeof response === 'undefined')
         		return;
-        	
+
 	        if (Array.isArray(response)) {
 	          	arr = $.grep(response, function(o){
 	  				return o.value == value;

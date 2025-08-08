@@ -28,7 +28,7 @@
 				<td class="center">
 								@if (Model.ShipTo.Link != null)
 								{
-												<a href="@HttpUtility.HtmlEncode(Model.ShipTo.Link)" target="_blank" rel="noopener noreferrer">@Model.ShipTo.Link.ToString().Substring(0, 30) ...</a>
+												<a href="@HttpUtility.HtmlEncode(Model.ShipTo.Link)" target="_blank" rel="noopener noreferrer">@Model.ShipTo.Link.ToString() ...</a>
 								}
 				</td>
     <td class="bool">@Html.DisplayFor(x => x.IsConfirmed)</td>

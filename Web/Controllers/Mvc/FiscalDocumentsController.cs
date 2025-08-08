@@ -89,7 +89,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			if (int.TryParse (pattern, out id) && id > 0) {
 				query = from x in FiscalDocument.Queryable
 					where !(!x.IsCompleted && x.IsCancelled) && (
-						x.Id == id || x.Serial == id)
+						x.Id == id || x.Serial == id || x.Details.Any(y => y.OrderDetail.SalesOrder.Id == id))
 					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Issued descending
 					select x;
 			} else if (string.IsNullOrWhiteSpace (pattern)) {
@@ -296,19 +296,21 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return View ("EditPayment", item);
 			}
 
-			    if (item.Type == FiscalDocumentType.CreditNote || item.Type == FiscalDocumentType.AdvancePaymentsApplied) {
-				return View("EditOutcome", item);
-			    }
+			if (item.Type == FiscalDocumentType.CreditNote || item.Type == FiscalDocumentType.AdvancePaymentsApplied) {
+				return View ("EditOutcome", item);
+			}
 
-            return View (item);
+			ViewBag.Error = TempData ["Error"];
+
+			return View (item);
 		}
 
 		public JsonResult Batches (int id)
 		{
 			var item = FiscalDocument.TryFind (id);
 			var qry = from x in TaxpayerBatch.Queryable
-					  where x.Taxpayer.Id == item.Issuer.Id && x.Type == item.Type
-					  select x.Batch;
+				  where x.Taxpayer.Id == item.Issuer.Id && x.Type == item.Type
+				  select x.Batch;
 			var list = from x in qry.Distinct ().ToList ()
 				   select new { value = x, text = x };
 
@@ -370,10 +372,37 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
+		public ActionResult SetIssued (int id, int value)
+		{
+			var entity = FiscalDocument.Find (id);
+			var date = DateTime.Now.AddHours(- value * 24);
+
+			if (entity.IsCompleted || entity.IsCancelled) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			entity.Updater = CurrentUser.Employee;
+			entity.ModificationTime = DateTime.Now;
+			entity.Issued = date;
+
+
+			using (var scope = new TransactionScope ()) {
+				entity.UpdateAndFlush ();
+			}
+
+
+			return Json (new {
+				id = id,
+				value = entity.FormattedValueFor (x => x.Issued)
+			});
+		}
+
+		[HttpPost]
 		public ActionResult SetIssuedLocation (int id, int value)
 		{
 			var entity = FiscalDocument.Find (id);
-			var store = MBEQueryable.IQStores.Where (x => x.Id == value).Single();
+			var store = MBEQueryable.IQStores.Where (x => x.Id == value).Single ();
 			var privilege = GetAccessPrivilege (SystemObjects.IssuedLocationId);
 			var recipient = TaxpayerRecipient.Find (entity.Recipient);
 
@@ -384,7 +413,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			if (!privilege.AllowUpdate) {
 				Response.StatusCode = 403;
-				return Content (string.Format(Resources.ModificationRequiresPermission, Resources.IssuedLocation));
+				return Content (string.Format (Resources.ModificationRequiresPermission, Resources.IssuedLocation));
 			}
 
 			if (store != null) {
@@ -481,7 +510,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return Json (new {
 				id = id,
 				value = entity.FormattedValueFor (x => x.Recipient),
-				recipientPostalCode= entity.FormattedValueFor (x => x.TaxpayerPostalCode),
+				recipientPostalCode = entity.FormattedValueFor (x => x.TaxpayerPostalCode),
 				recipientRegime = entity.FormattedValueFor (x => x.TaxpayerRegime.Id),
 				recipientRegimeDescription = entity.FormattedValueFor (x => x.TaxpayerRegime.Description)
 			});
@@ -657,7 +686,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
 
-				if(entity.Terms == PaymentTerms.NetD) {
+				if (entity.Terms == PaymentTerms.NetD) {
 					entity.PaymentMethod = PaymentMethod.ToBeDefined;
 				}
 
@@ -833,10 +862,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var entity = FiscalDocument.Find (id);
 			var item = SatReasonCancellation.TryFind (value);
-			
+
 
 			if (item != null) {
-				entity.CancellationReason= item;
+				entity.CancellationReason = item;
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
 
@@ -960,12 +989,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult AddRelation (int id, int relation, int type=0)
+		public ActionResult AddRelation (int id, int relation, int type = 0)
 		{
-		
+
 			var item = new FiscalDocumentRelation {
 				Document = FiscalDocument.Find (id),
-				Relation = FiscalDocument.Find (relation)				
+				Relation = FiscalDocument.Find (relation)
 			};
 
 			if (type != 0) {
@@ -1510,12 +1539,21 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return View ("InvalidBatch");
 			}
 
+			if (entity.Issued.HasValue) {
+				if (entity.Issued.Value <= dt.AddHours (-72)) {
+					Response.StatusCode = 400;
+					return Content (Resources.IssueDate);
+				}
+			} else {
+				entity.Issued = new DateTime (dt.Year, dt.Month, dt.Day,
+							      dt.Hour, dt.Minute, dt.Second,
+							      DateTimeKind.Unspecified);
+			}
+
 			entity.Type = batch.Type;
 			entity.Serial = serial;
 			entity.Provider = entity.Issuer.Provider;
-			entity.Issued = new DateTime (dt.Year, dt.Month, dt.Day,
-						      dt.Hour, dt.Minute, dt.Second,
-						      DateTimeKind.Unspecified);
+
 			entity.IssuerCertificateNumber = entity.Issuer.Certificates.Single (x => x.IsActive).Id;
 
 			CFDv40.Comprobante doc;
@@ -1523,11 +1561,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			try {
 				doc = CFDHelpers40.IssueCFD (entity);
 			} catch (Exception ex) {
-				return View ("Error", ex);
+				//return View ("Error", ex);
+				//ViewBag.Error = ex.ToString ();
+				TempData ["Error"] = ex.ToString ();
+				return RedirectToAction ("Edit", new { id = id });
 			}
 
-			foreach(var complemento in doc.Complemento) {
-				if(complemento is CFDv40.TimbreFiscalDigital tfd) {
+			foreach (var complemento in doc.Complemento) {
+				if (complemento is CFDv40.TimbreFiscalDigital tfd) {
 					entity.StampId = tfd.UUID;
 					entity.Stamped = tfd.FechaTimbrado;
 					entity.AuthorityDigitalSeal = tfd.SelloSAT;
@@ -1562,19 +1603,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult CancelNoReason (int id)
 		{
 			var entity = FiscalDocument.TryFind (id);
-			return Cancel ( entity);
+			return Cancel (entity);
 		}
 
 		[HttpPost]
 		public ActionResult Cancel (FiscalDocument item)
 		{
-			var entity = FiscalDocument.TryFind (item.Id);			
+			var entity = FiscalDocument.TryFind (item.Id);
 
 			if (entity == null || entity.IsCancelled) {
 				return RedirectToAction ("Index");
 			}
 
-			if(entity.IsCompleted) {
+			if (entity.IsCompleted) {
 				if (entity.CancellationReason == null) {
 
 					var query = from x in SatReasonCancellation.Queryable
@@ -1731,12 +1772,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var item = SalesOrderDetail.Find (id);
 			decimal quantity = item.Quantity;
 			string sql = @"SELECT IFNULL(SUM(d.quantity),0) quantity
-                           FROM fiscal_document_detail d INNER JOIN fiscal_document m ON d.document = m.fiscal_document_id
-                           WHERE m.cancelled = 0 AND d.order_detail = :detail
-						   UNION ALL
-						   SELECT IFNULL(SUM(d.quantity),0) quantity
-						   FROM customer_refund_detail d INNER JOIN customer_refund m ON d.customer_refund = m.customer_refund_id
-						   WHERE m.cancelled = 0 AND d.sales_order_detail = :detail";
+				FROM fiscal_document_detail d INNER JOIN fiscal_document m ON d.document = m.fiscal_document_id
+				WHERE m.cancelled = 0 AND d.order_detail = :detail
+				UNION ALL
+				SELECT IFNULL(SUM(d.quantity),0) quantity
+				FROM customer_refund_detail d INNER JOIN customer_refund m ON d.customer_refund = m.customer_refund_id
+				WHERE m.cancelled = 0 AND d.sales_order_detail = :detail";
 
 			IList<decimal> quantities = (IList<decimal>) ActiveRecordMediator<CustomerRefundDetail>.Execute (
 				delegate (ISession session, object instance) {
@@ -1864,6 +1905,18 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}
 
+		public JsonResult IssueDates ()
+		{
+			var items = new ArrayList {
+				new { value = 0, text = DateTime.Now.ToString("yyyy-MM-dd") },
+				new { value = 1, text = DateTime.Now.AddHours(-24).ToString("yyyy-MM-dd") },
+				new { value = 2, text = DateTime.Now.AddHours(-48).ToString("yyyy-MM-dd") },
+				new { value = 3, text = DateTime.Now.AddHours(-72).ToString("yyyy-MM-dd") },
+			};
+
+			return Json (items, JsonRequestBehavior.AllowGet);
+		}
+
 		public JsonResult Stores ()
 		{
 
@@ -1890,8 +1943,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				new { value = (int) PaymentMethod.FoodVouchers, text = PaymentMethod.FoodVouchers.GetDisplayName () },
 				new { value = (int) PaymentMethod.DebitCard, text = PaymentMethod.DebitCard.GetDisplayName () },
 				new { value = (int) PaymentMethod.ServiceCard, text = PaymentMethod.ServiceCard.GetDisplayName () },
-                new { value = (int) PaymentMethod.AdvancePayments, text = PaymentMethod.AdvancePayments.GetDisplayName () }
-            };
+				new { value = (int) PaymentMethod.AdvancePayments, text = PaymentMethod.AdvancePayments.GetDisplayName () },
+				new { value = (int) PaymentMethod.Giving, text = PaymentMethod.Giving.GetDisplayName () }
+	    };
 
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}
@@ -1907,7 +1961,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				new { value = (int) PaymentMethod.ElectronicMoney, text = PaymentMethod.ElectronicMoney.GetDisplayName () },
 				new { value = (int) PaymentMethod.FoodVouchers, text = PaymentMethod.FoodVouchers.GetDisplayName () },
 				new { value = (int) PaymentMethod.DebitCard, text = PaymentMethod.DebitCard.GetDisplayName () },
-				new { value = (int) PaymentMethod.ServiceCard, text = PaymentMethod.ServiceCard.GetDisplayName () }
+				new { value = (int) PaymentMethod.ServiceCard, text = PaymentMethod.ServiceCard.GetDisplayName () },
+				new { value = (int) PaymentMethod.Giving, text = PaymentMethod.Giving.GetDisplayName () }
 			};
 
 			return Json (items, JsonRequestBehavior.AllowGet);

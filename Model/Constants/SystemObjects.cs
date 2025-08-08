@@ -231,7 +231,7 @@ namespace Mictlanix.BE.Model {
 		CreditCustomerConfiguration = 98,
 		[Display (Name = "StoreMovementsSummary", ResourceType = typeof (Resources))]
 		StoreMovementsSummary = 99,
-		[Display (Name = "ChangesToPayments", ResourceType = typeof (Resources))]
+		[Display (Name = "ModificationsToPayments", ResourceType = typeof (Resources))]
 		PaymentsEditor = 100,
 		[Display (Name = "SearchCreditsFromAllStores", ResourceType = typeof (Resources))]
 		SearchCreditsFromAllStores = 101,
@@ -239,14 +239,23 @@ namespace Mictlanix.BE.Model {
 		ExcludePriceRangeValidation = 102,
 		[Display (Name = "IssuedLocationFiscalDocumentSettingPermission", ResourceType = typeof (Resources))]
 		IssuedLocationId = 103,
-		[Display (Name = "SearchAllSalesOrderFromCurrentStore", ResourceType = typeof (Resources))]
-		SearchAllSalesOrderFromAllUsers = 104,
+		//[Display (Name = "SearchAllSalesOrderFromCurrentStore", ResourceType = typeof (Resources))]
+		//SearchAllSalesOrderFromAllUsers = 104,
 		[Display (Name = "SearchAllSalesOrderFromAllStores", ResourceType = typeof (Resources))]
 		SearchAllSalesOrderFromAllStores = 105,
 		[Display (Name = "Pricing", ResourceType = typeof (Resources))]
 		Pricing = 106,
 		[Display (Name = "ProductionSites", ResourceType = typeof (Resources))]
 		ProductionSites = 107,
-
+		[Display (Name = "PaymentsValidation", ResourceType = typeof (Resources))]
+		PaymentsVerification = 108,
+		[Display (Name = "ReceivedPaymentsSummary", ResourceType = typeof (Resources))]
+		ReceivedPaymentsSummary = 109,
+		[Display (Name = "CustomerRefundConfirm", ResourceType = typeof (Resources))]
+		CustomerRefundConfirm = 110,
+		[Display (Name = "CashSessionClose", ResourceType = typeof (Resources))]
+		CashSessionClose = 111,
+		[Display (Name = "CommissionsBySalesPerson", ResourceType = typeof (Resources))]
+		CommissionsBySalesPerson = 112,
 	}
 }

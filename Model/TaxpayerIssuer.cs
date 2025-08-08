@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CustomerTaxpayer.cs
 // 
 // Author:
@@ -67,6 +67,12 @@ namespace Mictlanix.BE.Model {
 		[BelongsTo ("regime")]
 		[Display (Name = "TaxRegime", ResourceType = typeof (Resources))]
 		public virtual SatTaxRegime Regime { get; set; }
+
+		[Property ("postal_code")]
+		[Display (Name = "PostalCodeFiscal", ResourceType = typeof (Resources))]
+		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
+		[RegularExpression (@"^\d{5}$", ErrorMessageResourceName = "Validation_DigitsOnly", ErrorMessageResourceType = typeof (Resources))]
+		public virtual string PostalCode { get; set; }
 
 		[HasMany (typeof (TaxpayerCertificate), Table = "taxpayer_certificate", ColumnKey = "taxpayer", Lazy = true)]
 		public virtual IList<TaxpayerCertificate> Certificates {

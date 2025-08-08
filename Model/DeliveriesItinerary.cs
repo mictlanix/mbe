@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using Castle.ActiveRecord.Framework;
 using Castle.ActiveRecord;
 using Mictlanix.BE.Model;
+using System.Linq;
 
 namespace Mictlanix.BE.Model {
 	[ActiveRecord ("deliveries_itinerary")]
@@ -29,7 +30,8 @@ namespace Mictlanix.BE.Model {
 		[UIHint ("VehicleOperatorSelector")]
 		public int VehicleOperatorId { get; set; }
 
-		[BelongsTo ("vehicle_operator", NotNull = true, Fetch = FetchEnum.Join)]
+		//[BelongsTo ("vehicle_operator", NotNull = true, Fetch = FetchEnum.Join)]
+		[BelongsTo ("vehicle_operator", Fetch = FetchEnum.Join)]
 		[Display (Name = "VehicleOperator", ResourceType = typeof (Resources))]
 		public virtual VehicleOperator VehicleOperator { get; set; }
 
@@ -37,7 +39,7 @@ namespace Mictlanix.BE.Model {
 		[Property ("date")]
 		[DataType (DataType.Date)]
 		[Display (Name = "Date", ResourceType = typeof (Resources))]
-		public virtual DateTime DueDate { get; set; }
+		public virtual DateTime Date { get; set; }
 
 		[Property ("completed")]
 		[Display (Name = "Completed", ResourceType = typeof (Resources))]
@@ -73,10 +75,18 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "Updater", ResourceType = typeof (Resources))]
 		public virtual Employee Updater { get; set; }
 
+		[BelongsTo ("warehouse", Lazy = FetchWhen.OnInvoke)]
+		[Display (Name = "Warehouse", ResourceType = typeof (Resources))]
+		public virtual Warehouse Warehouse { get; set; }
+
 		[Property ("modification_time")]
 		[DataType (DataType.DateTime)]
 		[Display (Name = "ModificationTime", ResourceType = typeof (Resources))]
 		public virtual DateTime ModificationTime { get; set; }
+
+		[Display (Name = "Address", ResourceType = typeof (Resources))]
+		public virtual IEnumerable<DeliveryOrder> DeliveryOrders {
+			get { return Details.Select (x => x.DeliveryOrderDetail.DeliveryOrder).Distinct().ToArray (); } }
 
 		#region Override Base Methods
 

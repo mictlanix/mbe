@@ -1,0 +1,111 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model CommissionTicketViewModel
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = CurrentUser.GetPrivilege (SystemObjects.SalesOrders);
+}
+
+
+<table>
+    <thead>
+        <tr>
+            <th>@Resources.Labels</th>
+            <th>@Resources.Sales</th>
+												<th>Comisi&oacute;n</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model.Details.GroupBy(i => new { i.Label })
+                .Select(g => new { Family = g.Key, Details = g.ToList() })) {
+            <tr>
+                <td>@item.Family.Label</td>
+                <td>@(item.Details.Sum(x => (decimal)x.TotalDetail).ToString("c"))</td>
+                <td>@(item.Details.Sum(x => (decimal)x.Commission).ToString("c"))</td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td class="total">Total de Venta</td>
+            <td class="total">@(Model.Details.Sum(x => (decimal)x.TotalDetail).ToString("c"))</td>
+        </tr>
+        <tr>
+            <td class="total">Cobrado</td>
+            <td class="total">@(Model.Details.Sum(x => (decimal)(x.TotalDetail * x.PaidStatus)).ToString("c"))</td>
+            <td class="total">@(Model.Details.Sum(x => (decimal)x.Commission).ToString("c"))</td>
+        </tr>
+    </tfoot>
+</table>
+
+<div class="col-sm-12">
+				<div class='pull-right'>
+
+        @using (Html.BeginForm("PrintCommissionTicket", "Reports", null, FormMethod.Post, new { target = "_blank" }))
+        {
+            <input type="hidden" name="agent" value="@(Model.CommissionAgent != null ? Model.CommissionAgent.Id : (int?)null)" />
+            <input type="hidden" name="dateRange.StartDate" value="@Model.DateRange.StartDate" />
+            <input type="hidden" name="dateRange.EndDate" value="@Model.DateRange.EndDate" />
+												<button type="submit" class="button icon print">@string.Format(Resources.ItemReceipt, Resources.Commissions)</button>
+        }
+				</div>
+</div>
+
+<table class='table table-condensed '>
+    <tbody>
+    <tr>
+        <td>@Resources.ProductName</td>
+        <td>Total del Detalle</td>
+        <td>Porcentaje de Comisi&oacute;n</td>
+        <td>Comisi&oacute;n</td>
+        <td>Comisi&oacute;n Total Del Pedido</td>
+    </tr>
+@foreach (var item in Model.Details.GroupBy(i => new
+{
+    i.SalesOrder,
+    i.Customer,
+    i.PaymentDate,
+    i.OrderDate,
+    i.Paid,
+    i.Movement,
+    i.Participation
+})
+    .Select(g => new { Order = g.Key, Details = g.ToList() })
+    .OrderByDescending(g => g.Order.SalesOrder))
+{
+    <tr style="background-color:cadetblue">
+								<td>@Resources.SalesOrder: @item.Order.SalesOrder</td>
+								<td>@Resources.Customer: @item.Order.Customer</td>
+								<td>@Resources.SalesOrderDate: @item.Order.OrderDate</td>
+								<td>@Resources.ModificationTime: @item.Order.PaymentDate</td>
+								<td>@Resources.Paid: @item.Order.Paid</td>
+								<td>Movimiento: @item.Order.Movement</td>
+								<td>Movimiento: @item.Order.Participation</td>
+    </tr>
+    foreach (var d in item.Details)
+    {
+        <tr>
+            <td>@d.ProductName</td>
+            <td>@d.Label</td>
+            <td>@(d.TotalDetail.ToString("c"))</td>
+            <td>@d.CommissionRate</td>
+            <td>@(d.Commission.ToString("c"))</td>
+        </tr>
+    }
+    <tr>
+        <td colspan="4"></td>
+        <td>@(item.Details.Sum(x => (decimal)x.Commission).ToString("c"))</td>
+    </tr>
+}
+    </tbody>
+    <tfoot>
+	    <tr>
+	        <td colspan='4'/>
+	        <td><b>@Model.Details.Sum(x => (decimal)x.TotalDetail).ToString("c")</b></td>
+	        <td><b>@Model.Details.Sum(x => (decimal)x.Commission).ToString("c")</b></td>
+	    </tr>
+    </tfoot>
+</table>

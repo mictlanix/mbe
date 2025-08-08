@@ -37,7 +37,7 @@
 {
 				<div class='pull-right'>
 								<a class="button icon lock" id="buttonConfirm">@string.Format(Resources.Confirm, Resources.PurchaseRequest)</a>
-								<a class="button icon edit" id="buttonRefuse">@string.Format(Resources.Reedit, Resources.PurchaseRequest)</a>
+								@*<a class="button icon edit" id="buttonRefuse">@string.Format(Resources.Reedit, Resources.PurchaseRequest)</a>*@
 				</div>
 }
 <div class='clearfix'></div>
@@ -70,28 +70,16 @@
 												});
 												dialog.append($('<p>').text('Continuar?'));
 								});
-								$('#buttonRefuse').click(function () {
-												var dialog = $('<div><textarea value="" id="inputReason" cols="35" rows="5" />').dialog({
-																title: 'Ingrese el motivo:',
-																modal: true,
-																buttons: {
-																				'@string.Format(Resources.Reedit, string.Empty)': function () {
-																								$.post('@Url.Action("PurchaseRequestApproval/")', { id:@Model.Id, value: $("#inputReason").val(), approval : false }, function (detail) {
-																													$("#inputReason").val('');
-																												window.location.href = "/PurchaseRequests/PurchaseRequestsApproval";
-																									}, 'json').fail(function (xhr, status, error) {
-																													console.log(xhr);
-																													alert(xhr.responseText);
-																													$("#inputReason").val('')
-																									});
-																									$(this).dialog('close');
-																				},
-																				'@string.Format(Resources.Cancel, string.Empty)': function () {
-																								$(this).dialog('close');
-																				}
-																}
+
+								$('.to-purchase').dblclick(function () {
+												var self = $(this);
+												console.log(self)
+												$.ajax({
+																type: "POST",
+																url: self.data('url')
+												}).done(function (data) {
+																self.html(data);
 												});
-												dialog.append($('<p>').text('Continuar?'));
 								});
 				});
 </script>

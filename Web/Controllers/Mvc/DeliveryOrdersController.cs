@@ -76,16 +76,28 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			int id = 0;
 
 			query = DeliveryOrder.Queryable.Where (x => !x.IsCancelled
-							&& x.Creator == CurrentUser.Employee
-						)
-						.OrderBy (x => x.IsCompleted || x.IsCancelled ? 1 : 0)
-						.OrderByDescending (x => x.Id);
+							&& (x.Creator == CurrentUser.Employee ||
+							x.Updater == CurrentUser.Employee)
+						);
 
-			if (int.TryParse (pattern, out id) && id > 0) {
-				query = query.Where (y => y.Id == id || y.Serial == id);
-			} else {
-				query = query.Where (x => x.Customer.Name.Contains (pattern));
+			if (!string.IsNullOrEmpty (pattern)) {
+				if (int.TryParse (pattern, out id) && id > 0) {
+					query = DeliveryOrder.Queryable.Where (x => x.Id == id || x.Serial == id
+					|| x.Details.Any (y => y.OrderDetail.SalesOrder.Id == id));
+				} else {
+					query = query.Where (x => x.Customer.Name.Contains (pattern));
+
+					if (pattern.Contains (Resources.WilcardStringPatternForSearch) && CurrentUser.IsAdministrator) {
+						query = DeliveryOrder.Queryable;
+					}
+					
+				}
 			}
+
+			//query = query.OrderBy (x => x.IsCompleted || x.IsCancelled ? 1 : 0)
+			//			.OrderByDescending (x => x.Id);
+
+			query = query.OrderByDescending(x => x.Id);
 
 			search.Total = query.Count ();
 			search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
@@ -102,9 +114,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View (item);
 		}
 
-		public ActionResult Print (int id)
+		public ActionResult Print (int id, bool? only_current_warehouse)
 		{
 			var item = this.GetDeliveryViewModel (id);
+			item.DeliveryOrder.Details = only_current_warehouse.HasValue && only_current_warehouse.Value ?
+				item.DeliveryOrder.Details.Where (x => x.OrderDetail.Warehouse == WebConfig.PointOfSale.Warehouse).ToList() :
+				item.DeliveryOrder.Details;
 
 			if (!item.DeliveryOrder.IsCompleted) {
 				return RedirectToAction ("Edit", new { id });
@@ -112,7 +127,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			if (WebConfig.DeliveryOrdersUseMiniPrinter) {
 				var pickup_addresses = MBEQueryable.IQStores.Select (x => x.Address).ToList ();
-				if (pickup_addresses.Contains (item.DeliveryOrder.ShipTo)) {
+				//if (pickup_addresses.Contains (item.DeliveryOrder.ShipTo)) {
+				if (item.DeliveryOrder.IsPickedUpInStore) {
 					return PdfTicketView (WebConfig.PickUpTicket, item);
 				}
 				return PdfTicketView (WebConfig.DeliveryOrderTicket, item);
@@ -142,27 +158,28 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.SalesOrderNotFound);
 			}
 
-			if (entity.Creator != CurrentUser.Employee
-				&& entity.Updater != CurrentUser.Employee
-				&& entity.SalesPerson != CurrentUser.Employee) {
-				Response.StatusCode = 400;
-				return Content (Resources.CreatorDoesntMatchWithCurrentUser);
-			}
-
 			if (!entity.IsCompleted || entity.IsCancelled) {
 				Response.StatusCode = 400;
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			if (!entity.IsPaid && entity.Terms == PaymentTerms.Immediate) {
+			if (!entity.IsPaid && entity.Terms == PaymentTerms.Immediate
+				&& WebConfig.DeliveryOrderRequiresPaidOrCreditSalesOrder) {
 				Response.StatusCode = 400;
 				return Content (Resources.SalesOrderNotPaidYet);
 			}
 
+			if (entity.DeliveryMode == DeliveryMode.PickUp) {
+				Response.StatusCode = 400;
+				return Content (Resources.PickUp);
+			}
+
 			DeliveryOrder item = CreateFromSalesOrder (entity.Id);
+			item.IsPickedUpInStore = MBEQueryable.IQStoresAddress.ToList().Contains(item.ShipTo);
+			item.ShipTo = entity.ShipTo;
 
 
-			if (item.Details.Count <= 0) {
+			if (item.Details.Count() <= 0) {
 				Response.StatusCode = 400;
 				return Content (Resources.AlreadyFullyDelivered);
 			}
@@ -174,6 +191,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				item.CreateAndFlush ();
 				item.Refresh ();
 				details.ForEach (x => { x.DeliveryOrder = item; x.CreateAndFlush (); });
+				entity.DeliveryMode = DeliveryMode.PartialDeliveries;
+				entity.UpdateAndFlush ();
 			}
 
 
@@ -192,23 +211,27 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return RedirectToAction ("View", new { id = item.Id });
 			}
 
-			if (item.Creator != CurrentUser.Employee || item.Updater != CurrentUser.Employee) {
-				return RedirectToAction ("Index");
-			}
+			//if (item.Creator != CurrentUser.Employee || item.Updater != CurrentUser.Employee) {
+			//	return RedirectToAction ("Index");
+			//}
 
 			if (!CashHelpers.ValidateExchangeRate ()) {
 				return View ("InvalidExchangeRate");
 			}
 
-			foreach (var detail in item.Details) {
-				decimal remainingQuantityForDetail = GetRemainQuantityBySalesOrderDetail (detail.OrderDetail);
-				if (detail.Quantity > remainingQuantityForDetail) {
-					detail.Quantity = remainingQuantityForDetail;
-				}
-			}
+			//foreach (var detail in item.Details) {
+			//	//decimal remainingQuantityForDetail = GetRemainQuantityBySalesOrderDetail (detail.OrderDetail);
+			//	decimal remainingQuantityForDetail = detail.OrderDetail.GetDeliverableQuantity();
+			//	if (detail.Quantity > remainingQuantityForDetail) {
+			//		detail.Quantity = remainingQuantityForDetail;
+			//	}
+			//}
+
+			//item.Details = item.Details.OrderByDescending(x => x.DeliveryOrder.Priority).ToList ();
 
 			item.Details.ForEach (x => {
-				var remaining = GetRemainQuantityBySalesOrderDetail (x.OrderDetail);
+				//var remaining = GetRemainQuantityBySalesOrderDetail (x.OrderDetail);
+				var remaining = x.OrderDetail.GetDeliverableQuantity();
 				x.Quantity = x.Quantity > remaining ? remaining : x.Quantity;
 
 			});
@@ -264,7 +287,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				}
 				entity.Date = value.Value;
 			} else {
-				entity.Date = null;
+				entity.Date = DateTime.Now;
 			}
 			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
@@ -290,8 +313,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			if (item != null) {
 				entity.ShipTo = item;
+				entity.IsPickedUpInStore = MBEQueryable.IQStoresAddress.ToList().Contains (item);
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
+
 
 				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();
@@ -377,7 +402,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 
 			using (var scope = new TransactionScope ()) {
-				foreach (var x in Details.Where (y => GetRemainQuantityBySalesOrderDetail (y) > 0.0m)) {
+				foreach (var x in Details.Where (y => y.GetDeliverableQuantity() > 0.0m)) {
 
 					var item = new DeliveryOrderDetail {
 						DeliveryOrder = entity,
@@ -385,7 +410,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						OrderDetail = x,
 						ProductCode = x.ProductCode,
 						ProductName = x.ProductName,
-						Quantity = GetRemainQuantityBySalesOrderDetail (x)
+						Quantity = x.GetDeliverableQuantity()
 					};
 
 					item.Create ();
@@ -496,10 +521,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			if (value >= 0 && value <= GetRemainQuantityBySalesOrderDetail (entity.OrderDetail)) {
+			if (value >= 0 && value <= entity.OrderDetail.GetDeliverableQuantity()) {
 				entity.Quantity = value;
 			} else {
-				entity.Quantity = GetRemainQuantityBySalesOrderDetail (entity.OrderDetail);
+				entity.Quantity = entity.OrderDetail.GetDeliverableQuantity();
 			}
 
 			using (var scope = new TransactionScope ()) {
@@ -522,6 +547,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return RedirectToAction ("Index");
 			}
 
+			//if (entity.Customer.Id == WebConfig.DefaultCustomer
+			//	&& !MBEQueryable.IQStores.Select (x => x.Address).ToList().Contains (entity.ShipTo)) {
+			//	Response.StatusCode = 400;
+			//	return Content(Resources.ForbiddenDeliveryToDefaultCustomer);
+			//}
+
+			if (entity.Date.Date < DateTime.Now.Date) {
+				Response.StatusCode = 400;
+				return Content (Resources.InvalidDate);
+			}
+
 			if (!DeliveryHelpers.IsReadyToDeliver (entity)) {
 				Response.StatusCode = 400;
 				return Content (Resources.Message_NotContactOrShipTo);
@@ -533,7 +569,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			foreach (var detail in entity.Details) {
-				var remainingQuantity = GetRemainQuantityBySalesOrderDetail (detail.OrderDetail);
+				var remainingQuantity = detail.OrderDetail.GetDeliverableQuantity();
 				if (detail.Quantity > remainingQuantity) {
 					detail.Quantity = remainingQuantity;
 					restoredQuantities = true;
@@ -551,7 +587,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			entity.Serial = entity.Serial > 0 ? entity.Serial :
 				(DeliveryOrder.Queryable.Where (x => x.Store == entity.Store).Select (y => (int?) y.Serial).Max () ?? 0) + 1;
-
 
 			using (var scope = new TransactionScope ()) {
 				foreach (var item in entity.Details) {
@@ -577,7 +612,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			foreach (var Order in Orders) {
 
-				bool isSalesOrderDeliveredCompletly = Order.Details.Any (x => GetRemainQuantityBySalesOrderDetail (x) > 0.0m);
+				bool isSalesOrderDeliveredCompletly = Order.Details.Any (x => x.GetDeliverableQuantity() > 0.0m);
 
 				if (!isSalesOrderDeliveredCompletly) {
 					Order.IsDelivered = true;
@@ -617,105 +652,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return View (entity);
 		}
-		//public ActionResult Delivered (int id)
+
+		//private decimal GetRemainQuantityBySalesOrderDetail (SalesOrderDetail detail)
 		//{
+		//	var delivered = DeliveryOrderDetail.Queryable
+		//		.Where (x => x.OrderDetail == detail && x.DeliveryOrder.IsCompleted
+		//			&& !x.DeliveryOrder.IsCancelled).ToArray ();
 
-		//	DeliveryOrder order = DeliveryOrder.Find (id);
+		//	var refund = CustomerRefundDetail.Queryable
+		//		.Where (x => x.SalesOrderDetail == detail && !x.Refund.IsCancelled
+		//			&& x.Refund.IsCompleted).ToArray ();
 
-		//	if (!(order.IsCancelled || order.IsDelivered)) {
-		//		using (var scope = new TransactionScope ()) {
-		//			order.IsDelivered = true;
-		//			order.Updater = CurrentUser.Employee;
-		//			order.ModificationTime = DateTime.Now;
-		//			order.UpdateAndFlush ();
-		//		}
-
-		//		return RedirectToAction ("Print", new { id = id });
-		//	}
-
-		//	return RedirectToAction ("Index");
+		//	return detail.Quantity - (delivered.Sum(y => (decimal?) y.Quantity)??0) - (refund.Sum (y => (decimal?) y.Quantity) ?? 0);
 		//}
-
-		//public ViewResult PendantDeliveries ()
-		//{
-
-		//	Search<RemainingOrderDetail> search = new Search<RemainingOrderDetail> ();
-		//	search.Limit = WebConfig.PageSize;
-		//	List<SalesOrderDetail> items = new List<SalesOrderDetail> ();
-		//	var query = (from x in DeliveryOrderDetail.Queryable
-		//		     where !x.DeliveryOrder.IsCancelled && x.OrderDetail != null
-		//		     select x.OrderDetail.SalesOrder).Distinct ().ToList ();
-
-		//	foreach (var list in query) {
-		//		items.AddRange (list.Details);
-		//	}
-
-		//	search.Results = (from x in items.OrderByDescending (x => x.SalesOrder.Id).Skip (search.Offset).Take (search.Limit).ToList ()
-		//			  select new RemainingOrderDetail {
-		//				  Id = x.Id,
-		//				  SalesOrderId = x.SalesOrder.Id,
-		//				  Date = x.SalesOrder.Date,
-		//				  ProductName = x.ProductName,
-		//				  Quantity = x.Quantity,
-		//				  QuantityRemain = GetRemainQuantityBySalesOrderDetail (x),
-		//				  QuantityDelivered = x.Quantity - GetRemainQuantityBySalesOrderDetail (x),
-		//				  UnitOfMeasure = x.Product.UnitOfMeasurement.Id,
-		//				  Details = DeliveryOrderDetail.Queryable.Where (y => y.OrderDetail == x && !y.DeliveryOrder.IsCancelled).ToList ()
-		//			  }).ToList ();
-		//	search.Total = search.Results.Count ();
-		//	return View (search);
-		//}
-
-		//[HttpPost]
-		//public ActionResult PendantDeliveries (Search<RemainingOrderDetail> search)
-		//{
-		//	search.Limit = WebConfig.PageSize;
-		//	int salesorder_id;
-		//	List<SalesOrderDetail> items = new List<SalesOrderDetail> ();
-
-		//	var query = (from x in DeliveryOrderDetail.Queryable
-		//		     where !x.DeliveryOrder.IsCancelled && x.OrderDetail != null
-		//		     select x.OrderDetail.SalesOrder).Distinct ().ToList ();
-
-		//	if (int.TryParse (search.Pattern, out salesorder_id)) {
-		//		query = query.Where (x => x.Id == salesorder_id).ToList ();
-		//	} else if (!string.IsNullOrEmpty (search.Pattern)) {
-		//		query = query.Where (x => x.Customer.Name.ToLower ().Contains (search.Pattern.ToLower ())).ToList ();
-		//	}
-
-		//	foreach (var list in query.ToList ()) {
-		//		items.AddRange (list.Details);
-		//	}
-
-		//	search.Results = (from x in items.OrderByDescending (x => x.Id).Skip (search.Offset).Take (search.Limit).ToList ()
-		//			  select new RemainingOrderDetail {
-		//				  Id = x.Id,
-		//				  SalesOrderId = x.SalesOrder.Id,
-		//				  Date = x.SalesOrder.Date,
-		//				  ProductName = x.ProductName,
-		//				  Quantity = x.Quantity,
-		//				  QuantityDelivered = x.Quantity - GetRemainQuantityBySalesOrderDetail (x),
-		//				  QuantityRemain = GetRemainQuantityBySalesOrderDetail (x),
-		//				  UnitOfMeasure = x.Product.UnitOfMeasurement.Id,
-		//				  Details = DeliveryOrderDetail.Queryable.Where (y => y.OrderDetail == x && !y.DeliveryOrder.IsCancelled).ToList ()
-		//			  }).Take (15).ToList ();
-
-		//	search.Total = search.Results.Count ();
-
-		//	return PartialView ("_PendantDeliveries", search);
-		//}
-
-		private decimal GetRemainQuantityBySalesOrderDetail (SalesOrderDetail detail)
-		{
-
-			var deliveredQuantity = DeliveryOrderDetail.Queryable
-				.Where (x => x.OrderDetail == detail && x.DeliveryOrder.IsCompleted
-					&& !x.DeliveryOrder.IsCancelled).Sum (x => (decimal?) x.Quantity) ?? 0;
-			var refundQuantity = CustomerRefundDetail.Queryable
-				.Where (x => x.SalesOrderDetail == detail && !x.Refund.IsCancelled
-					&& x.Refund.IsCompleted).Sum (y => (decimal?) y.Quantity) ?? 0;
-			return detail.Quantity - deliveredQuantity - refundQuantity;
-		}
 
 		private DeliveryViewModel GetDeliveryViewModel (int id)
 		{
@@ -766,7 +715,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						Reference = item.Id,
 						SourceType = SourceType.DeliveryOrder,
 						Updater = CurrentUser.Employee,
-						PreviousState = JsonConvert.SerializeObject (item.GetSerializable ()),
+						PreviousState = string.Format(Resources.LogMessage, Resources.DeliveryOrder, value),
 						Comment = value,
 						ModificationTime = DateTime.Now,
 					};
@@ -787,57 +736,60 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return RedirectToAction ("DeliveryOrdersApproval");
 		}
 
-		[HttpPost]
-		public ActionResult Delivered (int id, bool approval, string value)
-		{
+		//[HttpPost]
+		//public ActionResult Delivered (int id, bool approval, string value)
+		//{
 
-			var item = DeliveryOrder.TryFind (id);
-			if (item == null) {
-				Response.StatusCode = 400;
-				return Content (Resources.ItemNotFound);
-			}
+		//	var item = DeliveryOrder.TryFind (id);
+		//	if (item == null) {
+		//		Response.StatusCode = 400;
+		//		return Content (Resources.ItemNotFound);
+		//	}
 
-			//if (item.Date < DateTime.Now) {
-			//	Response.StatusCode = 400;
-			//	return Content (string.Format (Resources.Validation_DateGreaterThan, Resources.Date, DateTime.Now.Date));
-			//}
+		//	//if (item.Date < DateTime.Now) {
+		//	//	Response.StatusCode = 400;
+		//	//	return Content (string.Format (Resources.Validation_DateGreaterThan, Resources.Date, DateTime.Now.Date));
+		//	//}
 
-			if (item.IsConfirmed) {
-				Response.StatusCode = 400;
-				return Content (Resources.ItemAlreadyCompletedOrCancelled);
-			}
-
-
-			using (var scope = new TransactionScope ()) {
-				if (approval) {
-					item.IsConfirmed = true;
-					item.IsDelivered = true;
-					item.UpdateAndFlush ();
-				} else {
-					var incidence = new Incidence {
-						Comment = value,
-						ModificationTime = DateTime.Now,
-						PreviousState = JsonConvert.SerializeObject (item.GetSerializable()),
-						Reference = item.Id,
-						SourceType = SourceType.DeliveryOrder,
-						Updater	= CurrentUser.Employee.GetSerializable()
-					};
-					incidence.CreateAndFlush ();
-
-					item.IsConfirmed = false;
-					item.IsCompleted = false;
-					item.UpdateAndFlush ();
-				}
-			}
+		//	if (item.IsConfirmed) {
+		//		Response.StatusCode = 400;
+		//		return Content (Resources.ItemAlreadyCompletedOrCancelled);
+		//	}
 
 
+		//	using (var scope = new TransactionScope ()) {
+		//		if (approval) {
+		//			item.IsConfirmed = true;
+		//			item.IsDelivered = true;
+		//			item.UpdateAndFlush ();
+		//		} else {
 
-			if (Request.IsAjaxRequest ()) {
-				return Json (new { id = id, done = true });
-			}
+		//			var json = JsonConvert.SerializeObject (item.GetSerializable());
+		//			var incidence = new Incidence {
+		//				Comment = value,
+		//				ModificationTime = DateTime.Now,
+		//				PreviousState = json,
+		//				Reference = item.Id,
+		//				SourceType = SourceType.DeliveryOrder,
+		//				Updater	= CurrentUser.Employee
+		//			};
 
-			return RedirectToAction ("DeliveryOrdersApproval");
-		}
+		//			incidence.CreateAndFlush ();
+
+		//			item.IsConfirmed = false;
+		//			item.IsCompleted = false;
+		//			item.UpdateAndFlush ();
+		//		}
+		//	}
+
+
+
+		//	if (Request.IsAjaxRequest ()) {
+		//		return Json (new { id = id, done = true });
+		//	}
+
+		//	return RedirectToAction ("DeliveryOrdersApproval");
+		//}
 
 		public ViewResult DeliveryOrdersApproval ()
 		{
@@ -860,7 +812,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			if (Request.IsAjaxRequest ()) {
-				return PartialView ("_Index", search);
+				return PartialView ("_DeliveryOrdersApproval", search);
 			} else {
 				return View (search);
 			}
@@ -885,7 +837,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						);
 			if (!string.IsNullOrEmpty (search.Pattern)) {
 				if (int.TryParse (pattern, out id) && id > 0) {
-					query = query.Where (y => y.Id == id || y.Serial == id);
+					query = DeliveryOrder.Queryable.Where (y => y.Id == id || y.Serial == id);
 				} else {
 					query = query.Where (x => x.Customer.Name.Contains (pattern));
 				}
@@ -905,7 +857,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var order = SalesOrder.TryFind (id);
 			if (order == null || order.IsCancelled || !order.IsCompleted) { return null; }
 			DeliveryOrder item = new DeliveryOrder ();
-			item.Customer = Customer.TryFind (WebConfig.DefaultCustomer);
 
 
 			item.Store = WebConfig.Store;
@@ -926,11 +877,52 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				Product = x.Product,
 				ProductCode = x.ProductCode,
 				ProductName = x.ProductName,
-				Quantity = GetRemainQuantityBySalesOrderDetail (x)
+				Quantity = x.GetDeliverableQuantity() //GetRemainQuantityBySalesOrderDetail (x)
 			});
 
 			item.Details = details.Where (x => x.Quantity > 0).ToList ();
 			return item;
+		}
+
+		public JsonResult PriorityLevels ()
+		{
+			var priorities = Enum.GetValues (typeof (Priority))
+				.Cast<Priority> ()
+				.Select (x => new { value = (int) x, text = x.GetDisplayName () })
+				.ToList ();
+
+			return Json (priorities, JsonRequestBehavior.AllowGet);
+		}
+
+		[HttpPost]
+		public ActionResult SetPriorityLevel (int id, string value)
+		{
+			bool success;
+			Priority val = Priority.Low;
+			var entity = DeliveryOrder.Find (id);
+
+			//if (entity.IsCompleted || entity.IsCancelled) {
+			//	Response.StatusCode = 400;
+			//	return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			//}
+
+			success = Enum.TryParse (value.Trim (), out val);
+
+			if (success) {
+
+				entity.Priority = val;
+				entity.Updater = CurrentUser.Employee;
+				//entity.ModificationTime = DateTime.Now;
+
+				using (var scope = new TransactionScope ()) {
+					entity.UpdateAndFlush ();
+				}
+			}
+
+			return Json (new {
+				id = id,
+				value = entity.Priority
+			});
 		}
 	}
 }

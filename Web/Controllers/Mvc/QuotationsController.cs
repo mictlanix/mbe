@@ -83,18 +83,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var item = WebConfig.Store;
 			IQueryable<SalesQuote> query = from x in SalesQuote.Queryable
+						       where x.Creator == CurrentUser.Employee || x.Updater == CurrentUser.Employee
 						       select x;
 
 			var pattern = (search.Pattern ?? string.Empty).Trim ();
 			int id = 0;
-
-			var privileges = GetAccessPrivilege (SystemObjects.SearchAllSalesOrderFromAllUsers);
-
-			if (!privileges.AllowRead) {
-				query = from x in query
-					where x.Creator == CurrentUser.Employee
-					select x;
-			}
 
 			if (int.TryParse (pattern, out id) && id > 0) {
 
@@ -103,13 +96,18 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					select x;
 
 			} else if (!string.IsNullOrEmpty (pattern)) {
-				query = from x in query
-					where (
-					    x.Customer.Name.Contains (pattern) ||
-					    x.SalesPerson.Nickname.Contains (pattern) ||
-					    x.Customer.Name.Contains (pattern)
-					    )
-					select x;
+				if (!pattern.Contains (Resources.WilcardStringPatternForSearch)) {
+					query = from x in SalesQuote.Queryable
+						where (
+						    x.Customer.Name.Contains (pattern) ||
+						    x.SalesPerson.Nickname.Contains (pattern) ||
+						    x.Customer.Name.Contains (pattern)
+						    )
+						select x;
+				} else {
+					query = from x in SalesQuote.Queryable
+						select x;
+				}
 			}
 
 			query = from x in query
@@ -198,89 +196,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			});
 		}
 
-		//[HttpPost]
-		//public ActionResult CreateSalesOrderFromQuotation (int id)
-		//{
-		//	var dt = DateTime.Now;
-		//	var item = new SalesOrder ();
-		//	var salesquote = SalesQuote.Find (id);
-
-		//	item.PointOfSale = WebConfig.PointOfSale;
-
-		//	if (item.PointOfSale == null) {
-		//		return View ("InvalidPointOfSale");
-		//	}
-
-		//	if (salesquote.HasExpired) {
-		//		Response.StatusCode = 400;
-		//		return Content (Resources.ExpirationDate);
-		//	}
-
-		//	if (!CashHelpers.ValidateExchangeRate ()) {
-		//		return View ("InvalidExchangeRate");
-		//	}
-
-		//	if (salesquote.IsCancelled || !salesquote.IsCompleted) {
-		//		return RedirectToAction ("Index", "Quotations");
-		//	}
-
-		//	// Store and Serial
-		//	item.Store = item.PointOfSale.Store;
-
-		//	try {
-		//		item.Serial = (from x in SalesOrder.Queryable
-		//			       where x.Store.Id == item.Store.Id
-		//			       select x.Serial).Max () + 1;
-		//	} catch {
-		//		item.Serial = 1;
-		//	}
-
-		//	item.Customer = salesquote.Customer;
-		//	item.SalesPerson = salesquote.SalesPerson;
-		//	item.Date = dt;
-		//	item.PromiseDate = dt;
-		//	item.Terms = salesquote.Terms;
-		//	item.DueDate = dt.AddDays (item.Customer.CreditDays);
-		//	item.Currency = salesquote.Currency;
-		//	item.ExchangeRate = salesquote.ExchangeRate;
-		//	item.Contact = salesquote.Contact;
-		//	item.Comment = salesquote.Comment;
-		//	item.ShipTo = salesquote.ShipTo;
-		//	item.CustomerShipTo = salesquote.ShipTo == null ? "" : salesquote.ShipTo.ToString ();
-
-		//	item.Creator = CurrentUser.Employee;
-		//	item.CreationTime = dt;
-		//	item.Updater = item.Creator;
-		//	item.ModificationTime = dt;
-
-		//	var details = salesquote.Details.Select (x => new SalesOrderDetail {
-		//		Currency = x.Currency,
-		//		ExchangeRate = x.ExchangeRate,
-		//		IsTaxIncluded = x.IsTaxIncluded,
-		//		Price = x.Price + x.PriceAdjustment,
-		//		Product = x.Product,
-		//		ProductCode = x.ProductCode,
-		//		ProductName = x.ProductName,
-		//		Quantity = x.Quantity,
-		//		SalesOrder = item,
-		//		TaxRate = x.TaxRate,
-		//		Warehouse = item.PointOfSale.Warehouse,
-		//		Comment = x.Comment,
-		//		DiscountRate = x.DiscountRate
-		//	}).ToList ();
-
-
-		//	using (var scope = new TransactionScope ()) {
-		//		item.CreateAndFlush ();
-		//		details.ForEach (x => x.CreateAndFlush ());
-		//	}
-
-
-		//	return RedirectToAction ("Edit", "SalesOrders", new {
-		//		id = item.Id
-		//	});
-		//}
-
 		public ActionResult Edit (int id)
 		{
 			var item = SalesQuote.Find (id);
@@ -302,10 +217,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var item = SalesQuote.Find (id);
 
-			//if(item.Creator != CurrentUser.Employee || item.Updater != CurrentUser.Employee) {
-			//	Response.StatusCode = (int) HTTPResponseStatusCodes.BadRequest;
-			//	return Content (Resources);
-			//}
 
 			SalesQuote copy = new SalesQuote {
 				IsCompleted = false,
@@ -339,7 +250,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						DiscountRate = detail.DiscountRate,
 						ExchangeRate = detail.ExchangeRate,
 						IsTaxIncluded = detail.IsTaxIncluded,
-						Price = detail.Price,
+						Price = detail.Product.GetPrice(item.Customer.PriceList.Id),
 						PriceIncrement = detail.PriceIncrement,
 						Product = detail.Product,
 						ProductCode = detail.ProductCode,

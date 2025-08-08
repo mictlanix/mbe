@@ -1,0 +1,38 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model CustomerPayment
+
+@{
+				var CurrentUser = Html.CurrentUser() ?? new User();
+				var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.PaymentsVerification);
+				var zeros = "00000000";
+
+}
+
+<div id="id:@Model.Id" class="row">
+				<div class="col-sm-1 data date text-center">@Html.DisplayFor(x => Model.Date)</div>
+				<div class="col-sm-2 data text-center">@Html.DisplayFor(x => Model.Customer.Name)</div>
+				<div class="col-sm-1 data text-center">@Html.DisplayFor(x => Model.CashSession.Cashier.Nickname)</div>
+				<div class="col-sm-1 data text-center">@(Model.Verifier!=null?Model.Verifier.Nickname:string.Empty)</div>
+				<div class="col-sm-1 data text-center">@Html.DisplayFor(x => Model.Amount)</div>
+				<div class="col-sm-1 data text-center">@Model.Method.GetDisplayName()</div>
+				<div class="col-sm-2 data text-center">@Html.DisplayFor(x => Model.Reference)</div>
+				<div class="col-sm-1 data text-center">@(Model.PaymentType.GetDisplayName())</div>
+				<div class="col-sm-1 data text-center">
+								@foreach (var order in Model.Allocations.Select(x => x.SalesOrder).Distinct())
+								{
+												@Html.ActionLink((string)order.Id.ToString(zeros), "View", "SalesOrders", new { id = order.Id },
+new { title = string.Join("\n", order.Details.Select(x => x.Quantity + " - " + x.ProductName)), target = "_blank" }) <br />
+
+								}
+				</div>
+				<div class="col-sm-1">
+								@if (Privilege.AllowUpdate && Model.Verifier == null)
+								{
+												<a class='button icon-only icon pay to-validate' title='@string.Format(Resources.Confirm, Resources.Payment)'
+															data-type='checklist' data-placement='bottom' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id'
+															data-url='@Url.Action("ValidatePayment", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
+								}
+				</div>
+</div>

@@ -1,0 +1,77 @@
+
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Models
+@using Mictlanix.BE.Web.Helpers
+@model CreditNote
+
+@{
+		  Layout = WebConfig.ReceiptLayout;
+		  ViewBag.Title = Resources.CreditNote;
+		  ViewBag.Store = Model.CustomerPayment.Store;
+		  ViewBag.Address = Model.CustomerPayment.Store.Address;
+}
+
+<div class="display-label text-right">
+	@Html.LabelFor(model => model.CustomerPayment.Serial)<br />
+	@Html.DisplayFor(model => model.CustomerPayment.Serial)
+</div>
+
+<div class="display-label date text-right">
+	@Html.LabelFor(model => model.Date)<br />
+	@Html.DisplayFor(model => model.Date)
+</div>
+
+<div class="display-label">
+	@Html.LabelFor(model => model.Customer)<br />
+	@Html.DisplayFor(model => model.Customer.Name)
+</div>
+<div class="display-label">
+	@Html.LabelFor(model => model.CustomerRefund)<br />
+	@Html.DisplayFor(model => model.CustomerRefund.Id)
+</div>
+<div class="display-label">
+	@Html.LabelFor(model => model.SalesOrder)<br />
+	@Html.DisplayFor(model => model.SalesOrder.Id)
+</div>
+
+
+<table>
+				<tr>
+								<td class="text-right">@Resources.Total</td>
+								<td class="number">@Html.DisplayFor(x => x.CustomerPayment.Amount)</td>
+				</tr>
+				@if (Model.CustomerPayment.Allocations.Any())
+				{
+								foreach (var allocation in Model.CustomerPayment.Allocations)
+								{
+												<tr>
+																<td class="text-right">@Resources.SalesOrder @Html.DisplayFor(x => allocation.SalesOrder.Id)</td>
+																<td class="text-right">@Html.DisplayFor(x => allocation.Amount)</td>
+												</tr>
+								}
+				}
+				<tr>
+								<td colspan="2" class="line">
+								</td>
+				</tr>
+				<tr>
+								<td class="number total">
+												@Html.LabelFor(x => x.CustomerPayment.Balance)
+								</td>
+								<td class="text-right total">
+												@Html.DisplayFor(x => x.CustomerPayment.Balance)
+								</td>
+				</tr>
+</table>
+
+@if (!string.IsNullOrEmpty (Model.CustomerPayment.Store.ReceiptMessage)) {
+		<div class="legend">
+			<p class="center">@Model.CustomerPayment.Store.ReceiptMessage</p>
+		</div>
+}
+
+@section Footer {
+	<img src='@Url.Action("Code128", "Barcodes", new { id = string.Format("{0}", Html.DisplayFor(x => x.CustomerPayment.Id)) })' alt='@Html.DisplayFor(x => x.CustomerPayment.Id)' title='@Html.DisplayFor(x => x.CustomerPayment.Id)'>
+	<p>@Html.DisplayFor(x => x.CustomerPayment.Id)</p>
+}

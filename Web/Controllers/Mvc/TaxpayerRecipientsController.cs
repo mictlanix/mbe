@@ -160,12 +160,20 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			entity.RegimeId = item.RegimeId;
 			entity.PostalCode = item.PostalCode.Trim ();
 
+			var issuer = TaxpayerIssuer.TryFind (item.Id);
+			if (issuer != null) {
+				issuer.PostalCode = entity.PostalCode;
+			}
+
 			if (string.IsNullOrWhiteSpace (item.Name)) {
 				item.Name = null;
 			}
 
 			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
+				if (issuer != null) {
+					issuer.UpdateAndFlush ();
+				}
 			}
 
 			return PartialView ("_Refresh");

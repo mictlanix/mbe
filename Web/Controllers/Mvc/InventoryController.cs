@@ -33,7 +33,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
-using NHibernate;
 using NHibernate.Exceptions;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
@@ -41,6 +40,8 @@ using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 using Castle.Core.Internal;
 using Microsoft.Ajax.Utilities;
+using NHibernate;
+using System.Reflection;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
@@ -76,7 +77,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var warehouse = WebConfig.PointOfSale.Warehouse;
 
 			IQueryable<InventoryReceipt> qry = from x in InventoryReceipt.Queryable
-							   where x.Warehouse == warehouse
+							   where x.Warehouse == warehouse || x.Creator == CurrentUser.Employee
 							   select x;
 			int id = 0;
 			int.TryParse (search.Pattern, out id);
@@ -262,15 +263,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			if (item == null || item.IsCompleted || item.IsCancelled)
 				return RedirectToAction ("Receipts");
 
-			item.Store = item.Warehouse.Store;
+			if (item.Details.Any (x => !x.Product.IsStockable)) {
+				Response.StatusCode = 400;
+				return Content (Resources.Product + " " + Resources.No + " " + Resources.Stockable);
+			}
 
-			//try {
-			//	item.Serial = (from x in InventoryReceipt.Queryable
-			//		       where x.Store.Id == item.Store.Id
-			//		       select x.Serial).Max () + 1;
-			//} catch {
-			//	item.Serial = 1;
-			//}
+			item.Store = item.Warehouse.Store;
 
 			item.Serial = (InventoryReceipt.Queryable
 				.Where (x => x.Store == item.Warehouse.Store).Max (y => (int?) y.Serial) ?? 0) + 1;
@@ -337,7 +335,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var warehouse = WebConfig.PointOfSale.Warehouse;
 
 			IQueryable<InventoryIssue> qry = from x in InventoryIssue.Queryable
-							   where x.Warehouse == warehouse
+							   where x.Warehouse == warehouse || x.Creator == CurrentUser.Employee
 							   select x;
 
 
@@ -463,11 +461,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public JsonResult EditIssueDetailQuantity (int id, decimal value)
+		public ActionResult EditIssueDetailQuantity (int id, decimal value)
 		{
 			var detail = InventoryIssueDetail.Find (id);
 
 			if (value >= 0) {
+				if (value > QuantityInWarehouse (detail.Issue.Warehouse.Id, detail.Product.Id)) {
+					Response.StatusCode = 400;
+					return Content (Resources.NoStockEnough);
+				}
 				detail.Quantity = value;
 
 				using (var scope = new TransactionScope ()) {
@@ -483,7 +485,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public ActionResult GetIssueItem (int id)
 		{
-			return PartialView ("Issues/_DetailEditView", InventoryIssueDetail.Find (id));
+			var item = InventoryIssueDetail.Find (id);
+			ValidateInventoryDetailStock (item);
+			return PartialView ("Issues/_DetailEditView", item);
 		}
 
 		[HttpPost]
@@ -505,19 +509,30 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult ConfirmIssue (int id)
 		{
 			var item = InventoryIssue.TryFind (id);
+			bool invalid_stock = item.Details.Any(x => x.Quantity > QuantityInWarehouse(item.Warehouse.Id, x.Product.Id));
+
 
 			if (item == null || item.IsCompleted || item.IsCancelled)
 				return RedirectToAction ("Issues");
 
+			if (invalid_stock) {
+				Response.StatusCode = 400;
+				return Content (Resources.NoStockEnough);
+			}
+
+			
+
 			item.Store = item.Warehouse.Store;
 
-			try {
-				item.Serial = (from x in InventoryIssue.Queryable
-					       where x.Store.Id == item.Store.Id
-					       select x.Serial).Max () + 1;
-			} catch {
-				item.Serial = 1;
-			}
+			//try {
+			//	item.Serial = (from x in InventoryIssue.Queryable
+			//		       where x.Store.Id == item.Store.Id
+			//		       select x.Serial).Max () + 1;
+			//} catch {
+			//	item.Serial = 1;
+			//}
+
+			item.Serial = (InventoryIssue.Queryable.Where (x => x.Store == item.Store).Max (x => (int?) x.Serial) ?? 0) + 1;
 
 			item.IsCompleted = true;
 			item.ModificationTime = DateTime.Now;
@@ -584,7 +599,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			Int32.TryParse(search.Pattern, out i);
 
 			IQueryable<InventoryTransfer> qry = from x in InventoryTransfer.Queryable
-							   where x.From == warehouse || x.To == warehouse
+							   where x.From == warehouse || x.To == warehouse || x.Creator == CurrentUser.Employee
 							   select x;
 
 			if (i > 0) {
@@ -620,7 +635,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public ActionResult NewTransfer ()
 		{
-			return PartialView ("Transfers/_Create", new InventoryTransfer ());
+			var user = MBEQueryable.IQUsers.Where(x => x.Employee == CurrentUser.Employee).Single().UserName;
+			var warehouse = MBEQueryable.IQUsersSettings.Where (x => x.UserName == user).Single ().PointOfSale.Warehouse;
+
+			return PartialView ("Transfers/_Create",
+				new InventoryTransfer {
+					From = warehouse,
+					FromId = warehouse.Id
+				});
 		}
 
 		[HttpPost]
@@ -654,6 +676,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					id = item.Id
 				});
 			}
+			item.Details.ForEach (x => ValidateInventoryDetailStock (x));
 
 			if (Request.IsAjaxRequest ())
 				return PartialView ("Transfers/_MasterEditView", item);
@@ -728,6 +751,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public JsonResult EditTransferDetailQuantity (int id, decimal value)
 		{
 			var detail = InventoryTransferDetail.Find (id);
+			ValidateInventoryDetailStock (detail);
 
 			if (value >= 0) {
 				detail.Quantity = value;
@@ -739,13 +763,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return Json (new {
 				id = id,
-				value = detail.Quantity
+				value = detail.Quantity,
+				errors = detail.Errors
 			});
 		}
 
 		public ActionResult GetTransferItem (int id)
 		{
-			return PartialView ("Transfers/_DetailEditView", InventoryTransferDetail.Find (id));
+			var item = InventoryTransferDetail.Find (id);
+			ValidateInventoryDetailStock (item);
+			return PartialView ("Transfers/_DetailEditView", item);
 		}
 
 		[HttpPost]
@@ -767,6 +794,27 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult ConfirmTransfer (int id)
 		{
 			var item = InventoryTransfer.TryFind (id);
+
+			item.Details.ForEach (x => ValidateInventoryDetailStock (x));
+
+			if (item == null || item.IsCompleted || item.IsCancelled)
+				return RedirectToAction ("Issues");
+
+			if (item.Details.Any(x => x.Errors.Any())) {
+				Response.StatusCode = 400;
+				return Content (Resources.NoStockEnough);
+			}
+
+			if (item.Details.Any (x => !x.Product.IsStockable)) {
+				Response.StatusCode = 400;
+				return Content (Resources.Product + " " + Resources.No + " " +  Resources.Stockable);
+			}
+
+			if (item.Details.Any(x => x.Errors.Any())) {
+				Response.StatusCode = 400;
+				return RedirectToAction("EditTransfer", new { id = id } );
+			}
+
 
 			if (item == null || item.IsCompleted || item.IsCancelled)
 				return RedirectToAction ("Transfers");
@@ -1413,6 +1461,32 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 							&& !z.Receipt.IsCancelled && z.Receipt.IsCompleted).Sum (z => (decimal?) z.Quantity) ?? 0),
 				}).ToList ();
 			return item;
+		}
+
+		private decimal QuantityInWarehouse (int warehouse_id, int product_id) {
+			return LotSerialTracking.Queryable.Where (x => x.Warehouse.Id == warehouse_id
+			&& x.Product.Id == product_id).Sum (x => (decimal?) x.Quantity) ?? 0;
+		}
+
+		private void ValidateInventoryDetailStock (InventoryTransferDetail detail) {
+				var stock = QuantityInWarehouse (detail.Transfer.From.Id, detail.Product.Id);
+				detail.Errors = new List<string> ();
+				if (stock < detail.Quantity) {
+					var error = string.Format (Resources.NoStockEnough, detail.ProductName, stock,
+						(detail.Product.UnitOfMeasurement != null ? detail.Product.UnitOfMeasurement.Name : Resources.ToBeDefined));
+					detail.Errors.Add (error);
+				}
+		}
+
+		private void ValidateInventoryDetailStock (InventoryIssueDetail detail)
+		{
+			var stock = QuantityInWarehouse (detail.Issue.Warehouse.Id, detail.Product.Id);
+			detail.Errors = new List<string> ();
+			if (stock < detail.Quantity) {
+				var error = string.Format (Resources.NoStockEnough, detail.ProductName, stock,
+					(detail.Product.UnitOfMeasurement != null ? detail.Product.UnitOfMeasurement.Name : Resources.ToBeDefined));
+				detail.Errors.Add (error);
+			}
 		}
 
 		#endregion

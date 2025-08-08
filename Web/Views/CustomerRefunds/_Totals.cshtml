@@ -36,21 +36,37 @@
     </li>
 </ul>
 
+@*<div>balance @Model.SalesOrder.Balance</div>
+<div>refund @Model.Total</div>*@
+
 <script type="text/javascript">
 
     $(document).ready(function () {
         if (@Model.SalesOrder.Balance < @Model.Total) {
             var order_id = @Model.SalesOrder.Id;
-            var info = "@Html.Raw(string.Format(
-                       Resources.RefundPaysSalesOrder, Model.SalesOrder.Id, Model.Total - Model.SalesOrder.Balance,
-                        Model.SalesOrder.Currency
-                       )
-                       )"
+            var is_paid = @Json.Encode(Model.SalesOrder.IsPaid);
+            @*var refund = @((Model.Total - Model.SalesOrder.Balance));*@
+            var refund_to_credit_note = @Json.Encode(WebConfig.RefundToCreditNote);
 
+            var info = "";
+
+            if (is_paid == true) {
+                if (refund_to_credit_note == true) {
+                    info = "@Html.Raw(string.Format(Resources.RefundToCreditNote,Model.Id, Model.Total - Model.SalesOrder.Balance, Model.Currency))";
+                } else {
+                    info = "@Html.Raw(Resources.Refund + ": " + (Model.Total - Model.SalesOrder.Balance).ToString("c"))";
+                }
+            } else {
+                info = "@Html.Raw(string.Format(
+                       Resources.RefundPaysSalesOrder, Model.SalesOrder.Id, Model.Total - Model.SalesOrder.Balance,
+                        Model.SalesOrder.Currency)
+                       )"
+            }
             $('.alert').css("display", 'block');
             $('.alert').text(info).fadeIn(1).delay(5000)
         }
         else {
+            console.log("sigo debiendo");
             $('.alert').css("display", 'none');
         }
 

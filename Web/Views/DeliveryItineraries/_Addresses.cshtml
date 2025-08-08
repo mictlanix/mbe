@@ -1,0 +1,10 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model IEnumerable<Mictlanix.BE.Web.Models.DeliveryItineraryAddressViewModel>
+
+<ul id="addresses" class="list-items">
+@foreach (var item in Model.OrderByDescending(x => x.DeliveryOrder.ShipTo.Id)) {
+    @Html.Partial("_Address", item)
+}
+</ul>

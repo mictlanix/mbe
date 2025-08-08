@@ -12,10 +12,12 @@
 }
 
 @{
-	var delivery_payments = SalesOrderPayment.Queryable.Where(x => x.Payment.CashSession == null).
-		Select(x => x.SalesOrder).OrderByDescending(x => x.Id).Take(WebConfig.PageSize).ToList();
-	var cash_payments = Model.Details.Where (x => !x.IsPaid).ToList ();
-				var payments = CustomerPayment.Queryable.Where(x => x.PaymentType == PaymentType.CreditPayment || x.PaymentType == PaymentType.PaymentInAdvance).OrderByDescending(x => x.Id).Take(WebConfig.PageSize).ToList();
+				var delivery_payments = SalesOrderPayment.Queryable.Where(x => x.Payment.CashSession == null).
+					Select(x => x.SalesOrder).OrderByDescending(x => x.Id).Take(WebConfig.PageSize).ToList();
+				var cash_payments = Model.Details.Where (x => !x.IsPaid).ToList ();
+				var payments = CustomerPayment.Queryable.Where(x => x.PaymentType == PaymentType.CreditPayment
+																																																								|| x.PaymentType == PaymentType.PaymentInAdvance
+																																																								|| (x.PaymentType == PaymentType.CreditNote)).OrderByDescending(x => x.Id).Take(WebConfig.PageSize).ToList();
 }
 
 <h2>@Resources.DisplayName_CustomerPayments</h2>

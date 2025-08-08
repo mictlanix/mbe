@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model Customer
@@ -9,6 +9,8 @@
     <td>@Html.DisplayFor(x => x.PriceList.Name)</td>
     <td>@Html.DisplayFor(x => x.CreditLimit)</td>
     <td>@Html.DisplayFor(x => x.CreditDays)</td>
+    <td>@Html.SafeDisplayFor(x => x.SalesPerson.Nickname)
+    </td>
     <td class="actions">
        @if (ViewBag.Privilege.AllowRead) {
         @Html.ActionLink(" ", "Details", new { id = Model.Id }, new { @class = "button icon view icon-only", @title = Resources.Details })
