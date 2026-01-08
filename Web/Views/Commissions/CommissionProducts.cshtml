@@ -4,7 +4,7 @@
 @using Mictlanix.BE.Web.Models
 @model Search<CommissionProduct>
 @{
-    ViewBag.Title = Resources.DeliveryItineraries;
+    ViewBag.Title = Resources.Commissions + " " + Resources.Product;
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = CurrentUser.GetPrivilege (SystemObjects.DeliveryItineraries);
 }
@@ -39,8 +39,7 @@
 	        </div>
 	    </div>
 	</div>
-    <h1>@Resources.DeliveryItineraries</h1>
-				<h2>@CurrentUser.UserSettings.PointOfSale.Warehouse.Name</h2>
+				<h1>@Resources.Commissions @Resources.Product</h1>
 </div>
 <div id="activity-indicator">
     <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
@@ -48,9 +47,18 @@
 @*<div id="search-results" data-url="@Url.Action("Index")">
     @Html.Partial("_Index", Model)
 </div>*@
+<table>
+
 @foreach(var item in Model.Results) {
-				<div>@item.Product.Code - @item.Product.Name - @item.Commission.Name  -  @item.Commission.CommissionRate</div>
+				<tr>
+								<td>@item.Product.Id</td>
+								<td>@item.Product.Code</td>
+								<td>@item.Product.Name</td>
+								<td>@item.Commission.Name</td>
+								<td>@item.Commission.CommissionRate</td>
+				</tr>
 }
+</table>
 
 <script type="text/javascript">
 				$('a.to-validate').editable({

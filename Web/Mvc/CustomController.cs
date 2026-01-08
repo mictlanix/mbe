@@ -42,6 +42,7 @@ using MimeKit;
 
 namespace Mictlanix.BE.Web.Mvc
 {
+	[SessionVersion]
 	public abstract class CustomController : Controller {
 		static string url_reports = null;
 

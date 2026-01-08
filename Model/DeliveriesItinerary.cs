@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using Castle.ActiveRecord.Framework;
-using Castle.ActiveRecord;
-using Mictlanix.BE.Model;
 using System.Linq;
+using Castle.ActiveRecord;
+using Castle.ActiveRecord.Framework;
+using System.ComponentModel.DataAnnotations;
 
 namespace Mictlanix.BE.Model {
 	[ActiveRecord ("deliveries_itinerary")]

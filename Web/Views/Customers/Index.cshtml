@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
@@ -20,11 +20,11 @@
 	                <span class="glyphicon glyphicon-plus"></span>
 	            </a>
 	        }
-			@if (Privilege.AllowUpdate) {
+			@*@if (Privilege.AllowUpdate) {
 				<a class="btn btn-primary" href="/Customers/Merge" data-modal-id="customer-modal">
 					<span class="glyphicon glyphicon-transfer"></span>
 				</a>
-			}
+			}*@
 			@if (CurrentUser.IsAdministrator) {
 				<a class="btn btn-primary" href="/Customers/Download">
 					<span class="glyphicon glyphicon-download-alt"></span>

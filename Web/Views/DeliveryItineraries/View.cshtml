@@ -4,15 +4,15 @@
 @model DeliveriesItinerary
 
 @{
-				ViewBag.Title = Resources.DeliveryOrder;
+				ViewBag.Title = Resources.DeliveryItinerary;
 				var CurrentUser = Html.CurrentUser() ?? new User();
-				var deliveryPrivilege = Html.GetPrivilege(CurrentUser, SystemObjects.DeliveryOrders);
+				var deliveryPrivilege = Html.GetPrivilege(CurrentUser, SystemObjects.DeliveryItineraries);
 }
 
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
-<h2>@Resources.DeliveryOrder</h2>
+<h2>@Resources.DeliveryItinerary</h2>
 
 <div id="master-section">
 				@Html.Partial("_DisplayView")
@@ -44,18 +44,12 @@
 </div>
 @if (deliveryPrivilege.AllowRead)
 {
-				if (WebConfig.DeliveryOrdersUseMiniPrinter)
-				{
 								<div class='pull-right'>
-												@Html.ActionLink(Resources.PrintTicket, "Print", new { id = Model.Id }, new { @class = "button icon print", target = "_blank" })
+												@Html.ActionLink(string.Format(Resources.PrintItem, Resources.DeliveryItinerary), "Print", new { id = Model.Id }, new { @class = "button icon print", target = "_blank" })
 								</div>
-				}
-				else
-				{
 								<div class='pull-right'>
-												@Html.ActionLink(Resources.PrintFormat, "PrintFormat", new { id = Model.Id }, new { @class = "button icon print", target = "_blank" })
+												@Html.ActionLink(string.Format(Resources.PrintItem, Resources.DeliveryNotes), "PrintDeliveryNotes", new { id = Model.Id }, new { @class = "button icon print", target = "_blank" })
 								</div>
-				}
 }
 
 @*@if (WebConfig.DeliveryOrderRequiresApprobation && schedulePrivilege.AllowRead && Model.IsCompleted

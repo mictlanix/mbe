@@ -241,8 +241,8 @@ namespace Mictlanix.BE.Model {
 		IssuedLocationId = 103,
 		//[Display (Name = "SearchAllSalesOrderFromCurrentStore", ResourceType = typeof (Resources))]
 		//SearchAllSalesOrderFromAllUsers = 104,
-		[Display (Name = "SearchAllSalesOrderFromAllStores", ResourceType = typeof (Resources))]
-		SearchAllSalesOrderFromAllStores = 105,
+		//[Display (Name = "SearchAllSalesOrderFromAllStores", ResourceType = typeof (Resources))]
+		//SearchAllSalesOrderFromAllStores = 105,
 		[Display (Name = "Pricing", ResourceType = typeof (Resources))]
 		Pricing = 106,
 		[Display (Name = "ProductionSites", ResourceType = typeof (Resources))]

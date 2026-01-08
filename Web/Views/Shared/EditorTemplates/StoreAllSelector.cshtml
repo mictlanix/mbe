@@ -4,14 +4,13 @@
 
 @{
 				var field = ViewData.TemplateInfo.HtmlFieldPrefix;
-				var atributos = ViewData["htmlAttributes"] as IDictionary<object, object>;
 }
 
-@*				@Html.TextBox("", Model)
+@*@Html.TextBox("", Model)
 				<script type="text/javascript">
 								$(function () {
-												$("#@field").tokenInput("@Url.Action("GetSuggestions", "Warehouses")", {
-																hintText: "@Resources.ChooseWarehouse",
+												$("#@field").tokenInput("@Url.Action("GetSuggestions", "Stores")", {
+																hintText: "@Resources.ChooseStore",
 																noResultsText: "@Resources.NoResultsText",
 																searchingText: "@Resources.SearchingText",
 																queryParam: "pattern",
@@ -21,41 +20,22 @@
 								});
 				</script>*@
 
-@if(atributos != null) {
-				foreach(var atributo in atributos) {
-								@atributo.Key
-				}
-}
-
-@if (atributos != null){
-				if (atributos.ContainsKey("readonly")) {
-								<div>readonly</div>
-				}
-				else {
-				<div>Sin Readonly</div>
-				}
-}
-else {
-				@*<div>Sin atributos</div>*@
-}
-
-<select type="text" href="#" class="form-control text-box single-line valid" name="@field"></select>
+<select type="text" href="#" class="form-control text-box single-line valid" name="@field" id="@field"></select>
 <script>
 				$(function () {
 								const select = document.getElementsByName('@field')[0];
-								var model = "@(Model == null ? string.Empty : Model.ToString())"
-								fetch(`/Warehouses/List/${model}`).then(respuest => respuest.json())
+								var model = "@(Model.HasValue ? Model : null)"
+								fetch("/Stores/ListAll").then(respuest => respuest.json())
 												.then(datos => {
 																datos.forEach(option => {
 																				const element = document.createElement('option');
 																				element.value = option.value;
 																				element.textContent = option.text;
-																				console.log(element)
 																				if (option.value == model) {
 																								element.selected = true;
 																				}
-																				select.add(element);
-																})
+																				select.appendChild(element);
+																});
 												})
 				});
 </script>

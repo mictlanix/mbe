@@ -208,8 +208,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 				//var session = FormsAuthentication.GetAuthCookie()
 
+				user.SessionVersion++;
 				user.UpdateAndFlush ();
-				
+
 			}
 
 			return RedirectToAction ("Index");
@@ -247,6 +248,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				var user = MBEQueryable.IQUsers.SingleOrDefault (s => s.UserName == id);
 				user.UserSettings = null;
 				user.Privileges.Clear ();
+				user.SessionVersion++;
 				user.DeleteAndFlush ();
 			}
 

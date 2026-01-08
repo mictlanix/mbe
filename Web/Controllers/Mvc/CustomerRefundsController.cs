@@ -131,11 +131,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				entity = SalesOrder.TryFind (id);
 			}
 
-			//if (CustomerRefund.Queryable.Any (x => x.SalesOrder == entity && !x.IsCancelled && x.IsCompleted)) {
-			//	Response.StatusCode = 400;
-			//	return Content (Resources.RefundableItemsNotFound);
-			//}
-
 			if (entity == null) {
 				Response.StatusCode = 400;
 				return Content (Resources.SalesOrderNotFound);
@@ -145,20 +140,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				Response.StatusCode = 400;
 				return Content (Resources.SalesOrderIsNotRefundable);
 			}
-
-			//if (entity.Creator != CurrentUser.Employee && entity.Updater != CurrentUser.Employee && !CurrentUser.IsAdministrator) {
-			//	Response.StatusCode = 400;
-			//	return Content (Resources.CreatorDoesntMatchWithCurrentUser);
-			//}
-
-
-			//El sistema debe permitir realizar la devolución en cualquier tienda
-			//Las políticas de la empresa definirán los términos de las devoluciones
-
-			//if (entity.Store != WebConfig.Store) {
-			//	Response.StatusCode = 400;
-			//	return Content (Resources.InvalidStore);
-			//}
 
 			var item = new CustomerRefund ();
 
@@ -198,13 +179,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					Price = x.Price,
 					ExchangeRate = x.ExchangeRate,
 					Currency = x.Currency,
-					Warehouse = WebConfig.PointOfSale.Warehouse,
+					Warehouse = x.Warehouse,
 				};
 
 				item.Details.Add (detail);
 			}
 
-			if (item.Details.Count == 0) {
+			if (item.Details.Count <= 0) {
 				Response.StatusCode = 400;
 				return Content (Resources.RefundableItemsNotFound);
 			}
@@ -362,7 +343,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 
 
-				if (entity.Total > order.Balance) {
+				if (entity.Total >= order.Balance) {
 
 					var cashback = entity.Total - order.Balance;
 					if (!order.IsPaid) {
@@ -371,32 +352,34 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					}
 					order.UpdateAndFlush ();
 
-					var item = new CreditNote {
-						SalesOrder = order,
-						Date = dt,
-						Refunded = 0,
-						Customer = entity.Customer,
-						CustomerRefund = entity,
-						CustomerPayment = new CustomerPayment {
-							CashSession = cash_session,
-							CreationTime = dt,
-							Creator = CurrentUser.Employee,
-							Amount = cashback,
-							Currency = entity.Currency,
-							Customer = entity.Customer,
-							PaymentType = PaymentType.CreditNote,
-							Method = PaymentMethod.NA,
-							ModificationTime = dt,
-							Serial = (CustomerPayment.Queryable.Where (x => x.Store == WebConfig.Store).Max (y => (int?) y.Serial) ?? 0) + 1,
-							Store = WebConfig.Store,
-							Updater = CurrentUser.Employee,
+					if (cashback > 0) {
+						var item = new CreditNote {
+							SalesOrder = order,
 							Date = dt,
-							CustomerId = entity.Customer.Id,
-						},
-					};
+							Refunded = 0,
+							Customer = entity.Customer,
+							CustomerRefund = entity,
+							CustomerPayment = new CustomerPayment {
+								CashSession = cash_session,
+								CreationTime = dt,
+								Creator = CurrentUser.Employee,
+								Amount = cashback,
+								Currency = entity.Currency,
+								Customer = entity.Customer,
+								PaymentType = PaymentType.CreditNote,
+								Method = PaymentMethod.NA,
+								ModificationTime = dt,
+								Serial = (CustomerPayment.Queryable.Where (x => x.Store == WebConfig.Store).Max (y => (int?) y.Serial) ?? 0) + 1,
+								Store = WebConfig.Store,
+								Updater = CurrentUser.Employee,
+								Date = dt,
+								CustomerId = entity.Customer.Id,
+							},
+						};
 
-					item.CustomerPayment.CreateAndFlush ();
-					item.CreateAndFlush ();
+						item.CustomerPayment.CreateAndFlush ();
+						item.CreateAndFlush ();
+					}
 				}
 
 				entity.IsCompleted = true;

@@ -43,9 +43,12 @@ using System.Threading.Tasks;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	public class AccountController : CustomController {
-		bool ValidateUser (string username, string password)
+		User GetUser (string username, string password)
 		{
-			var item = Model.User.Queryable.SingleOrDefault (x => x.UserName == username);
+			var item = Model.User.Queryable.SingleOrDefault (x => x.UserName == username && x.Password == SecurityHelpers.SHA1(password));
+
+			if(item == null)
+				return null;
 
 			if (WebConfig.UserSettingsMode == UserSettingsMode.Managed && item.UserSettings != null) {
 				var localSettings = new LocalSettings ();
@@ -65,7 +68,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				LocalSettings (localSettings);
 			}
 
-			return item != null && item.Password == SecurityHelpers.SHA1 (password);
+			return item;
 		}
 
 		bool CreateUser (string username, string password, string email)
@@ -183,11 +186,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return result;
 		}
 
+		[AllowAnonymous]
 		public ActionResult LogOn ()
 		{
 			return View ();
 		}
 
+		[AllowAnonymous]
 		[HttpPost]
 		public ActionResult LogOn (LogOnModel model, string returnUrl)
 		{
@@ -196,10 +201,35 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			// force lowercase for usernames
 			model.UserName = model.UserName.ToLower ();
+			var user = GetUser (model.UserName, model.Password);
 
-			if (ValidateUser (model.UserName, model.Password)) {
-				FormsAuthentication.SetAuthCookie (model.UserName, model.RememberMe);
+			if (user != null) {
+				//FormsAuthentication.SetAuthCookie (model.UserName, model.RememberMe);
+				FormsAuthentication.SetAuthCookie (user.UserName, model.RememberMe);
+				//FormsAuthenticationTicket ticket = new FormsAuthenticationTicket (
+				//	1,
+				//	model.UserName,
+				//	DateTime.Now,
+				//	DateTime.Now.AddMinutes (FormsAuthentication.Timeout.TotalMinutes),
+				//	model.RememberMe,
+				//	user.SessionVersion.ToString(),
+				//	FormsAuthentication.FormsCookiePath
+				//);
+				//string encTicket = FormsAuthentication.Encrypt (ticket);
+				//HttpCookie faCookie = new HttpCookie (FormsAuthentication.FormsCookieName, encTicket);
+				//Response.Cookies.Add (faCookie);
+
 				var cookie = FormsAuthentication.GetAuthCookie(model.UserName, model.RememberMe);
+				var sessionTicket = new HttpCookie ("SessionVersion", user.SessionVersion.ToString ()) {
+					Expires = cookie.Expires,
+					Path = cookie.Path,
+					Secure = cookie.Secure,
+					HttpOnly = true
+				};
+				cookie.HttpOnly = true;
+				Response.Cookies.Add (sessionTicket);
+
+
 				if (Url.IsLocalUrl (returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith ("/")
 				    && !returnUrl.StartsWith ("//") && !returnUrl.StartsWith ("/\\")) {
 					return Redirect (returnUrl);

@@ -141,7 +141,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					      select x;
 				} else {
 					qry = from x in PurchaseOrder.Queryable
-					      where x.Supplier.Name.Contains (search.Pattern)
+					      where x.Supplier.Name.Contains (search.Pattern) ||
+					      x.Details.Any(y => y.Warehouse.Name.Contains (search.Pattern))
 					      select x;
 					if (pattern.Contains (Resources.WilcardStringPatternForSearch)) {
 						qry = from x in PurchaseOrder.Queryable

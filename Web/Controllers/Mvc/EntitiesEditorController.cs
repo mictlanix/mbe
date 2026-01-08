@@ -8,20 +8,14 @@ using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Mvc;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
-	public class CorrectionController : CustomController {
-		// GET: Correction
+	public class EntitiesEditorController : CustomController {
+
 		public ActionResult Index ()
 		{
 			return View ();
 		}
+		// GET: Correction
 
-		// GET: Correction/Details/5
-		public ActionResult Details (int id)
-		{
-			return View ();
-		}
-
-		// GET: Correction/Create
 		public ActionResult RestoreDeliverableOrderStatus ()
 		{
 			return View ();
@@ -61,55 +55,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View ("RestoredOrderDeliveryStatus", (object)str );
 		}
 
-		// POST: Correction/Create
-		[HttpPost]
-		public ActionResult Create (FormCollection collection)
+		public ActionResult ViewSalesOrder (int id)
 		{
-			try {
-				// TODO: Add insert logic here
-
-				return RedirectToAction ("Index");
-			} catch {
-				return View ();
-			}
+			var salesOrder = SalesOrder.Queryable.Where (x => x.Id == id).SingleOrDefault ();
+			return View (salesOrder);
 		}
 
-		// GET: Correction/Edit/5
-		public ActionResult Edit (int id)
-		{
-			return View ();
-		}
-
-		// POST: Correction/Edit/5
-		[HttpPost]
-		public ActionResult Edit (int id, FormCollection collection)
-		{
-			try {
-				// TODO: Add update logic here
-
-				return RedirectToAction ("Index");
-			} catch {
-				return View ();
-			}
-		}
-
-		// GET: Correction/Delete/5
-		public ActionResult Delete (int id)
-		{
-			return View ();
-		}
-
-		// POST: Correction/Delete/5
-		[HttpPost]
-		public ActionResult Delete (int id, FormCollection collection)
-		{
-			try {
-				// TODO: Add delete logic here
-
-				return RedirectToAction ("Index");
-			} catch {
-				return View ();
-			}
-		}
 	}
 }

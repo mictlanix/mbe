@@ -10,11 +10,10 @@
 }
 
 
-<table>
+<table class="debts">
     <thead>
         <tr>
             <th>@Resources.Labels</th>
-            <th>@Resources.Sales</th>
 												<th>Comisi&oacute;n</th>
         </tr>
     </thead>
@@ -22,26 +21,21 @@
         @foreach(var item in Model.Details.GroupBy(i => new { i.Label })
                 .Select(g => new { Family = g.Key, Details = g.ToList() })) {
             <tr>
-                <td>@item.Family.Label</td>
-                <td>@(item.Details.Sum(x => (decimal)x.TotalDetail).ToString("c"))</td>
-                <td>@(item.Details.Sum(x => (decimal)x.Commission).ToString("c"))</td>
+                <td>@(item.Family.Label == null ? "** SIN ETIQUETAS **": item.Family.Label)</td>
+                <td>@(item.Details.Where(x => x.Payable && x.PaidStatus).Sum(x => (decimal)x.Commission).ToString("c"))</td>
             </tr>
         }
     </tbody>
     <tfoot>
         <tr>
-            <td class="total">Total de Venta</td>
-            <td class="total">@(Model.Details.Sum(x => (decimal)x.TotalDetail).ToString("c"))</td>
-        </tr>
-        <tr>
-            <td class="total">Cobrado</td>
-            <td class="total">@(Model.Details.Sum(x => (decimal)(x.TotalDetail * x.PaidStatus)).ToString("c"))</td>
-            <td class="total">@(Model.Details.Sum(x => (decimal)x.Commission).ToString("c"))</td>
+            <td class="total">@Resources.Total</td>
+            <td class="total">@(Model.Details.Where(x => x.Payable && x.PaidStatus )
+                                    .Sum(x => (decimal)(x.Commission)).ToString("c"))</td>
         </tr>
     </tfoot>
 </table>
 
-<div class="col-sm-12">
+@*<div class="col-sm-12">
 				<div class='pull-right'>
 
         @using (Html.BeginForm("PrintCommissionTicket", "Reports", null, FormMethod.Post, new { target = "_blank" }))
@@ -52,16 +46,21 @@
 												<button type="submit" class="button icon print">@string.Format(Resources.ItemReceipt, Resources.Commissions)</button>
         }
 				</div>
-</div>
-
-<table class='table table-condensed '>
+</div>*@
+<div class="clearfix"></div>
+<table class='table table-condensed debts'>
     <tbody>
     <tr>
+        <td>@Resources.SalesOrder</td>
+        <td>@Resources.Payment</td>
+        <td>@Resources.SalesAgent</td>
+        <td>@Resources.Customer</td>
         <td>@Resources.ProductName</td>
-        <td>Total del Detalle</td>
-        <td>Porcentaje de Comisi&oacute;n</td>
+        <td>@Resources.Category</td>
+        <td>@Resources.Rate</td>
         <td>Comisi&oacute;n</td>
-        <td>Comisi&oacute;n Total Del Pedido</td>
+        <td>@Resources.Movement</td>
+        <td></td>
     </tr>
 @foreach (var item in Model.Details.GroupBy(i => new
 {
@@ -71,41 +70,133 @@
     i.OrderDate,
     i.Paid,
     i.Movement,
-    i.Participation
+    i.Participation,
+    i.PaidStatus,
+    i.Payable
 })
     .Select(g => new { Order = g.Key, Details = g.ToList() })
-    .OrderByDescending(g => g.Order.SalesOrder))
+    .OrderByDescending(g => g.Order.Payable)
+    .ThenBy(g => g.Order.SalesOrder))
 {
-    <tr style="background-color:cadetblue">
-								<td>@Resources.SalesOrder: @item.Order.SalesOrder</td>
-								<td>@Resources.Customer: @item.Order.Customer</td>
-								<td>@Resources.SalesOrderDate: @item.Order.OrderDate</td>
-								<td>@Resources.ModificationTime: @item.Order.PaymentDate</td>
-								<td>@Resources.Paid: @item.Order.Paid</td>
-								<td>Movimiento: @item.Order.Movement</td>
-								<td>Movimiento: @item.Order.Participation</td>
-    </tr>
-    foreach (var d in item.Details)
-    {
+    @*<tr style="background-color:@(item.Order.Payable ? "#47d147" : "#f2f2f2")">
+								<td>@Resources.SalesOrder: @Html.ActionLink((string)item.Order.SalesOrder.ToString(), "Print", "Payments",
+                                                          new { id = item.Order.SalesOrder }, new { title = Resources.Details, target = "_blank" })</td>
+								<td>@item.Order.Customer</td>
+								<td>@Resources.SalesOrderDate: <br /> @string.Format("{0:yyyy-MM-dd}", item.Order.OrderDate)</td>
+																<td>
+																				@if (item.Order.PaidStatus)
+																				{
+                        <span>@Resources.Paid: </span><br />
+																							<span>	@string.Format("{0:yyyy-MM-dd}", item.Order.PaymentDate)</span>
+																				}
+
+<td>
+								
+				</td>
+								<td>@item.Order.Movement</td>
+																<td>@if(item.Order.Payable) {
+																				@(item.Details.Sum(x => (decimal)(x.Commission)).ToString("c"))
+                }
+																</td>
+    </tr>*@
+foreach (var d in item.Details)
+{
         <tr>
-            <td>@d.ProductName</td>
-            <td>@d.Label</td>
-            <td>@(d.TotalDetail.ToString("c"))</td>
-            <td>@d.CommissionRate</td>
-            <td>@(d.Commission.ToString("c"))</td>
-        </tr>
-    }
-    <tr>
+												<td>
+																@Html.ActionLink((string)item.Order.SalesOrder.ToString(), "Print", "Payments",
+           new { id = item.Order.SalesOrder }, new { title = Resources.Details, target = "_blank" })
+																				</td>
+												<td>@(item.Order.PaidStatus ? string.Format("{0:yyyy-MM-dd}", item.Order.PaymentDate) : string.Empty)</td>
+            <td>@Employee.Find(d.SalesPerson).Nickname</td>
+            <td title="@d.Customer">@(d.Customer.Length > 15 ? d.Customer.Substring(0, 15) + "..." : d.Customer)</td>
+            <td title="@d.ProductName">@(d.ProductName.Length > 40 ? d.ProductName.Substring(0, 40) + "..." : d.ProductName)</td>
+								<td>
+												@if (d.Label == null)
+												{
+																<a id='contact' class='editable' data-type='select' data-placement='right' data-pk='@d.ProductId'
+																			data-source='@Url.Action("LabelList","Commissions", new { id = d.ProductId })' data-source-cache='false'
+																			data-url='@Url.Action("SetCommissionLabel","Commissions", new { id = d.ProductId })'
+																			data-inputclass='input-xxlarge' data-emptytext='@Resources.Empty'>
+																								@Resources.Edit
+																</a>
+            }
+            else {
+																            <span>@d.Label</span>
+                        }
+																            </td>
+                        @*<td>@(d.TotalDetail.ToString("c"))</td>*@
+                        <td>@d.CommissionRate</td>
+                        <td>@(d.Payable ? (d.Commission).ToString("c") : string.Empty)</td>
+                        <td>@d.Movement @(d.Payable ? "PAGADO" : "PAGO PENDIENTE")</td>
+                        <td>@d.Participation</td>
+                    </tr>
+                }
+    @*<tr>
         <td colspan="4"></td>
-        <td>@(item.Details.Sum(x => (decimal)x.Commission).ToString("c"))</td>
-    </tr>
+        <td></td>
+    </tr>*@
 }
     </tbody>
     <tfoot>
 	    <tr>
-	        <td colspan='4'/>
+	        @*<td colspan='4'/>
 	        <td><b>@Model.Details.Sum(x => (decimal)x.TotalDetail).ToString("c")</b></td>
-	        <td><b>@Model.Details.Sum(x => (decimal)x.Commission).ToString("c")</b></td>
+	        <td><b>@Model.Details.Where(x => x.Payable).Sum(x => (decimal)x.Commission).ToString("c")</b></td>*@
 	    </tr>
     </tfoot>
 </table>
+
+<script>
+				$('a.editable').editable({
+
+        success: function (response, newValue) {
+												$.post('@Url.Action("CommissionsBySalesPerson",
+               new
+               {
+                   employee = Model.CommissionAgent == null?
+                    (int?)null : Model.CommissionAgent.Id
+                   ,
+                   StartDate = Model.DateRange.StartDate,
+                   EndDate = Model.DateRange.EndDate
+               })', 
+																function (respuesta) {
+                    $('#search-results').html(respuesta); 
+                    $("#activity-indicator").hide();
+																}
+												).fail(function (xhr, status, error) {
+																$('#search-results').html('Error: ' + error);
+												});
+
+								},
+								error: function (response, newValue) {
+												//console.log(response)
+												//console.log(newValue)
+												//if (response.status === 400) {
+												//				console.log("vamos bien...")
+            //}
+            return response.responseText;
+								},
+								validate: function (value) {
+												if (value < 0) {
+																console.log(value)
+												}
+								},
+								display: function (value, response) {
+												console.log(value)
+												console.log(response)
+												if (typeof response === 'undefined')
+																return;
+
+												if (Array.isArray(response)) {
+																var arr = $.grep(response, function (o) {
+																				return o.value == value;
+																});
+																if (arr.length != 0) {
+																				$(this).html(arr[0].text);
+																}
+												} else {
+																$(this).html(response.value);
+												}
+								}
+				});
+</script>

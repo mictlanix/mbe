@@ -79,17 +79,27 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			IQueryable<InventoryReceipt> qry = from x in InventoryReceipt.Queryable
 							   where x.Warehouse == warehouse || x.Creator == CurrentUser.Employee
 							   select x;
+			var pattern = search.Pattern;
 			int id = 0;
-			int.TryParse (search.Pattern, out id);
 
-			if (id > 0) {
-				qry = from x in InventoryReceipt.Queryable
-				      where x.Order.Id == id || x.Id == id || x.Serial == id
-				      select x;
-			} else if (!string.IsNullOrEmpty (search.Pattern)) {
-				qry = from x in qry
-				      where x.Warehouse.Name.Contains (search.Pattern)
-				      select x;
+
+			if (!string.IsNullOrEmpty(pattern)) {
+				pattern = pattern.Trim ();
+				int.TryParse(pattern, out id);
+				if (id > 0) {
+					qry = from x in InventoryReceipt.Queryable
+					      where x.Order.Id == id || x.Id == id || x.Serial == id
+					      select x;
+				} else {
+					if (pattern.Contains (Resources.WilcardStringPatternForSearch) && GetAccessPrivilege(SystemObjects.InventoryReceipts).AllowDelete) {
+						qry = from x in InventoryReceipt.Queryable
+						      select x;
+					} else {
+						qry = from x in qry
+						      where x.Warehouse.Name.Contains (pattern)
+						      select x;
+					}
+				}
 			}
 
 			qry = from x in qry
@@ -188,12 +198,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public JsonResult AddReceiptDetail (int movement, int product)
+		public ActionResult AddReceiptDetail (int movement, int product)
 		{
 			var p = Product.Find (product);
+			var receipt = InventoryReceipt.Find (movement);
+
+
+			if (receipt.Warehouse != WebConfig.PointOfSale.Warehouse) {
+				Response.StatusCode = 400;
+				return Content (Resources.UserCannotConfirmWarehouseEntry);
+			}
 
 			var item = new InventoryReceiptDetail {
-				Receipt = InventoryReceipt.Find (movement),
+				Receipt = receipt,
 				Product = p,
 				ProductCode = p.Code,
 				ProductName = p.Name,
@@ -211,9 +228,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public JsonResult EditReceiptDetailQuantity (int id, decimal value)
+		//public JsonResult EditReceiptDetailQuantity (int id, decimal value)
+		public ActionResult EditReceiptDetailQuantity (int id, decimal value)
 		{
 			var detail = InventoryReceiptDetail.Find (id);
+			if (detail.Receipt.Warehouse != WebConfig.PointOfSale.Warehouse) {
+				Response.StatusCode = 400;
+				return Content (Resources.UserCannotConfirmWarehouseEntry);
+			}
 
 			if (value >= 0) {
 				detail.Quantity = value;
@@ -241,9 +263,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public JsonResult RemoveReceiptDetail (int id)
+		//public JsonResult RemoveReceiptDetail (int id)
+		public ActionResult RemoveReceiptDetail (int id)
 		{
 			var item = InventoryReceiptDetail.Find (id);
+			if (item.Receipt.Warehouse != WebConfig.PointOfSale.Warehouse) {
+				Response.StatusCode = 400;
+				return Content (Resources.UserCannotConfirmWarehouseEntry);
+			}
 
 			using (var scope = new TransactionScope ()) {
 				item.DeleteAndFlush ();
@@ -262,6 +289,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			if (item == null || item.IsCompleted || item.IsCancelled)
 				return RedirectToAction ("Receipts");
+
+			if (item.Warehouse != WebConfig.PointOfSale.Warehouse && !CurrentUser.IsAdministrator) {
+				Response.StatusCode = 400;
+				return Content (Resources.UserCannotConfirmWarehouseEntry);
+			}
 
 			if (item.Details.Any (x => !x.Product.IsStockable)) {
 				Response.StatusCode = 400;

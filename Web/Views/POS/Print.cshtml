@@ -73,11 +73,11 @@
 				</tr>
 				@if (Model.Payments.Any())
 				{
-								if (Model.Refund > 0)
+								if (Model.CustomerRefunds.Count > 0)
 								{
 												<tr>
 																<td class="total text-right">@Resources.Refund</td>
-																<td class="total number">@Html.DisplayFor(x => x.Refund)</td>
+																@*<td class="total number">@Html.DisplayFor(x => x.Refund)</td>*@
 												</tr>
 								}
 								<tr>

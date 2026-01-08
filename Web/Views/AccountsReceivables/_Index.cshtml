@@ -9,7 +9,7 @@
 				var privilege = Html.GetPrivilege(user, SystemObjects.SearchCreditsFromAllStores);
 				}
 @foreach (var currency in new []{ CurrencyCode.MXN, CurrencyCode.USD, CurrencyCode.EUR }) {
-	var g = Model.Where (x => x.Currency == (int)currency);
+				var g = Model.Where (x => x.Currency == (int)currency);
 	if (g.Any ()) {
 		<table class='table table-condensed'>
 			<thead>
@@ -22,6 +22,8 @@
 			        <th class='nowrap center'>@Resources.Date</th>
 			        <th class='center'>@Resources.FiscalDocument</th>
 			        <th class='nowrap center'>@Resources.Customer</th>
+			        <th class='nowrap center'>@Resources.SalesPerson</th>
+			        <th class='nowrap center'>@Resources.SalesAgent</th>
 			        <th class='nowrap center'>@Resources.Total</th>
 			        <th class='nowrap center'>@Resources.Refunds</th>
 			        <th class='nowrap center'>@Resources.Payments</th>
@@ -32,7 +34,7 @@
 		    </thead>
 		    <tbody>
 			@foreach (var item in g) {
-				<tr >
+				<tr class="@(item.DueDate < DateTime.Now && !item.Paid ? "warning":string.Empty)">
 					<td class='date'>@item.DueDate.ToString("yyyy-MM-dd")</td>
 								@if (privilege.AllowRead) {
 												<td class='date'>@item.Store</td>
@@ -43,6 +45,8 @@
 					<td class='date'>@item.Date.ToString("yyyy-MM-dd")</td>
 					<td class='center' style='word-wrap:break-word'>@item.Invoices</td>
 					<td class='fill'>@item.Customer</td>
+					<td class='fill'>@item.Salesperson</td>
+					<td class='fill'>@item.Salesagent</td>
 					<td class='currency'>@item.Total.ToString("c")</td>
 					<td class='currency'>@item.Refunds.ToString("c")</td>
 					<td class='currency'>@item.Payments.ToString("c")</td>
@@ -58,11 +62,11 @@
 		    </tbody>
 		    <tfoot>
 			    <tr>
-			        <td class='center' colspan='6'></td>
+			        <td class='center' colspan='8'></td>
 			        <td class='currency'><b>@g.Sum(x => (decimal)x.Total).ToString("c")</b></td>
 			        <td class='currency'><b>@g.Sum(x => (decimal)x.Refunds).ToString("c")</b></td>
 			        <td class='currency'><b>@g.Sum(x => (decimal)x.Payments).ToString("c")</b></td>
-			        <td class='currency'><b>@g.Sum(x => (decimal)x.Balance).ToString("c")</b></td>
+			        <td class='currency'><b>@g.Where(x => !x.Paid).Sum(x => (decimal)x.Balance).ToString("c")</b></td>
 					<td class='center'><b>@currency</b></td>
 			    </tr>
 		    </tfoot>

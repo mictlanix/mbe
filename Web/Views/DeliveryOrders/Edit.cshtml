@@ -24,26 +24,38 @@
 		@Html.Partial("_Items", Model.Details)
     </div>
 </div>
+<div class="warning-message alert alert-danger alert-dismissible fade in" style="display:none;"></div>
 <div class='clearfix'></div>
 <div id='back-to-list' class='pull-left'>
     @Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
 </div>
 
-<div id="buttons" data-url='@Url.Action("Deliverable", new { id = Model.Id })'>
-	@Html.Partial("_buttons", Model)
+<div id="buttons" class="pull-right">
+				<button id='complete' type='submit' class="icon save">
+								@Resources.Complete
+				</button>
 </div>
 <div class='clearfix'></div>
 <script type='text/javascript'>
-$(function () {
-    $('#add-items').editable({
-		success: function (response, newValue) {
-			$('#items-container').loadUrl();
-			$('#buttons').loadUrl();
-            //$('#confirm-button').removeClass('hide');
-            setTimeout(function(){$('#add-items').editable('setValue', '');},500);
-	    }
-	}).removeClass('editable-click');
-});
+				$('#add-items').editable({
+								success: function (response, newValue) {
+												$('#items-container').loadUrl();
+								}
+				}
+				);
+					$("#complete").click(function () {
+													$.post('@Url.Action("Confirm", new { id = Model.Id })', function (detail) {
+																	//location.reload();
+																window.location.href = '@Url.Action("View", new { id = Model.Id })';
+								}, "json").fail(function (e) {
+												console.log(e);
+												DisplayErrorMessage(e.responseText)
+								});
+					});
+				function DisplayErrorMessage(errorMessage) {
+								$('.warning-message').text(errorMessage);
+								$('.warning-message').fadeIn(1).delay(5000).fadeOut(1000);
+				}
 </script>
 <style type='text/css'>
 ul.token-input-list { width: 100%; }

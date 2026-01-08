@@ -15,25 +15,20 @@
 }
 
 <div class="row">
-				<div class="col-xs-6 text-left shipandcontact">
+				<div class="col-xs-12 text-left shipandcontact">
 								<div class="row">
 												<div class="col-xs-12 uppercase">
-																<h3 class="text-left">@Resources.VehicleOperator</h3>
+																<p class="text-left">@Resources.DeliveryItinerary  : @Html.DisplayFor(x => x.Id)</p>
+												</div>
+												<div class="col-xs-12 uppercase">
+																<p class="text-left">@Resources.VehicleOperator: @Html.DisplayFor(x => x.VehicleOperator.Operator.Name)</p>
 												</div>
 												<div class="col-xs-12">
-																<h3>@Html.DisplayFor(x => x.VehicleOperator.Operator.Nickname)</h3>
+																<p><span class="mylabel">@Resources.Vehicle</span>: 
+																												@Html.DisplayFor(x => x.Vehicle.NickName) @Html.DisplayFor(x => x.Vehicle.LicensePlate)</p>
 												</div>
 												<div class="col-xs-12">
-																<p><span class="mylabel">@Resources.Vehicle</span>: </p>
-												</div>
-												<div class="col-xs-12">
-																												<p>@Html.DisplayFor(x => x.Vehicle.NickName) @Html.DisplayFor(x => x.Vehicle.LicensePlate)</p>
-												</div>
-												<div class="col-xs-12">
-																<p><span class="mylabel">@Resources.DeliveryDate</span>: </p>
-												</div>
-												<div class="col-xs-12">
-																<p>
+																<p><span class="mylabel">@Resources.DeliveryDate</span>:
 																				@Html.DisplayFor(x => x.Date)
 																</p>
 												</div>
@@ -58,34 +53,35 @@
 
 <table class="details" style="border-spacing:0 4px;border-collapse: separate;">
 				<thead>
-								@*<tr>
-												<td>@Resources.Quantity</td>
-												<td class="text-center">@Resources.Name</td>
-												<td>@Resources.SalesOrder</td>
-								</tr>*@
 				</thead>
 								<tbody>
 												@foreach (var item in Model.Details
-.GroupBy(x => new
-{
-shipto = x.DeliveryOrderDetail.DeliveryOrder.ShipTo,
-contact = x.DeliveryOrderDetail.DeliveryOrder.Contact
-})
-.Select(g => new { info = g.Key, Details = g.ToList() }))
+																.GroupBy(x => new
+																{
+																shipto = x.DeliveryOrderDetail.DeliveryOrder.ShipTo,
+																contact = x.DeliveryOrderDetail.DeliveryOrder.Contact,
+																customer = x.DeliveryOrderDetail.DeliveryOrder.Customer,
+																comment = x.DeliveryOrderDetail.DeliveryOrder.Comment
+																})
+																.Select(g => new { info = g.Key, Details = g.ToList() }))
 												{
 																<tr>
 																				<td class="line" colspan="3"></td>
 																</tr>
-																<tr class="alt">
-																				<td colspan="3">
-																								@Resources.Contact:	@Html.DisplayFor(x => item.info.contact.Name)
-																								@Html.SafeDisplayFor(x => item.info.contact.Mobile)
-																								<br />
-																								@Resources.ShipTo:	@item.info.shipto.ToString()
-																								<br />
-																				</td>
-																</tr>
-																<tr>
+																@*<tr class="alt">
+																																				<td colspan="3">
+																																								@Resources.Customer: @Html.DisplayFor(x => item.info.customer.Name)
+																																								<br />
+																																								@Resources.Contact:	@Html.DisplayFor(x => item.info.contact.Name)
+																																								@Html.SafeDisplayFor(x => item.info.contact.Mobile)
+																																								<br />
+																																								@Resources.ShipTo:	@item.info.shipto.ToString()
+																																								<br />
+																																								@Html.SafeDisplayFor(x => item.info.shipto.Comment)<br />
+																																								@Html.SafeDisplayFor(x => item.info.comment)
+																																				</td>
+																</tr>*@
+																@*<tr>
 																				<td colspan="3">
 																								<div class="row">
 
@@ -95,7 +91,7 @@ contact = x.DeliveryOrderDetail.DeliveryOrder.Contact
 																												</div>
 																								</div>
 																				</td>
-																</tr>
+																</tr>*@
 																@*if (item.info.shipto.Link != null) {
 												<tr><td colspan="3">
 															<img class="" style="" src='@Url.Action("QRCodeUrl", "Barcodes", new { url = item.info.shipto.Link })' />
@@ -111,9 +107,9 @@ contact = x.DeliveryOrderDetail.DeliveryOrder.Contact
 
 																}
 																@*<tr>
-																				<td class="line" colspan="3"></td>
-																</tr>*@
-																<tr>
+																<td class="line" colspan="3"></td>
+												</tr>*@
+																@*<tr>
 																				<td colspan="3">
 																								<div class="row" style="margin-top:10mm"></div>
 																								<div class="col-xs-8 col-xs-offset-2 text-center" style="border-top: #333 solid 1px">
@@ -121,7 +117,7 @@ contact = x.DeliveryOrderDetail.DeliveryOrder.Contact
 																												@Resources.AgreementSignature
 																								</div>
 																				</td>
-																</tr>
+																</tr>*@
 												}
 								</tbody>
 </table>
@@ -131,7 +127,7 @@ contact = x.DeliveryOrderDetail.DeliveryOrder.Contact
 <div style="min-height: 2.2mm; border-top: #333 solid 3px; border-bottom: #333 solid 1px"></div>
 <div class="row" style="margin-top:20mm">
 				<div class="col-xs-8 col-xs-offset-2 text-center" style="border-top: #333 solid 1px">
-								Firma del Transportista <br />
+								Firma del Operador <br />
 								Confirmación de Partidas y Cantidades descritas en el Despacho
 				</div>
 </div>

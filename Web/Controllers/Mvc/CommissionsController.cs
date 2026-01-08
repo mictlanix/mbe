@@ -7,9 +7,10 @@ using System.Web.Mvc;
 using Castle.ActiveRecord;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Models;
+using Mictlanix.BE.Web.Mvc;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
-	public class CommissionsController : Controller {
+	public class CommissionsController : CustomController {
 		// GET: Commissions
 		public ActionResult Index ()
 		{
@@ -28,67 +29,54 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View (search);
 		}
 
-		// GET: Commissions/Details/5
-		public ActionResult Commissions (int id)
+		public JsonResult LabelList ()
 		{
-			return View ();
+			var qry = from x in Commission.Queryable
+				  orderby x.Name
+				  select new {
+					  value = x.Id,
+					  text = x.Name
+				  };
+
+			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
 		}
 
-		// GET: Commissions/Create
-		public ActionResult Create ()
-		{
-			return View ();
-		}
-
-		// POST: Commissions/Create
 		[HttpPost]
-		public ActionResult Create (FormCollection collection)
+		public ActionResult SetCommissionLabel (int id, int value)
 		{
-			try {
-				// TODO: Add insert logic here
 
-				return RedirectToAction ("Index");
-			} catch {
-				return View ();
+			var permissions = GetAccessPrivilege (SystemObjects.CommissionsBySalesPerson);
+			if (permissions == null || !permissions.AllowUpdate) {
+				Response.StatusCode = 400;
+				return Content (Resources.NoAccessRights);
 			}
-		}
 
-		// GET: Commissions/Edit/5
-		public ActionResult Edit (int id)
-		{
-			return View ();
-		}
+			var Label = Commission.Queryable.Single (x => x.Id == value);
+			var product = Product.Queryable.SingleOrDefault (x => x.Id == id);
 
-		// POST: Commissions/Edit/5
-		[HttpPost]
-		public ActionResult Edit (int id, FormCollection collection)
-		{
-			try {
-				// TODO: Add update logic here
-
-				return RedirectToAction ("Index");
-			} catch {
-				return View ();
+			if (product == null) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemNotFound);
 			}
-		}
 
-		// GET: Commissions/Delete/5
-		public ActionResult Delete (int id)
-		{
-			return View ();
-		}
+			var commissionProduct = CommissionProduct.Queryable.SingleOrDefault (x => x.Product == product);
 
-		// POST: Commissions/Delete/5
-		[HttpPost]
-		public ActionResult Delete (int id, FormCollection collection)
-		{
-			try {
-				// TODO: Add delete logic here
-
-				return RedirectToAction ("Index");
-			} catch {
-				return View ();
+			if (commissionProduct != null) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyAdded);
 			}
+
+			var entity = new CommissionProduct {
+				Commission = Label,
+				Product = product
+			};
+				using (var scope = new TransactionScope ()) {
+					entity.SaveAndFlush ();
+				}
+
+			return Json (new {
+				id = entity.Id
+			});
 		}
 	}
 }

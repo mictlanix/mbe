@@ -225,5 +225,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
 		}
+
+		public JsonResult ListAll ()
+		{
+			var qry = (from x in MBEQueryable.IQStores
+				   orderby x.Name
+				   select new {
+					   value = x.Id,
+					   text = x.Name
+				   }).ToList ();
+
+			qry.Add (new { value = -1, text = Resources.All });
+
+			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
+		}
 	}
 }

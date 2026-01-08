@@ -74,7 +74,7 @@ namespace Mictlanix.BE.Model {
 		public virtual string CustomerShipTo { get; set; }
 
 		[Property]
-		[DataType (DataType.DateTime)]
+		[DataType (DataType.Date)]
 		[Display (Name = "Date", ResourceType = typeof (Resources))]
 		public virtual DateTime Date { get; set; }
 
@@ -228,7 +228,7 @@ namespace Mictlanix.BE.Model {
 		}
 
 		[DataType (DataType.Currency)]
-		[Display (Name = "Refund", ResourceType = typeof (Resources))]
+		[Display (Name = "CreditNote", ResourceType = typeof (Resources))]
 		public virtual decimal CreditNotesAmount {
 			get {
 				//return Payments.Where (x => x.Payment.PaymentType == PaymentType.CreditNote && x.IsConfirmed)
@@ -245,7 +245,11 @@ namespace Mictlanix.BE.Model {
 		[DataType (DataType.Currency)]
 		[Display (Name = "Balance", ResourceType = typeof (Resources))]
 		public virtual decimal Balance {
-			get { return Total - (CustomerRefunds.Sum(x => (decimal?)x.Total)?? 0) - Paid + CreditNotesAmount; }
+			get {
+				decimal refunds = (CustomerRefunds.Sum (x => (decimal?) x.Total) ?? 0);
+				decimal paid = Payments.Sum (x => (decimal?)x.Amount)??0;
+				decimal notes = CreditNote.Queryable.Where (x => x.SalesOrder == this).Sum (x => (decimal?) x.CustomerPayment.Amount) ?? 0;
+				return Total - refunds - paid + notes; }
 		}
 
 		[DataType (DataType.Currency)]

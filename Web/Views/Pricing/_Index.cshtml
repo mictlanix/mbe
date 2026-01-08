@@ -68,14 +68,14 @@
 																				@Html.DisplayFor(x => item.IsTaxIncluded)
 																</td>
 																<td class='stretch center'>
-																				@if (Privilege.AllowUpdate)
+																				@*@if (Privilege.AllowUpdate)
 																				{
 																								<a class='editable' data-type='select' data-placement='bottom' data-source='@Url.Action("PriceTypes")' data-pk='@item.Id' data-value='@((int)item.PriceType)' data-url='@Url.Action("SetPriceType", new { id = item.Id })'>@item.PriceType.GetDisplayName()</a>
 																				}
 																				else
-																				{
+																				{*@
 																								<span>@item.PriceType.GetDisplayName()</span>
-																				}
+																				@*}*@
 																</td>
 																<td class='stretch nowrap'>
 																				<table class='tabular'>

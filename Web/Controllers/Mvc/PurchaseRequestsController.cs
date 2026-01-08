@@ -22,12 +22,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Index ()
 		{
 
+			var items = PurchaseRequest.Queryable.Where (x => !x.IsCancelled
+					&& (x.Creator == CurrentUser.Employee || x.Updater == CurrentUser.Employee)).OrderByDescending (x => x.Date);
+
 			Search<PurchaseRequest> search = new Search<PurchaseRequest> () {
-				Limit = WebConfig.PageSize,
-				Results = PurchaseRequest.Queryable.Where (x => !x.IsCancelled
-					&& (x.Creator == CurrentUser.Employee || x.Updater == CurrentUser.Employee)).OrderByDescending (x => x.Date).ToList ()
+				Limit = WebConfig.PageSize
 			};
-			search.Total = search.Results.Count ();
+
+			search.Total = items.Count ();
+			search.Results = items.Take (WebConfig.PageSize).ToList ();
 
 			if (Request.IsAjaxRequest ()) {
 				return PartialView ("_Index", search);
@@ -209,11 +212,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public JsonResult GetSuggestions (string pattern)
 		{
-			var query = Product.Queryable.Where (x => (x.Name.Contains (pattern)
+			var query = MBEQueryable.IQProducts.Where (x => (x.Name.Contains (pattern)
 								|| x.Code.Contains (pattern) || x.SKU.Contains (pattern)
 								|| x.Brand.Contains (pattern) || x.BarCodeNumber.Contains (pattern)
-								|| (x.Supplier != null && x.Supplier.Name.Contains(pattern))
-								) && x.IsPurchasable && !x.IsDisabled);
+								//|| (x.Supplier != null && x.Supplier.Name.Contains(pattern))
+								) && x.IsPurchasable);
 			var items = query.Take (15).ToList ().Select (x =>
 			new { id = x.Id, name = x.Name, comment = x.Comment,
 				supplier = x.Supplier == null ? string.Format(Resources.AttribValueMissing, Resources.Supplier): x.Supplier.Name

@@ -82,9 +82,9 @@
 </div>
 <div id="back-to-list">
     @Html.ActionLink(Resources.BackToList, "Receipts", new { }, new { @class = "button icon back" })
-    @if (zero.AllowUpdate) {
+    @*@if (zero.AllowUpdate) {
         @Html.ActionLink(Resources.ZeroOutInventory, "ZeroOut", new { id = Model.Id }, new { @class = "button icon cancel" })
-    }
+    }*@
 </div>
 <script type='text/javascript'>
     $(function () {

@@ -2970,7 +2970,7 @@ con  valor {1} ya existe</value>
     <value>Validación de Pagos</value>
   </data>
   <data name="ShortCredit" xml:space="preserve">
-    <value>Crédito Corto Por {0} Días</value>
+    <value>Crédito 2D</value>
   </data>
   <data name="Giving" xml:space="preserve">
     <value>Dación</value>
@@ -3100,5 +3100,41 @@ con  valor {1} ya existe</value>
   </data>
   <data name="Stock" xml:space="preserve">
     <value>Existencia</value>
+  </data>
+  <data name="BalanceInCashDrawer" xml:space="preserve">
+    <value>Balance en Caja de Cobro</value>
+  </data>
+  <data name="SalesOrderPromiseDateExpired" xml:space="preserve">
+    <value>La Fecha Límite de Entrega Ha Expirado</value>
+  </data>
+  <data name="PromiseDateOutOfRange" xml:space="preserve">
+    <value>La Fecha del Envío Actual está fuera de rango para el pedido</value>
+  </data>
+  <data name="PrintItem" xml:space="preserve">
+    <value>Imprimir {0}</value>
+  </data>
+  <data name="DeliveryNotes" xml:space="preserve">
+    <value>Recibos de Entrega</value>
+  </data>
+  <data name="ExpiredPromiseDateForDelivery" xml:space="preserve">
+    <value>El período de {0} días para generar envíos de este pedido ha caducado</value>
+  </data>
+  <data name="NoAccessRights" xml:space="preserve">
+    <value>Requiere permisos para realizar esta acción</value>
+  </data>
+  <data name="SalesAgent" xml:space="preserve">
+    <value>Asesor Comercial</value>
+  </data>
+  <data name="UserCannotConfirmWarehouseEntry" xml:space="preserve">
+    <value>Acceso denegado: el almacén asociado a esta entrada no está vinculado a tu perfil de usuario.</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>Todos</value>
+  </data>
+  <data name="SalesDetailsSummary" xml:space="preserve">
+    <value>Reporte de Ventas a Detalle</value>
+  </data>
+  <data name="SessionVersion" xml:space="preserve">
+    <value>Versión de Sesión</value>
   </data>
 </root>

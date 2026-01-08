@@ -39,7 +39,7 @@ namespace Mictlanix.BE.Model {
 	public class DeliveryOrder : ActiveRecordLinqBase<DeliveryOrder> {
 		IList<DeliveryOrderDetail> details = new List<DeliveryOrderDetail> ();
 
-        [PrimaryKey (PrimaryKeyType.Identity, "delivery_order_id")]
+		[PrimaryKey (PrimaryKeyType.Identity, "delivery_order_id")]
 		[Display (Name = "DeliveryOrderId", ResourceType = typeof (Resources))]
 		[DisplayFormat (DataFormatString = "{0:D8}")]
 		public virtual int Id { get; set; }
@@ -88,6 +88,12 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "DeliveryDate", ResourceType = typeof (Resources))]
 		[DisplayFormat (DataFormatString = "{0:yyyy-MM-dd}")]
 		public virtual DateTime Date { get; set; }
+
+		//[Property]
+		//[DataType (DataType.Time)]
+		//[Display (Name = "DeliveryDate", ResourceType = typeof (Resources))]
+		//[DisplayFormat (DataFormatString = "{0:yyyy-MM-dd}")]
+		//public virtual TimeSpan Time { get; set; }
 
 		[Property ("completed")]
 		[Display (Name = "Completed", ResourceType = typeof (Resources))]

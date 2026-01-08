@@ -125,6 +125,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					price.Create ();
 				}
 
+				var incidende = new Incidence {
+					SourceType = SourceType.Product,
+					Reference = item.Id,
+					ModificationTime = DateTime.Now,
+					Updater = CurrentUser.Employee,
+					PreviousState = "Product created."
+				};
+				incidende.Create ();
+
 				scope.Flush ();
 			}
 
@@ -204,6 +213,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
+				var incidende = new Incidence {
+					SourceType = SourceType.Product,
+					Reference = entity.Id,
+					ModificationTime = DateTime.Now,
+					Updater = CurrentUser.Employee,
+					PreviousState = "Product modified."
+				};
 			}
 
 			return PartialView ("_Refresh");
@@ -232,6 +248,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 					item.IsDisabled = true;
 					item.UpdateAndFlush ();
+
+					var incidence = new Incidence {
+						SourceType = SourceType.Product,
+						Reference = item.Id,
+						ModificationTime = DateTime.Now,
+						Updater = CurrentUser.Employee,
+						PreviousState = "Product deleted."
+					};
+					incidence.CreateAndFlush ();
 				}
 				return PartialView ("_DeleteSuccesful", item);
 			} catch (Exception ex) {

@@ -3,8 +3,41 @@
 @using Mictlanix.BE.Web.Helpers
 @model IEnumerable<Mictlanix.BE.Web.Models.DeliveryItineraryAddressViewModel>
 
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script>
+				var jQueryUI = jQuery.noConflict(true); // Aíslalo
+</script>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script>
+				var jQueryApp = jQuery.noConflict(true); // Aíslalo también
+</script>
+
 <ul id="addresses" class="list-items">
-@foreach (var item in Model.OrderByDescending(x => x.DeliveryOrder.ShipTo.Id)) {
-    @Html.Partial("_Address", item)
-}
+				@foreach (var item in Model.OrderByDescending(x => x.DeliveryOrder.ShipTo.Id))
+				{
+								@Html.Partial("_Address", item)
+				}
 </ul>
+
+<script>
+				jQueryUI(function ($) {
+								$("#addresses").sortable({
+												items: '> li',
+												placeholder: 'ui-state-highlight',
+												update: function (event, ui) {
+																const orden = $(this).children('li').map(function () {
+																				return $(this).data('id');
+																}).get();
+																console.log(orden);
+												}
+								});
+								$(".sortable").disableSelection();
+				});
+</script>
+<style type="text/css">
+				#addresses > li {
+								transition: transform 0.3s ease;
+				}
+</style>

@@ -34,10 +34,11 @@ using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Helpers;
 using System.Collections.Generic;
-using Castle.Core.Internal;
+//using Castle.Core.Internal;
 using Castle.ActiveRecord.Testing;
 using NHibernate.Engine;
 using Newtonsoft.Json;
+using NHibernate.Linq;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
@@ -81,13 +82,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						);
 
 			if (!string.IsNullOrEmpty (pattern)) {
+				query = DeliveryOrder.Queryable;
 				if (int.TryParse (pattern, out id) && id > 0) {
-					query = DeliveryOrder.Queryable.Where (x => x.Id == id || x.Serial == id
+					query = query.Where (x => x.Id == id || x.Serial == id
 					|| x.Details.Any (y => y.OrderDetail.SalesOrder.Id == id));
 				} else {
 					query = query.Where (x => x.Customer.Name.Contains (pattern));
 
-					if (pattern.Contains (Resources.WilcardStringPatternForSearch) && CurrentUser.IsAdministrator) {
+					if (pattern.Contains (Resources.WilcardStringPatternForSearch)) {
 						query = DeliveryOrder.Queryable;
 					}
 					
@@ -169,10 +171,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.SalesOrderNotPaidYet);
 			}
 
+
 			if (entity.DeliveryMode == DeliveryMode.PickUp) {
 				Response.StatusCode = 400;
 				return Content (Resources.PickUp);
 			}
+
+			//if (entity.Date.AddDays(WebConfig.MaxDaysToDeliver) < DateTime.Now.Date && !CurrentUser.IsAdministrator) {
+			//	Response.StatusCode = 400;
+			//	return Content (string.Format(Resources.ExpiredPromiseDateForDelivery, WebConfig.MaxDaysToDeliver));
+			//}
 
 			DeliveryOrder item = CreateFromSalesOrder (entity.Id);
 			item.IsPickedUpInStore = MBEQueryable.IQStoresAddress.ToList().Contains(item.ShipTo);
@@ -262,7 +270,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var item = DeliveryOrder.TryFind (id);
 			var query = from x in item.Customer.Contacts
-				    select new { value = x.Id, text = x.Name + " - " + (!x.Mobile.IsNullOrEmpty () ? x.Mobile.ToString () : x.Email.ToString ()) };
+				    select new { value = x.Id, text = x.Name + " - " + (!string.IsNullOrEmpty(x.Mobile) ? x.Mobile.ToString () : x.Email.ToString ()) };
 			var items = query.ToList ();
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}
@@ -391,6 +399,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			if (sales_order.Customer != entity.Customer) {
 				Response.StatusCode = 400;
 				return Content (string.Format (Resources.MismatchCustomers, Resources.SalesOrder, Resources.DeliveryOrder));
+			}
+
+			if (entity.Date.AddDays (WebConfig.MaxDaysToDeliverStockables) < DateTime.Now.Date) {
+				Response.StatusCode = 400;
+				return Content (string.Format (Resources.ExpiredPromiseDateForDelivery, WebConfig.MaxDaysToDeliverStockables));
 			}
 
 			var Details = sales_order.Details.Where (x => !entity.Details.Any (y => y.OrderDetail == x)).ToList ();
@@ -558,9 +571,49 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.InvalidDate);
 			}
 
-			if (!DeliveryHelpers.IsReadyToDeliver (entity)) {
+			if ((entity.Contact == null 
+				|| entity.ShipTo == null) && !entity.IsPickedUpInStore) {
 				Response.StatusCode = 400;
 				return Content (Resources.Message_NotContactOrShipTo);
+			}
+
+			if (!entity.IsPickedUpInStore && entity.ShipTo.Link == null) {
+				Response.StatusCode = 400;
+				return Content (string.Format (Resources.AttribValueMissing, Resources.AddressLinkURL));
+			}
+
+			if (entity.Customer.HasExpiredCredits ()) {
+				Response.StatusCode = 400;
+				//return Content (Resources.ExpiredCredits);
+				return Content (Resources.ExpiredCredits);
+			}
+
+			var promise_dates = entity.Details.Select(x => x.OrderDetail.SalesOrder).ToList ();
+
+
+
+			if (WebConfig.DeliveryOrderRequiresPaidOrCreditSalesOrder) {
+				var orders = entity.Details.Select (x => x.OrderDetail.SalesOrder).Distinct ();
+				if (orders.Any (x => !x.IsPaid && x.Terms == PaymentTerms.Immediate)) {
+					Response.StatusCode = 400;
+					return Content (Resources.SalesOrderNotPaidYet);
+				}
+			}
+
+			if (WebConfig.MaxDaysToDeliverStockables > 0) {
+				var stockables_details = entity.Details.Where(x => x.Product.IsStockable).Select(x => x.OrderDetail.SalesOrder).Distinct();
+				if (stockables_details.Any(x => (DateTime.Now - x.Date).TotalDays > WebConfig.MaxDaysToDeliverStockables) && !CurrentUser.IsAdministrator) {
+					Response.StatusCode = 400;
+					return Content(Resources.PromiseDateOutOfRange);
+				}
+			}
+
+			if (WebConfig.MaxDaysToDeliverNoStockables > 0) {
+				var no_stockables_details = entity.Details.Where(x => !x.Product.IsStockable).Select(x => x.OrderDetail.SalesOrder).Distinct();
+				if (no_stockables_details.Any(x => (DateTime.Now - x.Date).TotalDays > WebConfig.MaxDaysToDeliverNoStockables) && !CurrentUser.IsAdministrator) {
+					Response.StatusCode = 400;
+					return Content(Resources.PromiseDateOutOfRange);
+				}
 			}
 
 			if (entity.Details.Count () == 0) {
@@ -620,6 +673,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						Order.UpdateAndFlush ();
 					}
 				}
+			}
+
+			if(Request.IsAjaxRequest ()) {
+				return Json (new { id = entity.Id, done = true });
 			}
 
 			return RedirectToAction ("View", new { id = entity.Id });
@@ -724,7 +781,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 					item.IsConfirmed = false;
 					item.UpdateAndFlush ();
-
 				}
 			}
 

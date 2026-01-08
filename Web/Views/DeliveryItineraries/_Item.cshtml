@@ -16,7 +16,7 @@
 				<td class="center">@Html.DisplayFor(x => x.VehicleOperator.Operator.Nickname)</td>
 				<td class="center">@Html.DisplayFor(x => x.Vehicle.NickName)</td>
 				<td class="">@Html.DisplayFor(x => x.Comment)</td>
-				<td class="">@Model.Details.Select(x => x.DeliveryOrderDetail.DeliveryOrder.Id).Count()</td>
+				<td class="">@Model.Details.Select(x => x.DeliveryOrderDetail.DeliveryOrder.Id).Distinct().Count()</td>
 				@*<td class="">@Html.DisplayFor(x => x.IsCompleted)</td>
 				<td class="">@Html.DisplayFor(x => x.IsCancelled)</td>*@
 				<td class=""></td>

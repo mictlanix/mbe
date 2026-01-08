@@ -35,6 +35,9 @@ using Google.Apis.Auth.OAuth2;
 using MimeKit;
 using Google.Apis.Auth.OAuth2.Flows;
 using Google.Apis.Auth.OAuth2.Responses;
+using Google.Apis.Gmail.v1;
+using Google.Apis.Gmail.v1.Data;
+using Google.Apis.Services;
 using System.Threading;
 
 namespace Mictlanix.BE.Web.Helpers {

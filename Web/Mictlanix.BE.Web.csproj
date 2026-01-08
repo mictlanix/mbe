@@ -59,14 +59,17 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.5.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis, Version=1.69.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Apis.1.69.0\lib\net462\Google.Apis.dll</HintPath>
+    <Reference Include="Google.Apis, Version=1.70.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.70.0\lib\net462\Google.Apis.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis.Auth, Version=1.69.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Apis.Auth.1.69.0\lib\net462\Google.Apis.Auth.dll</HintPath>
+    <Reference Include="Google.Apis.Auth, Version=1.70.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.70.0\lib\net462\Google.Apis.Auth.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis.Core, Version=1.69.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Apis.Core.1.69.0\lib\net462\Google.Apis.Core.dll</HintPath>
+    <Reference Include="Google.Apis.Core, Version=1.70.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Core.1.70.0\lib\net462\Google.Apis.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Gmail.v1, Version=1.70.0.3833, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Gmail.v1.1.70.0.3833\lib\net462\Google.Apis.Gmail.v1.dll</HintPath>
     </Reference>
     <Reference Include="LinqKit, Version=1.3.8.0, Culture=neutral, PublicKeyToken=bc217f8844052a91, processorArchitecture=MSIL">
       <HintPath>..\packages\LinqKit.1.3.8\lib\net45\LinqKit.dll</HintPath>
@@ -269,7 +272,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Mvc\CommissionsController.cs" />
-    <Compile Include="Controllers\Mvc\CorrectionController.cs" />
+    <Compile Include="Controllers\Mvc\EntitiesEditorController.cs" />
     <Compile Include="Controllers\Mvc\DeliveryItinerariesController.cs" />
     <Compile Include="Controllers\Mvc\ExpensesController.cs" />
     <Compile Include="Controllers\Mvc\ExpenseVoucherController.cs" />
@@ -294,9 +297,11 @@
     <Compile Include="Models\CustomersStatusFilter.cs" />
     <Compile Include="Models\CustomerStatusFilter.cs" />
     <Compile Include="Models\CustomerDebtViewModel.cs" />
+    <Compile Include="Models\DeliveriesSummaryViewModel.cs" />
     <Compile Include="Models\DeliveryItineraryAddressViewModel.cs" />
     <Compile Include="Models\ReceivedPaymentsSummaryViewModel.cs" />
     <Compile Include="Models\BigPictureAllStoresViewModel.cs" />
+    <Compile Include="Security\SessionVersionAttribute.cs" />
     <Compile Include="Services\IDocument.cs" />
     <Compile Include="Services\Result.cs" />
     <Compile Include="Services\ResultBind.cs" />
@@ -541,15 +546,19 @@
     <Content Include="Views\Payments\TicketCreditNote.cshtml" />
     <Content Include="Views\DeliveryItineraries\_Addresses.cshtml" />
     <Content Include="Views\DeliveryItineraries\_Address.cshtml" />
-    <Content Include="Views\Correction\Index.cshtml" />
-    <Content Include="Views\Correction\RestoreDeliverableOrderStatus.cshtml" />
-    <Content Include="Views\Correction\RestoredOrderDeliveryStatus.cshtml" />
+    <Content Include="Views\EntitiesEditor\Index.cshtml" />
+    <Content Include="Views\EntitiesEditor\RestoreDeliverableOrderStatus.cshtml" />
+    <Content Include="Views\EntitiesEditor\RestoredOrderDeliveryStatus.cshtml" />
     <Content Include="Views\Commissions\_CommissionProducts.cshtml" />
     <Content Include="Views\Commissions\CommissionProducts.cshtml" />
     <Content Include="Views\DeliveryItineraries\View.cshtml" />
     <Content Include="Views\DeliveryItineraries\_DisplayView.cshtml" />
     <Content Include="Views\DeliveryItineraries\_ItemDisplayView.cshtml" />
     <Content Include="Views\DeliveryItineraries\ItineraryTicket.cshtml" />
+    <Content Include="Views\EntitiesEditor\ViewSalesOrder.cshtml" />
+    <Content Include="Views\DeliveryItineraries\DeliveryNotesTicket.cshtml" />
+    <Content Include="Views\DeliveryItineraries\DeliveriesSummaryReport.cshtml" />
+    <Content Include="Views\DeliveryItineraries\_DeliveriesSummaryReport.cshtml" />
     <None Include="Views\POS\_ItemEditorView.cshtml.bk" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -1111,6 +1120,8 @@
     <Content Include="Views\Reports\_CommissionsBySalesPerson.cshtml" />
     <Content Include="Views\Reports\CommissionAgentTicket.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Priority.cshtml" />
+    <Content Include="Views\Reports\_SalesDetailsSummary.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\StoreAllSelector.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\fonts\" />

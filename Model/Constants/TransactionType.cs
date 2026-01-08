@@ -50,7 +50,9 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "SupplierReturn", ResourceType = typeof (Resources))]
 		SupplierReturn = 7,
 		[Display (Name = "InventoryAdjustment", ResourceType = typeof (Resources))]
-		InventoryAdjustment = 8
+		InventoryAdjustment = 8,
+		[Display (Name = "QuantityMapping", ResourceType = typeof (Resources))]
+		QuantityMapping = 9
 	}
 }
 

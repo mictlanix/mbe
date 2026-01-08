@@ -35,12 +35,12 @@
 																<div class="form-group">
 																				<div class="col-xs-3"><label for="amount">@Resources.Amount</label></div>
 																				<div class="col-xs-3"><label for="reference">@Resources.Reference</label></div>
-																				@if (Model.Terms == PaymentTerms.Immediate)
+																				@*@if (Model.Terms == PaymentTerms.Immediate)
 																				{
 																								<div class="col-xs-1 paymentondelivery">
 																												<label for="payment_upon_delivery">@Resources.PaymentOnDelivery</label>
 																								</div>
-																				}
+																				}*@
 																</div>
 																<div class="form-group">
 																				<div class="col-xs-3">
@@ -48,12 +48,12 @@
 																															class='form-control text-right' type='text' autocomplete="off">
 																				</div>
 																				<div class="col-xs-3"><input id='reference' style="font-size:3em; height:1.5em;" class='form-control' type='text' value=''></div>
-																				@if (Model.Terms == PaymentTerms.Immediate)
+																				@*@if (Model.Terms == PaymentTerms.Immediate)
 																				{
 																								<div class="col-xs-1 paymentondelivery">
 																												<input id='ondelivery' class='form-control' type='checkbox'>
 																								</div>
-																				}
+																				}*@
 																</div>
 																<div class="form-group">
 																				<div class="col-xs-12">
@@ -84,7 +84,7 @@
 																																																				{
 																																																								<button class="pay btn btn-default @(Model.Customer.Debt()>0?"disabled":"")"
 																																																																type="button" data-value='credit'>
-																																																												@(string.Format(Resources.ShortCredit, WebConfig.MaxDaysOneSingleCredit))
+																																																												@(string.Format(Resources.ShortCredit + ' ' + WebConfig.MaxDaysOneSingleCredit + string.Format("C",WebConfig.MaxAmountOneSingleCredit)))
 																																																								</button>
 																																																				}
 

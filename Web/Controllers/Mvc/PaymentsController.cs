@@ -27,17 +27,19 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
+using LinqKit;
 using Mictlanix.BE.Model;
+using Mictlanix.BE.Web.Helpers;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
-using Mictlanix.BE.Web.Helpers;
-using Newtonsoft.Json;
-using System.Collections.Generic;
 using Mictlanix.BE.Web.Services;
-using LinqKit;
+using Newtonsoft.Json;
+using NHibernate;
 
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
@@ -96,34 +98,107 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		Search<SalesOrder> SearchSalesOrders (Search<SalesOrder> search)
 		{
 			int id = 0;
+			var COUNT = 0;
 			var store = WebConfig.Store;
 			var cashier = GetSession ().Cashier;
 			var pattern = (search.Pattern ?? string.Empty).Trim ();
- 
-			IQueryable<SalesOrder> query = from x in MBEQueryable.IQSalesOrders
-						       where x.IsCompleted && !x.IsCancelled
-						       && (x.Creator == cashier || x.Updater == cashier || x.SalesPerson == cashier)
-						       && !x.IsPaid 
-						       select x;
+			var WHERE_PATTERN = @"	 AND (c.name COLLATE utf8_general_ci LIKE :pattern
+						OR sa.nickname COLLATE utf8_general_ci LIKE :pattern
+						OR so.customer_name COLLATE utf8_general_ci LIKE :pattern
+						OR sp.nickname COLLATE utf8_general_ci LIKE :pattern ) ";
+			var WHERE_EMPLOYEE = @" AND (so.creator = :cashier OR so.updater = :cashier OR c.salesperson = :cashier ) ";
+			var WHERE_PAID = @" AND so.paid = 0";
+			var WHERE_ID = @" AND (so.sales_order_id = :id OR so.serial = :id) ";
+			var OFFSET_TAG = @" LIMIT :limit OFFSET :offset ";
+			var results = new List<SalesOrder> ();
+			var offset = search.Offset * search.Limit;
+			var limit = search.Limit;
+			var escaped_wildcard = Regex.Escape (Resources.WilcardStringPatternForSearch) + "+";
 
+			var sql = @"
+					SELECT so.*
+					FROM sales_order so
+					JOIN sales_order_detail sod ON sod.sales_order = so.sales_order_id
+					LEFT JOIN (	SELECT crd.sales_order_detail, SUM(crd.quantity) quantity 
+							FROM customer_refund cr 
+							JOIN customer_refund_detail crd ON crd.customer_refund = cr.customer_refund_id
+							WHERE cr.completed = 1 AND cr.cancelled = 0
+							GROUP BY crd.sales_order_detail) AS r ON r.sales_order_detail = sod.sales_order_detail_id
+					JOIN customer c ON so.customer = c.customer_id
+					JOIN point_sale ps ON so.point_sale = ps.point_sale_id
+					LEFT JOIN employee sa ON c.salesperson = sa.employee_id
+					LEFT JOIN employee sp ON so.salesperson = sp.employee_id
+					LEFT JOIN employee cr ON so.creator = cr.employee_id
+					WHERE so.completed = 1 AND so.cancelled = 0
+					WHERE_PAID
+					WHERE_PATTERN
+					WHERE_EMPLOYEE
+					WHERE_ID	
+					GROUP BY so.sales_order_id
+					HAVING SUM(sod.quantity - IFNULL(r.quantity,0)) > 0
+					ORDER BY so.sales_order_id DESC
+					OFFSET_TAG
+					";
 
-			if (int.TryParse (pattern, out id) && id > 0) {
-				query = MBEQueryable.IQSalesOrders.Where (x => x.Id == id || x.Serial == id);
-			} else if (!string.IsNullOrEmpty (pattern)) {
-				if (pattern.Contains (Resources.WilcardStringPatternForSearch) && CurrentUser.IsAdministrator) {
-					query = MBEQueryable.IQSalesOrders.Where(x => !x.IsCancelled && x.IsCompleted);
-				} else {
+			var sql_count_rows = "SELECT COUNT(*) AS rows_count FROM (" + sql.Replace ("OFFSET_TAG", string.Empty) + ") AS pagging;";
+			var sql_pagging = sql.Replace("OFFSET_TAG", OFFSET_TAG);
 
-					query = MBEQueryable.IQSalesOrders.Where (x => (x.Customer.Name.Contains (pattern) ||
-						     (x.SalesPerson.FirstName + " " + x.SalesPerson.LastName).Contains (pattern)));
-				}
+			if(pattern.Contains(Resources.WilcardStringPatternForSearch)) {
+				WHERE_EMPLOYEE = string.Empty;
+				pattern = Regex.Replace (pattern, escaped_wildcard, string.Empty);
 			}
-			//query = query.Where (predicate);
 
-			query = query.OrderByDescending (x => x.Date);
+			if (string.IsNullOrEmpty (pattern)) {
+				WHERE_PATTERN = string.Empty;
+				WHERE_ID = string.Empty;
+			} else {
+				if(int.TryParse(pattern, out id) && id > 0) {
+					WHERE_EMPLOYEE = string.Empty;
+					WHERE_PATTERN = string.Empty;
+				} else {
+					WHERE_ID = string.Empty;
+				}
+				WHERE_PAID = string.Empty;
 
-			search.Total = query.Count ();
-			search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
+			}
+
+			sql_count_rows = sql_count_rows.Replace ("WHERE_PATTERN", WHERE_PATTERN);
+			sql_count_rows = sql_count_rows.Replace ("WHERE_EMPLOYEE", WHERE_EMPLOYEE);
+			sql_count_rows = sql_count_rows.Replace ("WHERE_PAID", WHERE_PAID);
+			sql_count_rows = sql_count_rows.Replace ("WHERE_ID", WHERE_ID);
+
+			sql_pagging = sql_pagging.Replace ("WHERE_PATTERN", WHERE_PATTERN);
+			sql_pagging = sql_pagging.Replace ("WHERE_EMPLOYEE", WHERE_EMPLOYEE);
+			sql_pagging = sql_pagging.Replace ("WHERE_PAID", WHERE_PAID);
+			sql_pagging = sql_pagging.Replace ("WHERE_ID", WHERE_ID);
+
+
+			ISession session = ActiveRecordMediator.GetSessionFactoryHolder ().CreateSession (typeof (SalesOrder));
+			ISession count_session = ActiveRecordMediator.GetSessionFactoryHolder ().CreateSession (typeof (SalesOrder));
+			var pagging = session.CreateSQLQuery (sql_pagging)
+				.AddEntity (typeof (SalesOrder))
+				.SetParameter ("offset", offset)
+				.SetParameter ("limit", limit);
+			var counting = count_session.CreateSQLQuery (sql_count_rows)
+				.AddScalar("rows_count", NHibernateUtil.Int32);
+			if (!string.IsNullOrEmpty (WHERE_PATTERN)) {
+				pagging.SetParameter ("pattern", "%" + pattern + "%");
+				counting.SetParameter ("pattern", "%" + pattern + "%");
+			}
+			if (!string.IsNullOrEmpty (WHERE_EMPLOYEE)) {
+				pagging.SetParameter ("cashier", cashier.Id);
+				counting.SetParameter ("cashier", cashier.Id);
+			}
+			if (!string.IsNullOrEmpty (WHERE_ID)) {
+				pagging.SetParameter ("id", id);
+				counting.SetParameter ("id", id);
+			}
+
+			results = (List<SalesOrder>) pagging.List<SalesOrder> ();
+			COUNT = counting.UniqueResult<int> ();
+
+			search.Total = COUNT;
+			search.Results = results;
 
 			return search;
 		}
@@ -310,7 +385,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			if (!string.IsNullOrEmpty (pattern)) {
 				if (Int32.TryParse (pattern, out int result)) {
 					query = from x in query
-						where x.Allocations.Any(Any => Any.SalesOrder.Id == result)
+						where x.Allocations.Any(Any => Any.SalesOrder.Id == result) || x.Id == result
 						select x;
 				} else {
 					query = from x in query
@@ -781,6 +856,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			entity.Customer = customer;
 			entity.Updater = CurrentUser.Employee;
 			entity.ModificationTime = DateTime.Now;
+			entity.Terms = PaymentTerms.Immediate;
 
 			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
@@ -952,7 +1028,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					return Content (Resources.CreditStatusNeedsToBeVerified);
 				}
 
-				if (entity.Balance > WebConfig.MaxAmountOneSingleCredit) {
+				if (entity.BalanceInCashDrawer() > WebConfig.MaxAmountOneSingleCredit) {
 					Response.StatusCode = 400;
 					return Content (Resources.CreditLimitExceeded);
 				}
@@ -1439,11 +1515,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					payment.UpdateAndFlush ();
 				}
 
-				if (item.BalanceInCashDraw() <= 0.1m) {
+				if (item.BalanceInCashDrawer() <= 0.1m) {
 					item.IsPaid = true;
 					item.ModificationTime = time;
 					item.Updater = CurrentUser.Employee;
 					item.BalanceZeroedTime = time;
+					item.DeliveryMode = DeliveryMode.PartialDeliveries;
 					item.UpdateAndFlush();
 				}
 			}

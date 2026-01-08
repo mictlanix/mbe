@@ -1,0 +1,225 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Controllers.Mvc
+@using Mictlanix.BE.Web.Models
+@using Gma.QrCodeNet.Encoding;
+@using Gma.QrCodeNet.Encoding.Windows.Render;
+@model DeliveriesItinerary
+
+@{
+				Layout = WebConfig.ReceiptLayout;
+				//ViewBag.Title = Resources.DeliveryItinerary;
+				ViewBag.Title = "Acuses de Recibido";
+				ViewBag.Store = Model.Warehouse.Store;
+				ViewBag.Address = Model.Warehouse.Store.Address;
+				var items = Model.Details
+								.GroupBy(x => new
+								{
+												shipto = x.DeliveryOrderDetail.DeliveryOrder.ShipTo,
+												contact = x.DeliveryOrderDetail.DeliveryOrder.Contact,
+												customer = x.DeliveryOrderDetail.DeliveryOrder.Customer,
+												comment = x.DeliveryOrderDetail.DeliveryOrder.Comment
+								})
+								.Select(g => new { info = g.Key, Details = g.ToList() });
+}
+<div class="col-xs-12 text-left shipandcontact">
+				<div class="row">
+								<div class="col-xs-12">
+												<h3 class="text-right uppercase mylabel" style="display:inline-block">@Resources.DeliveryItinerary: </h3>
+												<h3 style="display:inline-block">@Html.DisplayFor(x => x.Id)</h3>
+								</div>
+								<div class="col-xs-12 uppercase">
+												<h3 class="text-left">@Resources.Date: @Html.DisplayFor(x => x.Date)</h3>
+								</div>
+				</div>
+</div>
+<div class="row">
+				<div class="col-xs-12 text-left shipandcontact">
+								<div class="row">
+												<div class="col-xs-12 uppercase">
+																<p class="text-left">@Resources.DeliveryItinerary  : @Html.DisplayFor(x => x.Id)</p>
+												</div>
+												<div class="col-xs-12 uppercase">
+																<p class="text-left">@Resources.VehicleOperator: @Html.DisplayFor(x => x.VehicleOperator.Operator.Name)</p>
+												</div>
+												<div class="col-xs-12">
+																<p>
+																				<span class="mylabel">@Resources.Vehicle</span>:
+																				@Html.DisplayFor(x => x.Vehicle.NickName) @Html.DisplayFor(x => x.Vehicle.LicensePlate)
+																</p>
+												</div>
+												<div class="col-xs-12">
+																<p>
+																				<span class="mylabel">@Resources.DeliveryDate</span>:
+																				@Html.DisplayFor(x => x.Date)
+																</p>
+												</div>
+								</div>
+				</div>
+				<div class="col-xs-6 text-right shipandcontact">
+								<div class="row">
+												@if (!string.IsNullOrEmpty(Model.Comment))
+												{
+																<div class="col-xs-12">
+																				<p><span class="mylabel">@Resources.Comment</span></p>
+																</div>
+																<div class="col-xs-12">
+																				<p>@Html.SafeDisplayFor(x => x.Comment)</p>
+																</div>
+												}
+								</div>
+				</div>
+</div>
+
+<table class="details" style="border-spacing:0 4px;border-collapse: separate;">
+				<tbody>
+								@foreach (var item in items)
+								{
+												<tr>
+																<td class="line" colspan="3"></td>
+												</tr>
+												<tr class="alt">
+																<td colspan="3">
+																				@Resources.Customer: @Html.DisplayFor(x => item.info.customer.Name)
+																				<br />
+																				@Resources.Contact:	@Html.DisplayFor(x => item.info.contact.Name)
+																				@Html.SafeDisplayFor(x => item.info.contact.Mobile)
+																				<br />
+																				@Resources.ShipTo:	@item.info.shipto.ToString()
+																				<br />
+																				@Html.SafeDisplayFor(x => item.info.shipto.Comment)<br />
+																				@Html.SafeDisplayFor(x => item.info.comment)
+																</td>
+												</tr>
+												<tr>
+																<td colspan="3">
+																				<div class="row">
+
+																								<div class="col-xs-4"></div>
+																								<div class="col-xs-4">
+																												<img class="" style="" src='@Url.Action("QRCodeUrl", "Barcodes", new { url = item.info.shipto.Link })' />
+																								</div>
+																				</div>
+																</td>
+												</tr>
+												foreach (var detail in item.Details)
+												{
+																<tr>
+																				<td>@detail.SentQuantity.ToString("F2") @detail.DeliveryOrderDetail.Product.UnitOfMeasurement.Symbol</td>
+																				<td>@detail.DeliveryOrderDetail.ProductName</td>
+																				<td>@detail.DeliveryOrderDetail.DeliveryOrder.Id</td>
+																</tr>
+
+												}
+												<tr>
+																<td colspan="3">
+																				<div class="row" style="margin-top:10mm"></div>
+																				<div class="col-xs-8 col-xs-offset-2 text-center" style="border-top: #333 solid 1px">
+																								@Resources.ContactName: @item.info.contact.Name<br />
+																								@Resources.AgreementSignature
+																				</div>
+																</td>
+												</tr>
+								}
+				</tbody>
+</table>
+
+<div style="min-height: 2.2mm; border-top: #333 solid 3px; border-bottom: #333 solid 1px"></div>
+
+@foreach (var item in items)
+{
+				@*<hr class="pagebreak" />*@
+				<hr style="border: none; border-top: 2px dotted #000;">
+				<table style="border-spacing:0 4px;border-collapse: separate;">
+								<tbody>
+												<tr>
+																<td colspan="3">
+																				<div id="logo" style="display:inline-block; margin:10px">
+																								@if (!string.IsNullOrEmpty(ViewBag.Store.Logo))
+																								{
+																												<img src="@Url.Content(ViewBag.Store.Logo)" alt="Logo" />
+																								}
+																				</div>
+
+																				<div style="display:inline-block">
+																								<h2 class="text-center">@ViewBag.Store.Name</h2>
+																								@if (ViewBag.SkipAddress == null || !ViewBag.SkipAddress)
+																								{
+																												<h3 class="text-center">@ViewBag.Store.Taxpayer.Id</h3>
+																												<h3 class="text-center">
+																																@ViewBag.Address.StreetAndNumber
+																																@ViewBag.Address.Neighborhood,
+																																@if (!string.IsNullOrEmpty(ViewBag.Address.Locality))
+																																{
+																																				<text>@ViewBag.Address.Locality,</text>
+																																}
+																												</h3>
+																												<h3 class="text-center">
+																																@ViewBag.Address.PostalCode
+																																@ViewBag.Address.Borough,
+																																@ViewBag.Address.State
+
+																												</h3>
+																								}
+																				</div>
+																</td>
+												</tr>
+												<tr>
+																<td colspan="3"><h3 class="text-center">Recibo de Entrega</h3></td>
+												</tr>
+												<tr>
+																<td colspan="3"><b>@Resources.DeliveryDate:</b> @Html.DisplayFor(x => Model.Date)</td>
+												</tr>
+												<tr>
+																<td colspan="3"><b>@Resources.VehicleOperator:</b> @Model.VehicleOperator.Operator.Name</td>
+												</tr>
+												<tr>
+																<td colspan="3"><b>@Resources.Vehicle:</b> @Model.Vehicle.NickName - @Model.Vehicle.LicensePlate</td>
+												</tr>
+												<tr class="alt">
+																<td colspan="3">
+																				@Resources.Customer: @Html.DisplayFor(x => item.info.customer.Name)
+																				<br />
+																				@Resources.Contact:	@Html.DisplayFor(x => item.info.contact.Name)
+																				@Html.SafeDisplayFor(x => item.info.contact.Mobile)
+																				<br />
+																				@Resources.ShipTo:	@item.info.shipto.ToString()
+																				<br />
+																				@Html.SafeDisplayFor(x => item.info.shipto.Comment)
+																</td>
+												</tr>
+												<tr>
+																<td width="20%">@Resources.Quantity</td>
+																<td width="60%">@Resources.ProductName</td>
+																<td width="20%">@Resources.SalesOrder</td>
+												</tr>
+												@foreach (var detail in item.Details)
+												{
+																<tr>
+																				<td class="line">@detail.SentQuantity.ToString("F2") @detail.DeliveryOrderDetail.Product.UnitOfMeasurement.Symbol</td>
+																				<td class="line">@detail.DeliveryOrderDetail.ProductName</td>
+																				<td class="line">@detail.DeliveryOrderDetail.OrderDetail.SalesOrder.Id</td>
+																</tr>
+
+												}
+												<tr>
+																<td class="line" colspan="3">
+																				<div style="min-height: 2.2mm; border-top: #333 solid 3px; border-bottom: #333 solid 1px"></div>
+																</td>
+												</tr>
+												@*<tr>
+																				<td colspan="3">
+																								<div class="row" style="margin-top:10mm"></div>
+																								<div class="col-xs-8 col-xs-offset-2 text-center" style="border-top: #333 solid 1px">
+																												@Resources.ContactName: @item.info.contact.Name<br />
+																												@Resources.AgreementSignature
+																								</div>
+																				</td>
+																</tr>*@
+								</tbody>
+				</table>
+}
+
+
+@*<div style="min-height: 2.2mm; border-top: #333 solid 3px; border-bottom: #333 solid 1px"></div>*@

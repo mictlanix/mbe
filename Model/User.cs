@@ -58,6 +58,10 @@ namespace Mictlanix.BE.Model {
 		[StringLength (250, MinimumLength = 6, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Email { get; set; }
 
+		[Property ("session_version")]
+		[Display (Name = "SessionVersion", ResourceType = typeof (Resources))]
+		public virtual int SessionVersion { get; set; }
+
 		[Required (ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof (Resources))]
 		[Display (Name = "Employee", ResourceType = typeof (Resources))]
 		[UIHint ("EmployeeSelector")]

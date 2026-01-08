@@ -30,15 +30,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 using Castle.ActiveRecord;
-using NHibernate;
+using Lucene.Net.Search;
+using Microsoft.Ajax.Utilities;
 using Mictlanix.BE.Model;
+using Mictlanix.BE.Web.Helpers;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
-using Mictlanix.BE.Web.Helpers;
-using Microsoft.Ajax.Utilities;
 using Mictlanix.BE.Web.Security;
-using System.Web.UI.WebControls;
+using NHibernate;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Database;
 
 
@@ -632,7 +633,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		private string GetCommissionDetailsSQLQuery () {
-			return @"WITH details_orders AS (
+			string query = @"WITH details_orders AS (
 				SELECT so.sales_order_id sales_order, sod.sales_order_detail_id sales_order_detail, sod.quantity, 
 				ROUND((sod.price * (1-sod.discount_rate)* (1 + IF(sod.tax_included = 1, 0, sod.tax_rate))),2) price,
 				sod.product, sod.product_name, so.salesperson osp, c.salesperson csp,
@@ -640,7 +641,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				FROM sales_order so
 				JOIN sales_order_detail sod ON so.sales_order_id = sod.sales_order
 				JOIN customer c ON c.customer_id = so.customer
-				WHERE (so.date BETWEEN :start AND :end OR so.modification_time BETWEEN :start AND :end)
+				WHERE (so.date BETWEEN :start AND :end OR so.modification_time BETWEEN :start AND :end AND so.completed = 1 AND so.cancelled = 0)
 				AND (so.salesperson WHERE_SALESPERSON OR c.salesperson WHERE_SALESPERSON)
 			),
 			details_refunds AS(
@@ -674,37 +675,38 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			commission_detail_lifetime_customer AS(
 				SELECT d.sales_order, d.sales_order_detail, d.csp salesperson, d.osp, d.customer, d.paid, d.date, d.modification_time,
 					d.product, d.product_name,	d.price, d.quantity, ROUND((d.price * d.quantity) , 2) total_detail, 
-					(cm.commission_rate * cs.participation_rate) commission_rate, 
-					ROUND((d.price * d.quantity*d.paid * cm.commission_rate * cs.participation_rate) , 2) commission,
-					cm.name label, 'CLIENTE VITALICIO' participation 
+					(IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) commission_rate, 
+					ROUND((d.price * d.quantity * IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) , 2) commission,
+					IFNULL(cm.name,'SIN CATEGORÍA') label, 'CLIENTE VITALICIO' participation, IFNULL(cs.participation_rate,0) participation_rate 
 				FROM details d
 				LEFT JOIN commission_product cp ON cp.product = d.product
 				LEFT JOIN commission cm ON cm.commission_id = cp.commission
 				LEFT JOIN commission_salesperson cs ON cs.salesperson = d.csp AND cs.commission_participation = 1 AND cs.commission = cp.commission
-				WHERE cs.participation_rate IS NOT NULL AND cs.salesperson WHERE_SALESPERSON
+				WHERE cs.salesperson WHERE_SALESPERSON
 			),
 			commission_detail_customer_service AS(
 			SELECT d.sales_order, d.sales_order_detail, d.csp salesperson, d.osp, d.customer, d.paid, d.date, d.modification_time,
 					d.product, d.product_name,	d.price, d.quantity, ROUND((d.price * d.quantity) , 2) total_detail,
-					(cm.commission_rate * cs.participation_rate) commission_rate, 
-					ROUND((d.price * d.quantity*d.paid * cm.commission_rate * cs.participation_rate) , 2) commission,
-					cm.name label, 'ATENCIÓN TELEFÓNICA' participation  FROM details d
+					(IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) commission_rate, 
+					ROUND((d.price * d.quantity * IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) , 2) commission,
+					IFNULL(cm.name,'SIN CATEGORÍA') label, 'ATENCIÓN TELEFÓNICA' participation, IFNULL(cs.participation_rate,0) participation_rate 
+				FROM details d
 				LEFT JOIN commission_product cp ON cp.product = d.product
 				LEFT JOIN commission cm ON cm.commission_id = cp.commission
 				LEFT JOIN commission_salesperson cs ON cs.salesperson = d.csp AND cs.commission_participation = 2 AND cs.commission = cp.commission
-				WHERE cs.participation_rate IS NOT NULL AND cs.salesperson WHERE_SALESPERSON
+				WHERE cs.salesperson WHERE_SALESPERSON
 			),
 			commission_detail_on_field AS(
 			SELECT d.sales_order, d.sales_order_detail, d.salesperson, d.osp ,d.customer, d.paid, d.date, d.modification_time,
 					d.product, d.product_name,	d.price, d.quantity, d.total_detail,
-					(cm.commission_rate * cs.participation_rate) commission_rate, 
-					ROUND((d.price * d.quantity*d.paid * cm.commission_rate * cs.participation_rate) , 2) commission,
-					cm.name label, 'ATENCIÓN EN CAMPO' participation
+					(IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) commission_rate, 
+					ROUND((d.price * d.quantity * IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) , 2) commission,
+					IFNULL(cm.name,'SIN CATEGORÍA') label, 'ATENCIÓN EN CAMPO' participation, IFNULL(cs.participation_rate,0) participation_rate
 				FROM commission_detail_customer_service d
 				LEFT JOIN commission_product cp ON cp.product = d.product
 				LEFT JOIN commission cm ON cm.commission_id = cp.commission
 				LEFT JOIN commission_salesperson cs ON cs.salesperson = d.osp AND cs.commission_participation = 3 AND cs.commission = cp.commission
-				WHERE cs.participation_rate IS NOT NULL AND d.salesperson != d.osp and d.osp WHERE_SALESPERSON
+				WHERE d.salesperson != d.osp and d.osp WHERE_SALESPERSON
 			),
 			detailed AS(
 			SELECT * FROM commission_detail_on_field
@@ -721,14 +723,138 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				label Label,
 				product_name ProductName,
 				total_detail TotalDetail,
-				concat(round(commission_rate * 100, 2), '%') CommissionRate,
+				concat(round(IFNULL(commission_rate,0) * 100, 2), '%') CommissionRate,
 				commission Commission,
 				price Price,
 				quantity Quantity,
 				participation Participation,
 				paid PaidStatus,
 				IF(price < 0, 'DEVOLUCIÓN', 'PEDIDO') Movement,
-				if(paid = 0, 'A SALDAR', 'PAGADO') Paid FROM detailed";
+				if(paid = 0, 'A SALDAR', 'PAGADO') Paid
+				FROM detailed
+				ORDER BY paid DESC";
+
+			query = @"WITH details_orders AS (
+				SELECT so.sales_order_id sales_order, sod.sales_order_detail_id sales_order_detail, sod.quantity, 
+				ROUND((sod.price * (1-sod.discount_rate)* (1 + IF(sod.tax_included = 1, 0, sod.tax_rate))),2) price,
+				sod.product, sod.product_name, so.salesperson osp, c.salesperson csp,
+				so.paid, c.name customer, so.date, so.modification_time, 'sales' movement,
+				IF(so.paid = 1 AND so.modification_time BETWEEN :start AND :end, 1, 0 ) payable
+				FROM sales_order so
+				JOIN sales_order_detail sod ON so.sales_order_id = sod.sales_order
+				JOIN customer c ON c.customer_id = so.customer
+				WHERE (
+				-- so.date BETWEEN :start AND :end
+				-- OR
+				so.modification_time BETWEEN :start AND :end AND so.paid = 1
+				) AND so.completed = 1 AND so.cancelled = 0
+				AND (so.salesperson WHERE_SALESPERSON 
+					OR c.salesperson WHERE_SALESPERSON)
+			),
+			details_refunds AS(
+				SELECT  deto.sales_order, crd.sales_order_detail, crd.quantity,
+				ROUND((-1)*(crd.price * (1-crd.discount)* (1 + IF(crd.tax_included = 1, 0, crd.tax_rate))),2) price,
+				crd.product, crd.product_name, deto.osp, deto.csp, deto.paid, deto.customer, cr.date,
+				cr.modification_time, 'refund' movement,
+				IF(deto.paid = 1 AND deto.modification_time BETWEEN :start AND :end, 1, 0 ) payable
+				FROM customer_refund_detail crd
+				JOIN customer_refund cr ON crd.customer_refund = cr.customer_refund_id
+				JOIN details_orders deto ON deto.sales_order_detail = crd.sales_order_detail
+				WHERE cr.modification_time <= :end
+				AND cr.completed = 1 AND cr.cancelled = 0
+				UNION
+				SELECT sod.sales_order ,crd.sales_order_detail, crd.quantity,
+				ROUND((-1)*(crd.price * (1-crd.discount)* (1 + IF(crd.tax_included = 1, 0, crd.tax_rate))),2) price,
+				crd.product, crd.product_name, so.salesperson, c.salesperson, so.paid, c.name customer, cr.date,
+				cr.modification_time,  'refund' movement,
+				IF(so.paid = 1 AND cr.modification_time BETWEEN :start AND :end, 1, 0 ) payable
+				FROM customer_refund_detail crd
+				JOIN customer_refund cr ON crd.customer_refund = cr.customer_refund_id
+				JOIN sales_order_detail sod ON crd.sales_order_detail = sod.sales_order_detail_id
+				JOIN sales_order so ON sod.sales_order = so.sales_order_id
+				JOIN customer c ON so.customer = c.customer_id
+				WHERE cr.modification_time BETWEEN :start AND :end AND so.paid = 1
+				AND cr.completed = 1 AND cr.cancelled = 0 AND 
+				(so.salesperson WHERE_SALESPERSON
+					OR c.salesperson WHERE_SALESPERSON)
+			),
+			details AS (
+			SELECT * FROM details_refunds cr
+			UNION 
+			SELECT * FROM details_orders deto
+			),
+			commission_detail_lifetime_customer AS(
+				SELECT d.sales_order, d.sales_order_detail, d.csp salesperson, d.osp, d.customer, d.paid, d.date, d.modification_time,
+					d.product, d.product_name,	d.price, d.quantity, ROUND((d.price * d.quantity) , 2) total_detail ,
+					(IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) commission_rate, 
+					ROUND((d.price * d.quantity * IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) , 2) commission,
+					cm.name label, 'CLIENTE VITALICIO' participation, ifnull(cs.participation_rate,0) participation_rate,
+					d.payable
+				FROM details d
+				LEFT JOIN commission_product cp ON cp.product = d.product
+				LEFT JOIN commission cm ON cm.commission_id = cp.commission
+				LEFT JOIN commission_salesperson cs ON cs.salesperson = d.csp AND cs.commission_participation = 1 
+				AND cs.commission = cp.commission
+				WHERE d.csp WHERE_SALESPERSON
+			),
+			commission_detail_customer_service AS(
+			SELECT d.sales_order, d.sales_order_detail, d.csp salesperson, d.osp, d.customer, d.paid, d.date, d.modification_time,
+					d.product, d.product_name,	d.price, d.quantity, ROUND((d.price * d.quantity) , 2) total_detail,
+										(IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) commission_rate, 
+					ROUND((d.price * d.quantity * IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) , 2) commission,
+					cm.name label, 'ATENCIÓN TELEFÓNICA' participation, cs.participation_rate,
+					d.payable
+				FROM details d
+				LEFT JOIN commission_product cp ON cp.product = d.product
+				LEFT JOIN commission cm ON cm.commission_id = cp.commission
+				LEFT JOIN commission_salesperson cs ON cs.salesperson = d.csp AND cs.commission_participation = 2 
+				AND cs.commission = cp.commission
+				WHERE cs.salesperson WHERE_SALESPERSON
+			),
+			commission_detail_on_field AS(
+			SELECT d.sales_order, d.sales_order_detail, d.salesperson, d.osp ,d.customer, d.paid, d.date, d.modification_time,
+					d.product, d.product_name,	d.price, d.quantity, d.total_detail,
+										(IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) commission_rate, 
+					ROUND((d.price * d.quantity * IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) , 2) commission,
+					cm.name label, 'ATENCIÓN EN CAMPO' participation, cs.participation_rate,
+					d.payable
+				FROM commission_detail_customer_service d
+				LEFT JOIN commission_product cp ON cp.product = d.product
+				LEFT JOIN commission cm ON cm.commission_id = cp.commission
+				LEFT JOIN commission_salesperson cs ON cs.salesperson = d.osp AND cs.commission_participation = 3 
+				AND cs.commission = cp.commission
+				WHERE d.salesperson != d.osp and d.osp WHERE_SALESPERSON
+			)
+			,
+ 			detailed AS(
+			SELECT * FROM commission_detail_on_field
+			UNION
+			SELECT  * FROM commission_detail_customer_service
+			UNION
+			SELECT * FROM commission_detail_lifetime_customer)
+			SELECT	sales_order SalesOrder,
+				sales_order_detail SalesOrderDetail,
+				salesperson SalesPerson,
+				customer Customer,
+				date OrderDate,
+				modification_time PaymentDate,
+				label Label,
+				product_name ProductName,
+				product ProductId,
+				total_detail TotalDetail,
+				concat(round(IFNULL(commission_rate,0) * 100, 2), '%') CommissionRate,
+				commission Commission,
+				price Price,
+				quantity Quantity,
+				participation Participation,
+				paid PaidStatus,
+				IF(price < 0, 'DEVOLUCIÓN', 'PEDIDO') Movement,
+				if(paid = 0, 'A SALDAR', 'PAGADO') Paid,
+				payable Payable
+				FROM detailed
+				ORDER BY paid DESC";
+
+			return query;
 		}
 
 		[HttpPost]
@@ -1295,7 +1421,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				query.AddScalar ("Invoices", NHibernateUtil.String);
 				query.AddScalar ("Subtotal", NHibernateUtil.Decimal);
 				query.AddScalar ("Total", NHibernateUtil.Decimal);
-
 				query.SetDateTime ("start", start);
 				query.SetDateTime ("end", end);
 				query.SetInt32 ("employee", employee);
@@ -1321,7 +1446,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			var start = dates.StartDate;
 			var end = dates.EndDate;
-			string WHERE_SALESPERSON = employee.HasValue ? " = " + employee.Value : "IN (17,33,54,77,78)";
+			string WHERE_SALESPERSON = employee.HasValue ? " = " + employee.Value : "IN (SELECT employee FROM commission_agent)";
 			string sql = GetCommissionDetailsSQLQuery();
 
 			sql = sql.Replace("WHERE_SALESPERSON", WHERE_SALESPERSON);
@@ -1331,7 +1456,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
 				query.AddScalar ("SalesOrderDetail", NHibernateUtil.Int32);
-				query.AddScalar ("SalesPerson", NHibernateUtil.String);
+				query.AddScalar ("SalesPerson", NHibernateUtil.Int32);
 				query.AddScalar ("Customer", NHibernateUtil.String);
 				query.AddScalar ("OrderDate", NHibernateUtil.DateTime);
 				query.AddScalar ("PaymentDate", NHibernateUtil.DateTime);
@@ -1345,7 +1470,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				query.AddScalar ("Participation", NHibernateUtil.String);
 				query.AddScalar ("Movement", NHibernateUtil.String);
 				query.AddScalar ("Paid", NHibernateUtil.String);
-				query.AddScalar ("PaidStatus", NHibernateUtil.Int32);
+				query.AddScalar ("PaidStatus", NHibernateUtil.Boolean);
+				query.AddScalar ("Payable", NHibernateUtil.Boolean);
+				query.AddScalar ("ProductId", NHibernateUtil.Int32);
 
 				query.SetDateTime ("start", start);
 				query.SetDateTime ("end", end);
@@ -1371,7 +1498,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var BIGQUERY = GetCommissionDetailsSQLQuery ();
 			var start = dateRange.StartDate;
 			var end = dateRange.EndDate;
-			var WHERE_SALESPERSON = agent.HasValue ? " = " + agent.Value : "IN (17,33,54,77,78)";
+			var WHERE_SALESPERSON = agent.HasValue ? " = " + agent.Value : "IN (SELECT employee FROM commission_agent)";
 			BIGQUERY = BIGQUERY.Replace ("WHERE_SALESPERSON", WHERE_SALESPERSON);
 			var qry = @"SELECT Label, ROUND(SUM(Commission),2) CommissionByLabel
 				    FROM (BIGQUERY) AS T1
@@ -1416,6 +1543,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return View ("SummaryReport", new DateRange ());
 		}
+
 
 		[HttpPost]
 		public ActionResult SalesOrderSummary (int store, DateRange dates)
@@ -1483,7 +1611,158 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}, null);
 
 			return PartialView ("_SalesOrderSummary", items);
-		}public ViewResult StoreMovementsSummary ()
+		}
+
+		public ViewResult SalesDetailsSummary ()
+		{
+			if (WebConfig.Store == null) {
+				return View ("InvalidStore");
+			}
+
+			ViewBag.EditorField = "store";
+			ViewBag.EditorTemplate = "StoreAllSelector";
+			ViewBag.Title = Resources.SalesDetailsSummary;
+
+			ViewBag.FieldId = WebConfig.Store.Id;
+			ViewBag.FieldText = WebConfig.Store.Name;
+
+			return View ("SummaryReport", new DateRange ());
+		}
+
+		[HttpPost]
+		public ActionResult SalesDetailsSummary (int store, DateRange dates)
+		{
+			var start = dates.StartDate;
+			var end = dates.EndDate;
+
+			var Store = MBEQueryable.IQStores.SingleOrDefault(x => x.Id == store);
+
+			string WHERE_STORE = Store == null ? string.Empty : " AND t.store = " + Store.Id;
+
+			string sql = @"SELECT
+				sales_order SalesOrder, 
+				modification_time ModificationTime, 
+				sales_order_detail SalesOrderDetail, 
+				p.product_id Product,
+				product_code ProductCode,
+				product_name ProductName,
+				quantity Quantity,
+				IFNULL(um.symbol, um.name) UnitOfMeasure,
+				t.cost Cost,
+				if(p.stockable = 1 , w.name, 'PRODUCCIÓN') Warehouse,
+				price BasePrice,
+				ROUND(t.discount_rate, 4) Discount,
+				final_price Price,
+				subtotal Subtotal,
+				sa.nickname SalesAgent,
+				sp.nickname SalesPerson,
+				s.name Store,
+ 				Pagado Paid,
+				if(paid = 1 AND modification_time BETWEEN :start AND :end, 'COBRADO EN EL PERÍODO CONSULTADO', '') Received, 
+				Terms, 
+				Type
+				FROM
+				(SELECT so.sales_order_id sales_order,
+					so.store,
+					so.customer,
+					so.creator,
+					so.salesperson,
+					sod.warehouse,
+				   sod.sales_order_detail_id sales_order_detail,
+				   sod.product AS product_id,
+				   sod.product_code,
+				   so.modification_time,
+				   so.paid,
+				   if(so.paid = 1, 'Pagado', 'A saldar') Pagado,
+				   if(so.payment_terms = 0, 'Contado', 'Crédito') Terms,
+				   'Pedido' Type,
+				   sod.product_name,
+				   sod.cost,
+				   sod.discount_rate,
+				   sod.price,
+				   ROUND(CAST(sod.price * (1 - sod.discount_rate) AS DECIMAL(18, 7)), 2) final_price,
+				   sod.quantity,
+				   ROUND(CAST((sod.quantity * sod.price * (1 - sod.discount_rate)) AS DECIMAL(18, 7)), 2) subtotal
+				FROM sales_order so
+				INNER JOIN sales_order_detail sod ON so.sales_order_id = sod.sales_order
+				WHERE so.date BETWEEN :start AND :end
+				    AND so.completed = 1
+				    AND so.cancelled = 0
+				UNION  
+				SELECT so.sales_order_id,
+					so.store,
+					so.customer,
+					so.creator,
+					so.salesperson,
+					sod.warehouse,
+					sod.sales_order_detail_id,
+					sod.product,
+					sod.product_code,
+					cr.modification_time,
+					so.paid,
+					if(so.paid = 1, 'Pagado', 'A saldar'),
+					if(so.payment_terms = 0, 'Contado', 'Crédito'),
+					'Devolución' Tipo,
+					sod.product_name,
+					sod.cost,
+					sod.discount_rate,
+					sod.price,
+					ROUND(CAST(crd.price * (1 - crd.discount) AS DECIMAL(18, 7)), 2),
+					crd.quantity,
+					-ROUND(CAST((crd.quantity * crd.price * (1 - crd.discount)) AS DECIMAL(18, 7)), 2)
+				 FROM customer_refund_detail crd
+				JOIN customer_refund cr ON crd.customer_refund = cr.customer_refund_id
+				JOIN sales_order_detail sod ON crd.sales_order_detail = sod.sales_order_detail_id
+				JOIN sales_order so ON sod.sales_order = so.sales_order_id
+				WHERE cr.completed = 1 AND cr.cancelled = 0
+				AND cr.date BETWEEN :start AND :end) AS t
+				LEFT JOIN customer c ON t.customer = c.customer_id
+				LEFT JOIN employee sa ON c.salesperson = sa.employee_id
+				LEFT JOIN employee sp ON t.salesperson = sp.employee_id
+				JOIN store s ON t.store = s.store_id
+				LEFT JOIN product p ON t.product_id = p.product_id
+				JOIN sat_unit_of_measurement um ON p.unit_of_measurement = um.sat_unit_of_measurement_id
+				JOIN employee e ON t.creator = e.employee_id
+				LEFT JOIN warehouse w ON t.warehouse = w.warehouse_id
+				WHERE quantity > 0 WHERE_STORE
+				ORDER BY t.warehouse, t.sales_order;";
+
+			sql = sql.Replace ("WHERE_STORE", WHERE_STORE);
+
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
+
+				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
+				query.AddScalar ("ModificationTime", NHibernateUtil.DateTime);
+				query.AddScalar ("SalesOrderDetail", NHibernateUtil.Int32);
+				query.AddScalar ("Product", NHibernateUtil.Int32);
+				query.AddScalar ("ProductCode", NHibernateUtil.String);
+				query.AddScalar ("ProductName", NHibernateUtil.String);
+				query.AddScalar ("Quantity", NHibernateUtil.Decimal);
+				query.AddScalar ("UnitOfMeasure", NHibernateUtil.String);
+				query.AddScalar ("Cost", NHibernateUtil.Decimal);
+				query.AddScalar ("Warehouse", NHibernateUtil.String);
+				query.AddScalar ("BasePrice", NHibernateUtil.Decimal);
+				query.AddScalar ("Discount", NHibernateUtil.Decimal);
+				query.AddScalar ("Price", NHibernateUtil.Decimal);
+				query.AddScalar ("Subtotal", NHibernateUtil.Decimal);
+				query.AddScalar ("SalesPerson", NHibernateUtil.String);
+				query.AddScalar ("SalesAgent", NHibernateUtil.String);
+				query.AddScalar ("Store", NHibernateUtil.String);
+				query.AddScalar ("Paid", NHibernateUtil.String);
+				query.AddScalar ("Received", NHibernateUtil.String);
+				query.AddScalar ("Terms", NHibernateUtil.String);
+				query.AddScalar ("Type", NHibernateUtil.String);
+
+				query.SetDateTime ("start", start);
+				query.SetDateTime ("end", end);
+
+				return query.DynamicList ();
+			}, null);
+
+			return PartialView ("_SalesDetailsSummary", items);
+		}
+		public ViewResult StoreMovementsSummary ()
 		{
 			if (WebConfig.Store == null) {
 				return View ("InvalidStore");

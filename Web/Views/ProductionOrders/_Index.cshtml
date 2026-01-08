@@ -1,33 +1,77 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @using Mictlanix.BE.Web.Models
-@model Search<SalesOrder>
+@using NHibernate
+@model Search<DeliveryOrder>
 
 <table>
     <tr>
         <th>@Resources.Id</th>
-        <th>@Resources.Date</th>
-        <th>@Resources.Customer</th>
-        <th>@Resources.PromiseDate</th>
+        <th>@Resources.DeliveryDate</th>
         <th>@Resources.SalesPerson</th>
+        <th>@Resources.Customer</th>
+        <th>@Resources.Contact</th>
+        <th>@Resources.ShipTo</th>
+        <th>@Resources.PaymentStatus</th>
         <th></th>
     </tr>
-@foreach (var item in Model.Results) {
+@foreach (var item in Model.Results.SelectMany(x => x.Details).Where(x => !x.Product.IsStockable)
+                .GroupBy(x => new { x.DeliveryOrder.ShipTo,
+                                    x.DeliveryOrder.Contact,
+                                    x.OrderDetail.SalesOrder,
+                                    x.DeliveryOrder,
+                                    x.DeliveryOrder.Date})
+                .Select(g => new { Delivery = g.Key, Details = g.ToList()})) {
     <tr>
-        <td class='number'>
-        	@Html.DisplayFor(x => item.Id)
-        	<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => item.Serial)">
-				<span class="glyphicon glyphicon-exclamation-sign"></span>
-			</a>
+								<td class='number'>
+												@*@Html.DisplayFor(x => item.Delivery.SalesOrder.Id)*@
+												@Html.ActionLink((string)item.Delivery.SalesOrder.Id.ToString(), "Print", "Payments",
+            new { id = item.Delivery.SalesOrder.Id }, new { title = Resources.Details, target = "_blank" })
+												@*<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => item.OrderDetail.Serial)">
+									<span class="glyphicon glyphicon-exclamation-sign"></span>
+								</a>*@
+								</td>
+        <td class='date'>@Html.DisplayFor(x => item.Delivery.Date)</td>
+        <td class='center'>@Html.DisplayFor(x => item.Delivery.SalesOrder.SalesPerson.Nickname)</td>
+        <td>@Html.DisplayFor(x => item.Delivery.SalesOrder.Customer.Name)</td>
+        <td>@Html.DisplayFor(x => item.Delivery.DeliveryOrder.Contact.Name) @Html.SafeDisplayFor(x => item.Delivery.DeliveryOrder.Contact.Mobile)</td>
+        <td>@Html.SafeDisplayFor(x => item.Delivery.DeliveryOrder.ShipTo.Link)</td>
+        <td>@if (item.Delivery.SalesOrder.IsPaid) {
+                @Resources.Paid
+            }
+            else {
+                if(item.Delivery.SalesOrder.Terms == PaymentTerms.NetD) {
+                    if(item.Delivery.SalesOrder.DueDate < DateTime.Today) {
+                        <span>Crédito Vencido</span>
+                    }
+                    else {
+                        <span>Crédito Por Cobrar</span>
+                    }
+                }
+                else {
+                    <span>No pagado</span>
+                }
+            }
         </td>
-        <td class='date'>@Html.DisplayFor(x => item.Date)</td>
-        <td>@Html.DisplayFor(x => item.Customer.Name)</td>
-        <td class='date'>@Html.DisplayFor(x => item.PromiseDate)</td>
-        <td class='center'>@Html.DisplayFor(x => item.SalesPerson.Nickname)</td>
-        <td class='actions'>
-        	@Html.ActionLink(" ", "View", new { id = item.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
+    </tr>
+    <tr>
+        <td></td>
+        <td colspan="5">
+            @Html.SafeDisplayFor(x => item.Delivery.DeliveryOrder.Comment)
+            
         </td>
+    </tr>
+        foreach(var detail in item.Details) {
+            <tr>
+                <td colspan="2"></td>
+								        <td class="number">@Html.DisplayFor(x => detail.Quantity) @Html.DisplayFor(x => detail.Product.UnitOfMeasurement.Symbol)</td>
+                <td>@Html.DisplayFor(x => detail.ProductCode)</td>
+                @*<td colspan="3">@Html.DisplayFor(y => detail.ProductName)</td>*@
+            </tr>
+        }
+    <tr>
+        <td colspan="7" style="background-color: lightgrey">&nbsp;</td>
     </tr>
 }
 </table>

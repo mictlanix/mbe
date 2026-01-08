@@ -120,7 +120,7 @@ new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "details-order" }))
     <text>$("#form").hide("slow");</text>
 } else {
 	<text>
-    $("#amount").attr("placeholder", Number(@(Model.BalanceInCashDraw())))
+    $("#amount").attr("placeholder", Number(@(Model.BalanceInCashDrawer())))
         $("#form").show("slow");
 	</text>
 }

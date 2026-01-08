@@ -86,7 +86,7 @@
 																{
 																				<tr>
 																								<td class="text-center">
-																												@Html.ActionLink((string)item.SalesOrder.ToString(zeros), "Pdf", "POS", new { id = item.SalesOrder }, new { title = Resources.Details, target = "_blank" })
+																												@Html.ActionLink((string)item.SalesOrder.ToString(zeros), "Print", "Payments", new { id = item.SalesOrder }, new { title = Resources.Details, target = "_blank" })
 																								</td>
 																								<td class="col-sm-1 data">@item.Date.ToString("yyyy-MM-dd")</td>
 																								<td class="col-sm-1 data text-center">@item.Serial.ToString(zeros)</td>

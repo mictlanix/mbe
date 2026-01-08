@@ -118,22 +118,23 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		Search<DeliveriesItinerary> SearchDeliveryItineraries (Search<DeliveriesItinerary> search)
 		{
-			IQueryable<DeliveriesItinerary> qry = DeliveriesItinerary.Queryable;
+			var qry = DeliveriesItinerary.Queryable.Where(x => !x.IsCancelled);
 			DateTime date;
 			DateTime.TryParse (search.Pattern, out date);
 			var pattern = string.IsNullOrEmpty (search.Pattern) ? string.Empty : search.Pattern.Trim ();
 			var warehouse = UserSettings.Find (CurrentUser.Identity.Name).PointOfSale.Warehouse;
 
-			if (string.IsNullOrEmpty(pattern)) {
-				qry = from x in qry
-				      orderby x.Id descending
-				      select x;
-			} else {
-				qry = from x in qry
-				      where x.Date.Date == date.Date
-				      orderby x.Id descending
-				      select x;
+			if (!string.IsNullOrEmpty (pattern)) {
+				Int32.TryParse (pattern, out int result);
+				if (result > 0) {
+					qry = DeliveriesItinerary.Queryable.Where (x => x.Id == result);
+				} else {
+					//qry = qry.Where (x => x.VehicleOperator.Operator.FirstName.Contains (pattern) || x.VehicleOperator.Operator.LastName.Contains (pattern));
+					qry = qry.Where (x => x.DeliveryOrders.Select (y => y.Customer.Name).Contains (pattern));
+				}
 			}
+
+			qry = qry.OrderByDescending (x => x.Id);
 
 			search.Total = qry.Count ();
 			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
@@ -162,19 +163,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			item.VehicleOperator = VehicleOperator.TryFind (item.VehicleOperatorId);
 			item.Vehicle = Vehicle.TryFind (item.VehicleId);
-
-			////if (item.DueDate.Date < DateTime.Now.Date) {
-			////	ModelState.AddModelError ("DueDate", Resources.Validation_Date);
-			////}
-
-			////var itinerary_invalid = DeliveriesItinerary.Queryable
-			////	.Where(x => x.DueDate.Date == item.DueDate.Date
-			////	&& x.VehicleOperator == item.VehicleOperator
-			////	&& x.Vehicle == item.Vehicle).Count() > 0;
-
-			////if (itinerary_invalid) {
-			////	ModelState.AddModelError ("", Resources.ItemAlreadyAdded);
-			////}
 
 			if (!ModelState.IsValid)
 				return PartialView ("_Create", item);
@@ -215,8 +203,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Edit (int id)
 		{
 			var item = DeliveriesItinerary.Find (id);
-
-			return View (item);
+			if (!item.IsCancelled && !item.IsCompleted) {
+				return View (item);
+			}
+			return RedirectToAction ("View", new { id = id });
 		}
 
 		public ActionResult View (int id)
@@ -611,7 +601,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			if (Request.IsAjaxRequest()) {
-				return PartialView ("_item", item);
+				return PartialView ("_Item", item);
 			}
 
 			return RedirectToAction ("Index");
@@ -627,6 +617,49 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			return PdfTicketView ("ItineraryTicket", item);
 
+		}
+
+		public ActionResult PrintDeliveryNotes (int id)
+		{
+			var item = DeliveriesItinerary.Queryable.Where (x => x.Id == id).Single ();
+
+			if (!item.IsCompleted) {
+				return RedirectToAction ("Edit", new { id });
+			}
+
+			return PdfTicketView ("DeliveryNotesTicket", item);
+
+		}
+
+		public ActionResult DeliveriesSummary ()
+		{
+			if (WebConfig.Store == null) {
+				return View ("InvalidStore");
+			}
+
+			var search = new DateRange {
+				StartDate = DateTime.Now.Date.AddDays (-7),
+				EndDate = DateTime.Now.Date
+			};
+
+			return View ("DeliveriesSummaryReport",search);
+		}
+
+		[HttpPost]
+		public ActionResult DeliveriesSummary (DateRange dateRange)
+		{
+
+			var query = DeliveryOrder.Queryable.Where (x => !x.IsCancelled
+							&& x.IsCompleted
+							&& x.Date >= dateRange.StartDate
+							&& x.Date <= dateRange.EndDate
+						).SelectMany(x => x.Details.Where(y => y.OrderDetail.Warehouse == WebConfig.PointOfSale.Warehouse));
+
+			if (Request.IsAjaxRequest ()) {
+				return PartialView ("_DeliveriesSummaryReport", query);
+			} else {
+				return View (query);
+			}
 		}
 		public JsonResult GetSuggestions (int id, string pattern)
 		{
@@ -686,15 +719,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		private List<DeliveryOrderDetail> GetDeliveryOrderDetails (DateRange date, Warehouse w)
 		{
-			var qry = DeliveryOrderDetail.Queryable.Where (x =>
-				x.DeliveryOrder.Date >= date.StartDate
-				&& x.DeliveryOrder.Date <= date.EndDate
-				//&& x.Product.IsStockable
-				&& !x.DeliveryOrder.IsPickedUpInStore
-				&& x.OrderDetail.Warehouse == w
-				&& !x.DeliveryOrder.IsCancelled
-				&& x.DeliveryOrder.IsCompleted);
-			return qry.ToList ();
+			var orders = DeliveryOrder.Queryable.Where (x => x.Date >= date.StartDate && x.Date <= date.EndDate).ToList();
+
+			var items = orders.Where (x =>
+				x.Details.Any (y => y.OrderDetail.Warehouse == w)
+				&& !x.IsPickedUpInStore
+				).ToList ();
+			var details = items.SelectMany (x => x.Details)
+				.Where(x => x.OrderDetail.Product.IsStockable);
+
+			return details.ToList ();
 		}
 
 		private void GetDeliveriesItineraryDetails (DeliveriesItinerary entity, Warehouse w) {

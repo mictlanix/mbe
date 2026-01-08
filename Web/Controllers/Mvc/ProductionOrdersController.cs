@@ -43,13 +43,96 @@ using Mictlanix.BE.Web.Helpers;
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
 	public class ProductionOrdersController : CustomController {
+		//public ViewResult Index ()
+		//{
+		//	if (WebConfig.Store == null) {
+		//		return View ("InvalidStore");
+		//	}
+
+		//	var search = SearchSalesOrders (new Search<SalesOrder> {
+		//		Limit = WebConfig.PageSize
+		//	});
+
+		//	return View (search);
+		//}
+
+		//[HttpPost]
+		//public ActionResult Index (Search<SalesOrder> search)
+		//{
+		//	if (ModelState.IsValid) {
+		//		search = SearchSalesOrders (search);
+		//	}
+
+		//	if (Request.IsAjaxRequest ()) {
+		//		return PartialView ("_Index", search);
+		//	}
+
+		//	return View (search);
+		//}
+
+		//Search<SalesOrder> SearchSalesOrders (Search<SalesOrder> search)
+		//{
+		//	IQueryable<SalesOrder> query = from x in SalesOrder.Queryable
+		//				       where x.Details.Any(y => !y.Product.IsStockable)
+		//				       && x.IsCompleted && !x.IsCancelled
+		//				       select x;
+		//	var item = WebConfig.Store;
+
+		//	if (string.IsNullOrEmpty (search.Pattern)) {
+		//		query = from x in query
+		//			where x.Store.Id == item.Id
+		//			orderby x.Date descending
+		//			select x;
+		//	} else {
+		//		query = from x in query
+		//			where x.Store.Id == item.Id && (
+		//		      x.Customer.Name.Contains (search.Pattern) ||
+		//		      x.SalesPerson.Nickname.Contains (search.Pattern))
+		//			orderby x.Date descending
+		//			select x;
+		//	}
+
+		//	search.Total = query.Count ();
+		//	search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
+
+		//	return search;
+		//}
+
+		//public ViewResult View (int id)
+		//{
+		//	var item = SalesOrder.Find (id);
+		//	return View (item);
+		//}
+
+		//public ViewResult Print (int id)
+		//{
+		//	var item = SalesOrder.Find (id);
+		//	return View (item);
+		//}
+
+		//[HttpPost]
+		//public ActionResult Confirm (int id)
+		//{
+		//	var item = SalesOrder.Find (id);
+
+		//	item.Updater = CurrentUser.Employee;
+		//	item.ModificationTime = DateTime.Now;
+		//	item.IsDelivered = true;
+
+		//	using (var scope = new TransactionScope ()) {
+		//		item.UpdateAndFlush ();
+		//	}
+
+		//	return RedirectToAction ("Index");
+		//}
+
 		public ViewResult Index ()
 		{
 			if (WebConfig.Store == null) {
 				return View ("InvalidStore");
 			}
 
-			var search = SearchSalesOrders (new Search<SalesOrder> {
+			var search = SearchProductionOrders (new Search<DeliveryOrder> {
 				Limit = WebConfig.PageSize
 			});
 
@@ -57,10 +140,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult Index (Search<SalesOrder> search)
+		public ActionResult Index (Search<DeliveryOrder> search)
 		{
 			if (ModelState.IsValid) {
-				search = SearchSalesOrders (search);
+				search = SearchProductionOrders (search);
 			}
 
 			if (Request.IsAjaxRequest ()) {
@@ -70,24 +153,25 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View (search);
 		}
 
-		Search<SalesOrder> SearchSalesOrders (Search<SalesOrder> search)
+		Search<DeliveryOrder> SearchProductionOrders (Search<DeliveryOrder> search)
 		{
-			IQueryable<SalesOrder> query = from x in SalesOrder.Queryable
-						       where x.Details.Any(y => !y.Product.IsStockable)
+			IQueryable<DeliveryOrder> query = from x in DeliveryOrder.Queryable
+						       where x.Details.Any (y => !y.Product.IsStockable)
 						       && x.IsCompleted && !x.IsCancelled
 						       select x;
 			var item = WebConfig.Store;
+			var pattern = string.IsNullOrEmpty(search.Pattern) ? string.Empty : search.Pattern.Trim ();
 
-			if (string.IsNullOrEmpty (search.Pattern)) {
+			if (string.IsNullOrEmpty (pattern)) {
 				query = from x in query
 					where x.Store.Id == item.Id
 					orderby x.Date descending
 					select x;
 			} else {
 				query = from x in query
-					where x.Store.Id == item.Id && (
-				      x.Customer.Name.Contains (search.Pattern) ||
-				      x.SalesPerson.Nickname.Contains (search.Pattern))
+					where (
+					x.Customer.Name.Contains (pattern)
+				      )
 					orderby x.Date descending
 					select x;
 			}
@@ -100,20 +184,20 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public ViewResult View (int id)
 		{
-			var item = SalesOrder.Find (id);
+			var item = DeliveryOrder.Find (id);
 			return View (item);
 		}
 
 		public ViewResult Print (int id)
 		{
-			var item = SalesOrder.Find (id);
+			var item = DeliveryOrder.Find (id);
 			return View (item);
 		}
 
 		[HttpPost]
 		public ActionResult Confirm (int id)
 		{
-			var item = SalesOrder.Find (id);
+			var item = DeliveryOrder.Find (id);
 
 			item.Updater = CurrentUser.Employee;
 			item.ModificationTime = DateTime.Now;

@@ -14,28 +14,33 @@
         <a class='button icon-only icon delete' title='@Resources.Message_DeleteConfirmation'
 		   data-type='checklist' data-placement='left' data-pk='@Model.Id' data-source='{}' data-value='@Model.Id' data-url='@Url.Action("RemoveItem", new { id = Model.Id })' data-emptytext='' data-emptyclass=''></a>
     </div>
-    <div class='info'>
-		 <a class='editable name input-xxlarge' data-type='text' data-inputclass='input-xxlarge' data-placement='bottom' data-pk='@Model.Id' data-url='@Url.Action("SetItemProductName", new { id = Model.Id })'>@Html.DisplayFor(x => x.ProductName)</a>
-        <br/>
-        <b>@Resources.Code: </b>
-        <span>@Html.DisplayFor(x => x.ProductCode)</span>
-        <b>@Resources.UnitOfMeasurement: </b>
-        <span>@Html.DisplayFor(x => Model.Product.UnitOfMeasurement.Name)</span>
-    @if (!string.IsNullOrEmpty (Model.Product.Model)) {
-        <b>@Resources.Model: </b>
-        <span>@Html.DisplayFor(x => x.Product.Model)</span>
-    }
-    @if (!string.IsNullOrEmpty (Model.Product.SKU)) {
-        <b>@Resources.SKU: </b>
-        <span>@Html.DisplayFor(x => x.Product.SKU)</span>
-    }
-        <br/>
-		 @if (!string.IsNullOrEmpty (Model.OrderDetail.Comment)) {
-					<b>@Resources.Comment: </b><span>@Model.OrderDetail.Comment</span><br/>
-		 }
-        <b>@Resources.Quantity: </b>
-        <a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
-    </div>
+				<div class='info'>
+								@*<a class='editable name input-xxlarge' data-type='text' data-inputclass='input-xxlarge'
+								data-placement='bottom' data-pk='@Model.Id' data-url='@Url.Action("SetItemProductName", new { id = Model.Id })'>@Html.DisplayFor(x => x.ProductName)</a>*@
+								@Html.SafeDisplayFor(x => x.ProductName)
+								<br />
+								<b>@Resources.Code: </b>
+								<span>@Html.DisplayFor(x => x.ProductCode)</span>
+								<b>@Resources.UnitOfMeasurement: </b>
+								<span>@Html.DisplayFor(x => Model.Product.UnitOfMeasurement.Name)</span>
+								@if (!string.IsNullOrEmpty(Model.Product.Model))
+								{
+												<b>@Resources.Model: </b>
+												<span>@Html.DisplayFor(x => x.Product.Model)</span>
+								}
+								@if (!string.IsNullOrEmpty(Model.Product.SKU))
+								{
+												<b>@Resources.SKU: </b>
+												<span>@Html.DisplayFor(x => x.Product.SKU)</span>
+								}
+								<br />
+								@if (!string.IsNullOrEmpty(Model.OrderDetail.Comment))
+								{
+												<b>@Resources.Comment: </b><span>@Model.OrderDetail.Comment</span><br />
+								}
+								<b>@Resources.Quantity: </b>
+								<a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemQuantity", new { id = Model.Id })'>@Html.DisplayFor(x => x.Quantity)</a>
+				</div>
 </li>
 <script type='text/javascript'>
 $('#id\\:@Model.Id [data-toggle="tooltip"]').tooltip();

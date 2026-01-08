@@ -29,8 +29,8 @@
 							<div class="col-sm-2 ">@Resources.Customer</div>
 							<div class="col-sm-1 ">@Resources.SalesPerson</div>
 							<div class="col-sm-1 ">@Resources.User</div>
-							<div class="col-sm-1 ">@Resources.Completed</div>
-							<div class="col-sm-1 ">@Resources.Cancelled</div>
+							@*<div class="col-sm-1 ">@Resources.Completed</div>
+							<div class="col-sm-1 ">@Resources.Cancelled</div>*@
 							<div class="col-sm-1 ">@Resources.PaymentTerms</div>
 							<div class="col-sm-1 ">@Resources.Paid</div>
 							<div class="col-sm-1 "></div>
@@ -50,8 +50,8 @@
 								<div class="col-sm-2 data text-center">@Html.DisplayFor(x => item.Customer.Name) @Html.DisplayFor(x => item.CustomerName)</div>
 								<div class="col-sm-1 data text-center">@Html.DisplayFor(x => item.SalesPerson.Nickname)</div>
 								<div class="col-sm-1 data text-center">@Html.DisplayFor(x => item.Creator.Nickname)</div>
-								<div class="col-sm-1 data text-center">@Html.DisplayFor(x => item.IsCompleted)</div>
-								<div class="col-sm-1 data text-center">@Html.DisplayFor(x => item.IsCancelled)</div>
+								@*<div class="col-sm-1 data text-center">@Html.DisplayFor(x => item.IsCompleted)</div>
+								<div class="col-sm-1 data text-center">@Html.DisplayFor(x => item.IsCancelled)</div>*@
 								<div class="col-sm-1 data text-center">@item.Terms.GetDisplayName()</div>
 								<div class="col-sm-1 data text-center">@Html.DisplayFor(x => item.IsPaid)</div>
 								<div class="col-sm-1">

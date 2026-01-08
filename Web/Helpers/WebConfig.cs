@@ -546,6 +546,12 @@ namespace Mictlanix.BE.Web.Helpers {
 			get { return Convert.ToDecimal (ConfigurationManager.AppSettings ["MaxAmountOneSingleCredit"]); }
 		}
 
+		public static int MaxDaysToDeliverStockables {
+			get { return Convert.ToInt32 (ConfigurationManager.AppSettings ["MaxDaysToDeliverStockables"]); }
+		}
+		public static int MaxDaysToDeliverNoStockables {
+			get { return Convert.ToInt32 (ConfigurationManager.AppSettings ["MaxDaysToDeliverNoStockables"]); }
+		}
 
 		#endregion
 	}

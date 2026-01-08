@@ -104,13 +104,15 @@
 				</dd>
 				<dt>@Resources.Date</dt>
 				<dd>@Html.DisplayFor(x => x.Date)</dd>
-				<dt>@Resources.PromiseDate</dt>
+				@*<dt>@Resources.PromiseDate</dt>*@
+				<dt>Límite Para Envío</dt>
 				<dd>
-			        <a id='promise-date' data-type='date' data-placement='left' data-pk='@Model.Id'
+			        @*<a id='promise-date' data-type='date' data-placement='left' data-pk='@Model.Id'
 			        	data-value='@Html.DisplayFor(x => x.PromiseDate)' data-url='@Url.Action("SetPromiseDate", new { id = Model.Id })'
 			        	data-emptytext='@Resources.Empty' data-clear='false'>
 			        	@Html.DisplayFor(x => x.PromiseDate)
-			        </a>
+			        </a>*@
+			        	@Html.DisplayFor(x => x.PromiseDate)
 				</dd>
 				<dt>@Resources.Currency</dt>
 				<dd>

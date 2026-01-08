@@ -69,18 +69,9 @@ namespace Mictlanix.BE.Web.Helpers {
 
 		}
 
-		public static bool IsReadyToDeliver (DeliveryOrder order) {
-
-			if(order.ShipTo == null) return false;
-
-			var store_addresses = MBEQueryable.IQStores.Select (x => x.Address).ToList ();
-
-			var at_store = store_addresses.Contains(order.ShipTo);
-			var customer = order.Customer.Id != WebConfig.DefaultCustomer;
-			var contact = order.Contact != null;
-			var address = order.ShipTo != null;
-			return (at_store) || (customer && contact && address);
+		public static DeliveryOrder[] GetDeliveryOrders (this SalesOrder salesOrder) {
+			return DeliveryOrderDetail.Queryable.Where (x => salesOrder.Details
+			.Contains (x.OrderDetail)).Select (y => y.DeliveryOrder).Distinct ().ToArray ();
 		}
-
 	}
 }

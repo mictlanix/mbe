@@ -26,19 +26,20 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
+using Castle.Core.Resource;
+using Lucene.Net.Search;
 using Mictlanix.BE.Model;
+using Mictlanix.BE.Web.Helpers;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
-using Mictlanix.BE.Web.Helpers;
-using MimeKit;
-using System.Collections.Generic;
 using Mictlanix.BE.Web.Utils;
+using MimeKit;
 using NHibernate;
-using System.Text.RegularExpressions;
-using Lucene.Net.Search;
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
@@ -617,6 +618,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				if (val == PaymentTerms.NetD && !entity.Customer.HasCredit) {
 					Response.StatusCode = 400;
 					return Content (Resources.CreditLimitIsNotSet);
+				}
+
+				if (entity.Customer.HasExpiredCredits () || entity.IsOverCreditLimit ()) {
+					Response.StatusCode = 400;
+					return Content (Resources.CreditStatusNeedsToBeVerified);
 				}
 
 				entity.Terms = val;

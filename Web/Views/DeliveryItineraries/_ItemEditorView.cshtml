@@ -31,7 +31,8 @@
         <b>@Resources.QuantityToDeliver: </b>
         <a class='editable quantity' data-type='text' data-placement='right' data-pk='@Model.Id' data-url='@Url.Action("SetItemDetailQuantity", new { id = Model.Id })'>
             @Html.DisplayFor(x => x.SentQuantity)
-        </a>
+        </a><br />
+												<b> @Html.DisplayFor(x => Model.DeliveryOrderDetail.OrderDetail.Warehouse.Name)</b>
     </div>
 </li>
 <script type='text/javascript'>

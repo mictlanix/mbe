@@ -86,10 +86,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				  select x;
 
 			if (!string.IsNullOrEmpty(search.Pattern)) {
+				var pattern = search.Pattern.Trim ();
 				 qry = from x in qry
-					  where x.Name.Contains (search.Pattern) ||
-					      x.Code.Contains (search.Pattern) ||
-					      x.Zone.Contains (search.Pattern)
+					  where x.Name.Contains (pattern) ||
+					      x.Code.Contains (pattern) ||
+					      x.Zone.Contains (pattern)
 					  select x;
 			}
 
@@ -445,6 +446,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					UPDATE sales_order SET customer = :customer WHERE customer = :duplicate;
 					UPDATE sales_quote SET customer = :customer WHERE customer = :duplicate;
 					UPDATE tech_service_request SET customer = :customer WHERE customer = :duplicate;
+					UPDATE credit_note set customer = :customer WHERE customer = :duplicate;
 					DELETE FROM customer WHERE customer_id = :duplicate;";
 
 			ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {

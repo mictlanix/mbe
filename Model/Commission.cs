@@ -3,9 +3,9 @@ using Castle.ActiveRecord.Framework;
 using System.ComponentModel.DataAnnotations;
 
 namespace Mictlanix.BE.Model {
-	[ActiveRecord ("Commission", Lazy = true)]
+	[ActiveRecord ("commission", Lazy = true)]
 	public class Commission : ActiveRecordLinqBase<Commission> {
-		[PrimaryKey (PrimaryKeyType.Identity, "Commission_id")]
+		[PrimaryKey (PrimaryKeyType.Identity, "commission_id")]
 		public virtual int Id { get; set; }
 
 		[Property ("name")]

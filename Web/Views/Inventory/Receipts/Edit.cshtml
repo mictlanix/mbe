@@ -1,4 +1,4 @@
-﻿@using Mictlanix.BE
+@using Mictlanix.BE
 @using Mictlanix.BE.Model
 @using Mictlanix.BE.Web.Helpers
 @model InventoryReceipt
@@ -27,14 +27,15 @@
         @Html.Partial("Receipts/_TotalQuantity", Model)
     </div>
 </div>
+<div class="warning-message alert alert-danger alert-dismissible fade in" style="display:none;"></div>
 <div class="clear"></div>
 <div id='back-to-list' class='pull-left'>
     @Html.ActionLink(Resources.BackToList, "Receipts", new { }, new { @class = "button icon back" })
 </div>
 <div id='confirm-button' class='pull-right @(Model.Details.Count == 0 ? "hide" : "")'>
-@using (Html.BeginForm("ConfirmReceipt", "Inventory", new { id = Model.Id })) {
+@*@using (Html.BeginForm("ConfirmReceipt", "Inventory", new { id = Model.Id })) {
+}*@
     <button id='complete' type='submit' class='icon lock'>@Resources.Complete</button>
-}
 </div>
 <div class='clearfix'></div>
 <script type="text/javascript">
@@ -62,8 +63,21 @@ $(function () {
         $('button.lock').prop('disabled', true);
         $('button.lock').html('@Resources.PleaseWait');
 
-	});
+    });
 });
+ 	        $("#complete").click(function () {
+									        $.post('@Url.Action("ConfirmReceipt", new { id = Model.Id })', function (detail) {
+													        //location.reload();
+												        window.location.href = '@Url.Action("Receipt", new { id = Model.Id })';
+				        }, "json").fail(function (e) {
+								        console.log(e);
+								        DisplayErrorMessage(e.responseText)
+				        });
+	        });
+        function DisplayErrorMessage(errorMessage) {
+				        $('.warning-message').text(errorMessage);
+				        $('.warning-message').fadeIn(1).delay(5000).fadeOut(1000);
+        }
 </script>
 <style type='text/css'>
 ul.token-input-list { width: 100%; }

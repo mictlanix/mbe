@@ -77,7 +77,8 @@ namespace Mictlanix.BE.Web.Helpers {
 				where x.Terms == PaymentTerms.NetD &&
 				      x.IsCompleted && !x.IsCancelled && !x.IsPaid &&
 				      x.Customer.Id == entity.Id
-				select (y.Quantity - (CustomerRefundDetail.Queryable.Where (z => z.SalesOrderDetail == y && !z.Refund.IsCancelled && z.Refund.IsCompleted)
+				select (y.Quantity - (CustomerRefundDetail.Queryable.Where (
+						z => z.SalesOrderDetail == y && !z.Refund.IsCancelled && z.Refund.IsCompleted)
 					.Sum (w => (decimal?) w.Quantity) ?? 0)
 					) * y.Price * y.ExchangeRate * (1 - y.DiscountRate) * (y.IsTaxIncluded || y.TaxRate <= 0m ? 1m : (1m + y.TaxRate));
 			var bought = query.Count () > 0 ? query.ToList ().Sum () : 0;
@@ -112,13 +113,17 @@ namespace Mictlanix.BE.Web.Helpers {
 			if(customer.Id == WebConfig.DefaultCustomer) return new List<CreditNote> ();
 
 			return CreditNote.Queryable.Where (x =>
-				x.Customer == customer &&
-				x.CashSession == null)
+				x.Customer == customer
+				//&& !x.IsRefundedToCustomer
+				&& x.CashSession == null)
 				.ToList ();
 		}
 
 		public static bool HasExpiredCredits (this Customer customer) {
-			return SalesOrder.Queryable.Any (x => x.Terms == PaymentTerms.NetD && !x.IsPaid && x.Customer == customer && x.DueDate < DateTime.Now);
+			var expired = SalesOrder.Queryable.Where (x => x.Terms == PaymentTerms.NetD && !x.IsPaid
+				&& !x.IsCancelled && x.IsCompleted
+				&& x.Customer == customer && x.DueDate.Date < DateTime.Today).ToArray();
+			return expired.Any (x => x.Balance > 0.01m);
 		}
 
 		public static bool IsOverCreditLimit (this SalesOrder entity)
@@ -178,20 +183,32 @@ namespace Mictlanix.BE.Web.Helpers {
 					&& x.SalesOrderDetail == detail)
 				.Sum (x => (decimal?) x.Quantity) ?? 0;
 
-			return detail.Quantity- refunded; // - delivered;
+			return detail.Quantity- refunded;
+		}
+
+		public static decimal GetCancellableQuantity (this SalesOrderDetail detail) {
+			var delivered = DeliveriesItineraryDetail.Queryable.Where (x => !x.DeliveriesItinerary.IsCancelled
+					&& x.DeliveriesItinerary.IsCompleted
+					&& x.DeliveryOrderDetail.OrderDetail == detail)
+				.Sum (x => (decimal?) x.SentQuantity) ?? 0;
+			var picked = DeliveryOrderDetail.Queryable.Where (x => !x.DeliveryOrder.IsCancelled
+					&& x.DeliveryOrder.IsCompleted
+					&& x.OrderDetail == detail
+					&& x.DeliveryOrder.IsPickedUpInStore)
+				.Sum (x => (decimal?) x.Quantity) ?? 0;
+			return detail.Quantity - delivered - picked;
 		}
 
 		public static decimal GetDeliverableQuantity (this SalesOrderDetail detail) {
-			var delivered = DeliveryOrderDetail.Queryable.Where (x => x.DeliveryOrder.IsCompleted
-					&& !x.DeliveryOrder.IsCancelled
-					&& x.OrderDetail == detail)
-				.Sum (x => (decimal?) x.Quantity) ?? 0;
-			var refunded = CustomerRefundDetail.Queryable.Where (x => !x.Refund.IsCancelled
-				&& x.Refund.IsCompleted
-				&& x.SalesOrderDetail == detail)
-				.Sum (x => (decimal?) x.Quantity) ?? 0;
+			var deliveries = DeliveryOrderDetail.Queryable.Where (x => !x.DeliveryOrder.IsCancelled
+					&& x.DeliveryOrder.IsCompleted	
+					&& x.OrderDetail == detail).Select(x => x.Quantity).ToList();
 
-			return detail.Quantity - delivered - refunded;
+			var refunds = CustomerRefundDetail.Queryable.Where (x => !x.Refund.IsCancelled
+				&& x.Refund.IsCompleted
+				&& x.SalesOrderDetail == detail).Select(x => x.Quantity).ToList ();
+
+			return detail.Quantity - (deliveries.Sum(x => (decimal?)x) ?? 0) - (refunds.Sum(x => (decimal?)x)??0);
 		}
 	}
 }

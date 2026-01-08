@@ -13,7 +13,7 @@
 
 <li id='id:@Model.DeliveryOrder.Id'>
 				<div class="row" style="background-color:gainsboro">
-								<div class='photo'>
+								<div class='photo drag-handle'>
 												@Html.DisplayFor(x => x.DeliveryOrder.Priority)
 								</div>
 								<div class='action-link'>
@@ -34,20 +34,21 @@
 												{
 																<a href="@Model.DeliveryOrder.ShipTo.Link" target="_blank">@Resources.AddressLinkURL</a>
 												} <br />
+												@Html.SafeDisplayFor(x => Model.DeliveryOrder.ShipTo.Comment)
 												@Resources.SalesPerson: @Model.DeliveryOrder.Updater.Nickname
 												@Resources.DeliveryOrder: @Html.ActionLink(Model.DeliveryOrder.Id.ToString(), "Print", "DeliveryOrders", new { id = Model.DeliveryOrder.Id }, new { target = "_blank" })
 												@Resources.Details: @Model.DeliveryOrder.Details.Count()
 												@(Model.Itinerary.Date.Date > Model.DeliveryOrder.Date.Date ? "Extemporáneo":"A tiempo")<br />
 								</div>
 				</div>
-								<div class="row">
-												<ul id="addresses" class="list-items">
-																@foreach (var item in Model.Itinerary.Details.Where(x => x.DeliveryOrderDetail.DeliveryOrder == Model.DeliveryOrder))
-																{
-																				@Html.Partial("_ItemEditorView", item)
-																}
-												</ul>
-								</div>
+				<div class="row">
+								<ul class="list-items">
+												@foreach (var item in Model.Itinerary.Details.Where(x => x.DeliveryOrderDetail.DeliveryOrder == Model.DeliveryOrder))
+												{
+																@Html.Partial("_ItemEditorView", item)
+												}
+								</ul>
+				</div>
 </li>
 <script type='text/javascript'>
 $('#id\\:@Model.DeliveryOrder.Id [data-toggle="tooltip"]').tooltip();

@@ -49,7 +49,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult Index (int? customer)
+		public ActionResult Index (int? customer, bool all_salespersons)
 		{
 			//string sql1 = @"SELECT m.date Date, d.sales_order SalesOrder, m.due_date DueDate, c.name Customer,
 			//			GROUP_CONCAT(DISTINCT (SELECT GROUP_CONCAT(DISTINCT f.batch, LPAD(f.serial, 6, '0') SEPARATOR ' ')
@@ -75,15 +75,20 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			
 			//var privilege = GetAccessPrivilege(SystemObjects.SearchCreditsFromAllStores);
 			//var FILTERALLSTORES = privilege.AllowRead ? string.Empty : " AND m.store = " + WebConfig.Store.Id + " ";
-			var FILTERALLSTORES = string.Empty;
-		
 
-			string sql1 = @"SELECT m.date Date, m.sales_order_id SalesOrder, m.due_date DueDate, c.name Customer, s.code Store, m.paid Paid,
+			var FILTERBYSALESPERSON = all_salespersons ? string.Empty :
+				" AND (c.salesperson = " + CurrentUser.Employee.Id + " OR m.salesperson = " + CurrentUser.Employee.Id + ") ";
+			var CUSTOMER_FILTER = customer.HasValue ? "AND m.customer = " + customer.Value : string.Empty;
+
+			string sql1 = @"SELECT m.date Date, m.sales_order_id SalesOrder, m.due_date DueDate, c.name Customer,
+						sa.nickname Salesagent, sp.nickname Salesperson ,s.code Store, m.paid Paid,
 						Invoices, TotalEx, Total, IFNULL(r.refund, 0) Refunds,
 						m.currency Currency
 					FROM sales_order m
 					LEFT JOIN store s on s.store_id = m.store
 					INNER JOIN customer c ON m.customer = c.customer_id
+					LEFT JOIN employee sa on c.salesperson = sa.employee_id
+					JOIN employee sp on m.salesperson = sp.employee_id
 					INNER JOIN (SELECT d.sales_order,
 						SUM(ROUND(d.quantity * d.price * d.exchange_rate * (1 - d.discount_rate) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) TotalEx,
 						SUM(ROUND(d.quantity * d.price * (1 - d.discount_rate) * IF(d.tax_included = 0, 1 + d.tax_rate, 1), 2)) Total
@@ -105,27 +110,31 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						FROM customer_refund_detail crd
 						JOIN customer_refund cr ON crd.customer_refund = cr.customer_refund_id
 						GROUP BY cr.sales_order) AS r ON r.sales_order = m.sales_order_id
-					WHERE m.completed = 1 AND m.cancelled = 0 AND (m.paid = 0 OR
+					WHERE m.completed = 1 AND m.cancelled = 0
+					AND (det.Total - IFNULL(r.refund, 0)) > 0
+					AND (m.paid = 0 OR
 							(m.paid = 1 AND DATE_ADD(m.modification_time, INTERVAL 60 DAY) > NOW()))
-					AND m.payment_terms = 1 CUSTOMER_FILTER FILTERALLSTORES
-					ORDER BY m.due_date DESC";
+					AND m.payment_terms = 1 CUSTOMER_FILTER FILTERBYSALESPERSON
+					ORDER BY m.paid, m.due_date";
 			string sql2 = @"SELECT m.sales_order_id SalesOrder, SUM(ROUND(amount, 2)) Payments
 					FROM sales_order m
 					INNER JOIN sales_order_payment p ON m.sales_order_id = p.sales_order
 					WHERE m.completed = 1 AND m.cancelled = 0 AND m.paid = 0 and m.payment_terms = 1
-					CUSTOMER_FILTER FILTERALLSTORES
+					CUSTOMER_FILTER 
 					GROUP BY m.sales_order_id";
 
-			sql1 = sql1.Replace ("FILTERALLSTORES", FILTERALLSTORES);
-			sql2 = sql2.Replace ("FILTERALLSTORES", FILTERALLSTORES);
+			sql1 = sql1.Replace ("FILTERBYSALESPERSON", FILTERBYSALESPERSON);
+			sql1 = sql1.Replace ("CUSTOMER_FILTER", CUSTOMER_FILTER);
+			sql2 = sql2.Replace ("CUSTOMER_FILTER", CUSTOMER_FILTER);
+			
 
-			if (customer.HasValue) {
-				sql1 = sql1.Replace ("CUSTOMER_FILTER", "AND m.customer = :customer");
-				sql2 = sql2.Replace ("CUSTOMER_FILTER", "AND m.customer = :customer");
-			} else {
-				sql1 = sql1.Replace ("CUSTOMER_FILTER", string.Empty);
-				sql2 = sql2.Replace ("CUSTOMER_FILTER", string.Empty);
-			}
+			//if (customer.HasValue) {
+			//	sql1 = sql1.Replace ("CUSTOMER_FILTER", "AND m.customer = :customer");
+			//	sql2 = sql2.Replace ("CUSTOMER_FILTER", "AND m.customer = :customer");
+			//} else {
+			//	sql1 = sql1.Replace ("CUSTOMER_FILTER", string.Empty);
+			//	sql2 = sql2.Replace ("CUSTOMER_FILTER", string.Empty);
+			//}
 
 			var items = (IList<dynamic>) ActiveRecordMediator<SalesOrder>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql1);
@@ -135,6 +144,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				query.AddScalar ("Paid", NHibernateUtil.Boolean);
 				query.AddScalar ("Invoices", NHibernateUtil.String);
 				query.AddScalar ("Store", NHibernateUtil.String);
+				query.AddScalar ("Salesperson", NHibernateUtil.String);
+				query.AddScalar ("Salesagent", NHibernateUtil.String);
 				query.AddScalar ("DueDate", NHibernateUtil.DateTime);
 				query.AddScalar ("Customer", NHibernateUtil.String);
 				query.AddScalar ("TotalEx", NHibernateUtil.Decimal);
@@ -142,9 +153,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				query.AddScalar ("Refunds", NHibernateUtil.Decimal);
 				query.AddScalar ("Currency", NHibernateUtil.Int32);
 
-				if (customer.HasValue) {
-					query.SetInt32 ("customer", customer.Value);
-				}
+				//if (customer.HasValue) {
+				//	query.SetInt32 ("customer", customer.Value);
+				//}
 
 				return query.DynamicList ();
 			}, null);
@@ -155,9 +166,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
 				query.AddScalar ("Payments", NHibernateUtil.Decimal);
 
-				if (customer.HasValue) {
-					query.SetInt32 ("customer", customer.Value);
-				}
+				//if (customer.HasValue) {
+				//	query.SetInt32 ("customer", customer.Value);
+				//}
 
 				return query.DynamicList ();
 			}, null);

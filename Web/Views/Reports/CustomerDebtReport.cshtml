@@ -19,13 +19,22 @@
 <h4>
 				@Resources.Code: @Model.Customer.Code
 </h4>
-<h4>@Resources.SalesPerson: @(Model.Customer.SalesPerson != null ? Model.Customer.SalesPerson.Nickname: Resources.ItemNotFound )</h4>
+<h4>@Resources.SalesAgent: @(Model.Customer.SalesPerson != null ? Model.Customer.SalesPerson.Nickname: Resources.ItemNotFound )</h4>
+@if (Model.Customer.HasCredit)
+{
+				<h4>
+								@Resources.CreditLimit: @Model.Customer.CreditLimit.ToString("C")
+				</h4>
+				<h4>
+								@Resources.CreditDays: @Model.Customer.CreditDays
+				</h4>
+}
 <h5>
 				@Resources.Date: @Html.DisplayFor(x => Model.DateRange.StartDate) @Html.DisplayFor(x => Model.DateRange.EndDate)
 </h5>
 @*<h5>
-				@Resources.OnlyCredits  @Html.DisplayFor(x => Model.OnlyCredits)
-</h5>*@
+								@Resources.OnlyCredits  @Html.DisplayFor(x => Model.OnlyCredits)
+				</h5>*@
 
 <table class='debts'>
 				<thead>
@@ -63,21 +72,22 @@
 																<td class="date">@item.RefundsInfo</td>
 																<td class="date">@item.OrderedQuantity.ToString("F2")</td>
 																<td class="date">@item.DeliveredQuantity</td>
-																																<td class="date">
-																																				@if(!string.IsNullOrEmpty(item.DeliveryOrderIds)) {
-																																								var deliveries = item.DeliveryOrderIds.Split('|');
-																																								foreach (var delivery in deliveries)
-																																								{
-																																												@Html.ActionLink((string)delivery, "View", "DeliveryOrders", new { id = Int32.Parse(delivery) }, new { target = "_blank" }) <br />
-																																								}
-																																				}
-																																</td>
+																<td class="date">
+																				@if (!string.IsNullOrEmpty(item.DeliveryOrderIds))
+																				{
+																								var deliveries = item.DeliveryOrderIds.Split('|');
+																								foreach (var delivery in deliveries)
+																								{
+																												@Html.ActionLink((string)delivery, "View", "DeliveryOrders", new { id = Int32.Parse(delivery) }, new { target = "_blank" }) <br />
+																								}
+																				}
+																</td>
 																<td class="date">@(item.OnDelivery != null ? item.OnDelivery.ToString("C") + " ???":string.Empty)</td>
 												</tr>
 								}
 								<tr class="warning">
 												<td class="text-right" colspan="9"><b>@Resources.Balance</b></td>
-												<td class="number">@Model.SalesOrders.Where(x => (decimal)x.Balance < 0  && (bool)x.OrderPaidStatus == false).Sum(y => (decimal)y.Balance).ToString("C")</td>
+												<td class="number">@Model.SalesOrders.Where(x => (decimal)x.Balance < 0 && (bool)x.OrderPaidStatus == false).Sum(y => (decimal)y.Balance).ToString("C")</td>
 								</tr>
 				</tbody>
 </table>

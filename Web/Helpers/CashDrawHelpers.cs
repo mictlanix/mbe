@@ -33,9 +33,9 @@ using Microsoft.Ajax.Utilities;
 using Mictlanix.BE.Model;
 
 namespace Mictlanix.BE.Web.Helpers {
-	public static class CashDrawHelpers {
+	public static class CashDrawerHelpers {
 
-		public static decimal BalanceInCashDraw (this SalesOrder salesOrder) {
+		public static decimal BalanceInCashDrawer (this SalesOrder salesOrder) {
 			decimal balance = salesOrder.Total;
 			decimal paid = salesOrder.Payments.Where (x => x.IsConfirmed).Sum (x => (decimal?) x.Amount) ?? 0;
 			decimal refund = salesOrder.CustomerRefunds.Sum (x => (decimal?) x.Total) ?? 0;

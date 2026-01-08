@@ -88,6 +88,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var pattern = (search.Pattern ?? string.Empty).Trim ();
 			var user = CurrentUser.Employee;
 			IQueryable<SalesOrder> query = MBEQueryable.IQSalesOrders.Where(x => x.Creator == user || x.Updater == user || x.SalesPerson == user);
+			query = query.Where (x => !x.IsCancelled);
 
 			if (int.TryParse (pattern, out int id) && id > 0) {
 				query = MBEQueryable.IQSalesOrders.Where (x => x.Id == id || x.Serial == id);
@@ -160,21 +161,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			// Store and Serial
 			item.Store = item.PointOfSale.Store;
 
-			//try {
-			//	item.Serial = (from x in SalesOrder.Queryable
-			//		       where x.Store.Id == item.Store.Id
-			//		       select x.Serial).Max () + 1;
-			//} catch {
-			//	item.Serial = 1;
-			//}
-
-			//item.Serial = SalesOrder.Queryable.Where(x => x.Store == WebConfig.Store)
-			//	.Select (x => (int?)x.Serial).Max () + 1 ?? 1;
-
 			item.Customer = Customer.TryFind (WebConfig.DefaultCustomer);
 			item.SalesPerson = CurrentUser.Employee;
 			item.Date = dt;
-			item.PromiseDate = dt;
+			item.PromiseDate = dt.AddDays(WebConfig.MaxDaysToDeliverStockables);
 			item.DueDate = dt;
 			item.Currency = WebConfig.DefaultCurrency;
 			item.ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate ();
@@ -726,6 +716,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			PaymentTerms val;
 			var entity = SalesOrder.Find (id);
 			var dt = DateTime.Now;
+			var customer = entity.Customer;
 
 			if (entity.IsCompleted || entity.IsCancelled) {
 				Response.StatusCode = 400;
@@ -735,9 +726,22 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			success = Enum.TryParse (value.Trim (), out val);
 
 			if (success) {
-				if (val == PaymentTerms.NetD && !entity.Customer.HasCredit) {
-					Response.StatusCode = 400;
-					return Content (Resources.CreditLimitIsNotSet);
+				if (val == PaymentTerms.NetD) {
+
+					if (entity.Customer.Id == WebConfig.DefaultCustomer) {
+						Response.StatusCode = 400;
+						return Content (Resources.CustomerNotFound);
+					}
+
+					if (!entity.Customer.HasCredit) {
+						Response.StatusCode = 400;
+						return Content (Resources.CreditLimitIsNotSet);
+					}
+
+					if (customer.HasExpiredCredits () || entity.IsOverCreditLimit ()) {
+						Response.StatusCode = 400;
+						return Content (Resources.CreditStatusNeedsToBeVerified);
+					}
 				}
 
 				entity.Terms = val;
@@ -1249,11 +1253,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return RedirectToAction ("Index");
 			}
 
-			//if (entity.Terms == PaymentTerms.NetD
-			//	&& (entity.Customer.HasExpiredCredits () || entity.IsOverCreditLimit() )) {
-			//	Response.StatusCode = 400;
-			//	return Content (Resources.CreditStatusNeedsToBeVerified);
-			//}
+			if (WebConfig.DeliveryOrderRequiresPaidOrCreditSalesOrder && !CurrentUser.IsAdministrator) {
+				if (entity.Customer.HasExpiredCredits ()) {
+					//Response.StatusCode = 400;
+					//return Content (Resources.CreditStatusNeedsToBeVerified);
+					//messages.Add (Resources.CreditStatusNeedsToBeVerified);
+				}
+			}
 
 			entity.Updater = CurrentUser.Employee;
 			entity.ModificationTime = DateTime.Now;
@@ -1381,7 +1387,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 
-			sql = @"SELECT	p.product_id		id,
+			sql = @"SELECT		p.product_id		id,
 						p.name			name,
 						p.code			code,
 						p.sku			sku,

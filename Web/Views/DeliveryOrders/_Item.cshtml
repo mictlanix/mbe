@@ -31,7 +31,12 @@
 				<td class="">@Html.DisplayFor(x => x.Comment)</td>
 				<td class="bool">@Html.Raw(string.Join("<br/>", (with_warehouse.Where(x => x.OrderDetail.Warehouse != null)
 																																.Select(x => x.OrderDetail.Warehouse.Name).Distinct())))</td>
-
+				<td class="">
+								@if(Model.ShipTo != null && Model.ShipTo.Link != null && !Model.IsPickedUpInStore) {
+										  	<a href="@Model.ShipTo.Link.ToString()" target="_blank">@Resources.AddressLinkURL</a>
+								}
+								else { <span>Solicitar liga de ubicación...</span> }
+				</td>
 								<td class="actions">
 												@if (ViewBag.Privilege.AllowRead)
 												{
