@@ -41,6 +41,7 @@ using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Security;
 using NHibernate;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Database;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
 
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
@@ -824,8 +825,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				LEFT JOIN commission_salesperson cs ON cs.salesperson = d.osp AND cs.commission_participation = 3 
 				AND cs.commission = cp.commission
 				WHERE d.salesperson != d.osp and d.osp WHERE_SALESPERSON
-			)
-			,
+			),
  			detailed AS(
 			SELECT * FROM commission_detail_on_field
 			UNION
@@ -1117,6 +1117,27 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View ("SummaryReport", new DateRange ());
 		}
 
+		public ActionResult Customer360 ()
+		{
+			ViewBag.EditorField = "customer";
+			ViewBag.EditorTemplate = "CustomerSelector";
+			ViewBag.Title = Resources.Customer360;
+			return View ("SummaryReport", new DateRange ());
+		}
+
+		[HttpPost]
+		public ActionResult Customer360 (int customer)
+		{
+
+			var query = from x in SalesOrder.Queryable
+				    where x.Customer.Id == customer &&
+					x.IsCompleted && !x.IsCancelled
+				    orderby x.Date
+				    select x;
+
+			return PartialView ("_Customer360", query.ToList ());
+		}
+
 
 		//FIXME: Discount
 		[HttpPost]
@@ -1294,6 +1315,338 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}, null);
 
 			return PartialView ("_SalesBySalesPerson", items);
+		}
+
+		public ActionResult DownloadCSVs () {
+			var range = new DateRange ();
+			ViewBag.Title = Resources.DownloadCSVFiles;
+			return View (range);
+		}
+
+		public ActionResult SalesCsv (DateRange range)
+		{
+			string sql = @"
+					SELECT
+							sales_order sales_order_id, 
+							CAST(sale_date AS CHAR) AS sale_date,
+							sales_order_detail sales_order_detail_id, 
+							p.product_id,
+							p.code `product_code`,
+							t.product_code,
+							p.name `name`,
+						       t.product_name,
+						       quantity,
+						       IFNULL(um.symbol, um.name)unit,
+						       t.cost,
+						       if(p.stockable = 1 , w.name, 'PRODUCCIÓN') bodega,
+						       price,
+						       ROUND(t.discount_rate, 4) 'discount',
+						       final_price,
+						       subtotal,
+						      c.name customer_name,
+						       s.name store_name,
+						       e.nickname employee_name,
+						       sp.nickname sales_person,
+						       Pagado,
+						       Términos, 
+						       Tipo
+					FROM
+					(SELECT so.sales_order_id sales_order,
+						so.store,
+						so.customer,
+						so.creator,
+						so.salesperson,
+						sod.warehouse,
+					   sod.sales_order_detail_id sales_order_detail,
+					   sod.product AS product_id,
+					   sod.product_code,
+					   so.`date` sale_date,
+					   so.creation_time,
+					   so.modification_time,
+					   so.paid,
+					   if(so.paid = 1, 'Pagado', 'A saldar') Pagado,
+					   if(so.payment_terms = 0, 'Contado', 'Crédito') Términos,
+					   'Pedido' Tipo,
+					   sod.product_name,
+					   sod.cost,
+					   sod.discount_rate,
+					   sod.price,
+					   ROUND(CAST(sod.price * (1 - sod.discount_rate) AS DECIMAL(18, 7)), 2) final_price,
+					   sod.quantity,
+					   ROUND(CAST((sod.quantity * sod.price * (1 - sod.discount_rate)) AS DECIMAL(18, 7)), 2) subtotal
+					FROM sales_order so
+					INNER JOIN sales_order_detail sod ON so.sales_order_id = sod.sales_order
+					WHERE (date(so.`date`) BETWEEN :start AND :end
+						)		
+					    AND so.completed = 1
+					    AND so.cancelled = 0
+					UNION  
+					SELECT so.sales_order_id,
+						so.store,
+						so.customer,
+						so.creator,
+						so.salesperson,
+						sod.warehouse,
+						sod.sales_order_detail_id,
+						sod.product,
+						sod.product_code,
+						cr.`date`,
+						cr.creation_time,
+						cr.modification_time,
+						so.paid,
+						if(so.paid = 1, 'Pagado', 'A saldar') Pagado,
+					   if(so.payment_terms = 0, 'Contado', 'Crédito') Términos,
+					   'Devolución' Tipo,
+						sod.product_name,
+						sod.cost,
+						sod.discount_rate,
+						sod.price,
+						ROUND(CAST(crd.price * (1 - crd.discount) AS DECIMAL(18, 7)), 2) final_price,
+						crd.quantity,
+						-ROUND(CAST((crd.quantity * crd.price * (1 - crd.discount)) AS DECIMAL(18, 7)), 2) subtotal
+					 FROM customer_refund_detail crd
+					JOIN customer_refund cr ON crd.customer_refund = cr.customer_refund_id
+					JOIN sales_order_detail sod ON crd.sales_order_detail = sod.sales_order_detail_id
+					JOIN sales_order so ON sod.sales_order = so.sales_order_id
+					WHERE cr.completed = 1 AND cr.cancelled = 0
+					AND (date(cr.`date`) BETWEEN :start AND :end)) AS t
+					LEFT JOIN customer c ON t.customer = c.customer_id
+					LEFT JOIN employee sp ON t.salesperson = sp.employee_id
+					JOIN store s ON t.store = s.store_id
+					LEFT JOIN product p ON t.product_id = p.product_id
+					JOIN sat_unit_of_measurement um ON p.unit_of_measurement = um.sat_unit_of_measurement_id
+					JOIN employee e ON t.creator = e.employee_id
+					LEFT JOIN warehouse w ON t.warehouse = w.warehouse_id
+					WHERE quantity > 0 
+					ORDER BY sale_date DESC;
+					";
+
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+				return session.CreateSQLQuery (sql)
+				    .SetParameter ("start", range.StartDate)
+				    .SetParameter ("end", range.EndDate)
+				    .DynamicList ();
+			}, null);
+
+			var sb = new System.Text.StringBuilder ();
+
+			sb.AppendLine ("sales_order_id,date,sales_order_detail_id,product_id,product_code," +
+					"product_name, quantity, unit, cost, bodega, price, discount," +
+					"final_price, subtotal, customer_name, store_name, employee_name," +
+					"sales_person, Pagado, Términos, Tipo");
+			foreach (var u in items)
+				{ sb.AppendLine($"{u.sales_order_id},{u.sale_date},{u.sales_order_detail_id},{u.product_id}," +
+					$"{u.product_code.Replace (",", string.Empty).Trim ()},{u.product_name.Replace(",", string.Empty).Trim()}," +
+					$"{u.quantity},{u.unit},{u.cost},{u.bodega}," +
+					$"{u.price},{u.discount},{u.final_price},{u.subtotal},{u.customer_name.Replace(",",string.Empty).Trim()}," +
+					$"{u.store_name},{u.employee_name},{u.sales_person},{u.Pagado},{u.Términos},{u.Tipo}");
+			}
+			var bytes = System.Text.Encoding.UTF8.GetBytes(sb.ToString());
+			return File(bytes, "text/csv", "sales.csv");
+		}
+
+		public ActionResult PurchasesCsv (DateRange range)
+		{
+			var purchases = new List<PurchaseOrder> {
+				PurchaseOrder.Find(100),
+				PurchaseOrder.Find(200),
+				PurchaseOrder.Find(300),
+			};
+
+			var sb = new System.Text.StringBuilder ();
+			sb.AppendLine ("Id,Nombre,Edad"); // encabezados
+			foreach (var u in purchases) {
+				sb.AppendLine ($"{u.Id},{u.ModificationTime},{u.Creator.Nickname}");
+			}
+			var bytes = System.Text.Encoding.UTF8.GetBytes (sb.ToString ());
+			return File (bytes, "text/csv", "purchases.csv");
+		}
+
+		public ActionResult PaymentsCsv (DateRange range)
+		{
+			var payments = new List<CustomerPayment> {
+				CustomerPayment.Find(1000),
+				CustomerPayment.Find(1001),
+				CustomerPayment.Find(1002),
+			};
+
+			var sb = new System.Text.StringBuilder ();
+			sb.AppendLine ("Id,Nombre,Edad"); // encabezados
+			foreach (var u in payments) {
+				sb.AppendLine ($"{u.Id},{u.ModificationTime} , {u.Creator.Nickname}");
+			}
+			var bytes = System.Text.Encoding.UTF8.GetBytes (sb.ToString ());
+			return File (bytes, "text/csv", "payments.csv");
+		}
+
+		public ViewResult WarehouseReStock () {
+
+			return View ();
+		}
+
+		[HttpPost]
+		public ActionResult WarehouseReStock (int warehouse) {
+
+			int frequency_pivot_weeks = 20;
+			string sql = @"
+
+				DROP TABLE IF EXISTS abc_classification;
+				CREATE TABLE abc_classification AS
+				SELECT 	p.product_id,
+							p.name product, 
+							w.name warehouse,
+							w.warehouse_id warehouse_id, 
+							COUNT(t1.product) orders, 
+							SUM(t1.quantity) quantity, 
+							SUM(t1.total) sales,
+							SUM(t1.total) * 100 / SUM(SUM(t1.total)) OVER(PARTITION BY t1.warehouse) percentage_sales,
+							SUM(SUM(t1.total)) OVER (PARTITION BY t1.warehouse ORDER BY SUM(t1.total) DESC) / 
+									SUM(SUM(t1.total)) OVER(PARTITION BY t1.warehouse) percentage_sales_accumulation,
+							SUM(SUM(t1.total)) OVER(PARTITION BY t1.warehouse) sales_by_store,
+							CASE 
+								WHEN SUM(SUM(t1.total)) OVER (PARTITION BY t1.warehouse ORDER BY SUM(t1.total) DESC) / SUM(SUM(t1.total)) OVER (PARTITION BY t1.warehouse) <= .5 THEN 'AA' 
+								WHEN SUM(SUM(t1.total)) OVER (PARTITION BY t1.warehouse ORDER BY SUM(t1.total) DESC) / SUM(SUM(t1.total)) OVER (PARTITION BY t1.warehouse) <= .8 THEN 'A' 
+								WHEN SUM(SUM(t1.total)) OVER (PARTITION BY t1.warehouse ORDER BY SUM(t1.total) DESC) / SUM(SUM(t1.total)) OVER (PARTITION BY t1.warehouse) <= .95 THEN 'B' 
+								ELSE 'C' END AS ABC,
+											CASE 
+								WHEN SUM(SUM(t1.total)) OVER (PARTITION BY t1.warehouse ORDER BY SUM(t1.total) DESC) / SUM(SUM(t1.total)) OVER (PARTITION BY t1.warehouse) <= .5 THEN 0.95 
+								WHEN SUM(SUM(t1.total)) OVER (PARTITION BY t1.warehouse ORDER BY SUM(t1.total) DESC) / SUM(SUM(t1.total)) OVER (PARTITION BY t1.warehouse) <= .8 THEN 0.9
+								WHEN SUM(SUM(t1.total)) OVER (PARTITION BY t1.warehouse ORDER BY SUM(t1.total) DESC) / SUM(SUM(t1.total)) OVER (PARTITION BY t1.warehouse) <= .95 THEN 0.8 
+								ELSE 0.7 END AS service_level,
+								CASE 
+								WHEN SUM(SUM(t1.total)) OVER (PARTITION BY t1.warehouse ORDER BY SUM(t1.total) DESC) / SUM(SUM(t1.total)) OVER (PARTITION BY t1.warehouse) <= .5 THEN 1.645 
+								WHEN SUM(SUM(t1.total)) OVER (PARTITION BY t1.warehouse ORDER BY SUM(t1.total) DESC) / SUM(SUM(t1.total)) OVER (PARTITION BY t1.warehouse) <= .8 THEN 1.282
+								WHEN SUM(SUM(t1.total)) OVER (PARTITION BY t1.warehouse ORDER BY SUM(t1.total) DESC) / SUM(SUM(t1.total)) OVER (PARTITION BY t1.warehouse) <= .95 THEN 0.842 
+								ELSE 0.524 END AS z_value
+				FROM (
+				SELECT so.date, sod.product, sod.warehouse ,sod.quantity, ROUND(sod.price * (1 - sod.discount_rate),2) price, 
+				ROUND(sod.price * (1 - sod.discount_rate) * (sod.quantity - IFNULL(r.quantity, 0)),2) total
+				FROM sales_order_detail sod
+				JOIN sales_order so ON sod.sales_order = so.sales_order_id
+				LEFT JOIN (SELECT crd.sales_order_detail, SUM(crd.quantity) quantity
+								FROM customer_refund_detail crd 
+								JOIN customer_refund cr ON crd.customer_refund = cr.customer_refund_id
+								WHERE cr.completed = 1 AND cr.cancelled = 0
+								-- AND DATE(cr.date) BETWEEN '2025-01-01' AND '2025-12-31'
+								AND DATE(cr.date) >= DATE_SUB(DATE_FORMAT(CURDATE(), '%Y-%m-01'), INTERVAL 12 MONTH) 
+								AND DATE(cr.date) < DATE_FORMAT(CURDATE(), '%Y-%m-01')
+								GROUP BY crd.sales_order_detail) AS r
+								ON r.sales_order_detail = sod.sales_order_detail_id
+				WHERE so.completed = 1 AND so.cancelled = 0 
+				AND DATE(so.date) >= DATE_SUB(DATE_FORMAT(CURDATE(), '%Y-%m-01'), INTERVAL 12 MONTH) 
+								AND DATE(so.date) < DATE_FORMAT(CURDATE(), '%Y-%m-01')
+				AND sod.quantity - IFNULL(r.quantity,0) > 0
+				) AS t1
+				LEFT JOIN warehouse w ON t1.warehouse = w.warehouse_id
+				JOIN product p ON t1.product = p.product_id
+				GROUP BY t1.product, t1.warehouse
+				ORDER BY t1.warehouse, SUM(t1.total) DESC;
+
+				ALTER TABLE abc_classification ADD CONSTRAINT unique_product_warehouse UNIQUE (product_id, warehouse_id); 
+
+				DROP TABLE if EXISTS product_cost;
+				CREATE TABLE product_cost as
+				SELECT p.code, p.product_id, p.name product_name, s.name unit_of_measure, 
+				ROUND((SUM(pod.price * pod.quantity))/SUM(pod.quantity),2) unitary_cost
+				FROM purchase_order po
+				JOIN purchase_order_detail pod ON po.purchase_order_id = pod.purchase_order
+				JOIN product p ON pod.product = p.product_id
+				JOIN sat_unit_of_measurement s ON p.unit_of_measurement = s.sat_unit_of_measurement_id
+				WHERE date(po.creation_time) BETWEEN '2025-01-01' AND '2025-12-31'
+				GROUP BY pod.product
+				ORDER BY MAX(po.creation_time) DESC;
+				ALTER TABLE product_cost ADD PRIMARY KEY (product_id);
+
+
+				DROP TABLE IF EXISTS lead_time_purchase;
+				CREATE TABLE lead_time_purchase as
+				SELECT ird.product product_id, p.name, ir.warehouse warehouse_id, 
+				-- AVG( IFNULL(pr.modification_time, DATE_SUB(ir.modification_time, INTERVAL 3 DAY) )) pr_date_avg, 
+				ROUND(AVG(DATEDIFF(ir.modification_time,po.modification_time))/7.0,2) as lead_time,
+				ROUND(STDDEV_SAMP(DATEDIFF(ir.modification_time, po.modification_time))/7.0,2) AS standard_deviation_lead_time,
+				COUNT(po.purchase_order_id) count_purchases, COUNT(ir.inventory_receipt_id) count_inventory_entries,
+				3.0 AS purchasing_cost,
+				1.0 AS holding_annual_cost,
+				0.5 AS annual_rate
+				FROM inventory_receipt ir
+				JOIN inventory_receipt_detail ird ON ird.receipt = ir.inventory_receipt_id
+				LEFT JOIN abc_classification c ON ird.product = c.product_id AND ir.warehouse = c.warehouse_id
+				LEFT JOIN purchase_order_detail pod ON ird.purchase_order_detail = pod.purchase_order_detail_id
+				LEFT JOIN purchase_order po ON pod.purchase_order = po.purchase_order_id
+				LEFT JOIN purchase_request_detail prd ON pod.purchase_request_detail = prd.purchase_request_detail_id
+				LEFT JOIN purchase_request pr ON prd.purchase_request = pr.purchase_request_id
+				JOIN product p ON ird.product = p.product_id
+				WHERE date(ir.modification_time) BETWEEN '2025-01-01' AND '2025-12-31'
+				AND ir.completed = 1 AND ir.cancelled = 0
+				GROUP BY product_id, warehouse_id
+				ORDER BY lead_time DESC;
+				ALTER TABLE lead_time_purchase ADD CONSTRAINT unique_product_warehouse UNIQUE (product_id, warehouse_id); 
+
+
+				SELECT 
+				 c.warehouse WarehouseId, w.name WarehouseName,
+				 c.product ProductId
+				, p.name ProductName, p.code ProductCode
+				 ,IFNULL(ltp.annual_rate,0) AnnualRate
+				 ,IFNULL(ltp.purchasing_cost,0) PurchasingCost
+				 , IFNULL(m.name, '**REQUIRED**') UnitOfMeasure
+				 , IFNULL(ltp.holding_annual_cost,0) HoldingAnnualCost
+				, IFNULL(pc.unitary_cost,0) WeightedCost
+				,  COUNT(sold) AS WeeksDemand
+				, ROUND(SUM(sold)/COUNT(*),2) AS AverageWeekDemand
+				, SUM(sold) AS TotalYearDemand
+				, IFNULL(abc.ABC, 'N/A') ABC
+				, IFNULL(abc.service_level,0) ServiceLevel
+				, IFNULL(ltp.lead_time, 0) AS LeadTime
+				, IFNULL(ltp.standard_deviation_lead_time,0) StandardDeviationLeadTime
+				, IFNULL(z_value,0) ZValue
+				 , IFNULL(count_purchases,0) PurchasesCount
+				 , count_inventory_entries InventoryEntriesCount
+				 , ROUND(SUM(sold) * unitary_cost) AS TotalWeightedCostDemand
+				 , ROUND(STDDEV_SAMP(sold),2) StandardDeviationWeekly
+				 , ROUND(STDDEV_SAMP(sold)/AVG(sold),2) AS CV
+				 , IF(COUNT(*) > :fpw,'CONTINUO','INTERMITENTE') Demand
+				 ,ltp.lead_time
+				 , ROUND(ltp.lead_time * (SUM(sold)/COUNT(*)) * IF(COUNT(*) > :fpw, 1, COUNT(*)/52.0),2) AS DemandLeadTime
+				 , IF(COUNT(*) > :fpw, ROUND((SUM(sold)/COUNT(*))*52,2) ,SUM(sold)) AS AnnualDemand
+				 , ROUND(STDDEV_SAMP(sold) * SQRT(ltp.lead_time) * IF(COUNT(*) > :fpw, 1 , COUNT(*)/52.0 ),2) AS StandardDeviationLeadTimeDemand
+				 , ROUND(IFNULL(z_value * STDDEV_SAMP(sold) * SQRT(ltp.lead_time) * IF(COUNT(*) > :fpw, 1 , COUNT(*)/52.0 ) ,0) ,2) AS SafetyStock
+				 , ROUND(IFNULL(z_value * STDDEV_SAMP(sold) * SQRT(ltp.lead_time) * IF(COUNT(*) > :fpw, 1 , COUNT(*)/52.0 ) ,0) + 
+				    (STDDEV_SAMP(sold) * SQRT(ltp.lead_time) * IF(COUNT(*) > :fpw, 1 , COUNT(*)/52 )),2) AS ReorderPoint
+				 , ROUND(SQRT(2*IF(COUNT(*) > :fpw, ROUND((SUM(sold)/COUNT(*))*52,2) ,SUM(sold))*ltp.purchasing_cost/holding_annual_cost),2) AS EconomicOrderQuantity
+				 , ROUND(SQRT(IFNULL(abc.service_level,0)*2*IF(COUNT(*) > :fpw, ROUND((SUM(sold)/COUNT(*))*52,2) ,SUM(sold))*ltp.purchasing_cost/holding_annual_cost),2) AS AdjustedEOQ
+				 , stock
+				 , IF(ROUND(SQRT(IFNULL(abc.service_level,0)*2*IF(COUNT(*) > :fpw, ROUND((SUM(sold)/COUNT(*))*52,2) ,SUM(sold))*ltp.purchasing_cost/holding_annual_cost),2) > stock, 'order', '' ) AS OrderNow
+				 , ROUND(stock * pc.unitary_cost,2) AS CurrentInventoryWeightedCost
+				FROM 
+					(SELECT lst.warehouse, lst.product, YEAR(lst.date) AS yr, WEEK(lst.date) AS wk, 
+					CONCAT( YEAR(lst.date),'-', WEEK(lst.date)) AS txt, - SUM(lst.quantity) sold, COUNT(*) orders
+					FROM lot_serial_tracking lst
+					WHERE lst.source IN(1,2) AND DATE(lst.date) BETWEEN '2025-01-01' AND '2025-12-31'
+					GROUP BY lst.product, lst.warehouse, WEEK(lst.date), YEAR(lst.date)
+					ORDER BY lst.warehouse, lst.product, WEEK(lst.date), YEAR(lst.date)) AS c
+				LEFT JOIN (SELECT l.warehouse, l.product, SUM(l.quantity) stock
+								FROM lot_serial_tracking l GROUP BY l.warehouse, l.product) AS s ON c.product = s.product AND c.warehouse = s.warehouse
+				LEFT JOIN abc_classification abc ON c.warehouse = abc.warehouse_id AND c.product = abc.product_id
+				LEFT JOIN product_cost pc ON c.product = pc.product_id
+				LEFT JOIN lead_time_purchase ltp ON ltp.warehouse_id = c.warehouse AND ltp.product_id = c.product
+				JOIN product p ON c.product = p.product_id
+				LEFT JOIN sat_unit_of_measurement m ON m.sat_unit_of_measurement_id = p.unit_of_measurement
+				JOIN warehouse w ON c.warehouse = w.warehouse_id
+				WHERE w.warehouse_id = :warehouse 
+				GROUP BY c.warehouse, c.product
+				ORDER BY c.warehouse
+				 , abc.service_level desc;
+					";
+
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+				return session.CreateSQLQuery (sql)
+				    .SetInt32 ("warehouse", warehouse)
+				    .SetInt32("fpw", frequency_pivot_weeks)
+				    .DynamicList ();
+			}, null);
+
+			return PartialView ("_WarehouseReStock", items);
 		}
 
 		public ViewResult SalesByCustomer ()

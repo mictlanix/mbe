@@ -9,7 +9,7 @@
 				@Html.ValidationSummary(true)
 				<div class="row">
 								<div class="col-xs-12">
-												<h2>@Resources.CreditPayment</h2>
+												<h2>@Resources.Payment</h2>
 								</div>
 				</div>
 				<div class="form-horizontal">
@@ -76,12 +76,38 @@
 								width: 100%;
 				}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="text/javascript">
 $(function () {
-	$(".pay_credit").click(function () {
-		var type = $(this).data('value');
-		$('#Method').val(type);
-		$(this).closest('form').submit();
+				$(".pay_credit").click(function (e) {
+								e.preventDefault();
+								var type = $(this).data('value');
+								var text = $(this).text();
+								$('#Method').val(type);
+
+								Swal.fire({
+												title: 'Continuar?',
+												text: "Forma de Pago: " + text,
+												icon: 'warning',
+												showCancelButton: true,
+												confirmButtonColor: '#d33',   // rojo estilo Bootstrap danger
+												cancelButtonColor: '#3085d6', // azul estilo Bootstrap primary
+												confirmButtonText: '@Resources.Complete',
+												cancelButtonText: '@Resources.Cancel'
+								}).then((result) => {
+												if (result.isConfirmed) {
+																// Deshabilitar todos los botones de la clase
+																document.querySelectorAll(".btnAccion").forEach(b => b.disabled = true);
+																		$(this).closest('form').submit();
+
+																// Simular procedimiento (ej. 3 segundos)
+																//setTimeout(() => {
+																//				document.querySelectorAll(".btnAccion").forEach(b => b.disabled = false);
+																//				Swal.fire('Completado', 'El proceso terminó correctamente', 'success');
+																//}, 3000);
+												}
+								});
+
     });
 });
 

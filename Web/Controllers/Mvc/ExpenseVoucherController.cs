@@ -34,7 +34,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			if (int.TryParse (pattern, out id)) {
 				query = ExpenseVoucher.Queryable.Where (x => x.Id == id);
 			} else if (!string.IsNullOrEmpty (pattern)) {
-				query = ExpenseVoucher.Queryable.Where (x => x.Details.Any (y => y.Comment.Contains (pattern) || x.Comment.Contains (pattern)));
+				if (!pattern.Contains (Resources.WilcardStringPatternForSearch)) {
+					query = ExpenseVoucher.Queryable.Where (x => x.Details.Any (y => y.Comment.Contains (pattern) || x.Comment.Contains (pattern)));
+				} else {
+					query = ExpenseVoucher.Queryable.Where(x => !x.IsCancelled).OrderByDescending(x => x.Id);
+				}
 			}
 
 			search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();

@@ -290,6 +290,7 @@
     <Compile Include="Helpers\CashDrawHelpers.cs" />
     <Compile Include="Helpers\CashHelpers.cs" />
     <Compile Include="Helpers\CFDHelpers40.cs" />
+    <Compile Include="Helpers\DBHelpers.cs" />
     <Compile Include="Helpers\DeliveryHelpers.cs" />
     <Compile Include="Helpers\InstancesModelMerger.cs" />
     <Compile Include="Helpers\PriceHelpers.cs" />
@@ -542,7 +543,6 @@
     <Content Include="Views\Payments\_PaymentsValidation.cshtml" />
     <Content Include="Views\Payments\_PaymentToValidate.cshtml" />
     <Content Include="Views\CustomerRefunds\_buttons.cshtml" />
-    <Content Include="ServiceAccount.json" />
     <Content Include="Views\Payments\TicketCreditNote.cshtml" />
     <Content Include="Views\DeliveryItineraries\_Addresses.cshtml" />
     <Content Include="Views\DeliveryItineraries\_Address.cshtml" />
@@ -560,6 +560,10 @@
     <Content Include="Views\DeliveryItineraries\DeliveriesSummaryReport.cshtml" />
     <Content Include="Views\DeliveryItineraries\_DeliveriesSummaryReport.cshtml" />
     <None Include="Views\POS\_ItemEditorView.cshtml.bk" />
+    <Content Include="Views\Reports\DownloadCSVs.cshtml" />
+    <Content Include="Views\Reports\WarehouseReStock.cshtml" />
+    <Content Include="Views\Reports\_WarehouseReStock.cshtml" />
+    <None Include="Views\Shared\DisplayTemplates\EmailTemplate.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

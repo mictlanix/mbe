@@ -87,7 +87,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var item = WebConfig.Store;
 			var pattern = (search.Pattern ?? string.Empty).Trim ();
 			var user = CurrentUser.Employee;
-			IQueryable<SalesOrder> query = MBEQueryable.IQSalesOrders.Where(x => x.Creator == user || x.Updater == user || x.SalesPerson == user);
+			IQueryable<SalesOrder> query = MBEQueryable.IQSalesOrders.Where(x => x.Creator == user
+							|| x.Updater == user || x.SalesPerson == user);
 			query = query.Where (x => !x.IsCancelled);
 
 			if (int.TryParse (pattern, out int id) && id > 0) {
@@ -99,13 +100,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 				if (!(pattern.Contains (Resources.WilcardStringPatternForSearch) && CurrentUser.IsAdministrator)) {
 					query = from x in query
-						where x.Customer.Name.Contains (pattern) ||
-							x.SalesPerson.Nickname.Contains (pattern)
+						where (x.Customer.Name.Contains (pattern) ||
+							x.SalesPerson.Nickname.Contains (pattern)) && x.Store == item
 						select x;
 				}
 			}
 
 			query = query.OrderByDescending (x => x.Id).OrderBy (y => y.IsCompleted || y.IsCancelled ? 1 : 0);
+			//query = query.OrderByDescending (x => x.Serial).OrderBy (y => y.IsCompleted || y.IsCancelled ? 1 : 0);
 
 			search.Total = query.Count ();
 			search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
@@ -320,7 +322,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public JsonResult WarehouseStock (int id)
 		{
 			string sql = @"SELECT w.warehouse_id value,
-					CONCAT(w.name, ' - (' ,ROUND(SUM(lst.quantity), 2), ' ',IFNULL(s.symbol, '** Definir **') , ')' ) text
+					CONCAT(w.name, ' - (' ,ROUND(SUM(lst.quantity), 2), ' ',IFNULL(s.name, '** Definir **') , ')' ) text
 					FROM product p
 					LEFT JOIN lot_serial_tracking lst ON lst.product = p.product_id
 					JOIN warehouse w ON lst.warehouse = w.warehouse_id

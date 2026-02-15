@@ -1059,14 +1059,90 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var to_pay = value;
 			var dt = DateTime.Now;
 
+			var qry = @"	SELECT * FROM customer_payment cp
+					JOIN customer c ON cp.customer = c.customer_id
+					LEFT JOIN (SELECT sop.customer_payment, SUM(sop.amount + sop.amount_change) allocation
+						FROM sales_order_payment sop 
+						GROUP BY sop.customer_payment) AS a ON cp.customer_payment_id = a.customer_payment
+					WHERE c.name LIKE '%MATERIALES ALTAMIRANO%'
+					AND cp.payment_type IN (2,3) AND cp.amount - IFNULL(allocation, 0) > 0
+					ORDER BY cp.customer_payment_id;";
 
-			var payments = CustomerPayment.Queryable.Where (x => x.PaymentType == PaymentType.PaymentInAdvance
+
+			var payments = CustomerPayment.Queryable.Where (x =>
+					(x.PaymentType == PaymentType.PaymentInAdvance || x.PaymentType == PaymentType.CreditPayment)
 					&& !x.Allocations.Any(y => y.SalesOrder == entity)
 					&& x.Customer == entity.Customer
-					&& x.Amount - (x.Allocations.Sum(y => (decimal?)y.Amount)??0) > 0).ToList ();
+					&& (x.Amount -
+						(x.Allocations.Sum(y => (decimal?)(y.Amount + y.Change)) ?? 0)
+						) > 0).ToList ();
 			//var remaining = payments.Where(x=> !x.Allocations.Select(y => y.SalesOrder).Contains(entity))
 			//			.Sum (x => (decimal?)x.Balance)??0;
-			var funds = payments.Sum (x => x.Amount - (x.Allocations.Sum (y => (decimal?) y.Amount) ?? 0));
+			/*
+			 var sql_count_rows = "SELECT COUNT(*) AS rows_count FROM (" + sql.Replace ("OFFSET_TAG", string.Empty) + ") AS pagging;";
+			var sql_pagging = sql.Replace("OFFSET_TAG", OFFSET_TAG);
+
+			if(pattern.Contains(Resources.WilcardStringPatternForSearch)) {
+				WHERE_EMPLOYEE = string.Empty;
+				pattern = Regex.Replace (pattern, escaped_wildcard, string.Empty);
+			}
+
+			if (string.IsNullOrEmpty (pattern)) {
+				WHERE_PATTERN = string.Empty;
+				WHERE_ID = string.Empty;
+			} else {
+				if(int.TryParse(pattern, out id) && id > 0) {
+					WHERE_EMPLOYEE = string.Empty;
+					WHERE_PATTERN = string.Empty;
+				} else {
+					WHERE_ID = string.Empty;
+				}
+				WHERE_PAID = string.Empty;
+
+			}
+
+			sql_count_rows = sql_count_rows.Replace ("WHERE_PATTERN", WHERE_PATTERN);
+			sql_count_rows = sql_count_rows.Replace ("WHERE_EMPLOYEE", WHERE_EMPLOYEE);
+			sql_count_rows = sql_count_rows.Replace ("WHERE_PAID", WHERE_PAID);
+			sql_count_rows = sql_count_rows.Replace ("WHERE_ID", WHERE_ID);
+
+			sql_pagging = sql_pagging.Replace ("WHERE_PATTERN", WHERE_PATTERN);
+			sql_pagging = sql_pagging.Replace ("WHERE_EMPLOYEE", WHERE_EMPLOYEE);
+			sql_pagging = sql_pagging.Replace ("WHERE_PAID", WHERE_PAID);
+			sql_pagging = sql_pagging.Replace ("WHERE_ID", WHERE_ID);
+
+
+			ISession session = ActiveRecordMediator.GetSessionFactoryHolder ().CreateSession (typeof (SalesOrder));
+			ISession count_session = ActiveRecordMediator.GetSessionFactoryHolder ().CreateSession (typeof (SalesOrder));
+			var pagging = session.CreateSQLQuery (sql_pagging)
+				.AddEntity (typeof (SalesOrder))
+				.SetParameter ("offset", offset)
+				.SetParameter ("limit", limit);
+			var counting = count_session.CreateSQLQuery (sql_count_rows)
+				.AddScalar("rows_count", NHibernateUtil.Int32);
+			if (!string.IsNullOrEmpty (WHERE_PATTERN)) {
+				pagging.SetParameter ("pattern", "%" + pattern + "%");
+				counting.SetParameter ("pattern", "%" + pattern + "%");
+			}
+			if (!string.IsNullOrEmpty (WHERE_EMPLOYEE)) {
+				pagging.SetParameter ("cashier", cashier.Id);
+				counting.SetParameter ("cashier", cashier.Id);
+			}
+			if (!string.IsNullOrEmpty (WHERE_ID)) {
+				pagging.SetParameter ("id", id);
+				counting.SetParameter ("id", id);
+			}
+
+			results = (List<SalesOrder>) pagging.List<SalesOrder> ();
+			COUNT = counting.UniqueResult<int> ();
+
+			search.Total = COUNT;
+			search.Results = results;
+
+			return search;
+			 
+			 */
+			var funds = payments.Sum (x => x.Amount - (x.Allocations.Sum (y => (decimal?) (y.Amount + y.Change)) ?? 0));
 
 			if (entity.IsCancelled || entity.IsPaid) {
 				Response.StatusCode = 400;

@@ -257,5 +257,7 @@ namespace Mictlanix.BE.Model {
 		CashSessionClose = 111,
 		[Display (Name = "CommissionsBySalesPerson", ResourceType = typeof (Resources))]
 		CommissionsBySalesPerson = 112,
+		[Display (Name = "DownloadCSVFiles", ResourceType = typeof (Resources))]
+		DownloadCSVFiles = 113,
 	}
 }

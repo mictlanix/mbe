@@ -434,40 +434,41 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				}
 			}
 
+			DBHelpers.Merge ("customer","customer_id",duplicate, customer);
 
-				string sql = @"	UPDATE customer_address SET customer = :customer WHERE customer = :duplicate;
-					UPDATE customer_contact SET customer = :customer WHERE customer = :duplicate;
-					UPDATE customer_discount SET customer = :customer WHERE customer = :duplicate;
-					UPDATE customer_payment SET customer = :customer WHERE customer = :duplicate;
-					UPDATE customer_refund SET customer = :customer WHERE customer = :duplicate;
-					UPDATE customer_taxpayer SET customer = :customer WHERE customer = :duplicate;
-					UPDATE delivery_order SET customer = :customer WHERE customer = :duplicate;
-					UPDATE fiscal_document SET customer = :customer WHERE customer = :duplicate;
-					UPDATE sales_order SET customer = :customer WHERE customer = :duplicate;
-					UPDATE sales_quote SET customer = :customer WHERE customer = :duplicate;
-					UPDATE tech_service_request SET customer = :customer WHERE customer = :duplicate;
-					UPDATE credit_note set customer = :customer WHERE customer = :duplicate;
-					DELETE FROM customer WHERE customer_id = :duplicate;";
+			//	string sql = @"	UPDATE customer_address SET customer = :customer WHERE customer = :duplicate;
+			//		UPDATE customer_contact SET customer = :customer WHERE customer = :duplicate;
+			//		UPDATE customer_discount SET customer = :customer WHERE customer = :duplicate;
+			//		UPDATE customer_payment SET customer = :customer WHERE customer = :duplicate;
+			//		UPDATE customer_refund SET customer = :customer WHERE customer = :duplicate;
+			//		UPDATE customer_taxpayer SET customer = :customer WHERE customer = :duplicate;
+			//		UPDATE delivery_order SET customer = :customer WHERE customer = :duplicate;
+			//		UPDATE fiscal_document SET customer = :customer WHERE customer = :duplicate;
+			//		UPDATE sales_order SET customer = :customer WHERE customer = :duplicate;
+			//		UPDATE sales_quote SET customer = :customer WHERE customer = :duplicate;
+			//		UPDATE tech_service_request SET customer = :customer WHERE customer = :duplicate;
+			//		UPDATE credit_note set customer = :customer WHERE customer = :duplicate;
+			//		DELETE FROM customer WHERE customer_id = :duplicate;";
 
-			ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
-				int ret;
+			//ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			//	int ret;
 
-				using (var tx = session.BeginTransaction ()) {
-					var query = session.CreateSQLQuery (sql);
+			//	using (var tx = session.BeginTransaction ()) {
+			//		var query = session.CreateSQLQuery (sql);
 
-					query.AddScalar ("customer", NHibernateUtil.Int32);
-					query.AddScalar ("duplicate", NHibernateUtil.Int32);
+			//		query.AddScalar ("customer", NHibernateUtil.Int32);
+			//		query.AddScalar ("duplicate", NHibernateUtil.Int32);
 
-					query.SetInt32 ("customer", customer);
-					query.SetInt32 ("duplicate", duplicate);
+			//		query.SetInt32 ("customer", customer);
+			//		query.SetInt32 ("duplicate", duplicate);
 
-					ret = query.ExecuteUpdate ();
+			//		ret = query.ExecuteUpdate ();
 
-					tx.Commit ();
-				}
+			//		tx.Commit ();
+			//	}
 
-				return ret;
-			}, null);
+			//	return ret;
+			//}, null);
 
 			return View (new Pair<Customer, Customer> { First = prod, Second = dup });
 		}

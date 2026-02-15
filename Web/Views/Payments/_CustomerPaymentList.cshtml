@@ -18,7 +18,7 @@
         <th>@Resources.Customer</th>
         <th>@Resources.SalesPerson</th>
         <th>@Resources.PointOfSale</th>
-        <th>@Resources.PaymentType</th>
+        @*<th>@Resources.PaymentType</th>*@
         <th>@Resources.Amount</th>
         <th></th>
     </tr>
@@ -39,9 +39,9 @@
         <td class="center">
             @Html.DisplayFor(x => item.CashSession.CashDrawer.Store.Name)
         </td>
-        <td class="center">
+        @*<td class="center">
             @item.PaymentType.GetDisplayName()
-        </td>
+        </td>*@
         <td class="center">
             @Html.DisplayFor(x => item.Amount)
         </td>

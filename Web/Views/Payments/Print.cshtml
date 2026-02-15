@@ -92,7 +92,7 @@
 								<td class="total text-right">@Html.LabelFor(model => model.Total)</td>
 								<td class="total number"> @Html.DisplayFor(model => model.Total)</td>
 				</tr>
-				@if (Model.CustomerRefunds.Any())
+				@*@if (Model.CustomerRefunds.Any())
 				{
 								foreach (var refund in Model.CustomerRefunds)
 								{
@@ -101,7 +101,7 @@
 																<td class="total number"> @Html.DisplayFor(model => refund.Total)</td>
 												</tr>
 								}
-				}
+				}*@
 				@foreach (var item in Model.Payments)
 				{
 								<tr>

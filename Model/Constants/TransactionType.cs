@@ -27,11 +27,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Castle.ActiveRecord;
-using Castle.ActiveRecord.Framework;
 
 namespace Mictlanix.BE.Model {
 	public enum TransactionType : int {
@@ -51,8 +47,8 @@ namespace Mictlanix.BE.Model {
 		SupplierReturn = 7,
 		[Display (Name = "InventoryAdjustment", ResourceType = typeof (Resources))]
 		InventoryAdjustment = 8,
-		[Display (Name = "QuantityMapping", ResourceType = typeof (Resources))]
-		QuantityMapping = 9
+		[Display (Name = "ProductConversion", ResourceType = typeof (Resources))]
+		ProductConversion = 9
 	}
 }
 

@@ -1,0 +1,49 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model IEnumerable<dynamic>
+
+@{
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = CurrentUser.GetPrivilege (SystemObjects.SalesOrders);
+}
+
+<table class='table table-condensed'>
+	<thead>
+	    <tr>
+	        <th class=''>@Resources.ProductName</th>
+	        <th class=''>@Resources.ProductCode</th>
+	        <th class=''>Costo Ponderado </th>
+	        <th class=''>Semanas Con Demanda </th>
+	        <th class=''>Promedio Demanda Semanal </th>
+	        <th class=''>Clasificación ABC</th>
+	        <th class=''>Tipo de Demanda</th>
+	        <th class=''>EOQ Ajustado</th>
+	        <th class=''>@Resources.Stock</th>
+	        <th class=''>Comprar?</th>
+	    </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+    <tr>
+		<td class=''>@item.ProductName @item.UnitOfMeasure</td>
+        <td class=''>@item.ProductCode</td>
+								<td class=''>@item.WeightedCost.ToString("c")</td>
+								<td class=''>@item.WeeksDemand</td>
+								<td class=''>@item.AverageWeekDemand</td>
+        <td class=''>@item.ABC</td>
+        <td class=''>@item.Demand</td>
+        <td class=''>@item.AdjustedEOQ</td>
+        <td class=''>@item.stock</td>
+        <td class=''>@item.OrderNow</td>
+    </tr>
+}
+    </tbody>
+    <tfoot>
+	    <tr>
+	        <td colspan='4'/>
+	        <td class='number'><input type="button" value="@Resources.Create @Resources.PurchaseOrder"/></td>
+	    </tr>
+    </tfoot>
+</table>

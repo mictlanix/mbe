@@ -28,9 +28,9 @@
 <div class='tabbable'>
     <ul class='nav nav-tabs'>
         <li class='active'><a href='#tab-1' data-toggle='tab'>@Resources.SalesOrders</a></li>
-        <li><a href='#tab-2' data-toggle='tab'>@Resources.CreditPayment</a></li>
-								<li><a href='#tab-3' data-toggle='tab'>@Resources.PaymentOnDelivery</a></li>
-        <li><a href='#tab-4' data-toggle='tab'>@Resources.PaymentInAdvance</a></li>
+        <li><a href='#tab-2' data-toggle='tab'>@Resources.Payments</a></li>
+								@*<li><a href='#tab-3' data-toggle='tab'>@Resources.PaymentOnDelivery</a></li>*@
+        @*<li><a href='#tab-4' data-toggle='tab'>@Resources.PaymentInAdvance</a></li>*@
         <li><a href='#tab-5' data-toggle='tab'>@Resources.PrintTicket @Resources.Payment</a></li>
     </ul>
 				<div class="tab-content">
@@ -42,16 +42,16 @@
 																@Html.Partial("_CreditPayment", new CustomerPayment { Date = DateTime.Now })
 												</div>
 								</div>
-								<div id='tab-3' class='tab-pane'>
+								@*<div id='tab-3' class='tab-pane'>
 												<div id='delivery-payment'>
 																@Html.Partial("_DeliveryPayment", delivery_payments)
 												</div>
-								</div>
-								<div id='tab-4' class='tab-pane'>
+								</div>*@
+								@*<div id='tab-4' class='tab-pane'>
 												<div id='payment-in-advance'>
 																@Html.Partial("_PaymentInAdvance", new CustomerPayment { Date = DateTime.Now })
 												</div>
-								</div>
+								</div>*@
 								<div id='tab-5' class='tab-pane'>
 												<div id='payment-list'>
 																@Html.Partial("_PaymentList", payments)

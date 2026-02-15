@@ -277,43 +277,45 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var dup = Product.TryFind (duplicate);
 			//InstancesModelMerger.Merge("product", "product_id", dup.Id, prod.Id);
 			//InstancesModelMerger.Test ();
-			string sql = @"UPDATE customer_discount SET product = :product WHERE product = :duplicate;
-							UPDATE customer_refund_detail SET product = :product WHERE product = :duplicate;
-							UPDATE delivery_order_detail SET product = :product WHERE product = :duplicate;
-							UPDATE fiscal_document_detail SET product = :product WHERE product = :duplicate;
-							UPDATE inventory_issue_detail SET product = :product WHERE product = :duplicate;
-							UPDATE inventory_receipt_detail SET product = :product WHERE product = :duplicate;
-							UPDATE inventory_transfer_detail SET product = :product WHERE product = :duplicate;
-							UPDATE lot_serial_rqmt SET product = :product WHERE product = :duplicate;
-							UPDATE lot_serial_tracking SET product = :product WHERE product = :duplicate;
-							UPDATE purchase_order_detail SET product = :product WHERE product = :duplicate;
-							UPDATE sales_order_detail SET product = :product WHERE product = :duplicate;
-							UPDATE sales_quote_detail SET product = :product WHERE product = :duplicate;
-							UPDATE supplier_return_detail SET product = :product WHERE product = :duplicate;
-							UPDATE purchase_request_detail set product = :product WHERE product = :duplicate;
-							DELETE FROM product_label WHERE product = :duplicate;
-							DELETE FROM product_price WHERE product = :duplicate;
-							DELETE FROM product WHERE product_id = :duplicate;";
+			//string sql = @"UPDATE customer_discount SET product = :product WHERE product = :duplicate;
+			//				UPDATE customer_refund_detail SET product = :product WHERE product = :duplicate;
+			//				UPDATE delivery_order_detail SET product = :product WHERE product = :duplicate;
+			//				UPDATE fiscal_document_detail SET product = :product WHERE product = :duplicate;
+			//				UPDATE inventory_issue_detail SET product = :product WHERE product = :duplicate;
+			//				UPDATE inventory_receipt_detail SET product = :product WHERE product = :duplicate;
+			//				UPDATE inventory_transfer_detail SET product = :product WHERE product = :duplicate;
+			//				UPDATE lot_serial_rqmt SET product = :product WHERE product = :duplicate;
+			//				UPDATE lot_serial_tracking SET product = :product WHERE product = :duplicate;
+			//				UPDATE purchase_order_detail SET product = :product WHERE product = :duplicate;
+			//				UPDATE sales_order_detail SET product = :product WHERE product = :duplicate;
+			//				UPDATE sales_quote_detail SET product = :product WHERE product = :duplicate;
+			//				UPDATE supplier_return_detail SET product = :product WHERE product = :duplicate;
+			//				UPDATE purchase_request_detail set product = :product WHERE product = :duplicate;
+			//				DELETE FROM product_label WHERE product = :duplicate;
+			//				DELETE FROM product_price WHERE product = :duplicate;
+			//				DELETE FROM product WHERE product_id = :duplicate;";
 
-			ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
-				int ret;
+			//ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			//	int ret;
 
-				using (var tx = session.BeginTransaction ()) {
-					var query = session.CreateSQLQuery (sql);
+			//	using (var tx = session.BeginTransaction ()) {
+			//		var query = session.CreateSQLQuery (sql);
 
-					query.AddScalar ("product", NHibernateUtil.Int32);
-					query.AddScalar ("duplicate", NHibernateUtil.Int32);
+			//		query.AddScalar ("product", NHibernateUtil.Int32);
+			//		query.AddScalar ("duplicate", NHibernateUtil.Int32);
 
-					query.SetInt32 ("product", product);
-					query.SetInt32 ("duplicate", duplicate);
+			//		query.SetInt32 ("product", product);
+			//		query.SetInt32 ("duplicate", duplicate);
 
-					ret = query.ExecuteUpdate ();
+			//		ret = query.ExecuteUpdate ();
 
-					tx.Commit ();
-				}
+			//		tx.Commit ();
+			//	}
 
-				return ret;
-			}, null);
+			//	return ret;
+			//}, null);
+
+			DBHelpers.Merge ("product", "product_id", duplicate, product);
 
 			return View (new Pair<Product, Product> { First = prod, Second = dup });
 		}

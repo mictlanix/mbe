@@ -132,7 +132,7 @@ namespace Mictlanix.BE.Model {
 		[DataType (DataType.Currency)]
 		[Display (Name = "Paid", ResourceType = typeof (Resources))]
 		public virtual decimal Allocated {
-			get { return Allocations.Sum (x => x.Amount + x.Change); }
+			get { return Allocations.Where(x => !x.IsCancelled).Sum (x => x.Amount + x.Change); }
 		}
 
 		[DataType (DataType.Currency)]

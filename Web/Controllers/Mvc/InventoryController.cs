@@ -290,10 +290,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			if (item == null || item.IsCompleted || item.IsCancelled)
 				return RedirectToAction ("Receipts");
 
-			if (item.Warehouse != WebConfig.PointOfSale.Warehouse && !CurrentUser.IsAdministrator) {
-				Response.StatusCode = 400;
-				return Content (Resources.UserCannotConfirmWarehouseEntry);
-			}
+			//if (item.Warehouse.Store != WebConfig.PointOfSale.Store && !CurrentUser.IsAdministrator) {
+			//	Response.StatusCode = 400;
+			//	return Content (Resources.UserCannotConfirmWarehouseEntry);
+			//}
 
 			if (item.Details.Any (x => !x.Product.IsStockable)) {
 				Response.StatusCode = 400;

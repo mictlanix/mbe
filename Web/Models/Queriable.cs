@@ -12,7 +12,7 @@ namespace Mictlanix.BE.Web.Models {
 		public static IQueryable<Employee> IQEmployees { get { return Employee.Queryable.Where (x => !x.IsDisabled); } }
 		public static IQueryable<Store> IQStores { get { return Store.Queryable.Where(x => !x.IsDisabled); } }
 		public static IQueryable<Address> IQStoresAddress { get { return Store.Queryable.Where(x => !x.IsDisabled).Select(x => x.Address); } }
-		public static IQueryable<Warehouse> IQWarehouses { get { return Warehouse.Queryable.Where (x => !x.Store.IsDisabled); } }
+		public static IQueryable<Warehouse> IQWarehouses { get { return Warehouse.Queryable.Where (x => !x.Store.IsDisabled && !x.IsDisabled); } }
 		public static IQueryable<ProductionSite> IQProductionSites { get { return ProductionSite.Queryable.Where (x => !x.Store.IsDisabled); } }
 		public static IQueryable<PointOfSale> IQPointsOfSales { get { return PointOfSale.Queryable.Where(x => !x.Warehouse.Store.IsDisabled && !x.IsDisabled ); } }
 		public static IQueryable<CashDrawer> IQCashDrawers { get { return CashDrawer.Queryable.Where(x => !x.Store.IsDisabled); } }

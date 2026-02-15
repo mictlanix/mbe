@@ -89,7 +89,7 @@ namespace Mictlanix.BE.Web.Helpers {
 		public static decimal PrepaymentsBalance (this Customer entity, SalesOrder salesOrder)
 		{
 			var query = (from x in CustomerPayment.Queryable
-				     where x.PaymentType == PaymentType.PaymentInAdvance
+				     where (x.PaymentType == PaymentType.PaymentInAdvance || x.PaymentType == PaymentType.CreditPayment)
 				     && x.Customer == entity && !x.Allocations.Any(y => y.SalesOrder == salesOrder)
 				     select x).ToArray ();
 

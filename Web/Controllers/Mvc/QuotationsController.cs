@@ -84,32 +84,42 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var item = WebConfig.Store;
 			IQueryable<SalesQuote> query = from x in SalesQuote.Queryable
-						       where x.Creator == CurrentUser.Employee || x.Updater == CurrentUser.Employee
+						       where !x.IsCancelled
 						       select x;
 
 			var pattern = (search.Pattern ?? string.Empty).Trim ();
 			int id = 0;
+			bool success = int.TryParse (pattern, out id);
+			bool all = pattern.Contains (Resources.WilcardStringPatternForSearch);
 
-			if (int.TryParse (pattern, out id) && id > 0) {
-
-				query = from x in SalesQuote.Queryable
-					where (x.Id == id || x.Serial == id)
+			if (!all) {
+				query = from x in query
+					where (x.Creator == CurrentUser.Employee
+						|| x.Updater == CurrentUser.Employee)
 					select x;
+			} else {
+				pattern = pattern.Replace (Resources.WilcardStringPatternForSearch, string.Empty);
+			}
 
-			} else if (!string.IsNullOrEmpty (pattern)) {
-				if (!pattern.Contains (Resources.WilcardStringPatternForSearch)) {
-					query = from x in SalesQuote.Queryable
+			if (!string.IsNullOrEmpty (pattern)) {
+				if (!success) {
+					query = from x in query
 						where (
-						    x.Customer.Name.Contains (pattern) ||
-						    x.SalesPerson.Nickname.Contains (pattern) ||
-						    x.Customer.Name.Contains (pattern)
-						    )
+							    x.Customer.Name.Contains (pattern) ||
+							    x.SalesPerson.Nickname.Contains (pattern)
+							    )
 						select x;
-				} else {
+
+				}
+				if (success && id > 0) {
+
 					query = from x in SalesQuote.Queryable
+						where (x.Id == id || x.Serial == id)
 						select x;
 				}
 			}
+
+
 
 			query = from x in query
 				orderby (x.IsCompleted || x.IsCancelled ? 1 : 0),

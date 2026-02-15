@@ -29,16 +29,19 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using MailKit.Net.Smtp;
-using MailKit.Security;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 using Google.Apis.Auth.OAuth2;
-using MimeKit;
 using Google.Apis.Auth.OAuth2.Flows;
+using Google.Apis.Auth.OAuth2.Requests;
 using Google.Apis.Auth.OAuth2.Responses;
 using Google.Apis.Gmail.v1;
 using Google.Apis.Gmail.v1.Data;
 using Google.Apis.Services;
-using System.Threading;
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using MimeKit;
 
 namespace Mictlanix.BE.Web.Helpers {
 
@@ -163,6 +166,7 @@ namespace Mictlanix.BE.Web.Helpers {
 				var subtype = textPartSubtype == TextPartSubtype.Plain ? "plain" : "html";
 				var clientId = WebConfig.GoogleClientId;
 				var clientSecret = WebConfig.GoogleClientSecret;
+				var receiver = new FixedPortCodeReceiver (WebConfig.SmtpPort);
 				var refreshToken = "REFRESH_TOKEN";
 
 				var credential = new UserCredential (
@@ -229,7 +233,11 @@ namespace Mictlanix.BE.Web.Helpers {
 					// the XOAUTH2 authentication mechanism.
 					//client.AuthenticationMechanisms.Remove ("XOAUTH2");
 					client.Connect(WebConfig.SmtpServer, WebConfig.SmtpPort, SecureSocketOptions.StartTls);
-					client.Authenticate (new SaslMechanismOAuth2 (WebConfig.SmtpUser, accessToken));
+					var oauth2 = new SaslMechanismOAuth2 (WebConfig.SmtpUser, accessToken);
+					client.Authenticate (oauth2);
+					client.Send (message);
+					client.Disconnect (true);
+					//client.Authenticate (new SaslMechanismOAuth2 (WebConfig.SmtpUser, accessToken));
 
 					//if (!string.IsNullOrWhiteSpace (WebConfig.SmtpUser)) {
 					//	client.Authenticate (WebConfig.SmtpUser, WebConfig.SmtpPassword);
@@ -244,6 +252,52 @@ namespace Mictlanix.BE.Web.Helpers {
 			}
 
 			return true;
+		}
+	}
+
+	public class FixedPortCodeReceiver : ICodeReceiver {
+		private readonly int _port;
+
+		public FixedPortCodeReceiver (int port)
+		{
+			_port = port;
+		}
+
+		public string RedirectUri => $"http://localhost:{_port}/";
+
+		public async Task<AuthorizationCodeResponseUrl> ReceiveCodeAsync (AuthorizationCodeRequestUrl url, CancellationToken cancellationToken)
+		{
+			string authorizationUrl = url.Build ().ToString ();
+			System.Diagnostics.Process.Start (new System.Diagnostics.ProcessStartInfo {
+				FileName = authorizationUrl,
+				UseShellExecute = true
+			});
+
+			var listener = new HttpListener ();
+			listener.Prefixes.Add (RedirectUri);
+			listener.Start ();
+
+			var context = await listener.GetContextAsync ();
+			var response = context.Response;
+			string responseString = "<html><body>Autenticación completada. Puedes cerrar esta ventana.</body></html>";
+			var buffer = System.Text.Encoding.UTF8.GetBytes (responseString);
+			response.ContentLength64 = buffer.Length;
+			await response.OutputStream.WriteAsync (buffer, 0, buffer.Length);
+			response.OutputStream.Close ();
+
+			listener.Stop ();
+
+			var query = context.Request.QueryString;
+
+			var code = context.Request.QueryString ["code"];
+			var error = context.Request.QueryString ["error"];
+
+			var responseUrl = new AuthorizationCodeResponseUrl {
+				Code = code,
+				Error = error
+			};
+
+			return responseUrl;
 		}
 	}
 }

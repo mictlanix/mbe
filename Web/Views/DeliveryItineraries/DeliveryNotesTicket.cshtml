@@ -106,7 +106,7 @@
 												foreach (var detail in item.Details)
 												{
 																<tr>
-																				<td>@detail.SentQuantity.ToString("F2") @detail.DeliveryOrderDetail.Product.UnitOfMeasurement.Symbol</td>
+																				<td>@detail.SentQuantity.ToString("F3") @detail.DeliveryOrderDetail.Product.UnitOfMeasurement.Symbol</td>
 																				<td>@detail.DeliveryOrderDetail.ProductName</td>
 																				<td>@detail.DeliveryOrderDetail.DeliveryOrder.Id</td>
 																</tr>
@@ -197,7 +197,7 @@
 												@foreach (var detail in item.Details)
 												{
 																<tr>
-																				<td class="line">@detail.SentQuantity.ToString("F2") @detail.DeliveryOrderDetail.Product.UnitOfMeasurement.Symbol</td>
+																				<td class="line">@detail.SentQuantity.ToString("F3") @detail.DeliveryOrderDetail.Product.UnitOfMeasurement.Symbol</td>
 																				<td class="line">@detail.DeliveryOrderDetail.ProductName</td>
 																				<td class="line">@detail.DeliveryOrderDetail.OrderDetail.SalesOrder.Id</td>
 																</tr>

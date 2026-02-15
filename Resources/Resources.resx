@@ -3137,4 +3137,10 @@ con  valor {1} ya existe</value>
   <data name="SessionVersion" xml:space="preserve">
     <value>Versión de Sesión</value>
   </data>
+  <data name="Customer360" xml:space="preserve">
+    <value>Cliente 360</value>
+  </data>
+  <data name="DownloadCSVFiles" xml:space="preserve">
+    <value>Descarga de Archivos CSV</value>
+  </data>
 </root>
