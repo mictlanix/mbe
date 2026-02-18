@@ -3143,4 +3143,13 @@ con  valor {1} ya existe</value>
   <data name="DownloadCSVFiles" xml:space="preserve">
     <value>Descarga de Archivos CSV</value>
   </data>
+  <data name="SafeDeposit" xml:space="preserve">
+    <value>Depósito a Caja Fuerte</value>
+  </data>
+  <data name="CashSafeCustodian" xml:space="preserve">
+    <value>Responsable de Caja Fuerte</value>
+  </data>
+  <data name="ToTheSatisfactionOfTheCreditor" xml:space="preserve">
+    <value>A Satisfacción Del Acreedor</value>
+  </data>
 </root>

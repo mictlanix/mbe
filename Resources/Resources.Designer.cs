@@ -665,6 +665,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Responsable de Caja Fuerte.
+        /// </summary>
+        public static string CashSafeCustodian {
+            get {
+                return ResourceManager.GetString("CashSafeCustodian", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Ventas en Efectivo.
         /// </summary>
         public static string CashSales {
@@ -6500,6 +6509,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Depósito a Caja Fuerte.
+        /// </summary>
+        public static string SafeDeposit {
+            get {
+                return ResourceManager.GetString("SafeDeposit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Vendible.
         /// </summary>
         public static string Salable {
@@ -8433,6 +8451,15 @@ namespace Mictlanix.BE {
         public static string Totals {
             get {
                 return ResourceManager.GetString("Totals", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a A Satisfacción Del Acreedor.
+        /// </summary>
+        public static string ToTheSatisfactionOfTheCreditor {
+            get {
+                return ResourceManager.GetString("ToTheSatisfactionOfTheCreditor", resourceCulture);
             }
         }
         

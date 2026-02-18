@@ -1944,7 +1944,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				new { value = (int) PaymentMethod.DebitCard, text = PaymentMethod.DebitCard.GetDisplayName () },
 				new { value = (int) PaymentMethod.ServiceCard, text = PaymentMethod.ServiceCard.GetDisplayName () },
 				new { value = (int) PaymentMethod.AdvancePayments, text = PaymentMethod.AdvancePayments.GetDisplayName () },
-				new { value = (int) PaymentMethod.Giving, text = PaymentMethod.Giving.GetDisplayName () }
+				new { value = (int) PaymentMethod.Giving, text = PaymentMethod.Giving.GetDisplayName () },
+				new { value = (int) PaymentMethod.ToTheSatisfactionOfTheCreditor, text = PaymentMethod.ToTheSatisfactionOfTheCreditor.GetDisplayName () }
 	    };
 
 			return Json (items, JsonRequestBehavior.AllowGet);
