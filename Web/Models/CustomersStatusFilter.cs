@@ -42,9 +42,14 @@ namespace Mictlanix.BE.Web.Models {
 		[DataType (DataType.Date)]
 		[Display (Name = "DateRange", ResourceType = typeof (Resources))]
 		public DateRange DateRange { get; set; }
+
+		/*
 		[UIHint("CustomerSelector")]
 		[Display(Name = "Customer", ResourceType = typeof(Resources))]
-		public int? CustomerId { get; set; }
+		public int? CustomerId { get; set; }}
+		*/
+		[Display(Name = "Customer", ResourceType = typeof(Resources))]
+		public string CustomerName { get; set; }
 
 		[Display (Name = "OnlyDebtors", ResourceType = typeof (Resources))]
 		public bool OnlyDebtors { get; set; }

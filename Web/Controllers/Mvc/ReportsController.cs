@@ -587,6 +587,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 							t4.on_delivery 'sales_order_payments_on_delivery_unregistered',
 							t5.delivered_quantity 'delivered_quantity',
 							t5.delivery_order_ids 'delivery_order_ids',
+							t6.fiscal_ids 'fiscal_ids',
 							so.paid 'sales_order_paid_status', 
 							if( NOW() > so.due_date AND so.paid = 0 AND (-(t1.total - IFNULL(t2.refund, 0) - IFNULL(t3.paid, 0)) < 0), 1, 0 ) AS 'sales_order_due_status'
 				FROM sales_order so 
@@ -629,6 +630,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 								LEFT JOIN sales_order s ON sd.sales_order = s.sales_order_id
 								WHERE delo.cancelled = 0 AND delo.completed = 1
 								GROUP BY s.sales_order_id) AS t5 ON so.sales_order_id = t5.sales_order_id
+				LEFT JOIN (SELECT sod.sales_order, GROUP_CONCAT(DISTINCT CONCAT(fd.fiscal_document_id,'-',fd.batch, fd.serial) SEPARATOR '|') fiscal_ids 
+								FROM fiscal_document_detail fdd 
+								JOIN fiscal_document fd ON fd.fiscal_document_id = fdd.document
+								JOIN sales_order_detail sod ON fdd.order_detail = sod.sales_order_detail_id
+								JOIN sales_order so ON sod.sales_order = so.sales_order_id
+								WHERE fd.completed = 1 AND fd.cancelled = 0
+								GROUP BY sod.sales_order) as t6 on so.sales_order_id = t6.sales_order
 				WHERE so.completed = 1 AND so.cancelled = 0 AND date(so.creation_time) > '2024-01-01'
 			";
 		}
@@ -862,7 +870,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			string ONLY_CREDITS_FILTER = filter.OnlyCredits ? " AND op.terms = 1" : string.Empty;
 			string ONLY_DEBTORS_FILTER = filter.OnlyDebtors ? " HAVING (Balance < 0 OR OnDelivery > 0.01)" : string.Empty;
-			string CUSTOMER_ID_FILTER = filter.CustomerId.HasValue? " AND op.customer_id = " + filter.CustomerId.Value : string.Empty;
+			//string CUSTOMER_ID_FILTER = filter.CustomerId.HasValue? " AND op.customer_id = " + filter.CustomerId.Value : string.Empty;
+			string CUSTOMER_ID_FILTER = !string.IsNullOrEmpty(filter.CustomerName) ? " AND op.customer_name like '%" + filter.CustomerName + "%'" : string.Empty;
 
 			string REPORT = GetSalesOrdersDetailsSQLQuery ();
 
@@ -954,16 +963,27 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var start = model.DateRange.StartDate.Date;
 			var end = model.DateRange.EndDate.AddDays(1).Date;
 
-			string sql = @"	SELECT sales_order_id SalesOrderId, sales_order_date Date ,customer_name CustomerName,
-					terms_name Terms, due_date DueDate,
-					creator_nickname User, salesperson_nickname SalesPerson,
-					ordered_quantity OrderedQuantity, delivered_quantity DeliveredQuantity,
-					delivery_order_ids DeliveryOrderIds, 
-					sales_order_total Total, sales_order_refund Refund,
-					sales_order_refund_ids RefundsInfo, paid Paid,
-					sales_order_balance AS Balance, sales_order_payments PaymentsInfo,
-					sales_order_payments_on_delivery_unregistered OnDelivery,
-					sales_order_paid_status OrderPaidStatus, sales_order_due_status Overdue
+			string sql = @"	SELECT
+						sales_order_id SalesOrderId,
+						sales_order_date Date,
+						customer_name CustomerName,
+						terms_name Terms,
+						fiscal_ids FiscalDocumentIds,
+						due_date DueDate,
+						creator_nickname User,
+						salesperson_nickname SalesPerson,
+						ordered_quantity OrderedQuantity,
+						delivered_quantity DeliveredQuantity,
+						delivery_order_ids DeliveryOrderIds, 
+						sales_order_total Total,
+						sales_order_refund Refund,
+						sales_order_refund_ids RefundsInfo,
+						paid Paid,
+						sales_order_balance AS Balance,
+						sales_order_payments PaymentsInfo,
+						sales_order_payments_on_delivery_unregistered OnDelivery,
+						sales_order_paid_status OrderPaidStatus,
+						sales_order_due_status Overdue
 					FROM (REPORT) AS rpt
 					WHERE rpt.customer_id = :customer_id
 					AND rpt.sales_order_date BETWEEN :start AND :end
@@ -982,6 +1002,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				query.AddScalar ("Date", NHibernateUtil.Date);
 				query.AddScalar ("CustomerName", NHibernateUtil.String);
 				query.AddScalar ("Terms", NHibernateUtil.String);
+				query.AddScalar ("FiscalDocumentIds", NHibernateUtil.String);
 				query.AddScalar ("DueDate", NHibernateUtil.Date);
 				query.AddScalar ("SalesPerson", NHibernateUtil.String);
 				query.AddScalar ("User", NHibernateUtil.String);
@@ -1490,7 +1511,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			int frequency_pivot_weeks = 20;
 			string sql = @"
 
-				DROP TABLE IF EXISTS abc_classification;
+				/* DROP TABLE IF EXISTS abc_classification;
 				CREATE TABLE abc_classification AS
 				SELECT 	p.product_id,
 							p.name product, 
@@ -1581,7 +1602,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				GROUP BY product_id, warehouse_id
 				ORDER BY lead_time DESC;
 				ALTER TABLE lead_time_purchase ADD CONSTRAINT unique_product_warehouse UNIQUE (product_id, warehouse_id); 
-
+				*/
 
 				SELECT 
 				 c.warehouse WarehouseId, w.name WarehouseName,

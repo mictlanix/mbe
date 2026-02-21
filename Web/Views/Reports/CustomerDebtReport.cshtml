@@ -42,6 +42,7 @@
 												<th class='center'>@Resources.SalesOrder</th>
 												<th class='center'>@Resources.DueDate</th>
 												<th class='center'>@Resources.PaymentTerms</th>
+												<th class='center'>@Resources.FiscalDocuments</th>
 												<th class='center'>@Resources.User</th>
 												<th class='center'>@Resources.SalesPerson</th>
 												<th class='center'>@Resources.Total</th>
@@ -59,31 +60,40 @@
 								@foreach (var item in Model.SalesOrders)
 								{
 												string order_id = item.SalesOrderId.ToString("D5");
-												<tr class="@(item.Overdue > 0.01 || (item.OnDelivery > 0 && item.Balance < 0 ) ? "warning" : string.Empty )">
-																<td class="date">@Html.ActionLink(order_id, "Pdf", "POS", new { id = (int)item.SalesOrderId }, new { target = "_blank" })</td>
-																<td class="date">@item.DueDate.ToString("yyyy-MM-dd")</td>
-																<td class="date">@item.Terms</td>
-																<td class="date">@item.User</td>
-																<td class="date">@item.SalesPerson</td>
-																<td class="number">@item.Total.ToString("C")</td>
-																<td class="number">@(item.Refund != null ? item.Refund.ToString("C") : string.Empty)</td>
-																<td class="number">@(item.OrderPaidStatus ? Resources.Paid:item.Balance.ToString("C"))</td>
-																<td class="date">@(!string.IsNullOrEmpty(item.PaymentsInfo) ? Html.Raw(item.PaymentsInfo.Replace("|", "<br />")) : string.Empty)</td>
-																<td class="date">@item.RefundsInfo</td>
-																<td class="date">@item.OrderedQuantity.ToString("F2")</td>
-																<td class="date">@item.DeliveredQuantity</td>
-																<td class="date">
-																				@if (!string.IsNullOrEmpty(item.DeliveryOrderIds))
-																				{
-																								var deliveries = item.DeliveryOrderIds.Split('|');
-																								foreach (var delivery in deliveries)
-																								{
-																												@Html.ActionLink((string)delivery, "View", "DeliveryOrders", new { id = Int32.Parse(delivery) }, new { target = "_blank" }) <br />
-																								}
-																				}
-																</td>
-																<td class="date">@(item.OnDelivery != null ? item.OnDelivery.ToString("C") + " ???":string.Empty)</td>
-												</tr>
+																								<tr class="@(item.Overdue > 0.01 || (item.OnDelivery > 0 && item.Balance < 0 ) ? "warning" : string.Empty )">
+																												<td class="date">@Html.ActionLink(order_id, "Pdf", "POS", new { id = (int)item.SalesOrderId }, new { target = "_blank" })</td>
+																												<td class="date">@item.DueDate.ToString("yyyy-MM-dd")</td>
+																												<td class="date">@item.Terms</td>
+																												<td class="date">
+																																@if (!string.IsNullOrEmpty(item.FiscalDocumentIds)) {
+																																				foreach(var x in item.FiscalDocumentIds.Split('|')) {
+																																								var ids = x.Split('-');
+																																								@Html.ActionLink((string)ids[1], "View", "FiscalDocuments", new { id = ids[0] }, new { target = "_blank" });
+																																								<br />
+																																				}
+																																}
+																												</td>
+																												<td class="date">@item.User</td>
+																												<td class="date">@item.SalesPerson</td>
+																												<td class="number">@item.Total.ToString("C")</td>
+																												<td class="number">@(item.Refund != null ? item.Refund.ToString("C") : string.Empty)</td>
+																												<td class="number">@(item.OrderPaidStatus ? Resources.Paid:item.Balance.ToString("C"))</td>
+																												<td class="date">@(!string.IsNullOrEmpty(item.PaymentsInfo) ? Html.Raw(item.PaymentsInfo.Replace("|", "<br />")) : string.Empty)</td>
+																												<td class="date">@item.RefundsInfo</td>
+																												<td class="date">@item.OrderedQuantity.ToString("F2")</td>
+																												<td class="date">@item.DeliveredQuantity</td>
+																												<td class="date">
+																																@if (!string.IsNullOrEmpty(item.DeliveryOrderIds))
+																																{
+																																				foreach (var delivery in item.DeliveryOrderIds.Split('|'))
+																																				{
+																																								@Html.ActionLink((string)delivery, "View", "DeliveryOrders", new { id = Int32.Parse(delivery) }, new { target = "_blank" })
+																																								<br />
+																																				}
+																																}
+																												</td>
+																												<td class="date">@(item.OnDelivery != null ? item.OnDelivery.ToString("C") + " ???":string.Empty)</td>
+																								</tr>
 								}
 								<tr class="warning">
 												<td class="text-right" colspan="9"><b>@Resources.Balance</b></td>
