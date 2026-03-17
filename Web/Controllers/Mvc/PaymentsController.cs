@@ -32,7 +32,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
-using LinqKit;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Helpers;
 using Mictlanix.BE.Web.Models;
@@ -1059,14 +1058,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var to_pay = value;
 			var dt = DateTime.Now;
 
-			var qry = @"	SELECT * FROM customer_payment cp
-					JOIN customer c ON cp.customer = c.customer_id
-					LEFT JOIN (SELECT sop.customer_payment, SUM(sop.amount + sop.amount_change) allocation
-						FROM sales_order_payment sop 
-						GROUP BY sop.customer_payment) AS a ON cp.customer_payment_id = a.customer_payment
-					WHERE c.name LIKE '%MATERIALES ALTAMIRANO%'
-					AND cp.payment_type IN (2,3) AND cp.amount - IFNULL(allocation, 0) > 0
-					ORDER BY cp.customer_payment_id;";
+			//var qry = @"	SELECT * FROM customer_payment cp
+			//		JOIN customer c ON cp.customer = c.customer_id
+			//		LEFT JOIN (SELECT sop.customer_payment, SUM(sop.amount + sop.amount_change) allocation
+			//			FROM sales_order_payment sop 
+			//			GROUP BY sop.customer_payment) AS a ON cp.customer_payment_id = a.customer_payment
+			//		WHERE c.name LIKE '%MATERIALES ALTAMIRANO%'
+			//		AND cp.payment_type IN (2,3) AND cp.amount - IFNULL(allocation, 0) > 0
+			//		ORDER BY cp.customer_payment_id;";
 
 
 			var payments = CustomerPayment.Queryable.Where (x =>
