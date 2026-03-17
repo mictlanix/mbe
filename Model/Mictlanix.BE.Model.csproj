@@ -106,7 +106,6 @@
     <Compile Include="ExpenseVoucherDetail.cs" />
     <Compile Include="PaymentMethodOption.cs" />
     <Compile Include="CommissionProduct.cs" />
-    <Compile Include="ProductMapping.cs" />
     <Compile Include="PurchaseRequest.cs" />
     <Compile Include="PurchaseRequestDetail.cs" />
     <Compile Include="SalesQuote.cs" />
