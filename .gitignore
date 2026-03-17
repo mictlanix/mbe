@@ -32,4 +32,6 @@ Model/SalesQuoteDetailBk.cs
 Web/Views/QuotationsBk/
 [Dd]esktop.ini
 MictlanixBE.config
-
+.DS_Store
+.idea/
+.vscode/
