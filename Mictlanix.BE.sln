@@ -36,11 +36,7 @@ Global
 		{CBB1BA70-351E-4009-86FB-484810DC6364}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBB1BA70-351E-4009-86FB-484810DC6364}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CBB1BA70-351E-4009-86FB-484810DC6364}.Release|Any CPU.Build.0 = Release|Any CPU
-		{58B28C7C-DBEC-4FFD-94EF-243710F70A6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{58B28C7C-DBEC-4FFD-94EF-243710F70A6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{58B28C7C-DBEC-4FFD-94EF-243710F70A6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{58B28C7C-DBEC-4FFD-94EF-243710F70A6D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9CAAE36D-F2B9-41CC-8AB3-F02C5A49229E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+{9CAAE36D-F2B9-41CC-8AB3-F02C5A49229E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9CAAE36D-F2B9-41CC-8AB3-F02C5A49229E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CAAE36D-F2B9-41CC-8AB3-F02C5A49229E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CAAE36D-F2B9-41CC-8AB3-F02C5A49229E}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -51,9 +47,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{58B28C7C-DBEC-4FFD-94EF-243710F70A6D} = {36C5FC21-C386-4494-B93D-C6239075DFEB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {45B70545-7E4A-4918-83A9-31B7FC21B746}
