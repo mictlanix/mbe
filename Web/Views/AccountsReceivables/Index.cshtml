@@ -13,14 +13,9 @@
 <div id='master-section'>
 @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
 	<div class="row">
-						<div class="col-xs-7">
-										@Html.Editor("customer", "CustomerSelector")
-						</div>
-						<div class="col-xs-2" style=" text-align: center;">
-										<input name="all_salespersons" class='form-control' type='checkbox' value="true"/>
-										<label for="all_salespersons" style="display:inline;">Todos los cr&eacute;ditos</label>
-												<input type="hidden" name="all_salespersons" value="false" />
-						</div>
+		<div class="col-xs-11">
+			@Html.Editor("customer", "CustomerSelector")
+		</div>
 		<div class="col-xs-1">
 			<button class="btn btn-primary btn-block" type="submit">
 				<span class="glyphicon glyphicon-refresh"></span>
@@ -30,7 +25,7 @@
 }
 </div>
 <div id="activity-indicator">
-				<img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
+	<img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
 </div>
 <div id='search-results'></div>
 <style type='text/css'>

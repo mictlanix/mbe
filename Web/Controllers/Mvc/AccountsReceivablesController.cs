@@ -49,7 +49,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult Index (int? customer, bool all_salespersons)
+		public ActionResult Index (int? customer)
 		{
 			//string sql1 = @"SELECT m.date Date, d.sales_order SalesOrder, m.due_date DueDate, c.name Customer,
 			//			GROUP_CONCAT(DISTINCT (SELECT GROUP_CONCAT(DISTINCT f.batch, LPAD(f.serial, 6, '0') SEPARATOR ' ')
@@ -72,12 +72,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			//		WHERE m.completed = 1 AND m.cancelled = 0 AND m.paid = 0 and m.payment_terms = 1 CUSTOMER_FILTER
 			//		GROUP BY m.sales_order_id";
 
-			
+
 			//var privilege = GetAccessPrivilege(SystemObjects.SearchCreditsFromAllStores);
 			//var FILTERALLSTORES = privilege.AllowRead ? string.Empty : " AND m.store = " + WebConfig.Store.Id + " ";
-
-			var FILTERBYSALESPERSON = all_salespersons ? string.Empty :
-				" AND (c.salesperson = " + CurrentUser.Employee.Id + " OR m.salesperson = " + CurrentUser.Employee.Id + ") ";
 			var CUSTOMER_FILTER = customer.HasValue ? "AND m.customer = " + customer.Value : string.Empty;
 
 			string sql1 = @"SELECT m.date Date, m.sales_order_id SalesOrder, m.due_date DueDate, c.name Customer,
@@ -114,7 +111,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					AND (det.Total - IFNULL(r.refund, 0)) > 0
 					AND (m.paid = 0 OR
 							(m.paid = 1 AND DATE_ADD(m.modification_time, INTERVAL 60 DAY) > NOW()))
-					AND m.payment_terms = 1 CUSTOMER_FILTER FILTERBYSALESPERSON
+					AND m.payment_terms = 1 CUSTOMER_FILTER
 					ORDER BY m.paid, m.due_date";
 			string sql2 = @"SELECT m.sales_order_id SalesOrder, SUM(ROUND(amount, 2)) Payments
 					FROM sales_order m
@@ -123,11 +120,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					CUSTOMER_FILTER 
 					GROUP BY m.sales_order_id";
 
-			sql1 = sql1.Replace ("FILTERBYSALESPERSON", FILTERBYSALESPERSON);
 			sql1 = sql1.Replace ("CUSTOMER_FILTER", CUSTOMER_FILTER);
 			sql2 = sql2.Replace ("CUSTOMER_FILTER", CUSTOMER_FILTER);
 			
-
 			//if (customer.HasValue) {
 			//	sql1 = sql1.Replace ("CUSTOMER_FILTER", "AND m.customer = :customer");
 			//	sql2 = sql2.Replace ("CUSTOMER_FILTER", "AND m.customer = :customer");
