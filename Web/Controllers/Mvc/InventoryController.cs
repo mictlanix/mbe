@@ -77,34 +77,34 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var warehouse = WebConfig.PointOfSale.Warehouse;
 
 			IQueryable<InventoryReceipt> qry = from x in InventoryReceipt.Queryable
-							   where x.Warehouse == warehouse || x.Creator == CurrentUser.Employee
-							   select x;
+											   where x.Warehouse == warehouse || x.Creator == CurrentUser.Employee
+											   select x;
 			var pattern = search.Pattern;
 			int id = 0;
 
 
-			if (!string.IsNullOrEmpty(pattern)) {
+			if (!string.IsNullOrEmpty (pattern)) {
 				pattern = pattern.Trim ();
-				int.TryParse(pattern, out id);
+				int.TryParse (pattern, out id);
 				if (id > 0) {
 					qry = from x in InventoryReceipt.Queryable
-					      where x.Order.Id == id || x.Id == id || x.Serial == id
-					      select x;
+						  where x.Order.Id == id || x.Id == id || x.Serial == id
+						  select x;
 				} else {
-					if (pattern.Contains (Resources.WilcardStringPatternForSearch) && GetAccessPrivilege(SystemObjects.InventoryReceipts).AllowDelete) {
+					if (pattern.Contains (Resources.WilcardStringPatternForSearch) && GetAccessPrivilege (SystemObjects.InventoryReceipts).AllowDelete) {
 						qry = from x in InventoryReceipt.Queryable
-						      select x;
+							  select x;
 					} else {
 						qry = from x in qry
-						      where x.Warehouse.Name.Contains (pattern)
-						      select x;
+							  where x.Warehouse.Name.Contains (pattern)
+							  select x;
 					}
 				}
 			}
 
 			qry = from x in qry
-			      orderby x.Id descending
-			      select x;
+				  orderby x.Id descending
+				  select x;
 
 			search.Total = qry.Count ();
 			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
@@ -313,7 +313,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 				foreach (var x in item.Details) {
 					InventoryHelpers.ChangeNotification (TransactionType.InventoryReceipt, item.Id,
-									     item.ModificationTime, item.Warehouse, null, x.Product, x.Quantity);
+										 item.ModificationTime, item.Warehouse, null, x.Product, x.Quantity);
 				}
 			}
 
@@ -367,17 +367,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var warehouse = WebConfig.PointOfSale.Warehouse;
 
 			IQueryable<InventoryIssue> qry = from x in InventoryIssue.Queryable
-							   where x.Warehouse == warehouse || x.Creator == CurrentUser.Employee
-							   select x;
+											 where x.Warehouse == warehouse || x.Creator == CurrentUser.Employee
+											 select x;
 
 
 			if (search.Pattern == null) {
 				qry = from x in qry
-				      select x;
+					  select x;
 			} else {
 				qry = from x in qry
-				      where x.Warehouse.Name.Contains (search.Pattern)
-				      select x;
+					  where x.Warehouse.Name.Contains (search.Pattern)
+					  select x;
 			}
 
 			qry = qry.OrderByDescending (x => x.Id);
@@ -541,7 +541,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult ConfirmIssue (int id)
 		{
 			var item = InventoryIssue.TryFind (id);
-			bool invalid_stock = item.Details.Any(x => x.Quantity > QuantityInWarehouse(item.Warehouse.Id, x.Product.Id));
+			bool invalid_stock = item.Details.Any (x => x.Quantity > QuantityInWarehouse (item.Warehouse.Id, x.Product.Id));
 
 
 			if (item == null || item.IsCompleted || item.IsCancelled)
@@ -552,7 +552,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.NoStockEnough);
 			}
 
-			
+
 
 			item.Store = item.Warehouse.Store;
 
@@ -574,7 +574,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 				foreach (var x in item.Details) {
 					InventoryHelpers.ChangeNotification (TransactionType.InventoryIssue, item.Id,
-									     item.ModificationTime, item.Warehouse, null, x.Product, -x.Quantity);
+										 item.ModificationTime, item.Warehouse, null, x.Product, -x.Quantity);
 				}
 			}
 
@@ -628,21 +628,21 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var warehouse = WebConfig.PointOfSale.Warehouse;
 			int i = 0;
 
-			Int32.TryParse(search.Pattern, out i);
+			Int32.TryParse (search.Pattern, out i);
 
 			IQueryable<InventoryTransfer> qry = from x in InventoryTransfer.Queryable
-							   where x.From == warehouse || x.To == warehouse || x.Creator == CurrentUser.Employee
-							   select x;
+												where x.From == warehouse || x.To == warehouse || x.Creator == CurrentUser.Employee
+												select x;
 
 			if (i > 0) {
 				qry = from x in InventoryTransfer.Queryable
-				      where x.Id == i || x.Serial == i
-				      select x;
-			} else if(!string.IsNullOrEmpty(search.Pattern)) {
+					  where x.Id == i || x.Serial == i
+					  select x;
+			} else if (!string.IsNullOrEmpty (search.Pattern)) {
 				qry = from x in qry
-				      where x.To.Name.Contains (search.Pattern) ||
-						    x.From.Name.Contains (search.Pattern)
-				      select x;
+					  where x.To.Name.Contains (search.Pattern) ||
+							x.From.Name.Contains (search.Pattern)
+					  select x;
 			}
 
 			qry = qry.OrderByDescending (x => x.Id);
@@ -667,8 +667,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public ActionResult NewTransfer ()
 		{
-			var user = MBEQueryable.IQUsers.Where(x => x.Employee == CurrentUser.Employee).Single().UserName;
-			var warehouse = MBEQueryable.IQUsersSettings.Where (x => x.UserName == user).Single ().PointOfSale.Warehouse;
+			var warehouse = MBEQueryable.IQUsersSettings.Where (x => x.UserName == CurrentUser.Identity.Name).Single ().PointOfSale.Warehouse;
 
 			return PartialView ("Transfers/_Create",
 				new InventoryTransfer {
@@ -832,19 +831,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			if (item == null || item.IsCompleted || item.IsCancelled)
 				return RedirectToAction ("Issues");
 
-			if (item.Details.Any(x => x.Errors.Any())) {
+			if (item.Details.Any (x => x.Errors.Any ())) {
 				Response.StatusCode = 400;
 				return Content (Resources.NoStockEnough);
 			}
 
 			if (item.Details.Any (x => !x.Product.IsStockable)) {
 				Response.StatusCode = 400;
-				return Content (Resources.Product + " " + Resources.No + " " +  Resources.Stockable);
+				return Content (Resources.Product + " " + Resources.No + " " + Resources.Stockable);
 			}
 
-			if (item.Details.Any(x => x.Errors.Any())) {
+			if (item.Details.Any (x => x.Errors.Any ())) {
 				Response.StatusCode = 400;
-				return RedirectToAction("EditTransfer", new { id = id } );
+				return RedirectToAction ("EditTransfer", new { id = id });
 			}
 
 
@@ -855,8 +854,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			try {
 				item.Serial = (from x in InventoryTransfer.Queryable
-					       where x.Store.Id == item.Store.Id
-					       select x.Serial).Max () + 1;
+							   where x.Store.Id == item.Store.Id
+							   select x.Serial).Max () + 1;
 			} catch {
 				item.Serial = 1;
 			}
@@ -967,24 +966,24 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		Search<LotSerialRequirement> SearchLotSerialNumbers (Search<LotSerialRequirement> search)
 		{
 			var query = from x in LotSerialRequirement.Queryable
-				    orderby x.Id descending
-				    select new {
-					    Source = x.Source,
-					    Reference = x.Reference,
-					    Warehouse = new Warehouse { Id = x.Warehouse.Id, Name = x.Warehouse.Name },
-					    Quantity = x.Quantity
-				    };
+						orderby x.Id descending
+						select new {
+							Source = x.Source,
+							Reference = x.Reference,
+							Warehouse = new Warehouse { Id = x.Warehouse.Id, Name = x.Warehouse.Name },
+							Quantity = x.Quantity
+						};
 			var items = from x in query.ToList ()
-				    group x by new {
-					    x.Source,
-					    x.Reference
-				    } into g
-				    select new LotSerialRequirement {
-					    Source = g.Key.Source,
-					    Reference = g.Key.Reference,
-					    Warehouse = g.Select (y => y.Warehouse).First (),
-					    Quantity = g.Sum (y => y.Quantity)
-				    };
+						group x by new {
+							x.Source,
+							x.Reference
+						} into g
+						select new LotSerialRequirement {
+							Source = g.Key.Source,
+							Reference = g.Key.Reference,
+							Warehouse = g.Select (y => y.Warehouse).First (),
+							Quantity = g.Sum (y => y.Quantity)
+						};
 
 			search.Total = items.Count ();
 			search.Results = items.Skip (search.Offset).Take (search.Limit).ToList ();
@@ -996,11 +995,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var rqmt = LotSerialRequirement.Find (id);
 			var qry = from x in LotSerialTracking.Queryable
-				  where x.Source == rqmt.Source &&
-						x.Reference == rqmt.Reference &&
-						x.Warehouse.Id == rqmt.Warehouse.Id &&
-						x.Product == rqmt.Product
-				  select x;
+					  where x.Source == rqmt.Source &&
+							x.Reference == rqmt.Reference &&
+							x.Warehouse.Id == rqmt.Warehouse.Id &&
+							x.Product == rqmt.Product
+					  select x;
 
 			using (var scope = new TransactionScope ()) {
 				var entity = new LotSerialTracking {
@@ -1029,18 +1028,18 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult AssignLotSerialNumbers (TransactionType source, int reference)
 		{
 			var rqmts = from x in LotSerialRequirement.Queryable
-				    where x.Source == source &&
-					    x.Reference == reference
-				    select x;
+						where x.Source == source &&
+							x.Reference == reference
+						select x;
 			var items = new List<MasterDetails<LotSerialRequirement, LotSerialTracking>> ();
 
 			foreach (var rqmt in rqmts) {
 				var query = from x in LotSerialTracking.Queryable
-					    where x.Source == source &&
-						    x.Reference == reference &&
-						    x.Warehouse.Id == rqmt.Warehouse.Id &&
-						    x.Product.Id == rqmt.Product.Id
-					    select x;
+							where x.Source == source &&
+								x.Reference == reference &&
+								x.Warehouse.Id == rqmt.Warehouse.Id &&
+								x.Product.Id == rqmt.Product.Id
+							select x;
 
 				items.Add (new MasterDetails<LotSerialRequirement, LotSerialTracking> {
 					Master = rqmt,
@@ -1068,11 +1067,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var entity = LotSerialRequirement.Find (id);
 			var qry = from x in LotSerialTracking.Queryable
-				  where x.Source == entity.Source &&
-						x.Reference == entity.Reference &&
-						x.Warehouse.Id == entity.Warehouse.Id &&
-						x.Product.Id == entity.Product.Id
-				  select x;
+					  where x.Source == entity.Source &&
+							x.Reference == entity.Reference &&
+							x.Warehouse.Id == entity.Warehouse.Id &&
+							x.Product.Id == entity.Product.Id
+					  select x;
 			decimal sum = qry.Count () > 0 ? qry.Sum (x => x.Quantity) : 0;
 
 			if (entity.Quantity != sum) {
@@ -1121,11 +1120,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var item = LotSerialRequirement.Find (id);
 			var qry = from x in LotSerialTracking.Queryable
-				  where x.Source == item.Source &&
-						x.Reference == item.Reference &&
-						x.Warehouse.Id == item.Warehouse.Id &&
-						x.Product.Id == item.Product.Id
-				  select x.Quantity;
+					  where x.Source == item.Source &&
+							x.Reference == item.Reference &&
+							x.Warehouse.Id == item.Warehouse.Id &&
+							x.Product.Id == item.Product.Id
+					  select x.Quantity;
 			decimal sum = qry.Count () > 0 ? qry.Sum () : 0;
 
 			return Json (new {
@@ -1141,16 +1140,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			if (!string.IsNullOrWhiteSpace (serial)) {
 				query = from x in LotSerialTracking.Queryable
-					where x.Product.Id == product &&
-					    x.SerialNumber == serial
-					orderby x.Date descending
-					select x;
+						where x.Product.Id == product &&
+							x.SerialNumber == serial
+						orderby x.Date descending
+						select x;
 			} else {
 				query = from x in LotSerialTracking.Queryable
-					where x.Product.Id == product &&
-						x.LotNumber == lot
-					orderby x.Date descending
-					select x;
+						where x.Product.Id == product &&
+							x.LotNumber == lot
+						orderby x.Date descending
+						select x;
 			}
 
 			return query.FirstOrDefault ();
@@ -1213,13 +1212,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var warehouse = Warehouse.Find (value);
 			var rqmts = from x in LotSerialRequirement.Queryable
-				    where x.Source == source &&
-					    x.Reference == reference
-				    select x;
+						where x.Source == source &&
+							x.Reference == reference
+						select x;
 			var serials = from x in LotSerialTracking.Queryable
-				      where x.Source == source &&
-					      x.Reference == reference
-				      select x;
+						  where x.Source == source &&
+							  x.Reference == reference
+						  select x;
 
 			using (var scope = new TransactionScope ()) {
 				foreach (var item in rqmts) {
@@ -1495,19 +1494,21 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return item;
 		}
 
-		private decimal QuantityInWarehouse (int warehouse_id, int product_id) {
+		private decimal QuantityInWarehouse (int warehouse_id, int product_id)
+		{
 			return LotSerialTracking.Queryable.Where (x => x.Warehouse.Id == warehouse_id
 			&& x.Product.Id == product_id).Sum (x => (decimal?) x.Quantity) ?? 0;
 		}
 
-		private void ValidateInventoryDetailStock (InventoryTransferDetail detail) {
-				var stock = QuantityInWarehouse (detail.Transfer.From.Id, detail.Product.Id);
-				detail.Errors = new List<string> ();
-				if (stock < detail.Quantity) {
-					var error = string.Format (Resources.NoStockEnough, detail.ProductName, stock,
-						(detail.Product.UnitOfMeasurement != null ? detail.Product.UnitOfMeasurement.Name : Resources.ToBeDefined));
-					detail.Errors.Add (error);
-				}
+		private void ValidateInventoryDetailStock (InventoryTransferDetail detail)
+		{
+			var stock = QuantityInWarehouse (detail.Transfer.From.Id, detail.Product.Id);
+			detail.Errors = new List<string> ();
+			if (stock < detail.Quantity) {
+				var error = string.Format (Resources.NoStockEnough, detail.ProductName, stock,
+					(detail.Product.UnitOfMeasurement != null ? detail.Product.UnitOfMeasurement.Name : Resources.ToBeDefined));
+				detail.Errors.Add (error);
+			}
 		}
 
 		private void ValidateInventoryDetailStock (InventoryIssueDetail detail)
