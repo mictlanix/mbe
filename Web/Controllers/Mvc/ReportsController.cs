@@ -83,7 +83,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				sql += " HAVING SUM(quantity) <> 0 ";
 			}
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("Id", NHibernateUtil.Int32);
@@ -134,7 +134,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				sql = sql.Replace ("WHERE_BRAND", "AND p.brand = :brand");
 			}
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("Brand", NHibernateUtil.String);
@@ -145,7 +145,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				query.AddScalar ("ExpirationDate", NHibernateUtil.Date);
 				query.AddScalar ("Quantity", NHibernateUtil.Decimal);
 
-				query.SetInt32 ("warehouse", warehouse); 
+				query.SetInt32 ("warehouse", warehouse);
 
 				if (!string.IsNullOrWhiteSpace (brand)) {
 					query.SetString ("brand", brand);
@@ -174,7 +174,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
                             GROUP BY l.product, l.lot_number, l.expiration_date, l.serial_number
 							HAVING SUM(quantity) <> 0";
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("Brand", NHibernateUtil.String);
@@ -224,7 +224,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
                             WHERE warehouse = :warehouse AND product = :product AND date < :start";
 
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("Date", NHibernateUtil.Date);
@@ -242,7 +242,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return query.DynamicList ();
 			}, null);
 
-			var balance = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var balance = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (balance_query);
 
 				query.AddScalar ("Quantity", NHibernateUtil.Decimal);
@@ -254,7 +254,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return query.DynamicList ();
 			}, null);
 
-			ViewBag.OpeningBalance = (decimal)balance[0].Quantity;
+			ViewBag.OpeningBalance = (decimal) balance [0].Quantity;
 			return PartialView ("_Kardex", items);
 		}
 
@@ -272,8 +272,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var start = dates.StartDate;
 			var end = dates.EndDate;
 			var balance = from x in LotSerialTracking.Queryable
-				      where x.Warehouse.Id == warehouse && x.Product.Id == product && x.Date < start
-				      select x.Quantity;
+						  where x.Warehouse.Id == warehouse && x.Product.Id == product && x.Date < start
+						  select x.Quantity;
 
 			ViewBag.OpeningBalance = balance.Count () > 0 ? balance.Sum () : 0m;
 
@@ -282,7 +282,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
                             WHERE warehouse = :warehouse AND product = :product AND date >= :start AND date <= :end
                             ORDER BY l.serial_number, l.date";
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("Date", NHibernateUtil.Date);
@@ -323,29 +323,29 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var qry = from x in SalesOrder.Queryable
-				  from y in x.Details
-				  where x.Store.Id == store &&
-				      x.IsCompleted &&
-				      x.IsPaid &&
-				      !x.IsCancelled &&
-				      x.Date >= start &&
-				      x.Date <= end
-				  select new {
-					  Id = x.Customer.Id,
-					  Name = x.Customer.Name,
-					  Units = y.Quantity,
-					  Total = y.Quantity * (y.Price - y.Cost),
-					  Subtotal = y.Quantity * (y.Price - y.Cost) / (y.TaxRate + 1m)
-				  };
+					  from y in x.Details
+					  where x.Store.Id == store &&
+						  x.IsCompleted &&
+						  x.IsPaid &&
+						  !x.IsCancelled &&
+						  x.Date >= start &&
+						  x.Date <= end
+					  select new {
+						  Id = x.Customer.Id,
+						  Name = x.Customer.Name,
+						  Units = y.Quantity,
+						  Total = y.Quantity * (y.Price - y.Cost),
+						  Subtotal = y.Quantity * (y.Price - y.Cost) / (y.TaxRate + 1m)
+					  };
 			var qry2 = from x in qry.ToList ()
-				   group x by new { x.Id, x.Name } into g
-				   select new SummaryItem {
-					   Id = g.Key.Id.ToString (),
-					   Name = g.Key.Name,
-					   Units = g.Sum (x => x.Units),
-					   Total = g.Sum (x => x.Total),
-					   Subtotal = g.Sum (x => x.Subtotal)
-				   };
+					   group x by new { x.Id, x.Name } into g
+					   select new SummaryItem {
+						   Id = g.Key.Id.ToString (),
+						   Name = g.Key.Name,
+						   Units = g.Sum (x => x.Units),
+						   Total = g.Sum (x => x.Total),
+						   Subtotal = g.Sum (x => x.Subtotal)
+					   };
 			var items = qry2.OrderByDescending (x => x.Total).ToList ();
 
 			AnalyzeABC (items);
@@ -367,29 +367,29 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var qry = from x in SalesOrder.Queryable
-				  from y in x.Details
-				  where x.Store.Id == store &&
-				      x.IsCompleted &&
-				      x.IsPaid &&
-				      !x.IsCancelled &&
-				      x.Date >= start &&
-				      x.Date <= end
-				  select new {
-					  Id = x.SalesPerson.Id,
-					  Name = x.SalesPerson.FirstName + " " + x.SalesPerson.LastName,
-					  Units = y.Quantity,
-					  Total = y.Quantity * (y.Price - y.Cost),
-					  Subtotal = y.Quantity * (y.Price - y.Cost) / (y.TaxRate + 1m)
-				  };
+					  from y in x.Details
+					  where x.Store.Id == store &&
+						  x.IsCompleted &&
+						  x.IsPaid &&
+						  !x.IsCancelled &&
+						  x.Date >= start &&
+						  x.Date <= end
+					  select new {
+						  Id = x.SalesPerson.Id,
+						  Name = x.SalesPerson.FirstName + " " + x.SalesPerson.LastName,
+						  Units = y.Quantity,
+						  Total = y.Quantity * (y.Price - y.Cost),
+						  Subtotal = y.Quantity * (y.Price - y.Cost) / (y.TaxRate + 1m)
+					  };
 			var qry2 = from x in qry.ToList ()
-				   group x by new { x.Id, x.Name } into g
-				   select new SummaryItem {
-					   Id = g.Key.Id.ToString (),
-					   Name = g.Key.Name,
-					   Units = g.Sum (x => x.Units),
-					   Total = g.Sum (x => x.Total),
-					   Subtotal = g.Sum (x => x.Subtotal)
-				   };
+					   group x by new { x.Id, x.Name } into g
+					   select new SummaryItem {
+						   Id = g.Key.Id.ToString (),
+						   Name = g.Key.Name,
+						   Units = g.Sum (x => x.Units),
+						   Total = g.Sum (x => x.Total),
+						   Subtotal = g.Sum (x => x.Subtotal)
+					   };
 			var items = qry2.OrderByDescending (x => x.Total).ToList ();
 
 			AnalyzeABC (items);
@@ -411,29 +411,29 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var start = dates.StartDate.Date;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var qry = from x in SalesOrder.Queryable
-				  from y in x.Details
-				  where x.Store.Id == store &&
-				  x.IsCompleted &&
-				  x.IsPaid &&
-				  !x.IsCancelled &&
-				  x.Date >= start &&
-				  x.Date <= end
-				  select new {
-					  Id = y.ProductCode,
-					  Name = y.ProductName,
-					  Units = y.Quantity,
-					  Total = y.Quantity * (y.Price - y.Cost),
-					  Subtotal = y.Quantity * (y.Price - y.Cost) / (y.TaxRate + 1m)
-				  };
+					  from y in x.Details
+					  where x.Store.Id == store &&
+					  x.IsCompleted &&
+					  x.IsPaid &&
+					  !x.IsCancelled &&
+					  x.Date >= start &&
+					  x.Date <= end
+					  select new {
+						  Id = y.ProductCode,
+						  Name = y.ProductName,
+						  Units = y.Quantity,
+						  Total = y.Quantity * (y.Price - y.Cost),
+						  Subtotal = y.Quantity * (y.Price - y.Cost) / (y.TaxRate + 1m)
+					  };
 			var qry2 = from x in qry.ToList ()
-				   group x by new { x.Id, x.Name } into g
-				   select new SummaryItem {
-					   Id = g.Key.Id,
-					   Name = g.Key.Name,
-					   Units = g.Sum (x => x.Units),
-					   Total = g.Sum (x => x.Total),
-					   Subtotal = g.Sum (x => x.Subtotal),
-				   };
+					   group x by new { x.Id, x.Name } into g
+					   select new SummaryItem {
+						   Id = g.Key.Id,
+						   Name = g.Key.Name,
+						   Units = g.Sum (x => x.Units),
+						   Total = g.Sum (x => x.Total),
+						   Subtotal = g.Sum (x => x.Subtotal),
+					   };
 			var items = qry2.OrderByDescending (x => x.Total).ToList ();
 
 			AnalyzeABC (items);
@@ -459,29 +459,29 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var start = dates.StartDate;
 			var end = dates.EndDate;
 			var qry = from x in SalesOrder.Queryable
-				  from y in x.Details
-				  where x.Customer.Id == customer &&
-				      x.IsCompleted &&
-				      x.IsPaid &&
-				      !x.IsCancelled &&
-				      x.Date >= start &&
-				      x.Date <= end
-				  select new {
-					  Id = y.ProductCode,
-					  Name = y.ProductName,
-					  Units = y.Quantity,
-					  Total = y.Quantity * y.Price,
-					  Subtotal = y.Quantity * y.Price / (y.TaxRate + 1m)
-				  };
+					  from y in x.Details
+					  where x.Customer.Id == customer &&
+						  x.IsCompleted &&
+						  x.IsPaid &&
+						  !x.IsCancelled &&
+						  x.Date >= start &&
+						  x.Date <= end
+					  select new {
+						  Id = y.ProductCode,
+						  Name = y.ProductName,
+						  Units = y.Quantity,
+						  Total = y.Quantity * y.Price,
+						  Subtotal = y.Quantity * y.Price / (y.TaxRate + 1m)
+					  };
 			var qry2 = from x in qry.ToList ()
-				   group x by new { x.Id, x.Name } into g
-				   select new SummaryItem {
-					   Id = g.Key.Id,
-					   Name = g.Key.Name,
-					   Units = g.Sum (x => x.Units),
-					   Total = g.Sum (x => x.Total),
-					   Subtotal = g.Sum (x => x.Subtotal),
-				   };
+					   group x by new { x.Id, x.Name } into g
+					   select new SummaryItem {
+						   Id = g.Key.Id,
+						   Name = g.Key.Name,
+						   Units = g.Sum (x => x.Units),
+						   Total = g.Sum (x => x.Total),
+						   Subtotal = g.Sum (x => x.Subtotal),
+					   };
 			var items = qry2.OrderByDescending (x => x.Total).ToList ();
 
 			AnalyzeABC (items);
@@ -503,29 +503,29 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var start = dates.StartDate;
 			var end = dates.EndDate;
 			var qry = from x in SalesOrder.Queryable
-				  from y in x.Details
-				  where x.SalesPerson.Id == employee &&
-				      x.IsCompleted &&
-				      x.IsPaid &&
-				      !x.IsCancelled &&
-				      x.Date >= start &&
-				      x.Date <= end
-				  select new {
-					  Id = y.ProductCode,
-					  Name = y.ProductName,
-					  Units = y.Quantity,
-					  Total = y.Quantity * y.Price,
-					  Subtotal = y.Quantity * y.Price / (y.TaxRate + 1m)
-				  };
+					  from y in x.Details
+					  where x.SalesPerson.Id == employee &&
+						  x.IsCompleted &&
+						  x.IsPaid &&
+						  !x.IsCancelled &&
+						  x.Date >= start &&
+						  x.Date <= end
+					  select new {
+						  Id = y.ProductCode,
+						  Name = y.ProductName,
+						  Units = y.Quantity,
+						  Total = y.Quantity * y.Price,
+						  Subtotal = y.Quantity * y.Price / (y.TaxRate + 1m)
+					  };
 			var qry2 = from x in qry.ToList ()
-				   group x by new { x.Id, x.Name } into g
-				   select new SummaryItem {
-					   Id = g.Key.Id,
-					   Name = g.Key.Name,
-					   Units = g.Sum (x => x.Units),
-					   Total = g.Sum (x => x.Total),
-					   Subtotal = g.Sum (x => x.Subtotal)
-				   };
+					   group x by new { x.Id, x.Name } into g
+					   select new SummaryItem {
+						   Id = g.Key.Id,
+						   Name = g.Key.Name,
+						   Units = g.Sum (x => x.Units),
+						   Total = g.Sum (x => x.Total),
+						   Subtotal = g.Sum (x => x.Subtotal)
+					   };
 			var items = qry2.OrderByDescending (x => x.Total).ToList ();
 
 			AnalyzeABC (items);
@@ -551,17 +551,18 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			var filter = new CustomersStatusFilter {
 				DateRange = new DateRange {
-					StartDate = dt.AddDays(-60),
+					StartDate = dt.AddDays (-60),
 					EndDate = dt
 				},
 				OnlyCredits = false,
 				OnlyDebtors = true
 			};
 			return View ("CustomersDebtSummary", filter);
-			
+
 		}
 
-		private string GetSalesOrdersDetailsSQLQuery () {
+		private string GetSalesOrdersDetailsSQLQuery ()
+		{
 			return @"
 				SELECT 	so.sales_order_id 'sales_order_id', 
 							so.payment_terms 'terms' ,
@@ -641,7 +642,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			";
 		}
 
-		private string GetCommissionDetailsSQLQuery () {
+		private string GetCommissionDetailsSQLQuery ()
+		{
 			string query = @"WITH details_orders AS (
 				SELECT so.sales_order_id sales_order, sod.sales_order_detail_id sales_order_detail, sod.quantity, 
 				ROUND((sod.price * (1-sod.discount_rate)* (1 + IF(sod.tax_included = 1, 0, sod.tax_rate))),2) price,
@@ -866,12 +868,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		public ActionResult CustomersDebtSummary (CustomersStatusFilter filter) {
+		public ActionResult CustomersDebtSummary (CustomersStatusFilter filter)
+		{
 
 			string ONLY_CREDITS_FILTER = filter.OnlyCredits ? " AND op.terms = 1" : string.Empty;
 			string ONLY_DEBTORS_FILTER = filter.OnlyDebtors ? " HAVING (Balance < 0 OR OnDelivery > 0.01)" : string.Empty;
 			//string CUSTOMER_ID_FILTER = filter.CustomerId.HasValue? " AND op.customer_id = " + filter.CustomerId.Value : string.Empty;
-			string CUSTOMER_ID_FILTER = !string.IsNullOrEmpty(filter.CustomerName) ? " AND op.customer_name like '%" + filter.CustomerName + "%'" : string.Empty;
+			string CUSTOMER_ID_FILTER = !string.IsNullOrEmpty (filter.CustomerName) ? " AND op.customer_name like '%" + filter.CustomerName + "%'" : string.Empty;
 
 			string REPORT = GetSalesOrdersDetailsSQLQuery ();
 
@@ -915,7 +918,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 				//query.SetParameter ("start", filter.DateRange.StartDate);
 				//query.SetParameter ("end", filter.DateRange.EndDate);
-				query.SetParameter ("start", new DateTime(2024,01,01));
+				query.SetParameter ("start", new DateTime (2024, 01, 01));
 				query.SetParameter ("end", DateTime.Now);
 
 				return query.DynamicList ();
@@ -932,10 +935,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				Customer = MBEQueryable.IQCustomers.Where (x => x.Id == id).Single (),
 				OnlyDebts = false,
 				OnlyCredits = false,
-				DateRange = new DateRange { StartDate = new DateTime(2024,01,01), EndDate = DateTime.Now }
+				DateRange = new DateRange { StartDate = new DateTime (2024, 01, 01), EndDate = DateTime.Now }
 			};
 
-			item = GetCustomerDebtInfo(item);
+			item = GetCustomerDebtInfo (item);
 
 			return View (item);
 
@@ -944,8 +947,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ViewResult CustomerDebtReport (int id)
 		{
 			var viewModel = new CustomerDebtViewModel {
-				Customer = MBEQueryable.IQCustomers.Single(x=> x.Id == id),
-				DateRange = new DateRange { StartDate = new DateTime(2024,01,01), EndDate = DateTime.Now },
+				Customer = MBEQueryable.IQCustomers.Single (x => x.Id == id),
+				DateRange = new DateRange { StartDate = new DateTime (2024, 01, 01), EndDate = DateTime.Now },
 				OnlyCredits = false,
 				OnlyDebts = false,
 			};
@@ -955,13 +958,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View ("CustomerDebtReport", items);
 		}
 
-		private CustomerDebtViewModel GetCustomerDebtInfo (CustomerDebtViewModel model) {
+		private CustomerDebtViewModel GetCustomerDebtInfo (CustomerDebtViewModel model)
+		{
 
 			var ONLY_CREDITS = model.OnlyCredits ? " AND rpt.terms = 1 " : string.Empty;
 			var ONLY_DEBTS = model.OnlyDebts ? " HAVING Balance < 0 " : string.Empty;
 			var REPORT = GetSalesOrdersDetailsSQLQuery ();
 			var start = model.DateRange.StartDate.Date;
-			var end = model.DateRange.EndDate.AddDays(1).Date;
+			var end = model.DateRange.EndDate.AddDays (1).Date;
 
 			string sql = @"	SELECT
 						sales_order_id SalesOrderId,
@@ -1053,18 +1057,18 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			search.Pattern = search.Pattern.Trim ();
 			if (string.IsNullOrWhiteSpace (search.Pattern)) {
 				var qry = from x in Customer.Queryable
-					  orderby x.Name
-					  select x;
+						  orderby x.Name
+						  select x;
 
 				search.Total = qry.Count ();
 				search.Results = qry.ToList ();
 			} else {
 				var qry = from x in Customer.Queryable
-					  where x.Name.Contains (search.Pattern) ||
-					      x.Code.Contains (search.Pattern) ||
-					      x.Zone.Contains (search.Pattern)
-					  orderby x.Name
-					  select x;
+						  where x.Name.Contains (search.Pattern) ||
+							  x.Code.Contains (search.Pattern) ||
+							  x.Zone.Contains (search.Pattern)
+						  orderby x.Name
+						  select x;
 
 				search.Total = qry.Count ();
 				search.Results = qry.ToList ();
@@ -1096,10 +1100,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var start = dates.StartDate;
 			var end = dates.EndDate.Date.AddDays (1).AddSeconds (-1);
 			var query = from x in FiscalDocument.Queryable
-				    where x.Issuer.Id == taxpayer && x.IsCompleted &&
-				    ((x.Issued >= start && x.Issued <= end) || (x.CancellationDate >= start && x.CancellationDate <= end))
-				    orderby x.Issued
-				    select x;
+						where x.Issuer.Id == taxpayer && x.IsCompleted &&
+						((x.Issued >= start && x.Issued <= end) || (x.CancellationDate >= start && x.CancellationDate <= end))
+						orderby x.Issued
+						select x;
 
 			return PartialView ("_FiscalDocuments", query.ToList ());
 		}
@@ -1120,11 +1124,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var start = dates.StartDate;
 			var end = dates.EndDate;
 			var query = from x in SalesOrder.Queryable
-				    where x.Customer.Id == customer &&
-					x.IsCompleted && !x.IsCancelled &&
-					x.Date >= start && x.Date <= end
-				    orderby x.Date
-				    select x;
+						where x.Customer.Id == customer &&
+						x.IsCompleted && !x.IsCancelled &&
+						x.Date >= start && x.Date <= end
+						orderby x.Date
+						select x;
 
 			return PartialView ("_CustomerSalesOrders", query.ToList ());
 		}
@@ -1151,10 +1155,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 
 			var query = from x in SalesOrder.Queryable
-				    where x.Customer.Id == customer &&
-					x.IsCompleted && !x.IsCancelled
-				    orderby x.Date
-				    select x;
+						where x.Customer.Id == customer &&
+						x.IsCompleted && !x.IsCancelled
+						orderby x.Date
+						select x;
 
 			return PartialView ("_Customer360", query.ToList ());
 		}
@@ -1168,30 +1172,30 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var start = dates.StartDate;
 			var end = dates.EndDate;
 			var query = from x in SalesOrder.Queryable
-				    from y in x.Details
-				    where x.Customer.Id == customer &&
-					x.IsCompleted && !x.IsCancelled &&
-					x.Date >= start && x.Date <= end
-				    select new {
-					    SalesOrder = x.Id,
-					    Code = y.ProductCode,
-					    Name = y.ProductName,
-					    Quantity = y.Quantity,
-					    Price = y.Price,
-					    ExchangeRate = y.ExchangeRate,
-					    Discount = y.DiscountRate,
-					    TaxRate = y.TaxRate,
-					    IsTaxIncluded = y.IsTaxIncluded
-				    };
+						from y in x.Details
+						where x.Customer.Id == customer &&
+						x.IsCompleted && !x.IsCancelled &&
+						x.Date >= start && x.Date <= end
+						select new {
+							SalesOrder = x.Id,
+							Code = y.ProductCode,
+							Name = y.ProductName,
+							Quantity = y.Quantity,
+							Price = y.Price,
+							ExchangeRate = y.ExchangeRate,
+							Discount = y.DiscountRate,
+							TaxRate = y.TaxRate,
+							IsTaxIncluded = y.IsTaxIncluded
+						};
 			var items = from x in query.ToList ()
-				    select new SummaryItem {
-					    Category = x.SalesOrder.ToString (),
-					    Id = x.Code,
-					    Name = x.Name,
-					    Units = x.Quantity,
-					    Total = Model.ModelHelpers.Total (x.Quantity, x.Price, x.ExchangeRate, x.Discount, x.TaxRate, x.IsTaxIncluded),
-					    Subtotal = Model.ModelHelpers.Subtotal (x.Quantity, x.Price, x.ExchangeRate, x.TaxRate, x.IsTaxIncluded)
-				    };
+						select new SummaryItem {
+							Category = x.SalesOrder.ToString (),
+							Id = x.Code,
+							Name = x.Name,
+							Units = x.Quantity,
+							Total = Model.ModelHelpers.Total (x.Quantity, x.Price, x.ExchangeRate, x.Discount, x.TaxRate, x.IsTaxIncluded),
+							Subtotal = Model.ModelHelpers.Subtotal (x.Quantity, x.Price, x.ExchangeRate, x.TaxRate, x.IsTaxIncluded)
+						};
 
 			return PartialView ("_ProductSalesByCustomer", items);
 		}
@@ -1213,34 +1217,34 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var start = dates.StartDate;
 			var end = dates.EndDate;
 			var query = from x in SalesOrder.Queryable
-				    from y in x.Details
-				    where x.IsCompleted && !x.IsCancelled &&
-					x.Date >= start && x.Date <= end &&
-					y.Product.Model.Contains (productModel)
-				    orderby y.ProductName
-				    select new {
-					    Model = y.Product.Model,
-					    Brand = y.Product.Brand,
-					    Code = y.Product.Code,
-					    Name = y.Product.Name,
-					    Quantity = y.Quantity,
-					    Price = y.Price,
-					    ExchangeRate = y.ExchangeRate,
-					    Discount = y.DiscountRate,
-					    TaxRate = y.TaxRate,
-					    IsTaxIncluded = y.IsTaxIncluded
-				    };
+						from y in x.Details
+						where x.IsCompleted && !x.IsCancelled &&
+						x.Date >= start && x.Date <= end &&
+						y.Product.Model.Contains (productModel)
+						orderby y.ProductName
+						select new {
+							Model = y.Product.Model,
+							Brand = y.Product.Brand,
+							Code = y.Product.Code,
+							Name = y.Product.Name,
+							Quantity = y.Quantity,
+							Price = y.Price,
+							ExchangeRate = y.ExchangeRate,
+							Discount = y.DiscountRate,
+							TaxRate = y.TaxRate,
+							IsTaxIncluded = y.IsTaxIncluded
+						};
 			var items = from x in query.ToList ()
-				    group x by new { x.Model, x.Brand, x.Code, x.Name } into g
-				    select new SummaryItem {
-					    Id = g.Key.Brand,
-					    Category = g.Key.Model,
-					    Code = g.Key.Code,
-					    Name = g.Key.Name,
-					    Units = g.Sum (y => y.Quantity),
-					    Total = g.Sum (y => Model.ModelHelpers.Total (y.Quantity, y.Price, y.ExchangeRate, y.Discount, y.TaxRate, y.IsTaxIncluded)),
-					    Subtotal = g.Sum (y => Model.ModelHelpers.Subtotal (y.Quantity, y.Price, y.ExchangeRate, y.TaxRate, y.IsTaxIncluded))
-				    };
+						group x by new { x.Model, x.Brand, x.Code, x.Name } into g
+						select new SummaryItem {
+							Id = g.Key.Brand,
+							Category = g.Key.Model,
+							Code = g.Key.Code,
+							Name = g.Key.Name,
+							Units = g.Sum (y => y.Quantity),
+							Total = g.Sum (y => Model.ModelHelpers.Total (y.Quantity, y.Price, y.ExchangeRate, y.Discount, y.TaxRate, y.IsTaxIncluded)),
+							Subtotal = g.Sum (y => Model.ModelHelpers.Subtotal (y.Quantity, y.Price, y.ExchangeRate, y.TaxRate, y.IsTaxIncluded))
+						};
 
 			return PartialView ("_ProductSalesByCategory", items);
 		}
@@ -1262,34 +1266,34 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var start = dates.StartDate;
 			var end = dates.EndDate;
 			var query = from x in SalesOrder.Queryable
-				    from y in x.Details
-				    where x.IsCompleted && !x.IsCancelled &&
-					x.Date >= start && x.Date <= end &&
-					y.Product.Brand.Contains (brand)
-				    orderby y.ProductName
-				    select new {
-					    Model = y.Product.Model,
-					    Brand = y.Product.Brand,
-					    Code = y.Product.Code,
-					    Name = y.Product.Name,
-					    Quantity = y.Quantity,
-					    Price = y.Price,
-					    ExchangeRate = y.ExchangeRate,
-					    Discount = y.DiscountRate,
-					    TaxRate = y.TaxRate,
-					    IsTaxIncluded = y.IsTaxIncluded
-				    };
+						from y in x.Details
+						where x.IsCompleted && !x.IsCancelled &&
+						x.Date >= start && x.Date <= end &&
+						y.Product.Brand.Contains (brand)
+						orderby y.ProductName
+						select new {
+							Model = y.Product.Model,
+							Brand = y.Product.Brand,
+							Code = y.Product.Code,
+							Name = y.Product.Name,
+							Quantity = y.Quantity,
+							Price = y.Price,
+							ExchangeRate = y.ExchangeRate,
+							Discount = y.DiscountRate,
+							TaxRate = y.TaxRate,
+							IsTaxIncluded = y.IsTaxIncluded
+						};
 			var items = from x in query.ToList ()
-				    group x by new { x.Model, x.Brand, x.Code, x.Name } into g
-				    select new SummaryItem {
-					    Id = g.Key.Brand,
-					    Category = g.Key.Model,
-					    Code = g.Key.Code,
-					    Name = g.Key.Name,
-					    Units = g.Sum (y => y.Quantity),
-					    Total = g.Sum (y => Model.ModelHelpers.Total (y.Quantity, y.Price, y.ExchangeRate, y.Discount, y.TaxRate, y.IsTaxIncluded)),
-					    Subtotal = g.Sum (y => Model.ModelHelpers.Subtotal (y.Quantity, y.Price, y.ExchangeRate, y.TaxRate, y.IsTaxIncluded))
-				    };
+						group x by new { x.Model, x.Brand, x.Code, x.Name } into g
+						select new SummaryItem {
+							Id = g.Key.Brand,
+							Category = g.Key.Model,
+							Code = g.Key.Code,
+							Name = g.Key.Name,
+							Units = g.Sum (y => y.Quantity),
+							Total = g.Sum (y => Model.ModelHelpers.Total (y.Quantity, y.Price, y.ExchangeRate, y.Discount, y.TaxRate, y.IsTaxIncluded)),
+							Subtotal = g.Sum (y => Model.ModelHelpers.Subtotal (y.Quantity, y.Price, y.ExchangeRate, y.TaxRate, y.IsTaxIncluded))
+						};
 
 			return PartialView ("_ProductSalesByCategory", items);
 		}
@@ -1327,18 +1331,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 							m.date >= :start AND m.date <= :end
 						GROUP BY salesperson, first_name, last_name";
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				return session.CreateSQLQuery (sql)
-				    .SetParameter ("start", start)
-				    .SetParameter ("end", end)
-				    .SetParameter ("store", store)
-				    .DynamicList ();
+					.SetParameter ("start", start)
+					.SetParameter ("end", end)
+					.SetParameter ("store", store)
+					.DynamicList ();
 			}, null);
 
 			return PartialView ("_SalesBySalesPerson", items);
 		}
 
-		public ActionResult DownloadCSVs () {
+		public ActionResult DownloadCSVs ()
+		{
 			var range = new DateRange ();
 			ViewBag.Title = Resources.DownloadCSVFiles;
 			return View (range);
@@ -1353,24 +1358,24 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 							sales_order_detail sales_order_detail_id, 
 							p.product_id,
 							p.code `product_code`,
-							t.product_code,
-							p.name `name`,
-						       t.product_name,
-						       quantity,
-						       IFNULL(um.symbol, um.name)unit,
-						       t.cost,
-						       if(p.stockable = 1 , w.name, 'PRODUCCIÓN') bodega,
-						       price,
-						       ROUND(t.discount_rate, 4) 'discount',
-						       final_price,
-						       subtotal,
-						      c.name customer_name,
-						       s.name store_name,
-						       e.nickname employee_name,
-						       sp.nickname sales_person,
-						       Pagado,
-						       Términos, 
-						       Tipo
+							p.name `product_name`,
+							t.so_product_code,
+							t.so_product_name,
+							quantity,
+							IFNULL(um.symbol, um.name)unit,
+							t.cost,
+							if(p.stockable = 1 , w.name, 'PRODUCCIÓN') bodega,
+							price,
+							ROUND(t.discount_rate, 4) 'discount',
+							final_price,
+							subtotal,
+							c.name customer_name,
+							s.name store_name,
+							e.nickname employee_name,
+							sp.nickname sales_person,
+							Pagado,
+							Terminos, 
+							Tipo
 					FROM
 					(SELECT so.sales_order_id sales_order,
 						so.store,
@@ -1378,23 +1383,23 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						so.creator,
 						so.salesperson,
 						sod.warehouse,
-					   sod.sales_order_detail_id sales_order_detail,
-					   sod.product AS product_id,
-					   sod.product_code,
-					   so.`date` sale_date,
-					   so.creation_time,
-					   so.modification_time,
-					   so.paid,
-					   if(so.paid = 1, 'Pagado', 'A saldar') Pagado,
-					   if(so.payment_terms = 0, 'Contado', 'Crédito') Términos,
-					   'Pedido' Tipo,
-					   sod.product_name,
-					   sod.cost,
-					   sod.discount_rate,
-					   sod.price,
-					   ROUND(CAST(sod.price * (1 - sod.discount_rate) AS DECIMAL(18, 7)), 2) final_price,
-					   sod.quantity,
-					   ROUND(CAST((sod.quantity * sod.price * (1 - sod.discount_rate)) AS DECIMAL(18, 7)), 2) subtotal
+						sod.sales_order_detail_id sales_order_detail,
+						sod.product,
+						sod.product_code so_product_code,
+						sod.product_name so_product_name,
+						so.`date` sale_date,
+						so.creation_time,
+						so.modification_time,
+						so.paid,
+						if(so.paid = 1, 'Pagado', 'A saldar') Pagado,
+						if(so.payment_terms = 0, 'Contado', 'Crédito') Terminos,
+						'Pedido' Tipo,
+						sod.cost,
+						sod.discount_rate,
+						sod.price,
+						ROUND(CAST(sod.price * (1 - sod.discount_rate) AS DECIMAL(18, 7)), 2) final_price,
+						sod.quantity,
+						ROUND(CAST((sod.quantity * sod.price * (1 - sod.discount_rate)) AS DECIMAL(18, 7)), 2) subtotal
 					FROM sales_order so
 					INNER JOIN sales_order_detail sod ON so.sales_order_id = sod.sales_order
 					WHERE (date(so.`date`) BETWEEN :start AND :end
@@ -1408,24 +1413,24 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						so.creator,
 						so.salesperson,
 						sod.warehouse,
-						sod.sales_order_detail_id,
+						sod.sales_order_detail_id sales_order_detail,
 						sod.product,
-						sod.product_code,
+						sod.product_code so_product_code,
+						sod.product_name so_product_name,
 						cr.`date`,
 						cr.creation_time,
 						cr.modification_time,
 						so.paid,
 						if(so.paid = 1, 'Pagado', 'A saldar') Pagado,
-					   if(so.payment_terms = 0, 'Contado', 'Crédito') Términos,
-					   'Devolución' Tipo,
-						sod.product_name,
+					    if(so.payment_terms = 0, 'Contado', 'Crédito') Terminos,
+					    'Devolución' Tipo,
 						sod.cost,
 						sod.discount_rate,
 						sod.price,
 						ROUND(CAST(crd.price * (1 - crd.discount) AS DECIMAL(18, 7)), 2) final_price,
 						crd.quantity,
 						-ROUND(CAST((crd.quantity * crd.price * (1 - crd.discount)) AS DECIMAL(18, 7)), 2) subtotal
-					 FROM customer_refund_detail crd
+					FROM customer_refund_detail crd
 					JOIN customer_refund cr ON crd.customer_refund = cr.customer_refund_id
 					JOIN sales_order_detail sod ON crd.sales_order_detail = sod.sales_order_detail_id
 					JOIN sales_order so ON sod.sales_order = so.sales_order_id
@@ -1434,7 +1439,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					LEFT JOIN customer c ON t.customer = c.customer_id
 					LEFT JOIN employee sp ON t.salesperson = sp.employee_id
 					JOIN store s ON t.store = s.store_id
-					LEFT JOIN product p ON t.product_id = p.product_id
+					LEFT JOIN product p ON t.product = p.product_id
 					JOIN sat_unit_of_measurement um ON p.unit_of_measurement = um.sat_unit_of_measurement_id
 					JOIN employee e ON t.creator = e.employee_id
 					LEFT JOIN warehouse w ON t.warehouse = w.warehouse_id
@@ -1444,26 +1449,27 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				return session.CreateSQLQuery (sql)
-				    .SetParameter ("start", range.StartDate)
-				    .SetParameter ("end", range.EndDate)
-				    .DynamicList ();
+					.SetParameter ("start", range.StartDate)
+					.SetParameter ("end", range.EndDate)
+					.DynamicList ();
 			}, null);
 
 			var sb = new System.Text.StringBuilder ();
 
-			sb.AppendLine ("sales_order_id,date,sales_order_detail_id,product_id,product_code," +
-					"product_name, quantity, unit, cost, bodega, price, discount," +
-					"final_price, subtotal, customer_name, store_name, employee_name," +
-					"sales_person, Pagado, Términos, Tipo");
-			foreach (var u in items)
-				{ sb.AppendLine($"{u.sales_order_id},{u.sale_date},{u.sales_order_detail_id},{u.product_id}," +
-					$"{u.product_code.Replace (",", string.Empty).Trim ()},{u.product_name.Replace(",", string.Empty).Trim()}," +
+			sb.AppendLine ("sales_order_id,date,sales_order_detail_id,product_id," +
+					"product_code,product_name,so_product_code,so_product_name,quantity,unit,cost,bodega,price,discount," +
+					"final_price,subtotal,customer_name,store_name,employee_name," +
+					"sales_person,Pagado,Términos,Tipo");
+			foreach (var u in items) {
+				sb.AppendLine ($"{u.sales_order_id},{u.sale_date},{u.sales_order_detail_id},{u.product_id}," +
+					$"{u.product_code.Replace (",", string.Empty).Trim ()},{u.product_name.Replace (",", string.Empty).Trim ()}," +
+					$"{u.so_product_code.Replace (",", string.Empty).Trim ()},{u.so_product_name.Replace (",", string.Empty).Trim ()}," +
 					$"{u.quantity},{u.unit},{u.cost},{u.bodega}," +
-					$"{u.price},{u.discount},{u.final_price},{u.subtotal},{u.customer_name.Replace(",",string.Empty).Trim()}," +
-					$"{u.store_name},{u.employee_name},{u.sales_person},{u.Pagado},{u.Términos},{u.Tipo}");
+					$"{u.price},{u.discount},{u.final_price},{u.subtotal},{u.customer_name.Replace (",", string.Empty).Trim ()}," +
+					$"{u.store_name},{u.employee_name},{u.sales_person},{u.Pagado},{u.Terminos},{u.Tipo}");
 			}
-			var bytes = System.Text.Encoding.UTF8.GetBytes(sb.ToString());
-			return File(bytes, "text/csv", "sales.csv");
+			var bytes = System.Text.Encoding.UTF8.GetBytes (sb.ToString ());
+			return File (bytes, "text/csv", "sales.csv");
 		}
 
 		public ActionResult PurchasesCsv (DateRange range)
@@ -1500,13 +1506,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return File (bytes, "text/csv", "payments.csv");
 		}
 
-		public ViewResult WarehouseReStock () {
+		public ViewResult WarehouseReStock ()
+		{
 
 			return View ();
 		}
 
 		[HttpPost]
-		public ActionResult WarehouseReStock (int warehouse) {
+		public ActionResult WarehouseReStock (int warehouse)
+		{
 
 			int frequency_pivot_weeks = 20;
 			string sql = @"
@@ -1662,9 +1670,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				return session.CreateSQLQuery (sql)
-				    .SetInt32 ("warehouse", warehouse)
-				    .SetInt32("fpw", frequency_pivot_weeks)
-				    .DynamicList ();
+					.SetInt32 ("warehouse", warehouse)
+					.SetInt32 ("fpw", frequency_pivot_weeks)
+					.DynamicList ();
 			}, null);
 
 			return PartialView ("_WarehouseReStock", items);
@@ -1703,12 +1711,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 							m.date >= :start AND m.date <= :end
 						GROUP BY customer";
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				return session.CreateSQLQuery (sql)
-				    .SetParameter ("start", start)
-				    .SetParameter ("end", end)
-				    .SetParameter ("store", store)
-				    .DynamicList ();
+					.SetParameter ("start", start)
+					.SetParameter ("end", end)
+					.SetParameter ("store", store)
+					.DynamicList ();
 			}, null);
 
 			return PartialView ("_SalesByCustomer", items);
@@ -1747,12 +1755,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 							m.date >= :start AND m.date <= :end
 						GROUP BY product";
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				return session.CreateSQLQuery (sql)
-				    .SetParameter ("start", start)
-				    .SetParameter ("end", end)
-				    .SetParameter ("store", store)
-				    .DynamicList ();
+					.SetParameter ("start", start)
+					.SetParameter ("end", end)
+					.SetParameter ("store", store)
+					.DynamicList ();
 			}, null);
 
 			return PartialView ("_SalesByProduct", items);
@@ -1786,7 +1794,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 							m.date >= :start AND m.date <= :end
 						GROUP BY sales_order";
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
@@ -1821,9 +1829,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var start = dates.StartDate;
 			var end = dates.EndDate;
 			string WHERE_SALESPERSON = employee.HasValue ? " = " + employee.Value : "IN (SELECT employee FROM commission_agent)";
-			string sql = GetCommissionDetailsSQLQuery();
+			string sql = GetCommissionDetailsSQLQuery ();
 
-			sql = sql.Replace("WHERE_SALESPERSON", WHERE_SALESPERSON);
+			sql = sql.Replace ("WHERE_SALESPERSON", WHERE_SALESPERSON);
 
 			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
@@ -1859,7 +1867,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				Details = items,
 				CommissionAgent = employee.HasValue ?
 					MBEQueryable.IQEmployees.Where (x => x.Id == employee.Value).Single () : null,
-				Store = MBEQueryable.IQStores.Single(x => x.Id == Int32.Parse(WebConfig.DefaultStore))
+				Store = MBEQueryable.IQStores.Single (x => x.Id == Int32.Parse (WebConfig.DefaultStore))
 			};
 
 			return PartialView ("_CommissionsBySalesPerson", item);
@@ -1878,7 +1886,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				    FROM (BIGQUERY) AS T1
 				    GROUP BY Label";
 
-			qry = qry.Replace ("BIGQUERY", BIGQUERY);	
+			qry = qry.Replace ("BIGQUERY", BIGQUERY);
 
 			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (qry);
@@ -1894,7 +1902,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			model.DateRange = dateRange;
 			model.Store = WebConfig.Store;
-			model.CommissionAgent = agent.HasValue ? MBEQueryable.IQEmployees.Where(x => x.Id == agent.Value).Single() : null;
+			model.CommissionAgent = agent.HasValue ? MBEQueryable.IQEmployees.Where (x => x.Id == agent.Value).Single () : null;
 			model.Details = items;
 
 			return PdfTicketView ("CommissionAgentTicket", model);
@@ -1959,7 +1967,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					
 					";
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("Date", NHibernateUtil.DateTime);
@@ -2009,7 +2017,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var start = dates.StartDate;
 			var end = dates.EndDate;
 
-			var Store = MBEQueryable.IQStores.SingleOrDefault(x => x.Id == store);
+			var Store = MBEQueryable.IQStores.SingleOrDefault (x => x.Id == store);
 
 			string WHERE_STORE = Store == null ? string.Empty : " AND t.store = " + Store.Id;
 
@@ -2195,7 +2203,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					
 						";
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("Date", NHibernateUtil.Date);
@@ -2223,17 +2231,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}, null);
 
 			summary.SalesOrder = items;
-			summary.Expenses = ExpenseVoucher.Queryable.Where(x => x.Store.Id == store
-						&& x.IsCompleted && !x.IsCancelled && x.Date > start && x.Date < end).ToList();
+			summary.Expenses = ExpenseVoucher.Queryable.Where (x => x.Store.Id == store
+						&& x.IsCompleted && !x.IsCancelled && x.Date > start && x.Date < end).ToList ();
 			summary.Payments = CustomerPayment.Queryable.Where (x => x.CashSession.Start < end && x.CashSession.Start > start
 										&& x.CashSession.CashDrawer.Store.Id == store
 										&& x.PaymentType != PaymentType.CreditNote).ToList ();
 
-			if (Request.IsAjaxRequest()) {
+			if (Request.IsAjaxRequest ()) {
 				return PartialView ("_StoreMovementsSummary", summary);
 			}
 
-			return View ("SummaryReport",summary);
+			return View ("SummaryReport", summary);
 
 		}
 
@@ -2263,7 +2271,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 							m.date >= :start AND m.date <= :end
 						GROUP BY d.product";
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("Brand", NHibernateUtil.String);
@@ -2318,7 +2326,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				sql = sql.Replace ("JOIN_LABEL", string.Empty).Replace ("WHERE_LABEL", string.Empty);
 			}
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("Brand", NHibernateUtil.String);
@@ -2375,7 +2383,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				sql = sql.Replace ("WHERE_BRAND", "AND p.brand = :brand");
 			}
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("Brand", NHibernateUtil.String);
@@ -2432,7 +2440,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				sql = sql.Replace ("WHERE_MODEL", "AND p.model = :model");
 			}
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("Brand", NHibernateUtil.String);
@@ -2485,7 +2493,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 							m.date >= :start AND m.date <= :end
 						GROUP BY sales_order";
 
-			var orders = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var orders = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
@@ -2517,7 +2525,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						s.date >= :start AND s.date <= :end
 					GROUP BY sales_order";
 
-			var refunds = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var refunds = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
@@ -2567,7 +2575,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			sql += " order by s.supplier_id, p.product_id desc;";
 
-			var items = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("SupplierId", NHibernateUtil.Int32);
@@ -2621,7 +2629,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
                             GROUP BY sales_order_detail_id";
 
 
-			var orders = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var orders = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
@@ -2659,7 +2667,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						s.date >= :start AND s.date <= :end
                             GROUP BY customer_refund_detail_id";
 
-			var refunds = (IList<dynamic>)ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+			var refunds = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				var query = session.CreateSQLQuery (sql);
 
 				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
@@ -2692,8 +2700,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 
 			var qry = SalesOrderPayment.Queryable.Where (x => x.SalesOrder.IsPaid && x.Payment.Date > start.Date
-									     && x.Payment.Date < end.Date.AddDays (1).AddMilliseconds (-1)
-									     && x.Amount > 0 && x.SalesOrder.Store.Id == store)
+										 && x.Payment.Date < end.Date.AddDays (1).AddMilliseconds (-1)
+										 && x.Amount > 0 && x.SalesOrder.Store.Id == store)
 							.Select (y => new ReceivedPayment {
 								Date = y.Payment.Date,
 								Customer = y.Payment.Customer,
@@ -2722,12 +2730,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var received_payments = CustomerPayment.Queryable.Where (x => x.Date >= filter.StartDate.Date
 			&& x.Date <= filter.EndDate.Date.AddDays (1).AddMilliseconds (-1));
 
-			received_payments = filter.OnlyAppliedPayments ? received_payments.Where (x => x.Allocations.Count() > 0) : received_payments;
+			received_payments = filter.OnlyAppliedPayments ? received_payments.Where (x => x.Allocations.Count () > 0) : received_payments;
 
-			var privileges = GetAccessPrivilege(SystemObjects.ReceivedPaymentsAdvancedSearchFilter);
+			var privileges = GetAccessPrivilege (SystemObjects.ReceivedPaymentsAdvancedSearchFilter);
 
 			if (privileges.AllowRead) {
-				received_payments = filter.StoreId.HasValue? received_payments.Where (x => x.Store.Id == filter.StoreId.Value):received_payments;
+				received_payments = filter.StoreId.HasValue ? received_payments.Where (x => x.Store.Id == filter.StoreId.Value) : received_payments;
 			} else {
 				received_payments = received_payments.Where (x => x.Store.Id == WebConfig.Store.Id);
 			}
@@ -2737,14 +2745,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_ReceivedPayments", items);
 		}
 
-		public ActionResult ReceivedPaymentsSummary () {
+		public ActionResult ReceivedPaymentsSummary ()
+		{
 			var dt = DateTime.Now;
-			var range = new DateRange { StartDate = dt.Date.AddDays(-1), EndDate = dt.Date };
+			var range = new DateRange { StartDate = dt.Date.AddDays (-1), EndDate = dt.Date };
 			return View (range);
 		}
 
 		[HttpPost]
-		public ActionResult ReceivedPaymentsSummary (DateRange range) {
+		public ActionResult ReceivedPaymentsSummary (DateRange range)
+		{
 
 			var start = range.StartDate;
 			var end = range.EndDate;
@@ -2762,10 +2772,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			foreach (var store in stores) {
 				items.Add (new ReceivedPaymentsSummaryViewModel {
 					Store = store,
-					Expenses = expenses.Where(x => x.Store == store).ToList(),
-					CustomerPayments = payments.Where(x => x.Store == store).ToList(),
-					SalesOrders = sales_orders.Where(x => x.Store == store).ToList(),
-					CashSession = cashcounts.Where(x => x.CashDrawer.Store == store).ToList()
+					Expenses = expenses.Where (x => x.Store == store).ToList (),
+					CustomerPayments = payments.Where (x => x.Store == store).ToList (),
+					SalesOrders = sales_orders.Where (x => x.Store == store).ToList (),
+					CashSession = cashcounts.Where (x => x.CashDrawer.Store == store).ToList ()
 				});
 			}
 
