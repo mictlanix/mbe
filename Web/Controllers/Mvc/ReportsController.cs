@@ -648,116 +648,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				SELECT so.sales_order_id sales_order, sod.sales_order_detail_id sales_order_detail, sod.quantity, 
 				ROUND((sod.price * (1-sod.discount_rate)* (1 + IF(sod.tax_included = 1, 0, sod.tax_rate))),2) price,
 				sod.product, sod.product_name, so.salesperson osp, c.salesperson csp,
-				so.paid, c.name customer, so.date, so.modification_time, 'sales' movement
-				FROM sales_order so
-				JOIN sales_order_detail sod ON so.sales_order_id = sod.sales_order
-				JOIN customer c ON c.customer_id = so.customer
-				WHERE (so.date BETWEEN :start AND :end OR so.modification_time BETWEEN :start AND :end AND so.completed = 1 AND so.cancelled = 0)
-				AND (so.salesperson WHERE_SALESPERSON OR c.salesperson WHERE_SALESPERSON)
-			),
-			details_refunds AS(
-				SELECT  deto.sales_order, crd.sales_order_detail, crd.quantity,
-				ROUND((-1)*(crd.price * (1-crd.discount)* (1 + IF(crd.tax_included = 1, 0, crd.tax_rate))),2) price,
-				crd.product, crd.product_name, deto.osp, deto.csp, deto.paid, deto.customer, cr.date,
-				cr.modification_time, 'refund' movement
-				FROM customer_refund_detail crd
-				JOIN customer_refund cr ON crd.customer_refund = cr.customer_refund_id
-				JOIN details_orders deto ON deto.sales_order_detail = crd.sales_order_detail
-				WHERE cr.modification_time <= :end
-				AND cr.completed = 1 AND cr.cancelled = 0
-				UNION
-				SELECT sod.sales_order ,crd.sales_order_detail, crd.quantity,
-				ROUND((-1)*(crd.price * (1-crd.discount)* (1 + IF(crd.tax_included = 1, 0, crd.tax_rate))),2) price,
-				crd.product, crd.product_name, so.salesperson, c.salesperson, so.paid, c.name customer, cr.date,
-				cr.modification_time,  'refund' movement
-				FROM customer_refund_detail crd
-				JOIN customer_refund cr ON crd.customer_refund = cr.customer_refund_id
-				JOIN sales_order_detail sod ON crd.sales_order_detail = sod.sales_order_detail_id
-				JOIN sales_order so ON sod.sales_order = so.sales_order_id
-				JOIN customer c ON so.customer = c.customer_id
-				WHERE cr.modification_time BETWEEN :start AND :end
-				AND cr.completed = 1 AND cr.cancelled = 0 AND (so.salesperson WHERE_SALESPERSON OR c.salesperson WHERE_SALESPERSON)
-			),
-			details AS (
-			SELECT * FROM details_refunds cr
-			UNION 
-			SELECT * FROM details_orders deto
-			),
-			commission_detail_lifetime_customer AS(
-				SELECT d.sales_order, d.sales_order_detail, d.csp salesperson, d.osp, d.customer, d.paid, d.date, d.modification_time,
-					d.product, d.product_name,	d.price, d.quantity, ROUND((d.price * d.quantity) , 2) total_detail, 
-					(IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) commission_rate, 
-					ROUND((d.price * d.quantity * IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) , 2) commission,
-					IFNULL(cm.name,'SIN CATEGORÍA') label, 'CLIENTE VITALICIO' participation, IFNULL(cs.participation_rate,0) participation_rate 
-				FROM details d
-				LEFT JOIN commission_product cp ON cp.product = d.product
-				LEFT JOIN commission cm ON cm.commission_id = cp.commission
-				LEFT JOIN commission_salesperson cs ON cs.salesperson = d.csp AND cs.commission_participation = 1 AND cs.commission = cp.commission
-				WHERE cs.salesperson WHERE_SALESPERSON
-			),
-			commission_detail_customer_service AS(
-			SELECT d.sales_order, d.sales_order_detail, d.csp salesperson, d.osp, d.customer, d.paid, d.date, d.modification_time,
-					d.product, d.product_name,	d.price, d.quantity, ROUND((d.price * d.quantity) , 2) total_detail,
-					(IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) commission_rate, 
-					ROUND((d.price * d.quantity * IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) , 2) commission,
-					IFNULL(cm.name,'SIN CATEGORÍA') label, 'ATENCIÓN TELEFÓNICA' participation, IFNULL(cs.participation_rate,0) participation_rate 
-				FROM details d
-				LEFT JOIN commission_product cp ON cp.product = d.product
-				LEFT JOIN commission cm ON cm.commission_id = cp.commission
-				LEFT JOIN commission_salesperson cs ON cs.salesperson = d.csp AND cs.commission_participation = 2 AND cs.commission = cp.commission
-				WHERE cs.salesperson WHERE_SALESPERSON
-			),
-			commission_detail_on_field AS(
-			SELECT d.sales_order, d.sales_order_detail, d.salesperson, d.osp ,d.customer, d.paid, d.date, d.modification_time,
-					d.product, d.product_name,	d.price, d.quantity, d.total_detail,
-					(IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) commission_rate, 
-					ROUND((d.price * d.quantity * IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) , 2) commission,
-					IFNULL(cm.name,'SIN CATEGORÍA') label, 'ATENCIÓN EN CAMPO' participation, IFNULL(cs.participation_rate,0) participation_rate
-				FROM commission_detail_customer_service d
-				LEFT JOIN commission_product cp ON cp.product = d.product
-				LEFT JOIN commission cm ON cm.commission_id = cp.commission
-				LEFT JOIN commission_salesperson cs ON cs.salesperson = d.osp AND cs.commission_participation = 3 AND cs.commission = cp.commission
-				WHERE d.salesperson != d.osp and d.osp WHERE_SALESPERSON
-			),
-			detailed AS(
-			SELECT * FROM commission_detail_on_field
-			UNION
-			SELECT  * FROM commission_detail_customer_service
-			UNION
-			SELECT * FROM commission_detail_lifetime_customer)
-			SELECT	sales_order SalesOrder,
-				sales_order_detail SalesOrderDetail,
-				salesperson SalesPerson,
-				customer Customer,
-				date OrderDate,
-				modification_time PaymentDate,
-				label Label,
-				product_name ProductName,
-				total_detail TotalDetail,
-				concat(round(IFNULL(commission_rate,0) * 100, 2), '%') CommissionRate,
-				commission Commission,
-				price Price,
-				quantity Quantity,
-				participation Participation,
-				paid PaidStatus,
-				IF(price < 0, 'DEVOLUCIÓN', 'PEDIDO') Movement,
-				if(paid = 0, 'A SALDAR', 'PAGADO') Paid
-				FROM detailed
-				ORDER BY paid DESC";
-
-			query = @"WITH details_orders AS (
-				SELECT so.sales_order_id sales_order, sod.sales_order_detail_id sales_order_detail, sod.quantity, 
-				ROUND((sod.price * (1-sod.discount_rate)* (1 + IF(sod.tax_included = 1, 0, sod.tax_rate))),2) price,
-				sod.product, sod.product_name, so.salesperson osp, c.salesperson csp,
 				so.paid, c.name customer, so.date, so.modification_time, 'sales' movement,
 				IF(so.paid = 1 AND so.modification_time BETWEEN :start AND :end, 1, 0 ) payable
 				FROM sales_order so
 				JOIN sales_order_detail sod ON so.sales_order_id = sod.sales_order
 				JOIN customer c ON c.customer_id = so.customer
 				WHERE (
-				-- so.date BETWEEN :start AND :end
-				-- OR
-				so.modification_time BETWEEN :start AND :end AND so.paid = 1
+					so.modification_time BETWEEN :start AND :end AND so.paid = 1
 				) AND so.completed = 1 AND so.cancelled = 0
 				AND (so.salesperson WHERE_SALESPERSON 
 					OR c.salesperson WHERE_SALESPERSON)
@@ -809,40 +706,40 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				WHERE d.csp WHERE_SALESPERSON
 			),
 			commission_detail_customer_service AS(
-			SELECT d.sales_order, d.sales_order_detail, d.csp salesperson, d.osp, d.customer, d.paid, d.date, d.modification_time,
+				SELECT d.sales_order, d.sales_order_detail, d.csp salesperson, d.osp, d.customer, d.paid, d.date, d.modification_time,
 					d.product, d.product_name,	d.price, d.quantity, ROUND((d.price * d.quantity) , 2) total_detail,
-										(IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) commission_rate, 
+										(IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) commission_rate,
 					ROUND((d.price * d.quantity * IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) , 2) commission,
 					cm.name label, 'ATENCIÓN TELEFÓNICA' participation, cs.participation_rate,
 					d.payable
 				FROM details d
 				LEFT JOIN commission_product cp ON cp.product = d.product
 				LEFT JOIN commission cm ON cm.commission_id = cp.commission
-				LEFT JOIN commission_salesperson cs ON cs.salesperson = d.csp AND cs.commission_participation = 2 
+				LEFT JOIN commission_salesperson cs ON cs.salesperson = d.csp AND cs.commission_participation = 2
 				AND cs.commission = cp.commission
 				WHERE cs.salesperson WHERE_SALESPERSON
 			),
 			commission_detail_on_field AS(
-			SELECT d.sales_order, d.sales_order_detail, d.salesperson, d.osp ,d.customer, d.paid, d.date, d.modification_time,
-					d.product, d.product_name,	d.price, d.quantity, d.total_detail,
+				SELECT d.sales_order, d.sales_order_detail, d.csp salesperson, d.osp ,d.customer, d.paid, d.date, d.modification_time,
+					d.product, d.product_name,	d.price, d.quantity, ROUND((d.price * d.quantity) , 2) total_detail,
 										(IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) commission_rate, 
 					ROUND((d.price * d.quantity * IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) , 2) commission,
 					cm.name label, 'ATENCIÓN EN CAMPO' participation, cs.participation_rate,
 					d.payable
-				FROM commission_detail_customer_service d
+				FROM details d
 				LEFT JOIN commission_product cp ON cp.product = d.product
 				LEFT JOIN commission cm ON cm.commission_id = cp.commission
 				LEFT JOIN commission_salesperson cs ON cs.salesperson = d.osp AND cs.commission_participation = 3 
 				AND cs.commission = cp.commission
-				WHERE d.salesperson != d.osp and d.osp WHERE_SALESPERSON
+				WHERE d.csp != d.osp and d.osp WHERE_SALESPERSON
 			),
  			detailed AS(
 			SELECT * FROM commission_detail_on_field
 			UNION
-			SELECT  * FROM commission_detail_customer_service
+			SELECT * FROM commission_detail_customer_service
 			UNION
 			SELECT * FROM commission_detail_lifetime_customer)
-			SELECT	sales_order SalesOrder,
+			SELECT sales_order SalesOrder,
 				sales_order_detail SalesOrderDetail,
 				salesperson SalesPerson,
 				customer Customer,
