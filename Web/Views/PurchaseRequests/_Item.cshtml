@@ -6,38 +6,34 @@
 @model PurchaseRequest
 
 @{
-				var status = ((PurchaseRequestsController)this.ViewContext.Controller).GetRequestStatus(Model.Id);
-				var CurrentUser = Html.CurrentUser() ?? new User();
-				var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.PurchaseRequest);
+	var status = ((PurchaseRequestsController)this.ViewContext.Controller).GetRequestStatus(Model.Id);
+	var CurrentUser = Html.CurrentUser() ?? new User();
+	var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.PurchaseRequest);
 }
 
 <tr id='id:@Model.Id'>
-				<td class="number">
-									@Html.DisplayFor(x => x.Id)
-									<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => x.Serial)">
-										<span class="glyphicon glyphicon-exclamation-sign"></span>
-									</a>
-				</td>
-				<td class="">@Html.DisplayFor(x => x.Serial)</td>
-				<td class="date">@Html.DisplayFor(x => x.CreationTime)</td>
-				<td class="">@Html.DisplayFor(x => x.Warehouse.Name)</td>
-				<td class="">@Html.DisplayFor(x => x.Updater.Name)</td>
-				<td class="">@Html.DisplayFor(x => x.Comment)</td>
-				<td class="">@Model.Details.Count()</td>
-				<td class="">@*@(status.GetDisplayName())*@</td>
-				<td class=""></td>
-				<td class="bool">@Html.DisplayFor(x => x.IsCancelled)</td>
-				<td class='actions'>
-								@if (Privilege.AllowRead && (Model.IsCompleted || Model.IsCancelled))
-								{
-												@Html.ActionLink(" ", "View", new { id = Model.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
-												@*@Html.ActionLink(" ", "Print", new { id = Model.Id }, new { @class = "button icon print icon-only", title = Resources.Print, target = "_blank" })*@
-								}
-								@if (Privilege.AllowUpdate && !Model.IsCompleted && !Model.IsCancelled)
-								{
-												@Html.ActionLink(" ", "Edit", new { id = Model.Id }, new { @class = "button icon edit icon-only", title = Resources.Edit })
-								}
-				</td>
+	<td class="number">
+		@Html.DisplayFor(x => x.Id)
+		<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => x.Serial)">
+			<span class="glyphicon glyphicon-exclamation-sign"></span>
+		</a>
+	</td>
+	<td class="">@Html.DisplayFor(x => x.Serial)</td>
+	<td class="date">@Html.DisplayFor(x => x.CreationTime)</td>
+	<td class="">@Html.DisplayFor(x => x.Warehouse.Name)</td>
+	<td class="">@Html.DisplayFor(x => x.Updater.Name)</td>
+	<td class="">@Html.DisplayFor(x => x.Comment)</td>
+	<td class="">@Model.Details.Count()</td>
+	<td class="">@(status.GetDisplayName())</td>
+	<td class=""></td>
+	<td class="bool">@Html.DisplayFor(x => x.IsCancelled)</td>
+	<td class='actions'>
+	@if (Privilege.AllowRead && (Model.IsCompleted || Model.IsCancelled)) {
+		@Html.ActionLink(" ", "View", new { id = Model.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
+		@*@Html.ActionLink(" ", "Print", new { id = Model.Id }, new { @class = "button icon print icon-only", title = Resources.Print, target = "_blank" })*@
+	}
+	@if (Privilege.AllowUpdate && !Model.IsCompleted && !Model.IsCancelled) {
+		@Html.ActionLink(" ", "Edit", new { id = Model.Id }, new { @class = "button icon edit icon-only", title = Resources.Edit })
+	}
+	</td>
 </tr>
-
-
