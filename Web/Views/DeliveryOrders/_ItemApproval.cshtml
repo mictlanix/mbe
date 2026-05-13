@@ -11,39 +11,37 @@
         .OrderByDescending(y => y.Id).FirstOrDefault();
     var message = incidence != null ? incidence.Comment : "";
     var priority = Model.Details.Select(x => x.OrderDetail.SalesOrder.Priority).FirstOrDefault();
-    }
+}
 
 <tr id='id:@Model.Id'>
     <td class="number">
-    	@Html.DisplayFor(x => x.Id)
-    	<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.Serial @Html.DisplayFor(x => x.Serial)">
-			<span class="glyphicon glyphicon-exclamation-sign"></span>
-		</a>
+        @Html.DisplayFor(x => x.Id)
     </td>
     <td class="date">@Html.DisplayFor(x => x.Date)</td>
     <td class="">@Html.DisplayFor(x => x.Customer.Name)</td>
     <td class="center">@string.Join(", ", Model.Details.Select(x => x.OrderDetail.SalesOrder.Id).Distinct())</td>
     <td class="">@priority.GetDisplayName()</td>
-    <td class="center">@Model.ShipTo.ToString()</td>
-				<td class="center">
-								@if (Model.ShipTo.Link != null)
-								{
-												<a href="@HttpUtility.HtmlEncode(Model.ShipTo.Link)" target="_blank" rel="noopener noreferrer">@Model.ShipTo.Link.ToString() ...</a>
-								}
-				</td>
+    <td class="center">@Model.ShipTo</td>
+    <td class="center">
+    @if (Model.ShipTo != null && Model.ShipTo.Link != null) {
+        <a href="@HttpUtility.HtmlEncode(Model.ShipTo.Link)" target="_blank" rel="noopener noreferrer">@Model.ShipTo.Link.ToString()</a>
+    }
+    </td>
     <td class="bool">@Html.DisplayFor(x => x.IsConfirmed)</td>
     <td class="bool"></td>
 
     <td class="actions">
-        @if (Privilege.AllowRead) {
-            @Html.ActionLink(" ", "ViewDeliveryOrderApproval", new { id = Model.Id }, 
+        @if (Privilege.AllowRead)
+        {
+            @Html.ActionLink(" ", "ViewDeliveryOrderApproval", new { id = Model.Id },
                     new { @class = "button icon view icon-only", title = Resources.Details })
 
         }
         @if (Privilege.AllowUpdate)
         {
 
-            if (!Model.IsCompleted){
+            if (!Model.IsCompleted)
+            {
                 @Html.ActionLink(" ", "Edit", new { id = Model.Id },
                     new { @class = "button icon edit icon-only", title = Resources.Edit })
             }
@@ -54,5 +52,3 @@
         }
     </td>
 </tr>
-
-

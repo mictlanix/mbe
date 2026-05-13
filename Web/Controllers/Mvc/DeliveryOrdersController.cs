@@ -92,14 +92,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					if (pattern.Contains (Resources.WilcardStringPatternForSearch)) {
 						query = DeliveryOrder.Queryable;
 					}
-					
+
 				}
 			}
 
 			//query = query.OrderBy (x => x.IsCompleted || x.IsCancelled ? 1 : 0)
 			//			.OrderByDescending (x => x.Id);
 
-			query = query.OrderByDescending(x => x.Id);
+			query = query.OrderByDescending (x => x.Id);
 
 			search.Total = query.Count ();
 			search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
@@ -120,7 +120,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var item = this.GetDeliveryViewModel (id);
 			item.DeliveryOrder.Details = only_current_warehouse.HasValue && only_current_warehouse.Value ?
-				item.DeliveryOrder.Details.Where (x => x.OrderDetail.Warehouse == WebConfig.PointOfSale.Warehouse).ToList() :
+				item.DeliveryOrder.Details.Where (x => x.OrderDetail.Warehouse == WebConfig.PointOfSale.Warehouse).ToList () :
 				item.DeliveryOrder.Details;
 
 			if (!item.DeliveryOrder.IsCompleted) {
@@ -183,11 +183,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			//}
 
 			DeliveryOrder item = CreateFromSalesOrder (entity.Id);
-			item.IsPickedUpInStore = MBEQueryable.IQStoresAddress.ToList().Contains(item.ShipTo);
+			item.IsPickedUpInStore = MBEQueryable.IQStoresAddress.ToList ().Contains (item.ShipTo);
 			item.ShipTo = entity.ShipTo;
 
 
-			if (item.Details.Count() <= 0) {
+			if (item.Details.Count () <= 0) {
 				Response.StatusCode = 400;
 				return Content (Resources.AlreadyFullyDelivered);
 			}
@@ -239,7 +239,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			item.Details.ForEach (x => {
 				//var remaining = GetRemainQuantityBySalesOrderDetail (x.OrderDetail);
-				var remaining = x.OrderDetail.GetDeliverableQuantity();
+				var remaining = x.OrderDetail.GetDeliverableQuantity ();
 				x.Quantity = x.Quantity > remaining ? remaining : x.Quantity;
 
 			});
@@ -256,7 +256,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var item = DeliveryOrder.TryFind (id);
 			var query = from x in item.Customer.Addresses
-				    select new { value = x.Id, text = !string.IsNullOrEmpty (x.Nickname) ? x.Nickname : x.ToString () };
+						select new { value = x.Id, text = !string.IsNullOrEmpty (x.Nickname) ? x.Nickname : x.ToString () };
 
 			var items = query.ToList ();
 			var pickup = WebConfig.Store.Address;
@@ -270,7 +270,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var item = DeliveryOrder.TryFind (id);
 			var query = from x in item.Customer.Contacts
-				    select new { value = x.Id, text = x.Name + " - " + (!string.IsNullOrEmpty(x.Mobile) ? x.Mobile.ToString () : x.Email.ToString ()) };
+						select new { value = x.Id, text = x.Name + " - " + (!string.IsNullOrEmpty (x.Mobile) ? x.Mobile.ToString () : x.Email.ToString ()) };
 			var items = query.ToList ();
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}
@@ -321,7 +321,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			if (item != null) {
 				entity.ShipTo = item;
-				entity.IsPickedUpInStore = MBEQueryable.IQStoresAddress.ToList().Contains (item);
+				entity.IsPickedUpInStore = MBEQueryable.IQStoresAddress.ToList ().Contains (item);
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = DateTime.Now;
 
@@ -415,7 +415,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 
 			using (var scope = new TransactionScope ()) {
-				foreach (var x in Details.Where (y => y.GetDeliverableQuantity() > 0.0m)) {
+				foreach (var x in Details.Where (y => y.GetDeliverableQuantity () > 0.0m)) {
 
 					var item = new DeliveryOrderDetail {
 						DeliveryOrder = entity,
@@ -423,7 +423,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						OrderDetail = x,
 						ProductCode = x.ProductCode,
 						ProductName = x.ProductName,
-						Quantity = x.GetDeliverableQuantity()
+						Quantity = x.GetDeliverableQuantity ()
 					};
 
 					item.Create ();
@@ -534,10 +534,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			if (value >= 0 && value <= entity.OrderDetail.GetDeliverableQuantity()) {
+			if (value >= 0 && value <= entity.OrderDetail.GetDeliverableQuantity ()) {
 				entity.Quantity = value;
 			} else {
-				entity.Quantity = entity.OrderDetail.GetDeliverableQuantity();
+				entity.Quantity = entity.OrderDetail.GetDeliverableQuantity ();
 			}
 
 			using (var scope = new TransactionScope ()) {
@@ -571,7 +571,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.InvalidDate);
 			}
 
-			if ((entity.Contact == null 
+			if ((entity.Contact == null
 				|| entity.ShipTo == null) && !entity.IsPickedUpInStore) {
 				Response.StatusCode = 400;
 				return Content (Resources.Message_NotContactOrShipTo);
@@ -588,7 +588,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.ExpiredCredits);
 			}
 
-			var promise_dates = entity.Details.Select(x => x.OrderDetail.SalesOrder).ToList ();
+			var promise_dates = entity.Details.Select (x => x.OrderDetail.SalesOrder).ToList ();
 
 
 
@@ -601,18 +601,18 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			if (WebConfig.MaxDaysToDeliverStockables > 0) {
-				var stockables_details = entity.Details.Where(x => x.Product.IsStockable).Select(x => x.OrderDetail.SalesOrder).Distinct();
-				if (stockables_details.Any(x => (DateTime.Now - x.Date).TotalDays > WebConfig.MaxDaysToDeliverStockables) && !CurrentUser.IsAdministrator) {
+				var stockables_details = entity.Details.Where (x => x.Product.IsStockable).Select (x => x.OrderDetail.SalesOrder).Distinct ();
+				if (stockables_details.Any (x => (DateTime.Now - x.Date).TotalDays > WebConfig.MaxDaysToDeliverStockables) && !CurrentUser.IsAdministrator) {
 					Response.StatusCode = 400;
-					return Content(Resources.PromiseDateOutOfRange);
+					return Content (Resources.PromiseDateOutOfRange);
 				}
 			}
 
 			if (WebConfig.MaxDaysToDeliverNoStockables > 0) {
-				var no_stockables_details = entity.Details.Where(x => !x.Product.IsStockable).Select(x => x.OrderDetail.SalesOrder).Distinct();
-				if (no_stockables_details.Any(x => (DateTime.Now - x.Date).TotalDays > WebConfig.MaxDaysToDeliverNoStockables) && !CurrentUser.IsAdministrator) {
+				var no_stockables_details = entity.Details.Where (x => !x.Product.IsStockable).Select (x => x.OrderDetail.SalesOrder).Distinct ();
+				if (no_stockables_details.Any (x => (DateTime.Now - x.Date).TotalDays > WebConfig.MaxDaysToDeliverNoStockables) && !CurrentUser.IsAdministrator) {
 					Response.StatusCode = 400;
-					return Content(Resources.PromiseDateOutOfRange);
+					return Content (Resources.PromiseDateOutOfRange);
 				}
 			}
 
@@ -622,7 +622,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			foreach (var detail in entity.Details) {
-				var remainingQuantity = detail.OrderDetail.GetDeliverableQuantity();
+				var remainingQuantity = detail.OrderDetail.GetDeliverableQuantity ();
 				if (detail.Quantity > remainingQuantity) {
 					detail.Quantity = remainingQuantity;
 					restoredQuantities = true;
@@ -665,7 +665,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			foreach (var Order in Orders) {
 
-				bool isSalesOrderDeliveredCompletly = Order.Details.Any (x => x.GetDeliverableQuantity() > 0.0m);
+				bool isSalesOrderDeliveredCompletly = Order.Details.Any (x => x.GetDeliverableQuantity () > 0.0m);
 
 				if (!isSalesOrderDeliveredCompletly) {
 					Order.IsDelivered = true;
@@ -675,7 +675,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				}
 			}
 
-			if(Request.IsAjaxRequest ()) {
+			if (Request.IsAjaxRequest ()) {
 				return Json (new { id = entity.Id, done = true });
 			}
 
@@ -772,7 +772,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						Reference = item.Id,
 						SourceType = SourceType.DeliveryOrder,
 						Updater = CurrentUser.Employee,
-						PreviousState = string.Format(Resources.LogMessage, Resources.DeliveryOrder, value),
+						PreviousState = string.Format (Resources.LogMessage, Resources.DeliveryOrder, value),
 						Comment = value,
 						ModificationTime = DateTime.Now,
 					};
@@ -887,10 +887,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var pattern = (search.Pattern ?? string.Empty).Trim ();
 			int id = 0;
 
-			query = DeliveryOrder.Queryable.Where (x => !x.IsCancelled
-								     && x.IsCompleted
-								     && !x.IsConfirmed
-						);
+			query = from x in DeliveryOrder.Queryable
+					where !x.IsCancelled && x.IsCompleted && !x.IsConfirmed && x.ShipTo != null
+					select x;
+
 			if (!string.IsNullOrEmpty (search.Pattern)) {
 				if (int.TryParse (pattern, out id) && id > 0) {
 					query = DeliveryOrder.Queryable.Where (y => y.Id == id || y.Serial == id);
@@ -933,7 +933,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				Product = x.Product,
 				ProductCode = x.ProductCode,
 				ProductName = x.ProductName,
-				Quantity = x.GetDeliverableQuantity() //GetRemainQuantityBySalesOrderDetail (x)
+				Quantity = x.GetDeliverableQuantity () //GetRemainQuantityBySalesOrderDetail (x)
 			});
 
 			item.Details = details.Where (x => x.Quantity > 0).ToList ();
