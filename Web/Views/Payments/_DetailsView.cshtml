@@ -3,320 +3,320 @@
 @using Mictlanix.BE.Web.Helpers
 @model SalesOrder
 @{
-				var CurrentUser = Html.CurrentUser() ?? new User();
-				var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments);
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments);
 }
 <div id="items-container">
-				<ul id="items" class="list-items">
-								@foreach (var item in Model.Payments)
-								{
-												@Html.Partial("_Payment", item)
-								}
-				</ul>
-
-				<div class="warning-message alert alert-danger alert-dismissible fade in" style="display:none;">
-				</div>
+    <ul id="items" class="list-items">
+        @foreach (var item in Model.Payments) {
+            @Html.Partial("_Payment", item)
+        }
+    </ul>
+    <div class="warning-message alert alert-danger alert-dismissible fade in" style="display:none;">
+    </div>
 </div>
 <div id="form">
-				@if (!Model.IsPaid)
-				{
-								<fieldset>
-												<legend>@Resources.Payment</legend>
-												@*<div>
-																				@if (Model.Terms == PaymentTerms.NetD)
-																				{
-																								<div class="alert alert-danger alert-dismissible fade in" style="display:block;">
-																												@Html.Raw(Resources.PaymentCreditsNoRemovables)
-																								</div>
-																				}
-																</div>*@
+@if (!Model.IsPaid) {
+    <fieldset>
+        <legend>@Resources.Payment</legend>
+        @*<div>
+            @if (Model.Terms == PaymentTerms.NetD) {
+                <div class="alert alert-danger alert-dismissible fade in" style="display:block;">
+                    @Html.Raw(Resources.PaymentCreditsNoRemovables)
+                </div>
+            }
+        </div>*@
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-xs-3"><label for="amount">@Resources.Amount</label></div>
+                <div class="col-xs-3"><label for="reference">@Resources.Reference</label></div>
+                @*@if (Model.Terms == PaymentTerms.Immediate) {
+                    <div class="col-xs-1 paymentondelivery">
+                        <label for="payment_upon_delivery">@Resources.PaymentOnDelivery</label>
+                    </div>
+                }*@
+            </div>
+            <div class="form-group">
+                <div class="col-xs-3">
+                    <input id='amount' style="font-size:3em; height:1.5em;" class='form-control text-right' type='text'
+                            autocomplete="off">
+                </div>
+                <div class="col-xs-3">
+                    <input id='reference' style="font-size:3em; height:1.5em;" class='form-control'
+                            type='text' value=''>
+                </div>
+                @*@if (Model.Terms == PaymentTerms.Immediate)
+                {
+                    <div class="col-xs-1 paymentondelivery">
+                        <input id='ondelivery' class='form-control' type='checkbox'>
+                    </div>
+                }*@
+            </div>
+            <div class="form-group">
+                <div class="col-xs-12">
+                    @Resources.PaymentMethod
+                </div>
+                <div class="col-xs-12">
+                    <div class="btn-group">
+                        @foreach (var item in WebConfig.CashierPaymentOptions)
+                        {
+                            <button class="pay btn btn-default" type="button"
+                                    data-value='@((int)item)'>
+                                @item.GetDisplayName()
+                                </button>
+                            }
+                    </div>
+                </div>
+                <div style="height:35px;" class="col-xs-12"></div>
+                <div class="col-xs-12">
+                    <div class="btn-group">
+                        @if (Model.Customer.Id != WebConfig.DefaultCustomer)
+                        {
+                            if (Model.Customer.HasCredit)
+                            {
+                                <button class="pay btn btn-default @(Model.IsOverCreditLimit() || Model.Customer.HasExpiredCredits() || Model.Terms == PaymentTerms.NetD ? "disabled":"" )"
+                                        type="button" data-value='credit'>
+                                    @(Resources.CreditLimit + ": " + (Model.Customer.CreditLimit -
+							Model.Customer.Debt()).ToString("C"))
+                                </button>
+                            }
 
-												<div class="form-horizontal">
-																<div class="form-group">
-																				<div class="col-xs-3"><label for="amount">@Resources.Amount</label></div>
-																				<div class="col-xs-3"><label for="reference">@Resources.Reference</label></div>
-																				@*@if (Model.Terms == PaymentTerms.Immediate)
-																				{
-																								<div class="col-xs-1 paymentondelivery">
-																												<label for="payment_upon_delivery">@Resources.PaymentOnDelivery</label>
-																								</div>
-																				}*@
-																</div>
-																<div class="form-group">
-																				<div class="col-xs-3">
-																								<input id='amount' style="font-size:3em; height:1.5em;"
-																															class='form-control text-right' type='text' autocomplete="off">
-																				</div>
-																				<div class="col-xs-3"><input id='reference' style="font-size:3em; height:1.5em;" class='form-control' type='text' value=''></div>
-																				@*@if (Model.Terms == PaymentTerms.Immediate)
-																				{
-																								<div class="col-xs-1 paymentondelivery">
-																												<input id='ondelivery' class='form-control' type='checkbox'>
-																								</div>
-																				}*@
-																</div>
-																<div class="form-group">
-																				<div class="col-xs-12">
-																								@Resources.PaymentMethod
-																				</div>
-																				<div class="col-xs-12">
-																								<div class="btn-group">
-																												@foreach (var item in WebConfig.CashierPaymentOptions)
-																												{
-																																<button class="pay btn btn-default" type="button" data-value='@((int)item)'>@item.GetDisplayName()</button>
-																												}
-																								</div>
-																				</div>
-																				<div style="height:35px;" class="col-xs-12"></div>
-																				<div class="col-xs-12">
-																																												<div class="btn-group">
-																																																@if (Model.Customer.Id != WebConfig.DefaultCustomer)
-																																																{
-																																																				if (Model.Customer.HasCredit)
-																																																				{
-																																																								<button class="pay btn btn-default @(Model.IsOverCreditLimit() || Model.Customer.HasExpiredCredits() || Model.Terms == PaymentTerms.NetD ? "disabled":"" )"
-																																																																type="button" data-value='credit'>
-																																																												@(Resources.CreditLimit + ": " + (Model.Customer.CreditLimit - Model.Customer.Debt()).ToString("C"))
-																																																								</button>
-																																																				}
+                            if (!Model.Customer.HasCredit)
+                            {
+                                <button class="pay btn btn-default @(Model.Customer.Debt()>0?"disabled":"")" type="button"
+                                        data-value='credit'>
+                                    @(string.Format(Resources.ShortCredit + ' ' + WebConfig.MaxDaysOneSingleCredit +
+							string.Format("C", WebConfig.MaxAmountOneSingleCredit)))
+                                </button>
+                            }
 
-																																																				if (!Model.Customer.HasCredit)
-																																																				{
-																																																								<button class="pay btn btn-default @(Model.Customer.Debt()>0?"disabled":"")"
-																																																																type="button" data-value='credit'>
-																																																												@(string.Format(Resources.ShortCredit + ' ' + WebConfig.MaxDaysOneSingleCredit + string.Format("C",WebConfig.MaxAmountOneSingleCredit)))
-																																																								</button>
-																																																				}
+                            if (Model.Customer.RefundBalance(Model) > 0)
+                            {
+                                <button class="pay btn btn-default" type="button" data-value='refunds'>
+                                    @string.Format(Resources.Refunds + ": " + Model.Customer.RefundBalance(Model).ToString("c"))
+                                </button>
+                            }
 
-																																																				if (Model.Customer.RefundBalance(Model) > 0)
-																																																				{
-																																																								<button class="pay btn btn-default"
-																																																																type="button" data-value='refunds'>
-																																																												@string.Format(Resources.Refunds + ": " + Model.Customer.RefundBalance(Model).ToString("c"))
-																																																								</button>
-																																																				}
-
-																																																				if (Model.Customer.PrepaymentsBalance(Model) > 0)
-																																																				{
-																																																								<button class="pay btn btn-default" type="button" data-value='prepayment'>
-																																																												@(Resources.PaymentInAdvance + ": " + (Model.Customer.PrepaymentsBalance(Model)).ToString("C"))
-																																																								</button>
-																																																				}
-																																																}
-																																																<button class="btn btn-default"
-																																																								data-toggle="modal" data-target="#modalRefundDefaultCustomer"
-																																																								type="button" data-value='refunds_default_customer'>
-																																																				@string.Format(Resources.CreditNote)
-																																																</button>
-																																												</div>
-																				</div>
-																</div>
-																<div class="form-group">
-																				<div class="col-xs-12">
-																								<div class="btn-group">
-																												@foreach (var item in WebConfig.StorePaymentOptions)
-																												{
-																																<button class="pay btn btn-default" type="button" data-value="@((int)item.PaymentMethod)"
-																																								data-fee="@item.Id">
-																																				@item.Name (@Html.DisplayFor(x => item.CommissionByManage))
-																																</button>
-																												}
-																								</div>
-																				</div>
-																</div>
-												</div>
-								</fieldset>
-				}
+                            if (Model.Customer.PrepaymentsBalance(Model) > 0)
+                            {
+                                <button class="pay btn btn-default" type="button" data-value='prepayment'>
+                                    @(Resources.PaymentInAdvance + ": " +
+							(Model.Customer.PrepaymentsBalance(Model)).ToString("C"))
+                                </button>
+                            }
+                        }
+                        <button class="btn btn-default" data-toggle="modal" data-target="#modalRefundDefaultCustomer"
+                                type="button" data-value='refunds_default_customer'>
+                            @string.Format(Resources.CreditNote)
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <div class="btn-group">
+                        @foreach (var item in WebConfig.StorePaymentOptions)
+                        {
+                            <button class="pay btn btn-default" type="button" data-value="@((int)item.PaymentMethod)"
+                                    data-fee="@item.Id">
+                                @item.Name (@Html.DisplayFor(x => item.CommissionByManage))
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+}
 </div>
 @if (Model.Payments.Any(x => !x.IsConfirmed) && !Model.IsPaid)
 {
-				<div class="alert alert-danger alert-dismissible fade in" style="display:block;">
-								@string.Format(Resources.Confirm, Resources.Payments)
-				</div>
+    <div class="alert alert-danger alert-dismissible fade in" style="display:block;">
+        @string.Format(Resources.Confirm, Resources.Payments)
+    </div>
 }
 <div id="sales-order-balance">
-				@Html.Partial("_SalesOrderBalance")
+    @Html.Partial("_SalesOrderBalance")
 </div>
-
-
 <div id="modalRefundDefaultCustomer" class="modal fade" tabindex="-1" role="dialog">
-				<div class="modal-dialog">
-								<div class="modal-content">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
-												<form id="formCreditNote">
-																<div class="modal-header">
-																				<button type="button" class="close" data-dismiss="modal">&times;</button>
-																				<h4 class="modal-title">Aplicaci&oacute;n de Nota de Cr&eacute;dito</h4>
-																</div>
+            <form id="formCreditNote">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Aplicaci&oacute;n de Nota de Cr&eacute;dito</h4>
+                </div>
 
-																<div class="modal-body">
-																				<div class="form-group">
-																								<label for="creditNoteId">ID de la Nota de Cr&eacute;dito:</label>
-																								<input type="text" class="form-control" id="creditNoteId" name="creditNoteId" autocomplete="off" required>
-																				</div>
-																				<div class="form-group">
-																								<label for="cnamount">@Resources.Amount:</label>
-																								<input type="text" style="font-size:3em; height:1.5em;" class="form-control" id="cnamount" name="cnamount" autocomplete="off" required>
-																				</div>
-																</div>
-																<div class="warning-message alert alert-danger alert-dismissible fade in" style="display:none;"></div>
-																<div class="modal-footer">
-																				<button type="submit" class="btn btn-primary">@Resources.Complete</button>
-																				<button type="button" class="btn btn-default" data-dismiss="modal">@Resources.Cancel</button>
-																</div>
-												</form>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="creditNoteId">ID de la Nota de Cr&eacute;dito:</label>
+                        <input type="text" class="form-control" id="creditNoteId" name="creditNoteId" autocomplete="off"
+                               required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cnamount">@Resources.Amount:</label>
+                        <input type="text" style="font-size:3em; height:1.5em;" class="form-control" id="cnamount"
+                               name="cnamount" autocomplete="off" required>
+                    </div>
+                </div>
+                <div class="warning-message alert alert-danger alert-dismissible fade in" style="display:none;"></div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">@Resources.Complete</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">@Resources.Cancel</button>
+                </div>
+            </form>
 
-								</div>
-				</div>
+        </div>
+    </div>
 </div>
-
-
 <script type="text/javascript">
+function openCustomerEditor() {
+	var customer = $('#customer').attr('data-value');
+	if (customer != @WebConfig.DefaultCustomer) {
+		var url = '/Customers/Details/' + customer;
+		window.open(url, '_blank');
+	}
+}
 
-	function openCustomerEditor() {
-		var customer = $('#customer').attr('data-value');
-		if (customer != @WebConfig.DefaultCustomer) {
-			var url = '/Customers/Details/' + customer;
-			window.open(url, '_blank');
-		}
+$("#ondelivery").on('click', function () {
+	var customer = $('#customer').attr('data-value');
+	var shipto = $('#address').attr('data-value');
+
+	if (customer == @WebConfig.DefaultCustomer) {
+		DisplayErrorMessage(`No aplica para P\xfablico en General`);
+		$("#ondelivery").prop('checked', false);
+		return;
 	}
 
-	$("#ondelivery").on('click', function () {
-		var customer =
-			$('#customer').attr('data-value');
-		var shipto = $('#address').attr('data-value');
+	if (shipto === '') {
+		DisplayErrorMessage("Debe agregar el domicilio en el cual se realizar\xe1 el cobro a contraentrega");
+		$("#ondelivery").prop('checked', false);
+	}
 
-		if (customer == @WebConfig.DefaultCustomer) {
-						DisplayErrorMessage(`No aplica para P\xfablico en General`);
+});
+
+function updateTotals() {
+	$.get('@Url.Action("GetSalesOrderBalance", new { id = Model.Id })', function (data) {
+		$("#sales-order-balance").html(data);
+	});
+}
+
+$(function () {
+
+	$('[data-toggle="tooltip"]').tooltip();
+
+	$(".cancel").click(function () {
+		$.post('@Url.Action("Cancel", new { id = Model.Id })', function (detail) {
+			location.reload();
+		}, "json").fail(function (e) {
+			console.log(e);
+			DisplayErrorMessage(e.responseText)
+		});
+	});
+
+	$(".pay").click(function () {
+		var type = $(this).data('value');
+		var amount = $("#amount").val();
+		var reference = $("#reference").val();
+		var fee = $(this).data('fee');
+		var ship_to = '@Model.CustomerShipTo';
+		var ondelivery = $("#ondelivery").is(":checked");
+		const regex = /^-?\d+(\.\d+)?$/;
+
+		if (ship_to != '') {
 			$("#ondelivery").prop('checked', false);
+		}
+
+		if (!regex.test(amount)) {
+			DisplayErrorMessage("Ingrese el importe...");
 			return;
 		}
 
-		if (shipto === '') {
-						DisplayErrorMessage("Debe agregar el domicilio en el cual se realizar\xe1 el cobro a contraentrega");
-			$("#ondelivery").prop('checked', false);
+		if (type === 'credit') {
+			//DisplayErrorMessage("Vamos por el crédito...");
+			$.post('@Url.Action("SetTermToCredit", new { id = Model.Id })', function (detail) {
+				location.reload();
+
+			}, "json").fail(function (e) {
+				console.log(e);
+				DisplayErrorMessage(e.responseText)
+				$('#product-search').tokenInput('clear');
+			});
+			return;
 		}
 
+		if (type === 'prepayment') {
+			//DisplayErrorMessage("Vamos por el prepago...");
+			$.post('@Url.Action("ApplyInAdvancePayment", new { id = Model.Id })', { 'value': amount }, function (detail) {
+				location.reload();
+
+			}, "json").fail(function (e) {
+				DisplayErrorMessage(e.responseText)
+				$('#product-search').tokenInput('clear');
+			});
+			return;
+		}
+
+		if (type === 'refunds') {
+			var customer = @Model.Customer.Id;
+			var default_customer = @WebConfig.DefaultCustomer;
+			console.log(customer, default_customer);
+
+			$.post('@Url.Action("ApplyCreditNotes", new { id = Model.Id })', { 'value': amount }, function (detail) {
+				location.reload();
+
+			}, "json").fail(function (e) {
+				console.log(e);
+				DisplayErrorMessage(e.responseText)
+			});
+			return;
+		}
+
+
+		$.post('@Url.Action("AddPayment", new { id = Model.Id })',
+			{ 'type': type, 'amount': amount, 'reference': reference, 'fee': fee, 'ondelivery': ondelivery }, function (detail) {
+				@*$.get('@Url.Action("GetPayment")/' + detail.id, function (data) {
+			$('#items').append(data);
+			$("#amount,#reference").val('');
+			$("#ondelivery").prop('checked', false);
+			updateTotals();
+		});*@
+					location.reload();
+
+			}, "json").fail(function (e) {
+				console.log(e);
+				DisplayErrorMessage(e.responseText)
+			});
 	});
 
-function updateTotals() {
-    $.get('@Url.Action("GetSalesOrderBalance", new { id = Model.Id })', function (data) {
-        $("#sales-order-balance").html(data);
-    });
-}
-	$(function () {
-
-					$('[data-toggle="tooltip"]').tooltip();
-
-					$(".cancel").click(function () {
-													$.post('@Url.Action("Cancel", new { id = Model.Id })', function (detail) {
-																location.reload();
-								}, "json").fail(function (e) {
-												console.log(e);
-												DisplayErrorMessage(e.responseText)
-								});
-					});
-	$(".pay").click(function () {
-        var type = $(this).data('value');
-        var amount = $("#amount").val();
-								var reference = $("#reference").val();
-								var fee = $(this).data('fee');
-								var ship_to =  '@Model.CustomerShipTo';
-								var ondelivery = $("#ondelivery").is(":checked");
-								const regex = /^-?\d+(\.\d+)?$/;
-
-        if (ship_to != '') {
-								$("#ondelivery").prop('checked', false);
-					}
-
-					if (!regex.test(amount)) {
-									DisplayErrorMessage("Ingrese el importe...");
-									return;
-					}
-
-					if (type === 'credit') {
-									//DisplayErrorMessage("Vamos por el crédito...");
-													$.post('@Url.Action("SetTermToCredit", new { id = Model.Id })', function (detail) {
-																	location.reload();
-
-									}, "json").fail(function (e) {
-													console.log(e);
-													DisplayErrorMessage(e.responseText)
-													$('#product-search').tokenInput('clear');
-									});
-									return;
-					}
-
-					if (type === 'prepayment') {
-									//DisplayErrorMessage("Vamos por el prepago...");
-												$.post('@Url.Action("ApplyInAdvancePayment", new { id = Model.Id })', { 'value': amount } ,function (detail) {
-																location.reload();
-
-												}, "json").fail(function (e) {
-												DisplayErrorMessage(e.responseText)
-												$('#product-search').tokenInput('clear');
-								});
-									return;
-					}
-
-					if (type === 'refunds') {
-									var customer = @Model.Customer.Id;
-									var default_customer = @WebConfig.DefaultCustomer;
-									console.log(customer, default_customer);
-
-											$.post('@Url.Action("ApplyCreditNotes", new { id = Model.Id })', { 'value': amount } ,function (detail) {
-																				location.reload();
-
-																}, "json").fail(function (e) {
-																				console.log(e);
-																				DisplayErrorMessage(e.responseText)
-												});
-								return;
-					}
-
-
-					$.post('@Url.Action("AddPayment", new { id = Model.Id })',
-									{ 'type': type, 'amount': amount, 'reference': reference, 'fee': fee, 'ondelivery': ondelivery }, function (detail) {
-            @*$.get('@Url.Action("GetPayment")/' + detail.id, function (data) {
-                $('#items').append(data);
-																$("#amount,#reference").val('');
-																$("#ondelivery").prop('checked', false);
-                updateTotals();
-            });*@
-												location.reload();
-
-								}, "json").fail(function (e) {
-												console.log(e);
-												DisplayErrorMessage(e.responseText)
-								});
-	});
 	$('#customer').editable({
-	    select2: {
-	    	minimumInputLength: 3,
-		    ajax: {
-		        url: '@Url.Action("GetSuggestions", "Customers")',
-		        dataType: 'json',
-		        type: 'POST',
-		        data: function(term,page,context) {
-		        	return { pattern:term };
-		        },
-		        results: function(data,page) {
-		            return { results:data };
-		        }
-		    },
-		    initSelection: function(element, callback) {
-		        var data = {
-		        	id: $('#customer').data('value'),
-		        	name: $('#customer').text()
-	        	};
-		        callback(data);
-		    },
-		    formatResult: function(result) {
-		        return result.name + " (" + result.code + ")";
-		    },
-		    formatSelection: function(selection) {
-		        return selection.name;
-		    }
+		select2: {
+			minimumInputLength: 3,
+			ajax: {
+				url: '@Url.Action("GetSuggestions", "Customers")',
+				dataType: 'json',
+				type: 'POST',
+				data: function (term, page, context) {
+					return { pattern: term };
+				},
+				results: function (data, page) {
+					return { results: data };
+				}
+			},
+			initSelection: function (element, callback) {
+				var data = {
+					id: $('#customer').data('value'),
+					name: $('#customer').text()
+				};
+				callback(data);
+			},
+			formatResult: function (result) {
+				return result.name + " (" + result.code + ")";
+			},
+			formatSelection: function (selection) {
+				return selection.name;
+			}
 		},
 		success: function (response, newValue) {
 			$('#customer').attr('data-value', newValue)
@@ -326,12 +326,12 @@ function updateTotals() {
 			$('#items-container').load('@Url.Action("GetPayments", new { id = Model.Id } )');
 			$("#ondelivery").prop('checked', false);
 			updateTotals();
-	    },
-	    display: function(value, response) {
-	    	if (typeof response !== 'undefined') {
+		},
+		display: function (value, response) {
+			if (typeof response !== 'undefined') {
 				$(this).html(response.value);
 			}
-	    }
+		}
 	});
 
 	$('a.editable').editable({
@@ -339,17 +339,17 @@ function updateTotals() {
 
 			if ('type' in response) {
 				$('.paymentondelivery').removeClass('hidden');
-            }
+			}
 
-            if (response["value"]!="") {
-                $('.paymentondelivery').removeClass('hidden');
-            }
-            else {
+			if (response["value"] != "") {
+				$('.paymentondelivery').removeClass('hidden');
+			}
+			else {
 
-			    $("#ondelivery").prop('checked', false);
+				$("#ondelivery").prop('checked', false);
 				$('#items-container').load('@Url.Action("GetPayments", new { id = Model.Id } )');
 				$("#ondelivery").prop('checked', false);
-			    updateTotals();
+				updateTotals();
 			}
 
 			if (response['type'] == 'shipto') {
@@ -372,27 +372,27 @@ function updateTotals() {
 			}
 		}
 
-    });
 	});
+});
 
-				function DisplayErrorMessage(errorMessage) {
-								$('.warning-message').text(errorMessage);
-								$('.warning-message').fadeIn(1).delay(5000).fadeOut(1000);
-				}
+function DisplayErrorMessage(errorMessage) {
+	$('.warning-message').text(errorMessage);
+	$('.warning-message').fadeIn(1).delay(5000).fadeOut(1000);
+}
 
-				$('#formCreditNote').on('submit', function (e) {
-								e.preventDefault();
-								var creditNoteId = $('#creditNoteId').val();
-								var amount = $('#cnamount').val();
+$('#formCreditNote').on('submit', function (e) {
+	e.preventDefault();
+	var creditNoteId = $('#creditNoteId').val();
+	var amount = $('#cnamount').val();
 
-								$('#formCreditNote').modal('hide');
+	$('#formCreditNote').modal('hide');
 
-								$.post('@Url.Action("ApplyCreditNote", new { id = Model.Id })',
-												{ 'value': amount, 'credit_note': creditNoteId }, function (detail) {
-											location.reload();
-							}, "json").fail(function (e) {
-											$('#formCreditNote').modal('hide');
-												DisplayErrorMessage(e.responseText)
-								});
-				});
+	$.post('@Url.Action("ApplyCreditNote", new { id = Model.Id })',
+		{ 'value': amount, 'credit_note': creditNoteId }, function (detail) {
+			location.reload();
+		}, "json").fail(function (e) {
+			$('#formCreditNote').modal('hide');
+			DisplayErrorMessage(e.responseText)
+		});
+});
 </script>

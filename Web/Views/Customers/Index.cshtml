@@ -11,35 +11,35 @@
 }
 <div class="page-header">
 	<div class="pull-right col-xs-6">
-		@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
-			@Html.HiddenFor(x => x.Offset)
-			@Html.HiddenFor(x => x.Limit)
-			<div class="row">
-				<div class="col-xs-4 text-right">
-					@if (Privilege.AllowCreate) {
-						<a class="btn btn-primary open-modal" href="/Customers/Create" data-modal-id="customer-modal">
-							<span class="glyphicon glyphicon-plus"></span>
-						</a>
-					}
-					@if (CurrentUser.IsAdministrator) {
-						<a class="btn btn-primary" href="/Customers/Merge" data-modal-id="customer-modal">
-							<span class="glyphicon glyphicon-transfer"></span>
-						</a>
-						<a class="btn btn-primary" href="/Customers/Download">
-							<span class="glyphicon glyphicon-download-alt"></span>
-						</a>
-					}
-				</div>
-				<div class="col-xs-8 input-group">
-					<input id="Pattern" name="Pattern" type="text" class="form-control" placeholder="@Resources.SearchFor">
-					<span class="input-group-btn">
-						<button class="btn btn-default" type="submit">
-							<span class="glyphicon glyphicon-search"></span>
-						</button>
-					</span>
-				</div>
+	@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" })) {
+		@Html.HiddenFor(x => x.Offset)
+		@Html.HiddenFor(x => x.Limit)
+		<div class="row">
+			<div class="col-xs-4 text-right">
+				@if (Privilege.AllowCreate) {
+					<a class="btn btn-primary open-modal" href="/Customers/Create" data-modal-id="customer-modal">
+						<span class="glyphicon glyphicon-plus"></span>
+					</a>
+				}
+				@if (CurrentUser.IsAdministrator) {
+					<a class="btn btn-primary" href="/Customers/Merge" data-modal-id="customer-modal">
+						<span class="glyphicon glyphicon-transfer"></span>
+					</a>
+					<a class="btn btn-primary" href="/Customers/Download">
+						<span class="glyphicon glyphicon-download-alt"></span>
+					</a>
+				}
 			</div>
-		}
+			<div class="col-xs-8 input-group">
+				<input id="Pattern" name="Pattern" type="text" class="form-control" placeholder="@Resources.SearchFor">
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="submit">
+						<span class="glyphicon glyphicon-search"></span>
+					</button>
+				</span>
+			</div>
+		</div>
+	}
 	</div>
 	<h1>@Resources.DisplayName_Customers</h1>
 </div>

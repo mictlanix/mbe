@@ -298,7 +298,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public ActionResult CreditPayments ()
 		{
-
 			//Search<CustomerPayment> search = new Search<CustomerPayment> ();
 			Search<CustomerPayment> search = SearchPayments (new Search<CustomerPayment> ());
 
@@ -349,7 +348,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			if (int.TryParse (pattern, out id) && id > 0) {
 				search.Limit = int.MaxValue;
 				query = query.Where (x => x.Id == id);
-
 			} else if (!string.IsNullOrEmpty (pattern)) {
 				search.Limit = int.MaxValue;
 				query = query.Where (x => x.Customer.Name.Contains (pattern));
@@ -365,7 +363,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			search.Results = query.Take (search.Limit).Skip (search.Offset).ToList ();
 			search.Total = query.Count ();
-
 
 			if (Request.IsAjaxRequest ()) {
 				return PartialView ("_CreditPayments", search);
@@ -632,17 +629,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Print (int id)
 		{
 			var model = SalesOrder.Find (id);
-
-			//if (model.Customer.Id == WebConfig.DefaultCustomer) {
-			//	model.PartialDeliveries = false;
-			//}
-			//model.IsDelivered = true;
-			//model.ModificationTime = DateTime.Now;
-			//model.Updater = CurrentUser.Employee;
-
-			using (var scope = new TransactionScope ()) {
-				model.UpdateAndFlush ();
-			}
 
 			if (model.IsCompleted) {
 				return PdfTicketView ("Print", model);
@@ -1537,10 +1523,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		}
 
 		[HttpPost]
-		//public JsonResult RemovePayment (int id)
 		public ActionResult RemovePayment (int id)
 		{
 			var item = SalesOrderPayment.Find (id);
+			var payment = item.Payment;
 
 			if (item.SalesOrder.IsPaid || item.SalesOrder.IsCancelled || item.IsConfirmed) {
 				Response.StatusCode = 400;
@@ -1548,10 +1534,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			using (var scope = new TransactionScope ()) {
-
 				item.DeleteAndFlush ();
-				if (item.Payment.PaymentType == PaymentType.Immediate) {
-					item.Payment.DeleteAndFlush ();
+
+				if (payment.PaymentType == PaymentType.Immediate ||
+					(payment.PaymentType == PaymentType.CreditPayment && payment.CashSession == GetSession ())) {
+					payment.DeleteAndFlush ();
 				}
 			}
 
