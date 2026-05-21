@@ -74,13 +74,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			if (!string.IsNullOrEmpty (pattern)) {
 				query = from x in query
-					where (x.Name.Contains (pattern) ||
-						x.Code.Contains (pattern) ||
-						x.Model.Contains (pattern) ||
-						x.SKU.Contains (pattern) ||
-						x.Brand.Contains (pattern))
-					orderby x.Name
-					select x;
+						where (x.Name.Contains (pattern) ||
+							x.Code.Contains (pattern) ||
+							x.Model.Contains (pattern) ||
+							x.SKU.Contains (pattern) ||
+							x.Brand.Contains (pattern))
+						orderby x.Name
+						select x;
 
 			}
 
@@ -99,9 +99,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Create (Product item)
 		{
 			item.Supplier = Supplier.TryFind (item.SupplierId);
-			item.ProductService = string.IsNullOrEmpty( item.ProductServiceId) ? null : SatProductService.TryFind (item.ProductServiceId);
-			item.UnitOfMeasurement = string.IsNullOrEmpty(item.UnitOfMeasurementId) ? null: SatUnitOfMeasurement.TryFind (item.UnitOfMeasurementId);
-			item.BarCodeNumber = string.IsNullOrEmpty(item.BarCodeNumber)?string.Empty:item.BarCodeNumber;
+			item.ProductService = string.IsNullOrEmpty (item.ProductServiceId) ? null : SatProductService.TryFind (item.ProductServiceId);
+			item.UnitOfMeasurement = string.IsNullOrEmpty (item.UnitOfMeasurementId) ? null : SatUnitOfMeasurement.TryFind (item.UnitOfMeasurementId);
+			item.BarCodeNumber = string.IsNullOrEmpty (item.BarCodeNumber) ? string.Empty : item.BarCodeNumber;
 
 			if (!ModelState.IsValid) {
 				return PartialView ("_Create", item);
@@ -275,47 +275,43 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var prod = Product.TryFind (product);
 			var dup = Product.TryFind (duplicate);
-			//InstancesModelMerger.Merge("product", "product_id", dup.Id, prod.Id);
-			//InstancesModelMerger.Test ();
-			//string sql = @"UPDATE customer_discount SET product = :product WHERE product = :duplicate;
-			//				UPDATE customer_refund_detail SET product = :product WHERE product = :duplicate;
-			//				UPDATE delivery_order_detail SET product = :product WHERE product = :duplicate;
-			//				UPDATE fiscal_document_detail SET product = :product WHERE product = :duplicate;
-			//				UPDATE inventory_issue_detail SET product = :product WHERE product = :duplicate;
-			//				UPDATE inventory_receipt_detail SET product = :product WHERE product = :duplicate;
-			//				UPDATE inventory_transfer_detail SET product = :product WHERE product = :duplicate;
-			//				UPDATE lot_serial_rqmt SET product = :product WHERE product = :duplicate;
-			//				UPDATE lot_serial_tracking SET product = :product WHERE product = :duplicate;
-			//				UPDATE purchase_order_detail SET product = :product WHERE product = :duplicate;
-			//				UPDATE sales_order_detail SET product = :product WHERE product = :duplicate;
-			//				UPDATE sales_quote_detail SET product = :product WHERE product = :duplicate;
-			//				UPDATE supplier_return_detail SET product = :product WHERE product = :duplicate;
-			//				UPDATE purchase_request_detail set product = :product WHERE product = :duplicate;
-			//				DELETE FROM product_label WHERE product = :duplicate;
-			//				DELETE FROM product_price WHERE product = :duplicate;
-			//				DELETE FROM product WHERE product_id = :duplicate;";
+			string sql = @"UPDATE customer_discount SET product = :product WHERE product = :duplicate;
+							UPDATE customer_refund_detail SET product = :product WHERE product = :duplicate;
+							UPDATE delivery_order_detail SET product = :product WHERE product = :duplicate;
+							UPDATE fiscal_document_detail SET product = :product WHERE product = :duplicate;
+							UPDATE inventory_issue_detail SET product = :product WHERE product = :duplicate;
+							UPDATE inventory_receipt_detail SET product = :product WHERE product = :duplicate;
+							UPDATE inventory_transfer_detail SET product = :product WHERE product = :duplicate;
+							UPDATE lot_serial_rqmt SET product = :product WHERE product = :duplicate;
+							UPDATE lot_serial_tracking SET product = :product WHERE product = :duplicate;
+							UPDATE purchase_order_detail SET product = :product WHERE product = :duplicate;
+							UPDATE sales_order_detail SET product = :product WHERE product = :duplicate;
+							UPDATE sales_quote_detail SET product = :product WHERE product = :duplicate;
+							UPDATE supplier_return_detail SET product = :product WHERE product = :duplicate;
+							UPDATE purchase_request_detail set product = :product WHERE product = :duplicate;
+							DELETE FROM product_label WHERE product = :duplicate;
+							DELETE FROM product_price WHERE product = :duplicate;
+							DELETE FROM product WHERE product_id = :duplicate;";
 
-			//ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
-			//	int ret;
+			ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+				int ret;
 
-			//	using (var tx = session.BeginTransaction ()) {
-			//		var query = session.CreateSQLQuery (sql);
+				using (var tx = session.BeginTransaction ()) {
+					var query = session.CreateSQLQuery (sql);
 
-			//		query.AddScalar ("product", NHibernateUtil.Int32);
-			//		query.AddScalar ("duplicate", NHibernateUtil.Int32);
+					query.AddScalar ("product", NHibernateUtil.Int32);
+					query.AddScalar ("duplicate", NHibernateUtil.Int32);
 
-			//		query.SetInt32 ("product", product);
-			//		query.SetInt32 ("duplicate", duplicate);
+					query.SetInt32 ("product", product);
+					query.SetInt32 ("duplicate", duplicate);
 
-			//		ret = query.ExecuteUpdate ();
+					ret = query.ExecuteUpdate ();
 
-			//		tx.Commit ();
-			//	}
+					tx.Commit ();
+				}
 
-			//	return ret;
-			//}, null);
-
-			DBHelpers.Merge ("product", "product_id", duplicate, product);
+				return ret;
+			}, null);
 
 			return View (new Pair<Product, Product> { First = prod, Second = dup });
 		}
@@ -372,23 +368,53 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			pattern = pattern.Trim ();
 			var query = from x in MBEQueryable.IQProducts
-				    where (x.Name.Contains (pattern) ||
-			x.Code.Contains (pattern) ||
-			x.Model.Contains (pattern) ||
-			x.SKU.Contains (pattern) ||
-			x.Brand.Contains (pattern)) && !x.IsDisabled
-				    orderby x.Name
-				    select x;
+						where (x.Name.Contains (pattern) ||
+				x.Code.Contains (pattern) ||
+				x.Model.Contains (pattern) ||
+				x.SKU.Contains (pattern) ||
+				x.Brand.Contains (pattern)) && !x.IsDisabled
+						orderby x.Name
+						select x;
 
 			var items = from x in query.Take (15).ToList ()
-				    select new {
-					    id = x.Id,
-					    name = x.Name,
-					    code = x.Code,
-					    model = x.Model,
-					    sku = x.SKU,
-					    url = Url.Content (x.Photo)
-				    };
+						select new {
+							id = x.Id,
+							name = x.Name,
+							code = x.Code,
+							model = x.Model,
+							sku = x.SKU,
+							url = Url.Content (x.Photo)
+						};
+
+			return Json (items, JsonRequestBehavior.AllowGet);
+		}
+
+		public JsonResult GetMergeSuggestions (string pattern)
+		{
+			pattern = pattern.Trim ();
+			var query = from x in Product.Queryable
+						select x;
+
+			if (int.TryParse (pattern, out var product_id)) {
+				query = query.Where (x => x.Id == product_id);
+			} else {
+				query = query.Where (x => x.Name.Contains (pattern) ||
+								x.Code.Contains (pattern) ||
+								x.Model.Contains (pattern) ||
+								x.SKU.Contains (pattern) ||
+								x.Brand.Contains (pattern)
+						);
+			}
+
+			var items = from x in query.OrderBy (x => x.Name).Take (15).ToList ()
+						select new {
+							id = x.Id,
+							name = x.Name,
+							code = x.Code,
+							model = x.Model,
+							sku = x.SKU,
+							url = Url.Content (x.Photo)
+						};
 
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}
@@ -443,19 +469,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			if (!string.IsNullOrWhiteSpace (pattern)) {
 				query = from x in brands
-					where x.Brand.Contains (pattern)
-					orderby x.Brand
-					select x.Brand;
+						where x.Brand.Contains (pattern)
+						orderby x.Brand
+						select x.Brand;
 			} else {
 
 				query = from x in brands
-					where x.Brand == null && x.Model != string.Empty
-					orderby x.Brand
-					select x.Brand;
+						where x.Brand == null && x.Model != string.Empty
+						orderby x.Brand
+						select x.Brand;
 			}
 
 			var items = from x in query.Distinct ().ToList ()
-				    select new { id = x, name = x };
+						select new { id = x, name = x };
 
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}
@@ -468,18 +494,18 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			if (string.IsNullOrWhiteSpace (pattern)) {
 				query = from x in models
-					where x.Model != null && x.Model != string.Empty
-					orderby x.Model
-					select x.Model;
+						where x.Model != null && x.Model != string.Empty
+						orderby x.Model
+						select x.Model;
 			} else {
 				query = from x in models
-					where x.Model.Contains (pattern)
-					orderby x.Model
-					select x.Model;
+						where x.Model.Contains (pattern)
+						orderby x.Model
+						select x.Model;
 			}
 
 			var items = from x in query.Distinct ().ToList ()
-				    select new { id = x, name = x };
+						select new { id = x, name = x };
 
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}
@@ -487,14 +513,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public JsonResult ProductServiceKeys (string pattern)
 		{
 			var query = from x in SatProductService.Queryable
-				    where x.Id.Contains (pattern) || x.Description.Contains (pattern) || x.Keywords.Contains (pattern)
-				    select x;
+						where x.Id.Contains (pattern) || x.Description.Contains (pattern) || x.Keywords.Contains (pattern)
+						select x;
 
 			var items = from x in query.Take (15).ToList ()
-				    select new {
-					    id = x.Id,
-					    name = x.ToString ()
-				    };
+						select new {
+							id = x.Id,
+							name = x.ToString ()
+						};
 
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}
@@ -502,14 +528,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public JsonResult ProductUnitsOfMeasurements (string pattern)
 		{
 			var query = from x in SatUnitOfMeasurement.Queryable
-				    where x.Id.StartsWith (pattern) || x.Name.StartsWith (pattern)
-				    select x;
+						where x.Id.StartsWith (pattern) || x.Name.StartsWith (pattern)
+						select x;
 
 			var items = from x in query.OrderBy (y => y.Name).Take (15).ToList ()
-				    select new {
-					    id = x.Id,
-					    name = x.ToString ()
-				    };
+						select new {
+							id = x.Id,
+							name = x.ToString ()
+						};
 
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}
