@@ -540,7 +540,7 @@
     <Content Include="Views\DeliveryItineraries\DeliveriesSummaryReport.cshtml" />
     <Content Include="Views\DeliveryItineraries\_DeliveriesSummaryReport.cshtml" />
     <None Include="Views\POS\_ItemEditorView.cshtml.bk" />
-    <Content Include="Views\Reports\DownloadCSVs.cshtml" />
+    <Content Include="Views\Reports\DownloadCSV.cshtml" />
     <Content Include="Views\Reports\WarehouseReStock.cshtml" />
     <Content Include="Views\Reports\_WarehouseReStock.cshtml" />
     <None Include="Views\Shared\DisplayTemplates\EmailTemplate.cshtml" />
