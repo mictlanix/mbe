@@ -30,28 +30,25 @@ using System.Dynamic;
 using NHibernate;
 using NHibernate.Transform;
 
-namespace Mictlanix.BE.Web.Helpers
-{
-	public static class NhTransformers
-	{
+namespace Mictlanix.BE.Web.Helpers {
+	public static class NhTransformers {
 		public static readonly IResultTransformer ExpandoObject;
 
-		static NhTransformers()
+		static NhTransformers ()
 		{
-			ExpandoObject = new ExpandoObjectResultSetTransformer();
+			ExpandoObject = new ExpandoObjectResultSetTransformer ();
 		}
 
-		private class ExpandoObjectResultSetTransformer : IResultTransformer
-		{
+		private class ExpandoObjectResultSetTransformer : IResultTransformer {
 			public IList TransformList (IList collection)
 			{
 				return collection;
 			}
 
-			public object TransformTuple (object[] tuple, string[] aliases)
+			public object TransformTuple (object [] tuple, string [] aliases)
 			{
 				var expando = new ExpandoObject ();
-				var dictionary = (IDictionary<string, object>)expando;
+				var dictionary = (IDictionary<string, object>) expando;
 
 				for (int i = 0; i < tuple.Length; i++) {
 					string alias = aliases [i];
@@ -65,11 +62,15 @@ namespace Mictlanix.BE.Web.Helpers
 		}
 	}
 
-	public static class NHibernateExtensions
-	{
+	public static class NHibernateExtensions {
 		public static IList<dynamic> DynamicList (this IQuery query)
 		{
 			return query.SetResultTransformer (NhTransformers.ExpandoObject).List<dynamic> ();
+		}
+
+		public static IList<IDictionary<string, object>> DictionaryList (this IQuery query)
+		{
+			return query.SetResultTransformer (NhTransformers.ExpandoObject).List<IDictionary<string, object>> ();
 		}
 	}
 }

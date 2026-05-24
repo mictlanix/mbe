@@ -30,18 +30,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using System.Web.UI.WebControls;
+using System.Text;
 using Castle.ActiveRecord;
-using Lucene.Net.Search;
-using Microsoft.Ajax.Utilities;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Helpers;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
-using Mictlanix.BE.Web.Security;
 using NHibernate;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Database;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
 
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
@@ -1239,110 +1234,121 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_SalesBySalesPerson", items);
 		}
 
-		public ActionResult DownloadCSVs ()
+		public ActionResult DownloadCSV ()
 		{
 			var range = new DateRange ();
 			ViewBag.Title = Resources.DownloadCSVFiles;
 			return View (range);
 		}
 
+		[HttpPost]
+		public ActionResult DownloadCSV (DateRange range)
+		{
+			var action = Request ["action"];
+			switch (action) {
+			case "purchases":
+				return PurchasesCsv (range);
+			case "payments":
+				return PaymentsCsv (range);
+			default:
+				return SalesCsv (range);
+			}
+		}
+
+		[HttpPost]
 		public ActionResult SalesCsv (DateRange range)
 		{
 			string sql = @"
-					SELECT
-							sales_order sales_order_id, 
-							CAST(sale_date AS CHAR) AS sale_date,
-							sales_order_detail sales_order_detail_id, 
-							p.product_id,
-							p.code `product_code`,
-							p.name `product_name`,
-							t.so_product_code,
-							t.so_product_name,
-							quantity,
-							IFNULL(um.symbol, um.name)unit,
-							t.cost,
-							if(p.stockable = 1 , w.name, 'PRODUCCIÓN') bodega,
-							price,
-							ROUND(t.discount_rate, 4) 'discount',
-							final_price,
-							subtotal,
-							c.name customer_name,
-							s.name store_name,
-							e.nickname employee_name,
-							sp.nickname sales_person,
-							Pagado,
-							Terminos, 
-							Tipo
-					FROM
-					(SELECT so.sales_order_id sales_order,
-						so.store,
-						so.customer,
-						so.creator,
-						so.salesperson,
-						sod.warehouse,
-						sod.sales_order_detail_id sales_order_detail,
-						sod.product,
-						sod.product_code so_product_code,
-						sod.product_name so_product_name,
-						so.`date` sale_date,
-						so.creation_time,
-						so.modification_time,
-						so.paid,
-						if(so.paid = 1, 'Pagado', 'A saldar') Pagado,
-						if(so.payment_terms = 0, 'Contado', 'Crédito') Terminos,
-						'Pedido' Tipo,
-						sod.cost,
-						sod.discount_rate,
-						sod.price,
-						ROUND(CAST(sod.price * (1 - sod.discount_rate) AS DECIMAL(18, 7)), 2) final_price,
-						sod.quantity,
-						ROUND(CAST((sod.quantity * sod.price * (1 - sod.discount_rate)) AS DECIMAL(18, 7)), 2) subtotal
-					FROM sales_order so
-					INNER JOIN sales_order_detail sod ON so.sales_order_id = sod.sales_order
-					WHERE (date(so.`date`) BETWEEN :start AND :end
-						)		
-					    AND so.completed = 1
-					    AND so.cancelled = 0
-					UNION  
-					SELECT so.sales_order_id,
-						so.store,
-						so.customer,
-						so.creator,
-						so.salesperson,
-						sod.warehouse,
-						sod.sales_order_detail_id sales_order_detail,
-						sod.product,
-						sod.product_code so_product_code,
-						sod.product_name so_product_name,
-						cr.`date`,
-						cr.creation_time,
-						cr.modification_time,
-						so.paid,
-						if(so.paid = 1, 'Pagado', 'A saldar') Pagado,
-					    if(so.payment_terms = 0, 'Contado', 'Crédito') Terminos,
-					    'Devolución' Tipo,
-						sod.cost,
-						sod.discount_rate,
-						sod.price,
-						ROUND(CAST(crd.price * (1 - crd.discount) AS DECIMAL(18, 7)), 2) final_price,
-						crd.quantity,
-						-ROUND(CAST((crd.quantity * crd.price * (1 - crd.discount)) AS DECIMAL(18, 7)), 2) subtotal
-					FROM customer_refund_detail crd
-					JOIN customer_refund cr ON crd.customer_refund = cr.customer_refund_id
-					JOIN sales_order_detail sod ON crd.sales_order_detail = sod.sales_order_detail_id
-					JOIN sales_order so ON sod.sales_order = so.sales_order_id
-					WHERE cr.completed = 1 AND cr.cancelled = 0
+				SELECT
+					sales_order SalesOrderId, 
+					CAST(sale_date AS CHAR) AS SalesDate,
+					sales_order_detail SalesOrderDetailId, 
+					p.product_id ProductId,
+					p.code ProductCode,
+					p.name ProductName,
+					t.so_product_code SalesProductCode,
+					t.so_product_name SalesProductName,
+					IFNULL(um.symbol, um.name) Unit,
+					quantity Quantity,
+					price Price,
+					subtotal Subtotal,
+					ROUND(t.discount_rate, 4) Discount,
+					total_amount TotalAmount,
+					if(p.stockable = 1 , w.name, 'PRODUCCIÓN') Warehouse,
+					t.cost Cost,
+					c.name CustomerName,
+					s.name StoreName,
+					e.nickname Creator,
+					sp.nickname SalesPerson,
+					IF(payment_terms = 0, 'Contado', 'Crédito') PaymentTerms,
+					IF(paid = 1, 'Pagado', 'A saldar') PaymentStatus,
+					transaction_type TransactionType
+				FROM
+				(SELECT so.sales_order_id sales_order,
+					so.store,
+					so.customer,
+					so.creator,
+					so.salesperson,
+					sod.warehouse,
+					sod.sales_order_detail_id sales_order_detail,
+					sod.product,
+					sod.product_code so_product_code,
+					sod.product_name so_product_name,
+					so.`date` sale_date,
+					so.creation_time,
+					so.modification_time,
+					so.paid,
+					so.payment_terms,
+					'SalesOrder' transaction_type,
+					sod.cost,
+					sod.discount_rate,
+					sod.price,
+					ROUND(CAST(sod.price * (1 - sod.discount_rate) AS DECIMAL(18, 7)), 2) total_amount,
+					sod.quantity,
+					ROUND(CAST((sod.quantity * sod.price * (1 - sod.discount_rate)) AS DECIMAL(18, 7)), 2) subtotal
+				FROM sales_order so
+				INNER JOIN sales_order_detail sod ON so.sales_order_id = sod.sales_order
+				WHERE (date(so.`date`) BETWEEN :start AND :end)
+					AND so.completed = 1 AND so.cancelled = 0
+				UNION
+				SELECT so.sales_order_id,
+					so.store,
+					so.customer,
+					so.creator,
+					so.salesperson,
+					sod.warehouse,
+					sod.sales_order_detail_id sales_order_detail,
+					sod.product,
+					sod.product_code so_product_code,
+					sod.product_name so_product_name,
+					cr.`date`,
+					cr.creation_time,
+					cr.modification_time,
+					so.paid,
+					so.payment_terms,
+					'Refund' transaction_type,
+					sod.cost,
+					sod.discount_rate,
+					sod.price,
+					ROUND(CAST(crd.price * (1 - crd.discount) AS DECIMAL(18, 7)), 2) total_amount,
+					crd.quantity,
+					-ROUND(CAST((crd.quantity * crd.price * (1 - crd.discount)) AS DECIMAL(18, 7)), 2) subtotal
+				FROM customer_refund_detail crd
+				JOIN customer_refund cr ON crd.customer_refund = cr.customer_refund_id
+				JOIN sales_order_detail sod ON crd.sales_order_detail = sod.sales_order_detail_id
+				JOIN sales_order so ON sod.sales_order = so.sales_order_id
+				WHERE cr.completed = 1 AND cr.cancelled = 0
 					AND (date(cr.`date`) BETWEEN :start AND :end)) AS t
-					LEFT JOIN customer c ON t.customer = c.customer_id
-					LEFT JOIN employee sp ON t.salesperson = sp.employee_id
-					JOIN store s ON t.store = s.store_id
-					LEFT JOIN product p ON t.product = p.product_id
-					JOIN sat_unit_of_measurement um ON p.unit_of_measurement = um.sat_unit_of_measurement_id
-					JOIN employee e ON t.creator = e.employee_id
-					LEFT JOIN warehouse w ON t.warehouse = w.warehouse_id
-					WHERE quantity > 0 
-					ORDER BY sale_date DESC;
-					";
+				JOIN store s ON t.store = s.store_id
+				JOIN employee e ON t.creator = e.employee_id
+				JOIN product p ON t.product = p.product_id
+				JOIN sat_unit_of_measurement um ON p.unit_of_measurement = um.sat_unit_of_measurement_id
+				LEFT JOIN customer c ON t.customer = c.customer_id
+				LEFT JOIN employee sp ON t.salesperson = sp.employee_id
+				LEFT JOIN warehouse w ON t.warehouse = w.warehouse_id
+				WHERE quantity > 0
+				ORDER BY sale_date DESC
+			";
 
 			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
 				return session.CreateSQLQuery (sql)
@@ -1351,41 +1357,64 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					.DynamicList ();
 			}, null);
 
-			var sb = new System.Text.StringBuilder ();
-
-			sb.AppendLine ("sales_order_id,date,sales_order_detail_id,product_id," +
-					"product_code,product_name,so_product_code,so_product_name,quantity,unit,cost,bodega,price,discount," +
-					"final_price,subtotal,customer_name,store_name,employee_name," +
-					"sales_person,Pagado,Términos,Tipo");
-			foreach (var u in items) {
-				sb.AppendLine ($"{u.sales_order_id},{u.sale_date},{u.sales_order_detail_id},{u.product_id}," +
-					$"{u.product_code.Replace (",", string.Empty).Trim ()},{u.product_name.Replace (",", string.Empty).Trim ()}," +
-					$"{u.so_product_code.Replace (",", string.Empty).Trim ()},{u.so_product_name.Replace (",", string.Empty).Trim ()}," +
-					$"{u.quantity},{u.unit},{u.cost},{u.bodega}," +
-					$"{u.price},{u.discount},{u.final_price},{u.subtotal},{u.customer_name.Replace (",", string.Empty).Trim ()}," +
-					$"{u.store_name},{u.employee_name},{u.sales_person},{u.Pagado},{u.Terminos},{u.Tipo}");
-			}
-			var bytes = System.Text.Encoding.UTF8.GetBytes (sb.ToString ());
+			var bytes = Encoding.UTF8.GetBytes (BuildCsv (items));
 			return File (bytes, "text/csv", "sales.csv");
 		}
 
+		[HttpPost]
 		public ActionResult PurchasesCsv (DateRange range)
 		{
-			var purchases = new List<PurchaseOrder> {
-				PurchaseOrder.Find(100),
-				PurchaseOrder.Find(200),
-				PurchaseOrder.Find(300),
-			};
+			string sql = @"
+				SELECT
+					po.purchase_order_id PurchaseOrderId,
+					s.name Supplier,
+					po.comment Comment,
+					p.product_id ProductId,
+					p.code ProductCode,
+					p.name ProductName,
+					pod.product_code PurchaseProductCode,
+					pod.product_name PurchaseProductName,
+					pod.quantity Quantity,
+					pod.price Price,
+					w.name Warehouse,
+					pr.purchase_request_id PurchaseRequestId,
+					IF(pr.completed = 1, CAST(pr.modification_time AS CHAR), NULL) PurchaseRequestIdDate,
+					r.nickname Requester,
+					CAST(po.modification_time AS CHAR) PurchaseDate,
+					c.nickname Purchaser,
+					IF(ir.completed = 1, CAST(ir.modification_time AS CHAR), NULL) InventoryReceiptDate,
+					IF(ir.completed = 1, ire.nickname, NULL) Recipient,
+					ROUND(pod.quantity * pod.price, 2) TotalAmount
+				FROM purchase_order po
+				JOIN purchase_order_detail pod ON po.purchase_order_id = pod.purchase_order
+				JOIN supplier s ON po.supplier = s.supplier_id
+				JOIN product p ON pod.product = p.product_id
+				LEFT JOIN employee c ON po.creator = c.employee_id
+				LEFT JOIN warehouse w ON pod.warehouse = w.warehouse_id
+				LEFT JOIN purchase_request_detail prd ON pod.purchase_request_detail = prd.purchase_request_detail_id
+				LEFT JOIN purchase_request pr ON prd.purchase_request = pr.purchase_request_id
+				LEFT JOIN inventory_receipt_detail ird ON ird.purchase_order_detail = pod.purchase_order_detail_id
+				LEFT JOIN inventory_receipt ir ON ird.receipt = ir.inventory_receipt_id
+				LEFT JOIN employee r ON pr.creator = r.employee_id
+				LEFT JOIN employee ire ON ir.updater = ire.employee_id
+				WHERE po.completed = 1 AND po.cancelled = 0
+						AND DATE(po.modification_time) BETWEEN :start AND :end
+				ORDER BY po.purchase_order_id DESC
+			";
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
 
-			var sb = new System.Text.StringBuilder ();
-			sb.AppendLine ("Id,Nombre,Edad"); // encabezados
-			foreach (var u in purchases) {
-				sb.AppendLine ($"{u.Id},{u.ModificationTime},{u.Creator.Nickname}");
-			}
-			var bytes = System.Text.Encoding.UTF8.GetBytes (sb.ToString ());
+				query.SetParameter ("start", range.StartDate);
+				query.SetParameter ("end", range.EndDate);
+
+				return query.DynamicList ();
+			}, null);
+
+			var bytes = Encoding.UTF8.GetBytes (BuildCsv (items));
 			return File (bytes, "text/csv", "purchases.csv");
 		}
 
+		[HttpPost]
 		public ActionResult PaymentsCsv (DateRange range)
 		{
 			var payments = new List<CustomerPayment> {
@@ -1399,8 +1428,37 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			foreach (var u in payments) {
 				sb.AppendLine ($"{u.Id},{u.ModificationTime} , {u.Creator.Nickname}");
 			}
-			var bytes = System.Text.Encoding.UTF8.GetBytes (sb.ToString ());
+			var bytes = Encoding.UTF8.GetBytes (sb.ToString ());
 			return File (bytes, "text/csv", "payments.csv");
+		}
+
+		public static string BuildCsv (IList<dynamic> items)
+		{
+			bool header = false;
+			var sb = new System.Text.StringBuilder ();
+
+			foreach (IDictionary<string, object> row in items) {
+				if (!header) {
+					sb.AppendLine (EncodeRow (row.Keys));
+					header = true;
+				}
+				sb.AppendLine (EncodeRow (row.Values));
+			}
+
+			return sb.ToString ();
+		}
+
+		public static string EncodeRow (IEnumerable<object> columns)
+		{
+			return string.Join (",", columns.Select (c => {
+				if (c == null) return string.Empty;
+				var cell = c.ToString ();
+				// Escape internal double quotes by doubling them, and wrap if it contains a comma, quote, or newline
+				if (cell.Contains (",") || cell.Contains ("\"") || cell.Contains ("\n") || cell.Contains ("\r")) {
+					return $"\"{cell.Replace ("\"", "\"\"")}\"";
+				}
+				return cell;
+			}));
 		}
 
 		public ViewResult WarehouseReStock ()
