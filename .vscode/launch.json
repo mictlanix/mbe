@@ -1,0 +1,26 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch with xsp4",
+            "type": "mono",
+            "request": "launch",
+            "program": "/Library/Frameworks/Mono.framework/Versions/6.12.0/lib/mono/4.5/xsp4.exe",
+            "args": ["--nonstop", "--port", "8080"],
+            "cwd": "${workspaceFolder}/Web",
+            "preLaunchTask": "build",
+            "serverReadyAction": {
+                "pattern": "Listening on port: ([0-9]+)",
+                "uriFormat": "http://localhost:%s",
+                "action": "openExternally"
+            }
+        },
+        {
+            "name": "Attach to Mono",
+            "type": "mono",
+            "request": "attach",
+            "address": "localhost",
+            "port": 55555
+        }
+    ]
+}

@@ -1,0 +1,41 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "restore",
+            "type": "shell",
+            "command": "msbuild",
+            "args": [
+                "${workspaceFolder}/Mictlanix.BE.sln",
+                "/t:restore",
+                "/p:RestorePackagesConfig=true"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "msbuild",
+            "args": [
+                "${workspaceFolder}/Mictlanix.BE.sln",
+                "/p:Configuration=Debug",
+                "/t:Build",
+                "/m"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": "restore",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}
