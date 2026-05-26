@@ -667,7 +667,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public ActionResult NewTransfer ()
 		{
-			var warehouse = MBEQueryable.IQUsersSettings.Where (x => x.UserName == CurrentUser.Identity.Name).Single ().PointOfSale.Warehouse;
+			var user = Model.User.Find (CurrentUser.Identity.Name);
+			var warehouse = user.UserSettings.PointOfSale.Warehouse;
 
 			return PartialView ("Transfers/_Create",
 				new InventoryTransfer {

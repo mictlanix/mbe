@@ -34,6 +34,7 @@ using System.Web.Mvc;
 using System.Web.Security;
 using Castle.ActiveRecord;
 using Castle.Core.Internal;
+using Gma.QrCodeNet.Encoding.DataEncodation;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Helpers;
 using Mictlanix.BE.Web.Models;
@@ -44,10 +45,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 	public class UsersController : CustomController {
 		public ActionResult Index ()
 		{
-			var qry = from x in MBEQueryable.IQUsers
-				  select x;
+			var qry = from x in Model.User.Queryable
+					  select x;
 
-			var search = SearchUsers( new Search<User> {
+			var search = SearchUsers (new Search<User> {
 				Limit = WebConfig.PageSize
 			});
 
@@ -74,16 +75,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View (user);
 		}
 
-		Search<User> SearchUsers (Search<User> search) {
-			var query = from x in MBEQueryable.IQUsers
-				    select x;
+		Search<User> SearchUsers (Search<User> search)
+		{
+			var query = from x in Model.User.Queryable
+						select x;
 			if (!string.IsNullOrEmpty (search.Pattern)) {
 				query = from x in query
-					where x.UserName.Contains (search.Pattern)
-					|| x.Email.Contains (search.Pattern)
-					|| x.Employee.FirstName.Contains (search.Pattern)
-					|| x.Employee.LastName.Contains (search.Pattern)
-					select x;
+						where x.UserName.Contains (search.Pattern)
+						|| x.Email.Contains (search.Pattern)
+						|| x.Employee.FirstName.Contains (search.Pattern)
+						|| x.Employee.LastName.Contains (search.Pattern)
+						select x;
 			}
 			search.Total = query.Count ();
 			search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
@@ -93,8 +95,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public ActionResult Edit (string id)
 		{
-			//User user = Model.User.Find (id);			
-			User user = MBEQueryable.IQUsers.Single(x => x.UserName == id);
+			var user = Model.User.Find (id);
 			//var storeId = user.UserSettings == null || user.UserSettings.Store == null ?  int.Parse (WebConfig.DefaultStore) : user.UserSettings.Store.Id;
 
 			//Int32.TryParse(user.UserSettings.Store.Id, out storeId);
@@ -108,7 +109,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				var defaultStore = MBEQueryable.IQStores.Single (x => x.Id == defaultStoreId);
 				var defaultPointOfSaleId = int.Parse (WebConfig.DefaultPointOfSale); ;
 				var defaultPointOfSale = MBEQueryable.IQPointsOfSales.Single (x => x.Id == defaultPointOfSaleId);
-				var defaultCashDrawerId = (int?)null;
+				var defaultCashDrawerId = (int?) null;
 				user.UserSettings = new UserSettings {
 					UserName = user.UserName,
 					StoreId = defaultStoreId,
@@ -119,8 +120,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				};
 			} else {
 				user.UserSettings.StoreId = user.UserSettings.Store.Id;
-				user.UserSettings.PointOfSaleId = user.UserSettings.PointOfSale != null ? user.UserSettings.PointOfSale.Id: (int?)null;
-				user.UserSettings.CashDrawerId = user.UserSettings.CashDrawer != null ? user.UserSettings.CashDrawer.Id : (int?)null;
+				user.UserSettings.PointOfSaleId = user.UserSettings.PointOfSale != null ? user.UserSettings.PointOfSale.Id : (int?) null;
+				user.UserSettings.CashDrawerId = user.UserSettings.CashDrawer != null ? user.UserSettings.CashDrawer.Id : (int?) null;
 			}
 
 			return View (user);
@@ -140,7 +141,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					ModificationTime = DateTime.Now,
 					SourceType = SourceType.UserSettings,
 					Updater = CurrentUser.Employee,
-					PreviousState = user.UserName.ToString(),
+					PreviousState = user.UserName.ToString (),
 					Reference = user.EmployeeId,
 				};
 				incidence.CreateAndFlush ();
@@ -159,16 +160,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 							cashDrawer = CashDrawer.Find (item.UserSettings.CashDrawerId);
 						}
 
-						user.UserSettings = new UserSettings () {
+						user.UserSettings = new UserSettings {
 							UserName = user.UserName,
 							Store = store,
 							PointOfSale = pointOfSale,
 							CashDrawer = cashDrawer
 						};
-					} else{
+					} else {
 						user.UserSettings.Store = Store.Find (item.UserSettings.StoreId);
 						user.UserSettings.PointOfSale = item.UserSettings.PointOfSaleId.HasValue ?
-							PointOfSale.TryFind (item.UserSettings.PointOfSaleId.Value):null;
+							PointOfSale.TryFind (item.UserSettings.PointOfSaleId.Value) : null;
 
 						if (item.UserSettings.CashDrawerId.HasValue) {
 							user.UserSettings.CashDrawer = CashDrawer.TryFind (item.UserSettings.CashDrawerId);
@@ -229,27 +230,23 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		[HttpPost, ActionName ("Delete")]
 		public ActionResult DeleteConfirmed (string id)
 		{
-			var item = Model.User.Find (id);
-			var settings = UserSettings.TryFind (id);
-
-
 			using (var scope = new TransactionScope ()) {
+				var settings = UserSettings.TryFind (id);
 
-
-				item.Privileges.ForEach (privilege => { privilege.DeleteAndFlush (); });
-
-				if (settings != null && WebConfig.UserSettingsMode == UserSettingsMode.Managed) {
-					settings.DeleteAndFlush ();
+				if (settings != null) {
+					settings.Delete ();
 				}
-				scope.Flush ();
-			}
 
-			using (var scope = new TransactionScope ()) {
-				var user = MBEQueryable.IQUsers.SingleOrDefault (s => s.UserName == id);
-				user.UserSettings = null;
-				user.Privileges.Clear ();
-				user.SessionVersion++;
-				user.DeleteAndFlush ();
+				var privileges = (from x in AccessPrivilege.Queryable
+								  where x.User.UserName == id
+								  select x).ToList ();
+
+				privileges.ForEach (privilege => { privilege.Delete (); });
+				scope.Flush ();
+
+				var item = Model.User.Find (id);
+
+				item.DeleteAndFlush ();
 			}
 
 			return RedirectToAction ("Index");
