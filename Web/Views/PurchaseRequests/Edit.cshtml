@@ -12,6 +12,12 @@
 <div id='master-section'>
 	@Html.Partial("_EditorView")
 </div>
+@if (Model.Details.Count <= 0 || Model.Details.Any (x => x.Quantity <= 0)) {
+    <div class="alert alert-danger alert-dismissible fade in" style="display:block;">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>@Resources.Warning</strong> @Resources.MinimumOrderQuantity
+    </div>
+}
 <div id='details-section'>
 	<div id='items-container' data-url='@Url.Action("Items", new { id = Model.Id })'>
 		@Html.Partial("_Items", Model.Details)

@@ -128,9 +128,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				item.CreateAndFlush ();
 			}
 
-			return RedirectToAction ("Edit", new {
-				id = item.Id
-			});
+			return RedirectToAction ("Edit", new { id = item.Id });
 		}
 
 		public ActionResult Edit (int id)
@@ -217,10 +215,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 								|| x.Brand.Contains (pattern) || x.BarCodeNumber.Contains (pattern)
 								//|| (x.Supplier != null && x.Supplier.Name.Contains(pattern))
 								) && x.IsPurchasable);
-			var items = query.Take (15).ToList ().Select (x =>
-			new { id = x.Id, name = x.Name, comment = x.Comment,
-				supplier = x.Supplier == null ? string.Format(Resources.AttribValueMissing, Resources.Supplier): x.Supplier.Name
-				, code = x.Code, model = x.Model, brand = x.Brand });
+			var items = query.Take (15).ToList ().Select (x => new {
+				id = x.Id, name = x.Name, comment = x.Comment,
+				supplier = x.Supplier == null ? string.Format (Resources.AttribValueMissing, Resources.Supplier) : x.Supplier.Name
+				, code = x.Code, model = x.Model, brand = x.Brand
+			});
 
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}
@@ -408,7 +407,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var entity = PurchaseRequest.TryFind (id);
 
 			if (entity.Details.Count <= 0 || entity.Details.Any (x => x.Quantity <= 0)) {
-				return RedirectToAction ("Edit", entity);
+				return RedirectToAction ("Edit", new { id = entity.Id });
 			}
 
 			if (entity == null || entity.IsCompleted || entity.IsCancelled) {
@@ -419,7 +418,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			entity.ModificationTime = DateTime.Now;
 			entity.IsCompleted = true;
 			entity.Serial = entity.Serial > 0 ? entity.Serial :
-				PurchaseRequest.Queryable.Where(x => x.Warehouse == WebConfig.PointOfSale.Warehouse).Select(x => (int?)x.Serial).Max()??0 + 1;
+				PurchaseRequest.Queryable.Where (x => x.Warehouse == WebConfig.PointOfSale.Warehouse).Select (x => (int?) x.Serial).Max () ?? 0 + 1;
 
 			if (!WebConfig.PurchaseRequestApprovalRequired) {
 				entity.IsApproved = true;
@@ -468,8 +467,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var item = PurchaseRequest.Find (id);
 
 			if (!item.IsCompleted) {
-				return RedirectToAction ("Edit", item);
+				return RedirectToAction ("Edit", new { id = item.Id });
 			}
+
 			return View (item);
 		}
 
@@ -529,7 +529,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					incidence.Reference = item.Id;
 					incidence.Updater = CurrentUser.Employee;
 					incidence.ModificationTime = DateTime.Now;
-					incidence.PreviousState = JsonConvert.SerializeObject (item.GetSerializable());
+					incidence.PreviousState = JsonConvert.SerializeObject (item.GetSerializable ());
 					incidence.Comment = value;
 					incidence.CreateAndFlush ();
 
@@ -553,7 +553,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			int id = 0;
 
 			query = PurchaseRequest.Queryable.Where (x => !x.IsCancelled
-								     && x.IsCompleted
+									 && x.IsCompleted
 						);
 
 			if (int.TryParse (pattern, out id) && id > 0) {
