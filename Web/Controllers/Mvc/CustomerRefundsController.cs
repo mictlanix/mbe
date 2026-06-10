@@ -144,9 +144,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var item = new CustomerRefund ();
 
 			item.Store = WebConfig.Store;
-
-
-
 			item.SalesOrder = entity;
 			item.SalesPerson = entity.SalesPerson;
 			item.Customer = entity.Customer;

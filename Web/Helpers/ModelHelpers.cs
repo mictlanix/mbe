@@ -65,22 +65,22 @@ namespace Mictlanix.BE.Web.Helpers {
 			IQueryable<decimal> query;
 
 			query = from x in SalesOrder.Queryable
-				from y in x.Payments
-				where x.Terms == PaymentTerms.NetD &&
-				      x.IsCompleted && !x.IsCancelled && !x.IsPaid &&
-				      x.Customer.Id == entity.Id
-				select y.Amount * x.ExchangeRate;
+					from y in x.Payments
+					where x.Terms == PaymentTerms.NetD &&
+						  x.IsCompleted && !x.IsCancelled && !x.IsPaid &&
+						  x.Customer.Id == entity.Id
+					select y.Amount * x.ExchangeRate;
 			var paid = query.Count () > 0 ? query.ToList ().Sum () : 0;
 
 			query = from x in SalesOrder.Queryable
-				from y in x.Details
-				where x.Terms == PaymentTerms.NetD &&
-				      x.IsCompleted && !x.IsCancelled && !x.IsPaid &&
-				      x.Customer.Id == entity.Id
-				select (y.Quantity - (CustomerRefundDetail.Queryable.Where (
-						z => z.SalesOrderDetail == y && !z.Refund.IsCancelled && z.Refund.IsCompleted)
-					.Sum (w => (decimal?) w.Quantity) ?? 0)
-					) * y.Price * y.ExchangeRate * (1 - y.DiscountRate) * (y.IsTaxIncluded || y.TaxRate <= 0m ? 1m : (1m + y.TaxRate));
+					from y in x.Details
+					where x.Terms == PaymentTerms.NetD &&
+						  x.IsCompleted && !x.IsCancelled && !x.IsPaid &&
+						  x.Customer.Id == entity.Id
+					select (y.Quantity - (CustomerRefundDetail.Queryable.Where (
+							z => z.SalesOrderDetail == y && !z.Refund.IsCancelled && z.Refund.IsCompleted)
+						.Sum (w => (decimal?) w.Quantity) ?? 0)
+						) * y.Price * y.ExchangeRate * (1 - y.DiscountRate) * (y.IsTaxIncluded || y.TaxRate <= 0m ? 1m : (1m + y.TaxRate));
 			var bought = query.Count () > 0 ? query.ToList ().Sum () : 0;
 
 			return bought - paid;
@@ -89,28 +89,30 @@ namespace Mictlanix.BE.Web.Helpers {
 		public static decimal PrepaymentsBalance (this Customer entity, SalesOrder salesOrder)
 		{
 			var query = (from x in CustomerPayment.Queryable
-				     where (x.PaymentType == PaymentType.PaymentInAdvance || x.PaymentType == PaymentType.CreditPayment)
-				     && x.Customer == entity && !x.Allocations.Any(y => y.SalesOrder == salesOrder)
-				     select x).ToArray ();
+						 where (x.PaymentType == PaymentType.PaymentInAdvance || x.PaymentType == PaymentType.CreditPayment)
+						 && x.Customer == entity && !x.Allocations.Any (y => y.SalesOrder == salesOrder)
+						 select x).ToArray ();
 
-			return query.Sum(x => (decimal?)x.Amount - x.Allocated)??0;
+			return query.Sum (x => (decimal?) x.Amount - x.Allocated) ?? 0;
 		}
 
-		public static decimal RefundBalance (this Customer entity, SalesOrder salesOrder) {
+		public static decimal RefundBalance (this Customer entity, SalesOrder salesOrder)
+		{
 
 			if (entity.Id == WebConfig.DefaultCustomer) {
 				return 0;
 			}
 
-			var credits = entity.GetCreditNotes()
-				.Where(x => !x.CustomerPayment.Allocations.Any(y => y.SalesOrder == salesOrder))
-				.Select(x => x.CustomerPayment).ToArray();
-			return credits.Sum (x => (decimal?)x.Balance)??0;
+			var credits = entity.GetCreditNotes ()
+				.Where (x => !x.CustomerPayment.Allocations.Any (y => y.SalesOrder == salesOrder))
+				.Select (x => x.CustomerPayment).ToArray ();
+			return credits.Sum (x => (decimal?) x.Balance) ?? 0;
 
 		}
 
-		public static List<CreditNote> GetCreditNotes (this Customer customer) {
-			if(customer.Id == WebConfig.DefaultCustomer) return new List<CreditNote> ();
+		public static List<CreditNote> GetCreditNotes (this Customer customer)
+		{
+			if (customer.Id == WebConfig.DefaultCustomer) return new List<CreditNote> ();
 
 			return CreditNote.Queryable.Where (x =>
 				x.Customer == customer
@@ -119,10 +121,11 @@ namespace Mictlanix.BE.Web.Helpers {
 				.ToList ();
 		}
 
-		public static bool HasExpiredCredits (this Customer customer) {
+		public static bool HasExpiredCredits (this Customer customer)
+		{
 			var expired = SalesOrder.Queryable.Where (x => x.Terms == PaymentTerms.NetD && !x.IsPaid
 				&& !x.IsCancelled && x.IsCompleted
-				&& x.Customer == customer && x.DueDate.Date < DateTime.Today).ToArray();
+				&& x.Customer == customer && x.DueDate.Date < DateTime.Today).ToArray ();
 			return expired.Any (x => x.Balance > 0.01m);
 		}
 
@@ -143,10 +146,10 @@ namespace Mictlanix.BE.Web.Helpers {
 		public static string InvoiceSerials (this SalesOrder entity)
 		{
 			var query = from x in FiscalDocument.Queryable
-				    from y in x.Details
-				    where x.IsCompleted && !x.IsCancelled &&
-					    y.OrderDetail.SalesOrder.Id == entity.Id
-				    select new { x.Batch, x.Serial };
+						from y in x.Details
+						where x.IsCompleted && !x.IsCancelled &&
+							y.OrderDetail.SalesOrder.Id == entity.Id
+						select new { x.Batch, x.Serial };
 
 			return string.Join (",", query.ToList ().Distinct ().Select (x => string.Format ("{0}{1:D6}", x.Batch, x.Serial)));
 		}
@@ -160,10 +163,10 @@ namespace Mictlanix.BE.Web.Helpers {
 		public static string InvoiceSerials (this SalesQuote entity)
 		{
 			var query = from x in FiscalDocument.Queryable
-				    from y in x.Details
-				    where x.IsCompleted && !x.IsCancelled &&
-					y.OrderDetail.SalesOrder.Id == entity.Id
-				    select new { x.Batch, x.Serial };
+						from y in x.Details
+						where x.IsCompleted && !x.IsCancelled &&
+						y.OrderDetail.SalesOrder.Id == entity.Id
+						select new { x.Batch, x.Serial };
 
 			return string.Join (",", query.ToList ().Distinct ().Select (x => string.Format ("{0}{1:D6}", x.Batch, x.Serial)));
 		}
@@ -177,16 +180,17 @@ namespace Mictlanix.BE.Web.Helpers {
 			return data;
 		}
 
-		public static decimal GetRefundableQuantity (this SalesOrderDetail detail) {
-			var refunded = CustomerRefundDetail.Queryable.Where (x => !x.Refund.IsCancelled
-					&& x.Refund.IsCompleted
-					&& x.SalesOrderDetail == detail)
-				.Sum (x => (decimal?) x.Quantity) ?? 0;
+		public static decimal GetRefundableQuantity (this SalesOrderDetail detail)
+		{
+			var refunded = from x in CustomerRefundDetail.Queryable
+						   where !x.Refund.IsCancelled && x.Refund.IsCompleted && x.SalesOrderDetail == detail
+						   select x.Quantity;
 
-			return detail.Quantity- refunded;
+			return detail.Quantity - refunded.ToList ().Sum ();
 		}
 
-		public static decimal GetCancellableQuantity (this SalesOrderDetail detail) {
+		public static decimal GetCancellableQuantity (this SalesOrderDetail detail)
+		{
 			var delivered = DeliveriesItineraryDetail.Queryable.Where (x => !x.DeliveriesItinerary.IsCancelled
 					&& x.DeliveriesItinerary.IsCompleted
 					&& x.DeliveryOrderDetail.OrderDetail == detail)
@@ -199,16 +203,17 @@ namespace Mictlanix.BE.Web.Helpers {
 			return detail.Quantity - delivered - picked;
 		}
 
-		public static decimal GetDeliverableQuantity (this SalesOrderDetail detail) {
+		public static decimal GetDeliverableQuantity (this SalesOrderDetail detail)
+		{
 			var deliveries = DeliveryOrderDetail.Queryable.Where (x => !x.DeliveryOrder.IsCancelled
-					&& x.DeliveryOrder.IsCompleted	
-					&& x.OrderDetail == detail).Select(x => x.Quantity).ToList();
+					&& x.DeliveryOrder.IsCompleted
+					&& x.OrderDetail == detail).Select (x => x.Quantity).ToList ();
 
 			var refunds = CustomerRefundDetail.Queryable.Where (x => !x.Refund.IsCancelled
 				&& x.Refund.IsCompleted
-				&& x.SalesOrderDetail == detail).Select(x => x.Quantity).ToList ();
+				&& x.SalesOrderDetail == detail).Select (x => x.Quantity).ToList ();
 
-			return detail.Quantity - (deliveries.Sum(x => (decimal?)x) ?? 0) - (refunds.Sum(x => (decimal?)x)??0);
+			return detail.Quantity - (deliveries.Sum (x => (decimal?) x) ?? 0) - (refunds.Sum (x => (decimal?) x) ?? 0);
 		}
 	}
 }
