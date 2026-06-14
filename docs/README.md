@@ -7,6 +7,7 @@ This directory contains the reverse-engineered specifications for the Mictlanix 
 | File | Contents |
 |------|----------|
 | [data-dictionary.md](data-dictionary.md) | All database tables with column-level descriptions |
+| [constants.md](constants.md) | All enum constants from `Model/Constants/` with integer values |
 | [specs/01-master-data.md](specs/01-master-data.md) | Products, Customers, Suppliers, Warehouses, etc. |
 | [specs/02-sales.md](specs/02-sales.md) | Quotes, POS, Sales Orders, Payments, Refunds |
 | [specs/03-production.md](specs/03-production.md) | Production Orders |
