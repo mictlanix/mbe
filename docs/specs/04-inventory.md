@@ -1,30 +1,47 @@
 # Inventory Specs
 
-Covers all physical stock movements: receipts (in), issues (out), transfers (between warehouses), and lot/serial tracking.
+Covers all physical stock movements: receipts (in), issues (out), transfers (between warehouses), adjustments, and lot/serial tracking.
 
-All inventory transactions post to `lot_serial_tracking` for products where `perishable=true` or `seriable=true`.
+All inventory transactions post to `lot_serial_tracking` via `InventoryHelpers.ChangeNotification`, which creates entries with `TransactionType` identifying the source document.
+
+---
+
+## Common Patterns
+
+### Warehouse Scope
+Every inventory action is scoped to the **user's POS warehouse** (`WebConfig.PointOfSale.Warehouse`). Users only see and can edit receipts/issues/transfers for their assigned warehouse. The `*` wildcard (with `AllowDelete` privilege) shows all records globally.
+
+### Confirm / Complete Sequence
+Every movement type follows: Create → Edit lines → Confirm (post to ledger). Once confirmed (`IsCompleted = true`), documents are read-only. Cancellation sets `IsCancelled = true` and may reverse ledger entries depending on type.
+
+### Incidence Logging
+All operations log inventory change notifications via `InventoryHelpers.ChangeNotification(TransactionType, docId, datetime, warehouse, null, product, ±quantity)`.
 
 ---
 
 ## 1. Inventory Receipts
 
 **Route**: `GET /inventory/receipts`  
-**SystemObject**: `InventoryReceipts`
+**Controller**: `InventoryController` (action: `Receipts`)  
+**SystemObject**: `InventoryReceipts` (15)
 
 ### Purpose
-Record goods arriving into a warehouse. Typically follows a purchase order but can also be standalone.
+Record goods arriving into a warehouse. Typically follows a purchase order but can be standalone.
 
 ### List View
-- Filter by: store, warehouse, date range, status (open/completed/cancelled)
-- Columns: folio, date, warehouse, linked PO, creator, status
+- Default filter: receipts for user's POS warehouse OR created by current user
+- Search numeric: matches PO ID, receipt ID, or serial
+- Search text: matches warehouse name
+- Wildcard `*` (requires `AllowDelete` privilege): shows all receipts globally
+- Sort: descending by ID
 
 ### Header Fields
 
 | Field | Column | Notes |
 |-------|--------|-------|
-| Store | `inventory_receipt.store` | From user context |
-| Serial/Folio | `inventory_receipt.serial` | Auto per store |
-| Warehouse | `inventory_receipt.warehouse` | Destination warehouse |
+| Store | `inventory_receipt.store` | Auto-set from warehouse's store |
+| Serial/Folio | `inventory_receipt.serial` | Assigned on Confirm (MAX+1 for store) |
+| Warehouse | `inventory_receipt.warehouse` | Destination; must match user's POS warehouse to edit |
 | Linked Purchase Order | `inventory_receipt.purchase_order` | Optional FK → `purchase_order` |
 | Notes | `inventory_receipt.comment` | |
 
@@ -32,42 +49,47 @@ Record goods arriving into a warehouse. Typically follows a purchase order but c
 
 | Field | Column | Notes |
 |-------|--------|-------|
-| Product | `product` | FK → `product` |
-| Linked PO Line | `purchase_order_detail` | Optional — if from PO |
-| Quantity Ordered | `quantity_ordered` | From PO line (display only) |
-| Quantity Received | `quantity` | Actual amount received |
-| Product Code | `product_code` | Snapshot |
+| Product | `product` | FK → `product` (must be `stockable = true`) |
+| Linked PO Line | `purchase_order_detail` | Optional FK |
+| Quantity Ordered | `quantity_ordered` | From PO line (display reference) |
+| Quantity Received | `quantity` | Actual quantity received |
+| Product Code | `product_code` | Snapshot of code at time of receipt |
 | Product Name | `product_name` | Snapshot |
 
-### Lot/Serial Entry
-When a line's product has `perishable=true` or `seriable=true`, an additional sub-form captures:
-- Lot number (`lot_serial_tracking.lot_number`)
-- Expiration date (`lot_serial_tracking.expiration_date`) — perishable only
-- Serial number (`lot_serial_tracking.serial_number`) — seriable only
-- Quantity per lot/serial entry
+> Lines can only be added/removed/edited when `receipt.Warehouse == user's POS warehouse`.
 
-### Actions
-- **Complete**: posts stock to warehouse; creates `lot_serial_tracking` entries (`source = InventoryReceipt`)
-- **Cancel**: voids the document; reverses any partial entries
+### Complementary Receipt
+An additional "complementary receipt" can be created from an existing one (`CreateComplementaryReceipt`) for the same PO — used to handle back-ordered items.
+
+### Confirm Action (`ConfirmReceipt`)
+1. Validates: all products must be `IsStockable = true` (non-stockable products rejected)
+2. Sets `Store = warehouse.Store`
+3. Assigns `Serial = MAX(serial FOR store) + 1`
+4. Sets `IsCompleted = true`
+5. Posts `InventoryHelpers.ChangeNotification(TransactionType.InventoryReceipt, ..., +quantity)` for each line
+
+### Cancel Action (`CancelReceipt`)
+- Sets `IsCancelled = true`
+- Does NOT automatically reverse ledger entries (cancellation of completed receipts must be handled via Inventory Issue or Adjustment)
 
 ### Business Rules
-- Cannot complete if any line has `quantity = 0`.
-- If linked to a purchase order, receiving more than ordered shows a warning.
-- Completed receipts cannot be edited; only cancellation is allowed.
-- Cancelled receipts reverse all `lot_serial_tracking` entries they created.
+- Cannot complete if warehouse doesn't match user's POS warehouse (non-admin).
+- Completed receipts are locked — only cancellation is allowed.
+- If linked to a purchase order, receiving more than ordered shows a warning (no hard block).
 
 ---
 
 ## 2. Inventory Issues
 
 **Route**: `GET /inventory/issues`  
-**SystemObject**: `InventoryIssues`
+**Controller**: `InventoryController` (action: `Issues`)  
+**SystemObject**: `InventoryIssues` (16)
 
 ### Purpose
-Record goods leaving a warehouse (write-offs, waste, supplier returns).
+Record goods leaving a warehouse (write-offs, waste, supplier returns, internal consumption).
 
 ### List View
-- Filter by: store, warehouse, date range, status
+- Filter: user's POS warehouse scope
 - Columns: folio, date, warehouse, linked supplier return, status
 
 ### Header Fields
@@ -77,7 +99,7 @@ Record goods leaving a warehouse (write-offs, waste, supplier returns).
 | Store | `inventory_issue.store` | |
 | Serial/Folio | `inventory_issue.serial` | |
 | Warehouse | `inventory_issue.warehouse` | Source warehouse |
-| Linked Supplier Return | `inventory_issue.supplier_return` | Optional FK |
+| Linked Supplier Return | `inventory_issue.supplier_return` | Optional FK → `supplier_return` |
 | Notes | `inventory_issue.comment` | |
 
 ### Line Item Fields (`inventory_issue_detail`)
@@ -90,11 +112,11 @@ Record goods leaving a warehouse (write-offs, waste, supplier returns).
 | Product Name | `product_name` | Snapshot |
 
 ### Lot/Serial Selection
-For products with tracking, user must specify which lot/serial numbers to consume (FIFO enforced by default).
+For products with `perishable = true` or `seriable = true`, user must specify which lot/serial numbers to consume. FIFO (earliest expiration date, then earliest tracking date) is the recommended default.
 
-### Actions
-- **Complete**: removes stock from warehouse; creates negative `lot_serial_tracking` entries
-- **Cancel**: reverses
+### Confirm Action
+- Posts `InventoryHelpers.ChangeNotification(TransactionType.InventoryIssue, ..., −quantity)` for each line
+- Sets `IsCompleted = true`
 
 ### Business Rules
 - Cannot issue more than current available stock.
@@ -105,13 +127,14 @@ For products with tracking, user must specify which lot/serial numbers to consum
 ## 3. Inventory Transfers
 
 **Route**: `GET /inventory/transfers`  
-**SystemObject**: `InventoryTransfers`
+**Controller**: `InventoryController` (action: `Transfers`)  
+**SystemObject**: `InventoryTransfers` (17)
 
 ### Purpose
 Move stock between two warehouses within the same store.
 
 ### List View
-- Filter by: store, from warehouse, to warehouse, date range, status
+- Filter: user's POS warehouse scope (from/to)
 
 ### Header Fields
 
@@ -132,24 +155,59 @@ Move stock between two warehouses within the same store.
 | Product Code | `product_code` | Snapshot |
 | Product Name | `product_name` | Snapshot |
 
-### Actions
-- **Complete**: creates a negative `lot_serial_tracking` entry for source warehouse and a positive one for destination
-- **Cancel**: reverses
+### Confirm Action
+- Posts two `InventoryHelpers.ChangeNotification` calls per line:
+  - Negative entry for source warehouse
+  - Positive entry for destination warehouse
+- `TransactionType.InventoryTransfer`
 
 ### Business Rules
 - Source and destination warehouses must be different.
 - Cannot transfer more than available stock in source.
-- Cross-store transfers are not supported (use issue + receipt between stores).
+- Cross-store transfers are not supported; use Issue + Receipt between stores.
 
 ---
 
-## 4. Lot / Serial Numbers
+## 4. Inventory Adjustments
 
-**Route**: `GET /inventory/lot-serial-numbers`  
-**SystemObject**: `LotSerialNumbers`
+**Route**: `GET /inventory/adjustments`  
+**SystemObject**: `InventoryAdjustments` (93)
 
 ### Purpose
-View and query the lot/serial tracking ledger. Shows current inventory by lot or serial number, with full movement history.
+Manual stock corrections after a physical count. Adds or removes stock without a linked purchase or sales document.
+
+### Features
+- Enter actual counted quantities per product per warehouse
+- System computes delta vs current ledger balance
+- Positive delta → issues a positive `lot_serial_tracking` entry
+- Negative delta → issues a negative entry
+
+### Key Tables
+- `lot_serial_tracking` (direct insert/update)
+
+---
+
+## 5. Physical Count Adjustment
+
+**SystemObject**: `PhysicalCountAdjustment` (74)
+
+### Purpose
+Supervisor-level tool for bulk physical inventory count entry. Requires elevated privilege separate from normal adjustments.
+
+### Distinction from Inventory Adjustments
+- `PhysicalCountAdjustment (74)` is the privilege gate for bulk count operations.
+- `InventoryAdjustments (93)` gates the standard adjustment form.
+- In practice, both post to `lot_serial_tracking`.
+
+---
+
+## 6. Lot / Serial Numbers
+
+**Route**: `GET /inventory/lot-serial-numbers`  
+**SystemObject**: `LotSerialNumbers` (42)
+
+### Purpose
+View and query the lot/serial tracking ledger. Shows current inventory by lot or serial number with full movement history.
 
 ### Features
 
@@ -159,17 +217,20 @@ View and query the lot/serial tracking ledger. Shows current inventory by lot or
 
 #### Movement History
 - Shows all `lot_serial_tracking` entries for selected filters
-- Columns: date, source document type, document folio/ID, warehouse, quantity (±)
+- Columns: date, `TransactionType` (source document type), document ID, warehouse, quantity (±)
 
 #### Expiry Alerts
-- Highlight lots expiring within configurable days threshold
+- Highlight lots expiring within a configurable threshold
 - Export expiring-soon list
 
 ### Key Tables
-- `lot_serial_tracking` — full ledger
-- `lot_serial_rqmt` — pending requirements (reserved but not yet tracked)
+- `lot_serial_tracking` — full movement ledger (one row per document line)
+- `lot_serial_rqmt` — pending reservations (reserved but not yet fulfilled)
+
+### Quantity Calculation
+Stock on hand = `SUM(lst.quantity)` grouped by `(warehouse, product, lot_number, serial_number)` where sum > 0
 
 ### Business Rules
-- Stock on hand = SUM(quantity) grouped by warehouse + product + lot + serial, where sum > 0
-- A serial number should appear in exactly one location at a time (quantity must be 0 or 1 per location)
-- FIFO picking order: oldest lot (earliest expiration_date, then earliest tracking date) first
+- A serial number should appear in exactly one location (quantity = 0 or 1 per location).
+- FIFO picking order: oldest lot (earliest `expiration_date`, then earliest tracking `date`) is consumed first.
+- Products with `perishable = false` and `seriable = false` still get tracking entries — the lot/serial fields are null.

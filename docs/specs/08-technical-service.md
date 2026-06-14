@@ -1,20 +1,21 @@
 # Technical Service Specs
 
-Covers equipment service workflows: intake receipts, diagnostic reports, customer service requests, and vehicle maintenance orders.
+Covers equipment service workflows: intake receipts, diagnostic reports, customer service requests, and fleet vehicle maintenance orders.
 
 ---
 
 ## 1. Technical Service Receipts
 
 **Route**: `GET /technical-service-receipts`  
-**SystemObject**: `TechnicalServiceReceipts`
+**Controller**: `TechnicalServiceReceiptsController`  
+**SystemObject**: `TechnicalServiceReceipts` (65)
 
 ### Purpose
 Equipment intake form. Records equipment received for service at the technical service counter — the physical check-in before any diagnosis or work begins.
 
 ### List View
-- Filter by: date range, status, brand, equipment type
-- Columns: ID, date, brand, equipment, model, serial number, status, location
+- Search by: equipment name/type, brand, model, serial number
+- Columns: ID, date, brand, equipment, model, serial number, location
 
 ### Form Fields (`tech_service_receipt`)
 
@@ -25,10 +26,10 @@ Equipment intake form. Records equipment received for service at the technical s
 | Model | `model` | Model name/number |
 | Serial Number | `serial_number` | |
 | Receipt Date | `date` | |
-| Status | `status` | Free text (e.g. "Powers on", "Dead on arrival") |
-| Storage Location | `location` | Bin/shelf where stored |
-| Checked By | `checker` | Name of receiving technician |
-| Notes | `comment` | Observed conditions |
+| Status | `status` | Free text condition description (e.g. "Powers on", "Dead on arrival") |
+| Storage Location | `location` | Bin/shelf where equipment is stored |
+| Checked By | `checker` | Receiving technician's name |
+| Notes | `comment` | Observed conditions, accessories noted |
 
 ### Components Sub-Panel (`tech_service_receipt_component`)
 
@@ -40,22 +41,29 @@ Equipment intake form. Records equipment received for service at the technical s
 | Notes | `comment` | |
 
 ### Actions
+- **Create**: creates receipt record directly; redirects to Edit
+- **Edit**: update fields and manage components
 - **Print Receipt**: customer acknowledgment slip listing equipment and components received
-- **Link to Service Request**: associate with an existing `tech_service_request`
+- **Delete**: hard delete (no soft-delete flag); only allowed on non-linked receipts
+
+### Business Rules
+- Components sub-panel is managed inline on the Edit view.
+- No workflow states (no confirm/cancel flow) — receipt is just a record.
 
 ---
 
 ## 2. Technical Service Reports
 
 **Route**: `GET /technical-service-reports`  
-**SystemObject**: `TechnicalServiceReports`
+**Controller**: `TechnicalServiceReportsController`  
+**SystemObject**: `TechnicalServiceReports` (58)
 
 ### Purpose
 Technician's diagnostic and repair report for a serviced piece of equipment. Documents work performed, cost, and outcome.
 
 ### List View
-- Filter by: date range, equipment type, brand, technician
-- Columns: ID, date, equipment, brand, model, serial, technician, cost
+- Search by: service type, equipment name, brand, model, serial number
+- Columns: ID, date, equipment, brand, model, serial number, technician, cost
 
 ### Form Fields (`tech_service_report`)
 
@@ -63,37 +71,43 @@ Technician's diagnostic and repair report for a serviced piece of equipment. Doc
 |-------|--------|-------|
 | Date | `date` | Report date |
 | Service Location | `location` | Where service was performed |
-| Service Type | `type` | Enum or free text (e.g. "Preventive", "Corrective") |
+| Service Type | `type` | Searched as text; e.g. "Preventive", "Corrective" |
 | Equipment | `equipment` | Equipment description |
 | Brand | `brand` | |
 | Model | `model` | |
 | Serial Number | `serial_number` | |
 | Equipment User | `user` | End-user name |
-| Technician | `technician` | Name of technician |
+| Technician | `technician` | Name of technician who performed service |
 | Service Cost | `cost` | Amount charged |
 | Problem Reported by User | `user_report` | User's description of the issue |
-| Technical Diagnosis | `description` | Technician's diagnosis and work done |
+| Technical Diagnosis | `description` | Technician's diagnosis and work performed |
 | Notes | `comment` | |
+
+### Actions
+- **Create / Edit / Delete**: standard CRUD; no workflow states
+- **Print**: service report document
 
 ---
 
 ## 3. Technical Service Requests
 
 **Route**: `GET /technical-service-requests`  
-**SystemObject**: `TechnicalServiceRequests`
+**Controller**: `TechnicalServiceRequestsController`  
+**SystemObject**: `TechnicalServiceRequests` (64)
 
 ### Purpose
-Customer-facing service request. A customer submits a request for equipment servicing; this tracks the full lifecycle from intake to completion.
+Customer-facing service request. Tracks the full service lifecycle: intake → diagnosis → work → delivery.
 
 ### List View
-- Filter by: customer, date range, service type, payment status, end date
-- Columns: ID, date, customer, equipment, brand, model, responsible, status, end date
+- Search by: equipment name, brand, model, serial number
+- Sort: all records, no creator-filter default
+- Columns: ID, date, customer, equipment, brand, model, responsible technician, end date
 
 ### Form Fields (`tech_service_request`)
 
 | Field | Column | Notes |
 |-------|--------|-------|
-| Service Type | `type` | Enum |
+| Service Type | `type` | Enum or category |
 | Brand | `brand` | |
 | Equipment | `equipment` | |
 | Model | `model` | |
@@ -101,7 +115,7 @@ Customer-facing service request. A customer submits a request for equipment serv
 | Request Date | `date` | |
 | End Date | `end_date` | Completion/return date |
 | Customer | `customer` | FK → `customer` |
-| Responsible Technician | `responsible` | Name |
+| Responsible Technician | `responsible` | Name (free text) |
 | Service Location | `location` | |
 | Payment Status | `payment_status` | e.g. "Pending", "Paid" |
 | Shipping Method | `shipping_method` | How equipment arrives/departs |
@@ -112,34 +126,42 @@ Customer-facing service request. A customer submits a request for equipment serv
 | Internal Notes | `comment` | |
 
 ### Components Sub-Panel (`tech_service_request_component`)
-Same structure as `tech_service_receipt_component` — lists accessories and components received with the equipment.
+Same structure as receipt components: name, quantity, serial number, notes. Lists accessories received with the equipment.
 
 ### Actions
-- **Mark Complete**: sets `end_date` to today
-- **Print Work Order**: printable service request form for technician
+- **Create**: creates immediately, redirects to Edit
+- **Edit**: update all fields and manage components
+- **Delete** (`DeleteConfirmed`): hard delete — no soft delete
+- **Print Work Order**: printable service request document for technician
+
+### Business Rules
+- No confirm/cancel flow; status is tracked via `payment_status` and `end_date` fields.
+- Customer is optional (walk-in service without account).
 
 ---
 
 ## 4. Vehicle Service Orders
 
 **Route**: `GET /vehicles/service-orders`  
-**SystemObject**: `VehicleServiceOrders`
+**Controller**: `VehiclesController` (action: `ServiceOrders`)  
+**SystemObject**: `VehicleServiceOrders` (90)
 
 ### Purpose
 Internal maintenance and repair orders for fleet vehicles. Tracks problems reported, work performed, and spare parts consumed.
 
 ### List View
-- Filter by: vehicle, date range, status (open/completed/cancelled)
-- Columns: ID, vehicle, date, problem summary, status, completed
+- Search numeric: matches order ID
+- Search text: matches vehicle name, vehicle nickname, or notifier's full name
+- Columns: ID, vehicle, date, problem summary, status (completed flag)
 
-### Header Fields (`vehicle_service_order`)
+### Header Fields (`service_order` / `vehicle_service_order`)
 
 | Field | Column | Notes |
 |-------|--------|-------|
 | Vehicle | `vehicle` | FK → `vehicle` |
 | Problem Description | `problem_description` | Reported issue |
 | Service Description | `service_description` | Work performed |
-| Date | `date` | Scheduled/completion date |
+| Date | `date` | Scheduled or completion date |
 | Notifier | `notifier` | FK → `employee` — who reported the issue |
 | Notes | `comment` | |
 
@@ -147,16 +169,18 @@ Internal maintenance and repair orders for fleet vehicles. Tracks problems repor
 
 | Field | Column | Notes |
 |-------|--------|-------|
-| Spare Part | `spare_part` | FK → `product` (must be `purchasable=true`) |
+| Spare Part | `spare_part` | FK → `product` |
 | Quantity | `quantity` | |
 | Date Used | `date` | |
 | Notes | `comment` | |
 
 ### Actions
-- **Complete**: sets `completed=1`, records service description and date
-- **Cancel**: sets `cancelled=1`
+- **Create** (`CreateServiceOrder`): creates order immediately; redirects to Edit
+- **Edit** (`EditServiceOrder`): update all fields and spare parts
+- **Delete** (`DeleteServiceOrderConfirmed`): hard delete
+- **Add Item**: add spare part line to the order
 
 ### Business Rules
-- Spare parts used are deducted from inventory via a linked `inventory_issue` (optional, if integrated).
 - Vehicle must be active (`vehicle.active = 1`) to create a service order.
+- Spare parts are tracked for maintenance cost reporting but do NOT automatically deduct stock (no auto-inventory issue).
 - Notifier and creator may be different employees.

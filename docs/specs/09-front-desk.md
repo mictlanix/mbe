@@ -7,13 +7,15 @@ Covers administrative/clerical services managed at the front desk: document tran
 ## 1. Translation Requests
 
 **Route**: `GET /translation-requests`  
-**SystemObject**: `TranslationRequests`
+**Controller**: `TranslationRequestsController`  
+**SystemObject**: `TranslationRequests` (59)
 
 ### Purpose
 Track requests for document translation sent to external agencies. Used by administrative staff to manage turnaround, cost, and delivery of translated documents.
 
 ### List View
-- Filter by: requester, date range, agency, delivery date range
+- Search by: agency name, document name
+- No user-scope filter — all requests are visible
 - Columns: ID, date, requester, agency, document name, amount, delivery date
 
 ### Form Fields (`translation_request`)
@@ -22,32 +24,36 @@ Track requests for document translation sent to external agencies. Used by admin
 |-------|--------|-------|
 | Requester | `requester` | FK → `employee` — who is requesting |
 | Request Date | `date` | |
-| Agency | `agency` | Translation agency name |
-| Document Name | `document_name` | Name/title of document being translated |
+| Agency | `agency` | Translation agency name (searchable) |
+| Document Name | `document_name` | Name/title of document being translated (searchable) |
 | Amount | `amount` | Cost of translation |
 | Expected Delivery Date | `delivery_date` | When translated document is expected |
 | Notes | `comment` | |
 
 ### Actions
-- **Mark Delivered**: update status / close request (via `comment` or status flag if added)
-- **Print Request**: printable request form for agency
+- **Create**: creates immediately, redirects to Edit
+- **Edit**: update all fields
+- **View**: read-only detail view
+- **Delete** (`DeleteConfirmed`): hard delete — no soft delete, no workflow states
 
 ### Business Rules
+- No confirm/cancel workflow — purely informational tracking.
 - `requester` must be an active employee.
-- Cost tracking supports budget reporting for front desk services.
 
 ---
 
 ## 2. Notarizations
 
 **Route**: `GET /notarizations`  
-**SystemObject**: `Notarizations`
+**Controller**: `NotarizationsController`  
+**SystemObject**: `Notarizations` (60)
 
 ### Purpose
 Track notarization processes managed through a notary office. Records request details, cost, payment, and expected delivery of notarized documents.
 
 ### List View
-- Filter by: requester, notary office, date range, delivery date range
+- Search by: notary office name, document description
+- No user-scope filter — all records are visible
 - Columns: ID, date, requester, notary office, document description, amount, payment date, delivery date
 
 ### Form Fields (`notarization`)
@@ -55,18 +61,21 @@ Track notarization processes managed through a notary office. Records request de
 | Field | Column | Notes |
 |-------|--------|-------|
 | Requester | `requester` | FK → `employee` |
-| Notary Office | `notary_office` | Office name |
+| Notary Office | `notary_office` | Office name (searchable) |
 | Request Date | `date` | |
-| Document Description | `document_description` | What is being notarized |
+| Document Description | `document_description` | What is being notarized (searchable) |
 | Amount | `amount` | Notarization fee |
 | Payment Date | `payment_date` | When fee is/was paid |
 | Expected Delivery Date | `delivery_date` | When notarized document returns |
 | Notes | `comment` | |
 
 ### Actions
-- **Mark Received**: record that notarized document has been returned
-- **Print**: request summary
+- **Create**: creates immediately, redirects to Edit
+- **Edit**: update all fields
+- **View**: read-only detail view
+- **Delete** (`DeleteConfirmed`): hard delete — no soft delete
 
 ### Business Rules
-- Both `payment_date` and `delivery_date` are tracked independently (payment may occur before document is ready).
+- No confirm/cancel workflow — purely informational tracking.
+- `payment_date` and `delivery_date` are tracked independently (payment often precedes document delivery).
 - `requester` must be an active employee.
