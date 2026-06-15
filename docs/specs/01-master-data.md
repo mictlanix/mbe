@@ -71,12 +71,9 @@ When a product is created, the controller automatically:
 8. Logs an `Incidence` record (`SourceType.Product`)
 
 ### Delete Behavior
-Deletion is a **soft delete** combined with a price cleanup:
-1. Sets `product.disabled = true` (soft delete — product hidden from new transactions)
-2. **Hard-deletes all `product_price` rows** for this product
+1. Hard-deletes all `product_price` rows for this product
+2. Hard-deletes the `product` record
 3. Logs an `Incidence` record (`SourceType.Product`)
-
-Product is excluded from `IQProducts` queryable once `disabled = true`.
 
 ### Merge Feature
 **Route**: `POST /products/merge`  
@@ -93,11 +90,10 @@ Tables remapped during merge include: `sales_order_detail`, `purchase_order_deta
 Create, Edit, and Delete all write an `incidence` record with `source_type = SourceType.Product`.
 
 ### Business Rules
-- `code` must be unique across all products (including disabled ones).
+- `code` must be unique across all products.
 - If `stockable = false`, stock reports exclude this product.
 - If `perishable = true`, lot/expiry must be entered on inventory receipts; FIFO by expiration date.
 - If `seriable = true`, serial number must be entered on receipts and tracked through sales.
-- `disabled = true` hides product from new orders/purchases but retains all historical data.
 - A new `PriceList` added after the product was created does NOT automatically add a `product_price` row — must be added manually.
 
 ---
@@ -167,7 +163,6 @@ Buyer entities. All sales orders, payments, and refunds belong to a customer.
 ### Business Rules
 - **Cannot delete `WebConfig.DefaultCustomer`**: the system-default customer (used for anonymous POS sales) is protected from deletion. Attempting to delete it returns an error.
 - A customer at `credit_limit` cannot place new credit orders until balance is reduced.
-- `disabled` customers cannot appear on new orders.
 - `salesperson` is optional; some customers are walk-ins with no assigned rep.
 
 ---
