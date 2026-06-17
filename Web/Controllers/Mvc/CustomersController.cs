@@ -60,7 +60,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				Limit = WebConfig.PageSize
 			};
 
-			search = GetCustomers(search);
+			search = GetCustomers (search);
 
 			return View (search);
 		}
@@ -83,20 +83,20 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 
 			var qry = from x in MBEQueryable.IQCustomers
-				  select x;
+					  select x;
 
-			if (!string.IsNullOrEmpty(search.Pattern)) {
+			if (!string.IsNullOrEmpty (search.Pattern)) {
 				var pattern = search.Pattern.Trim ();
-				 qry = from x in qry
+				qry = from x in qry
 					  where x.Name.Contains (pattern) ||
-					      x.Code.Contains (pattern) ||
-					      x.Zone.Contains (pattern)
+						  x.Code.Contains (pattern) ||
+						  x.Zone.Contains (pattern)
 					  select x;
 			}
 
 			qry = from x in qry
-			      orderby x.Id descending
-			      select x;
+				  orderby x.Id descending
+				  select x;
 
 			search.Total = qry.Count ();
 			search.Results = qry.Skip (search.Offset).Take (search.Limit).ToList ();
@@ -119,12 +119,18 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			item.PriceList = PriceList.TryFind (item.PriceListId);
 			item.Creator = CurrentUser.Employee;
+
 			if (item.SalesPersonId.HasValue) {
 				item.SalesPerson = Employee.TryFind (item.SalesPersonId.Value);
 			}
-			
-			if (!ModelState.IsValid)
+
+			if (item.PriceListId == 0) {
 				return PartialView ("_Create", item);
+			}
+
+			if (!ModelState.IsValid) {
+				return PartialView ("_Create", item);
+			}
 
 			var settings = new JsonSerializerSettings {
 				StringEscapeHandling = StringEscapeHandling.EscapeNonAscii
@@ -134,7 +140,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				item.CreateAndFlush ();
 				var incidence = new Incidence {
 					ModificationTime = DateTime.Now,
-					PreviousState = JsonConvert.SerializeObject( item.GetSerializable(), settings),
+					PreviousState = JsonConvert.SerializeObject (item.GetSerializable (), settings),
 					SourceType = SourceType.Customer,
 					Reference = item.Id,
 					Updater = CurrentUser.Employee,
@@ -186,7 +192,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			entity.ShippingRequiredDocument = item.ShippingRequiredDocument;
 			entity.Comment = item.Comment;
 			entity.SalesPerson = item.SalesPerson;
-			
+
 			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
 			}
@@ -251,15 +257,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public JsonResult GetSuggestions (string pattern)
 		{
 			var qry = from x in MBEQueryable.IQCustomers
-				  where x.Code.Contains (pattern) ||
-				      x.Name.Contains (pattern) ||
-				      x.Zone.Contains (pattern)
-				  select new {
-					  id = x.Id,
-					  name = x.Name,
-					  code = x.Code,
-					  hasCredit = (x.CreditDays > 0 && x.CreditLimit > 0)
-				  };
+					  where x.Code.Contains (pattern) ||
+						  x.Name.Contains (pattern) ||
+						  x.Zone.Contains (pattern)
+					  select new {
+						  id = x.Id,
+						  name = x.Name,
+						  code = x.Code,
+						  hasCredit = (x.CreditDays > 0 && x.CreditLimit > 0)
+					  };
 
 			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
 		}
@@ -268,9 +274,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			JsonResult result = new JsonResult ();
 			var qry = from x in MBEQueryable.IQCustomers
-				  from y in x.Taxpayers
-				  where x.Id == id
-				  select new { id = y.Id, name = string.Format ("{1} ({0})", y.Id, y.Name) };
+					  from y in x.Taxpayers
+					  where x.Id == id
+					  select new { id = y.Id, name = string.Format ("{1} ({0})", y.Id, y.Name) };
 
 			result = Json (qry.ToList ());
 			result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
@@ -400,13 +406,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public JsonResult ListEmails (int id)
 		{
 			var qry1 = from x in Customer.Queryable
-				   from y in x.Taxpayers
-				   where x.Id == id
-				   select new { id = y.Email, name = string.Format ("{1} <{0}>", y.Email, y.Name) };
+					   from y in x.Taxpayers
+					   where x.Id == id
+					   select new { id = y.Email, name = string.Format ("{1} <{0}>", y.Email, y.Name) };
 			var qry2 = from x in Customer.Queryable
-				   from y in x.Contacts
-				   where x.Id == id
-				   select new { id = y.Email, name = string.Format ("{1} <{0}>", y.Email, y.Name) };
+					   from y in x.Contacts
+					   where x.Id == id
+					   select new { id = y.Email, name = string.Format ("{1} <{0}>", y.Email, y.Name) };
 
 			return Json (qry1.ToList ().Union (qry2.ToList ()).ToList (), JsonRequestBehavior.AllowGet);
 		}
@@ -425,7 +431,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			var prod = Customer.TryFind (customer);
 			var dup = Customer.TryFind (duplicate);
-			var to_delete = dup.Taxpayers.Intersect (prod.Taxpayers).ToList();
+			var to_delete = dup.Taxpayers.Intersect (prod.Taxpayers).ToList ();
 
 			using (var scope = new TransactionScope ()) {
 				foreach (var t in to_delete) {
@@ -434,7 +440,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				}
 			}
 
-			DBHelpers.Merge ("customer","customer_id",duplicate, customer);
+			DBHelpers.Merge ("customer", "customer_id", duplicate, customer);
 
 			//	string sql = @"	UPDATE customer_address SET customer = :customer WHERE customer = :duplicate;
 			//		UPDATE customer_contact SET customer = :customer WHERE customer = :duplicate;
@@ -477,20 +483,20 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var ms = new MemoryStream ();
 			var customers = (from x in Customer.Queryable
-					 orderby x.Name
-					 select x).ToList ();
+							 orderby x.Name
+							 select x).ToList ();
 			var taxpayers = (from x in Customer.Queryable
-					 from y in x.Taxpayers
-					 orderby x.Name
-			                 select new { Id = x.Id, Value = y }).ToList ();
+							 from y in x.Taxpayers
+							 orderby x.Name
+							 select new { Id = x.Id, Value = y }).ToList ();
 			var addresses = (from x in Customer.Queryable
-					 from y in x.Addresses
-					 orderby x.Name
-			                 select new { Id = x.Id, Value = y }).ToList ();
+							 from y in x.Addresses
+							 orderby x.Name
+							 select new { Id = x.Id, Value = y }).ToList ();
 			var contacts = (from x in Customer.Queryable
-					from y in x.Contacts
-					orderby x.Name
-			                select new { Id = x.Id, Value = y }).ToList ();
+							from y in x.Contacts
+							orderby x.Name
+							select new { Id = x.Id, Value = y }).ToList ();
 
 			using (var package = new ExcelPackage ()) {
 				int row = 2;
@@ -600,9 +606,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					ws.Cells [row, 7].Value = item.Value.Locality;
 					ws.Cells [row, 8].Value = item.Value.Borough;
 					ws.Cells [row, 9].Value = item.Value.State;
-					ws.Cells [row,10].Value = item.Value.City;
-					ws.Cells [row,11].Value = item.Value.Country;
-					ws.Cells [row,12].Value = item.Value.Comment;
+					ws.Cells [row, 10].Value = item.Value.City;
+					ws.Cells [row, 11].Value = item.Value.Country;
+					ws.Cells [row, 12].Value = item.Value.Comment;
 
 					row++;
 				}
