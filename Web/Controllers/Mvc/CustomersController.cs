@@ -111,7 +111,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		public ActionResult Create ()
 		{
-			return PartialView ("_Create", new Customer ());
+			var price_list = PriceList.Queryable.Where (x => x.Id > 0).FirstOrDefault ();
+			var item = new Customer {
+				PriceListId = price_list.Id,
+				PriceList = price_list
+			};
+			return PartialView ("_Create", item);
 		}
 
 		[HttpPost]
@@ -125,6 +130,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			if (item.PriceListId == 0) {
+				item.PriceList = null;
 				return PartialView ("_Create", item);
 			}
 
