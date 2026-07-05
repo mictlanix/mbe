@@ -87,7 +87,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var item = WebConfig.Store;
 			var pattern = (search.Pattern ?? string.Empty).Trim ();
 			var user = CurrentUser.Employee;
-			IQueryable<SalesOrder> query = MBEQueryable.IQSalesOrders.Where(x => x.Creator == user
+			IQueryable<SalesOrder> query = MBEQueryable.IQSalesOrders.Where (x => x.Creator == user
 							|| x.Updater == user || x.SalesPerson == user);
 			query = query.Where (x => !x.IsCancelled);
 
@@ -96,13 +96,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			} else if (!string.IsNullOrEmpty (pattern)) {
 
 				query = from x in MBEQueryable.IQSalesOrders
-					select x;
+						select x;
 
 				if (!(pattern.Contains (Resources.WilcardStringPatternForSearch) && CurrentUser.IsAdministrator)) {
 					query = from x in query
-						where (x.Customer.Name.Contains (pattern) ||
-							x.SalesPerson.Nickname.Contains (pattern)) && x.Store == item
-						select x;
+							where (x.Customer.Name.Contains (pattern) ||
+								x.SalesPerson.Nickname.Contains (pattern)) && x.Store == item
+							select x;
 				}
 			}
 
@@ -166,7 +166,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.Customer = Customer.TryFind (WebConfig.DefaultCustomer);
 			item.SalesPerson = CurrentUser.Employee;
 			item.Date = dt;
-			item.PromiseDate = dt.AddDays(WebConfig.MaxDaysToDeliverStockables);
+			item.PromiseDate = dt.AddDays (WebConfig.MaxDaysToDeliverStockables);
 			item.DueDate = dt;
 			item.Currency = WebConfig.DefaultCurrency;
 			item.ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate ();
@@ -230,7 +230,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.Date = dt;
 			item.PromiseDate = dt;
 			item.Terms = salesquote.Terms;
-			item.DueDate = salesquote.Terms == PaymentTerms.NetD ? dt.AddDays (item.Customer.CreditDays) : dt ;
+			item.DueDate = salesquote.Terms == PaymentTerms.NetD ? dt.AddDays (item.Customer.CreditDays) : dt;
 			item.Currency = salesquote.Currency;
 			item.ExchangeRate = salesquote.ExchangeRate;
 			item.Contact = salesquote.Contact;
@@ -300,10 +300,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var item = SalesOrder.TryFind (id);
 			var query = from x in item.Customer.Contacts
-				    select new {
-					    value = x.Id,
-					    text = x.ToString ()
-				    };
+						select new {
+							value = x.Id,
+							text = x.ToString ()
+						};
 
 			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
 		}
@@ -312,10 +312,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var item = SalesOrder.TryFind (id);
 			var query = from x in item.Customer.Taxpayers
-				    select new {
-					    value = x.Id,
-					    text = x.ToString ()
-				    };
+						select new {
+							value = x.Id,
+							text = x.ToString ()
+						};
 			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
 		}
 
@@ -348,11 +348,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var item = SalesOrder.TryFind (id);
 			var query = from x in item.Customer.Addresses
-				    where x.IsDisabled == false
-				    select new {
-					    value = x.Id,
-					    text = x.ToString ()
-				    };
+						where x.IsDisabled == false
+						select new {
+							value = x.Id,
+							text = x.ToString ()
+						};
 
 			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
 		}
@@ -360,10 +360,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public JsonResult Terms ()
 		{
 			var query = from x in Enum.GetValues (typeof (PaymentTerms)).Cast<PaymentTerms> ()
-				    select new {
-					    value = (int) x,
-					    text = x.GetDisplayName ()
-				    };
+						select new {
+							value = (int) x,
+							text = x.GetDisplayName ()
+						};
 
 			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
 		}
@@ -812,14 +812,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			int pl = entity.Customer.PriceList.Id;
 			var w = warehouse_id.HasValue ? Warehouse.TryFind (warehouse_id) : null;
 			var cost = (from x in ProductPrice.Queryable
-				    where x.Product.Id == product && x.List.Id == 0
-				    select x).SingleOrDefault ();
+						where x.Product.Id == product && x.List.Id == 0
+						select x).SingleOrDefault ();
 			var price = (from x in ProductPrice.Queryable
-				     where x.Product.Id == product && x.List.Id == pl
-				     select x).SingleOrDefault ();
+						 where x.Product.Id == product && x.List.Id == pl
+						 select x).SingleOrDefault ();
 			var discount = (from x in CustomerDiscount.Queryable
-					where x.Product.Id == product && x.Customer.Id == entity.Customer.Id
-					select x.Discount).SingleOrDefault ();
+							where x.Product.Id == product && x.Customer.Id == entity.Customer.Id
+							select x.Discount).SingleOrDefault ();
 
 			//if (p.StockRequired && p.IsStockable) {
 			//	var stock = LotSerialTracking.Queryable.Where (x => x.Product == p && x.Warehouse == w).Sum (y => (decimal?) y.Quantity) ?? 0.0m;
@@ -1045,7 +1045,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			entity.Quantity = value;
 
-			var validation = EvalDetailEditable(entity).Bind(ValidateStock);
+			var validation = EvalDetailEditable (entity).Bind (ValidateStock);
 
 			if (value < entity.Product.MinimumOrderQuantity) {
 				Response.StatusCode = 400;
@@ -1083,7 +1083,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.ItemAlreadyCompletedOrCancelled);
 			}
 
-			entity.Warehouse = MBEQueryable.IQWarehouses.Single(x => x.Id == value);
+			entity.Warehouse = MBEQueryable.IQWarehouses.Single (x => x.Id == value);
 
 			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
@@ -1106,7 +1106,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			bool success;
 			decimal val;
 
-			var result = EvalDetailEditable (entity).Bind(ValidatePrice).Bind(ValidateStock);
+			var result = EvalDetailEditable (entity).Bind (ValidatePrice).Bind (ValidateStock);
 
 			if (entity.SalesOrder.IsCompleted || entity.SalesOrder.IsCancelled) {
 				Response.StatusCode = 400;
@@ -1114,8 +1114,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			success = decimal.TryParse (value.Trim (),
-						    System.Globalization.NumberStyles.Currency,
-						    null, out val);
+							System.Globalization.NumberStyles.Currency,
+							null, out val);
 
 			if (success && entity.Price >= 0) {
 				var price_in_list = ProductPrice.Queryable.Where (x => x.List == entity.SalesOrder.Customer.PriceList && x.Product == entity.Product).SingleOrDefault ();
@@ -1268,7 +1268,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			entity.IsDelivered = false;
 			entity.IsCompleted = true;
 
-			entity.Serial = (SalesOrder.Queryable.Where(x => x.Store == WebConfig.Store).Max (x => (int?)x.Serial) + 1 ?? 1);
+			entity.Serial = (SalesOrder.Queryable.Where (x => x.Store == WebConfig.Store).Max (x => (int?) x.Serial) + 1 ?? 1);
 
 			foreach (var detail in entity.Details) {
 				if (detail.Price == decimal.Zero) {
@@ -1278,7 +1278,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			if (messages.Count > 0) {
-				return RedirectToAction("Edit", new { id = entity.Id });
+				return RedirectToAction ("Edit", new { id = entity.Id });
 			}
 
 			using (var scope = new TransactionScope ()) {
@@ -1350,7 +1350,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		//			    code = x.Code,
 		//			    model = x.Model ?? Resources.None,
 		//			    sku = x.SKU ?? Resources.None,
-		//			    url = Url.Content (x.Photo),
+		//			    url = Url.Photo (x.Photo),
 		//			    price = x.Price,
 		//			    quantity = LotSerialTracking.Queryable.Where (y => y.Product.Code == x.Code
 		//						&& y.Warehouse == WebConfig.PointOfSale.Warehouse)
@@ -1440,19 +1440,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}, null);
 
 			var items = (from x in raw
-				     select new {
-					     id = x.id,
-					     name = x.name,
-					     code = x.code,
-					     sku = x.sku,
-					     model = x.model,
-					     url = x.url,
-					     warehouse_id = x.warehouse_id,
-					     quantity = x.quantity,
-					     warehouse = x.warehouse,
-					     price = x.price,
-					     stockable = x.stockable,
-				     }).ToList ();
+						 select new {
+							 id = x.id,
+							 name = x.name,
+							 code = x.code,
+							 sku = x.sku,
+							 model = x.model,
+							 url = Url.Photo ((string) x.url),
+							 warehouse_id = x.warehouse_id,
+							 quantity = x.quantity,
+							 warehouse = x.warehouse,
+							 price = x.price,
+							 stockable = x.stockable,
+						 }).ToList ();
 
 
 			return Json (items, JsonRequestBehavior.AllowGet);
@@ -1529,7 +1529,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return detail;
 		}
 
-		private List<string> GetValidationMessages (SalesOrderDetail detail) {
+		private List<string> GetValidationMessages (SalesOrderDetail detail)
+		{
 			var errors = new List<string> ();
 			var stock = ValidateStock (detail);
 			var price = ValidatePrice (detail);
@@ -1537,7 +1538,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				errors.AddRange (stock.Errors);
 			}
 			if (!price.Success) {
-				errors.AddRange(price.Errors);
+				errors.AddRange (price.Errors);
 			}
 
 			return errors;

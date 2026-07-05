@@ -180,21 +180,21 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var item = WebConfig.Store;
 			var pattern = (search.Pattern ?? string.Empty).Trim ();
 			IQueryable<ServiceOrder> query = from x in ServiceOrder.Queryable
-							 select x;
+											 select x;
 
 			if (int.TryParse (pattern, out int id) && id > 0) {
 				query = query.Where (x => x.Id == id);
 			} else if (string.IsNullOrEmpty (pattern)) {
 				query = from x in query
-					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending
-					select x;
+						orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending
+						select x;
 			} else {
 				query = from x in query
-					where x.Vehicle.Name.Contains (pattern) ||
-						x.Vehicle.NickName.Contains (pattern) ||
-						(x.Notifier.FirstName + " " + x.Notifier.LastName).Contains (pattern)
-					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending
-					select x;
+						where x.Vehicle.Name.Contains (pattern) ||
+							x.Vehicle.NickName.Contains (pattern) ||
+							(x.Notifier.FirstName + " " + x.Notifier.LastName).Contains (pattern)
+						orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Date descending
+						select x;
 			}
 
 			search.Total = query.Count ();
@@ -394,17 +394,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			using (var scope = new TransactionScope ()) {
 
 				var warehouse = WebConfig.PointOfSale.Warehouse;
-					var dt = DateTime.Now;
+				var dt = DateTime.Now;
 
-					foreach (var x in entity.Details) {
-						//x.Warehouse = warehouse;
-						x.Update ();
+				foreach (var x in entity.Details) {
+					//x.Warehouse = warehouse;
+					x.Update ();
 
-						InventoryHelpers.ChangeNotification (TransactionType.InventoryIssue, entity.Id,
-							dt, warehouse, null, x.SparePart, -x.Quantity);
-					}
+					InventoryHelpers.ChangeNotification (TransactionType.InventoryIssue, entity.Id,
+						dt, warehouse, null, x.SparePart, -x.Quantity);
+				}
 
-				
+
 				entity.UpdateAndFlush ();
 			}
 
@@ -437,11 +437,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}, null);
 
 			var items = (from x in raw
-				     select new {
-					     id = x.id,
-					     name = x.nickname,
-					     service = x.service
-				     }).ToList ();
+						 select new {
+							 id = x.id,
+							 name = x.nickname,
+							 service = x.service
+						 }).ToList ();
 
 
 			return Json (items, JsonRequestBehavior.AllowGet);
@@ -490,12 +490,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}, null);
 
 			var items = (from x in raw
-				     select new {
-					     id = x.id,
-					     name = x.name,
-					     url = x.url,
-					     quantity = x.quantity,
-				     }).ToList ();
+						 select new {
+							 id = x.id,
+							 name = x.name,
+							 url = Url.Photo ((string) x.url),
+							 quantity = x.quantity,
+						 }).ToList ();
 
 
 			return Json (items, JsonRequestBehavior.AllowGet);
@@ -504,11 +504,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public JsonResult List ()
 		{
 			var qry = (from x in MBEQueryable.IQVehicles
-				   orderby x.Name
-				   select new {
-					   id = x.Id,
-					   name = x.NickName + " - " + x.Name
-				   }).ToList ();
+					   orderby x.Name
+					   select new {
+						   id = x.Id,
+						   name = x.NickName + " - " + x.Name
+					   }).ToList ();
 
 			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
 		}

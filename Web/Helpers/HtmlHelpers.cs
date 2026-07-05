@@ -29,6 +29,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web;
@@ -73,7 +74,7 @@ namespace Mictlanix.BE.Web.Helpers {
 			imgBuilder.MergeAttribute ("src", url.Content (imagePath));
 
 			if (attrs.ContainsKey ("alt")) {
-				imgBuilder.MergeAttribute ("alt", attrs["alt"].ToString ());
+				imgBuilder.MergeAttribute ("alt", attrs ["alt"].ToString ());
 				attrs.Remove ("alt");
 			}
 
@@ -123,8 +124,8 @@ namespace Mictlanix.BE.Web.Helpers {
 		{
 			var metadata = ModelMetadata.FromLambdaExpression (expression, htmlHelper.ViewData);
 			return metadata.Model == null
-			    ? MvcHtmlString.Empty
-			    : htmlHelper.EditorFor (expression);
+				? MvcHtmlString.Empty
+				: htmlHelper.EditorFor (expression);
 		}
 
 		public static IHtmlString SafeDisplayFor<TModel, TProperty> (
@@ -133,8 +134,17 @@ namespace Mictlanix.BE.Web.Helpers {
 		{
 			var metadata = ModelMetadata.FromLambdaExpression (expression, htmlHelper.ViewData);
 			return metadata.Model == null
-			    ? MvcHtmlString.Empty
-			    : htmlHelper.DisplayFor (expression);
+				? MvcHtmlString.Empty
+				: htmlHelper.DisplayFor (expression);
+		}
+
+		public static string Photo (this UrlHelper url, string imagePath)
+		{
+			if (string.IsNullOrWhiteSpace (imagePath)) {
+				return url.Content (WebConfig.DefaultPhotoFile);
+			}
+
+			return url.Content (Path.Combine (WebConfig.PhotosPath, imagePath));
 		}
 	}
 }

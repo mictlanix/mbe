@@ -4,7 +4,7 @@
 @model Product
 <tr id='id:@Model.Id'>
 				<td class='stretch'>
-								<img src='@Url.Content(Model.Photo)' alt='' class='small' />
+					<img src='@Url.Photo(Model.Photo)' alt='' class='small' />
 				</td>
 				<td class="center">@Html.DisplayFor(x => x.Code)</td>
 				<td style='position:relative'>

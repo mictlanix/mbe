@@ -28,16 +28,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
-using Castle.Core.Resource;
-using Lucene.Net.Search;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Helpers;
 using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Mvc;
-using Mictlanix.BE.Web.Utils;
 using MimeKit;
 using NHibernate;
 
@@ -84,8 +80,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var item = WebConfig.Store;
 			IQueryable<SalesQuote> query = from x in SalesQuote.Queryable
-						       where !x.IsCancelled
-						       select x;
+										   where !x.IsCancelled
+										   select x;
 
 			var pattern = (search.Pattern ?? string.Empty).Trim ();
 			int id = 0;
@@ -94,9 +90,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			if (!all) {
 				query = from x in query
-					where (x.Creator == CurrentUser.Employee
-						|| x.Updater == CurrentUser.Employee)
-					select x;
+						where (x.Creator == CurrentUser.Employee
+							|| x.Updater == CurrentUser.Employee)
+						select x;
 			} else {
 				pattern = pattern.Replace (Resources.WilcardStringPatternForSearch, string.Empty);
 			}
@@ -104,27 +100,27 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			if (!string.IsNullOrEmpty (pattern)) {
 				if (!success) {
 					query = from x in query
-						where (
-							    x.Customer.Name.Contains (pattern) ||
-							    x.SalesPerson.Nickname.Contains (pattern)
-							    )
-						select x;
+							where (
+									x.Customer.Name.Contains (pattern) ||
+									x.SalesPerson.Nickname.Contains (pattern)
+									)
+							select x;
 
 				}
 				if (success && id > 0) {
 
 					query = from x in SalesQuote.Queryable
-						where (x.Id == id || x.Serial == id)
-						select x;
+							where (x.Id == id || x.Serial == id)
+							select x;
 				}
 			}
 
 
 
 			query = from x in query
-				orderby (x.IsCompleted || x.IsCancelled ? 1 : 0),
-							       x.Date descending
-				select x;
+					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0),
+									   x.Date descending
+					select x;
 
 			search.Total = query.Count ();
 			search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
@@ -179,8 +175,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			//Store and Serial
 			try {
 				item.Serial = (from x in SalesQuote.Queryable
-					       where x.Store.Id == item.Store.Id
-					       select x.Serial).Max () + 1;
+							   where x.Store.Id == item.Store.Id
+							   select x.Serial).Max () + 1;
 			} catch {
 				item.Serial = 1;
 			}
@@ -261,7 +257,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						DiscountRate = detail.DiscountRate,
 						ExchangeRate = detail.ExchangeRate,
 						IsTaxIncluded = detail.IsTaxIncluded,
-						Price = detail.Product.GetPrice(item.Customer.PriceList.Id),
+						Price = detail.Product.GetPrice (item.Customer.PriceList.Id),
 						PriceIncrement = detail.PriceIncrement,
 						Product = detail.Product,
 						ProductCode = detail.ProductCode,
@@ -279,10 +275,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var item = SalesQuote.TryFind (id);
 			var query = from x in item.Customer.Contacts
-				    select new {
-					    value = x.Id,
-					    text = x.ToString ()
-				    };
+						select new {
+							value = x.Id,
+							text = x.ToString ()
+						};
 
 			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
 		}
@@ -291,10 +287,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var item = SalesQuote.TryFind (id);
 			var query = from x in item.Customer.Addresses
-				    select new {
-					    value = x.Id,
-					    text = x.ToString ()
-				    };
+						select new {
+							value = x.Id,
+							text = x.ToString ()
+						};
 
 			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
 		}
@@ -302,10 +298,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public JsonResult Terms ()
 		{
 			var query = from x in Enum.GetValues (typeof (PaymentTerms)).Cast<PaymentTerms> ()
-				    select new {
-					    value = (int) x,
-					    text = x.GetDisplayName ()
-				    };
+						select new {
+							value = (int) x,
+							text = x.GetDisplayName ()
+						};
 
 			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
 		}
@@ -668,16 +664,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var p = Product.TryFind (product);
 			int pl = entity.Customer.PriceList.Id;
 			var cost = (from x in ProductPrice.Queryable
-				    where x.Product.Id == product && x.List.Id == 0
-				    select x).SingleOrDefault ();
+						where x.Product.Id == product && x.List.Id == 0
+						select x).SingleOrDefault ();
 			//var cost = p.GetCost ();
 			//var price = (from x in ProductPrice.Queryable
 			//	     where x.Product.Id == product && x.List.Id == pl
 			//	     select x).SingleOrDefault ();
 			var price = p.GetPrice (pl);
 			var discount = (from x in CustomerDiscount.Queryable
-					where x.Product.Id == product && x.Customer.Id == entity.Customer.Id
-					select x.Discount).SingleOrDefault ();
+							where x.Product.Id == product && x.Customer.Id == entity.Customer.Id
+							select x.Discount).SingleOrDefault ();
 
 			if (entity.IsCompleted || entity.IsCancelled) {
 				Response.StatusCode = 400;
@@ -864,7 +860,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				if (WebConfig.PriceValidationInRangeRequired && !privileges.AllowUpdate) {
 					var minimal_price = entity.Product.GetMinimalPrice ();
 					var maximum_price = entity.Product.GetMaximumPrice ();
-					if (!entity.IsPriceInRange()) {
+					if (!entity.IsPriceInRange ()) {
 						Response.StatusCode = 400;
 						return Content (string.Format (Resources.PriceInvalidRange, minimal_price, maximum_price));
 					}
@@ -906,7 +902,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				if (WebConfig.PriceValidationInRangeRequired && !privileges.AllowUpdate) {
 					var minimal_price = entity.Product.GetMinimalPrice ();
 					var maximum_price = entity.Product.GetMaximumPrice ();
-					if (!entity.IsPriceInRange()) {
+					if (!entity.IsPriceInRange ()) {
 						Response.StatusCode = 400;
 						return Content (string.Format (Resources.PriceInvalidRange, minimal_price, maximum_price));
 					}
@@ -952,7 +948,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				if (WebConfig.PriceValidationInRangeRequired && !privileges.AllowUpdate) {
 					var minimal_price = entity.Product.GetMinimalPrice ();
 					var maximum_price = entity.Product.GetMaximumPrice ();
-					if (!entity.IsPriceInRange()) {
+					if (!entity.IsPriceInRange ()) {
 						Response.StatusCode = 400;
 						return Content (string.Format (Resources.PriceInvalidRange, minimal_price, maximum_price));
 					}
@@ -996,7 +992,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				if (WebConfig.PriceValidationInRangeRequired && !privileges.AllowUpdate) {
 					var minimal_price = entity.Product.GetMinimalPrice ();
 					var maximum_price = entity.Product.GetMaximumPrice ();
-					if (!entity.IsPriceInRange()) {
+					if (!entity.IsPriceInRange ()) {
 						Response.StatusCode = 400;
 						return Content (string.Format (Resources.PriceInvalidRange, minimal_price, maximum_price));
 					}
@@ -1035,7 +1031,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				if (WebConfig.PriceValidationInRangeRequired && !privileges.AllowUpdate) {
 					var minimal_price = entity.Product.GetMinimalPrice ();
 					var maximum_price = entity.Product.GetMaximumPrice ();
-					if (!entity.IsPriceInRange()) {
+					if (!entity.IsPriceInRange ()) {
 						Response.StatusCode = 400;
 						return Content (string.Format (Resources.PriceInvalidRange, minimal_price, maximum_price));
 					}
@@ -1246,19 +1242,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}, null);
 
 			var items = (from x in raw
-				     select new {
-					     id = x.id,
-					     name = x.name,
-					     code = x.code,
-					     sku = x.sku,
-					     model = x.model,
-					     url = x.url,
-					     //warehouse_id = x.warehouse_id,
-					     quantity = x.quantity,
-					     //warehouse = x.warehouse,
-					     price = x.price,
-					     stockable = x.stockable,
-				     }).ToList ();
+						 select new {
+							 id = x.id,
+							 name = x.name,
+							 code = x.code,
+							 sku = x.sku,
+							 model = x.model,
+							 url = Url.Photo ((string) x.url),
+							 //warehouse_id = x.warehouse_id,
+							 quantity = x.quantity,
+							 //warehouse = x.warehouse,
+							 price = x.price,
+							 stockable = x.stockable,
+						 }).ToList ();
 
 
 			return Json (items, JsonRequestBehavior.AllowGet);

@@ -88,24 +88,24 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			if (int.TryParse (pattern, out id) && id > 0) {
 				query = from x in FiscalDocument.Queryable
-					where !(!x.IsCompleted && x.IsCancelled) && (
-						x.Id == id || x.Serial == id || x.Details.Any(y => y.OrderDetail.SalesOrder.Id == id))
-					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Issued descending
-					select x;
+						where !(!x.IsCompleted && x.IsCancelled) && (
+							x.Id == id || x.Serial == id || x.Details.Any (y => y.OrderDetail.SalesOrder.Id == id))
+						orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Issued descending
+						select x;
 			} else if (string.IsNullOrWhiteSpace (pattern)) {
 				query = from x in FiscalDocument.Queryable
-					where !(!x.IsCompleted && x.IsCancelled)
-					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Issued descending
-					select x;
+						where !(!x.IsCompleted && x.IsCancelled)
+						orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Issued descending
+						select x;
 			} else {
 				query = from x in FiscalDocument.Queryable
-					where !(!x.IsCompleted && x.IsCancelled) && (
-						x.Issuer.Id.Contains (pattern) ||
-						x.Recipient.Contains (pattern) ||
-						x.RecipientName.Contains (pattern) ||
-						x.Customer.Name.Contains (pattern))
-					orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Issued descending
-					select x;
+						where !(!x.IsCompleted && x.IsCancelled) && (
+							x.Issuer.Id.Contains (pattern) ||
+							x.Recipient.Contains (pattern) ||
+							x.RecipientName.Contains (pattern) ||
+							x.Customer.Name.Contains (pattern))
+						orderby (x.IsCompleted || x.IsCancelled ? 1 : 0), x.Issued descending
+						select x;
 			}
 
 			search.Total = query.Count ();
@@ -120,7 +120,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			if (item.CancellationReason == null) {
 
 				var query = from x in SatReasonCancellation.Queryable
-					    select new { value = x.Id, text = x.Description };
+							select new { value = x.Id, text = x.Description };
 
 				item.CancellationReason = new SatReasonCancellation {
 					Id = query.ToList () [2].value,
@@ -309,10 +309,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var item = FiscalDocument.TryFind (id);
 			var qry = from x in TaxpayerBatch.Queryable
-				  where x.Taxpayer.Id == item.Issuer.Id && x.Type == item.Type
-				  select x.Batch;
+					  where x.Taxpayer.Id == item.Issuer.Id && x.Type == item.Type
+					  select x.Batch;
 			var list = from x in qry.Distinct ().ToList ()
-				   select new { value = x, text = x };
+					   select new { value = x, text = x };
 
 			return Json (list.ToList (), JsonRequestBehavior.AllowGet);
 		}
@@ -321,7 +321,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 			var item = FiscalDocument.TryFind (id);
 			var qry = from x in item.Customer.Taxpayers
-				  select new { value = x.Id, text = x.ToString () };
+					  select new { value = x.Id, text = x.ToString () };
 
 			return Json (qry.ToList (), JsonRequestBehavior.AllowGet);
 		}
@@ -375,7 +375,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult SetIssued (int id, int value)
 		{
 			var entity = FiscalDocument.Find (id);
-			var date = DateTime.Now.AddHours(- value * 24);
+			var date = DateTime.Now.AddHours (-value * 24);
 
 			if (entity.IsCompleted || entity.IsCancelled) {
 				Response.StatusCode = 400;
@@ -952,8 +952,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var entity = FiscalDocument.Find (id);
 			int pl = entity.Customer.PriceList.Id;
 			var price = (from x in ProductPrice.Queryable
-				     where x.Product.Id == product && x.List.Id == pl
-				     select x).SingleOrDefault ();
+						 where x.Product.Id == product && x.List.Id == pl
+						 select x).SingleOrDefault ();
 
 			if (entity.IsCompleted || entity.IsCancelled) {
 				Response.StatusCode = 400;
@@ -1419,8 +1419,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			success = decimal.TryParse (value.Trim (),
-						    System.Globalization.NumberStyles.Currency,
-						    null, out val);
+							System.Globalization.NumberStyles.Currency,
+							null, out val);
 
 			if (success && val >= 0) {
 				entity.Price = val;
@@ -1527,13 +1527,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			serial = (from x in FiscalDocument.Queryable
-				  where x.Issuer.Id == entity.Issuer.Id &&
-							    x.Batch == entity.Batch
-				  select x.Serial).Max ().GetValueOrDefault () + 1;
+					  where x.Issuer.Id == entity.Issuer.Id &&
+									x.Batch == entity.Batch
+					  select x.Serial).Max ().GetValueOrDefault () + 1;
 
 			batch = (from x in entity.Issuer.Batches
-				 where x.Batch == entity.Batch
-				 select x).SingleOrDefault ();
+					 where x.Batch == entity.Batch
+					 select x).SingleOrDefault ();
 
 			if (batch == null) {
 				return View ("InvalidBatch");
@@ -1546,8 +1546,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				}
 			} else {
 				entity.Issued = new DateTime (dt.Year, dt.Month, dt.Day,
-							      dt.Hour, dt.Minute, dt.Second,
-							      DateTimeKind.Unspecified);
+								  dt.Hour, dt.Minute, dt.Second,
+								  DateTimeKind.Unspecified);
 			}
 
 			entity.Type = batch.Type;
@@ -1619,7 +1619,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				if (entity.CancellationReason == null) {
 
 					var query = from x in SatReasonCancellation.Queryable
-						    select new { value = x.Id, text = x.Description };
+								select new { value = x.Id, text = x.Description };
 
 					entity.CancellationReason = new SatReasonCancellation {
 						Id = query.ToList () [2].value,
@@ -1656,33 +1656,33 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			int pl = FiscalDocument.Queryable.Where (x => x.Id == id)
 								.Select (x => x.Customer.PriceList.Id).Single ();
 			var query = from x in ProductPrice.Queryable
-				    where x.List.Id == pl && (
-					    x.Product.Name.Contains (pattern) ||
-					    x.Product.Code.Contains (pattern) ||
-					    x.Product.Model.Contains (pattern) ||
-					    x.Product.SKU.Contains (pattern) ||
-					    x.Product.Brand.Contains (pattern))
-				    orderby x.Product.Name
-				    select new {
-					    x.Product.Id,
-					    x.Product.Name,
-					    x.Product.Code,
-					    x.Product.Model,
-					    x.Product.SKU,
-					    x.Product.Photo,
-					    Price = x.Value
-				    };
+						where x.List.Id == pl && (
+							x.Product.Name.Contains (pattern) ||
+							x.Product.Code.Contains (pattern) ||
+							x.Product.Model.Contains (pattern) ||
+							x.Product.SKU.Contains (pattern) ||
+							x.Product.Brand.Contains (pattern))
+						orderby x.Product.Name
+						select new {
+							x.Product.Id,
+							x.Product.Name,
+							x.Product.Code,
+							x.Product.Model,
+							x.Product.SKU,
+							x.Product.Photo,
+							Price = x.Value
+						};
 
 			var items = from x in query.Take (15).ToList ()
-				    select new {
-					    id = x.Id,
-					    name = x.Name,
-					    code = x.Code,
-					    model = x.Model,
-					    sku = x.SKU,
-					    url = Url.Content (x.Photo),
-					    price = x.Price
-				    };
+						select new {
+							id = x.Id,
+							name = x.Name,
+							code = x.Code,
+							model = x.Model,
+							sku = x.SKU,
+							url = Url.Photo (x.Photo),
+							price = x.Price
+						};
 
 			return Json (items.ToList (), JsonRequestBehavior.AllowGet);
 		}
@@ -1697,32 +1697,32 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			if (int.TryParse (pattern, out serial) && serial > 0) {
 				query = from x in FiscalDocument.Queryable
-					where x.Type != FiscalDocumentType.PaymentReceipt && x.Type != FiscalDocumentType.CreditNote &&
-						x.IsCompleted && !x.IsCancelled &&
-						x.Recipient == entity.Recipient &&
-						x.Issuer.Id == entity.Issuer.Id &&
-						(x.Id == serial || x.Serial == serial)
-					orderby x.Issued descending
-					select x;
+						where x.Type != FiscalDocumentType.PaymentReceipt && x.Type != FiscalDocumentType.CreditNote &&
+							x.IsCompleted && !x.IsCancelled &&
+							x.Recipient == entity.Recipient &&
+							x.Issuer.Id == entity.Issuer.Id &&
+							(x.Id == serial || x.Serial == serial)
+						orderby x.Issued descending
+						select x;
 			} else {
 				query = from x in FiscalDocument.Queryable
-					where x.Type != FiscalDocumentType.PaymentReceipt && x.Type != FiscalDocumentType.CreditNote &&
-						x.IsCompleted && !x.IsCancelled &&
-						x.Recipient == entity.Recipient &&
-						x.Issuer.Id == entity.Issuer.Id &&
-						x.StampId.Contains (pattern)
-					orderby x.Issued descending
-					select x;
+						where x.Type != FiscalDocumentType.PaymentReceipt && x.Type != FiscalDocumentType.CreditNote &&
+							x.IsCompleted && !x.IsCancelled &&
+							x.Recipient == entity.Recipient &&
+							x.Issuer.Id == entity.Issuer.Id &&
+							x.StampId.Contains (pattern)
+						orderby x.Issued descending
+						select x;
 			}
 
 			var items = from x in query.Take (15).ToList ()
-				    select new {
-					    id = x.Id,
-					    stamp = x.StampId,
-					    batch = x.Batch,
-					    serial = x.FormattedValueFor (o => o.Serial),
-					    currency = x.Currency.GetDisplayName ()
-				    };
+						select new {
+							id = x.Id,
+							stamp = x.StampId,
+							batch = x.Batch,
+							serial = x.FormattedValueFor (o => o.Serial),
+							currency = x.Currency.GetDisplayName ()
+						};
 
 			return Json (items.ToList (), JsonRequestBehavior.AllowGet);
 		}
@@ -1737,32 +1737,32 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			if (int.TryParse (pattern, out serial) && serial > 0) {
 				query = from x in FiscalDocument.Queryable
-					where x.Type < FiscalDocumentType.CreditNote &&
-						x.IsCompleted && x.IsCancelled &&
-						x.Recipient == entity.Recipient &&
-						x.Issuer.Id == entity.Issuer.Id &&
-						(x.Id == serial || x.Serial == serial)
-					orderby x.Issued descending
-					select x;
+						where x.Type < FiscalDocumentType.CreditNote &&
+							x.IsCompleted && x.IsCancelled &&
+							x.Recipient == entity.Recipient &&
+							x.Issuer.Id == entity.Issuer.Id &&
+							(x.Id == serial || x.Serial == serial)
+						orderby x.Issued descending
+						select x;
 			} else {
 				query = from x in FiscalDocument.Queryable
-					where x.Type < FiscalDocumentType.CreditNote &&
-						x.IsCompleted && x.IsCancelled &&
-						x.Recipient == entity.Recipient &&
-						x.Issuer.Id == entity.Issuer.Id &&
-						x.StampId.Contains (pattern)
-					orderby x.Issued descending
-					select x;
+						where x.Type < FiscalDocumentType.CreditNote &&
+							x.IsCompleted && x.IsCancelled &&
+							x.Recipient == entity.Recipient &&
+							x.Issuer.Id == entity.Issuer.Id &&
+							x.StampId.Contains (pattern)
+						orderby x.Issued descending
+						select x;
 			}
 
 			var items = from x in query.Take (15).ToList ()
-				    select new {
-					    id = x.Id,
-					    stamp = x.StampId,
-					    batch = x.Batch,
-					    serial = x.FormattedValueFor (o => o.Serial),
-					    currency = x.Currency.GetDisplayName ()
-				    };
+						select new {
+							id = x.Id,
+							stamp = x.StampId,
+							batch = x.Batch,
+							serial = x.FormattedValueFor (o => o.Serial),
+							currency = x.Currency.GetDisplayName ()
+						};
 
 			return Json (items.ToList (), JsonRequestBehavior.AllowGet);
 		}
@@ -1850,11 +1850,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var xml = FiscalDocumentXml.Find (id);
 			var batch = TaxpayerBatch.Queryable.First (x => x.Taxpayer.Id == model.Issuer.Id && x.Batch == model.Batch);
 			var filename = string.Format (Resources.FiscalDocumentFilenameFormatString, model.Issuer.Id, model.Batch,
-						      model.Serial);
+							  model.Serial);
 			var subject = string.Format (Resources.FiscalDocumentEmailSubjectFormatString, model.Issuer.Id, model.Batch,
-						     model.Serial);
+							 model.Serial);
 			var message = string.Format (Resources.FiscalDocumentEmailBodyFormatString, model.Issuer.Id, model.Recipient,
-						     model.Total, model.StampId, model.IssuerDigitalSeal.Substring (model.IssuerDigitalSeal.Length - 8));
+							 model.Total, model.StampId, model.IssuerDigitalSeal.Substring (model.IssuerDigitalSeal.Length - 8));
 			var attachments = new List<MimePart> ();
 			var template = Newtonsoft.Json.JsonConvert.DeserializeObject<Template> (batch.Template);
 			var view = string.Format ("Print{0:00}{1}", model.Version * 10, template.Name);
@@ -1946,7 +1946,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				new { value = (int) PaymentMethod.AdvancePayments, text = PaymentMethod.AdvancePayments.GetDisplayName () },
 				new { value = (int) PaymentMethod.Giving, text = PaymentMethod.Giving.GetDisplayName () },
 				new { value = (int) PaymentMethod.ToTheSatisfactionOfTheCreditor, text = PaymentMethod.ToTheSatisfactionOfTheCreditor.GetDisplayName () }
-	    };
+		};
 
 			return Json (items, JsonRequestBehavior.AllowGet);
 		}
@@ -1972,7 +1972,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public JsonResult Usages ()
 		{
 			var query = from x in SatCfdiUsage.Queryable
-				    select new { value = x.Id, text = x.Description };
+						select new { value = x.Id, text = x.Description };
 
 			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
 		}
@@ -1980,7 +1980,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public JsonResult Reasons ()
 		{
 			var query = from x in SatReasonCancellation.Queryable
-				    select new { value = x.Id, text = x.Description };
+						select new { value = x.Id, text = x.Description };
 
 			return Json (query.ToList (), JsonRequestBehavior.AllowGet);
 		}

@@ -10,7 +10,7 @@
 
 <li id='id:@Model.Id' class="to-purchase" data-url='@Url.Action("ToogleToPurchase", new { id = Model.Id })'>
 				<div class='photo'>
-								<img src='@Url.Content(Model.Product.Photo)' title='@Model.Product.Name' />
+								<img src='@Url.Photo(Model.Product.Photo)' title='@Model.Product.Name' />
 				</div>
 				@*<div class='action-link'>
 				</div>*@

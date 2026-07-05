@@ -148,13 +148,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			if (entity.IsDisabled)
 				return RedirectToAction ("index");
 
-			entity.Photo = SavePhoto (file) ?? WebConfig.DefaultPhotoFile;
+			entity.Photo = SavePhoto (file);
 
 			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
 			}
 
-			return Json (new { id = id, url = Url.Content (entity.Photo) });
+			return Json (new { id = id, url = Url.Photo (entity.Photo) });
 		}
 
 		public ActionResult View (int id)
@@ -328,7 +328,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 					img.Save (path, ImageFormat.Png);
 
-					return Path.Combine (WebConfig.PhotosPath, hash);
+					return hash;
 				}
 			}
 		}
@@ -383,7 +383,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 							code = x.Code,
 							model = x.Model,
 							sku = x.SKU,
-							url = Url.Content (x.Photo)
+							url = Url.Photo (x.Photo)
 						};
 
 			return Json (items, JsonRequestBehavior.AllowGet);
@@ -413,7 +413,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 							code = x.Code,
 							model = x.Model,
 							sku = x.SKU,
-							url = Url.Content (x.Photo)
+							url = Url.Photo (x.Photo)
 						};
 
 			return Json (items, JsonRequestBehavior.AllowGet);
