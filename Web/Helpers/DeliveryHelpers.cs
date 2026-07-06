@@ -38,13 +38,14 @@ using Mictlanix.BE.Web.Models;
 namespace Mictlanix.BE.Web.Helpers {
 	public static class DeliveryHelpers {
 
-		public static List<DeliveryDetail> GetDeliveryDetailsByOrderDetail (SalesOrderDetail detail) {
+		public static List<DeliveryDetail> GetDeliveryDetailsByOrderDetail (SalesOrderDetail detail)
+		{
 
 			var details = new List<DeliveryDetail> ();
 
 			details.AddRange (DeliveryOrderDetail.Queryable.Where (x => x.OrderDetail == detail
 			&& !x.DeliveryOrder.IsCancelled && x.DeliveryOrder.IsCompleted)
-				.Select(y => new DeliveryDetail {SalesOrderDetail = detail, DeliveryDate = y.DeliveryOrder.Date, Quantity = y.Quantity }));
+				.Select (y => new DeliveryDetail { SalesOrderDetail = detail, DeliveryDate = y.DeliveryOrder.Date, Quantity = y.Quantity }));
 
 			return details;
 		}
@@ -53,28 +54,36 @@ namespace Mictlanix.BE.Web.Helpers {
 			return GetDeliveryDetailsByOrderDetail (detail).Sum (x => (decimal?) x.Quantity ?? 0);
 		}
 
-		public static bool IsAddressStore (Address address) {
-			var address_ids = MBEQueryable.IQStores.Select (x => x.Address.Id).ToList();
+		public static bool IsAddressStore (Address address)
+		{
+			var address_ids = MBEQueryable.IQStores.Select (x => x.Address.Id).ToList ();
 			return address_ids.Contains (address.Id);
 		}
 
-		public static decimal GetRemainingQuantity (SalesOrderDetail detail) {
-			return detail.Quantity - DeliveredQuantity(detail);
+		public static decimal GetRemainingQuantity (SalesOrderDetail detail)
+		{
+			return detail.Quantity - DeliveredQuantity (detail);
 		}
 
-		public static Address GetCurrentStoreAddress (User user) {
+		public static Address GetCurrentStoreAddress (User user)
+		{
 
 			return Mictlanix.BE.Model.User.Queryable
 				.Where (x => x.Employee.Id == user.EmployeeId).First ().UserSettings.PointOfSale.Store.Address;
 
 		}
 
-		public static DeliveryOrder[] GetDeliveryOrders (this SalesOrder salesOrder) {
+		public static DeliveryOrder [] GetDeliveryOrders (this SalesOrder salesOrder)
+		{
+			if (!salesOrder.IsCompleted || !salesOrder.Details.Any ())
+				return new DeliveryOrder [0];
+
 			return DeliveryOrderDetail.Queryable.Where (x => salesOrder.Details
-			.Contains (x.OrderDetail)).Select (y => y.DeliveryOrder).Distinct ().ToArray ();
+					.Contains (x.OrderDetail)).Select (y => y.DeliveryOrder).Distinct ().ToArray ();
 		}
 
-		public static DateTime ComputeDueDate (this SalesOrder salesOrder) {
+		public static DateTime ComputeDueDate (this SalesOrder salesOrder)
+		{
 			if (salesOrder.Terms == PaymentTerms.Immediate)
 				return salesOrder.Date;
 
