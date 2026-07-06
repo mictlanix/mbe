@@ -156,7 +156,7 @@ Full sales order management for credit customers and pre-invoiced sales. Support
 - Store: from `WebConfig.PointOfSale.Store`
 - Customer: `WebConfig.DefaultCustomer`
 - Salesperson: current user's employee
-- Date: now; PromiseDate: `now + WebConfig.MaxDaysToDeliverStockables`; DueDate: now
+- Date: now; PromiseDate: `now + WebConfig.MaxDaysToDeliverStockables`; DueDate: now (`Immediate`) or `PromiseDate + customer.credit_days` (`NetD`)
 - Terms: `NetD` if customer has credit (and is not `DefaultCustomer`), else `Immediate`
 - Currency: `WebConfig.DefaultCurrency`; ExchangeRate: today's rate
 
@@ -228,7 +228,7 @@ Full sales order management for credit customers and pre-invoiced sales. Support
 
 ### Business Rules
 - `Terms = NetD` requires: customer has credit limit set (`HasCredit`), no expired credits, not over credit limit; `DefaultCustomer` cannot use `NetD`.
-- `DueDate`: `Immediate` → same as order date; `NetD` → order date + `customer.credit_days`.
+- `DueDate`: `Immediate` → same as order date; `NetD` → latest delivered `DeliveryOrder.Date` + `customer.credit_days` (falls back to `PromiseDate + customer.credit_days` until a delivery order is confirmed as delivered). Recomputed whenever a linked delivery order is delivered (see Logistics spec).
 - Price validation (if `WebConfig.PriceValidationInRangeRequired` and user lacks `ExcludePriceRangeValidation.AllowUpdate`): price must be in `[low_profit_margin, high_profit_margin]` of product.
 - Stock validation (if `product.StockRequired && product.IsStockable`): warehouse must be set; available stock must cover all SO lines for same product+warehouse.
 - `balance_zeroed_time` is set when a supervisor manually zeros the remaining balance.

@@ -167,10 +167,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.SalesPerson = CurrentUser.Employee;
 			item.Date = dt;
 			item.PromiseDate = dt.AddDays (WebConfig.MaxDaysToDeliverStockables);
-			item.DueDate = dt;
 			item.Currency = WebConfig.DefaultCurrency;
 			item.ExchangeRate = CashHelpers.GetTodayDefaultExchangeRate ();
 			item.Terms = item.Customer.HasCredit ? PaymentTerms.NetD : PaymentTerms.Immediate;
+			item.DueDate = item.ComputeDueDate ();
 
 			item.Creator = CurrentUser.Employee;
 			item.CreationTime = dt;
@@ -230,7 +230,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			item.Date = dt;
 			item.PromiseDate = dt;
 			item.Terms = salesquote.Terms;
-			item.DueDate = salesquote.Terms == PaymentTerms.NetD ? dt.AddDays (item.Customer.CreditDays) : dt;
+			item.DueDate = item.ComputeDueDate ();
 			item.Currency = salesquote.Currency;
 			item.ExchangeRate = salesquote.ExchangeRate;
 			item.Contact = salesquote.Contact;
@@ -398,8 +398,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				entity.CustomerShipTo = null;
 				entity.CustomerName = null;
 				entity.Terms = entity.Customer.HasCredit && entity.Customer.Id != WebConfig.DefaultCustomer ? PaymentTerms.NetD : PaymentTerms.Immediate;
-				entity.DueDate = entity.Terms == PaymentTerms.Immediate ? entity.Date :
-					entity.Date.AddDays (entity.Customer.CreditDays);
+				entity.DueDate = entity.ComputeDueDate ();
 				entity.SalesPerson = CurrentUser.Employee;
 
 				//if (item.SalesPerson == null) {
@@ -749,15 +748,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				entity.Terms = val;
 				entity.Updater = CurrentUser.Employee;
 				entity.ModificationTime = dt;
-
-				switch (entity.Terms) {
-				case PaymentTerms.Immediate:
-					entity.DueDate = entity.Date;
-					break;
-				case PaymentTerms.NetD:
-					entity.DueDate = dt.AddDays (entity.Customer.CreditDays);
-					break;
-				}
+				entity.DueDate = entity.ComputeDueDate ();
 
 				using (var scope = new TransactionScope ()) {
 					entity.UpdateAndFlush ();

@@ -73,5 +73,19 @@ namespace Mictlanix.BE.Web.Helpers {
 			return DeliveryOrderDetail.Queryable.Where (x => salesOrder.Details
 			.Contains (x.OrderDetail)).Select (y => y.DeliveryOrder).Distinct ().ToArray ();
 		}
+
+		public static DateTime ComputeDueDate (this SalesOrder salesOrder) {
+			if (salesOrder.Terms == PaymentTerms.Immediate)
+				return salesOrder.Date;
+
+			var lastDeliveryDate = salesOrder.GetDeliveryOrders ()
+				.Where (x => x.IsDelivered && !x.IsCancelled)
+				.Select (x => (DateTime?) x.Date)
+				.Max ();
+
+			DateTime baseDate = lastDeliveryDate ?? salesOrder.PromiseDate;
+
+			return baseDate.AddDays (salesOrder.Customer.CreditDays);
+		}
 	}
 }

@@ -109,6 +109,7 @@ Triggered by entering a Sales Order ID into the "New" action:
 - Counter pickups (`IsPickedUpInStore = true`) bypass the approval queue (no approval needed)
 - A DO cannot be edited once `completed=1` or `cancelled=1`
 - Adding items from a second sales order to the same DO is allowed (multi-SO delivery)
+- When a DO transitions to `delivered=1`, any linked `NetD` sales order has its `DueDate` recomputed as the latest delivered `DeliveryOrder.Date` (across all its delivery orders) + `customer.credit_days` (see Sales spec)
 
 ---
 

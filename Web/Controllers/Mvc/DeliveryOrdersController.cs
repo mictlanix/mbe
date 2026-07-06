@@ -669,6 +669,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 				if (!isSalesOrderDeliveredCompletly) {
 					Order.IsDelivered = true;
+
+					if (Order.Terms == PaymentTerms.NetD) {
+						Order.DueDate = Order.ComputeDueDate ();
+					}
+
 					using (var scope = new TransactionScope ()) {
 						Order.UpdateAndFlush ();
 					}
@@ -767,6 +772,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					item.IsConfirmed = true;
 					item.IsDelivered = true;
 					item.UpdateAndFlush ();
+
+					var orders = item.Details.Select (x => x.OrderDetail.SalesOrder).Distinct ()
+						.Where (x => x.Terms == PaymentTerms.NetD
+							&& !x.Details.Any (y => y.GetDeliverableQuantity () > 0.0m));
+
+					foreach (var order in orders) {
+						order.DueDate = order.ComputeDueDate ();
+						order.UpdateAndFlush ();
+					}
 				} else {
 					var incidence = new Incidence {
 						Reference = item.Id,
