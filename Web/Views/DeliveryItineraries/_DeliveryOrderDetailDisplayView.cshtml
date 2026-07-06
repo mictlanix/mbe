@@ -1,0 +1,92 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model DeliveryOrderDetail
+
+
+<tr id='item:@Model.Id'>
+				<td class='action-link'>
+								@if (Model.OrderDetail != null)
+								{
+												<span class='label label-info' title='@Resources.SalesOrder'>@Html.DisplayFor(x => x.OrderDetail.SalesOrder.Id)</span>
+												<span>@Model.OrderDetail.SalesOrder.Priority.GetDisplayName()</span>
+								}
+				</td>
+				<td class='action-link'>
+								<span class='label label-info' title='@Resources.DeliveryOrder'>@Html.DisplayFor(x => x.DeliveryOrder.Id)</span>
+				</td>
+				<td>@Html.DisplayFor(x => x.DeliveryOrder.Updater.Nickname)</td>
+				<td>@Html.DisplayFor(x => x.DeliveryOrder.ModificationTime)</td>
+				<td class='info'>
+								<span class='editable name input-xxlarge'>@Html.DisplayFor(x => x.ProductName)</span>
+								<br />
+								@if (Model.OrderDetail != null && !string.IsNullOrEmpty(Model.OrderDetail.Comment))
+								{
+												<b>@Resources.Comment: </b><span>@Model.OrderDetail.Comment</span><br />
+								}
+								<br />
+				</td>
+				<td>
+								<span class='editable quantity'>@Html.DisplayFor(x => x.Quantity)</span>
+				</td>
+				<td>
+								@Html.DisplayFor(x => x.DeliveryOrder.Date)
+
+				</td>
+				<td>
+								@foreach (var item in Model.DeliveriesItineraryDetails)
+								{
+												<span class="label label-info"> @item.DeliveriesItinerary.Id</span>
+																			@Html.DisplayFor(x => item.SentQuantity)
+												<span> @Html.DisplayFor(x => item.DeliveriesItinerary.IsCompleted)</span> <br />
+								}
+				</td>
+				<td>
+								@*<a id="id:@Model.Id" class='editable editable-input' data-type='select2' data-placement='left' data-pk='@Model.Id'
+											data-value='@Model.Id' data-source-cache='false'
+											data-url='@Url.Action("AddDeliveryOrderDetail", new { id = Model.Id })'
+											data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
+												Asignar un Despacho.
+								</a>*@
+				</td>
+</tr>
+<script>
+				$('#item\\:@Model.Id a.editable').editable({
+								   select2: {
+   	minimumInputLength: 3,
+    ajax: {
+        url: '@Url.Action("GetSuggestions", "DeliveryItineraries", new { id = Model.Id })',
+        dataType: 'json',
+        type: 'POST',
+        data: function(term,page,context) {
+        	return { pattern:term };
+        },
+        results: function(data,page) {
+            return { results:data };
+        }
+    },
+												initSelection: function (element, callback) {
+					//console.log("Dónde estoy???")
+        var data = {
+        	id: $('#id\\:@Model.Id').data('value'),
+        	name: $('#id\\:@Model.Id').text()
+       	};
+        callback(data);
+    },
+    formatResult: function(result) {
+        return result.name;
+    },
+    formatSelection: function(selection) {
+        return selection.name;
+    }
+},
+success: function(response, newValue) {
+
+   },
+   display: function(value, response) {
+   	if (typeof response !== 'undefined') {
+		$(this).html(response.value);
+	}
+   }
+				});
+</script>

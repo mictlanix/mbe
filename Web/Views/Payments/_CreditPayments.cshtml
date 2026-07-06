@@ -39,7 +39,7 @@
 					<td>@Html.DisplayFor(x => applied)</td>
 					<td class='actions'>
 								@Html.ActionLink(" ", "ViewCreditPayment", "Payments", new { id = item.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
-								@Html.ActionLink(" ", "PrintCreditPayment", "Payments", new { id = item.Id }, new { @class = "button icon print icon-only", title = Resources.Print, target = "_blank" })
+								@Html.ActionLink(" ", "PrintPayment", "Payments", new { id = item.Id }, new { @class = "button icon print icon-only", title = Resources.Print, target = "_blank" })
 					</td>
 				</tr>
 		}
