@@ -36,3 +36,5 @@ ActiveRecord.config
 .DS_Store
 .idea/
 .vscode/
+.specify/companion.yml
+ToDo
