@@ -1250,6 +1250,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return PurchasesCsv (range);
 			case "payments":
 				return PaymentsCsv (range);
+			case "quotes":
+				return SalesQuoteCsv (range);
 			default:
 				return SalesCsv (range);
 			}
@@ -1359,6 +1361,64 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			var bytes = Encoding.UTF8.GetBytes (BuildCsv (items));
 			return File (bytes, "text/csv", "sales.csv");
+		}
+
+		[HttpPost]
+		public ActionResult SalesQuoteCsv (DateRange range)
+		{
+			string sql = @"
+				SELECT
+					sq.sales_quote_id SalesQuoteId,
+					CAST(sq.`date` AS CHAR) AS QuoteDate,
+					sqd.sales_quote_detail_id SalesQuoteDetailId,
+					p.product_id ProductId,
+					p.code ProductCode,
+					p.name ProductName,
+					sqd.product_code QuoteProductCode,
+					sqd.product_name QuoteProductName,
+					IFNULL(um.symbol, um.name) Unit,
+					sqd.quantity Quantity,
+					sqd.price + sqd.price_adjustment Price,
+					ROUND(CAST(sqd.quantity * (sqd.price + sqd.price_adjustment) * (1 - sqd.discount_rate) AS DECIMAL(18, 7)), 2) Subtotal,
+					ROUND(sqd.discount_rate, 4) Discount,
+					ROUND(CAST((sqd.price + sqd.price_adjustment) * (1 - sqd.discount_rate) AS DECIMAL(18, 7)), 2) TotalAmount,
+					c.name CustomerName,
+					s.name StoreName,
+					e.nickname Creator,
+					sp.nickname SalesPerson,
+					IF(sq.payment_terms = 0, 'Contado', 'Crédito') PaymentTerms,
+					so.first_sales_order FirstSalesOrderId,
+					so.last_sales_order LastSalesOrderId
+				FROM sales_quote sq
+				JOIN sales_quote_detail sqd ON sq.sales_quote_id = sqd.sales_quote
+				JOIN store s ON sq.store = s.store_id
+				JOIN employee e ON sq.creator = e.employee_id
+				JOIN product p ON sqd.product = p.product_id
+				JOIN sat_unit_of_measurement um ON p.unit_of_measurement = um.sat_unit_of_measurement_id
+				LEFT JOIN customer c ON sq.customer = c.customer_id
+				LEFT JOIN employee sp ON sq.salesperson = sp.employee_id
+				LEFT JOIN
+					(SELECT sales_quote,
+						MIN(sales_order_id) first_sales_order,
+						MAX(sales_order_id) last_sales_order
+					FROM sales_order
+					WHERE sales_quote IS NOT NULL AND completed = 1 AND cancelled = 0
+					GROUP BY sales_quote) so ON so.sales_quote = sq.sales_quote_id
+				WHERE sq.completed = 1 AND sq.cancelled = 0
+					AND (date(sq.`date`) BETWEEN :start AND :end)
+					AND sqd.quantity > 0
+				ORDER BY sq.`date` DESC
+			";
+
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+				return session.CreateSQLQuery (sql)
+					.SetParameter ("start", range.StartDate)
+					.SetParameter ("end", range.EndDate)
+					.DynamicList ();
+			}, null);
+
+			var bytes = Encoding.UTF8.GetBytes (BuildCsv (items));
+			return File (bytes, "text/csv", "sales_quotes.csv");
 		}
 
 		[HttpPost]
