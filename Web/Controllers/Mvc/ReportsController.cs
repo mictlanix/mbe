@@ -1387,8 +1387,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					e.nickname Creator,
 					sp.nickname SalesPerson,
 					IF(sq.payment_terms = 0, 'Contado', 'Crédito') PaymentTerms,
+					so.sales_orders_count SalesOrdersCount,
 					so.first_sales_order FirstSalesOrderId,
-					so.last_sales_order LastSalesOrderId
+					CAST(so.first_sales_order_date AS CHAR) FirstSalesOrderDate,
+					so.last_sales_order LastSalesOrderId,
+					CAST(so.last_sales_order_date AS CHAR) LastSalesOrderDate
 				FROM sales_quote sq
 				JOIN sales_quote_detail sqd ON sq.sales_quote_id = sqd.sales_quote
 				JOIN store s ON sq.store = s.store_id
@@ -1400,7 +1403,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				LEFT JOIN
 					(SELECT sales_quote,
 						MIN(sales_order_id) first_sales_order,
-						MAX(sales_order_id) last_sales_order
+						MIN(`date`) first_sales_order_date,
+						MAX(sales_order_id) last_sales_order,
+						MAX(`date`) last_sales_order_date,
+						COUNT(*) sales_orders_count
 					FROM sales_order
 					WHERE sales_quote IS NOT NULL AND completed = 1 AND cancelled = 0
 					GROUP BY sales_quote) so ON so.sales_quote = sq.sales_quote_id
