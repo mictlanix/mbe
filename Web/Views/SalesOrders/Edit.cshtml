@@ -15,6 +15,10 @@
 <div id='master-section'>
 				@Html.Partial("_EditorView")
 </div>
+@if (!string.IsNullOrEmpty(ViewBag.Error))
+{
+				<div class="alert alert-danger" style="display:block;">@Html.Raw(ViewBag.Error)</div>
+}
 <div id='details-section'>
 				<div id='items-container' data-url='@Url.Action("Items", new { id = Model.Id })'>
 								@Html.Partial("_Items", Model.Details)

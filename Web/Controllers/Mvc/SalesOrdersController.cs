@@ -293,6 +293,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return View ("InvalidExchangeRate");
 			}
 
+			ViewBag.Error = TempData ["Error"];
+
 			return View (item);
 		}
 
@@ -738,11 +740,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						Response.StatusCode = 400;
 						return Content (Resources.CreditLimitIsNotSet);
 					}
+				}
 
-					if (customer.HasExpiredCredits () || entity.IsOverCreditLimit ()) {
-						Response.StatusCode = 400;
-						return Content (Resources.CreditStatusNeedsToBeVerified);
-					}
+				if (customer.HasExpiredCredits () || entity.IsOverCreditLimit ()) {
+					Response.StatusCode = 400;
+					return Content (Resources.CreditStatusNeedsToBeVerified);
 				}
 
 				entity.Terms = val;
@@ -1246,12 +1248,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return RedirectToAction ("Index");
 			}
 
-			if (WebConfig.DeliveryOrderRequiresPaidOrCreditSalesOrder && !CurrentUser.IsAdministrator) {
-				if (entity.Customer.HasExpiredCredits ()) {
-					//Response.StatusCode = 400;
-					//return Content (Resources.CreditStatusNeedsToBeVerified);
-					//messages.Add (Resources.CreditStatusNeedsToBeVerified);
-				}
+			if (entity.Customer.HasExpiredCredits ()) {
+				TempData ["Error"] = Resources.CreditStatusNeedsToBeVerified;
+				return RedirectToAction ("Edit", new { id = entity.Id });
 			}
 
 			entity.Updater = CurrentUser.Employee;
