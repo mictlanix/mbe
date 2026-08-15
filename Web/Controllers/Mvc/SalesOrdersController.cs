@@ -1294,8 +1294,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Cancel (int id)
 		{
 			var entity = SalesOrder.Find (id);
+			var privilege = GetAccessPrivilege (SystemObjects.SalesOrders);
 
 			if (entity.IsCancelled || entity.IsPaid) {
+				return RedirectToAction ("Index");
+			}
+
+			if (!(entity.IsCompleted ? privilege.AllowDelete : privilege.AllowUpdate)) {
 				return RedirectToAction ("Index");
 			}
 

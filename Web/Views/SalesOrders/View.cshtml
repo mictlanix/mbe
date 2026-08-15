@@ -5,6 +5,8 @@
 
 @{
     ViewBag.Title = Resources.SalesOrder;
+    var CurrentUser = Html.CurrentUser() ?? new User();
+    var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.SalesOrders);
 }
 
 <h2>@Resources.SalesOrder</h2>
@@ -31,6 +33,11 @@
 <div class='pull-right'>
 	@Html.ActionLink(Resources.Print, "Print", new { id = Model.Id }, new { @class = "button icon print", target = "_blank" })
 </div>
+@if (!Model.IsCancelled && !Model.IsPaid && (Model.IsCompleted ? Privilege.AllowDelete : Privilege.AllowUpdate)) {
+    using (Html.BeginForm("Cancel", "SalesOrders", new { id = Model.Id }, FormMethod.Post, new { @class = "modal-form pull-right" })) {
+		<button type="submit" class="icon cancel">@Resources.Cancel</button>
+    }
+}
 <div class='clearfix'></div>
 <script type='text/javascript'>
 $(function () {
