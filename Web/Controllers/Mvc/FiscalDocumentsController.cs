@@ -1384,7 +1384,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			if (entity.OrderDetail != null) {
-				decimal max_qty = entity.Quantity + GetInvoiceableQuantity (entity.OrderDetail.Id);
+				decimal max_qty = GetInvoiceableQuantity (entity.OrderDetail.Id);
 
 				if (max_qty < value)
 					value = max_qty;
@@ -1773,11 +1773,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			decimal quantity = item.Quantity;
 			string sql = @"SELECT IFNULL(SUM(d.quantity),0) quantity
 				FROM fiscal_document_detail d INNER JOIN fiscal_document m ON d.document = m.fiscal_document_id
-				WHERE m.cancelled = 0 AND d.order_detail = :detail
+				WHERE m.cancelled = 0 AND m.completed = 1 AND d.order_detail = :detail
 				UNION ALL
 				SELECT IFNULL(SUM(d.quantity),0) quantity
 				FROM customer_refund_detail d INNER JOIN customer_refund m ON d.customer_refund = m.customer_refund_id
-				WHERE m.cancelled = 0 AND d.sales_order_detail = :detail";
+				WHERE m.cancelled = 0 AND m.completed = 1 AND d.sales_order_detail = :detail";
 
 			IList<decimal> quantities = (IList<decimal>) ActiveRecordMediator<CustomerRefundDetail>.Execute (
 				delegate (ISession session, object instance) {
@@ -1791,7 +1791,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				}, null);
 
 			if (quantities != null && quantities.Count > 0) {
-				quantity = item.Quantity - quantities.Sum ();
+				quantity = item.Quantity - quantities.Max ();
 			}
 
 			return quantity > 0 ? quantity : 0;

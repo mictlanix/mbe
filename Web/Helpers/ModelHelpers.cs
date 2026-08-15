@@ -186,7 +186,13 @@ namespace Mictlanix.BE.Web.Helpers {
 						   where !x.Refund.IsCancelled && x.Refund.IsCompleted && x.SalesOrderDetail == detail
 						   select x.Quantity;
 
-			return detail.Quantity - refunded.ToList ().Sum ();
+			var invoiced = from x in FiscalDocumentDetail.Queryable
+						   where !x.Document.IsCancelled && x.Document.IsCompleted && x.OrderDetail == detail
+						   select x.Quantity;
+
+			var quantity = detail.Quantity - Math.Max (refunded.ToList ().Sum (), invoiced.ToList ().Sum ());
+
+			return quantity > 0 ? quantity : 0;
 		}
 
 		public static decimal GetCancellableQuantity (this SalesOrderDetail detail)
