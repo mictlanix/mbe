@@ -1258,7 +1258,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			entity.IsDelivered = false;
 			entity.IsCompleted = true;
 
-			entity.Serial = (SalesOrder.Queryable.Where (x => x.Store == WebConfig.Store).Max (x => (int?) x.Serial) + 1 ?? 1);
+			entity.Serial = (SalesOrder.Queryable.Where (x => x.Store == entity.Store).Max (x => (int?) x.Serial) + 1 ?? 1);
 
 			foreach (var detail in entity.Details) {
 				if (detail.Price == decimal.Zero) {
