@@ -30,11 +30,10 @@
 																			data-source='@Url.Action("Contacts", new { id = Model.Id })' data-source-cache='false'
 																			data-url='@Url.Action("SetContact", new { id = Model.Id })'
 																			data-inputclass='input-xlarge' data-emptytext='@Resources.Empty'>
-																				@*@if (Model.Contact != null)
-																				{
-																								@Html.DisplayFor(x => x.Contact, "String")
-																				}*@
-																				@Html.SafeEditorFor(x => x.Contact)
+																			@if (Model.Contact != null)
+																			{
+																				@Html.DisplayFor(x => x.Contact, "String")
+																			}
 																</a>
 												</dd>
 												<dt>@Resources.TaxpayerRecipient</dt>
