@@ -1336,6 +1336,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		[HttpPost]
 		public ActionResult AddPayment (int id, int type, decimal amount, string reference, int? fee, bool ondelivery)
 		{
+			if (reference != null && reference.Length > 50) {
+				Response.StatusCode = 400;
+				return Content (String.Format (Resources.Validation_StringLength, Resources.PaymentReference, 50, 0));
+			}
 
 			var dt = DateTime.Now;
 			var session = GetSession ();

@@ -67,54 +67,39 @@
 </ul>
 
 <div class='clearfix'></div>
-<div id='back-to-list' class='pull-left'>
-				@Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+<div class='order-actions'>
+	<div class='order-actions-left'>
+		@Html.ActionLink(Resources.BackToList, "Index", new { }, new { @class = "button icon back" })
+	</div>
+	<div class='order-actions-right'>
+		@if (Model.IsPaid || Model.Terms == PaymentTerms.NetD)
+		{
+			if (Model.DeliveryMode == DeliveryMode.ToBeDefined)
+			{
+				<button type="submit" class='icon shipping partial_deliveries' value="@DeliveryMode.PartialDeliveries">@Resources.PartialDeliveries</button>
+				<button type="submit" class='icon delivery partial_deliveries' value="@DeliveryMode.PickUp">@Resources.PickUp</button>
+			}
+			else
+			{
+				if (Model.DeliveryMode == DeliveryMode.PartialDeliveries)
+				{
+					<button type="submit" id="delivery" class='icon shipping'>@Resources.CreateNew @Resources.DeliveryOrder</button>
+				}
+
+				@Html.ActionLink(Resources.SalesReceipt, "Print", new { id = Model.Id },
+					new { @class = "button icon print", target = "_blank" })
+			}
+		}
+		@if (Model.Payments.Any(x => !x.IsConfirmed))
+		{
+			using (Ajax.BeginForm("ConfirmPayment", "Payments", new { id = Model.Id },
+				new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "details-order" }))
+			{
+				<button type="submit" class='icon confirm-payments lock'>@Resources.CompletePayment</button>
+			}
+		}
+	</div>
 </div>
-
-
-@if (Model.IsPaid || Model.Terms == PaymentTerms.NetD)
-{
-
-
-				if (Model.DeliveryMode == DeliveryMode.ToBeDefined)
-				{
-
-								<div class="pull-right col-xs-1"></div>
-								<div id='confirm-button' class='pull-right '>
-																<button type="submit" class='icon delivery partial_deliveries' value="@DeliveryMode.PickUp">@Resources.PickUp</button>
-								</div>
-								<div class="pull-right col-xs-1"></div>
-								<div id='confirm-button' class='pull-right'>
-																<button type="submit" class='icon shipping partial_deliveries' value="@DeliveryMode.PartialDeliveries">@Resources.PartialDeliveries</button>
-								</div>
-				}
-				else
-				{
-								if (Model.DeliveryMode == DeliveryMode.PartialDeliveries)
-								{
-												<div id='confirm-button' class='pull-right'>
-																								<button type="submit" id="delivery" class='icon shipping'>@Resources.CreateNew @Resources.DeliveryOrder</button>
-												</div>
-								}
-								<div class='pull-right'>
-												@Html.ActionLink(Resources.SalesReceipt, "Print", new { id = Model.Id },
-															new { @class = "button icon print", target = "_blank" })
-								</div>
-				}
-}
-
-
-@if (Model.Payments.Any(x => !x.IsConfirmed))
-{
-				<div id='confirm-button' class='pull-right'>
-								@using (Ajax.BeginForm("ConfirmPayment", "Payments", new { id = Model.Id },
-new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "details-order" }))
-								{
-												<button type="submit" class='icon confirm-payments lock'>@Resources.CompletePayment</button>
-								}
-				</div>
-}
-<div class='clearfix'></div>
 <script type="text/javascript">
 @if (Model.Balance <= 0.01m) {
     <text>$("#form").hide("slow");</text>
@@ -148,14 +133,4 @@ new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "details-order" }))
 												DisplayErrorMessage(e.responseText)
 								});
 				});
-
-				$(".confirm-payments").click(function () {
-
-				$.post('@Url.Action("ConfirmPayment", new { id = Model.Id })',
-								function (detail) {
-											location.reload();
-							}, "json").fail(function (e) {
-											DisplayErrorMessage(e.responseText)
-							});
-});
 </script>

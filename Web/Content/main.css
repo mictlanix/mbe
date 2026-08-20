@@ -618,3 +618,28 @@ table.debts tr.warning td a {
 				color: red;
 				font-weight:bold
 }
+
+.order-actions {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-top: 10px;
+}
+
+.order-actions-left,
+.order-actions-right {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.order-actions-right {
+	margin-left: auto;
+}
+
+.order-actions form {
+	margin: 0;
+}

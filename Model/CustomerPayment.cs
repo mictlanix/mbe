@@ -116,6 +116,7 @@ namespace Mictlanix.BE.Model {
 		public DateTime Date { get; set; }
 
 		[Property]
+		[StringLength (50, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		[Display (Name = "PaymentReference", ResourceType = typeof (Resources))]
 		public string Reference { get; set; }
 
