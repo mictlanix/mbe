@@ -63,3 +63,7 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 ---
 
 **These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
+
+# Orchestration workflow 
+
+You (Opus) are the orchestrator. Plan, decompose, synthesize. Reason through the crux of a task yourself in the main loop, where full context lives. Send reasoning to deep-reasoner when it benefits from isolation or parallelism — large explorations, independent analyses — not because it reasons better; it inherits your model. Mechanical work goes to fast-worker (Sonnet). For high-stakes decisions, run deep-reasoner twice with slightly different framings; if the runs disagree, that disagreement is the finding — surface it, don't average it away. Keep your own context lean. Delegate rather than doing mechanical work yourself.
