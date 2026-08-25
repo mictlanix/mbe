@@ -1252,6 +1252,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return PaymentsCsv (range);
 			case "quotes":
 				return SalesQuoteCsv (range);
+			case "commissions":
+				return CommissionsCsv (range);
 			default:
 				return SalesCsv (range);
 			}
@@ -1478,6 +1480,52 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			var bytes = Encoding.UTF8.GetBytes (BuildCsv (items));
 			return File (bytes, "text/csv", "purchases.csv");
+		}
+
+		[HttpPost]
+		public ActionResult CommissionsCsv (DateRange range)
+		{
+			var BIGQUERY = GetCommissionDetailsSQLQuery ();
+			string sql = @"SELECT t.*, e.nickname SalesPersonName
+				FROM (BIGQUERY) AS t
+				LEFT JOIN employee e ON t.SalesPerson = e.employee_id
+				ORDER BY t.PaidStatus DESC";
+
+			sql = sql.Replace ("BIGQUERY", BIGQUERY);
+			sql = sql.Replace ("WHERE_SALESPERSON", "IN (SELECT employee FROM commission_agent)");
+
+			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
+
+				query.AddScalar ("SalesOrder", NHibernateUtil.Int32);
+				query.AddScalar ("SalesOrderDetail", NHibernateUtil.Int32);
+				query.AddScalar ("SalesPerson", NHibernateUtil.Int32);
+				query.AddScalar ("SalesPersonName", NHibernateUtil.String);
+				query.AddScalar ("Customer", NHibernateUtil.String);
+				query.AddScalar ("OrderDate", NHibernateUtil.DateTime);
+				query.AddScalar ("PaymentDate", NHibernateUtil.DateTime);
+				query.AddScalar ("Label", NHibernateUtil.String);
+				query.AddScalar ("ProductId", NHibernateUtil.Int32);
+				query.AddScalar ("ProductName", NHibernateUtil.String);
+				query.AddScalar ("TotalDetail", NHibernateUtil.Decimal);
+				query.AddScalar ("CommissionRate", NHibernateUtil.String);
+				query.AddScalar ("Commission", NHibernateUtil.Decimal);
+				query.AddScalar ("Quantity", NHibernateUtil.Decimal);
+				query.AddScalar ("Price", NHibernateUtil.Decimal);
+				query.AddScalar ("Participation", NHibernateUtil.String);
+				query.AddScalar ("Movement", NHibernateUtil.String);
+				query.AddScalar ("Paid", NHibernateUtil.String);
+				// query.AddScalar ("PaidStatus", NHibernateUtil.Boolean);
+				// query.AddScalar ("Payable", NHibernateUtil.Boolean);
+
+				query.SetDateTime ("start", range.StartDate);
+				query.SetDateTime ("end", range.EndDate);
+
+				return query.DynamicList ();
+			}, null);
+
+			var bytes = Encoding.UTF8.GetBytes (BuildCsv (items));
+			return File (bytes, "text/csv", "commissions.csv");
 		}
 
 		[HttpPost]
