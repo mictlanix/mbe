@@ -129,10 +129,12 @@ namespace Mictlanix.BE.Web.Helpers {
 			return expired.Any (x => x.Balance > 0.01m);
 		}
 
-		public static bool IsOverCreditLimit (this SalesOrder entity)
+		public static bool IsOverCreditLimit (this SalesOrder entity, bool includeMe = true)
 		{
-			return (entity.Customer.Debt () + entity.Balance) > entity.Customer.CreditLimit;
+			decimal extra = includeMe ? entity.Balance : 0;
+			return (entity.Customer.Debt () + extra) > entity.Customer.CreditLimit;
 		}
+
 		public static bool IsOverCreditLimit (this SalesQuote entity)
 		{
 			return (entity.Customer.Debt () + entity.TotalEx) > entity.Customer.CreditLimit;

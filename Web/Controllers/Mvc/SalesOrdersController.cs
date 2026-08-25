@@ -742,7 +742,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					}
 				}
 
-				if (customer.HasExpiredCredits () || entity.IsOverCreditLimit ()) {
+				if (customer.HasExpiredCredits () || entity.IsOverCreditLimit (false)) {
 					Response.StatusCode = 400;
 					return Content (Resources.CreditStatusNeedsToBeVerified);
 				}
