@@ -177,12 +177,6 @@
     <Compile Include="CustomerDiscount.cs" />
     <Compile Include="TranslationRequest.cs" />
     <Compile Include="Notarization.cs" />
-    <Compile Include="TechnicalServiceReport.cs" />
-    <Compile Include="TechnicalServiceRequest.cs" />
-    <Compile Include="Constants\TechnicalServiceRequestType.cs" />
-    <Compile Include="TechnicalServiceRequestComponent.cs" />
-    <Compile Include="TechnicalServiceReceipt.cs" />
-    <Compile Include="TechnicalServiceReceiptComponent.cs" />
     <Compile Include="DeliveryOrder.cs" />
     <Compile Include="DeliveryOrderDetail.cs" />
     <Compile Include="SalesOrderPayment.cs" />

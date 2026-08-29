@@ -7753,60 +7753,6 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Entrada de Servicio Técnico.
-        /// </summary>
-        public static string TechnicalServiceReceipt {
-            get {
-                return ResourceManager.GetString("TechnicalServiceReceipt", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a Entradas de Servicio Técnico.
-        /// </summary>
-        public static string TechnicalServiceReceipts {
-            get {
-                return ResourceManager.GetString("TechnicalServiceReceipts", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a Reporte de Servicio Técnico.
-        /// </summary>
-        public static string TechnicalServiceReport {
-            get {
-                return ResourceManager.GetString("TechnicalServiceReport", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a Reportes de Servicio Técnico.
-        /// </summary>
-        public static string TechnicalServiceReports {
-            get {
-                return ResourceManager.GetString("TechnicalServiceReports", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a Solicitud de Servicio Técnico.
-        /// </summary>
-        public static string TechnicalServiceRequest {
-            get {
-                return ResourceManager.GetString("TechnicalServiceRequest", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a Solicitudes de Servicio Técnico.
-        /// </summary>
-        public static string TechnicalServiceRequests {
-            get {
-                return ResourceManager.GetString("TechnicalServiceRequests", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Busca una cadena traducida similar a Técnico.
         /// </summary>
         public static string Technician {
