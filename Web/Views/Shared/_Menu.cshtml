@@ -80,10 +80,6 @@
 		new MenuItemModel{SystemObject = SystemObjects.AccountsPayable, Controller = "AccountsPayables", DefaultAction = "Index", Resources = Resources.Title_AccountsPayable },
 	};
 
-				var technical_service_menu_items = new List<MenuItemModel> {
-		new MenuItemModel{ SystemObject = SystemObjects.VehicleServiceOrders, Controller="Vehicles", DefaultAction = "ServiceOrders", Resources = Resources.ServiceOrders }
-	};
-
 				var front_desk_menu_items = new List<MenuItemModel> {
 		new MenuItemModel{ SystemObject = SystemObjects.TranslationRequests, Controller = "TranslationRequests", DefaultAction = "Index", Resources = Resources.TranslationRequests },
 		new MenuItemModel{ SystemObject = SystemObjects.Notarizations, Controller = "Notarizations", DefaultAction = "Index", Resources = Resources.Notarizations }
@@ -140,7 +136,6 @@
 								{ Resources.Purchase, purchases_menu_items },
 								{ Resources.Logistic, logistic_menu_items },
 								{ Resources.Administration, administration_menu_items },
-								{ Resources.TechnicalService, technical_service_menu_items },
 								{ Resources.FrontDesk, front_desk_menu_items },
 								{ Resources.FiscalDocuments, fiscal_document_menu_items },
 								{ Resources.Reports, reports_menu_1_items }

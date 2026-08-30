@@ -539,15 +539,6 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Informe de Avería.
-        /// </summary>
-        public static string BreakdownReport {
-            get {
-                return ResourceManager.GetString("BreakdownReport", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Busca una cadena traducida similar a Negocio.
         /// </summary>
         public static string Business {
@@ -4862,15 +4853,6 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Reportó.
-        /// </summary>
-        public static string Notifier {
-            get {
-                return ResourceManager.GetString("Notifier", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Busca una cadena traducida similar a Aún no hay solicitudes de envío registradas.
         /// </summary>
         public static string NotPendingShippingRequestsYet {
@@ -7060,56 +7042,11 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Descripción del Servicio.
-        /// </summary>
-        public static string ServiceDescription {
-            get {
-                return ResourceManager.GetString("ServiceDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Busca una cadena traducida similar a Lugar.
         /// </summary>
         public static string ServiceLocation {
             get {
                 return ResourceManager.GetString("ServiceLocation", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a Órden de Servicio a Vehículo.
-        /// </summary>
-        public static string ServiceOrder {
-            get {
-                return ResourceManager.GetString("ServiceOrder", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a Id de Orden de Servicio.
-        /// </summary>
-        public static string ServiceOrderId {
-            get {
-                return ResourceManager.GetString("ServiceOrderId", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a Órdenes de Servicio.
-        /// </summary>
-        public static string ServiceOrders {
-            get {
-                return ResourceManager.GetString("ServiceOrders", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a Órdenes de Servicio a Vehículos de Transporte.
-        /// </summary>
-        public static string ServiceTruckOrders {
-            get {
-                return ResourceManager.GetString("ServiceTruckOrders", resourceCulture);
             }
         }
         
@@ -7281,15 +7218,6 @@ namespace Mictlanix.BE {
         public static string SKU {
             get {
                 return ResourceManager.GetString("SKU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a Informe de Solución.
-        /// </summary>
-        public static string SolutionReport {
-            get {
-                return ResourceManager.GetString("SolutionReport", resourceCulture);
             }
         }
         
@@ -7740,15 +7668,6 @@ namespace Mictlanix.BE {
         public static string TaxRegime {
             get {
                 return ResourceManager.GetString("TaxRegime", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a Servicio Técnico.
-        /// </summary>
-        public static string TechnicalService {
-            get {
-                return ResourceManager.GetString("TechnicalService", resourceCulture);
             }
         }
         

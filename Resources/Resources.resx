@@ -1976,17 +1976,11 @@ Realizada el: {0:d}</value>
   <data name="FrontDesk" xml:space="preserve">
     <value>Recepción</value>
   </data>
-  <data name="TechnicalService" xml:space="preserve">
-    <value>Servicio Técnico</value>
-  </data>
   <data name="Equipment" xml:space="preserve">
     <value>Equipo</value>
   </data>
   <data name="Technician" xml:space="preserve">
     <value>Técnico</value>
-  </data>
-  <data name="ServiceDescription" xml:space="preserve">
-    <value>Descripción del Servicio</value>
   </data>
   <data name="RequestType" xml:space="preserve">
     <value>Tipo de Solicitud</value>
@@ -2601,26 +2595,8 @@ Atte: {1}.</value>
     <value>El atributo {0} 
 con  valor {1} ya existe</value>
   </data>
-  <data name="BreakdownReport" xml:space="preserve">
-    <value>Informe de Avería</value>
-  </data>
-  <data name="ServiceTruckOrders" xml:space="preserve">
-    <value>Órdenes de Servicio a Vehículos de Transporte</value>
-  </data>
   <data name="Vehicle" xml:space="preserve">
     <value>Vehículo</value>
-  </data>
-  <data name="Notifier" xml:space="preserve">
-    <value>Reportó</value>
-  </data>
-  <data name="ServiceOrderId" xml:space="preserve">
-    <value>Id de Orden de Servicio</value>
-  </data>
-  <data name="SolutionReport" xml:space="preserve">
-    <value>Informe de Solución</value>
-  </data>
-  <data name="ServiceOrder" xml:space="preserve">
-    <value>Órden de Servicio a Vehículo</value>
   </data>
   <data name="SavingOnSalesQuote" xml:space="preserve">
     <value>¡Con esta compra usted ahorra {0:C2}!</value>
@@ -2699,9 +2675,6 @@ con  valor {1} ya existe</value>
   </data>
   <data name="WilcardStringPatternForSearch" xml:space="preserve">
     <value>**</value>
-  </data>
-  <data name="ServiceOrders" xml:space="preserve">
-    <value>Órdenes de Servicio</value>
   </data>
   <data name="Logistic" xml:space="preserve">
     <value>Logística</value>

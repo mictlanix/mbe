@@ -211,8 +211,8 @@ namespace Mictlanix.BE.Model {
 		Vehicle = 88,
 		[Display (Name = "VehicleOperators", ResourceType = typeof (Resources))]
 		VehicleOperators = 89,
-		[Display (Name = "ServiceOrders", ResourceType = typeof (Resources))]
-		VehicleServiceOrders = 90,
+		//[Display (Name = "ServiceOrders", ResourceType = typeof (Resources))]
+		//VehicleServiceOrders = 90,
 		[Display (Name = "ForDeliver", ResourceType = typeof (Resources))]
 		ForDeliver = 91,
 		[Display (Name = "Users", ResourceType = typeof (Resources))]

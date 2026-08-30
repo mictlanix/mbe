@@ -1998,28 +1998,6 @@ CREATE TABLE `sat_unit_of_measurement` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `service_order_detail`
---
-
-DROP TABLE IF EXISTS `service_order_detail`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `service_order_detail` (
-  `service_order_detail_id` int(11) NOT NULL AUTO_INCREMENT,
-  `vehicle_service_order` int(11) NOT NULL DEFAULT 0,
-  `spare_part` int(11) NOT NULL DEFAULT 0,
-  `quantity` decimal(20,6) NOT NULL DEFAULT 0.000000,
-  `comment` varchar(500) DEFAULT '0',
-  `date` datetime NOT NULL,
-  PRIMARY KEY (`service_order_detail_id`) USING BTREE,
-  KEY `FK__vehicle_service_order` (`vehicle_service_order`) USING BTREE,
-  KEY `FK__product` (`spare_part`) USING BTREE,
-  CONSTRAINT `FK__product` FOREIGN KEY (`spare_part`) REFERENCES `product` (`product_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK__vehicle_service_order` FOREIGN KEY (`vehicle_service_order`) REFERENCES `vehicle_service_order` (`service_order_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `special_receipt`
 --
 
@@ -2485,39 +2463,6 @@ CREATE TABLE `vehicle_operator` (
   CONSTRAINT `FK_vehicle_operator_employee_2` FOREIGN KEY (`creator`) REFERENCES `employee` (`employee_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_vehicle_operator_employee_3` FOREIGN KEY (`updater`) REFERENCES `employee` (`employee_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `vehicle_service_order`
---
-
-DROP TABLE IF EXISTS `vehicle_service_order`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `vehicle_service_order` (
-  `service_order_id` int(11) NOT NULL AUTO_INCREMENT,
-  `vehicle` int(11) NOT NULL DEFAULT 0,
-  `problem_description` varchar(500) NOT NULL DEFAULT '0',
-  `service_description` varchar(500) DEFAULT '0',
-  `creator` int(11) NOT NULL DEFAULT 0,
-  `updater` int(11) NOT NULL DEFAULT 0,
-  `notifier` int(11) NOT NULL DEFAULT 0,
-  `creation_time` datetime NOT NULL,
-  `modification_time` datetime NOT NULL,
-  `completed` tinyint(1) NOT NULL DEFAULT 0,
-  `cancelled` tinyint(1) NOT NULL DEFAULT 0,
-  `comment` varchar(250) DEFAULT '0',
-  `date` datetime DEFAULT NULL,
-  PRIMARY KEY (`service_order_id`) USING BTREE,
-  KEY `FK_vehicle` (`vehicle`) USING BTREE,
-  KEY `FK_vehicle_service_order_employee` (`creator`) USING BTREE,
-  KEY `FK_vehicle_service_order_employee_2` (`updater`) USING BTREE,
-  KEY `FK_vehicle_service_order_employee_3` (`notifier`) USING BTREE,
-  CONSTRAINT `FK__vehicle` FOREIGN KEY (`vehicle`) REFERENCES `vehicle` (`vehicle_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK_vehicle_service_order_employee` FOREIGN KEY (`creator`) REFERENCES `employee` (`employee_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK_vehicle_service_order_employee_2` FOREIGN KEY (`updater`) REFERENCES `employee` (`employee_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK_vehicle_service_order_employee_3` FOREIGN KEY (`notifier`) REFERENCES `employee` (`employee_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
