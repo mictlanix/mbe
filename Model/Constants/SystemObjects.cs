@@ -147,8 +147,8 @@ namespace Mictlanix.BE.Model {
 		StandaloneFiscalDocuments = 56,
 		[Display (Name = "ProductionOrders", ResourceType = typeof (Resources))]
 		ProductionOrders = 57,
-		[Display (Name = "TechnicalServiceReports", ResourceType = typeof (Resources))]
-		TechnicalServiceReports = 58,
+		//[Display (Name = "TechnicalServiceReports", ResourceType = typeof (Resources))]
+		//TechnicalServiceReports = 58,
 		[Display (Name = "TranslationRequests", ResourceType = typeof (Resources))]
 		TranslationRequests = 59,
 		[Display (Name = "Notarizations", ResourceType = typeof (Resources))]
@@ -159,10 +159,10 @@ namespace Mictlanix.BE.Model {
 		ProductSalesBySalesPersonAndBrand = 62,
 		[Display (Name = "ProductSalesBySalesPersonAndModel", ResourceType = typeof (Resources))]
 		ProductSalesBySalesPersonAndModel = 63,
-		[Display (Name = "TechnicalServiceRequests", ResourceType = typeof (Resources))]
-		TechnicalServiceRequests = 64,
-		[Display (Name = "TechnicalServiceReceipts", ResourceType = typeof (Resources))]
-		TechnicalServiceReceipts = 65,
+		//[Display (Name = "TechnicalServiceRequests", ResourceType = typeof (Resources))]
+		//TechnicalServiceRequests = 64,
+		//[Display (Name = "TechnicalServiceReceipts", ResourceType = typeof (Resources))]
+		//TechnicalServiceReceipts = 65,
 		[Display (Name = "CustomersReport", ResourceType = typeof (Resources))]
 		CustomersReport = 66,
 		[Display (Name = "WarehouseStockReport", ResourceType = typeof (Resources))]
@@ -211,8 +211,8 @@ namespace Mictlanix.BE.Model {
 		Vehicle = 88,
 		[Display (Name = "VehicleOperators", ResourceType = typeof (Resources))]
 		VehicleOperators = 89,
-		[Display (Name = "ServiceOrders", ResourceType = typeof (Resources))]
-		VehicleServiceOrders = 90,
+		//[Display (Name = "ServiceOrders", ResourceType = typeof (Resources))]
+		//VehicleServiceOrders = 90,
 		[Display (Name = "ForDeliver", ResourceType = typeof (Resources))]
 		ForDeliver = 91,
 		[Display (Name = "Users", ResourceType = typeof (Resources))]

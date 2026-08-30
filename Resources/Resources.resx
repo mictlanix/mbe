@@ -1916,12 +1916,6 @@ Realizada el: {0:d}</value>
   <data name="Status" xml:space="preserve">
     <value>Estado</value>
   </data>
-  <data name="TechnicalServiceReports" xml:space="preserve">
-    <value>Reportes de Servicio Técnico</value>
-  </data>
-  <data name="TechnicalServiceReport" xml:space="preserve">
-    <value>Reporte de Servicio Técnico</value>
-  </data>
   <data name="ServiceType" xml:space="preserve">
     <value>Tipo de Servicio</value>
   </data>
@@ -1982,17 +1976,11 @@ Realizada el: {0:d}</value>
   <data name="FrontDesk" xml:space="preserve">
     <value>Recepción</value>
   </data>
-  <data name="TechnicalService" xml:space="preserve">
-    <value>Servicio Técnico</value>
-  </data>
   <data name="Equipment" xml:space="preserve">
     <value>Equipo</value>
   </data>
   <data name="Technician" xml:space="preserve">
     <value>Técnico</value>
-  </data>
-  <data name="ServiceDescription" xml:space="preserve">
-    <value>Descripción del Servicio</value>
   </data>
   <data name="RequestType" xml:space="preserve">
     <value>Tipo de Solicitud</value>
@@ -2027,12 +2015,6 @@ Realizada el: {0:d}</value>
   <data name="ContactPhoneNumber" xml:space="preserve">
     <value>Teléfono de Contacto</value>
   </data>
-  <data name="TechnicalServiceRequest" xml:space="preserve">
-    <value>Solicitud de Servicio Técnico</value>
-  </data>
-  <data name="TechnicalServiceRequests" xml:space="preserve">
-    <value>Solicitudes de Servicio Técnico</value>
-  </data>
   <data name="Component" xml:space="preserve">
     <value>Componente</value>
   </data>
@@ -2041,12 +2023,6 @@ Realizada el: {0:d}</value>
   </data>
   <data name="WarehouseManager" xml:space="preserve">
     <value>Jefe de Almacén</value>
-  </data>
-  <data name="TechnicalServiceReceipt" xml:space="preserve">
-    <value>Entrada de Servicio Técnico</value>
-  </data>
-  <data name="TechnicalServiceReceipts" xml:space="preserve">
-    <value>Entradas de Servicio Técnico</value>
   </data>
   <data name="ReceiptLocation" xml:space="preserve">
     <value>Localización</value>
@@ -2609,6 +2585,9 @@ Atte: {1}.</value>
   <data name="TonsCapacity" xml:space="preserve">
     <value>Capacidad de Carga</value>
   </data>
+  <data name="Truck" xml:space="preserve">
+    <value>Camión de Transporte</value>
+  </data>
   <data name="LicensePlateAlreadyExists" xml:space="preserve">
     <value>La placa ya existe</value>
   </data>
@@ -2616,26 +2595,8 @@ Atte: {1}.</value>
     <value>El atributo {0} 
 con  valor {1} ya existe</value>
   </data>
-  <data name="BreakdownReport" xml:space="preserve">
-    <value>Informe de Avería</value>
-  </data>
-  <data name="ServiceTruckOrders" xml:space="preserve">
-    <value>Órdenes de Servicio a Vehículos de Transporte</value>
-  </data>
   <data name="Vehicle" xml:space="preserve">
     <value>Vehículo</value>
-  </data>
-  <data name="Notifier" xml:space="preserve">
-    <value>Reportó</value>
-  </data>
-  <data name="ServiceOrderId" xml:space="preserve">
-    <value>Id de Orden de Servicio</value>
-  </data>
-  <data name="SolutionReport" xml:space="preserve">
-    <value>Informe de Solución</value>
-  </data>
-  <data name="ServiceOrder" xml:space="preserve">
-    <value>Órden de Servicio a Vehículo</value>
   </data>
   <data name="SavingOnSalesQuote" xml:space="preserve">
     <value>¡Con esta compra usted ahorra {0:C2}!</value>
@@ -2714,9 +2675,6 @@ con  valor {1} ya existe</value>
   </data>
   <data name="WilcardStringPatternForSearch" xml:space="preserve">
     <value>**</value>
-  </data>
-  <data name="ServiceOrders" xml:space="preserve">
-    <value>Órdenes de Servicio</value>
   </data>
   <data name="Logistic" xml:space="preserve">
     <value>Logística</value>
