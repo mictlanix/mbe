@@ -8356,6 +8356,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Camión de Transporte.
+        /// </summary>
+        public static string Truck {
+            get {
+                return ResourceManager.GetString("Truck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Cobro Total.
         /// </summary>
         public static string TotalPayment {

@@ -2591,6 +2591,9 @@ Atte: {1}.</value>
   <data name="TonsCapacity" xml:space="preserve">
     <value>Capacidad de Carga</value>
   </data>
+  <data name="Truck" xml:space="preserve">
+    <value>Camión de Transporte</value>
+  </data>
   <data name="LicensePlateAlreadyExists" xml:space="preserve">
     <value>La placa ya existe</value>
   </data>
