@@ -458,7 +458,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			//		UPDATE fiscal_document SET customer = :customer WHERE customer = :duplicate;
 			//		UPDATE sales_order SET customer = :customer WHERE customer = :duplicate;
 			//		UPDATE sales_quote SET customer = :customer WHERE customer = :duplicate;
-			//		UPDATE tech_service_request SET customer = :customer WHERE customer = :duplicate;
 			//		UPDATE credit_note set customer = :customer WHERE customer = :duplicate;
 			//		DELETE FROM customer WHERE customer_id = :duplicate;";
 

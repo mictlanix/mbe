@@ -142,14 +142,11 @@ Complete enum (integer value → name). Controls every module and sub-feature. V
 | 55 | `ProductSalesBySalesPerson` | Reports → Product Sales by Salesperson |
 | 56 | `StandaloneFiscalDocuments` | Fiscal → Standalone Fiscal Docs |
 | 57 | `ProductionOrders` | Production → Production Orders |
-| 58 | `TechnicalServiceReports` | Technical Service → Service Reports |
 | 59 | `TranslationRequests` | Front Desk → Translation Requests |
 | 60 | `Notarizations` | Front Desk → Notarizations |
 | 61 | `ProductSalesBySalesPersonAndLabel` | Reports → Product Sales by Salesperson+Label |
 | 62 | `ProductSalesBySalesPersonAndBrand` | Reports → Product Sales by Salesperson+Brand |
 | 63 | `ProductSalesBySalesPersonAndModel` | Reports → Product Sales by Salesperson+Model |
-| 64 | `TechnicalServiceRequests` | Technical Service → Service Requests |
-| 65 | `TechnicalServiceReceipts` | Technical Service → Service Receipts |
 | 66 | `CustomersReport` | Reports → Customers Report |
 | 67 | `WarehouseStockReport` | Reports → Warehouse Stock |
 | 68 | `WarehouseStockByLotReport` | Reports → Warehouse Stock by Lot |
@@ -170,7 +167,6 @@ Complete enum (integer value → name). Controls every module and sub-feature. V
 | 87 | `DeliveryItineraries` | Logistics → Delivery Itineraries |
 | 88 | `Vehicle` | Master Data → Vehicles |
 | 89 | `VehicleOperators` | Master Data → Vehicle Operators |
-| 90 | `VehicleServiceOrders` | Logistics → Vehicle Service Orders |
 | 91 | `ForDeliver` | Logistics → For Delivery view |
 | 92 | `Users` | Users (admin only menu item) |
 | 93 | `InventoryAdjustments` | Inventory → Adjustments |

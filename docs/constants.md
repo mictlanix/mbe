@@ -228,7 +228,7 @@ Classifies what a `customer_payment` record represents.
 ## Priority
 
 **File**: `Model/Constants/PriorityEnum.cs`  
-**DB column**: `purchase_request.priority`, `tech_service_request.priority`
+**DB column**: `purchase_request.priority`
 
 | Value | Name |
 |-------|------|
@@ -274,19 +274,6 @@ Polymorphic discriminator on the `incidence_log` audit table. Identifies which e
 | 5 | WireTransfer | Wire transfer (SPEI) |
 
 > Note: starts at 1 (no 0/NA value).
-
----
-
-## TechnicalServiceRequestType
-
-**File**: `Model/Constants/TechnicalServiceRequestType.cs`  
-**DB column**: `tech_service_request.type`
-
-| Value | Name | Description |
-|-------|------|-------------|
-| 0 | Demonstration | Product demo for a customer |
-| 1 | Installation | On-site or in-store installation |
-| 2 | Loan | Equipment loan to customer |
 
 ---
 
@@ -393,14 +380,11 @@ Commented-out entries (31, 70, 76, 77, 78, 104, 105) are **disabled/unused** in 
 | 55 | ProductSalesBySalesPerson | Reports | Product sales by salesperson |
 | 56 | StandaloneFiscalDocuments | Fiscal | Fiscal documents without source SO |
 | 57 | ProductionOrders | Production | Production orders (**NOT IMPLEMENTED** — controller commented out) |
-| 58 | TechnicalServiceReports | Technical Service | Technician service reports |
 | 59 | TranslationRequests | Front Desk | Document translation requests |
 | 60 | Notarizations | Front Desk | Notarization tracking |
 | 61 | ProductSalesBySalesPersonAndLabel | Reports | Product sales by salesperson × label |
 | 62 | ProductSalesBySalesPersonAndBrand | Reports | Product sales by salesperson × brand |
 | 63 | ProductSalesBySalesPersonAndModel | Reports | Product sales by salesperson × model |
-| 64 | TechnicalServiceRequests | Technical Service | Customer service requests |
-| 65 | TechnicalServiceReceipts | Technical Service | Equipment intake receipts |
 | 66 | CustomersReport | Reports | Customer directory export |
 | 67 | WarehouseStockReport | Reports | Current stock levels report |
 | 68 | WarehouseStockByLotReport | Reports | Stock by lot/expiry report |
@@ -421,7 +405,6 @@ Commented-out entries (31, 70, 76, 77, 78, 104, 105) are **disabled/unused** in 
 | 87 | DeliveryItineraries | Logistics | Delivery itinerary / route planning |
 | 88 | Vehicle | Logistics | Fleet vehicle catalog |
 | 89 | VehicleOperators | Logistics | Vehicle operator catalog |
-| 90 | VehicleServiceOrders | Technical Service | Fleet vehicle service/maintenance orders |
 | 91 | ForDeliver | Logistics | "Ready to deliver" queue |
 | 92 | Users | Users | User account management |
 | 93 | InventoryAdjustments | Inventory | Inventory adjustment documents |

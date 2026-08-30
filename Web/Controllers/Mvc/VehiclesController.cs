@@ -119,13 +119,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 
 			var sql = @"
-					SELECT v.vehicle_id id, v.nickname nickname,
-					IFNULL( so.services, 0) service  FROM vehicle v 
-					LEFT JOIN (SELECT vso.vehicle, COUNT(*) services 
-							FROM vehicle_service_order vso 
-							WHERE vso.cancelled = 0 AND vso.completed = 0
-							GROUP BY vso.vehicle) so
-					ON v.vehicle_id = so.vehicle
+					SELECT v.vehicle_id id, v.nickname nickname
+					FROM vehicle v 
 					WHERE v.name LIKE :pattern OR v.nickname LIKE :pattern
 					LIMIT 15";
 
@@ -133,7 +128,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				var query = session.CreateSQLQuery (sql);
 				query.AddScalar ("id", NHibernateUtil.Int32);
 				query.AddScalar ("nickname", NHibernateUtil.String);
-				query.AddScalar ("service", NHibernateUtil.Int32);
 
 				query.SetParameter ("pattern", "%" + pattern + "%");
 				return query.DynamicList ();
@@ -142,8 +136,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var items = (from x in raw
 						 select new {
 							 id = x.id,
-							 name = x.nickname,
-							 service = x.service
+							 name = x.nickname
 						 }).ToList ();
 
 
