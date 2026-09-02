@@ -492,14 +492,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					return Content (string.Format (Resources.DoctoRequiresApproval, Resources.PurchaseRequest));
 				}
 
-				//TODO: Revisar por qué sigue metiendo items de requests cancelados
-				var items = request.Details.Where (x => !PurchaseOrderDetail.Queryable
-					.Select(y => y.PurchaseRequestDetail).Where(z =>
-									  !z.PurchaseRequest.IsCancelled
-									&& z.PurchaseRequest.IsCompleted
-									&& z.PurchaseRequest.IsApproved).Contains (x));
+				var detail_ids = request.Details.Select (x => x.Id).ToList ();
+				var used_ids = PurchaseOrderDetail.Queryable
+					.Where (y => detail_ids.Contains (y.PurchaseRequestDetail.Id) && !y.Order.IsCancelled)
+					.Select (y => y.PurchaseRequestDetail.Id).ToList ();
 
-				details.AddRange (items.ToList ());
+				details.AddRange (request.Details.Where (x => !used_ids.Contains (x.Id)));
 			}
 
 			List<int> added = new List<int> ();
