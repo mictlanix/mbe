@@ -1889,12 +1889,6 @@ Realizada el: {0:d}</value>
   <data name="ProductSalesBySalesPerson" xml:space="preserve">
     <value>Productos Vendidos Por Vendedor</value>
   </data>
-  <data name="ShippingRequired" xml:space="preserve">
-    <value>Requiere Mensajería</value>
-  </data>
-  <data name="ShippingInvoiceRequired" xml:space="preserve">
-    <value>Requiere Envío con Factura</value>
-  </data>
   <data name="Discounts" xml:space="preserve">
     <value>Descuentos</value>
   </data>

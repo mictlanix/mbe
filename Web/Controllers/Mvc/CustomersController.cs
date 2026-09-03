@@ -194,8 +194,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			entity.PriceListId = item.PriceListId;
 			entity.CreditDays = item.CreditDays;
 			entity.CreditLimit = item.CreditLimit;
-			entity.Shipping = item.Shipping;
-			entity.ShippingRequiredDocument = item.ShippingRequiredDocument;
 			entity.Comment = item.Comment;
 			entity.SalesPerson = item.SalesPerson;
 

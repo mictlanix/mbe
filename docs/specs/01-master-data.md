@@ -150,8 +150,6 @@ Buyer entities. All sales orders, payments, and refunds belong to a customer.
 | Credit Days | `customer.credit_days` | Net payment days |
 | Price List | `customer.price_list` | FK → `price_list` |
 | Salesperson | `customer.salesperson` | FK → `employee` (`sales_person=1`) — **optional** |
-| Shipping Enabled | `customer.shipping` | Boolean |
-| Shipping Requires Document | `customer.shipping_required_document` | Boolean |
 | Notes | `customer.comment` | |
 
 ### Sub-Panels

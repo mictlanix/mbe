@@ -94,14 +94,6 @@ namespace Mictlanix.BE.Model {
 		[Display (Name = "PriceList", ResourceType = typeof (Resources))]
 		public virtual PriceList PriceList { get; set; }
 
-		[Property]
-		[Display (Name = "ShippingRequired", ResourceType = typeof (Resources))]
-		public virtual bool Shipping { get; set; }
-
-		[Property ("shipping_required_document")]
-		[Display (Name = "ShippingInvoiceRequired", ResourceType = typeof (Resources))]
-		public virtual bool ShippingRequiredDocument { get; set; }
-
 		[Display (Name = "SalesPerson", ResourceType = typeof (Resources))]
 		[UIHint ("EmployeeSelector")]
 		public virtual int? SalesPersonId { get; set; }
