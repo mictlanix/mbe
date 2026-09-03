@@ -357,8 +357,6 @@ CREATE TABLE `customer` (
   `credit_days` int(11) NOT NULL,
   `comment` varchar(1024) DEFAULT NULL,
   `price_list` int(11) NOT NULL,
-  `shipping` tinyint(1) NOT NULL,
-  `shipping_required_document` tinyint(1) NOT NULL,
   `salesperson` int(11) DEFAULT NULL,
   `disabled` tinyint(1) DEFAULT 0,
   `creator` int(11) DEFAULT NULL,

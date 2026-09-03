@@ -1,6 +1,6 @@
 # Data Dictionary
 
-Generated from `mbe_schema.sql` — MariaDB 10.11, database `mbe`.
+Generated from `Schema/model/mbe_schema.sql` — MariaDB 10.11, database `mbe`.
 
 ---
 
@@ -393,8 +393,6 @@ Customer / buyer entity.
 | `credit_days` | int(11) | NO | Net days payment terms |
 | `comment` | varchar(1024) | YES | Notes |
 | `price_list` | int(11) | NO | FK → `price_list` — assigned price tier |
-| `shipping` | tinyint(1) | NO | Whether deliveries are enabled |
-| `shipping_required_document` | tinyint(1) | NO | Require delivery document |
 | `salesperson` | int(11) | YES | FK → `employee` — assigned sales rep |
 | `disabled` | tinyint(1) | YES | Soft-delete |
 | `creator` | int(11) | YES | FK → `employee` |

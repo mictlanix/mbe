@@ -7105,29 +7105,11 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Requiere Envío con Factura.
-        /// </summary>
-        public static string ShippingInvoiceRequired {
-            get {
-                return ResourceManager.GetString("ShippingInvoiceRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Busca una cadena traducida similar a Método de Envío.
         /// </summary>
         public static string ShippingMethod {
             get {
                 return ResourceManager.GetString("ShippingMethod", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a Requiere Mensajería.
-        /// </summary>
-        public static string ShippingRequired {
-            get {
-                return ResourceManager.GetString("ShippingRequired", resourceCulture);
             }
         }
         
