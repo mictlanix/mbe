@@ -189,10 +189,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var item = new SalesOrderPayment {
 				SalesOrder = SalesOrder.TryFind (id)
 			};
+			var balance = item.SalesOrder.Balance;// - GetRefunds (item.SalesOrder.Id);
 
-			ViewBag.Balance = item.SalesOrder.Balance;// - GetRefunds (item.SalesOrder.Id);
+			item.Amount = balance;
+
+			return ApplyPaymentEditor (item, balance);
+		}
+
+		ActionResult ApplyPaymentEditor (SalesOrderPayment item, decimal balance)
+		{
+			ViewBag.Balance = balance;
 			ViewBag.Payments = GetRemainingPayments (item.SalesOrder.Customer.Id, item.SalesOrder.Currency);
-			item.Amount = ViewBag.Balance;
 
 			return PartialView ("_ApplyPayment", item);
 		}
@@ -213,11 +220,29 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			};
 			var balance = entity.SalesOrder.Balance;// - GetRefunds (entity.SalesOrder.Id);
 
+			if (entity.SalesOrder.IsCancelled || entity.SalesOrder.IsPaid) {
+				ModelState.AddModelError (string.Empty, Resources.ItemAlreadyCompletedOrCancelled);
+				return ApplyPaymentEditor (entity, balance);
+			}
+
 			if (entity.Amount > entity.Payment.Balance) {
 				entity.Amount = entity.Payment.Balance;
 			}
 
+			if (entity.Amount > balance) {
+				entity.Amount = balance;
+			}
+
+			if (entity.Amount < 0.01m) {
+				ModelState.AddModelError (string.Empty, Resources.InsufficientFunds);
+				return ApplyPaymentEditor (entity, balance);
+			}
+
 			balance -= entity.Amount;
+
+			// a payment can be allocated to a sales order only once, so the new
+			// amount is added to the allocation already registered, if any
+			var allocation = entity.Payment.Allocations.FirstOrDefault (x => x.SalesOrder == entity.SalesOrder);
 
 			using (var scope = new TransactionScope ()) {
 				if (balance <= 0.01m) {
@@ -227,8 +252,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					entity.SalesOrder.Update ();
 				}
 
-				if (entity.Amount > 0) {
+				if (allocation == null) {
 					entity.Create ();
+				} else {
+					allocation.Amount += entity.Amount;
+					allocation.Applier = entity.Applier;
+					allocation.Date = entity.Date;
+					allocation.IsConfirmed = entity.IsConfirmed;
+					allocation.Update ();
 				}
 
 				scope.Flush ();
