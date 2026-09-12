@@ -146,7 +146,6 @@ namespace Mictlanix.BE.Web.Models {
 			get { return (decimal?)CashCounts.Where (x => x.Type == CashCountType.CountedCash).Sum (x => x.Total) ?? 0; }
 		}
 
-		public IList<MoneyCount> MoneyCounts { get; set; }
 		public IList<CashCount> CashCounts { get; set; }
 		public IList<CustomerPayment> Expenses { get; set; }
 		public IList<CustomerPayment> Refunds { get; set; }

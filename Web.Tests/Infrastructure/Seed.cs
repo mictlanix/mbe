@@ -152,14 +152,17 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 			return item;
 		}
 
-		public CustomerPayment Payment (PaymentType type, decimal amount)
+		public CustomerPayment Payment (PaymentType type, decimal amount,
+						PaymentMethod method = PaymentMethod.Cash,
+						CashSession session = null)
 		{
 			var now = DateTime.Now;
 			var item = new CustomerPayment {
 				Customer = Customer,
 				Store = Store,
 				Amount = amount,
-				Method = PaymentMethod.Cash,
+				Method = method,
+				CashSession = session,
 				Date = now,
 				Currency = CurrencyCode.MXN,
 				PaymentType = type,
@@ -178,14 +181,15 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 		}
 
 		public SalesOrderPayment Allocation (SalesOrder order, CustomerPayment payment,
-						     decimal amount, bool confirmed = false)
+						     decimal amount, bool confirmed = false,
+						     decimal change = 0m)
 		{
 			var item = new SalesOrderPayment {
 				SalesOrder = order,
 				Payment = payment,
 				PaymentId = payment.Id,
 				Amount = amount,
-				Change = 0m,
+				Change = change,
 				Date = DateTime.Now,
 				IsConfirmed = confirmed
 			};
