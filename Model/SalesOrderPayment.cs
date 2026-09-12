@@ -71,10 +71,6 @@ namespace Mictlanix.BE.Model {
 		//[Display (Name = "IsCompleted", ResourceType = typeof (Resources))]
 		public virtual bool IsConfirmed { get; set; }
 
-		[Property ("cancelled")]
-		//[Display (Name = "IsCompleted", ResourceType = typeof (Resources))]
-		public virtual bool IsCancelled { get; set; }
-
 		#region Override Base Methods
 
 		public override string ToString ()

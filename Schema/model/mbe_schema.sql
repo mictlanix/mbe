@@ -1791,7 +1791,6 @@ CREATE TABLE `sales_order_payment` (
   `applier` int(11) DEFAULT NULL,
   `date` datetime DEFAULT NULL,
   `confirmed` tinyint(1) DEFAULT NULL,
-  `cancelled` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`sales_order_payment_id`),
   UNIQUE KEY `sales_order_payment_sales_order_customer_payment_idx` (`sales_order`,`customer_payment`),
   KEY `sales_order_payment_sales_order_idx` (`sales_order`),

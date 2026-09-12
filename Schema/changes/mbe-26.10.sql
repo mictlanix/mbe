@@ -1,0 +1,28 @@
+-- sales_order_payment.cancelled dropped (see mictlanix/mbe#55, companion to
+-- mictlanix/mbe-api#212).
+--
+-- The column never appeared in a change file -- it was applied to production
+-- out-of-band and only ever landed in Schema/model/mbe_schema.sql, alongside
+-- `applier`, `date` and `confirmed`, which were formalised later in mbe-25.08.sql.
+--
+-- In this repository it is dead weight: `CustomerPayment.Allocated` was the only
+-- reader and nothing ever wrote it. The ~60 other sites that sum allocations --
+-- SalesOrder.Balance, SalesOrder.Paid, Customer.Debt(), BalanceInCashDrawer(),
+-- the accounts-receivable aging query and six report queries -- ignored it
+-- entirely, so a flagged row was counted as live everywhere that matters. The
+-- docs described an "Unapply" action built on it that was never implemented;
+-- that text is corrected in the same commit.
+--
+-- WARNING -- check before applying. mbe-api DOES write this column: its
+-- POST /customer-payments/{id}/applications/{id}/reverse sets cancelled = 1 to
+-- reverse an application (FR-045). Any row already reversed that way silently
+-- becomes live again once the column is gone, and its amount is counted back
+-- into CustomerPayment.Allocated. Run this first and deal with the result:
+--
+--   SELECT sales_order_payment_id, sales_order, customer_payment, amount
+--   FROM sales_order_payment WHERE cancelled = 1;
+--
+-- If that returns rows, do not apply this until mictlanix/mbe-api#212 is
+-- resolved -- those reversals have nowhere to go.
+ALTER TABLE `sales_order_payment`
+	DROP COLUMN `cancelled`;

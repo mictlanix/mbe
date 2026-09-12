@@ -659,7 +659,6 @@ Application of a customer payment to a specific order (many-to-many).
 | `applier` | int(11) | YES | FK → `employee` — who applied it |
 | `date` | datetime | YES | Application date |
 | `confirmed` | tinyint(1) | YES | Supervisor confirmation |
-| `cancelled` | tinyint(1) | NO | Cancelled/reversed |
 
 ### `customer_refund`
 Customer return (devolution) header.
