@@ -85,6 +85,7 @@
     <Compile Include="Infrastructure\FakeHttpContext.cs" />
     <Compile Include="Infrastructure\Seed.cs" />
     <Compile Include="PaymentsControllerRemovePaymentTests.cs" />
+    <Compile Include="SalesOrderBalanceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

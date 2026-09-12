@@ -39,3 +39,14 @@ INSERT INTO `customer` (`customer_id`, `code`, `name`, `credit_limit`, `credit_d
 INSERT INTO `employee` (`employee_id`, `first_name`, `last_name`, `nickname`, `gender`,
 	`birthday`, `sales_person`, `active`, `start_job_date`)
 	VALUES (1, 'Test', 'Employee', 'tester', 0, '1990-01-01', 1, 1, '2020-01-01');
+
+-- SalesOrderBalanceTests seeds an order line, which needs a product to point at.
+INSERT INTO `sat_unit_of_measurement` (`sat_unit_of_measurement_id`, `name`)
+	VALUES ('H87', 'Pieza');
+
+INSERT INTO `product` (`product_id`, `code`, `name`, `unit_of_measurement`, `stockable`,
+	`perishable`, `seriable`, `purchasable`, `salable`, `invoiceable`, `tax_rate`,
+	`tax_included`, `price_type`, `currency`, `min_order_qty`, `deactivated`,
+	`stock_verification`)
+	VALUES (1, 'TEST-PROD', 'Test Product', 'H87', 1, 0, 0, 1, 1, 1, 0.000000,
+		0, 0, 0, 1, 0, 0);

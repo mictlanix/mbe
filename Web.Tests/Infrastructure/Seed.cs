@@ -45,6 +45,7 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 		public const string Marker = "MBE-TEST";
 
 		readonly List<SalesOrderPayment> allocations = new List<SalesOrderPayment> ();
+		readonly List<SalesOrderDetail> details = new List<SalesOrderDetail> ();
 		readonly List<CustomerPayment> payments = new List<CustomerPayment> ();
 		readonly List<SalesOrder> orders = new List<SalesOrder> ();
 
@@ -91,6 +92,33 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 
 			item.CreateAndFlush ();
 			orders.Add (item);
+
+			return item;
+		}
+
+		// A single line with no tax and no discount, so the order total is just
+		// quantity x price and the balance arithmetic stays readable.
+		public SalesOrderDetail Detail (SalesOrder order, decimal price, decimal quantity = 1m)
+		{
+			var product = Product.Queryable.First ();
+			var item = new SalesOrderDetail {
+				SalesOrder = order,
+				Product = product,
+				ProductCode = product.Code,
+				ProductName = product.Name,
+				Quantity = quantity,
+				Cost = 0m,
+				Price = price,
+				DiscountRate = 0m,
+				TaxRate = 0m,
+				IsTaxIncluded = false,
+				Currency = CurrencyCode.MXN,
+				ExchangeRate = 1m,
+				IsDelivery = false
+			};
+
+			item.CreateAndFlush ();
+			details.Add (item);
 
 			return item;
 		}
@@ -146,6 +174,10 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 		{
 			foreach (var item in allocations) {
 				Remove (SalesOrderPayment.TryFind (item.Id));
+			}
+
+			foreach (var item in details) {
+				Remove (SalesOrderDetail.TryFind (item.Id));
 			}
 
 			foreach (var item in payments) {
