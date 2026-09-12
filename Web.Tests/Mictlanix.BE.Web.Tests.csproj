@@ -84,6 +84,8 @@
     <Compile Include="Infrastructure\DatabaseFixture.cs" />
     <Compile Include="Infrastructure\FakeHttpContext.cs" />
     <Compile Include="Infrastructure\Seed.cs" />
+    <Compile Include="PaymentsControllerAddPaymentTests.cs" />
+    <Compile Include="PaymentsControllerConfirmPaymentTests.cs" />
     <Compile Include="PaymentsControllerRemovePaymentTests.cs" />
     <Compile Include="SalesOrderBalanceTests.cs" />
   </ItemGroup>

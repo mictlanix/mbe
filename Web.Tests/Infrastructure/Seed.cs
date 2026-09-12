@@ -48,6 +48,8 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 		readonly List<SalesOrderDetail> details = new List<SalesOrderDetail> ();
 		readonly List<CustomerPayment> payments = new List<CustomerPayment> ();
 		readonly List<SalesOrder> orders = new List<SalesOrder> ();
+		readonly List<CashSession> sessions = new List<CashSession> ();
+		readonly List<CashDrawer> drawers = new List<CashDrawer> ();
 
 		public Store Store { get; private set; }
 		public PointOfSale PointOfSale { get; private set; }
@@ -60,6 +62,33 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 			Store = PointOfSale.Store;
 			Employee = Employee.Queryable.First (x => x.IsSalesPerson);
 			Customer = Customer.Queryable.First ();
+		}
+
+		// PaymentsController.AddPayment needs an open cash session: it reads
+		// session.CashDrawer.Store and stamps the session onto the customer payment.
+		// GetSession finds it from the CashDrawer cookie, which FakeHttpContext sets.
+		public CashSession OpenCashSession ()
+		{
+			var drawer = new CashDrawer {
+				Store = Store,
+				Code = "MBE-TEST",
+				Name = "Test Cash Drawer"
+			};
+
+			drawer.CreateAndFlush ();
+			drawers.Add (drawer);
+
+			var session = new CashSession {
+				CashDrawer = drawer,
+				Cashier = Employee,
+				Start = DateTime.Now,
+				End = null
+			};
+
+			session.CreateAndFlush ();
+			sessions.Add (session);
+
+			return session;
 		}
 
 		public SalesOrder Order (bool paid = false, bool cancelled = false)
@@ -167,6 +196,19 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 			return item;
 		}
 
+		// Rows created by the code under test rather than by Seed still have to be
+		// cleaned up, and only the test knows how to find them.
+		public void Track (params SalesOrderPayment [] items)
+		{
+			foreach (var item in items) {
+				allocations.Add (item);
+
+				if (item.Payment != null) {
+					payments.Add (item.Payment);
+				}
+			}
+		}
+
 		// Deletes children before parents. Rows the code under test already removed
 		// are skipped rather than treated as an error -- that is the expected outcome
 		// of a successful removal test.
@@ -186,6 +228,14 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 
 			foreach (var item in orders) {
 				Remove (SalesOrder.TryFind (item.Id));
+			}
+
+			foreach (var item in sessions) {
+				Remove (CashSession.TryFind (item.Id));
+			}
+
+			foreach (var item in drawers) {
+				Remove (CashDrawer.TryFind (item.Id));
 			}
 		}
 

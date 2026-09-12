@@ -31,6 +31,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Mictlanix.BE.Model;
+using Mictlanix.BE.Web.Helpers;
 using Mictlanix.BE.Web.Security;
 
 namespace Mictlanix.BE.Web.Tests.Infrastructure {
@@ -42,9 +43,19 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 	// goes through it. A stub that only satisfied Controller.Request would still
 	// throw there.
 	public static class FakeHttpContext {
-		public static void Attach (Controller controller, CustomPrincipal user = null)
+		public static void Attach (Controller controller, CustomPrincipal user = null,
+					   int? cash_drawer = null)
 		{
 			var request = new HttpRequest (string.Empty, "http://localhost/", string.Empty);
+
+			// WebConfig.CashDrawer reads this cookie first and only falls back to
+			// "the one drawer that exists" when it is absent -- which is no use against
+			// a database that has several.
+			if (cash_drawer.HasValue) {
+				request.Cookies.Add (new HttpCookie (WebConfig.CashDrawerCookieKey,
+								     cash_drawer.Value.ToString ()));
+			}
+
 			var response = new HttpResponse (new StringWriter ());
 			var context = new HttpContext (request, response);
 
