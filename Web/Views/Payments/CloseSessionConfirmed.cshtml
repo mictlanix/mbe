@@ -59,10 +59,10 @@
         </th>
     </tr>
 
-@foreach (var item in Model.MoneyCounts) {
+@foreach (var item in Model.PaymentsReceivedByMethod) {
     <tr>
         <td class="number">
-            @item.Type.GetDisplayName()
+            @item.Method.GetDisplayName()
         </td>
        
         <td class="number">
@@ -76,7 +76,7 @@
         </td>
 
         <td class="number">
-            @((Model.MoneyCounts.Sum(x => x.Amount)).ToString("c"))
+            @((Model.PaymentsReceivedByMethod.Sum(x => x.Amount)).ToString("c"))
         </td>
     </tr>
 </table>

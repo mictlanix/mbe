@@ -675,16 +675,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var model = new CashCountReport ();
 			var session = CashSession.Find (id);
 			var session_payments = CustomerPayment.Queryable.Where (x => x.CashSession == session).ToList ();
-			var qry = from x in CustomerPayment.Queryable
-					  where x.CashSession.Id == session.Id
-					  select new {
-						  Method = x.Method,
-						  Type = x.PaymentType,
-						  Amount = x.Allocations.Sum (y => (decimal?) y.Amount) ?? 0,
-					  };
-			var list = from x in qry.ToList ()
-					   group x by x.Method into g
-					   select new MoneyCount { Method = g.Key, Amount = g.Sum (y => y.Amount) };
 			var expenses = from x in ExpenseVoucher.Queryable
 						   where x.CashSession == session && x.IsCompleted && !x.IsCancelled
 						   select x;
@@ -703,7 +693,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 								  PaymentType = PaymentType.Expense,
 								  Method = PaymentMethod.Cash,
 							  }).ToList ();
-			model.MoneyCounts = list.Where (x => x.Type != PaymentType.CreditNote).ToList ();
 			model.Refunds = session_payments.Where (x => x.PaymentType == PaymentType.CreditNote).ToList ();
 			model.CashCounts = session.CashCounts.Where (x => x.Type == CashCountType.CountedCash).ToList ();
 			model.Payments = session_payments.Where (x => x.PaymentType == PaymentType.Immediate
