@@ -3,6 +3,21 @@
 Integration tests for the MVC controllers. These talk to a **real database** —
 there is no seam between the controllers and Castle ActiveRecord to stub.
 
+## Running against a throwaway database
+
+No developer database needed -- build one from the committed schema:
+
+```sh
+mysql -u developer -e "CREATE DATABASE mbe_test"
+mysql -u developer mbe_test < Schema/model/mbe_schema.sql
+mysql -u developer mbe_test < Web.Tests/fixtures/minimal.sql
+export MBE_TEST_CONNECTION="Server=/tmp/mysql.sock;Protocol=unix;Database=mbe_test;User Id=developer;Password=;Allow Zero Datetime=True"
+```
+
+`fixtures/minimal.sql` supplies only the parent rows the tests read but never
+create -- a store, a point of sale, a customer and a salesperson, plus the SAT
+catalogue rows the store's foreign keys require.
+
 ## Pointing them at a database
 
 The fixture reads `Web/ActiveRecord.config` (gitignored, so no credentials live
