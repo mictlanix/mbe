@@ -677,6 +677,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				JOIN sales_order so ON sod.sales_order = so.sales_order_id
 				JOIN customer c ON so.customer = c.customer_id
 				WHERE cr.modification_time BETWEEN :start AND :end AND so.paid = 1
+				AND so.modification_time < :start
 				AND cr.completed = 1 AND cr.cancelled = 0 AND 
 				(so.salesperson WHERE_SALESPERSON
 					OR c.salesperson WHERE_SALESPERSON)
@@ -691,42 +692,42 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					d.product, d.product_name,	d.price, d.quantity, ROUND((d.price * d.quantity) , 2) total_detail ,
 					(IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) commission_rate, 
 					ROUND((d.price * d.quantity * IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) , 2) commission,
-					cm.name label, 'CLIENTE VITALICIO' participation, ifnull(cs.participation_rate,0) participation_rate,
+					cm.name label, (SELECT name FROM commission_participation WHERE commission_participation_id = 1) participation, ifnull(cs.participation_rate,0) participation_rate,
 					d.payable
 				FROM details d
 				LEFT JOIN commission_product cp ON cp.product = d.product
 				LEFT JOIN commission cm ON cm.commission_id = cp.commission
 				LEFT JOIN commission_salesperson cs ON cs.salesperson = d.csp AND cs.commission_participation = 1 
 				AND cs.commission = cp.commission
-				WHERE d.csp WHERE_SALESPERSON
+				WHERE d.csp = d.osp AND d.csp WHERE_SALESPERSON
 			),
 			commission_detail_customer_service AS(
-				SELECT d.sales_order, d.sales_order_detail, d.csp salesperson, d.osp, d.customer, d.paid, d.date, d.modification_time,
+				SELECT d.sales_order, d.sales_order_detail, d.osp salesperson, d.csp, d.customer, d.paid, d.date, d.modification_time,
 					d.product, d.product_name,	d.price, d.quantity, ROUND((d.price * d.quantity) , 2) total_detail,
 										(IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) commission_rate,
 					ROUND((d.price * d.quantity * IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) , 2) commission,
-					cm.name label, 'ATENCIÓN TELEFÓNICA' participation, cs.participation_rate,
+					cm.name label, (SELECT name FROM commission_participation WHERE commission_participation_id = 2) participation, cs.participation_rate,
 					d.payable
 				FROM details d
 				LEFT JOIN commission_product cp ON cp.product = d.product
 				LEFT JOIN commission cm ON cm.commission_id = cp.commission
-				LEFT JOIN commission_salesperson cs ON cs.salesperson = d.csp AND cs.commission_participation = 2
+				LEFT JOIN commission_salesperson cs ON cs.salesperson = d.osp AND cs.commission_participation = 2
 				AND cs.commission = cp.commission
-				WHERE cs.salesperson WHERE_SALESPERSON
+				WHERE d.csp != d.osp AND d.osp WHERE_SALESPERSON
 			),
 			commission_detail_on_field AS(
 				SELECT d.sales_order, d.sales_order_detail, d.csp salesperson, d.osp ,d.customer, d.paid, d.date, d.modification_time,
 					d.product, d.product_name,	d.price, d.quantity, ROUND((d.price * d.quantity) , 2) total_detail,
 										(IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) commission_rate, 
 					ROUND((d.price * d.quantity * IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) , 2) commission,
-					cm.name label, 'ATENCIÓN EN CAMPO' participation, cs.participation_rate,
+					cm.name label, (SELECT name FROM commission_participation WHERE commission_participation_id = 3) participation, cs.participation_rate,
 					d.payable
 				FROM details d
 				LEFT JOIN commission_product cp ON cp.product = d.product
 				LEFT JOIN commission cm ON cm.commission_id = cp.commission
-				LEFT JOIN commission_salesperson cs ON cs.salesperson = d.osp AND cs.commission_participation = 3 
+				LEFT JOIN commission_salesperson cs ON cs.salesperson = d.csp AND cs.commission_participation = 3 
 				AND cs.commission = cp.commission
-				WHERE d.csp != d.osp and d.osp WHERE_SALESPERSON
+				WHERE d.csp != d.osp and d.csp WHERE_SALESPERSON
 			),
  			detailed AS(
 			SELECT * FROM commission_detail_on_field
