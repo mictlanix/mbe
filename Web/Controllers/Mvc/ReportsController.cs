@@ -691,7 +691,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					d.product, d.product_name,	d.price, d.quantity, ROUND((d.price * d.quantity) , 2) total_detail ,
 					(IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) commission_rate, 
 					ROUND((d.price * d.quantity * IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) , 2) commission,
-					cm.name label, 'CLIENTE VITALICIO' participation, ifnull(cs.participation_rate,0) participation_rate,
+					cm.name label, (SELECT name FROM commission_participation WHERE commission_participation_id = 1) participation, ifnull(cs.participation_rate,0) participation_rate,
 					d.payable
 				FROM details d
 				LEFT JOIN commission_product cp ON cp.product = d.product
@@ -705,7 +705,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					d.product, d.product_name,	d.price, d.quantity, ROUND((d.price * d.quantity) , 2) total_detail,
 										(IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) commission_rate,
 					ROUND((d.price * d.quantity * IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) , 2) commission,
-					cm.name label, 'ATENCIÓN TELEFÓNICA' participation, cs.participation_rate,
+					cm.name label, (SELECT name FROM commission_participation WHERE commission_participation_id = 2) participation, cs.participation_rate,
 					d.payable
 				FROM details d
 				LEFT JOIN commission_product cp ON cp.product = d.product
@@ -719,7 +719,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					d.product, d.product_name,	d.price, d.quantity, ROUND((d.price * d.quantity) , 2) total_detail,
 										(IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) commission_rate, 
 					ROUND((d.price * d.quantity * IFNULL(cm.commission_rate,0) * IFNULL(cs.participation_rate,0)) , 2) commission,
-					cm.name label, 'ATENCIÓN EN CAMPO' participation, cs.participation_rate,
+					cm.name label, (SELECT name FROM commission_participation WHERE commission_participation_id = 3) participation, cs.participation_rate,
 					d.payable
 				FROM details d
 				LEFT JOIN commission_product cp ON cp.product = d.product
