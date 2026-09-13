@@ -677,6 +677,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				JOIN sales_order so ON sod.sales_order = so.sales_order_id
 				JOIN customer c ON so.customer = c.customer_id
 				WHERE cr.modification_time BETWEEN :start AND :end AND so.paid = 1
+				AND so.modification_time < :start
 				AND cr.completed = 1 AND cr.cancelled = 0 AND 
 				(so.salesperson WHERE_SALESPERSON
 					OR c.salesperson WHERE_SALESPERSON)
