@@ -87,10 +87,20 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			if (!string.IsNullOrEmpty (search.Pattern)) {
 				var pattern = search.Pattern.Trim ();
+				var salespeople = (from x in Employee.Queryable
+								   where x.FirstName.Contains (pattern) ||
+									 x.LastName.Contains (pattern) ||
+									 x.Nickname.Contains (pattern)
+								   select x.Id).ToList ();
+
+				// keeps the IN clause from being empty; it matches no employee
+				salespeople.Add (int.MinValue);
+
 				qry = from x in qry
 					  where x.Name.Contains (pattern) ||
 						  x.Code.Contains (pattern) ||
-						  x.Zone.Contains (pattern)
+						  x.Zone.Contains (pattern) ||
+						  salespeople.Contains (x.SalesPerson.Id)
 					  select x;
 			}
 

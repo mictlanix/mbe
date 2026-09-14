@@ -85,6 +85,7 @@
     <Compile Include="Infrastructure\FakeHttpContext.cs" />
     <Compile Include="Infrastructure\Seed.cs" />
     <Compile Include="CloseSessionBreakdownTests.cs" />
+    <Compile Include="CustomersControllerSearchTests.cs" />
     <Compile Include="CloseSessionViewTests.cs" />
     <Compile Include="PaymentsControllerAddPaymentTests.cs" />
     <Compile Include="PaymentsControllerConfirmPaymentTests.cs" />
