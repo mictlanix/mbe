@@ -5,6 +5,7 @@
 @{
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.CustomerPayments);
+    var IsCreditSale = Model.Terms == PaymentTerms.NetD;
 }
 <div id="items-container">
     <ul id="items" class="list-items">
@@ -56,17 +57,20 @@
                 <div class="col-xs-12">
                     @Resources.PaymentMethod
                 </div>
-                <div class="col-xs-12">
-                    <div class="btn-group">
-                        @foreach (var item in WebConfig.CashierPaymentOptions)
-                        {
-                            <button class="pay btn btn-default" type="button"
-                                    data-value='@((int)item)'>
-                                @item.GetDisplayName()
+                @if (!IsCreditSale)
+                {
+                    <div class="col-xs-12">
+                        <div class="btn-group">
+                            @foreach (var item in WebConfig.CashierPaymentOptions)
+                            {
+                                <button class="pay btn btn-default" type="button"
+                                        data-value='@((int)item)'>
+                                    @item.GetDisplayName()
                                 </button>
                             }
+                        </div>
                     </div>
-                </div>
+                }
                 <div style="height:35px;" class="col-xs-12"></div>
                 <div class="col-xs-12">
                     <div class="btn-group">
@@ -74,14 +78,24 @@
                         {
                             if (Model.Customer.HasCredit)
                             {
-                                <button class="pay btn btn-default @(Model.IsOverCreditLimit() || Model.Customer.HasExpiredCredits() || Model.Terms == PaymentTerms.NetD ? "disabled":"" )"
-                                        type="button" data-value='credit'>
-                                    @(Resources.CreditLimit + ": " + (Model.Customer.CreditLimit -
+                                if (IsCreditSale)
+                                {
+                                    <span class="btn btn-default disabled">
+                                        @(Resources.CreditLimit + ": " + (Model.Customer.CreditLimit -
 							Model.Customer.Debt()).ToString("C"))
-                                </button>
+                                    </span>
+                                }
+                                else
+                                {
+                                    <button class="pay btn btn-default @(Model.IsOverCreditLimit() || Model.Customer.HasExpiredCredits() ? "disabled":"" )"
+                                            type="button" data-value='credit'>
+                                        @(Resources.CreditLimit + ": " + (Model.Customer.CreditLimit -
+							Model.Customer.Debt()).ToString("C"))
+                                    </button>
+                                }
                             }
 
-                            if (!Model.Customer.HasCredit)
+                            if (!IsCreditSale && !Model.Customer.HasCredit)
                             {
                                 <button class="pay btn btn-default @(Model.Customer.Debt()>0?"disabled":"")" type="button"
                                         data-value='credit'>
@@ -90,7 +104,7 @@
                                 </button>
                             }
 
-                            if (Model.Customer.RefundBalance(Model) > 0)
+                            if (!IsCreditSale && Model.Customer.RefundBalance(Model) > 0)
                             {
                                 <button class="pay btn btn-default" type="button" data-value='refunds'>
                                     @string.Format(Resources.Refunds + ": " + Model.Customer.RefundBalance(Model).ToString("c"))
@@ -112,19 +126,22 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-xs-12">
-                    <div class="btn-group">
-                        @foreach (var item in WebConfig.StorePaymentOptions)
-                        {
-                            <button class="pay btn btn-default" type="button" data-value="@((int)item.PaymentMethod)"
-                                    data-fee="@item.Id">
-                                @item.Name (@Html.DisplayFor(x => item.CommissionByManage))
-                            </button>
-                        }
+            @if (!IsCreditSale)
+            {
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <div class="btn-group">
+                            @foreach (var item in WebConfig.StorePaymentOptions)
+                            {
+                                <button class="pay btn btn-default" type="button" data-value="@((int)item.PaymentMethod)"
+                                        data-fee="@item.Id">
+                                    @item.Name (@Html.DisplayFor(x => item.CommissionByManage))
+                                </button>
+                            }
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
         </div>
     </fieldset>
 }

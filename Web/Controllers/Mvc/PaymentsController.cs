@@ -1335,6 +1335,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			var store = session.CashDrawer.Store;
 			var sales_order = SalesOrder.Find (id);
 			var employee = CurrentUser.Employee;
+
+			if (sales_order.Terms == PaymentTerms.NetD) {
+				Response.StatusCode = 400;
+				return Content (Resources.PaymentMethodNotAllowedOnCredit);
+			}
+
 			var item = new SalesOrderPayment {
 				SalesOrder = sales_order,
 				Applier = employee,

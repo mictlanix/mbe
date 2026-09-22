@@ -5150,6 +5150,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Las ventas a crédito sólo admiten anticipos y notas de crédito..
+        /// </summary>
+        public static string PaymentMethodNotAllowedOnCredit {
+            get {
+                return ResourceManager.GetString("PaymentMethodNotAllowedOnCredit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Fecha del Pago.
         /// </summary>
         public static string PaymentDate {
