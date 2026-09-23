@@ -10,6 +10,9 @@
     ViewBag.TaxpayerName = null;
     ViewBag.Taxpayer = null;
     ViewBag.Address = WebConfig.Store.Address;
+    var debt = Model.SalesOrders.Where(x => (int)x.TermsId == (int)PaymentTerms.NetD && !x.OrderPaidStatus).Sum(y => (decimal)y.Balance);
+    var pending = Model.SalesOrders.Where(x => (int)x.TermsId == (int)PaymentTerms.Immediate && (decimal)x.Balance < 0 && !x.OrderPaidStatus).Sum(y => (decimal)y.Balance);
+    var credits = Model.AvailableCredits.Sum(x => (decimal)x.Available);
 }
 <h2>@Resources.CustomerDebt</h2>
 <h3>@Resources.Customer: @Html.DisplayFor(x => x.Customer.Name)</h3>
@@ -53,13 +56,62 @@
 								<tr class="warning">
 												<td class="text-right" colspan="6"></td>
 												<td class="text-right"><b>@Resources.Balance</b></td>
-												<td class="number">@Model.SalesOrders.Where(x => (decimal)x.Balance < 0 && !x.OrderPaidStatus).Sum(y => (decimal)y.Balance).ToString("C")</td>
+												<td class="number">@debt.ToString("C")</td>
 								</tr>
+								@if (pending < 0)
+								{
+												<tr class="warning">
+																<td class="text-right" colspan="6"></td>
+																<td class="text-right"><b>@Resources.PendingAtCashier</b></td>
+																<td class="number">@pending.ToString("C")</td>
+												</tr>
+								}
 				</tfoot>
 </table>
 
 <div style="min-height: 2.2mm; border-top: #333 solid 3px; border-bottom: #333 solid 1px"></div>
 
-<table>
-
+<h3>@Resources.PaymentsInAdvance / @Resources.CreditNotes</h3>
+<table style="border-spacing:0 4px;border-collapse: separate;">
+				<thead>
+								<tr>
+												<th class="">@Resources.Id</th>
+												<th class="">@Resources.Date</th>
+												<th class="">@Resources.PaymentType</th>
+												<th class="">@Resources.PaymentMethod</th>
+												<th class="">@Resources.Reference</th>
+												<th class="center">@Resources.Amount</th>
+												<th class="center">@Resources.Paid</th>
+												<th class="center">@Resources.Available</th>
+								</tr>
+				</thead>
+				<tbody>
+								@foreach (var item in Model.AvailableCredits)
+								{
+												var payment_type = (PaymentType)(int)item.PaymentType;
+												var payment_method = (PaymentMethod)(int)item.Method;
+												<tr>
+																<td class="">@item.PaymentId.ToString("D5")</td>
+																<td class="date">@item.Date.ToString("yyyy-MM-dd")</td>
+																<td class="">@payment_type.GetDisplayName()</td>
+																<td class="">@payment_method.GetDisplayName()</td>
+																<td class="">@item.Reference</td>
+																<td class="number text-right">@item.Amount.ToString("C")</td>
+																<td class="number text-right">@item.Allocated.ToString("C")</td>
+																<td class="number text-right">@item.Available.ToString("C")</td>
+												</tr>
+								}
+				</tbody>
+				<tfoot>
+								<tr class="warning">
+												<td class="text-right" colspan="6"></td>
+												<td class="text-right"><b>@Resources.Available</b></td>
+												<td class="number">@credits.ToString("C")</td>
+								</tr>
+								<tr class="warning">
+												<td class="text-right" colspan="6"></td>
+												<td class="text-right"><b>@Resources.NetBalance</b></td>
+												<td class="number">@((debt + credits).ToString("C"))</td>
+								</tr>
+				</tfoot>
 </table>

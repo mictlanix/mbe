@@ -8,6 +8,7 @@ namespace Mictlanix.BE.Web.Models {
 	public class CustomerDebtViewModel {
 		public Customer Customer { get; set; }
 		public IList<dynamic> SalesOrders { get; set; }
+		public IList<dynamic> AvailableCredits { get; set; }
 		public List<SalesOrderPayment> Payments { get; set; }
 		public DateRange DateRange { get; set; }
 		public bool OnlyCredits { get; set; }

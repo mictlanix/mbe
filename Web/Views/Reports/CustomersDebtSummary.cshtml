@@ -19,7 +19,7 @@
 		OnBegin = "onSearchBegin"
 	}))
 	{
-		<div class="row">
+		<div class="row debt-filter">
 			<div class="col-sm-10">
 				@Html.EditorFor(x => Model)
 			</div>
@@ -40,5 +40,12 @@
 <style type="text/css">
 	ul.token-input-list {
 		width: 100%;
+	}
+	.debt-filter {
+		display: flex;
+		align-items: flex-end;
+	}
+	.debt-filter .btn {
+		margin-bottom: 15px;
 	}
 </style>

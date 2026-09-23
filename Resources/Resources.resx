@@ -2981,6 +2981,21 @@ con  valor {1} ya existe</value>
   <data name="PaymentMethodNotAllowedOnCredit" xml:space="preserve">
     <value>Las ventas a crédito sólo admiten anticipos y notas de crédito.</value>
   </data>
+  <data name="Available" xml:space="preserve">
+    <value>Disponible</value>
+  </data>
+  <data name="NetBalance" xml:space="preserve">
+    <value>Saldo Neto</value>
+  </data>
+  <data name="PaymentsInAdvance" xml:space="preserve">
+    <value>Anticipos</value>
+  </data>
+  <data name="CreditNotes" xml:space="preserve">
+    <value>Notas de Crédito</value>
+  </data>
+  <data name="PendingAtCashier" xml:space="preserve">
+    <value>Pendiente de Cobro en Caja</value>
+  </data>
   <data name="InvalidEntity" xml:space="preserve">
     <value>{0} no válido</value>
   </data>

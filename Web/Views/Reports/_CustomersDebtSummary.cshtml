@@ -4,6 +4,7 @@
 @using Mictlanix.BE.Web.Models
 @model IEnumerable<dynamic>
 
+<div class="table-responsive">
 <table class='debts'>
 				<thead>
 								<tr>
@@ -15,6 +16,10 @@
 												<th class='center'>@Resources.Refund</th>
 												<th class='center'>@Resources.Paid</th>
 												<th class='center'>@Resources.Balance</th>
+												<th class='center'>@Resources.PendingAtCashier</th>
+												<th class='center'>@Resources.PaymentsInAdvance</th>
+												<th class='center'>@Resources.CreditNotes</th>
+												<th class='center'>@Resources.NetBalance</th>
 												<th class='center'>@Resources.ExpiredCredits</th>
 												<th class='center'>@Resources.ExpirationDate</th>
 												<th class='center'></th>
@@ -30,14 +35,15 @@
 																				@item.CustomerId.ToString().PadLeft(5, '0')
 																</td>
 																<td class='text-left'>
-																				@item.CustomerName <br />
-																				@if(item.CreditLimit > 0 && item.CreditDays > 0) {
-																								@Resources.CreditLimit	@item.CreditLimit.ToString("C") <br />
-																								@Resources.CreditDays  @item.CreditDays
-																				}
-																				else {
-																								@Resources.CreditLimitIsNotSet
-																				}
+																				@item.CustomerName
+																				<small class="debt-credit">
+																								@if(item.CreditLimit > 0 && item.CreditDays > 0) {
+																												@:@Resources.CreditLimit: @item.CreditLimit.ToString("C") &middot; @Resources.CreditDays: @item.CreditDays
+																								}
+																								else {
+																												@Resources.CreditLimitIsNotSet
+																								}
+																				</small>
 																</td>
 																<td class='number'>@item.CustomerCode</td>
 																<td class="number">@item.NumberOfOrders	</td>
@@ -45,19 +51,37 @@
 																<td class="number">@(item.Refunds > 0 ? item.Refunds.ToString("C") : "")</td>
 																<td class="number">@(item.Payment > 0 ? item.Payment.ToString("C") : "")</td>
 																<td class='currency'>@item.Balance.ToString("C")</td>
+																<td class='currency'>@(item.PendingAtCashier < 0 ? item.PendingAtCashier.ToString("C") : "")</td>
+																<td class='currency'>@(item.Prepayments > 0 ? item.Prepayments.ToString("C") : "")</td>
+																<td class='currency'>@(item.CreditNotes > 0 ? item.CreditNotes.ToString("C") : "")</td>
+																<td class='currency'>@item.NetBalance.ToString("C")</td>
 																<td class='currency'>@(item.NumberOfOverdueOrders > 0 ? item.NumberOfOverdueOrders : string.Empty)</td>
 																<td class='date'>@(item.NumberOfOverdueOrders > 0 ?
 																																								item.OldestOverdueDate.ToString("yyyy-MM-dd")
 																																								:string.Empty)</td>
-																<td>@Html.ActionLink(Resources.CustomerDebt,"CustomerDebtReport",new {id = item.CustomerId }, new {target="_blank"})</td>
+																<td class="text-center">
+																				<a href="@Url.Action("CustomerDebtReport", new { id = item.CustomerId })" target="_blank" title="@Resources.CustomerDebt">
+																								<span class="glyphicon glyphicon-list-alt"></span>
+																				</a>
+																</td>
 												</tr>
 								}
 								<tr class="warning">
-												<td class="text-right" colspan="8"><b>@Resources.Balance</b></td>
+												<td class="text-right" colspan="7"><b>@Resources.Balance</b></td>
 												<td><b>@Model.Where(x => (decimal)x.Balance < 0).Sum(x => (decimal)x.Balance).ToString("c")</b></td>
+												<td><b>@Model.Sum(x => (decimal)x.PendingAtCashier).ToString("c")</b></td>
+												<td><b>@Model.Sum(x => (decimal)x.Prepayments).ToString("c")</b></td>
+												<td><b>@Model.Sum(x => (decimal)x.CreditNotes).ToString("c")</b></td>
+												<td><b>@Model.Sum(x => (decimal)x.NetBalance).ToString("c")</b></td>
 								</tr>
 				</tbody>
 </table>
+</div>
+<style type="text/css">
+				table.debts th { vertical-align: bottom; }
+				table.debts td.number, table.debts td.currency, table.debts td.date { white-space: nowrap; }
+				table.debts small.debt-credit { display: block; margin-top: 2px; font-weight: normal; color: #777; }
+</style>
 <script type='text/javascript'>
 				$('[data-toggle="tooltip"]').tooltip();
 </script>

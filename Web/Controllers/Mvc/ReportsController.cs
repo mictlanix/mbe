@@ -598,16 +598,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 									GROUP_CONCAT(DISTINCT cr.customer_refund_id ORDER BY cr.customer_refund_id SEPARATOR '|') refund_ids
 								FROM customer_refund cr
 								JOIN customer_refund_detail crd ON crd.customer_refund = cr.customer_refund_id
+								WHERE cr.completed = 1 AND cr.cancelled = 0
 								GROUP BY cr.sales_order) AS t2 ON t2.sales_order = so.sales_order_id
 				LEFT JOIN (SELECT sop.sales_order, sop.customer_payment, MAX(cp.date) last_payment, 
 									GROUP_CONCAT( 
 									CASE 
-										WHEN cp.method = 1  THEN CONCAT('Efectivo: ',' $', sop.amount)
-										WHEN cp.method = 3  THEN CONCAT('Transferencia: ',' $', sop.amount)
-										WHEN cp.method = 4  THEN CONCAT('T. Crédito: ',' $', sop.amount)
-										WHEN cp.method = 12 THEN CONCAT('Dación: ',' $', sop.amount)	
-										WHEN cp.method = 28 THEN CONCAT('T. Débito: ',' $', sop.amount)						
-										ELSE CONCAT('*Nuevo*: ', cp.customer_payment_id, ' $', sop.amount)
+										WHEN cp.method = 1  THEN CONCAT('Efectivo: $', FORMAT(sop.amount, 2))
+										WHEN cp.method = 3  THEN CONCAT('Transferencia: $', FORMAT(sop.amount, 2))
+										WHEN cp.method = 4  THEN CONCAT('T. Crédito: $', FORMAT(sop.amount, 2))
+										WHEN cp.method = 12 THEN CONCAT('Dación: $', FORMAT(sop.amount, 2))	
+										WHEN cp.method = 28 THEN CONCAT('T. Débito: $', FORMAT(sop.amount, 2))						
+										ELSE CONCAT('*Nuevo*: ', cp.customer_payment_id, ' $', FORMAT(sop.amount, 2))
 										END
 									 SEPARATOR '|') payments, SUM(sop.amount) paid
 								FROM sales_order_payment sop 
@@ -634,6 +635,29 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 								WHERE fd.completed = 1 AND fd.cancelled = 0
 								GROUP BY sod.sales_order) as t6 on so.sales_order_id = t6.sales_order
 				WHERE so.completed = 1 AND so.cancelled = 0 AND date(so.creation_time) > '2024-01-01'
+			";
+		}
+
+		private string GetCustomerCreditsSQLQuery ()
+		{
+			return @"
+				SELECT 	cp.customer 'customer_id',
+							cp.customer_payment_id 'payment_id',
+							cp.date 'date',
+							cp.payment_type 'payment_type',
+							cp.method 'method',
+							cp.reference 'reference',
+							cp.amount 'amount',
+							IFNULL(t1.allocated, 0) 'allocated',
+							cp.amount - IFNULL(t1.allocated, 0) 'available'
+				FROM customer_payment cp
+				LEFT JOIN credit_note cn ON cn.customer_payment = cp.customer_payment_id
+				LEFT JOIN (SELECT sop.customer_payment, SUM(sop.amount + sop.amount_change) allocated
+								FROM sales_order_payment sop
+								GROUP BY sop.customer_payment) AS t1 ON t1.customer_payment = cp.customer_payment_id
+				WHERE (cp.payment_type IN (2, 3)
+						OR (cp.payment_type = 4 AND cn.credit_note_id IS NOT NULL AND cn.cash_session IS NULL))
+					AND cp.amount - IFNULL(t1.allocated, 0) > 0.01
 			";
 		}
 
@@ -765,31 +789,43 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		{
 
 			string ONLY_CREDITS_FILTER = filter.OnlyCredits ? " AND op.terms = 1" : string.Empty;
-			string ONLY_DEBTORS_FILTER = filter.OnlyDebtors ? " HAVING (Balance < 0 OR OnDelivery > 0.01)" : string.Empty;
+			string ONLY_DEBTORS_FILTER = filter.OnlyDebtors ? " HAVING (Balance < 0 OR PendingAtCashier < 0 OR OnDelivery > 0.01)" : string.Empty;
 			//string CUSTOMER_ID_FILTER = filter.CustomerId.HasValue? " AND op.customer_id = " + filter.CustomerId.Value : string.Empty;
 			string CUSTOMER_ID_FILTER = !string.IsNullOrEmpty (filter.CustomerName) ? " AND op.customer_name like '%" + filter.CustomerName + "%'" : string.Empty;
 
 			string REPORT = GetSalesOrdersDetailsSQLQuery ();
+			string CREDITS = GetCustomerCreditsSQLQuery ();
 
-			string sql = @"	SELECT op.customer_id AS CustomerId, op.customer_name AS CustomerName,
-					op.customer_code AS CustomerCode, op.credit_limit CreditLimit,
-					op.credit_days CreditDays, SUM(op.sales_order_total) Total,
-					SUM(op.sales_order_due_status) NumberOfOverdueOrders,
-					COUNT(*) NumberOfOrders,
-					SUM(op.sales_order_refund) Refunds, SUM(op.paid) Payment,
-					SUM(IF(op.sales_order_balance < 0 AND op.sales_order_paid_status = 0, op.sales_order_balance, 0)) AS Balance,
-					SUM(op.sales_order_payments_on_delivery_unregistered) AS OnDelivery, 
-					MIN(op.due_date) AS OldestOverdueDate 
-					FROM (REPORT) AS op
-					WHERE op.sales_order_date BETWEEN :start AND :end
-					CUSTOMER_ID_FILTER
-					GROUP BY op.customer_id
-					ONLY_DEBTORS_FILTER
-					ORDER BY OldestOverdueDate";
+			string sql = @"	SELECT dbt.*,
+					IFNULL(crd.prepayments, 0) AS Prepayments,
+					IFNULL(crd.credit_notes, 0) AS CreditNotes,
+					dbt.Balance + IFNULL(crd.prepayments, 0) + IFNULL(crd.credit_notes, 0) AS NetBalance
+					FROM (SELECT op.customer_id AS CustomerId, op.customer_name AS CustomerName,
+						op.customer_code AS CustomerCode, op.credit_limit CreditLimit,
+						op.credit_days CreditDays, SUM(op.sales_order_total) Total,
+						SUM(op.sales_order_due_status) NumberOfOverdueOrders,
+						COUNT(*) NumberOfOrders,
+						SUM(op.sales_order_refund) Refunds, SUM(op.paid) Payment,
+						SUM(IF(op.terms = 1 AND op.sales_order_paid_status = 0, op.sales_order_balance, 0)) AS Balance,
+						SUM(IF(op.terms = 0 AND op.sales_order_paid_status = 0 AND op.sales_order_balance < 0, op.sales_order_balance, 0)) AS PendingAtCashier,
+						SUM(op.sales_order_payments_on_delivery_unregistered) AS OnDelivery, 
+						MIN(op.due_date) AS OldestOverdueDate 
+						FROM (REPORT) AS op
+						WHERE op.sales_order_date BETWEEN :start AND :end
+						CUSTOMER_ID_FILTER
+						GROUP BY op.customer_id
+						ONLY_DEBTORS_FILTER) AS dbt
+					LEFT JOIN (SELECT crd.customer_id,
+							SUM(IF(crd.payment_type = 4, crd.available, 0)) credit_notes,
+							SUM(IF(crd.payment_type <> 4, crd.available, 0)) prepayments
+							FROM (CREDITS) AS crd
+							GROUP BY crd.customer_id) AS crd ON crd.customer_id = dbt.CustomerId
+					ORDER BY dbt.OldestOverdueDate";
 
 			sql = sql.Replace ("ONLY_CREDITS_FILTER", ONLY_CREDITS_FILTER);
 			sql = sql.Replace ("ONLY_DEBTORS_FILTER", ONLY_DEBTORS_FILTER);
 			sql = sql.Replace ("CUSTOMER_ID_FILTER", CUSTOMER_ID_FILTER);
+			sql = sql.Replace ("CREDITS", CREDITS);
 			sql = sql.Replace ("REPORT", REPORT);
 
 			var items = (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
@@ -806,6 +842,10 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				query.AddScalar ("Refunds", NHibernateUtil.Decimal);
 				query.AddScalar ("Payment", NHibernateUtil.Decimal);
 				query.AddScalar ("Balance", NHibernateUtil.Decimal);
+				query.AddScalar ("PendingAtCashier", NHibernateUtil.Decimal);
+				query.AddScalar ("Prepayments", NHibernateUtil.Decimal);
+				query.AddScalar ("CreditNotes", NHibernateUtil.Decimal);
+				query.AddScalar ("NetBalance", NHibernateUtil.Decimal);
 				query.AddScalar ("OnDelivery", NHibernateUtil.Decimal);
 				query.AddScalar ("OldestOverdueDate", NHibernateUtil.Date);
 
@@ -865,6 +905,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 						sales_order_date Date,
 						customer_name CustomerName,
 						terms_name Terms,
+						terms TermsId,
 						fiscal_ids FiscalDocumentIds,
 						due_date DueDate,
 						creator_nickname User,
@@ -899,6 +940,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				query.AddScalar ("Date", NHibernateUtil.Date);
 				query.AddScalar ("CustomerName", NHibernateUtil.String);
 				query.AddScalar ("Terms", NHibernateUtil.String);
+				query.AddScalar ("TermsId", NHibernateUtil.Int32);
 				query.AddScalar ("FiscalDocumentIds", NHibernateUtil.String);
 				query.AddScalar ("DueDate", NHibernateUtil.Date);
 				query.AddScalar ("SalesPerson", NHibernateUtil.String);
@@ -923,8 +965,44 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}, null);
 
 			model.SalesOrders = items;
+			model.AvailableCredits = GetCustomerCredits (model.Customer.Id);
 
 			return model;
+		}
+
+		private IList<dynamic> GetCustomerCredits (int customer)
+		{
+			string sql = @"	SELECT
+						payment_id PaymentId,
+						date Date,
+						payment_type PaymentType,
+						method Method,
+						reference Reference,
+						amount Amount,
+						allocated Allocated,
+						available Available
+					FROM (CREDITS) AS crd
+					WHERE crd.customer_id = :customer_id
+					ORDER BY date;";
+
+			sql = sql.Replace ("CREDITS", GetCustomerCreditsSQLQuery ());
+
+			return (IList<dynamic>) ActiveRecordMediator<Product>.Execute (delegate (ISession session, object instance) {
+				var query = session.CreateSQLQuery (sql);
+
+				query.AddScalar ("PaymentId", NHibernateUtil.Int32);
+				query.AddScalar ("Date", NHibernateUtil.DateTime);
+				query.AddScalar ("PaymentType", NHibernateUtil.Int32);
+				query.AddScalar ("Method", NHibernateUtil.Int32);
+				query.AddScalar ("Reference", NHibernateUtil.String);
+				query.AddScalar ("Amount", NHibernateUtil.Decimal);
+				query.AddScalar ("Allocated", NHibernateUtil.Decimal);
+				query.AddScalar ("Available", NHibernateUtil.Decimal);
+
+				query.SetParameter ("customer_id", customer);
+
+				return query.DynamicList ();
+			}, null);
 		}
 
 		public ViewResult CustomersReport ()

@@ -6,36 +6,27 @@
 
 @{
 				ViewBag.Title = Resources.CustomersReport;
+				var debt = Model.SalesOrders.Where(x => (int)x.TermsId == (int)PaymentTerms.NetD && (bool)x.OrderPaidStatus == false).Sum(y => (decimal)y.Balance);
+				var pending = Model.SalesOrders.Where(x => (int)x.TermsId == (int)PaymentTerms.Immediate && (decimal)x.Balance < 0 && (bool)x.OrderPaidStatus == false).Sum(y => (decimal)y.Balance);
+				var credits = Model.AvailableCredits.Sum(x => (decimal)x.Available);
 }
 
 
-<h2>@Resources.CustomersReport</h2>
-<h4>
-				@Resources.CustomerId: @Model.Customer.Id
-</h4>
-<h4>
-				@Resources.Customer: @Model.Customer.Name
-</h4>
-<h4>
-				@Resources.Code: @Model.Customer.Code
-</h4>
-<h4>@Resources.SalesAgent: @(Model.Customer.SalesPerson != null ? Model.Customer.SalesPerson.Nickname: Resources.ItemNotFound )</h4>
-@if (Model.Customer.HasCredit)
-{
-				<h4>
-								@Resources.CreditLimit: @Model.Customer.CreditLimit.ToString("C")
-				</h4>
-				<h4>
-								@Resources.CreditDays: @Model.Customer.CreditDays
-				</h4>
-}
-<h5>
-				@Resources.Date: @Html.DisplayFor(x => Model.DateRange.StartDate) @Html.DisplayFor(x => Model.DateRange.EndDate)
-</h5>
-@*<h5>
-								@Resources.OnlyCredits  @Html.DisplayFor(x => Model.OnlyCredits)
-				</h5>*@
+<h2>@Resources.CustomerDebt</h2>
+<h3 class="debt-customer">@Model.Customer.Name</h3>
+<div class="debt-info">
+				<div><span>@Resources.CustomerId</span><strong>@Model.Customer.Id</strong></div>
+				<div><span>@Resources.Code</span><strong>@Model.Customer.Code</strong></div>
+				<div><span>@Resources.SalesAgent</span><strong>@(Model.Customer.SalesPerson != null ? Model.Customer.SalesPerson.Nickname : Resources.ItemNotFound)</strong></div>
+				@if (Model.Customer.HasCredit)
+				{
+								<div><span>@Resources.CreditLimit</span><strong>@Model.Customer.CreditLimit.ToString("C")</strong></div>
+								<div><span>@Resources.CreditDays</span><strong>@Model.Customer.CreditDays</strong></div>
+				}
+				<div><span>@Resources.Date</span><strong>@Html.DisplayFor(x => Model.DateRange.StartDate) &ndash; @Html.DisplayFor(x => Model.DateRange.EndDate)</strong></div>
+</div>
 
+<div class="table-responsive">
 <table class='debts'>
 				<thead>
 								<tr>
@@ -81,7 +72,7 @@
 																												<td class="date">@(!string.IsNullOrEmpty(item.PaymentsInfo) ? Html.Raw(item.PaymentsInfo.Replace("|", "<br />")) : string.Empty)</td>
 																												<td class="date">@item.RefundsInfo</td>
 																												<td class="date">@item.OrderedQuantity.ToString("F2")</td>
-																												<td class="date">@item.DeliveredQuantity</td>
+																												<td class="date">@(item.DeliveredQuantity != null ? item.DeliveredQuantity.ToString("F2") : string.Empty)</td>
 																												<td class="date">
 																																@if (!string.IsNullOrEmpty(item.DeliveryOrderIds))
 																																{
@@ -96,20 +87,80 @@
 																								</tr>
 								}
 								<tr class="warning">
-												<td class="text-right" colspan="9"><b>@Resources.Balance</b></td>
-												<td class="number">@Model.SalesOrders.Where(x => (decimal)x.Balance < 0 && (bool)x.OrderPaidStatus == false).Sum(y => (decimal)y.Balance).ToString("C")</td>
+												<td class="text-right" colspan="8"><b>@Resources.Balance</b></td>
+												<td class="number">@debt.ToString("C")</td>
+								</tr>
+								@if (pending < 0)
+								{
+												<tr class="warning">
+																<td class="text-right" colspan="8"><b>@Resources.PendingAtCashier</b></td>
+																<td class="number">@pending.ToString("C")</td>
+												</tr>
+								}
+				</tbody>
+</table>
+</div>
+
+<h3 class="debt-section">@Resources.PaymentsInAdvance / @Resources.CreditNotes</h3>
+<div class="table-responsive">
+<table class='debts' style='width:auto'>
+				<thead>
+								<tr>
+												<th class='center'>@Resources.Id</th>
+												<th class='center'>@Resources.Date</th>
+												<th class='center'>@Resources.PaymentType</th>
+												<th class='center'>@Resources.PaymentMethod</th>
+												<th class='center'>@Resources.Reference</th>
+												<th class='center'>@Resources.Amount</th>
+												<th class='center'>@Resources.Paid</th>
+												<th class='center'>@Resources.Available</th>
+								</tr>
+				</thead>
+				<tbody>
+								@foreach (var item in Model.AvailableCredits)
+								{
+												var payment_type = (PaymentType)(int)item.PaymentType;
+												var payment_method = (PaymentMethod)(int)item.Method;
+												<tr>
+																<td class="text-center">@item.PaymentId.ToString("D5")</td>
+																<td class="date">@item.Date.ToString("yyyy-MM-dd")</td>
+																<td class="date">@payment_type.GetDisplayName()</td>
+																<td class="date">@payment_method.GetDisplayName()</td>
+																<td class="date">@item.Reference</td>
+																<td class="number">@item.Amount.ToString("C")</td>
+																<td class="number">@item.Allocated.ToString("C")</td>
+																<td class="number">@item.Available.ToString("C")</td>
+												</tr>
+								}
+								<tr class="warning">
+												<td class="text-right" colspan="7"><b>@Resources.Available</b></td>
+												<td class="number">@credits.ToString("C")</td>
+								</tr>
+								<tr class="warning">
+												<td class="text-right" colspan="7"><b>@Resources.NetBalance</b></td>
+												<td class="number">@((debt + credits).ToString("C"))</td>
 								</tr>
 				</tbody>
 </table>
+</div>
 
-<div class='clearfix'></div>
-<div id='back-to-list' class='pull-left'>
-				@Html.ActionLink(Resources.BackToList, "CustomersDebtSummary", new { }, new { @class = "button icon back" })
+<div class="debt-actions">
+				<div id='back-to-list'>
+								@Html.ActionLink(Resources.BackToList, "CustomersDebtSummary", new { }, new { @class = "button icon back" })
+				</div>
+				<div>
+								@Html.ActionLink(Resources.Print, "PrintCustomerDebtReport", new { id = Model.Customer.Id }, new { @class = "button icon print", target = "_blank" })
+				</div>
 </div>
-<div class='pull-right'>
-				@Html.ActionLink(Resources.Print, "PrintCustomerDebtReport", new { id = Model.Customer.Id }, new { @class = "button icon print", target = "_blank" })
-</div>
-<div class='clearfix'></div>
+<style type="text/css">
+				.debt-customer { margin-top: 0; }
+				.debt-info { display: flex; flex-wrap: wrap; gap: 8px 36px; margin: 12px 0 20px; }
+				.debt-info span { display: block; font-size: 12px; color: #777; }
+				.debt-info strong { font-size: 15px; }
+				.debt-section { margin-top: 30px; }
+				.debt-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
+				table.debts td.number { white-space: nowrap; }
+</style>
 <script type='text/javascript'>
 				$(function () {
 								$('[data-toggle="tooltip"]').tooltip();

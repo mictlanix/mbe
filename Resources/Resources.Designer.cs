@@ -5159,6 +5159,51 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Disponible.
+        /// </summary>
+        public static string Available {
+            get {
+                return ResourceManager.GetString("Available", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Saldo Neto.
+        /// </summary>
+        public static string NetBalance {
+            get {
+                return ResourceManager.GetString("NetBalance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Anticipos.
+        /// </summary>
+        public static string PaymentsInAdvance {
+            get {
+                return ResourceManager.GetString("PaymentsInAdvance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Notas de Crédito.
+        /// </summary>
+        public static string CreditNotes {
+            get {
+                return ResourceManager.GetString("CreditNotes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Pendiente de Cobro en Caja.
+        /// </summary>
+        public static string PendingAtCashier {
+            get {
+                return ResourceManager.GetString("PendingAtCashier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Fecha del Pago.
         /// </summary>
         public static string PaymentDate {
