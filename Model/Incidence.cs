@@ -17,7 +17,7 @@ namespace Mictlanix.BE.Model {
 		public virtual int Id { get; set; }
 
 		[Property ("source")]
-		[Display (Name = "source", ResourceType = typeof (Resources))]
+		[Display (Name = "Source", ResourceType = typeof (Resources))]
 		public virtual SourceType SourceType { get; set; }
 
 		[Property ("instance_id")]
@@ -36,7 +36,7 @@ namespace Mictlanix.BE.Model {
 
 		[Property ("content")]
 		[DataType (DataType.MultilineText)]
-		[Display (Name = "Report", ResourceType = typeof (Resources))]
+		[Display (Name = "PreviousState", ResourceType = typeof (Resources))]
 		[StringLength (21845, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string PreviousState { get; set; }
 

@@ -74,7 +74,7 @@ namespace Mictlanix.BE.Web.Models {
 		[Display(Name = "Reason", ResourceType = typeof(Resources))]
 		public c_Reason Reason { get; set; }
 
-		[Display (Name = "Substitution", ResourceType = typeof (Resources))]
+		[Display (Name = "CancellationSubstitution", ResourceType = typeof (Resources))]
 		public  string Substitution { get; set; }
 
 	}

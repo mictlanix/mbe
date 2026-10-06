@@ -99,7 +99,7 @@ namespace Mictlanix.BE.Web.Models {
 		}
 
 		[DataType (DataType.Currency)]
-		[Display (Name = "ExpensesCount", ResourceType = typeof (Resources))]
+		[Display (Name = "Expenses", ResourceType = typeof (Resources))]
 		public List<MoneyCount> ExpensesByMethod {
 			get {
 				var types = new List<PaymentType> { PaymentType.Expense };
@@ -112,7 +112,7 @@ namespace Mictlanix.BE.Web.Models {
 		}
 
 		[DataType (DataType.Currency)]
-		[Display (Name = "RefundsCount", ResourceType = typeof (Resources))]
+		[Display (Name = "Refunds", ResourceType = typeof (Resources))]
 		public List<MoneyCount> RefundsByMethod {
 			get {
 				var types = new List<PaymentType> { PaymentType.CreditNote };

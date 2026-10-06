@@ -3122,4 +3122,61 @@ con  valor {1} ya existe</value>
   <data name="ToTheSatisfactionOfTheCreditor" xml:space="preserve">
     <value>A Satisfacción Del Acreedor</value>
   </data>
+  <data name="Approver" xml:space="preserve">
+    <value>Aprobó</value>
+  </data>
+  <data name="CancellationReason" xml:space="preserve">
+    <value>Motivo de Cancelación</value>
+  </data>
+  <data name="Commission" xml:space="preserve">
+    <value>Comisión</value>
+  </data>
+  <data name="CommissionRate" xml:space="preserve">
+    <value>Tasa de Comisión</value>
+  </data>
+  <data name="Confirmed" xml:space="preserve">
+    <value>Confirmado</value>
+  </data>
+  <data name="CustomerPayment" xml:space="preserve">
+    <value>Pago de Cliente</value>
+  </data>
+  <data name="DeliveriesItinerary" xml:space="preserve">
+    <value>Despacho</value>
+  </data>
+  <data name="DeliveryOrderDetail" xml:space="preserve">
+    <value>Detalle de Envío</value>
+  </data>
+  <data name="IncidenceId" xml:space="preserve">
+    <value>ID de la Incidencia</value>
+  </data>
+  <data name="PreviousState" xml:space="preserve">
+    <value>Estado Anterior</value>
+  </data>
+  <data name="Privileges" xml:space="preserve">
+    <value>Privilegios</value>
+  </data>
+  <data name="ProductConversion" xml:space="preserve">
+    <value>Conversión de Producto</value>
+  </data>
+  <data name="PurchaseRequestDetail" xml:space="preserve">
+    <value>Detalle de Solicitud de Compra</value>
+  </data>
+  <data name="Refunded" xml:space="preserve">
+    <value>Reembolsado</value>
+  </data>
+  <data name="SpecialReceiptId" xml:space="preserve">
+    <value>ID del Recibo Especial</value>
+  </data>
+  <data name="SystemObject" xml:space="preserve">
+    <value>Objeto del Sistema</value>
+  </data>
+  <data name="TaxpayerPostalCode" xml:space="preserve">
+    <value>C.P. Fiscal</value>
+  </data>
+  <data name="UserSettings" xml:space="preserve">
+    <value>Configuración de Usuario</value>
+  </data>
+  <data name="WireTransfer" xml:space="preserve">
+    <value>Transferencia</value>
+  </data>
 </root>
