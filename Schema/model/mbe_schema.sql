@@ -992,7 +992,7 @@ CREATE TABLE `incidence` (
   `instance_id` int(11) NOT NULL DEFAULT 0,
   `modification_time` datetime DEFAULT NULL,
   `updater` int(11) NOT NULL DEFAULT 0,
-  `content` varchar(1000) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin DEFAULT '0',
+  `content` text CHARACTER SET utf8mb3 COLLATE utf8mb3_bin DEFAULT '0',
   `comment` varchar(500) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin DEFAULT NULL,
   PRIMARY KEY (`incidence_id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=2455 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;

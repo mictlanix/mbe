@@ -72,3 +72,19 @@ WHERE cs.`commission_participation` = 1
 			AND x.`commission` = cs.`commission`
 			AND x.`commission_participation` = 3
 	);
+
+-- incidence.content widened from VARCHAR(1000) to TEXT (see mictlanix/mbe#42).
+--
+-- PaymentsController.EditPayment stores the payment's previous state here as
+-- JSON, with the store and the updating employee embedded. The 94 such rows
+-- already present run 898-986 characters, and the size grows with free text --
+-- the payment reference, the employee's names and comment, the store name.
+-- Under STRICT_TRANS_TABLES an oversized value fails the insert rather than
+-- truncating, which takes the whole correction down with it.
+--
+-- TEXT holds 65,535 bytes, 21,845 characters in utf8mb3. Charset, collation,
+-- nullability and the (meaningless) '0' default are kept as they were.
+-- mbe-api maps the column as String(1000); SQLAlchemy does not enforce that
+-- length on insert, so it keeps working, but its model is now understated.
+ALTER TABLE `incidence`
+	MODIFY COLUMN `content` TEXT CHARACTER SET utf8mb3 COLLATE utf8mb3_bin DEFAULT '0';

@@ -37,7 +37,7 @@ namespace Mictlanix.BE.Model {
 		[Property ("content")]
 		[DataType (DataType.MultilineText)]
 		[Display (Name = "Report", ResourceType = typeof (Resources))]
-		[StringLength (1000, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
+		[StringLength (21845, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string PreviousState { get; set; }
 
 		[Property("comment")]

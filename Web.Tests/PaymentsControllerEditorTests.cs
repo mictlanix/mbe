@@ -26,6 +26,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
 using Mictlanix.BE.Model;
@@ -118,6 +119,33 @@ namespace Mictlanix.BE.Web.Tests {
 			}
 
 			using (new SessionScope ()) {
+				Assert.That (CustomerPayment.Find (id).Amount, Is.EqualTo (90m));
+			}
+		}
+
+		// mictlanix/mbe#42: the snapshot was taken from the instance already holding the
+		// new values -- a second Find in the same session returns that same object -- so
+		// the audit trail recorded the correction as its own previous state. The scope
+		// mirrors the per-request one Global.asax opens.
+		[Test]
+		public void EditPayment_RecordsThePaymentAsItWasBeforeTheCorrection ()
+		{
+			var controller = LogIn (AccessRight.Read | AccessRight.Update);
+			int id;
+
+			using (new SessionScope ()) {
+				id = seed.Payment (PaymentType.Immediate, 100m).Id;
+			}
+
+			using (new SessionScope (FlushAction.Never)) {
+				controller.EditPayment (Correction (id, 90m));
+			}
+
+			using (new SessionScope ()) {
+				var incidence = Incidence.Queryable.Single (x => x.SourceType == SourceType.CustomerPayment && x.Reference == id);
+
+				Assert.That (incidence.PreviousState, Does.Contain ("\"Amount\":100"));
+				Assert.That (incidence.PreviousState, Does.Not.Contain ("\"Amount\":90"));
 				Assert.That (CustomerPayment.Find (id).Amount, Is.EqualTo (90m));
 			}
 		}

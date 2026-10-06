@@ -584,6 +584,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			if (ModelState.IsValid) {
+				// Snapshot before touching the payment: a second Find in this session
+				// returns the same instance, already holding the new values.
+				var incidence = new Incidence {
+					SourceType = SourceType.CustomerPayment,
+					Reference = item.Id,
+					Updater = CurrentUser.Employee,
+					PreviousState = JsonConvert.SerializeObject (payment.GetSerializable ()),
+					ModificationTime = DateTime.Now,
+				};
+
 				payment.Amount = item.Amount;
 				payment.Method = item.Method;
 				payment.PaymentType = item.PaymentType;
@@ -591,17 +601,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				payment.Updater = CurrentUser.Employee;
 
 				using (var scope = new TransactionScope ()) {
-					payment = CustomerPayment.Find (item.Id);
-					var incidence = new Incidence {
-						SourceType = SourceType.CustomerPayment,
-						Reference = item.Id,
-						Updater = CurrentUser.Employee,
-						PreviousState = JsonConvert.SerializeObject (payment.GetSerializable ()),
-						ModificationTime = DateTime.Now,
-					};
-					incidence.CreateAndFlush ();
-				}
-				using (var scope = new TransactionScope ()) {
+					incidence.Create ();
 					payment.UpdateAndFlush ();
 				}
 			} else {

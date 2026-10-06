@@ -90,6 +90,7 @@
     <Compile Include="PaymentsControllerAddPaymentTests.cs" />
     <Compile Include="PaymentsControllerConfirmPaymentTests.cs" />
     <Compile Include="PaymentsControllerEditorTests.cs" />
+    <Compile Include="IncidenceContentTests.cs" />
     <Compile Include="PaymentsControllerRemovePaymentTests.cs" />
     <Compile Include="SalesOrderBalanceTests.cs" />
   </ItemGroup>
