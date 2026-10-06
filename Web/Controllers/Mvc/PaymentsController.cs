@@ -409,24 +409,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			search.Limit = WebConfig.PageSize;
 			search = SearchCustomerPayment (search);
 
-
-			var drawer = WebConfig.CashDrawer;
-			var session = GetSession ();
 			var privilege = GetAccessPrivilege (SystemObjects.PaymentsEditor);
 
-			if (!privilege.AllowRead || !CurrentUser.IsAdministrator) {
+			if (!privilege.AllowRead) {
 				return RedirectToAction ("Index");
 			}
-
-			if (drawer == null) {
-				return View ("InvalidCashDrawer");
-			}
-
-			if (session == null) {
-				return RedirectToAction ("OpenSession");
-			}
-
-
 
 			if (Request.IsAjaxRequest ()) {
 				return PartialView ("_Index", search);
@@ -440,12 +427,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ActionResult Payments (Search<CustomerPayment> search)
 		{
 
-			var drawer = WebConfig.CashDrawer;
-			var session = GetSession ();
-
 			var privilege = GetAccessPrivilege (SystemObjects.PaymentsEditor);
 
-			if (!privilege.AllowRead || !CurrentUser.IsAdministrator) {
+			if (!privilege.AllowRead) {
 				return RedirectToAction ("Index");
 			}
 
@@ -595,9 +579,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			var payment = CustomerPayment.Find (item.Id);
-			//if (payment.CreationTime != payment.ModificationTime) {
-			//	ModelState.AddModelError ("Error", Resources.ItemCanBeChangedOnlyOnce);
-			//}
+			if (payment.CreationTime != payment.ModificationTime) {
+				ModelState.AddModelError (string.Empty, Resources.ItemCanBeChangedOnlyOnce);
+			}
 
 			if (ModelState.IsValid) {
 				payment.Amount = item.Amount;

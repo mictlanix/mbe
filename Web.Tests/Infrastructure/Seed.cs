@@ -50,6 +50,8 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 		readonly List<SalesOrder> orders = new List<SalesOrder> ();
 		readonly List<CashSession> sessions = new List<CashSession> ();
 		readonly List<CashDrawer> drawers = new List<CashDrawer> ();
+		readonly List<AccessPrivilege> privileges = new List<AccessPrivilege> ();
+		readonly List<User> users = new List<User> ();
 
 		public Store Store { get; private set; }
 		public PointOfSale PointOfSale { get; private set; }
@@ -89,6 +91,34 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 			sessions.Add (session);
 
 			return session;
+		}
+
+		// CustomController.GetAccessPrivilege reads privileges from the user row named by
+		// the principal, not from the principal itself, so a privilege test needs a real
+		// user, and the principal's name has to match its UserName.
+		public User User (SystemObjects obj, AccessRight rights, bool administrator = false)
+		{
+			var user = new User {
+				UserName = "mbetest",
+				Password = Marker,
+				Email = "tester@example.com",
+				Employee = Employee,
+				IsAdministrator = administrator
+			};
+
+			user.CreateAndFlush ();
+			users.Add (user);
+
+			var privilege = new AccessPrivilege {
+				User = user,
+				Object = obj,
+				Privileges = rights
+			};
+
+			privilege.CreateAndFlush ();
+			privileges.Add (privilege);
+
+			return user;
 		}
 
 		public SalesOrder Order (bool paid = false, bool cancelled = false)
@@ -226,7 +256,14 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 				Remove (SalesOrderDetail.TryFind (item.Id));
 			}
 
+			// PaymentsController.EditPayment records the payment's prior state as an incidence.
 			foreach (var item in payments) {
+				var id = item.Id;
+
+				foreach (var incidence in Incidence.Queryable.Where (x => x.SourceType == SourceType.CustomerPayment && x.Reference == id).ToList ()) {
+					Remove (incidence);
+				}
+
 				Remove (CustomerPayment.TryFind (item.Id));
 			}
 
@@ -240,6 +277,14 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 
 			foreach (var item in drawers) {
 				Remove (CashDrawer.TryFind (item.Id));
+			}
+
+			foreach (var item in privileges) {
+				Remove (AccessPrivilege.TryFind (item.Id));
+			}
+
+			foreach (var item in users) {
+				Remove (Model.User.TryFind (item.UserName));
 			}
 		}
 

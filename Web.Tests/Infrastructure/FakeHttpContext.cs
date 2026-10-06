@@ -26,7 +26,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -59,6 +61,8 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 			var response = new HttpResponse (new StringWriter ());
 			var context = new HttpContext (request, response);
 
+			RestoreAppSettings ();
+
 			if (user != null) {
 				context.User = user;
 			}
@@ -67,6 +71,20 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 
 			controller.ControllerContext = new ControllerContext (
 				new HttpContextWrapper (context), new RouteData (), controller);
+		}
+
+		// Under Mono, the first HttpRequest replaces ConfigurationManager's config system
+		// with System.Web's, whose appSettings are empty outside a hosted site -- so
+		// WebConfig.PageSize and friends stop seeing App.config. Put the client one back.
+		static readonly FieldInfo config_system = typeof (ConfigurationManager)
+			.GetField ("configSystem", BindingFlags.NonPublic | BindingFlags.Static);
+		static readonly object client_config_system = config_system?.GetValue (null);
+
+		static void RestoreAppSettings ()
+		{
+			if (config_system != null) {
+				config_system.SetValue (null, client_config_system);
+			}
 		}
 
 		public static void Detach ()
