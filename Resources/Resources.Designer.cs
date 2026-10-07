@@ -3447,11 +3447,38 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Historial de Cambios.
+        /// </summary>
+        public static string IncidenceHistory {
+            get {
+                return ResourceManager.GetString("IncidenceHistory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a ID de la Incidencia.
         /// </summary>
         public static string IncidenceId {
             get {
                 return ResourceManager.GetString("IncidenceId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Este registro es anterior a la corrección de la bitácora de pagos: muestra el pago como quedó después del cambio, no como estaba antes.
+        /// </summary>
+        public static string IncidencePostChangeSnapshot {
+            get {
+                return ResourceManager.GetString("IncidencePostChangeSnapshot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Incidencias.
+        /// </summary>
+        public static string Incidences {
+            get {
+                return ResourceManager.GetString("Incidences", resourceCulture);
             }
         }
         
@@ -4298,6 +4325,15 @@ namespace Mictlanix.BE {
         public static string Menu_Home {
             get {
                 return ResourceManager.GetString("Menu_Home", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Sistema.
+        /// </summary>
+        public static string Menu_System {
+            get {
+                return ResourceManager.GetString("Menu_System", resourceCulture);
             }
         }
         
@@ -6478,6 +6514,15 @@ namespace Mictlanix.BE {
         public static string Register {
             get {
                 return ResourceManager.GetString("Register", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Motivo de Rechazo.
+        /// </summary>
+        public static string RejectionReason {
+            get {
+                return ResourceManager.GetString("RejectionReason", resourceCulture);
             }
         }
         

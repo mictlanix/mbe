@@ -128,6 +128,11 @@
 
 	};
 
+				var system_menu_items = new List<MenuItemModel> {
+		new MenuItemModel{SystemObject = SystemObjects.Users, Controller = "Users", DefaultAction = "Index", Resources = Resources.Title_Users, AdministratorOnly = true },
+		new MenuItemModel{SystemObject = SystemObjects.Incidences, Controller = "Incidences", DefaultAction = "Index", Resources = Resources.Incidences },
+	};
+
 				var columns = new Dictionary<string, List<MenuItemModel>>() {
 								{ Resources.MasterData, master_data_menu_items },
 								{ Resources.Sales, sales_menu_items },
@@ -138,8 +143,11 @@
 								{ Resources.Administration, administration_menu_items },
 								{ Resources.FrontDesk, front_desk_menu_items },
 								{ Resources.FiscalDocuments, fiscal_document_menu_items },
-								{ Resources.Reports, reports_menu_1_items }
+								{ Resources.Reports, reports_menu_1_items },
+								{ Resources.Menu_System, system_menu_items }
 				};
+
+				Func<MenuItemModel, bool> visible = x => x.AdministratorOnly ? CurrentUser.IsAdministrator : CurrentUser.GetPrivilege(x.SystemObject).AllowRead;
 
 
 }
@@ -155,7 +163,7 @@
 																</a>
 												</li>
 
-												@foreach (var column in columns.Where(x => x.Value.Any(y => CurrentUser.GetPrivilege(y.SystemObject).AllowRead)))
+												@foreach (var column in columns.Where(x => x.Value.Any(visible)))
 												{
 																<li class="gbt">
 																				<a id="master-data-menu" class="gbgt" href="javascript:void(0)">
@@ -169,7 +177,7 @@
 																								<div class="gbmc">
 																												<ol class="gbmcc">
 
-																																@foreach (var item in column.Value.Where(x => CurrentUser.GetPrivilege(x.SystemObject).AllowRead))
+																																@foreach (var item in column.Value.Where(visible))
 																																{
 																																				<li class="gbmtc">
 																																								<a class="gbmt @(Html.IsMenuSelected(item.DefaultAction, item.Controller) ? "gbm0l" : "")"
@@ -180,16 +188,6 @@
 																												</ol>
 																								</div>
 																				</div>
-																</li>
-												}
-												@if (CurrentUser.IsAdministrator)
-												{
-																<li class="gbt">
-																				<a class="gbzt @(Html.IsMenuSelected("Index", "Users") ? "gbz0l" : "")"
-																							href="@Url.Action("Index", "Users")">
-																								<span class="gbtb2"></span>
-																								<span class="gbts">@Resources.Title_Users</span>
-																				</a>
 																</li>
 												}
 								</ol>

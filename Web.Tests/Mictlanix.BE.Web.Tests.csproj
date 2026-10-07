@@ -91,6 +91,8 @@
     <Compile Include="PaymentsControllerConfirmPaymentTests.cs" />
     <Compile Include="PaymentsControllerEditorTests.cs" />
     <Compile Include="IncidenceContentTests.cs" />
+    <Compile Include="IncidencesTests.cs" />
+    <Compile Include="SecurityHelpersTests.cs" />
     <Compile Include="DisplayResourceTests.cs" />
     <Compile Include="PaymentsControllerRemovePaymentTests.cs" />
     <Compile Include="SalesOrderBalanceTests.cs" />
@@ -107,6 +109,10 @@
     <ProjectReference Include="..\Web\Mictlanix.BE.Web.csproj">
       <Project>{D13A33DE-A12D-420E-ABB2-76A7C0F2E2E5}</Project>
       <Name>Mictlanix.BE.Web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Resources\Mictlanix.BE.Resources.csproj">
+      <Project>{CBB1BA70-351E-4009-86FB-484810DC6364}</Project>
+      <Name>Mictlanix.BE.Resources</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

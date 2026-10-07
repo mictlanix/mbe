@@ -10,5 +10,7 @@ namespace Mictlanix.BE.Web.Models {
 		public string Resources { get; set; }
 		public string Controller { get; set; }
 		public string DefaultAction { get; set; }
+		// Shown to administrators instead of by SystemObject privilege.
+		public bool AdministratorOnly { get; set; }
 	}
 }

@@ -257,6 +257,7 @@
     <Compile Include="Controllers\Mvc\ExpensesController.cs" />
     <Compile Include="Controllers\Mvc\ExpenseVoucherController.cs" />
     <Compile Include="Controllers\Mvc\HumanResourcesController.cs" />
+    <Compile Include="Controllers\Mvc\IncidencesController.cs" />
     <Compile Include="Controllers\Mvc\PaymentMethodOptionsController.cs" />
     <Compile Include="Controllers\Mvc\QuotationsController.cs" />
     <Compile Include="Controllers\Mvc\SpecialReceiptsController.cs" />
@@ -306,6 +307,8 @@
     <Compile Include="Models\DeliveryViewModel.cs" />
     <Compile Include="Models\EmployeeAttendanceDBRecorder.cs" />
     <Compile Include="Models\ItemDateRange.cs" />
+    <Compile Include="Models\IncidenceContent.cs" />
+    <Compile Include="Models\IncidenceSearch.cs" />
     <Compile Include="Models\DateRange.cs" />
     <Compile Include="Models\MenuItemModel.cs" />
     <Compile Include="Models\MoneyCount.cs" />
@@ -1233,6 +1236,9 @@
     <Content Include="Views\Reports\_ProductsBySupplierReport.cshtml" />
     <Content Include="Views\HumanResources\Attendance.cshtml" />
     <Content Include="Views\HumanResources\SynchronizeTimeClocks.cshtml" />
+    <Content Include="Views\Incidences\Index.cshtml" />
+    <Content Include="Views\Incidences\_Index.cshtml" />
+    <Content Include="Views\Incidences\_Details.cshtml" />
     <Content Include="Views\HumanResources\_Attendance.cshtml" />
     <Content Include="Views\HumanResources\_AttendanceSheetEmployee.cshtml" />
     <Content Include="Views\HumanResources\_AttendanceEmployeeByDay.cshtml" />

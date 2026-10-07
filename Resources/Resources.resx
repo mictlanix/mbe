@@ -3179,4 +3179,19 @@ con  valor {1} ya existe</value>
   <data name="WireTransfer" xml:space="preserve">
     <value>Transferencia</value>
   </data>
+  <data name="Incidences" xml:space="preserve">
+    <value>Incidencias</value>
+  </data>
+  <data name="IncidenceHistory" xml:space="preserve">
+    <value>Historial de Cambios</value>
+  </data>
+  <data name="IncidencePostChangeSnapshot" xml:space="preserve">
+    <value>Este registro es anterior a la corrección de la bitácora de pagos: muestra el pago como quedó después del cambio, no como estaba antes.</value>
+  </data>
+  <data name="RejectionReason" xml:space="preserve">
+    <value>Motivo de Rechazo</value>
+  </data>
+  <data name="Menu_System" xml:space="preserve">
+    <value>Sistema</value>
+  </data>
 </root>

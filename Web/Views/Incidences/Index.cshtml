@@ -1,0 +1,60 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model IncidenceSearch
+@{
+    ViewBag.Title = Resources.Incidences;
+    var sources = Enum.GetValues(typeof(SourceType)).Cast<SourceType>();
+}
+<div class="page-header">
+    <h1>@Resources.Incidences</h1>
+</div>
+<div id="master-section">
+@using (Ajax.BeginForm("Index", null, new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }, new { id = "incidence-search" })) {
+    @Html.HiddenFor(x => x.Offset)
+    <div class="row">
+        <div class="col-xs-3">
+            @Html.LabelFor(x => x.Source)
+            <select id="Source" name="Source" class="form-control">
+                <option value="">@Resources.All</option>
+                @foreach (var item in sources) {
+                    <option value="@((int)item)" @(item == Model.Source ? "selected" : string.Empty)>@item.GetDisplayName()</option>
+                }
+            </select>
+        </div>
+        <div class="col-xs-2">
+            @Html.LabelFor(x => x.Reference)
+            @Html.TextBoxFor(x => x.Reference, new { @class = "form-control", type = "number", min = "0" })
+        </div>
+        <div class="col-xs-3">
+            @Html.LabelFor(x => x.StartDate)
+            @Html.EditorFor(x => x.StartDate)
+        </div>
+        <div class="col-xs-3">
+            @Html.LabelFor(x => x.EndDate)
+            @Html.EditorFor(x => x.EndDate)
+        </div>
+        <div class="col-xs-1">
+            <label>&nbsp;</label>
+            <button class="btn btn-primary btn-block" type="submit" title="@Resources.Search">
+                <span class="glyphicon glyphicon-search"></span>
+            </button>
+        </div>
+    </div>
+}
+</div>
+<div id="activity-indicator">
+    <img alt="@Resources.Loading" src="@Url.Content("~/Content/images/loading-bar.gif")" />
+</div>
+<div id="search-results">
+    @Html.Partial("_Index")
+</div>
+<script type="text/javascript">
+$(function () {
+    // A new search starts from the first page.
+    $('#incidence-search').submit(function () {
+        $('#Offset').val(0);
+    });
+});
+</script>

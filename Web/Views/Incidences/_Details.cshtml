@@ -1,0 +1,51 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model Incidence
+@{
+    var content = IncidenceContent.Parse(Model);
+}
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h3>@Resources.IncidenceId @Html.DisplayFor(x => x.Id)</h3>
+</div>
+<div class="modal-body">
+    <dl class="dl-horizontal">
+        <dt>@Html.DisplayNameFor(x => x.SourceType)</dt>
+        <dd>@Model.SourceType.GetDisplayName()</dd>
+        <dt>@Html.DisplayNameFor(x => x.Reference)</dt>
+        <dd>
+            @Html.DisplayFor(x => x.Reference)
+            @Html.ActionLink(Resources.IncidenceHistory, "Index", new { Source = Model.SourceType, Reference = Model.Reference })
+        </dd>
+        <dt>@Html.DisplayNameFor(x => x.Updater)</dt>
+        <dd>@Model.Updater.Name</dd>
+        <dt>@Html.DisplayNameFor(x => x.ModificationTime)</dt>
+        <dd>@Html.DisplayFor(x => x.ModificationTime)</dd>
+        @if (!string.IsNullOrEmpty(Model.Comment)) {
+            <dt>@Html.DisplayNameFor(x => x.Comment)</dt>
+            <dd>@Model.Comment</dd>
+        }
+    </dl>
+    @if (content.IsStructured) {
+        <h4>@Html.DisplayNameFor(x => x.PreviousState)</h4>
+        if (content.IsPostChangeSnapshot) {
+            <div class="alert alert-warning">@Resources.IncidencePostChangeSnapshot</div>
+        }
+        <table class="table table-condensed">
+        @foreach (var field in content.Fields) {
+            <tr>
+                <th>@field.Key</th>
+                <td>@field.Value</td>
+            </tr>
+        }
+        </table>
+    } else if (!string.IsNullOrEmpty(content.Text)) {
+        <h4>@Html.DisplayNameFor(x => x.PreviousState)</h4>
+        <p>@content.Text</p>
+    }
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">@Resources.Close</button>
+</div>

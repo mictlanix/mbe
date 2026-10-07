@@ -88,3 +88,13 @@ WHERE cs.`commission_participation` = 1
 -- length on insert, so it keeps working, but its model is now understated.
 ALTER TABLE `incidence`
 	MODIFY COLUMN `content` TEXT CHARACTER SET utf8mb3 COLLATE utf8mb3_bin DEFAULT '0';
+
+-- incidence gains an index on (source, instance_id) (see mictlanix/mbe#63).
+--
+-- The table had only its primary key, so every "history of this record" lookup
+-- scanned it. The incidences screen filters on exactly this pair, the delivery
+-- order lists read the latest rejection per order through it, and the planned
+-- payment reversal narrows by it before parsing content.
+ALTER TABLE `incidence`
+	ADD INDEX `incidence_source_instance_idx` (`source`, `instance_id`);
+

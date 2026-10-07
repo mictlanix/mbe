@@ -91,11 +91,22 @@ namespace Mictlanix.BE.Web.Tests {
 			}
 		}
 
-		// The privilege is authoritative: being an administrator does not stand in for it.
+		// Administrators hold every right on every module, row or no row.
 		[Test]
-		public void Payments_RedirectsAnAdministratorWithoutThePrivilege ()
+		public void Payments_OpensForAnAdministratorWithoutThePrivilege ()
 		{
 			var controller = LogIn (AccessRight.None, administrator: true);
+
+			using (new SessionScope ()) {
+				Assert.That (controller.Payments (), Is.InstanceOf<ViewResult> ());
+				Assert.That (controller.Payments (new Search<CustomerPayment> ()), Is.InstanceOf<ViewResult> ());
+			}
+		}
+
+		[Test]
+		public void Payments_RedirectsANonAdministratorWithoutThePrivilege ()
+		{
+			var controller = LogIn (AccessRight.None);
 
 			using (new SessionScope ()) {
 				Assert.That (controller.Payments (), Is.InstanceOf<RedirectToRouteResult> ());

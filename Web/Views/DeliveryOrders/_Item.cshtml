@@ -5,9 +5,12 @@
 @model DeliveryOrder
 
 @{
-				var objection = Incidence.Queryable.Where(x => x.Reference == Model.Id && x.SourceType == SourceType.DeliveryOrder)
-																				.OrderByDescending(y => y.Id).FirstOrDefault();
-				var message = objection == null ? string.Empty : objection.Comment;
+				// Why the order was last rejected; _Index loads these for the whole page.
+				string rejection = null;
+				var rejections = ViewBag.Rejections as IDictionary<int, string>;
+				if (!Model.IsConfirmed && rejections != null) {
+								rejections.TryGetValue(Model.Id, out rejection);
+				}
 
 				var with_warehouse = Model.Details.Where(x => x.OrderDetail != null).ToList();
 }
@@ -26,7 +29,14 @@
 				<td class="date">@Html.DisplayFor(x => x.Date)</td>
 				@if (WebConfig.DeliveryOrderApprovalRequired)
 				{
-								<td class="bool">@Html.DisplayFor(x => x.IsConfirmed)</td>
+								<td class="bool">
+												@Html.DisplayFor(x => x.IsConfirmed)
+												@if (rejection != null) {
+																<a href="javascript:void(0)" data-toggle="tooltip" title="@Resources.RejectionReason: @rejection">
+																				<span class="glyphicon glyphicon-comment"></span>
+																</a>
+												}
+								</td>
 				}
 				<td class="">@Html.DisplayFor(x => x.Comment)</td>
 				<td class="bool">@Html.Raw(string.Join("<br/>", (with_warehouse.Where(x => x.OrderDetail.Warehouse != null)

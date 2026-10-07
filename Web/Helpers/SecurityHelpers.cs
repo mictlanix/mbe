@@ -51,11 +51,20 @@ namespace Mictlanix.BE.Web.Helpers {
 
 		public static AccessPrivilege GetPrivilege (this HtmlHelper helper, User user, SystemObjects obj)
 		{
-			return user.Privileges.SingleOrDefault (x => x.Object == obj) ?? new AccessPrivilege ();
+			return user.GetPrivilege (obj);
 		}
 
+		// Administrators hold every right on every module, whatever rows they have.
+		// The rows are still what Users > Edit shows and saves.
 		public static AccessPrivilege GetPrivilege (this User user, SystemObjects obj)
 		{
+			if (user.IsAdministrator) {
+				return new AccessPrivilege {
+					Object = obj,
+					Privileges = AccessRight.Create | AccessRight.Read | AccessRight.Update | AccessRight.Delete
+				};
+			}
+
 			return user.Privileges.SingleOrDefault (x => x.Object == obj) ?? new AccessPrivilege ();
 		}
 

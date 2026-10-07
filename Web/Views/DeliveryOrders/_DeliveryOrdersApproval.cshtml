@@ -7,6 +7,7 @@
 @{
     var CurrentUser = Html.CurrentUser() ?? new User();
     ViewBag.Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.DeliveryOrderApproval);
+    ViewBag.Rejections = Incidence.LatestComments(SourceType.DeliveryOrder, Model.Results.Where(x => !x.IsConfirmed).Select(x => x.Id));
 }
 
 <table class="table-hover">

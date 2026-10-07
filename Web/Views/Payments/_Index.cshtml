@@ -6,6 +6,7 @@
 @{
 				var CurrentUser = Html.CurrentUser () ?? new User ();
 				var Privilege = Html.GetPrivilege (CurrentUser, SystemObjects.PaymentsEditor);
+				var IncidencesPrivilege = Html.GetPrivilege (CurrentUser, SystemObjects.Incidences);
 				var zeros = "00000000";
 
 }
@@ -51,6 +52,10 @@
 												@if (Privilege.AllowUpdate && item.CreationTime == item.ModificationTime)
 												{
 																@Html.ActionLink(" ", "EditPayment", new { id = item.Id }, new { @class = "button icon edit icon-only open-modal", title = Resources.Edit, data_modal_id = "customer-payment-modal" })
+												}
+												@if (IncidencesPrivilege.AllowRead && item.CreationTime != item.ModificationTime)
+												{
+																@Html.ActionLink(" ", "Index", "Incidences", new { Source = SourceType.CustomerPayment, Reference = item.Id }, new { @class = "button icon view icon-only", title = Resources.IncidenceHistory, target = "_blank" })
 												}
 								</div>
 				</div>

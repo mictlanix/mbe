@@ -46,6 +46,26 @@ namespace Mictlanix.BE.Model {
 		[StringLength (500, MinimumLength = 0, ErrorMessageResourceName = "Validation_StringLength", ErrorMessageResourceType = typeof (Resources))]
 		public virtual string Comment { get; set; }
 
+		// The latest non-empty comment for each of the given records, in one query --
+		// for a list that shows, say, why each delivery order was last rejected.
+		public static IDictionary<int, string> LatestComments (SourceType source, IEnumerable<int> references)
+		{
+			var ids = references.Distinct ().ToList ();
+
+			// NHibernate 3 emits `in ()` for an empty list, which MySQL rejects.
+			if (ids.Count == 0) {
+				return new Dictionary<int, string> ();
+			}
+
+			var items = Queryable.Where (x => x.SourceType == source && ids.Contains (x.Reference) &&
+						     x.Comment != null && x.Comment != "")
+					     .Select (x => new { x.Id, x.Reference, x.Comment })
+					     .ToList ();
+
+			return items.GroupBy (x => x.Reference)
+				    .ToDictionary (g => g.Key, g => g.OrderByDescending (x => x.Id).First ().Comment);
+		}
+
 		#region Override Base Methods
 
 		public override string ToString ()

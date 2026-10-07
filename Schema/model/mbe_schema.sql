@@ -994,7 +994,8 @@ CREATE TABLE `incidence` (
   `updater` int(11) NOT NULL DEFAULT 0,
   `content` text CHARACTER SET utf8mb3 COLLATE utf8mb3_bin DEFAULT '0',
   `comment` varchar(500) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin DEFAULT NULL,
-  PRIMARY KEY (`incidence_id`) USING BTREE
+  PRIMARY KEY (`incidence_id`) USING BTREE,
+  KEY `incidence_source_instance_idx` (`source`,`instance_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2455 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

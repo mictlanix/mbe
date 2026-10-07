@@ -259,5 +259,8 @@ namespace Mictlanix.BE.Model {
 		CommissionsBySalesPerson = 112,
 		[Display (Name = "DownloadCSVFiles", ResourceType = typeof (Resources))]
 		DownloadCSVFiles = 113,
+		// 114 is reserved for the payment reversal privilege.
+		[Display (Name = "Incidences", ResourceType = typeof (Resources))]
+		Incidences = 115,
 	}
 }

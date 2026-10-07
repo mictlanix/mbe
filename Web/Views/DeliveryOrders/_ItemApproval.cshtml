@@ -7,9 +7,12 @@
 @{
     var CurrentUser = Html.CurrentUser() ?? new User();
     var Privilege = Html.GetPrivilege(CurrentUser, SystemObjects.DeliveryOrderApproval);
-    var incidence = Incidence.Queryable.Where(x => x.Reference == Model.Id && x.SourceType == SourceType.DeliveryOrder)
-        .OrderByDescending(y => y.Id).FirstOrDefault();
-    var message = incidence != null ? incidence.Comment : "";
+    // Why the order was last rejected; _DeliveryOrdersApproval loads these for the whole page.
+    string rejection = null;
+    var rejections = ViewBag.Rejections as IDictionary<int, string>;
+    if (!Model.IsConfirmed && rejections != null) {
+        rejections.TryGetValue(Model.Id, out rejection);
+    }
     var priority = Model.Details.Select(x => x.OrderDetail.SalesOrder.Priority).FirstOrDefault();
 }
 
@@ -28,7 +31,7 @@
     }
     </td>
     <td class="bool">@Html.DisplayFor(x => x.IsConfirmed)</td>
-    <td class="bool"></td>
+    <td>@rejection</td>
 
     <td class="actions">
         @if (Privilege.AllowRead)
