@@ -24,7 +24,7 @@ namespace Mictlanix.BE.Model {
 
 		public override bool Equals (object obj)
 		{
-			var other = obj as ProductPrice;
+			var other = obj as CommissionProduct;
 
 			if (other == null)
 				return false;

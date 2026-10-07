@@ -67,7 +67,7 @@ namespace Mictlanix.BE.Model {
 
 		public override bool Equals (object obj)
 		{
-			Store other = obj as Store;
+			ExchangeRate other = obj as ExchangeRate;
 
 			if (other == null)
 				return false;

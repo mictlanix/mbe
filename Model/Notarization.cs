@@ -102,7 +102,7 @@ namespace Mictlanix.BE.Model {
 
 		public override bool Equals (object obj)
 		{
-			var other = obj as TranslationRequest;
+			var other = obj as Notarization;
 
 			if (other == null)
 				return false;

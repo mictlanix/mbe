@@ -53,7 +53,7 @@ namespace Mictlanix.BE.Model {
 
 		public override bool Equals (object obj)
 		{
-			Warehouse other = obj as Warehouse;
+			ProductionSite other = obj as ProductionSite;
 
 			if (other == null)
 				return false;

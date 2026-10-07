@@ -75,7 +75,7 @@ namespace Mictlanix.BE.Model {
 
 		public override bool Equals (object obj)
 		{
-			var other = obj as DeliveryOrder;
+			var other = obj as Incidence;
 
 			if (other == null)
 				return false;

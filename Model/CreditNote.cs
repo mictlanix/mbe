@@ -62,7 +62,7 @@ namespace Mictlanix.BE.Model {
 
 		public override bool Equals (object obj)
 		{
-			CustomerPayment other = obj as CustomerPayment;
+			CreditNote other = obj as CreditNote;
 
 			if (other == null)
 				return false;

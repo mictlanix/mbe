@@ -98,6 +98,7 @@
     <Compile Include="UsersControllerAccessTests.cs" />
     <Compile Include="EntitiesEditorControllerTests.cs" />
     <Compile Include="DisplayResourceTests.cs" />
+    <Compile Include="ModelEqualityTests.cs" />
     <Compile Include="PaymentsControllerRemovePaymentTests.cs" />
     <Compile Include="SalesOrderBalanceTests.cs" />
   </ItemGroup>
