@@ -1084,7 +1084,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return search;
 			 
 			 */
-			var funds = payments.Sum (x => x.Amount - (x.Allocations.Sum (y => (decimal?) (y.Amount + y.Change)) ?? 0));
+			var funds = payments.Sum (x => x.Balance);
 
 			if (entity.IsCancelled || entity.IsPaid) {
 				Response.StatusCode = 400;
@@ -1096,7 +1096,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.InsufficientFunds);
 			}
 
-
+			to_pay = value > entity.Balance ? entity.Balance : value;
 
 			using (var scope = new TransactionScope ()) {
 				entity.UpdateAndFlush ();
