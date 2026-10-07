@@ -3194,4 +3194,64 @@ con  valor {1} ya existe</value>
   <data name="Menu_System" xml:space="preserve">
     <value>Sistema</value>
   </data>
+  <data name="RestoreDeliveryMode" xml:space="preserve">
+    <value>Restablecer Modo de Entrega</value>
+  </data>
+  <data name="DeliveryMode" xml:space="preserve">
+    <value>Modo de Entrega</value>
+  </data>
+  <data name="Current" xml:space="preserve">
+    <value>Actual</value>
+  </data>
+  <data name="RestoreDeliveryModeIntro" xml:space="preserve">
+    <value>Usa esta herramienta cuando en un pedido se eligió «{0}» por error. El pedido regresa a «{1}» y en la pantalla de cobro se puede volver a elegir cómo se entrega.</value>
+  </data>
+  <data name="RestoreDeliveryModeStepFind" xml:space="preserve">
+    <value>Buscar pedido</value>
+  </data>
+  <data name="RestoreDeliveryModeStepReview" xml:space="preserve">
+    <value>Revisar el cambio</value>
+  </data>
+  <data name="RestoreDeliveryModeStepDone" xml:space="preserve">
+    <value>Listo</value>
+  </data>
+  <data name="RestoreDeliveryModeReview" xml:space="preserve">
+    <value>Revisar</value>
+  </data>
+  <data name="RestoreDeliveryModeWhatChanges" xml:space="preserve">
+    <value>Esto es lo que va a cambiar</value>
+  </data>
+  <data name="RestoreDeliveryModeEffectButtons" xml:space="preserve">
+    <value>En la pantalla de cobro vuelven a aparecer los botones «{0}» y «{1}».</value>
+  </data>
+  <data name="RestoreDeliveryModeEffectNothingElse" xml:space="preserve">
+    <value>No se modifican pagos, productos ni importes.</value>
+  </data>
+  <data name="RestoreDeliveryModeEffectLogged" xml:space="preserve">
+    <value>El cambio queda registrado en Incidencias a tu nombre.</value>
+  </data>
+  <data name="RestoreDeliveryModeConfirm" xml:space="preserve">
+    <value>Sí, cambiar a «{0}»</value>
+  </data>
+  <data name="RestoreDeliveryModeCannot" xml:space="preserve">
+    <value>Este pedido no se puede restablecer.</value>
+  </data>
+  <data name="RestoreDeliveryModeNothingToChange" xml:space="preserve">
+    <value>Ya está en «{0}»: no hay nada que cambiar.</value>
+  </data>
+  <data name="RestoreDeliveryModeOnlyPickUp" xml:space="preserve">
+    <value>Está en «{0}» y puede tener órdenes de entrega. Sólo se restablecen pedidos en «{1}».</value>
+  </data>
+  <data name="RestoreDeliveryModeSucceeded" xml:space="preserve">
+    <value>El pedido {0} ahora está en «{1}».</value>
+  </data>
+  <data name="RestoreDeliveryModeNext" xml:space="preserve">
+    <value>Ya se puede elegir de nuevo el modo de entrega en la pantalla de cobro.</value>
+  </data>
+  <data name="RestoreDeliveryModeSearchAgain" xml:space="preserve">
+    <value>Buscar otro pedido</value>
+  </data>
+  <data name="RestoreDeliveryModeAnother" xml:space="preserve">
+    <value>Restablecer otro pedido</value>
+  </data>
 </root>

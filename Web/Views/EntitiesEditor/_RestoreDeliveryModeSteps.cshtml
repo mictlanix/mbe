@@ -1,0 +1,33 @@
+@using Mictlanix.BE
+@model int
+@{
+	var steps = new [] { Resources.RestoreDeliveryModeStepFind, Resources.RestoreDeliveryModeStepReview, Resources.RestoreDeliveryModeStepDone };
+}
+<ol class="restore-steps">
+	@for(int i = 0; i < steps.Length; i++) {
+		var step = i + 1;
+		<li class="@(step < Model ? "done" : step == Model ? "active" : "")">
+			<span class="number">@(step < Model ? "✓" : step.ToString ())</span> @steps[i]
+		</li>
+	}
+</ol>
+<style type="text/css">
+.restore-steps { list-style: none; padding: 0; margin: 0 0 24px; display: flex; gap: 8px; }
+.restore-steps li { flex: 1; padding: 8px 12px; border-radius: 4px; background: #f5f5f5; color: #999; }
+.restore-steps li.active { background: #337ab7; color: #fff; font-weight: bold; }
+.restore-steps li.done { background: #dff0d8; color: #3c763d; }
+.restore-steps .number { display: inline-block; width: 22px; height: 22px; line-height: 22px; border-radius: 11px; text-align: center; background: rgba(0,0,0,.08); margin-right: 4px; }
+.restore-order:before, .restore-order:after { display: none; }
+.restore-order { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px 24px; }
+.restore-order span { display: block; font-size: 11px; text-transform: uppercase; color: #999; }
+.restore-change { display: flex; align-items: center; gap: 24px; margin: 4px 0 16px; }
+.restore-change .side { flex: 1; text-align: center; padding: 12px; border-radius: 6px; }
+.restore-change .side span { display: block; font-size: 11px; text-transform: uppercase; color: #777; margin-bottom: 4px; }
+.restore-change .from { background: #f5f5f5; color: #777; }
+.restore-change .from strong { text-decoration: line-through; }
+.restore-change .to { background: #dff0d8; color: #3c763d; font-weight: bold; }
+.restore-change .side strong { font-size: 18px; }
+.restore-change .arrow { font-size: 28px; color: #8a6d3b; }
+.restore-effects { margin: 0 0 16px; padding-left: 20px; }
+.restore-effects li { margin-bottom: 4px; }
+</style>

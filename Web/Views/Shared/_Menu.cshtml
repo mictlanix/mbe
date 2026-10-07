@@ -131,6 +131,7 @@
 				var system_menu_items = new List<MenuItemModel> {
 		new MenuItemModel{SystemObject = SystemObjects.Users, Controller = "Users", DefaultAction = "Index", Resources = Resources.Title_Users, AdministratorOnly = true },
 		new MenuItemModel{SystemObject = SystemObjects.Incidences, Controller = "Incidences", DefaultAction = "Index", Resources = Resources.Incidences },
+		new MenuItemModel{Controller = "EntitiesEditor", DefaultAction = "RestoreDeliveryMode", Resources = Resources.RestoreDeliveryMode, AdministratorOnly = true },
 	};
 
 				var columns = new Dictionary<string, List<MenuItemModel>>() {

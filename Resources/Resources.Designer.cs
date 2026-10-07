@@ -1493,6 +1493,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Actual
+        /// </summary>
+        public static string Current {
+            get {
+                return ResourceManager.GetString("Current", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Contraseña Actual.
         /// </summary>
         public static string CurrentPassword {
@@ -1795,6 +1804,15 @@ namespace Mictlanix.BE {
         public static string DeliveryItinerary {
             get {
                 return ResourceManager.GetString("DeliveryItinerary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Modo de Entrega
+        /// </summary>
+        public static string DeliveryMode {
+            get {
+                return ResourceManager.GetString("DeliveryMode", resourceCulture);
             }
         }
         
@@ -6640,6 +6658,168 @@ namespace Mictlanix.BE {
         public static string ResponsiblePerson {
             get {
                 return ResourceManager.GetString("ResponsiblePerson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Restablecer Modo de Entrega
+        /// </summary>
+        public static string RestoreDeliveryMode {
+            get {
+                return ResourceManager.GetString("RestoreDeliveryMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Restablecer otro pedido
+        /// </summary>
+        public static string RestoreDeliveryModeAnother {
+            get {
+                return ResourceManager.GetString("RestoreDeliveryModeAnother", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Este pedido no se puede restablecer.
+        /// </summary>
+        public static string RestoreDeliveryModeCannot {
+            get {
+                return ResourceManager.GetString("RestoreDeliveryModeCannot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Sí, cambiar a «{0}»
+        /// </summary>
+        public static string RestoreDeliveryModeConfirm {
+            get {
+                return ResourceManager.GetString("RestoreDeliveryModeConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a En la pantalla de cobro vuelven a aparecer los botones «{0}» y «{1}».
+        /// </summary>
+        public static string RestoreDeliveryModeEffectButtons {
+            get {
+                return ResourceManager.GetString("RestoreDeliveryModeEffectButtons", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a El cambio queda registrado en Incidencias a tu nombre.
+        /// </summary>
+        public static string RestoreDeliveryModeEffectLogged {
+            get {
+                return ResourceManager.GetString("RestoreDeliveryModeEffectLogged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a No se modifican pagos, productos ni importes.
+        /// </summary>
+        public static string RestoreDeliveryModeEffectNothingElse {
+            get {
+                return ResourceManager.GetString("RestoreDeliveryModeEffectNothingElse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Usa esta herramienta cuando en un pedido se eligió «{0}» por error. El pedido regresa a «{1}» y en la pantalla de cobro se puede volver a elegir cómo se entrega.
+        /// </summary>
+        public static string RestoreDeliveryModeIntro {
+            get {
+                return ResourceManager.GetString("RestoreDeliveryModeIntro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Ya se puede elegir de nuevo el modo de entrega en la pantalla de cobro.
+        /// </summary>
+        public static string RestoreDeliveryModeNext {
+            get {
+                return ResourceManager.GetString("RestoreDeliveryModeNext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Ya está en «{0}»: no hay nada que cambiar.
+        /// </summary>
+        public static string RestoreDeliveryModeNothingToChange {
+            get {
+                return ResourceManager.GetString("RestoreDeliveryModeNothingToChange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Está en «{0}» y puede tener órdenes de entrega. Sólo se restablecen pedidos en «{1}».
+        /// </summary>
+        public static string RestoreDeliveryModeOnlyPickUp {
+            get {
+                return ResourceManager.GetString("RestoreDeliveryModeOnlyPickUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Revisar
+        /// </summary>
+        public static string RestoreDeliveryModeReview {
+            get {
+                return ResourceManager.GetString("RestoreDeliveryModeReview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Buscar otro pedido
+        /// </summary>
+        public static string RestoreDeliveryModeSearchAgain {
+            get {
+                return ResourceManager.GetString("RestoreDeliveryModeSearchAgain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Listo
+        /// </summary>
+        public static string RestoreDeliveryModeStepDone {
+            get {
+                return ResourceManager.GetString("RestoreDeliveryModeStepDone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Buscar pedido
+        /// </summary>
+        public static string RestoreDeliveryModeStepFind {
+            get {
+                return ResourceManager.GetString("RestoreDeliveryModeStepFind", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Revisar el cambio
+        /// </summary>
+        public static string RestoreDeliveryModeStepReview {
+            get {
+                return ResourceManager.GetString("RestoreDeliveryModeStepReview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a El pedido {0} ahora está en «{1}».
+        /// </summary>
+        public static string RestoreDeliveryModeSucceeded {
+            get {
+                return ResourceManager.GetString("RestoreDeliveryModeSucceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Esto es lo que va a cambiar
+        /// </summary>
+        public static string RestoreDeliveryModeWhatChanges {
+            get {
+                return ResourceManager.GetString("RestoreDeliveryModeWhatChanges", resourceCulture);
             }
         }
         

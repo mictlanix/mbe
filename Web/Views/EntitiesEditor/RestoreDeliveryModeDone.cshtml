@@ -1,0 +1,22 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model SalesOrder
+@{
+	ViewBag.Title = Resources.RestoreDeliveryMode;
+}
+<div class="page-header">
+	<h1>@Resources.RestoreDeliveryMode</h1>
+</div>
+
+@Html.Partial("_RestoreDeliveryModeSteps", 3)
+
+<div class="alert alert-success">
+	<h4>✓ @string.Format(Resources.RestoreDeliveryModeSucceeded, Model.Id, Model.DeliveryMode.GetDisplayName ())</h4>
+	<p>@Resources.RestoreDeliveryModeNext</p>
+</div>
+
+@Html.Partial("_RestoreDeliveryModeOrder", Model)
+
+@Html.ActionLink(Resources.IncidenceHistory, "Index", "Incidences", new { Source = SourceType.SalesOrder, Reference = Model.Id }, new { @class = "btn btn-default" })
+@Html.ActionLink(Resources.RestoreDeliveryModeAnother, "RestoreDeliveryMode", null, new { @class = "btn btn-primary" })

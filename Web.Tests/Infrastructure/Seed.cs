@@ -267,7 +267,14 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 				Remove (CustomerPayment.TryFind (item.Id));
 			}
 
+			// EntitiesEditorController.RestoreDeliveryMode records the reset as an incidence.
 			foreach (var item in orders) {
+				var id = item.Id;
+
+				foreach (var incidence in Incidence.Queryable.Where (x => x.SourceType == SourceType.SalesOrder && x.Reference == id).ToList ()) {
+					Remove (incidence);
+				}
+
 				Remove (SalesOrder.TryFind (item.Id));
 			}
 

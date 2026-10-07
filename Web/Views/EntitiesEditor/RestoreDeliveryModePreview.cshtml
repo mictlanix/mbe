@@ -1,0 +1,44 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model SalesOrder
+@{
+	ViewBag.Title = Resources.RestoreDeliveryMode;
+	string error = ViewBag.Error;
+}
+<div class="page-header">
+	<h1>@Resources.RestoreDeliveryMode</h1>
+</div>
+
+@Html.Partial("_RestoreDeliveryModeSteps", 2)
+
+@Html.Partial("_RestoreDeliveryModeOrder", Model)
+
+@if(error != null) {
+	<div class="alert alert-warning">
+		<strong>@Resources.RestoreDeliveryModeCannot</strong> @error
+	</div>
+	@Html.ActionLink(Resources.RestoreDeliveryModeSearchAgain, "RestoreDeliveryMode", null, new { @class = "btn btn-default" })
+} else {
+	<div class="panel panel-warning">
+		<div class="panel-heading"><strong>@Resources.RestoreDeliveryModeWhatChanges</strong> · @Resources.DeliveryMode</div>
+		<div class="panel-body">
+			<div class="restore-change">
+				<div class="side from"><span>@Resources.Current</span><strong>@Model.DeliveryMode.GetDisplayName()</strong></div>
+				<div class="arrow">→</div>
+				<div class="side to"><span>@Resources.New</span><strong>@DeliveryMode.ToBeDefined.GetDisplayName()</strong></div>
+			</div>
+			<ul class="restore-effects">
+				<li>@string.Format(Resources.RestoreDeliveryModeEffectButtons, DeliveryMode.PartialDeliveries.GetDisplayName (), DeliveryMode.PickUp.GetDisplayName ())</li>
+				<li>@Resources.RestoreDeliveryModeEffectNothingElse</li>
+				<li>@Resources.RestoreDeliveryModeEffectLogged</li>
+			</ul>
+			@using (Html.BeginForm("RestoreDeliveryMode", "EntitiesEditor", FormMethod.Post)) {
+				@Html.AntiForgeryToken()
+				<input type="hidden" name="id" value="@Model.Id" />
+				<button type="submit" class="btn btn-warning btn-lg">@string.Format(Resources.RestoreDeliveryModeConfirm, DeliveryMode.ToBeDefined.GetDisplayName ())</button>
+				@Html.ActionLink(Resources.Cancel, "RestoreDeliveryMode", null, new { @class = "btn btn-link btn-lg" })
+			}
+		</div>
+	</div>
+}

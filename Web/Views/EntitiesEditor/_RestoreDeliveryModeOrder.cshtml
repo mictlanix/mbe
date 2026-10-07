@@ -1,0 +1,17 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model SalesOrder
+<div class="panel panel-default">
+	<div class="panel-heading"><strong>@Resources.SalesOrder @Model.Id</strong></div>
+	<div class="panel-body restore-order">
+		<div><span>@Resources.Date</span>@Html.DisplayFor(x => x.Date)</div>
+		<div><span>@Resources.Customer</span>@(string.IsNullOrEmpty (Model.CustomerName) ? Model.Customer.Name : Model.CustomerName)</div>
+		<div><span>@Resources.SalesPerson</span>@Model.SalesPerson.Name</div>
+		<div><span>@Resources.Store</span>@Model.Store.Name</div>
+		<div><span>@Resources.Total</span>@Html.DisplayFor(x => x.Total) @Model.Currency.GetDisplayName()</div>
+		<div><span>@Resources.PaymentTerms</span>@Model.Terms.GetDisplayName()</div>
+		<div><span>@Resources.Paid</span>@(Model.IsPaid ? Resources.Yes : Resources.No)</div>
+		<div><span>@Resources.DeliveryMode</span>@Model.DeliveryMode.GetDisplayName()</div>
+	</div>
+</div>

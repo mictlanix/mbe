@@ -1,0 +1,25 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@{
+	ViewBag.Title = Resources.RestoreDeliveryMode;
+}
+<div class="page-header">
+	<h1>@Resources.RestoreDeliveryMode</h1>
+</div>
+
+@Html.Partial("_RestoreDeliveryModeSteps", 1)
+
+<p class="lead">@string.Format(Resources.RestoreDeliveryModeIntro, DeliveryMode.PickUp.GetDisplayName (), DeliveryMode.ToBeDefined.GetDisplayName ())</p>
+
+@if(ViewBag.Error != null) {
+	<div class="alert alert-danger">@ViewBag.Error</div>
+}
+
+@using(Html.BeginForm ("RestoreDeliveryModePreview", "EntitiesEditor", FormMethod.Get, new { @class = "form-inline" })) {
+	<div class="form-group">
+		<label for="id">@Resources.SalesOrderId</label>
+		<input type="number" id="id" name="id" min="1" required autofocus class="form-control" value="@Request.QueryString["id"]" />
+	</div>
+	<button type="submit" class="btn btn-primary">@Resources.RestoreDeliveryModeReview →</button>
+}
