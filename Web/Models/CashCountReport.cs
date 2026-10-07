@@ -38,6 +38,21 @@ using Mictlanix.BE.Model;
 
 namespace Mictlanix.BE.Web.Models {
 	public class CashCountReport {
+		// A payment is classified by type *and* sign (mictlanix/mbe#60). The database
+		// holds four conventions: type 0 (N/A) for sales and, negative, for refunds
+		// before 2024; credit notes recorded negative (2025-04 to 2025-07) and
+		// positive (since). A refund is a credit note or any negative payment, and is
+		// reported as the amount paid out; any other positive payment is a sale.
+		public static bool IsRefund (CustomerPayment payment)
+		{
+			return payment.PaymentType == PaymentType.CreditNote || payment.Amount < 0;
+		}
+
+		public static bool IsSale (CustomerPayment payment)
+		{
+			return !IsRefund (payment) && payment.Amount > 0;
+		}
+
 		[DisplayFormat (DataFormatString = "{0:000000}")]
 		public int SessionId { get; set; }
 
@@ -63,7 +78,7 @@ namespace Mictlanix.BE.Web.Models {
 		[Display (Name = "CashSales", ResourceType = typeof (Resources))]
 		public decimal CashSales {
 			get {
-				return Payments.Where (x => x.Method == PaymentMethod.Cash).Sum (x => x.Amount - x.Allocations.Sum (y => (decimal?) y.Change) ?? 0);
+				return PaymentsReceivedInCash;
 			}
 		}
 
@@ -71,8 +86,7 @@ namespace Mictlanix.BE.Web.Models {
 		[Display (Name = "CashSales", ResourceType = typeof (Resources))]
 		public List<MoneyCount> PaymentsReceivedByMethod {
 			get {
-				var types = new List<PaymentType>{ PaymentType.Immediate, PaymentType.CreditPayment, PaymentType.PaymentInAdvance};
-				var items = (from y in Payments.Where(x => types.Contains(x.PaymentType))
+				var items = (from y in Payments
 					    group y by y.Method into g
 					    select new MoneyCount { Method = g.Key, Amount = g.Sum(x => x.Amount - x.Allocations.Sum (y => (decimal?) y.Change) ?? 0) }).ToList();
 
@@ -115,10 +129,9 @@ namespace Mictlanix.BE.Web.Models {
 		[Display (Name = "Refunds", ResourceType = typeof (Resources))]
 		public List<MoneyCount> RefundsByMethod {
 			get {
-				var types = new List<PaymentType> { PaymentType.CreditNote };
-				var items = (from y in Payments.Where (x => types.Contains(x.PaymentType))
+				var items = (from y in Refunds
 					     group y by y.Method into g
-					     select new MoneyCount { Method = g.Key, Amount = g.Sum (x => (decimal?)x.Amount) ?? 0 }).ToList ();
+					     select new MoneyCount { Method = g.Key, Amount = g.Sum (x => (decimal?) Math.Abs (x.Amount)) ?? 0 }).ToList ();
 
 				return items;
 			}
@@ -148,6 +161,7 @@ namespace Mictlanix.BE.Web.Models {
 
 		public IList<CashCount> CashCounts { get; set; }
 		public IList<CustomerPayment> Expenses { get; set; }
+		// See IsRefund and IsSale.
 		public IList<CustomerPayment> Refunds { get; set; }
 		public IList<CustomerPayment> Payments { get; set; }
 	}

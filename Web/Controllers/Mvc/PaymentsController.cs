@@ -677,10 +677,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 								  PaymentType = PaymentType.Expense,
 								  Method = PaymentMethod.Cash,
 							  }).ToList ();
-			model.Refunds = session_payments.Where (x => x.PaymentType == PaymentType.CreditNote).ToList ();
+			model.Refunds = session_payments.Where (CashCountReport.IsRefund).ToList ();
 			model.CashCounts = session.CashCounts.Where (x => x.Type == CashCountType.CountedCash).ToList ();
-			model.Payments = session_payments.Where (x => x.PaymentType == PaymentType.Immediate
-					|| x.PaymentType == PaymentType.CreditPayment || x.PaymentType == PaymentType.PaymentInAdvance || x.PaymentType == PaymentType.CreditNote).ToList ();
+			model.Payments = session_payments.Where (CashCountReport.IsSale).ToList ();
 
 			return model;
 		}
