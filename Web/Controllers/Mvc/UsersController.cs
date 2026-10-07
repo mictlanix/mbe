@@ -43,6 +43,21 @@ using Mictlanix.BE.Web.Mvc;
 namespace Mictlanix.BE.Web.Controllers.Mvc {
 	[Authorize]
 	public class UsersController : CustomController {
+		// Every action here can grant privileges or IsAdministrator, so all of them
+		// are for administrators only. Read from the database rather than the login
+		// cookie, so a revoked administrator loses access straight away.
+		protected override void OnActionExecuting (ActionExecutingContext filterContext)
+		{
+			var user = Model.User.TryFind (User.Identity.Name);
+
+			if (user == null || !user.IsAdministrator) {
+				filterContext.Result = RedirectToAction ("Index", "Home");
+				return;
+			}
+
+			base.OnActionExecuting (filterContext);
+		}
+
 		public ActionResult Index ()
 		{
 			var qry = from x in Model.User.Queryable
