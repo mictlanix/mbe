@@ -611,6 +611,138 @@ namespace Mictlanix.BE.Web.Tests {
 			Assert.That (Reload (allocation).Payment.Amount, Is.EqualTo (100m));
 		}
 
+		// 10
+		[Test]
+		public void DeletePayment_RemovesItWithItsAllocationsAndRecordsIt ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update | AccessRight.Delete);
+			SalesOrderPayment first, second;
+			CustomerPayment payment;
+
+			using (new SessionScope ()) {
+				payment = seed.Payment (PaymentType.Immediate, 200m);
+				var a = seed.Order (paid: true);
+				var b = seed.Order (paid: true);
+				seed.Detail (a, 100m);
+				seed.Detail (b, 50m);
+				first = seed.Allocation (a, payment, 100m, change: 50m);
+				second = seed.Allocation (b, payment, 50m);
+			}
+
+			var controller = Controller ();
+			Assert.That (Request (() => controller.DeletePayment (payment.Id, Reason)), Is.InstanceOf<JsonResult> ());
+
+			using (new SessionScope ()) {
+				Assert.That (CustomerPayment.TryFind (payment.Id), Is.Null);
+				Assert.That (SalesOrderPayment.TryFind (first.Id), Is.Null);
+				Assert.That (SalesOrderPayment.TryFind (second.Id), Is.Null);
+				Assert.That (SalesOrder.Find (first.SalesOrder.Id).IsPaid, Is.False);
+				Assert.That (SalesOrder.Find (second.SalesOrder.Id).IsPaid, Is.False);
+			}
+
+			var record = Records (payment.Id).Single ();
+			Assert.That ((string) record ["Operation"], Is.EqualTo ("Delete"));
+			Assert.That ((decimal) record ["NetBefore"], Is.EqualTo (150m));
+			Assert.That ((decimal) record ["NetAfter"], Is.EqualTo (0m));
+			Assert.That ((decimal) record ["Amount"], Is.EqualTo (200m));
+			Assert.That ((int) record ["Customer"], Is.EqualTo (seed.Customer.Id));
+			Assert.That ((string) record ["Reference"], Is.EqualTo (Seed.Marker));
+			Assert.That (record ["Date"], Is.Not.Null);
+			Assert.That ((string) record ["Unpaid"], Is.EqualTo (first.SalesOrder.Id + ", " + second.SalesOrder.Id));
+		}
+
+		// 11
+		[Test]
+		public void DeletePayment_RefusesARefundWhoseAllocationCanBeReversed ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update | AccessRight.Delete);
+			SalesOrderPayment allocation;
+
+			using (new SessionScope ()) {
+				var order = seed.Order (paid: true);
+				seed.Detail (order, 100m);
+				allocation = seed.Allocation (order, seed.Payment (PaymentType.CreditNote, 100m), 100m);
+			}
+
+			var controller = Controller ();
+			Assert.That (Refused (controller, Request (() => controller.DeletePayment (allocation.Payment.Id, Reason))), Is.True);
+
+			controller = Controller ();
+			Assert.That (Request (() => controller.ReverseAllocation (allocation.Id, Reason)), Is.InstanceOf<JsonResult> ());
+			Assert.That ((bool) Records (allocation.Payment.Id).Single () ["CreditNote"], Is.True);
+		}
+
+		// 14 (delete)
+		[Test]
+		public void DeletePayment_RefusesToUnpayAnOrderWithAnActiveInvoice ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update | AccessRight.Delete);
+			var allocation = Paid (100m, 100m);
+
+			using (new SessionScope ()) {
+				seed.Invoice (SalesOrder.Find (allocation.SalesOrder.Id).Details.Single (), PaymentTerms.Immediate);
+			}
+
+			var controller = Controller ();
+			Assert.That (Refused (controller, Request (() => controller.DeletePayment (allocation.Payment.Id, Reason))), Is.True);
+
+			using (new SessionScope ()) {
+				Assert.That (CustomerPayment.TryFind (allocation.Payment.Id), Is.Not.Null);
+			}
+		}
+
+		[Test]
+		public void DeletePayment_RefusesAPaymentOnDelivery ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update | AccessRight.Delete);
+			int payment;
+
+			using (new SessionScope ()) {
+				payment = seed.Payment (PaymentType.Immediate, 100m).Id;
+			}
+
+			Sql ("INSERT INTO payment_on_delivery (customer_payment) VALUES (:id)", payment);
+
+			try {
+				var controller = Controller ();
+				Assert.That (Refused (controller, Request (() => controller.DeletePayment (payment, Reason))), Is.True);
+			} finally {
+				Sql ("DELETE FROM payment_on_delivery WHERE customer_payment = :id", payment);
+			}
+		}
+
+		[Test]
+		public void DeletePayment_NeedsTheDeleteRight ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update);
+			int payment;
+
+			using (new SessionScope ()) {
+				payment = seed.Payment (PaymentType.Immediate, 100m).Id;
+			}
+
+			var controller = Controller ();
+			Assert.That (Request (() => controller.DeletePayment (payment, Reason)), Is.InstanceOf<RedirectToRouteResult> ());
+
+			using (new SessionScope ()) {
+				Assert.That (CustomerPayment.TryFind (payment), Is.Not.Null);
+			}
+		}
+
+		static void Sql (string sql, int id)
+		{
+			using (new SessionScope ()) {
+				var holder = ActiveRecordMediator.GetSessionFactoryHolder ();
+				var session = holder.CreateSession (typeof (CustomerPayment));
+
+				try {
+					session.CreateSQLQuery (sql).SetInt32 ("id", id).ExecuteUpdate ();
+				} finally {
+					holder.ReleaseSession (session);
+				}
+			}
+		}
+
 		[Test]
 		public void ReverseAllocation_NeedsTheUpdateRight ()
 		{

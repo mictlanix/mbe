@@ -3323,4 +3323,7 @@ con  valor {1} ya existe</value>
   <data name="PaymentCorrectionBelowAllocated" xml:space="preserve">
     <value>El importe no puede ser menor que lo aplicado ({0:c}). Revierta una aplicación primero.</value>
   </data>
+  <data name="PaymentCorrectionOnDelivery" xml:space="preserve">
+    <value>El pago tiene un registro de pago contra entrega y no se puede borrar.</value>
+  </data>
 </root>

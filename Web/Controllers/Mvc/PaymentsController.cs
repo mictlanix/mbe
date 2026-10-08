@@ -755,6 +755,85 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return Json (new { id });
 		}
 
+		// Removes a payment that should never have been recorded, with its
+		// allocations (mictlanix/mbe#66 §6.4). The record keeps what the row held.
+		[HttpPost]
+		public ActionResult DeletePayment (int id, string reason)
+		{
+			var privilege = GetAccessPrivilege (SystemObjects.PaymentsEditor);
+
+			if (!privilege.AllowDelete) {
+				return RedirectToAction ("Index");
+			}
+
+			if (string.IsNullOrWhiteSpace (reason)) {
+				return Refuse (string.Format (Resources.Validation_Required, Resources.Comment));
+			}
+
+			var now = DateTime.Now;
+
+			using (var scope = new TransactionScope ()) {
+				var payment = PaymentCorrection.Lock<CustomerPayment> (id);
+
+				if (payment == null) {
+					return Refuse (Resources.ItemNotFound);
+				}
+
+				if (CashCountReport.IsRefund (payment)) {
+					return Refuse (Resources.PaymentCorrectionRefund);
+				}
+
+				if (HasPaymentOnDelivery (id)) {
+					return Refuse (Resources.PaymentCorrectionOnDelivery);
+				}
+
+				var allocations = payment.Allocations.ToList ();
+				var check = PaymentCorrection.Check (allocations.Select (x =>
+					new KeyValuePair<SalesOrder, decimal> (x.SalesOrder, -x.Amount)));
+
+				if (check.IsBlocked) {
+					return Refuse (string.Join (" ", check.Blocks));
+				}
+
+				var record = new CorrectionRecord ("Delete", payment, check)
+					.After (payment.Method, 0m)
+					.Set ("Serial", payment.Serial)
+					.Set ("Customer", payment.Customer.Id)
+					.Set ("Date", payment.Date)
+					.Set ("Amount", payment.Amount)
+					.Set ("Reference", payment.Reference);
+
+				foreach (var item in allocations) {
+					item.Delete ();
+				}
+
+				check.Apply (CurrentUser.Employee, now);
+				record.ToIncidence (CurrentUser.Employee, reason.Trim ()).Create ();
+
+				// Allocations is not inverse: deleting the payment with them still
+				// pending would first null their NOT NULL customer_payment.
+				scope.Flush ();
+				payment.DeleteAndFlush ();
+			}
+
+			return Json (new { id });
+		}
+
+		// payment_on_delivery has had no model since 35bbcb7, but its foreign key
+		// would still fail the delete.
+		static bool HasPaymentOnDelivery (int payment)
+		{
+			var holder = ActiveRecordMediator.GetSessionFactoryHolder ();
+			var session = holder.CreateSession (typeof (CustomerPayment));
+
+			try {
+				return Convert.ToInt64 (session.CreateSQLQuery ("SELECT COUNT(*) FROM payment_on_delivery WHERE customer_payment = :id")
+					.SetInt32 ("id", payment).UniqueResult ()) > 0;
+			} finally {
+				holder.ReleaseSession (session);
+			}
+		}
+
 		ActionResult Refuse (string message)
 		{
 			Response.StatusCode = 400;
