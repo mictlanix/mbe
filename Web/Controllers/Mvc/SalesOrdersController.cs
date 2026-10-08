@@ -118,6 +118,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ViewResult View (int id)
 		{
 			var item = SalesOrder.Find (id);
+			ViewBag.Error = TempData ["Error"];
 			return View (item);
 		}
 
@@ -1301,6 +1302,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			if (!(entity.IsCompleted ? privilege.AllowDelete : privilege.AllowUpdate)) {
 				return RedirectToAction ("Index");
+			}
+
+			// A correction un-paid it: its remaining payments have to be reversed first.
+			if (entity.Payments.Any () && PaymentCorrection.WasUnpaid (entity.Id)) {
+				TempData ["Error"] = Resources.PaymentCorrectionCancelAllocated;
+				return RedirectToAction ("View", new { id = entity.Id });
 			}
 
 			entity.Updater = CurrentUser.Employee;

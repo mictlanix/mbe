@@ -961,6 +961,72 @@ namespace Mictlanix.BE.Web.Tests {
 			Assert.That (CashCount (session).Amendments, Is.Empty);
 		}
 
+		// 16
+		[Test]
+		public void Cancel_WaitsUntilAnOrderACorrectionUnpaidHasNoAllocations ()
+		{
+			LogIn (AccessRight.None, administrator: true);
+			SalesOrderPayment first, second;
+
+			using (new SessionScope ()) {
+				var order = seed.Order (paid: true);
+				seed.Detail (order, 100m);
+				first = seed.Allocation (order, seed.Payment (PaymentType.Immediate, 60m), 60m);
+				second = seed.Allocation (order, seed.Payment (PaymentType.Immediate, 40m), 40m);
+			}
+
+			var payments = Controller ();
+			Assert.That (Request (() => payments.ReverseAllocation (second.Id, Reason)), Is.InstanceOf<JsonResult> ());
+
+			payments = Controller ();
+			Assert.That (Refused (payments, Request (() => payments.Cancel (first.SalesOrder.Id))), Is.True);
+
+			var orders = new SalesOrdersController ();
+			FakeHttpContext.Attach (orders, principal);
+			var result = Request (() => orders.Cancel (first.SalesOrder.Id));
+
+			Assert.That (((RedirectToRouteResult) result).RouteValues ["action"], Is.EqualTo ("View"));
+			Assert.That (orders.TempData ["Error"], Is.Not.Null);
+
+			using (new SessionScope ()) {
+				Assert.That (SalesOrder.Find (first.SalesOrder.Id).IsCancelled, Is.False);
+			}
+
+			payments = Controller ();
+			Assert.That (Request (() => payments.ReverseAllocation (first.Id, Reason)), Is.InstanceOf<JsonResult> ());
+
+			orders = new SalesOrdersController ();
+			FakeHttpContext.Attach (orders, principal);
+			Request (() => orders.Cancel (first.SalesOrder.Id));
+
+			using (new SessionScope ()) {
+				Assert.That (SalesOrder.Find (first.SalesOrder.Id).IsCancelled, Is.True);
+			}
+		}
+
+		[Test]
+		public void WasUnpaid_ComparesOrderIdsExactly ()
+		{
+			int order, payment;
+
+			using (new SessionScope ()) {
+				order = seed.Order ().Id;
+				payment = seed.Payment (PaymentType.Immediate, 100m).Id;
+
+				new Incidence {
+					SourceType = SourceType.CustomerPayment,
+					Reference = payment,
+					Updater = seed.Employee,
+					PreviousState = "{\"Operation\":\"Reverse\",\"Unpaid\":\"" + order + "0, 1" + order + "\"}",
+					ModificationTime = DateTime.Now
+				}.CreateAndFlush ();
+			}
+
+			using (new SessionScope ()) {
+				Assert.That (Services.PaymentCorrection.WasUnpaid (order), Is.False);
+			}
+		}
+
 		[Test]
 		public void ReverseAllocation_NeedsTheUpdateRight ()
 		{

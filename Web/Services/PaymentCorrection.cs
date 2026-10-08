@@ -32,6 +32,8 @@ using System.Linq;
 using Castle.ActiveRecord;
 using Mictlanix.BE.Model;
 using NHibernate;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Mictlanix.BE.Web.Services {
 	// What a payment correction would do to the orders it touches, worked out
@@ -109,6 +111,33 @@ namespace Mictlanix.BE.Web.Services {
 										      x.Order.SalesPerson == null ? string.Empty : x.Order.SalesPerson.Name).Trim ()));
 
 			return item;
+		}
+
+		// Whether a correction un-paid this order (§6.9), from the correction records.
+		// Ids are compared exactly: a LIKE on 123 would match 1234.
+		public static bool WasUnpaid (int order)
+		{
+			var id = order.ToString (CultureInfo.InvariantCulture);
+			var records = Incidence.Queryable
+				.Where (x => x.SourceType == SourceType.CustomerPayment && x.PreviousState.Contains ("\"Unpaid\""))
+				.Select (x => x.PreviousState)
+				.ToList ();
+
+			foreach (var record in records) {
+				JObject json;
+
+				try {
+					json = JObject.Parse (record);
+				} catch (JsonReaderException) {
+					continue;
+				}
+
+				if (json ["Operation"] != null && ((string) json ["Unpaid"] ?? string.Empty).Split (',').Any (x => x.Trim () == id)) {
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		// Loads a row and holds it until the surrounding TransactionScope ends, so two

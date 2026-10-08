@@ -5429,6 +5429,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Una corrección dejó este pedido sin pagar y aún tiene pagos aplicados. Revierta esas aplicaciones antes de cancelarlo..
+        /// </summary>
+        public static string PaymentCorrectionCancelAllocated {
+            get {
+                return ResourceManager.GetString("PaymentCorrectionCancelAllocated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a El cliente sólo puede cambiarse en un pago sin aplicaciones. Revierta sus aplicaciones primero..
         /// </summary>
         public static string PaymentCorrectionCustomerAllocated {

@@ -1544,6 +1544,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.SalesOrdersHasDeliveryOrders);
 			}
 
+			// Cancelling would delete or strand the payments still applied to it.
+			if (entity.Payments.Any () && PaymentCorrection.WasUnpaid (entity.Id)) {
+				return Refuse (Resources.PaymentCorrectionCancelAllocated);
+			}
+
 			using (var scope = new TransactionScope ()) {
 				foreach (var item in entity.Payments.Where (x => x.Payment.PaymentType == PaymentType.Immediate)) {
 					item.DeleteAndFlush ();

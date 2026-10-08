@@ -14,6 +14,10 @@
 <div id="master-section">
 	@Html.Partial("_DisplayView")
 </div>
+@if (!string.IsNullOrEmpty(ViewBag.Error))
+{
+	<div class="alert alert-danger" style="display:block;">@ViewBag.Error</div>
+}
 <div id="details-section">
     <div id="items-container">
         <ul id="items" class="list-items">
