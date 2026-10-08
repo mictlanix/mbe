@@ -88,6 +88,7 @@
     <Compile Include="CashCountClassificationTests.cs" />
     <Compile Include="CustomersControllerSearchTests.cs" />
     <Compile Include="CloseSessionViewTests.cs" />
+    <Compile Include="PrintedLabelTests.cs" />
     <Compile Include="PaymentsControllerAddPaymentTests.cs" />
     <Compile Include="PaymentsControllerApplyInAdvanceTests.cs" />
     <Compile Include="PaymentsControllerConfirmPaymentTests.cs" />
