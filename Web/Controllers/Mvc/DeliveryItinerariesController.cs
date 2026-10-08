@@ -149,36 +149,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View (item);
 		}
 
-		public ActionResult Create ()
-		{
-			//if (!CashHelpers.ValidateExchangeRate ()) {
-			//    return View ("InvalidExchangeRate");
-			//}
-
-			return PartialView ("_Create");
-		}
-
-		[HttpPost]
-		public ActionResult Create (DeliveriesItinerary item)
-		{
-			item.VehicleOperator = VehicleOperator.TryFind (item.VehicleOperatorId);
-			item.Vehicle = Vehicle.TryFind (item.VehicleId);
-
-			if (!ModelState.IsValid)
-				return PartialView ("_Create", item);
-
-			item.Creator = CurrentUser.Employee;
-			item.Updater = item.Creator;
-			item.CreationTime = DateTime.Now;
-			item.ModificationTime = item.CreationTime;
-
-			using (var scope = new TransactionScope ()) {
-				item.CreateAndFlush ();
-			}
-
-			return PartialView ("_CreateSuccesful", new DeliveriesItinerary { Id = item.Id });
-		}
-
 		[HttpPost]
 		public ActionResult New ()
 		{

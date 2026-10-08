@@ -66,47 +66,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View (search);
 		}
 
-		//public ActionResult Create ()
-		//{
-		//	var warehouse = UserSettings.Find (CurrentUser.Employee.Nickname).PointOfSale.Warehouse;
-		//	var item = new PurchaseRequest {
-		//		Warehouse = warehouse,
-		//		WarehouseId = warehouse.Id
-		//	};
-		//	return PartialView ("_Create", item);
-		//}
-
-		//[HttpPost]
-		//public ActionResult Create (PurchaseRequest item)
-		//{
-		//	//if (!(item.Quantity > 0)) {
-		//	//	ModelState.AddModelError (Resources.QuantityShort, Resources.Validation_CannotBeZeroOrNegative);
-		//	//}
-
-		//	//if (item.Product == null && item.Comment == string.Empty) {
-		//	//	ModelState.AddModelError (Resources.QuantityShort, Resources.ProductInfoRequired);
-		//	//}
-
-		//	if (!ModelState.IsValid) {
-		//		return PartialView ("_Create", item);
-		//	}
-
-		//	item.Creator = CurrentUser.Employee;
-		//	item.Updater = CurrentUser.Employee;
-		//	item.CreationTime = DateTime.Now;
-		//	item.ModificationTime = item.CreationTime;
-		//	item.Date = item.CreationTime;
-		//	item.Warehouse = Warehouse.Find (item.WarehouseId);
-		//	//item.Product = item.ProductId.HasValue ? Product.TryFind (item.ProductId) : null;
-		//	//item.Customer = item.CustomerId.HasValue ? Customer.TryFind (item.CustomerId) : null;
-
-		//	using (var scope = new TransactionScope ()) {
-		//		item.CreateAndFlush ();
-		//	}
-
-		//	return PartialView ("_Refresh");
-		//}
-
 		[HttpPost]
 		public ActionResult New ()
 		{
@@ -138,23 +97,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return RedirectToAction ("View");
 
 			return View ("Edit", item);
-		}
-
-		[HttpPost]
-		public ActionResult Edit (PurchaseRequest item)
-		{
-			var purchase_request = PurchaseRequest.Find (item.Id);
-
-			if (!ModelState.IsValid) {
-				return View ("_Edit", item);
-			}
-
-			using (var scope = new TransactionScope ()) {
-				purchase_request.UpdateAndFlush ();
-			}
-
-			//return PartialView ("_Refresh");
-			return View ("Index");
 		}
 
 		[HttpPost]
