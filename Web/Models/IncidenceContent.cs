@@ -72,7 +72,7 @@ namespace Mictlanix.BE.Web.Models {
 
 			foreach (var field in json.Properties ()) {
 				var property = type == null ? null : type.GetProperty (field.Name);
-				var value = Describe (field.Value, property);
+				var value = Describe (field.Value, property ?? Corrected (type, field.Name));
 
 				if (!string.IsNullOrEmpty (value)) {
 					item.Fields.Add (new KeyValuePair<string, string> (Label (field.Name, property), value));
@@ -108,6 +108,18 @@ namespace Mictlanix.BE.Web.Models {
 		{
 			var name = source == SourceType.Pricing ? "Product" : source.ToString ();
 			return typeof (Incidence).Assembly.GetType (typeof (Incidence).Namespace + "." + name);
+		}
+
+		// A payment correction records a changed field as …Before / …After: format the
+		// value as the field it names (MethodBefore by method name), label it by its own key.
+		static PropertyInfo Corrected (Type type, string field)
+		{
+			foreach (var suffix in new [] { "Before", "After" }) {
+				if (type != null && field.Length > suffix.Length && field.EndsWith (suffix, StringComparison.Ordinal)) {
+					return type.GetProperty (field.Substring (0, field.Length - suffix.Length));
+				}
+			}
+			return null;
 		}
 
 		static string Label (string field, PropertyInfo property)

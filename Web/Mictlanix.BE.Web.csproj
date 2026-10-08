@@ -320,6 +320,8 @@
     <Compile Include="Models\StoreMovementsSummaryViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\SalesOrderService.cs" />
+    <Compile Include="Services\PaymentCorrection.cs" />
+    <Compile Include="Services\CorrectionRecord.cs" />
     <Compile Include="Utils\Code128Content.cs" />
     <Compile Include="Utils\Code128Rendering.cs" />
     <Compile Include="Models\LocalSettings.cs" />

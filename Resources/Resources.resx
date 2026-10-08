@@ -3260,4 +3260,58 @@ con  valor {1} ya existe</value>
   <data name="RestoreDeliveryModeAnother" xml:space="preserve">
     <value>Restablecer otro pedido</value>
   </data>
+  <data name="AllocatedAmount" xml:space="preserve">
+    <value>Importe aplicado</value>
+  </data>
+  <data name="Allocation" xml:space="preserve">
+    <value>Aplicación</value>
+  </data>
+  <data name="AmountAfter" xml:space="preserve">
+    <value>Importe nuevo</value>
+  </data>
+  <data name="AmountBefore" xml:space="preserve">
+    <value>Importe anterior</value>
+  </data>
+  <data name="CustomerAfter" xml:space="preserve">
+    <value>Cliente nuevo</value>
+  </data>
+  <data name="CustomerBefore" xml:space="preserve">
+    <value>Cliente anterior</value>
+  </data>
+  <data name="Invoiced" xml:space="preserve">
+    <value>Facturado</value>
+  </data>
+  <data name="MethodAfter" xml:space="preserve">
+    <value>Método nuevo</value>
+  </data>
+  <data name="MethodBefore" xml:space="preserve">
+    <value>Método anterior</value>
+  </data>
+  <data name="NetAfter" xml:space="preserve">
+    <value>Neto nuevo</value>
+  </data>
+  <data name="NetBefore" xml:space="preserve">
+    <value>Neto anterior</value>
+  </data>
+  <data name="Operation" xml:space="preserve">
+    <value>Operación</value>
+  </data>
+  <data name="PaidAt" xml:space="preserve">
+    <value>Pagado el</value>
+  </data>
+  <data name="PaymentCorrectionInvoiceActive" xml:space="preserve">
+    <value>El pedido {0} quedaría sin pagar y tiene la factura {1} vigente. Cancélela primero.</value>
+  </data>
+  <data name="PaymentCorrectionReceiptsActive" xml:space="preserve">
+    <value>El pedido {0} quedaría sin pagar y la factura {1} tiene complementos de pago vigentes: {2}. Cancélelos primero.</value>
+  </data>
+  <data name="ReferenceAfter" xml:space="preserve">
+    <value>Referencia nueva</value>
+  </data>
+  <data name="ReferenceBefore" xml:space="preserve">
+    <value>Referencia anterior</value>
+  </data>
+  <data name="Unpaid" xml:space="preserve">
+    <value>Ya no pagados</value>
+  </data>
 </root>
