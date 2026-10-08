@@ -687,6 +687,29 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return null;
 		}
 
+		// The confirmation: what reversing it would do, without doing it.
+		public ActionResult ReverseAllocation (int id)
+		{
+			if (!GetAccessPrivilege (SystemObjects.PaymentsEditor).AllowUpdate) {
+				return RedirectToAction ("Index");
+			}
+
+			var item = SalesOrderPayment.TryFind (id);
+			var model = new PaymentCorrectionConfirmation { Operation = "Reverse", Action = "ReverseAllocation", Id = id };
+
+			if (item == null) {
+				model.Error = Resources.ItemNotFound;
+			} else {
+				model.Payment = item.Payment;
+				model.Amount = item.Amount;
+				model.Check = PaymentCorrection.Check (new [] {
+					new KeyValuePair<SalesOrder, decimal> (item.SalesOrder, -item.Amount)
+				});
+			}
+
+			return PartialView ("_CorrectPayment", model);
+		}
+
 		// Takes one allocation off its order and keeps the payment, which can then be
 		// applied again (mictlanix/mbe#66 §6.4). Its change comes off the payment's
 		// amount, so the payment's net -- and the cash count -- stay the same.
@@ -753,6 +776,31 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			return Json (new { id });
+		}
+
+		// The confirmation: what deleting it would do, without doing it.
+		public ActionResult DeletePayment (int id)
+		{
+			if (!GetAccessPrivilege (SystemObjects.PaymentsEditor).AllowDelete) {
+				return RedirectToAction ("Index");
+			}
+
+			var payment = CustomerPayment.TryFind (id);
+			var model = new PaymentCorrectionConfirmation { Operation = "Delete", Action = "DeletePayment", Id = id, Payment = payment };
+
+			if (payment == null) {
+				model.Error = Resources.ItemNotFound;
+			} else if (CashCountReport.IsRefund (payment)) {
+				model.Error = Resources.PaymentCorrectionRefund;
+			} else if (HasPaymentOnDelivery (id)) {
+				model.Error = Resources.PaymentCorrectionOnDelivery;
+			} else {
+				model.Amount = payment.Amount;
+				model.Check = PaymentCorrection.Check (payment.Allocations.Select (x =>
+					new KeyValuePair<SalesOrder, decimal> (x.SalesOrder, -x.Amount)));
+			}
+
+			return PartialView ("_CorrectPayment", model);
 		}
 
 		// Removes a payment that should never have been recorded, with its

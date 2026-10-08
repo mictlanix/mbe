@@ -37,21 +37,35 @@
 								<div class="col-sm-1 data text-center">@(item.PaymentType.GetDisplayName())</div>
 								<div class="col-sm-1 data text-center">@(WebConfig.PaymentMethodsVerificationRequired.Contains(item.Method) ? Resources.Yes: Resources.No)</div>
 																<div class="col-sm-1 data text-center">
-																				@foreach (var order in item.Allocations.Select(x => x.SalesOrder).Distinct())
+																@* Each allocation, so each can be reversed on its own. *@
+																@foreach (var allocation in item.Allocations)
+																{
+																				var order = allocation.SalesOrder;
+																				@Html.ActionLink((string)order.Id.ToString(zeros), "View", "SalesOrders", new { id = order.Id },
+																														 new { title = string.Join("\n", order.Details.Select(x => x.Quantity + " - " + x.ProductName)), target = "_blank" })
+																				if (Privilege.AllowUpdate && item.Allocations.Count > 1)
 																				{
-																								@Html.ActionLink((string)order.Id.ToString(zeros), "View", "SalesOrders", new { id = order.Id },
-																														 new { title = string.Join("\n", order.Details.Select(x => x.Quantity + " - " + x.ProductName)), target = "_blank" }) <br />
-
+																								@Html.ActionLink(" ", "ReverseAllocation", new { id = allocation.Id }, new { @class = "button icon cancel icon-only open-modal", title = Resources.Reverse, data_modal_id = "customer-payment-modal" })
 																				}
-																</div>
+																				<br />
+																}
+												</div>
 								<div class="col-sm-1">
 												@*@if (Privilege.AllowRead)
 												{
 																@Html.ActionLink(" ", "View", new { id = item.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
 												}*@
-												@if (Privilege.AllowUpdate)
+												@if (Privilege.AllowUpdate && !CashCountReport.IsRefund(item))
 												{
 																@Html.ActionLink(" ", "EditPayment", new { id = item.Id }, new { @class = "button icon edit icon-only open-modal", title = Resources.Edit, data_modal_id = "customer-payment-modal" })
+												}
+												@if (Privilege.AllowUpdate && item.Allocations.Count == 1)
+												{
+																@Html.ActionLink(" ", "ReverseAllocation", new { id = item.Allocations.Single().Id }, new { @class = "button icon cancel icon-only open-modal", title = Resources.Reverse, data_modal_id = "customer-payment-modal" })
+												}
+												@if (Privilege.AllowDelete && !CashCountReport.IsRefund(item))
+												{
+																@Html.ActionLink(" ", "DeletePayment", new { id = item.Id }, new { @class = "button icon delete icon-only open-modal", title = Resources.Delete, data_modal_id = "customer-payment-modal" })
 												}
 												@if (IncidencesPrivilege.AllowRead && item.CreationTime != item.ModificationTime)
 												{

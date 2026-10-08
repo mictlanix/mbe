@@ -14,7 +14,7 @@
 @using (Ajax.BeginForm("Index", null, new AjaxOptions { UpdateTargetId = "search-results", LoadingElementId = "activity-indicator", OnBegin = "onSearchBegin" }, new { id = "incidence-search" })) {
     @Html.HiddenFor(x => x.Offset)
     <div class="row">
-        <div class="col-xs-3">
+        <div class="col-xs-2">
             @Html.LabelFor(x => x.Source)
             <select id="Source" name="Source" class="form-control">
                 <option value="">@Resources.All</option>
@@ -34,6 +34,10 @@
         <div class="col-xs-3">
             @Html.LabelFor(x => x.EndDate)
             @Html.EditorFor(x => x.EndDate)
+        </div>
+        <div class="col-xs-1">
+            @Html.LabelFor(x => x.FollowUp)
+            @Html.CheckBoxFor(x => x.FollowUp)
         </div>
         <div class="col-xs-1">
             <label>&nbsp;</label>

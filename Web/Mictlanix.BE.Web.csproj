@@ -295,6 +295,7 @@
     <Compile Include="Models\CancellationStampViewModel.cs" />
     <Compile Include="Models\CashCountAmendment.cs" />
     <Compile Include="Models\CashCountReport.cs" />
+    <Compile Include="Models\PaymentCorrectionConfirmation.cs" />
     <Compile Include="Models\AccountsReceivableSummary.cs" />
     <Compile Include="Models\AccountsReceivableEntry.cs" />
     <Compile Include="Models\AccountsPayableEntry.cs" />
@@ -1407,6 +1408,7 @@
     <Content Include="Views\Payments\_Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\CustomerPayment.cshtml" />
     <Content Include="Views\Payments\_EditPayment.cshtml" />
+    <Content Include="Views\Payments\_CorrectPayment.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\PaymentMethodSelector.cshtml" />
     <Content Include="Views\Payments\_RefreshPayment.cshtml" />
     <Content Include="Views\Purchases\Approvals.cshtml" />

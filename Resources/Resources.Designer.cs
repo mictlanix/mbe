@@ -3253,6 +3253,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Con seguimiento.
+        /// </summary>
+        public static string FollowUp {
+            get {
+                return ResourceManager.GetString("FollowUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Órdenes de envío próximas.
         /// </summary>
         public static string FollowingDeliveryOrders {

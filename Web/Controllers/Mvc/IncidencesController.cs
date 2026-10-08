@@ -100,6 +100,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				query = query.Where (x => x.ModificationTime < end);
 			}
 
+			// Matched on the key, quotes and colon included, never on a value.
+			if (search.FollowUp) {
+				query = query.Where (x => x.SourceType == SourceType.CustomerPayment && (
+					x.PreviousState.Contains ("\"Invoiced\":") ||
+					x.PreviousState.Contains ("\"Delivered\":") ||
+					x.PreviousState.Contains ("\"Commission\":")));
+			}
+
 			search.Total = query.Count ();
 			search.Results = query.OrderByDescending (x => x.Id)
 					      .Skip (search.Offset).Take (search.Limit).ToList ();

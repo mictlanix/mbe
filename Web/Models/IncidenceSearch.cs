@@ -46,5 +46,10 @@ namespace Mictlanix.BE.Web.Models {
 		[DataType (DataType.Date)]
 		[Display (Name = "EndDate", ResourceType = typeof (Resources))]
 		public DateTime? EndDate { get; set; }
+
+		// Payment corrections that left work for billing, the supervisor or payroll
+		// (mictlanix/mbe#66 §6.7).
+		[Display (Name = "FollowUp", ResourceType = typeof (Resources))]
+		public bool FollowUp { get; set; }
 	}
 }

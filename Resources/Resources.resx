@@ -3341,4 +3341,7 @@ con  valor {1} ya existe</value>
   <data name="PaymentCorrectionCancelAllocated" xml:space="preserve">
     <value>Una corrección dejó este pedido sin pagar y aún tiene pagos aplicados. Revierta esas aplicaciones antes de cancelarlo.</value>
   </data>
+  <data name="FollowUp" xml:space="preserve">
+    <value>Con seguimiento</value>
+  </data>
 </root>

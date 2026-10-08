@@ -1027,6 +1027,136 @@ namespace Mictlanix.BE.Web.Tests {
 			}
 		}
 
+		PaymentCorrectionConfirmation Confirmation (Func<PaymentsController, ActionResult> action)
+		{
+			var controller = Controller ();
+
+			using (new SessionScope ()) {
+				var result = (PartialViewResult) action (controller);
+				var model = (PaymentCorrectionConfirmation) result.Model;
+
+				Assert.That (result.ViewName, Is.EqualTo ("_CorrectPayment"));
+				return model;
+			}
+		}
+
+		// 15
+		[Test]
+		public void FollowUps_AreShownAtConfirmationAndListedByTheFilter ()
+		{
+			LogIn (AccessRight.None, administrator: true);
+			var allocation = Paid (100m, 100m);
+			int delivery;
+
+			using (new SessionScope ()) {
+				delivery = seed.Delivery (SalesOrder.Find (allocation.SalesOrder.Id).Details.Single ()).Id;
+			}
+
+			var confirmation = Confirmation (x => x.ReverseAllocation (allocation.Id));
+
+			Assert.That (confirmation.IsRefused, Is.False);
+			Assert.That (confirmation.Amount, Is.EqualTo (100m));
+			Assert.That (confirmation.Check.Unpaid.Single ().Order.Id, Is.EqualTo (allocation.SalesOrder.Id));
+			Assert.That (confirmation.Check.Delivered, Is.EqualTo (allocation.SalesOrder.Id + ": " + delivery));
+			Assert.That (confirmation.Check.Commission, Does.StartWith (allocation.SalesOrder.Id + ": "));
+
+			var controller = Controller ();
+			Assert.That (Request (() => controller.ReverseAllocation (allocation.Id, Reason)), Is.InstanceOf<JsonResult> ());
+
+			var incidences = new IncidencesController ();
+			FakeHttpContext.Attach (incidences, principal);
+
+			using (new SessionScope ()) {
+				var listed = (IncidenceSearch) ((ViewResult) incidences.Index (new IncidenceSearch {
+					Reference = allocation.Payment.Id, FollowUp = true
+				})).Model;
+				var all = (IncidenceSearch) ((ViewResult) incidences.Index (new IncidenceSearch {
+					Reference = allocation.SalesOrder.Id, FollowUp = true
+				})).Model;
+
+				Assert.That (listed.Results.Single ().SourceType, Is.EqualTo (SourceType.CustomerPayment));
+				Assert.That (all.Results.Where (x => x.SourceType != SourceType.CustomerPayment), Is.Empty);
+			}
+		}
+
+		// 14 (confirmation)
+		[Test]
+		public void Confirmation_NamesTheInvoiceToCancelInsteadOfAskingForAReason ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update | AccessRight.Delete);
+			var allocation = Paid (100m, 100m);
+
+			using (new SessionScope ()) {
+				seed.Invoice (SalesOrder.Find (allocation.SalesOrder.Id).Details.Single (), PaymentTerms.Immediate);
+			}
+
+			var reverse = Confirmation (x => x.ReverseAllocation (allocation.Id));
+			var delete = Confirmation (x => x.DeletePayment (allocation.Payment.Id));
+
+			Assert.That (reverse.IsRefused, Is.True);
+			Assert.That (reverse.Check.Blocks.Single (), Does.Contain ("TEST000001"));
+			Assert.That (delete.IsRefused, Is.True);
+			Assert.That (delete.Check.Blocks.Single (), Does.Contain ("TEST000001"));
+		}
+
+		// 17
+		[Test]
+		public void UpdateWithoutDelete_EditsAndReversesButCannotDelete ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update);
+			var allocation = Paid (100m, 150m);
+			var controller = Controller ();
+
+			Assert.That (Request (() => controller.DeletePayment (allocation.Payment.Id)), Is.InstanceOf<RedirectToRouteResult> ());
+			Assert.That (Edited (Edit (allocation.Payment.Id, 120m)), Is.True);
+
+			controller = Controller ();
+			Assert.That (Request (() => controller.ReverseAllocation (allocation.Id, Reason)), Is.InstanceOf<JsonResult> ());
+		}
+
+		// 17
+		[Test]
+		public void Administrator_CanDoAllThreeWithoutTheRight ()
+		{
+			LogIn (AccessRight.None, administrator: true);
+			var first = Paid (100m, 150m);
+			var second = Paid (100m, 100m);
+
+			Assert.That (Edited (Edit (first.Payment.Id, 120m)), Is.True);
+
+			var controller = Controller ();
+			Assert.That (Request (() => controller.ReverseAllocation (first.Id, Reason)), Is.InstanceOf<JsonResult> ());
+
+			controller = Controller ();
+			Assert.That (Request (() => controller.DeletePayment (second.Payment.Id, Reason)), Is.InstanceOf<JsonResult> ());
+		}
+
+		// 19
+		[Test]
+		public void IncidenceDetails_ShowBeforeAndAfterMethodsByNameAndFollowUps ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update);
+			var allocation = Paid (100m, 100m);
+
+			using (new SessionScope ()) {
+				seed.Invoice (SalesOrder.Find (allocation.SalesOrder.Id).Details.Single (), PaymentTerms.Immediate);
+			}
+
+			Assert.That (Edited (Edit (allocation.Payment.Id, 100m, PaymentMethod.CreditCard)), Is.True);
+
+			using (new SessionScope ()) {
+				var incidence = Incidence.Queryable.Single (x => x.SourceType == SourceType.CustomerPayment &&
+									     x.Reference == allocation.Payment.Id);
+				var fields = IncidenceContent.Parse (incidence).Fields;
+
+				Assert.That (fields, Does.Contain (new KeyValuePair<string, string> (Resources.MethodBefore, PaymentMethod.Cash.GetDisplayName ())));
+				Assert.That (fields, Does.Contain (new KeyValuePair<string, string> (Resources.MethodAfter, PaymentMethod.CreditCard.GetDisplayName ())));
+				Assert.That (fields, Does.Contain (new KeyValuePair<string, string> (Resources.Invoiced, allocation.SalesOrder.Id + ": TEST000001")));
+				Assert.That (fields.Select (x => x.Key), Does.Contain (Resources.NetBefore).And.Contain (Resources.NetAfter));
+				Assert.That (IncidenceContent.Parse (incidence).IsPostChangeSnapshot, Is.False);
+			}
+		}
+
 		[Test]
 		public void ReverseAllocation_NeedsTheUpdateRight ()
 		{

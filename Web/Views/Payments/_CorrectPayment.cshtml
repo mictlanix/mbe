@@ -1,0 +1,84 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model PaymentCorrectionConfirmation
+@{
+	var unpaid = Model.Check == null ? string.Empty : string.Join(", ", Model.Check.Unpaid.Select(x => x.Order.Id.ToString("D8")));
+}
+
+<div class='modal-header'>
+	<button type='button' class='close' data-dismiss='modal'>&times;</button>
+	<h3>@Resources.ResourceManager.GetString(Model.Operation)</h3>
+</div>
+<div class='modal-body'>
+	@if (Model.Payment != null)
+	{
+		<p>
+			@Resources.Payment @Model.Payment.Id.ToString("D8") &middot; @Model.Payment.Customer.Name &middot;
+			@Model.Payment.Method.GetDisplayName() &middot; @Model.Amount.ToString("c")
+		</p>
+	}
+
+	@if (Model.Error != null)
+	{
+		<div class="alert alert-danger" style="display:block;">@Model.Error</div>
+	}
+	else if (Model.Check.IsBlocked)
+	{
+		@* Instead of a reason: the documents to cancel first. *@
+		<div class="alert alert-danger" style="display:block;">
+			@foreach (var item in Model.Check.Blocks)
+			{
+				<p>@item</p>
+			}
+		</div>
+	}
+	else
+	{
+		<dl class="dl-horizontal">
+			@if (unpaid.Length > 0)
+			{
+				<dt>@Resources.Unpaid</dt>
+				<dd>@unpaid</dd>
+			}
+			@if (Model.Check.Invoiced != null)
+			{
+				<dt>@Resources.Invoiced</dt>
+				<dd>@Model.Check.Invoiced</dd>
+			}
+			@if (Model.Check.Delivered != null)
+			{
+				<dt>@Resources.Delivered</dt>
+				<dd>@Model.Check.Delivered</dd>
+			}
+			@if (Model.Check.Commission != null)
+			{
+				<dt>@Resources.Commission</dt>
+				<dd>@Model.Check.Commission</dd>
+			}
+		</dl>
+		<div class="form-group field-required">
+			<label for="correction-reason">@Resources.Comment</label>
+			<textarea id="correction-reason" class="form-control" rows="2" maxlength="500"></textarea>
+		</div>
+		<div id="correction-error" class="alert alert-danger" style="display:none;"></div>
+	}
+</div>
+<div class='modal-footer'>
+	<button type='button' class='btn btn-default' data-dismiss='modal'>@Resources.Discard</button>
+	@if (!Model.IsRefused)
+	{
+		<button id="correction-confirm" type='button' class='btn btn-danger'>@Resources.ResourceManager.GetString(Model.Operation)</button>
+	}
+</div>
+<script type='text/javascript'>
+$('#correction-confirm').click(function () {
+	$.post('@Url.Action(Model.Action, new { id = Model.Id })', { reason: $('#correction-reason').val() }, function () {
+		$('.refreshable').loadUrl();
+		$('#customer-payment-modal').modal('hide');
+	}, 'json').fail(function (e) {
+		$('#correction-error').text(e.responseText).show();
+	});
+});
+</script>
