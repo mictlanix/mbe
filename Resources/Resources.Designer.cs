@@ -5411,6 +5411,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a El pago quedaría aplicado por más de su importe..
+        /// </summary>
+        public static string PaymentCorrectionOverAllocated {
+            get {
+                return ResourceManager.GetString("PaymentCorrectionOverAllocated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a El pedido {0} quedaría sin pagar y la factura {1} tiene complementos de pago vigentes: {2}. Cancélelos primero..
         /// </summary>
         public static string PaymentCorrectionReceiptsActive {

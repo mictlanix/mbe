@@ -610,6 +610,80 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_RefreshPayment");
 		}
 
+		// Takes one allocation off its order and keeps the payment, which can then be
+		// applied again (mictlanix/mbe#66 §6.4). Its change comes off the payment's
+		// amount, so the payment's net -- and the cash count -- stay the same.
+		[HttpPost]
+		public ActionResult ReverseAllocation (int id, string reason)
+		{
+			var privilege = GetAccessPrivilege (SystemObjects.PaymentsEditor);
+
+			if (!privilege.AllowUpdate) {
+				return RedirectToAction ("Index");
+			}
+
+			if (string.IsNullOrWhiteSpace (reason)) {
+				return Refuse (string.Format (Resources.Validation_Required, Resources.Comment));
+			}
+
+			var found = SalesOrderPayment.TryFind (id);
+
+			if (found == null) {
+				return Refuse (Resources.ItemNotFound);
+			}
+
+			var now = DateTime.Now;
+
+			using (var scope = new TransactionScope ()) {
+				// The payment first, as every correction locks it.
+				var payment = PaymentCorrection.Lock<CustomerPayment> (found.Payment.Id);
+				var item = PaymentCorrection.Lock<SalesOrderPayment> (id);
+
+				if (payment == null || item == null) {
+					return Refuse (Resources.ItemNotFound);
+				}
+
+				var check = PaymentCorrection.Check (new [] {
+					new KeyValuePair<SalesOrder, decimal> (item.SalesOrder, -item.Amount)
+				});
+
+				if (check.IsBlocked) {
+					return Refuse (string.Join (" ", check.Blocks));
+				}
+
+				var others = payment.Allocations.Where (x => x.Id != item.Id).ToList ();
+
+				if (payment.Amount - item.Change < others.Sum (x => x.Amount + x.Change)) {
+					return Refuse (Resources.PaymentCorrectionOverAllocated);
+				}
+
+				var net = CorrectionRecord.Net (payment);
+				var record = new CorrectionRecord ("Reverse", payment, check)
+					.After (payment.Method, net)
+					.Set ("Allocation", item.Id)
+					.Set ("AllocatedAmount", item.Amount)
+					.Set ("Change", item.Change == 0m ? (decimal?) null : item.Change)
+					.Set ("CreditNote", payment.PaymentType == PaymentType.CreditNote ? (bool?) true : null);
+
+				payment.Amount -= item.Change;
+				payment.Updater = CurrentUser.Employee;
+				payment.ModificationTime = now;
+
+				item.Delete ();
+				check.Apply (CurrentUser.Employee, now);
+				record.ToIncidence (CurrentUser.Employee, reason.Trim ()).Create ();
+				payment.UpdateAndFlush ();
+			}
+
+			return Json (new { id });
+		}
+
+		ActionResult Refuse (string message)
+		{
+			Response.StatusCode = 400;
+			return Content (message);
+		}
+
 		public ActionResult Print (int id)
 		{
 			var model = SalesOrder.Find (id);

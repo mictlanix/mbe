@@ -122,13 +122,39 @@ namespace Mictlanix.BE.Web.Services {
 			try {
 				var item = session.Get<T> (id);
 
-				if (item != null) {
+				if (item == null) {
+					return null;
+				}
+
+				// Gone by the time the lock was granted: deleted by the transaction it
+				// waited on. NHibernate has already dropped it from the session.
+				try {
 					session.Refresh (item, LockMode.Upgrade);
+				} catch (UnresolvableObjectException) {
+					return null;
 				}
 
 				return item;
 			} finally {
 				holder.ReleaseSession (session);
+			}
+		}
+
+		// Each touched order as its balance after the correction leaves it (§6.4).
+		// Delivery mode is left alone.
+		public void Apply (Employee updater, DateTime now)
+		{
+			foreach (var item in Orders) {
+				var order = item.Order;
+
+				if (order.IsPaid != item.IsPaid) {
+					order.IsPaid = item.IsPaid;
+					order.BalanceZeroedTime = item.IsPaid ? now : (DateTime?) null;
+				}
+
+				order.Updater = updater;
+				order.ModificationTime = now;
+				order.Update ();
 			}
 		}
 

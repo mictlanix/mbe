@@ -3314,4 +3314,7 @@ con  valor {1} ya existe</value>
   <data name="Unpaid" xml:space="preserve">
     <value>Ya no pagados</value>
   </data>
+  <data name="PaymentCorrectionOverAllocated" xml:space="preserve">
+    <value>El pago quedaría aplicado por más de su importe.</value>
+  </data>
 </root>
