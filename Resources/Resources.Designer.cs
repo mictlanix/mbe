@@ -4014,15 +4014,6 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a El elemento sólo puede ser modificado una vez..
-        /// </summary>
-        public static string ItemCanBeChangedOnlyOnce {
-            get {
-                return ResourceManager.GetString("ItemCanBeChangedOnlyOnce", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Busca una cadena traducida similar a {0} Cancelado.
         /// </summary>
         public static string ItemCancelled {
@@ -5402,6 +5393,24 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a El importe no puede ser menor que lo aplicado ({0:c}). Revierta una aplicación primero..
+        /// </summary>
+        public static string PaymentCorrectionBelowAllocated {
+            get {
+                return ResourceManager.GetString("PaymentCorrectionBelowAllocated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a El cliente sólo puede cambiarse en un pago sin aplicaciones. Revierta sus aplicaciones primero..
+        /// </summary>
+        public static string PaymentCorrectionCustomerAllocated {
+            get {
+                return ResourceManager.GetString("PaymentCorrectionCustomerAllocated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a El pedido {0} quedaría sin pagar y tiene la factura {1} vigente. Cancélela primero..
         /// </summary>
         public static string PaymentCorrectionInvoiceActive {
@@ -5425,6 +5434,15 @@ namespace Mictlanix.BE {
         public static string PaymentCorrectionReceiptsActive {
             get {
                 return ResourceManager.GetString("PaymentCorrectionReceiptsActive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Las devoluciones se corrigen en su propio módulo..
+        /// </summary>
+        public static string PaymentCorrectionRefund {
+            get {
+                return ResourceManager.GetString("PaymentCorrectionRefund", resourceCulture);
             }
         }
         

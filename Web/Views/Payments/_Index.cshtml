@@ -49,7 +49,7 @@
 												{
 																@Html.ActionLink(" ", "View", new { id = item.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
 												}*@
-												@if (Privilege.AllowUpdate && item.CreationTime == item.ModificationTime)
+												@if (Privilege.AllowUpdate)
 												{
 																@Html.ActionLink(" ", "EditPayment", new { id = item.Id }, new { @class = "button icon edit icon-only open-modal", title = Resources.Edit, data_modal_id = "customer-payment-modal" })
 												}

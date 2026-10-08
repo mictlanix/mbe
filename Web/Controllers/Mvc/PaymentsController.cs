@@ -568,46 +568,123 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_EditPayment", CustomerPayment.Find (id));
 		}
 
+		// Fixes a payment's amount, method, customer or reference (mictlanix/mbe#66 §6.4).
+		// Its type isn't editable. A single allocation is refitted to the new amount;
+		// with several, the amount can't drop below what they hold.
 		[HttpPost]
-		public ActionResult EditPayment (CustomerPayment item)
+		public ActionResult EditPayment (CustomerPayment item, int? customer, string reason)
 		{
-
 			var privilege = GetAccessPrivilege (SystemObjects.PaymentsEditor);
 
 			if (!privilege.AllowUpdate) {
 				return RedirectToAction ("Index");
 			}
 
-			var payment = CustomerPayment.Find (item.Id);
-			if (payment.CreationTime != payment.ModificationTime) {
-				ModelState.AddModelError (string.Empty, Resources.ItemCanBeChangedOnlyOnce);
+			if (string.IsNullOrWhiteSpace (reason)) {
+				ModelState.AddModelError (string.Empty, string.Format (Resources.Validation_Required, Resources.Comment));
 			}
 
-			if (ModelState.IsValid) {
-				// Snapshot before touching the payment: a second Find in this session
-				// returns the same instance, already holding the new values.
-				var incidence = new Incidence {
-					SourceType = SourceType.CustomerPayment,
-					Reference = item.Id,
-					Updater = CurrentUser.Employee,
-					PreviousState = JsonConvert.SerializeObject (payment.GetSerializable ()),
-					ModificationTime = DateTime.Now,
-				};
+			if (!ModelState.IsValid) {
+				return PartialView ("_EditPayment", CustomerPayment.Find (item.Id));
+			}
+
+			var now = DateTime.Now;
+
+			using (var scope = new TransactionScope ()) {
+				var payment = PaymentCorrection.Lock<CustomerPayment> (item.Id);
+				var error = EditPaymentError (payment, item, customer);
+
+				if (error != null) {
+					ModelState.AddModelError (string.Empty, error);
+					return PartialView ("_EditPayment", payment ?? item);
+				}
+
+				var target = customer.HasValue && customer.Value != payment.Customer.Id ? Customer.Find (customer.Value) : null;
+				var allocation = payment.Allocations.Count == 1 ? payment.Allocations.Single () : null;
+				var allocated = allocation == null ? 0m : allocation.Amount;
+				var change = allocation == null ? 0m : allocation.Change;
+
+				// Takes as much as the order can; for cash the rest is change, as
+				// AddPayment does. Otherwise it stays as credit: a correction records what
+				// the customer was really charged.
+				if (allocation != null) {
+					allocated = Math.Min (item.Amount, allocation.Amount + allocation.SalesOrder.Balance);
+					change = item.Method == PaymentMethod.Cash ? item.Amount - allocated : 0m;
+				}
+
+				var check = PaymentCorrection.Check (allocation == null ? new KeyValuePair<SalesOrder, decimal> [0] : new [] {
+					new KeyValuePair<SalesOrder, decimal> (allocation.SalesOrder, allocated - allocation.Amount)
+				});
+
+				if (check.IsBlocked) {
+					ModelState.AddModelError (string.Empty, string.Join (" ", check.Blocks));
+					return PartialView ("_EditPayment", payment);
+				}
+
+				var record = new CorrectionRecord ("Edit", payment, check);
+
+				if (payment.Amount != item.Amount) {
+					record.Set ("AmountBefore", payment.Amount).Set ("AmountAfter", item.Amount);
+				}
+
+				if (target != null) {
+					record.Set ("CustomerBefore", payment.Customer.Id).Set ("CustomerAfter", target.Id);
+					payment.Customer = target;
+				}
+
+				if ((payment.Reference ?? string.Empty) != (item.Reference ?? string.Empty)) {
+					record.Set ("ReferenceBefore", payment.Reference).Set ("ReferenceAfter", item.Reference);
+				}
 
 				payment.Amount = item.Amount;
 				payment.Method = item.Method;
-				payment.PaymentType = item.PaymentType;
-				payment.ModificationTime = DateTime.Now;
+				payment.Reference = item.Reference;
 				payment.Updater = CurrentUser.Employee;
+				payment.ModificationTime = now;
 
-				using (var scope = new TransactionScope ()) {
-					incidence.Create ();
-					payment.UpdateAndFlush ();
+				if (allocation != null) {
+					allocation.Amount = allocated;
+					allocation.Change = change;
+					allocation.Update ();
 				}
-			} else {
-				return PartialView ("_EditPayment", item);
+
+				check.Apply (CurrentUser.Employee, now);
+				record.After (payment.Method, CorrectionRecord.Net (payment));
+				record.ToIncidence (CurrentUser.Employee, reason.Trim ()).Create ();
+				payment.UpdateAndFlush ();
 			}
+
 			return PartialView ("_RefreshPayment");
+		}
+
+		// The refusals that don't need the check (§6.3).
+		static string EditPaymentError (CustomerPayment payment, CustomerPayment item, int? customer)
+		{
+			if (payment == null) {
+				return Resources.ItemNotFound;
+			}
+
+			if (CashCountReport.IsRefund (payment)) {
+				return Resources.PaymentCorrectionRefund;
+			}
+
+			if (customer.HasValue && customer.Value != payment.Customer.Id) {
+				if (Customer.TryFind (customer.Value) == null) {
+					return Resources.ItemNotFound;
+				}
+
+				if (payment.Allocations.Any ()) {
+					return Resources.PaymentCorrectionCustomerAllocated;
+				}
+			}
+
+			var allocated = payment.Allocations.Sum (x => x.Amount + x.Change);
+
+			if (payment.Allocations.Count > 1 && item.Amount < allocated) {
+				return string.Format (Resources.PaymentCorrectionBelowAllocated, allocated);
+			}
+
+			return null;
 		}
 
 		// Takes one allocation off its order and keeps the payment, which can then be

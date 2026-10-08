@@ -2840,9 +2840,6 @@ con  valor {1} ya existe</value>
     <value>Consulta de Créditos en Todas Las Tiendas</value>
     <comment>Habilita la consulta de créditos en todas las tiendas. Por defecto la consulta de créditos sólo devuelve los que corresponden a la tienda actual.</comment>
   </data>
-  <data name="ItemCanBeChangedOnlyOnce" xml:space="preserve">
-    <value>El elemento sólo puede ser modificado una vez.</value>
-  </data>
   <data name="PaymentsEditor" xml:space="preserve">
     <value>Corrección de Datos de Pagos</value>
   </data>
@@ -3316,5 +3313,14 @@ con  valor {1} ya existe</value>
   </data>
   <data name="PaymentCorrectionOverAllocated" xml:space="preserve">
     <value>El pago quedaría aplicado por más de su importe.</value>
+  </data>
+  <data name="PaymentCorrectionRefund" xml:space="preserve">
+    <value>Las devoluciones se corrigen en su propio módulo.</value>
+  </data>
+  <data name="PaymentCorrectionCustomerAllocated" xml:space="preserve">
+    <value>El cliente sólo puede cambiarse en un pago sin aplicaciones. Revierta sus aplicaciones primero.</value>
+  </data>
+  <data name="PaymentCorrectionBelowAllocated" xml:space="preserve">
+    <value>El importe no puede ser menor que lo aplicado ({0:c}). Revierta una aplicación primero.</value>
   </data>
 </root>

@@ -22,16 +22,33 @@
 				</div>
 </div>
 <div class="form-group">
-				<div class="col-xs-12 field-required">
-								@Html.LabelFor(x => x.PaymentType)
-								@Html.EditorFor(x => x.PaymentType)
-								@Html.ValidationMessageFor(x => x.PaymentType)
-				</div>
+	<div class="col-xs-12">
+		@Html.LabelFor(x => x.Customer): @(Model.Customer == null ? string.Empty : Model.Customer.Name)
+		@* A different customer, only for a payment with no allocations. Not CustomerSelector:
+		   Html.Editor ("customer") would resolve to Model.Customer. *@
+		<input type="text" id="customer" name="customer" />
+		<script type="text/javascript">
+			$("#customer").tokenInput("@Url.Action("GetSuggestions", "Customers")", {
+				hintText: "@Resources.ChooseCustomer",
+				noResultsText: "@Resources.NoResultsText",
+				searchingText: "@Resources.SearchingText",
+				queryParam: "pattern",
+				minChars: 1,
+				tokenLimit: 1
+			});
+		</script>
+	</div>
 </div>
 <div class="form-group">
     <div class="col-xs-12 field-required">@Html.LabelFor(x => x.Reference)
 				@Html.EditorFor(x => x.Reference)
 				@Html.ValidationMessageFor(x => x.Reference)</div>
+</div>
+<div class="form-group">
+	<div class="col-xs-12 field-required">
+		<label for="reason">@Resources.Comment</label>
+		<textarea id="reason" name="reason" class="form-control" rows="2" maxlength="500"></textarea>
+	</div>
 </div>
 <div class="form-group">
 				@Html.ValidationSummary()

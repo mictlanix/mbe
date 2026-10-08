@@ -37,6 +37,7 @@ using Mictlanix.BE.Web.Helpers;
 using Mictlanix.BE.Web.Security;
 using Mictlanix.BE.Web.Tests.Infrastructure;
 using Newtonsoft.Json.Linq;
+using NHibernate;
 using NUnit.Framework;
 
 namespace Mictlanix.BE.Web.Tests {
@@ -372,6 +373,242 @@ namespace Mictlanix.BE.Web.Tests {
 			using (new SessionScope ()) {
 				Assert.That (CustomerPayment.Find (allocation.Payment.Id).Amount, Is.EqualTo (100m));
 			}
+		}
+
+		ActionResult Edit (int payment, decimal amount, PaymentMethod method = PaymentMethod.Cash,
+				   int? customer = null, string reason = Reason)
+		{
+			var controller = Controller ();
+
+			return Request (() => controller.EditPayment (new CustomerPayment {
+				Id = payment,
+				Amount = amount,
+				Method = method,
+				Reference = Seed.Marker
+			}, customer, reason));
+		}
+
+		static bool Edited (ActionResult result)
+		{
+			return result is PartialViewResult && ((PartialViewResult) result).ViewName == "_RefreshPayment";
+		}
+
+		static SalesOrderPayment Reload (SalesOrderPayment allocation)
+		{
+			using (new SessionScope ()) {
+				var item = SalesOrderPayment.Find (allocation.Id);
+				NHibernateUtil.Initialize (item.Payment);
+				NHibernateUtil.Initialize (item.Payment.Allocations);
+				NHibernateUtil.Initialize (item.SalesOrder);
+				return item;
+			}
+		}
+
+		// 5
+		[Test]
+		public void EditPayment_LowerAmountUnpaysTheOrder ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update);
+			var allocation = Paid (100m, 100m);
+
+			Assert.That (Edited (Edit (allocation.Payment.Id, 80m)), Is.True);
+
+			var item = Reload (allocation);
+			Assert.That (item.Amount, Is.EqualTo (80m));
+			Assert.That (item.Change, Is.EqualTo (0m));
+			Assert.That (item.Payment.Amount, Is.EqualTo (80m));
+			Assert.That (item.SalesOrder.IsPaid, Is.False);
+			Assert.That (item.SalesOrder.BalanceZeroedTime, Is.Null);
+
+			var record = Records (allocation.Payment.Id).Single ();
+			Assert.That ((string) record ["Operation"], Is.EqualTo ("Edit"));
+			Assert.That ((decimal) record ["AmountBefore"], Is.EqualTo (100m));
+			Assert.That ((decimal) record ["AmountAfter"], Is.EqualTo (80m));
+			Assert.That ((decimal) record ["NetBefore"], Is.EqualTo (100m));
+			Assert.That ((decimal) record ["NetAfter"], Is.EqualTo (80m));
+			Assert.That ((string) record ["Unpaid"], Is.EqualTo (allocation.SalesOrder.Id.ToString ()));
+			Assert.That (record ["ReferenceBefore"], Is.Null);
+		}
+
+		// 6
+		[Test]
+		public void EditPayment_LowerTenderedCashOnlyShrinksTheChange ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update);
+			var allocation = Paid (100m, 150m);
+
+			Assert.That (Edited (Edit (allocation.Payment.Id, 120m)), Is.True);
+
+			var item = Reload (allocation);
+			Assert.That (item.Amount, Is.EqualTo (100m));
+			Assert.That (item.Change, Is.EqualTo (20m));
+			Assert.That (item.SalesOrder.IsPaid, Is.True);
+
+			var record = Records (allocation.Payment.Id).Single ();
+			Assert.That ((decimal) record ["NetBefore"], Is.EqualTo (100m));
+			Assert.That ((decimal) record ["NetAfter"], Is.EqualTo (100m));
+			Assert.That (record ["Unpaid"], Is.Null);
+		}
+
+		SalesOrderPayment Underpaid ()
+		{
+			using (new SessionScope ()) {
+				var order = seed.Order ();
+				seed.Detail (order, 100m);
+				return seed.Allocation (order, seed.Payment (PaymentType.Immediate, 60m), 60m);
+			}
+		}
+
+		// 7
+		[Test]
+		public void EditPayment_RaiseInCashPaysTheOrderAndGivesChange ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update);
+			var allocation = Underpaid ();
+
+			Assert.That (Edited (Edit (allocation.Payment.Id, 130m)), Is.True);
+
+			var item = Reload (allocation);
+			Assert.That (item.Amount, Is.EqualTo (100m));
+			Assert.That (item.Change, Is.EqualTo (30m));
+			Assert.That (item.SalesOrder.IsPaid, Is.True);
+			Assert.That (item.SalesOrder.BalanceZeroedTime, Is.Not.Null);
+			Assert.That (item.Payment.Balance, Is.EqualTo (0m));
+		}
+
+		// 7
+		[Test]
+		public void EditPayment_RaiseByCardPaysTheOrderAndKeepsTheRestAsCredit ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update);
+			var allocation = Underpaid ();
+
+			Assert.That (Edited (Edit (allocation.Payment.Id, 130m, PaymentMethod.CreditCard)), Is.True);
+
+			var item = Reload (allocation);
+			Assert.That (item.Amount, Is.EqualTo (100m));
+			Assert.That (item.Change, Is.EqualTo (0m));
+			Assert.That (item.SalesOrder.IsPaid, Is.True);
+			Assert.That (item.Payment.Balance, Is.EqualTo (30m));
+		}
+
+		// 8
+		[Test]
+		public void EditPayment_ChangesTheMethod ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update);
+			var allocation = Paid (100m, 100m);
+
+			Assert.That (Edited (Edit (allocation.Payment.Id, 100m, PaymentMethod.CreditCard)), Is.True);
+
+			Assert.That (Reload (allocation).Payment.Method, Is.EqualTo (PaymentMethod.CreditCard));
+
+			var record = Records (allocation.Payment.Id).Single ();
+			Assert.That ((int) record ["MethodBefore"], Is.EqualTo ((int) PaymentMethod.Cash));
+			Assert.That ((int) record ["MethodAfter"], Is.EqualTo ((int) PaymentMethod.CreditCard));
+			Assert.That ((decimal) record ["NetAfter"], Is.EqualTo (100m));
+			Assert.That (record ["AmountBefore"], Is.Null);
+		}
+
+		// 9
+		[Test]
+		public void EditPayment_ChangesTheCustomerOnlyWithoutAllocations ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update);
+			var allocation = Paid (100m, 100m);
+			int other, unallocated;
+
+			using (new SessionScope ()) {
+				other = Customer.Queryable.First (x => x.Id != seed.Customer.Id).Id;
+				unallocated = seed.Payment (PaymentType.Immediate, 50m).Id;
+			}
+
+			Assert.That (Edited (Edit (allocation.Payment.Id, 100m, customer: other)), Is.False);
+			Assert.That (Reload (allocation).Payment.Customer.Id, Is.EqualTo (seed.Customer.Id));
+
+			Assert.That (Edited (Edit (unallocated, 50m, customer: other)), Is.True);
+
+			using (new SessionScope ()) {
+				Assert.That (CustomerPayment.Find (unallocated).Customer.Id, Is.EqualTo (other));
+			}
+
+			var record = Records (unallocated).Single ();
+			Assert.That ((int) record ["CustomerBefore"], Is.EqualTo (seed.Customer.Id));
+			Assert.That ((int) record ["CustomerAfter"], Is.EqualTo (other));
+			Assert.That ((decimal) record ["NetAfter"], Is.EqualTo ((decimal) record ["NetBefore"]));
+		}
+
+		[Test]
+		public void EditPayment_KeepsSeveralAllocationsCovered ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update);
+			int payment;
+
+			using (new SessionScope ()) {
+				var item = seed.Payment (PaymentType.Immediate, 150m);
+				var a = seed.Order (paid: true);
+				var b = seed.Order (paid: true);
+				seed.Detail (a, 100m);
+				seed.Detail (b, 50m);
+				seed.Allocation (a, item, 100m);
+				seed.Allocation (b, item, 50m);
+				payment = item.Id;
+			}
+
+			Assert.That (Edited (Edit (payment, 140m)), Is.False);
+			Assert.That (Edited (Edit (payment, 200m)), Is.True);
+
+			using (new SessionScope ()) {
+				var item = CustomerPayment.Find (payment);
+				Assert.That (item.Amount, Is.EqualTo (200m));
+				Assert.That (item.Balance, Is.EqualTo (50m));
+			}
+		}
+
+		// 11 (edit)
+		[Test]
+		public void EditPayment_RefusesARefund ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update);
+			int payment;
+
+			using (new SessionScope ()) {
+				payment = seed.Payment (PaymentType.CreditNote, 100m).Id;
+			}
+
+			Assert.That (Edited (Edit (payment, 50m)), Is.False);
+
+			using (new SessionScope ()) {
+				Assert.That (CustomerPayment.Find (payment).Amount, Is.EqualTo (100m));
+			}
+		}
+
+		// 14 (edit)
+		[Test]
+		public void EditPayment_RecordsTheInvoiceOfAnOrderThatStaysPaid ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update);
+			var allocation = Paid (100m, 100m);
+
+			using (new SessionScope ()) {
+				seed.Invoice (SalesOrder.Find (allocation.SalesOrder.Id).Details.Single (), PaymentTerms.Immediate);
+			}
+
+			Assert.That (Edited (Edit (allocation.Payment.Id, 80m)), Is.False, "un-pays an invoiced order");
+			Assert.That (Edited (Edit (allocation.Payment.Id, 100m, PaymentMethod.CreditCard)), Is.True);
+			Assert.That ((string) Records (allocation.Payment.Id).Single () ["Invoiced"],
+				     Is.EqualTo (allocation.SalesOrder.Id + ": TEST000001"));
+		}
+
+		// 18 (edit)
+		[Test]
+		public void EditPayment_RefusesAnEmptyReason ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update);
+			var allocation = Paid (100m, 100m);
+
+			Assert.That (Edited (Edit (allocation.Payment.Id, 80m, reason: "")), Is.False);
+			Assert.That (Reload (allocation).Payment.Amount, Is.EqualTo (100m));
 		}
 
 		[Test]
