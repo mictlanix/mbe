@@ -1085,9 +1085,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			//		ORDER BY cp.customer_payment_id;";
 
 
-			var payments = CustomerPayment.Queryable.Where (x =>
-					(x.PaymentType == PaymentType.PaymentInAdvance || x.PaymentType == PaymentType.CreditPayment)
-					&& !x.Allocations.Any (y => y.SalesOrder == entity)
+			var payments = CustomerPayment.Queryable.ForSales ().Where (x =>
+					!x.Allocations.Any (y => y.SalesOrder == entity)
 					&& x.Customer == entity.Customer
 					&& (x.Amount -
 						(x.Allocations.Sum (y => (decimal?) (y.Amount + y.Change)) ?? 0)

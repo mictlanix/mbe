@@ -38,8 +38,8 @@ namespace Mictlanix.BE.Web.Tests {
 	// large prepayment could be applied past the order total. Its siblings
 	// (ApplyCreditNotes, ApplyCreditNote, AccountsReceivables.ApplyPayment) clamp.
 	//
-	// The action draws on every open prepayment of the order's customer, so these
-	// rely on Seed's customer having none of its own.
+	// The action draws on every open payment of the order's customer, so these rely
+	// on Seed's customer -- created for the test -- having none of its own.
 	[TestFixture]
 	public class PaymentsControllerApplyInAdvanceTests {
 		Seed seed;

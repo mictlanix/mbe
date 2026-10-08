@@ -33,6 +33,7 @@ using System.Web.Mvc;
 using Castle.ActiveRecord;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Controllers.Mvc;
+using Mictlanix.BE.Web.Helpers;
 using Mictlanix.BE.Web.Security;
 using Mictlanix.BE.Web.Tests.Infrastructure;
 using Newtonsoft.Json.Linq;
@@ -207,6 +208,69 @@ namespace Mictlanix.BE.Web.Tests {
 				Assert.That (b.IsPaid, Is.True);
 				Assert.That (b.ModificationTime, Is.EqualTo (modified).Within (TimeSpan.FromSeconds (1)));
 				Assert.That (CustomerPayment.Find (first.Payment.Id).Balance, Is.EqualTo (100m));
+			}
+		}
+
+		// 4
+		[Test]
+		public void ReversedPayment_IsOfferedAgainAndReappliesThroughAccountsReceivable ()
+		{
+			var allocation = Reversed ();
+			var receivables = new AccountsReceivablesController ();
+			FakeHttpContext.Attach (receivables, principal);
+
+			using (new SessionScope ()) {
+				var order = SalesOrder.Find (allocation.SalesOrder.Id);
+				var view = (PartialViewResult) receivables.ApplyPayment (order.Id);
+				var offered = (IEnumerable<CustomerPayment>) view.ViewData ["Payments"];
+
+				Assert.That (offered.Select (x => x.Id), Does.Contain (allocation.Payment.Id));
+				Assert.That (order.Customer.PrepaymentsBalance (order), Is.EqualTo (100m));
+			}
+
+			Request (() => receivables.ApplyPayment (new SalesOrderPayment {
+				SalesOrder = new SalesOrder { Id = allocation.SalesOrder.Id },
+				PaymentId = allocation.Payment.Id,
+				Amount = 100m
+			}));
+
+			AssertReapplied (allocation);
+		}
+
+		// 4
+		[Test]
+		public void ReversedPayment_ReappliesThroughThePointOfSale ()
+		{
+			var allocation = Reversed ();
+			var controller = Controller ();
+
+			Assert.That (Request (() => controller.ApplyInAdvancePayment (allocation.SalesOrder.Id, 100m)), Is.InstanceOf<JsonResult> ());
+
+			AssertReapplied (allocation);
+		}
+
+		SalesOrderPayment Reversed ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update);
+			var allocation = Paid (100m, 100m);
+			var controller = Controller ();
+
+			Assert.That (Request (() => controller.ReverseAllocation (allocation.Id, Reason)), Is.InstanceOf<JsonResult> ());
+
+			return allocation;
+		}
+
+		void AssertReapplied (SalesOrderPayment reversed)
+		{
+			using (new SessionScope ()) {
+				var order = SalesOrder.Find (reversed.SalesOrder.Id);
+				var allocation = order.Payments.Single ();
+
+				seed.Track (allocation);
+
+				Assert.That (allocation.Payment.Id, Is.EqualTo (reversed.Payment.Id));
+				Assert.That (allocation.Amount, Is.EqualTo (100m));
+				Assert.That (order.Balance, Is.EqualTo (0m));
 			}
 		}
 

@@ -39,8 +39,9 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 	// it commits on its own. Rolling back an outer transaction therefore isolates
 	// nothing, and every row a test creates has to be deleted by id instead.
 	//
-	// Only new rows are ever written. Stores, customers, employees and points of sale
-	// are read from whatever the target database already holds and are never modified.
+	// Only new rows are ever written. Stores, employees and points of sale are read
+	// from whatever the target database already holds and are never modified; the
+	// customer is created, so no real payment of its own is ever in reach.
 	public sealed class Seed : IDisposable {
 		public const string Marker = "MBE-TEST";
 
@@ -57,6 +58,7 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 		readonly List<CashDrawer> drawers = new List<CashDrawer> ();
 		readonly List<AccessPrivilege> privileges = new List<AccessPrivilege> ();
 		readonly List<User> users = new List<User> ();
+		readonly List<Customer> customers = new List<Customer> ();
 
 		public Store Store { get; private set; }
 		public PointOfSale PointOfSale { get; private set; }
@@ -68,7 +70,26 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 			PointOfSale = PointOfSale.Queryable.First ();
 			Store = PointOfSale.Store;
 			Employee = Employee.Queryable.First (x => x.IsSalesPerson);
-			Customer = Customer.Queryable.First ();
+			Customer = TestCustomer (Customer.Queryable.First ().PriceList);
+		}
+
+		// A customer of its own: the apply-payment actions draw on every unallocated
+		// payment of the order's customer, and a real one may have plenty.
+		Customer TestCustomer (PriceList prices)
+		{
+			var item = new Customer {
+				Code = Marker,
+				Name = "Test Customer",
+				CreditLimit = 0m,
+				CreditDays = 0,
+				PriceList = prices,
+				Creator = Employee
+			};
+
+			item.CreateAndFlush ();
+			customers.Add (item);
+
+			return item;
 		}
 
 		// PaymentsController.AddPayment needs an open cash session: it reads
@@ -442,6 +463,10 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 
 			foreach (var item in users) {
 				Remove (Model.User.TryFind (item.UserName));
+			}
+
+			foreach (var item in customers) {
+				Remove (Model.Customer.TryFind (item.Id));
 			}
 		}
 
