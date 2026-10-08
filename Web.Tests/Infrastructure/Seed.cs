@@ -119,12 +119,15 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 			return session;
 		}
 
-		// A payment taken in a session that has since been counted.
+		// A payment taken in a session that has since been counted. It ended a minute
+		// ago: datetime columns keep whole seconds, and a correction made in the same
+		// second as the close wouldn't count as made after it.
 		public CashSession ClosedCashSession ()
 		{
 			var session = OpenCashSession ();
 
-			session.End = DateTime.Now;
+			session.Start = DateTime.Now.AddHours (-1);
+			session.End = DateTime.Now.AddMinutes (-1);
 			session.UpdateAndFlush ();
 
 			return session;

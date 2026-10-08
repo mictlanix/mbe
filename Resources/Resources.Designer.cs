@@ -674,6 +674,33 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Correcciones posteriores al cierre.
+        /// </summary>
+        public static string CashCountAmendments {
+            get {
+                return ResourceManager.GetString("CashCountAmendments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Al cierre.
+        /// </summary>
+        public static string CashCountAsSigned {
+            get {
+                return ResourceManager.GetString("CashCountAsSigned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Corregido.
+        /// </summary>
+        public static string CashCountCorrected {
+            get {
+                return ResourceManager.GetString("CashCountCorrected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Caja.
         /// </summary>
         public static string CashDrawer {
@@ -7063,6 +7090,15 @@ namespace Mictlanix.BE {
         public static string ReturnsSummary {
             get {
                 return ResourceManager.GetString("ReturnsSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Revertir.
+        /// </summary>
+        public static string Reverse {
+            get {
+                return ResourceManager.GetString("Reverse", resourceCulture);
             }
         }
         

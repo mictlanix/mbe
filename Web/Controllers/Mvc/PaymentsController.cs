@@ -911,6 +911,20 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			model.CashCounts = session.CashCounts.Where (x => x.Type == CashCountType.CountedCash).ToList ();
 			model.Payments = session_payments.Where (CashCountReport.IsSale).ToList ();
 
+			// Corrections of this session's payments made after it was counted.
+			if (session.End.HasValue) {
+				var end = session.End.Value;
+
+				model.Amendments = Incidence.Queryable
+					.Where (x => x.SourceType == SourceType.CustomerPayment && x.ModificationTime > end &&
+						x.PreviousState.Contains ("\"Operation\""))
+					.ToList ()
+					.Select (CashCountAmendment.Parse)
+					.Where (x => x != null && x.Session == session.Id)
+					.OrderBy (x => x.Time)
+					.ToList ();
+			}
+
 			return model;
 		}
 

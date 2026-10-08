@@ -8,6 +8,28 @@
 				ViewBag.Store = Model.CashDrawer.Store;
 				ViewBag.SkipAddress = true;
 }
+@helper MethodTotals (IEnumerable<MoneyCount> items) {
+				foreach (var item in items)
+				{
+								<tr>
+												<td class="right">
+																@item.Method.GetDisplayName() :
+												</td>
+
+												<td class="number">
+																@((item.Amount).ToString("c"))
+												</td>
+								</tr>
+				}
+				<tr>
+								<td class="line right">
+												@Resources.Total :
+								</td>
+								<td class="line number">
+												@items.Sum(x => x.Amount).ToString("c")
+								</td>
+				</tr>
+}
 <table>
 				<tr>
 								<th colspan="2" class="line center">
@@ -72,26 +94,38 @@
 								</td>
 				</tr>
 
-				@foreach (var item in Model.PaymentsReceivedByMethod)
+				@if (Model.Amendments.Any())
 				{
+								@* Counted cash never changes: the totals as signed, each
+								   correction made since, and the totals as they stand now. *@
 								<tr>
-												<td class="right">
-																@item.Method.GetDisplayName() :
-												</td>
-
-												<td class="number">
-																@((item.Amount).ToString("c"))
-												</td>
+												<td colspan="2" class="center">@Resources.CashCountAsSigned</td>
+								</tr>
+								@MethodTotals(Model.SignedByMethod)
+								<tr>
+												<td colspan="2" class="center">@Resources.CashCountAmendments</td>
+								</tr>
+								foreach (var item in Model.Amendments)
+								{
+												<tr>
+																<td colspan="2" class="left">
+																				@item.Payment.ToString("D8") @(Resources.ResourceManager.GetString(item.Operation) ?? item.Operation)
+																</td>
+												</tr>
+												<tr>
+																<td class="right">@item.MethodBefore.GetDisplayName() :</td>
+																<td class="number">@((-item.NetBefore).ToString("c"))</td>
+												</tr>
+												<tr>
+																<td class="right">@item.MethodAfter.GetDisplayName() :</td>
+																<td class="number">@item.NetAfter.ToString("c")</td>
+												</tr>
+								}
+								<tr>
+												<td colspan="2" class="center">@Resources.CashCountCorrected</td>
 								</tr>
 				}
-				<tr>
-								<td class="line right">
-												@Resources.Total :
-								</td>
-								<td class="line number">
-												@Model.PaymentsReceivedByMethod.Sum(x => x.Amount).ToString("c")
-								</td>
-				</tr>
+				@MethodTotals(Model.PaymentsReceivedByMethod)
 				<tr>
 								<td colspan="2" class="line title center">
 												@Resources.Refunds

@@ -94,6 +94,23 @@ namespace Mictlanix.BE.Web.Models {
 			}
 		}
 
+		// The totals as the cashier signed them: today's, with the effect of every
+		// correction made since undone (mictlanix/mbe#66 §6.8).
+		public List<MoneyCount> SignedByMethod {
+			get {
+				var totals = PaymentsReceivedByMethod.ToDictionary (x => x.Method, x => x.Amount);
+
+				foreach (var item in Amendments) {
+					totals [item.MethodBefore] = (totals.ContainsKey (item.MethodBefore) ? totals [item.MethodBefore] : 0m) + item.NetBefore;
+					totals [item.MethodAfter] = (totals.ContainsKey (item.MethodAfter) ? totals [item.MethodAfter] : 0m) - item.NetAfter;
+				}
+
+				return totals.Where (x => x.Value != 0m)
+					.Select (x => new MoneyCount { Method = x.Key, Amount = x.Value })
+					.OrderBy (x => x.Method).ToList ();
+			}
+		}
+
 		public decimal PaymentsReceivedInCash {
 			get {
 				return PaymentsReceivedByMethod.Where (x => x.Method == PaymentMethod.Cash).Sum (x => (decimal?) x.Amount) ?? 0;
@@ -164,6 +181,7 @@ namespace Mictlanix.BE.Web.Models {
 		// See IsRefund and IsSale.
 		public IList<CustomerPayment> Refunds { get; set; }
 		public IList<CustomerPayment> Payments { get; set; }
+		public IList<CashCountAmendment> Amendments { get; set; } = new List<CashCountAmendment> ();
 	}
 
 }

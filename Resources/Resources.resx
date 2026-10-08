@@ -3326,4 +3326,16 @@ con  valor {1} ya existe</value>
   <data name="PaymentCorrectionOnDelivery" xml:space="preserve">
     <value>El pago tiene un registro de pago contra entrega y no se puede borrar.</value>
   </data>
+  <data name="CashCountAsSigned" xml:space="preserve">
+    <value>Al cierre</value>
+  </data>
+  <data name="CashCountAmendments" xml:space="preserve">
+    <value>Correcciones posteriores al cierre</value>
+  </data>
+  <data name="CashCountCorrected" xml:space="preserve">
+    <value>Corregido</value>
+  </data>
+  <data name="Reverse" xml:space="preserve">
+    <value>Revertir</value>
+  </data>
 </root>

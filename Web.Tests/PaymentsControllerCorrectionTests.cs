@@ -34,6 +34,7 @@ using Castle.ActiveRecord;
 using Mictlanix.BE.Model;
 using Mictlanix.BE.Web.Controllers.Mvc;
 using Mictlanix.BE.Web.Helpers;
+using Mictlanix.BE.Web.Models;
 using Mictlanix.BE.Web.Security;
 using Mictlanix.BE.Web.Tests.Infrastructure;
 using Newtonsoft.Json.Linq;
@@ -741,6 +742,223 @@ namespace Mictlanix.BE.Web.Tests {
 					holder.ReleaseSession (session);
 				}
 			}
+		}
+
+		// The cash count as the close-session screen shows it.
+		sealed class Count {
+			public Dictionary<PaymentMethod, decimal> Signed;
+			public Dictionary<PaymentMethod, decimal> Current;
+			public IList<CashCountAmendment> Amendments;
+			public decimal Counted;
+		}
+
+		Count CashCount (int session)
+		{
+			var controller = Controller ();
+
+			using (new SessionScope ()) {
+				var model = (CashCountReport) ((ViewResult) controller.CloseSessionConfirmed (session)).Model;
+
+				return new Count {
+					Signed = model.SignedByMethod.ToDictionary (x => x.Method, x => x.Amount),
+					Current = model.PaymentsReceivedByMethod.Where (x => x.Amount != 0m).ToDictionary (x => x.Method, x => x.Amount),
+					Amendments = model.Amendments,
+					Counted = model.CountedCash
+				};
+			}
+		}
+
+		int ClosedSession ()
+		{
+			using (new SessionScope ()) {
+				return seed.ClosedCashSession ().Id;
+			}
+		}
+
+		static Dictionary<PaymentMethod, decimal> Totals (params object [] pairs)
+		{
+			var items = new Dictionary<PaymentMethod, decimal> ();
+
+			for (var i = 0; i < pairs.Length; i += 2) {
+				items [(PaymentMethod) pairs [i]] = Convert.ToDecimal (pairs [i + 1]);
+			}
+
+			return items;
+		}
+
+		// Runs one correction on a counted session: the totals as signed don't move,
+		// the count lists it once with its effect, and today's totals carry it.
+		void AssertAmended (int session, Func<ActionResult> correct, string operation,
+				    Dictionary<PaymentMethod, decimal> current)
+		{
+			var before = CashCount (session);
+
+			Assert.That (before.Amendments, Is.Empty);
+			var result = correct ();
+			Assert.That (result is JsonResult || Edited (result), Is.True, "corrected");
+
+			var after = CashCount (session);
+			var item = after.Amendments.Single ();
+
+			Assert.That (after.Signed, Is.EquivalentTo (before.Current), "as signed");
+			Assert.That (after.Current, Is.EquivalentTo (current), "corrected");
+			Assert.That (after.Counted, Is.EqualTo (before.Counted), "counted cash");
+			Assert.That (item.Operation, Is.EqualTo (operation));
+			Assert.That (item.Comment, Is.EqualTo (Reason));
+		}
+
+		// 1, 2 (closed)
+		[Test]
+		public void Closed_ReverseIsListedWithNoEffect ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update);
+			var session = ClosedSession ();
+			var allocation = Paid (100m, 150m, CashSession.Find (session));
+			var controller = Controller ();
+
+			AssertAmended (session, () => Request (() => controller.ReverseAllocation (allocation.Id, Reason)),
+				       "Reverse", Totals (PaymentMethod.Cash, 100m));
+		}
+
+		// 5 (closed)
+		[Test]
+		public void Closed_LowerAmountTakesTheDifferenceOut ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update);
+			var session = ClosedSession ();
+			var allocation = Paid (100m, 100m, CashSession.Find (session));
+
+			AssertAmended (session, () => Edit (allocation.Payment.Id, 80m), "Edit", Totals (PaymentMethod.Cash, 80m));
+		}
+
+		// 6 (closed)
+		[Test]
+		public void Closed_LowerTenderedCashLeavesTheCount ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update);
+			var session = ClosedSession ();
+			var allocation = Paid (100m, 150m, CashSession.Find (session));
+
+			AssertAmended (session, () => Edit (allocation.Payment.Id, 120m), "Edit", Totals (PaymentMethod.Cash, 100m));
+		}
+
+		// 7 (closed)
+		[Test]
+		public void Closed_RaiseAddsTheNet ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update);
+			var session = ClosedSession ();
+			int payment;
+
+			using (new SessionScope ()) {
+				var order = seed.Order ();
+				seed.Detail (order, 100m);
+				var item = seed.Payment (PaymentType.Immediate, 60m, PaymentMethod.Cash, CashSession.Find (session));
+				seed.Allocation (order, item, 60m);
+				payment = item.Id;
+			}
+
+			AssertAmended (session, () => Edit (payment, 130m), "Edit", Totals (PaymentMethod.Cash, 100m));
+		}
+
+		// 8 (closed)
+		[Test]
+		public void Closed_MethodChangeMovesTheNet ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update);
+			var session = ClosedSession ();
+			var allocation = Paid (100m, 100m, CashSession.Find (session));
+
+			AssertAmended (session, () => Edit (allocation.Payment.Id, 100m, PaymentMethod.CreditCard), "Edit",
+				       Totals (PaymentMethod.CreditCard, 100m));
+		}
+
+		// 9 (closed)
+		[Test]
+		public void Closed_CustomerChangeIsListedWithNoEffect ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update);
+			var session = ClosedSession ();
+			int payment, other;
+
+			using (new SessionScope ()) {
+				payment = seed.Payment (PaymentType.Immediate, 50m, PaymentMethod.Cash, CashSession.Find (session)).Id;
+				other = Customer.Queryable.First (x => x.Id != seed.Customer.Id).Id;
+			}
+
+			AssertAmended (session, () => Edit (payment, 50m, customer: other), "Edit", Totals (PaymentMethod.Cash, 50m));
+		}
+
+		// 10 (closed)
+		[Test]
+		public void Closed_DeleteTakesTheNetOut ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update | AccessRight.Delete);
+			var session = ClosedSession ();
+			var allocation = Paid (100m, 100m, CashSession.Find (session));
+			var controller = Controller ();
+
+			AssertAmended (session, () => Request (() => controller.DeletePayment (allocation.Payment.Id, Reason)),
+				       "Delete", Totals ());
+		}
+
+		// 12
+		[Test]
+		public void Closed_SeveralCorrectionsAreListedEachAndAddUp ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update | AccessRight.Delete);
+			var session = ClosedSession ();
+			var first = Paid (100m, 100m, CashSession.Find (session));
+			var second = Paid (50m, 50m, CashSession.Find (session));
+			var third = Paid (30m, 30m, CashSession.Find (session));
+			var before = CashCount (session);
+
+			Assert.That (Edited (Edit (first.Payment.Id, 100m, PaymentMethod.CreditCard)), Is.True);
+			Assert.That (Edited (Edit (second.Payment.Id, 40m)), Is.True);
+			var controller = Controller ();
+			Assert.That (Request (() => controller.DeletePayment (third.Payment.Id, Reason)), Is.InstanceOf<JsonResult> ());
+
+			var after = CashCount (session);
+
+			Assert.That (after.Signed, Is.EquivalentTo (Totals (PaymentMethod.Cash, 180m)));
+			Assert.That (after.Signed, Is.EquivalentTo (before.Current));
+			Assert.That (after.Current, Is.EquivalentTo (Totals (PaymentMethod.Cash, 40m, PaymentMethod.CreditCard, 100m)));
+			Assert.That (after.Amendments.Select (x => x.Payment),
+				     Is.EqualTo (new [] { first.Payment.Id, second.Payment.Id, third.Payment.Id }));
+			Assert.That (after.Counted, Is.EqualTo (before.Counted));
+		}
+
+		// 13
+		[Test]
+		public void Closed_WithoutCorrectionsTheCountIsAsBefore ()
+		{
+			LogIn (AccessRight.Read);
+			var session = ClosedSession ();
+			Paid (100m, 150m, CashSession.Find (session));
+
+			var count = CashCount (session);
+
+			Assert.That (count.Amendments, Is.Empty);
+			Assert.That (count.Signed, Is.EquivalentTo (count.Current));
+			Assert.That (count.Current, Is.EquivalentTo (Totals (PaymentMethod.Cash, 100m)));
+		}
+
+		// 1 (open): corrected before the count, so nothing to amend.
+		[Test]
+		public void Open_CorrectionIsNotAnAmendment ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update);
+			int session;
+
+			using (new SessionScope ()) {
+				session = seed.OpenCashSession ().Id;
+			}
+
+			var allocation = Paid (100m, 100m, CashSession.Find (session));
+
+			Assert.That (Edited (Edit (allocation.Payment.Id, 80m)), Is.True);
+			Assert.That ((int) Records (allocation.Payment.Id).Single () ["CashSession"], Is.EqualTo (session));
+			Assert.That (CashCount (session).Amendments, Is.Empty);
 		}
 
 		[Test]

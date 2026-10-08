@@ -293,6 +293,7 @@
     <Compile Include="Models\AttendanceDayDBRecorder.cs" />
     <Compile Include="Models\AttendanceSheetByEmployee.cs" />
     <Compile Include="Models\CancellationStampViewModel.cs" />
+    <Compile Include="Models\CashCountAmendment.cs" />
     <Compile Include="Models\CashCountReport.cs" />
     <Compile Include="Models\AccountsReceivableSummary.cs" />
     <Compile Include="Models\AccountsReceivableEntry.cs" />
