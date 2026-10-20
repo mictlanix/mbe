@@ -103,6 +103,7 @@
     <Compile Include="PaymentsControllerRemovePaymentTests.cs" />
     <Compile Include="SalesOrderBalanceTests.cs" />
     <Compile Include="ReportsControllerCustomerDebtTests.cs" />
+    <Compile Include="PaymentsControllerApplyCreditNoteTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

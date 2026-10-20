@@ -1154,9 +1154,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.InsufficientFunds);
 			}
 
-			to_pay = value > entity.Balance ? entity.Balance : value;
+			var balance = entity.Balance;
+
+			to_pay = value > balance ? balance : value;
 
 			using (var scope = new TransactionScope ()) {
+				// As AccountsReceivables.ApplyPayment does: the credit notes cover to_pay.
+				if (balance - to_pay <= 0.01m) {
+					entity.IsPaid = true;
+					entity.BalanceZeroedTime = dt;
+					entity.Updater = CurrentUser.Employee;
+					entity.ModificationTime = dt;
+				}
+
 				entity.UpdateAndFlush ();
 
 				foreach (var payment in payments) {
@@ -1211,7 +1221,9 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.ItemAlreadyAdded);
 			}
 
-			value = value > entity.Balance ? entity.Balance : value;
+			var balance = entity.Balance;
+
+			value = value > balance ? balance : value;
 
 			if (value > note.CustomerPayment.Balance) {
 				Response.StatusCode = 400;
@@ -1221,6 +1233,15 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 
 			using (var scope = new TransactionScope ()) {
+				// As AccountsReceivables.ApplyPayment does: the credit note covers value.
+				if (balance - value <= 0.01m) {
+					entity.IsPaid = true;
+					entity.BalanceZeroedTime = dt;
+					entity.Updater = CurrentUser.Employee;
+					entity.ModificationTime = dt;
+					entity.UpdateAndFlush ();
+				}
+
 				var sop = new SalesOrderPayment {
 					Amount = value,
 					Payment = note.CustomerPayment,
