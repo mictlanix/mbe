@@ -291,6 +291,8 @@ $(function () {
 		}
 
 
+		$(".pay").prop('disabled', true);
+
 		$.post('@Url.Action("AddPayment", new { id = Model.Id })',
 			{ 'type': type, 'amount': amount, 'reference': reference, 'fee': fee, 'ondelivery': ondelivery }, function (detail) {
 				@*$.get('@Url.Action("GetPayment")/' + detail.id, function (data) {
@@ -304,6 +306,7 @@ $(function () {
 			}, "json").fail(function (e) {
 				console.log(e);
 				DisplayErrorMessage(e.responseText)
+				$(".pay").prop('disabled', false);
 			});
 	});
 

@@ -7040,6 +7040,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a La orden no tiene saldo pendiente..
+        /// </summary>
+        public static string SalesOrderHasNoBalance {
+            get {
+                return ResourceManager.GetString("SalesOrderHasNoBalance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Orden de Compra con pago pendiente..
         /// </summary>
         public static string SalesOrderNotPaidYet {
