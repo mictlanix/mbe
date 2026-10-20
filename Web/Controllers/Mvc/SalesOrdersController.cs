@@ -1304,9 +1304,11 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return RedirectToAction ("Index");
 			}
 
-			// A correction un-paid it: its remaining payments have to be reversed first.
-			if (entity.Payments.Any () && PaymentCorrection.WasUnpaid (entity.Id)) {
-				TempData ["Error"] = Resources.PaymentCorrectionCancelAllocated;
+			// Cancelling only flags the order, so payments still applied would stay on
+			// a cancelled order, paying nothing and not available to apply elsewhere
+			// (mictlanix/mbe#78). They have to be reversed first.
+			if (entity.Payments.Any ()) {
+				TempData ["Error"] = Resources.SalesOrderCancelHasPayments;
 				return RedirectToAction ("View", new { id = entity.Id });
 			}
 

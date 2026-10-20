@@ -108,6 +108,7 @@
     <Compile Include="ReportsControllerCustomerDebtTests.cs" />
     <Compile Include="PaymentsControllerApplyCreditNoteTests.cs" />
     <Compile Include="PaymentCorrectionTests.cs" />
+    <Compile Include="SalesOrdersControllerCancelTests.cs" />
     <Compile Include="PaymentsControllerCorrectionTests.cs" />
   </ItemGroup>
   <ItemGroup>

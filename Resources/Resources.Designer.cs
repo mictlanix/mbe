@@ -7454,6 +7454,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a El pedido tiene pagos aplicados. Revierte cada uno en Sistema › Corrección de Pagos antes de cancelarlo..
+        /// </summary>
+        public static string SalesOrderCancelHasPayments {
+            get {
+                return ResourceManager.GetString("SalesOrderCancelHasPayments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Fecha del Pedido.
         /// </summary>
         public static string SalesOrderDate {

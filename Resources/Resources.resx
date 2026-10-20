@@ -3413,4 +3413,7 @@ con  valor {1} ya existe</value>
   <data name="CorrectionDeleting" xml:space="preserve">
     <value>se borra</value>
   </data>
+  <data name="SalesOrderCancelHasPayments" xml:space="preserve">
+    <value>El pedido tiene pagos aplicados. Revierte cada uno en Sistema › Corrección de Pagos antes de cancelarlo.</value>
+  </data>
 </root>
