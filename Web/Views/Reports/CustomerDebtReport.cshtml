@@ -13,7 +13,13 @@
 
 
 <h2>@Resources.CustomerDebt</h2>
-<h3 class="debt-customer">@Model.Customer.Name</h3>
+<h3 class="debt-customer">
+				@Model.Customer.Name
+				@if (Model.Customer.IsDeleted)
+				{
+								<span class="label label-danger">@Resources.Deleted</span>
+				}
+</h3>
 <div class="debt-info">
 				<div><span>@Resources.CustomerId</span><strong>@Model.Customer.Id</strong></div>
 				<div><span>@Resources.Code</span><strong>@Model.Customer.Code</strong></div>

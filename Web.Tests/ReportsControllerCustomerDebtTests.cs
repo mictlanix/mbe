@@ -26,6 +26,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Castle.ActiveRecord;
@@ -40,21 +41,27 @@ namespace Mictlanix.BE.Web.Tests {
 	// ones, and links each to its debt report. Looking the customer up through
 	// MBEQueryable.IQCustomers hid deleted customers and threw "Sequence contains
 	// no elements", so the report must find a customer by id whether deleted or not.
+	// Both reports also flag a deleted customer so it isn't mistaken for an active one.
 	[TestFixture]
 	public class ReportsControllerCustomerDebtTests {
 		const string Marker = "MBE-TEST";
 
 		ReportsController controller;
+		Seed seed;
 		int customer;
+		string name;
 
 		[SetUp]
 		public void SetUp ()
 		{
+			// Unique per run, so the summary's name filter matches only this customer.
+			name = "Deleted Customer " + Marker + " Zz" + DateTime.Now.Ticks.ToString ("x");
+
 			using (new SessionScope ()) {
 				var price_list = PriceList.Queryable.First ();
 				var item = new Customer {
 					Code = Marker + "-D",
-					Name = "Deleted Customer " + Marker,
+					Name = name,
 					CreditLimit = 0m,
 					CreditDays = 0,
 					Comment = Marker,
@@ -65,6 +72,14 @@ namespace Mictlanix.BE.Web.Tests {
 
 				item.CreateAndFlush ();
 				customer = item.Id;
+
+				// The summary only lists customers with orders.
+				seed = new Seed ();
+				var order = seed.Order ();
+				order.Customer = item;
+				order.CustomerName = item.Name;
+				order.UpdateAndFlush ();
+				seed.Detail (order, 100m);
 			}
 
 			controller = new ReportsController ();
@@ -75,6 +90,8 @@ namespace Mictlanix.BE.Web.Tests {
 		public void TearDown ()
 		{
 			using (new SessionScope ()) {
+				seed.Dispose ();
+
 				var item = Customer.TryFind (customer);
 
 				if (item != null) {
@@ -102,6 +119,23 @@ namespace Mictlanix.BE.Web.Tests {
 		}
 
 		[Test]
+		public void CustomersDebtSummary_ForADeletedCustomer_FlagsIt ()
+		{
+			using (new SessionScope ()) {
+				var result = controller.CustomersDebtSummary (new CustomersStatusFilter { CustomerName = name });
+
+				Assert.That (result, Is.InstanceOf<PartialViewResult> ());
+
+				// Rows are ExpandoObjects; read them as dictionaries to avoid dynamic here.
+				var rows = ((IEnumerable<object>) ((PartialViewResult) result).Model)
+					.Cast<IDictionary<string, object>> ();
+				var row = rows.Single (x => (int) x ["CustomerId"] == customer);
+
+				Assert.That (row ["CustomerDeleted"], Is.True);
+			}
+		}
+
+		[Test]
 		public void CustomerDebtReport_ForAMissingCustomer_IsNotFound ()
 		{
 			using (new SessionScope ()) {
@@ -117,6 +151,7 @@ namespace Mictlanix.BE.Web.Tests {
 			var model = (CustomerDebtViewModel) ((ViewResult) result).Model;
 
 			Assert.That (model.Customer.Id, Is.EqualTo (customer));
+			Assert.That (model.Customer.IsDeleted, Is.True);
 		}
 	}
 }

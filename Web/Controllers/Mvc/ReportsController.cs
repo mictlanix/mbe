@@ -572,6 +572,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 							c.customer_id 'customer_id',
 							c.name 'customer_name',
 							c.code 'customer_code' ,
+							c.disabled 'customer_disabled',
 							so.date 'sales_order_date', 
 							t1.total 'sales_order_total',
 							t1.ordered_quantity 'ordered_quantity',
@@ -802,7 +803,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					dbt.Balance + IFNULL(crd.prepayments, 0) + IFNULL(crd.credit_notes, 0) AS NetBalance
 					FROM (SELECT op.customer_id AS CustomerId, op.customer_name AS CustomerName,
 						op.customer_code AS CustomerCode, op.credit_limit CreditLimit,
-						op.credit_days CreditDays, SUM(op.sales_order_total) Total,
+						op.credit_days CreditDays, MAX(op.customer_disabled) CustomerDeleted,
+						SUM(op.sales_order_total) Total,
 						SUM(op.sales_order_due_status) NumberOfOverdueOrders,
 						COUNT(*) NumberOfOrders,
 						SUM(op.sales_order_refund) Refunds, SUM(op.paid) Payment,
@@ -836,6 +838,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				query.AddScalar ("CustomerCode", NHibernateUtil.String);
 				query.AddScalar ("CreditLimit", NHibernateUtil.Decimal);
 				query.AddScalar ("CreditDays", NHibernateUtil.Int32);
+				query.AddScalar ("CustomerDeleted", NHibernateUtil.Boolean);
 				query.AddScalar ("Total", NHibernateUtil.Decimal);
 				query.AddScalar ("NumberOfOrders", NHibernateUtil.Int32);
 				query.AddScalar ("NumberOfOverdueOrders", NHibernateUtil.Int32);
