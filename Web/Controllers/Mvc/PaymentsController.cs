@@ -1387,9 +1387,19 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.InsufficientFunds);
 			}
 
-			to_pay = value > entity.Balance ? entity.Balance : value;
+			var balance = entity.Balance;
+
+			to_pay = value > balance ? balance : value;
 
 			using (var scope = new TransactionScope ()) {
+				// As AccountsReceivables.ApplyPayment does: the funds cover to_pay.
+				if (balance - to_pay <= 0.01m) {
+					entity.IsPaid = true;
+					entity.BalanceZeroedTime = dt;
+					entity.Updater = CurrentUser.Employee;
+					entity.ModificationTime = dt;
+				}
+
 				entity.UpdateAndFlush ();
 
 				foreach (var payment in payments) {

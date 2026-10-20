@@ -273,6 +273,38 @@ namespace Mictlanix.BE.Web.Tests {
 				Assert.That (allocation.Payment.Id, Is.EqualTo (reversed.Payment.Id));
 				Assert.That (allocation.Amount, Is.EqualTo (100m));
 				Assert.That (order.Balance, Is.EqualTo (0m));
+				Assert.That (order.IsPaid, Is.True);
+			}
+		}
+
+		// The general public's payments belong to no one in particular: they are never
+		// offered, or every public order would offer the whole pool. Only reads -- an
+		// apply here would draw on real public payments.
+		[Test]
+		public void ReversedPublicPayment_IsNotOffered ()
+		{
+			var allocation = Reversed ();
+			var receivables = new AccountsReceivablesController ();
+			FakeHttpContext.Attach (receivables, principal);
+
+			using (new SessionScope ()) {
+				var general_public = Customer.Find (WebConfig.DefaultCustomer);
+				var order = SalesOrder.Find (allocation.SalesOrder.Id);
+				var payment = CustomerPayment.Find (allocation.Payment.Id);
+
+				order.Customer = general_public;
+				payment.Customer = general_public;
+				order.UpdateAndFlush ();
+				payment.UpdateAndFlush ();
+			}
+
+			using (new SessionScope ()) {
+				var order = SalesOrder.Find (allocation.SalesOrder.Id);
+				var view = (PartialViewResult) receivables.ApplyPayment (order.Id);
+				var offered = (IEnumerable<CustomerPayment>) view.ViewData ["Payments"];
+
+				Assert.That (offered, Is.Empty);
+				Assert.That (order.Customer.PrepaymentsBalance (order), Is.EqualTo (0m));
 			}
 		}
 

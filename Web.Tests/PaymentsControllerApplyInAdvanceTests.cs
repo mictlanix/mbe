@@ -105,6 +105,8 @@ namespace Mictlanix.BE.Web.Tests {
 
 				Assert.That (order.Payments.Sum (x => x.Amount), Is.EqualTo (100m), "only what the order is worth");
 				Assert.That (order.Balance, Is.EqualTo (0m));
+				Assert.That (order.IsPaid, Is.True, "as AccountsReceivables.ApplyPayment marks it");
+				Assert.That (order.BalanceZeroedTime, Is.Not.Null);
 				Assert.That (CustomerPayment.Find (ids [1]).Balance, Is.EqualTo (400m), "the rest stays available");
 			}
 		}
@@ -118,6 +120,7 @@ namespace Mictlanix.BE.Web.Tests {
 
 			using (new SessionScope ()) {
 				Assert.That (SalesOrder.Find (ids [0]).Balance, Is.EqualTo (60m));
+				Assert.That (SalesOrder.Find (ids [0]).IsPaid, Is.False);
 				Assert.That (CustomerPayment.Find (ids [1]).Balance, Is.EqualTo (460m));
 			}
 		}
