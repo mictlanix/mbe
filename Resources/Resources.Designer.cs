@@ -1754,6 +1754,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Eliminado.
+        /// </summary>
+        public static string Deleted {
+            get {
+                return ResourceManager.GetString("Deleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Entregado.
         /// </summary>
         public static string Delivered {

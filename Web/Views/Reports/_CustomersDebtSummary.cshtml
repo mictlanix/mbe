@@ -36,6 +36,9 @@
 																</td>
 																<td class='text-left'>
 																				@item.CustomerName
+																				@if (item.CustomerDeleted) {
+																								<span class="label label-danger">@Resources.Deleted</span>
+																				}
 																				<small class="debt-credit">
 																								@if(item.CreditLimit > 0 && item.CreditDays > 0) {
 																												@:@Resources.CreditLimit: @item.CreditLimit.ToString("C") &middot; @Resources.CreditDays: @item.CreditDays
