@@ -118,8 +118,10 @@ namespace Mictlanix.BE.Web.Services {
 		public static bool WasUnpaid (int order)
 		{
 			var id = order.ToString (CultureInfo.InvariantCulture);
+			// The LIKE only narrows the rows; the exact comparison is below.
 			var records = Incidence.Queryable
-				.Where (x => x.SourceType == SourceType.CustomerPayment && x.PreviousState.Contains ("\"Unpaid\""))
+				.Where (x => x.SourceType == SourceType.CustomerPayment && x.PreviousState.Contains ("\"Unpaid\"") &&
+					x.PreviousState.Contains (id))
 				.Select (x => x.PreviousState)
 				.ToList ();
 
@@ -169,18 +171,17 @@ namespace Mictlanix.BE.Web.Services {
 			}
 		}
 
-		// Each touched order as its balance after the correction leaves it (§6.4).
-		// Delivery mode is left alone.
+		// Each touched order whose paid state the correction changes (§6.4). An order
+		// that stays paid keeps its modification time: the commissions report pays
+		// orders by paid = 1 and modification_time in the period, so moving it would
+		// pay its commission again. Delivery mode is left alone.
 		public void Apply (Employee updater, DateTime now)
 		{
-			foreach (var item in Orders) {
+			foreach (var item in Orders.Where (x => x.Order.IsPaid != x.IsPaid)) {
 				var order = item.Order;
 
-				if (order.IsPaid != item.IsPaid) {
-					order.IsPaid = item.IsPaid;
-					order.BalanceZeroedTime = item.IsPaid ? now : (DateTime?) null;
-				}
-
+				order.IsPaid = item.IsPaid;
+				order.BalanceZeroedTime = item.IsPaid ? now : (DateTime?) null;
 				order.Updater = updater;
 				order.ModificationTime = now;
 				order.Update ();

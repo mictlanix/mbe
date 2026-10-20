@@ -1189,6 +1189,114 @@ namespace Mictlanix.BE.Web.Tests {
 			}
 		}
 
+		// Review: the commissions report pays orders by paid = 1 and modification_time
+		// in the period, so an order that stays paid must keep its modification time.
+		[Test]
+		public void ReverseAllocation_LeavesAnOrderThatStaysPaidAsItWas ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update);
+			var allocation = Paid (100m, 100m);
+			SalesOrderPayment extra;
+			DateTime modified;
+
+			using (new SessionScope ()) {
+				var order = SalesOrder.Find (allocation.SalesOrder.Id);
+				extra = seed.Allocation (order, seed.Payment (PaymentType.Immediate, 20m), 20m);
+				modified = order.ModificationTime;
+			}
+
+			var controller = Controller ();
+			Assert.That (Request (() => controller.ReverseAllocation (extra.Id, Reason)), Is.InstanceOf<JsonResult> ());
+
+			using (new SessionScope ()) {
+				var order = SalesOrder.Find (allocation.SalesOrder.Id);
+
+				Assert.That (order.IsPaid, Is.True);
+				Assert.That (order.ModificationTime, Is.EqualTo (modified).Within (TimeSpan.FromSeconds (1)));
+			}
+		}
+
+		// Review: a reference fix touches no order -- no follow-up, no order change.
+		[Test]
+		public void EditPayment_ReferenceOnlyTouchesNoOrder ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update);
+			var allocation = Paid (100m, 100m);
+			DateTime modified;
+
+			using (new SessionScope ()) {
+				var order = SalesOrder.Find (allocation.SalesOrder.Id);
+				seed.Invoice (order.Details.Single (), PaymentTerms.Immediate);
+				modified = order.ModificationTime;
+			}
+
+			var controller = Controller ();
+			var result = Request (() => controller.EditPayment (new CustomerPayment {
+				Id = allocation.Payment.Id,
+				Amount = 100m,
+				Method = PaymentMethod.Cash,
+				Reference = "Fixed"
+			}, null, Reason));
+
+			Assert.That (Edited (result), Is.True);
+
+			var record = Records (allocation.Payment.Id).Single ();
+			Assert.That ((string) record ["ReferenceBefore"], Is.EqualTo (Seed.Marker));
+			Assert.That ((string) record ["ReferenceAfter"], Is.EqualTo ("Fixed"));
+			Assert.That (record ["Invoiced"], Is.Null);
+			Assert.That (record ["SalesOrders"], Is.Null);
+
+			using (new SessionScope ()) {
+				Assert.That (SalesOrder.Find (allocation.SalesOrder.Id).ModificationTime,
+					     Is.EqualTo (modified).Within (TimeSpan.FromSeconds (1)));
+			}
+		}
+
+		// Review: only cash gives change, with several allocations too.
+		[Test]
+		public void EditPayment_FromCashDropsTheChangeOfSeveralAllocations ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update);
+			SalesOrderPayment first, second;
+
+			using (new SessionScope ()) {
+				var payment = seed.Payment (PaymentType.Immediate, 500m);
+				var a = seed.Order (paid: true);
+				var b = seed.Order (paid: true);
+				seed.Detail (a, 300m);
+				seed.Detail (b, 180m);
+				first = seed.Allocation (a, payment, 300m);
+				second = seed.Allocation (b, payment, 180m, change: 20m);
+			}
+
+			Assert.That (Edited (Edit (first.Payment.Id, 500m, PaymentMethod.CreditCard)), Is.True);
+
+			var item = Reload (second);
+			Assert.That (item.Change, Is.EqualTo (0m));
+			Assert.That (item.Payment.Balance, Is.EqualTo (20m), "the former change stays as credit");
+			Assert.That ((decimal) Records (first.Payment.Id).Single () ["NetAfter"], Is.EqualTo (500m));
+		}
+
+		// Review: a refused edit shows what the user entered, not the stored payment.
+		[Test]
+		public void EditPayment_RefusedKeepsWhatWasEntered ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update);
+			var allocation = Paid (100m, 100m);
+
+			using (new SessionScope ()) {
+				seed.Invoice (SalesOrder.Find (allocation.SalesOrder.Id).Details.Single (), PaymentTerms.Immediate);
+			}
+
+			var result = (PartialViewResult) Edit (allocation.Payment.Id, 80m, PaymentMethod.CreditCard);
+			var model = (CustomerPayment) result.Model;
+
+			Assert.That (result.ViewName, Is.EqualTo ("_EditPayment"));
+			Assert.That (model.Amount, Is.EqualTo (80m));
+			Assert.That (model.Method, Is.EqualTo (PaymentMethod.CreditCard));
+			Assert.That (model.Customer.Id, Is.EqualTo (seed.Customer.Id));
+		}
+
 		[Test]
 		public void ReverseAllocation_NeedsTheUpdateRight ()
 		{

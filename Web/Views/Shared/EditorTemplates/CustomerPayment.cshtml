@@ -7,7 +7,7 @@
     <div class="col-xs-6 field-required" style="font-size:3em;">@Html.LabelFor(x => x.Amount) @Html.DisplayFor(x => x.Amount) @Html.ValidationMessageFor(x => x.Amount)</div>
 </div>
 <div class="form-group">
-				<input id="Amount" name="Amount" style="font-size:3em; height:1.5em;" class="form-control text-right" type="text" autocomplete="off" placeholder="@Model.Amount">
+				<input id="Amount" name="Amount" style="font-size:3em; height:1.5em;" class="form-control text-right" type="text" autocomplete="off" placeholder="@Model.Amount" value="@(ViewData.ModelState.IsValid ? string.Empty : Model.Amount.ToString())">
 </div>
 <div class="form-group">
 				<div class="col-xs-12 field-required">

@@ -585,7 +585,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			if (!ModelState.IsValid) {
-				return PartialView ("_EditPayment", CustomerPayment.Find (item.Id));
+				return EditPaymentForm (item, CustomerPayment.TryFind (item.Id));
 			}
 
 			var now = DateTime.Now;
@@ -596,7 +596,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 				if (error != null) {
 					ModelState.AddModelError (string.Empty, error);
-					return PartialView ("_EditPayment", payment ?? item);
+					return EditPaymentForm (item, payment);
 				}
 
 				var target = customer.HasValue && customer.Value != payment.Customer.Id ? Customer.Find (customer.Value) : null;
@@ -612,13 +612,17 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					change = item.Method == PaymentMethod.Cash ? item.Amount - allocated : 0m;
 				}
 
-				var check = PaymentCorrection.Check (allocation == null ? new KeyValuePair<SalesOrder, decimal> [0] : new [] {
-					new KeyValuePair<SalesOrder, decimal> (allocation.SalesOrder, allocated - allocation.Amount)
-				});
+				// Only the orders whose money moves, or whose payment method changes -- an
+				// invoice states the method. A reference fix touches no order.
+				var changes = item.Method != payment.Method || allocated != (allocation == null ? 0m : allocation.Amount)
+					? payment.Allocations.Select (x => new KeyValuePair<SalesOrder, decimal> (x.SalesOrder,
+						x == allocation ? allocated - x.Amount : 0m))
+					: new KeyValuePair<SalesOrder, decimal> [0];
+				var check = PaymentCorrection.Check (changes);
 
 				if (check.IsBlocked) {
 					ModelState.AddModelError (string.Empty, string.Join (" ", check.Blocks));
-					return PartialView ("_EditPayment", payment);
+					return EditPaymentForm (item, payment);
 				}
 
 				var record = new CorrectionRecord ("Edit", payment, check);
@@ -646,6 +650,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 					allocation.Amount = allocated;
 					allocation.Change = change;
 					allocation.Update ();
+				} else if (item.Method != PaymentMethod.Cash) {
+					// Only cash gives change; what was change stays as credit, as above.
+					foreach (var x in payment.Allocations.Where (x => x.Change != 0m)) {
+						x.Change = 0m;
+						x.Update ();
+					}
 				}
 
 				check.Apply (CurrentUser.Employee, now);
@@ -655,6 +665,13 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			return PartialView ("_RefreshPayment");
+		}
+
+		// The form again, with what the user entered, after a refusal.
+		ActionResult EditPaymentForm (CustomerPayment item, CustomerPayment stored)
+		{
+			item.Customer = stored == null ? null : stored.Customer;
+			return PartialView ("_EditPayment", item);
 		}
 
 		// The refusals that don't need the check (§6.3).
@@ -962,10 +979,12 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			// Corrections of this session's payments made after it was counted.
 			if (session.End.HasValue) {
 				var end = session.End.Value;
+				// CorrectionRecord writes MethodBefore right after CashSession.
+				var key = "\"CashSession\":" + session.Id + ",";
 
 				model.Amendments = Incidence.Queryable
 					.Where (x => x.SourceType == SourceType.CustomerPayment && x.ModificationTime > end &&
-						x.PreviousState.Contains ("\"Operation\""))
+						x.PreviousState.Contains (key))
 					.ToList ()
 					.Select (CashCountAmendment.Parse)
 					.Where (x => x != null && x.Session == session.Id)
