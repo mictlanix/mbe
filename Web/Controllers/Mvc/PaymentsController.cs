@@ -39,6 +39,7 @@ using Mictlanix.BE.Web.Mvc;
 using Mictlanix.BE.Web.Services;
 using Newtonsoft.Json;
 using NHibernate;
+using NHibernate.Linq;
 
 
 namespace Mictlanix.BE.Web.Controllers.Mvc {
@@ -396,7 +397,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			query = query.OrderByDescending (x => x.Id);
 
 			search.Total = query.Count ();
-			search.Results = query.Skip (search.Offset).Take (search.Limit).ToList ();
+			// The list shows each payment's customer, cash session and allocations:
+			// one query each for the page, not one per row.
+			search.Results = query.Skip (search.Offset).Take (search.Limit)
+				.Fetch (x => x.Customer).Fetch (x => x.CashSession).ToList ();
+
+			var ids = search.Results.Select (x => x.Id).ToArray ();
+			ViewBag.Allocations = SalesOrderPayment.Queryable
+				.Where (x => ids.Contains (x.Payment.Id))
+				.ToList ()
+				.ToLookup (x => x.Payment.Id);
 
 			return search;
 		}
@@ -557,83 +567,70 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return View (search);
 		}
 
+		// Corrections are pages, as Sistema > Restablecer Modo de Entrega is
+		// (mictlanix/mbe#80): the payment list is the Find step, then Review, then
+		// Done. An edit asks for the new values first. Review is built without
+		// writing; the confirm builds it again under lock and writes only if it still
+		// holds.
+
+		// Edit, step Change: the new amount, method, customer and reference.
 		public ActionResult EditPayment (int id)
 		{
-			var privilege = GetAccessPrivilege (SystemObjects.PaymentsEditor);
-
-			if (!privilege.AllowUpdate) {
+			if (!GetAccessPrivilege (SystemObjects.PaymentsEditor).AllowUpdate) {
 				return RedirectToAction ("Index");
 			}
 
-			return PartialView ("_EditPayment", CustomerPayment.Find (id));
+			var payment = CustomerPayment.TryFind (id);
+
+			if (payment == null) {
+				return RedirectToAction ("Payments");
+			}
+
+			return View ("EditPayment", payment);
+		}
+
+		// Edit, step Review.
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult EditPaymentReview (CustomerPayment item, int? customer)
+		{
+			if (!GetAccessPrivilege (SystemObjects.PaymentsEditor).AllowUpdate) {
+				return RedirectToAction ("Index");
+			}
+
+			return View ("CorrectPayment", ReviewEdit (CustomerPayment.TryFind (item.Id), item, customer));
 		}
 
 		// Fixes a payment's amount, method, customer or reference (mictlanix/mbe#66 §6.4).
 		// Its type isn't editable. A single allocation is refitted to the new amount;
 		// with several, the amount can't drop below what they hold.
 		[HttpPost]
+		[ValidateAntiForgeryToken]
 		public ActionResult EditPayment (CustomerPayment item, int? customer, string reason)
 		{
-			var privilege = GetAccessPrivilege (SystemObjects.PaymentsEditor);
-
-			if (!privilege.AllowUpdate) {
+			if (!GetAccessPrivilege (SystemObjects.PaymentsEditor).AllowUpdate) {
 				return RedirectToAction ("Index");
-			}
-
-			if (string.IsNullOrWhiteSpace (reason)) {
-				ModelState.AddModelError (string.Empty, string.Format (Resources.Validation_Required, Resources.Comment));
-			}
-
-			if (!ModelState.IsValid) {
-				return EditPaymentForm (item, CustomerPayment.TryFind (item.Id));
 			}
 
 			var now = DateTime.Now;
 
 			using (var scope = new TransactionScope ()) {
 				var payment = PaymentCorrection.Lock<CustomerPayment> (item.Id);
-				var error = EditPaymentError (payment, item, customer);
+				var model = ReviewEdit (payment, item, customer);
 
-				if (error != null) {
-					ModelState.AddModelError (string.Empty, error);
-					return EditPaymentForm (item, payment);
+				if (model.IsRefused || !HasReason (reason)) {
+					return View ("CorrectPayment", model);
 				}
 
-				var target = customer.HasValue && customer.Value != payment.Customer.Id ? Customer.Find (customer.Value) : null;
-				var allocation = payment.Allocations.Count == 1 ? payment.Allocations.Single () : null;
-				var allocated = allocation == null ? 0m : allocation.Amount;
-				var change = allocation == null ? 0m : allocation.Change;
-
-				// Takes as much as the order can; for cash the rest is change, as
-				// AddPayment does. Otherwise it stays as credit: a correction records what
-				// the customer was really charged.
-				if (allocation != null) {
-					allocated = Math.Min (item.Amount, allocation.Amount + allocation.SalesOrder.Balance);
-					change = item.Method == PaymentMethod.Cash ? item.Amount - allocated : 0m;
-				}
-
-				// Only the orders whose money moves, or whose payment method changes -- an
-				// invoice states the method. A reference fix touches no order.
-				var changes = item.Method != payment.Method || allocated != (allocation == null ? 0m : allocation.Amount)
-					? payment.Allocations.Select (x => new KeyValuePair<SalesOrder, decimal> (x.SalesOrder,
-						x == allocation ? allocated - x.Amount : 0m))
-					: new KeyValuePair<SalesOrder, decimal> [0];
-				var check = PaymentCorrection.Check (changes);
-
-				if (check.IsBlocked) {
-					ModelState.AddModelError (string.Empty, string.Join (" ", check.Blocks));
-					return EditPaymentForm (item, payment);
-				}
-
-				var record = new CorrectionRecord ("Edit", payment, check);
+				var record = new CorrectionRecord ("Edit", payment, model.Check);
 
 				if (payment.Amount != item.Amount) {
 					record.Set ("AmountBefore", payment.Amount).Set ("AmountAfter", item.Amount);
 				}
 
-				if (target != null) {
-					record.Set ("CustomerBefore", payment.Customer.Id).Set ("CustomerAfter", target.Id);
-					payment.Customer = target;
+				if (model.Customer != null) {
+					record.Set ("CustomerBefore", payment.Customer.Id).Set ("CustomerAfter", model.Customer.Id);
+					payment.Customer = model.Customer;
 				}
 
 				if ((payment.Reference ?? string.Empty) != (item.Reference ?? string.Empty)) {
@@ -646,43 +643,87 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				payment.Updater = CurrentUser.Employee;
 				payment.ModificationTime = now;
 
-				if (allocation != null) {
-					allocation.Amount = allocated;
-					allocation.Change = change;
-					allocation.Update ();
-				} else if (item.Method != PaymentMethod.Cash) {
-					// Only cash gives change; what was change stays as credit, as above.
-					foreach (var x in payment.Allocations.Where (x => x.Change != 0m)) {
-						x.Change = 0m;
+				foreach (var x in payment.Allocations) {
+					var refit = model.Refit [x.Id];
+
+					if (x.Amount != refit.Key || x.Change != refit.Value) {
+						x.Amount = refit.Key;
+						x.Change = refit.Value;
 						x.Update ();
 					}
 				}
 
-				check.Apply (CurrentUser.Employee, now);
+				model.Check.Apply (CurrentUser.Employee, now);
 				record.After (payment.Method, CorrectionRecord.Net (payment));
-				record.ToIncidence (CurrentUser.Employee, reason.Trim ()).Create ();
-				payment.UpdateAndFlush ();
-			}
 
-			return PartialView ("_RefreshPayment");
+				var incidence = record.ToIncidence (CurrentUser.Employee, reason.Trim ());
+				incidence.Create ();
+				payment.UpdateAndFlush ();
+
+				return Corrected (incidence);
+			}
 		}
 
-		// The form again, with what the user entered, after a refusal.
-		ActionResult EditPaymentForm (CustomerPayment item, CustomerPayment stored)
+		// What an edit would do: each allocation's new amount and change, the orders
+		// it touches, the refusals.
+		PaymentCorrectionConfirmation ReviewEdit (CustomerPayment payment, CustomerPayment item, int? customer)
 		{
-			item.Customer = stored == null ? null : stored.Customer;
-			return PartialView ("_EditPayment", item);
+			var model = new PaymentCorrectionConfirmation {
+				Operation = "Edit", Action = "EditPayment", Id = item.Id, Payment = payment, Proposed = item,
+				MethodAfter = item.Method
+			};
+
+			if (payment == null) {
+				model.Error = Resources.ItemNotFound;
+				return model;
+			}
+
+			model.MethodBefore = payment.Method;
+			model.NetBefore = CorrectionRecord.Net (payment);
+			model.Error = EditPaymentError (payment, item, customer);
+
+			if (model.Error != null) {
+				return model;
+			}
+
+			if (customer.HasValue && customer.Value != payment.Customer.Id) {
+				model.Customer = Customer.Find (customer.Value);
+			}
+
+			// A single allocation takes as much as the order can; for cash the rest is
+			// change, as AddPayment does. Otherwise it stays as credit: a correction
+			// records what the customer was really charged. Only cash gives change,
+			// with several allocations too.
+			var single = payment.Allocations.Count == 1 ? payment.Allocations.Single () : null;
+
+			model.Refit = payment.Allocations.ToDictionary (x => x.Id, x => {
+				if (x == single) {
+					var allocated = Math.Min (item.Amount, x.Amount + x.SalesOrder.Balance);
+					return new KeyValuePair<decimal, decimal> (allocated, item.Method == PaymentMethod.Cash ? item.Amount - allocated : 0m);
+				}
+
+				return new KeyValuePair<decimal, decimal> (x.Amount, item.Method == PaymentMethod.Cash ? x.Change : 0m);
+			});
+
+			// Only the orders whose money moves, or whose payment method changes -- an
+			// invoice states the method. A reference fix touches no order.
+			model.Check = PaymentCorrection.Check (payment.Allocations
+				.Where (x => item.Method != payment.Method || model.Refit [x.Id].Key != x.Amount)
+				.Select (x => new KeyValuePair<SalesOrder, decimal> (x.SalesOrder, model.Refit [x.Id].Key - x.Amount)));
+			model.NetAfter = item.Amount - model.Refit.Values.Sum (x => x.Value);
+
+			return model;
 		}
 
 		// The refusals that don't need the check (§6.3).
 		static string EditPaymentError (CustomerPayment payment, CustomerPayment item, int? customer)
 		{
-			if (payment == null) {
-				return Resources.ItemNotFound;
-			}
-
 			if (CashCountReport.IsRefund (payment)) {
 				return Resources.PaymentCorrectionRefund;
+			}
+
+			if (item.Amount <= 0m) {
+				return string.Format (Resources.Validation_Required, Resources.Amount);
 			}
 
 			if (customer.HasValue && customer.Value != payment.Customer.Id) {
@@ -704,7 +745,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return null;
 		}
 
-		// The confirmation: what reversing it would do, without doing it.
+		// Reverse, step Review.
 		public ActionResult ReverseAllocation (int id)
 		{
 			if (!GetAccessPrivilege (SystemObjects.PaymentsEditor).AllowUpdate) {
@@ -712,41 +753,25 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			var item = SalesOrderPayment.TryFind (id);
-			var model = new PaymentCorrectionConfirmation { Operation = "Reverse", Action = "ReverseAllocation", Id = id };
 
-			if (item == null) {
-				model.Error = Resources.ItemNotFound;
-			} else {
-				model.Payment = item.Payment;
-				model.Amount = item.Amount;
-				model.Check = PaymentCorrection.Check (new [] {
-					new KeyValuePair<SalesOrder, decimal> (item.SalesOrder, -item.Amount)
-				});
-			}
-
-			return PartialView ("_CorrectPayment", model);
+			return View ("CorrectPayment", ReviewReverse (id, item == null ? null : item.Payment, item));
 		}
 
 		// Takes one allocation off its order and keeps the payment, which can then be
 		// applied again (mictlanix/mbe#66 §6.4). Its change comes off the payment's
 		// amount, so the payment's net -- and the cash count -- stay the same.
 		[HttpPost]
+		[ValidateAntiForgeryToken]
 		public ActionResult ReverseAllocation (int id, string reason)
 		{
-			var privilege = GetAccessPrivilege (SystemObjects.PaymentsEditor);
-
-			if (!privilege.AllowUpdate) {
+			if (!GetAccessPrivilege (SystemObjects.PaymentsEditor).AllowUpdate) {
 				return RedirectToAction ("Index");
-			}
-
-			if (string.IsNullOrWhiteSpace (reason)) {
-				return Refuse (string.Format (Resources.Validation_Required, Resources.Comment));
 			}
 
 			var found = SalesOrderPayment.TryFind (id);
 
 			if (found == null) {
-				return Refuse (Resources.ItemNotFound);
+				return View ("CorrectPayment", ReviewReverse (id, null, null));
 			}
 
 			var now = DateTime.Now;
@@ -755,28 +780,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				// The payment first, as every correction locks it.
 				var payment = PaymentCorrection.Lock<CustomerPayment> (found.Payment.Id);
 				var item = PaymentCorrection.Lock<SalesOrderPayment> (id);
+				var model = ReviewReverse (id, payment, item);
 
-				if (payment == null || item == null) {
-					return Refuse (Resources.ItemNotFound);
+				if (model.IsRefused || !HasReason (reason)) {
+					return View ("CorrectPayment", model);
 				}
 
-				var check = PaymentCorrection.Check (new [] {
-					new KeyValuePair<SalesOrder, decimal> (item.SalesOrder, -item.Amount)
-				});
-
-				if (check.IsBlocked) {
-					return Refuse (string.Join (" ", check.Blocks));
-				}
-
-				var others = payment.Allocations.Where (x => x.Id != item.Id).ToList ();
-
-				if (payment.Amount - item.Change < others.Sum (x => x.Amount + x.Change)) {
-					return Refuse (Resources.PaymentCorrectionOverAllocated);
-				}
-
-				var net = CorrectionRecord.Net (payment);
-				var record = new CorrectionRecord ("Reverse", payment, check)
-					.After (payment.Method, net)
+				var record = new CorrectionRecord ("Reverse", payment, model.Check)
+					.After (payment.Method, model.NetAfter)
 					.Set ("Allocation", item.Id)
 					.Set ("AllocatedAmount", item.Amount)
 					.Set ("Change", item.Change == 0m ? (decimal?) null : item.Change)
@@ -787,22 +798,100 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				payment.ModificationTime = now;
 
 				item.Delete ();
-				check.Apply (CurrentUser.Employee, now);
-				record.ToIncidence (CurrentUser.Employee, reason.Trim ()).Create ();
-				payment.UpdateAndFlush ();
-			}
+				model.Check.Apply (CurrentUser.Employee, now);
 
-			return Json (new { id });
+				var incidence = record.ToIncidence (CurrentUser.Employee, reason.Trim ());
+				incidence.Create ();
+				payment.UpdateAndFlush ();
+
+				return Corrected (incidence);
+			}
 		}
 
-		// The confirmation: what deleting it would do, without doing it.
+		PaymentCorrectionConfirmation ReviewReverse (int id, CustomerPayment payment, SalesOrderPayment item)
+		{
+			var model = new PaymentCorrectionConfirmation {
+				Operation = "Reverse", Action = "ReverseAllocation", Id = id, Payment = payment, Allocation = item
+			};
+
+			if (payment == null || item == null) {
+				model.Error = Resources.ItemNotFound;
+				return model;
+			}
+
+			// Keeps the net: the change comes off the amount.
+			model.MethodBefore = model.MethodAfter = payment.Method;
+			model.NetBefore = model.NetAfter = CorrectionRecord.Net (payment);
+			model.Check = PaymentCorrection.Check (new [] {
+				new KeyValuePair<SalesOrder, decimal> (item.SalesOrder, -item.Amount)
+			});
+
+			// A payment ending up allocating more than its amount would be a bug.
+			if (payment.Amount - item.Change < payment.Allocations.Where (x => x.Id != item.Id).Sum (x => x.Amount + x.Change)) {
+				model.Error = Resources.PaymentCorrectionOverAllocated;
+			}
+
+			return model;
+		}
+
+		// Delete, step Review.
 		public ActionResult DeletePayment (int id)
 		{
 			if (!GetAccessPrivilege (SystemObjects.PaymentsEditor).AllowDelete) {
 				return RedirectToAction ("Index");
 			}
 
-			var payment = CustomerPayment.TryFind (id);
+			return View ("CorrectPayment", ReviewDelete (id, CustomerPayment.TryFind (id)));
+		}
+
+		// Removes a payment that should never have been recorded, with its
+		// allocations (mictlanix/mbe#66 §6.4). The record keeps what the row held.
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult DeletePayment (int id, string reason)
+		{
+			if (!GetAccessPrivilege (SystemObjects.PaymentsEditor).AllowDelete) {
+				return RedirectToAction ("Index");
+			}
+
+			var now = DateTime.Now;
+
+			using (var scope = new TransactionScope ()) {
+				var payment = PaymentCorrection.Lock<CustomerPayment> (id);
+				var model = ReviewDelete (id, payment);
+
+				if (model.IsRefused || !HasReason (reason)) {
+					return View ("CorrectPayment", model);
+				}
+
+				var record = new CorrectionRecord ("Delete", payment, model.Check)
+					.After (payment.Method, 0m)
+					.Set ("Serial", payment.Serial)
+					.Set ("Customer", payment.Customer.Id)
+					.Set ("Date", payment.Date)
+					.Set ("Amount", payment.Amount)
+					.Set ("Reference", payment.Reference);
+
+				foreach (var item in payment.Allocations.ToList ()) {
+					item.Delete ();
+				}
+
+				model.Check.Apply (CurrentUser.Employee, now);
+
+				var incidence = record.ToIncidence (CurrentUser.Employee, reason.Trim ());
+				incidence.Create ();
+
+				// Allocations is not inverse: deleting the payment with them still
+				// pending would first null their NOT NULL customer_payment.
+				scope.Flush ();
+				payment.DeleteAndFlush ();
+
+				return Corrected (incidence);
+			}
+		}
+
+		PaymentCorrectionConfirmation ReviewDelete (int id, CustomerPayment payment)
+		{
 			var model = new PaymentCorrectionConfirmation { Operation = "Delete", Action = "DeletePayment", Id = id, Payment = payment };
 
 			if (payment == null) {
@@ -812,76 +901,45 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			} else if (HasPaymentOnDelivery (id)) {
 				model.Error = Resources.PaymentCorrectionOnDelivery;
 			} else {
-				model.Amount = payment.Amount;
+				model.MethodBefore = model.MethodAfter = payment.Method;
+				model.NetBefore = CorrectionRecord.Net (payment);
 				model.Check = PaymentCorrection.Check (payment.Allocations.Select (x =>
 					new KeyValuePair<SalesOrder, decimal> (x.SalesOrder, -x.Amount)));
 			}
 
-			return PartialView ("_CorrectPayment", model);
+			return model;
 		}
 
-		// Removes a payment that should never have been recorded, with its
-		// allocations (mictlanix/mbe#66 §6.4). The record keeps what the row held.
-		[HttpPost]
-		public ActionResult DeletePayment (int id, string reason)
+		// Step Done. The record is the incidence the correction wrote.
+		public ActionResult PaymentCorrected (int id)
 		{
-			var privilege = GetAccessPrivilege (SystemObjects.PaymentsEditor);
-
-			if (!privilege.AllowDelete) {
+			if (!GetAccessPrivilege (SystemObjects.PaymentsEditor).AllowRead) {
 				return RedirectToAction ("Index");
 			}
 
+			var incidence = Incidence.TryFind (id);
+
+			if (incidence == null || incidence.SourceType != SourceType.CustomerPayment) {
+				return RedirectToAction ("Payments");
+			}
+
+			return View ("PaymentCorrected", incidence);
+		}
+
+		// Post-redirect-get, so a reload of Done doesn't post the correction again.
+		ActionResult Corrected (Incidence incidence)
+		{
+			return RedirectToAction ("PaymentCorrected", new { id = incidence.Id });
+		}
+
+		bool HasReason (string reason)
+		{
 			if (string.IsNullOrWhiteSpace (reason)) {
-				return Refuse (string.Format (Resources.Validation_Required, Resources.Comment));
+				ModelState.AddModelError ("reason", string.Format (Resources.Validation_Required, Resources.Comment));
+				return false;
 			}
 
-			var now = DateTime.Now;
-
-			using (var scope = new TransactionScope ()) {
-				var payment = PaymentCorrection.Lock<CustomerPayment> (id);
-
-				if (payment == null) {
-					return Refuse (Resources.ItemNotFound);
-				}
-
-				if (CashCountReport.IsRefund (payment)) {
-					return Refuse (Resources.PaymentCorrectionRefund);
-				}
-
-				if (HasPaymentOnDelivery (id)) {
-					return Refuse (Resources.PaymentCorrectionOnDelivery);
-				}
-
-				var allocations = payment.Allocations.ToList ();
-				var check = PaymentCorrection.Check (allocations.Select (x =>
-					new KeyValuePair<SalesOrder, decimal> (x.SalesOrder, -x.Amount)));
-
-				if (check.IsBlocked) {
-					return Refuse (string.Join (" ", check.Blocks));
-				}
-
-				var record = new CorrectionRecord ("Delete", payment, check)
-					.After (payment.Method, 0m)
-					.Set ("Serial", payment.Serial)
-					.Set ("Customer", payment.Customer.Id)
-					.Set ("Date", payment.Date)
-					.Set ("Amount", payment.Amount)
-					.Set ("Reference", payment.Reference);
-
-				foreach (var item in allocations) {
-					item.Delete ();
-				}
-
-				check.Apply (CurrentUser.Employee, now);
-				record.ToIncidence (CurrentUser.Employee, reason.Trim ()).Create ();
-
-				// Allocations is not inverse: deleting the payment with them still
-				// pending would first null their NOT NULL customer_payment.
-				scope.Flush ();
-				payment.DeleteAndFlush ();
-			}
-
-			return Json (new { id });
+			return true;
 		}
 
 		// payment_on_delivery has had no model since 35bbcb7, but its foreign key

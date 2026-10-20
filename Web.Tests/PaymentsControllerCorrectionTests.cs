@@ -93,7 +93,28 @@ namespace Mictlanix.BE.Web.Tests {
 			}
 		}
 
+		// A correction that went through redirects to its Done page.
+		static bool Done (ActionResult result)
+		{
+			var redirect = result as RedirectToRouteResult;
+			return redirect != null && (string) redirect.RouteValues ["action"] == "PaymentCorrected";
+		}
+
+		// A refused correction shows its review page again, with the reason.
 		static bool Refused (PaymentsController controller, ActionResult result)
+		{
+			var view = result as ViewResult;
+			return view != null && view.ViewName == "CorrectPayment";
+		}
+
+		static string Refusal (ActionResult result)
+		{
+			var model = (PaymentCorrectionConfirmation) ((ViewResult) result).Model;
+			return model.Error ?? string.Join (" ", model.Check.Blocks);
+		}
+
+		// Cancel still answers with a 400 and the message.
+		static bool Refused400 (PaymentsController controller, ActionResult result)
 		{
 			return result is ContentResult && FakeHttpContext.StatusCode (controller) == 400;
 		}
@@ -132,7 +153,7 @@ namespace Mictlanix.BE.Web.Tests {
 			var allocation = Paid (100m, 100m);
 			var controller = Controller ();
 
-			Assert.That (Request (() => controller.ReverseAllocation (allocation.Id, Reason)), Is.InstanceOf<JsonResult> ());
+			Assert.That (Done (Request (() => controller.ReverseAllocation (allocation.Id, Reason))), Is.True);
 
 			using (new SessionScope ()) {
 				var order = SalesOrder.Find (allocation.SalesOrder.Id);
@@ -164,7 +185,7 @@ namespace Mictlanix.BE.Web.Tests {
 			var allocation = Paid (100m, 150m);
 			var controller = Controller ();
 
-			Assert.That (Request (() => controller.ReverseAllocation (allocation.Id, Reason)), Is.InstanceOf<JsonResult> ());
+			Assert.That (Done (Request (() => controller.ReverseAllocation (allocation.Id, Reason))), Is.True);
 
 			using (new SessionScope ()) {
 				var payment = CustomerPayment.Find (allocation.Payment.Id);
@@ -201,7 +222,7 @@ namespace Mictlanix.BE.Web.Tests {
 
 			var controller = Controller ();
 
-			Assert.That (Request (() => controller.ReverseAllocation (first.Id, Reason)), Is.InstanceOf<JsonResult> ());
+			Assert.That (Done (Request (() => controller.ReverseAllocation (first.Id, Reason))), Is.True);
 
 			using (new SessionScope ()) {
 				var b = SalesOrder.Find (second.SalesOrder.Id);
@@ -257,7 +278,7 @@ namespace Mictlanix.BE.Web.Tests {
 			var allocation = Paid (100m, 100m);
 			var controller = Controller ();
 
-			Assert.That (Request (() => controller.ReverseAllocation (allocation.Id, Reason)), Is.InstanceOf<JsonResult> ());
+			Assert.That (Done (Request (() => controller.ReverseAllocation (allocation.Id, Reason))), Is.True);
 
 			return allocation;
 		}
@@ -323,7 +344,7 @@ namespace Mictlanix.BE.Web.Tests {
 			var result = Request (() => controller.ReverseAllocation (allocation.Id, Reason));
 
 			Assert.That (Refused (controller, result), Is.True);
-			Assert.That (((ContentResult) result).Content, Does.Contain ("TEST000001"));
+			Assert.That (Refusal (result), Does.Contain ("TEST000001"));
 
 			using (new SessionScope ()) {
 				Assert.That (SalesOrderPayment.TryFind (allocation.Id), Is.Not.Null);
@@ -356,7 +377,7 @@ namespace Mictlanix.BE.Web.Tests {
 			}
 
 			controller = Controller ();
-			Assert.That (Request (() => controller.ReverseAllocation (allocation.Id, Reason)), Is.InstanceOf<JsonResult> ());
+			Assert.That (Done (Request (() => controller.ReverseAllocation (allocation.Id, Reason))), Is.True);
 			Assert.That ((string) Records (allocation.Payment.Id).Single () ["Invoiced"],
 				     Is.EqualTo (allocation.SalesOrder.Id + ": TEST000001"));
 		}
@@ -390,7 +411,7 @@ namespace Mictlanix.BE.Web.Tests {
 				try {
 					var controller = Controller ();
 					start.SignalAndWait ();
-					results [i] = Request (() => controller.ReverseAllocation (allocation.Id, Reason)) is JsonResult;
+					results [i] = Done (Request (() => controller.ReverseAllocation (allocation.Id, Reason)));
 				} catch (Exception e) {
 					errors [i] = e;
 				}
@@ -423,7 +444,7 @@ namespace Mictlanix.BE.Web.Tests {
 
 		static bool Edited (ActionResult result)
 		{
-			return result is PartialViewResult && ((PartialViewResult) result).ViewName == "_RefreshPayment";
+			return Done (result);
 		}
 
 		static SalesOrderPayment Reload (SalesOrderPayment allocation)
@@ -663,7 +684,7 @@ namespace Mictlanix.BE.Web.Tests {
 			}
 
 			var controller = Controller ();
-			Assert.That (Request (() => controller.DeletePayment (payment.Id, Reason)), Is.InstanceOf<JsonResult> ());
+			Assert.That (Done (Request (() => controller.DeletePayment (payment.Id, Reason))), Is.True);
 
 			using (new SessionScope ()) {
 				Assert.That (CustomerPayment.TryFind (payment.Id), Is.Null);
@@ -701,7 +722,7 @@ namespace Mictlanix.BE.Web.Tests {
 			Assert.That (Refused (controller, Request (() => controller.DeletePayment (allocation.Payment.Id, Reason))), Is.True);
 
 			controller = Controller ();
-			Assert.That (Request (() => controller.ReverseAllocation (allocation.Id, Reason)), Is.InstanceOf<JsonResult> ());
+			Assert.That (Done (Request (() => controller.ReverseAllocation (allocation.Id, Reason))), Is.True);
 			Assert.That ((bool) Records (allocation.Payment.Id).Single () ["CreditNote"], Is.True);
 		}
 
@@ -827,7 +848,7 @@ namespace Mictlanix.BE.Web.Tests {
 
 			Assert.That (before.Amendments, Is.Empty);
 			var result = correct ();
-			Assert.That (result is JsonResult || Edited (result), Is.True, "corrected");
+			Assert.That (Done (result), Is.True, "corrected");
 
 			var after = CashCount (session);
 			var item = after.Amendments.Single ();
@@ -948,7 +969,7 @@ namespace Mictlanix.BE.Web.Tests {
 			Assert.That (Edited (Edit (first.Payment.Id, 100m, PaymentMethod.CreditCard)), Is.True);
 			Assert.That (Edited (Edit (second.Payment.Id, 40m)), Is.True);
 			var controller = Controller ();
-			Assert.That (Request (() => controller.DeletePayment (third.Payment.Id, Reason)), Is.InstanceOf<JsonResult> ());
+			Assert.That (Done (Request (() => controller.DeletePayment (third.Payment.Id, Reason))), Is.True);
 
 			var after = CashCount (session);
 
@@ -1008,10 +1029,10 @@ namespace Mictlanix.BE.Web.Tests {
 			}
 
 			var payments = Controller ();
-			Assert.That (Request (() => payments.ReverseAllocation (second.Id, Reason)), Is.InstanceOf<JsonResult> ());
+			Assert.That (Done (Request (() => payments.ReverseAllocation (second.Id, Reason))), Is.True);
 
 			payments = Controller ();
-			Assert.That (Refused (payments, Request (() => payments.Cancel (first.SalesOrder.Id))), Is.True);
+			Assert.That (Refused400 (payments, Request (() => payments.Cancel (first.SalesOrder.Id))), Is.True);
 
 			var orders = new SalesOrdersController ();
 			FakeHttpContext.Attach (orders, principal);
@@ -1025,7 +1046,7 @@ namespace Mictlanix.BE.Web.Tests {
 			}
 
 			payments = Controller ();
-			Assert.That (Request (() => payments.ReverseAllocation (first.Id, Reason)), Is.InstanceOf<JsonResult> ());
+			Assert.That (Done (Request (() => payments.ReverseAllocation (first.Id, Reason))), Is.True);
 
 			orders = new SalesOrdersController ();
 			FakeHttpContext.Attach (orders, principal);
@@ -1064,10 +1085,10 @@ namespace Mictlanix.BE.Web.Tests {
 			var controller = Controller ();
 
 			using (new SessionScope ()) {
-				var result = (PartialViewResult) action (controller);
+				var result = (ViewResult) action (controller);
 				var model = (PaymentCorrectionConfirmation) result.Model;
 
-				Assert.That (result.ViewName, Is.EqualTo ("_CorrectPayment"));
+				Assert.That (result.ViewName, Is.EqualTo ("CorrectPayment"));
 				return model;
 			}
 		}
@@ -1087,13 +1108,13 @@ namespace Mictlanix.BE.Web.Tests {
 			var confirmation = Confirmation (x => x.ReverseAllocation (allocation.Id));
 
 			Assert.That (confirmation.IsRefused, Is.False);
-			Assert.That (confirmation.Amount, Is.EqualTo (100m));
+			Assert.That (confirmation.Allocation.Amount, Is.EqualTo (100m));
 			Assert.That (confirmation.Check.Unpaid.Single ().Order.Id, Is.EqualTo (allocation.SalesOrder.Id));
 			Assert.That (confirmation.Check.Delivered, Is.EqualTo (allocation.SalesOrder.Id + ": " + delivery));
 			Assert.That (confirmation.Check.Commission, Does.StartWith (allocation.SalesOrder.Id + ": "));
 
 			var controller = Controller ();
-			Assert.That (Request (() => controller.ReverseAllocation (allocation.Id, Reason)), Is.InstanceOf<JsonResult> ());
+			Assert.That (Done (Request (() => controller.ReverseAllocation (allocation.Id, Reason))), Is.True);
 
 			var incidences = new IncidencesController ();
 			FakeHttpContext.Attach (incidences, principal);
@@ -1143,7 +1164,7 @@ namespace Mictlanix.BE.Web.Tests {
 			Assert.That (Edited (Edit (allocation.Payment.Id, 120m)), Is.True);
 
 			controller = Controller ();
-			Assert.That (Request (() => controller.ReverseAllocation (allocation.Id, Reason)), Is.InstanceOf<JsonResult> ());
+			Assert.That (Done (Request (() => controller.ReverseAllocation (allocation.Id, Reason))), Is.True);
 		}
 
 		// 17
@@ -1157,10 +1178,10 @@ namespace Mictlanix.BE.Web.Tests {
 			Assert.That (Edited (Edit (first.Payment.Id, 120m)), Is.True);
 
 			var controller = Controller ();
-			Assert.That (Request (() => controller.ReverseAllocation (first.Id, Reason)), Is.InstanceOf<JsonResult> ());
+			Assert.That (Done (Request (() => controller.ReverseAllocation (first.Id, Reason))), Is.True);
 
 			controller = Controller ();
-			Assert.That (Request (() => controller.DeletePayment (second.Payment.Id, Reason)), Is.InstanceOf<JsonResult> ());
+			Assert.That (Done (Request (() => controller.DeletePayment (second.Payment.Id, Reason))), Is.True);
 		}
 
 		// 19
@@ -1206,7 +1227,7 @@ namespace Mictlanix.BE.Web.Tests {
 			}
 
 			var controller = Controller ();
-			Assert.That (Request (() => controller.ReverseAllocation (extra.Id, Reason)), Is.InstanceOf<JsonResult> ());
+			Assert.That (Done (Request (() => controller.ReverseAllocation (extra.Id, Reason))), Is.True);
 
 			using (new SessionScope ()) {
 				var order = SalesOrder.Find (allocation.SalesOrder.Id);
@@ -1288,13 +1309,80 @@ namespace Mictlanix.BE.Web.Tests {
 				seed.Invoice (SalesOrder.Find (allocation.SalesOrder.Id).Details.Single (), PaymentTerms.Immediate);
 			}
 
-			var result = (PartialViewResult) Edit (allocation.Payment.Id, 80m, PaymentMethod.CreditCard);
-			var model = (CustomerPayment) result.Model;
+			var result = (ViewResult) Edit (allocation.Payment.Id, 80m, PaymentMethod.CreditCard);
+			var model = (PaymentCorrectionConfirmation) result.Model;
 
-			Assert.That (result.ViewName, Is.EqualTo ("_EditPayment"));
-			Assert.That (model.Amount, Is.EqualTo (80m));
-			Assert.That (model.Method, Is.EqualTo (PaymentMethod.CreditCard));
-			Assert.That (model.Customer.Id, Is.EqualTo (seed.Customer.Id));
+			Assert.That (result.ViewName, Is.EqualTo ("CorrectPayment"));
+			Assert.That (model.IsRefused, Is.True);
+			Assert.That (model.Proposed.Amount, Is.EqualTo (80m));
+			Assert.That (model.Proposed.Method, Is.EqualTo (PaymentMethod.CreditCard));
+			Assert.That (model.Payment.Customer.Id, Is.EqualTo (seed.Customer.Id));
+		}
+
+		// mictlanix/mbe#80: Change, then a review that writes nothing.
+		[Test]
+		public void EditPaymentReview_ShowsTheResultWithoutWriting ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update);
+			var allocation = Paid (100m, 100m);
+			var controller = Controller ();
+
+			using (new SessionScope ()) {
+				var change = (ViewResult) controller.EditPayment (allocation.Payment.Id);
+				Assert.That (change.ViewName, Is.EqualTo ("EditPayment"));
+			}
+
+			controller = Controller ();
+			var model = Confirmation (x => x.EditPaymentReview (new CustomerPayment {
+				Id = allocation.Payment.Id, Amount = 80m, Method = PaymentMethod.Cash, Reference = Seed.Marker
+			}, null));
+
+			Assert.That (model.IsRefused, Is.False);
+			Assert.That (model.Action, Is.EqualTo ("EditPayment"));
+			Assert.That (model.NetBefore, Is.EqualTo (100m));
+			Assert.That (model.NetAfter, Is.EqualTo (80m));
+			Assert.That (model.Check.Unpaid.Single ().Order.Id, Is.EqualTo (allocation.SalesOrder.Id));
+			Assert.That (model.IsAmendment, Is.False);
+
+			using (new SessionScope ()) {
+				Assert.That (CustomerPayment.Find (allocation.Payment.Id).Amount, Is.EqualTo (100m));
+				Assert.That (SalesOrder.Find (allocation.SalesOrder.Id).IsPaid, Is.True);
+			}
+
+			Assert.That (Records (allocation.Payment.Id), Is.Empty);
+		}
+
+		// mictlanix/mbe#80: a counted session's review says the count will show it.
+		[Test]
+		public void Review_OfACountedSessionNotesTheAmendment ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update | AccessRight.Delete);
+			var allocation = Paid (100m, 100m, CashSession.Find (ClosedSession ()));
+
+			Assert.That (Confirmation (x => x.ReverseAllocation (allocation.Id)).IsAmendment, Is.True);
+			Assert.That (Confirmation (x => x.DeletePayment (allocation.Payment.Id)).IsAmendment, Is.True);
+		}
+
+		// mictlanix/mbe#80: Done shows the record the correction wrote.
+		[Test]
+		public void PaymentCorrected_ShowsTheRecord ()
+		{
+			LogIn (AccessRight.Read | AccessRight.Update);
+			var allocation = Paid (100m, 100m);
+			var controller = Controller ();
+			var result = (RedirectToRouteResult) Request (() => controller.ReverseAllocation (allocation.Id, Reason));
+			var id = (int) result.RouteValues ["id"];
+
+			controller = Controller ();
+
+			using (new SessionScope ()) {
+				var view = (ViewResult) controller.PaymentCorrected (id);
+				var incidence = (Incidence) view.Model;
+
+				Assert.That (view.ViewName, Is.EqualTo ("PaymentCorrected"));
+				Assert.That (incidence.Reference, Is.EqualTo (allocation.Payment.Id));
+				Assert.That (incidence.Comment, Is.EqualTo (Reason));
+			}
 		}
 
 		[Test]

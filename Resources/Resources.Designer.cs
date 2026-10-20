@@ -710,6 +710,24 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Cerrada.
+        /// </summary>
+        public static string CashSessionClosed {
+            get {
+                return ResourceManager.GetString("CashSessionClosed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Abierta.
+        /// </summary>
+        public static string CashSessionOpen {
+            get {
+                return ResourceManager.GetString("CashSessionOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Cajero.
         /// </summary>
         public static string Cashier {
@@ -1318,6 +1336,186 @@ namespace Mictlanix.BE {
         public static string Contacts {
             get {
                 return ResourceManager.GetString("Contacts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a La sesión de caja {0} ya se cerró: su corte mostrará esta corrección como enmienda. El efectivo contado no cambia..
+        /// </summary>
+        public static string CorrectionAmendment {
+            get {
+                return ResourceManager.GetString("CorrectionAmendment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Aplicado al pedido {0}.
+        /// </summary>
+        public static string CorrectionAppliedTo {
+            get {
+                return ResourceManager.GetString("CorrectionAppliedTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Volver a pagos.
+        /// </summary>
+        public static string CorrectionBackToPayments {
+            get {
+                return ResourceManager.GetString("CorrectionBackToPayments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a No se puede corregir:.
+        /// </summary>
+        public static string CorrectionCannot {
+            get {
+                return ResourceManager.GetString("CorrectionCannot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a El cliente sólo puede cambiarse en un pago sin aplicaciones..
+        /// </summary>
+        public static string CorrectionCustomerLocked {
+            get {
+                return ResourceManager.GetString("CorrectionCustomerLocked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Se borran el pago y todas sus aplicaciones..
+        /// </summary>
+        public static string CorrectionDeletesPayment {
+            get {
+                return ResourceManager.GetString("CorrectionDeletesPayment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a se borra.
+        /// </summary>
+        public static string CorrectionDeleting {
+            get {
+                return ResourceManager.GetString("CorrectionDeleting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Corrección aplicada al pago {0}..
+        /// </summary>
+        public static string CorrectionDone {
+            get {
+                return ResourceManager.GetString("CorrectionDone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a La corrección queda registrada en Incidencias a tu nombre, con el motivo..
+        /// </summary>
+        public static string CorrectionLogged {
+            get {
+                return ResourceManager.GetString("CorrectionLogged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Ningún pedido queda sin pagar..
+        /// </summary>
+        public static string CorrectionNoOrderUnpaid {
+            get {
+                return ResourceManager.GetString("CorrectionNoOrderUnpaid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Saldo del pago, para aplicar de nuevo.
+        /// </summary>
+        public static string CorrectionPaymentBalance {
+            get {
+                return ResourceManager.GetString("CorrectionPaymentBalance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Se quita la aplicación de {0} al pedido {1}; el pago conserva ese importe para aplicarlo de nuevo..
+        /// </summary>
+        public static string CorrectionRemovesAllocation {
+            get {
+                return ResourceManager.GetString("CorrectionRemovesAllocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a se revierte.
+        /// </summary>
+        public static string CorrectionReversing {
+            get {
+                return ResourceManager.GetString("CorrectionReversing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Revisar.
+        /// </summary>
+        public static string CorrectionReviewButton {
+            get {
+                return ResourceManager.GetString("CorrectionReviewButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Capturar el cambio.
+        /// </summary>
+        public static string CorrectionStepChange {
+            get {
+                return ResourceManager.GetString("CorrectionStepChange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Listo.
+        /// </summary>
+        public static string CorrectionStepDone {
+            get {
+                return ResourceManager.GetString("CorrectionStepDone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Buscar el pago.
+        /// </summary>
+        public static string CorrectionStepFind {
+            get {
+                return ResourceManager.GetString("CorrectionStepFind", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Revisar el cambio.
+        /// </summary>
+        public static string CorrectionStepReview {
+            get {
+                return ResourceManager.GetString("CorrectionStepReview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Quedan sin pagar: {0}..
+        /// </summary>
+        public static string CorrectionUnpays {
+            get {
+                return ResourceManager.GetString("CorrectionUnpays", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Esto es lo que va a cambiar.
+        /// </summary>
+        public static string CorrectionWhatChanges {
+            get {
+                return ResourceManager.GetString("CorrectionWhatChanges", resourceCulture);
             }
         }
         
@@ -4867,6 +5065,15 @@ namespace Mictlanix.BE {
         public static string Neighborhood {
             get {
                 return ResourceManager.GetString("Neighborhood", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Neto.
+        /// </summary>
+        public static string Net {
+            get {
+                return ResourceManager.GetString("Net", resourceCulture);
             }
         }
         

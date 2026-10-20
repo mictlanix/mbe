@@ -1,0 +1,33 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model Incidence
+@{
+	ViewBag.Title = Resources.PaymentsEditor;
+	var content = IncidenceContent.Parse(Model);
+	var edit = Model.PreviousState != null && Model.PreviousState.Contains("\"Operation\":\"Edit\"");
+}
+<div class="page-header">
+	<h1>@Resources.PaymentsEditor</h1>
+</div>
+
+@Html.Partial("_CorrectPaymentSteps", edit ? 4 : 3, new ViewDataDictionary { { "Edit", edit } })
+
+<div class="alert alert-success">
+	<h4>✓ @string.Format(Resources.CorrectionDone, Model.Reference.ToString("D8"))</h4>
+	<p>@Model.Comment</p>
+</div>
+
+@* What was recorded, as the incidences screen shows it. *@
+@if (content.IsStructured) {
+	<dl class="dl-horizontal">
+		@foreach (var field in content.Fields) {
+			<dt>@field.Key</dt>
+			<dd>@field.Value</dd>
+		}
+	</dl>
+}
+
+@Html.ActionLink(Resources.IncidenceHistory, "Index", "Incidences", new { Source = SourceType.CustomerPayment, Reference = Model.Reference }, new { @class = "btn btn-default" })
+@Html.ActionLink(Resources.CorrectionBackToPayments, "Payments", null, new { @class = "btn btn-primary" })

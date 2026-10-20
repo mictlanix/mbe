@@ -3344,4 +3344,73 @@ con  valor {1} ya existe</value>
   <data name="FollowUp" xml:space="preserve">
     <value>Con seguimiento</value>
   </data>
+  <data name="CorrectionStepFind" xml:space="preserve">
+    <value>Buscar el pago</value>
+  </data>
+  <data name="CorrectionStepChange" xml:space="preserve">
+    <value>Capturar el cambio</value>
+  </data>
+  <data name="CorrectionStepReview" xml:space="preserve">
+    <value>Revisar el cambio</value>
+  </data>
+  <data name="CorrectionStepDone" xml:space="preserve">
+    <value>Listo</value>
+  </data>
+  <data name="CorrectionReviewButton" xml:space="preserve">
+    <value>Revisar</value>
+  </data>
+  <data name="CorrectionWhatChanges" xml:space="preserve">
+    <value>Esto es lo que va a cambiar</value>
+  </data>
+  <data name="CorrectionCannot" xml:space="preserve">
+    <value>No se puede corregir:</value>
+  </data>
+  <data name="CorrectionRemovesAllocation" xml:space="preserve">
+    <value>Se quita la aplicación de {0} al pedido {1}; el pago conserva ese importe para aplicarlo de nuevo.</value>
+  </data>
+  <data name="CorrectionDeletesPayment" xml:space="preserve">
+    <value>Se borran el pago y todas sus aplicaciones.</value>
+  </data>
+  <data name="CorrectionUnpays" xml:space="preserve">
+    <value>Quedan sin pagar: {0}.</value>
+  </data>
+  <data name="CorrectionNoOrderUnpaid" xml:space="preserve">
+    <value>Ningún pedido queda sin pagar.</value>
+  </data>
+  <data name="CorrectionAmendment" xml:space="preserve">
+    <value>La sesión de caja {0} ya se cerró: su corte mostrará esta corrección como enmienda. El efectivo contado no cambia.</value>
+  </data>
+  <data name="CorrectionLogged" xml:space="preserve">
+    <value>La corrección queda registrada en Incidencias a tu nombre, con el motivo.</value>
+  </data>
+  <data name="CorrectionDone" xml:space="preserve">
+    <value>Corrección aplicada al pago {0}.</value>
+  </data>
+  <data name="CorrectionBackToPayments" xml:space="preserve">
+    <value>Volver a pagos</value>
+  </data>
+  <data name="CorrectionCustomerLocked" xml:space="preserve">
+    <value>El cliente sólo puede cambiarse en un pago sin aplicaciones.</value>
+  </data>
+  <data name="CashSessionOpen" xml:space="preserve">
+    <value>Abierta</value>
+  </data>
+  <data name="CashSessionClosed" xml:space="preserve">
+    <value>Cerrada</value>
+  </data>
+  <data name="Net" xml:space="preserve">
+    <value>Neto</value>
+  </data>
+  <data name="CorrectionAppliedTo" xml:space="preserve">
+    <value>Aplicado al pedido {0}</value>
+  </data>
+  <data name="CorrectionPaymentBalance" xml:space="preserve">
+    <value>Saldo del pago, para aplicar de nuevo</value>
+  </data>
+  <data name="CorrectionReversing" xml:space="preserve">
+    <value>se revierte</value>
+  </data>
+  <data name="CorrectionDeleting" xml:space="preserve">
+    <value>se borra</value>
+  </data>
 </root>

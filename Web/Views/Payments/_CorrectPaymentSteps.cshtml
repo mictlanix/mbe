@@ -1,0 +1,36 @@
+@using Mictlanix.BE
+@model int
+@{
+	// The payment list is the Find step; an edit asks for the new values first.
+	var steps = ViewData["Edit"] as bool? == true
+		? new [] { Resources.CorrectionStepFind, Resources.CorrectionStepChange, Resources.CorrectionStepReview, Resources.CorrectionStepDone }
+		: new [] { Resources.CorrectionStepFind, Resources.CorrectionStepReview, Resources.CorrectionStepDone };
+}
+<ol class="correction-steps">
+	@for (int i = 0; i < steps.Length; i++) {
+		var step = i + 1;
+		<li class="@(step < Model ? "done" : step == Model ? "active" : "")">
+			<span class="number">@(step < Model ? "✓" : step.ToString ())</span> @steps[i]
+		</li>
+	}
+</ol>
+<style type="text/css">
+.correction-steps { list-style: none; padding: 0; margin: 0 0 24px; display: flex; gap: 8px; }
+.correction-steps li { flex: 1; padding: 8px 12px; border-radius: 4px; background: #f5f5f5; color: #999; }
+.correction-steps li.active { background: #337ab7; color: #fff; font-weight: bold; }
+.correction-steps li.done { background: #dff0d8; color: #3c763d; }
+.correction-steps .number { display: inline-block; width: 22px; height: 22px; line-height: 22px; border-radius: 11px; text-align: center; background: rgba(0,0,0,.08); margin-right: 4px; }
+.correction-payment:before, .correction-payment:after { display: none; }
+.correction-payment { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px 24px; }
+.correction-payment span.label-text { display: block; font-size: 11px; text-transform: uppercase; color: #999; }
+.correction-change { display: flex; align-items: center; gap: 24px; margin: 4px 0 16px; }
+.correction-change .side { flex: 1; text-align: center; padding: 12px; border-radius: 6px; }
+.correction-change .side span { display: block; font-size: 11px; text-transform: uppercase; color: #777; margin-bottom: 4px; }
+.correction-change .from { background: #f5f5f5; color: #777; }
+.correction-change .from strong { text-decoration: line-through; }
+.correction-change .to { background: #dff0d8; color: #3c763d; font-weight: bold; }
+.correction-change .side strong { font-size: 18px; }
+.correction-change .arrow { font-size: 28px; color: #8a6d3b; }
+.correction-effects { margin: 0 0 16px; padding-left: 20px; }
+.correction-effects li { margin-bottom: 4px; }
+</style>

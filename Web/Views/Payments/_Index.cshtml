@@ -4,103 +4,104 @@
 @using Mictlanix.BE.Web.Models
 @model Search<CustomerPayment>
 @{
-				var CurrentUser = Html.CurrentUser () ?? new User ();
-				var Privilege = Html.GetPrivilege (CurrentUser, SystemObjects.PaymentsEditor);
-				var IncidencesPrivilege = Html.GetPrivilege (CurrentUser, SystemObjects.Incidences);
-				var zeros = "00000000";
-
+	var CurrentUser = Html.CurrentUser () ?? new User ();
+	var Privilege = Html.GetPrivilege (CurrentUser, SystemObjects.PaymentsEditor);
+	var IncidencesPrivilege = Html.GetPrivilege (CurrentUser, SystemObjects.Incidences);
+	// Loaded for the whole page at once (PaymentsController.SearchCustomerPayment).
+	var allocations = (ILookup<int, SalesOrderPayment>) ViewBag.Allocations;
 }
-				<div class="row scrollable-header">
-							<div class="col-sm-1 ">@Resources.Id</div>
-							<div class="col-sm-1 ">@Resources.Date</div>
-							<div class="col-sm-2 ">@Resources.Customer</div>
-							<div class="col-sm-1 ">@Resources.SalesPerson</div>
-							<div class="col-sm-1 ">@Resources.Updater</div>
-							<div class="col-sm-1 ">@Resources.Amount</div>
-							<div class="col-sm-1 ">@Resources.PaymentMethod</div>
-							<div class="col-sm-1 ">@Resources.PaymentType</div>
-							<div class="col-sm-1 ">@Resources.Verifier</div>
-							<div class="col-sm-1 ">@Resources.SalesOrders</div>
-							<div class="col-sm-1 "></div>
+@* Each link starts a correction: Review, then Done (mictlanix/mbe#80). Edit and
+   delete aren't offered for refunds; their allocations can still be reversed. *@
+<style type="text/css">
+	/* Headers stay in view while the list scrolls. */
+	#payments th { position: sticky; top: 0; z-index: 1; background: #fff; box-shadow: inset 0 -1px 0 #ddd; }
+	#payments td .button.icon-only { margin: 1px 0; vertical-align: middle; }
+	/* One line per allocation: order, amount, then the reverse button on the right edge. */
+	#payments .allocation { display: flex; align-items: center; gap: 8px; }
+	#payments .allocation + .allocation { border-top: 1px solid #ddd; margin-top: 2px; padding-top: 2px; }
+	#payments .allocation .amount { flex: 1; text-align: right; }
+</style>
+<table id='payments'>
+	<tr>
+		<th>@Resources.Payment</th>
+		<th>@Resources.Date</th>
+		<th>@Resources.Customer</th>
+		<th>@Resources.PaymentMethod</th>
+		<th class="number">@Resources.Amount</th>
+		<th>@Resources.CashSession</th>
+		<th>@Resources.SalesOrders</th>
+		<th></th>
+	</tr>
+@foreach (var item in Model.Results) {
+	var refund = CashCountReport.IsRefund (item);
+	var session = item.CashSession;
+	<tr>
+		<td class="center">
+			@* PrintPayment has a ticket only for these types. Any other was printed on
+			   the ticket of the order it paid, so the first one's is reprinted. *@
+			@if (item.PaymentType == PaymentType.CreditPayment || item.PaymentType == PaymentType.PaymentInAdvance || item.PaymentType == PaymentType.CreditNote) {
+				@Html.ActionLink(item.Id.ToString("D8"), "PrintPayment", new { id = item.Id }, new { title = Resources.Print, target = "_blank" })
+			} else if (allocations [item.Id].Any ()) {
+				@Html.ActionLink(item.Id.ToString("D8"), "Print", new { id = allocations [item.Id].First ().SalesOrder.Id }, new { title = Resources.Print, target = "_blank" })
+			} else {
+				@item.Id.ToString("D8")
+			}
+		</td>
+		<td class="center nowrap">@Html.DisplayFor(x => item.Date)</td>
+		<td>@item.Customer.Name</td>
+		<td>@item.Method.GetDisplayName()<br /><small class="text-muted">@item.PaymentType.GetDisplayName()</small></td>
+		<td class="number">@item.Amount.ToString("c")</td>
+		<td class="center nowrap">
+			@if (session != null) {
+				@session.Id.ToString("D6")<br /><small class="text-muted">@(session.End.HasValue ? Resources.CashSessionClosed : Resources.CashSessionOpen)</small>
+			}
+		</td>
+		<td class="nowrap">
+			@foreach (var allocation in allocations [item.Id]) {
+				<div class="allocation">
+					@Html.ActionLink(allocation.SalesOrder.Id.ToString("D8"), "View", "SalesOrders", new { id = allocation.SalesOrder.Id }, new { target = "_blank" })
+					<span class="amount">@allocation.Amount.ToString("c")</span>
+					@if (Privilege.AllowUpdate) {
+						@Html.ActionLink(" ", "ReverseAllocation", new { id = allocation.Id }, new { @class = "button icon cancel icon-only", title = Resources.Reverse })
+					}
 				</div>
-
-<div class="scrollable">
-				@foreach(var item in Model.Results) {
-				<div class="row">
-								<div class="col-sm-1 data date text-center">@Html.DisplayFor(x => item.Id)</div>
-								<div class="col-sm-1 data date text-center">@Html.DisplayFor(x => item.Date)</div>
-								<div class="col-sm-2 data text-center">@Html.DisplayFor(x => item.Customer.Name)</div>
-								<div class="col-sm-1 data text-center">@Html.DisplayFor(x => item.CashSession.Cashier.Nickname)</div>
-								<div class="col-sm-1 data text-center">@(item.ModificationTime != item.CreationTime ? item.Updater.Nickname : string.Empty)</div>
-								<div class="col-sm-1 data text-center">@Html.DisplayFor(x => item.Amount)</div>
-								<div class="col-sm-1 data text-center">@item.Method.GetDisplayName()</div>
-								<div class="col-sm-1 data text-center">@(item.PaymentType.GetDisplayName())</div>
-								<div class="col-sm-1 data text-center">@(WebConfig.PaymentMethodsVerificationRequired.Contains(item.Method) ? Resources.Yes: Resources.No)</div>
-																<div class="col-sm-1 data text-center">
-																@* Each allocation, so each can be reversed on its own. *@
-																@foreach (var allocation in item.Allocations)
-																{
-																				var order = allocation.SalesOrder;
-																				@Html.ActionLink((string)order.Id.ToString(zeros), "View", "SalesOrders", new { id = order.Id },
-																														 new { title = string.Join("\n", order.Details.Select(x => x.Quantity + " - " + x.ProductName)), target = "_blank" })
-																				if (Privilege.AllowUpdate && item.Allocations.Count > 1)
-																				{
-																								@Html.ActionLink(" ", "ReverseAllocation", new { id = allocation.Id }, new { @class = "button icon cancel icon-only open-modal", title = Resources.Reverse, data_modal_id = "customer-payment-modal" })
-																				}
-																				<br />
-																}
-												</div>
-								<div class="col-sm-1">
-												@*@if (Privilege.AllowRead)
-												{
-																@Html.ActionLink(" ", "View", new { id = item.Id }, new { @class = "button icon view icon-only", title = Resources.Details })
-												}*@
-												@if (Privilege.AllowUpdate && !CashCountReport.IsRefund(item))
-												{
-																@Html.ActionLink(" ", "EditPayment", new { id = item.Id }, new { @class = "button icon edit icon-only open-modal", title = Resources.Edit, data_modal_id = "customer-payment-modal" })
-												}
-												@if (Privilege.AllowUpdate && item.Allocations.Count == 1)
-												{
-																@Html.ActionLink(" ", "ReverseAllocation", new { id = item.Allocations.Single().Id }, new { @class = "button icon cancel icon-only open-modal", title = Resources.Reverse, data_modal_id = "customer-payment-modal" })
-												}
-												@if (Privilege.AllowDelete && !CashCountReport.IsRefund(item))
-												{
-																@Html.ActionLink(" ", "DeletePayment", new { id = item.Id }, new { @class = "button icon delete icon-only open-modal", title = Resources.Delete, data_modal_id = "customer-payment-modal" })
-												}
-												@if (IncidencesPrivilege.AllowRead && item.CreationTime != item.ModificationTime)
-												{
-																@Html.ActionLink(" ", "Index", "Incidences", new { Source = SourceType.CustomerPayment, Reference = item.Id }, new { @class = "button icon view icon-only", title = Resources.IncidenceHistory, target = "_blank" })
-												}
-								</div>
-				</div>
-				}
+			}
+		</td>
+		<td class="nowrap">
+			@if (Privilege.AllowUpdate && !refund) {
+				@Html.ActionLink(" ", "EditPayment", new { id = item.Id }, new { @class = "button icon edit icon-only", title = Resources.Edit })
+			}
+			@if (Privilege.AllowDelete && !refund) {
+				@Html.ActionLink(" ", "DeletePayment", new { id = item.Id }, new { @class = "button icon delete icon-only", title = Resources.Delete })
+			}
+			@if (IncidencesPrivilege.AllowRead && item.CreationTime != item.ModificationTime) {
+				@Html.ActionLink(" ", "Index", "Incidences", new { Source = SourceType.CustomerPayment, Reference = item.Id }, new { @class = "button icon view icon-only", title = Resources.IncidenceHistory, target = "_blank" })
+			}
+		</td>
+	</tr>
+}
+</table>
+<div class="buttons right">
+	<label class='button left'>@Model.ToString()</label>@if (Model.HasPrev) {<a class='button middle icon prev icon-only paging' title='@Resources.PrevPage' href='javascript:void(0)'></a>}@if (Model.HasNext) {<a class='button right icon next icon-only paging' title='@Resources.NextPage' href='javascript:void(0)'></a>}
 </div>
-
-				<div class='buttons right'>
-								<label class='button left'>@Model.ToString()</label>@if (Model.HasPrev)
-								{<a class='button middle icon prev icon-only paging' title='@Resources.PrevPage' href='javascript:void(0)'></a>}@if (Model.HasNext)
-								{<a class='button right icon next icon-only paging' title='@Resources.NextPage' href='javascript:void(0)'></a>}
-				</div>
-				<script type='text/javascript'>
-								bindModal('.open-modal');
-$('[data-toggle="tooltip"]').tooltip();
+<script type="text/javascript">
 $('a.paging').click(function (e) {
-	var offset=@Model.Offset;
+	var offset = @Model.Offset;
 
-	if($(this).hasClass('next')) {
-		offset+=@Model.Limit;
+	if ($(this).hasClass('next')) {
+		offset += @Model.Limit;
 	} else {
-		offset-=@Model.Limit;
+		offset -= @Model.Limit;
 	}
 
 	e.preventDefault();
 	$('#activity-indicator').show();
 	$('#search-results').hide();
 
-	$.post('@Url.Action("Payments")', { Pattern: '@Model.Pattern', Offset: offset, Limit: @Model.Limit }, function(data) {
+	$.post('@Url.Action("Payments")', { Pattern: '@Model.Pattern', Offset: offset, Limit: @Model.Limit }, function (data) {
 		$('#search-results').html(data);
 		$('#search-results').show();
 		$('#activity-indicator').hide();
 	});
 });
-				</script>
+</script>

@@ -126,7 +126,7 @@ namespace Mictlanix.BE.Web.Tests {
 
 			using (new SessionScope ()) {
 				var result = controller.EditPayment (Correction (id, 90m), null, Reason);
-				Assert.That (((PartialViewResult) result).ViewName, Is.EqualTo ("_RefreshPayment"));
+				Assert.That (((RedirectToRouteResult) result).RouteValues ["action"], Is.EqualTo ("PaymentCorrected"));
 			}
 
 			using (new SessionScope ()) {
@@ -176,7 +176,7 @@ namespace Mictlanix.BE.Web.Tests {
 
 			using (new SessionScope ()) {
 				var result = controller.EditPayment (Correction (id, 90m), null, Reason);
-				Assert.That (((PartialViewResult) result).ViewName, Is.EqualTo ("_RefreshPayment"));
+				Assert.That (((RedirectToRouteResult) result).RouteValues ["action"], Is.EqualTo ("PaymentCorrected"));
 			}
 
 			using (new SessionScope ()) {
