@@ -95,19 +95,30 @@ namespace Mictlanix.BE.Web.Models {
 		}
 
 		// The totals as the cashier signed them: today's, with the effect of every
-		// correction made since undone (mictlanix/mbe#66 §6.8).
+		// correction made since undone (mictlanix/mbe#66 §6.8). Listed in today's
+		// order, so the two lists on the ticket line up; a method no longer received
+		// comes after them.
 		public List<MoneyCount> SignedByMethod {
 			get {
-				var totals = PaymentsReceivedByMethod.ToDictionary (x => x.Method, x => x.Amount);
+				var current = PaymentsReceivedByMethod;
+				var methods = current.Select (x => x.Method).ToList ();
+				var totals = current.ToDictionary (x => x.Method, x => x.Amount);
 
 				foreach (var item in Amendments) {
-					totals [item.MethodBefore] = (totals.ContainsKey (item.MethodBefore) ? totals [item.MethodBefore] : 0m) + item.NetBefore;
-					totals [item.MethodAfter] = (totals.ContainsKey (item.MethodAfter) ? totals [item.MethodAfter] : 0m) - item.NetAfter;
+					foreach (var method in new [] { item.MethodBefore, item.MethodAfter }) {
+						if (!totals.ContainsKey (method)) {
+							totals [method] = 0m;
+							methods.Add (method);
+						}
+					}
+
+					totals [item.MethodBefore] += item.NetBefore;
+					totals [item.MethodAfter] -= item.NetAfter;
 				}
 
-				return totals.Where (x => x.Value != 0m)
-					.Select (x => new MoneyCount { Method = x.Key, Amount = x.Value })
-					.OrderBy (x => x.Method).ToList ();
+				return methods.Where (x => totals [x] != 0m)
+					.Select (x => new MoneyCount { Method = x, Amount = totals [x] })
+					.ToList ();
 			}
 		}
 

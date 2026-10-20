@@ -1206,6 +1206,8 @@ namespace Mictlanix.BE.Web.Tests {
 				Assert.That (fields, Does.Contain (new KeyValuePair<string, string> (Resources.MethodAfter, PaymentMethod.CreditCard.GetDisplayName ())));
 				Assert.That (fields, Does.Contain (new KeyValuePair<string, string> (Resources.Invoiced, allocation.SalesOrder.Id + ": TEST000001")));
 				Assert.That (fields.Select (x => x.Key), Does.Contain (Resources.NetBefore).And.Contain (Resources.NetAfter));
+				Assert.That (fields, Does.Contain (new KeyValuePair<string, string> (Resources.Operation, Resources.Edit)));
+				Assert.That (fields, Does.Contain (new KeyValuePair<string, string> (Resources.NetBefore, 100m.ToString ("c"))));
 				Assert.That (IncidenceContent.Parse (incidence).IsPostChangeSnapshot, Is.False);
 			}
 		}

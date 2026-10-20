@@ -315,6 +315,28 @@ namespace Mictlanix.BE.Web.Tests {
 			Assert.That (content.IsPostChangeSnapshot, Is.False);
 		}
 
+		// The ticket prints the totals as signed above the corrected ones: same order,
+		// so they line up; a method no longer received comes last.
+		[Test]
+		public void SignedTotals_FollowTheOrderOfTodaysTotals ()
+		{
+			var report = new CashCountReport {
+				Payments = new List<CustomerPayment> {
+					new CustomerPayment { Method = PaymentMethod.CreditCard, Amount = 100m },
+					new CustomerPayment { Method = PaymentMethod.Cash, Amount = 50m }
+				},
+				Amendments = new List<CashCountAmendment> {
+					new CashCountAmendment { MethodBefore = PaymentMethod.Cash, NetBefore = 20m, MethodAfter = PaymentMethod.Cash, NetAfter = 0m },
+					new CashCountAmendment { MethodBefore = PaymentMethod.EFT, NetBefore = 10m, MethodAfter = PaymentMethod.EFT, NetAfter = 0m }
+				}
+			};
+
+			Assert.That (report.PaymentsReceivedByMethod.Select (x => x.Method),
+				     Is.EqualTo (new [] { PaymentMethod.CreditCard, PaymentMethod.Cash }));
+			Assert.That (report.SignedByMethod.Select (x => x.Method + "=" + x.Amount),
+				     Is.EqualTo (new [] { "CreditCard=100", "Cash=70", "EFT=10" }));
+		}
+
 		// The first transaction locks the payment, then changes it. The second asks
 		// for the same lock in the meantime: it must wait for the first to commit and
 		// then see its change -- without the lock it would read the old amount at once.

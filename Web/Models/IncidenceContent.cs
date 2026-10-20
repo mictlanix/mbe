@@ -70,9 +70,15 @@ namespace Mictlanix.BE.Web.Models {
 
 			item.Fields = new List<KeyValuePair<string, string>> ();
 
+			// A payment correction record (mictlanix/mbe#66 §6.6) names its operation
+			// and holds money in keys of its own; older snapshots keep their format.
+			var correction = json ["Operation"] != null;
+
 			foreach (var field in json.Properties ()) {
 				var property = type == null ? null : type.GetProperty (field.Name);
-				var value = Describe (field.Value, property ?? Corrected (type, field.Name));
+				var value = correction ? DescribeCorrection (field) : null;
+
+				value = value ?? Describe (field.Value, property ?? Corrected (type, field.Name));
 
 				if (!string.IsNullOrEmpty (value)) {
 					item.Fields.Add (new KeyValuePair<string, string> (Label (field.Name, property), value));
@@ -119,6 +125,27 @@ namespace Mictlanix.BE.Web.Models {
 					return type.GetProperty (field.Substring (0, field.Length - suffix.Length));
 				}
 			}
+			return null;
+		}
+
+		static readonly HashSet<string> correction_money = new HashSet<string> {
+			"NetBefore", "NetAfter", "AmountBefore", "AmountAfter", "AllocatedAmount", "Change", "Amount"
+		};
+
+		// The operation by its name on screen (Editar, Revertir, Borrar) and money as
+		// currency; null for anything else, which is described as usual.
+		static string DescribeCorrection (JProperty field)
+		{
+			if (field.Name == "Operation" && field.Value.Type == JTokenType.String) {
+				var operation = (string) field.Value;
+				return Resources.ResourceManager.GetString (operation) ?? operation;
+			}
+
+			if (correction_money.Contains (field.Name) &&
+			    (field.Value.Type == JTokenType.Float || field.Value.Type == JTokenType.Integer)) {
+				return ((decimal) field.Value).ToString ("c");
+			}
+
 			return null;
 		}
 
