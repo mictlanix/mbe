@@ -861,11 +861,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			return PartialView ("_CustomersDebtSummary", items.ToList ());
 		}
 
-		public ViewResult PrintCustomerDebtReport (int id)
+		public ActionResult PrintCustomerDebtReport (int id)
 		{
+			// A soft-deleted customer may still owe money, so don't filter out deleted ones
+			var customer = Customer.TryFind (id);
+
+			if (customer == null)
+				return HttpNotFound ();
 
 			var item = new CustomerDebtViewModel {
-				Customer = MBEQueryable.IQCustomers.Where (x => x.Id == id).Single (),
+				Customer = customer,
 				OnlyDebts = false,
 				OnlyCredits = false,
 				DateRange = new DateRange { StartDate = new DateTime (2024, 01, 01), EndDate = DateTime.Now }
@@ -877,10 +882,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		}
 
-		public ViewResult CustomerDebtReport (int id)
+		public ActionResult CustomerDebtReport (int id)
 		{
+			// A soft-deleted customer may still owe money, so don't filter out deleted ones
+			var customer = Customer.TryFind (id);
+
+			if (customer == null)
+				return HttpNotFound ();
+
 			var viewModel = new CustomerDebtViewModel {
-				Customer = MBEQueryable.IQCustomers.Single (x => x.Id == id),
+				Customer = customer,
 				DateRange = new DateRange { StartDate = new DateTime (2024, 01, 01), EndDate = DateTime.Now },
 				OnlyCredits = false,
 				OnlyDebts = false,
