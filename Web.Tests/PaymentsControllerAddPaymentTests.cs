@@ -153,6 +153,76 @@ namespace Mictlanix.BE.Web.Tests {
 			}
 		}
 
+		// A double click on a pay button posts twice. The second request finds the
+		// balance already covered by the first, still unconfirmed, payment and used to
+		// save it anyway as a payment of 0 with the whole bill as change.
+		[Test]
+		public void AddPayment_WhenTheBalanceIsAlreadyCovered_IsRefused ()
+		{
+			using (new SessionScope ()) {
+				controller.AddPayment (order.Id, (int) PaymentMethod.Cash, 150m, null, null, false);
+			}
+
+			using (new SessionScope ()) {
+				var result = controller.AddPayment (order.Id, (int) PaymentMethod.Cash, 150m,
+								    null, null, false);
+
+				Assert.That (result, Is.InstanceOf<ContentResult> ());
+				Assert.That (FakeHttpContext.StatusCode (controller), Is.EqualTo (400));
+			}
+
+			using (new SessionScope ()) {
+				var saved = SalesOrder.Find (order.Id);
+
+				Assert.That (saved.Payments.Count, Is.EqualTo (1), "the second post adds nothing");
+				Assert.That (saved.Change, Is.EqualTo (50m));
+			}
+		}
+
+		[Test]
+		public void AddPayment_OnAPaidOrder_IsRefused ()
+		{
+			using (new SessionScope ()) {
+				var entity = SalesOrder.Find (order.Id);
+				entity.IsPaid = true;
+				entity.UpdateAndFlush ();
+			}
+
+			using (new SessionScope ()) {
+				var result = controller.AddPayment (order.Id, (int) PaymentMethod.Cash, 50m,
+								    null, null, false);
+
+				Assert.That (result, Is.InstanceOf<ContentResult> ());
+				Assert.That (FakeHttpContext.StatusCode (controller), Is.EqualTo (400));
+			}
+
+			using (new SessionScope ()) {
+				Assert.That (SalesOrder.Find (order.Id).Payments, Is.Empty);
+			}
+		}
+
+		[Test]
+		public void AddPayment_OnACancelledOrder_IsRefused ()
+		{
+			using (new SessionScope ()) {
+				var entity = SalesOrder.Find (order.Id);
+				entity.IsCancelled = true;
+				entity.UpdateAndFlush ();
+			}
+
+			using (new SessionScope ()) {
+				var result = controller.AddPayment (order.Id, (int) PaymentMethod.Cash, 50m,
+								    null, null, false);
+
+				Assert.That (result, Is.InstanceOf<ContentResult> ());
+				Assert.That (FakeHttpContext.StatusCode (controller), Is.EqualTo (400));
+			}
+
+			using (new SessionScope ()) {
+				Assert.That (SalesOrder.Find (order.Id).Payments, Is.Empty);
+			}
+		}
+
 		// PaymentType is derived from the order's terms, not passed in.
 		[Test]
 		public void AddPayment_OnAnImmediateOrder_CreatesAnImmediatePayment ()

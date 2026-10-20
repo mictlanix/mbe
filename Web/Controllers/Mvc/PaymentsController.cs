@@ -1324,6 +1324,16 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				return Content (Resources.PaymentMethodNotAllowedOnCredit);
 			}
 
+			if (sales_order.IsCancelled || sales_order.IsPaid) {
+				Response.StatusCode = 400;
+				return Content (Resources.ItemAlreadyCompletedOrCancelled);
+			}
+
+			if (sales_order.Balance <= 0) {
+				Response.StatusCode = 400;
+				return Content (Resources.SalesOrderHasNoBalance);
+			}
+
 			var item = new SalesOrderPayment {
 				SalesOrder = sales_order,
 				Applier = employee,

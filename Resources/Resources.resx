@@ -2248,6 +2248,9 @@ Gracias por utilizar nuestros servicios.
   <data name="SalesOrderNotPaidYet" xml:space="preserve">
     <value>Orden de Compra con pago pendiente.</value>
   </data>
+  <data name="SalesOrderHasNoBalance" xml:space="preserve">
+    <value>La orden no tiene saldo pendiente.</value>
+  </data>
   <data name="ShipToRequired" xml:space="preserve">
     <value>Se requiere domicilio para completar la entrega del pedido.</value>
   </data>
