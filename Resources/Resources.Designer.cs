@@ -5663,7 +5663,7 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Corrección de Datos de Pagos.
+        ///   Busca una cadena traducida similar a Corrección de Pagos.
         /// </summary>
         public static string PaymentsEditor {
             get {

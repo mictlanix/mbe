@@ -2841,7 +2841,7 @@ con  valor {1} ya existe</value>
     <comment>Habilita la consulta de créditos en todas las tiendas. Por defecto la consulta de créditos sólo devuelve los que corresponden a la tienda actual.</comment>
   </data>
   <data name="PaymentsEditor" xml:space="preserve">
-    <value>Corrección de Datos de Pagos</value>
+    <value>Corrección de Pagos</value>
   </data>
   <data name="PriceInvalidRange" xml:space="preserve">
     <value>Este Precio debe estar entre {0:c} y {1:c}</value>

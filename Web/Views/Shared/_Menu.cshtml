@@ -35,7 +35,6 @@
 		new MenuItemModel{ SystemObject = SystemObjects.CustomerPayments, Controller = "Payments", DefaultAction = "Index", Resources = Resources.Title_CustomerPayment },
 		new MenuItemModel{ SystemObject = SystemObjects.CustomerRefunds, Controller = "CustomerRefunds", DefaultAction = "Index", Resources = Resources.CustomerRefunds },
 		new MenuItemModel{ SystemObject = SystemObjects.CreditPayments, Controller = "Payments", DefaultAction = "CreditPayments", Resources = Resources.CreditPayments },
-		new MenuItemModel{ SystemObject = SystemObjects.PaymentsEditor, Controller = "Payments", DefaultAction = "Payments", Resources = Resources.PaymentsEditor },
 		new MenuItemModel{ SystemObject = SystemObjects.PaymentsVerification, Controller = "Payments", DefaultAction = "PaymentsValidation", Resources = Resources.PaymentsValidation },
 	};
 
@@ -131,6 +130,7 @@
 				var system_menu_items = new List<MenuItemModel> {
 		new MenuItemModel{SystemObject = SystemObjects.Users, Controller = "Users", DefaultAction = "Index", Resources = Resources.Title_Users, AdministratorOnly = true },
 		new MenuItemModel{SystemObject = SystemObjects.Incidences, Controller = "Incidences", DefaultAction = "Index", Resources = Resources.Incidences },
+		new MenuItemModel{SystemObject = SystemObjects.PaymentsEditor, Controller = "Payments", DefaultAction = "Payments", Resources = Resources.PaymentsEditor },
 		new MenuItemModel{Controller = "EntitiesEditor", DefaultAction = "RestoreDeliveryMode", Resources = Resources.RestoreDeliveryMode, AdministratorOnly = true },
 	};
 
