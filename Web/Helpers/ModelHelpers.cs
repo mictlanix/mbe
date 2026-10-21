@@ -86,11 +86,23 @@ namespace Mictlanix.BE.Web.Helpers {
 			return bought - paid;
 		}
 
+		// Payments a customer made for sales -- not credit notes, refunds or expenses.
+		// A corrected payment keeps its type, often Immediate, and has to be offered
+		// again wherever unallocated money is (mictlanix/mbe#66 §6.5). The general
+		// public's are left out, as in RefundBalance: they belong to no one in
+		// particular, and every public order would offer the whole pool.
+		public static IQueryable<CustomerPayment> ForSales (this IQueryable<CustomerPayment> query)
+		{
+			var general_public = WebConfig.DefaultCustomer;
+
+			return query.Where (x => x.PaymentType != PaymentType.CreditNote && x.PaymentType != PaymentType.Expense &&
+					    x.Amount > 0 && x.Customer.Id != general_public);
+		}
+
 		public static decimal PrepaymentsBalance (this Customer entity, SalesOrder salesOrder)
 		{
-			var query = (from x in CustomerPayment.Queryable
-						 where (x.PaymentType == PaymentType.PaymentInAdvance || x.PaymentType == PaymentType.CreditPayment)
-						 && x.Customer == entity && !x.Allocations.Any (y => y.SalesOrder == salesOrder)
+			var query = (from x in CustomerPayment.Queryable.ForSales ()
+						 where x.Customer == entity && !x.Allocations.Any (y => y.SalesOrder == salesOrder)
 						 select x).ToArray ();
 
 			return query.Sum (x => (decimal?) x.Amount - x.Allocated) ?? 0;

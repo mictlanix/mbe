@@ -2840,11 +2840,8 @@ con  valor {1} ya existe</value>
     <value>Consulta de Créditos en Todas Las Tiendas</value>
     <comment>Habilita la consulta de créditos en todas las tiendas. Por defecto la consulta de créditos sólo devuelve los que corresponden a la tienda actual.</comment>
   </data>
-  <data name="ItemCanBeChangedOnlyOnce" xml:space="preserve">
-    <value>El elemento sólo puede ser modificado una vez.</value>
-  </data>
   <data name="PaymentsEditor" xml:space="preserve">
-    <value>Corrección de Datos de Pagos</value>
+    <value>Corrección de Pagos</value>
   </data>
   <data name="PriceInvalidRange" xml:space="preserve">
     <value>Este Precio debe estar entre {0:c} y {1:c}</value>
@@ -3259,5 +3256,164 @@ con  valor {1} ya existe</value>
   </data>
   <data name="RestoreDeliveryModeAnother" xml:space="preserve">
     <value>Restablecer otro pedido</value>
+  </data>
+  <data name="AllocatedAmount" xml:space="preserve">
+    <value>Importe aplicado</value>
+  </data>
+  <data name="Allocation" xml:space="preserve">
+    <value>Aplicación</value>
+  </data>
+  <data name="AmountAfter" xml:space="preserve">
+    <value>Importe nuevo</value>
+  </data>
+  <data name="AmountBefore" xml:space="preserve">
+    <value>Importe anterior</value>
+  </data>
+  <data name="CustomerAfter" xml:space="preserve">
+    <value>Cliente nuevo</value>
+  </data>
+  <data name="CustomerBefore" xml:space="preserve">
+    <value>Cliente anterior</value>
+  </data>
+  <data name="Invoiced" xml:space="preserve">
+    <value>Facturado</value>
+  </data>
+  <data name="MethodAfter" xml:space="preserve">
+    <value>Método nuevo</value>
+  </data>
+  <data name="MethodBefore" xml:space="preserve">
+    <value>Método anterior</value>
+  </data>
+  <data name="NetAfter" xml:space="preserve">
+    <value>Neto nuevo</value>
+  </data>
+  <data name="NetBefore" xml:space="preserve">
+    <value>Neto anterior</value>
+  </data>
+  <data name="Operation" xml:space="preserve">
+    <value>Operación</value>
+  </data>
+  <data name="PaidAt" xml:space="preserve">
+    <value>Pagado el</value>
+  </data>
+  <data name="PaymentCorrectionInvoiceActive" xml:space="preserve">
+    <value>El pedido {0} quedaría sin pagar y tiene la factura {1} vigente. Cancélela primero.</value>
+  </data>
+  <data name="PaymentCorrectionReceiptsActive" xml:space="preserve">
+    <value>El pedido {0} quedaría sin pagar y la factura {1} tiene complementos de pago vigentes: {2}. Cancélelos primero.</value>
+  </data>
+  <data name="ReferenceAfter" xml:space="preserve">
+    <value>Referencia nueva</value>
+  </data>
+  <data name="ReferenceBefore" xml:space="preserve">
+    <value>Referencia anterior</value>
+  </data>
+  <data name="Unpaid" xml:space="preserve">
+    <value>Ya no pagados</value>
+  </data>
+  <data name="PaymentCorrectionOverAllocated" xml:space="preserve">
+    <value>El pago quedaría aplicado por más de su importe.</value>
+  </data>
+  <data name="PaymentCorrectionRefund" xml:space="preserve">
+    <value>Las devoluciones se corrigen en su propio módulo.</value>
+  </data>
+  <data name="PaymentCorrectionCustomerAllocated" xml:space="preserve">
+    <value>El cliente sólo puede cambiarse en un pago sin aplicaciones. Revierta sus aplicaciones primero.</value>
+  </data>
+  <data name="PaymentCorrectionBelowAllocated" xml:space="preserve">
+    <value>El importe no puede ser menor que lo aplicado ({0:c}). Revierta una aplicación primero.</value>
+  </data>
+  <data name="PaymentCorrectionOnDelivery" xml:space="preserve">
+    <value>El pago tiene un registro de pago contra entrega y no se puede borrar.</value>
+  </data>
+  <data name="CashCountAsSigned" xml:space="preserve">
+    <value>Al cierre</value>
+  </data>
+  <data name="CashCountAmendments" xml:space="preserve">
+    <value>Correcciones posteriores al cierre</value>
+  </data>
+  <data name="CashCountCorrected" xml:space="preserve">
+    <value>Corregido</value>
+  </data>
+  <data name="Reverse" xml:space="preserve">
+    <value>Revertir</value>
+  </data>
+  <data name="PaymentCorrectionCancelAllocated" xml:space="preserve">
+    <value>Una corrección dejó este pedido sin pagar y aún tiene pagos aplicados. Revierta esas aplicaciones antes de cancelarlo.</value>
+  </data>
+  <data name="FollowUp" xml:space="preserve">
+    <value>Con seguimiento</value>
+  </data>
+  <data name="CorrectionStepFind" xml:space="preserve">
+    <value>Buscar el pago</value>
+  </data>
+  <data name="CorrectionStepChange" xml:space="preserve">
+    <value>Capturar el cambio</value>
+  </data>
+  <data name="CorrectionStepReview" xml:space="preserve">
+    <value>Revisar el cambio</value>
+  </data>
+  <data name="CorrectionStepDone" xml:space="preserve">
+    <value>Listo</value>
+  </data>
+  <data name="CorrectionReviewButton" xml:space="preserve">
+    <value>Revisar</value>
+  </data>
+  <data name="CorrectionWhatChanges" xml:space="preserve">
+    <value>Esto es lo que va a cambiar</value>
+  </data>
+  <data name="CorrectionCannot" xml:space="preserve">
+    <value>No se puede corregir:</value>
+  </data>
+  <data name="CorrectionRemovesAllocation" xml:space="preserve">
+    <value>Se quita la aplicación de {0} al pedido {1}; el pago conserva ese importe para aplicarlo de nuevo.</value>
+  </data>
+  <data name="CorrectionDeletesPayment" xml:space="preserve">
+    <value>Se borran el pago y todas sus aplicaciones.</value>
+  </data>
+  <data name="CorrectionUnpays" xml:space="preserve">
+    <value>Quedan sin pagar: {0}.</value>
+  </data>
+  <data name="CorrectionNoOrderUnpaid" xml:space="preserve">
+    <value>Ningún pedido queda sin pagar.</value>
+  </data>
+  <data name="CorrectionAmendment" xml:space="preserve">
+    <value>La sesión de caja {0} ya se cerró: su corte mostrará esta corrección como enmienda. El efectivo contado no cambia.</value>
+  </data>
+  <data name="CorrectionLogged" xml:space="preserve">
+    <value>La corrección queda registrada en Incidencias a tu nombre, con el motivo.</value>
+  </data>
+  <data name="CorrectionDone" xml:space="preserve">
+    <value>Corrección aplicada al pago {0}.</value>
+  </data>
+  <data name="CorrectionBackToPayments" xml:space="preserve">
+    <value>Volver a pagos</value>
+  </data>
+  <data name="CorrectionCustomerLocked" xml:space="preserve">
+    <value>El cliente sólo puede cambiarse en un pago sin aplicaciones.</value>
+  </data>
+  <data name="CashSessionOpen" xml:space="preserve">
+    <value>Abierta</value>
+  </data>
+  <data name="CashSessionClosed" xml:space="preserve">
+    <value>Cerrada</value>
+  </data>
+  <data name="Net" xml:space="preserve">
+    <value>Neto</value>
+  </data>
+  <data name="CorrectionAppliedTo" xml:space="preserve">
+    <value>Aplicado al pedido {0}</value>
+  </data>
+  <data name="CorrectionPaymentBalance" xml:space="preserve">
+    <value>Saldo del pago, para aplicar de nuevo</value>
+  </data>
+  <data name="CorrectionReversing" xml:space="preserve">
+    <value>se revierte</value>
+  </data>
+  <data name="CorrectionDeleting" xml:space="preserve">
+    <value>se borra</value>
+  </data>
+  <data name="SalesOrderCancelHasPayments" xml:space="preserve">
+    <value>El pedido tiene pagos aplicados. Revierte cada uno en Sistema › Corrección de Pagos antes de cancelarlo.</value>
   </data>
 </root>

@@ -39,11 +39,17 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 	// it commits on its own. Rolling back an outer transaction therefore isolates
 	// nothing, and every row a test creates has to be deleted by id instead.
 	//
-	// Only new rows are ever written. Stores, customers, employees and points of sale
-	// are read from whatever the target database already holds and are never modified.
+	// Only new rows are ever written. Stores, employees and points of sale are read
+	// from whatever the target database already holds and are never modified; the
+	// customer is created, so no real payment of its own is ever in reach.
 	public sealed class Seed : IDisposable {
 		public const string Marker = "MBE-TEST";
 
+		readonly List<FiscalDocumentRelation> relations = new List<FiscalDocumentRelation> ();
+		readonly List<FiscalDocumentDetail> fiscal_details = new List<FiscalDocumentDetail> ();
+		readonly List<FiscalDocument> fiscal_documents = new List<FiscalDocument> ();
+		readonly List<DeliveryOrderDetail> delivery_details = new List<DeliveryOrderDetail> ();
+		readonly List<DeliveryOrder> deliveries = new List<DeliveryOrder> ();
 		readonly List<SalesOrderPayment> allocations = new List<SalesOrderPayment> ();
 		readonly List<SalesOrderDetail> details = new List<SalesOrderDetail> ();
 		readonly List<CustomerPayment> payments = new List<CustomerPayment> ();
@@ -52,6 +58,7 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 		readonly List<CashDrawer> drawers = new List<CashDrawer> ();
 		readonly List<AccessPrivilege> privileges = new List<AccessPrivilege> ();
 		readonly List<User> users = new List<User> ();
+		readonly List<Customer> customers = new List<Customer> ();
 
 		public Store Store { get; private set; }
 		public PointOfSale PointOfSale { get; private set; }
@@ -63,7 +70,26 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 			PointOfSale = PointOfSale.Queryable.First ();
 			Store = PointOfSale.Store;
 			Employee = Employee.Queryable.First (x => x.IsSalesPerson);
-			Customer = Customer.Queryable.First ();
+			Customer = TestCustomer (Customer.Queryable.First ().PriceList);
+		}
+
+		// A customer of its own: the apply-payment actions draw on every unallocated
+		// payment of the order's customer, and a real one may have plenty.
+		Customer TestCustomer (PriceList prices)
+		{
+			var item = new Customer {
+				Code = Marker,
+				Name = "Test Customer",
+				CreditLimit = 0m,
+				CreditDays = 0,
+				PriceList = prices,
+				Creator = Employee
+			};
+
+			item.CreateAndFlush ();
+			customers.Add (item);
+
+			return item;
 		}
 
 		// PaymentsController.AddPayment needs an open cash session: it reads
@@ -89,6 +115,20 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 
 			session.CreateAndFlush ();
 			sessions.Add (session);
+
+			return session;
+		}
+
+		// A payment taken in a session that has since been counted. It ended a minute
+		// ago: datetime columns keep whole seconds, and a correction made in the same
+		// second as the close wouldn't count as made after it.
+		public CashSession ClosedCashSession ()
+		{
+			var session = OpenCashSession ();
+
+			session.Start = DateTime.Now.AddHours (-1);
+			session.End = DateTime.Now.AddMinutes (-1);
+			session.UpdateAndFlush ();
 
 			return session;
 		}
@@ -230,6 +270,120 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 			return item;
 		}
 
+		// A stamped invoice for one order line, as ModelHelpers.InvoiceSerials finds it:
+		// PUE when terms are Immediate, PPD when NetD.
+		public FiscalDocument Invoice (SalesOrderDetail line, PaymentTerms terms, bool cancelled = false)
+		{
+			var invoice = Document (FiscalDocumentType.Invoice, terms, cancelled);
+			var item = new FiscalDocumentDetail {
+				Document = invoice,
+				OrderDetail = line,
+				Product = line.Product,
+				ProductCode = line.ProductCode,
+				ProductName = line.ProductName,
+				Quantity = line.Quantity,
+				Price = line.Price,
+				DiscountRate = 0m,
+				TaxRate = 0m,
+				IsTaxIncluded = false,
+				Currency = CurrencyCode.MXN,
+				ExchangeRate = 1m
+			};
+
+			item.CreateAndFlush ();
+			fiscal_details.Add (item);
+
+			return invoice;
+		}
+
+		// A payment complement (REP) for a PPD invoice.
+		public FiscalDocument PaymentReceipt (FiscalDocument invoice, bool cancelled = false)
+		{
+			var receipt = Document (FiscalDocumentType.PaymentReceipt, PaymentTerms.Immediate, cancelled);
+			var item = new FiscalDocumentRelation {
+				Document = receipt,
+				Relation = invoice,
+				ExchangeRate = 1m,
+				Installment = 1,
+				PreviousBalance = 0m,
+				Amount = 0m
+			};
+
+			item.CreateAndFlush ();
+			relations.Add (item);
+
+			return receipt;
+		}
+
+		FiscalDocument Document (FiscalDocumentType type, PaymentTerms terms, bool cancelled)
+		{
+			var now = DateTime.Now;
+			var item = new FiscalDocument {
+				Type = type,
+				Terms = terms,
+				Batch = "TEST",
+				Serial = fiscal_documents.Count + 1,
+				Issuer = TaxpayerIssuer.Queryable.First (),
+				Customer = Customer,
+				Recipient = "XAXX010101000",
+				Store = Store,
+				IssuedLocation = Marker,
+				PaymentMethod = PaymentMethod.Cash,
+				Currency = CurrencyCode.MXN,
+				ExchangeRate = 1m,
+				Version = 4.0m,
+				Provider = FiscalCertificationProvider.None,
+				IsCompleted = true,
+				IsCancelled = cancelled,
+				Reference = Marker,
+				Creator = Employee,
+				Updater = Employee,
+				CreationTime = now,
+				ModificationTime = now
+			};
+
+			item.CreateAndFlush ();
+			fiscal_documents.Add (item);
+
+			return item;
+		}
+
+		// A delivery of one order line, as PaymentsController.Cancel finds it.
+		public DeliveryOrder Delivery (SalesOrderDetail line, bool completed = true)
+		{
+			var now = DateTime.Now;
+			var delivery = new DeliveryOrder {
+				Store = Store,
+				Serial = 0,
+				Customer = Customer,
+				Date = now,
+				IsCompleted = completed,
+				IsCancelled = false,
+				Comment = Marker,
+				Creator = Employee,
+				Updater = Employee,
+				CreationTime = now,
+				ModificationTime = now
+			};
+
+			delivery.CreateAndFlush ();
+			deliveries.Add (delivery);
+
+			var item = new DeliveryOrderDetail {
+				DeliveryOrder = delivery,
+				OrderDetail = line,
+				Product = line.Product,
+				ProductCode = line.ProductCode,
+				ProductName = line.ProductName,
+				Quantity = line.Quantity
+			};
+
+			item.CreateAndFlush ();
+			delivery_details.Add (item);
+
+			return delivery;
+		}
+
 		// Rows created by the code under test rather than by Seed still have to be
 		// cleaned up, and only the test knows how to find them.
 		public void Track (params SalesOrderPayment [] items)
@@ -248,6 +402,26 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 		// of a successful removal test.
 		public void Dispose ()
 		{
+			foreach (var item in relations) {
+				Remove (FiscalDocumentRelation.TryFind (item.Id));
+			}
+
+			foreach (var item in fiscal_details) {
+				Remove (FiscalDocumentDetail.TryFind (item.Id));
+			}
+
+			foreach (var item in fiscal_documents) {
+				Remove (FiscalDocument.TryFind (item.Id));
+			}
+
+			foreach (var item in delivery_details) {
+				Remove (DeliveryOrderDetail.TryFind (item.Id));
+			}
+
+			foreach (var item in deliveries) {
+				Remove (DeliveryOrder.TryFind (item.Id));
+			}
+
 			foreach (var item in allocations) {
 				Remove (SalesOrderPayment.TryFind (item.Id));
 			}
@@ -292,6 +466,10 @@ namespace Mictlanix.BE.Web.Tests.Infrastructure {
 
 			foreach (var item in users) {
 				Remove (Model.User.TryFind (item.UserName));
+			}
+
+			foreach (var item in customers) {
+				Remove (Model.Customer.TryFind (item.Id));
 			}
 		}
 

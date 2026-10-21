@@ -47,39 +47,65 @@
     
 </fieldset>
 
-<div id="details-section">
+@helper Totals (IEnumerable<MoneyCount> items) {
 <table>
     <tr>
-        <th>
-            @Html.LabelFor(x => new CustomerPayment().Method)
-        </th>
-
-        <th>
-            @Html.LabelFor(x => new CustomerPayment().Amount)
-        </th>
+        <th>@Resources.PaymentMethod</th>
+        <th>@Resources.Amount</th>
     </tr>
-
-@foreach (var item in Model.PaymentsReceivedByMethod) {
+@foreach (var item in items) {
     <tr>
-        <td class="number">
-            @item.Method.GetDisplayName()
-        </td>
-       
-        <td class="number">
-            @Html.DisplayFor(modelItem => item.Amount)
-        </td>
+        <td class="number">@item.Method.GetDisplayName()</td>
+        <td class="number">@item.Amount.ToString("c")</td>
     </tr>
 }
     <tr>
-        <td class="number">
-            @Resources.Total
-        </td>
-
-        <td class="number">
-            @((Model.PaymentsReceivedByMethod.Sum(x => x.Amount)).ToString("c"))
-        </td>
+        <td class="number">@Resources.Total</td>
+        <td class="number">@items.Sum(x => x.Amount).ToString("c")</td>
     </tr>
 </table>
+}
+
+<div id="details-section">
+@if (Model.Amendments.Any()) {
+    @* Counted cash never changes: the totals as signed, each correction made
+       since, and the totals as they stand now. *@
+    <h3>@Resources.CashCountAsSigned</h3>
+    @Totals(Model.SignedByMethod)
+
+    <h3>@Resources.CashCountAmendments</h3>
+    <table>
+        <tr>
+            <th>@Resources.Date</th>
+            <th>@Resources.Payment</th>
+            <th>@Resources.Operation</th>
+            <th>@Resources.Updater</th>
+            <th>@Resources.MethodBefore</th>
+            <th>@Resources.NetBefore</th>
+            <th>@Resources.MethodAfter</th>
+            <th>@Resources.NetAfter</th>
+            <th>@Resources.Comment</th>
+        </tr>
+    @foreach (var item in Model.Amendments) {
+        <tr>
+            <td>@item.Time.ToString(Resources.DateTimeFormatString)</td>
+            <td>@item.Payment.ToString("D8")</td>
+            <td>@(Resources.ResourceManager.GetString(item.Operation) ?? item.Operation)</td>
+            <td>@(item.Updater == null ? string.Empty : item.Updater.Nickname)</td>
+            <td>@item.MethodBefore.GetDisplayName()</td>
+            <td class="number">@item.NetBefore.ToString("c")</td>
+            <td>@item.MethodAfter.GetDisplayName()</td>
+            <td class="number">@item.NetAfter.ToString("c")</td>
+            <td>@item.Comment</td>
+        </tr>
+    }
+    </table>
+
+    <h3>@Resources.CashCountCorrected</h3>
+    @Totals(Model.PaymentsReceivedByMethod)
+} else {
+    @Totals(Model.PaymentsReceivedByMethod)
+}
 </div>
 <div class='clearfix'></div>
 <div id='back-to-list' class='pull-left'>

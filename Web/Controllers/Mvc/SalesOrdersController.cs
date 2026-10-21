@@ -118,6 +118,7 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 		public ViewResult View (int id)
 		{
 			var item = SalesOrder.Find (id);
+			ViewBag.Error = TempData ["Error"];
 			return View (item);
 		}
 
@@ -1301,6 +1302,14 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 			if (!(entity.IsCompleted ? privilege.AllowDelete : privilege.AllowUpdate)) {
 				return RedirectToAction ("Index");
+			}
+
+			// Cancelling only flags the order, so payments still applied would stay on
+			// a cancelled order, paying nothing and not available to apply elsewhere
+			// (mictlanix/mbe#78). They have to be reversed first.
+			if (entity.Payments.Any ()) {
+				TempData ["Error"] = Resources.SalesOrderCancelHasPayments;
+				return RedirectToAction ("View", new { id = entity.Id });
 			}
 
 			entity.Updater = CurrentUser.Employee;

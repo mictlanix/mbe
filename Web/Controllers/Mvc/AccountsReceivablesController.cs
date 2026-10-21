@@ -280,9 +280,8 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 
 		IEnumerable<CustomerPayment> GetRemainingPayments (int customer, CurrencyCode currency)
 		{
-			var query = from x in CustomerPayment.Queryable
-				    where x.PaymentType == PaymentType.CreditPayment
-					&& x.Customer.Id == customer && x.Currency == currency
+			var query = from x in CustomerPayment.Queryable.ForSales ()
+				    where x.Customer.Id == customer && x.Currency == currency
 				    	&& (x.Allocations.Count == 0 || x.Amount > x.Allocations.Sum (y => y.Amount + y.Change))
 				    select x;
 			var results = query.ToList ().Where (x => x.Balance >= 0.01m);

@@ -39,8 +39,8 @@ using NUnit.Framework;
 namespace Mictlanix.BE.Web.Tests {
 	// The payment correction screen (SystemObjects.PaymentsEditor) fixes historical
 	// payment data. mictlanix/mbe#48: it demanded a cash drawer, an open cash session
-	// and IsAdministrator on top of the privilege, and the "edit only once" rule lived
-	// only in the view.
+	// and IsAdministrator on top of the privilege. mictlanix/mbe#70 dropped the "edit
+	// only once" rule: every correction is recorded.
 	//
 	// No cash drawer cookie is set anywhere in this fixture, and no session is opened.
 	[TestFixture]
@@ -125,8 +125,8 @@ namespace Mictlanix.BE.Web.Tests {
 			}
 
 			using (new SessionScope ()) {
-				var result = controller.EditPayment (Correction (id, 90m));
-				Assert.That (((PartialViewResult) result).ViewName, Is.EqualTo ("_RefreshPayment"));
+				var result = controller.EditPayment (Correction (id, 90m), null, Reason);
+				Assert.That (((RedirectToRouteResult) result).RouteValues ["action"], Is.EqualTo ("PaymentCorrected"));
 			}
 
 			using (new SessionScope ()) {
@@ -149,22 +149,20 @@ namespace Mictlanix.BE.Web.Tests {
 			}
 
 			using (new SessionScope (FlushAction.Never)) {
-				controller.EditPayment (Correction (id, 90m));
+				controller.EditPayment (Correction (id, 90m), null, Reason);
 			}
 
 			using (new SessionScope ()) {
 				var incidence = Incidence.Queryable.Single (x => x.SourceType == SourceType.CustomerPayment && x.Reference == id);
 
-				Assert.That (incidence.PreviousState, Does.Contain ("\"Amount\":100"));
-				Assert.That (incidence.PreviousState, Does.Not.Contain ("\"Amount\":90"));
+				Assert.That (incidence.PreviousState, Does.Contain ("\"AmountBefore\":100"));
+				Assert.That (incidence.PreviousState, Does.Contain ("\"AmountAfter\":90"));
 				Assert.That (CustomerPayment.Find (id).Amount, Is.EqualTo (90m));
 			}
 		}
 
-		// The view hides the edit link once a payment has been changed; replaying the
-		// POST must not get around that.
 		[Test]
-		public void EditPayment_RejectsASecondCorrection ()
+		public void EditPayment_AppliesASecondCorrection ()
 		{
 			var controller = LogIn (AccessRight.Read | AccessRight.Update);
 			int id;
@@ -177,15 +175,16 @@ namespace Mictlanix.BE.Web.Tests {
 			}
 
 			using (new SessionScope ()) {
-				var result = controller.EditPayment (Correction (id, 90m));
-				Assert.That (((PartialViewResult) result).ViewName, Is.EqualTo ("_EditPayment"));
-				Assert.That (controller.ModelState.IsValid, Is.False);
+				var result = controller.EditPayment (Correction (id, 90m), null, Reason);
+				Assert.That (((RedirectToRouteResult) result).RouteValues ["action"], Is.EqualTo ("PaymentCorrected"));
 			}
 
 			using (new SessionScope ()) {
-				Assert.That (CustomerPayment.Find (id).Amount, Is.EqualTo (100m));
+				Assert.That (CustomerPayment.Find (id).Amount, Is.EqualTo (90m));
 			}
 		}
+
+		const string Reason = "Typo";
 
 		static CustomerPayment Correction (int id, decimal amount)
 		{
@@ -193,7 +192,7 @@ namespace Mictlanix.BE.Web.Tests {
 				Id = id,
 				Amount = amount,
 				Method = PaymentMethod.Cash,
-				PaymentType = PaymentType.Immediate
+				Reference = Seed.Marker
 			};
 		}
 	}

@@ -196,6 +196,24 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Importe aplicado.
+        /// </summary>
+        public static string AllocatedAmount {
+            get {
+                return ResourceManager.GetString("AllocatedAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Aplicación.
+        /// </summary>
+        public static string Allocation {
+            get {
+                return ResourceManager.GetString("Allocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Pedido ya enviado por completo.
         /// </summary>
         public static string AlreadyFullyDelivered {
@@ -210,6 +228,24 @@ namespace Mictlanix.BE {
         public static string Amount {
             get {
                 return ResourceManager.GetString("Amount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Importe nuevo.
+        /// </summary>
+        public static string AmountAfter {
+            get {
+                return ResourceManager.GetString("AmountAfter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Importe anterior.
+        /// </summary>
+        public static string AmountBefore {
+            get {
+                return ResourceManager.GetString("AmountBefore", resourceCulture);
             }
         }
         
@@ -638,11 +674,56 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Correcciones posteriores al cierre.
+        /// </summary>
+        public static string CashCountAmendments {
+            get {
+                return ResourceManager.GetString("CashCountAmendments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Al cierre.
+        /// </summary>
+        public static string CashCountAsSigned {
+            get {
+                return ResourceManager.GetString("CashCountAsSigned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Corregido.
+        /// </summary>
+        public static string CashCountCorrected {
+            get {
+                return ResourceManager.GetString("CashCountCorrected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Caja.
         /// </summary>
         public static string CashDrawer {
             get {
                 return ResourceManager.GetString("CashDrawer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Cerrada.
+        /// </summary>
+        public static string CashSessionClosed {
+            get {
+                return ResourceManager.GetString("CashSessionClosed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Abierta.
+        /// </summary>
+        public static string CashSessionOpen {
+            get {
+                return ResourceManager.GetString("CashSessionOpen", resourceCulture);
             }
         }
         
@@ -1259,6 +1340,186 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a La sesión de caja {0} ya se cerró: su corte mostrará esta corrección como enmienda. El efectivo contado no cambia..
+        /// </summary>
+        public static string CorrectionAmendment {
+            get {
+                return ResourceManager.GetString("CorrectionAmendment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Aplicado al pedido {0}.
+        /// </summary>
+        public static string CorrectionAppliedTo {
+            get {
+                return ResourceManager.GetString("CorrectionAppliedTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Volver a pagos.
+        /// </summary>
+        public static string CorrectionBackToPayments {
+            get {
+                return ResourceManager.GetString("CorrectionBackToPayments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a No se puede corregir:.
+        /// </summary>
+        public static string CorrectionCannot {
+            get {
+                return ResourceManager.GetString("CorrectionCannot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a El cliente sólo puede cambiarse en un pago sin aplicaciones..
+        /// </summary>
+        public static string CorrectionCustomerLocked {
+            get {
+                return ResourceManager.GetString("CorrectionCustomerLocked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Se borran el pago y todas sus aplicaciones..
+        /// </summary>
+        public static string CorrectionDeletesPayment {
+            get {
+                return ResourceManager.GetString("CorrectionDeletesPayment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a se borra.
+        /// </summary>
+        public static string CorrectionDeleting {
+            get {
+                return ResourceManager.GetString("CorrectionDeleting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Corrección aplicada al pago {0}..
+        /// </summary>
+        public static string CorrectionDone {
+            get {
+                return ResourceManager.GetString("CorrectionDone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a La corrección queda registrada en Incidencias a tu nombre, con el motivo..
+        /// </summary>
+        public static string CorrectionLogged {
+            get {
+                return ResourceManager.GetString("CorrectionLogged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Ningún pedido queda sin pagar..
+        /// </summary>
+        public static string CorrectionNoOrderUnpaid {
+            get {
+                return ResourceManager.GetString("CorrectionNoOrderUnpaid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Saldo del pago, para aplicar de nuevo.
+        /// </summary>
+        public static string CorrectionPaymentBalance {
+            get {
+                return ResourceManager.GetString("CorrectionPaymentBalance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Se quita la aplicación de {0} al pedido {1}; el pago conserva ese importe para aplicarlo de nuevo..
+        /// </summary>
+        public static string CorrectionRemovesAllocation {
+            get {
+                return ResourceManager.GetString("CorrectionRemovesAllocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a se revierte.
+        /// </summary>
+        public static string CorrectionReversing {
+            get {
+                return ResourceManager.GetString("CorrectionReversing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Revisar.
+        /// </summary>
+        public static string CorrectionReviewButton {
+            get {
+                return ResourceManager.GetString("CorrectionReviewButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Capturar el cambio.
+        /// </summary>
+        public static string CorrectionStepChange {
+            get {
+                return ResourceManager.GetString("CorrectionStepChange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Listo.
+        /// </summary>
+        public static string CorrectionStepDone {
+            get {
+                return ResourceManager.GetString("CorrectionStepDone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Buscar el pago.
+        /// </summary>
+        public static string CorrectionStepFind {
+            get {
+                return ResourceManager.GetString("CorrectionStepFind", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Revisar el cambio.
+        /// </summary>
+        public static string CorrectionStepReview {
+            get {
+                return ResourceManager.GetString("CorrectionStepReview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Quedan sin pagar: {0}..
+        /// </summary>
+        public static string CorrectionUnpays {
+            get {
+                return ResourceManager.GetString("CorrectionUnpays", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Esto es lo que va a cambiar.
+        /// </summary>
+        public static string CorrectionWhatChanges {
+            get {
+                return ResourceManager.GetString("CorrectionWhatChanges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Costo.
         /// </summary>
         public static string Cost {
@@ -1534,6 +1795,24 @@ namespace Mictlanix.BE {
         public static string Customer360 {
             get {
                 return ResourceManager.GetString("Customer360", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Cliente nuevo.
+        /// </summary>
+        public static string CustomerAfter {
+            get {
+                return ResourceManager.GetString("CustomerAfter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Cliente anterior.
+        /// </summary>
+        public static string CustomerBefore {
+            get {
+                return ResourceManager.GetString("CustomerBefore", resourceCulture);
             }
         }
         
@@ -3172,6 +3451,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Con seguimiento.
+        /// </summary>
+        public static string FollowUp {
+            get {
+                return ResourceManager.GetString("FollowUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Órdenes de envío próximas.
         /// </summary>
         public static string FollowingDeliveryOrders {
@@ -3780,6 +4068,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Facturado.
+        /// </summary>
+        public static string Invoiced {
+            get {
+                return ResourceManager.GetString("Invoiced", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Asistencia.
         /// </summary>
         public static string IsAbsent {
@@ -3947,15 +4244,6 @@ namespace Mictlanix.BE {
         public static string ItemAutorized {
             get {
                 return ResourceManager.GetString("ItemAutorized", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a El elemento sólo puede ser modificado una vez..
-        /// </summary>
-        public static string ItemCanBeChangedOnlyOnce {
-            get {
-                return ResourceManager.GetString("ItemCanBeChangedOnlyOnce", resourceCulture);
             }
         }
         
@@ -4601,6 +4889,24 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Método nuevo.
+        /// </summary>
+        public static string MethodAfter {
+            get {
+                return ResourceManager.GetString("MethodAfter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Método anterior.
+        /// </summary>
+        public static string MethodBefore {
+            get {
+                return ResourceManager.GetString("MethodBefore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Opciones en Métodos de Pago.
         /// </summary>
         public static string MethodPaymentOptions {
@@ -4759,6 +5065,33 @@ namespace Mictlanix.BE {
         public static string Neighborhood {
             get {
                 return ResourceManager.GetString("Neighborhood", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Neto.
+        /// </summary>
+        public static string Net {
+            get {
+                return ResourceManager.GetString("Net", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Neto nuevo.
+        /// </summary>
+        public static string NetAfter {
+            get {
+                return ResourceManager.GetString("NetAfter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Neto anterior.
+        /// </summary>
+        public static string NetBefore {
+            get {
+                return ResourceManager.GetString("NetBefore", resourceCulture);
             }
         }
         
@@ -5105,6 +5438,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Operación.
+        /// </summary>
+        public static string Operation {
+            get {
+                return ResourceManager.GetString("Operation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Cadena Original.
         /// </summary>
         public static string OriginalString {
@@ -5164,6 +5506,15 @@ namespace Mictlanix.BE {
         public static string Paid {
             get {
                 return ResourceManager.GetString("Paid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Pagado el.
+        /// </summary>
+        public static string PaidAt {
+            get {
+                return ResourceManager.GetString("PaidAt", resourceCulture);
             }
         }
         
@@ -5281,6 +5632,78 @@ namespace Mictlanix.BE {
         public static string PaymentAmount {
             get {
                 return ResourceManager.GetString("PaymentAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a El importe no puede ser menor que lo aplicado ({0:c}). Revierta una aplicación primero..
+        /// </summary>
+        public static string PaymentCorrectionBelowAllocated {
+            get {
+                return ResourceManager.GetString("PaymentCorrectionBelowAllocated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Una corrección dejó este pedido sin pagar y aún tiene pagos aplicados. Revierta esas aplicaciones antes de cancelarlo..
+        /// </summary>
+        public static string PaymentCorrectionCancelAllocated {
+            get {
+                return ResourceManager.GetString("PaymentCorrectionCancelAllocated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a El cliente sólo puede cambiarse en un pago sin aplicaciones. Revierta sus aplicaciones primero..
+        /// </summary>
+        public static string PaymentCorrectionCustomerAllocated {
+            get {
+                return ResourceManager.GetString("PaymentCorrectionCustomerAllocated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a El pedido {0} quedaría sin pagar y tiene la factura {1} vigente. Cancélela primero..
+        /// </summary>
+        public static string PaymentCorrectionInvoiceActive {
+            get {
+                return ResourceManager.GetString("PaymentCorrectionInvoiceActive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a El pago tiene un registro de pago contra entrega y no se puede borrar..
+        /// </summary>
+        public static string PaymentCorrectionOnDelivery {
+            get {
+                return ResourceManager.GetString("PaymentCorrectionOnDelivery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a El pago quedaría aplicado por más de su importe..
+        /// </summary>
+        public static string PaymentCorrectionOverAllocated {
+            get {
+                return ResourceManager.GetString("PaymentCorrectionOverAllocated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a El pedido {0} quedaría sin pagar y la factura {1} tiene complementos de pago vigentes: {2}. Cancélelos primero..
+        /// </summary>
+        public static string PaymentCorrectionReceiptsActive {
+            get {
+                return ResourceManager.GetString("PaymentCorrectionReceiptsActive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Las devoluciones se corrigen en su propio módulo..
+        /// </summary>
+        public static string PaymentCorrectionRefund {
+            get {
+                return ResourceManager.GetString("PaymentCorrectionRefund", resourceCulture);
             }
         }
         
@@ -5447,7 +5870,7 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Corrección de Datos de Pagos.
+        ///   Busca una cadena traducida similar a Corrección de Pagos.
         /// </summary>
         public static string PaymentsEditor {
             get {
@@ -6464,6 +6887,24 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Referencia nueva.
+        /// </summary>
+        public static string ReferenceAfter {
+            get {
+                return ResourceManager.GetString("ReferenceAfter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Referencia anterior.
+        /// </summary>
+        public static string ReferenceBefore {
+            get {
+                return ResourceManager.GetString("ReferenceBefore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Devolución.
         /// </summary>
         public static string Refund {
@@ -6878,6 +7319,15 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Revertir.
+        /// </summary>
+        public static string Reverse {
+            get {
+                return ResourceManager.GetString("Reverse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a RFC del proveedor de certificación.
         /// </summary>
         public static string RfcPac {
@@ -7000,6 +7450,15 @@ namespace Mictlanix.BE {
         public static string SalesOrder {
             get {
                 return ResourceManager.GetString("SalesOrder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a El pedido tiene pagos aplicados. Revierte cada uno en Sistema › Corrección de Pagos antes de cancelarlo..
+        /// </summary>
+        public static string SalesOrderCancelHasPayments {
+            get {
+                return ResourceManager.GetString("SalesOrderCancelHasPayments", resourceCulture);
             }
         }
         
@@ -8865,6 +9324,15 @@ namespace Mictlanix.BE {
         public static string Units {
             get {
                 return ResourceManager.GetString("Units", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Ya no pagados.
+        /// </summary>
+        public static string Unpaid {
+            get {
+                return ResourceManager.GetString("Unpaid", resourceCulture);
             }
         }
         

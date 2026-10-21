@@ -1,0 +1,42 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Services
+@model CustomerPayment
+@{
+	var session = Model.CashSession;
+	// What the correction takes off, marked in the list: the allocation a reversal
+	// takes off, or every allocation of a payment being deleted.
+	var reversing = ViewData["Allocation"] as int?;
+	var deleting = ViewData["Delete"] as bool? == true;
+}
+<div class="panel panel-default">
+	<div class="panel-heading"><strong>@Resources.Payment @Model.Id.ToString("D8")</strong></div>
+	<div class="panel-body correction-payment">
+		<div><span class="label-text">@Resources.Date</span>@Html.DisplayFor(x => x.Date)</div>
+		<div><span class="label-text">@Resources.Customer</span>@Model.Customer.Name</div>
+		<div><span class="label-text">@Resources.PaymentMethod</span>@Model.Method.GetDisplayName()</div>
+		<div><span class="label-text">@Resources.PaymentType</span>@Model.PaymentType.GetDisplayName()</div>
+		<div><span class="label-text">@Resources.Amount</span>@Model.Amount.ToString("c")</div>
+		<div><span class="label-text">@Resources.Net</span>@CorrectionRecord.Net(Model).ToString("c")</div>
+		<div><span class="label-text">@Resources.PaymentReference</span>@Model.Reference</div>
+		<div>
+			<span class="label-text">@Resources.CashSession</span>
+			@if (session != null) {
+				@session.Id.ToString("D6") @:&middot; @(session.End.HasValue ? Resources.CashSessionClosed : Resources.CashSessionOpen)
+			}
+		</div>
+		<div style="grid-column: 1 / -1">
+			<span class="label-text">@Resources.SalesOrders</span>
+			@foreach (var allocation in Model.Allocations) {
+				var marked = deleting || allocation.Id == reversing;
+				@Html.ActionLink(allocation.SalesOrder.Id.ToString("D8"), "View", "SalesOrders", new { id = allocation.SalesOrder.Id }, new { target = "_blank" })
+				<span style="@(marked ? "text-decoration: line-through; color: #a94442" : "")">@allocation.Amount.ToString("c")@(allocation.Change != 0m ? " (" + Resources.Change + " " + allocation.Change.ToString("c") + ")" : string.Empty)</span>
+				if (marked) {
+					<span class="label label-warning">← @(deleting ? Resources.CorrectionDeleting : Resources.CorrectionReversing)</span>
+				}
+				<br />
+			}
+		</div>
+	</div>
+</div>

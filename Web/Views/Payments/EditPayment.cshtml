@@ -1,0 +1,67 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@model CustomerPayment
+@{
+	ViewBag.Title = Resources.PaymentsEditor;
+}
+<div class="page-header">
+	<h1>@Resources.PaymentsEditor</h1>
+</div>
+
+@Html.Partial("_CorrectPaymentSteps", 2, new ViewDataDictionary { { "Edit", true } })
+
+@Html.Partial("_CorrectPaymentPayment", Model)
+
+@using (Html.BeginForm("EditPaymentReview", "Payments", new { id = Model.Id }, FormMethod.Post, new { @class = "form-horizontal" })) {
+	@Html.AntiForgeryToken()
+	<div class="form-group field-required">
+		<label class="col-sm-2 control-label" for="Amount">@Resources.Amount</label>
+		<div class="col-sm-3">
+			<input type="number" id="Amount" name="Amount" step="0.01" min="0.01" required class="form-control text-right" value="@Model.Amount.ToString("0.00")" />
+		</div>
+	</div>
+	<div class="form-group field-required">
+		<label class="col-sm-2 control-label" for="Method">@Resources.PaymentMethod</label>
+		<div class="col-sm-3">
+			<select id="Method" name="Method" class="form-control">
+				@foreach (var method in WebConfig.CashierPaymentOptions) {
+					<option value="@method" @(method == Model.Method ? "selected" : "")>@method.GetDisplayName()</option>
+				}
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="customer">@Resources.Customer</label>
+		<div class="col-sm-6">
+			@if (Model.Allocations.Any()) {
+				<p class="form-control-static">@Model.Customer.Name <small class="text-muted">· @Resources.CorrectionCustomerLocked</small></p>
+			} else {
+				<p class="form-control-static">@Model.Customer.Name</p>
+				<input type="text" id="customer" name="customer" />
+				<script type="text/javascript">
+					$("#customer").tokenInput("@Url.Action("GetSuggestions", "Customers")", {
+						hintText: "@Resources.ChooseCustomer",
+						noResultsText: "@Resources.NoResultsText",
+						searchingText: "@Resources.SearchingText",
+						queryParam: "pattern",
+						minChars: 1,
+						tokenLimit: 1
+					});
+				</script>
+			}
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="Reference">@Resources.PaymentReference</label>
+		<div class="col-sm-4">
+			<input type="text" id="Reference" name="Reference" maxlength="50" class="form-control" value="@Model.Reference" />
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+			<button type="submit" class="btn btn-primary">@Resources.CorrectionReviewButton →</button>
+			@Html.ActionLink(Resources.Cancel, "Payments", null, new { @class = "btn btn-link" })
+		</div>
+	</div>
+}

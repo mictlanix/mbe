@@ -1,0 +1,116 @@
+@using Mictlanix.BE
+@using Mictlanix.BE.Model
+@using Mictlanix.BE.Web.Helpers
+@using Mictlanix.BE.Web.Models
+@model PaymentCorrectionConfirmation
+@{
+	ViewBag.Title = Resources.PaymentsEditor;
+	var edit = Model.Operation == "Edit";
+	var operation = Resources.ResourceManager.GetString(Model.Operation);
+	// The confirm button: an edit saves; a reversal or a delete names itself.
+	var confirm = edit ? Resources.Save : operation;
+	var check = Model.Check;
+}
+<div class="page-header">
+	<h1>@Resources.PaymentsEditor</h1>
+</div>
+
+@Html.Partial("_CorrectPaymentSteps", edit ? 3 : 2, new ViewDataDictionary { { "Edit", edit } })
+
+@if (Model.Payment != null) {
+	@Html.Partial("_CorrectPaymentPayment", Model.Payment, new ViewDataDictionary { { "Allocation", Model.Allocation == null ? (int?) null : Model.Allocation.Id }, { "Delete", Model.Operation == "Delete" } })
+}
+
+@if (Model.IsRefused) {
+	@* Instead of a reason: what has to be fixed first. *@
+	<div class="alert alert-warning">
+		<strong>@Resources.CorrectionCannot</strong>
+		@if (Model.Error != null) {
+			@Model.Error
+		} else {
+			foreach (var item in check.Blocks) {
+				<p>@item</p>
+			}
+		}
+	</div>
+	if (edit && Model.Payment != null) {
+		@Html.ActionLink(Resources.CorrectionStepChange, "EditPayment", new { id = Model.Payment.Id }, new { @class = "btn btn-default" })
+	}
+	@Html.ActionLink(Resources.CorrectionBackToPayments, "Payments", null, new { @class = "btn btn-link" })
+} else {
+	<div class="panel panel-warning">
+		<div class="panel-heading"><strong>@Resources.CorrectionWhatChanges</strong> · @operation</div>
+		<div class="panel-body">
+			<div class="correction-change">
+				@if (Model.Operation == "Reverse") {
+					@* The net stays; what moves is the money on the order. *@
+					<div class="side from"><span>@string.Format(Resources.CorrectionAppliedTo, Model.Allocation.SalesOrder.Id.ToString("D8"))</span><strong>@Model.Allocation.Amount.ToString("c")</strong></div>
+					<div class="arrow">→</div>
+					<div class="side to"><span>@Resources.CorrectionPaymentBalance</span><strong>@((Model.Payment.Balance + Model.Allocation.Amount).ToString("c"))</strong></div>
+				} else {
+					<div class="side from"><span>@Resources.Current</span><strong>@Model.MethodBefore.GetDisplayName() @Model.NetBefore.ToString("c")</strong></div>
+					<div class="arrow">→</div>
+					<div class="side to"><span>@Resources.New</span><strong>@(Model.Operation == "Delete" ? "—" : Model.MethodAfter.GetDisplayName() + " " + Model.NetAfter.ToString("c"))</strong></div>
+				}
+			</div>
+			<ul class="correction-effects">
+				@if (edit) {
+					if (Model.Proposed.Amount != Model.Payment.Amount) {
+						<li>@Resources.Amount: @Model.Payment.Amount.ToString("c") → @Model.Proposed.Amount.ToString("c")</li>
+					}
+					if (Model.Customer != null) {
+						<li>@Resources.Customer: @Model.Payment.Customer.Name → @Model.Customer.Name</li>
+					}
+					if ((Model.Proposed.Reference ?? string.Empty) != (Model.Payment.Reference ?? string.Empty)) {
+						<li>@Resources.PaymentReference: @Model.Payment.Reference → @Model.Proposed.Reference</li>
+					}
+				}
+				@if (Model.Operation == "Reverse") {
+					<li>@string.Format(Resources.CorrectionRemovesAllocation, Model.Allocation.Amount.ToString("c"), Model.Allocation.SalesOrder.Id.ToString("D8"))</li>
+				}
+				@if (Model.Operation == "Delete") {
+					<li>@Resources.CorrectionDeletesPayment</li>
+				}
+				@if (check.Unpaid.Any()) {
+					<li><strong>@string.Format(Resources.CorrectionUnpays, string.Join(", ", check.Unpaid.Select(x => x.Order.Id.ToString("D8"))))</strong></li>
+				} else {
+					<li>@Resources.CorrectionNoOrderUnpaid</li>
+				}
+				@if (check.Invoiced != null) {
+					<li>@Resources.Invoiced: @check.Invoiced</li>
+				}
+				@if (check.Delivered != null) {
+					<li>@Resources.Delivered: @check.Delivered</li>
+				}
+				@if (check.Commission != null) {
+					<li>@Resources.Commission: @check.Commission</li>
+				}
+				@if (Model.IsAmendment) {
+					<li>@string.Format(Resources.CorrectionAmendment, Model.Payment.CashSession.Id.ToString("D6"))</li>
+				}
+				<li>@Resources.CorrectionLogged</li>
+			</ul>
+			@using (Html.BeginForm(Model.Action, "Payments", new { id = Model.Id }, FormMethod.Post)) {
+				@Html.AntiForgeryToken()
+				if (edit) {
+					<input type="hidden" name="Amount" value="@Model.Proposed.Amount" />
+					<input type="hidden" name="Method" value="@Model.Proposed.Method" />
+					<input type="hidden" name="Reference" value="@Model.Proposed.Reference" />
+					if (Model.Customer != null) {
+						<input type="hidden" name="customer" value="@Model.Customer.Id" />
+					}
+				}
+				<div class="form-group field-required">
+					<label for="reason">@Resources.Comment</label>
+					<textarea id="reason" name="reason" class="form-control" rows="2" maxlength="500" required>@Request.Form["reason"]</textarea>
+					@Html.ValidationMessage("reason")
+				</div>
+				<button type="submit" class="btn btn-warning btn-lg">@confirm</button>
+				if (edit) {
+					@Html.ActionLink(Resources.CorrectionStepChange, "EditPayment", new { id = Model.Payment.Id }, new { @class = "btn btn-link btn-lg" })
+				}
+				@Html.ActionLink(Resources.Cancel, "Payments", null, new { @class = "btn btn-link btn-lg" })
+			}
+		</div>
+	</div>
+}
