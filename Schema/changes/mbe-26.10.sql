@@ -98,3 +98,16 @@ ALTER TABLE `incidence`
 ALTER TABLE `incidence`
 	ADD INDEX `incidence_source_instance_idx` (`source`, `instance_id`);
 
+-- payment_on_delivery dropped (see mictlanix/mbe#81).
+--
+-- Created in mbe-17.11.sql for a "payment on delivery" flow whose model was
+-- removed in 35bbcb7; nothing in this application has read or written it
+-- since. Its only remaining effect was the foreign key to customer_payment,
+-- which would fail a payment delete -- the payment corrections tool (#66, #71)
+-- checked it first just to explain that. No other table references it.
+--
+-- Production holds no rows (checked 2026-10-21). If you apply this elsewhere,
+-- check first and deal with any result:
+--
+--   SELECT * FROM payment_on_delivery;
+DROP TABLE `payment_on_delivery`;

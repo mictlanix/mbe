@@ -5672,15 +5672,6 @@ namespace Mictlanix.BE {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a El pago tiene un registro de pago contra entrega y no se puede borrar..
-        /// </summary>
-        public static string PaymentCorrectionOnDelivery {
-            get {
-                return ResourceManager.GetString("PaymentCorrectionOnDelivery", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Busca una cadena traducida similar a El pago quedaría aplicado por más de su importe..
         /// </summary>
         public static string PaymentCorrectionOverAllocated {

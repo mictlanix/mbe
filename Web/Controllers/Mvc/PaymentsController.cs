@@ -898,8 +898,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 				model.Error = Resources.ItemNotFound;
 			} else if (CashCountReport.IsRefund (payment)) {
 				model.Error = Resources.PaymentCorrectionRefund;
-			} else if (HasPaymentOnDelivery (id)) {
-				model.Error = Resources.PaymentCorrectionOnDelivery;
 			} else {
 				model.MethodBefore = model.MethodAfter = payment.Method;
 				model.NetBefore = CorrectionRecord.Net (payment);
@@ -940,21 +938,6 @@ namespace Mictlanix.BE.Web.Controllers.Mvc {
 			}
 
 			return true;
-		}
-
-		// payment_on_delivery has had no model since 35bbcb7, but its foreign key
-		// would still fail the delete.
-		static bool HasPaymentOnDelivery (int payment)
-		{
-			var holder = ActiveRecordMediator.GetSessionFactoryHolder ();
-			var session = holder.CreateSession (typeof (CustomerPayment));
-
-			try {
-				return Convert.ToInt64 (session.CreateSQLQuery ("SELECT COUNT(*) FROM payment_on_delivery WHERE customer_payment = :id")
-					.SetInt32 ("id", payment).UniqueResult ()) > 0;
-			} finally {
-				holder.ReleaseSession (session);
-			}
 		}
 
 		ActionResult Refuse (string message)

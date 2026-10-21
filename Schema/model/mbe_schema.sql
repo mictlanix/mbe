@@ -1309,27 +1309,6 @@ CREATE TABLE `payment_method_option` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `payment_on_delivery`
---
-
-DROP TABLE IF EXISTS `payment_on_delivery`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `payment_on_delivery` (
-  `payment_on_delivery_id` int(11) NOT NULL AUTO_INCREMENT,
-  `customer_payment` int(11) NOT NULL,
-  `cash_session` int(11) DEFAULT NULL,
-  `paid` tinyint(1) NOT NULL DEFAULT 0,
-  `date` datetime NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`payment_on_delivery_id`),
-  KEY `payment_on_delivery_customer_payment` (`customer_payment`),
-  KEY `payment_on_delivery_cash_session` (`cash_session`),
-  CONSTRAINT `payments_on_deliveries_cash_session_fk` FOREIGN KEY (`cash_session`) REFERENCES `cash_session` (`cash_session_id`),
-  CONSTRAINT `payments_on_deliveries_customer_payment_fk` FOREIGN KEY (`customer_payment`) REFERENCES `customer_payment` (`customer_payment_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `payments`
 --
 

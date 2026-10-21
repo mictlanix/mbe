@@ -746,26 +746,6 @@ namespace Mictlanix.BE.Web.Tests {
 		}
 
 		[Test]
-		public void DeletePayment_RefusesAPaymentOnDelivery ()
-		{
-			LogIn (AccessRight.Read | AccessRight.Update | AccessRight.Delete);
-			int payment;
-
-			using (new SessionScope ()) {
-				payment = seed.Payment (PaymentType.Immediate, 100m).Id;
-			}
-
-			Sql ("INSERT INTO payment_on_delivery (customer_payment) VALUES (:id)", payment);
-
-			try {
-				var controller = Controller ();
-				Assert.That (Refused (controller, Request (() => controller.DeletePayment (payment, Reason))), Is.True);
-			} finally {
-				Sql ("DELETE FROM payment_on_delivery WHERE customer_payment = :id", payment);
-			}
-		}
-
-		[Test]
 		public void DeletePayment_NeedsTheDeleteRight ()
 		{
 			LogIn (AccessRight.Read | AccessRight.Update);
@@ -780,20 +760,6 @@ namespace Mictlanix.BE.Web.Tests {
 
 			using (new SessionScope ()) {
 				Assert.That (CustomerPayment.TryFind (payment), Is.Not.Null);
-			}
-		}
-
-		static void Sql (string sql, int id)
-		{
-			using (new SessionScope ()) {
-				var holder = ActiveRecordMediator.GetSessionFactoryHolder ();
-				var session = holder.CreateSession (typeof (CustomerPayment));
-
-				try {
-					session.CreateSQLQuery (sql).SetInt32 ("id", id).ExecuteUpdate ();
-				} finally {
-					holder.ReleaseSession (session);
-				}
 			}
 		}
 
